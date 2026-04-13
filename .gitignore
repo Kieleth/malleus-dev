@@ -50,3 +50,6 @@ Thumbs.db
 /tests/test_integration.py
 /private/
 /experiments/
+/paper/
+/scripts/
+/prolog/
