@@ -41,23 +41,32 @@ Documentation = "https://github.com/kieleth/malleus-dev/blob/main/docs/ARCHITECT
 Repository = "https://github.com/kieleth/malleus-dev"
 Issues = "https://github.com/kieleth/malleus-dev/issues"
 
+[tool.hatch.build]
+# Only the files explicitly listed below are packaged. Anything else present
+# in the working tree (local scratch files, experimental modules, notes) is
+# ignored by the build.
+include = [
+    "src/malleus/__init__.py",
+    "src/malleus/ontology.py",
+    "src/malleus/kg.py",
+    "src/malleus/prolog_verifier.py",
+    "ontology/**/*.yaml",
+    "tests/test_ontology.py",
+    "tests/test_kg.py",
+    "tests/test_prolog_verifier.py",
+    "docs/**/*.md",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "pyproject.toml",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/malleus"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "ontology" = "share/malleus/ontology"
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "/src",
-    "/ontology",
-    "/tests",
-    "/docs",
-    "/README.md",
-    "/LICENSE",
-    "/CHANGELOG.md",
-]
-
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/test_ontology.py", "tests/test_kg.py", "tests/test_prolog_verifier.py"]
 python_files = ["test_*.py"]

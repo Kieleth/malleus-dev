@@ -34,3 +34,19 @@ Thumbs.db
 
 # Secrets
 .env
+
+# Local workspace (not part of the published library)
+/src/malleus/conditions.py
+/src/malleus/runner.py
+/src/malleus/session.py
+/src/malleus/evaluator.py
+/src/malleus/tools.py
+/src/malleus/llm_client.py
+/src/malleus/static_loader.py
+/tests/test_session.py
+/tests/test_runner.py
+/tests/test_scenarios.py
+/tests/test_static_loader.py
+/tests/test_integration.py
+/private/
+/experiments/
