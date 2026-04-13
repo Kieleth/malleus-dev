@@ -1,0 +1,198 @@
+id: https://malleus.dev/schema/attack
+name: attack
+version: 0.1.0
+title: MITRE ATT&CK + Attack Flow Domain Extension
+description: >-
+  Domain extension for MITRE ATT&CK technique chain analysis.
+  Covers: techniques, tactics, sub-techniques, mitigations,
+  and their relationships. Chain validity modeled via Attack Flow
+  (MITRE CTID v3.0.0) as reference corpus. Scoped to technique
+  chain reasoning, not incident response.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  attack: https://malleus.dev/schema/attack/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  AttackEntityType:
+    description: Types of ATT&CK domain entities.
+    permissible_values:
+      TECHNIQUE:
+        description: An ATT&CK technique or sub-technique.
+      TACTIC:
+        description: An ATT&CK tactic (phase of an attack).
+      MITIGATION:
+        description: A defensive measure that reduces technique effectiveness.
+      DATA_SOURCE:
+        description: A source of telemetry for detecting a technique.
+
+  Tactic:
+    description: >-
+      The 14 ATT&CK Enterprise tactics, ordered by typical attack progression.
+    permissible_values:
+      RECONNAISSANCE:
+        description: Gathering information to plan operations.
+      RESOURCE_DEVELOPMENT:
+        description: Establishing resources to support operations.
+      INITIAL_ACCESS:
+        description: Gaining an initial foothold.
+      EXECUTION:
+        description: Running adversary-controlled code.
+      PERSISTENCE:
+        description: Maintaining presence across restarts.
+      PRIVILEGE_ESCALATION:
+        description: Gaining higher-level permissions.
+      DEFENSE_EVASION:
+        description: Avoiding detection.
+      CREDENTIAL_ACCESS:
+        description: Stealing credentials.
+      DISCOVERY:
+        description: Understanding the environment.
+      LATERAL_MOVEMENT:
+        description: Moving through the environment.
+      COLLECTION:
+        description: Gathering target data.
+      COMMAND_AND_CONTROL:
+        description: Communicating with compromised systems.
+      EXFILTRATION:
+        description: Stealing data from the network.
+      IMPACT:
+        description: Disrupting availability or integrity.
+
+  AttackRelationType:
+    description: Types of relationships between ATT&CK entities.
+    permissible_values:
+      BELONGS_TO_TACTIC:
+        description: Technique belongs to this tactic phase.
+      SUBTECHNIQUE_OF:
+        description: Sub-technique of a parent technique.
+      REQUIRES_CAPABILITY:
+        description: Technique requires this capability to execute.
+      PROVIDES_CAPABILITY:
+        description: Technique provides this capability upon success.
+      MITIGATES:
+        description: Mitigation reduces effectiveness of this technique.
+      DETECTS:
+        description: Data source can detect this technique.
+      CHAIN_LINK:
+        description: >-
+          Technique A enables technique B in a sequential attack chain.
+          Derived from Attack Flow corpus.
+
+  AttackSignalType:
+    description: Types of computed signals in the ATT&CK domain.
+    permissible_values:
+      CHAIN_VIABILITY:
+        description: >-
+          Whether a proposed attack chain is viable given current
+          mitigations and technique prerequisites.
+      MITIGATION_COVERAGE:
+        description: >-
+          Fraction of techniques in a chain that are mitigated.
+
+  AttackEventType:
+    description: Types of events in the ATT&CK domain.
+    permissible_values:
+      CHAIN_CONSTRUCTED:
+        description: An attack chain was constructed from technique nodes.
+      CHAIN_EVALUATED:
+        description: A chain was evaluated for viability against mitigations.
+      ALTERNATIVE_FOUND:
+        description: An alternative chain was found when the primary was blocked.
+
+classes:
+  Technique:
+    is_a: Entity
+    description: An ATT&CK technique or sub-technique.
+    slots:
+      - attack_id
+      - tactic
+      - platform
+      - is_subtechnique
+    class_uri: attack:Technique
+
+  TacticEntity:
+    is_a: Entity
+    description: An ATT&CK tactic (attack phase).
+    slots:
+      - tactic
+      - tactic_order
+    class_uri: attack:TacticEntity
+
+  Mitigation:
+    is_a: Entity
+    description: A defensive measure.
+    slots:
+      - attack_id
+    class_uri: attack:Mitigation
+
+  AttackRelation:
+    is_a: Relation
+    description: A typed relationship between ATT&CK entities.
+    slots:
+      - capability
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+    class_uri: attack:AttackRelation
+
+  AttackSignal:
+    is_a: Signal
+    description: A computed signal in the ATT&CK domain.
+    slot_usage:
+      signal_type:
+        range: AttackSignalType
+        required: true
+    class_uri: attack:AttackSignal
+
+  AttackEvent:
+    is_a: Event
+    description: An event in the ATT&CK domain.
+    slot_usage:
+      event_type:
+        range: AttackEventType
+        required: true
+    class_uri: attack:AttackEvent
+
+slots:
+  attack_id:
+    range: string
+    description: >-
+      MITRE ATT&CK identifier (e.g., T1566, T1059.001, M1049).
+
+  tactic:
+    range: Tactic
+    description: Which tactic phase this entity belongs to.
+
+  tactic_order:
+    range: integer
+    description: >-
+      Numeric ordering of the tactic in the attack lifecycle.
+      RECONNAISSANCE=1 through IMPACT=14.
+
+  platform:
+    range: string
+    multivalued: true
+    description: >-
+      Operating systems / platforms this technique applies to
+      (e.g., "Windows", "Linux", "macOS").
+
+  is_subtechnique:
+    range: boolean
+    description: Whether this is a sub-technique of a parent.
+
+  capability:
+    range: string
+    description: >-
+      The capability provided or required by this relation.
+      e.g., "local-code-execution", "domain-admin-credentials",
+      "network-access". Used for REQUIRES_CAPABILITY and
+      PROVIDES_CAPABILITY relations.

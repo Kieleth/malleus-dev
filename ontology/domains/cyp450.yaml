@@ -1,0 +1,188 @@
+id: https://malleus.dev/schema/cyp450
+name: cyp450
+version: 0.1.0
+title: CYP450 Drug Interaction Domain Extension
+description: >-
+  Domain extension for CYP-mediated pharmacokinetic drug interactions.
+  Covers: drugs, enzymes, metabolites, and their relationships
+  (substrate, inhibitor, inducer). Scoped to CYP450-mediated
+  mechanisms only. No pharmacodynamic, absorption, or transporter
+  interactions.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  cyp450: https://malleus.dev/schema/cyp450/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  DrugEntityType:
+    description: Types of drug-domain entities.
+    permissible_values:
+      DRUG:
+        description: A pharmaceutical compound.
+      ENZYME:
+        description: A CYP450 enzyme isoform.
+      METABOLITE:
+        description: A product of drug metabolism.
+
+  CYPEnzyme:
+    description: The 6 core CYP450 isoforms responsible for ~80-90% of CYP drug metabolism.
+    permissible_values:
+      CYP1A2:
+        description: Cytochrome P450 1A2.
+      CYP2C9:
+        description: Cytochrome P450 2C9.
+      CYP2C19:
+        description: Cytochrome P450 2C19.
+      CYP2D6:
+        description: Cytochrome P450 2D6.
+      CYP2E1:
+        description: Cytochrome P450 2E1.
+      CYP3A4:
+        description: Cytochrome P450 3A4. Metabolizes ~50% of CYP-pathway drugs.
+
+  InhibitionStrength:
+    description: FDA classification of inhibitor/inducer potency.
+    permissible_values:
+      WEAK:
+        description: Weak inhibitor/inducer.
+      MODERATE:
+        description: Moderate inhibitor/inducer.
+      STRONG:
+        description: Strong inhibitor/inducer.
+
+  DrugRelationType:
+    description: Types of relationships between drug-domain entities.
+    permissible_values:
+      SUBSTRATE_OF:
+        description: Drug is metabolized by this enzyme.
+      INHIBITS:
+        description: Drug inhibits this enzyme's activity.
+      INDUCES:
+        description: Drug induces this enzyme's expression/activity.
+      PRODUCES:
+        description: Drug metabolism produces this metabolite (via enzyme).
+      INTERACTS_WITH:
+        description: Two drugs interact via a shared CYP mechanism.
+
+  InteractionEffect:
+    description: The pharmacokinetic effect of a drug-drug interaction.
+    permissible_values:
+      INCREASED_EXPOSURE:
+        description: Substrate plasma concentration increases (inhibition of metabolism).
+      DECREASED_EXPOSURE:
+        description: Substrate plasma concentration decreases (induction of metabolism).
+      NO_SIGNIFICANT_EFFECT:
+        description: No clinically significant change in exposure.
+
+  DrugSignalType:
+    description: Types of computed signals in the drug interaction domain.
+    permissible_values:
+      INTERACTION_RISK:
+        description: >-
+          Risk level of a drug-drug interaction pair. Computed from
+          inhibition strength, number of shared CYP pathways, and
+          clinical significance data.
+      EXPOSURE_CHANGE:
+        description: >-
+          Estimated fold-change in substrate exposure due to
+          enzyme inhibition or induction.
+
+  DrugEventType:
+    description: Types of events in the drug interaction domain.
+    permissible_values:
+      INTERACTION_DETECTED:
+        description: A drug-drug interaction was identified via CYP mechanism tracing.
+      MECHANISM_TRACED:
+        description: A multi-step interaction mechanism was traced through the KG.
+
+classes:
+  Drug:
+    is_a: Entity
+    description: A pharmaceutical compound with known or hypothesized CYP interactions.
+    slots:
+      - drug_class
+    class_uri: cyp450:Drug
+
+  Enzyme:
+    is_a: Entity
+    description: A CYP450 enzyme isoform.
+    slots:
+      - cyp_isoform
+    slot_usage:
+      cyp_isoform:
+        required: true
+    class_uri: cyp450:Enzyme
+
+  Metabolite:
+    is_a: Entity
+    description: A product of drug metabolism via a CYP enzyme.
+    class_uri: cyp450:Metabolite
+
+  DrugRelation:
+    is_a: Relation
+    description: >-
+      A typed relationship between drug-domain entities.
+      Constrains relation_type to DrugRelationType enum.
+    slots:
+      - inhibition_strength
+      - interaction_effect
+      - mechanism
+    slot_usage:
+      relation_type:
+        range: DrugRelationType
+        required: true
+    class_uri: cyp450:DrugRelation
+
+  DrugSignal:
+    is_a: Signal
+    description: A computed signal in the drug interaction domain.
+    slot_usage:
+      signal_type:
+        range: DrugSignalType
+        required: true
+    class_uri: cyp450:DrugSignal
+
+  DrugEvent:
+    is_a: Event
+    description: An event in the drug interaction domain.
+    slot_usage:
+      event_type:
+        range: DrugEventType
+        required: true
+    class_uri: cyp450:DrugEvent
+
+slots:
+  drug_class:
+    range: string
+    description: >-
+      Therapeutic or pharmacological class of the drug
+      (e.g., "statin", "macrolide antibiotic", "azole antifungal").
+
+  cyp_isoform:
+    range: CYPEnzyme
+    description: Which CYP450 isoform this enzyme represents.
+
+  inhibition_strength:
+    range: InhibitionStrength
+    description: >-
+      FDA-classified potency of inhibition or induction.
+      Applies to INHIBITS and INDUCES relations.
+
+  interaction_effect:
+    range: InteractionEffect
+    description: >-
+      The pharmacokinetic outcome of this interaction.
+      Applies to INTERACTS_WITH relations.
+
+  mechanism:
+    range: string
+    description: >-
+      Free-text description of the interaction mechanism.
+      e.g., "CYP3A4 inhibition reduces simvastatin first-pass metabolism"
