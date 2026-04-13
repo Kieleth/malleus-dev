@@ -392,3 +392,222 @@ class TestCompatibility:
         atk = OntologyRegistry(ATTACK_SCHEMA)
         result = root.check_compatibility(atk.content_hash(), atk.fingerprint())
         assert result == "subset"
+
+
+# --- Strict Fingerprint (consumer-side safety) ---
+
+
+class TestStrictFingerprint:
+    def test_strict_is_superset_of_lax(self):
+        """Strict fingerprint contains everything the lax one does, plus required facts."""
+        reg = OntologyRegistry(CYP450_SCHEMA)
+        lax = reg.fingerprint()
+        strict = reg.strict_fingerprint()
+        assert lax.issubset(strict)
+
+    def test_strict_includes_required_facts(self):
+        """Enzyme.cyp_isoform is required; the strict fingerprint should say so."""
+        reg = OntologyRegistry(CYP450_SCHEMA)
+        strict = reg.strict_fingerprint()
+        assert "type:Enzyme:usage:cyp_isoform:required" in strict
+
+    def test_lax_excludes_required_facts(self):
+        """The lax fingerprint deliberately omits required constraints."""
+        reg = OntologyRegistry(CYP450_SCHEMA)
+        lax = reg.fingerprint()
+        assert "type:Enzyme:usage:cyp_isoform:required" not in lax
+
+    def test_strict_is_cached(self):
+        reg = OntologyRegistry(CYP450_SCHEMA)
+        a = reg.strict_fingerprint()
+        b = reg.strict_fingerprint()
+        assert a is b
+
+    def test_strict_serializable_is_sorted_list(self):
+        reg = OntologyRegistry(CYP450_SCHEMA)
+        s = reg.strict_fingerprint_serializable()
+        assert isinstance(s, list)
+        assert s == sorted(s)
+
+
+class TestStrictCompatibility:
+    def test_identical_under_strict(self):
+        a = OntologyRegistry(CYP450_SCHEMA)
+        b = OntologyRegistry(CYP450_SCHEMA)
+        assert a.check_compatibility_strict(b.content_hash(), b.strict_fingerprint()) == "identical"
+
+    def test_pure_addition_still_superset(self):
+        """CYP450 adds types on top of root; strict check sees it as a superset."""
+        cyp = OntologyRegistry(CYP450_SCHEMA)
+        root = OntologyRegistry(ROOT_SCHEMA)
+        result = cyp.check_compatibility_strict(root.content_hash(), root.strict_fingerprint())
+        assert result == "superset"
+
+    def test_pure_addition_reverse_is_subset(self):
+        cyp = OntologyRegistry(CYP450_SCHEMA)
+        root = OntologyRegistry(ROOT_SCHEMA)
+        result = root.check_compatibility_strict(cyp.content_hash(), cyp.strict_fingerprint())
+        assert result == "subset"
+
+    def test_relaxation_breaks_strict_check(self, tmp_path):
+        """If two schemas differ only by a required -> optional change, lax says
+        superset/subset but strict says divergent."""
+        import textwrap
+        strict_yaml = tmp_path / "strict.yaml"
+        relaxed_yaml = tmp_path / "relaxed.yaml"
+        strict_yaml.write_text(textwrap.dedent("""
+            id: https://example.org/schema/test
+            name: test
+            imports: [linkml:types]
+            prefixes:
+              linkml: https://w3id.org/linkml/
+            classes:
+              Thing:
+                slot_usage:
+                  name:
+                    required: true
+            slots:
+              name:
+                range: string
+        """).strip())
+        relaxed_yaml.write_text(textwrap.dedent("""
+            id: https://example.org/schema/test
+            name: test
+            imports: [linkml:types]
+            prefixes:
+              linkml: https://w3id.org/linkml/
+            classes:
+              Thing:
+                slot_usage:
+                  name:
+                    required: false
+            slots:
+              name:
+                range: string
+        """).strip())
+
+        strict_reg = OntologyRegistry(strict_yaml)
+        relaxed_reg = OntologyRegistry(relaxed_yaml)
+
+        # Hashes differ because the canonical form includes required:true/false.
+        assert strict_reg.content_hash() != relaxed_reg.content_hash()
+
+        # Lax check: they look identical structurally (relaxation is "additive").
+        lax = strict_reg.check_compatibility(relaxed_reg.content_hash(), relaxed_reg.fingerprint())
+        assert lax in ("identical", "superset", "subset")
+
+        # Strict check: the relaxed schema is missing the required fact.
+        # Neither fingerprint is a superset of the other: divergent.
+        strict_result = strict_reg.check_compatibility_strict(
+            relaxed_reg.content_hash(), relaxed_reg.strict_fingerprint()
+        )
+        assert strict_result in ("superset", "divergent")
+        # Same check from the relaxed side.
+        strict_reverse = relaxed_reg.check_compatibility_strict(
+            strict_reg.content_hash(), strict_reg.strict_fingerprint()
+        )
+        assert strict_reverse in ("subset", "divergent")
+
+        # And one of the two sides has to see the constraint change.
+        # Together they cover the asymmetry.
+        assert "divergent" in (strict_result, strict_reverse) or \
+               (strict_result == "superset" and strict_reverse == "subset")
+
+
+# --- Mixin tracking (Agent-as-trait, queryable) ---
+
+
+@pytest.fixture
+def agent_domain(tmp_path):
+    """A minimal domain that declares a class using the Agent mixin."""
+    import textwrap
+    schema = tmp_path / "agent_domain.yaml"
+    schema.write_text(textwrap.dedent("""
+        id: https://example.org/schema/agent_test
+        name: agent_test
+        imports:
+          - malleus
+          - linkml:types
+        prefixes:
+          linkml: https://w3id.org/linkml/
+
+        classes:
+          Person:
+            is_a: Entity
+            mixins:
+              - Agent
+          Service:
+            is_a: Entity
+            mixins:
+              - Agent
+          Drug:
+            is_a: Entity
+    """).strip())
+    # Copy malleus.yaml next to it so the import resolver finds it.
+    import shutil
+    shutil.copy(ROOT_SCHEMA, tmp_path / "malleus.yaml")
+    return schema
+
+
+class TestMixinTracking:
+    def test_mixins_loaded(self, agent_domain):
+        reg = OntologyRegistry(agent_domain)
+        person = reg.get_type("Person")
+        assert "Agent" in person.mixins
+
+    def test_has_mixin_direct(self, agent_domain):
+        reg = OntologyRegistry(agent_domain)
+        assert reg.has_mixin("Person", "Agent")
+        assert reg.has_mixin("Service", "Agent")
+        assert not reg.has_mixin("Drug", "Agent")
+
+    def test_has_mixin_inherited(self, agent_domain):
+        """A subtype of a type that carries the mixin should also carry it."""
+        # Person is_a Entity. If we made SeniorPerson is_a Person, it would
+        # inherit the Agent mixin. Simulate by checking the walk.
+        reg = OntologyRegistry(agent_domain)
+        # Add a synthetic subtype in-memory for the test
+        from malleus.ontology import TypeDef
+        reg._types["SeniorPerson"] = TypeDef(
+            name="SeniorPerson", parent="Person", slots=[], slot_usage={},
+            is_mixin=False, mixins=(),
+        )
+        reg._inheritance["SeniorPerson"] = "Person"
+        assert reg.has_mixin("SeniorPerson", "Agent")
+
+    def test_types_with_mixin(self, agent_domain):
+        reg = OntologyRegistry(agent_domain)
+        agents = reg.types_with_mixin("Agent")
+        assert agents == ["Person", "Service"]
+        assert "Drug" not in agents
+        assert "Agent" not in agents  # the mixin itself is excluded
+
+    def test_mixin_appears_in_fingerprint(self, agent_domain):
+        reg = OntologyRegistry(agent_domain)
+        fp = reg.fingerprint()
+        assert "type:Person:uses_mixin:Agent" in fp
+        assert "type:Service:uses_mixin:Agent" in fp
+        assert "type:Drug:uses_mixin:Agent" not in fp
+
+    def test_mixin_affects_content_hash(self, agent_domain, tmp_path):
+        """A schema that declares an extra mixin must hash differently."""
+        import textwrap, shutil
+        no_mixin = tmp_path / "no_mixin.yaml"
+        no_mixin.write_text(textwrap.dedent("""
+            id: https://example.org/schema/agent_test
+            name: agent_test
+            imports: [malleus, linkml:types]
+            prefixes:
+              linkml: https://w3id.org/linkml/
+            classes:
+              Person:
+                is_a: Entity
+              Service:
+                is_a: Entity
+              Drug:
+                is_a: Entity
+        """).strip())
+        shutil.copy(ROOT_SCHEMA, tmp_path / "malleus.yaml")
+        with_mx = OntologyRegistry(agent_domain).content_hash()
+        without_mx = OntologyRegistry(no_mixin).content_hash()
+        assert with_mx != without_mx

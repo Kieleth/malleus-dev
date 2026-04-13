@@ -31,6 +31,7 @@ class TypeDef:
     slots: list[str] = field(default_factory=list)
     slot_usage: dict[str, SlotConstraint] = field(default_factory=dict)
     is_mixin: bool = False
+    mixins: tuple[str, ...] = ()  # mixin classes this type uses
 
 
 @dataclass(frozen=True)
@@ -94,6 +95,7 @@ class OntologyRegistry:
             parent = defn.get("is_a")
             is_mixin = defn.get("mixin", False)
             slots = defn.get("slots", [])
+            mixins = tuple(defn.get("mixins", []) or ())
             slot_usage = {}
             for slot_name, usage in defn.get("slot_usage", {}).items():
                 slot_usage[slot_name] = SlotConstraint(
@@ -106,6 +108,7 @@ class OntologyRegistry:
                 slots=slots,
                 slot_usage=slot_usage,
                 is_mixin=is_mixin,
+                mixins=mixins,
             )
             self._inheritance[name] = parent
 
@@ -149,6 +152,29 @@ class OntologyRegistry:
                 return True
             current = self._inheritance.get(current)
         return False
+
+    def has_mixin(self, type_name: str, mixin_name: str) -> bool:
+        """True if type_name uses mixin_name, directly or via its is_a ancestors."""
+        current = type_name
+        while current is not None:
+            td = self._types.get(current)
+            if td and mixin_name in td.mixins:
+                return True
+            current = self._inheritance.get(current)
+        return False
+
+    def types_with_mixin(self, mixin_name: str) -> list[str]:
+        """Return all registered type names that carry the given mixin.
+
+        Walks is_a ancestors, so a subtype of a type that declares the mixin
+        is included. Excludes the mixin itself. Agent is a trait, not a kind,
+        so it lives as a mixin rather than a class; use this when you want
+        "every type that can act" as a queryable set.
+        """
+        return sorted(
+            name for name in self._types
+            if name != mixin_name and self.has_mixin(name, mixin_name)
+        )
 
     def get_type(self, type_name: str) -> TypeDef:
         if type_name not in self._types:
@@ -210,6 +236,7 @@ class OntologyRegistry:
                             for k, v in sorted(td.slot_usage.items())
                         },
                         "is_mixin": td.is_mixin,
+                        "mixins": sorted(td.mixins),
                     }
                     for name, td in sorted(self._types.items())
                 },
@@ -225,15 +252,21 @@ class OntologyRegistry:
         return self._cached_hash
 
     def fingerprint(self) -> frozenset[str]:
-        """Compute atomic facts about this ontology for superset checking.
+        """Compute atomic facts about this ontology for producer-side superset checking.
 
-        Each element is one fact: type exists, enum value exists, inheritance
-        link, slot range, etc. Under additive-only evolution, a newer ontology's
-        fingerprint is a strict superset of an older one's.
+        Each element is one fact: type exists, enum value exists, inheritance link,
+        slot range, etc. Under additive-only evolution (new types, new enum values,
+        new slots, or relaxing required to optional), a newer ontology's fingerprint
+        is a strict superset of an older one's.
 
-        Required/optional constraints are excluded from the fingerprint because
-        additive-only allows relaxation (required -> optional), which is a valid
-        superset change that doesn't affect data compatibility.
+        Required/optional constraints are deliberately excluded here. This fingerprint
+        answers: "can data produced under their schema flow safely into mine?" It does
+        not answer: "can code built against their schema handle data produced under mine?"
+
+        For the consumer-side question (code built against old-schema producers might
+        hardcode a field's presence), use strict_fingerprint() and
+        check_compatibility_strict(). Relaxation is additive for producers and
+        subtractive for consumers; the two checks surface that asymmetry.
         """
         if not hasattr(self, "_cached_fingerprint"):
             facts: set[str] = set()
@@ -244,6 +277,8 @@ class OntologyRegistry:
                     facts.add(f"type:{name}:parent:{td.parent}")
                 if td.is_mixin:
                     facts.add(f"type:{name}:mixin")
+                for mx in td.mixins:
+                    facts.add(f"type:{name}:uses_mixin:{mx}")
                 for slot in td.slots:
                     facts.add(f"type:{name}:slot:{slot}")
                 for slot_name, constraint in td.slot_usage.items():
@@ -265,18 +300,49 @@ class OntologyRegistry:
         """Return fingerprint as a sorted list for JSON serialization."""
         return sorted(self.fingerprint())
 
+    def strict_fingerprint(self) -> frozenset[str]:
+        """Compute atomic facts including required-constraint assertions.
+
+        Extends the structural fingerprint with one fact per required slot usage:
+        `type:{class}:usage:{slot}:required`. Relaxing required to optional removes
+        the fact, which makes the newer fingerprint fail the superset check against
+        the older one. That is the point: the strict check surfaces constraint
+        changes that producer-side evolution hides.
+
+        Use this when you need consumer-side safety (downstream code may have
+        hardcoded presence assumptions).
+        """
+        if not hasattr(self, "_cached_strict_fingerprint"):
+            facts = set(self.fingerprint())
+            for name, td in self._types.items():
+                for slot_name, constraint in td.slot_usage.items():
+                    if constraint.required:
+                        facts.add(f"type:{name}:usage:{slot_name}:required")
+            self._cached_strict_fingerprint = frozenset(facts)
+        return self._cached_strict_fingerprint
+
+    def strict_fingerprint_serializable(self) -> list[str]:
+        """Return strict fingerprint as a sorted list for JSON serialization."""
+        return sorted(self.strict_fingerprint())
+
     def check_compatibility(
         self,
         foreign_hash: str,
         foreign_fingerprint: frozenset[str],
     ) -> str:
-        """Check compatibility with a foreign ontology.
+        """Check producer-side compatibility with a foreign ontology.
+
+        Answers: can data produced under the foreign schema flow safely into mine?
 
         Returns one of:
         - "identical": same resolved ontology
         - "superset": this ontology contains everything foreign does (I'm newer)
         - "subset": foreign contains everything this does (they're newer)
         - "divergent": neither is a superset (incompatible fork)
+
+        Relaxation (required -> optional) is counted as a valid additive change.
+        For consumer-side safety (code that hardcoded a field's presence still
+        works against data from the other schema), use check_compatibility_strict.
         """
         if self.content_hash() == foreign_hash:
             return "identical"
@@ -285,6 +351,32 @@ class OntologyRegistry:
         if foreign_fingerprint.issubset(my_fp):
             return "superset"
         if my_fp.issubset(foreign_fingerprint):
+            return "subset"
+        return "divergent"
+
+    def check_compatibility_strict(
+        self,
+        foreign_hash: str,
+        foreign_strict_fingerprint: frozenset[str],
+    ) -> str:
+        """Check consumer-side compatibility with a foreign ontology.
+
+        Answers: will code built against either schema handle the other's data
+        without crashing on missing fields?
+
+        Same four return values as check_compatibility, but uses strict fingerprints
+        that include required-constraint facts. Relaxation (required -> optional)
+        shows up as a constraint divergence: the schema that relaxed is no longer
+        a strict superset, because it has fewer required-facts. The check returns
+        "divergent" in that case, surfacing the consumer risk.
+        """
+        if self.content_hash() == foreign_hash:
+            return "identical"
+
+        my_fp = self.strict_fingerprint()
+        if foreign_strict_fingerprint.issubset(my_fp):
+            return "superset"
+        if my_fp.issubset(foreign_strict_fingerprint):
             return "subset"
         return "divergent"
 

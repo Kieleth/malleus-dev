@@ -52,6 +52,109 @@ OntologyRegistry (ontology.py)
 
 ---
 
+## Design questions that come up fast
+
+Two distinctions in the vocabulary look clean in the schema and get tested within the first real domain. Here's how they hold under pressure.
+
+### Signal vs Event
+
+The definitions:
+
+- **Event** is an occurrent. It IS the happening. A click, a deployment, an interaction detected. Events have a time (instant or interval) and participants. They don't persist as states; they're records of something that happened.
+- **Signal** is a dependent continuant. It's a derived quality that exists as a property of a bearer. A risk score on a user, a health status on a service, a severity on a drug pair. Signals persist, they get recomputed, they have a current value.
+
+The distinction holds even in cases that feel like one thing.
+
+**Case 1: "The risk score updates when the user clicks."**
+
+```
+Click happens at T1.
+┌──────────────────────────────┐
+│ ClickEvent                   │  ← this IS the click
+│   occurred_at: T1            │
+│   source: user-42            │
+│   target: button-pay         │
+│   event_type: BUTTON_CLICK   │
+└──────────────────────────────┘
+
+Risk recomputation triggered by T1.
+┌──────────────────────────────┐
+│ RiskSignal                   │  ← this is the user's risk RIGHT NOW
+│   bearer: user-42            │
+│   value: 0.73                │
+│   signal_type: FRAUD_RISK    │
+│   computed_at: T1            │
+└──────────────────────────────┘
+```
+
+The click is an event; it happened at T1 and is done. The risk score is a signal on `user-42`; it had some prior value and now has `0.73` as of `T1`. Next click at T2, the event is a new `ClickEvent` instance, and the signal gets a new `computed_at` and `value`. Same signal entity, new reading.
+
+**Case 2: "An interaction is detected between two drugs."**
+
+```
+┌──────────────────────────────┐
+│ InteractionDetected          │  ← Event: the moment we noticed
+│   occurred_at: T             │
+│   source: drug-simvastatin   │
+│   target: drug-clarithromycin│
+│   event_type: INTERACTION... │
+└──────────────────────────────┘
+
+┌──────────────────────────────┐
+│ InteractionRiskSignal        │  ← Signal: the risk carried by the pair
+│   bearer: pair-sim-cla       │
+│   value: 0.9                 │
+│   signal_type: INTERACTION...│
+│   computed_at: T             │
+└──────────────────────────────┘
+```
+
+"We found the interaction" is an event. "This pair is risky right now" is a signal. You can have the event without the signal (informational log), the signal without an event (computed at startup from static rules), or both linked.
+
+The shape of the test, whenever the call is close: **if you ask "when did it happen?", it's an Event. If you ask "what's the current value?", it's a Signal.** BFO formalizes this as Occurrent vs Dependent Continuant; the names are optional, the distinction is real.
+
+### Agent as mixin, and how to query for agents anyway
+
+Agent-hood is a capability, not a kind. A Person can act. A Service can act. A Script can act. A Drug cannot. An Enzyme does catalysis (arguably a form of action, in a biological sense) but it doesn't plan or decide. The set of things that can act cross-cuts the set of things that exist.
+
+If Agent were a class, you'd have two bad options:
+
+1. Force multiple inheritance: `Person(Entity, Agent)`, `Service(Entity, Agent)`. Works in Python, breaks LinkML's single-is_a tree and makes the type hierarchy harder to reason about.
+2. Put Agent as an Entity subtype and subclass from it. Now you can't model a Person who is also an Agent without making Person is_a Agent (inverting the intent) or inventing `ActingPerson`, `ActingService`, `ActingScript`, which multiplies types along an orthogonal axis. Ugly.
+
+Mixin avoids both. Any Entity subtype can opt into Agent:
+
+```yaml
+classes:
+  Person:
+    is_a: Entity
+    mixins: [Agent]
+  Service:
+    is_a: Entity
+    mixins: [Agent]
+  Drug:
+    is_a: Entity
+    # no Agent mixin; drugs don't act
+```
+
+The legitimate pushback: you can no longer write `SELECT * WHERE type = Agent`. For a system whose whole point is one-vocabulary queries, that's a real cost. The library pays it back two ways:
+
+- `OntologyRegistry.types_with_mixin("Agent")` returns every type that carries the mixin, including subtypes of types that do. Use it to enumerate schema-level "what can act?"
+- `KnowledgeGraph.query(mixin="Agent")` returns every node whose concrete type carries the mixin. The filter is AND with `entity_type` and any property filters, so `kg.query(entity_type="Person", mixin="Agent")` works.
+
+```python
+>>> reg.types_with_mixin("Agent")
+['Person', 'Service']
+
+>>> kg.query(mixin="Agent")
+[{'id': 'alice', 'type': 'Person', ...},
+ {'id': 'svc-1', 'type': 'Service', ...}]
+```
+
+You get the queryability back without giving up the ontological correctness.
+
+---
+
 ## Layer 1: The Graph (What DOES Exist)
 
 The Knowledge Graph is a NetworkX MultiDiGraph (directed, allows multiple edges between the same pair) wrapped with write-time validation.
@@ -243,9 +346,18 @@ fp_A = {type:Drug,            fp_B = {type:Drug,
            replays them when B upgrades to v2.
 ```
 
-**What's excluded from the fingerprint.** Required/optional flags are deliberately left out because additive-only permits relaxation (required → optional) which is a valid superset change that doesn't affect data compatibility. Tightening (optional → required) is not an additive change and isn't supported under this guarantee.
+**What's excluded from the default fingerprint, and why that matters.** Required/optional flags are deliberately left out, because additive-only evolution permits relaxation (required → optional) and the default check is meant to answer the producer question: "can data produced under their schema flow safely into mine?" Under relaxation, yes, a newer producer can send data without a field the older schema marked required, and the sync doesn't care (the consumer's validator will).
 
-**19 tests** verify: hash determinism across two loads, hash is 64-char hex (SHA-256), distinct schemas produce distinct hashes, caching, fingerprint content (types, mixins, domain types, enum values, serialization), strict-superset relationships (root ⊂ cyp450, root ⊂ attack), divergence (cyp450 and attack share root but diverge on domain types), and all four `check_compatibility` outcomes.
+That's the soft spot. Relaxation is additive for the producer and subtractive for the consumer, because code written against the old schema may have hardcoded the field's presence. The library surfaces this through a second pair of APIs:
+
+- `OntologyRegistry.strict_fingerprint()` includes required-constraint facts (one per required slot usage).
+- `OntologyRegistry.check_compatibility_strict()` uses it.
+
+A relaxation breaks the strict superset check: the schema that relaxed has fewer required-facts, so its strict fingerprint is no longer a superset. The strict check returns "divergent" where the lax check would have returned "superset". Use the strict variant when your downstream code relies on presence assumptions.
+
+Tightening (optional → required) is not an additive change and isn't supported under either guarantee.
+
+**Tests** verify: hash determinism, SHA-256 format, distinct schemas produce distinct hashes, caching, fingerprint content (types, mixins, enum values, serialization), strict-superset relationships (root ⊂ cyp450, root ⊂ attack), divergence (cyp450 and attack share root but diverge on domain types), all four `check_compatibility` outcomes, and that strict fingerprints catch constraint relaxation.
 
 ---
 

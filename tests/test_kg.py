@@ -369,3 +369,70 @@ class TestAttackDomain:
         # but Drug is only in cyp450.yaml). This tests domain isolation.
         op = attack_kg.create_entity("Drug", "drug-1")
         assert op.op_status == OpStatus.REJECTED
+
+
+# --- Mixin filtering in queries ---
+
+
+class TestMixinQuery:
+    def test_query_by_mixin(self, tmp_path):
+        """kg.query(mixin=...) returns every node whose type carries the mixin."""
+        import textwrap, shutil
+        schema = tmp_path / "agent_domain.yaml"
+        schema.write_text(textwrap.dedent("""
+            id: https://example.org/schema/agent_test
+            name: agent_test
+            imports: [malleus, linkml:types]
+            prefixes:
+              linkml: https://w3id.org/linkml/
+            classes:
+              Person:
+                is_a: Entity
+                mixins: [Agent]
+              Service:
+                is_a: Entity
+                mixins: [Agent]
+              Drug:
+                is_a: Entity
+        """).strip())
+        shutil.copy(ONTOLOGY_DIR / "malleus.yaml", tmp_path / "malleus.yaml")
+
+        reg = OntologyRegistry(schema)
+        kg = KnowledgeGraph(reg)
+
+        kg.create_entity("Person", "alice", {"name": "Alice"})
+        kg.create_entity("Service", "svc-1", {"name": "web-api"})
+        kg.create_entity("Drug", "drug-x", {"name": "Aspirin"})
+
+        agents = kg.query(mixin="Agent")
+        agent_ids = {a["id"] for a in agents}
+        assert agent_ids == {"alice", "svc-1"}
+        assert "drug-x" not in agent_ids
+
+    def test_query_mixin_and_type_combine(self, tmp_path):
+        """mixin and entity_type filters both apply (AND)."""
+        import textwrap, shutil
+        schema = tmp_path / "agent_domain.yaml"
+        schema.write_text(textwrap.dedent("""
+            id: https://example.org/schema/agent_test
+            name: agent_test
+            imports: [malleus, linkml:types]
+            prefixes:
+              linkml: https://w3id.org/linkml/
+            classes:
+              Person:
+                is_a: Entity
+                mixins: [Agent]
+              Service:
+                is_a: Entity
+                mixins: [Agent]
+        """).strip())
+        shutil.copy(ONTOLOGY_DIR / "malleus.yaml", tmp_path / "malleus.yaml")
+
+        reg = OntologyRegistry(schema)
+        kg = KnowledgeGraph(reg)
+        kg.create_entity("Person", "alice", {"name": "Alice"})
+        kg.create_entity("Service", "svc-1", {"name": "web-api"})
+
+        persons_that_are_agents = kg.query(entity_type="Person", mixin="Agent")
+        assert {p["id"] for p in persons_that_are_agents} == {"alice"}

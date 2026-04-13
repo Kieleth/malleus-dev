@@ -283,13 +283,22 @@ class KnowledgeGraph:
 
     # --- Read operations ---
 
-    def query(self, entity_type: str | None = None, **filters) -> list[dict]:
-        """Query entities/relations matching type and filter criteria."""
+    def query(self, entity_type: str | None = None, mixin: str | None = None, **filters) -> list[dict]:
+        """Query entities by type, mixin, and property filters.
+
+        `entity_type` matches the node's concrete type or any subtype. `mixin`
+        matches nodes whose type (or any is_a ancestor) declares the mixin. Use
+        mixin to enumerate cross-cutting traits like Agent without having to
+        union across concrete classes.
+        """
         results = []
         for node_id, data in self._graph.nodes(data=True):
-            if entity_type and data.get("type") != entity_type:
-                if entity_type and not self._registry.is_subtype_of(data.get("type", ""), entity_type):
+            node_type = data.get("type", "")
+            if entity_type and node_type != entity_type:
+                if not self._registry.is_subtype_of(node_type, entity_type):
                     continue
+            if mixin and not self._registry.has_mixin(node_type, mixin):
+                continue
             if all(data.get(k) == v for k, v in filters.items()):
                 results.append({"id": node_id, **data})
         return results

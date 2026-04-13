@@ -77,6 +77,8 @@ Under additive-only evolution (add types, enum values, or slots; relax required 
 
 This matters in fleets running rolling updates. Without it, CRDT sync during the upgrade window can silently drop properties the older node doesn't recognize. With it, the older node says "I can't validate this yet, hold it" and nothing is lost.
 
+One caveat, worth saying plainly. Relaxing a slot from required to optional is additive on the producer side (you're loosening a guarantee) but subtractive on the consumer side (code that hardcoded the field's presence will crash when a new producer omits it). The default `check_compatibility()` answers the producer question: can data flow safely between us? For the consumer question, use `strict_fingerprint()` and `check_compatibility_strict()`, which include required-constraint facts. A relaxation shows up there as divergence, surfacing the risk that would otherwise stay hidden.
+
 ## Domain extensions
 
 Two examples ship with the library. Write your own the same way:
