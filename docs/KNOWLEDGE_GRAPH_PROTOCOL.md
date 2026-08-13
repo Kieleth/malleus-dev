@@ -67,6 +67,10 @@ When you create an entity, the type must exist in the ontology. When you create 
 
 This happens at the point of the call. Invalid writes are rejected immediately. No invalid data ever materializes in the graph.
 
+Relation predicates with different endpoint signatures use different LinkML classes. A concrete relation fixes `relation_type` with `equals_string` and narrows `source_id` and `target_id` to class ranges. A generic relation enum cannot express this contract and is not accepted as a substitute.
+
+`COMMITTED` is the result of this structural boundary only. It does not establish truth, epistemic acceptance, policy approval, or authorization to execute an action.
+
 ### 3. The ontology is immutable after construction
 
 Once the KG is born with its ontology, the ontology cannot be changed in ways that invalidate existing data. It can only grow monotonically:
@@ -101,7 +105,7 @@ Both outputs come from the same YAML source of truth. They are two views of the 
 
 The KG accepts both:
 - **Typed API**: `kg.createEntity(EntityType::HUMANOID)` — compile-time safe, impossible to pass an invalid type
-- **String API**: `kg.createEntity("Humanoid")` — for dynamic/data-driven use (file loading, LLM commands, scripting), validated against the registry at runtime
+- **String API**: `kg.createEntity("Humanoid")` — for dynamic/data-driven use (file loading, Shelob commands, scripting), validated against the registry at runtime
 
 Both paths produce the same result. The string API exists for flexibility; the typed API exists for safety. Neither can create invalid data.
 

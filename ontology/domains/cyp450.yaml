@@ -125,20 +125,86 @@ classes:
     description: A product of drug metabolism via a CYP enzyme.
     class_uri: cyp450:Metabolite
 
-  DrugRelation:
+  SubstrateOfRelation:
     is_a: Relation
-    description: >-
-      A typed relationship between drug-domain entities.
-      Constrains relation_type to DrugRelationType enum.
+    description: A Drug is metabolized by an Enzyme.
+    slot_usage:
+      relation_type:
+        range: DrugRelationType
+        required: true
+        equals_string: SUBSTRATE_OF
+      source_id:
+        range: Drug
+      target_id:
+        range: Enzyme
+    class_uri: cyp450:SubstrateOfRelation
+
+  InhibitsRelation:
+    is_a: Relation
+    description: A Drug inhibits an Enzyme.
     slots:
       - inhibition_strength
+      - mechanism
+    slot_usage:
+      relation_type:
+        range: DrugRelationType
+        required: true
+        equals_string: INHIBITS
+      source_id:
+        range: Drug
+      target_id:
+        range: Enzyme
+    class_uri: cyp450:InhibitsRelation
+
+  InducesRelation:
+    is_a: Relation
+    description: A Drug induces an Enzyme.
+    slots:
+      - inhibition_strength
+      - mechanism
+    slot_usage:
+      relation_type:
+        range: DrugRelationType
+        required: true
+        equals_string: INDUCES
+      source_id:
+        range: Drug
+      target_id:
+        range: Enzyme
+    class_uri: cyp450:InducesRelation
+
+  ProducesRelation:
+    is_a: Relation
+    description: Metabolism of a Drug produces a Metabolite.
+    slots:
+      - mechanism
+    slot_usage:
+      relation_type:
+        range: DrugRelationType
+        required: true
+        equals_string: PRODUCES
+      source_id:
+        range: Drug
+      target_id:
+        range: Metabolite
+    class_uri: cyp450:ProducesRelation
+
+  InteractsWithRelation:
+    is_a: Relation
+    description: A Drug interacts with another Drug through a CYP mechanism.
+    slots:
       - interaction_effect
       - mechanism
     slot_usage:
       relation_type:
         range: DrugRelationType
         required: true
-    class_uri: cyp450:DrugRelation
+        equals_string: INTERACTS_WITH
+      source_id:
+        range: Drug
+      target_id:
+        range: Drug
+    class_uri: cyp450:InteractsWithRelation
 
   DrugSignal:
     is_a: Signal

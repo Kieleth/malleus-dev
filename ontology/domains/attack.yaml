@@ -32,6 +32,8 @@ enums:
         description: A defensive measure that reduces technique effectiveness.
       DATA_SOURCE:
         description: A source of telemetry for detecting a technique.
+      CAPABILITY:
+        description: A capability required or produced by a technique.
 
   Tactic:
     description: >-
@@ -133,16 +135,112 @@ classes:
       - attack_id
     class_uri: attack:Mitigation
 
-  AttackRelation:
+  DataSource:
+    is_a: Entity
+    description: A source of telemetry used to detect a Technique.
+    class_uri: attack:DataSource
+
+  Capability:
+    is_a: Entity
+    description: A capability required or produced by a Technique.
+    class_uri: attack:Capability
+
+  BelongsToTacticRelation:
     is_a: Relation
-    description: A typed relationship between ATT&CK entities.
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: BELONGS_TO_TACTIC
+      source_id:
+        range: Technique
+      target_id:
+        range: TacticEntity
+    class_uri: attack:BelongsToTacticRelation
+
+  SubtechniqueOfRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: SUBTECHNIQUE_OF
+      source_id:
+        range: Technique
+      target_id:
+        range: Technique
+    class_uri: attack:SubtechniqueOfRelation
+
+  RequiresCapabilityRelation:
+    is_a: Relation
     slots:
       - capability
     slot_usage:
       relation_type:
         range: AttackRelationType
         required: true
-    class_uri: attack:AttackRelation
+        equals_string: REQUIRES_CAPABILITY
+      source_id:
+        range: Technique
+      target_id:
+        range: Capability
+    class_uri: attack:RequiresCapabilityRelation
+
+  ProvidesCapabilityRelation:
+    is_a: Relation
+    slots:
+      - capability
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: PROVIDES_CAPABILITY
+      source_id:
+        range: Technique
+      target_id:
+        range: Capability
+    class_uri: attack:ProvidesCapabilityRelation
+
+  MitigatesRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: MITIGATES
+      source_id:
+        range: Mitigation
+      target_id:
+        range: Technique
+    class_uri: attack:MitigatesRelation
+
+  DetectsRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: DETECTS
+      source_id:
+        range: DataSource
+      target_id:
+        range: Technique
+    class_uri: attack:DetectsRelation
+
+  ChainLinkRelation:
+    is_a: Relation
+    slots:
+      - capability
+    slot_usage:
+      relation_type:
+        range: AttackRelationType
+        required: true
+        equals_string: CHAIN_LINK
+      source_id:
+        range: Technique
+      target_id:
+        range: Technique
+    class_uri: attack:ChainLinkRelation
 
   AttackSignal:
     is_a: Signal

@@ -46,9 +46,17 @@ imports:
 ```
 
 Malleus must be resolvable. Options:
-- Symlink `malleus.yaml` into your schema directory
-- Add malleus to your LinkML import path
-- Use a local imports map
+- Place or symlink `malleus.yaml` into the schema directory or one of its parents.
+- Pass an explicit local map for an alias, CURIE, or URI import:
+
+```python
+registry = OntologyRegistry(
+    "schema/your_project.yaml",
+    import_map={"malleus:root": "vendor/malleus-0.4.0.yaml"},
+)
+```
+
+Unresolved imports fail registry construction. Malleus never ignores them.
 
 ### Step 2: Extend, don't redefine
 
@@ -115,6 +123,30 @@ classes:
 
 Signals are dependent continuants — they must reference a bearer via `bearer_id`. They are computed, not asserted: the `algorithm` slot names the computation, and `computed_at` records when the value was last derived. The value is ephemeral — recomputable from the underlying Events at any time.
 
+Your domain relations use one concrete class per predicate. The class fixes the predicate and narrows both endpoint ranges:
+
+```yaml
+enums:
+  MyRelationType:
+    permissible_values:
+      DEPENDS_ON: {}
+
+classes:
+  DependsOnRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: MyRelationType
+        required: true
+        equals_string: DEPENDS_ON
+      source_id:
+        range: MyDomainThing
+      target_id:
+        range: MyDomainThing
+```
+
+Do not multiplex predicates with different endpoint signatures through one generic relation class. Concrete classes make the source and target contract inspectable and enforceable.
+
 ### Step 3: Constrain loose slots
 
 Malleus intentionally leaves `event_type`, `agent_type`, `relation_type`, and `signal_type` as strings. Your project MUST constrain these to project-specific enums:
@@ -138,7 +170,8 @@ classes:
 This is the three-layer pattern in action:
 - Layer 1 (Malleus): vocabulary with string ranges
 - Layer 2 (your project): semantic constraints via enums and domain/range
-- Layer 3 (your application): cardinality, required fields, closed shapes
+- Layer 3 (Malleus runtime): required fields, closed properties, value shape, identifiers, and endpoint ranges
+- Layer 4 (your application): domain rules, evidence policy, acceptance, and authorization
 
 ### Step 4: Generate code
 
@@ -175,6 +208,8 @@ gen-shacl schema/your_project.yaml  # generate SHACL shapes
 4. **Mixins for cross-cutting concerns.** Don't force traits into the class hierarchy. If something applies across unrelated classes (like "has a position" or "has health"), make it a mixin in your project schema.
 
 5. **Keep it shallow.** The research says: a class with a single subclass is suspicious. Don't create depth for the sake of depth.
+
+6. **Treat `COMMITTED` narrowly.** It means a write passed structural validation and materialized. It does not establish truth, epistemic acceptance, or permission to act.
 
 ## Current adopters
 

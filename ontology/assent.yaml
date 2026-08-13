@@ -1,0 +1,953 @@
+id: https://malleus.dev/schema/assent
+name: malleus_assent
+version: 0.1.0
+title: Malleus Assent Protocol Ontology
+description: >-
+  Structurally enforced records for proposed knowledge, monitoring,
+  epistemic decisions, action authorization, requests, revision, execution,
+  outcomes, and state transitions. These records do not establish truth.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  assent: https://malleus.dev/schema/assent/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  AssessmentOutcome:
+    permissible_values:
+      SATISFIED:
+      VIOLATED:
+      UNKNOWN:
+
+  AssessmentKind:
+    permissible_values:
+      TYPE:
+      EVIDENCE_COMPLETENESS:
+      CONFLICT:
+      UNCERTAINTY:
+      LOGICAL:
+      TEMPORAL:
+      AUTHORITY:
+      MONITOR_FAILURE:
+
+  EpistemicVerdict:
+    permissible_values:
+      ACCEPT:
+      REJECT:
+      DEFER:
+      CONTEST:
+
+  AuthorizationVerdict:
+    permissible_values:
+      AUTHORIZE:
+      BLOCK:
+      CLARIFY:
+
+  RequestState:
+    permissible_values:
+      OPEN:
+      FULFILLED:
+      CANCELLED:
+
+  EvidencePolarity:
+    permissible_values:
+      SUPPORTS:
+      CONTRADICTS:
+      QUALIFIES:
+
+  ExecutionStatus:
+    permissible_values:
+      STARTED:
+      SUCCEEDED:
+      FAILED:
+      ABORTED:
+
+  ArtifactKind:
+    permissible_values:
+      MONITOR_SPECIFICATION:
+      EPISTEMIC_POLICY:
+      AUTHORIZATION_POLICY:
+      RULE_SET:
+      EVIDENCE_CONTRACT:
+      CONFLICT_RULE:
+      UNCERTAINTY_CONTRACT:
+      TEMPORAL_CONTRACT:
+      AUTHORITY_GRANT:
+
+classes:
+  ProtocolRecord:
+    abstract: true
+    is_a: Entity
+    description: >-
+      Immutable record produced by an identified activity. The fields encode
+      record provenance but are not a claim of formal PROV-O conformance.
+    slots:
+      - content_hash
+      - generation_event_id
+      - generated_at
+      - responsible_actor_id
+      - responsible_role
+      - source_record_ids
+    slot_usage:
+      content_hash:
+        required: true
+      generation_event_id:
+        required: true
+      generated_at:
+        required: true
+      responsible_actor_id:
+        required: true
+      responsible_role:
+        required: true
+
+  ProtocolArtifact:
+    is_a: ProtocolRecord
+    slots:
+      - artifact_kind
+      - artifact_version
+      - artifact_hash
+    slot_usage:
+      artifact_kind:
+        required: true
+      artifact_version:
+        required: true
+      artifact_hash:
+        required: true
+
+  AuthorityGrant:
+    is_a: ProtocolArtifact
+    slots:
+      - grantor_actor_id
+      - grantee_actor_id
+      - permitted_action_types
+      - grant_valid_from
+      - grant_valid_to
+    slot_usage:
+      artifact_kind:
+        equals_string: AUTHORITY_GRANT
+      grantor_actor_id:
+        required: true
+      grantee_actor_id:
+        required: true
+      permitted_action_types:
+        required: true
+      grant_valid_from:
+        required: true
+
+  ProposedSubgraph:
+    is_a: ProtocolRecord
+    slots:
+      - revision
+      - proposal_key
+      - revises_proposal_id
+      - base_acceptance_head
+      - member_content_hashes
+      - claim_version_ids
+      - evidence_ids
+      - evidence_assertion_ids
+      - action_proposal_ids
+    slot_usage:
+      revision:
+        required: true
+      proposal_key:
+        required: true
+      base_acceptance_head:
+        required: true
+      member_content_hashes:
+        required: true
+
+  ClaimVersion:
+    is_a: ProtocolRecord
+    slots:
+      - claim_key
+      - revision
+      - revises_claim_version_id
+      - statement
+      - domain_valid_from
+      - domain_valid_to
+      - dependency_ids
+    slot_usage:
+      claim_key:
+        required: true
+      revision:
+        required: true
+      statement:
+        required: true
+      domain_valid_from:
+        required: true
+
+  Evidence:
+    is_a: ProtocolRecord
+    slots:
+      - evidence_kind
+      - source_version_id
+      - locator
+      - request_id
+    slot_usage:
+      evidence_kind:
+        required: true
+      source_version_id:
+        required: true
+      locator:
+        required: true
+
+  EvidenceAssertion:
+    is_a: ProtocolRecord
+    slots:
+      - claim_version_id
+      - evidence_id
+      - evidence_polarity
+      - rationale
+    slot_usage:
+      claim_version_id:
+        required: true
+      evidence_id:
+        required: true
+      evidence_polarity:
+        required: true
+      rationale:
+        required: true
+
+  ActionProposal:
+    abstract: true
+    is_a: ProtocolRecord
+    description: Domain ontologies define concrete action payload types.
+    slots:
+      - action_type
+      - action_payload_hash
+      - action_key
+      - revision
+      - revises_action_proposal_id
+    slot_usage:
+      action_type:
+        required: true
+      action_payload_hash:
+        required: true
+      action_key:
+        required: true
+      revision:
+        required: true
+
+  Assessment:
+    abstract: true
+    is_a: ProtocolRecord
+    slots:
+      - proposal_id
+      - proposal_content_hash
+      - base_acceptance_head
+      - assessment_kind
+      - assessment_outcome
+      - monitor_id
+      - monitor_version
+      - monitor_hash
+      - monitor_failure_id
+      - input_record_ids
+      - reason_codes
+      - rationale
+    slot_usage:
+      proposal_id:
+        required: true
+      proposal_content_hash:
+        required: true
+      base_acceptance_head:
+        required: true
+      assessment_kind:
+        required: true
+      assessment_outcome:
+        required: true
+      monitor_id:
+        required: true
+      monitor_version:
+        required: true
+      monitor_hash:
+        required: true
+      input_record_ids:
+        required: true
+      reason_codes:
+        required: true
+      rationale:
+        required: true
+
+  TypeAssessment:
+    is_a: Assessment
+    slot_usage:
+      assessment_kind:
+        equals_string: TYPE
+
+  EvidenceCompletenessAssessment:
+    is_a: Assessment
+    slots:
+      - evidence_contract_id
+      - evidence_contract_hash
+      - missing_requirement_ids
+    slot_usage:
+      assessment_kind:
+        equals_string: EVIDENCE_COMPLETENESS
+      evidence_contract_id:
+        required: true
+      evidence_contract_hash:
+        required: true
+
+  ConflictAssessment:
+    is_a: Assessment
+    slots:
+      - conflicting_assertion_ids
+      - conflict_rule_id
+      - conflict_rule_hash
+    slot_usage:
+      assessment_kind:
+        equals_string: CONFLICT
+      conflicting_assertion_ids:
+        required: true
+      conflict_rule_id:
+        required: true
+      conflict_rule_hash:
+        required: true
+
+  UncertaintyAssessment:
+    is_a: Assessment
+    slots:
+      - uncertainty_contract_id
+      - uncertainty_contract_hash
+    slot_usage:
+      assessment_kind:
+        equals_string: UNCERTAINTY
+      uncertainty_contract_id:
+        required: true
+      uncertainty_contract_hash:
+        required: true
+
+  LogicalAssessment:
+    is_a: Assessment
+    slots:
+      - checked_rule_ids
+      - violated_rule_ids
+      - proof_record_ids
+      - ruleset_id
+      - ruleset_hash
+    slot_usage:
+      assessment_kind:
+        equals_string: LOGICAL
+      checked_rule_ids:
+        required: true
+      ruleset_id:
+        required: true
+      ruleset_hash:
+        required: true
+
+  TemporalAssessment:
+    is_a: Assessment
+    slots:
+      - temporal_contract_id
+      - temporal_contract_hash
+    slot_usage:
+      assessment_kind:
+        equals_string: TEMPORAL
+      temporal_contract_id:
+        required: true
+      temporal_contract_hash:
+        required: true
+
+  AuthorityAssessment:
+    is_a: Assessment
+    slots:
+      - action_proposal_id
+      - evaluated_actor_id
+      - authority_policy_id
+      - authority_policy_hash
+      - checked_policy_predicates
+      - violated_policy_predicates
+    slot_usage:
+      assessment_kind:
+        equals_string: AUTHORITY
+      action_proposal_id:
+        required: true
+      evaluated_actor_id:
+        required: true
+      authority_policy_id:
+        required: true
+      authority_policy_hash:
+        required: true
+      checked_policy_predicates:
+        required: true
+
+  MonitorFailure:
+    is_a: ProtocolRecord
+    description: A monitoring failure report, never negative evidence.
+    slots:
+      - proposal_id
+      - proposal_content_hash
+      - base_acceptance_head
+      - monitor_id
+      - monitor_version
+      - monitor_hash
+      - failed_assessment_kind
+      - failure_category
+      - error_code
+      - error_message
+    slot_usage:
+      proposal_id:
+        required: true
+      proposal_content_hash:
+        required: true
+      base_acceptance_head:
+        required: true
+      monitor_id:
+        required: true
+      monitor_version:
+        required: true
+      monitor_hash:
+        required: true
+      failed_assessment_kind:
+        required: true
+      failure_category:
+        required: true
+      error_code:
+        required: true
+      error_message:
+        required: true
+
+  Decision:
+    abstract: true
+    is_a: ProtocolRecord
+    slots:
+      - base_acceptance_head
+      - policy_id
+      - policy_hash
+      - rationale_codes
+      - rationale
+    slot_usage:
+      base_acceptance_head:
+        required: true
+      policy_id:
+        required: true
+      policy_hash:
+        required: true
+      rationale_codes:
+        required: true
+      rationale:
+        required: true
+
+  EpistemicDecision:
+    is_a: Decision
+    slots:
+      - proposal_id
+      - proposal_content_hash
+      - epistemic_verdict
+      - assessment_ids
+      - evidence_assertion_ids
+      - request_ids
+      - claim_revision_ids
+      - ruleset_id
+      - ruleset_hash
+    slot_usage:
+      proposal_id:
+        required: true
+      proposal_content_hash:
+        required: true
+      epistemic_verdict:
+        required: true
+      assessment_ids:
+        required: true
+      ruleset_id:
+        required: true
+      ruleset_hash:
+        required: true
+
+  AuthorizationDecision:
+    is_a: Decision
+    slots:
+      - action_proposal_id
+      - action_content_hash
+      - authorization_verdict
+      - epistemic_decision_ids
+      - relied_on_claim_version_ids
+      - authority_assessment_ids
+      - authority_grant_id
+      - authority_grant_hash
+      - authorized_actor_id
+      - authorization_valid_from
+      - authorization_valid_to
+    slot_usage:
+      action_proposal_id:
+        required: true
+      action_content_hash:
+        required: true
+      authorization_verdict:
+        required: true
+      epistemic_decision_ids:
+        required: true
+      relied_on_claim_version_ids:
+        required: true
+      authority_assessment_ids:
+        required: true
+      authority_grant_id:
+        required: true
+      authority_grant_hash:
+        required: true
+      authorized_actor_id:
+        required: true
+      authorization_valid_from:
+        required: true
+
+  Request:
+    abstract: true
+    is_a: ProtocolRecord
+    slots:
+      - triggering_decision_id
+      - target_proposal_id
+      - request_contract_id
+      - request_contract_hash
+      - requested_by_actor_id
+      - intended_recipient_id
+      - intended_role
+      - issued_at
+      - expires_at
+      - request_state
+    slot_usage:
+      triggering_decision_id:
+        required: true
+      target_proposal_id:
+        required: true
+      request_contract_id:
+        required: true
+      request_contract_hash:
+        required: true
+      requested_by_actor_id:
+        required: true
+      intended_role:
+        required: true
+      issued_at:
+        required: true
+      request_state:
+        required: true
+        equals_string: OPEN
+
+  EvidenceRequest:
+    is_a: Request
+
+  HumanReviewRequest:
+    is_a: Request
+    slots:
+      - review_question
+      - reviewer_authority_requirement
+    slot_usage:
+      review_question:
+        required: true
+      reviewer_authority_requirement:
+        required: true
+
+  ReviewReport:
+    is_a: ProtocolRecord
+    slots:
+      - request_id
+      - reviewer_id
+      - review_outcome
+      - rationale
+    slot_usage:
+      request_id:
+        required: true
+      reviewer_id:
+        required: true
+      review_outcome:
+        required: true
+      rationale:
+        required: true
+
+  ClaimRevision:
+    is_a: ProtocolRecord
+    slots:
+      - replaced_claim_version_id
+      - replacement_claim_version_id
+      - triggering_decision_id
+      - revision_justification
+      - dependency_ids
+      - replacement_valid_from
+      - replaced_valid_to
+    slot_usage:
+      replaced_claim_version_id:
+        required: true
+      replacement_claim_version_id:
+        required: true
+      triggering_decision_id:
+        required: true
+      revision_justification:
+        required: true
+      replacement_valid_from:
+        required: true
+      replaced_valid_to:
+        required: true
+
+  TransitionRecord:
+    is_a: ProtocolRecord
+    slots:
+      - transition_subject_id
+      - from_state
+      - to_state
+      - triggering_record_id
+      - ledger_event_id
+      - sequence
+      - transition_time
+    slot_usage:
+      transition_subject_id:
+        required: true
+      from_state:
+        required: true
+      to_state:
+        required: true
+      triggering_record_id:
+        required: true
+      ledger_event_id:
+        required: true
+      sequence:
+        required: true
+      transition_time:
+        required: true
+
+  ActionExecution:
+    is_a: ProtocolRecord
+    slots:
+      - action_proposal_id
+      - action_content_hash
+      - authorization_decision_id
+      - executor_id
+      - base_acceptance_head
+      - execution_started_at
+      - execution_ended_at
+      - execution_status
+    slot_usage:
+      action_proposal_id:
+        required: true
+      action_content_hash:
+        required: true
+      authorization_decision_id:
+        required: true
+      executor_id:
+        required: true
+      base_acceptance_head:
+        required: true
+      execution_started_at:
+        required: true
+      execution_status:
+        required: true
+
+  OutcomeObservation:
+    is_a: ProtocolRecord
+    slots:
+      - execution_id
+      - observer_id
+      - observation_type
+      - observed_at
+      - evidence_ids
+    slot_usage:
+      execution_id:
+        required: true
+      observer_id:
+        required: true
+      observation_type:
+        required: true
+      observed_at:
+        required: true
+      evidence_ids:
+        required: true
+
+slots:
+  content_hash:
+    range: string
+  generation_event_id:
+    range: string
+  generated_at:
+    range: datetime
+  responsible_actor_id:
+    range: string
+  responsible_role:
+    range: string
+  source_record_ids:
+    range: string
+    multivalued: true
+
+  revision:
+    range: integer
+    minimum_value: 1
+  revises_proposal_id:
+    range: string
+  proposal_key:
+    range: string
+  base_acceptance_head:
+    range: string
+  member_content_hashes:
+    range: string
+    multivalued: true
+  claim_version_ids:
+    range: string
+    multivalued: true
+  evidence_ids:
+    range: string
+    multivalued: true
+  evidence_assertion_ids:
+    range: string
+    multivalued: true
+  action_proposal_ids:
+    range: string
+    multivalued: true
+
+  claim_key:
+    range: string
+  revises_claim_version_id:
+    range: string
+  statement:
+    range: string
+  domain_valid_from:
+    range: datetime
+  domain_valid_to:
+    range: datetime
+  dependency_ids:
+    range: string
+    multivalued: true
+
+  evidence_kind:
+    range: string
+  source_version_id:
+    range: string
+  locator:
+    range: string
+  request_id:
+    range: string
+  claim_version_id:
+    range: string
+  evidence_id:
+    range: string
+  evidence_polarity:
+    range: EvidencePolarity
+
+  action_type:
+    range: string
+  action_payload_hash:
+    range: string
+  action_key:
+    range: string
+  revises_action_proposal_id:
+    range: string
+  action_proposal_id:
+    range: string
+
+  proposal_id:
+    range: string
+  proposal_content_hash:
+    range: string
+  assessment_kind:
+    range: AssessmentKind
+  assessment_outcome:
+    range: AssessmentOutcome
+  monitor_id:
+    range: string
+  monitor_version:
+    range: string
+  monitor_hash:
+    range: string
+  monitor_failure_id:
+    range: string
+  ruleset_id:
+    range: string
+  ruleset_hash:
+    range: string
+  input_record_ids:
+    range: string
+    multivalued: true
+  reason_codes:
+    range: string
+    multivalued: true
+  rationale:
+    range: string
+
+  evidence_contract_id:
+    range: string
+  evidence_contract_hash:
+    range: string
+  missing_requirement_ids:
+    range: string
+    multivalued: true
+  conflicting_assertion_ids:
+    range: string
+    multivalued: true
+  conflict_rule_id:
+    range: string
+  conflict_rule_hash:
+    range: string
+  uncertainty_contract_id:
+    range: string
+  uncertainty_contract_hash:
+    range: string
+  checked_rule_ids:
+    range: string
+    multivalued: true
+  violated_rule_ids:
+    range: string
+    multivalued: true
+  proof_record_ids:
+    range: string
+    multivalued: true
+  temporal_contract_id:
+    range: string
+  temporal_contract_hash:
+    range: string
+  evaluated_actor_id:
+    range: string
+  authority_policy_id:
+    range: string
+  authority_policy_hash:
+    range: string
+  checked_policy_predicates:
+    range: string
+    multivalued: true
+  violated_policy_predicates:
+    range: string
+    multivalued: true
+  failed_assessment_kind:
+    range: AssessmentKind
+  failure_category:
+    range: string
+  error_code:
+    range: string
+  error_message:
+    range: string
+
+  policy_id:
+    range: string
+  policy_hash:
+    range: string
+  rationale_codes:
+    range: string
+    multivalued: true
+  epistemic_verdict:
+    range: EpistemicVerdict
+  assessment_ids:
+    range: string
+    multivalued: true
+  request_ids:
+    range: string
+    multivalued: true
+  claim_revision_ids:
+    range: string
+    multivalued: true
+  action_content_hash:
+    range: string
+  authorization_verdict:
+    range: AuthorizationVerdict
+  epistemic_decision_ids:
+    range: string
+    multivalued: true
+  relied_on_claim_version_ids:
+    range: string
+    multivalued: true
+  authority_assessment_ids:
+    range: string
+    multivalued: true
+  authority_grant_id:
+    range: string
+  authority_grant_hash:
+    range: string
+  authorized_actor_id:
+    range: string
+  authorization_valid_from:
+    range: datetime
+  authorization_valid_to:
+    range: datetime
+
+  triggering_decision_id:
+    range: string
+  target_proposal_id:
+    range: string
+  request_contract_id:
+    range: string
+  request_contract_hash:
+    range: string
+  requested_by_actor_id:
+    range: string
+  intended_recipient_id:
+    range: string
+  intended_role:
+    range: string
+  issued_at:
+    range: datetime
+  expires_at:
+    range: datetime
+  request_state:
+    range: RequestState
+  review_question:
+    range: string
+  reviewer_authority_requirement:
+    range: string
+  reviewer_id:
+    range: string
+  review_outcome:
+    range: string
+
+  replaced_claim_version_id:
+    range: string
+  replacement_claim_version_id:
+    range: string
+  revision_justification:
+    range: string
+  replacement_valid_from:
+    range: datetime
+  replaced_valid_to:
+    range: datetime
+
+  transition_subject_id:
+    range: string
+  from_state:
+    range: string
+  to_state:
+    range: string
+  triggering_record_id:
+    range: string
+  ledger_event_id:
+    range: string
+  sequence:
+    range: integer
+    minimum_value: 1
+  transition_time:
+    range: datetime
+
+  authorization_decision_id:
+    range: string
+  executor_id:
+    range: string
+  execution_started_at:
+    range: datetime
+  execution_ended_at:
+    range: datetime
+  execution_status:
+    range: ExecutionStatus
+  execution_id:
+    range: string
+  observer_id:
+    range: string
+  observation_type:
+    range: string
+  observed_at:
+    range: datetime
+  artifact_kind:
+    range: ArtifactKind
+  artifact_version:
+    range: string
+  artifact_hash:
+    range: string
+  grantor_actor_id:
+    range: string
+  grantee_actor_id:
+    range: string
+  permitted_action_types:
+    range: string
+    multivalued: true
+  grant_valid_from:
+    range: datetime
+  grant_valid_to:
+    range: datetime

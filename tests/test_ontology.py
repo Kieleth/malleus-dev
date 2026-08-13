@@ -7,6 +7,7 @@ for distributed ontology convergence.
 """
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -14,12 +15,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from malleus.ontology import OntologyRegistry
+from malleus.ontology import OntologyError, OntologyRegistry
 
 ONTOLOGY_DIR = Path(__file__).parent.parent / "ontology"
 ROOT_SCHEMA = ONTOLOGY_DIR / "malleus.yaml"
 CYP450_SCHEMA = ONTOLOGY_DIR / "domains" / "cyp450.yaml"
 ATTACK_SCHEMA = ONTOLOGY_DIR / "domains" / "attack.yaml"
+PYPROJECT = ONTOLOGY_DIR.parent / "pyproject.toml"
 
 
 def run_linkml(command: str, schema: Path) -> subprocess.CompletedProcess:
@@ -32,6 +34,15 @@ def run_linkml(command: str, schema: Path) -> subprocess.CompletedProcess:
     return result
 
 
+def test_no_isolation_build_backend_is_declared_for_development():
+    """The development extra must install the configured build backend."""
+    text = PYPROJECT.read_text()
+    build_backend = re.search(r'requires = \["([a-zA-Z0-9_-]+)', text)
+    dev_extra = re.search(r'dev = \[(.+)\]', text)
+    assert build_backend and dev_extra
+    assert build_backend.group(1) in dev_extra.group(1)
+
+
 # --- Root Ontology ---
 
 
@@ -41,7 +52,7 @@ class TestRootOntology:
         with open(ROOT_SCHEMA) as f:
             schema = yaml.safe_load(f)
         assert schema["name"] == "malleus"
-        assert schema["version"] == "0.3.0"
+        assert schema["version"] == "0.4.0"
 
     def test_generates_json_schema(self):
         """Root schema compiles to JSON Schema."""
@@ -88,6 +99,12 @@ class TestRootOntology:
         assert slots["relation_type"].get("required") is True
         assert slots["source_id"].get("required") is True
         assert slots["target_id"].get("required") is True
+
+    def test_root_relation_is_abstract(self):
+        """Only concrete predicate classes can be materialized."""
+        with open(ROOT_SCHEMA) as f:
+            schema = yaml.safe_load(f)
+        assert schema["classes"]["Relation"]["abstract"] is True
 
     def test_signal_bearer_required(self):
         """Signal requires bearer_id (dependent continuant)."""
@@ -137,13 +154,24 @@ class TestCYP450Schema:
         expected = {"CYP1A2", "CYP2C9", "CYP2C19", "CYP2D6", "CYP2E1", "CYP3A4"}
         assert set(values.keys()) == expected
 
-    def test_drug_relation_constrains_type(self):
-        """DrugRelation constrains relation_type to DrugRelationType enum."""
+    def test_drug_relations_have_concrete_signatures(self):
+        """Each drug predicate has a concrete class and endpoint ranges."""
         with open(CYP450_SCHEMA) as f:
             schema = yaml.safe_load(f)
-        dr = schema["classes"]["DrugRelation"]
-        assert dr["is_a"] == "Relation"
-        assert dr["slot_usage"]["relation_type"]["range"] == "DrugRelationType"
+        expected = {
+            "SubstrateOfRelation": ("SUBSTRATE_OF", "Drug", "Enzyme"),
+            "InhibitsRelation": ("INHIBITS", "Drug", "Enzyme"),
+            "InducesRelation": ("INDUCES", "Drug", "Enzyme"),
+            "ProducesRelation": ("PRODUCES", "Drug", "Metabolite"),
+            "InteractsWithRelation": ("INTERACTS_WITH", "Drug", "Drug"),
+        }
+        assert "DrugRelation" not in schema["classes"]
+        for name, (predicate, source, target) in expected.items():
+            relation = schema["classes"][name]
+            assert relation["is_a"] == "Relation"
+            assert relation["slot_usage"]["relation_type"]["equals_string"] == predicate
+            assert relation["slot_usage"]["source_id"]["range"] == source
+            assert relation["slot_usage"]["target_id"]["range"] == target
 
     def test_drug_relation_types(self):
         """DrugRelationType has the expected interaction types."""
@@ -209,13 +237,25 @@ class TestAttackSchema:
         assert "RECONNAISSANCE" in values
         assert "IMPACT" in values
 
-    def test_attack_relation_constrains_type(self):
-        """AttackRelation constrains relation_type to AttackRelationType."""
+    def test_attack_relations_have_concrete_signatures(self):
+        """Every ATT&CK predicate has one concrete relation signature."""
         with open(ATTACK_SCHEMA) as f:
             schema = yaml.safe_load(f)
-        ar = schema["classes"]["AttackRelation"]
-        assert ar["is_a"] == "Relation"
-        assert ar["slot_usage"]["relation_type"]["range"] == "AttackRelationType"
+        expected = {
+            "BelongsToTacticRelation": ("BELONGS_TO_TACTIC", "Technique", "TacticEntity"),
+            "SubtechniqueOfRelation": ("SUBTECHNIQUE_OF", "Technique", "Technique"),
+            "RequiresCapabilityRelation": ("REQUIRES_CAPABILITY", "Technique", "Capability"),
+            "ProvidesCapabilityRelation": ("PROVIDES_CAPABILITY", "Technique", "Capability"),
+            "MitigatesRelation": ("MITIGATES", "Mitigation", "Technique"),
+            "DetectsRelation": ("DETECTS", "DataSource", "Technique"),
+            "ChainLinkRelation": ("CHAIN_LINK", "Technique", "Technique"),
+        }
+        assert "AttackRelation" not in schema["classes"]
+        for name, (predicate, source, target) in expected.items():
+            relation = schema["classes"][name]
+            assert relation["slot_usage"]["relation_type"]["equals_string"] == predicate
+            assert relation["slot_usage"]["source_id"]["range"] == source
+            assert relation["slot_usage"]["target_id"]["range"] == target
 
     def test_chain_link_in_relation_types(self):
         """CHAIN_LINK exists as a relation type (Attack Flow integration)."""
@@ -429,6 +469,26 @@ class TestStrictFingerprint:
         assert isinstance(s, list)
         assert s == sorted(s)
 
+    def test_effective_required_override_changes_strict_fingerprint(self, tmp_path):
+        required = tmp_path / "required.yaml"
+        relaxed = tmp_path / "relaxed.yaml"
+        template = (
+            "id: test\nname: test\n"
+            "classes:\n  Thing:\n    slots: [name]\n{usage}"
+            "slots:\n  name:\n    range: string\n    required: true\n"
+        )
+        required.write_text(template.format(usage=""))
+        relaxed.write_text(
+            template.format(
+                usage="    slot_usage:\n      name:\n        required: false\n"
+            )
+        )
+        required_registry = OntologyRegistry(required)
+        relaxed_registry = OntologyRegistry(relaxed)
+        fact = "type:Thing:effective:name:required"
+        assert fact in required_registry.strict_fingerprint()
+        assert fact not in relaxed_registry.strict_fingerprint()
+
 
 class TestStrictCompatibility:
     def test_identical_under_strict(self):
@@ -611,3 +671,184 @@ class TestMixinTracking:
         with_mx = OntologyRegistry(agent_domain).content_hash()
         without_mx = OntologyRegistry(no_mixin).content_hash()
         assert with_mx != without_mx
+
+
+# --- Strict loading and closed-world instance validation ---
+
+
+class TestStrictOntologyLoading:
+    @pytest.mark.parametrize(
+        "body",
+        [
+            "name: one\nname: two\n",
+            "classes:\n  Thing: {}\n  Thing: {abstract: true}\n",
+            "slots:\n  value: {range: string}\n  value: {range: integer}\n",
+            "enums:\n  Choice: {permissible_values: {A: {}, A: {}}}\n",
+            (
+                "slots:\n  value: {range: string}\n"
+                "classes:\n  Thing:\n    slot_usage:\n"
+                "      value: {required: true, required: false}\n"
+            ),
+        ],
+    )
+    def test_duplicate_yaml_keys_fail(self, tmp_path, body):
+        schema = tmp_path / "duplicate.yaml"
+        schema.write_text(f"id: duplicate\nname: duplicate\n{body}")
+        with pytest.raises(OntologyError, match="Duplicate YAML key"):
+            OntologyRegistry(schema)
+
+    def test_missing_import_fails_loudly(self, tmp_path):
+        schema = tmp_path / "broken.yaml"
+        schema.write_text("id: x\nname: broken\nimports: [missing]\n")
+        with pytest.raises(OntologyError, match="Cannot resolve import 'missing'"):
+            OntologyRegistry(schema)
+
+    def test_explicit_import_map_resolves_alias(self, tmp_path):
+        base = tmp_path / "base.yaml"
+        base.write_text("id: base\nname: base\nclasses:\n  Root: {}\n")
+        child = tmp_path / "child.yaml"
+        child.write_text(
+            "id: child\nname: child\nimports: ['vendor:base']\n"
+            "classes:\n  Child:\n    is_a: Root\n"
+        )
+        registry = OntologyRegistry(child, {"vendor:base": base})
+        assert registry.is_subtype_of("Child", "Root")
+
+    @pytest.mark.parametrize(
+        "section, definition",
+        [
+            ("classes", "  Shared: {}\n"),
+            ("slots", "  shared:\n    range: string\n"),
+            ("enums", "  Shared:\n    permissible_values: {A: {}}\n"),
+            ("types", "  Shared:\n    typeof: string\n"),
+        ],
+    )
+    def test_imported_name_collision_fails(self, tmp_path, section, definition):
+        base = tmp_path / "base.yaml"
+        base.write_text(f"id: base\nname: base\n{section}:\n{definition}")
+        child = tmp_path / "child.yaml"
+        child.write_text(
+            f"id: child\nname: child\nimports: [base]\n{section}:\n{definition}"
+        )
+        with pytest.raises(OntologyError, match="Duplicate"):
+            OntologyRegistry(child)
+
+    def test_unknown_range_fails_at_construction(self, tmp_path):
+        schema = tmp_path / "broken.yaml"
+        schema.write_text(
+            "id: broken\nname: broken\n"
+            "classes:\n  Thing:\n    slots: [value]\n"
+            "slots:\n  value:\n    range: MissingType\n"
+        )
+        with pytest.raises(OntologyError, match="unknown range 'MissingType'"):
+            OntologyRegistry(schema)
+
+    def test_generic_relation_subclass_is_rejected(self, tmp_path):
+        import shutil
+
+        shutil.copy(ROOT_SCHEMA, tmp_path / "malleus.yaml")
+        schema = tmp_path / "generic.yaml"
+        schema.write_text(
+            "id: generic\nname: generic\nimports: [malleus]\n"
+            "classes:\n  Thing:\n    is_a: Entity\n"
+            "  GenericRelation:\n    is_a: Relation\n"
+        )
+        with pytest.raises(OntologyError, match="must fix relation_type with equals_string"):
+            OntologyRegistry(schema)
+
+    def test_relation_endpoint_range_must_be_a_class(self, tmp_path):
+        import shutil
+
+        shutil.copy(ROOT_SCHEMA, tmp_path / "malleus.yaml")
+        schema = tmp_path / "generic.yaml"
+        schema.write_text(
+            "id: generic\nname: generic\nimports: [malleus]\n"
+            "enums:\n  Predicate:\n    permissible_values:\n      LINK: {}\n"
+            "classes:\n  Thing:\n    is_a: Entity\n"
+            "  BrokenRelation:\n    is_a: Relation\n    slot_usage:\n"
+            "      relation_type:\n        range: Predicate\n        equals_string: LINK\n"
+            "      source_id:\n        range: string\n"
+            "      target_id:\n        range: Thing\n"
+        )
+        with pytest.raises(OntologyError, match="class-valued source_id range"):
+            OntologyRegistry(schema)
+
+    def test_scalar_type_must_terminate_in_supported_builtin(self, tmp_path):
+        schema = tmp_path / "broken.yaml"
+        schema.write_text(
+            "id: broken\nname: broken\n"
+            "types:\n  Mystery:\n    typeof: Missing\n"
+        )
+        with pytest.raises(OntologyError, match="unsupported range 'Missing'"):
+            OntologyRegistry(schema)
+
+    @pytest.mark.parametrize(
+        "constraint, message",
+        [
+            ('required: "yes"', "required must be bool"),
+            ("multivalued: many", "multivalued must be bool"),
+            ("identifier: id", "identifier must be bool"),
+            ("range: 7", "range must be str"),
+            ("equals_string: 7", "equals_string must be str"),
+            ("minimum_value: low", "minimum_value must be a finite number"),
+            ("maximum_value: .nan", "maximum_value must be a finite number"),
+        ],
+    )
+    def test_malformed_slot_constraints_fail_at_construction(
+        self,
+        tmp_path,
+        constraint,
+        message,
+    ):
+        schema = tmp_path / "broken.yaml"
+        schema.write_text(
+            "id: broken\nname: broken\n"
+            f"slots:\n  value:\n    {constraint}\n"
+        )
+        with pytest.raises(OntologyError, match=message):
+            OntologyRegistry(schema)
+
+    def test_malformed_class_boolean_fails_at_construction(self, tmp_path):
+        schema = tmp_path / "broken.yaml"
+        schema.write_text(
+            'id: broken\nname: broken\nclasses:\n  Thing:\n    abstract: "yes"\n'
+        )
+        with pytest.raises(OntologyError, match="abstract must be bool"):
+            OntologyRegistry(schema)
+
+
+class TestEffectiveSlotValidation:
+    def test_inherited_and_mixin_slots_are_effective(self):
+        registry = OntologyRegistry(CYP450_SCHEMA)
+        drug_slots = registry.effective_slots("Drug")
+        assert drug_slots["id"].required is True
+        assert drug_slots["id"].identifier is True
+        assert drug_slots["tags"].multivalued is True
+        relation_slots = registry.effective_slots("SubstrateOfRelation")
+        assert relation_slots["source_id"].range == "Drug"
+        assert relation_slots["target_id"].range == "Enzyme"
+
+    def test_unknown_property_is_reported(self):
+        registry = OntologyRegistry(CYP450_SCHEMA)
+        errors = registry.validate_instance("Drug", {"id": "drug-1", "fabricated": 1})
+        assert errors == ["Unknown property 'fabricated' for Drug"]
+
+    def test_multivalued_shape_is_enforced(self):
+        registry = OntologyRegistry(CYP450_SCHEMA)
+        errors = registry.validate_instance("Drug", {"id": "drug-1", "tags": "one"})
+        assert errors == ["Property 'tags' must be a list"]
+
+    def test_enforced_slot_shape_changes_identity(self, tmp_path):
+        singular = tmp_path / "singular.yaml"
+        plural = tmp_path / "plural.yaml"
+        template = (
+            "id: test\nname: test\n"
+            "classes:\n  Thing:\n    slots: [value]\n"
+            "slots:\n  value:\n    range: string\n    multivalued: {multivalued}\n"
+        )
+        singular.write_text(template.format(multivalued="false"))
+        plural.write_text(template.format(multivalued="true"))
+        left = OntologyRegistry(singular)
+        right = OntologyRegistry(plural)
+        assert left.content_hash() != right.content_hash()
+        assert left.fingerprint() != right.fingerprint()

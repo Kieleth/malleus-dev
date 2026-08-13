@@ -26,9 +26,11 @@ cyp450.yaml (imports malleus.yaml)
 ├── Drug      is_a Entity     "a pharmaceutical compound"
 ├── Enzyme    is_a Entity     "a CYP450 isoform"   [requires: cyp_isoform ∈ {CYP3A4, CYP2D6, ...}]
 ├── Metabolite is_a Entity    "a product of metabolism"
-└── DrugRelation is_a Relation
-    └── relation_type ∈ {SUBSTRATE_OF, INHIBITS, INDUCES, PRODUCES, INTERACTS_WITH}
-    └── inhibition_strength ∈ {WEAK, MODERATE, STRONG}
+├── SubstrateOfRelation  Drug → Enzyme
+├── InhibitsRelation     Drug → Enzyme
+├── InducesRelation      Drug → Enzyme
+├── ProducesRelation     Drug → Metabolite
+└── InteractsWithRelation Drug → Drug
 ```
 
 **The key idea:** the ontology is a TYPE SYSTEM. Just like `int` and `string` in a programming language, `Drug` and `Enzyme` are types. If you try to create something that isn't a valid type, it's rejected. Period.
@@ -40,15 +42,17 @@ OntologyRegistry (ontology.py)
 │    • All valid types (Drug, Enzyme, ...)                │
 │    • All valid enums (CYP3A4, STRONG, ...)              │
 │    • Inheritance chains (Drug is_a Entity is_a ...)     │
-│    • Required slots (Enzyme requires cyp_isoform)       │
-│    • Enum constraints (cyp_isoform must be in CYPEnzyme)│
+│    • Effective inherited and mixin slots                │
+│    • Required, range, collection, and value constraints │
+│    • Concrete relation source and target ranges         │
+│    • Strict imports and collision detection             │
 │                                                         │
 │  This registry is the CONSTRUCTOR PARAMETER of the KG.  │
 │  No registry → no KG. That's the rule.                  │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**26 tests** verify: schemas load, types exist, enums have the right values, required slots enforced.
+Tests verify strict imports, collision rejection, inherited and mixin slots, schema identity, concrete relation signatures, and closed-world record validation.
 
 ---
 
@@ -189,26 +193,31 @@ KnowledgeGraph (kg.py)
 │         │ Yes                                           │
 │         ▼                                               │
 │  ┌──────────────┐                                       │
-│  │ Enum values   │──No──→ REJECTED: "Invalid value"     │
-│  │ valid?        │                                       │
+│  │ Fields, ranges,│──No──→ REJECTED: exact violation     │
+│  │ IDs, endpoints │                                      │
 │  └──────┬───────┘                                       │
 │         │ Yes                                           │
 │         ▼                                               │
-│     COMMITTED → node added to NetworkX graph            │
+│     COMMITTED → structurally valid graph materialization │
 │     + Operation logged (turn, type, data, status)       │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Every** operation (committed or rejected) is logged. The log is the audit trail. You can ask: "at turn 15, what did the LLM try to write, and what happened?"
+**Every** operation (committed or rejected) is logged. The log is the audit trail. You can ask: "at turn 15, what did Shelob try to write, and what happened?"
 
-**38 tests** verify: valid writes commit, invalid types/enums/slots reject, duplicates reject, endpoints verified, strength range checked, queries work, domain isolation works (Drug rejected in ATT&CK KG).
+Tests verify that invalid types, properties, values, identifiers, predicates, and endpoints reject without graph mutation. `COMMITTED` means structural materialization only. It does not mean true, epistemically accepted, or authorized for action.
+
+The separate [Assent Protocol](ASSENT_PROTOCOL.md) defines immutable protocol
+records, disjoint assessment and decision outcomes, replay-derived transition
+state, and a strict hash-linked JSONL envelope. It does not change the meaning
+of `Operation.COMMITTED` or materialize accepted proposed subgraphs.
 
 ---
 
 ## Layer 2: The Ground Truth (Static Data)
 
-Before any LLM runs, we load curated pharmacological data into the KG.
+Before Shelob runs, we load curated pharmacological data into the KG.
 
 ```
 cyp450_seed.yaml → load_cyp450_data() → KnowledgeGraph
@@ -226,7 +235,7 @@ cyp450_seed.yaml → load_cyp450_data() → KnowledgeGraph
 │  ...                                               │
 │                                                    │
 │  This is the STATIC layer. Read-only. Never changes.│
-│  The LLM can QUERY it but never WRITE to it.       │
+│  Shelob can QUERY it but never WRITE to it.         │
 │                                                    │
 └────────────────────────────────────────────────────┘
 ```
@@ -398,18 +407,9 @@ The library is three classes and three LinkML files. The root ontology (`malleus
 
 ## Test Coverage
 
-```
-tests/test_ontology.py      45 tests   Schema loading, types, enums, mixins,
-                                       hash, fingerprint, compatibility check.
-tests/test_kg.py            38 tests   Write-time validation (invalid types,
-                                       enums, slots, duplicates, endpoints),
-                                       operation log, queries, domain isolation.
-tests/test_prolog_verifier.py 12 tests Prolog sync, interaction detection,
-                                       contradiction catching, read-only
-                                       verification.
-                           ─────
-                           95 tests    ~3 seconds, all green.
-```
+- `tests/test_ontology.py`: strict loading, imports, collisions, effective slots, instance validation, hashing, fingerprints, and compatibility.
+- `tests/test_kg.py`: mutation-free rejection of invalid types, properties, ranges, collections, identifiers, predicates, and endpoints, plus operation logging and queries.
+- `tests/test_prolog_verifier.py`: Prolog synchronization, interaction queries, contradiction detection, and read-only verification.
 
 ---
 
@@ -434,4 +434,3 @@ result = verifier.verify_proposed_relation(
 )
 # result.valid, result.rule_violated, result.proof_trace
 ```
-

@@ -10,7 +10,7 @@ A root ontology in LinkML, and the opinion that words have power.
 
 I believe words have power. The closer we work with them, the more carefully we pin down what they mean and how they relate, the closer we get to something a machine can use without guessing. An ontology is that pinning-down, made explicit and machine-readable. Borges and Le Guin understood this long before software did: to name something precisely is to begin controlling it.
 
-The practical bet: if you define your domain once, in an ontology, you can propagate that definition through every layer of a system. LinkML already compiles a schema down to JSON Schema, Pydantic, SQL DDL, OWL, SHACL, TypeScript, whatever you need. So the same five concepts, with the same constraints, can shape the frontend form, the backend validator, the ML training contract, the LLM tool schema, the knowledge graph's node types, and the Prolog rules that reason over them. One source. All layers speaking the same vocabulary.
+The practical bet: if you define your domain once, in an ontology, you can propagate that definition through every layer of a system. LinkML already compiles a schema down to JSON Schema, Pydantic, SQL DDL, OWL, SHACL, TypeScript, whatever you need. So the same five concepts, with the same constraints, can shape the frontend form, the backend validator, the ML training contract, Shelob's tool schema, the knowledge graph's node types, and the Prolog rules that reason over them. One source. All layers speaking the same vocabulary.
 
 When that actually happens across a codebase, something unexpectedly useful shows up. Components stop drifting apart. The frontend and backend stop disagreeing about what a "Drug" is. A new contributor learns one vocabulary instead of five. Whole classes of bugs (the ones caused by definitions sliding between modules) just stop existing. Adding a new concept becomes one change in one file, flowing outward through whatever code generators you've wired up.
 
@@ -49,16 +49,18 @@ kg = KnowledgeGraph(reg)
 
 kg.create_entity("Enzyme", "enz-cyp3a4", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
 kg.create_entity("Drug", "drug-sim", {"name": "Simvastatin"})
-kg.create_relation("DrugRelation", "rel-001", "drug-sim", "enz-cyp3a4",
+kg.create_relation("SubstrateOfRelation", "rel-001", "drug-sim", "enz-cyp3a4",
                    {"relation_type": "SUBSTRATE_OF"})
 
-# Write-time validation. Nothing wrong reaches the graph.
+# Write-time validation. No structurally invalid write materializes.
 op = kg.create_entity("NotAType", "x", {})
 assert op.op_status.value == "REJECTED"
 print(op.rejection_reason)   # "Unknown entity type: 'NotAType'"
 ```
 
 The `OntologyRegistry` is the constructor parameter for the `KnowledgeGraph`. No registry, no KG. That's the rule, and it's the whole point: the graph can only ever hold things the ontology says exist.
+
+`COMMITTED` is a structural result only: the record passed closed-world schema validation and was materialized. It does not mean the record is true, epistemically accepted, or authorized for action.
 
 ## Distributed convergence
 
@@ -99,12 +101,34 @@ classes:
         required: true
         range: YourEnum
 
+  YourRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: YourRelationType
+        required: true
+        equals_string: CONNECTS
+      source_id:
+        range: YourEntity
+      target_id:
+        range: YourEntity
+
 enums:
   YourEnum:
     permissible_values:
       VALUE_A: {}
       VALUE_B: {}
+
+  YourRelationType:
+    permissible_values:
+      CONNECTS: {}
+
+slots:
+  your_slot:
+    range: YourEnum
 ```
+
+Relations use concrete classes with explicit source and target ranges. Malleus rejects unknown properties, missing required fields, malformed values, duplicate identifiers, mismatched predicates, and invalid endpoint types before graph mutation.
 
 ## Optional Prolog verification
 
@@ -135,13 +159,13 @@ For the layer-by-layer walkthrough (vocabulary, typed graph, ground truth loadin
 Adoption guides:
 - [docs/ONTOLOGY_PROTOCOL.md](docs/ONTOLOGY_PROTOCOL.md): how to add malleus to an existing project
 - [docs/KNOWLEDGE_GRAPH_PROTOCOL.md](docs/KNOWLEDGE_GRAPH_PROTOCOL.md): how the ontology shapes the KG
+- [docs/ASSENT_PROTOCOL.md](docs/ASSENT_PROTOCOL.md): how proposals, assessments, decisions, authorization, and replay remain separate
 
 ## Tests
 
 ```bash
 pip install -e .[prolog,dev]
 pytest tests/ -v
-# 89 tests, ~2 seconds
 ```
 
 ## License

@@ -64,11 +64,11 @@ def populated_kg():
     kg.create_entity("Drug", "drug-inh", {"name": "Inhibitor", "drug_class": "y"})
     kg.create_entity("Drug", "drug-ind", {"name": "Inducer", "drug_class": "z"})
 
-    kg.create_relation("DrugRelation", "r1", "drug-sub", "enz-1",
+    kg.create_relation("SubstrateOfRelation", "r1", "drug-sub", "enz-1",
                        {"relation_type": "SUBSTRATE_OF"})
-    kg.create_relation("DrugRelation", "r2", "drug-inh", "enz-1",
+    kg.create_relation("InhibitsRelation", "r2", "drug-inh", "enz-1",
                        {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"})
-    kg.create_relation("DrugRelation", "r3", "drug-ind", "enz-1",
+    kg.create_relation("InducesRelation", "r3", "drug-ind", "enz-1",
                        {"relation_type": "INDUCES", "inhibition_strength": "STRONG"})
     return kg
 
@@ -86,7 +86,7 @@ class TestPrologSync:
         reg = OntologyRegistry(CYP450_SCHEMA)
         dynamic = KnowledgeGraph(reg)
         dynamic.create_entity("Drug", "drug-new", {"name": "New", "drug_class": "z"})
-        dynamic.create_relation("DrugRelation", "rN", "drug-new", "enz-1",
+        dynamic.create_relation("InhibitsRelation", "rN", "drug-new", "enz-1",
                                 {"relation_type": "SUBSTRATE_OF"})
         # Wait — drug-new depends on enz-1 which is only in populated_kg.
         # The relation above should be rejected because enz-1 isn't in dynamic.
@@ -96,7 +96,7 @@ class TestPrologSync:
         dynamic = KnowledgeGraph(reg)
         dynamic.create_entity("Enzyme", "enz-1", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
         dynamic.create_entity("Drug", "drug-new", {"name": "New", "drug_class": "z"})
-        dynamic.create_relation("DrugRelation", "rN", "drug-new", "enz-1",
+        dynamic.create_relation("InhibitsRelation", "rN", "drug-new", "enz-1",
                                 {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"})
 
         v = PrologVerifier(rules_file)

@@ -14,6 +14,7 @@ Example:
 
 from malleus.ontology import (
     EnumDef,
+    OntologyError,
     OntologyRegistry,
     SlotConstraint,
     TypeDef,
@@ -24,6 +25,16 @@ from malleus.kg import (
     OpStatus,
     OpType,
     ValidationResult,
+)
+from malleus.protocol import (
+    AuthorizationState,
+    EventType,
+    LedgerError,
+    ProposalState,
+    ProtocolError,
+    ProtocolLedger,
+    ProtocolProjection,
+    make_record,
 )
 
 try:
@@ -36,6 +47,7 @@ __version__ = "0.1.0"
 
 __all__ = [
     "OntologyRegistry",
+    "OntologyError",
     "TypeDef",
     "EnumDef",
     "SlotConstraint",
@@ -44,6 +56,14 @@ __all__ = [
     "OpStatus",
     "OpType",
     "ValidationResult",
+    "ProtocolLedger",
+    "ProtocolProjection",
+    "ProtocolError",
+    "LedgerError",
+    "EventType",
+    "ProposalState",
+    "AuthorizationState",
+    "make_record",
     "__version__",
 ]
 
