@@ -44,6 +44,15 @@ from malleus.staging import (
     stage_subgraph,
 )
 from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
+from malleus.control import (
+    ControlError,
+    MonitoringError,
+    PolicyEvaluation,
+    epistemic_policy_digest,
+    evaluate_epistemic_policy,
+    monitor_failure_records,
+    monitor_specification_digest,
+)
 from malleus.logic import (
     CompiledFacts,
     GraphFactCompiler,
@@ -82,6 +91,13 @@ __all__ = [
     "StagingError",
     "StaleCandidateError",
     "stage_subgraph",
+    "ControlError",
+    "MonitoringError",
+    "PolicyEvaluation",
+    "monitor_specification_digest",
+    "epistemic_policy_digest",
+    "evaluate_epistemic_policy",
+    "monitor_failure_records",
     "CompiledFacts",
     "GraphFactCompiler",
     "LogicCheckResult",

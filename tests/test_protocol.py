@@ -10,6 +10,13 @@ from pathlib import Path
 import pytest
 
 from malleus.ontology import OntologyRegistry
+from malleus.control import (
+    MonitoringError,
+    epistemic_policy_digest,
+    evaluate_epistemic_policy,
+    monitor_failure_records,
+    monitor_specification_digest,
+)
 from malleus.logic import (
     LogicCheckResult,
     LogicExecutionError,
@@ -56,6 +63,8 @@ classes:
     is_a: ActionProposal
     slots:
       - test_parameter
+  ForgedLogicalAssessment:
+    is_a: Assessment
 slots:
   test_parameter:
     range: string
@@ -121,15 +130,99 @@ def add_artifact(
     return record
 
 
-def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
-    monitor = add_artifact(ledger, "artifact:monitor", "MONITOR_SPECIFICATION", 1)
-    epistemic_policy = add_artifact(
+def add_monitor(
+    ledger: ProtocolLedger,
+    monitor_id: str,
+    assessment_kind: str,
+    minute: int,
+    *,
+    input_artifacts: list[dict] | None = None,
+) -> dict:
+    inputs = sorted(input_artifacts or [], key=lambda artifact: artifact["id"])
+    fields = {
+        "monitor_schema_version": "1",
+        "assessment_kind": assessment_kind,
+        "monitor_implementation_hash": "sha256:" + "a" * 64,
+        "input_artifact_ids": [artifact["id"] for artifact in inputs],
+        "input_artifact_record_hashes": [artifact["content_hash"] for artifact in inputs],
+        "source_record_ids": [artifact["id"] for artifact in inputs],
+    }
+    return add_artifact(
         ledger,
-        "artifact:epistemic-policy",
-        "EPISTEMIC_POLICY",
-        2,
+        monitor_id,
+        "MONITOR_SPECIFICATION",
+        minute,
+        record_type="MonitorSpecificationArtifact",
+        artifact_hash=monitor_specification_digest(
+            schema_version="1",
+            monitor_id=monitor_id,
+            monitor_version="1",
+            assessment_kind=assessment_kind,
+            implementation_hash=fields["monitor_implementation_hash"],
+            input_artifact_ids=fields["input_artifact_ids"],
+            input_artifact_record_hashes=fields["input_artifact_record_hashes"],
+        ),
+        **fields,
     )
-    rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 3)
+
+
+def add_epistemic_policy(
+    ledger: ProtocolLedger,
+    rules: dict,
+    requirements: list[tuple[dict, str, str]],
+    minute: int,
+    *,
+    policy_id: str = "artifact:epistemic-policy",
+) -> dict:
+    ordered = sorted(requirements, key=lambda item: item[0]["id"])
+    fields = {
+        "policy_schema_version": "1",
+        "ruleset_id": rules["id"],
+        "ruleset_record_hash": rules["content_hash"],
+        "ruleset_artifact_hash": rules["artifact_hash"],
+        "required_monitor_ids": [item[0]["id"] for item in ordered],
+        "required_monitor_record_hashes": [item[0]["content_hash"] for item in ordered],
+        "violation_verdicts": [item[1] for item in ordered],
+        "unknown_verdicts": [item[2] for item in ordered],
+        "control_precedence": ["REJECT", "CONTEST", "DEFER"],
+        "source_record_ids": [rules["id"], *(item[0]["id"] for item in ordered)],
+    }
+    return add_artifact(
+        ledger,
+        policy_id,
+        "EPISTEMIC_POLICY",
+        minute,
+        record_type="EpistemicPolicyArtifact",
+        artifact_hash=epistemic_policy_digest(
+            schema_version="1",
+            policy_id=policy_id,
+            policy_version="1",
+            ruleset_id=rules["id"],
+            ruleset_record_hash=rules["content_hash"],
+            ruleset_artifact_hash=rules["artifact_hash"],
+            required_monitor_ids=fields["required_monitor_ids"],
+            required_monitor_record_hashes=fields["required_monitor_record_hashes"],
+            violation_verdicts=fields["violation_verdicts"],
+            unknown_verdicts=fields["unknown_verdicts"],
+            control_precedence=fields["control_precedence"],
+        ),
+        **fields,
+    )
+
+
+def setup_artifacts(
+    ledger: ProtocolLedger,
+    *,
+    violation_verdict: str = "REJECT",
+    unknown_verdict: str = "DEFER",
+) -> dict[str, dict]:
+    rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
+    authorization_policy = add_artifact(
+        ledger,
+        "artifact:authorization-policy",
+        "AUTHORIZATION_POLICY",
+        1,
+    )
     contract_fields = {
         "logic_contract_schema_version": "1",
         "ontology_hash": "sha256:" + "6" * 64,
@@ -146,7 +239,7 @@ def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
         ledger,
         "artifact:logic-contract",
         "LOGIC_CONTRACT",
-        3,
+        2,
         record_type="LogicContractArtifact",
         artifact_hash=logic_contract_digest(
             schema_version=contract_fields["logic_contract_schema_version"],
@@ -162,12 +255,27 @@ def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
         ),
         **contract_fields,
     )
-    authorization_policy = add_artifact(
-            ledger,
-            "artifact:authorization-policy",
-            "AUTHORIZATION_POLICY",
-            4,
-        )
+    monitor = add_monitor(ledger, "artifact:monitor", "TYPE", 2)
+    logic_monitor = add_monitor(
+        ledger,
+        "artifact:logic-monitor",
+        "LOGICAL",
+        3,
+        input_artifacts=[logic_contract],
+    )
+    authority_monitor = add_monitor(
+        ledger,
+        "artifact:authority-monitor",
+        "AUTHORITY",
+        3,
+        input_artifacts=[authorization_policy],
+    )
+    epistemic_policy = add_epistemic_policy(
+        ledger,
+        rules,
+        [(monitor, violation_verdict, unknown_verdict)],
+        4,
+    )
     grant = add_artifact(
             ledger,
             "artifact:grant",
@@ -182,6 +290,8 @@ def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
         )
     return {
         "monitor": monitor,
+        "logic_monitor": logic_monitor,
+        "authority_monitor": authority_monitor,
         "epistemic_policy": epistemic_policy,
         "rules": rules,
         "logic_contract": logic_contract,
@@ -193,6 +303,7 @@ def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
 def record_proposal(
     ledger: ProtocolLedger,
     *,
+    epistemic_policy: dict | None = None,
     include_action: bool = False,
     minute: int = 6,
     proposal_id: str = "proposal:1",
@@ -204,6 +315,15 @@ def record_proposal(
     revises_action_id: str | None = None,
 ) -> tuple[dict, dict, dict | None]:
     projection = ledger.replay()
+    if epistemic_policy is None:
+        policies = [
+            item["record"]
+            for item in projection.objects.values()
+            if item["record_type"] == "EpistemicPolicyArtifact"
+        ]
+        if len(policies) != 1:
+            raise AssertionError("record_proposal requires exactly one epistemic policy")
+        epistemic_policy = policies[0]
     event_id = f"event:{proposal_id}"
     timestamp = time_at(minute)
     claim = make_record(
@@ -245,11 +365,14 @@ def record_proposal(
         generated_at=timestamp,
         actor_id="actor:proposer",
         role="proposer",
+        source_record_ids=[epistemic_policy["id"]],
         id=proposal_id,
         proposal_key="proposal-key",
         revision=proposal_revision,
         revises_proposal_id=revises_proposal_id,
         base_acceptance_head=projection.acceptance_head,
+        epistemic_policy_id=epistemic_policy["id"],
+        epistemic_policy_hash=epistemic_policy["content_hash"],
         member_content_hashes=[record["content_hash"] for _, record in members],
         claim_version_ids=[claim["id"]],
         evidence_ids=[],
@@ -321,6 +444,8 @@ def record_logic_check(
     *,
     violated: bool = False,
     minute: int = 7,
+    check_id: str = "logic-check:1",
+    event_id: str = "event:logic-check",
     mutate=None,
 ) -> tuple[dict, tuple[dict, ...]]:
     result = LogicCheckResult(
@@ -345,10 +470,9 @@ def record_logic_check(
         checked_rule_ids=("RULE_ONE",),
         violations=(Violation("RULE_ONE", "CONFLICT", ("graph:1",)),) if violated else (),
     )
-    event_id = "event:logic-check"
     timestamp = time_at(minute)
     check, witnesses = result.to_protocol_records(
-        check_id="logic-check:1",
+        check_id=check_id,
         event_id=event_id,
         generated_at=timestamp,
         actor_id="actor:monitor",
@@ -356,9 +480,9 @@ def record_logic_check(
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=proposal["base_acceptance_head"],
-        monitor_id=artifacts["monitor"]["id"],
+        monitor_id=artifacts["logic_monitor"]["id"],
         monitor_version="1",
-        monitor_hash=artifacts["monitor"]["content_hash"],
+        monitor_hash=artifacts["logic_monitor"]["content_hash"],
         logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
         ruleset_record_hash=artifacts["rules"]["content_hash"],
     )
@@ -397,7 +521,7 @@ def record_logical_assessment(
         role="logic-monitor",
         source_record_ids=[
             proposal["id"],
-            artifacts["monitor"]["id"],
+            artifacts["logic_monitor"]["id"],
             check["id"],
             artifacts["logic_contract"]["id"],
             artifacts["rules"]["id"],
@@ -408,9 +532,9 @@ def record_logical_assessment(
         base_acceptance_head=proposal["base_acceptance_head"],
         assessment_kind="LOGICAL",
         assessment_outcome=check["check_outcome"],
-        monitor_id=artifacts["monitor"]["id"],
+        monitor_id=artifacts["logic_monitor"]["id"],
         monitor_version="1",
-        monitor_hash=artifacts["monitor"]["content_hash"],
+        monitor_hash=artifacts["logic_monitor"]["content_hash"],
         monitor_failure_id=None,
         input_record_ids=[proposal["id"], check["id"]],
         reason_codes=["LOGIC_CHECK_COMPLETED"],
@@ -454,16 +578,21 @@ def record_authority_assessment(
         generated_at=timestamp,
         actor_id="actor:authority-monitor",
         role="authority-monitor",
-        source_record_ids=[proposal["id"], action["id"], artifacts["authorization_policy"]["id"]],
+        source_record_ids=[
+            proposal["id"],
+            action["id"],
+            artifacts["authority_monitor"]["id"],
+            artifacts["authorization_policy"]["id"],
+        ],
         id="assessment:authority:1",
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=ledger.replay().acceptance_head,
         assessment_kind="AUTHORITY",
         assessment_outcome=outcome,
-        monitor_id=artifacts["monitor"]["id"],
+        monitor_id=artifacts["authority_monitor"]["id"],
         monitor_version="1",
-        monitor_hash=artifacts["monitor"]["content_hash"],
+        monitor_hash=artifacts["authority_monitor"]["content_hash"],
         monitor_failure_id=None,
         input_record_ids=[proposal["id"], action["id"]],
         reason_codes=["GRANT_RESULT"],
@@ -521,11 +650,28 @@ def decide_epistemically(
     assessment: dict,
     artifacts: dict[str, dict],
     *,
-    verdict: str = "ACCEPT",
+    verdict: str | None = None,
     minute: int = 8,
+    mutate=None,
+    transition_id: str = "transition:proposal:1",
 ) -> dict:
     event_id = "event:epistemic:1"
     timestamp = time_at(minute)
+    policy = artifacts["epistemic_policy"]
+    monitors = {
+        artifact["id"]: artifact
+        for artifact in artifacts.values()
+        if artifact.get("artifact_kind") == "MONITOR_SPECIFICATION"
+    }
+    evaluation = evaluate_epistemic_policy(
+        policy,
+        monitors,
+        [assessment],
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+    )
+    selected_verdict = verdict or evaluation.verdict
     decision = make_record(
         "EpistemicDecision",
         event_id=event_id,
@@ -542,8 +688,10 @@ def decide_epistemically(
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=proposal["base_acceptance_head"],
-        epistemic_verdict=verdict,
-        assessment_ids=[assessment["id"]],
+        epistemic_verdict=selected_verdict,
+        assessment_ids=list(evaluation.assessment_ids),
+        triggered_assessment_ids=list(evaluation.triggered_assessment_ids),
+        policy_evaluation_hash=evaluation.evaluation_hash,
         evidence_assertion_ids=[],
         request_ids=[],
         claim_revision_ids=[],
@@ -554,12 +702,15 @@ def decide_epistemically(
         rationale_codes=["POLICY_RESULT"],
         rationale="The versioned policy selected a verdict.",
     )
+    if mutate is not None:
+        mutate(decision)
+        decision["content_hash"] = record_hash("EpistemicDecision", decision)
     target = {
         "ACCEPT": "ACCEPTED",
         "REJECT": "REJECTED",
         "DEFER": "DEFERRED",
         "CONTEST": "CONTESTED",
-    }[verdict]
+    }[decision["epistemic_verdict"]]
     sequence = ledger.replay().event_count + 1
     ledger.append_event(
         event_id=event_id,
@@ -574,7 +725,7 @@ def decide_epistemically(
                 event_id=event_id,
                 timestamp=timestamp,
                 actor_id="actor:reviewer",
-                transition_id="transition:proposal:1",
+                transition_id=transition_id,
                 subject=proposal["id"],
                 from_state="PROPOSED",
                 to_state=target,
@@ -606,6 +757,142 @@ class TestEnvelope:
                 payload={"artifact_type": "ProtocolArtifact", "artifact": {}},
             )
         assert not ledger.path.exists()
+
+    @pytest.mark.parametrize(
+        "kind,required_type",
+        [
+            ("MONITOR_SPECIFICATION", "MonitorSpecificationArtifact"),
+            ("EPISTEMIC_POLICY", "EpistemicPolicyArtifact"),
+        ],
+    )
+    def test_stage_six_artifact_kinds_require_typed_records(self, ledger, kind, required_type):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=required_type):
+            add_artifact(ledger, f"artifact:opaque:{kind}", kind, 1)
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "case,message",
+        [
+            ("input_hash", "input artifact hash mismatch"),
+            ("semantic_hash", "monitor semantic hash mismatch"),
+            ("sources", "source_record_ids missing required records"),
+        ],
+    )
+    def test_monitor_specification_replay_binds_inputs_and_semantics(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        contract = add_artifact(ledger, "artifact:contract", "EVIDENCE_CONTRACT", 1)
+        input_hash = contract["content_hash"]
+        sources = [contract["id"]]
+        if case == "input_hash":
+            input_hash = "sha256:" + "0" * 64
+        elif case == "sources":
+            sources = []
+        semantic_hash = monitor_specification_digest(
+            schema_version="1",
+            monitor_id="artifact:evidence-monitor",
+            monitor_version="1",
+            assessment_kind="EVIDENCE_COMPLETENESS",
+            implementation_hash="sha256:" + "a" * 64,
+            input_artifact_ids=[contract["id"]],
+            input_artifact_record_hashes=[input_hash],
+        )
+        if case == "semantic_hash":
+            semantic_hash = "sha256:" + "0" * 64
+
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            add_artifact(
+                ledger,
+                "artifact:evidence-monitor",
+                "MONITOR_SPECIFICATION",
+                2,
+                record_type="MonitorSpecificationArtifact",
+                artifact_hash=semantic_hash,
+                monitor_schema_version="1",
+                assessment_kind="EVIDENCE_COMPLETENESS",
+                monitor_implementation_hash="sha256:" + "a" * 64,
+                input_artifact_ids=[contract["id"]],
+                input_artifact_record_hashes=[input_hash],
+                source_record_ids=sources,
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "case,message",
+        [
+            ("monitor_hash", "Artifact hash mismatch"),
+            ("semantic_hash", "policy semantic hash mismatch"),
+            ("authority_monitor", "cannot require AUTHORITY monitor"),
+            ("sources", "source_record_ids missing required records"),
+        ],
+    )
+    def test_epistemic_policy_replay_binds_exact_monitors_and_semantics(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
+        monitor = add_monitor(
+            ledger,
+            "artifact:policy-monitor",
+            "AUTHORITY" if case == "authority_monitor" else "TYPE",
+            2,
+        )
+        monitor_hash = monitor["content_hash"]
+        sources = [rules["id"], monitor["id"]]
+        if case == "monitor_hash":
+            monitor_hash = "sha256:" + "0" * 64
+        elif case == "sources":
+            sources = [rules["id"]]
+        fields = {
+            "policy_schema_version": "1",
+            "ruleset_id": rules["id"],
+            "ruleset_record_hash": rules["content_hash"],
+            "ruleset_artifact_hash": rules["artifact_hash"],
+            "required_monitor_ids": [monitor["id"]],
+            "required_monitor_record_hashes": [monitor_hash],
+            "violation_verdicts": ["REJECT"],
+            "unknown_verdicts": ["DEFER"],
+            "control_precedence": ["REJECT", "CONTEST", "DEFER"],
+            "source_record_ids": sources,
+        }
+        semantic_hash = epistemic_policy_digest(
+            schema_version="1",
+            policy_id="artifact:epistemic-policy",
+            policy_version="1",
+            ruleset_id=fields["ruleset_id"],
+            ruleset_record_hash=fields["ruleset_record_hash"],
+            ruleset_artifact_hash=fields["ruleset_artifact_hash"],
+            required_monitor_ids=fields["required_monitor_ids"],
+            required_monitor_record_hashes=fields["required_monitor_record_hashes"],
+            violation_verdicts=fields["violation_verdicts"],
+            unknown_verdicts=fields["unknown_verdicts"],
+            control_precedence=fields["control_precedence"],
+        )
+        if case == "semantic_hash":
+            semantic_hash = "sha256:" + "0" * 64
+
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            add_artifact(
+                ledger,
+                "artifact:epistemic-policy",
+                "EPISTEMIC_POLICY",
+                3,
+                record_type="EpistemicPolicyArtifact",
+                artifact_hash=semantic_hash,
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
 
     @pytest.mark.parametrize(
         "mutate,message",
@@ -640,7 +927,7 @@ class TestEnvelope:
 
     def test_hash_chain_and_external_anchor_checks_detect_corruption(self, ledger):
         first = anchor(ledger)
-        add_artifact(ledger, "artifact:monitor", "MONITOR_SPECIFICATION", 1)
+        add_monitor(ledger, "artifact:monitor", "TYPE", 1)
         events = [json.loads(line) for line in ledger.path.read_text(encoding="utf-8").splitlines()]
         events[0]["actor_id"] = "actor:tampered"
         ledger.path.write_text(
@@ -658,7 +945,7 @@ class TestEnvelope:
 
     def test_broken_previous_hash_is_rejected(self, ledger):
         anchor(ledger)
-        add_artifact(ledger, "artifact:monitor", "MONITOR_SPECIFICATION", 1)
+        add_monitor(ledger, "artifact:monitor", "TYPE", 1)
         events = [json.loads(line) for line in ledger.path.read_text(encoding="utf-8").splitlines()]
         events[1]["previous_event_hash"] = "sha256:" + "9" * 64
         events[1]["event_hash"] = event_hash(events[1])
@@ -684,6 +971,9 @@ class TestProposalAndEpistemicState:
         artifacts = setup_artifacts(ledger)
         proposal, claim, _ = record_proposal(ledger)
         assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        monitored = ledger.replay()
+        assert monitored.proposal_states[proposal["id"]] == ProposalState.PROPOSED
+        assert not monitored.epistemic_decision_ids
         decide_epistemically(ledger, proposal, assessment, artifacts)
         first = ledger.replay()
         second = ledger.replay()
@@ -702,11 +992,16 @@ class TestProposalAndEpistemicState:
     )
     def test_nonacceptance_does_not_advance_acceptance_head(self, ledger, verdict, state):
         anchor(ledger)
-        artifacts = setup_artifacts(ledger)
+        artifacts = setup_artifacts(ledger, violation_verdict=verdict)
         proposal, _, _ = record_proposal(ledger)
-        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        assessment = record_type_assessment(
+            ledger,
+            proposal,
+            artifacts["monitor"],
+            outcome="VIOLATED",
+        )
         before = ledger.replay().acceptance_head
-        decide_epistemically(ledger, proposal, assessment, artifacts, verdict=verdict)
+        decide_epistemically(ledger, proposal, assessment, artifacts)
         projection = ledger.replay()
         assert projection.proposal_states[proposal["id"]] == state
         assert projection.acceptance_head == before
@@ -722,23 +1017,313 @@ class TestProposalAndEpistemicState:
             outcome="VIOLATED",
         )
         before = ledger.path.read_bytes()
-        with pytest.raises(ProtocolError, match="every cited assessment SATISFIED"):
-            decide_epistemically(ledger, proposal, assessment, artifacts)
+        with pytest.raises(ProtocolError, match="verdict differs from deterministic policy"):
+            decide_epistemically(ledger, proposal, assessment, artifacts, verdict="ACCEPT")
+        assert ledger.path.read_bytes() == before
+
+    def test_exact_monitor_can_produce_only_one_output_per_proposal(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        first = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="monitor already produced assessment"):
+            record_type_assessment(
+                ledger,
+                proposal,
+                artifacts["monitor"],
+                outcome="VIOLATED",
+                minute=8,
+            )
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().monitor_output_ids[
+            (proposal["id"], artifacts["monitor"]["id"])
+        ] == first["id"]
+
+    def test_proposal_policy_cannot_be_replaced_after_monitoring(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        late_policy = add_epistemic_policy(
+            ledger,
+            artifacts["rules"],
+            [(artifacts["monitor"], "CONTEST", "CONTEST")],
+            8,
+            policy_id="artifact:late-policy",
+        )
+        late_artifacts = {**artifacts, "epistemic_policy": late_policy}
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="decision policy differs from proposal"):
+            decide_epistemically(
+                ledger,
+                proposal,
+                assessment,
+                late_artifacts,
+                minute=9,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_custom_assessment_subclass_cannot_bypass_kind_contract(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:forged-logical-assessment"
+        timestamp = time_at(7)
+        assessment = make_record(
+            "ForgedLogicalAssessment",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="logic-monitor",
+            source_record_ids=[proposal["id"], artifacts["logic_monitor"]["id"]],
+            id="assessment:forged-logical",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            assessment_kind="LOGICAL",
+            assessment_outcome="SATISFIED",
+            monitor_id=artifacts["logic_monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["logic_monitor"]["content_hash"],
+            monitor_failure_id=None,
+            input_record_ids=[proposal["id"]],
+            reason_codes=["FORGED"],
+            rationale="Attempted to bypass the logical assessment contract.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="LOGICAL monitor requires LogicalAssessment"):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.ASSESSMENT_RECORDED,
+                transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "assessment_type": "ForgedLogicalAssessment",
+                    "assessment": assessment,
+                },
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "outcome,missing_requirements,error",
+        [
+            ("SATISFIED", [], None),
+            ("VIOLATED", ["requirement:citation"], None),
+            ("SATISFIED", ["requirement:citation"], "has missing requirements"),
+            ("VIOLATED", [], "has no missing requirement"),
+        ],
+    )
+    def test_evidence_completeness_outcome_matches_missing_requirements(
+        self,
+        ledger,
+        outcome,
+        missing_requirements,
+        error,
+    ):
+        anchor(ledger)
+        rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
+        contract = add_artifact(ledger, "artifact:evidence-contract", "EVIDENCE_CONTRACT", 1)
+        monitor = add_monitor(
+            ledger,
+            "artifact:evidence-monitor",
+            "EVIDENCE_COMPLETENESS",
+            2,
+            input_artifacts=[contract],
+        )
+        add_epistemic_policy(
+            ledger,
+            rules,
+            [(monitor, "REJECT", "DEFER")],
+            3,
+        )
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:evidence-assessment"
+        timestamp = time_at(7)
+        assessment = make_record(
+            "EvidenceCompletenessAssessment",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="evidence-monitor",
+            source_record_ids=[proposal["id"], monitor["id"], contract["id"]],
+            id="assessment:evidence",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            assessment_kind="EVIDENCE_COMPLETENESS",
+            assessment_outcome=outcome,
+            monitor_id=monitor["id"],
+            monitor_version="1",
+            monitor_hash=monitor["content_hash"],
+            monitor_failure_id=None,
+            input_record_ids=[proposal["id"]],
+            reason_codes=["EVIDENCE_RESULT"],
+            rationale="The evidence contract was evaluated.",
+            evidence_contract_id=contract["id"],
+            evidence_contract_hash=contract["content_hash"],
+            missing_requirement_ids=missing_requirements,
+        )
+        def append():
+            return ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.ASSESSMENT_RECORDED,
+                transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "assessment_type": "EvidenceCompletenessAssessment",
+                    "assessment": assessment,
+                },
+            )
+        if error is None:
+            append()
+            assert assessment["id"] in ledger.replay().assessment_ids
+        else:
+            before = ledger.path.read_bytes()
+            with pytest.raises(ProtocolError, match=error):
+                append()
+            assert ledger.path.read_bytes() == before
+
+    def test_decision_requires_every_policy_selected_monitor(self, ledger):
+        anchor(ledger)
+        rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
+        type_monitor = add_monitor(ledger, "artifact:type-monitor", "TYPE", 2)
+        conflict_monitor = add_monitor(ledger, "artifact:conflict-monitor", "CONFLICT", 2)
+        policy = add_epistemic_policy(
+            ledger,
+            rules,
+            [
+                (type_monitor, "REJECT", "DEFER"),
+                (conflict_monitor, "CONTEST", "DEFER"),
+            ],
+            3,
+        )
+        proposal, _, _ = record_proposal(ledger)
+        assessment = record_type_assessment(ledger, proposal, type_monitor)
+        event_id = "event:missing-monitor-decision"
+        timestamp = time_at(8)
+        decision = make_record(
+            "EpistemicDecision",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="epistemic-controller",
+            source_record_ids=[proposal["id"], assessment["id"], policy["id"], rules["id"]],
+            id="decision:missing-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            epistemic_verdict="ACCEPT",
+            assessment_ids=[assessment["id"]],
+            triggered_assessment_ids=[],
+            policy_evaluation_hash="sha256:" + "9" * 64,
+            evidence_assertion_ids=[],
+            request_ids=[],
+            claim_revision_ids=[],
+            policy_id=policy["id"],
+            policy_hash=policy["content_hash"],
+            ruleset_id=rules["id"],
+            ruleset_hash=rules["content_hash"],
+            rationale_codes=["POLICY_RESULT"],
+            rationale="Attempted decision with incomplete monitor coverage.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="has no assessment"):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.EPISTEMIC_DECIDED,
+                transaction_time=timestamp,
+                actor_id="actor:reviewer",
+                payload={
+                    "decision": decision,
+                    "requests": [],
+                    "revisions": [],
+                    "transition": transition(
+                        event_id=event_id,
+                        timestamp=timestamp,
+                        actor_id="actor:reviewer",
+                        transition_id="transition:missing-monitor",
+                        subject=proposal["id"],
+                        from_state="PROPOSED",
+                        to_state="ACCEPTED",
+                        trigger=decision["id"],
+                        sequence=ledger.replay().event_count + 1,
+                    ),
+                },
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda decision: decision.update(triggered_assessment_ids=[]),
+                "triggered assessments differ",
+            ),
+            (
+                lambda decision: decision.update(policy_evaluation_hash="sha256:" + "0" * 64),
+                "policy evaluation hash mismatch",
+            ),
+            (
+                lambda decision: decision.update(source_record_ids=[]),
+                "source_record_ids missing required records",
+            ),
+        ],
+    )
+    def test_policy_control_record_is_replay_bound(self, ledger, mutate, message):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        assessment = record_type_assessment(
+            ledger,
+            proposal,
+            artifacts["monitor"],
+            outcome="VIOLATED",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            decide_epistemically(
+                ledger,
+                proposal,
+                assessment,
+                artifacts,
+                mutate=mutate,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_decision_and_transition_ids_must_be_distinct(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="introduced record IDs contain duplicates"):
+            decide_epistemically(
+                ledger,
+                proposal,
+                assessment,
+                artifacts,
+                transition_id="decision:epistemic:1",
+            )
         assert ledger.path.read_bytes() == before
 
     def test_state_outputs_cannot_be_smuggled_as_proposal_members(self, ledger):
         anchor(ledger)
+        artifacts = setup_artifacts(ledger)
         proposal = make_record(
             "ProposedSubgraph",
             event_id="event:proposal:1",
-            generated_at=time_at(1),
+            generated_at=time_at(6),
             actor_id="actor:proposer",
             role="proposer",
+            source_record_ids=[artifacts["epistemic_policy"]["id"]],
             id="proposal:1",
             proposal_key="proposal-key",
             revision=1,
             revises_proposal_id=None,
             base_acceptance_head=ledger.replay().acceptance_head,
+            epistemic_policy_id=artifacts["epistemic_policy"]["id"],
+            epistemic_policy_hash=artifacts["epistemic_policy"]["content_hash"],
             member_content_hashes=["sha256:" + "9" * 64],
             claim_version_ids=[],
             evidence_ids=[],
@@ -749,7 +1334,7 @@ class TestProposalAndEpistemicState:
             ledger.append_event(
                 event_id="event:proposal:1",
                 event_type=EventType.PROPOSAL_RECORDED,
-                transaction_time=time_at(1),
+                transaction_time=time_at(6),
                 actor_id="actor:proposer",
                 payload={
                     "proposal": proposal,
@@ -809,6 +1394,8 @@ class TestProposalAndEpistemicState:
             revision=1,
             revises_proposal_id=None,
             base_acceptance_head=ledger.replay().acceptance_head,
+            epistemic_policy_id="artifact:policy",
+            epistemic_policy_hash="sha256:" + "8" * 64,
             member_content_hashes=[claim["content_hash"]],
             claim_version_ids=[claim["id"]],
             evidence_ids=[],
@@ -867,45 +1454,23 @@ class TestMonitorFailureAndAuthorization:
         proposal, _, _ = record_proposal(ledger)
         event_id = "event:monitor-failed"
         timestamp = time_at(7)
-        failure = make_record(
-            "MonitorFailure",
+        failure, unknown = monitor_failure_records(
+            error=MonitoringError("The monitor exceeded its deadline."),
+            failure_id="failure:1",
+            assessment_id="assessment:unknown",
             event_id=event_id,
             generated_at=timestamp,
             actor_id="actor:monitor",
             role="type-monitor",
-            source_record_ids=[proposal["id"], artifacts["monitor"]["id"]],
-            id="failure:1",
             proposal_id=proposal["id"],
             proposal_content_hash=proposal["content_hash"],
             base_acceptance_head=proposal["base_acceptance_head"],
             monitor_id=artifacts["monitor"]["id"],
             monitor_version="1",
             monitor_hash=artifacts["monitor"]["content_hash"],
-            failed_assessment_kind="TYPE",
+            assessment_kind="TYPE",
             failure_category="TIMEOUT",
             error_code="DEADLINE",
-            error_message="The monitor exceeded its deadline.",
-        )
-        unknown = make_record(
-            "TypeAssessment",
-            event_id=event_id,
-            generated_at=timestamp,
-            actor_id="actor:monitor",
-            role="type-monitor",
-            source_record_ids=[proposal["id"], artifacts["monitor"]["id"], failure["id"]],
-            id="assessment:unknown",
-            proposal_id=proposal["id"],
-            proposal_content_hash=proposal["content_hash"],
-            base_acceptance_head=proposal["base_acceptance_head"],
-            assessment_kind="TYPE",
-            assessment_outcome="UNKNOWN",
-            monitor_id=artifacts["monitor"]["id"],
-            monitor_version="1",
-            monitor_hash=artifacts["monitor"]["content_hash"],
-            monitor_failure_id=failure["id"],
-            input_record_ids=[proposal["id"]],
-            reason_codes=["MONITOR_FAILED"],
-            rationale="No assessment result was available.",
         )
         ledger.append_event(
             event_id=event_id,
@@ -914,15 +1479,112 @@ class TestMonitorFailureAndAuthorization:
             actor_id="actor:monitor",
             payload={
                 "failure": failure,
-                "assessment_type": "TypeAssessment",
+                "assessment_type": "UnavailableAssessment",
                 "assessment": unknown,
             },
         )
         projection = ledger.replay()
         assert failure["id"] in projection.monitor_failure_ids
         assert unknown["id"] in projection.assessment_ids
-        with pytest.raises(ProtocolError, match="every cited assessment SATISFIED"):
-            decide_epistemically(ledger, proposal, unknown, artifacts)
+        with pytest.raises(ProtocolError, match="verdict differs from deterministic policy"):
+            decide_epistemically(ledger, proposal, unknown, artifacts, verdict="ACCEPT")
+        decision = decide_epistemically(ledger, proposal, unknown, artifacts)
+        assert decision["epistemic_verdict"] == "DEFER"
+        assert decision["triggered_assessment_ids"] == [unknown["id"]]
+        assert ledger.replay().proposal_states[proposal["id"]] == ProposalState.DEFERRED
+
+    def test_monitor_failure_cannot_impersonate_authorization_monitor(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:authority-monitor-failed"
+        timestamp = time_at(7)
+        failure, unknown = monitor_failure_records(
+            error=MonitoringError("The monitor exceeded its deadline."),
+            failure_id="failure:authority",
+            assessment_id="assessment:authority:unknown",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="authority-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            assessment_kind="TYPE",
+            failure_category="TIMEOUT",
+            error_code="DEADLINE",
+        )
+        authority_monitor = artifacts["authority_monitor"]
+        for record in (failure, unknown):
+            record["assessment_kind" if record is unknown else "failed_assessment_kind"] = (
+                "AUTHORITY"
+            )
+            record["monitor_id"] = authority_monitor["id"]
+            record["monitor_hash"] = authority_monitor["content_hash"]
+            record["source_record_ids"] = [proposal["id"], authority_monitor["id"]]
+        unknown["source_record_ids"].append(failure["id"])
+        failure["content_hash"] = record_hash("MonitorFailure", failure)
+        unknown["content_hash"] = record_hash("UnavailableAssessment", unknown)
+
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="supports epistemic monitors only"):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.MONITOR_FAILED,
+                transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "failure": failure,
+                    "assessment_type": "UnavailableAssessment",
+                    "assessment": unknown,
+                },
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_monitor_failure_and_unavailable_assessment_cannot_share_id(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:monitor-id-collision"
+        timestamp = time_at(7)
+        failure, unknown = monitor_failure_records(
+            error=MonitoringError("The monitor failed."),
+            failure_id="record:collision",
+            assessment_id="assessment:temporary",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="type-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            assessment_kind="TYPE",
+            failure_category="EXECUTION",
+            error_code="FAILED",
+        )
+        unknown["id"] = failure["id"]
+        unknown["content_hash"] = record_hash("UnavailableAssessment", unknown)
+
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="IDs must differ"):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.MONITOR_FAILED,
+                transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "failure": failure,
+                    "assessment_type": "UnavailableAssessment",
+                    "assessment": unknown,
+                },
+            )
+        assert ledger.path.read_bytes() == before
 
     @pytest.mark.parametrize("reuse_same_context", [True, False])
     def test_standalone_unknown_cannot_reuse_monitor_failure(self, ledger, reuse_same_context):
@@ -931,45 +1593,23 @@ class TestMonitorFailureAndAuthorization:
         proposal, _, _ = record_proposal(ledger)
         event_id = "event:monitor-failed"
         timestamp = time_at(7)
-        failure = make_record(
-            "MonitorFailure",
+        failure, unknown = monitor_failure_records(
+            error=MonitoringError("The monitor exceeded its deadline."),
+            failure_id="failure:reused",
+            assessment_id="assessment:original-unknown",
             event_id=event_id,
             generated_at=timestamp,
             actor_id="actor:monitor",
             role="type-monitor",
-            source_record_ids=[proposal["id"], artifacts["monitor"]["id"]],
-            id="failure:reused",
             proposal_id=proposal["id"],
             proposal_content_hash=proposal["content_hash"],
             base_acceptance_head=proposal["base_acceptance_head"],
             monitor_id=artifacts["monitor"]["id"],
             monitor_version="1",
             monitor_hash=artifacts["monitor"]["content_hash"],
-            failed_assessment_kind="TYPE",
+            assessment_kind="TYPE",
             failure_category="TIMEOUT",
             error_code="DEADLINE",
-            error_message="The monitor exceeded its deadline.",
-        )
-        unknown = make_record(
-            "TypeAssessment",
-            event_id=event_id,
-            generated_at=timestamp,
-            actor_id="actor:monitor",
-            role="type-monitor",
-            source_record_ids=[proposal["id"], artifacts["monitor"]["id"], failure["id"]],
-            id="assessment:original-unknown",
-            proposal_id=proposal["id"],
-            proposal_content_hash=proposal["content_hash"],
-            base_acceptance_head=proposal["base_acceptance_head"],
-            assessment_kind="TYPE",
-            assessment_outcome="UNKNOWN",
-            monitor_id=artifacts["monitor"]["id"],
-            monitor_version="1",
-            monitor_hash=artifacts["monitor"]["content_hash"],
-            monitor_failure_id=failure["id"],
-            input_record_ids=[proposal["id"]],
-            reason_codes=["MONITOR_FAILED"],
-            rationale="No assessment result was available.",
         )
         ledger.append_event(
             event_id=event_id,
@@ -978,7 +1618,7 @@ class TestMonitorFailureAndAuthorization:
             actor_id="actor:monitor",
             payload={
                 "failure": failure,
-                "assessment_type": "TypeAssessment",
+                "assessment_type": "UnavailableAssessment",
                 "assessment": unknown,
             },
         )
@@ -1005,7 +1645,7 @@ class TestMonitorFailureAndAuthorization:
             ),
         }
         reused = make_record(
-            "TypeAssessment",
+            "UnavailableAssessment",
             event_id=reuse_event_id,
             generated_at=time_at(8),
             actor_id="actor:other",
@@ -1027,7 +1667,7 @@ class TestMonitorFailureAndAuthorization:
                 event_type=EventType.ASSESSMENT_RECORDED,
                 transaction_time=time_at(8),
                 actor_id="actor:other",
-                payload={"assessment_type": "TypeAssessment", "assessment": reused},
+                payload={"assessment_type": "UnavailableAssessment", "assessment": reused},
             )
         assert ledger.path.read_bytes() == before
 
@@ -1111,8 +1751,13 @@ class TestMonitorFailureAndAuthorization:
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
         first_proposal, _, first_action = record_proposal(ledger, include_action=True)
-        assessment = record_type_assessment(ledger, first_proposal, artifacts["monitor"])
-        decide_epistemically(ledger, first_proposal, assessment, artifacts, verdict="REJECT")
+        assessment = record_type_assessment(
+            ledger,
+            first_proposal,
+            artifacts["monitor"],
+            outcome="VIOLATED",
+        )
+        decide_epistemically(ledger, first_proposal, assessment, artifacts)
         record_proposal(
             ledger,
             include_action=True,
@@ -1287,6 +1932,91 @@ class TestLogicCheckProtocol:
         assert check["check_outcome"] == ("VIOLATED" if violated else "SATISFIED")
         assert len(witnesses) == (1 if violated else 0)
 
+    def test_exact_logical_monitor_can_record_only_one_check_per_proposal(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        first, _ = record_logic_check(ledger, proposal, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="logical monitor already produced check"):
+            record_logic_check(
+                ledger,
+                proposal,
+                artifacts,
+                violated=True,
+                minute=8,
+                check_id="logic-check:2",
+                event_id="event:logic-check:2",
+            )
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().logic_check_by_monitor_context[
+            (proposal["id"], artifacts["logic_monitor"]["id"])
+        ] == first["id"]
+
+    @pytest.mark.parametrize("failure_first", [False, True])
+    def test_completed_and_unavailable_logic_paths_are_mutually_exclusive(
+        self,
+        ledger,
+        failure_first,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        failure_event_id = "event:exclusive-logic-failure"
+        failure, unavailable = logic_monitor_failure_records(
+            error=LogicExecutionError("The pinned logic engine did not complete."),
+            failure_id="failure:logic:exclusive",
+            assessment_id="assessment:logic:unavailable",
+            event_id=failure_event_id,
+            generated_at=time_at(7),
+            actor_id="actor:monitor",
+            role="logic-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["logic_monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["logic_monitor"]["content_hash"],
+            logic_contract_id=artifacts["logic_contract"]["id"],
+            logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+            ruleset_id=artifacts["rules"]["id"],
+            ruleset_record_hash=artifacts["rules"]["content_hash"],
+            failure_category="EXECUTION",
+            error_code="ENGINE_FAILED",
+        )
+
+        def record_failure():
+            return ledger.append_event(
+                event_id=failure_event_id,
+                event_type=EventType.MONITOR_FAILED,
+                transaction_time=time_at(7),
+                actor_id="actor:monitor",
+                payload={
+                    "failure": failure,
+                    "assessment_type": "UnavailableAssessment",
+                    "assessment": unavailable,
+                },
+            )
+
+        if failure_first:
+            record_failure()
+            before = ledger.path.read_bytes()
+            with pytest.raises(ProtocolError, match="already produced unavailable output"):
+                record_logic_check(
+                    ledger,
+                    proposal,
+                    artifacts,
+                    violated=True,
+                    minute=8,
+                    event_id="event:exclusive-logic-check",
+                )
+        else:
+            record_logic_check(ledger, proposal, artifacts, violated=True)
+            before = ledger.path.read_bytes()
+            with pytest.raises(ProtocolError, match="completed logical check already exists"):
+                record_failure()
+        assert ledger.path.read_bytes() == before
+
     @pytest.mark.parametrize(
         "case, message",
         [
@@ -1435,9 +2165,9 @@ class TestLogicCheckProtocol:
             proposal_id=proposal["id"],
             proposal_content_hash=proposal["content_hash"],
             base_acceptance_head=proposal["base_acceptance_head"],
-            monitor_id=artifacts["monitor"]["id"],
+            monitor_id=artifacts["logic_monitor"]["id"],
             monitor_version="1",
-            monitor_hash=artifacts["monitor"]["content_hash"],
+            monitor_hash=artifacts["logic_monitor"]["content_hash"],
             logic_contract_id=artifacts["logic_contract"]["id"],
             logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
             failure_category="EXECUTION",
@@ -1452,7 +2182,7 @@ class TestLogicCheckProtocol:
             actor_id="actor:monitor",
             payload={
                 "failure": failure,
-                "assessment_type": "LogicalAssessment",
+                "assessment_type": "UnavailableAssessment",
                 "assessment": assessment,
             },
         )
@@ -1490,9 +2220,9 @@ class TestLogicCheckProtocol:
             proposal_id=proposal["id"],
             proposal_content_hash=proposal["content_hash"],
             base_acceptance_head=proposal["base_acceptance_head"],
-            monitor_id=artifacts["monitor"]["id"],
+            monitor_id=artifacts["logic_monitor"]["id"],
             monitor_version="1",
-            monitor_hash=artifacts["monitor"]["content_hash"],
+            monitor_hash=artifacts["logic_monitor"]["content_hash"],
             logic_contract_id=artifacts["logic_contract"]["id"],
             logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
             failure_category="EXECUTION",
@@ -1505,7 +2235,7 @@ class TestLogicCheckProtocol:
             failure["content_hash"] = record_hash("MonitorFailure", failure)
         elif case == "assessment_sources":
             assessment["source_record_ids"] = []
-            assessment["content_hash"] = record_hash("LogicalAssessment", assessment)
+            assessment["content_hash"] = record_hash("UnavailableAssessment", assessment)
         else:
             failure["logic_contract_record_hash"] = "sha256:" + "0" * 64
             failure["content_hash"] = record_hash("MonitorFailure", failure)
@@ -1518,7 +2248,7 @@ class TestLogicCheckProtocol:
                 actor_id="actor:monitor",
                 payload={
                     "failure": failure,
-                    "assessment_type": "LogicalAssessment",
+                    "assessment_type": "UnavailableAssessment",
                     "assessment": assessment,
                 },
             )

@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-12
+
+### Added
+
+- Added typed `MonitorSpecificationArtifact` records that bind assessment kind, monitor implementation hash, and exact input artifacts.
+- Added typed `EpistemicPolicyArtifact` records that declare exact required monitors, outcome-to-control mappings, and deterministic control precedence.
+- Added a pure policy evaluator that selects `ACCEPT`, `REJECT`, `DEFER`, or `CONTEST` only from complete, proposal-bound monitor outputs.
+- Added replay-bound trigger assessments and a canonical policy-evaluation hash to every epistemic decision.
+- Added proposal-time binding to one exact epistemic policy, before any monitor output exists.
+- Added `UnavailableAssessment` and `monitor_failure_records()` for atomic, non-logical monitor failure reporting.
+- Added adversarial tests for omitted monitors, unrequired monitors, post-output policy replacement, contradictory outputs and logical checks from one monitor, custom assessment-subclass bypass, artifact drift, outcome mapping, precedence, trigger drift, evaluation-hash drift, cross-record ID collisions, and standalone `UNKNOWN` reuse.
+
+### Changed
+
+- Replaced opaque monitor and epistemic-policy artifacts with concrete typed artifacts. The generic artifact path is rejected for both kinds.
+- Replaced caller-selected epistemic verdicts with replay-recomputed policy results.
+- Replaced incomplete typed assessments with `UnavailableAssessment`; `MONITOR_FAILED` is the only event that may introduce it.
+- Required all completed assessments to use `SATISFIED` or `VIOLATED`, bind the exact typed monitor, and include required dependencies in provenance.
+- Required one output from each exact monitor per proposal. A retry requires a new proposal or monitor record rather than an uncited competing assessment.
+- Required one completed check from each exact logical monitor per proposal. An assessment cannot cherry-pick among contradictory applied checks.
+- Rejected ID collisions across every atomic multi-record event before constructing the introduced-object map.
+- Closed core assessment kinds to their standard concrete record types. A domain-defined `Assessment` subclass cannot claim a core kind without its required semantic contract.
+
+### Compatibility
+
+- Version 0.4.0 intentionally does not replay 0.3.0 proposal records unchanged. `ProposedSubgraph` now requires `epistemic_policy_id` and `epistemic_policy_hash`; no implicit migration or default policy is applied.
+
+### Boundary
+
+- Stage 6 validates recorded monitor outputs but does not execute domain-specific monitors or independently reproduce their results.
+- Omitted required output blocks a decision. A real missing execution must be represented by `MonitorFailure` plus `UnavailableAssessment`.
+- `UNKNOWN` may select `DEFER` or `CONTEST`, never `ACCEPT` or `REJECT`.
+- Request payload selection, accepted-graph materialization, and bitemporal replay remain outside this release.
+- Policy authority, eligibility, scope, and effective-time selection remain outside this release. Coverage is exact relative to the policy precommitted by the proposal, not proof that the policy is legitimate.
+
 ## [0.3.0] - 2026-08-12
 
 ### Added

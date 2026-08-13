@@ -21,16 +21,24 @@ def test_package_runtime_and_project_versions_match():
     assert version.group(1) == malleus.__version__ == IMPLEMENTATION_STATUS.package_version
 
 
-def test_stage_five_boundary_is_explicit():
-    assert IMPLEMENTATION_STATUS.current_stage == "5"
-    assert IMPLEMENTATION_STATUS.boundary == "stage-5-general-logic-monitoring"
-    assert IMPLEMENTATION_STATUS.completed_stages == ("2", "3", "7a", "4", "5")
+def test_stage_six_boundary_is_explicit():
+    assert IMPLEMENTATION_STATUS.current_stage == "6"
+    assert IMPLEMENTATION_STATUS.boundary == "stage-6-policy-selected-monitoring-control"
+    assert IMPLEMENTATION_STATUS.completed_stages == ("2", "3", "7a", "4", "5", "6")
     assert "isolated-proposed-subgraph-staging" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "general-graph-to-prolog-compilation" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "logic-monitor-failure-to-unknown" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "typed-monitor-specifications" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "proposal-bound-epistemic-policy" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "exact-required-monitor-coverage" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "single-output-per-monitor-context" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "single-logic-check-per-monitor-context" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "closed-core-assessment-contracts" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "deterministic-epistemic-control-selection" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "assent-gated-materialization" in IMPLEMENTATION_STATUS.pending_capabilities
     assert "proposal-candidate-semantic-binding" in IMPLEMENTATION_STATUS.pending_capabilities
     assert "untrusted-rule-program-sandboxing" in IMPLEMENTATION_STATUS.pending_capabilities
+    assert "epistemic-policy-authority-and-scope" in IMPLEMENTATION_STATUS.pending_capabilities
 
 
 def test_ontology_versions_match_status_boundary():
@@ -48,7 +56,7 @@ def test_status_document_names_current_version_and_boundary():
         assert f"`{capability}`" in document
 
 
-def test_stage_five_example_contract_and_rules_are_distribution_inputs():
+def test_stage_five_example_contract_and_rules_remain_distribution_inputs():
     contract_path = ROOT / "prolog" / "cyp450_logic.yaml"
     rules_path = ROOT / "prolog" / "cyp450_rules.pl"
     assert contract_path.is_file()

@@ -32,6 +32,15 @@ def test_assent_ontology_loads_with_disjoint_outcome_vocabularies():
         "FULFILLED",
         "CANCELLED",
     }
+    assert registry.get_enum_values("ViolationEpistemicVerdict") == {
+        "REJECT",
+        "DEFER",
+        "CONTEST",
+    }
+    assert registry.get_enum_values("UnknownEpistemicVerdict") == {
+        "DEFER",
+        "CONTEST",
+    }
 
 
 def test_records_assessments_and_failures_are_distinct_categories():
@@ -41,6 +50,40 @@ def test_records_assessments_and_failures_are_distinct_categories():
     assert registry.is_subtype_of("MonitorFailure", "ProtocolRecord")
     assert not registry.is_subtype_of("MonitorFailure", "Assessment")
     assert "assessment_outcome" not in registry.effective_slots("MonitorFailure")
+    assert registry.is_subtype_of("UnavailableAssessment", "Assessment")
+
+
+def test_stage_six_artifacts_are_concrete_protocol_types():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("MonitorSpecificationArtifact", "ProtocolArtifact")
+    assert registry.is_subtype_of("EpistemicPolicyArtifact", "ProtocolArtifact")
+    monitor_kind = registry.get_slot_constraint(
+        "MonitorSpecificationArtifact",
+        "artifact_kind",
+    )
+    policy_kind = registry.get_slot_constraint("EpistemicPolicyArtifact", "artifact_kind")
+    assert monitor_kind.equals_string == "MONITOR_SPECIFICATION"
+    assert policy_kind.equals_string == "EPISTEMIC_POLICY"
+
+
+def test_unavailable_assessment_is_unknown_only():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    outcome = registry.get_slot_constraint("UnavailableAssessment", "assessment_outcome")
+    assert outcome.equals_string == "UNKNOWN"
+
+
+def test_epistemic_decision_records_policy_evaluation_and_triggers():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    slots = registry.effective_slots("EpistemicDecision")
+    assert slots["policy_evaluation_hash"].required
+    assert slots["triggered_assessment_ids"].multivalued
+
+
+def test_proposal_requires_exact_epistemic_policy_binding():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    slots = registry.effective_slots("ProposedSubgraph")
+    assert slots["epistemic_policy_id"].required
+    assert slots["epistemic_policy_hash"].required
 
 
 def test_epistemic_and_authorization_slots_use_different_enums():

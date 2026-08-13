@@ -302,13 +302,72 @@ malleus_rule(RuleId).
 malleus_violation(RuleId, ViolationCode, WitnessRecordIds).
 ```
 
-`LogicContract` pins the resolved ontology hash, fact-contract version, exact rule-program bytes, manifest of rule IDs, artifact versions, and Prolog subprocess wall-clock timeout. `LogicContractArtifact` exposes the canonical semantic fields to replay while retaining separate content-record, semantic-contract, and raw-rule-byte hashes. `PrologVerifier` compiles caller-supplied context and the candidate overlay, starts a fresh SWI-Prolog process, enumerates all violations, validates every rule ID and witness, and returns a deterministic `LogicCheckResult`. A fresh process prevents facts or rules from leaking between checks. The timeout does not bound graph compilation, output size, memory, or CPU, and the process is not an untrusted-code sandbox. Stage 5 does not establish that caller-supplied context is assent-accepted state.
+`LogicContract` pins the resolved ontology hash, fact-contract version, exact rule-program bytes, manifest of rule IDs, artifact versions, and Prolog subprocess wall-clock timeout. `LogicContractArtifact` exposes the canonical semantic fields to replay while retaining separate content-record, semantic-contract, and raw-rule-byte hashes. `PrologVerifier` compiles caller-supplied context and the candidate overlay, starts a fresh SWI-Prolog process, enumerates all violations, validates every rule ID and witness, and returns a canonicalized `LogicCheckResult`. A fresh process prevents facts or rules from leaking between checks. The timeout does not bound graph compilation, output size, memory, or CPU, and the process is not an untrusted-code sandbox. Stage 5 does not establish that caller-supplied context is assent-accepted state.
 
 A completed check has exactly two outcomes. `SATISFIED` means the exhaustive query completed with no violations. `VIOLATED` means it completed with at least one validated witness. Missing entrypoints, syntax errors, manifest mismatches, malformed witnesses, timeouts, and unavailable SWI-Prolog raise `LogicExecutionError`. They are incomplete monitoring, never clean results.
 
-Completed execution evidence becomes an immutable `LogicCheckRecord` plus zero or more `ViolationWitness` records. Failed execution becomes a separate `MonitorFailure` and logical `UNKNOWN` assessment. These are content-addressed execution attestations with replay-validated bindings, not formal proof certificates or guarantees that another engine run will reproduce the result.
+Completed execution evidence becomes an immutable `LogicCheckRecord` plus zero or more `ViolationWitness` records. Failed execution becomes an atomic `MonitorFailure` and `UnavailableAssessment` pair bound to the logical contract and ruleset. These are content-addressed execution attestations with replay-validated bindings, not formal proof certificates or guarantees that another engine run will reproduce the result.
 
 The package ships one CYP450 contract and rule program as a worked example. Stage 5 accepts only trusted, pinned local rules. Sandboxing uploaded or otherwise untrusted Prolog is outside this boundary.
+
+## Layer 3b: Monitoring Policy and Epistemic Control
+
+Stage 6 operates on recorded assessment outputs. It does not run the domain
+monitors itself.
+
+```text
+MonitorSpecificationArtifact
+  assessment kind
+  implementation hash
+  input artifact IDs and record hashes
+            |
+            v
+EpistemicPolicyArtifact
+  exact required monitor records
+  VIOLATED control per monitor
+  UNKNOWN control per monitor
+  explicit control precedence
+            |
+            v
+ProposedSubgraph
+  exact policy ID and record hash
+            |
+            v
+PolicyEvaluation
+  exact coverage check
+  proposal and monitor binding
+  selected verdict
+  trigger assessment IDs
+  canonical evaluation hash
+            |
+            v
+EpistemicDecision
+```
+
+All required monitors must contribute exactly one assessment. `SATISFIED`
+contributes no control. `VIOLATED` uses the policy's declared `REJECT`, `DEFER`,
+or `CONTEST` mapping. `UNKNOWN` can only use `DEFER` or `CONTEST`. If several
+controls fire, the policy's stored precedence resolves them deterministically.
+Replay recomputes the result and rejects a changed verdict, trigger list, or
+evaluation hash.
+
+The proposal pins the policy before monitoring. Replay permits one output from
+an exact monitor for that proposal, one completed logical check from an exact
+logical monitor, and rejects later competing records. Core
+assessment kinds are closed to their standard concrete types, so an ontology
+extension cannot claim a core result while omitting its semantic evidence.
+The pinned policy is not thereby legitimate. Stage 6 has no policy-authority,
+scope, eligibility, or effective-time selection mechanism.
+
+Monitor absence is not treated as an implicit outcome. The failed attempt and
+its `UnavailableAssessment` must be recorded atomically. An omitted required
+monitor prevents a decision. This preserves provenance and distinguishes an
+execution failure from negative evidence.
+
+The same assessment events can exist without an epistemic decision. That is
+the code-level boundary between experimental condition C3, monitoring recorded
+with control disabled, and C4, the same monitoring followed by explicit policy
+control.
 
 ---
 
@@ -415,6 +474,7 @@ The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.
 - `tests/test_kg.py`: mutation-free rejection of invalid types, properties, ranges, collections, identifiers, predicates, and endpoints, plus operation logging and queries.
 - `tests/test_staging.py`: isolated candidate validation, intra-candidate dependencies, stale-base rejection, and atomic structural materialization.
 - `tests/test_logic.py`: pinned contract loading, domain-neutral fact compilation, deterministic hashes, and protocol-record construction.
+- `tests/test_control.py`: exact monitor coverage, outcome mappings, precedence, evaluation hashing, and explicit unavailable-monitor records.
 - `tests/test_prolog_verifier.py`: process isolation, exhaustive violations, malformed-result rejection, injection resistance, timeout handling, and mutation-free candidate verification.
 - `tests/test_protocol.py`: atomic check and witness recording, artifact binding, assessment agreement, and failure-to-`UNKNOWN` replay.
 

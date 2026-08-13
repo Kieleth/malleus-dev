@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.2.0
+version: 0.3.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -45,6 +45,17 @@ enums:
     permissible_values:
       ACCEPT:
       REJECT:
+      DEFER:
+      CONTEST:
+
+  ViolationEpistemicVerdict:
+    permissible_values:
+      REJECT:
+      DEFER:
+      CONTEST:
+
+  UnknownEpistemicVerdict:
+    permissible_values:
       DEFER:
       CONTEST:
 
@@ -126,6 +137,66 @@ classes:
       artifact_hash:
         required: true
 
+  MonitorSpecificationArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Replay-visible specification of one exact monitor implementation and its
+      input artifacts. This record does not claim that the monitor executed.
+    slots:
+      - monitor_schema_version
+      - assessment_kind
+      - monitor_implementation_hash
+      - input_artifact_ids
+      - input_artifact_record_hashes
+    slot_usage:
+      artifact_kind:
+        equals_string: MONITOR_SPECIFICATION
+      monitor_schema_version:
+        required: true
+        equals_string: "1"
+      assessment_kind:
+        required: true
+      monitor_implementation_hash:
+        required: true
+
+  EpistemicPolicyArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Deterministic mapping from exact required monitor outputs to one
+      epistemic verdict.
+    slots:
+      - policy_schema_version
+      - ruleset_id
+      - ruleset_record_hash
+      - ruleset_artifact_hash
+      - required_monitor_ids
+      - required_monitor_record_hashes
+      - violation_verdicts
+      - unknown_verdicts
+      - control_precedence
+    slot_usage:
+      artifact_kind:
+        equals_string: EPISTEMIC_POLICY
+      policy_schema_version:
+        required: true
+        equals_string: "1"
+      ruleset_id:
+        required: true
+      ruleset_record_hash:
+        required: true
+      ruleset_artifact_hash:
+        required: true
+      required_monitor_ids:
+        required: true
+      required_monitor_record_hashes:
+        required: true
+      violation_verdicts:
+        required: true
+      unknown_verdicts:
+        required: true
+      control_precedence:
+        required: true
+
   LogicContractArtifact:
     is_a: ProtocolArtifact
     description: >-
@@ -192,6 +263,8 @@ classes:
       - proposal_key
       - revises_proposal_id
       - base_acceptance_head
+      - epistemic_policy_id
+      - epistemic_policy_hash
       - member_content_hashes
       - claim_version_ids
       - evidence_ids
@@ -203,6 +276,10 @@ classes:
       proposal_key:
         required: true
       base_acceptance_head:
+        required: true
+      epistemic_policy_id:
+        required: true
+      epistemic_policy_hash:
         required: true
       member_content_hashes:
         required: true
@@ -319,6 +396,20 @@ classes:
       rationale:
         required: true
 
+  UnavailableAssessment:
+    is_a: Assessment
+    description: >-
+      Explicit UNKNOWN output paired atomically with a MonitorFailure. It is
+      not a completed monitor result.
+    slots:
+      - logic_contract_id
+      - logic_contract_record_hash
+      - ruleset_id
+      - ruleset_hash
+    slot_usage:
+      assessment_outcome:
+        equals_string: UNKNOWN
+
   TypeAssessment:
     is_a: Assessment
     slot_usage:
@@ -348,8 +439,6 @@ classes:
     slot_usage:
       assessment_kind:
         equals_string: CONFLICT
-      conflicting_assertion_ids:
-        required: true
       conflict_rule_id:
         required: true
       conflict_rule_hash:
@@ -601,6 +690,8 @@ classes:
       - proposal_content_hash
       - epistemic_verdict
       - assessment_ids
+      - triggered_assessment_ids
+      - policy_evaluation_hash
       - evidence_assertion_ids
       - request_ids
       - claim_revision_ids
@@ -614,6 +705,8 @@ classes:
       epistemic_verdict:
         required: true
       assessment_ids:
+        required: true
+      policy_evaluation_hash:
         required: true
       ruleset_id:
         required: true
@@ -913,6 +1006,33 @@ slots:
     range: string
   monitor_failure_id:
     range: string
+  monitor_schema_version:
+    range: string
+  monitor_implementation_hash:
+    range: string
+  input_artifact_ids:
+    range: string
+    multivalued: true
+  input_artifact_record_hashes:
+    range: string
+    multivalued: true
+  policy_schema_version:
+    range: string
+  required_monitor_ids:
+    range: string
+    multivalued: true
+  required_monitor_record_hashes:
+    range: string
+    multivalued: true
+  violation_verdicts:
+    range: ViolationEpistemicVerdict
+    multivalued: true
+  unknown_verdicts:
+    range: UnknownEpistemicVerdict
+    multivalued: true
+  control_precedence:
+    range: ViolationEpistemicVerdict
+    multivalued: true
   ruleset_id:
     range: string
   ruleset_hash:
@@ -1050,6 +1170,15 @@ slots:
     multivalued: true
   epistemic_verdict:
     range: EpistemicVerdict
+  triggered_assessment_ids:
+    range: string
+    multivalued: true
+  policy_evaluation_hash:
+    range: string
+  epistemic_policy_id:
+    range: string
+  epistemic_policy_hash:
+    range: string
   assessment_ids:
     range: string
     multivalued: true

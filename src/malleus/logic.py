@@ -13,6 +13,7 @@ from typing import Any, Mapping
 import yaml
 
 from malleus.kg import KnowledgeGraph
+from malleus.control import build_monitor_failure_records
 from malleus.ledger import (
     LedgerError,
     content_digest,
@@ -527,28 +528,7 @@ def logic_monitor_failure_records(
     """Build the only valid protocol outcome for an incomplete logic check."""
     if not isinstance(error, LogicError):
         raise TypeError("error must be a LogicError")
-    error_message = str(error)
     for name, value in (
-        ("failure_id", failure_id),
-        ("assessment_id", assessment_id),
-        ("event_id", event_id),
-        ("generated_at", generated_at),
-        ("actor_id", actor_id),
-        ("role", role),
-        ("proposal_id", proposal_id),
-        ("monitor_id", monitor_id),
-        ("monitor_version", monitor_version),
-        ("logic_contract_id", logic_contract_id),
-        ("ruleset_id", ruleset_id),
-        ("failure_category", failure_category),
-        ("error_code", error_code),
-        ("error_message", error_message),
-    ):
-        _nonblank(value, name)
-    for name, value in (
-        ("proposal_content_hash", proposal_content_hash),
-        ("base_acceptance_head", base_acceptance_head),
-        ("monitor_hash", monitor_hash),
         ("logic_contract_record_hash", logic_contract_record_hash),
         ("ruleset_record_hash", ruleset_record_hash),
     ):
@@ -556,68 +536,37 @@ def logic_monitor_failure_records(
             require_digest(value, name)
         except LedgerError as digest_error:
             raise LogicError(str(digest_error)) from digest_error
-    failure = with_content_hash(
-        "MonitorFailure",
-        {
-            "id": failure_id,
-            "generation_event_id": event_id,
-            "generated_at": generated_at,
-            "responsible_actor_id": actor_id,
-            "responsible_role": role,
-            "source_record_ids": sorted({proposal_id, monitor_id, logic_contract_id, ruleset_id}),
-            "proposal_id": proposal_id,
-            "proposal_content_hash": proposal_content_hash,
-            "base_acceptance_head": base_acceptance_head,
-            "monitor_id": monitor_id,
-            "monitor_version": monitor_version,
-            "monitor_hash": monitor_hash,
+    return build_monitor_failure_records(
+        error=error,
+        failure_id=failure_id,
+        assessment_id=assessment_id,
+        event_id=event_id,
+        generated_at=generated_at,
+        actor_id=actor_id,
+        role=role,
+        proposal_id=proposal_id,
+        proposal_content_hash=proposal_content_hash,
+        base_acceptance_head=base_acceptance_head,
+        monitor_id=monitor_id,
+        monitor_version=monitor_version,
+        monitor_hash=monitor_hash,
+        assessment_kind="LOGICAL",
+        failure_category=failure_category,
+        error_code=error_code,
+        additional_source_record_ids=(logic_contract_id, ruleset_id),
+        failure_fields={
             "logic_contract_id": logic_contract_id,
             "logic_contract_record_hash": logic_contract_record_hash,
             "ruleset_id": ruleset_id,
             "ruleset_hash": ruleset_record_hash,
-            "failed_assessment_kind": "LOGICAL",
-            "failure_category": failure_category,
-            "error_code": error_code,
-            "error_message": error_message,
         },
-    )
-    assessment = with_content_hash(
-        "LogicalAssessment",
-        {
-            "id": assessment_id,
-            "generation_event_id": event_id,
-            "generated_at": generated_at,
-            "responsible_actor_id": actor_id,
-            "responsible_role": role,
-            "source_record_ids": sorted({
-                proposal_id,
-                monitor_id,
-                failure_id,
-                logic_contract_id,
-                ruleset_id,
-            }),
-            "proposal_id": proposal_id,
-            "proposal_content_hash": proposal_content_hash,
-            "base_acceptance_head": base_acceptance_head,
-            "assessment_kind": "LOGICAL",
-            "assessment_outcome": "UNKNOWN",
-            "monitor_id": monitor_id,
-            "monitor_version": monitor_version,
-            "monitor_hash": monitor_hash,
-            "monitor_failure_id": failure_id,
-            "input_record_ids": [proposal_id],
-            "reason_codes": [error_code],
-            "rationale": "The logic monitor did not complete; no rule result is available.",
-            "checked_rule_ids": [],
-            "violated_rule_ids": [],
-            "logic_check_record_ids": [],
+        assessment_fields={
             "logic_contract_id": logic_contract_id,
             "logic_contract_record_hash": logic_contract_record_hash,
             "ruleset_id": ruleset_id,
             "ruleset_hash": ruleset_record_hash,
         },
     )
-    return failure, assessment
 
 
 def _property_facts(owner_id: str, properties: Mapping[str, Any]) -> set[str]:

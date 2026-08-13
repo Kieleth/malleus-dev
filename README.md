@@ -16,7 +16,7 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.2.0`, `stage-4-structural-staging`. See
+Current package boundary: `0.4.0`, `stage-6-policy-selected-monitoring-control`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -174,9 +174,51 @@ malleus_rule(RuleId).
 malleus_violation(RuleId, ViolationCode, WitnessRecordIds).
 ```
 
-The verifier enumerates every violation, rejects malformed or unknown witnesses, and never mutates the base graph. Consult errors, timeouts, manifest mismatches, and malformed results raise `LogicExecutionError`; they never become `SATISFIED`. `logic_monitor_failure_records()` converts such a failure into a `MonitorFailure` and a logical `UNKNOWN` assessment. Completed checks can be serialized as content-addressed `LogicCheckRecord` and `ViolationWitness` records.
+The verifier enumerates every violation, rejects malformed or unknown witnesses, and never mutates the base graph. Consult errors, timeouts, manifest mismatches, and malformed results raise `LogicExecutionError`; they never become `SATISFIED`. `logic_monitor_failure_records()` converts such a failure into an atomic `MonitorFailure` and `UnavailableAssessment` pair bound to the logical contract and ruleset. Completed checks can be serialized as content-addressed `LogicCheckRecord` and `ViolationWitness` records.
 
 The package ships the CYP450 contract and rules as an example. Stage 5 accepts only trusted, pinned local rule programs. The timeout bounds the Prolog subprocess wall clock, not graph compilation, output size, memory, or CPU. It does not sandbox untrusted Prolog or issue formal proof certificates.
+
+## Policy-selected monitoring and control
+
+Stage 6 replaces opaque monitor and epistemic-policy artifacts with typed,
+content-addressed records. A monitor specification binds its assessment kind,
+implementation hash, and input artifacts. An epistemic policy names the exact
+monitors it requires and maps each `VIOLATED` or `UNKNOWN` result to an
+epistemic control. Each proposal binds one exact policy before monitoring
+begins, so a controller cannot choose a favorable policy after seeing outputs.
+
+`evaluate_epistemic_policy()` requires exactly one assessment from every
+selected monitor. It returns the ordered assessment IDs, control-triggering
+assessment IDs, selected verdict, and canonical evaluation hash. Protocol
+replay recomputes those values before accepting an `EpistemicDecision`.
+
+The control rules are intentionally small:
+
+- All required assessments `SATISFIED` selects `ACCEPT`.
+- `VIOLATED` selects the monitor-specific `REJECT`, `DEFER`, or `CONTEST` mapping.
+- `UNKNOWN` selects only `DEFER` or `CONTEST`.
+- Explicit policy precedence resolves multiple triggered controls.
+- Omitted, duplicate, or unrequired monitor outputs block the decision.
+- An exact monitor can produce only one output per proposal. A logical monitor can also record only one completed check for that proposal.
+
+A monitor that did not complete is not silently omitted. The caller records
+`MonitorFailure` plus `UnavailableAssessment` atomically, using
+`monitor_failure_records()` for non-logical monitors or
+`logic_monitor_failure_records()` for logical execution. Stage 6 validates
+these outputs and controls; it does not execute every domain-specific monitor
+or claim to reproduce its result.
+
+Recording assessments without appending an epistemic decision leaves the
+proposal open. This separates monitoring-only C3 from monitoring-plus-control
+C4 without maintaining two code paths.
+
+Core assessment kinds use their declared concrete record types. Domain-defined
+assessment subclasses cannot claim a core kind while omitting that kind's
+required evidence. Version 0.4.0 therefore does not replay 0.3.0 proposals
+unchanged: each proposal must explicitly name and source its policy record.
+This precommitment prevents ex-post selection. It does not prove that the
+proposer had authority to choose that policy or that the policy applies to the
+proposal's domain; those checks remain outside Stage 6.
 
 ## Architecture
 

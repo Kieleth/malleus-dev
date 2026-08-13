@@ -446,9 +446,9 @@ def test_execution_failure_builds_unknown_assessment_without_completed_check():
     )
     assert failure["failed_assessment_kind"] == "LOGICAL"
     assert assessment["assessment_outcome"] == "UNKNOWN"
-    assert assessment["checked_rule_ids"] == []
-    assert assessment["violated_rule_ids"] == []
-    assert assessment["logic_check_record_ids"] == []
+    assert "checked_rule_ids" not in assessment
+    assert "violated_rule_ids" not in assessment
+    assert "logic_check_record_ids" not in assessment
     assert assessment["monitor_failure_id"] == failure["id"]
     assert failure["logic_contract_id"] == "logic-contract:1"
     assert assessment["logic_contract_record_hash"] == "sha256:" + "5" * 64

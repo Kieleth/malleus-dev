@@ -21,6 +21,14 @@ from malleus.ledger import (
 )
 from malleus.ontology import OntologyRegistry
 from malleus.logic import logic_contract_digest
+from malleus.control import (
+    ControlError,
+    EPISTEMIC_MONITOR_KINDS,
+    epistemic_policy_digest,
+    evaluate_epistemic_policy,
+    monitor_specification_digest,
+    policy_requirements,
+)
 
 
 class ProtocolError(LedgerError):
@@ -64,6 +72,15 @@ AUTHORIZATION_TARGETS = {
     "BLOCK": AuthorizationState.BLOCKED,
     "CLARIFY": AuthorizationState.CLARIFICATION_REQUIRED,
 }
+ASSESSMENT_TYPES_BY_KIND = {
+    "TYPE": "TypeAssessment",
+    "EVIDENCE_COMPLETENESS": "EvidenceCompletenessAssessment",
+    "CONFLICT": "ConflictAssessment",
+    "UNCERTAINTY": "UncertaintyAssessment",
+    "LOGICAL": "LogicalAssessment",
+    "TEMPORAL": "TemporalAssessment",
+    "AUTHORITY": "AuthorityAssessment",
+}
 PAYLOAD_FIELDS = {
     EventType.EXTERNAL_SNAPSHOT_ANCHORED: {
         "snapshot_id",
@@ -81,6 +98,17 @@ PAYLOAD_FIELDS = {
     EventType.AUTHORIZATION_DECIDED: {"decision", "transition"},
 }
 PRESENT_FIELDS = {
+    "MonitorSpecificationArtifact": {
+        "input_artifact_ids",
+        "input_artifact_record_hashes",
+    },
+    "EpistemicPolicyArtifact": {
+        "required_monitor_ids",
+        "required_monitor_record_hashes",
+        "violation_verdicts",
+        "unknown_verdicts",
+        "control_precedence",
+    },
     "ProposedSubgraph": {
         "claim_version_ids",
         "evidence_ids",
@@ -89,10 +117,13 @@ PRESENT_FIELDS = {
     },
     "ClaimVersion": {"dependency_ids"},
     "EpistemicDecision": {
+        "triggered_assessment_ids",
         "evidence_assertion_ids",
         "request_ids",
         "claim_revision_ids",
     },
+    "EvidenceCompletenessAssessment": {"missing_requirement_ids"},
+    "ConflictAssessment": {"conflicting_assertion_ids"},
     "AuthorizationDecision": {
         "epistemic_decision_ids",
         "relied_on_claim_version_ids",
@@ -134,6 +165,8 @@ class ProtocolProjection:
     current_claim_by_key: dict[str, str] = field(default_factory=dict)
     latest_action_by_key: dict[str, str] = field(default_factory=dict)
     superseded_claim_ids: set[str] = field(default_factory=set)
+    monitor_output_ids: dict[tuple[str, str], str] = field(default_factory=dict)
+    logic_check_by_monitor_context: dict[tuple[str, str], str] = field(default_factory=dict)
     snapshot_hash: str | None = None
     acceptance_head: str = GENESIS
     head_hash: str = GENESIS
@@ -273,11 +306,124 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: AuthorityGrant grantor must be the generating actor"
             )
-        if artifact_type == "LogicContractArtifact":
+        typed_artifacts = {
+            "MONITOR_SPECIFICATION": "MonitorSpecificationArtifact",
+            "EPISTEMIC_POLICY": "EpistemicPolicyArtifact",
+            "LOGIC_CONTRACT": "LogicContractArtifact",
+        }
+        expected_type = typed_artifacts.get(artifact["artifact_kind"])
+        if expected_type and artifact_type != expected_type:
+            raise ProtocolError(
+                f"event {event['event_id']}: {artifact['artifact_kind']} requires {expected_type}"
+            )
+        if artifact_type == "MonitorSpecificationArtifact":
+            self._validate_monitor_specification_artifact(projection, artifact, event)
+        elif artifact_type == "EpistemicPolicyArtifact":
+            self._validate_epistemic_policy_artifact(projection, artifact, event)
+        elif artifact_type == "LogicContractArtifact":
             self._validate_logic_contract_artifact(projection, artifact, event)
         self._validate_sources(artifact, projection.objects, event)
         self._add_objects(projection, {artifact["id"]: _wrapped(artifact_type, artifact)}, event)
         projection.artifact_ids.add(artifact["id"])
+
+    def _validate_monitor_specification_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        _canonical_unique(
+            artifact["input_artifact_ids"],
+            f"event {event['event_id']} input_artifact_ids",
+        )
+        if len(artifact["input_artifact_ids"]) != len(artifact["input_artifact_record_hashes"]):
+            raise ProtocolError(
+                f"event {event['event_id']}: monitor input artifact fields differ in length"
+            )
+        if artifact["assessment_kind"] not in {*EPISTEMIC_MONITOR_KINDS, "AUTHORITY"}:
+            raise ProtocolError(f"event {event['event_id']}: unsupported monitor assessment kind")
+        require_digest(
+            artifact["monitor_implementation_hash"],
+            f"event {event['event_id']} monitor_implementation_hash",
+        )
+        for artifact_id, record_hash_value in zip(
+            artifact["input_artifact_ids"],
+            artifact["input_artifact_record_hashes"],
+            strict=True,
+        ):
+            dependency = self._object(projection.objects, artifact_id, "ProtocolArtifact")
+            if dependency["content_hash"] != record_hash_value:
+                raise ProtocolError(
+                    f"event {event['event_id']}: monitor input artifact hash mismatch"
+                )
+        self._require_sources(artifact, set(artifact["input_artifact_ids"]), event)
+        try:
+            expected_hash = monitor_specification_digest(
+                schema_version=artifact["monitor_schema_version"],
+                monitor_id=artifact["id"],
+                monitor_version=artifact["artifact_version"],
+                assessment_kind=artifact["assessment_kind"],
+                implementation_hash=artifact["monitor_implementation_hash"],
+                input_artifact_ids=artifact["input_artifact_ids"],
+                input_artifact_record_hashes=artifact["input_artifact_record_hashes"],
+            )
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"event {event['event_id']}: monitor semantic hash mismatch")
+
+    def _validate_epistemic_policy_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        try:
+            requirements = policy_requirements(artifact)
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        ruleset = self._artifact_ref(
+            projection,
+            artifact["ruleset_id"],
+            artifact["ruleset_record_hash"],
+            "RULE_SET",
+        )
+        if artifact["ruleset_artifact_hash"] != ruleset["artifact_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: policy ruleset artifact hash mismatch")
+        required_sources = {artifact["ruleset_id"]}
+        for requirement in requirements:
+            monitor = self._artifact_ref(
+                projection,
+                requirement["monitor_id"],
+                requirement["monitor_record_hash"],
+                "MONITOR_SPECIFICATION",
+                record_type="MonitorSpecificationArtifact",
+            )
+            if monitor["assessment_kind"] not in EPISTEMIC_MONITOR_KINDS:
+                raise ProtocolError(
+                    f"event {event['event_id']}: epistemic policy cannot require "
+                    f"{monitor['assessment_kind']} monitor"
+                )
+            required_sources.add(monitor["id"])
+        self._require_sources(artifact, required_sources, event)
+        try:
+            expected_hash = epistemic_policy_digest(
+                schema_version=artifact["policy_schema_version"],
+                policy_id=artifact["id"],
+                policy_version=artifact["artifact_version"],
+                ruleset_id=artifact["ruleset_id"],
+                ruleset_record_hash=artifact["ruleset_record_hash"],
+                ruleset_artifact_hash=artifact["ruleset_artifact_hash"],
+                required_monitor_ids=artifact["required_monitor_ids"],
+                required_monitor_record_hashes=artifact["required_monitor_record_hashes"],
+                violation_verdicts=artifact["violation_verdicts"],
+                unknown_verdicts=artifact["unknown_verdicts"],
+                control_precedence=artifact["control_precedence"],
+            )
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"event {event['event_id']}: epistemic policy semantic hash mismatch")
 
     def _validate_logic_contract_artifact(
         self,
@@ -323,6 +469,14 @@ class ProtocolLedger:
         proposal = self._record("ProposedSubgraph", payload["proposal"], event)
         if proposal["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: proposal has stale base_acceptance_head")
+        self._artifact_ref(
+            projection,
+            proposal["epistemic_policy_id"],
+            proposal["epistemic_policy_hash"],
+            "EPISTEMIC_POLICY",
+            record_type="EpistemicPolicyArtifact",
+        )
+        self._require_sources(proposal, {proposal["epistemic_policy_id"]}, event)
         self._validate_proposal_revision(projection, proposal, event)
         if not isinstance(payload["members"], list) or not payload["members"]:
             raise ProtocolError(f"event {event['event_id']}: proposal members must be nonempty")
@@ -404,15 +558,31 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: logic check base mismatch")
         if check["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: logic check has stale acceptance head")
+        check_key = (check["proposal_id"], check["monitor_id"])
+        existing_output = projection.monitor_output_ids.get(check_key)
+        if existing_output is not None:
+            raise ProtocolError(
+                f"event {event['event_id']}: logical monitor already produced unavailable output "
+                f"'{existing_output}' for proposal '{check['proposal_id']}'"
+            )
+        existing_check = projection.logic_check_by_monitor_context.get(check_key)
+        if existing_check is not None:
+            raise ProtocolError(
+                f"event {event['event_id']}: logical monitor already produced check "
+                f"'{existing_check}' for proposal '{check['proposal_id']}'"
+            )
 
         monitor = self._artifact_ref(
             projection,
             check["monitor_id"],
             check["monitor_hash"],
             "MONITOR_SPECIFICATION",
+            record_type="MonitorSpecificationArtifact",
         )
         if check["monitor_version"] != monitor["artifact_version"]:
             raise ProtocolError(f"event {event['event_id']}: monitor_version mismatch")
+        if monitor["assessment_kind"] != "LOGICAL":
+            raise ProtocolError(f"event {event['event_id']}: logic check requires LOGICAL monitor")
         contract = self._artifact_ref(
             projection,
             check["logic_contract_id"],
@@ -424,6 +594,13 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: logic_contract_version mismatch")
         if check["logic_contract_artifact_hash"] != contract["artifact_hash"]:
             raise ProtocolError(f"event {event['event_id']}: logic contract artifact hash mismatch")
+        monitor_inputs = dict(zip(
+            monitor["input_artifact_ids"],
+            monitor["input_artifact_record_hashes"],
+            strict=True,
+        ))
+        if monitor_inputs.get(contract["id"]) != contract["content_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract differs from monitor")
         ruleset = self._artifact_ref(
             projection,
             check["ruleset_id"],
@@ -556,6 +733,7 @@ class ProtocolLedger:
             "witness_binding_hash values",
         )
 
+        _require_distinct_record_ids([check, *witness_records], event)
         introduced = {
             check["id"]: _wrapped("LogicCheckRecord", check),
             **witnesses,
@@ -567,6 +745,7 @@ class ProtocolLedger:
         self._add_objects(projection, introduced, event)
         projection.logic_check_ids.add(check["id"])
         projection.violation_witness_ids.update(witnesses)
+        projection.logic_check_by_monitor_context[check_key] = check["id"]
 
     def _assessment(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -579,6 +758,7 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: UNKNOWN assessment requires atomic MONITOR_FAILED event"
             )
+        self._require_new_monitor_output(projection, assessment, event)
         self._validate_assessment_context(projection, assessment_type, assessment, event)
         if assessment.get("monitor_failure_id") is not None:
             raise ProtocolError(
@@ -591,6 +771,7 @@ class ProtocolLedger:
             event,
         )
         projection.assessment_ids.add(assessment["id"])
+        self._index_monitor_output(projection, assessment)
 
     def _monitor_failure(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -598,8 +779,29 @@ class ProtocolLedger:
         failure = self._record("MonitorFailure", payload["failure"], event)
         assessment_type = payload["assessment_type"]
         assessment = self._record(assessment_type, payload["assessment"], event, root="Assessment")
+        if assessment_type != "UnavailableAssessment":
+            raise ProtocolError(
+                f"event {event['event_id']}: MONITOR_FAILED requires UnavailableAssessment"
+            )
         if assessment["assessment_outcome"] != "UNKNOWN":
             raise ProtocolError(f"event {event['event_id']}: failed monitor must produce UNKNOWN")
+        if assessment["assessment_kind"] not in EPISTEMIC_MONITOR_KINDS:
+            raise ProtocolError(
+                f"event {event['event_id']}: MONITOR_FAILED supports epistemic monitors only"
+            )
+        if failure["id"] == assessment["id"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: monitor failure and assessment IDs must differ"
+            )
+        self._require_new_monitor_output(projection, assessment, event)
+        if (
+            assessment["assessment_kind"] == "LOGICAL"
+            and (assessment["proposal_id"], assessment["monitor_id"])
+            in projection.logic_check_by_monitor_context
+        ):
+            raise ProtocolError(
+                f"event {event['event_id']}: completed logical check already exists for monitor"
+            )
         if assessment.get("monitor_failure_id") != failure["id"]:
             raise ProtocolError(f"event {event['event_id']}: UNKNOWN assessment must cite failure")
         for name in (
@@ -621,14 +823,19 @@ class ProtocolLedger:
             assessment["monitor_id"],
             failure["id"],
         }
-        if assessment_type == "LogicalAssessment":
-            for name in (
-                "logic_contract_id",
-                "logic_contract_record_hash",
-                "ruleset_id",
-                "ruleset_hash",
-            ):
-                if name not in failure or failure[name] != assessment[name]:
+        logic_fields = (
+            "logic_contract_id",
+            "logic_contract_record_hash",
+            "ruleset_id",
+            "ruleset_hash",
+        )
+        if assessment["assessment_kind"] == "LOGICAL":
+            for name in logic_fields:
+                if (
+                    name not in failure
+                    or name not in assessment
+                    or failure[name] != assessment[name]
+                ):
                     raise ProtocolError(
                         f"event {event['event_id']}: failure and assessment {name} differ"
                     )
@@ -651,6 +858,10 @@ class ProtocolLedger:
                 raise ProtocolError(
                     f"event {event['event_id']}: failed logical assessment ruleset hash mismatch"
                 )
+        elif any(name in failure or name in assessment for name in logic_fields):
+            raise ProtocolError(
+                f"event {event['event_id']}: non-logical failure contains logical contract fields"
+            )
         self._require_sources(failure, required_failure_sources, event)
         self._require_sources(assessment, required_assessment_sources, event)
         self._validate_assessment_context(projection, assessment_type, assessment, event)
@@ -671,6 +882,7 @@ class ProtocolLedger:
         )
         projection.monitor_failure_ids.add(failure["id"])
         projection.assessment_ids.add(assessment["id"])
+        self._index_monitor_output(projection, assessment)
 
     def _epistemic(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -684,9 +896,24 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: decision has stale acceptance head")
         if proposal["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: proposal has stale acceptance head")
-        self._artifact_ref(projection, decision["policy_id"], decision["policy_hash"], "EPISTEMIC_POLICY")
-        self._artifact_ref(projection, decision["ruleset_id"], decision["ruleset_hash"], "RULE_SET")
+        policy = self._artifact_ref(
+            projection,
+            decision["policy_id"],
+            decision["policy_hash"],
+            "EPISTEMIC_POLICY",
+            record_type="EpistemicPolicyArtifact",
+        )
+        if (
+            policy["id"] != proposal["epistemic_policy_id"]
+            or policy["content_hash"] != proposal["epistemic_policy_hash"]
+        ):
+            raise ProtocolError(f"event {event['event_id']}: decision policy differs from proposal")
+        if decision["ruleset_id"] != policy["ruleset_id"]:
+            raise ProtocolError(f"event {event['event_id']}: decision ruleset differs from policy")
+        if decision["ruleset_hash"] != policy["ruleset_record_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: decision ruleset hash differs from policy")
         _unique(decision["assessment_ids"], "assessment_ids")
+        _unique(decision["triggered_assessment_ids"], "triggered_assessment_ids")
         if not decision["assessment_ids"]:
             raise ProtocolError(f"event {event['event_id']}: decision requires assessments")
         assessments = []
@@ -698,14 +925,36 @@ class ProtocolLedger:
             if assessment["base_acceptance_head"] != projection.acceptance_head:
                 raise ProtocolError(f"event {event['event_id']}: assessment has stale acceptance head")
             assessments.append(assessment)
+        monitors = {
+            requirement["monitor_id"]: self._object(
+                projection.objects,
+                requirement["monitor_id"],
+                "MonitorSpecificationArtifact",
+            )
+            for requirement in policy_requirements(policy)
+        }
+        try:
+            evaluation = evaluate_epistemic_policy(
+                policy,
+                monitors,
+                assessments,
+                proposal_id=proposal["id"],
+                proposal_content_hash=proposal["content_hash"],
+                base_acceptance_head=projection.acceptance_head,
+            )
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if decision["assessment_ids"] != list(evaluation.assessment_ids):
+            raise ProtocolError(f"event {event['event_id']}: assessment order differs from policy")
+        if decision["triggered_assessment_ids"] != list(evaluation.triggered_assessment_ids):
+            raise ProtocolError(f"event {event['event_id']}: triggered assessments differ from policy")
+        if decision["policy_evaluation_hash"] != evaluation.evaluation_hash:
+            raise ProtocolError(f"event {event['event_id']}: policy evaluation hash mismatch")
         verdict = decision["epistemic_verdict"]
-        if verdict not in EPISTEMIC_TARGETS:
-            raise ProtocolError(f"event {event['event_id']}: invalid epistemic verdict '{verdict}'")
-        if verdict == "ACCEPT" and any(
-            assessment["assessment_outcome"] != "SATISFIED" for assessment in assessments
-        ):
+        if verdict != evaluation.verdict:
             raise ProtocolError(
-                f"event {event['event_id']}: ACCEPT requires every cited assessment SATISFIED"
+                f"event {event['event_id']}: verdict differs from deterministic policy "
+                f"({evaluation.verdict})"
             )
         for assertion_id in decision["evidence_assertion_ids"]:
             self._object(projection.objects, assertion_id, "EvidenceAssertion")
@@ -744,12 +993,31 @@ class ProtocolLedger:
             trigger=decision["id"],
             event=event,
         )
+        _require_distinct_record_ids(
+            [
+                decision,
+                transition,
+                *(item["record"] for item in requests.values()),
+                *(item["record"] for item in revisions.values()),
+            ],
+            event,
+        )
         introduced = {
             decision["id"]: _wrapped("EpistemicDecision", decision),
             transition["id"]: _wrapped("TransitionRecord", transition),
             **requests,
             **revisions,
         }
+        self._require_sources(
+            decision,
+            {
+                proposal["id"],
+                policy["id"],
+                policy["ruleset_id"],
+                *decision["assessment_ids"],
+            },
+            event,
+        )
         self._validate_sources(decision, {**projection.objects, **introduced}, event)
         for item in [*requests.values(), *revisions.values()]:
             self._validate_sources(item["record"], {**projection.objects, **introduced}, event)
@@ -875,6 +1143,7 @@ class ProtocolLedger:
             trigger=decision["id"],
             event=event,
         )
+        _require_distinct_record_ids([decision, transition], event)
         introduced = {
             decision["id"]: _wrapped("AuthorizationDecision", decision),
             transition["id"]: _wrapped("TransitionRecord", transition),
@@ -905,9 +1174,28 @@ class ProtocolLedger:
             assessment["monitor_id"],
             assessment["monitor_hash"],
             "MONITOR_SPECIFICATION",
+            record_type="MonitorSpecificationArtifact",
         )
         if assessment["monitor_version"] != monitor["artifact_version"]:
             raise ProtocolError(f"event {event['event_id']}: monitor_version mismatch")
+        if assessment["assessment_kind"] != monitor["assessment_kind"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment kind differs from monitor")
+        expected_type = ASSESSMENT_TYPES_BY_KIND[assessment["assessment_kind"]]
+        if assessment_type == "UnavailableAssessment":
+            if assessment["assessment_outcome"] != "UNKNOWN":
+                raise ProtocolError(
+                    f"event {event['event_id']}: UnavailableAssessment must be UNKNOWN"
+                )
+        elif assessment_type != expected_type:
+            raise ProtocolError(
+                f"event {event['event_id']}: {assessment['assessment_kind']} monitor requires "
+                f"{expected_type}"
+            )
+        self._require_sources(
+            assessment,
+            {assessment["proposal_id"], assessment["monitor_id"]},
+            event,
+        )
         if assessment_type == "AuthorityAssessment":
             if projection.proposal_states[proposal["id"]] != ProposalState.ACCEPTED:
                 raise ProtocolError(f"event {event['event_id']}: authority checks require accepted proposal")
@@ -948,12 +1236,6 @@ class ProtocolLedger:
                 raise ProtocolError(
                     f"event {event['event_id']}: VIOLATED authority assessment has no violations"
                 )
-            self._artifact_ref(
-                projection,
-                assessment["authority_policy_id"],
-                assessment["authority_policy_hash"],
-                "AUTHORIZATION_POLICY",
-            )
         else:
             if projection.proposal_states[proposal["id"]] != ProposalState.PROPOSED:
                 raise ProtocolError(f"event {event['event_id']}: proposal is not open for assessment")
@@ -976,18 +1258,123 @@ class ProtocolLedger:
                 "temporal_contract_hash",
                 "TEMPORAL_CONTRACT",
             ),
-            "LogicalAssessment": ("ruleset_id", "ruleset_hash", "RULE_SET"),
+            "LogicalAssessment": (
+                "logic_contract_id",
+                "logic_contract_record_hash",
+                "LOGIC_CONTRACT",
+            ),
+            "AuthorityAssessment": (
+                "authority_policy_id",
+                "authority_policy_hash",
+                "AUTHORIZATION_POLICY",
+            ),
         }
         requirement = artifact_requirements.get(assessment_type)
+        if assessment_type == "UnavailableAssessment" and assessment["assessment_kind"] == "LOGICAL":
+            requirement = (
+                "logic_contract_id",
+                "logic_contract_record_hash",
+                "LOGIC_CONTRACT",
+            )
         if requirement:
-            self._artifact_ref(
+            dependency = self._artifact_ref(
                 projection,
                 assessment[requirement[0]],
                 assessment[requirement[1]],
                 requirement[2],
             )
+            monitor_inputs = dict(zip(
+                monitor["input_artifact_ids"],
+                monitor["input_artifact_record_hashes"],
+                strict=True,
+            ))
+            if monitor_inputs.get(dependency["id"]) != dependency["content_hash"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: assessment dependency differs from monitor"
+                )
+            self._require_sources(assessment, {dependency["id"]}, event)
         if assessment_type == "LogicalAssessment":
             self._validate_logical_assessment(projection, assessment, event)
+        elif assessment_type != "UnavailableAssessment":
+            self._validate_completed_assessment(
+                proposal,
+                assessment_type,
+                assessment,
+                event,
+            )
+
+    @staticmethod
+    def _monitor_output_key(assessment: Mapping[str, Any]) -> tuple[str, str]:
+        subject_id = (
+            assessment["action_proposal_id"]
+            if assessment["assessment_kind"] == "AUTHORITY"
+            else assessment["proposal_id"]
+        )
+        return subject_id, assessment["monitor_id"]
+
+    def _require_new_monitor_output(
+        self,
+        projection: ProtocolProjection,
+        assessment: Mapping[str, Any],
+        event: Mapping[str, Any],
+    ) -> None:
+        key = self._monitor_output_key(assessment)
+        existing = projection.monitor_output_ids.get(key)
+        if existing is not None:
+            raise ProtocolError(
+                f"event {event['event_id']}: monitor already produced assessment '{existing}' "
+                f"for subject '{key[0]}'"
+            )
+
+    def _index_monitor_output(
+        self,
+        projection: ProtocolProjection,
+        assessment: Mapping[str, Any],
+    ) -> None:
+        projection.monitor_output_ids[self._monitor_output_key(assessment)] = assessment["id"]
+
+    def _validate_completed_assessment(
+        self,
+        proposal: dict[str, Any],
+        assessment_type: str,
+        assessment: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        outcome = assessment["assessment_outcome"]
+        if outcome not in {"SATISFIED", "VIOLATED"}:
+            raise ProtocolError(f"event {event['event_id']}: completed assessment has UNKNOWN outcome")
+        if assessment_type == "EvidenceCompletenessAssessment":
+            missing = assessment["missing_requirement_ids"]
+            _canonical_unique(missing, f"event {event['event_id']} missing_requirement_ids")
+            _nonblank_values(missing, f"event {event['event_id']} missing_requirement_ids")
+            if outcome == "SATISFIED" and missing:
+                raise ProtocolError(
+                    f"event {event['event_id']}: SATISFIED evidence assessment has missing requirements"
+                )
+            if outcome == "VIOLATED" and not missing:
+                raise ProtocolError(
+                    f"event {event['event_id']}: VIOLATED evidence assessment has no missing requirement"
+                )
+        elif assessment_type == "ConflictAssessment":
+            conflicts = assessment["conflicting_assertion_ids"]
+            _canonical_unique(conflicts, f"event {event['event_id']} conflicting_assertion_ids")
+            _nonblank_values(conflicts, f"event {event['event_id']} conflicting_assertion_ids")
+            if outcome == "SATISFIED" and conflicts:
+                raise ProtocolError(
+                    f"event {event['event_id']}: SATISFIED conflict assessment names conflicts"
+                )
+            if outcome == "VIOLATED" and len(conflicts) < 2:
+                raise ProtocolError(
+                    f"event {event['event_id']}: VIOLATED conflict assessment requires two assertions"
+                )
+            if not set(conflicts).issubset(proposal["evidence_assertion_ids"]):
+                raise ProtocolError(
+                    f"event {event['event_id']}: conflict assertion is outside proposal"
+                )
+            if not set(conflicts).issubset(assessment["input_record_ids"]):
+                raise ProtocolError(
+                    f"event {event['event_id']}: conflict assertions must be assessment inputs"
+                )
 
     def _validate_logical_assessment(
         self,
@@ -1009,26 +1396,14 @@ class ProtocolLedger:
             record_type="LogicContractArtifact",
         )
         outcome = assessment["assessment_outcome"]
+        if outcome not in {"SATISFIED", "VIOLATED"}:
+            raise ProtocolError(f"event {event['event_id']}: completed logic assessment is UNKNOWN")
         required_sources = {
             assessment["proposal_id"],
             assessment["monitor_id"],
             assessment["logic_contract_id"],
             assessment["ruleset_id"],
         }
-        if outcome == "UNKNOWN":
-            self._require_sources(
-                assessment,
-                {*required_sources, assessment["monitor_failure_id"]},
-                event,
-            )
-            if any(
-                assessment[name]
-                for name in ("checked_rule_ids", "violated_rule_ids", "logic_check_record_ids")
-            ):
-                raise ProtocolError(
-                    f"event {event['event_id']}: UNKNOWN logical assessment cannot cite a completed check"
-                )
-            return
         if not assessment["checked_rule_ids"]:
             raise ProtocolError(f"event {event['event_id']}: logical assessment checked no rules")
         _nonblank_values(
@@ -1396,6 +1771,8 @@ class ProtocolLedger:
         required = {
             "ProtocolRecord",
             "ProtocolArtifact",
+            "MonitorSpecificationArtifact",
+            "EpistemicPolicyArtifact",
             "LogicContractArtifact",
             "AuthorityGrant",
             "ProposedSubgraph",
@@ -1404,6 +1781,7 @@ class ProtocolLedger:
             "EvidenceAssertion",
             "ActionProposal",
             "Assessment",
+            "UnavailableAssessment",
             "TypeAssessment",
             "EvidenceCompletenessAssessment",
             "ConflictAssessment",
@@ -1436,6 +1814,8 @@ class ProtocolLedger:
         inheritance = {
             "ProtocolRecord": "Entity",
             "ProtocolArtifact": "ProtocolRecord",
+            "MonitorSpecificationArtifact": "ProtocolArtifact",
+            "EpistemicPolicyArtifact": "ProtocolArtifact",
             "LogicContractArtifact": "ProtocolArtifact",
             "AuthorityGrant": "ProtocolArtifact",
             "ProposedSubgraph": "ProtocolRecord",
@@ -1444,6 +1824,7 @@ class ProtocolLedger:
             "EvidenceAssertion": "ProtocolRecord",
             "ActionProposal": "ProtocolRecord",
             "Assessment": "ProtocolRecord",
+            "UnavailableAssessment": "Assessment",
             "TypeAssessment": "Assessment",
             "EvidenceCompletenessAssessment": "Assessment",
             "ConflictAssessment": "Assessment",
@@ -1475,6 +1856,8 @@ class ProtocolLedger:
             "AssessmentOutcome": {"SATISFIED", "VIOLATED", "UNKNOWN"},
             "LogicCheckOutcome": {"SATISFIED", "VIOLATED"},
             "EpistemicVerdict": {"ACCEPT", "REJECT", "DEFER", "CONTEST"},
+            "ViolationEpistemicVerdict": {"REJECT", "DEFER", "CONTEST"},
+            "UnknownEpistemicVerdict": {"DEFER", "CONTEST"},
             "AuthorizationVerdict": {"AUTHORIZE", "BLOCK", "CLARIFY"},
             "RequestState": {"OPEN", "FULFILLED", "CANCELLED"},
         }
@@ -1504,6 +1887,15 @@ def _nonblank(value: Mapping[str, Any], names: Iterable[str], context: str) -> N
     invalid = [name for name in names if not isinstance(value[name], str) or not value[name].strip()]
     if invalid:
         raise ProtocolError(f"{context}: fields must be nonblank: {', '.join(invalid)}")
+
+
+def _require_distinct_record_ids(
+    records: Iterable[Mapping[str, Any]],
+    event: Mapping[str, Any],
+) -> None:
+    identifiers = [record["id"] for record in records]
+    if len(identifiers) != len(set(identifiers)):
+        raise ProtocolError(f"event {event['event_id']}: introduced record IDs contain duplicates")
 
 
 def _unique(values: Any, context: str) -> None:

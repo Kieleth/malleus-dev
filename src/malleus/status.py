@@ -16,10 +16,10 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.3.0",
-    current_stage="5",
-    boundary="stage-5-general-logic-monitoring",
-    completed_stages=("2", "3", "7a", "4", "5"),
+    package_version="0.4.0",
+    current_stage="6",
+    boundary="stage-6-policy-selected-monitoring-control",
+    completed_stages=("2", "3", "7a", "4", "5", "6"),
     implemented_capabilities=(
         "closed-world-ontology-validation",
         "typed-graph-write-validation",
@@ -32,9 +32,19 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "exhaustive-violation-witnesses",
         "immutable-logic-check-records",
         "logic-monitor-failure-to-unknown",
+        "typed-monitor-specifications",
+        "typed-epistemic-policies",
+        "proposal-bound-epistemic-policy",
+        "exact-required-monitor-coverage",
+        "single-output-per-monitor-context",
+        "single-logic-check-per-monitor-context",
+        "closed-core-assessment-contracts",
+        "deterministic-epistemic-control-selection",
+        "atomic-unavailable-monitor-assessments",
     ),
     pending_capabilities=(
-        "policy-selected-monitoring-control",
+        "monitor-execution-orchestration",
+        "epistemic-policy-authority-and-scope",
         "proposal-candidate-semantic-binding",
         "assent-gated-materialization",
         "accepted-graph-projection",
@@ -43,5 +53,5 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "untrusted-rule-program-sandboxing",
     ),
     root_ontology_version="0.4.0",
-    assent_ontology_version="0.2.0",
+    assent_ontology_version="0.3.0",
 )
