@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-12
+
 ### Added
 
 - Added a separate assent ontology for immutable proposals, assessments, epistemic decisions, authorization decisions, requests, revisions, executions, outcomes, and transition records.
 - Added a single-writer hash-linked JSONL protocol ledger with strict event schemas, immutable typed record hashes, contiguous sequencing, deterministic replay, derived state machines, and explicit snapshot genesis.
 - Added distinct assessment, epistemic, authorization, and request outcome vocabularies. Requests and claim revisions are records, not decision values.
+- Added ordered proposed-subgraph staging on isolated graph copies, deterministic materialized-state digests, stale-base detection, and all-or-nothing structural materialization.
+- Added a machine-readable implementation boundary and public status document for the Stage 4 capability set.
 
 ### Changed
 
@@ -20,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced generic `DrugRelation` and `AttackRelation` classes with concrete predicate classes whose `source_id` and `target_id` use LinkML class ranges.
 - Made identifiers graph-wide across entities, relations, signals, and events. Duplicate and reserved positional identifiers reject before mutation.
 - Versioned the structural fingerprint format as version 2. All enforced structural facts now affect ontology identity.
+- Prolog verification now consumes a complete isolated candidate overlay. The tentative single-relation assertion and retract API was deleted.
 
 ### Fixed
 
@@ -27,11 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unknown properties and non-enum scalar mismatches no longer pass validation.
 - Relation endpoint types are now checked against declared source and target ranges.
 - Signal and event writes can no longer overwrite existing graph nodes.
+- Rule-rejected candidate writes no longer require private graph and audit-log rollback because live graph mutation occurs only after verification.
 
 ### Boundary
 
 - `Operation.COMMITTED` records structural materialization only. It does not represent epistemic acceptance or action authorization.
-- The protocol ledger projects accepted proposal membership, not a materialized accepted knowledge graph. Atomic proposed-subgraph materialization and domain rule execution remain later boundaries.
+- Candidate materialization is an explicit structural operation. It is not gated by assent yet and must not be presented as epistemic acceptance.
+- The protocol ledger projects accepted proposal membership, not a materialized accepted knowledge graph. Accepted-graph projection and general domain rule execution remain later boundaries.
 
 ## [0.1.0] - 2026-04-12
 

@@ -71,6 +71,16 @@ Relation predicates with different endpoint signatures use different LinkML clas
 
 `COMMITTED` is the result of this structural boundary only. It does not establish truth, epistemic acceptance, policy approval, or authorization to execute an action.
 
+### 2A. Stage related writes as one isolated candidate
+
+Some structural claims require several records at once. A relation may depend on entities introduced by the same proposal. Validating and committing each write separately creates partial state when a later member fails.
+
+`stage_subgraph()` applies an ordered batch to an isolated graph copy. Members can depend on earlier members in the same batch. The `candidate_digest` binds the ontology hash, base-state digest, and exact ordered writes for later provenance records. Successful candidate operations report `STAGED`; the base graph and its audit log remain unchanged. If any member fails, the candidate exposes the rejection but has no usable overlay and cannot be materialized.
+
+`CandidateSubgraph.materialize_into()` checks that the ontology and base-state digest still match, rebuilds the candidate on a fresh copy, and replaces materialized state only after the full batch succeeds. A stale candidate cannot overwrite intervening graph changes.
+
+This is a structural transaction boundary. It does not decide truth, epistemic acceptance, or action authorization. Coupling accepted protocol decisions to graph materialization is a separate projection step.
+
 ### 3. The ontology is immutable after construction
 
 Once the KG is born with its ontology, the ontology cannot be changed in ways that invalidate existing data. It can only grow monotonically:

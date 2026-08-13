@@ -11,7 +11,8 @@ from typing import Any
 
 from pyswip import Prolog
 
-from malleus.kg import KnowledgeGraph, Operation, OpType
+from malleus.kg import KnowledgeGraph
+from malleus.staging import CandidateSubgraph
 
 
 def _escape(s: str) -> str:
@@ -172,33 +173,12 @@ class PrologVerifier:
             for r in results
         ]
 
-    def verify_proposed_relation(self, *kgs: KnowledgeGraph, source_id: str, target_id: str, relation_type: str, properties: dict) -> VerificationResult:
-        """Verify a proposed relation against domain rules.
-
-        Syncs current KG state (static + dynamic), tentatively adds
-        the proposed fact, checks for contradictions, then retracts.
-        """
-        self.sync_from_kg(*kgs)
-
-        strength = properties.get("inhibition_strength", "unknown").lower()
-        tentative_fact = None
-
-        if relation_type == "SUBSTRATE_OF":
-            tentative_fact = f"substrate_of('{source_id}', '{target_id}')"
-        elif relation_type == "INHIBITS":
-            tentative_fact = f"inhibits('{source_id}', '{target_id}', {strength})"
-        elif relation_type == "INDUCES":
-            tentative_fact = f"induces('{source_id}', '{target_id}', {strength})"
-
-        if tentative_fact:
-            self._prolog.assertz(tentative_fact)
-
-        result = self.verify_no_contradictions()
-
-        if tentative_fact:
-            try:
-                self._prolog.retract(tentative_fact)
-            except Exception:
-                pass
-
-        return result
+    def verify_candidate_subgraph(
+        self,
+        candidate: CandidateSubgraph,
+        *context: KnowledgeGraph,
+    ) -> VerificationResult:
+        """Check a complete isolated candidate overlay against domain rules."""
+        overlay = candidate.overlay()
+        self.sync_from_kg(*context, overlay)
+        return self.verify_no_contradictions()

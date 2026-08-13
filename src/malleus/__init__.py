@@ -36,6 +36,14 @@ from malleus.protocol import (
     ProtocolProjection,
     make_record,
 )
+from malleus.staging import (
+    CandidateSubgraph,
+    ProposedOperation,
+    StagingError,
+    StaleCandidateError,
+    stage_subgraph,
+)
+from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
 
 try:
     from malleus.prolog_verifier import PrologVerifier, VerificationResult
@@ -43,7 +51,7 @@ try:
 except ImportError:
     _prolog_available = False
 
-__version__ = "0.1.0"
+__version__ = IMPLEMENTATION_STATUS.package_version
 
 __all__ = [
     "OntologyRegistry",
@@ -64,6 +72,13 @@ __all__ = [
     "ProposalState",
     "AuthorizationState",
     "make_record",
+    "CandidateSubgraph",
+    "ProposedOperation",
+    "StagingError",
+    "StaleCandidateError",
+    "stage_subgraph",
+    "IMPLEMENTATION_STATUS",
+    "ImplementationStatus",
     "__version__",
 ]
 

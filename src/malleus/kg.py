@@ -8,6 +8,7 @@ from typing import Any
 
 import networkx as nx
 
+from malleus.ledger import content_digest
 from malleus.ontology import OntologyRegistry
 
 
@@ -19,6 +20,7 @@ class OpType(str, Enum):
 
 
 class OpStatus(str, Enum):
+    STAGED = "STAGED"
     COMMITTED = "COMMITTED"
     REJECTED = "REJECTED"
 
@@ -69,6 +71,51 @@ class KnowledgeGraph:
     @property
     def edge_count(self) -> int:
         return self._graph.number_of_edges()
+
+    @property
+    def current_turn(self) -> int:
+        return self._current_turn
+
+    def snapshot(self) -> dict[str, Any]:
+        """Return a defensive, canonicalizable view of materialized graph state."""
+        nodes = [
+            deepcopy({"id": node_id, **data})
+            for node_id, data in self._graph.nodes(data=True)
+        ]
+        relations = [
+            deepcopy({"source_id": source, "target_id": target, "key": key, **data})
+            for source, target, key, data in self._graph.edges(data=True, keys=True)
+        ]
+        nodes.sort(key=lambda node: node["id"])
+        relations.sort(key=lambda relation: relation["key"])
+        return {
+            "ontology_hash": f"sha256:{self._registry.content_hash()}",
+            "nodes": nodes,
+            "relations": relations,
+        }
+
+    def state_digest(self) -> str:
+        """Hash materialized graph state, excluding the operation audit log."""
+        return content_digest(self.snapshot())
+
+    def fork(self) -> "KnowledgeGraph":
+        """Return an isolated graph copy suitable for candidate evaluation."""
+        return deepcopy(self)
+
+    def _replace_materialized_state(self, other: "KnowledgeGraph") -> None:
+        """Atomically replace state from a fully validated isolated graph."""
+        if not isinstance(other, KnowledgeGraph):
+            raise TypeError("Replacement state must be a KnowledgeGraph")
+        if self._registry.content_hash() != other._registry.content_hash():
+            raise ValueError("Replacement graph uses a different ontology")
+        graph = deepcopy(other._graph)
+        identifiers = deepcopy(other._identifiers)
+        operations = deepcopy(other._operations)
+        current_turn = other._current_turn
+        self._graph = graph
+        self._identifiers = identifiers
+        self._operations = operations
+        self._current_turn = current_turn
 
     def set_turn(self, turn: int) -> None:
         self._current_turn = turn

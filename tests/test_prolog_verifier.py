@@ -16,6 +16,7 @@ pytest.importorskip("pyswip")
 from malleus.kg import KnowledgeGraph
 from malleus.ontology import OntologyRegistry
 from malleus.prolog_verifier import PrologVerifier
+from malleus.staging import ProposedOperation, StagingError, stage_subgraph
 
 ONTOLOGY_DIR = Path(__file__).parent.parent / "ontology"
 CYP450_SCHEMA = ONTOLOGY_DIR / "domains" / "cyp450.yaml"
@@ -129,16 +130,19 @@ class TestInteractionDetection:
         assert sub[0]["effect"] == "decreased_exposure"
 
 
-class TestVerifyProposedRelation:
-    def test_valid_proposed_relation_passes(self, rules_file, populated_kg):
-        """A non-contradictory proposed relation passes verification."""
+class TestVerifyCandidateSubgraph:
+    def test_valid_candidate_passes(self, rules_file, populated_kg):
+        """A non-contradictory candidate overlay passes verification."""
         v = PrologVerifier(rules_file)
-        result = v.verify_proposed_relation(
-            populated_kg,
-            source_id="drug-sub",
-            target_id="enz-2",
-            relation_type="SUBSTRATE_OF",
-            properties={},
+        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
+            "SubstrateOfRelation",
+            "candidate-r1",
+            "drug-sub",
+            "enz-2",
+            {"relation_type": "SUBSTRATE_OF"},
+        )])
+        result = v.verify_candidate_subgraph(
+            candidate,
         )
         assert result.valid
 
@@ -146,30 +150,42 @@ class TestVerifyProposedRelation:
         """A drug that's a strong inhibitor added as strong inducer of the same enzyme
         should be flagged as a contradiction."""
         v = PrologVerifier(rules_file)
-        result = v.verify_proposed_relation(
-            populated_kg,
-            source_id="drug-inh",  # already a strong inhibitor of enz-1
-            target_id="enz-1",
-            relation_type="INDUCES",
-            properties={"inhibition_strength": "STRONG"},
-        )
+        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
+            "InducesRelation",
+            "candidate-r2",
+            "drug-inh",
+            "enz-1",
+            {"relation_type": "INDUCES", "inhibition_strength": "STRONG"},
+        )])
+        result = v.verify_candidate_subgraph(candidate)
         assert not result.valid
         assert result.rule_violated == "contradiction"
 
     def test_verification_is_read_only(self, rules_file, populated_kg):
         """Verification does not mutate the KG."""
         v = PrologVerifier(rules_file)
-        before_nodes = populated_kg.node_count
-        before_edges = populated_kg.edge_count
-        v.verify_proposed_relation(
+        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
+            "SubstrateOfRelation",
+            "candidate-r3",
+            "drug-sub",
+            "enz-2",
+            {"relation_type": "SUBSTRATE_OF"},
+        )])
+        before = populated_kg.snapshot()
+        v.verify_candidate_subgraph(candidate)
+        assert populated_kg.snapshot() == before
+
+    def test_rejected_candidate_cannot_be_verified(self, rules_file, populated_kg):
+        v = PrologVerifier(rules_file)
+        candidate = stage_subgraph(
             populated_kg,
-            source_id="drug-sub",
-            target_id="enz-2",
-            relation_type="SUBSTRATE_OF",
-            properties={},
+            [ProposedOperation.entity("UnknownType", "bad-1")],
         )
-        assert populated_kg.node_count == before_nodes
-        assert populated_kg.edge_count == before_edges
+        with pytest.raises(StagingError, match="no usable overlay"):
+            v.verify_candidate_subgraph(candidate)
+
+    def test_tentative_relation_api_is_deleted(self, rules_file):
+        assert not hasattr(PrologVerifier(rules_file), "verify_proposed_relation")
 
 
 class TestNoContradictions:

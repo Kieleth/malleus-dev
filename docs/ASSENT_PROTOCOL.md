@@ -96,17 +96,23 @@ silently become protocol-accepted knowledge.
 
 `acceptance_head` commits to the ordered sequence of accepted proposal,
 decision, and revision content. It is not a digest of a materialized current
-knowledge graph. Atomic subgraph staging and accepted-graph projection belong
-to the next stage.
+knowledge graph.
+
+`stage_subgraph()` now provides a separate structural boundary. It validates an
+ordered candidate on an isolated graph copy, records the exact ontology and
+base-state digests, and rejects stale materialization targets. This mechanism
+is not coupled to assent replay yet. Calling `materialize_into()` therefore
+does not mean that a proposal was epistemically accepted or authorized.
 
 ## Current claim boundary
 
 This implementation supports a narrow claim: Malleus has an executable,
 structurally enforced protocol ontology and replay-derived state machine that
 separate proposals, monitor failures, assessments, epistemic decisions, and
-action authorization.
+action authorization. It also has non-mutating proposed-subgraph staging and
+stale-checked, all-or-nothing structural materialization.
 
-It does not yet establish atomic proposed-subgraph materialization, general
-logical verification, policy-selected monitor completeness, action execution
-safety, bitemporal as-of reconstruction, formal PROV-O interoperability, or an
+It does not yet establish assent-gated materialization, general logical
+verification, policy-selected monitor completeness, action execution safety,
+bitemporal as-of reconstruction, formal PROV-O interoperability, or an
 empirical metacognitive effect.

@@ -211,7 +211,39 @@ Tests verify that invalid types, properties, values, identifiers, predicates, an
 The separate [Assent Protocol](ASSENT_PROTOCOL.md) defines immutable protocol
 records, disjoint assessment and decision outcomes, replay-derived transition
 state, and a strict hash-linked JSONL envelope. It does not change the meaning
-of `Operation.COMMITTED` or materialize accepted proposed subgraphs.
+of `Operation.COMMITTED`.
+
+Related writes can be staged as one isolated candidate:
+
+```text
+base KnowledgeGraph + ordered ProposedOperation values
+                         |
+                         v
+                  stage_subgraph()
+                         |
+          +--------------+---------------+
+          |                              |
+       invalid                        valid
+          |                              |
+ no overlay, no base write      CandidateSubgraph overlay
+                                         |
+                         ontology and base digest still match?
+                                         |
+                                         v
+                               materialize_into(base)
+```
+
+Staging supports dependencies inside the candidate, such as a relation whose
+endpoints are introduced earlier in the same batch. Materialization rebuilds
+on a fresh copy and swaps state only after every operation succeeds. The base
+graph and its operation log remain unchanged on validation failure, rule
+rejection, stale-base rejection, or an exception before the swap.
+
+Each candidate has a deterministic digest over its ontology, base state, and
+exact ordered writes. Later assessment and decision records can cite this
+digest without treating the candidate as accepted state.
+
+This is structural materialization, not assent-gated accepted-graph projection.
 
 ---
 
@@ -291,18 +323,17 @@ PrologVerifier (prolog_verifier.py)
 │    Enz = 'enz-cyp3a4'                              │
 │    Str = strong                                    │
 │                                                    │
-│  verify_proposed_relation(static_kg, dynamic_kg,   │
-│      source_id, target_id, relation_type, props)   │
+│  verify_candidate_subgraph(candidate, *context)    │
 │       │                                            │
 │       ▼                                            │
-│  Syncs all facts → tentatively asserts proposed    │
-│  fact → checks for contradictions → retracts →     │
-│  returns valid/invalid with proof trace             │
+│  Reads the complete isolated candidate overlay →   │
+│  checks for contradictions → returns valid/invalid │
+│  with proof trace                                  │
 │                                                    │
 └────────────────────────────────────────────────────┘
 ```
 
-**12 tests** verify: known drug-drug interactions detected (inhibitor + substrate on the same enzyme), induction detected (inducer + substrate), multi-enzyme effects detected, combined inhibition detected, contradictions caught (same drug as strong inhibitor and strong inducer), and that verification is read-only (never mutates the KG).
+Tests verify known drug-drug interactions, induction, multi-enzyme effects, combined inhibition, contradiction detection, complete candidate-overlay verification, and mutation-free rule rejection.
 
 The Prolog rule file shown here is an example. The library ships only the generic `PrologVerifier` class. You bring your own `.pl` rules for your domain.
 
@@ -394,14 +425,14 @@ Tightening (optional → required) is not an additive change and isn't supported
 │                        │            │                      │
 │  Loads LinkML YAML     │            │  SWI-Prolog bridge   │
 │  Types, enums, slots   │            │  sync_from_kg(*kgs)  │
-│  is_subtype_of()       │            │  verify_proposed_    │
-│  content_hash()        │            │    relation(...)     │
+│  is_subtype_of()       │            │  verify_candidate_   │
+│  content_hash()        │            │    subgraph(...)     │
 │  fingerprint()         │            │  (you supply .pl)    │
 │  check_compatibility() │            │                      │
 └────────────────────────┘            └──────────────────────┘
 ```
 
-The library is three classes and three LinkML files. The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.yaml`, `attack.yaml`) are examples. The Prolog verifier is optional (requires `pip install malleus-dev[prolog]` and SWI-Prolog on the system).
+The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.yaml`, `attack.yaml`) are examples. The Prolog verifier is optional and requires `pip install malleus-dev[prolog]` plus SWI-Prolog on the system.
 
 ---
 
@@ -409,14 +440,21 @@ The library is three classes and three LinkML files. The root ontology (`malleus
 
 - `tests/test_ontology.py`: strict loading, imports, collisions, effective slots, instance validation, hashing, fingerprints, and compatibility.
 - `tests/test_kg.py`: mutation-free rejection of invalid types, properties, ranges, collections, identifiers, predicates, and endpoints, plus operation logging and queries.
-- `tests/test_prolog_verifier.py`: Prolog synchronization, interaction queries, contradiction detection, and read-only verification.
+- `tests/test_staging.py`: isolated candidate validation, intra-candidate dependencies, stale-base rejection, and atomic structural materialization.
+- `tests/test_prolog_verifier.py`: Prolog synchronization, interaction queries, contradiction detection, and candidate-overlay verification.
 
 ---
 
 ## Public API
 
 ```python
-from malleus import OntologyRegistry, KnowledgeGraph, PrologVerifier
+from malleus import (
+    KnowledgeGraph,
+    OntologyRegistry,
+    PrologVerifier,
+    ProposedOperation,
+    stage_subgraph,
+)
 
 reg = OntologyRegistry("path/to/your_schema.yaml")
 print(reg.content_hash())              # deterministic 64-char hex
@@ -428,9 +466,14 @@ op = kg.create_entity("Drug", "drug-001", {"name": "Simvastatin"})
 # op.op_status ∈ {COMMITTED, REJECTED}; op.rejection_reason if rejected
 
 verifier = PrologVerifier("path/to/your_rules.pl")  # optional
-result = verifier.verify_proposed_relation(
-    kg, source_id="drug-001", target_id="enz-001",
-    relation_type="INHIBITS", properties={"strength": "strong"},
-)
+candidate = stage_subgraph(kg, [
+    ProposedOperation.relation(
+        "InhibitsRelation", "relation-001", "drug-001", "enz-001",
+        {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"},
+    )
+])
+result = verifier.verify_candidate_subgraph(candidate)
 # result.valid, result.rule_violated, result.proof_trace
+if result.valid:
+    candidate.materialize_into(kg)
 ```

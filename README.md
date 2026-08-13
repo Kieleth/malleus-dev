@@ -16,6 +16,11 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
+Current package boundary: `0.2.0`, `stage-4-structural-staging`. See
+[docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
+and explicitly pending capabilities. Code can inspect the same boundary through
+`malleus.IMPLEMENTATION_STATUS`.
+
 ## The core primitives
 
 Everything in malleus is one of five things:
@@ -42,15 +47,24 @@ pip install malleus-dev[prolog]
 ## Quick start
 
 ```python
-from malleus import OntologyRegistry, KnowledgeGraph
+from malleus import KnowledgeGraph, OntologyRegistry, ProposedOperation, stage_subgraph
 
 reg = OntologyRegistry("ontology/domains/cyp450.yaml")
 kg = KnowledgeGraph(reg)
 
 kg.create_entity("Enzyme", "enz-cyp3a4", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
 kg.create_entity("Drug", "drug-sim", {"name": "Simvastatin"})
-kg.create_relation("SubstrateOfRelation", "rel-001", "drug-sim", "enz-cyp3a4",
-                   {"relation_type": "SUBSTRATE_OF"})
+
+candidate = stage_subgraph(kg, [
+    ProposedOperation.relation(
+        "SubstrateOfRelation", "rel-001", "drug-sim", "enz-cyp3a4",
+        {"relation_type": "SUBSTRATE_OF"},
+    )
+])
+assert candidate.valid
+assert kg.edge_count == 0             # staging never mutates the base graph
+print(candidate.candidate_digest)     # binds ontology, base state, and ordered writes
+candidate.materialize_into(kg)        # explicit structural materialization
 
 # Write-time validation. No structurally invalid write materializes.
 op = kg.create_entity("NotAType", "x", {})
@@ -60,7 +74,7 @@ print(op.rejection_reason)   # "Unknown entity type: 'NotAType'"
 
 The `OntologyRegistry` is the constructor parameter for the `KnowledgeGraph`. No registry, no KG. That's the rule, and it's the whole point: the graph can only ever hold things the ontology says exist.
 
-`COMMITTED` is a structural result only: the record passed closed-world schema validation and was materialized. It does not mean the record is true, epistemically accepted, or authorized for action.
+`STAGED` means an operation passed validation inside an isolated candidate. `COMMITTED` means it was structurally materialized. Neither means the record is true, epistemically accepted, or authorized for action.
 
 ## Distributed convergence
 
@@ -135,28 +149,31 @@ Relations use concrete classes with explicit source and target ranges. Malleus r
 For domains where logical consistency matters (pharmacology, security, regulatory rules, anything where "can this combination of facts coexist?" is a real question), the `PrologVerifier` syncs the KG into SWI-Prolog and checks proposed writes against a rule file you supply.
 
 ```python
-from malleus import PrologVerifier
+from malleus import PrologVerifier, ProposedOperation, stage_subgraph
 
 verifier = PrologVerifier("your_rules.pl")
-result = verifier.verify_proposed_relation(
-    kg,
-    source_id="drug-a",
-    target_id="enz-x",
-    relation_type="INHIBITS",
-    properties={"strength": "strong"},
-)
+candidate = stage_subgraph(kg, [
+    ProposedOperation.relation(
+        "InhibitsRelation", "rel-002", "drug-sim", "enz-cyp3a4",
+        {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"},
+    )
+])
+result = verifier.verify_candidate_subgraph(candidate)
 if not result.valid:
     print(f"Rule violation: {result.rule_violated}")
     print(result.proof_trace)
+else:
+    candidate.materialize_into(kg)
 ```
 
-Verification is read-only. Rejected writes are rolled back from the tentative assertion, never committed. The rule file is yours; the library doesn't ship domain rules.
+Verification reads the isolated candidate overlay. A rule rejection has nothing to roll back because the base graph was never changed. The rule file is yours; the library doesn't ship domain rules.
 
 ## Architecture
 
 For the layer-by-layer walkthrough (vocabulary, typed graph, ground truth loading, logic engine, distributed convergence), see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Adoption guides:
+- [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md): the current machine-checked capability boundary
 - [docs/ONTOLOGY_PROTOCOL.md](docs/ONTOLOGY_PROTOCOL.md): how to add malleus to an existing project
 - [docs/KNOWLEDGE_GRAPH_PROTOCOL.md](docs/KNOWLEDGE_GRAPH_PROTOCOL.md): how the ontology shapes the KG
 - [docs/ASSENT_PROTOCOL.md](docs/ASSENT_PROTOCOL.md): how proposals, assessments, decisions, authorization, and replay remain separate
