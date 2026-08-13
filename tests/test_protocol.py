@@ -12,6 +12,9 @@ import pytest
 from malleus.ontology import OntologyRegistry
 from malleus.control import (
     MonitoringError,
+    authority_monitor_failure_records,
+    authorization_policy_digest,
+    evaluate_authorization_policy,
     epistemic_policy_digest,
     evaluate_epistemic_policy,
     monitor_failure_records,
@@ -210,19 +213,45 @@ def add_epistemic_policy(
     )
 
 
+def add_authorization_policy(
+    ledger: ProtocolLedger,
+    monitors: list[dict],
+    minute: int,
+    *,
+    policy_id: str = "artifact:authorization-policy",
+) -> dict:
+    ordered = sorted(monitors, key=lambda item: item["id"])
+    fields = {
+        "policy_schema_version": "1",
+        "required_monitor_ids": [item["id"] for item in ordered],
+        "required_monitor_record_hashes": [item["content_hash"] for item in ordered],
+        "source_record_ids": [item["id"] for item in ordered],
+    }
+    return add_artifact(
+        ledger,
+        policy_id,
+        "AUTHORIZATION_POLICY",
+        minute,
+        record_type="AuthorizationPolicyArtifact",
+        artifact_hash=authorization_policy_digest(
+            schema_version="1",
+            policy_id=policy_id,
+            policy_version="1",
+            required_monitor_ids=fields["required_monitor_ids"],
+            required_monitor_record_hashes=fields["required_monitor_record_hashes"],
+        ),
+        **fields,
+    )
+
+
 def setup_artifacts(
     ledger: ProtocolLedger,
     *,
     violation_verdict: str = "REJECT",
     unknown_verdict: str = "DEFER",
+    include_grant: bool = True,
 ) -> dict[str, dict]:
     rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
-    authorization_policy = add_artifact(
-        ledger,
-        "artifact:authorization-policy",
-        "AUTHORIZATION_POLICY",
-        1,
-    )
     contract_fields = {
         "logic_contract_schema_version": "1",
         "ontology_hash": "sha256:" + "6" * 64,
@@ -268,7 +297,11 @@ def setup_artifacts(
         "artifact:authority-monitor",
         "AUTHORITY",
         3,
-        input_artifacts=[authorization_policy],
+    )
+    authorization_policy = add_authorization_policy(
+        ledger,
+        [authority_monitor],
+        4,
     )
     epistemic_policy = add_epistemic_policy(
         ledger,
@@ -287,7 +320,7 @@ def setup_artifacts(
             permitted_action_types=["TEST"],
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
-        )
+        ) if include_grant else None
     return {
         "monitor": monitor,
         "logic_monitor": logic_monitor,
@@ -304,12 +337,14 @@ def record_proposal(
     ledger: ProtocolLedger,
     *,
     epistemic_policy: dict | None = None,
+    authorization_policy: dict | None = None,
     include_action: bool = False,
     minute: int = 6,
     proposal_id: str = "proposal:1",
     proposal_revision: int = 1,
     revises_proposal_id: str | None = None,
     claim_id: str = "claim:1",
+    claim_key: str = "claim-key",
     action_id: str = "action:1",
     action_revision: int = 1,
     revises_action_id: str | None = None,
@@ -324,6 +359,15 @@ def record_proposal(
         if len(policies) != 1:
             raise AssertionError("record_proposal requires exactly one epistemic policy")
         epistemic_policy = policies[0]
+    if include_action and authorization_policy is None:
+        policies = [
+            item["record"]
+            for item in projection.objects.values()
+            if item["record_type"] == "AuthorizationPolicyArtifact"
+        ]
+        if len(policies) != 1:
+            raise AssertionError("record_proposal requires exactly one authorization policy")
+        authorization_policy = policies[0]
     event_id = f"event:{proposal_id}"
     timestamp = time_at(minute)
     claim = make_record(
@@ -333,7 +377,7 @@ def record_proposal(
         actor_id="actor:proposer",
         role="proposer",
         id=claim_id,
-        claim_key="claim-key",
+        claim_key=claim_key,
         revision=1,
         revises_claim_version_id=None,
         statement="The declared relation is structurally valid.",
@@ -350,12 +394,15 @@ def record_proposal(
             generated_at=timestamp,
             actor_id="actor:proposer",
             role="proposer",
+            source_record_ids=[authorization_policy["id"]],
             id=action_id,
             action_type="TEST",
             action_payload_hash="sha256:" + "6" * 64,
             action_key="action-key",
             revision=action_revision,
             revises_action_proposal_id=revises_action_id,
+            authorization_policy_id=authorization_policy["id"],
+            authorization_policy_hash=authorization_policy["content_hash"],
             test_parameter="value",
         )
         members.append(("TestActionProposal", action))
@@ -403,8 +450,10 @@ def record_type_assessment(
     outcome: str = "SATISFIED",
     minute: int = 7,
     input_record_ids: list[str] | None = None,
+    assessment_id: str | None = None,
 ) -> dict:
-    event_id = f"event:assessment:{outcome.lower()}"
+    assessment_id = assessment_id or f"assessment:{outcome.lower()}"
+    event_id = f"event:{assessment_id}"
     timestamp = time_at(minute)
     assessment = make_record(
         "TypeAssessment",
@@ -413,7 +462,7 @@ def record_type_assessment(
         actor_id="actor:monitor",
         role="type-monitor",
         source_record_ids=[proposal["id"], monitor["id"]],
-        id=f"assessment:{outcome.lower()}",
+        id=assessment_id,
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=proposal["base_acceptance_head"],
@@ -569,22 +618,32 @@ def record_authority_assessment(
     outcome: str = "SATISFIED",
     checked: list[str] | None = None,
     violated: list[str] | None = None,
+    evaluated_actor_id: str = "actor:executor",
+    grant: dict | None = None,
+    include_grant: bool = True,
+    minute: int = 9,
+    assessment_id: str = "assessment:authority:1",
+    mutate=None,
 ) -> dict:
-    event_id = "event:authority-assessment"
-    timestamp = time_at(9)
+    event_id = f"event:{assessment_id}"
+    timestamp = time_at(minute)
+    evaluated_grant = (artifacts["grant"] if grant is None else grant) if include_grant else None
+    sources = [
+        proposal["id"],
+        action["id"],
+        artifacts["authority_monitor"]["id"],
+        artifacts["authorization_policy"]["id"],
+    ]
+    if evaluated_grant is not None:
+        sources.append(evaluated_grant["id"])
     authority = make_record(
         "AuthorityAssessment",
         event_id=event_id,
         generated_at=timestamp,
         actor_id="actor:authority-monitor",
         role="authority-monitor",
-        source_record_ids=[
-            proposal["id"],
-            action["id"],
-            artifacts["authority_monitor"]["id"],
-            artifacts["authorization_policy"]["id"],
-        ],
-        id="assessment:authority:1",
+        source_record_ids=sources,
+        id=assessment_id,
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=ledger.replay().acceptance_head,
@@ -594,16 +653,30 @@ def record_authority_assessment(
         monitor_version="1",
         monitor_hash=artifacts["authority_monitor"]["content_hash"],
         monitor_failure_id=None,
-        input_record_ids=[proposal["id"], action["id"]],
+        input_record_ids=[
+            proposal["id"],
+            action["id"],
+            *([evaluated_grant["id"]] if evaluated_grant is not None else []),
+        ],
         reason_codes=["GRANT_RESULT"],
         rationale="The versioned authority policy was evaluated.",
         action_proposal_id=action["id"],
-        evaluated_actor_id="actor:executor",
+        action_content_hash=action["content_hash"],
+        evaluated_actor_id=evaluated_actor_id,
         authority_policy_id=artifacts["authorization_policy"]["id"],
         authority_policy_hash=artifacts["authorization_policy"]["content_hash"],
+        evaluated_authority_grant_id=(
+            evaluated_grant["id"] if evaluated_grant is not None else None
+        ),
+        evaluated_authority_grant_hash=(
+            evaluated_grant["content_hash"] if evaluated_grant is not None else None
+        ),
         checked_policy_predicates=checked if checked is not None else ["actor_in_scope"],
         violated_policy_predicates=violated if violated is not None else [],
     )
+    if mutate is not None:
+        mutate(authority)
+        authority["content_hash"] = record_hash("AuthorityAssessment", authority)
     ledger.append_event(
         event_id=event_id,
         event_type=EventType.ASSESSMENT_RECORDED,
@@ -612,6 +685,66 @@ def record_authority_assessment(
         payload={"assessment_type": "AuthorityAssessment", "assessment": authority},
     )
     return authority
+
+
+def record_authority_failure(
+    ledger: ProtocolLedger,
+    proposal: dict,
+    action: dict,
+    artifacts: dict[str, dict],
+    *,
+    evaluated_actor_id: str = "actor:executor",
+    evaluated_grant: dict | None = None,
+    minute: int = 9,
+    assessment_id: str = "assessment:authority:unknown",
+    mutate=None,
+) -> dict:
+    event_id = f"event:{assessment_id}"
+    timestamp = time_at(minute)
+    failure, unknown = authority_monitor_failure_records(
+        error=MonitoringError("authority dependency unavailable"),
+        failure_id=f"failure:{assessment_id}",
+        assessment_id=assessment_id,
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:authority-monitor",
+        role="authority-monitor",
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=ledger.replay().acceptance_head,
+        action_proposal_id=action["id"],
+        action_content_hash=action["content_hash"],
+        evaluated_actor_id=evaluated_actor_id,
+        authority_policy_id=artifacts["authorization_policy"]["id"],
+        authority_policy_hash=artifacts["authorization_policy"]["content_hash"],
+        monitor_id=artifacts["authority_monitor"]["id"],
+        monitor_version="1",
+        monitor_hash=artifacts["authority_monitor"]["content_hash"],
+        failure_category="DEPENDENCY",
+        error_code="AUTHORITY_SOURCE_UNAVAILABLE",
+        evaluated_authority_grant_id=(
+            evaluated_grant["id"] if evaluated_grant is not None else None
+        ),
+        evaluated_authority_grant_hash=(
+            evaluated_grant["content_hash"] if evaluated_grant is not None else None
+        ),
+    )
+    if mutate is not None:
+        mutate(failure, unknown)
+        failure["content_hash"] = record_hash("MonitorFailure", failure)
+        unknown["content_hash"] = record_hash("UnavailableAuthorityAssessment", unknown)
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.MONITOR_FAILED,
+        transaction_time=timestamp,
+        actor_id="actor:authority-monitor",
+        payload={
+            "failure": failure,
+            "assessment_type": "UnavailableAuthorityAssessment",
+            "assessment": unknown,
+        },
+    )
+    return unknown
 
 
 def transition(
@@ -644,6 +777,111 @@ def transition(
     )
 
 
+def decide_authorization(
+    ledger: ProtocolLedger,
+    proposal: dict,
+    action: dict,
+    claim: dict,
+    epistemic: dict,
+    assessments: list[dict],
+    artifacts: dict[str, dict],
+    *,
+    authorized_actor_id: str = "actor:executor",
+    cite_grant: bool | None = None,
+    minute: int = 10,
+    decision_id: str = "decision:authorization:1",
+    mutate=None,
+) -> dict:
+    base = ledger.replay().acceptance_head
+    policy = artifacts["authorization_policy"]
+    projection = ledger.replay()
+    monitors = {
+        monitor_id: projection.objects[monitor_id]["record"]
+        for monitor_id in policy["required_monitor_ids"]
+    }
+    evaluation = evaluate_authorization_policy(
+        policy,
+        monitors,
+        assessments,
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        action_id=action["id"],
+        action_content_hash=action["content_hash"],
+        evaluated_actor_id=authorized_actor_id,
+        base_acceptance_head=base,
+    )
+    if cite_grant is None:
+        cite_grant = evaluation.verdict == "AUTHORIZE"
+    grant = artifacts["grant"] if cite_grant else None
+    event_id = f"event:{decision_id}"
+    timestamp = time_at(minute)
+    sources = {
+        action["id"],
+        claim["id"],
+        epistemic["id"],
+        policy["id"],
+        *(item["id"] for item in assessments),
+    }
+    if grant is not None:
+        sources.add(grant["id"])
+    decision = make_record(
+        "AuthorizationDecision",
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:authorizer",
+        role="authorizer",
+        source_record_ids=sorted(sources),
+        id=decision_id,
+        base_acceptance_head=base,
+        policy_id=policy["id"],
+        policy_hash=policy["content_hash"],
+        rationale_codes=[f"AUTHORIZATION_{evaluation.verdict}"],
+        rationale="The deterministic authorization policy selected this control.",
+        action_proposal_id=action["id"],
+        action_content_hash=action["content_hash"],
+        authorization_verdict=evaluation.verdict,
+        epistemic_decision_ids=[epistemic["id"]],
+        relied_on_claim_version_ids=[claim["id"]],
+        authority_assessment_ids=list(evaluation.assessment_ids),
+        triggered_assessment_ids=list(evaluation.triggered_assessment_ids),
+        policy_evaluation_hash=evaluation.evaluation_hash,
+        authority_grant_id=grant["id"] if grant is not None else None,
+        authority_grant_hash=grant["content_hash"] if grant is not None else None,
+        authorized_actor_id=authorized_actor_id,
+        authorization_valid_from=timestamp if evaluation.verdict == "AUTHORIZE" else None,
+        authorization_valid_to=time_at(minute + 1) if evaluation.verdict == "AUTHORIZE" else None,
+    )
+    if mutate is not None:
+        mutate(decision)
+        decision["content_hash"] = record_hash("AuthorizationDecision", decision)
+    target = {
+        "AUTHORIZE": "AUTHORIZED",
+        "BLOCK": "BLOCKED",
+        "CLARIFY": "CLARIFICATION_REQUIRED",
+    }[decision["authorization_verdict"]]
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.AUTHORIZATION_DECIDED,
+        transaction_time=timestamp,
+        actor_id="actor:authorizer",
+        payload={
+            "decision": decision,
+            "transition": transition(
+                event_id=event_id,
+                timestamp=timestamp,
+                actor_id="actor:authorizer",
+                transition_id=f"transition:{decision_id}",
+                subject=action["id"],
+                from_state="PENDING",
+                to_state=target,
+                trigger=decision["id"],
+                sequence=ledger.replay().event_count + 1,
+            ),
+        },
+    )
+    return decision
+
+
 def decide_epistemically(
     ledger: ProtocolLedger,
     proposal: dict,
@@ -654,14 +892,16 @@ def decide_epistemically(
     minute: int = 8,
     mutate=None,
     transition_id: str = "transition:proposal:1",
+    decision_id: str = "decision:epistemic:1",
+    event_id: str = "event:epistemic:1",
 ) -> dict:
-    event_id = "event:epistemic:1"
     timestamp = time_at(minute)
     policy = artifacts["epistemic_policy"]
     monitors = {
         artifact["id"]: artifact
         for artifact in artifacts.values()
-        if artifact.get("artifact_kind") == "MONITOR_SPECIFICATION"
+        if artifact is not None
+        and artifact.get("artifact_kind") == "MONITOR_SPECIFICATION"
     }
     evaluation = evaluate_epistemic_policy(
         policy,
@@ -684,7 +924,7 @@ def decide_epistemically(
             artifacts["epistemic_policy"]["id"],
             artifacts["rules"]["id"],
         ],
-        id="decision:epistemic:1",
+        id=decision_id,
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=proposal["base_acceptance_head"],
@@ -1477,6 +1717,18 @@ class TestProposalAndEpistemicState:
 
 
 class TestMonitorFailureAndAuthorization:
+    def test_authorization_policy_kind_requires_typed_artifact(self, ledger):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="requires AuthorizationPolicyArtifact"):
+            add_artifact(
+                ledger,
+                "artifact:opaque-authorization-policy",
+                "AUTHORIZATION_POLICY",
+                1,
+            )
+        assert ledger.path.read_bytes() == before
+
     def test_authority_grant_cannot_name_another_grantor(self, ledger):
         anchor(ledger)
         with pytest.raises(ProtocolError, match="grantor must be the generating actor"):
@@ -1538,7 +1790,7 @@ class TestMonitorFailureAndAuthorization:
         assert decision["triggered_assessment_ids"] == [unknown["id"]]
         assert ledger.replay().proposal_states[proposal["id"]] == ProposalState.DEFERRED
 
-    def test_monitor_failure_cannot_impersonate_authorization_monitor(self, ledger):
+    def test_generic_unknown_cannot_impersonate_authority_output(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
         proposal, _, _ = record_proposal(ledger)
@@ -1575,11 +1827,51 @@ class TestMonitorFailureAndAuthorization:
         unknown["content_hash"] = record_hash("UnavailableAssessment", unknown)
 
         before = ledger.path.read_bytes()
-        with pytest.raises(ProtocolError, match="supports epistemic monitors only"):
+        with pytest.raises(ProtocolError, match="requires UnavailableAuthorityAssessment"):
             ledger.append_event(
                 event_id=event_id,
                 event_type=EventType.MONITOR_FAILED,
                 transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "failure": failure,
+                    "assessment_type": "UnavailableAssessment",
+                    "assessment": unknown,
+                },
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_epistemic_monitor_failure_cannot_carry_authority_context(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:type-monitor-with-authority-context"
+        failure, unknown = monitor_failure_records(
+            error=MonitoringError("monitor failed"),
+            failure_id="failure:type-with-authority",
+            assessment_id="assessment:type-with-authority",
+            event_id=event_id,
+            generated_at=time_at(7),
+            actor_id="actor:monitor",
+            role="type-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            assessment_kind="TYPE",
+            failure_category="EXECUTION",
+            error_code="FAILED",
+        )
+        failure["action_proposal_id"] = "action:smuggled"
+        failure["content_hash"] = record_hash("MonitorFailure", failure)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="non-authority failure contains authority fields"):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.MONITOR_FAILED,
+                transaction_time=time_at(7),
                 actor_id="actor:monitor",
                 payload={
                     "failure": failure,
@@ -1724,6 +2016,17 @@ class TestMonitorFailureAndAuthorization:
         epistemic = decide_epistemically(ledger, proposal, type_assessment, artifacts)
         base = ledger.replay().acceptance_head
         authority = record_authority_assessment(ledger, proposal, action, artifacts)
+        evaluation = evaluate_authorization_policy(
+            artifacts["authorization_policy"],
+            {artifacts["authority_monitor"]["id"]: artifacts["authority_monitor"]},
+            [authority],
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            action_id=action["id"],
+            action_content_hash=action["content_hash"],
+            evaluated_actor_id="actor:executor",
+            base_acceptance_head=base,
+        )
         event_id = "event:authorization:1"
         timestamp = time_at(10)
         decision = make_record(
@@ -1732,7 +2035,14 @@ class TestMonitorFailureAndAuthorization:
             generated_at=timestamp,
             actor_id="actor:authorizer",
             role="authorizer",
-            source_record_ids=[epistemic["id"], authority["id"], artifacts["grant"]["id"]],
+            source_record_ids=[
+                action["id"],
+                claim["id"],
+                epistemic["id"],
+                authority["id"],
+                artifacts["authorization_policy"]["id"],
+                artifacts["grant"]["id"],
+            ],
             id="decision:authorization:1",
             base_acceptance_head=base,
             policy_id=artifacts["authorization_policy"]["id"],
@@ -1745,6 +2055,8 @@ class TestMonitorFailureAndAuthorization:
             epistemic_decision_ids=[epistemic["id"]],
             relied_on_claim_version_ids=[claim["id"]],
             authority_assessment_ids=[authority["id"]],
+            triggered_assessment_ids=list(evaluation.triggered_assessment_ids),
+            policy_evaluation_hash=evaluation.evaluation_hash,
             authority_grant_id=artifacts["grant"]["id"],
             authority_grant_hash=artifacts["grant"]["content_hash"],
             authorized_actor_id="actor:executor",
@@ -1789,6 +2101,586 @@ class TestMonitorFailureAndAuthorization:
                 artifacts,
                 checked=["actor_in_scope"],
                 violated=["actor_in_scope"],
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize("field", ["checked_policy_predicates", "violated_policy_predicates"])
+    def test_authority_predicate_lists_are_present_or_fail_with_protocol_error(self, ledger, field):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=f"missing required fields|Required slot '{field}'"):
+            record_authority_assessment(
+                ledger,
+                proposal,
+                action,
+                artifacts,
+                mutate=lambda value: value.pop(field),
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_violated_authority_output_deterministically_blocks_and_may_cite_grant(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome="VIOLATED",
+            violated=["actor_in_scope"],
+        )
+        decision = decide_authorization(
+            ledger,
+            proposal,
+            action,
+            claim,
+            epistemic,
+            [authority],
+            artifacts,
+            cite_grant=True,
+        )
+        assert decision["authorization_verdict"] == "BLOCK"
+        assert decision["authority_grant_id"] == artifacts["grant"]["id"]
+        assert decision["authorization_valid_from"] is None
+        assert ledger.replay().authorization_states[action["id"]] == AuthorizationState.BLOCKED
+
+    def test_missing_grant_can_be_assessed_as_violated_and_blocked(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger, include_grant=False)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome="VIOLATED",
+            checked=["grant_present"],
+            violated=["grant_present"],
+            include_grant=False,
+        )
+        decision = decide_authorization(
+            ledger,
+            proposal,
+            action,
+            claim,
+            epistemic,
+            [authority],
+            artifacts,
+        )
+        assert decision["authorization_verdict"] == "BLOCK"
+        assert decision["authority_grant_id"] is None
+
+    @pytest.mark.parametrize("failure_first", [False, True])
+    def test_completed_and_unavailable_authority_outputs_are_mutually_exclusive(
+        self,
+        ledger,
+        failure_first,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        if failure_first:
+            record_authority_failure(
+                ledger,
+                proposal,
+                action,
+                artifacts,
+                evaluated_grant=artifacts["grant"],
+            )
+        else:
+            record_authority_assessment(ledger, proposal, action, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="monitor already produced assessment"):
+            if failure_first:
+                record_authority_assessment(ledger, proposal, action, artifacts)
+            else:
+                record_authority_failure(
+                    ledger,
+                    proposal,
+                    action,
+                    artifacts,
+                    evaluated_grant=artifacts["grant"],
+                )
+        assert ledger.path.read_bytes() == before
+
+    def test_authority_output_can_refresh_after_acceptance_head_advances(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        first = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            assessment_id="assessment:authority:head-1",
+        )
+
+        other, _, _ = record_proposal(
+            ledger,
+            minute=10,
+            proposal_id="proposal:other",
+            claim_id="claim:other",
+            claim_key="claim-key-other",
+        )
+        other_assessment = record_type_assessment(
+            ledger,
+            other,
+            artifacts["monitor"],
+            minute=11,
+            assessment_id="assessment:other",
+        )
+        decide_epistemically(
+            ledger,
+            other,
+            other_assessment,
+            artifacts,
+            minute=12,
+            decision_id="decision:epistemic:other",
+            event_id="event:epistemic:other",
+            transition_id="transition:proposal:other",
+        )
+        second = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            minute=13,
+            assessment_id="assessment:authority:head-2",
+        )
+        assert first["base_acceptance_head"] != second["base_acceptance_head"]
+        assert {
+            first["id"],
+            second["id"],
+        }.issubset(ledger.replay().assessment_ids)
+
+    def test_authority_outputs_are_distinct_for_evaluated_actors(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        first = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            evaluated_actor_id="actor:executor",
+            assessment_id="assessment:authority:executor",
+        )
+        second = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome="VIOLATED",
+            evaluated_actor_id="actor:other",
+            violated=["actor_in_scope"],
+            minute=10,
+            assessment_id="assessment:authority:other",
+        )
+        assert first["evaluated_actor_id"] != second["evaluated_actor_id"]
+        assert {first["id"], second["id"]}.issubset(ledger.replay().assessment_ids)
+
+    def test_authority_output_can_reevaluate_a_new_exact_grant(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        first = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            assessment_id="assessment:authority:grant-1",
+        )
+        second_grant = add_artifact(
+            ledger,
+            "artifact:grant:second",
+            "AUTHORITY_GRANT",
+            10,
+            record_type="AuthorityGrant",
+            grantor_actor_id="actor:system",
+            grantee_actor_id="actor:executor",
+            permitted_action_types=["TEST"],
+            grant_valid_from=time_at(5),
+            grant_valid_to=time_at(20),
+        )
+        second = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            grant=second_grant,
+            minute=11,
+            assessment_id="assessment:authority:grant-2",
+        )
+        assert first["base_acceptance_head"] == second["base_acceptance_head"]
+        assert first["evaluated_authority_grant_id"] != second["evaluated_authority_grant_id"]
+        assert {first["id"], second["id"]}.issubset(ledger.replay().assessment_ids)
+
+    def test_unavailable_authority_output_deterministically_requires_clarification(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        unknown = record_authority_failure(ledger, proposal, action, artifacts)
+        decision = decide_authorization(
+            ledger,
+            proposal,
+            action,
+            claim,
+            epistemic,
+            [unknown],
+            artifacts,
+        )
+        assert decision["authorization_verdict"] == "CLARIFY"
+        assert decision["authority_grant_id"] is None
+        assert ledger.replay().authorization_states[action["id"]] == (
+            AuthorizationState.CLARIFICATION_REQUIRED
+        )
+
+    def test_block_cannot_cite_grant_from_unknown_output(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        second_monitor = add_monitor(
+            ledger,
+            "artifact:authority-monitor:second",
+            "AUTHORITY",
+            6,
+        )
+        multi_policy = add_authorization_policy(
+            ledger,
+            [artifacts["authority_monitor"], second_monitor],
+            6,
+            policy_id="artifact:authorization-policy:multi",
+        )
+        second_grant = add_artifact(
+            ledger,
+            "artifact:grant:unknown-path",
+            "AUTHORITY_GRANT",
+            6,
+            record_type="AuthorityGrant",
+            grantor_actor_id="actor:system",
+            grantee_actor_id="actor:executor",
+            permitted_action_types=["TEST"],
+            grant_valid_from=time_at(5),
+            grant_valid_to=time_at(20),
+        )
+        proposal, claim, action = record_proposal(
+            ledger,
+            authorization_policy=multi_policy,
+            include_action=True,
+            minute=7,
+        )
+        type_assessment = record_type_assessment(
+            ledger,
+            proposal,
+            artifacts["monitor"],
+            minute=8,
+        )
+        epistemic = decide_epistemically(
+            ledger,
+            proposal,
+            type_assessment,
+            artifacts,
+            minute=9,
+        )
+        multi_artifacts = {
+            **artifacts,
+            "authorization_policy": multi_policy,
+        }
+        violated = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            multi_artifacts,
+            outcome="VIOLATED",
+            violated=["actor_in_scope"],
+            minute=10,
+            assessment_id="assessment:authority:violated",
+        )
+        unknown = record_authority_failure(
+            ledger,
+            proposal,
+            action,
+            {
+                **multi_artifacts,
+                "authority_monitor": second_monitor,
+            },
+            evaluated_grant=second_grant,
+            minute=11,
+            assessment_id="assessment:authority:unknown-second",
+        )
+        before = ledger.path.read_bytes()
+
+        def cite_unknown_grant(value):
+            value["authority_grant_id"] = second_grant["id"]
+            value["authority_grant_hash"] = second_grant["content_hash"]
+            value["source_record_ids"].append(second_grant["id"])
+
+        with pytest.raises(
+            ProtocolError,
+            match="triggering VIOLATED authority assessment",
+        ):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [violated, unknown],
+                multi_artifacts,
+                minute=12,
+                mutate=cite_unknown_grant,
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda value: value.update({"authorization_verdict": "BLOCK"}),
+                "verdict differs from deterministic authorization policy",
+            ),
+            (
+                lambda value: value.update({"policy_evaluation_hash": "sha256:" + "9" * 64}),
+                "authorization policy evaluation hash mismatch",
+            ),
+            (
+                lambda value: value["triggered_assessment_ids"].append(
+                    "assessment:authority:1"
+                ),
+                "triggered authority assessments differ from policy",
+            ),
+        ],
+    )
+    def test_authorization_control_record_cannot_override_replay(self, ledger, mutate, message):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(ledger, proposal, action, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [authority],
+                artifacts,
+                mutate=mutate,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_late_valid_authorization_policy_cannot_replace_action_binding(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        replacement = add_authorization_policy(
+            ledger,
+            [artifacts["authority_monitor"]],
+            9,
+            policy_id="artifact:authorization-policy:replacement",
+        )
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            minute=10,
+        )
+        before = ledger.path.read_bytes()
+
+        def replace_policy(value):
+            value["policy_id"] = replacement["id"]
+            value["policy_hash"] = replacement["content_hash"]
+            value["source_record_ids"].append(replacement["id"])
+
+        with pytest.raises(ProtocolError, match="decision policy differs from action"):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [authority],
+                artifacts,
+                minute=11,
+                mutate=replace_policy,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_authority_failure_context_mismatch_is_atomic(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        before = ledger.path.read_bytes()
+
+        def drift_action_hash(_failure, unknown):
+            unknown["action_content_hash"] = "sha256:" + "9" * 64
+
+        with pytest.raises(ProtocolError, match="failure and assessment action_content_hash differ"):
+            record_authority_failure(
+                ledger,
+                proposal,
+                action,
+                artifacts,
+                mutate=drift_action_hash,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_violated_authority_predicate_must_have_been_checked(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decide_epistemically(ledger, proposal, assessment, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="violated authority predicates were not checked"):
+            record_authority_assessment(
+                ledger,
+                proposal,
+                action,
+                artifacts,
+                outcome="VIOLATED",
+                checked=["actor_in_scope"],
+                violated=["action_in_scope"],
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_authorize_cannot_substitute_a_different_sufficient_grant(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(ledger, proposal, action, artifacts)
+        replacement_grant = add_artifact(
+            ledger,
+            "artifact:grant:replacement",
+            "AUTHORITY_GRANT",
+            10,
+            record_type="AuthorityGrant",
+            grantor_actor_id="actor:system",
+            grantee_actor_id="actor:executor",
+            permitted_action_types=["TEST"],
+            grant_valid_from=time_at(5),
+            grant_valid_to=time_at(20),
+        )
+        before = ledger.path.read_bytes()
+
+        def replace_grant(value):
+            value["authority_grant_id"] = replacement_grant["id"]
+            value["authority_grant_hash"] = replacement_grant["content_hash"]
+            value["source_record_ids"].append(replacement_grant["id"])
+
+        with pytest.raises(ProtocolError, match="AUTHORIZE grant differs from assessed grant"):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [authority],
+                artifacts,
+                minute=11,
+                mutate=replace_grant,
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutation,message",
+        [
+            (
+                lambda value: value.update({
+                    "authority_grant_id": None,
+                    "authority_grant_hash": None,
+                }),
+                "AUTHORIZE requires grant and validity start",
+            ),
+            (
+                lambda value: value.update({"authorization_valid_from": time_at(4)}),
+                "authorization begins before its grant",
+            ),
+            (
+                lambda value: value.update({"authorization_valid_to": time_at(21)}),
+                "authorization exceeds its grant",
+            ),
+        ],
+    )
+    def test_authorize_grant_preconditions_fail_atomically(self, ledger, mutation, message):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(ledger, proposal, action, artifacts)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [authority],
+                artifacts,
+                mutate=mutation,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_non_authorizing_decision_cannot_smuggle_validity(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome="VIOLATED",
+            violated=["actor_in_scope"],
+        )
+        before = ledger.path.read_bytes()
+
+        def add_validity(value):
+            value["authorization_valid_from"] = time_at(10)
+            value["authorization_valid_to"] = time_at(11)
+
+        with pytest.raises(ProtocolError, match="non-AUTHORIZE decision cannot grant validity"):
+            decide_authorization(
+                ledger,
+                proposal,
+                action,
+                claim,
+                epistemic,
+                [authority],
+                artifacts,
+                mutate=add_validity,
             )
         assert ledger.path.read_bytes() == before
 

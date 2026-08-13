@@ -38,7 +38,10 @@ from malleus.staging import StagingError, stage_subgraph
 from malleus.control import (
     ControlError,
     EPISTEMIC_MONITOR_KINDS,
+    authorization_policy_digest,
+    authorization_policy_requirements,
     epistemic_policy_digest,
+    evaluate_authorization_policy,
     evaluate_epistemic_policy,
     monitor_specification_digest,
     policy_requirements,
@@ -129,6 +132,10 @@ PRESENT_FIELDS = {
         "unknown_verdicts",
         "control_precedence",
     },
+    "AuthorizationPolicyArtifact": {
+        "required_monitor_ids",
+        "required_monitor_record_hashes",
+    },
     "ProposedSubgraph": {
         "claim_version_ids",
         "evidence_ids",
@@ -148,6 +155,21 @@ PRESENT_FIELDS = {
         "epistemic_decision_ids",
         "relied_on_claim_version_ids",
         "authority_assessment_ids",
+        "triggered_assessment_ids",
+        "authority_grant_id",
+        "authority_grant_hash",
+        "authorization_valid_from",
+        "authorization_valid_to",
+    },
+    "AuthorityAssessment": {
+        "checked_policy_predicates",
+        "violated_policy_predicates",
+        "evaluated_authority_grant_id",
+        "evaluated_authority_grant_hash",
+    },
+    "UnavailableAuthorityAssessment": {
+        "evaluated_authority_grant_id",
+        "evaluated_authority_grant_hash",
     },
     "LogicalAssessment": {
         "checked_rule_ids",
@@ -186,7 +208,7 @@ class ProtocolProjection:
     current_claim_by_key: dict[str, str] = field(default_factory=dict)
     latest_action_by_key: dict[str, str] = field(default_factory=dict)
     superseded_claim_ids: set[str] = field(default_factory=set)
-    monitor_output_ids: dict[tuple[str, str], str] = field(default_factory=dict)
+    monitor_output_ids: dict[tuple[str, ...], str] = field(default_factory=dict)
     logic_check_by_monitor_context: dict[tuple[str, str], str] = field(default_factory=dict)
     snapshot_hash: str | None = None
     acceptance_head: str = GENESIS
@@ -366,11 +388,25 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: AuthorityGrant grantor must be the generating actor"
             )
+        if artifact_type == "AuthorityGrant":
+            _canonical_unique(
+                artifact["permitted_action_types"],
+                f"event {event['event_id']} permitted_action_types",
+            )
+            _nonblank_values(
+                artifact["permitted_action_types"],
+                f"event {event['event_id']} permitted_action_types",
+            )
+            if not artifact["permitted_action_types"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: AuthorityGrant permits no action types"
+                )
         typed_artifacts = {
             "GRAPH_BASE": "GraphBaseArtifact",
             "CANDIDATE_SUBGRAPH": "CandidateSubgraphArtifact",
             "MONITOR_SPECIFICATION": "MonitorSpecificationArtifact",
             "EPISTEMIC_POLICY": "EpistemicPolicyArtifact",
+            "AUTHORIZATION_POLICY": "AuthorizationPolicyArtifact",
             "LOGIC_CONTRACT": "LogicContractArtifact",
         }
         expected_type = typed_artifacts.get(artifact["artifact_kind"])
@@ -391,6 +427,8 @@ class ProtocolLedger:
             self._validate_monitor_specification_artifact(projection, artifact, event)
         elif artifact_type == "EpistemicPolicyArtifact":
             self._validate_epistemic_policy_artifact(projection, artifact, event)
+        elif artifact_type == "AuthorizationPolicyArtifact":
+            self._validate_authorization_policy_artifact(projection, artifact, event)
         elif artifact_type == "LogicContractArtifact":
             self._validate_logic_contract_artifact(projection, artifact, event)
         self._validate_sources(artifact, projection.objects, event)
@@ -627,6 +665,47 @@ class ProtocolLedger:
         if artifact["artifact_hash"] != expected_hash:
             raise ProtocolError(f"event {event['event_id']}: epistemic policy semantic hash mismatch")
 
+    def _validate_authorization_policy_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        try:
+            requirements = authorization_policy_requirements(artifact)
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        required_sources = set()
+        for requirement in requirements:
+            monitor = self._artifact_ref(
+                projection,
+                requirement["monitor_id"],
+                requirement["monitor_record_hash"],
+                "MONITOR_SPECIFICATION",
+                record_type="MonitorSpecificationArtifact",
+            )
+            if monitor["assessment_kind"] != "AUTHORITY":
+                raise ProtocolError(
+                    f"event {event['event_id']}: authorization policy cannot require "
+                    f"{monitor['assessment_kind']} monitor"
+                )
+            required_sources.add(monitor["id"])
+        self._require_sources(artifact, required_sources, event)
+        try:
+            expected_hash = authorization_policy_digest(
+                schema_version=artifact["policy_schema_version"],
+                policy_id=artifact["id"],
+                policy_version=artifact["artifact_version"],
+                required_monitor_ids=artifact["required_monitor_ids"],
+                required_monitor_record_hashes=artifact["required_monitor_record_hashes"],
+            )
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(
+                f"event {event['event_id']}: authorization policy semantic hash mismatch"
+            )
+
     def _validate_logic_contract_artifact(
         self,
         projection: ProtocolProjection,
@@ -736,6 +815,14 @@ class ProtocolLedger:
             elif record_type == "ClaimVersion":
                 self._validate_claim_lineage(combined, record, event)
             elif self.registry.is_subtype_of(record_type, "ActionProposal"):
+                policy = self._artifact_ref(
+                    projection,
+                    record["authorization_policy_id"],
+                    record["authorization_policy_hash"],
+                    "AUTHORIZATION_POLICY",
+                    record_type="AuthorizationPolicyArtifact",
+                )
+                self._require_sources(record, {policy["id"]}, event)
                 self._validate_action_lineage(projection, combined, record, event)
         action_keys = [
             members[action_id]["record"]["action_key"]
@@ -1002,15 +1089,21 @@ class ProtocolLedger:
         failure = self._record("MonitorFailure", payload["failure"], event)
         assessment_type = payload["assessment_type"]
         assessment = self._record(assessment_type, payload["assessment"], event, root="Assessment")
-        if assessment_type != "UnavailableAssessment":
+        expected_unavailable_type = (
+            "UnavailableAuthorityAssessment"
+            if assessment["assessment_kind"] == "AUTHORITY"
+            else "UnavailableAssessment"
+        )
+        if assessment_type != expected_unavailable_type:
             raise ProtocolError(
-                f"event {event['event_id']}: MONITOR_FAILED requires UnavailableAssessment"
+                f"event {event['event_id']}: MONITOR_FAILED requires "
+                f"{expected_unavailable_type}"
             )
         if assessment["assessment_outcome"] != "UNKNOWN":
             raise ProtocolError(f"event {event['event_id']}: failed monitor must produce UNKNOWN")
-        if assessment["assessment_kind"] not in EPISTEMIC_MONITOR_KINDS:
+        if assessment["assessment_kind"] not in {*EPISTEMIC_MONITOR_KINDS, "AUTHORITY"}:
             raise ProtocolError(
-                f"event {event['event_id']}: MONITOR_FAILED supports epistemic monitors only"
+                f"event {event['event_id']}: MONITOR_FAILED has unsupported assessment kind"
             )
         if failure["id"] == assessment["id"]:
             raise ProtocolError(
@@ -1084,6 +1177,34 @@ class ProtocolLedger:
         elif any(name in failure or name in assessment for name in logic_fields):
             raise ProtocolError(
                 f"event {event['event_id']}: non-logical failure contains logical contract fields"
+            )
+        authority_fields = (
+            "action_proposal_id",
+            "action_content_hash",
+            "evaluated_actor_id",
+            "authority_policy_id",
+            "authority_policy_hash",
+            "evaluated_authority_grant_id",
+            "evaluated_authority_grant_hash",
+        )
+        if assessment["assessment_kind"] == "AUTHORITY":
+            for name in authority_fields:
+                if failure.get(name) != assessment.get(name):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: failure and assessment {name} differ"
+                    )
+            required_failure_sources.update(
+                {failure["action_proposal_id"], failure["authority_policy_id"]}
+            )
+            required_assessment_sources.update(
+                {assessment["action_proposal_id"], assessment["authority_policy_id"]}
+            )
+            if assessment.get("evaluated_authority_grant_id") is not None:
+                required_failure_sources.add(failure["evaluated_authority_grant_id"])
+                required_assessment_sources.add(assessment["evaluated_authority_grant_id"])
+        elif any(name in failure or name in assessment for name in authority_fields):
+            raise ProtocolError(
+                f"event {event['event_id']}: non-authority failure contains authority fields"
             )
         self._require_sources(failure, required_failure_sources, event)
         self._require_sources(assessment, required_assessment_sources, event)
@@ -1430,51 +1551,30 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: action_content_hash mismatch")
         if decision["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: authorization has stale acceptance head")
-        self._artifact_ref(
+        policy = self._artifact_ref(
             projection,
             decision["policy_id"],
             decision["policy_hash"],
             "AUTHORIZATION_POLICY",
+            record_type="AuthorizationPolicyArtifact",
         )
-        grant = self._artifact_ref(
-            projection,
-            decision["authority_grant_id"],
-            decision["authority_grant_hash"],
-            "AUTHORITY_GRANT",
-            record_type="AuthorityGrant",
-        )
-        _valid_interval(
-            decision["authorization_valid_from"],
-            decision.get("authorization_valid_to"),
-            "authorization validity",
-        )
-        if grant["grantee_actor_id"] != decision["authorized_actor_id"]:
-            raise ProtocolError(f"event {event['event_id']}: authority grant actor mismatch")
-        if action["action_type"] not in grant["permitted_action_types"]:
-            raise ProtocolError(f"event {event['event_id']}: action type is outside authority grant")
-        if aware_datetime(
-            decision["authorization_valid_from"],
-            "authorization valid from",
-        ) < aware_datetime(grant["grant_valid_from"], "grant valid from"):
-            raise ProtocolError(f"event {event['event_id']}: authorization begins before its grant")
-        grant_end = grant.get("grant_valid_to")
-        authorization_end = decision.get("authorization_valid_to")
-        if grant_end is not None and (
-            authorization_end is None
-            or aware_datetime(authorization_end, "authorization valid to")
-            > aware_datetime(grant_end, "grant valid to")
+        if (
+            policy["id"] != action["authorization_policy_id"]
+            or policy["content_hash"] != action["authorization_policy_hash"]
         ):
-            raise ProtocolError(f"event {event['event_id']}: authorization exceeds its grant")
+            raise ProtocolError(f"event {event['event_id']}: decision policy differs from action")
         _unique(decision["epistemic_decision_ids"], "epistemic_decision_ids")
-        accepted_decisions = []
+        if not decision["epistemic_decision_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: action proposal lacks ACCEPT decision")
         for decision_id in decision["epistemic_decision_ids"]:
             if decision_id not in projection.epistemic_decision_ids:
                 raise ProtocolError(f"event {event['event_id']}: epistemic decision was not applied")
             epistemic = self._object(projection.objects, decision_id, "EpistemicDecision")
-            if epistemic["epistemic_verdict"] == "ACCEPT" and epistemic["proposal_id"] == proposal_id:
-                accepted_decisions.append(epistemic)
-        if not accepted_decisions:
-            raise ProtocolError(f"event {event['event_id']}: action proposal lacks ACCEPT decision")
+            if epistemic["epistemic_verdict"] != "ACCEPT" or epistemic["proposal_id"] != proposal_id:
+                raise ProtocolError(
+                    f"event {event['event_id']}: epistemic decision does not accept action proposal"
+                )
+        _unique(decision["relied_on_claim_version_ids"], "relied_on_claim_version_ids")
         for claim_id in decision["relied_on_claim_version_ids"]:
             claim = self._object(projection.objects, claim_id, "ClaimVersion")
             if projection.current_claim_by_key.get(claim["claim_key"]) != claim_id:
@@ -1482,34 +1582,133 @@ class ProtocolLedger:
 
         assessments = []
         _unique(decision["authority_assessment_ids"], "authority_assessment_ids")
+        _unique(decision["triggered_assessment_ids"], "triggered_assessment_ids")
+        if not decision["authority_assessment_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: authorization requires assessments")
         for assessment_id in decision["authority_assessment_ids"]:
             if assessment_id not in projection.assessment_ids:
                 raise ProtocolError(f"event {event['event_id']}: authority assessment was not applied")
-            assessment = self._object(projection.objects, assessment_id, "AuthorityAssessment")
-            if assessment["action_proposal_id"] != action_id:
-                raise ProtocolError(f"event {event['event_id']}: authority assessment action mismatch")
-            if assessment["proposal_id"] != proposal_id:
-                raise ProtocolError(f"event {event['event_id']}: authority assessment proposal mismatch")
-            if assessment["base_acceptance_head"] != projection.acceptance_head:
-                raise ProtocolError(f"event {event['event_id']}: authority assessment is stale")
-            if assessment["evaluated_actor_id"] != decision["authorized_actor_id"]:
-                raise ProtocolError(f"event {event['event_id']}: authority assessment actor mismatch")
-            if (
-                assessment["authority_policy_id"] != decision["policy_id"]
-                or assessment["authority_policy_hash"] != decision["policy_hash"]
-            ):
-                raise ProtocolError(f"event {event['event_id']}: authority policy mismatch")
+            assessment = self._object(projection.objects, assessment_id, "Assessment")
+            if assessment["assessment_kind"] != "AUTHORITY":
+                raise ProtocolError(
+                    f"event {event['event_id']}: authorization cites non-authority assessment"
+                )
             assessments.append(assessment)
-        verdict = decision["authorization_verdict"]
-        if verdict not in AUTHORIZATION_TARGETS:
-            raise ProtocolError(f"event {event['event_id']}: invalid authorization verdict '{verdict}'")
-        if verdict == "AUTHORIZE" and (
-            not assessments
-            or any(item["assessment_outcome"] != "SATISFIED" for item in assessments)
-        ):
-            raise ProtocolError(
-                f"event {event['event_id']}: AUTHORIZE requires SATISFIED authority assessments"
+        monitors = {
+            requirement["monitor_id"]: self._object(
+                projection.objects,
+                requirement["monitor_id"],
+                "MonitorSpecificationArtifact",
             )
+            for requirement in authorization_policy_requirements(policy)
+        }
+        try:
+            evaluation = evaluate_authorization_policy(
+                policy,
+                monitors,
+                assessments,
+                proposal_id=proposal_id,
+                proposal_content_hash=proposal["content_hash"],
+                action_id=action_id,
+                action_content_hash=action["content_hash"],
+                evaluated_actor_id=decision["authorized_actor_id"],
+                base_acceptance_head=projection.acceptance_head,
+            )
+        except ControlError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if decision["authority_assessment_ids"] != list(evaluation.assessment_ids):
+            raise ProtocolError(
+                f"event {event['event_id']}: authority assessment order differs from policy"
+            )
+        if decision["triggered_assessment_ids"] != list(evaluation.triggered_assessment_ids):
+            raise ProtocolError(
+                f"event {event['event_id']}: triggered authority assessments differ from policy"
+            )
+        if decision["policy_evaluation_hash"] != evaluation.evaluation_hash:
+            raise ProtocolError(
+                f"event {event['event_id']}: authorization policy evaluation hash mismatch"
+            )
+        verdict = decision["authorization_verdict"]
+        if verdict != evaluation.verdict:
+            raise ProtocolError(
+                f"event {event['event_id']}: verdict differs from deterministic authorization "
+                f"policy ({evaluation.verdict})"
+            )
+
+        grant_id = decision.get("authority_grant_id")
+        grant_hash = decision.get("authority_grant_hash")
+        if (grant_id is None) != (grant_hash is None):
+            raise ProtocolError(
+                f"event {event['event_id']}: authority grant binding must be all-or-none"
+            )
+        grant = None
+        if grant_id is not None:
+            grant = self._artifact_ref(
+                projection,
+                grant_id,
+                grant_hash,
+                "AUTHORITY_GRANT",
+                record_type="AuthorityGrant",
+            )
+        valid_from = decision.get("authorization_valid_from")
+        valid_to = decision.get("authorization_valid_to")
+        if verdict == "AUTHORIZE":
+            if grant is None or valid_from is None:
+                raise ProtocolError(
+                    f"event {event['event_id']}: AUTHORIZE requires grant and validity start"
+                )
+            _valid_interval(valid_from, valid_to, "authorization validity")
+            if grant["grantee_actor_id"] != decision["authorized_actor_id"]:
+                raise ProtocolError(f"event {event['event_id']}: authority grant actor mismatch")
+            if action["action_type"] not in grant["permitted_action_types"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: action type is outside authority grant"
+                )
+            if aware_datetime(valid_from, "authorization valid from") < aware_datetime(
+                grant["grant_valid_from"], "grant valid from"
+            ):
+                raise ProtocolError(
+                    f"event {event['event_id']}: authorization begins before its grant"
+                )
+            grant_end = grant.get("grant_valid_to")
+            if grant_end is not None and (
+                valid_to is None
+                or aware_datetime(valid_to, "authorization valid to")
+                > aware_datetime(grant_end, "grant valid to")
+            ):
+                raise ProtocolError(
+                    f"event {event['event_id']}: authorization exceeds its grant"
+                )
+            for assessment in assessments:
+                if (
+                    assessment.get("evaluated_authority_grant_id") != grant["id"]
+                    or assessment.get("evaluated_authority_grant_hash") != grant["content_hash"]
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: AUTHORIZE grant differs from assessed grant"
+                    )
+        else:
+            if valid_from is not None or valid_to is not None:
+                raise ProtocolError(
+                    f"event {event['event_id']}: non-AUTHORIZE decision cannot grant validity"
+                )
+            if grant is not None:
+                eligible_outcome = "VIOLATED" if verdict == "BLOCK" else "UNKNOWN"
+                triggered = [
+                    assessment
+                    for assessment in assessments
+                    if assessment["id"] in decision["triggered_assessment_ids"]
+                    and assessment["assessment_outcome"] == eligible_outcome
+                ]
+                if not any(
+                    item.get("evaluated_authority_grant_id") == grant["id"]
+                    and item.get("evaluated_authority_grant_hash") == grant["content_hash"]
+                    for item in triggered
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: cited grant was not evaluated by a "
+                        f"triggering {eligible_outcome} authority assessment"
+                    )
         transition = self._record("TransitionRecord", payload["transition"], event)
         self._transition(
             transition,
@@ -1524,6 +1723,17 @@ class ProtocolLedger:
             decision["id"]: _wrapped("AuthorizationDecision", decision),
             transition["id"]: _wrapped("TransitionRecord", transition),
         }
+        required_sources = {
+            action_id,
+            policy["id"],
+            *decision["epistemic_decision_ids"],
+            *decision["relied_on_claim_version_ids"],
+            *decision["authority_assessment_ids"],
+        }
+        if grant is not None:
+            required_sources.add(grant["id"])
+        self._require_sources(decision, required_sources, event)
+        self._require_sources(transition, {decision["id"]}, event)
         self._validate_sources(decision, {**projection.objects, **introduced}, event)
         self._validate_sources(transition, {**projection.objects, **introduced}, event)
         self._add_objects(projection, introduced, event)
@@ -1557,10 +1767,26 @@ class ProtocolLedger:
         if assessment["assessment_kind"] != monitor["assessment_kind"]:
             raise ProtocolError(f"event {event['event_id']}: assessment kind differs from monitor")
         expected_type = ASSESSMENT_TYPES_BY_KIND[assessment["assessment_kind"]]
-        if assessment_type == "UnavailableAssessment":
+        unavailable = assessment_type in {
+            "UnavailableAssessment",
+            "UnavailableAuthorityAssessment",
+        }
+        if unavailable:
             if assessment["assessment_outcome"] != "UNKNOWN":
                 raise ProtocolError(
-                    f"event {event['event_id']}: UnavailableAssessment must be UNKNOWN"
+                    f"event {event['event_id']}: unavailable assessment must be UNKNOWN"
+                )
+            if (
+                assessment_type == "UnavailableAuthorityAssessment"
+                and assessment["assessment_kind"] != "AUTHORITY"
+            ):
+                raise ProtocolError(
+                    f"event {event['event_id']}: UnavailableAuthorityAssessment must be AUTHORITY"
+                )
+            if assessment_type == "UnavailableAssessment" and assessment["assessment_kind"] == "AUTHORITY":
+                raise ProtocolError(
+                    f"event {event['event_id']}: AUTHORITY failure requires "
+                    "UnavailableAuthorityAssessment"
                 )
         elif assessment_type != expected_type:
             raise ProtocolError(
@@ -1572,7 +1798,11 @@ class ProtocolLedger:
             {assessment["proposal_id"], assessment["monitor_id"]},
             event,
         )
-        if assessment_type == "AuthorityAssessment":
+        authority_output = assessment_type in {
+            "AuthorityAssessment",
+            "UnavailableAuthorityAssessment",
+        }
+        if authority_output:
             if projection.proposal_states[proposal["id"]] != ProposalState.ACCEPTED:
                 raise ProtocolError(f"event {event['event_id']}: authority checks require accepted proposal")
             if assessment["base_acceptance_head"] != projection.acceptance_head:
@@ -1584,34 +1814,89 @@ class ProtocolLedger:
             )
             if projection.action_to_proposal[action["id"]] != proposal["id"]:
                 raise ProtocolError(f"event {event['event_id']}: authority action is outside proposal")
+            if assessment["action_content_hash"] != action["content_hash"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: authority action_content_hash mismatch"
+                )
             if action["id"] not in assessment["input_record_ids"]:
                 raise ProtocolError(f"event {event['event_id']}: authority inputs must include action")
-            _unique(
-                assessment["checked_policy_predicates"],
-                "checked_policy_predicates",
-            )
-            _unique(
-                assessment["violated_policy_predicates"],
-                "violated_policy_predicates",
-            )
-            if not assessment["checked_policy_predicates"]:
-                raise ProtocolError(
-                    f"event {event['event_id']}: authority assessment checked no predicates"
-                )
             if (
-                assessment["assessment_outcome"] == "SATISFIED"
-                and assessment["violated_policy_predicates"]
+                assessment["authority_policy_id"] != action["authorization_policy_id"]
+                or assessment["authority_policy_hash"] != action["authorization_policy_hash"]
             ):
                 raise ProtocolError(
-                    f"event {event['event_id']}: SATISFIED authority assessment has violations"
+                    f"event {event['event_id']}: authority assessment policy differs from action"
+                )
+            grant_fields = (
+                assessment.get("evaluated_authority_grant_id"),
+                assessment.get("evaluated_authority_grant_hash"),
+            )
+            if (grant_fields[0] is None) != (grant_fields[1] is None):
+                raise ProtocolError(
+                    f"event {event['event_id']}: evaluated authority grant binding must be all-or-none"
                 )
             if (
-                assessment["assessment_outcome"] == "VIOLATED"
-                and not assessment["violated_policy_predicates"]
+                assessment_type == "AuthorityAssessment"
+                and assessment["assessment_outcome"] == "SATISFIED"
+                and grant_fields[0] is None
             ):
                 raise ProtocolError(
-                    f"event {event['event_id']}: VIOLATED authority assessment has no violations"
+                    f"event {event['event_id']}: SATISFIED authority assessment requires a grant"
                 )
+            if grant_fields[0] is not None:
+                grant = self._artifact_ref(
+                    projection,
+                    grant_fields[0],
+                    grant_fields[1],
+                    "AUTHORITY_GRANT",
+                    record_type="AuthorityGrant",
+                )
+                self._require_sources(assessment, {grant["id"]}, event)
+                if grant["id"] not in assessment["input_record_ids"]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: evaluated grant must be an authority input"
+                    )
+            if assessment_type == "AuthorityAssessment":
+                _canonical_unique(
+                    assessment["checked_policy_predicates"],
+                    "checked_policy_predicates",
+                )
+                _canonical_unique(
+                    assessment["violated_policy_predicates"],
+                    "violated_policy_predicates",
+                )
+                _nonblank_values(
+                    assessment["checked_policy_predicates"],
+                    "checked_policy_predicates",
+                )
+                _nonblank_values(
+                    assessment["violated_policy_predicates"],
+                    "violated_policy_predicates",
+                )
+                if not assessment["checked_policy_predicates"]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: authority assessment checked no predicates"
+                    )
+                if not set(assessment["violated_policy_predicates"]).issubset(
+                    assessment["checked_policy_predicates"]
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: violated authority predicates were not checked"
+                    )
+                if (
+                    assessment["assessment_outcome"] == "SATISFIED"
+                    and assessment["violated_policy_predicates"]
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: SATISFIED authority assessment has violations"
+                    )
+                if (
+                    assessment["assessment_outcome"] == "VIOLATED"
+                    and not assessment["violated_policy_predicates"]
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: VIOLATED authority assessment has no violations"
+                    )
         else:
             if projection.proposal_states[proposal["id"]] != ProposalState.PROPOSED:
                 raise ProtocolError(f"event {event['event_id']}: proposal is not open for assessment")
@@ -1644,6 +1929,11 @@ class ProtocolLedger:
                 "authority_policy_hash",
                 "AUTHORIZATION_POLICY",
             ),
+            "UnavailableAuthorityAssessment": (
+                "authority_policy_id",
+                "authority_policy_hash",
+                "AUTHORIZATION_POLICY",
+            ),
         }
         requirement = artifact_requirements.get(assessment_type)
         if assessment_type == "UnavailableAssessment" and assessment["assessment_kind"] == "LOGICAL":
@@ -1659,19 +1949,20 @@ class ProtocolLedger:
                 assessment[requirement[1]],
                 requirement[2],
             )
-            monitor_inputs = dict(zip(
-                monitor["input_artifact_ids"],
-                monitor["input_artifact_record_hashes"],
-                strict=True,
-            ))
-            if monitor_inputs.get(dependency["id"]) != dependency["content_hash"]:
-                raise ProtocolError(
-                    f"event {event['event_id']}: assessment dependency differs from monitor"
-                )
+            if not authority_output:
+                monitor_inputs = dict(zip(
+                    monitor["input_artifact_ids"],
+                    monitor["input_artifact_record_hashes"],
+                    strict=True,
+                ))
+                if monitor_inputs.get(dependency["id"]) != dependency["content_hash"]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: assessment dependency differs from monitor"
+                    )
             self._require_sources(assessment, {dependency["id"]}, event)
         if assessment_type == "LogicalAssessment":
             self._validate_logical_assessment(projection, assessment, event)
-        elif assessment_type != "UnavailableAssessment":
+        elif not unavailable:
             self._validate_completed_assessment(
                 proposal,
                 assessment_type,
@@ -1680,13 +1971,17 @@ class ProtocolLedger:
             )
 
     @staticmethod
-    def _monitor_output_key(assessment: Mapping[str, Any]) -> tuple[str, str]:
-        subject_id = (
-            assessment["action_proposal_id"]
-            if assessment["assessment_kind"] == "AUTHORITY"
-            else assessment["proposal_id"]
-        )
-        return subject_id, assessment["monitor_id"]
+    def _monitor_output_key(assessment: Mapping[str, Any]) -> tuple[str, ...]:
+        if assessment["assessment_kind"] == "AUTHORITY":
+            return (
+                assessment["action_proposal_id"],
+                assessment["evaluated_actor_id"],
+                assessment["base_acceptance_head"],
+                assessment["monitor_id"],
+                assessment.get("evaluated_authority_grant_id") or "",
+                assessment.get("evaluated_authority_grant_hash") or "",
+            )
+        return assessment["proposal_id"], assessment["monitor_id"]
 
     def _require_new_monitor_output(
         self,
@@ -2187,6 +2482,7 @@ class ProtocolLedger:
             "CandidateSubgraphArtifact",
             "MonitorSpecificationArtifact",
             "EpistemicPolicyArtifact",
+            "AuthorizationPolicyArtifact",
             "LogicContractArtifact",
             "AuthorityGrant",
             "ProposedSubgraph",
@@ -2196,6 +2492,7 @@ class ProtocolLedger:
             "ActionProposal",
             "Assessment",
             "UnavailableAssessment",
+            "UnavailableAuthorityAssessment",
             "TypeAssessment",
             "EvidenceCompletenessAssessment",
             "ConflictAssessment",
@@ -2233,6 +2530,7 @@ class ProtocolLedger:
             "CandidateSubgraphArtifact": "ProtocolArtifact",
             "MonitorSpecificationArtifact": "ProtocolArtifact",
             "EpistemicPolicyArtifact": "ProtocolArtifact",
+            "AuthorizationPolicyArtifact": "ProtocolArtifact",
             "LogicContractArtifact": "ProtocolArtifact",
             "AuthorityGrant": "ProtocolArtifact",
             "ProposedSubgraph": "ProtocolRecord",
@@ -2242,6 +2540,7 @@ class ProtocolLedger:
             "ActionProposal": "ProtocolRecord",
             "Assessment": "ProtocolRecord",
             "UnavailableAssessment": "Assessment",
+            "UnavailableAuthorityAssessment": "UnavailableAssessment",
             "TypeAssessment": "Assessment",
             "EvidenceCompletenessAssessment": "Assessment",
             "ConflictAssessment": "Assessment",

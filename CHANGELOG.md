@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-08-12
+
+### Added
+
+- Added typed, content-addressed `AuthorizationPolicyArtifact` records that pin exact `AUTHORITY` monitor records.
+- Added proposal-time authorization-policy bindings to every concrete `ActionProposal`.
+- Added a pure authorization evaluator with fixed `SATISFIED` to `AUTHORIZE`, `VIOLATED` to `BLOCK`, and `UNKNOWN` to `CLARIFY` control, with `BLOCK` precedence.
+- Added replay-bound authority assessment ordering, triggered assessment IDs, and authorization policy-evaluation hashes.
+- Added `UnavailableAuthorityAssessment` and `authority_monitor_failure_records()` for atomic authority-monitor failure reporting with exact proposal, action, actor, policy, monitor, and acceptance-head context.
+- Added adversarial gates for policy substitution, incomplete monitor coverage, action and actor drift, output ordering, trigger and evaluation-hash tampering, authority failure context drift, grant substitution, and verdict override.
+
+### Changed
+
+- Replaced opaque authorization-policy artifacts with a concrete typed artifact. Generic `ProtocolArtifact` records can no longer carry `AUTHORIZATION_POLICY`.
+- Replaced caller-selected authorization verdicts with replay-recomputed control selection.
+- Required completed and unavailable authority outputs to bind the exact action content hash and the action's precommitted authorization policy.
+- Scoped grant sufficiency checks to `AUTHORIZE`. `BLOCK` may cite an evaluated insufficient grant but receives no authorization validity interval.
+- Scoped non-authorizing grant citations to the output that selected control: `BLOCK` requires `VIOLATED`; `CLARIFY` requires `UNKNOWN`.
+- Keyed authority outputs by exact action, actor, acceptance head, monitor, and optional evaluated grant, permitting changed-context reevaluation while rejecting same-context competing results.
+- Required `AUTHORIZE` to use the same exact grant evaluated by every satisfied authority assessment.
+- Required authority-grant action types to be nonempty, canonical, unique, and nonblank.
+
+### Compatibility
+
+- Version 0.6.0 does not replay 0.5.0 action proposals, opaque authorization policies, authority assessments, or authorization decisions unchanged. There is no implicit migration or default authorization policy.
+- The assent ontology is version 0.5.0. The root ontology remains version 0.4.0.
+
+### Boundary
+
+- Stage 7c validates recorded authority outputs and derives authorization control. It does not execute authority monitors, establish policy legitimacy or a grantor trust root, or execute actions.
+- Authorization policy authority, scope, eligibility, and effective-time selection remain outside this release.
+
 ## [0.5.0] - 2026-08-12
 
 ### Added

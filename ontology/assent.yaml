@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.4.0
+version: 0.5.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -197,6 +197,26 @@ classes:
       unknown_verdicts:
         required: true
       control_precedence:
+        required: true
+
+  AuthorizationPolicyArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Deterministic authorization control policy bound to an exact set of
+      authority monitors before an action is proposed.
+    slots:
+      - policy_schema_version
+      - required_monitor_ids
+      - required_monitor_record_hashes
+    slot_usage:
+      artifact_kind:
+        equals_string: AUTHORIZATION_POLICY
+      policy_schema_version:
+        required: true
+        equals_string: "1"
+      required_monitor_ids:
+        required: true
+      required_monitor_record_hashes:
         required: true
 
   LogicContractArtifact:
@@ -425,6 +445,8 @@ classes:
       - action_key
       - revision
       - revises_action_proposal_id
+      - authorization_policy_id
+      - authorization_policy_hash
     slot_usage:
       action_type:
         required: true
@@ -433,6 +455,10 @@ classes:
       action_key:
         required: true
       revision:
+        required: true
+      authorization_policy_id:
+        required: true
+      authorization_policy_hash:
         required: true
 
   Assessment:
@@ -488,6 +514,33 @@ classes:
     slot_usage:
       assessment_outcome:
         equals_string: UNKNOWN
+
+  UnavailableAuthorityAssessment:
+    is_a: UnavailableAssessment
+    description: >-
+      UNKNOWN authority output paired atomically with a MonitorFailure and
+      bound to the exact action, actor, policy, and optional evaluated grant.
+    slots:
+      - action_proposal_id
+      - action_content_hash
+      - evaluated_actor_id
+      - authority_policy_id
+      - authority_policy_hash
+      - evaluated_authority_grant_id
+      - evaluated_authority_grant_hash
+    slot_usage:
+      assessment_kind:
+        equals_string: AUTHORITY
+      action_proposal_id:
+        required: true
+      action_content_hash:
+        required: true
+      evaluated_actor_id:
+        required: true
+      authority_policy_id:
+        required: true
+      authority_policy_hash:
+        required: true
 
   TypeAssessment:
     is_a: Assessment
@@ -682,15 +735,20 @@ classes:
     is_a: Assessment
     slots:
       - action_proposal_id
+      - action_content_hash
       - evaluated_actor_id
       - authority_policy_id
       - authority_policy_hash
+      - evaluated_authority_grant_id
+      - evaluated_authority_grant_hash
       - checked_policy_predicates
       - violated_policy_predicates
     slot_usage:
       assessment_kind:
         equals_string: AUTHORITY
       action_proposal_id:
+        required: true
+      action_content_hash:
         required: true
       evaluated_actor_id:
         required: true
@@ -715,6 +773,13 @@ classes:
       - logic_contract_record_hash
       - ruleset_id
       - ruleset_hash
+      - action_proposal_id
+      - action_content_hash
+      - evaluated_actor_id
+      - authority_policy_id
+      - authority_policy_hash
+      - evaluated_authority_grant_id
+      - evaluated_authority_grant_hash
       - failed_assessment_kind
       - failure_category
       - error_code
@@ -862,6 +927,8 @@ classes:
       - epistemic_decision_ids
       - relied_on_claim_version_ids
       - authority_assessment_ids
+      - triggered_assessment_ids
+      - policy_evaluation_hash
       - authority_grant_id
       - authority_grant_hash
       - authorized_actor_id
@@ -880,13 +947,9 @@ classes:
         required: true
       authority_assessment_ids:
         required: true
-      authority_grant_id:
-        required: true
-      authority_grant_hash:
+      policy_evaluation_hash:
         required: true
       authorized_actor_id:
-        required: true
-      authorization_valid_from:
         required: true
 
   Request:
@@ -1314,6 +1377,10 @@ slots:
     range: string
   authority_policy_hash:
     range: string
+  evaluated_authority_grant_id:
+    range: string
+  evaluated_authority_grant_hash:
+    range: string
   checked_policy_predicates:
     range: string
     multivalued: true
@@ -1346,6 +1413,10 @@ slots:
   epistemic_policy_id:
     range: string
   epistemic_policy_hash:
+    range: string
+  authorization_policy_id:
+    range: string
+  authorization_policy_hash:
     range: string
   assessment_ids:
     range: string

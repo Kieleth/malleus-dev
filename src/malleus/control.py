@@ -1,4 +1,4 @@
-"""Typed monitor contracts and deterministic epistemic control selection."""
+"""Typed monitor contracts and deterministic epistemic and authorization control."""
 
 from __future__ import annotations
 
@@ -33,6 +33,16 @@ class MonitoringError(ControlError):
 @dataclass(frozen=True)
 class PolicyEvaluation:
     """Canonical result of applying one policy to exact monitor outputs."""
+
+    verdict: str
+    assessment_ids: tuple[str, ...]
+    triggered_assessment_ids: tuple[str, ...]
+    evaluation_hash: str
+
+
+@dataclass(frozen=True)
+class AuthorizationEvaluation:
+    """Canonical authorization control selected from exact authority outputs."""
 
     verdict: str
     assessment_ids: tuple[str, ...]
@@ -124,6 +134,67 @@ def epistemic_policy_digest(
         "requirements": requirements,
         "control_precedence": policy["control_precedence"],
     })
+
+
+def authorization_policy_digest(
+    *,
+    schema_version: str,
+    policy_id: str,
+    policy_version: str,
+    required_monitor_ids: Iterable[str],
+    required_monitor_record_hashes: Iterable[str],
+) -> str:
+    """Hash one authorization policy's exact authority-monitor coverage."""
+    if schema_version != "1":
+        raise ControlError(f"unsupported authorization policy schema_version '{schema_version}'")
+    _text(policy_id, "policy_id")
+    _text(policy_version, "policy_version")
+    requirements = authorization_policy_requirements({
+        "required_monitor_ids": _iterable_values(
+            required_monitor_ids,
+            "required_monitor_ids",
+        ),
+        "required_monitor_record_hashes": _iterable_values(
+            required_monitor_record_hashes,
+            "required_monitor_record_hashes",
+        ),
+    })
+    return content_digest({
+        "schema_version": schema_version,
+        "policy_id": policy_id,
+        "policy_version": policy_version,
+        "requirements": requirements,
+        "outcome_controls": {
+            "SATISFIED": "AUTHORIZE",
+            "VIOLATED": "BLOCK",
+            "UNKNOWN": "CLARIFY",
+        },
+        "control_precedence": ["BLOCK", "CLARIFY", "AUTHORIZE"],
+    })
+
+
+def authorization_policy_requirements(policy: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Return validated authority-monitor requirements in canonical ID order."""
+    if not isinstance(policy, Mapping):
+        raise ControlError("authorization policy must be a mapping")
+    monitor_ids = policy.get("required_monitor_ids")
+    monitor_hashes = policy.get("required_monitor_record_hashes")
+    if not isinstance(monitor_ids, list) or not monitor_ids:
+        raise ControlError("required_monitor_ids must be a nonempty list")
+    if not isinstance(monitor_hashes, list) or not monitor_hashes:
+        raise ControlError("required_monitor_record_hashes must be a nonempty list")
+    if len(monitor_ids) != len(monitor_hashes):
+        raise ControlError("authorization policy requirement fields must have equal lengths")
+    if any(not isinstance(value, str) or not value.strip() for value in monitor_ids):
+        raise ControlError("required_monitor_ids must contain nonblank strings")
+    if monitor_ids != sorted(set(monitor_ids)):
+        raise ControlError("required_monitor_ids must be unique and canonical")
+    for index, value in enumerate(monitor_hashes):
+        _digest(value, f"required_monitor_record_hashes[{index}]")
+    return [
+        {"monitor_id": monitor_id, "monitor_record_hash": monitor_hash}
+        for monitor_id, monitor_hash in zip(monitor_ids, monitor_hashes, strict=True)
+    ]
 
 
 def policy_requirements(policy: Mapping[str, Any]) -> list[dict[str, str]]:
@@ -305,6 +376,197 @@ def evaluate_epistemic_policy(
     )
 
 
+def evaluate_authorization_policy(
+    policy: Mapping[str, Any],
+    monitors: Mapping[str, Mapping[str, Any]],
+    assessments: Iterable[Mapping[str, Any]],
+    *,
+    proposal_id: str,
+    proposal_content_hash: str,
+    action_id: str,
+    action_content_hash: str,
+    evaluated_actor_id: str,
+    base_acceptance_head: str,
+) -> AuthorizationEvaluation:
+    """Derive a verdict from records already type- and hash-validated by replay."""
+    _text(proposal_id, "proposal_id")
+    _digest(proposal_content_hash, "proposal_content_hash")
+    _text(action_id, "action_id")
+    _digest(action_content_hash, "action_content_hash")
+    _text(evaluated_actor_id, "evaluated_actor_id")
+    _digest(base_acceptance_head, "base_acceptance_head")
+    if not isinstance(policy, Mapping):
+        raise ControlError("authorization policy must be a mapping")
+    policy_id = policy.get("id")
+    policy_record_hash = policy.get("content_hash")
+    policy_version = policy.get("artifact_version")
+    policy_schema_version = policy.get("policy_schema_version")
+    _text(policy_id, "policy id")
+    _digest(policy_record_hash, "policy content_hash")
+    _text(policy_version, "policy artifact_version")
+    if policy.get("artifact_kind") != "AUTHORIZATION_POLICY":
+        raise ControlError("authorization policy artifact_kind must be AUTHORIZATION_POLICY")
+    if policy_schema_version != "1":
+        raise ControlError(
+            f"unsupported authorization policy schema_version '{policy_schema_version}'"
+        )
+    expected_policy_hash = authorization_policy_digest(
+        schema_version=policy_schema_version,
+        policy_id=policy_id,
+        policy_version=policy_version,
+        required_monitor_ids=policy.get("required_monitor_ids"),
+        required_monitor_record_hashes=policy.get("required_monitor_record_hashes"),
+    )
+    if policy.get("artifact_hash") != expected_policy_hash:
+        raise ControlError("authorization policy semantic hash mismatch")
+    requirements = authorization_policy_requirements(policy)
+
+    if not isinstance(monitors, Mapping):
+        raise ControlError("monitors must be a mapping")
+    if any(not isinstance(value, str) or not value.strip() for value in monitors):
+        raise ControlError("monitor mapping keys must be nonblank strings")
+    required_ids = [item["monitor_id"] for item in requirements]
+    missing_monitors = sorted(set(required_ids) - set(monitors))
+    if missing_monitors:
+        raise ControlError(
+            f"required authority monitor specification '{missing_monitors[0]}' is unavailable"
+        )
+    extra_monitors = sorted(set(monitors) - set(required_ids))
+    if extra_monitors:
+        raise ControlError(f"unrequired monitor specification '{extra_monitors[0]}'")
+
+    assessment_by_monitor: dict[str, Mapping[str, Any]] = {}
+    for assessment in _iterable_values(assessments, "authority assessments"):
+        if not isinstance(assessment, Mapping):
+            raise ControlError("authority assessments must be mappings")
+        monitor_id = assessment.get("monitor_id")
+        _text(monitor_id, "authority assessment monitor_id")
+        if monitor_id in assessment_by_monitor:
+            raise ControlError(f"multiple assessments cite authority monitor '{monitor_id}'")
+        assessment_by_monitor[monitor_id] = assessment
+    missing_assessments = sorted(set(required_ids) - set(assessment_by_monitor))
+    if missing_assessments:
+        raise ControlError(
+            f"required authority monitor '{missing_assessments[0]}' has no assessment"
+        )
+    extra_assessments = sorted(set(assessment_by_monitor) - set(required_ids))
+    if extra_assessments:
+        raise ControlError(
+            f"assessment from unrequired authority monitor '{extra_assessments[0]}'"
+        )
+
+    ordered_assessment_ids: list[str] = []
+    triggered_assessment_ids: list[str] = []
+    bindings: list[dict[str, Any]] = []
+    triggered_controls: set[str] = set()
+    for requirement in requirements:
+        monitor_id = requirement["monitor_id"]
+        monitor = monitors[monitor_id]
+        if not isinstance(monitor, Mapping):
+            raise ControlError(
+                f"required authority monitor specification '{monitor_id}' must be a mapping"
+            )
+        if monitor.get("id") != monitor_id:
+            raise ControlError(
+                f"required authority monitor specification '{monitor_id}' has mismatched id"
+            )
+        if monitor.get("content_hash") != requirement["monitor_record_hash"]:
+            raise ControlError(f"required authority monitor '{monitor_id}' record hash mismatch")
+        if monitor.get("artifact_kind") != "MONITOR_SPECIFICATION":
+            raise ControlError(
+                f"required authority monitor '{monitor_id}' artifact_kind mismatch"
+            )
+        if monitor.get("assessment_kind") != "AUTHORITY":
+            raise ControlError(f"required monitor '{monitor_id}' is not an AUTHORITY monitor")
+        input_ids = monitor.get("input_artifact_ids")
+        input_hashes = monitor.get("input_artifact_record_hashes")
+        if not isinstance(input_ids, list) or not isinstance(input_hashes, list):
+            raise ControlError(f"authority monitor '{monitor_id}' input fields must be lists")
+        expected_monitor_hash = monitor_specification_digest(
+            schema_version=monitor.get("monitor_schema_version"),
+            monitor_id=monitor_id,
+            monitor_version=monitor.get("artifact_version"),
+            assessment_kind=monitor.get("assessment_kind"),
+            implementation_hash=monitor.get("monitor_implementation_hash"),
+            input_artifact_ids=input_ids,
+            input_artifact_record_hashes=input_hashes,
+        )
+        if monitor.get("artifact_hash") != expected_monitor_hash:
+            raise ControlError(f"authority monitor '{monitor_id}' semantic hash mismatch")
+
+        assessment = assessment_by_monitor[monitor_id]
+        if assessment.get("monitor_hash") != monitor.get("content_hash"):
+            raise ControlError(f"authority assessment monitor hash mismatch for '{monitor_id}'")
+        if assessment.get("monitor_version") != monitor.get("artifact_version"):
+            raise ControlError(f"authority assessment monitor version mismatch for '{monitor_id}'")
+        if assessment.get("assessment_kind") != "AUTHORITY":
+            raise ControlError(f"assessment kind mismatch for authority monitor '{monitor_id}'")
+        for name, expected in (
+            ("proposal_id", proposal_id),
+            ("proposal_content_hash", proposal_content_hash),
+            ("action_proposal_id", action_id),
+            ("action_content_hash", action_content_hash),
+            ("evaluated_actor_id", evaluated_actor_id),
+            ("base_acceptance_head", base_acceptance_head),
+            ("authority_policy_id", policy_id),
+            ("authority_policy_hash", policy_record_hash),
+        ):
+            if assessment.get(name) != expected:
+                raise ControlError(
+                    f"authority assessment {name} mismatch for monitor '{monitor_id}'"
+                )
+        outcome = assessment.get("assessment_outcome")
+        try:
+            selected_control = _authorization_control(outcome)
+        except ControlError as error:
+            raise ControlError(
+                f"invalid authority assessment outcome for monitor '{monitor_id}'"
+            ) from error
+        assessment_id = assessment.get("id")
+        assessment_hash = assessment.get("content_hash")
+        _text(assessment_id, "authority assessment id")
+        _digest(assessment_hash, "authority assessment content_hash")
+        if selected_control != "AUTHORIZE":
+            triggered_controls.add(selected_control)
+            triggered_assessment_ids.append(assessment_id)
+        ordered_assessment_ids.append(assessment_id)
+        bindings.append({
+            "monitor_id": monitor_id,
+            "monitor_record_hash": monitor["content_hash"],
+            "assessment_id": assessment_id,
+            "assessment_content_hash": assessment_hash,
+            "assessment_outcome": outcome,
+            "selected_control": selected_control,
+        })
+
+    if len(ordered_assessment_ids) != len(set(ordered_assessment_ids)):
+        raise ControlError("authority assessment IDs must be unique")
+    verdict = "AUTHORIZE"
+    if "BLOCK" in triggered_controls:
+        verdict = "BLOCK"
+    elif "CLARIFY" in triggered_controls:
+        verdict = "CLARIFY"
+    evaluation_hash = content_digest({
+        "policy_id": policy_id,
+        "policy_record_hash": policy_record_hash,
+        "proposal_id": proposal_id,
+        "proposal_content_hash": proposal_content_hash,
+        "action_id": action_id,
+        "action_content_hash": action_content_hash,
+        "evaluated_actor_id": evaluated_actor_id,
+        "base_acceptance_head": base_acceptance_head,
+        "bindings": bindings,
+        "selected_verdict": verdict,
+        "triggered_assessment_ids": triggered_assessment_ids,
+    })
+    return AuthorizationEvaluation(
+        verdict=verdict,
+        assessment_ids=tuple(ordered_assessment_ids),
+        triggered_assessment_ids=tuple(triggered_assessment_ids),
+        evaluation_hash=evaluation_hash,
+    )
+
+
 def monitor_failure_records(
     *,
     error: MonitoringError,
@@ -349,6 +611,91 @@ def monitor_failure_records(
     )
 
 
+def authority_monitor_failure_records(
+    *,
+    error: MonitoringError,
+    failure_id: str,
+    assessment_id: str,
+    event_id: str,
+    generated_at: str,
+    actor_id: str,
+    role: str,
+    proposal_id: str,
+    proposal_content_hash: str,
+    base_acceptance_head: str,
+    action_proposal_id: str,
+    action_content_hash: str,
+    evaluated_actor_id: str,
+    authority_policy_id: str,
+    authority_policy_hash: str,
+    monitor_id: str,
+    monitor_version: str,
+    monitor_hash: str,
+    failure_category: str,
+    error_code: str,
+    evaluated_authority_grant_id: str | None = None,
+    evaluated_authority_grant_hash: str | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Build one atomic UNKNOWN authority output with exact action context."""
+    if not isinstance(error, MonitoringError):
+        raise TypeError("error must be a MonitoringError")
+    for name, value in (
+        ("action_proposal_id", action_proposal_id),
+        ("evaluated_actor_id", evaluated_actor_id),
+        ("authority_policy_id", authority_policy_id),
+    ):
+        _text(value, name)
+    for name, value in (
+        ("action_content_hash", action_content_hash),
+        ("authority_policy_hash", authority_policy_hash),
+    ):
+        _digest(value, name)
+    if (evaluated_authority_grant_id is None) != (
+        evaluated_authority_grant_hash is None
+    ):
+        raise ControlError("evaluated authority grant binding must be all-or-none")
+    if evaluated_authority_grant_id is not None:
+        _text(evaluated_authority_grant_id, "evaluated_authority_grant_id")
+        _digest(evaluated_authority_grant_hash, "evaluated_authority_grant_hash")
+    authority_fields = {
+        "action_proposal_id": action_proposal_id,
+        "action_content_hash": action_content_hash,
+        "evaluated_actor_id": evaluated_actor_id,
+        "authority_policy_id": authority_policy_id,
+        "authority_policy_hash": authority_policy_hash,
+        "evaluated_authority_grant_id": evaluated_authority_grant_id,
+        "evaluated_authority_grant_hash": evaluated_authority_grant_hash,
+    }
+    additional_sources = {action_proposal_id, authority_policy_id}
+    additional_inputs = {action_proposal_id}
+    if evaluated_authority_grant_id is not None:
+        additional_sources.add(evaluated_authority_grant_id)
+        additional_inputs.add(evaluated_authority_grant_id)
+    return build_monitor_failure_records(
+        error=error,
+        failure_id=failure_id,
+        assessment_id=assessment_id,
+        event_id=event_id,
+        generated_at=generated_at,
+        actor_id=actor_id,
+        role=role,
+        proposal_id=proposal_id,
+        proposal_content_hash=proposal_content_hash,
+        base_acceptance_head=base_acceptance_head,
+        monitor_id=monitor_id,
+        monitor_version=monitor_version,
+        monitor_hash=monitor_hash,
+        assessment_kind="AUTHORITY",
+        failure_category=failure_category,
+        error_code=error_code,
+        additional_source_record_ids=additional_sources,
+        additional_input_record_ids=additional_inputs,
+        failure_fields=authority_fields,
+        assessment_fields=authority_fields,
+        assessment_record_type="UnavailableAuthorityAssessment",
+    )
+
+
 def build_monitor_failure_records(
     *,
     error: Exception,
@@ -368,12 +715,23 @@ def build_monitor_failure_records(
     failure_category: str,
     error_code: str,
     additional_source_record_ids: Iterable[str] = (),
+    additional_input_record_ids: Iterable[str] = (),
     failure_fields: Mapping[str, Any] | None = None,
     assessment_fields: Mapping[str, Any] | None = None,
+    assessment_record_type: str = "UnavailableAssessment",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Internal common builder used by generic and logical failure helpers."""
-    if assessment_kind not in EPISTEMIC_MONITOR_KINDS:
-        raise ControlError(f"unsupported epistemic assessment kind '{assessment_kind}'")
+    if assessment_kind not in {*EPISTEMIC_MONITOR_KINDS, "AUTHORITY"}:
+        raise ControlError(f"unsupported assessment kind '{assessment_kind}'")
+    expected_record_type = (
+        "UnavailableAuthorityAssessment"
+        if assessment_kind == "AUTHORITY"
+        else "UnavailableAssessment"
+    )
+    if assessment_record_type != expected_record_type:
+        raise ControlError(
+            f"{assessment_kind} failure requires {expected_record_type}"
+        )
     if failure_id == assessment_id:
         raise ControlError("failure_id and assessment_id must differ")
     error_message = str(error)
@@ -402,6 +760,9 @@ def build_monitor_failure_records(
     extra_sources = set(additional_source_record_ids)
     if any(not isinstance(value, str) or not value.strip() for value in extra_sources):
         raise ControlError("additional_source_record_ids must contain nonblank strings")
+    extra_inputs = set(additional_input_record_ids)
+    if any(not isinstance(value, str) or not value.strip() for value in extra_inputs):
+        raise ControlError("additional_input_record_ids must contain nonblank strings")
     failure_extra = dict(failure_fields or {})
     assessment_extra = dict(assessment_fields or {})
     provenance_names = {
@@ -457,7 +818,7 @@ def build_monitor_failure_records(
         },
     )
     assessment = with_content_hash(
-        "UnavailableAssessment",
+        assessment_record_type,
         {
             "id": assessment_id,
             "generation_event_id": event_id,
@@ -479,7 +840,7 @@ def build_monitor_failure_records(
             "monitor_version": monitor_version,
             "monitor_hash": monitor_hash,
             "monitor_failure_id": failure_id,
-            "input_record_ids": [proposal_id],
+            "input_record_ids": sorted({proposal_id, *extra_inputs}),
             "reason_codes": [error_code],
             "rationale": "The required monitor did not complete; no result is available.",
             **assessment_extra,
@@ -520,6 +881,25 @@ def _monitor_shape(
 def _text(value: Any, name: str) -> None:
     if not isinstance(value, str) or not value.strip():
         raise ControlError(f"{name} must be a nonblank string")
+
+
+def _iterable_values(value: Any, name: str) -> list[Any]:
+    if isinstance(value, (str, bytes, Mapping)):
+        raise ControlError(f"{name} must be an iterable collection")
+    try:
+        return list(value)
+    except TypeError as error:
+        raise ControlError(f"{name} must be an iterable collection") from error
+
+
+def _authorization_control(outcome: Any) -> str:
+    if outcome == "SATISFIED":
+        return "AUTHORIZE"
+    if outcome == "VIOLATED":
+        return "BLOCK"
+    if outcome == "UNKNOWN":
+        return "CLARIFY"
+    raise ControlError("invalid authority assessment outcome")
 
 
 def _digest(value: Any, name: str) -> None:

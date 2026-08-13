@@ -418,6 +418,54 @@ transaction prefix and then a valid-time view. A later retroactive correction
 therefore changes past valid-time views only for transaction prefixes that
 include the correction.
 
+## Layer 3d: Policy-Selected Authorization Control
+
+Stage 7c makes authorization control replay-derived without conflating it with
+epistemic acceptance or action execution.
+
+```text
+ActionProposal
+  exact AuthorizationPolicyArtifact ID and record hash
+            |
+            v
+AUTHORITY monitor outputs
+  exact proposal, action, actor, policy, monitor, acceptance head
+            |
+            v
+AuthorizationEvaluation
+  SATISFIED -> AUTHORIZE
+  VIOLATED  -> BLOCK
+  UNKNOWN   -> CLARIFY
+  BLOCK precedes CLARIFY
+            |
+            v
+AuthorizationDecision
+  exact ordered outputs, triggers, evaluation hash, verdict
+            |
+            v
+PENDING -> AUTHORIZED | BLOCKED | CLARIFICATION_REQUIRED
+```
+
+The authorization policy pins exact authority-monitor record hashes before the
+action is proposed. Each authority output is keyed by action, actor, acceptance
+head, monitor, and optional evaluated grant, so two actions or two exact
+evaluation contexts do not share a monitor result. A changed head, actor, or
+grant permits a fresh output; the same context still permits only one. Completed
+and unavailable authority outputs both bind the action content hash and the
+evaluated actor. Replay rejects policy substitution, missing or extra monitor
+outputs, stale context, reordered assessment IDs, changed triggers, changed
+evaluation hashes, and caller-selected verdicts.
+
+Grant validation is verdict-scoped. `AUTHORIZE` requires an exact grant for the
+evaluated actor and action type plus an authorization interval contained in the
+grant interval. `BLOCK` may cite the insufficient grant that a triggered
+`VIOLATED` assessment evaluated, but does not validate it as sufficient and carries no
+authorization interval. `CLARIFY` also carries no authorization interval.
+
+This layer validates immutable authority outputs. It does not execute the
+authority monitors, establish a grantor trust root, select a legitimate policy,
+or execute an authorized action.
+
 ---
 
 ## Layer 4: Distributed Convergence (Ontology Hashing)

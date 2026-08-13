@@ -1,7 +1,7 @@
 # Implementation Status
 
-Malleus package version `0.5.0` implements the
-`stage-7b-assent-gated-bitemporal-accepted-graph` boundary.
+Malleus package version `0.6.0` implements the
+`stage-7c-policy-selected-authorization-control` boundary.
 
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
@@ -20,6 +20,9 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 - Stage 7b: content-addressed external graph bases, exact temporal candidate
   manifests, proposal and decision binding, atomic accepted applications,
   derived accepted-graph projection, and transaction-time plus valid-time replay
+- Stage 7c: typed authorization policies, proposal-time action-policy commitment, exact
+  required authority-monitor coverage, deterministic `AUTHORIZE`, `BLOCK`, or
+  `CLARIFY` selection, and verdict-scoped grant validation
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -67,6 +70,28 @@ omitting a required monitor blocks the decision. Recording assessments without
 an `EPISTEMIC_DECIDED` event leaves the proposal open, which keeps experimental
 conditions C3 and C4 mechanically separable.
 
+The Stage 7c boundary replaces opaque authorization-policy artifacts and
+caller-selected authorization verdicts. Each action proposal now pins one
+typed, content-addressed `AuthorizationPolicyArtifact` before epistemic
+acceptance. That policy names the exact `AUTHORITY` monitor records required
+for the action. Replay requires one output from each selected monitor and
+recomputes the ordered assessment set, triggered assessments, evaluation hash,
+and verdict. All `SATISFIED` outputs select `AUTHORIZE`; any `VIOLATED` output
+selects `BLOCK`; otherwise any `UNKNOWN` output selects `CLARIFY`. `BLOCK` has
+precedence over `CLARIFY`.
+
+Completed and unavailable authority outputs bind the exact proposal, action,
+action hash, evaluated actor, authorization policy, monitor, and acceptance
+head. Authority-monitor failure is atomic: a `MonitorFailure` and an
+`UnavailableAuthorityAssessment` must carry the same context. Only
+`AUTHORIZE` validates grant actor, action type, and interval sufficiency.
+`BLOCK` may cite the exact insufficient grant evaluated by a triggered
+`VIOLATED` assessment, without treating it as sufficient. Authority outputs
+are unique per action, actor, acceptance head, monitor, and optional evaluated
+grant, so an exact changed context can be re-evaluated while competing output
+for the same context remains forbidden. Non-authorizing verdicts carry
+no authorization validity interval.
+
 ## Not implemented
 
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
@@ -76,6 +101,7 @@ conditions C3 and C4 mechanically separable.
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
 - `epistemic-policy-authority-and-scope`: deciding which policy is legitimate and applicable to a proposal
+- `authorization-policy-authority-and-scope`: deciding which authorization policy is legitimate and applicable to an action
 
 Stage 5 accepts only trusted, pinned local rule programs. Logic-check records
 are content-addressed execution attestations with replay-validated bindings,
@@ -103,6 +129,12 @@ Proposal-time pinning prevents ex-post policy selection but does not establish
 authority, eligibility, domain scope, or effective time for that policy. Exact
 coverage is relative to the proposal's precommitted policy, not system-wide.
 
+Stage 7c selects authorization control from recorded authority outputs. It does
+not execute authority monitors, establish a grantor trust root, decide which
+authorization policy is legitimate, or execute an authorized action. The
+fixed outcome-to-control mapping is protocol behavior, not proof that an input
+authority assessment is correct.
+
 The graph base is intentionally explicit. The opaque Stage 1 snapshot anchor
 contributes no graph records. A `GraphBaseArtifact` is usable only when the
 caller supplies a graph whose ontology, state digest, record count, and complete
@@ -124,7 +156,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.4.0`.
+ontology is `0.4.0`; the assent ontology is `0.5.0`.
 
 ## History
 
@@ -135,3 +167,4 @@ ontology is `0.4.0`; the assent ontology is `0.4.0`.
 | `0.3.0` | `stage-5-general-logic-monitoring` | Stage 5 generic compilation, isolated execution, and replay-validated records |
 | `0.4.0` | `stage-6-policy-selected-monitoring-control` | Typed monitor coverage and deterministic epistemic control selection |
 | `0.5.0` | `stage-7b-assent-gated-bitemporal-accepted-graph` | Exact proposed mutations, atomic accepted applications, and bitemporal replay |
+| `0.6.0` | `stage-7c-policy-selected-authorization-control` | Typed action-bound policy, exact authority coverage, and deterministic authorization control |

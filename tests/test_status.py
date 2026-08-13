@@ -21,11 +21,11 @@ def test_package_runtime_and_project_versions_match():
     assert version.group(1) == malleus.__version__ == IMPLEMENTATION_STATUS.package_version
 
 
-def test_stage_seven_b_boundary_is_explicit():
-    assert IMPLEMENTATION_STATUS.current_stage == "7b"
+def test_stage_seven_c_boundary_is_explicit():
+    assert IMPLEMENTATION_STATUS.current_stage == "7c"
     assert (
         IMPLEMENTATION_STATUS.boundary
-        == "stage-7b-assent-gated-bitemporal-accepted-graph"
+        == "stage-7c-policy-selected-authorization-control"
     )
     assert IMPLEMENTATION_STATUS.completed_stages == (
         "2",
@@ -35,6 +35,7 @@ def test_stage_seven_b_boundary_is_explicit():
         "5",
         "6",
         "7b",
+        "7c",
     )
     assert "isolated-proposed-subgraph-staging" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "failure-atomic-ledger-replacement" in IMPLEMENTATION_STATUS.implemented_capabilities
@@ -51,9 +52,22 @@ def test_stage_seven_b_boundary_is_explicit():
     assert "atomic-assent-gated-materialization" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "accepted-graph-projection" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "bitemporal-as-of-replay" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "typed-authorization-policies" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "action-bound-authorization-policy" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert (
+        "deterministic-authorization-control-selection"
+        in IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert (
+        "authority-monitor-failure-to-clarify"
+        in IMPLEMENTATION_STATUS.implemented_capabilities
+    )
     assert "portable-graph-base-resolution" in IMPLEMENTATION_STATUS.pending_capabilities
     assert "untrusted-rule-program-sandboxing" in IMPLEMENTATION_STATUS.pending_capabilities
     assert "epistemic-policy-authority-and-scope" in IMPLEMENTATION_STATUS.pending_capabilities
+    assert "authorization-policy-authority-and-scope" in (
+        IMPLEMENTATION_STATUS.pending_capabilities
+    )
 
 
 def test_ontology_versions_match_status_boundary():
@@ -69,6 +83,14 @@ def test_status_document_names_current_version_and_boundary():
     assert f"`{IMPLEMENTATION_STATUS.boundary}`" in document
     for capability in IMPLEMENTATION_STATUS.pending_capabilities:
         assert f"`{capability}`" in document
+
+
+def test_readme_names_current_version_and_boundary():
+    document = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert (
+        f"Current package boundary: `{IMPLEMENTATION_STATUS.package_version}`, "
+        f"`{IMPLEMENTATION_STATUS.boundary}`"
+    ) in document
 
 
 def test_stage_five_example_contract_and_rules_remain_distribution_inputs():

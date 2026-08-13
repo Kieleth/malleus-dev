@@ -16,10 +16,10 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.5.0",
-    current_stage="7b",
-    boundary="stage-7b-assent-gated-bitemporal-accepted-graph",
-    completed_stages=("2", "3", "7a", "4", "5", "6", "7b"),
+    package_version="0.6.0",
+    current_stage="7c",
+    boundary="stage-7c-policy-selected-authorization-control",
+    completed_stages=("2", "3", "7a", "4", "5", "6", "7b", "7c"),
     implemented_capabilities=(
         "closed-world-ontology-validation",
         "typed-graph-write-validation",
@@ -52,10 +52,17 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "half-open-valid-time-intervals",
         "explicit-record-supersession",
         "accepted-graph-materialization-head",
+        "typed-authorization-policies",
+        "action-bound-authorization-policy",
+        "exact-required-authority-monitor-coverage",
+        "deterministic-authorization-control-selection",
+        "authority-monitor-failure-to-clarify",
+        "verdict-scoped-authority-grant-validation",
     ),
     pending_capabilities=(
         "monitor-execution-orchestration",
         "epistemic-policy-authority-and-scope",
+        "authorization-policy-authority-and-scope",
         "portable-graph-base-resolution",
         "typed-retraction-semantics",
         "multi-writer-ledger-serialization",
@@ -63,5 +70,5 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "untrusted-rule-program-sandboxing",
     ),
     root_ontology_version="0.4.0",
-    assent_ontology_version="0.4.0",
+    assent_ontology_version="0.5.0",
 )

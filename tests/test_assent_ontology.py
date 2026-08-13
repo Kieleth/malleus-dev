@@ -66,6 +66,26 @@ def test_stage_six_artifacts_are_concrete_protocol_types():
     assert policy_kind.equals_string == "EPISTEMIC_POLICY"
 
 
+def test_stage_seven_c_authorization_contract_is_typed_and_action_bound():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("AuthorizationPolicyArtifact", "ProtocolArtifact")
+    assert registry.is_subtype_of(
+        "UnavailableAuthorityAssessment",
+        "UnavailableAssessment",
+    )
+    policy_kind = registry.get_slot_constraint(
+        "AuthorizationPolicyArtifact",
+        "artifact_kind",
+    )
+    assert policy_kind.equals_string == "AUTHORIZATION_POLICY"
+    action_slots = registry.effective_slots("ActionProposal")
+    assert action_slots["authorization_policy_id"].required
+    assert action_slots["authorization_policy_hash"].required
+    decision_slots = registry.effective_slots("AuthorizationDecision")
+    assert decision_slots["policy_evaluation_hash"].required
+    assert decision_slots["triggered_assessment_ids"].multivalued
+
+
 def test_stage_seven_b_graph_records_are_separate_typed_categories():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     assert registry.is_subtype_of("GraphBaseArtifact", "ProtocolArtifact")

@@ -37,13 +37,21 @@ decision bind the candidate by ID, record hash, and candidate digest. An
 accepted application binds that proposal, decision, candidate, ontology,
 acceptance heads, materialization heads, and graph state digests in one event.
 
+Stage 7c adds `AuthorizationPolicyArtifact` and
+`UnavailableAuthorityAssessment`. Each concrete `ActionProposal` binds one
+exact authorization policy by ID and record hash before it can enter a
+proposal. The policy pins a canonical, nonempty set of exact `AUTHORITY`
+monitor records. The policy depends on those monitor records; the monitors do
+not depend on the composed policy, which avoids a content-hash cycle.
+
 Precommitment does not establish policy legitimacy. Any applied typed policy
 can currently be selected by a proposal. Policy authority, domain scope,
 eligibility, and effective-time rules remain unimplemented. Exact monitor
 coverage is therefore relative to the precommitted policy, not system-wide.
 
 `ActionProposal` is abstract. A domain ontology must define a concrete action
-class and its typed parameters.
+class and its typed parameters. Every concrete action also inherits required
+authorization-policy ID and hash fields.
 
 ## Disjoint outcomes
 
@@ -64,7 +72,9 @@ A failed monitor produces two distinct records in one event:
 2. `UnavailableAssessment`, whose outcome is `UNKNOWN` and whose
    `monitor_failure_id` identifies that failure.
 
-`UNKNOWN` cannot support `ACCEPT` or `AUTHORIZE`.
+`UNKNOWN` cannot support `ACCEPT` or `AUTHORIZE`. An unavailable authority
+monitor produces `MonitorFailure` plus `UnavailableAuthorityAssessment` and
+selects `CLARIFY` when authorization control runs.
 
 A completed logic monitor first records one `LogicCheckRecord` and zero or more
 `ViolationWitness` records atomically. The check binds the proposal, candidate
@@ -147,11 +157,31 @@ an applied acceptance decision, current supporting claim versions, applied
 `AuthorityGrant` for that actor and action type. The authorization interval
 must remain within the grant interval.
 
+The caller does not select the authorization verdict. Replay evaluates the
+action's precommitted authorization policy against exact authority outputs.
+All `SATISFIED` outputs select `AUTHORIZE`; any `VIOLATED` output selects
+`BLOCK`; otherwise any `UNKNOWN` output selects `CLARIFY`. `BLOCK` precedes
+`CLARIFY`. The decision must reproduce the policy-ordered assessment IDs,
+triggered IDs, evaluation hash, and verdict exactly.
+
+Grant sufficiency is checked only for `AUTHORIZE`. A `BLOCK` may cite the exact
+grant evaluated by a triggered `VIOLATED` assessment, even when that grant is
+insufficient, but it receives no authorization interval. `CLARIFY` likewise
+receives no authorization interval. A satisfied assessment cannot authorize
+under a different grant from the one it evaluated.
+
+Authority output uniqueness is scoped to the exact action, evaluated actor,
+acceptance head, monitor, and optional evaluated grant. The same context cannot
+produce competing outputs. A changed head, actor, or grant can produce a fresh
+output instead of leaving the action permanently bound to a stale assessment.
+
 The grantor must be the actor that records the grant. This authenticates the
 ledger attribution only. Whether that grantor is itself entitled to delegate
 authority remains an external trust-root and policy question.
 
-Authorization remains a record. This stage does not execute the action.
+Authorization remains a record. Stage 7c validates recorded authority outputs;
+it does not execute authority monitors, determine policy legitimacy or grantor
+trust, or execute the action.
 
 ## JSONL ledger
 
