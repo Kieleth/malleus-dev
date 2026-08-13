@@ -721,6 +721,7 @@ def decide_epistemically(
             "decision": decision,
             "requests": [],
             "revisions": [],
+            "application": None,
             "transition": transition(
                 event_id=event_id,
                 timestamp=timestamp,
@@ -924,6 +925,49 @@ class TestEnvelope:
         ledger.path.write_text(raw, encoding="utf-8")
         with pytest.raises(LedgerError, match="truncated final record"):
             ledger.replay()
+
+    def test_interrupted_append_preserves_last_valid_ledger(self, ledger, monkeypatch):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+        real_write = __import__("os").write
+        writes = 0
+
+        def interrupted_write(descriptor, value):
+            nonlocal writes
+            writes += 1
+            if writes == 1:
+                return real_write(descriptor, value[:17])
+            raise OSError("injected append failure")
+
+        monkeypatch.setattr("malleus.ledger.os.write", interrupted_write)
+        with pytest.raises(LedgerError, match="failed without changing the ledger"):
+            add_artifact(ledger, "artifact:interrupted", "RULE_SET", 1)
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().event_count == 1
+        assert list(ledger.path.parent.glob(f".{ledger.path.name}.*.tmp")) == []
+
+    @pytest.mark.parametrize("operation", ["fsync", "replace"])
+    def test_failed_ledger_commit_preserves_last_valid_file(
+        self,
+        ledger,
+        monkeypatch,
+        operation,
+    ):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+
+        def fail(*_args):
+            raise OSError(f"injected {operation} failure")
+
+        monkeypatch.setattr(f"malleus.ledger.os.{operation}", fail)
+        with pytest.raises(LedgerError, match="failed without changing the ledger"):
+            add_artifact(ledger, f"artifact:{operation}", "RULE_SET", 1)
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().event_count == 1
+        assert list(ledger.path.parent.glob(f".{ledger.path.name}.*.tmp")) == []
+
+    def test_protocol_ledger_has_no_public_raw_storage_mutator(self, ledger):
+        assert not hasattr(ledger, "storage")
 
     def test_hash_chain_and_external_anchor_checks_detect_corruption(self, ledger):
         first = anchor(ledger)
@@ -1238,6 +1282,7 @@ class TestProposalAndEpistemicState:
                     "decision": decision,
                     "requests": [],
                     "revisions": [],
+                    "application": None,
                     "transition": transition(
                         event_id=event_id,
                         timestamp=timestamp,

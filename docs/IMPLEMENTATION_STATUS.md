@@ -1,7 +1,7 @@
 # Implementation Status
 
-Malleus package version `0.4.0` implements the
-`stage-6-policy-selected-monitoring-control` boundary.
+Malleus package version `0.5.0` implements the
+`stage-7b-assent-gated-bitemporal-accepted-graph` boundary.
 
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
@@ -17,6 +17,9 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
   logic-monitoring records
 - Stage 6: typed monitor specifications, typed epistemic policies, exact
   required-monitor coverage, and deterministic epistemic control selection
+- Stage 7b: content-addressed external graph bases, exact temporal candidate
+  manifests, proposal and decision binding, atomic accepted applications,
+  derived accepted-graph projection, and transaction-time plus valid-time replay
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -39,6 +42,25 @@ output per exact proposal-monitor pair and one completed logical check per
 exact proposal-monitor pair, requires every selected monitor, and
 recomputes the verdict, trigger assessments, and policy-evaluation hash.
 
+The Stage 7b boundary adds three concrete records. `GraphBaseArtifact` commits
+the ontology, state digest, and valid-time metadata for an externally supplied
+base graph. `CandidateSubgraphArtifact` stores the exact ordered structural
+writes, their explicit half-open valid-time intervals, supersession links, and
+pre-state and post-state digests. `AcceptedGraphApplication` binds one accepted
+decision to that exact candidate in the same `EPISTEMIC_DECIDED` event.
+
+Replay restages every candidate against the reconstructed accepted graph. A
+candidate-bound `ACCEPT` requires exactly one application; every other verdict
+requires none. Replay keeps `acceptance_head`, `materialization_head`, cumulative
+accepted graph digest, and valid-time view digest separate. `AcceptedGraphProjector`
+rebuilds current or historical views from the verified ledger and requires an
+explicit valid-time query. NetworkX remains a derived projection, not a second
+authority.
+
+Protocol commits use same-directory failure-atomic replacement. Interrupted
+writes, file syncs, and replacements preserve the last valid ledger. This does
+not claim multi-writer safety or filesystem-independent power-loss durability.
+
 `UNKNOWN` never maps to `ACCEPT` or `REJECT`. A missing execution must be
 recorded atomically as `MonitorFailure` plus `UnavailableAssessment`; simply
 omitting a required monitor blocks the decision. Recording assessments without
@@ -47,10 +69,9 @@ conditions C3 and C4 mechanically separable.
 
 ## Not implemented
 
-- `proposal-candidate-semantic-binding`: mechanical binding from protocol proposal content to the checked candidate
-- `assent-gated-materialization`: structural commits caused by accepted decisions
-- `accepted-graph-projection`: a current accepted-state view
-- `bitemporal-as-of-replay`: valid-time and transaction-time reconstruction
+- `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
+- `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
+- `multi-writer-ledger-serialization`: safe concurrent append coordination
 - `action-execution`: execution after authorization
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
@@ -59,12 +80,11 @@ conditions C3 and C4 mechanically separable.
 Stage 5 accepts only trusted, pinned local rule programs. Logic-check records
 are content-addressed execution attestations with replay-validated bindings,
 not formal proof certificates or guarantees of engine-level reproducibility.
-A check identifies a proposal and a candidate digest, but does not yet establish
-that the proposal was compiled into exactly that candidate. Stage 4 materialization
-remains structural and single-writer. Neither stage proves truth, epistemic
-acceptance, authorization, or multi-writer correctness.
-Candidate, state, and fact digests in a check are monitor attestations until
-Stage 7b supplies the missing proposal-to-candidate and accepted-state binding.
+A candidate-bound logical check must match the proposal's exact candidate,
+pre-state, post-state, and ontology commitments. Stage 4 direct materialization
+remains a structural API and has no effect on protocol replay. Stage 7b accepted
+materialization is still single-writer. It records epistemic commitment, not
+truth, authorization, external-world currency, or multi-writer correctness.
 
 Stage 6 selects control from recorded monitor outputs. It does not orchestrate
 type, evidence, conflict, uncertainty, temporal, or logical monitor execution,
@@ -83,6 +103,12 @@ Proposal-time pinning prevents ex-post policy selection but does not establish
 authority, eligibility, domain scope, or effective time for that policy. Exact
 coverage is relative to the proposal's precommitted policy, not system-wide.
 
+The graph base is intentionally explicit. The opaque Stage 1 snapshot anchor
+contributes no graph records. A `GraphBaseArtifact` is usable only when the
+caller supplies a graph whose ontology, state digest, record count, and complete
+valid-time metadata match the artifact. Version 0.5.0 does not provide a remote
+resolver or silently treat the research graph as accepted knowledge.
+
 ## Release boundary rule
 
 Every completed implementation stage must update all of these in the same
@@ -98,7 +124,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.3.0`.
+ontology is `0.4.0`; the assent ontology is `0.4.0`.
 
 ## History
 
@@ -108,3 +134,4 @@ ontology is `0.4.0`; the assent ontology is `0.3.0`.
 | `0.2.0` | `stage-4-structural-staging` | Stages 2, 3, 7a, and 4 |
 | `0.3.0` | `stage-5-general-logic-monitoring` | Stage 5 generic compilation, isolated execution, and replay-validated records |
 | `0.4.0` | `stage-6-policy-selected-monitoring-control` | Typed monitor coverage and deterministic epistemic control selection |
+| `0.5.0` | `stage-7b-assent-gated-bitemporal-accepted-graph` | Exact proposed mutations, atomic accepted applications, and bitemporal replay |

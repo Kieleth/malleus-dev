@@ -79,7 +79,7 @@ Some structural claims require several records at once. A relation may depend on
 
 `CandidateSubgraph.materialize_into()` checks that the ontology and base-state digest still match, rebuilds the candidate on a fresh copy, and replaces materialized state only after the full batch succeeds. A stale candidate cannot overwrite intervening graph changes.
 
-This is a structural transaction boundary. It does not decide truth, epistemic acceptance, or action authorization. Coupling accepted protocol decisions to graph materialization is a separate projection step.
+This is a structural transaction boundary. It does not decide truth, epistemic acceptance, or action authorization. Stage 7b can record the exact writes in a `CandidateSubgraphArtifact` and couple an accepted protocol decision to a separate replay-derived graph projection. Direct structural materialization still has no protocol effect.
 
 ### 3. The ontology is immutable after construction
 

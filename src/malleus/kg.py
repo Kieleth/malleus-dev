@@ -102,6 +102,48 @@ class KnowledgeGraph:
         """Return an isolated graph copy suitable for candidate evaluation."""
         return deepcopy(self)
 
+    def state_projection(self) -> "KnowledgeGraph":
+        """Return materialized graph state without the local operation audit."""
+        projection = KnowledgeGraph(self._registry)
+        projection._graph = deepcopy(self._graph)
+        projection._identifiers = deepcopy(self._identifiers)
+        return projection
+
+    def canonical_operations(self) -> tuple[dict[str, Any], ...]:
+        """Export exact materialized records with explicit graph categories."""
+        operations = []
+        relations = {
+            key: (source, target, data)
+            for source, target, key, data in self._graph.edges(data=True, keys=True)
+        }
+        for record_id, (kind, record_type) in self._identifiers.items():
+            if kind == "RELATION":
+                source_id, target_id, data = relations[record_id]
+                properties = {
+                    key: deepcopy(value)
+                    for key, value in data.items()
+                    if key != "type"
+                }
+            else:
+                data = self._graph.nodes[record_id]
+                properties = {
+                    key: deepcopy(value)
+                    for key, value in data.items()
+                    if key not in {"type", "is_signal", "is_event"}
+                }
+                source_id = None
+                target_id = None
+            operations.append({
+                "kind": kind,
+                "record_type": record_type,
+                "record_id": record_id,
+                "properties": properties,
+                "source_id": source_id,
+                "target_id": target_id,
+            })
+        operations.sort(key=lambda item: item["record_id"])
+        return tuple(operations)
+
     def _replace_materialized_state(self, other: "KnowledgeGraph") -> None:
         """Atomically replace state from a fully validated isolated graph."""
         if not isinstance(other, KnowledgeGraph):
@@ -129,7 +171,11 @@ class KnowledgeGraph:
         type_result = self._validate_category(entity_type, "Entity", "entity type")
         if not type_result.valid:
             return type_result
-        common = self._validate_common_id(entity_id, properties, {"id"})
+        common = self._validate_common_id(
+            entity_id,
+            properties,
+            {"id", "type", "is_signal", "is_event"},
+        )
         if not common.valid:
             return common
         return self._validate_payload(entity_type, {**properties, "id": entity_id})
@@ -148,7 +194,7 @@ class KnowledgeGraph:
         common = self._validate_common_id(
             relation_id,
             properties,
-            {"id", "source_id", "target_id"},
+            {"id", "type", "source_id", "target_id"},
         )
         if not common.valid:
             return common
@@ -190,7 +236,11 @@ class KnowledgeGraph:
         type_result = self._validate_category(signal_type, "Signal", "signal type class")
         if not type_result.valid:
             return type_result
-        common = self._validate_common_id(signal_id, properties, {"id"})
+        common = self._validate_common_id(
+            signal_id,
+            properties,
+            {"id", "type", "is_signal", "is_event"},
+        )
         if not common.valid:
             return common
         structural = self._validate_payload(signal_type, {**properties, "id": signal_id})
@@ -213,7 +263,11 @@ class KnowledgeGraph:
         type_result = self._validate_category(event_type, "Event", "event type class")
         if not type_result.valid:
             return type_result
-        common = self._validate_common_id(event_id, properties, {"id"})
+        common = self._validate_common_id(
+            event_id,
+            properties,
+            {"id", "type", "is_signal", "is_event"},
+        )
         if not common.valid:
             return common
         return self._validate_payload(event_type, {**properties, "id": event_id})

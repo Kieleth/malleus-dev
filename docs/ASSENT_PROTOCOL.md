@@ -29,6 +29,14 @@ monitoring. The proposal cites that policy in `source_record_ids`. A decision
 using any other policy fails replay, including a policy registered after the
 monitor outputs were observed.
 
+Stage 7b adds `GraphBaseArtifact`, `CandidateSubgraphArtifact`, and
+`AcceptedGraphApplication`. The graph base commits the external graph used to
+seed replay. The candidate artifact contains the exact ordered structural
+writes and an explicit valid-time envelope for each write. The proposal and
+decision bind the candidate by ID, record hash, and candidate digest. An
+accepted application binds that proposal, decision, candidate, ontology,
+acceptance heads, materialization heads, and graph state digests in one event.
+
 Precommitment does not establish policy legitimacy. Any applied typed policy
 can currently be selected by a proposal. Policy authority, domain scope,
 eligibility, and effective-time rules remain unimplemented. Exact monitor
@@ -71,12 +79,13 @@ timeout, unavailable engine, invalid program, bad manifest, or malformed result
 does not create a completed check. It creates `MonitorFailure` plus an
 `UnavailableAssessment` bound to the logical monitor, logic contract, and
 ruleset. The records are execution evidence, not formal proof certificates.
+For a candidate-bound proposal, the check's candidate, pre-state, post-state,
+and ontology commitments must match the exact candidate artifact.
 `UNKNOWN` assessments are valid only in the same atomic `MONITOR_FAILED` event
 as their cited failure. A later standalone assessment cannot reuse a failure.
 Replay verifies the typed contract artifact, its semantic digest, the separate
 rule-set record and raw-byte hashes, and agreement between the contract, check,
-and assessment. Candidate, state, and fact digests remain monitor attestations
-until Stage 7b binds protocol proposals to canonical graph materialization.
+assessment, and bound candidate.
 
 ## Policy-selected monitoring and control
 
@@ -152,10 +161,14 @@ hash, previous hash, and event hash. Duplicate keys, nonfinite numbers, unknown
 fields, sequence gaps, broken hashes, blank lines, and partial final records are
 fatal.
 
-The ledger validates the complete candidate history before appending a line.
-Replay revalidates the same event sequence and reconstructs all state from
-scratch. Callers may retain the expected event count and head hash outside the
-ledger to detect complete truncation or replacement.
+The ledger validates the complete candidate history before committing a line.
+It writes a complete same-directory temporary file, syncs that file, and then
+replaces the prior ledger. Interrupted writes, file syncs, and replacements
+leave the last valid ledger unchanged. Power-loss durability of the directory
+entry remains filesystem-dependent. Replay revalidates the same event sequence
+and reconstructs all state from scratch. Callers may retain the expected event
+count and head hash outside the ledger to detect complete truncation or
+replacement.
 
 One ledger is frozen to one ontology hash. Replaying across ontology upgrades
 requires an explicit migration into a new ledger.
@@ -169,30 +182,80 @@ silently become protocol-accepted knowledge.
 decision, and revision content. It is not a digest of a materialized current
 knowledge graph.
 
-`stage_subgraph()` now provides a separate structural boundary. It validates an
+`materialization_head` separately commits the graph base and ordered accepted
+applications. The cumulative accepted graph digest commits all structurally
+materialized records. A valid-time view has its own digest. These values are
+not interchangeable.
+
+The opaque snapshot anchor contributes no graph records. Accepted graph replay
+starts only after a `GraphBaseArtifact` matches an externally supplied graph's
+ontology and state digest and provides valid-time metadata for every base
+record. Candidate artifacts then store replayable writes rather than digest-only
+attestations.
+
+A candidate-bound `ACCEPT` and its single `AcceptedGraphApplication` occur in
+the same event. Replay validates the proposal, decision, candidate, logical
+checks, heads, and pre-state and post-state digests before swapping the derived
+graph. Non-accepting verdicts forbid applications. Epistemic acceptance can
+therefore change accepted knowledge, but it cannot authorize or execute an
+action.
+
+`AcceptedGraphProjector.current()` and `.as_of()` require explicit valid time.
+Intervals use `valid_from <= query < valid_to`; a missing end is unbounded.
+Transaction-time views use the ledger event prefix, with sequence as the tie
+breaker. A retroactive revision affects only transaction prefixes that include
+the later revision. Active relations whose endpoints are not active fail
+loudly rather than producing a dangling view.
+
+Accepted graph views omit the local `KnowledgeGraph.operations` audit. That
+audit contains execution-local timestamps and may contain rejected writes made
+while constructing the externally supplied base. The ledger application
+records, candidate manifests, and temporal metadata are the accepted audit.
+
+`stage_subgraph()` remains a separate structural boundary. It validates an
 ordered candidate on an isolated graph copy, records the exact ontology and
-base-state digests, and rejects stale materialization targets. This mechanism
-is not coupled to assent replay yet. Calling `materialize_into()` therefore
-does not mean that a proposal was epistemically accepted or authorized.
+base-state digests, and rejects stale materialization targets. Directly calling
+`materialize_into()` does not affect the ledger projection and does not mean
+that a proposal was epistemically accepted or authorized.
 
 ## Current claim boundary
 
 This implementation supports a narrow claim: Malleus has an executable,
 structurally enforced protocol ontology and replay-derived state machine that
 separate proposals, monitor failures, assessments, epistemic decisions, and
-action authorization. It also has non-mutating proposed-subgraph staging and
-stale-checked, all-or-nothing structural materialization.
+action authorization. Exact proposed mutations can be bound to acceptance,
+materialized atomically, and reconstructed by transaction time and valid time.
 
-It does not yet establish assent-gated materialization, domain-specific monitor
-execution orchestration, action execution safety,
-bitemporal as-of reconstruction, formal PROV-O interoperability, or an
-empirical metacognitive effect.
+It does not establish truth, policy legitimacy, domain-specific monitor
+execution orchestration, action execution safety, concurrent-writer safety,
+formal PROV-O interoperability, or an empirical metacognitive effect.
 
-Version 0.4.0 changes the required `ProposedSubgraph` shape. Ledgers written by
-0.3.0 do not replay unchanged because they lack the proposal's policy ID and
-hash. Malleus applies no implicit policy and supplies no silent migration.
+Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
+explicit `application` field, which is `null` when no accepted graph application
+occurs. Candidate bindings are optional as a group so protocol-only proposals
+remain representable. Malleus supplies no silent migration.
 
 General logical verification currently accepts only trusted, pinned local rule
-programs. It does not sandbox untrusted Prolog. A logic check identifies both a
-proposal and a candidate digest, but Stage 7b must still prove that the proposal
-was compiled into exactly that candidate before accepted-graph materialization.
+programs. It does not sandbox untrusted Prolog. The graph base must be supplied
+by the caller; portable resolution from an artifact locator is not implemented.
+
+## Design lineage and claim limits
+
+The components are established prior work. Clark and McCabe's 2007
+[ontology schema for an agent belief store](https://doi.org/10.1016/j.ijhcs.2007.03.004)
+uses ontology constraints, logic rules, justifications, and revision for an
+agent belief store. [PROV-O](https://www.w3.org/TR/prov-o/) supplies the standard
+provenance vocabulary that motivates explicit entities, activities, agents,
+sources, and responsibility, although Malleus does not yet claim formal PROV-O
+interoperability. [Sentinel](https://arxiv.org/abs/2604.12177) independently
+uses proposed graph mutations, counterfactual state, invariant checks, and
+allow, block, or clarify control. [TOKI](https://arxiv.org/abs/2606.06240)
+independently develops typed bitemporal contradiction operators and retained
+provenance.
+
+Stage 7b does not claim novelty for any of those components. Its research use
+is the mechanically testable composition of ontology-typed candidate
+subgraphs, explicit monitoring, policy-selected epistemic control, exact logic
+bindings, atomic knowledge commitment, bitemporal replay, and a separate action
+authorization boundary. Whether that composition produces a measurable
+metacognitive effect remains an empirical question.

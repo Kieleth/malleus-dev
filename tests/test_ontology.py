@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from malleus.ontology import OntologyError, OntologyRegistry
+from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
 
 ONTOLOGY_DIR = Path(__file__).parent.parent / "ontology"
 ROOT_SCHEMA = ONTOLOGY_DIR / "malleus.yaml"
@@ -37,10 +37,17 @@ def run_linkml(command: str, schema: Path) -> subprocess.CompletedProcess:
 def test_no_isolation_build_backend_is_declared_for_development():
     """The development extra must install the configured build backend."""
     text = PYPROJECT.read_text()
-    build_backend = re.search(r'requires = \["([a-zA-Z0-9_-]+)', text)
+    build_backend = re.search(r'requires = \["([a-zA-Z0-9_.=-]+)', text)
     dev_extra = re.search(r'dev = \[(.+)\]', text)
     assert build_backend and dev_extra
     assert build_backend.group(1) in dev_extra.group(1)
+
+
+def test_distribution_metadata_toolchain_is_reproducible():
+    text = PYPROJECT.read_text()
+    assert 'requires = ["hatchling==1.31.0"]' in text
+    assert '"twine==6.2.0"' in text
+    assert text.count('core-metadata-version = "2.4"') == 2
 
 
 # --- Root Ontology ---
@@ -53,6 +60,18 @@ class TestRootOntology:
             schema = yaml.safe_load(f)
         assert schema["name"] == "malleus"
         assert schema["version"] == "0.4.0"
+
+    def test_bundled_ontology_path_resolves_source_and_domain_imports(self):
+        root = bundled_ontology_path("malleus.yaml")
+        domain = bundled_ontology_path("domains", "cyp450.yaml")
+        assert root.resolve() == ROOT_SCHEMA.resolve()
+        assert domain.resolve() == CYP450_SCHEMA.resolve()
+        assert OntologyRegistry(domain).has_type("Drug")
+
+    @pytest.mark.parametrize("parts", [("..", "private.yaml"), ("domains/..", "malleus.yaml")])
+    def test_bundled_ontology_path_rejects_traversal(self, parts):
+        with pytest.raises(OntologyError, match="relative names"):
+            bundled_ontology_path(*parts)
 
     def test_generates_json_schema(self):
         """Root schema compiles to JSON Schema."""
@@ -119,6 +138,16 @@ class TestRootOntology:
 
 
 class TestCYP450Schema:
+
+    def test_returned_type_definition_cannot_mutate_registry(self):
+        registry = OntologyRegistry(CYP450_SCHEMA)
+        original_hash = registry.content_hash()
+        returned = registry.get_type("Drug")
+        returned.slots.append("forged_slot")
+        returned.slot_usage.clear()
+        assert registry.content_hash() == original_hash
+        assert "forged_slot" not in registry.get_type("Drug").slots
+
     def test_schema_loads(self):
         """CYP450 schema is valid YAML and imports malleus."""
         with open(CYP450_SCHEMA) as f:

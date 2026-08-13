@@ -5,8 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import sysconfig
+from copy import deepcopy
 from dataclasses import dataclass, field, fields
 from datetime import datetime
+from importlib.metadata import PackageNotFoundError, distribution
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -15,6 +18,41 @@ import yaml
 
 BUILTIN_RANGES = frozenset({"string", "integer", "float", "boolean", "datetime"})
 FINGERPRINT_VERSION = 2
+
+
+def bundled_ontology_path(*parts: str) -> Path:
+    """Resolve one ontology shipped with the installed package or source tree."""
+    if not parts:
+        raise OntologyError("bundled ontology path requires at least one component")
+    if any(
+        not isinstance(part, str)
+        or not part.strip()
+        or Path(part).is_absolute()
+        or Path(part).parts != (part,)
+        or part in {".", ".."}
+        for part in parts
+    ):
+        raise OntologyError("bundled ontology path components must be relative names")
+    source_root = Path(__file__).resolve().parents[2] / "ontology"
+    source_candidate = source_root.joinpath(*parts)
+    if source_candidate.is_file():
+        return source_candidate
+    try:
+        installed = distribution("malleus-dev")
+    except PackageNotFoundError:
+        installed = None
+    if installed is not None:
+        suffix = "/".join(("share", "malleus", "ontology", *parts))
+        for installed_file in installed.files or ():
+            if installed_file.as_posix().endswith(suffix):
+                candidate = Path(installed.locate_file(installed_file))
+                if candidate.is_file():
+                    return candidate
+    installed_root = Path(sysconfig.get_path("data")) / "share" / "malleus" / "ontology"
+    installed_candidate = installed_root.joinpath(*parts)
+    if installed_candidate.is_file():
+        return installed_candidate
+    raise OntologyError(f"Bundled ontology does not exist: {'/'.join(parts)}")
 
 
 class OntologyError(ValueError):
@@ -430,7 +468,7 @@ class OntologyRegistry:
     def get_type(self, type_name: str) -> TypeDef:
         if type_name not in self._types:
             raise KeyError(f"Unknown type: {type_name}")
-        return self._types[type_name]
+        return deepcopy(self._types[type_name])
 
     def effective_slots(self, type_name: str) -> dict[str, SlotConstraint]:
         """Return inherited and mixin slots with the most specific constraints."""

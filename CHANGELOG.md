@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-12
+
+### Added
+
+- Added typed `GraphBaseArtifact`, `CandidateSubgraphArtifact`, and `AcceptedGraphApplication` records.
+- Added canonical candidate manifests containing exact ordered structural writes, explicit half-open valid-time intervals, and immutable supersession links.
+- Added proposal and decision bindings to exact candidate artifact IDs, record hashes, and candidate digests.
+- Added atomic accepted graph materialization inside `EPISTEMIC_DECIDED`; candidate-bound `ACCEPT` requires exactly one application and all other verdicts forbid it.
+- Added a separate materialization head, cumulative accepted graph projection, and defensive current and bitemporal as-of views.
+- Added `bundled_ontology_path()` so source checkouts and installed distributions resolve the exact shipped ontology without stale-environment ambiguity.
+- Added adversarial gates for manifest drift, stale graph bases, missing and altered applications, rejected candidates, direct staging bypass, half-open interval boundaries, retroactive supersession, transaction prefixes, and dangling valid-time relations.
+
+### Changed
+
+- Bound candidate-aware logical checks to the exact candidate ontology, pre-state, post-state, and candidate digests.
+- Required complete valid-time metadata for every external graph-base record and every candidate write. Valid time is never inferred from transaction time.
+- Required full current-ledger verification before historical prefix projection.
+- Replaced in-place JSONL append with same-directory failure-atomic file replacement. An interrupted write, file sync, or replacement leaves the last valid ledger unchanged; power-loss durability remains filesystem-dependent.
+- Hid the raw storage envelope behind `ProtocolLedger` so callers cannot bypass protocol validation through a public mutator.
+- Removed execution-local and potentially rejected `KnowledgeGraph.operations` entries from accepted graph projections; the protocol ledger remains their only accepted audit.
+- Required a prior claim's declared `domain_valid_to`, when present, to agree with its atomic replacement boundary.
+- Kept direct `CandidateSubgraph.materialize_into()` as a structural API with no effect on the protocol-derived accepted graph.
+- Pinned the build backend and core metadata version used by release artifacts so distribution checks are reproducible.
+
+### Compatibility
+
+- Version 0.5.0 requires an explicit `application` field in every `EPISTEMIC_DECIDED` payload. It is `null` when no accepted graph application occurs. No implicit migration is applied.
+- Candidate bindings are optional only as an all-or-none group, preserving protocol-only proposals while preventing partial candidate references.
+
+### Boundary
+
+- Accepted graph state is epistemic commitment, not truth, action authorization, or execution.
+- The opaque Stage 1 snapshot anchor contributes no graph records. A matching external graph must be supplied for `GraphBaseArtifact` replay.
+- Portable graph-base resolution, typed retraction, concurrent-writer serialization, policy authority, monitor orchestration, action execution, and untrusted Prolog sandboxing remain outside this release.
+
 ## [0.4.0] - 2026-08-12
 
 ### Added

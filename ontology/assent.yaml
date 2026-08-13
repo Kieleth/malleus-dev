@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.3.0
+version: 0.4.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -86,6 +86,8 @@ enums:
 
   ArtifactKind:
     permissible_values:
+      GRAPH_BASE:
+      CANDIDATE_SUBGRAPH:
       MONITOR_SPECIFICATION:
       EPISTEMIC_POLICY:
       AUTHORIZATION_POLICY:
@@ -236,6 +238,80 @@ classes:
       timeout_seconds:
         required: true
 
+  GraphBaseArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Content-addressed declaration of the external graph used to seed accepted
+      graph replay. The graph itself must be supplied and independently match
+      these commitments.
+    slots:
+      - graph_schema_version
+      - graph_ontology_hash
+      - base_state_digest
+      - base_record_metadata
+      - base_record_count
+    slot_usage:
+      artifact_kind:
+        equals_string: GRAPH_BASE
+      graph_schema_version:
+        required: true
+        equals_string: "1"
+      graph_ontology_hash:
+        required: true
+      base_state_digest:
+        required: true
+      base_record_metadata:
+        required: true
+      base_record_count:
+        required: true
+
+  CandidateSubgraphArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Exact ordered graph writes and temporal envelopes staged against one
+      accepted graph state. A digest-only candidate is not replayable.
+    slots:
+      - candidate_schema_version
+      - graph_base_id
+      - graph_base_hash
+      - graph_ontology_hash
+      - base_acceptance_head
+      - base_materialization_head
+      - base_state_digest
+      - candidate_manifest
+      - candidate_manifest_hash
+      - candidate_write_count
+      - candidate_digest
+      - candidate_state_digest
+    slot_usage:
+      artifact_kind:
+        equals_string: CANDIDATE_SUBGRAPH
+      candidate_schema_version:
+        required: true
+        equals_string: "1"
+      graph_base_id:
+        required: true
+      graph_base_hash:
+        required: true
+      graph_ontology_hash:
+        required: true
+      base_acceptance_head:
+        required: true
+      base_materialization_head:
+        required: true
+      base_state_digest:
+        required: true
+      candidate_manifest:
+        required: true
+      candidate_manifest_hash:
+        required: true
+      candidate_write_count:
+        required: true
+      candidate_digest:
+        required: true
+      candidate_state_digest:
+        required: true
+
   AuthorityGrant:
     is_a: ProtocolArtifact
     slots:
@@ -270,6 +346,9 @@ classes:
       - evidence_ids
       - evidence_assertion_ids
       - action_proposal_ids
+      - candidate_artifact_id
+      - candidate_artifact_hash
+      - candidate_digest
     slot_usage:
       revision:
         required: true
@@ -697,6 +776,10 @@ classes:
       - claim_revision_ids
       - ruleset_id
       - ruleset_hash
+      - candidate_artifact_id
+      - candidate_artifact_hash
+      - candidate_digest
+      - accepted_application_id
     slot_usage:
       proposal_id:
         required: true
@@ -711,6 +794,63 @@ classes:
       ruleset_id:
         required: true
       ruleset_hash:
+        required: true
+
+  AcceptedGraphApplication:
+    is_a: ProtocolRecord
+    description: >-
+      Atomic binding of one accepted decision to the exact candidate applied
+      during the same ledger event. This records knowledge commitment, not
+      action authorization or execution.
+    slots:
+      - proposal_id
+      - proposal_content_hash
+      - epistemic_decision_id
+      - epistemic_decision_hash
+      - candidate_artifact_id
+      - candidate_artifact_hash
+      - candidate_digest
+      - candidate_manifest_hash
+      - graph_ontology_hash
+      - previous_acceptance_head
+      - result_acceptance_head
+      - previous_materialization_head
+      - result_materialization_head
+      - base_state_digest
+      - candidate_state_digest
+      - applied_record_ids
+    slot_usage:
+      proposal_id:
+        required: true
+      proposal_content_hash:
+        required: true
+      epistemic_decision_id:
+        required: true
+      epistemic_decision_hash:
+        required: true
+      candidate_artifact_id:
+        required: true
+      candidate_artifact_hash:
+        required: true
+      candidate_digest:
+        required: true
+      candidate_manifest_hash:
+        required: true
+      graph_ontology_hash:
+        required: true
+      previous_acceptance_head:
+        required: true
+      result_acceptance_head:
+        required: true
+      previous_materialization_head:
+        required: true
+      result_materialization_head:
+        required: true
+      base_state_digest:
+        required: true
+      candidate_state_digest:
+        required: true
+      applied_record_ids:
         required: true
 
   AuthorizationDecision:
@@ -949,6 +1089,10 @@ slots:
   action_proposal_ids:
     range: string
     multivalued: true
+  candidate_artifact_id:
+    range: string
+  candidate_artifact_hash:
+    range: string
 
   claim_key:
     range: string
@@ -1079,6 +1223,30 @@ slots:
     range: string
   candidate_state_digest:
     range: string
+  candidate_schema_version:
+    range: string
+  candidate_manifest:
+    range: string
+  candidate_manifest_hash:
+    range: string
+  candidate_write_count:
+    range: integer
+    minimum_value: 1
+  graph_schema_version:
+    range: string
+  graph_base_id:
+    range: string
+  graph_base_hash:
+    range: string
+  graph_ontology_hash:
+    range: string
+  base_materialization_head:
+    range: string
+  base_record_metadata:
+    range: string
+  base_record_count:
+    range: integer
+    minimum_value: 0
   context_state_digests:
     range: string
     multivalued: true
@@ -1186,6 +1354,23 @@ slots:
     range: string
     multivalued: true
   claim_revision_ids:
+    range: string
+    multivalued: true
+  accepted_application_id:
+    range: string
+  epistemic_decision_id:
+    range: string
+  epistemic_decision_hash:
+    range: string
+  previous_acceptance_head:
+    range: string
+  result_acceptance_head:
+    range: string
+  previous_materialization_head:
+    range: string
+  result_materialization_head:
+    range: string
+  applied_record_ids:
     range: string
     multivalued: true
   action_content_hash:

@@ -16,7 +16,7 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.4.0`, `stage-6-policy-selected-monitoring-control`. See
+Current package boundary: `0.5.0`, `stage-7b-assent-gated-bitemporal-accepted-graph`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -46,9 +46,15 @@ The Python package contains the logic compiler and verifier. Executing logic che
 ## Quick start
 
 ```python
-from malleus import KnowledgeGraph, OntologyRegistry, ProposedOperation, stage_subgraph
+from malleus import (
+    KnowledgeGraph,
+    OntologyRegistry,
+    ProposedOperation,
+    bundled_ontology_path,
+    stage_subgraph,
+)
 
-reg = OntologyRegistry("ontology/domains/cyp450.yaml")
+reg = OntologyRegistry(bundled_ontology_path("domains", "cyp450.yaml"))
 kg = KnowledgeGraph(reg)
 
 kg.create_entity("Enzyme", "enz-cyp3a4", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
@@ -80,7 +86,7 @@ The `OntologyRegistry` is the constructor parameter for the `KnowledgeGraph`. No
 Every `OntologyRegistry` has a deterministic content hash and a fingerprint of atomic facts. Two peers running the same schema produce the same hash, no coordination needed. Two peers running different versions can verify compatibility without exchanging full schemas.
 
 ```python
-reg = OntologyRegistry("ontology/domains/cyp450.yaml")
+reg = OntologyRegistry(bundled_ontology_path("domains", "cyp450.yaml"))
 print(reg.content_hash())        # 64-char SHA-256, deterministic
 print(len(reg.fingerprint()))    # frozenset of atomic facts
 
@@ -219,6 +225,45 @@ unchanged: each proposal must explicitly name and source its policy record.
 This precommitment prevents ex-post selection. It does not prove that the
 proposer had authority to choose that policy or that the policy applies to the
 proposal's domain; those checks remain outside Stage 6.
+
+## Accepted graph and bitemporal replay
+
+Stage 7b makes the proposed graph mutation replayable and binds it to assent.
+A `GraphBaseArtifact` commits an externally supplied base graph. A
+`CandidateSubgraphArtifact` stores exact ordered writes, an explicit valid-time
+interval for every write, supersession links, ontology hash, acceptance and
+materialization heads, and pre-state and post-state digests. `ProposedSubgraph`
+and `EpistemicDecision` both bind that candidate by ID, record hash, and
+candidate digest.
+
+A candidate-bound `ACCEPT` requires exactly one `AcceptedGraphApplication` in
+the same decision event. `REJECT`, `DEFER`, and `CONTEST` require no application.
+Replay restages the writes and recomputes every binding before it updates the
+derived graph. Direct use of `CandidateSubgraph.materialize_into()` remains a
+structural operation and cannot change the ledger's accepted projection.
+
+```python
+from malleus import AcceptedGraphProjector
+
+projector = AcceptedGraphProjector(protocol_ledger)
+current = projector.current(valid_as_of="2026-08-12T08:00:00+00:00")
+historical = projector.as_of(
+    transaction_as_of="2026-08-12T09:00:00+00:00",
+    valid_as_of="2026-01-01T00:00:00+00:00",
+)
+```
+
+Valid intervals are half-open. Valid time is always explicit and is never
+inferred from transaction time. A later retroactive supersession affects only
+transaction views that include the later event. The JSONL ledger is the
+authority; NetworkX is rebuilt as a defensive projection. Accepted projections
+omit the local `KnowledgeGraph.operations` audit because those operation
+timestamps are execution-local and are not ledger commitments.
+
+This is an accepted knowledge commitment, not a truth guarantee or action
+authorization. The caller must supply the exact graph committed by the graph
+base artifact. Remote graph-base resolution, typed retraction, and multi-writer
+serialization remain outside version 0.5.0.
 
 ## Architecture
 

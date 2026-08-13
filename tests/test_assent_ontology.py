@@ -66,6 +66,38 @@ def test_stage_six_artifacts_are_concrete_protocol_types():
     assert policy_kind.equals_string == "EPISTEMIC_POLICY"
 
 
+def test_stage_seven_b_graph_records_are_separate_typed_categories():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("GraphBaseArtifact", "ProtocolArtifact")
+    assert registry.is_subtype_of("CandidateSubgraphArtifact", "ProtocolArtifact")
+    assert registry.is_subtype_of("AcceptedGraphApplication", "ProtocolRecord")
+    assert not registry.is_subtype_of("AcceptedGraphApplication", "Decision")
+    assert (
+        registry.get_slot_constraint("GraphBaseArtifact", "artifact_kind").equals_string
+        == "GRAPH_BASE"
+    )
+    assert (
+        registry.get_slot_constraint(
+            "CandidateSubgraphArtifact",
+            "artifact_kind",
+        ).equals_string
+        == "CANDIDATE_SUBGRAPH"
+    )
+
+
+def test_candidate_and_application_bindings_remain_distinct():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    proposal_slots = registry.effective_slots("ProposedSubgraph")
+    decision_slots = registry.effective_slots("EpistemicDecision")
+    application_slots = registry.effective_slots("AcceptedGraphApplication")
+    for name in ("candidate_artifact_id", "candidate_artifact_hash", "candidate_digest"):
+        assert name in proposal_slots
+        assert name in decision_slots
+        assert name in application_slots
+    assert "accepted_application_id" in decision_slots
+    assert "result_materialization_head" in application_slots
+
+
 def test_unavailable_assessment_is_unknown_only():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     outcome = registry.get_slot_constraint("UnavailableAssessment", "assessment_outcome")

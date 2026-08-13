@@ -369,6 +369,55 @@ the code-level boundary between experimental condition C3, monitoring recorded
 with control disabled, and C4, the same monitoring followed by explicit policy
 control.
 
+## Layer 3c: Assent-Gated Accepted Graph
+
+Stage 7b connects the Stage 4 structural candidate to the Stage 6 epistemic
+decision without collapsing their meanings.
+
+```text
+Externally supplied graph
+  + GraphBaseArtifact
+            |
+            v
+CandidateSubgraphArtifact
+  exact ordered writes
+  valid-time interval per write
+  optional supersession link
+  ontology, heads, pre-state, post-state digests
+            |
+            v
+ProposedSubgraph -> monitor outputs -> EpistemicDecision
+  exact candidate binding             ACCEPT only
+            |                              |
+            +------------------------------+
+                           |
+                           v
+              AcceptedGraphApplication
+              same event, exact P/D/C binding
+                           |
+                           v
+              replay-derived NetworkX graph
+```
+
+The JSONL ledger is authoritative. Candidate registration and accepted
+application replay both restage the exact writes against the reconstructed
+accepted graph and recompute all digests. A candidate-bound `ACCEPT` requires
+one application in the same event. Non-accepting verdicts require none. The
+graph is swapped only after the complete event validates.
+
+Four commitments remain distinct: `acceptance_head` for accepted protocol
+content, `materialization_head` for ordered graph applications, cumulative
+accepted graph state digest, and valid-time view digest. None stands for truth.
+Authorization remains a separate state machine and cannot cause accepted graph
+materialization or action execution.
+
+Every graph-base record and candidate write has an explicit half-open valid
+interval. Supersession creates a new record and closes the prior interval; it
+never mutates the ledger history. `AcceptedGraphProjector` selects a verified
+transaction prefix and then a valid-time view. A later retroactive correction
+therefore changes past valid-time views only for transaction prefixes that
+include the correction.
+
 ---
 
 ## Layer 4: Distributed Convergence (Ontology Hashing)

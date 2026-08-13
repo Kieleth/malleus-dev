@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -20,7 +19,22 @@ from malleus.ledger import (
     with_content_hash,
 )
 from malleus.ontology import OntologyRegistry
+from malleus.kg import KnowledgeGraph
 from malleus.logic import logic_contract_digest
+from malleus.accepted import (
+    AcceptedGraphError,
+    acceptance_result_head,
+    accepted_application_record,
+    apply_temporal_writes,
+    base_record_metadata,
+    candidate_artifact_digest,
+    graph_base_artifact_digest,
+    graph_base_operations,
+    parse_candidate_manifest,
+    parse_graph_base_metadata,
+    validate_temporal_writes,
+)
+from malleus.staging import StagingError, stage_subgraph
 from malleus.control import (
     ControlError,
     EPISTEMIC_MONITOR_KINDS,
@@ -94,7 +108,13 @@ PAYLOAD_FIELDS = {
     EventType.LOGIC_CHECK_RECORDED: {"check", "witnesses"},
     EventType.ASSESSMENT_RECORDED: {"assessment_type", "assessment"},
     EventType.MONITOR_FAILED: {"failure", "assessment_type", "assessment"},
-    EventType.EPISTEMIC_DECIDED: {"decision", "requests", "revisions", "transition"},
+    EventType.EPISTEMIC_DECIDED: {
+        "decision",
+        "requests",
+        "revisions",
+        "transition",
+        "application",
+    },
     EventType.AUTHORIZATION_DECIDED: {"decision", "transition"},
 }
 PRESENT_FIELDS = {
@@ -142,6 +162,7 @@ PRESENT_FIELDS = {
         "violation_witness_ids",
     },
     "ViolationWitness": {"witness_record_ids"},
+    "AcceptedGraphApplication": {"applied_record_ids"},
 }
 
 
@@ -169,6 +190,15 @@ class ProtocolProjection:
     logic_check_by_monitor_context: dict[tuple[str, str], str] = field(default_factory=dict)
     snapshot_hash: str | None = None
     acceptance_head: str = GENESIS
+    materialization_head: str = GENESIS
+    graph_base_id: str | None = None
+    graph_base_hash: str | None = None
+    accepted_graph: KnowledgeGraph | None = None
+    accepted_record_metadata: dict[str, dict[str, Any]] = field(default_factory=dict)
+    candidate_manifests: dict[str, tuple[Any, ...]] = field(default_factory=dict)
+    accepted_application_ids: set[str] = field(default_factory=set)
+    accepted_application_order: list[str] = field(default_factory=list)
+    applied_candidate_ids: set[str] = field(default_factory=set)
     head_hash: str = GENESIS
 
     @property
@@ -206,15 +236,34 @@ def make_record(
 class ProtocolLedger:
     """Assent state machine persisted through a strict JSONL ledger."""
 
-    def __init__(self, path: str | Path, registry: OntologyRegistry):
+    def __init__(
+        self,
+        path: str | Path,
+        registry: OntologyRegistry,
+        *,
+        accepted_graph_base: KnowledgeGraph | None = None,
+    ):
         self.registry = registry
         self._validate_registry_contract()
         self.ontology_hash = f"sha256:{registry.content_hash()}"
-        self.storage = JsonlLedger(path, self.ontology_hash)
+        if accepted_graph_base is not None:
+            if not isinstance(accepted_graph_base, KnowledgeGraph):
+                raise TypeError("accepted_graph_base must be a KnowledgeGraph")
+            base_ontology_hash = f"sha256:{accepted_graph_base.registry.content_hash()}"
+            if base_ontology_hash != self.ontology_hash:
+                raise ProtocolError(
+                    "accepted_graph_base and protocol ledger must use the same ontology"
+                )
+        self._accepted_graph_base = (
+            accepted_graph_base.state_projection()
+            if accepted_graph_base is not None
+            else None
+        )
+        self._storage = JsonlLedger(path, self.ontology_hash)
 
     @property
     def path(self) -> Path:
-        return self.storage.path
+        return self._storage.path
 
     def append_event(
         self,
@@ -226,7 +275,7 @@ class ProtocolLedger:
         payload: Mapping[str, Any],
     ) -> dict[str, Any]:
         name = event_type.value if isinstance(event_type, EventType) else event_type
-        return self.storage.append(
+        return self._storage.append(
             event_id=event_id,
             event_type=name,
             transaction_time=transaction_time,
@@ -241,13 +290,24 @@ class ProtocolLedger:
         expected_head_hash: str | None = None,
         expected_event_count: int | None = None,
     ) -> ProtocolProjection:
-        events = self.storage.read(
+        events = self._read_events(
             expected_head_hash=expected_head_hash,
             expected_event_count=expected_event_count,
         )
         if not events:
             raise ProtocolError("Protocol ledger is empty")
         return self._replay_events(events).copy()
+
+    def _read_events(
+        self,
+        *,
+        expected_head_hash: str | None = None,
+        expected_event_count: int | None = None,
+    ) -> list[dict[str, Any]]:
+        return self._storage.read(
+            expected_head_hash=expected_head_hash,
+            expected_event_count=expected_event_count,
+        )
 
     def _replay_events(self, events: list[dict[str, Any]]) -> ProtocolProjection:
         projection = ProtocolProjection()
@@ -307,6 +367,8 @@ class ProtocolLedger:
                 f"event {event['event_id']}: AuthorityGrant grantor must be the generating actor"
             )
         typed_artifacts = {
+            "GRAPH_BASE": "GraphBaseArtifact",
+            "CANDIDATE_SUBGRAPH": "CandidateSubgraphArtifact",
             "MONITOR_SPECIFICATION": "MonitorSpecificationArtifact",
             "EPISTEMIC_POLICY": "EpistemicPolicyArtifact",
             "LOGIC_CONTRACT": "LogicContractArtifact",
@@ -316,7 +378,16 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: {artifact['artifact_kind']} requires {expected_type}"
             )
-        if artifact_type == "MonitorSpecificationArtifact":
+        candidate_manifest = None
+        if artifact_type == "GraphBaseArtifact":
+            self._validate_graph_base_artifact(projection, artifact, event)
+        elif artifact_type == "CandidateSubgraphArtifact":
+            candidate_manifest = self._validate_candidate_artifact(
+                projection,
+                artifact,
+                event,
+            )
+        elif artifact_type == "MonitorSpecificationArtifact":
             self._validate_monitor_specification_artifact(projection, artifact, event)
         elif artifact_type == "EpistemicPolicyArtifact":
             self._validate_epistemic_policy_artifact(projection, artifact, event)
@@ -325,6 +396,137 @@ class ProtocolLedger:
         self._validate_sources(artifact, projection.objects, event)
         self._add_objects(projection, {artifact["id"]: _wrapped(artifact_type, artifact)}, event)
         projection.artifact_ids.add(artifact["id"])
+        if artifact_type == "GraphBaseArtifact":
+            projection.graph_base_id = artifact["id"]
+            projection.graph_base_hash = artifact["content_hash"]
+            projection.materialization_head = content_digest(
+                {"graph_base_artifact_hash": artifact["content_hash"]}
+            )
+            projection.accepted_graph = self._accepted_graph_base.state_projection()
+            projection.accepted_record_metadata = base_record_metadata(
+                projection.accepted_graph,
+                artifact["base_record_metadata"],
+                graph_base_id=artifact["id"],
+            )
+        elif artifact_type == "CandidateSubgraphArtifact":
+            projection.candidate_manifests[artifact["id"]] = candidate_manifest
+
+    def _validate_graph_base_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        context = f"event {event['event_id']}"
+        if projection.graph_base_id is not None:
+            raise ProtocolError(f"{context}: graph base is already recorded")
+        if projection.accepted_application_ids:
+            raise ProtocolError(f"{context}: graph base cannot follow accepted applications")
+        if self._accepted_graph_base is None:
+            raise ProtocolError(
+                f"{context}: GraphBaseArtifact requires an externally supplied graph base"
+            )
+        expected_ontology = f"sha256:{self._accepted_graph_base.registry.content_hash()}"
+        if artifact["graph_ontology_hash"] != expected_ontology:
+            raise ProtocolError(f"{context}: graph base ontology hash mismatch")
+        if artifact["base_state_digest"] != self._accepted_graph_base.state_digest():
+            raise ProtocolError(f"{context}: graph base state digest mismatch")
+        try:
+            records = parse_graph_base_metadata(artifact["base_record_metadata"])
+            metadata = base_record_metadata(
+                self._accepted_graph_base,
+                artifact["base_record_metadata"],
+                graph_base_id=artifact["id"],
+            )
+            reconstructed = stage_subgraph(
+                KnowledgeGraph(self.registry),
+                graph_base_operations(self._accepted_graph_base),
+            ) if metadata else None
+            expected_hash = graph_base_artifact_digest(
+                artifact_id=artifact["id"],
+                artifact_version=artifact["artifact_version"],
+                graph_ontology_hash=artifact["graph_ontology_hash"],
+                base_state_digest=artifact["base_state_digest"],
+                base_record_metadata=artifact["base_record_metadata"],
+            )
+        except AcceptedGraphError as error:
+            raise ProtocolError(f"{context}: {error}") from error
+        if artifact["base_record_count"] != len(records):
+            raise ProtocolError(f"{context}: graph base record count mismatch")
+        if reconstructed is not None and (
+            not reconstructed.valid
+            or reconstructed.candidate_state_digest != artifact["base_state_digest"]
+        ):
+            raise ProtocolError(f"{context}: graph base does not round-trip canonically")
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"{context}: graph base semantic hash mismatch")
+
+    def _validate_candidate_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> tuple[Any, ...]:
+        context = f"event {event['event_id']}"
+        if projection.graph_base_id is None or projection.accepted_graph is None:
+            raise ProtocolError(f"{context}: candidate requires a verified graph base")
+        graph_base = self._artifact_ref(
+            projection,
+            artifact["graph_base_id"],
+            artifact["graph_base_hash"],
+            "GRAPH_BASE",
+            record_type="GraphBaseArtifact",
+        )
+        if graph_base["id"] != projection.graph_base_id:
+            raise ProtocolError(f"{context}: candidate graph base is not active")
+        if artifact["graph_ontology_hash"] != graph_base["graph_ontology_hash"]:
+            raise ProtocolError(f"{context}: candidate ontology differs from graph base")
+        if artifact["base_acceptance_head"] != projection.acceptance_head:
+            raise ProtocolError(f"{context}: candidate has stale base_acceptance_head")
+        if artifact["base_materialization_head"] != projection.materialization_head:
+            raise ProtocolError(f"{context}: candidate has stale base_materialization_head")
+        if artifact["base_state_digest"] != projection.accepted_graph.state_digest():
+            raise ProtocolError(f"{context}: candidate has stale base_state_digest")
+        self._require_sources(artifact, {graph_base["id"]}, event)
+        try:
+            expected_hash = candidate_artifact_digest(
+                artifact_id=artifact["id"],
+                artifact_version=artifact["artifact_version"],
+                candidate_schema_version=artifact["candidate_schema_version"],
+                graph_base_id=artifact["graph_base_id"],
+                graph_base_hash=artifact["graph_base_hash"],
+                graph_ontology_hash=artifact["graph_ontology_hash"],
+                base_acceptance_head=artifact["base_acceptance_head"],
+                base_materialization_head=artifact["base_materialization_head"],
+                base_state_digest=artifact["base_state_digest"],
+                candidate_manifest=artifact["candidate_manifest"],
+                candidate_manifest_hash=artifact["candidate_manifest_hash"],
+                candidate_write_count=artifact["candidate_write_count"],
+                candidate_digest=artifact["candidate_digest"],
+                candidate_state_digest=artifact["candidate_state_digest"],
+            )
+            manifest = parse_candidate_manifest(artifact["candidate_manifest"])
+            validate_temporal_writes(projection.accepted_record_metadata, manifest)
+            staged = stage_subgraph(
+                projection.accepted_graph,
+                [item.operation for item in manifest],
+            )
+        except (AcceptedGraphError, StagingError) as error:
+            raise ProtocolError(f"{context}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"{context}: candidate semantic hash mismatch")
+        if not staged.valid:
+            raise ProtocolError(f"{context}: candidate is structurally invalid")
+        bindings = {
+            "graph_ontology_hash": staged.ontology_hash,
+            "base_state_digest": staged.base_state_digest,
+            "candidate_digest": staged.candidate_digest,
+            "candidate_state_digest": staged.candidate_state_digest,
+        }
+        for name, expected in bindings.items():
+            if artifact[name] != expected:
+                raise ProtocolError(f"{context}: candidate {name} mismatch")
+        return manifest
 
     def _validate_monitor_specification_artifact(
         self,
@@ -476,7 +678,15 @@ class ProtocolLedger:
             "EPISTEMIC_POLICY",
             record_type="EpistemicPolicyArtifact",
         )
-        self._require_sources(proposal, {proposal["epistemic_policy_id"]}, event)
+        required_sources = {proposal["epistemic_policy_id"]}
+        candidate = self._candidate_binding(projection, proposal, event)
+        if candidate is not None:
+            if candidate["base_acceptance_head"] != proposal["base_acceptance_head"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: proposal and candidate base acceptance differ"
+                )
+            required_sources.add(candidate["id"])
+        self._require_sources(proposal, required_sources, event)
         self._validate_proposal_revision(projection, proposal, event)
         if not isinstance(payload["members"], list) or not payload["members"]:
             raise ProtocolError(f"event {event['event_id']}: proposal members must be nonempty")
@@ -551,6 +761,7 @@ class ProtocolLedger:
         payload = event["payload"]
         check = self._record("LogicCheckRecord", payload["check"], event)
         proposal = self._object(projection.objects, check["proposal_id"], "ProposedSubgraph")
+        candidate = self._candidate_binding(projection, proposal, event)
         if projection.proposal_states[proposal["id"]] != ProposalState.PROPOSED:
             raise ProtocolError(f"event {event['event_id']}: proposal is not open for logic check")
         self._same_proposal(check, proposal, event)
@@ -558,6 +769,18 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: logic check base mismatch")
         if check["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: logic check has stale acceptance head")
+        if candidate is not None:
+            candidate_bindings = {
+                "candidate_digest": "candidate_digest",
+                "base_state_digest": "base_state_digest",
+                "candidate_state_digest": "candidate_state_digest",
+                "ontology_hash": "graph_ontology_hash",
+            }
+            for check_name, candidate_name in candidate_bindings.items():
+                if check[check_name] != candidate[candidate_name]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: logic check targets a different candidate"
+                    )
         check_key = (check["proposal_id"], check["monitor_id"])
         existing_output = projection.monitor_output_ids.get(check_key)
         if existing_output is not None:
@@ -892,6 +1115,22 @@ class ProtocolLedger:
         if projection.proposal_states[proposal["id"]] != ProposalState.PROPOSED:
             raise ProtocolError(f"event {event['event_id']}: proposal is not open")
         self._same_proposal(decision, proposal, event)
+        proposal_candidate = self._candidate_binding(projection, proposal, event)
+        decision_candidate = self._candidate_binding(projection, decision, event)
+        if (proposal_candidate is None) != (decision_candidate is None):
+            raise ProtocolError(
+                f"event {event['event_id']}: proposal and decision candidate bindings differ"
+            )
+        if proposal_candidate is not None:
+            for name in (
+                "candidate_artifact_id",
+                "candidate_artifact_hash",
+                "candidate_digest",
+            ):
+                if proposal[name] != decision[name]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: decision changes proposal candidate binding"
+                    )
         if decision["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: decision has stale acceptance head")
         if proposal["base_acceptance_head"] != projection.acceptance_head:
@@ -984,6 +1223,43 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: revisions require ACCEPT")
         self._validate_claim_acceptance(projection, proposal, revisions, decision, event)
 
+        revision_hashes = sorted(
+            item["record"]["content_hash"] for item in revisions.values()
+        )
+        result_acceptance_head = (
+            acceptance_result_head(
+                previous_acceptance_head=projection.acceptance_head,
+                proposal_content_hash=proposal["content_hash"],
+                decision_content_hash=decision["content_hash"],
+                revision_content_hashes=revision_hashes,
+            )
+            if verdict == "ACCEPT"
+            else projection.acceptance_head
+        )
+        application = None
+        staged = None
+        temporal_writes = ()
+        if verdict == "ACCEPT" and proposal_candidate is not None:
+            application, staged, temporal_writes = self._validate_accepted_application(
+                projection,
+                proposal,
+                decision,
+                proposal_candidate,
+                assessments,
+                payload["application"],
+                result_acceptance_head,
+                event,
+            )
+        else:
+            if payload["application"] is not None:
+                raise ProtocolError(
+                    f"event {event['event_id']}: graph application is forbidden for this decision"
+                )
+            if decision.get("accepted_application_id") is not None:
+                raise ProtocolError(
+                    f"event {event['event_id']}: decision cites a forbidden graph application"
+                )
+
         transition = self._record("TransitionRecord", payload["transition"], event)
         self._transition(
             transition,
@@ -993,50 +1269,150 @@ class ProtocolLedger:
             trigger=decision["id"],
             event=event,
         )
-        _require_distinct_record_ids(
-            [
-                decision,
-                transition,
-                *(item["record"] for item in requests.values()),
-                *(item["record"] for item in revisions.values()),
-            ],
-            event,
-        )
+        new_records = [
+            decision,
+            transition,
+            *(item["record"] for item in requests.values()),
+            *(item["record"] for item in revisions.values()),
+        ]
+        if application is not None:
+            new_records.append(application)
+        _require_distinct_record_ids(new_records, event)
         introduced = {
             decision["id"]: _wrapped("EpistemicDecision", decision),
             transition["id"]: _wrapped("TransitionRecord", transition),
             **requests,
             **revisions,
         }
+        if application is not None:
+            introduced[application["id"]] = _wrapped(
+                "AcceptedGraphApplication",
+                application,
+            )
+        required_decision_sources = {
+            proposal["id"],
+            policy["id"],
+            policy["ruleset_id"],
+            *decision["assessment_ids"],
+        }
+        if proposal_candidate is not None:
+            required_decision_sources.add(proposal_candidate["id"])
         self._require_sources(
             decision,
-            {
-                proposal["id"],
-                policy["id"],
-                policy["ruleset_id"],
-                *decision["assessment_ids"],
-            },
+            required_decision_sources,
             event,
         )
         self._validate_sources(decision, {**projection.objects, **introduced}, event)
         for item in [*requests.values(), *revisions.values()]:
             self._validate_sources(item["record"], {**projection.objects, **introduced}, event)
         self._validate_sources(transition, {**projection.objects, **introduced}, event)
+        if application is not None:
+            self._validate_sources(application, {**projection.objects, **introduced}, event)
         self._add_objects(projection, introduced, event)
         projection.epistemic_decision_ids.add(decision["id"])
         projection.proposal_states[proposal["id"]] = EPISTEMIC_TARGETS[verdict]
         for request_id in requests:
             projection.request_states[request_id] = "OPEN"
+        if application is not None:
+            try:
+                staged.materialize_into(projection.accepted_graph)
+                projection.accepted_graph = projection.accepted_graph.state_projection()
+                apply_temporal_writes(
+                    projection.accepted_record_metadata,
+                    temporal_writes,
+                    transaction_time=event["transaction_time"],
+                    transaction_sequence=event["sequence"],
+                    application_id=application["id"],
+                )
+            except (AcceptedGraphError, StagingError) as error:
+                raise ProtocolError(f"event {event['event_id']}: {error}") from error
+            projection.materialization_head = application["result_materialization_head"]
+            projection.accepted_application_ids.add(application["id"])
+            projection.accepted_application_order.append(application["id"])
+            projection.applied_candidate_ids.add(proposal_candidate["id"])
         if verdict == "ACCEPT":
-            revision_hashes = sorted(item["record"]["content_hash"] for item in revisions.values())
-            projection.acceptance_head = content_digest(
-                {
-                    "previous_acceptance_head": projection.acceptance_head,
-                    "proposal_content_hash": proposal["content_hash"],
-                    "decision_content_hash": decision["content_hash"],
-                    "revision_content_hashes": revision_hashes,
-                }
+            projection.acceptance_head = result_acceptance_head
+
+    def _validate_accepted_application(
+        self,
+        projection: ProtocolProjection,
+        proposal: dict[str, Any],
+        decision: dict[str, Any],
+        candidate: dict[str, Any],
+        assessments: list[dict[str, Any]],
+        value: Any,
+        result_acceptance_head: str,
+        event: dict[str, Any],
+    ) -> tuple[dict[str, Any], Any, tuple[Any, ...]]:
+        context = f"event {event['event_id']}"
+        if projection.accepted_graph is None or projection.graph_base_id is None:
+            raise ProtocolError(f"{context}: accepted graph base is unavailable")
+        if not isinstance(value, dict):
+            raise ProtocolError(f"{context}: candidate-bound ACCEPT requires one application")
+        application = self._record("AcceptedGraphApplication", value, event)
+        if decision.get("accepted_application_id") != application["id"]:
+            raise ProtocolError(f"{context}: decision application reference mismatch")
+        if candidate["id"] in projection.applied_candidate_ids:
+            raise ProtocolError(f"{context}: candidate was already applied")
+        if application["id"] in projection.accepted_application_ids:
+            raise ProtocolError(f"{context}: application was already applied")
+        if candidate["base_acceptance_head"] != projection.acceptance_head:
+            raise ProtocolError(f"{context}: application candidate has stale acceptance base")
+        if candidate["base_materialization_head"] != projection.materialization_head:
+            raise ProtocolError(f"{context}: application candidate has stale materialization base")
+        if candidate["base_state_digest"] != projection.accepted_graph.state_digest():
+            raise ProtocolError(f"{context}: application candidate has stale graph base")
+        temporal_writes = projection.candidate_manifests.get(candidate["id"])
+        if temporal_writes is None:
+            raise ProtocolError(f"{context}: candidate manifest is unavailable")
+        try:
+            validate_temporal_writes(projection.accepted_record_metadata, temporal_writes)
+            staged = stage_subgraph(
+                projection.accepted_graph,
+                [item.operation for item in temporal_writes],
             )
+        except (AcceptedGraphError, StagingError) as error:
+            raise ProtocolError(f"{context}: {error}") from error
+        if not staged.valid:
+            raise ProtocolError(f"{context}: applied candidate is structurally invalid")
+        staged_bindings = {
+            "graph_ontology_hash": staged.ontology_hash,
+            "base_state_digest": staged.base_state_digest,
+            "candidate_digest": staged.candidate_digest,
+            "candidate_state_digest": staged.candidate_state_digest,
+        }
+        for name, expected in staged_bindings.items():
+            if candidate[name] != expected:
+                raise ProtocolError(f"{context}: applied candidate {name} mismatch")
+        for assessment in assessments:
+            if assessment["assessment_kind"] != "LOGICAL" or assessment["assessment_outcome"] == "UNKNOWN":
+                continue
+            for check_id in assessment["logic_check_record_ids"]:
+                check = self._object(projection.objects, check_id, "LogicCheckRecord")
+                exact = {
+                    "candidate_digest": candidate["candidate_digest"],
+                    "base_state_digest": candidate["base_state_digest"],
+                    "candidate_state_digest": candidate["candidate_state_digest"],
+                    "ontology_hash": candidate["graph_ontology_hash"],
+                }
+                if any(check[name] != expected for name, expected in exact.items()):
+                    raise ProtocolError(f"{context}: logical check targets a different candidate")
+        expected_application = accepted_application_record(
+            application_id=application["id"],
+            event_id=event["event_id"],
+            generated_at=event["transaction_time"],
+            actor_id=event["actor_id"],
+            role=application["responsible_role"],
+            proposal=proposal,
+            decision=decision,
+            candidate=candidate,
+            previous_acceptance_head=projection.acceptance_head,
+            result_acceptance_head=result_acceptance_head,
+            previous_materialization_head=projection.materialization_head,
+        )
+        if application != expected_application:
+            raise ProtocolError(f"{context}: accepted application binding mismatch")
+        return application, staged, temporal_writes
 
     def _authorization(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -1509,6 +1885,13 @@ class ProtocolLedger:
                     raise ProtocolError(f"event {event['event_id']}: replacement valid time mismatch")
                 if revision["replaced_valid_to"] != claim["domain_valid_from"]:
                     raise ProtocolError(f"event {event['event_id']}: replaced interval must close at replacement")
+                if (
+                    old.get("domain_valid_to") is not None
+                    and old["domain_valid_to"] != revision["replaced_valid_to"]
+                ):
+                    raise ProtocolError(
+                        f"event {event['event_id']}: prior claim valid_to disagrees with revision"
+                    )
                 _valid_interval(old["domain_valid_from"], revision["replaced_valid_to"], "claim revision")
         if set(by_new) != {
             claim["id"] for claim in proposed_claims if projection.current_claim_by_key.get(claim["claim_key"])
@@ -1579,6 +1962,35 @@ class ProtocolLedger:
             and projection.proposal_states[prior_proposal_id] == ProposalState.ACCEPTED
         ):
             raise ProtocolError(f"event {event['event_id']}: cannot revise a pending accepted action")
+
+    def _candidate_binding(
+        self,
+        projection: ProtocolProjection,
+        record: Mapping[str, Any],
+        event: Mapping[str, Any],
+    ) -> dict[str, Any] | None:
+        names = (
+            "candidate_artifact_id",
+            "candidate_artifact_hash",
+            "candidate_digest",
+        )
+        present = [name for name in names if record.get(name) is not None]
+        if present and len(present) != len(names):
+            raise ProtocolError(
+                f"event {event['event_id']}: candidate binding must be all-or-none"
+            )
+        if not present:
+            return None
+        candidate = self._artifact_ref(
+            projection,
+            record["candidate_artifact_id"],
+            record["candidate_artifact_hash"],
+            "CANDIDATE_SUBGRAPH",
+            record_type="CandidateSubgraphArtifact",
+        )
+        if record["candidate_digest"] != candidate["candidate_digest"]:
+            raise ProtocolError(f"event {event['event_id']}: candidate digest mismatch")
+        return candidate
 
     def _proposal_member_category(self, record_type: str) -> str:
         if record_type in {"ClaimVersion", "Evidence", "EvidenceAssertion"}:
@@ -1771,6 +2183,8 @@ class ProtocolLedger:
         required = {
             "ProtocolRecord",
             "ProtocolArtifact",
+            "GraphBaseArtifact",
+            "CandidateSubgraphArtifact",
             "MonitorSpecificationArtifact",
             "EpistemicPolicyArtifact",
             "LogicContractArtifact",
@@ -1794,6 +2208,7 @@ class ProtocolLedger:
             "Decision",
             "MonitorFailure",
             "EpistemicDecision",
+            "AcceptedGraphApplication",
             "AuthorizationDecision",
             "Request",
             "EvidenceRequest",
@@ -1814,6 +2229,8 @@ class ProtocolLedger:
         inheritance = {
             "ProtocolRecord": "Entity",
             "ProtocolArtifact": "ProtocolRecord",
+            "GraphBaseArtifact": "ProtocolArtifact",
+            "CandidateSubgraphArtifact": "ProtocolArtifact",
             "MonitorSpecificationArtifact": "ProtocolArtifact",
             "EpistemicPolicyArtifact": "ProtocolArtifact",
             "LogicContractArtifact": "ProtocolArtifact",
@@ -1837,6 +2254,7 @@ class ProtocolLedger:
             "MonitorFailure": "ProtocolRecord",
             "Decision": "ProtocolRecord",
             "EpistemicDecision": "Decision",
+            "AcceptedGraphApplication": "ProtocolRecord",
             "AuthorizationDecision": "Decision",
             "Request": "ProtocolRecord",
             "EvidenceRequest": "Request",

@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import tempfile
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -107,7 +108,7 @@ class JsonlLedger:
         payload: Mapping[str, Any],
         validate: Callable[[list[dict[str, Any]]], None],
     ) -> dict[str, Any]:
-        """Validate the complete candidate history, then append one durable line."""
+        """Validate history, then commit one line by failure-atomic replacement."""
         events = self.read()
         event = {
             "schema_version": SCHEMA_VERSION,
@@ -126,17 +127,34 @@ class JsonlLedger:
         validate(deepcopy(candidate))
         encoded = (canonical_json(event) + "\n").encode("utf-8")
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        descriptor = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+        current = self.path.read_bytes() if self.path.exists() else b""
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{self.path.name}.",
+            suffix=".tmp",
+            dir=self.path.parent,
+        )
         try:
-            view = memoryview(encoded)
+            view = memoryview(current + encoded)
             while view:
                 written = os.write(descriptor, view)
                 if written <= 0:
                     raise LedgerError("Ledger append made no progress")
                 view = view[written:]
             os.fsync(descriptor)
-        finally:
             os.close(descriptor)
+            descriptor = -1
+            os.replace(temporary_name, self.path)
+            temporary_name = ""
+        except (OSError, LedgerError) as error:
+            raise LedgerError(f"Ledger append failed without changing the ledger: {error}") from error
+        finally:
+            if descriptor >= 0:
+                os.close(descriptor)
+            if temporary_name:
+                try:
+                    os.unlink(temporary_name)
+                except FileNotFoundError:
+                    pass
         return deepcopy(event)
 
     def read(
