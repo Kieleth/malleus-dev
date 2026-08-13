@@ -44,12 +44,17 @@ from malleus.staging import (
     stage_subgraph,
 )
 from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
-
-try:
-    from malleus.prolog_verifier import PrologVerifier, VerificationResult
-    _prolog_available = True
-except ImportError:
-    _prolog_available = False
+from malleus.logic import (
+    CompiledFacts,
+    GraphFactCompiler,
+    LogicCheckResult,
+    LogicContract,
+    LogicError,
+    LogicExecutionError,
+    Violation,
+    logic_monitor_failure_records,
+)
+from malleus.prolog_verifier import PrologVerifier
 
 __version__ = IMPLEMENTATION_STATUS.package_version
 
@@ -77,10 +82,16 @@ __all__ = [
     "StagingError",
     "StaleCandidateError",
     "stage_subgraph",
+    "CompiledFacts",
+    "GraphFactCompiler",
+    "LogicCheckResult",
+    "LogicContract",
+    "LogicError",
+    "LogicExecutionError",
+    "Violation",
+    "logic_monitor_failure_records",
+    "PrologVerifier",
     "IMPLEMENTATION_STATUS",
     "ImplementationStatus",
     "__version__",
 ]
-
-if _prolog_available:
-    __all__.extend(["PrologVerifier", "VerificationResult"])

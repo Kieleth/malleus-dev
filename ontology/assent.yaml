@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.1.0
+version: 0.2.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -24,6 +24,11 @@ enums:
       SATISFIED:
       VIOLATED:
       UNKNOWN:
+
+  LogicCheckOutcome:
+    permissible_values:
+      SATISFIED:
+      VIOLATED:
 
   AssessmentKind:
     permissible_values:
@@ -74,6 +79,7 @@ enums:
       EPISTEMIC_POLICY:
       AUTHORIZATION_POLICY:
       RULE_SET:
+      LOGIC_CONTRACT:
       EVIDENCE_CONTRACT:
       CONFLICT_RULE:
       UNCERTAINTY_CONTRACT:
@@ -118,6 +124,45 @@ classes:
       artifact_version:
         required: true
       artifact_hash:
+        required: true
+
+  LogicContractArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Replay-visible semantic fields for a pinned logic contract. The artifact
+      hash is the canonical semantic contract digest.
+    slots:
+      - logic_contract_schema_version
+      - ontology_hash
+      - fact_contract_version
+      - ruleset_id
+      - ruleset_version
+      - ruleset_record_hash
+      - ruleset_artifact_hash
+      - rule_ids
+      - timeout_seconds
+    slot_usage:
+      artifact_kind:
+        equals_string: LOGIC_CONTRACT
+      logic_contract_schema_version:
+        required: true
+        equals_string: "1"
+      ontology_hash:
+        required: true
+      fact_contract_version:
+        required: true
+        equals_string: "2"
+      ruleset_id:
+        required: true
+      ruleset_version:
+        required: true
+      ruleset_record_hash:
+        required: true
+      ruleset_artifact_hash:
+        required: true
+      rule_ids:
+        required: true
+      timeout_seconds:
         required: true
 
   AuthorityGrant:
@@ -328,17 +373,128 @@ classes:
     slots:
       - checked_rule_ids
       - violated_rule_ids
-      - proof_record_ids
+      - logic_check_record_ids
+      - logic_contract_id
+      - logic_contract_record_hash
       - ruleset_id
       - ruleset_hash
     slot_usage:
       assessment_kind:
         equals_string: LOGICAL
-      checked_rule_ids:
+      logic_contract_id:
+        required: true
+      logic_contract_record_hash:
         required: true
       ruleset_id:
         required: true
       ruleset_hash:
+        required: true
+
+  LogicCheckRecord:
+    is_a: ProtocolRecord
+    description: >-
+      Immutable evidence of one completed logic-engine execution. This record
+      is not a formal proof certificate.
+    slots:
+      - proposal_id
+      - proposal_content_hash
+      - base_acceptance_head
+      - monitor_id
+      - monitor_version
+      - monitor_hash
+      - candidate_digest
+      - base_state_digest
+      - candidate_state_digest
+      - context_state_digests
+      - ontology_hash
+      - fact_contract_version
+      - logic_contract_id
+      - logic_contract_version
+      - logic_contract_record_hash
+      - logic_contract_artifact_hash
+      - ruleset_id
+      - ruleset_version
+      - ruleset_record_hash
+      - ruleset_artifact_hash
+      - engine_name
+      - engine_version
+      - timeout_seconds
+      - facts_hash
+      - fact_count
+      - translated_record_ids
+      - checked_rule_ids
+      - violated_rule_ids
+      - violation_witness_ids
+      - check_outcome
+    slot_usage:
+      proposal_id:
+        required: true
+      proposal_content_hash:
+        required: true
+      base_acceptance_head:
+        required: true
+      monitor_id:
+        required: true
+      monitor_version:
+        required: true
+      monitor_hash:
+        required: true
+      candidate_digest:
+        required: true
+      base_state_digest:
+        required: true
+      candidate_state_digest:
+        required: true
+      ontology_hash:
+        required: true
+      fact_contract_version:
+        required: true
+        equals_string: "2"
+      logic_contract_id:
+        required: true
+      logic_contract_version:
+        required: true
+      logic_contract_record_hash:
+        required: true
+      logic_contract_artifact_hash:
+        required: true
+      ruleset_id:
+        required: true
+      ruleset_version:
+        required: true
+      ruleset_record_hash:
+        required: true
+      ruleset_artifact_hash:
+        required: true
+      engine_name:
+        required: true
+      engine_version:
+        required: true
+      timeout_seconds:
+        required: true
+      facts_hash:
+        required: true
+      fact_count:
+        required: true
+      check_outcome:
+        required: true
+
+  ViolationWitness:
+    is_a: ProtocolRecord
+    slots:
+      - logic_check_id
+      - rule_id
+      - violation_code
+      - witness_record_ids
+      - witness_binding_hash
+    slot_usage:
+      logic_check_id:
+        required: true
+      rule_id:
+        required: true
+      violation_code:
+        required: true
+      witness_binding_hash:
         required: true
 
   TemporalAssessment:
@@ -387,6 +543,10 @@ classes:
       - monitor_id
       - monitor_version
       - monitor_hash
+      - logic_contract_id
+      - logic_contract_record_hash
+      - ruleset_id
+      - ruleset_hash
       - failed_assessment_kind
       - failure_category
       - error_code
@@ -790,7 +950,70 @@ slots:
   violated_rule_ids:
     range: string
     multivalued: true
-  proof_record_ids:
+  logic_check_record_ids:
+    range: string
+    multivalued: true
+  candidate_digest:
+    range: string
+  base_state_digest:
+    range: string
+  candidate_state_digest:
+    range: string
+  context_state_digests:
+    range: string
+    multivalued: true
+  ontology_hash:
+    range: string
+  fact_contract_version:
+    range: string
+  logic_contract_id:
+    range: string
+  logic_contract_schema_version:
+    range: string
+  logic_contract_version:
+    range: string
+  logic_contract_record_hash:
+    range: string
+  logic_contract_artifact_hash:
+    range: string
+  ruleset_version:
+    range: string
+  ruleset_record_hash:
+    range: string
+  ruleset_artifact_hash:
+    range: string
+  engine_name:
+    range: string
+  engine_version:
+    range: string
+  timeout_seconds:
+    range: integer
+    minimum_value: 1
+  facts_hash:
+    range: string
+  fact_count:
+    range: integer
+    minimum_value: 1
+  translated_record_ids:
+    range: string
+    multivalued: true
+  violation_witness_ids:
+    range: string
+    multivalued: true
+  check_outcome:
+    range: LogicCheckOutcome
+  logic_check_id:
+    range: string
+  rule_id:
+    range: string
+  violation_code:
+    range: string
+  witness_record_ids:
+    range: string
+    multivalued: true
+  witness_binding_hash:
+    range: string
+  rule_ids:
     range: string
     multivalued: true
   temporal_contract_id:

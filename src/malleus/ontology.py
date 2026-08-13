@@ -384,6 +384,10 @@ class OntologyRegistry:
     def has_type(self, type_name: str) -> bool:
         return type_name in self._types
 
+    def type_names(self) -> tuple[str, ...]:
+        """Return every resolved ontology class name in deterministic order."""
+        return tuple(sorted(self._types))
+
     def has_enum(self, enum_name: str) -> bool:
         return enum_name in self._enums
 

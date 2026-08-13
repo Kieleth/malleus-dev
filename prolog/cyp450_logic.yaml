@@ -1,0 +1,11 @@
+schema_version: "1"
+contract_id: malleus-cyp450-logic
+contract_version: "1"
+ontology_hash: sha256:0b73534d0453a2a06935ce6279f895a069f47db18cea284e08d7edc61a4af7ee
+fact_contract_version: "2"
+ruleset_id: malleus-cyp450-rules
+ruleset_version: "1"
+rules_file: cyp450_rules.pl
+rule_ids:
+  - CYP450_INHIBITOR_INDUCER_CONFLICT
+timeout_seconds: 5

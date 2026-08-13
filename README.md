@@ -39,10 +39,9 @@ Domains extend this root. CYP450 drug interactions, MITRE ATT&CK threat models, 
 
 ```bash
 pip install malleus-dev
-
-# Optional SWI-Prolog verification layer:
-pip install malleus-dev[prolog]
 ```
+
+The Python package contains the logic compiler and verifier. Executing logic checks also requires a `swipl` executable on `PATH`; absence fails explicitly at check time.
 
 ## Quick start
 
@@ -144,14 +143,15 @@ slots:
 
 Relations use concrete classes with explicit source and target ranges. Malleus rejects unknown properties, missing required fields, malformed values, duplicate identifiers, mismatched predicates, and invalid endpoint types before graph mutation.
 
-## Optional Prolog verification
+## Pinned Prolog verification
 
-For domains where logical consistency matters (pharmacology, security, regulatory rules, anything where "can this combination of facts coexist?" is a real question), the `PrologVerifier` syncs the KG into SWI-Prolog and checks proposed writes against a rule file you supply.
+`GraphFactCompiler` converts any Malleus graph into a fixed typed fact vocabulary. A `LogicContract` pins the ontology hash, exact trusted rule bytes, declared rule IDs, versions, and subprocess wall-clock timeout. `PrologVerifier` evaluates caller-supplied context plus an isolated candidate in a fresh SWI-Prolog process. Stage 5 does not claim that the context is protocol-accepted state.
 
 ```python
-from malleus import PrologVerifier, ProposedOperation, stage_subgraph
+from malleus import LogicContract, PrologVerifier, ProposedOperation, stage_subgraph
 
-verifier = PrologVerifier("your_rules.pl")
+contract = LogicContract.load("your_logic_contract.yaml")
+verifier = PrologVerifier(contract)
 candidate = stage_subgraph(kg, [
     ProposedOperation.relation(
         "InhibitsRelation", "rel-002", "drug-sim", "enz-cyp3a4",
@@ -160,13 +160,23 @@ candidate = stage_subgraph(kg, [
 ])
 result = verifier.verify_candidate_subgraph(candidate)
 if not result.valid:
-    print(f"Rule violation: {result.rule_violated}")
-    print(result.proof_trace)
+    for violation in result.violations:
+        print(violation.rule_id, violation.violation_code, violation.witness_record_ids)
 else:
+    # Structural materialization only. This is not epistemic acceptance.
     candidate.materialize_into(kg)
 ```
 
-Verification reads the isolated candidate overlay. A rule rejection has nothing to roll back because the base graph was never changed. The rule file is yours; the library doesn't ship domain rules.
+The rule program exposes only two required predicates:
+
+```prolog
+malleus_rule(RuleId).
+malleus_violation(RuleId, ViolationCode, WitnessRecordIds).
+```
+
+The verifier enumerates every violation, rejects malformed or unknown witnesses, and never mutates the base graph. Consult errors, timeouts, manifest mismatches, and malformed results raise `LogicExecutionError`; they never become `SATISFIED`. `logic_monitor_failure_records()` converts such a failure into a `MonitorFailure` and a logical `UNKNOWN` assessment. Completed checks can be serialized as content-addressed `LogicCheckRecord` and `ViolationWitness` records.
+
+The package ships the CYP450 contract and rules as an example. Stage 5 accepts only trusted, pinned local rule programs. The timeout bounds the Prolog subprocess wall clock, not graph compilation, output size, memory, or CPU. It does not sandbox untrusted Prolog or issue formal proof certificates.
 
 ## Architecture
 
@@ -181,7 +191,7 @@ Adoption guides:
 ## Tests
 
 ```bash
-pip install -e .[prolog,dev]
+pip install -e .[dev]
 pytest tests/ -v
 ```
 

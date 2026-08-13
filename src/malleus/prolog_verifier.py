@@ -1,184 +1,221 @@
-"""Prolog verification layer: translates KG state to Prolog facts and verifies.
+"""Process-isolated SWI-Prolog execution for generic Malleus graph facts."""
 
-Bridges the KG (NetworkX) to SWI-Prolog (via pyswip). Each KG entity
-and relation becomes a Prolog fact. Domain rules are loaded from .pl files.
-Verification checks proposed operations against rules + accumulated state.
-"""
+from __future__ import annotations
 
-from dataclasses import dataclass
+import json
+import shutil
+import subprocess
+import tempfile
 from pathlib import Path
-from typing import Any
-
-from pyswip import Prolog
 
 from malleus.kg import KnowledgeGraph
+from malleus.logic import (
+    GraphFactCompiler,
+    LogicContract,
+    LogicError,
+    LogicExecutionError,
+    LogicCheckResult,
+    Violation,
+    fact_declarations,
+)
 from malleus.staging import CandidateSubgraph
 
 
-def _escape(s: str) -> str:
-    """Escape a string for safe use as a Prolog atom.
-
-    Wraps in single quotes and escapes internal single quotes
-    to prevent injection (bug fix #7).
-    """
-    if not isinstance(s, str):
-        s = str(s)
-    return "'" + s.replace("\\", "\\\\").replace("'", "\\'") + "'"
-
-
-@dataclass
-class VerificationResult:
-    """Result of Prolog verification of a proposed KG operation."""
-    valid: bool
-    rule_violated: str | None = None
-    proof_trace: list[str] | None = None
+RESULT_FIELDS = {"rules", "violations", "version"}
+VIOLATION_FIELDS = {"rule_id", "violation_code", "witnesses"}
+RUNNER = r"""
+:- use_module(library(http/json)).
+:- initialization(malleus_main).
+malleus_main :-
+    findall(RuleId, malleus_rule(RuleId), Rules),
+    findall(
+        _{rule_id:RuleId, violation_code:ViolationCode, witnesses:WitnessRecordIds},
+        malleus_violation(RuleId, ViolationCode, WitnessRecordIds),
+        Violations
+    ),
+    current_prolog_flag(version, Version),
+    json_write_dict(
+        current_output,
+        _{rules:Rules, violations:Violations, version:Version},
+        [width(0)]
+    ),
+    nl,
+    halt.
+"""
 
 
 class PrologVerifier:
-    """Verifies KG operations against Prolog domain rules.
+    """Evaluate a trusted pinned rule set in one fresh process per check."""
 
-    Translates KG state to Prolog facts, loads domain rules,
-    and checks proposed operations for consistency.
-    """
+    def __init__(self, contract: LogicContract):
+        if not isinstance(contract, LogicContract):
+            raise TypeError("PrologVerifier requires a LogicContract")
+        contract.validate_integrity()
+        self.contract = contract
+        self._compiler = GraphFactCompiler()
 
-    def __init__(self, rules_path: str | Path):
-        self._rules_path = Path(rules_path)
-        self._prolog = Prolog()
-        self._prolog.consult(str(self._rules_path))
-        self._asserted_facts: list[str] = []
-
-    def sync_from_kg(self, *kgs: KnowledgeGraph):
-        """Sync KG state into Prolog as facts.
-
-        Accepts one or more KGs (typically static + dynamic).
-        Retracts all previous dynamic facts and reasserts from
-        all provided KGs. Called before verification.
-        """
-        self._retract_all()
-
-        for kg in kgs:
-            self._sync_single_kg(kg)
-
-    def _sync_single_kg(self, kg: KnowledgeGraph):
-        """Sync a single KG's nodes and edges into Prolog facts."""
-        for node_id, data in kg._graph.nodes(data=True):
-            node_type = data.get("type", "")
-
-            if data.get("cyp_isoform"):
-                self._assert_fact(
-                    f"enzyme({_escape(node_id)}, {_escape(data.get('name', ''))}, {_escape(data.get('cyp_isoform', ''))})"
-                )
-            elif not data.get("is_signal") and not data.get("is_event"):
-                if node_type == "Drug" or (kg.registry.has_type(node_type) and kg.registry.is_subtype_of(node_type, "Entity")):
-                    self._assert_fact(
-                        f"drug({_escape(node_id)}, {_escape(data.get('name', ''))}, {_escape(data.get('drug_class', ''))})"
-                    )
-
-        for u, v, key, data in kg._graph.edges(data=True, keys=True):
-            rel_type = data.get("relation_type", "")
-            strength = data.get("inhibition_strength", "").lower() if data.get("inhibition_strength") else "unknown"
-
-            if rel_type == "SUBSTRATE_OF":
-                self._assert_fact(f"substrate_of({_escape(u)}, {_escape(v)})")
-            elif rel_type == "INHIBITS":
-                self._assert_fact(f"inhibits({_escape(u)}, {_escape(v)}, {strength})")
-            elif rel_type == "INDUCES":
-                self._assert_fact(f"induces({_escape(u)}, {_escape(v)}, {strength})")
-
-    def _assert_fact(self, fact: str):
-        """Assert a fact into the Prolog knowledge base."""
-        self._prolog.assertz(fact)
-        self._asserted_facts.append(fact)
-
-    def _retract_all(self):
-        """Retract all dynamically asserted facts."""
-        for pred in ["substrate_of", "inhibits", "induces", "drug", "enzyme"]:
-            try:
-                list(self._prolog.query(f"retractall({pred}(_, _))"))
-            except Exception:
-                pass
-            try:
-                list(self._prolog.query(f"retractall({pred}(_, _, _))"))
-            except Exception:
-                pass
-        self._asserted_facts.clear()
-
-    def verify_no_contradictions(self) -> VerificationResult:
-        """Check if the current fact base has any contradictions."""
-        results = list(self._prolog.query("contradiction(Drug, Enzyme, Type)"))
-        if results:
-            r = results[0]
-            return VerificationResult(
-                valid=False,
-                rule_violated="contradiction",
-                proof_trace=[
-                    f"Drug '{r['Drug']}' is both a strong inhibitor and strong inducer of enzyme '{r['Enzyme']}'"
-                ],
-            )
-        return VerificationResult(valid=True)
-
-    def query_interactions(self, drug_id: str) -> list[dict[str, Any]]:
-        """Query all interactions where drug_id is the perpetrator."""
-        results = list(self._prolog.query(
-            f"interaction('{drug_id}', Substrate, Effect, Enzyme, Strength)"
-        ))
-        return [
-            {
-                "perpetrator": drug_id,
-                "substrate": str(r["Substrate"]),
-                "effect": str(r["Effect"]),
-                "enzyme": str(r["Enzyme"]),
-                "strength": str(r["Strength"]),
-            }
-            for r in results
-        ]
-
-    def query_all_interactions(self) -> list[dict[str, Any]]:
-        """Query all interactions in the current fact base."""
-        results = list(self._prolog.query(
-            "interaction(Perpetrator, Substrate, Effect, Enzyme, Strength)"
-        ))
-        return [
-            {
-                "perpetrator": str(r["Perpetrator"]),
-                "substrate": str(r["Substrate"]),
-                "effect": str(r["Effect"]),
-                "enzyme": str(r["Enzyme"]),
-                "strength": str(r["Strength"]),
-            }
-            for r in results
-        ]
-
-    def query_polypharmacy_risk(self, substrate_id: str) -> list[dict]:
-        """Check if a substrate is affected by multiple perpetrators."""
-        results = list(self._prolog.query(
-            f"polypharmacy_risk('{substrate_id}', Perpetrators)"
-        ))
-        if results:
-            return [{"substrate": substrate_id, "perpetrators": str(results[0]["Perpetrators"])}]
-        return []
-
-    def query_combined_inhibition(self) -> list[dict]:
-        """Find cases where two drugs inhibit the same enzyme affecting a substrate."""
-        results = list(self._prolog.query(
-            "combined_inhibition(Drug1, Drug2, Substrate, Enzyme)"
-        ))
-        return [
-            {
-                "drug1": str(r["Drug1"]),
-                "drug2": str(r["Drug2"]),
-                "substrate": str(r["Substrate"]),
-                "enzyme": str(r["Enzyme"]),
-            }
-            for r in results
-        ]
+    @classmethod
+    def from_contract(cls, path: str) -> "PrologVerifier":
+        return cls(LogicContract.load(path))
 
     def verify_candidate_subgraph(
         self,
         candidate: CandidateSubgraph,
         *context: KnowledgeGraph,
-    ) -> VerificationResult:
-        """Check a complete isolated candidate overlay against domain rules."""
+    ) -> LogicCheckResult:
+        """Enumerate all declared violations over context plus the candidate."""
+        self.contract.validate_integrity()
+        if not isinstance(candidate, CandidateSubgraph):
+            raise TypeError("candidate must be a CandidateSubgraph")
         overlay = candidate.overlay()
-        self.sync_from_kg(*context, overlay)
-        return self.verify_no_contradictions()
+        compiled = self._compiler.compile(*context, overlay)
+        if compiled.ontology_hash != candidate.ontology_hash:
+            raise LogicError("Compiled facts and candidate use different ontologies")
+        if compiled.ontology_hash != self.contract.ontology_hash:
+            raise LogicError("Logic contract and compiled facts use different ontologies")
+
+        execution = self._execute(compiled.facts)
+        declared = {
+            _ground_string(value, "declared rule ID")
+            for value in execution["rules"]
+        }
+        if declared != set(self.contract.rule_ids):
+            raise LogicExecutionError(
+                "Rules file declaration differs from the pinned logic contract"
+            )
+        violations = self._violations(
+            execution["violations"],
+            declared,
+            set(compiled.record_ids),
+        )
+        context_count = len(context)
+        return LogicCheckResult(
+            candidate_digest=candidate.candidate_digest,
+            base_state_digest=candidate.base_state_digest,
+            candidate_state_digest=candidate.candidate_state_digest,
+            context_state_digests=tuple(sorted(set(compiled.state_digests[:context_count]))),
+            ontology_hash=compiled.ontology_hash,
+            fact_contract_version=self.contract.fact_contract_version,
+            contract_id=self.contract.contract_id,
+            contract_version=self.contract.contract_version,
+            contract_hash=self.contract.contract_hash,
+            ruleset_id=self.contract.ruleset_id,
+            ruleset_version=self.contract.ruleset_version,
+            ruleset_hash=self.contract.ruleset_hash,
+            engine_name="SWI-Prolog",
+            engine_version=_engine_version(execution["version"]),
+            timeout_seconds=self.contract.timeout_seconds,
+            facts_hash=compiled.facts_hash,
+            fact_count=len(compiled.facts),
+            translated_record_ids=compiled.record_ids,
+            checked_rule_ids=tuple(sorted(self.contract.rule_ids)),
+            violations=violations,
+        )
+
+    def _execute(self, facts: tuple[str, ...]) -> dict:
+        executable = shutil.which("swipl")
+        if executable is None:
+            raise LogicExecutionError("SWI-Prolog executable 'swipl' is not available")
+        program = (
+            ":- set_prolog_flag(character_escapes, true).\n"
+            + fact_declarations()
+            + "\n"
+            + "\n".join(f"{fact}." for fact in facts)
+            + "\n"
+            + RUNNER
+            + "\n"
+            + self.contract.rules_source.rstrip()
+            + "\n"
+        )
+        try:
+            with tempfile.TemporaryDirectory(prefix="malleus-logic-") as directory:
+                path = Path(directory) / "check.pl"
+                path.write_text(program, encoding="utf-8")
+                completed = subprocess.run(
+                    [executable, "-q", "-f", str(path)],
+                    capture_output=True,
+                    text=True,
+                    timeout=self.contract.timeout_seconds,
+                    check=False,
+                )
+        except subprocess.TimeoutExpired as error:
+            raise LogicExecutionError(
+                f"Logic check exceeded {self.contract.timeout_seconds} seconds"
+            ) from error
+        except (OSError, UnicodeError) as error:
+            raise LogicExecutionError(f"Logic engine execution failed: {error}") from error
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or "no error detail"
+            raise LogicExecutionError(
+                f"Logic engine exited with status {completed.returncode}: {detail}"
+            )
+        output = completed.stdout.strip()
+        if not output:
+            detail = completed.stderr.strip() or "no error detail"
+            raise LogicExecutionError(
+                f"Logic engine emitted no JSON result: {detail}"
+            )
+        try:
+            result = json.loads(output)
+        except json.JSONDecodeError as error:
+            raise LogicExecutionError(f"Logic engine emitted invalid JSON: {error}") from error
+        _exact_result(result, RESULT_FIELDS, "logic engine result")
+        if not isinstance(result["rules"], list) or not isinstance(result["violations"], list):
+            raise LogicExecutionError("Logic engine rules and violations must be lists")
+        return result
+
+    @staticmethod
+    def _violations(
+        results: list,
+        declared_rules: set[str],
+        record_ids: set[str],
+    ) -> tuple[Violation, ...]:
+        violations = set()
+        for index, result in enumerate(results):
+            _exact_result(result, VIOLATION_FIELDS, f"violation {index}")
+            rule_id = _ground_string(result["rule_id"], "violation rule ID")
+            if rule_id not in declared_rules:
+                raise LogicExecutionError(f"Violation returned undeclared rule ID '{rule_id}'")
+            code = _ground_string(result["violation_code"], "violation code")
+            witness_values = result["witnesses"]
+            if not isinstance(witness_values, list) or not witness_values:
+                raise LogicExecutionError("Violation witnesses must be a nonempty proper list")
+            witnesses = tuple(
+                _ground_string(value, "violation witness record ID")
+                for value in witness_values
+            )
+            if len(witnesses) != len(set(witnesses)):
+                raise LogicExecutionError("Violation witness record IDs must be unique")
+            unknown = sorted(set(witnesses) - record_ids)
+            if unknown:
+                raise LogicExecutionError(
+                    f"Violation returned unknown witness record ID '{unknown[0]}'"
+                )
+            violations.add(Violation(rule_id, code, tuple(sorted(witnesses))))
+        return tuple(sorted(violations))
+
+
+def _exact_result(value, expected: set[str], context: str) -> None:
+    if not isinstance(value, dict):
+        raise LogicExecutionError(f"{context} must be an object")
+    missing = sorted(expected - set(value))
+    unknown = sorted(set(value) - expected)
+    if missing or unknown:
+        raise LogicExecutionError(
+            f"{context} fields differ, missing={missing}, unknown={unknown}"
+        )
+
+
+def _ground_string(value, context: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise LogicExecutionError(f"{context} must be a nonblank ground string")
+    return value
+
+
+def _engine_version(value) -> str:
+    if not isinstance(value, (str, int)) or isinstance(value, bool):
+        raise LogicExecutionError("engine version must be a string or integer")
+    text = str(value)
+    if not text.strip():
+        raise LogicExecutionError("engine version must be nonblank")
+    return text

@@ -10,6 +10,13 @@ from pathlib import Path
 import pytest
 
 from malleus.ontology import OntologyRegistry
+from malleus.logic import (
+    LogicCheckResult,
+    LogicExecutionError,
+    Violation,
+    logic_contract_digest,
+    logic_monitor_failure_records,
+)
 from malleus.protocol import (
     AuthorizationState,
     EventType,
@@ -18,6 +25,7 @@ from malleus.protocol import (
     ProtocolError,
     ProtocolLedger,
     canonical_json,
+    content_digest,
     event_hash,
     make_record,
     record_hash,
@@ -86,6 +94,7 @@ def add_artifact(
     minute: int,
     *,
     record_type: str = "ProtocolArtifact",
+    artifact_hash: str = ARTIFACT_BODY,
     **fields,
 ) -> dict:
     event_id = f"event:{artifact_id}"
@@ -99,7 +108,7 @@ def add_artifact(
         id=artifact_id,
         artifact_kind=kind,
         artifact_version="1",
-        artifact_hash=ARTIFACT_BODY,
+        artifact_hash=artifact_hash,
         **fields,
     )
     ledger.append_event(
@@ -113,22 +122,53 @@ def add_artifact(
 
 
 def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
-    return {
-        "monitor": add_artifact(ledger, "artifact:monitor", "MONITOR_SPECIFICATION", 1),
-        "epistemic_policy": add_artifact(
-            ledger,
-            "artifact:epistemic-policy",
-            "EPISTEMIC_POLICY",
-            2,
+    monitor = add_artifact(ledger, "artifact:monitor", "MONITOR_SPECIFICATION", 1)
+    epistemic_policy = add_artifact(
+        ledger,
+        "artifact:epistemic-policy",
+        "EPISTEMIC_POLICY",
+        2,
+    )
+    rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 3)
+    contract_fields = {
+        "logic_contract_schema_version": "1",
+        "ontology_hash": "sha256:" + "6" * 64,
+        "fact_contract_version": "2",
+        "ruleset_id": rules["id"],
+        "ruleset_version": "1",
+        "ruleset_record_hash": rules["content_hash"],
+        "ruleset_artifact_hash": rules["artifact_hash"],
+        "rule_ids": ["RULE_ONE"],
+        "timeout_seconds": 5,
+        "source_record_ids": [rules["id"]],
+    }
+    logic_contract = add_artifact(
+        ledger,
+        "artifact:logic-contract",
+        "LOGIC_CONTRACT",
+        3,
+        record_type="LogicContractArtifact",
+        artifact_hash=logic_contract_digest(
+            schema_version=contract_fields["logic_contract_schema_version"],
+            contract_id="artifact:logic-contract",
+            contract_version="1",
+            ontology_hash=contract_fields["ontology_hash"],
+            fact_contract_version=contract_fields["fact_contract_version"],
+            ruleset_id=contract_fields["ruleset_id"],
+            ruleset_version=contract_fields["ruleset_version"],
+            rule_ids=contract_fields["rule_ids"],
+            timeout_seconds=contract_fields["timeout_seconds"],
+            ruleset_hash=contract_fields["ruleset_artifact_hash"],
         ),
-        "rules": add_artifact(ledger, "artifact:rules", "RULE_SET", 3),
-        "authorization_policy": add_artifact(
+        **contract_fields,
+    )
+    authorization_policy = add_artifact(
             ledger,
             "artifact:authorization-policy",
             "AUTHORIZATION_POLICY",
             4,
-        ),
-        "grant": add_artifact(
+        )
+    grant = add_artifact(
             ledger,
             "artifact:grant",
             "AUTHORITY_GRANT",
@@ -139,7 +179,14 @@ def setup_artifacts(ledger: ProtocolLedger) -> dict[str, dict]:
             permitted_action_types=["TEST"],
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
-        ),
+        )
+    return {
+        "monitor": monitor,
+        "epistemic_policy": epistemic_policy,
+        "rules": rules,
+        "logic_contract": logic_contract,
+        "authorization_policy": authorization_policy,
+        "grant": grant,
     }
 
 
@@ -263,6 +310,128 @@ def record_type_assessment(
         transaction_time=timestamp,
         actor_id="actor:monitor",
         payload={"assessment_type": "TypeAssessment", "assessment": assessment},
+    )
+    return assessment
+
+
+def record_logic_check(
+    ledger: ProtocolLedger,
+    proposal: dict,
+    artifacts: dict[str, dict],
+    *,
+    violated: bool = False,
+    minute: int = 7,
+    mutate=None,
+) -> tuple[dict, tuple[dict, ...]]:
+    result = LogicCheckResult(
+        candidate_digest="sha256:" + "3" * 64,
+        base_state_digest="sha256:" + "4" * 64,
+        candidate_state_digest="sha256:" + "5" * 64,
+        context_state_digests=(),
+        ontology_hash="sha256:" + "6" * 64,
+        fact_contract_version="2",
+        contract_id=artifacts["logic_contract"]["id"],
+        contract_version="1",
+        contract_hash=artifacts["logic_contract"]["artifact_hash"],
+        ruleset_id=artifacts["rules"]["id"],
+        ruleset_version="1",
+        ruleset_hash=artifacts["rules"]["artifact_hash"],
+        engine_name="SWI-Prolog",
+        engine_version="100002",
+        timeout_seconds=5,
+        facts_hash="sha256:" + "7" * 64,
+        fact_count=4,
+        translated_record_ids=("graph:1",),
+        checked_rule_ids=("RULE_ONE",),
+        violations=(Violation("RULE_ONE", "CONFLICT", ("graph:1",)),) if violated else (),
+    )
+    event_id = "event:logic-check"
+    timestamp = time_at(minute)
+    check, witnesses = result.to_protocol_records(
+        check_id="logic-check:1",
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:monitor",
+        role="logic-monitor",
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+        monitor_id=artifacts["monitor"]["id"],
+        monitor_version="1",
+        monitor_hash=artifacts["monitor"]["content_hash"],
+        logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+        ruleset_record_hash=artifacts["rules"]["content_hash"],
+    )
+    witnesses = list(witnesses)
+    if mutate is not None:
+        mutate(check, witnesses)
+        check["content_hash"] = record_hash("LogicCheckRecord", check)
+        for witness in witnesses:
+            witness["content_hash"] = record_hash("ViolationWitness", witness)
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.LOGIC_CHECK_RECORDED,
+        transaction_time=timestamp,
+        actor_id="actor:monitor",
+        payload={"check": check, "witnesses": witnesses},
+    )
+    return check, tuple(witnesses)
+
+
+def record_logical_assessment(
+    ledger: ProtocolLedger,
+    proposal: dict,
+    check: dict,
+    artifacts: dict[str, dict],
+    *,
+    minute: int = 8,
+    mutate=None,
+) -> dict:
+    event_id = "event:logical-assessment"
+    timestamp = time_at(minute)
+    assessment = make_record(
+        "LogicalAssessment",
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:monitor",
+        role="logic-monitor",
+        source_record_ids=[
+            proposal["id"],
+            artifacts["monitor"]["id"],
+            check["id"],
+            artifacts["logic_contract"]["id"],
+            artifacts["rules"]["id"],
+        ],
+        id="assessment:logical:1",
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+        assessment_kind="LOGICAL",
+        assessment_outcome=check["check_outcome"],
+        monitor_id=artifacts["monitor"]["id"],
+        monitor_version="1",
+        monitor_hash=artifacts["monitor"]["content_hash"],
+        monitor_failure_id=None,
+        input_record_ids=[proposal["id"], check["id"]],
+        reason_codes=["LOGIC_CHECK_COMPLETED"],
+        rationale="The pinned logic check completed.",
+        checked_rule_ids=check["checked_rule_ids"],
+        violated_rule_ids=check["violated_rule_ids"],
+        logic_check_record_ids=[check["id"]],
+        logic_contract_id=artifacts["logic_contract"]["id"],
+        logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+        ruleset_id=artifacts["rules"]["id"],
+        ruleset_hash=artifacts["rules"]["content_hash"],
+    )
+    if mutate is not None:
+        mutate(assessment)
+        assessment["content_hash"] = record_hash("LogicalAssessment", assessment)
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.ASSESSMENT_RECORDED,
+        transaction_time=timestamp,
+        actor_id="actor:monitor",
+        payload={"assessment_type": "LogicalAssessment", "assessment": assessment},
     )
     return assessment
 
@@ -723,7 +892,7 @@ class TestMonitorFailureAndAuthorization:
             generated_at=timestamp,
             actor_id="actor:monitor",
             role="type-monitor",
-            source_record_ids=[failure["id"]],
+            source_record_ids=[proposal["id"], artifacts["monitor"]["id"], failure["id"]],
             id="assessment:unknown",
             proposal_id=proposal["id"],
             proposal_content_hash=proposal["content_hash"],
@@ -754,6 +923,113 @@ class TestMonitorFailureAndAuthorization:
         assert unknown["id"] in projection.assessment_ids
         with pytest.raises(ProtocolError, match="every cited assessment SATISFIED"):
             decide_epistemically(ledger, proposal, unknown, artifacts)
+
+    @pytest.mark.parametrize("reuse_same_context", [True, False])
+    def test_standalone_unknown_cannot_reuse_monitor_failure(self, ledger, reuse_same_context):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:monitor-failed"
+        timestamp = time_at(7)
+        failure = make_record(
+            "MonitorFailure",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="type-monitor",
+            source_record_ids=[proposal["id"], artifacts["monitor"]["id"]],
+            id="failure:reused",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            failed_assessment_kind="TYPE",
+            failure_category="TIMEOUT",
+            error_code="DEADLINE",
+            error_message="The monitor exceeded its deadline.",
+        )
+        unknown = make_record(
+            "TypeAssessment",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="type-monitor",
+            source_record_ids=[proposal["id"], artifacts["monitor"]["id"], failure["id"]],
+            id="assessment:original-unknown",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            assessment_kind="TYPE",
+            assessment_outcome="UNKNOWN",
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            monitor_failure_id=failure["id"],
+            input_record_ids=[proposal["id"]],
+            reason_codes=["MONITOR_FAILED"],
+            rationale="No assessment result was available.",
+        )
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.MONITOR_FAILED,
+            transaction_time=timestamp,
+            actor_id="actor:monitor",
+            payload={
+                "failure": failure,
+                "assessment_type": "TypeAssessment",
+                "assessment": unknown,
+            },
+        )
+
+        reuse_event_id = f"event:reuse-failure:{reuse_same_context}"
+        context = {
+            "proposal_id": proposal["id"] if reuse_same_context else "proposal:other",
+            "proposal_content_hash": (
+                proposal["content_hash"] if reuse_same_context else "sha256:" + "9" * 64
+            ),
+            "base_acceptance_head": (
+                proposal["base_acceptance_head"]
+                if reuse_same_context
+                else "sha256:" + "8" * 64
+            ),
+            "monitor_id": (
+                artifacts["monitor"]["id"] if reuse_same_context else "artifact:monitor:other"
+            ),
+            "monitor_version": "1",
+            "monitor_hash": (
+                artifacts["monitor"]["content_hash"]
+                if reuse_same_context
+                else "sha256:" + "7" * 64
+            ),
+        }
+        reused = make_record(
+            "TypeAssessment",
+            event_id=reuse_event_id,
+            generated_at=time_at(8),
+            actor_id="actor:other",
+            role="type-monitor",
+            source_record_ids=[failure["id"]],
+            id=f"assessment:reused:{reuse_same_context}",
+            assessment_kind="TYPE",
+            assessment_outcome="UNKNOWN",
+            monitor_failure_id=failure["id"],
+            input_record_ids=[context["proposal_id"]],
+            reason_codes=["MONITOR_FAILED"],
+            rationale="Attempted reuse of an earlier monitor failure.",
+            **context,
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="atomic MONITOR_FAILED"):
+            ledger.append_event(
+                event_id=reuse_event_id,
+                event_type=EventType.ASSESSMENT_RECORDED,
+                transaction_time=time_at(8),
+                actor_id="actor:other",
+                payload={"assessment_type": "TypeAssessment", "assessment": reused},
+            )
+        assert ledger.path.read_bytes() == before
 
     def test_authorization_requires_action_bound_actor_and_satisfied_authority(self, ledger):
         anchor(ledger)
@@ -900,3 +1176,355 @@ class TestMonitorFailureAndAuthorization:
         wrong._inheritance[type_name] = parent
         with pytest.raises(ProtocolError, match=expected):
             ProtocolLedger(tmp_path / f"wrong-{type_name}.jsonl", wrong)
+
+
+class TestLogicCheckProtocol:
+    @pytest.mark.parametrize(
+        "case, message",
+        [
+            ("record_hash", "Artifact hash mismatch"),
+            ("artifact_hash", "ruleset artifact hash mismatch"),
+            ("semantic_hash", "semantic hash mismatch"),
+            ("sources", "sources must include ruleset"),
+        ],
+    )
+    def test_logic_contract_artifact_separates_record_raw_and_semantic_hashes(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
+        fields = {
+            "logic_contract_schema_version": "1",
+            "ontology_hash": "sha256:" + "6" * 64,
+            "fact_contract_version": "2",
+            "ruleset_id": rules["id"],
+            "ruleset_version": "1",
+            "ruleset_record_hash": rules["content_hash"],
+            "ruleset_artifact_hash": rules["artifact_hash"],
+            "rule_ids": ["RULE_ONE"],
+            "timeout_seconds": 5,
+            "source_record_ids": [rules["id"]],
+        }
+        if case == "record_hash":
+            fields["ruleset_record_hash"] = "sha256:" + "0" * 64
+        elif case == "artifact_hash":
+            fields["ruleset_artifact_hash"] = "sha256:" + "0" * 64
+        elif case == "sources":
+            fields["source_record_ids"] = []
+        semantic_hash = logic_contract_digest(
+            schema_version=fields["logic_contract_schema_version"],
+            contract_id="artifact:logic-contract",
+            contract_version="1",
+            ontology_hash=fields["ontology_hash"],
+            fact_contract_version=fields["fact_contract_version"],
+            ruleset_id=fields["ruleset_id"],
+            ruleset_version=fields["ruleset_version"],
+            rule_ids=fields["rule_ids"],
+            timeout_seconds=fields["timeout_seconds"],
+            ruleset_hash=fields["ruleset_artifact_hash"],
+        )
+        if case == "semantic_hash":
+            semantic_hash = "sha256:" + "0" * 64
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            add_artifact(
+                ledger,
+                "artifact:logic-contract",
+                "LOGIC_CONTRACT",
+                2,
+                record_type="LogicContractArtifact",
+                artifact_hash=semantic_hash,
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_logic_check_rejects_stale_accepted_context(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        stale, _, _ = record_proposal(
+            ledger,
+            proposal_id="proposal:stale",
+            claim_id="claim:stale",
+        )
+        fresh, _, _ = record_proposal(
+            ledger,
+            proposal_id="proposal:fresh",
+            claim_id="claim:fresh",
+            minute=7,
+        )
+        assessment = record_type_assessment(
+            ledger,
+            fresh,
+            artifacts["monitor"],
+            minute=8,
+        )
+        decide_epistemically(ledger, fresh, assessment, artifacts, minute=9)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="stale acceptance head"):
+            record_logic_check(ledger, stale, artifacts, minute=10)
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize("violated", [False, True])
+    def test_completed_logic_check_and_assessment_replay(self, ledger, violated):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        check, witnesses = record_logic_check(
+            ledger,
+            proposal,
+            artifacts,
+            violated=violated,
+        )
+        assessment = record_logical_assessment(ledger, proposal, check, artifacts)
+
+        projection = ledger.replay()
+        assert check["id"] in projection.logic_check_ids
+        assert set(check["violation_witness_ids"]) == projection.violation_witness_ids
+        assert assessment["id"] in projection.assessment_ids
+        assert check["check_outcome"] == ("VIOLATED" if violated else "SATISFIED")
+        assert len(witnesses) == (1 if violated else 0)
+
+    @pytest.mark.parametrize(
+        "case, message",
+        [
+            ("no_rules", "checked no rules"),
+            ("unchecked_violation", "violated rules were not checked"),
+            ("satisfied_with_violation", "SATISFIED logic check has violations"),
+            ("wrong_rules_hash", "Artifact hash mismatch"),
+            ("blank_rule", "nonblank strings"),
+            ("fact_contract", "fact_contract_version"),
+            ("ontology", "ontology hash differs from contract"),
+            ("timeout", "timeout differs from contract"),
+            ("sources", "source_record_ids missing required records"),
+        ],
+    )
+    def test_logic_check_rejects_inconsistent_or_unpinned_results(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        before = ledger.path.read_bytes()
+
+        def mutate(check, _witnesses):
+            if case == "no_rules":
+                check["checked_rule_ids"] = []
+            elif case == "unchecked_violation":
+                check["violated_rule_ids"] = ["RULE_OTHER"]
+                check["check_outcome"] = "VIOLATED"
+            elif case == "satisfied_with_violation":
+                check["violated_rule_ids"] = ["RULE_ONE"]
+            elif case == "wrong_rules_hash":
+                check["ruleset_record_hash"] = "sha256:" + "0" * 64
+            elif case == "blank_rule":
+                check["checked_rule_ids"] = [""]
+            elif case == "fact_contract":
+                check["fact_contract_version"] = "99"
+            elif case == "ontology":
+                check["ontology_hash"] = "sha256:" + "0" * 64
+            elif case == "sources":
+                check["source_record_ids"] = []
+            else:
+                check["timeout_seconds"] = 6
+
+        with pytest.raises(ProtocolError, match=message):
+            record_logic_check(ledger, proposal, artifacts, mutate=mutate)
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "case, message",
+        [
+            ("unknown_record", "untranslated record"),
+            ("binding_hash", "binding hash mismatch"),
+            ("wrong_check", "logic_check_id mismatch"),
+            ("sources", "source_record_ids missing required records"),
+        ],
+    )
+    def test_violation_witness_is_bound_to_check_rule_and_translated_scope(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        before = ledger.path.read_bytes()
+
+        def mutate(_check, witnesses):
+            witness = witnesses[0]
+            if case == "unknown_record":
+                witness["witness_record_ids"] = ["graph:unknown"]
+                witness["witness_binding_hash"] = content_digest({
+                    "rule_id": witness["rule_id"],
+                    "violation_code": witness["violation_code"],
+                    "witness_record_ids": witness["witness_record_ids"],
+                })
+            elif case == "binding_hash":
+                witness["witness_binding_hash"] = "sha256:" + "0" * 64
+            elif case == "wrong_check":
+                witness["logic_check_id"] = "logic-check:other"
+            else:
+                witness["source_record_ids"] = []
+
+        with pytest.raises(ProtocolError, match=message):
+            record_logic_check(
+                ledger,
+                proposal,
+                artifacts,
+                violated=True,
+                mutate=mutate,
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "case, message",
+        [
+            ("rules", "checked rules differ"),
+            ("sources", "source_record_ids missing required records"),
+        ],
+    )
+    def test_logical_assessment_must_exactly_match_applied_check(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        check, _ = record_logic_check(ledger, proposal, artifacts)
+        before = ledger.path.read_bytes()
+
+        def mutate(assessment):
+            if case == "rules":
+                assessment["checked_rule_ids"] = ["RULE_OTHER"]
+            else:
+                assessment["source_record_ids"] = []
+
+        with pytest.raises(ProtocolError, match=message):
+            record_logical_assessment(
+                ledger,
+                proposal,
+                check,
+                artifacts,
+                mutate=mutate,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_unknown_logical_assessment_has_failure_and_no_completed_check(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:logic-monitor-failed"
+        timestamp = time_at(7)
+        failure, assessment = logic_monitor_failure_records(
+            error=LogicExecutionError("The pinned logic engine did not complete."),
+            failure_id="failure:logic:1",
+            assessment_id="assessment:logical:unknown",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="logic-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            logic_contract_id=artifacts["logic_contract"]["id"],
+            logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+            failure_category="EXECUTION",
+            error_code="ENGINE_FAILED",
+            ruleset_id=artifacts["rules"]["id"],
+            ruleset_record_hash=artifacts["rules"]["content_hash"],
+        )
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.MONITOR_FAILED,
+            transaction_time=timestamp,
+            actor_id="actor:monitor",
+            payload={
+                "failure": failure,
+                "assessment_type": "LogicalAssessment",
+                "assessment": assessment,
+            },
+        )
+        projection = ledger.replay()
+        assert assessment["id"] in projection.assessment_ids
+        assert not projection.logic_check_ids
+
+    @pytest.mark.parametrize(
+        "case, message",
+        [
+            ("failure_sources", "source_record_ids missing required records"),
+            ("assessment_sources", "source_record_ids missing required records"),
+            ("contract_hash", "failure and assessment logic_contract_record_hash differ"),
+        ],
+    )
+    def test_failed_logic_monitor_requires_exact_atomic_provenance(
+        self,
+        ledger,
+        case,
+        message,
+    ):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        event_id = "event:logic-monitor-provenance-failed"
+        timestamp = time_at(7)
+        failure, assessment = logic_monitor_failure_records(
+            error=LogicExecutionError("The pinned logic engine did not complete."),
+            failure_id="failure:logic:provenance",
+            assessment_id="assessment:logical:provenance",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="logic-monitor",
+            proposal_id=proposal["id"],
+            proposal_content_hash=proposal["content_hash"],
+            base_acceptance_head=proposal["base_acceptance_head"],
+            monitor_id=artifacts["monitor"]["id"],
+            monitor_version="1",
+            monitor_hash=artifacts["monitor"]["content_hash"],
+            logic_contract_id=artifacts["logic_contract"]["id"],
+            logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+            failure_category="EXECUTION",
+            error_code="ENGINE_FAILED",
+            ruleset_id=artifacts["rules"]["id"],
+            ruleset_record_hash=artifacts["rules"]["content_hash"],
+        )
+        if case == "failure_sources":
+            failure["source_record_ids"] = []
+            failure["content_hash"] = record_hash("MonitorFailure", failure)
+        elif case == "assessment_sources":
+            assessment["source_record_ids"] = []
+            assessment["content_hash"] = record_hash("LogicalAssessment", assessment)
+        else:
+            failure["logic_contract_record_hash"] = "sha256:" + "0" * 64
+            failure["content_hash"] = record_hash("MonitorFailure", failure)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            ledger.append_event(
+                event_id=event_id,
+                event_type=EventType.MONITOR_FAILED,
+                transaction_time=timestamp,
+                actor_id="actor:monitor",
+                payload={
+                    "failure": failure,
+                    "assessment_type": "LogicalAssessment",
+                    "assessment": assessment,
+                },
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_old_proof_field_is_not_in_schema(self, registry):
+        slots = registry.effective_slots("LogicalAssessment")
+        assert "proof_record_ids" not in slots
+        assert "logic_check_record_ids" in slots

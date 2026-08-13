@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-12
+
+### Added
+
+- Added a versioned, domain-neutral compiler from public graph snapshots to a fixed typed Prolog fact vocabulary.
+- Added strict logic contracts and typed contract artifacts that pin the ontology hash, fact-contract version, trusted local rule bytes, declared rule IDs, artifact versions, and Prolog subprocess wall-clock timeout while keeping record, semantic-contract, and raw-byte hashes distinct.
+- Added process-isolated SWI-Prolog checks with exhaustive violation enumeration, canonical witness sets, deterministic fact hashes, and fail-loud malformed-result handling.
+- Added immutable `LogicCheckRecord` and `ViolationWitness` protocol records plus the atomic `LOGIC_CHECK_RECORDED` event.
+- Added `logic_monitor_failure_records()` so incomplete logic execution becomes `MonitorFailure` plus a logical `UNKNOWN` assessment with no completed-check claim.
+- Added adversarial tests for rule injection, state leakage, timeouts, invalid programs, manifest drift, unknown witnesses, artifact mismatch, assessment disagreement, and unrelated ontologies.
+
+### Changed
+
+- Replaced the CYP450-specific graph translator with the generic typed fact compiler. CYP450 rules now consume the same fact vocabulary as every other ontology.
+- Replaced in-process `pyswip` state with one fresh SWI-Prolog process per check to prevent cross-check fact and rule leakage.
+- Replaced `proof_record_ids` with `logic_check_record_ids`. Logic execution output is no longer described as a formal proof.
+- Updated the assent ontology to `0.2.0` and the package capability boundary to Stage 5.
+
+### Removed
+
+- Removed the old `VerificationResult`, `sync_from_kg`, domain query methods, tentative assertion path, first-violation-only result, and `pyswip` dependency.
+
+### Boundary
+
+- Only trusted, pinned local rule programs are supported. Untrusted Prolog sandboxing is not implemented.
+- A check binds a proposal identity and candidate digest, but Stage 7b must still bind proposal content mechanically to that exact candidate before assent-gated materialization.
+- `LogicCheckRecord` is execution evidence, not an independently checked proof certificate and not a claim of truth.
+
 ## [0.2.0] - 2026-08-12
 
 ### Added

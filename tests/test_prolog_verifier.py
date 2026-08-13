@@ -1,197 +1,337 @@
-"""Tests for the optional Prolog verification layer.
+"""Execution guardrails for the optional SWI-Prolog logic monitor."""
 
-Generic tests that don't depend on any specific domain. Uses a minimal
-in-memory rules file and a hand-built KG.
-
-Requires: pyswip and SWI-Prolog installed (pip install malleus-dev[prolog]).
-"""
-
-import textwrap
+import shutil
 from pathlib import Path
+from dataclasses import replace
 
 import pytest
 
-pytest.importorskip("pyswip")
+pytestmark = pytest.mark.skipif(
+    shutil.which("swipl") is None,
+    reason="SWI-Prolog executable is not available",
+)
 
 from malleus.kg import KnowledgeGraph
+from malleus.logic import LogicContract, LogicError, LogicExecutionError, Violation
 from malleus.ontology import OntologyRegistry
 from malleus.prolog_verifier import PrologVerifier
 from malleus.staging import ProposedOperation, StagingError, stage_subgraph
 
-ONTOLOGY_DIR = Path(__file__).parent.parent / "ontology"
-CYP450_SCHEMA = ONTOLOGY_DIR / "domains" / "cyp450.yaml"
 
-
-MINIMAL_RULES = textwrap.dedent("""\
-    %% Minimal test rules: drug-enzyme interactions and contradictions.
-
-    %% Interaction: inhibitor + substrate on the same enzyme -> increased exposure.
-    interaction(Inhibitor, Substrate, increased_exposure, Enzyme, Strength) :-
-        inhibits(Inhibitor, Enzyme, Strength),
-        substrate_of(Substrate, Enzyme),
-        Inhibitor \\= Substrate.
-
-    %% Interaction: inducer + substrate on the same enzyme -> decreased exposure.
-    interaction(Inducer, Substrate, decreased_exposure, Enzyme, Strength) :-
-        induces(Inducer, Enzyme, Strength),
-        substrate_of(Substrate, Enzyme),
-        Inducer \\= Substrate.
-
-    %% Contradiction: same drug cannot be strong inhibitor AND strong inducer
-    %% of the same enzyme.
-    contradiction(Drug, Enzyme, inhibitor_and_inducer) :-
-        inhibits(Drug, Enzyme, strong),
-        induces(Drug, Enzyme, strong).
-""")
+ROOT = Path(__file__).parent.parent
+CYP450_SCHEMA = ROOT / "ontology" / "domains" / "cyp450.yaml"
+CYP450_CONTRACT = ROOT / "prolog" / "cyp450_logic.yaml"
 
 
 @pytest.fixture
-def rules_file(tmp_path):
-    """Write the minimal rules to a tempfile and return its path."""
-    p = tmp_path / "rules.pl"
-    p.write_text(MINIMAL_RULES)
-    return p
+def graph():
+    registry = OntologyRegistry(CYP450_SCHEMA)
+    result = KnowledgeGraph(registry)
+    result.create_entity("Enzyme", "enzyme-1", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
+    result.create_entity("Drug", "drug-1", {"name": "Drug One"})
+    result.create_relation(
+        "InhibitsRelation",
+        "inhibits-1",
+        "drug-1",
+        "enzyme-1",
+        {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"},
+    )
+    return result
 
 
 @pytest.fixture
-def populated_kg():
-    """A small CYP450 KG: 2 enzymes, 3 drugs, 4 relations."""
-    reg = OntologyRegistry(CYP450_SCHEMA)
-    kg = KnowledgeGraph(reg)
-
-    kg.create_entity("Enzyme", "enz-1", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
-    kg.create_entity("Enzyme", "enz-2", {"name": "CYP2D6", "cyp_isoform": "CYP2D6"})
-    kg.create_entity("Drug", "drug-sub", {"name": "Substrate", "drug_class": "x"})
-    kg.create_entity("Drug", "drug-inh", {"name": "Inhibitor", "drug_class": "y"})
-    kg.create_entity("Drug", "drug-ind", {"name": "Inducer", "drug_class": "z"})
-
-    kg.create_relation("SubstrateOfRelation", "r1", "drug-sub", "enz-1",
-                       {"relation_type": "SUBSTRATE_OF"})
-    kg.create_relation("InhibitsRelation", "r2", "drug-inh", "enz-1",
-                       {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"})
-    kg.create_relation("InducesRelation", "r3", "drug-ind", "enz-1",
-                       {"relation_type": "INDUCES", "inhibition_strength": "STRONG"})
-    return kg
+def verifier():
+    return PrologVerifier(LogicContract.load(CYP450_CONTRACT))
 
 
-class TestPrologSync:
-    def test_sync_loads_facts(self, rules_file, populated_kg):
-        """After sync, the fact base is non-empty."""
-        v = PrologVerifier(rules_file)
-        v.sync_from_kg(populated_kg)
-        results = v.query_all_interactions()
-        assert len(results) > 0
-
-    def test_sync_multiple_kgs(self, rules_file, populated_kg):
-        """Verifier syncs from both static and dynamic KGs."""
-        reg = OntologyRegistry(CYP450_SCHEMA)
-        dynamic = KnowledgeGraph(reg)
-        dynamic.create_entity("Drug", "drug-new", {"name": "New", "drug_class": "z"})
-        dynamic.create_relation("InhibitsRelation", "rN", "drug-new", "enz-1",
-                                {"relation_type": "SUBSTRATE_OF"})
-        # Wait — drug-new depends on enz-1 which is only in populated_kg.
-        # The relation above should be rejected because enz-1 isn't in dynamic.
-        # That's fine; we're testing that sync can combine both KGs.
-
-        # Rebuild dynamic with its own enzyme copy:
-        dynamic = KnowledgeGraph(reg)
-        dynamic.create_entity("Enzyme", "enz-1", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
-        dynamic.create_entity("Drug", "drug-new", {"name": "New", "drug_class": "z"})
-        dynamic.create_relation("InhibitsRelation", "rN", "drug-new", "enz-1",
-                                {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"})
-
-        v = PrologVerifier(rules_file)
-        v.sync_from_kg(populated_kg, dynamic)
-        results = v.query_all_interactions()
-        # Both static (drug-inh) and dynamic (drug-new) interactions should appear.
-        perpetrators = {r["perpetrator"] for r in results}
-        assert "drug-inh" in perpetrators
-        assert "drug-new" in perpetrators
+def candidate(graph, *, relation_id="induces-1", relation_type="SUBSTRATE_OF"):
+    record_type = {
+        "SUBSTRATE_OF": "SubstrateOfRelation",
+        "INDUCES": "InducesRelation",
+    }[relation_type]
+    properties = {"relation_type": relation_type}
+    if relation_type == "INDUCES":
+        properties["inhibition_strength"] = "STRONG"
+    return stage_subgraph(graph, [ProposedOperation.relation(
+        record_type,
+        relation_id,
+        "drug-1",
+        "enzyme-1",
+        properties,
+    )])
 
 
-class TestInteractionDetection:
-    def test_inhibition_interaction_detected(self, rules_file, populated_kg):
-        """Inhibitor + substrate on same enzyme = increased_exposure."""
-        v = PrologVerifier(rules_file)
-        v.sync_from_kg(populated_kg)
-        results = v.query_interactions("drug-inh")
-        sub = [r for r in results if r["substrate"] == "drug-sub"]
-        assert len(sub) == 1
-        assert sub[0]["effect"] == "increased_exposure"
-        assert sub[0]["enzyme"] == "enz-1"
+def write_contract(tmp_path, rules: str, *, rule_ids=None, timeout_seconds=5) -> Path:
+    rules_path = tmp_path / "rules.pl"
+    rules_path.write_text(rules, encoding="utf-8")
+    ontology_hash = f"sha256:{OntologyRegistry(CYP450_SCHEMA).content_hash()}"
+    contract = tmp_path / "logic.yaml"
+    ids = rule_ids or ["RULE_ONE"]
+    rendered_ids = "\n".join(f"  - {rule_id}" for rule_id in ids)
+    contract.write_text(
+        f'''schema_version: "1"
+contract_id: test-contract
+contract_version: "1"
+ontology_hash: {ontology_hash}
+fact_contract_version: "2"
+ruleset_id: test-rules
+ruleset_version: "1"
+rules_file: rules.pl
+rule_ids:
+{rendered_ids}
+timeout_seconds: {timeout_seconds}
+''',
+        encoding="utf-8",
+    )
+    return contract
 
-    def test_induction_interaction_detected(self, rules_file, populated_kg):
-        """Inducer + substrate on same enzyme = decreased_exposure."""
-        v = PrologVerifier(rules_file)
-        v.sync_from_kg(populated_kg)
-        results = v.query_interactions("drug-ind")
-        sub = [r for r in results if r["substrate"] == "drug-sub"]
-        assert len(sub) == 1
-        assert sub[0]["effect"] == "decreased_exposure"
 
+class TestCandidateVerification:
+    def test_absent_relation_and_list_predicates_are_empty_not_undefined(self, verifier):
+        graph = KnowledgeGraph(OntologyRegistry(CYP450_SCHEMA))
+        staged = stage_subgraph(graph, [
+            ProposedOperation.entity("Drug", "drug-only", {"name": "Drug Only"})
+        ])
+        result = verifier.verify_candidate_subgraph(staged)
+        assert result.outcome == "SATISFIED"
 
-class TestVerifyCandidateSubgraph:
-    def test_valid_candidate_passes(self, rules_file, populated_kg):
-        """A non-contradictory candidate overlay passes verification."""
-        v = PrologVerifier(rules_file)
-        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
-            "SubstrateOfRelation",
-            "candidate-r1",
-            "drug-sub",
-            "enz-2",
-            {"relation_type": "SUBSTRATE_OF"},
-        )])
-        result = v.verify_candidate_subgraph(
-            candidate,
-        )
+    def test_clean_candidate_is_satisfied(self, graph, verifier):
+        staged = candidate(graph)
+        before = graph.snapshot()
+        result = verifier.verify_candidate_subgraph(staged)
+
         assert result.valid
+        assert result.outcome == "SATISFIED"
+        assert result.checked_rule_ids == ("CYP450_INHIBITOR_INDUCER_CONFLICT",)
+        assert result.violations == ()
+        assert graph.snapshot() == before
 
-    def test_contradiction_caught(self, rules_file, populated_kg):
-        """A drug that's a strong inhibitor added as strong inducer of the same enzyme
-        should be flagged as a contradiction."""
-        v = PrologVerifier(rules_file)
-        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
-            "InducesRelation",
-            "candidate-r2",
-            "drug-inh",
-            "enz-1",
-            {"relation_type": "INDUCES", "inhibition_strength": "STRONG"},
-        )])
-        result = v.verify_candidate_subgraph(candidate)
+    def test_all_violations_are_canonicalized(self, graph, verifier):
+        staged = candidate(graph, relation_type="INDUCES")
+        result = verifier.verify_candidate_subgraph(staged)
+
         assert not result.valid
-        assert result.rule_violated == "contradiction"
+        assert result.outcome == "VIOLATED"
+        assert result.violated_rule_ids == ("CYP450_INHIBITOR_INDUCER_CONFLICT",)
+        assert len(result.violations) == 1
+        violation = result.violations[0]
+        assert violation.violation_code == "INHIBITOR_AND_INDUCER"
+        assert violation.witness_record_ids == ("induces-1", "inhibits-1")
 
-    def test_verification_is_read_only(self, rules_file, populated_kg):
-        """Verification does not mutate the KG."""
-        v = PrologVerifier(rules_file)
-        candidate = stage_subgraph(populated_kg, [ProposedOperation.relation(
-            "SubstrateOfRelation",
-            "candidate-r3",
-            "drug-sub",
-            "enz-2",
-            {"relation_type": "SUBSTRATE_OF"},
-        )])
-        before = populated_kg.snapshot()
-        v.verify_candidate_subgraph(candidate)
-        assert populated_kg.snapshot() == before
-
-    def test_rejected_candidate_cannot_be_verified(self, rules_file, populated_kg):
-        v = PrologVerifier(rules_file)
-        candidate = stage_subgraph(
-            populated_kg,
-            [ProposedOperation.entity("UnknownType", "bad-1")],
-        )
+    def test_rejected_candidate_has_no_logic_input(self, graph, verifier):
+        rejected = stage_subgraph(graph, [ProposedOperation.entity("UnknownType", "bad-1")])
         with pytest.raises(StagingError, match="no usable overlay"):
-            v.verify_candidate_subgraph(candidate)
+            verifier.verify_candidate_subgraph(rejected)
 
-    def test_tentative_relation_api_is_deleted(self, rules_file):
-        assert not hasattr(PrologVerifier(rules_file), "verify_proposed_relation")
+    def test_contract_ontology_must_match_candidate(self, graph, tmp_path):
+        contract_path = write_contract(
+            tmp_path,
+            "malleus_rule('RULE_ONE').\nmalleus_violation(_, _, _) :- fail.\n",
+        )
+        text = contract_path.read_text(encoding="utf-8").replace(
+            f"sha256:{graph.registry.content_hash()}",
+            "sha256:" + "0" * 64,
+        )
+        contract_path.write_text(text, encoding="utf-8")
+        verifier = PrologVerifier(LogicContract.load(contract_path))
+        with pytest.raises(LogicError, match="different ontologies"):
+            verifier.verify_candidate_subgraph(candidate(graph))
+
+    def test_old_domain_query_and_tentative_apis_are_deleted(self, verifier):
+        assert not hasattr(verifier, "verify_proposed_relation")
+        assert not hasattr(verifier, "query_interactions")
+        assert not hasattr(verifier, "sync_from_kg")
 
 
-class TestNoContradictions:
-    def test_clean_facts_verify(self, rules_file, populated_kg):
-        """Seed facts with no contradictions verify as valid."""
-        v = PrologVerifier(rules_file)
-        v.sync_from_kg(populated_kg)
-        result = v.verify_no_contradictions()
+class TestExecutionFailures:
+    def test_mutated_in_memory_contract_cannot_run(self, graph):
+        contract = replace(
+            LogicContract.load(CYP450_CONTRACT),
+            rules_source="malleus_rule('CYP450_INHIBITOR_INDUCER_CONFLICT').\n"
+            "malleus_violation(_, _, _) :- fail.\n",
+        )
+        with pytest.raises(LogicError, match="rules_source"):
+            PrologVerifier(contract).verify_candidate_subgraph(candidate(graph))
+
+    def test_missing_swipl_fails_not_satisfied(self, graph, verifier, monkeypatch):
+        monkeypatch.setattr("malleus.prolog_verifier.shutil.which", lambda _name: None)
+        with pytest.raises(LogicExecutionError, match="not available"):
+            verifier.verify_candidate_subgraph(candidate(graph))
+
+    def test_invalid_rules_file_fails_not_satisfied(self, graph, tmp_path):
+        contract = write_contract(tmp_path, "this is not valid prolog.\n")
+        with pytest.raises(LogicExecutionError, match="exited|JSON result"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_missing_entrypoint_fails_not_satisfied(self, graph, tmp_path):
+        contract = write_contract(tmp_path, "malleus_rule('RULE_ONE').\n")
+        with pytest.raises(LogicExecutionError, match="JSON result|malleus_violation"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_timeout_fails_not_satisfied(self, graph, tmp_path):
+        contract = write_contract(
+            tmp_path,
+            "malleus_rule('RULE_ONE').\nmalleus_violation(_, _, _) :- sleep(2), fail.\n",
+            timeout_seconds=1,
+        )
+        with pytest.raises(LogicExecutionError, match="exceeded 1 seconds"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_rule_manifest_mismatch_fails(self, graph, tmp_path):
+        contract = write_contract(
+            tmp_path,
+            "malleus_rule('OTHER').\nmalleus_violation(_, _, _) :- fail.\n",
+        )
+        with pytest.raises(LogicExecutionError, match="differs"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_undeclared_violation_rule_fails(self, graph, tmp_path):
+        contract = write_contract(
+            tmp_path,
+            """malleus_rule('RULE_ONE').
+malleus_violation('OTHER', 'BAD', ['drug-1']).
+""",
+        )
+        with pytest.raises(LogicExecutionError, match="undeclared"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    @pytest.mark.parametrize("term", ["1", "1.5", "true", "_"])
+    def test_nonstring_rule_identifiers_fail(self, graph, tmp_path, term):
+        contract = write_contract(
+            tmp_path,
+            f"malleus_rule({term}).\nmalleus_violation(_, _, _) :- fail.\n",
+            rule_ids=["RULE_ONE"],
+        )
+        with pytest.raises(LogicExecutionError, match="ground string|invalid JSON"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    @pytest.mark.parametrize("term", ["2", "2.5", "true", "_"])
+    def test_nonstring_violation_codes_fail(self, graph, tmp_path, term):
+        contract = write_contract(
+            tmp_path,
+            f"malleus_rule('RULE_ONE').\nmalleus_violation('RULE_ONE', {term}, ['drug-1']).\n",
+        )
+        with pytest.raises(LogicExecutionError, match="ground string|invalid JSON"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    @pytest.mark.parametrize("term", ["3", "3.5", "true", "_"])
+    def test_nonstring_witness_identifiers_fail(self, graph, tmp_path, term):
+        contract = write_contract(
+            tmp_path,
+            f"malleus_rule('RULE_ONE').\nmalleus_violation('RULE_ONE', 'BAD', [{term}]).\n",
+        )
+        with pytest.raises(LogicExecutionError, match="ground string|invalid JSON"):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_underscore_prefixed_ground_strings_remain_valid(self, tmp_path):
+        graph = KnowledgeGraph(OntologyRegistry(CYP450_SCHEMA))
+        staged = stage_subgraph(graph, [
+            ProposedOperation.entity("Drug", "_d", {"name": "D"})
+        ])
+        contract = write_contract(
+            tmp_path,
+            "malleus_rule('_RULE').\nmalleus_violation('_RULE', '_CODE', ['_d']).\n",
+            rule_ids=["_RULE"],
+        )
+        result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(staged)
+        assert result.violations == (Violation("_RULE", "_CODE", ("_d",)),)
+
+    @pytest.mark.parametrize(
+        "witness, message",
+        [
+            ("[]", "nonempty proper list"),
+            ("['missing']", "unknown witness"),
+            ("['drug-1', 'drug-1']", "must be unique"),
+        ],
+    )
+    def test_malformed_witnesses_fail(self, graph, tmp_path, witness, message):
+        contract = write_contract(
+            tmp_path,
+            f"""malleus_rule('RULE_ONE').
+malleus_violation('RULE_ONE', 'BAD', {witness}).
+""",
+        )
+        with pytest.raises(LogicExecutionError, match=message):
+            PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+
+    def test_duplicate_derivations_have_set_semantics(self, graph, tmp_path):
+        contract = write_contract(
+            tmp_path,
+            """malleus_rule('RULE_ONE').
+malleus_violation('RULE_ONE', 'BAD', ['drug-1']).
+malleus_violation('RULE_ONE', 'BAD', ['drug-1']).
+""",
+        )
+        result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+        assert len(result.violations) == 1
+
+    def test_all_distinct_violations_are_retained_in_canonical_order(self, graph, tmp_path):
+        contract = write_contract(
+            tmp_path,
+            """malleus_rule('RULE_TWO').
+malleus_rule('RULE_ONE').
+malleus_violation('RULE_TWO', 'SECOND', ['drug-1']).
+malleus_violation('RULE_ONE', 'FIRST', ['enzyme-1', 'drug-1']).
+""",
+            rule_ids=["RULE_TWO", "RULE_ONE"],
+        )
+        result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(candidate(graph))
+        assert result.checked_rule_ids == ("RULE_ONE", "RULE_TWO")
+        assert [item.rule_id for item in result.violations] == ["RULE_ONE", "RULE_TWO"]
+        assert result.violations[0].witness_record_ids == ("drug-1", "enzyme-1")
+
+    def test_fresh_engine_prevents_cross_run_fact_leakage(self, graph, verifier):
+        first = verifier.verify_candidate_subgraph(candidate(graph, relation_type="INDUCES"))
+        clean_graph = KnowledgeGraph(graph.registry)
+        clean_graph.create_entity("Enzyme", "enzyme-1", {"name": "CYP3A4", "cyp_isoform": "CYP3A4"})
+        clean_graph.create_entity("Drug", "drug-1", {"name": "Drug One"})
+        second = verifier.verify_candidate_subgraph(candidate(clean_graph))
+        assert not first.valid
+        assert second.valid
+
+    def test_quoted_identifier_is_data_not_prolog_code(self, graph, verifier):
+        staged = stage_subgraph(graph, [ProposedOperation.entity(
+            "Drug",
+            "drug-quote') :- throw(injected). %",
+            {"name": "quoted\nvalue'). malleus_rule('INJECTED"},
+        )])
+        result = verifier.verify_candidate_subgraph(staged)
         assert result.valid
+
+    @pytest.mark.parametrize(
+        "identifier",
+        ["drug\u0085separator", "drug\u2028separator", "drug\u2029separator", "drug\x00nul", "drug-😀"],
+    )
+    def test_all_control_and_unicode_data_round_trip_in_witnesses(self, tmp_path, identifier):
+        graph = KnowledgeGraph(OntologyRegistry(CYP450_SCHEMA))
+        staged = stage_subgraph(graph, [
+            ProposedOperation.entity("Drug", identifier, {"name": identifier})
+        ])
+        contract = write_contract(
+            tmp_path,
+            """malleus_rule('RULE_ONE').
+malleus_violation('RULE_ONE', 'UNICODE', [RecordId]) :-
+    m_record(RecordId, 'Drug', 'entity').
+""",
+        )
+        result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(staged)
+        assert result.violations[0].witness_record_ids == (identifier,)
+
+    def test_rule_parser_directive_cannot_turn_graph_data_into_code(self, graph, tmp_path):
+        staged = stage_subgraph(graph, [
+            ProposedOperation.entity("Drug", "d", {"name": "D"}),
+            ProposedOperation.entity(
+                "Drug",
+                "x').\u2028malleus_violation('RULE_ONE','INJECTED',['d']).\u2028%",
+                {"name": "Untrusted graph data"},
+            ),
+        ])
+        contract = write_contract(
+            tmp_path,
+            """:- set_prolog_flag(character_escapes, false).
+malleus_rule('RULE_ONE').
+malleus_violation(_, _, _) :- fail.
+""",
+        )
+        result = PrologVerifier.from_contract(str(contract)).verify_candidate_subgraph(staged)
+        assert result.outcome == "SATISFIED"

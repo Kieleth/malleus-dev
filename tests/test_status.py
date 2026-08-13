@@ -6,6 +6,7 @@ from pathlib import Path
 import yaml
 
 import malleus
+from malleus.logic import LogicContract
 from malleus.status import IMPLEMENTATION_STATUS
 
 
@@ -20,13 +21,16 @@ def test_package_runtime_and_project_versions_match():
     assert version.group(1) == malleus.__version__ == IMPLEMENTATION_STATUS.package_version
 
 
-def test_stage_four_boundary_is_explicit():
-    assert IMPLEMENTATION_STATUS.current_stage == "4"
-    assert IMPLEMENTATION_STATUS.boundary == "stage-4-structural-staging"
-    assert IMPLEMENTATION_STATUS.completed_stages == ("2", "3", "7a", "4")
+def test_stage_five_boundary_is_explicit():
+    assert IMPLEMENTATION_STATUS.current_stage == "5"
+    assert IMPLEMENTATION_STATUS.boundary == "stage-5-general-logic-monitoring"
+    assert IMPLEMENTATION_STATUS.completed_stages == ("2", "3", "7a", "4", "5")
     assert "isolated-proposed-subgraph-staging" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "general-graph-to-prolog-compilation" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "logic-monitor-failure-to-unknown" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "assent-gated-materialization" in IMPLEMENTATION_STATUS.pending_capabilities
-    assert "general-graph-to-prolog-compilation" in IMPLEMENTATION_STATUS.pending_capabilities
+    assert "proposal-candidate-semantic-binding" in IMPLEMENTATION_STATUS.pending_capabilities
+    assert "untrusted-rule-program-sandboxing" in IMPLEMENTATION_STATUS.pending_capabilities
 
 
 def test_ontology_versions_match_status_boundary():
@@ -42,3 +46,12 @@ def test_status_document_names_current_version_and_boundary():
     assert f"`{IMPLEMENTATION_STATUS.boundary}`" in document
     for capability in IMPLEMENTATION_STATUS.pending_capabilities:
         assert f"`{capability}`" in document
+
+
+def test_stage_five_example_contract_and_rules_are_distribution_inputs():
+    contract_path = ROOT / "prolog" / "cyp450_logic.yaml"
+    rules_path = ROOT / "prolog" / "cyp450_rules.pl"
+    assert contract_path.is_file()
+    assert rules_path.is_file()
+    contract = LogicContract.load(contract_path)
+    assert contract.rules_path == rules_path.resolve()

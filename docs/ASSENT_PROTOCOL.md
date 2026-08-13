@@ -42,6 +42,26 @@ A failed monitor produces two distinct records in one event:
 
 `UNKNOWN` cannot support `ACCEPT` or `AUTHORIZE`.
 
+A completed logic monitor first records one `LogicCheckRecord` and zero or more
+`ViolationWitness` records atomically. The check binds the proposal, candidate
+and state digests, ontology, monitor, logic contract, rule-set bytes, engine,
+timeout, compiled facts, complete checked-rule set, and complete violation set.
+A subsequent `LogicalAssessment` must cite exactly that applied check and agree
+with its proposal, base head, monitor, rules, violations, and outcome.
+
+`SATISFIED` requires a completed check with no violations. `VIOLATED` requires
+at least one witness whose record IDs occur in the translated input scope. A
+timeout, unavailable engine, invalid program, bad manifest, or malformed result
+does not create a completed check. It creates `MonitorFailure` plus an `UNKNOWN`
+logical assessment with empty checked-rule, violated-rule, and check-record
+lists. The records are execution evidence, not formal proof certificates.
+`UNKNOWN` assessments are valid only in the same atomic `MONITOR_FAILED` event
+as their cited failure. A later standalone assessment cannot reuse a failure.
+Replay verifies the typed contract artifact, its semantic digest, the separate
+rule-set record and raw-byte hashes, and agreement between the contract, check,
+and assessment. Candidate, state, and fact digests remain monitor attestations
+until Stage 7b binds protocol proposals to canonical graph materialization.
+
 ## Replay-derived state
 
 Proposals and action proposals do not carry mutable state fields. Replay
@@ -112,7 +132,12 @@ separate proposals, monitor failures, assessments, epistemic decisions, and
 action authorization. It also has non-mutating proposed-subgraph staging and
 stale-checked, all-or-nothing structural materialization.
 
-It does not yet establish assent-gated materialization, general logical
-verification, policy-selected monitor completeness, action execution safety,
+It does not yet establish assent-gated materialization, policy-selected
+monitor completeness, action execution safety,
 bitemporal as-of reconstruction, formal PROV-O interoperability, or an
 empirical metacognitive effect.
+
+General logical verification currently accepts only trusted, pinned local rule
+programs. It does not sandbox untrusted Prolog. A logic check identifies both a
+proposal and a candidate digest, but Stage 7b must still prove that the proposal
+was compiled into exactly that candidate before accepted-graph materialization.

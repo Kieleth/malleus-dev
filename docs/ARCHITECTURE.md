@@ -280,62 +280,35 @@ The Fluconazole dual-axis pattern is the key test case: it inhibits CYP3A4 (mode
 
 ## Layer 3: The Logic Engine (Domain Rules)
 
-Prolog rules encode what FOLLOWS from the facts in the KG.
+`GraphFactCompiler` reads public graph snapshots and emits a closed, domain-neutral vocabulary:
 
-```
-cyp450_rules.pl
-┌────────────────────────────────────────────────────┐
-│                                                    │
-│  % If Drug A inhibits an enzyme that metabolizes   │
-│  % Drug B, then A increases B's exposure.          │
-│                                                    │
-│  interaction(A, B, increased_exposure, Enz, Str) :-│
-│      inhibits(A, Enz, Str),                        │
-│      substrate_of(B, Enz),                         │
-│      A \= B.                                       │
-│                                                    │
-│  % Also: combined inhibition, polypharmacy risk,   │
-│  % contradiction detection (can't be strong         │
-│  % inhibitor AND strong inducer of same enzyme)    │
-│                                                    │
-└────────────────────────────────────────────────────┘
+```prolog
+m_ontology_hash(OntologyHash).
+m_type(OntologyType).
+m_mixin(MixinType).
+m_subtype(ConcreteType, AncestorType).
+m_has_mixin(ConcreteType, EffectiveMixinType).
+m_record(RecordId, ConcreteType, RecordKind).
+m_relation(RecordId, ConcreteType, SourceId, TargetId).
+m_property(RecordId, PropertyName, ScalarKind, Value).
+m_list(RecordId, PropertyName, Length).
+m_list_item(RecordId, PropertyName, Index, ScalarKind, Value).
 ```
 
-The PrologVerifier bridges Python to SWI-Prolog:
+The compiler does not infer domain predicate names. CYP450, security, and toy ontologies use the same facts. A trusted domain rule program reads those facts and exposes a fixed interface:
 
-```
-PrologVerifier (prolog_verifier.py)
-┌────────────────────────────────────────────────────┐
-│                                                    │
-│  sync_from_kg(static_kg, dynamic_kg)               │
-│       │                                            │
-│       ▼                                            │
-│  KG nodes → Prolog facts:                          │
-│    drug('drug-sim', 'Simvastatin', 'statin').      │
-│    enzyme('enz-cyp3a4', 'CYP3A4', 'CYP3A4').      │
-│    substrate_of('drug-sim', 'enz-cyp3a4').         │
-│    inhibits('drug-cla', 'enz-cyp3a4', strong).     │
-│                                                    │
-│  Then query:                                       │
-│    ?- interaction('drug-cla', X, Effect, Enz, Str).│
-│    X = 'drug-sim'                                  │
-│    Effect = increased_exposure                     │
-│    Enz = 'enz-cyp3a4'                              │
-│    Str = strong                                    │
-│                                                    │
-│  verify_candidate_subgraph(candidate, *context)    │
-│       │                                            │
-│       ▼                                            │
-│  Reads the complete isolated candidate overlay →   │
-│  checks for contradictions → returns valid/invalid │
-│  with proof trace                                  │
-│                                                    │
-└────────────────────────────────────────────────────┘
+```prolog
+malleus_rule(RuleId).
+malleus_violation(RuleId, ViolationCode, WitnessRecordIds).
 ```
 
-Tests verify known drug-drug interactions, induction, multi-enzyme effects, combined inhibition, contradiction detection, complete candidate-overlay verification, and mutation-free rule rejection.
+`LogicContract` pins the resolved ontology hash, fact-contract version, exact rule-program bytes, manifest of rule IDs, artifact versions, and Prolog subprocess wall-clock timeout. `LogicContractArtifact` exposes the canonical semantic fields to replay while retaining separate content-record, semantic-contract, and raw-rule-byte hashes. `PrologVerifier` compiles caller-supplied context and the candidate overlay, starts a fresh SWI-Prolog process, enumerates all violations, validates every rule ID and witness, and returns a deterministic `LogicCheckResult`. A fresh process prevents facts or rules from leaking between checks. The timeout does not bound graph compilation, output size, memory, or CPU, and the process is not an untrusted-code sandbox. Stage 5 does not establish that caller-supplied context is assent-accepted state.
 
-The Prolog rule file shown here is an example. The library ships only the generic `PrologVerifier` class. You bring your own `.pl` rules for your domain.
+A completed check has exactly two outcomes. `SATISFIED` means the exhaustive query completed with no violations. `VIOLATED` means it completed with at least one validated witness. Missing entrypoints, syntax errors, manifest mismatches, malformed witnesses, timeouts, and unavailable SWI-Prolog raise `LogicExecutionError`. They are incomplete monitoring, never clean results.
+
+Completed execution evidence becomes an immutable `LogicCheckRecord` plus zero or more `ViolationWitness` records. Failed execution becomes a separate `MonitorFailure` and logical `UNKNOWN` assessment. These are content-addressed execution attestations with replay-validated bindings, not formal proof certificates or guarantees that another engine run will reproduce the result.
+
+The package ships one CYP450 contract and rule program as a worked example. Stage 5 accepts only trusted, pinned local rules. Sandboxing uploaded or otherwise untrusted Prolog is outside this boundary.
 
 ---
 
@@ -417,22 +390,22 @@ Tightening (optional → required) is not an additive change and isn't supported
 │  Every operation logged (turn, type, status, data).         │
 └────────┬──────────────────────────────────────┬─────────────┘
          │                                      │
-         │ validates against                    │ optionally syncs into
+         │ validates against                    │ compiles typed facts for
          ▼                                      ▼
 ┌────────────────────────┐            ┌──────────────────────┐
 │  OntologyRegistry      │            │   PrologVerifier     │
 │    (ontology.py)       │            │ (prolog_verifier.py) │
 │                        │            │                      │
 │  Loads LinkML YAML     │            │  SWI-Prolog bridge   │
-│  Types, enums, slots   │            │  sync_from_kg(*kgs)  │
+│  Types, enums, slots   │            │  LogicContract       │
 │  is_subtype_of()       │            │  verify_candidate_   │
 │  content_hash()        │            │    subgraph(...)     │
-│  fingerprint()         │            │  (you supply .pl)    │
+│  fingerprint()         │            │  LogicCheckResult    │
 │  check_compatibility() │            │                      │
 └────────────────────────┘            └──────────────────────┘
 ```
 
-The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.yaml`, `attack.yaml`) are examples. The Prolog verifier is optional and requires `pip install malleus-dev[prolog]` plus SWI-Prolog on the system.
+The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.yaml`, `attack.yaml`) are examples. Logic execution requires a `swipl` executable on `PATH` and fails explicitly when it is absent.
 
 ---
 
@@ -441,7 +414,9 @@ The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.
 - `tests/test_ontology.py`: strict loading, imports, collisions, effective slots, instance validation, hashing, fingerprints, and compatibility.
 - `tests/test_kg.py`: mutation-free rejection of invalid types, properties, ranges, collections, identifiers, predicates, and endpoints, plus operation logging and queries.
 - `tests/test_staging.py`: isolated candidate validation, intra-candidate dependencies, stale-base rejection, and atomic structural materialization.
-- `tests/test_prolog_verifier.py`: Prolog synchronization, interaction queries, contradiction detection, and candidate-overlay verification.
+- `tests/test_logic.py`: pinned contract loading, domain-neutral fact compilation, deterministic hashes, and protocol-record construction.
+- `tests/test_prolog_verifier.py`: process isolation, exhaustive violations, malformed-result rejection, injection resistance, timeout handling, and mutation-free candidate verification.
+- `tests/test_protocol.py`: atomic check and witness recording, artifact binding, assessment agreement, and failure-to-`UNKNOWN` replay.
 
 ---
 
@@ -450,6 +425,7 @@ The root ontology (`malleus.yaml`) is mandatory; the domain extensions (`cyp450.
 ```python
 from malleus import (
     KnowledgeGraph,
+    LogicContract,
     OntologyRegistry,
     PrologVerifier,
     ProposedOperation,
@@ -465,7 +441,8 @@ kg = KnowledgeGraph(reg)
 op = kg.create_entity("Drug", "drug-001", {"name": "Simvastatin"})
 # op.op_status ∈ {COMMITTED, REJECTED}; op.rejection_reason if rejected
 
-verifier = PrologVerifier("path/to/your_rules.pl")  # optional
+contract = LogicContract.load("path/to/your_logic_contract.yaml")
+verifier = PrologVerifier(contract)
 candidate = stage_subgraph(kg, [
     ProposedOperation.relation(
         "InhibitsRelation", "relation-001", "drug-001", "enz-001",
@@ -473,7 +450,7 @@ candidate = stage_subgraph(kg, [
     )
 ])
 result = verifier.verify_candidate_subgraph(candidate)
-# result.valid, result.rule_violated, result.proof_trace
+# result.valid, result.outcome, result.violations
 if result.valid:
     candidate.materialize_into(kg)
 ```

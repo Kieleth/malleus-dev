@@ -20,6 +20,7 @@ from malleus.ledger import (
     with_content_hash,
 )
 from malleus.ontology import OntologyRegistry
+from malleus.logic import logic_contract_digest
 
 
 class ProtocolError(LedgerError):
@@ -30,6 +31,7 @@ class EventType(str, Enum):
     EXTERNAL_SNAPSHOT_ANCHORED = "EXTERNAL_SNAPSHOT_ANCHORED"
     ARTIFACT_RECORDED = "ARTIFACT_RECORDED"
     PROPOSAL_RECORDED = "PROPOSAL_RECORDED"
+    LOGIC_CHECK_RECORDED = "LOGIC_CHECK_RECORDED"
     ASSESSMENT_RECORDED = "ASSESSMENT_RECORDED"
     MONITOR_FAILED = "MONITOR_FAILED"
     EPISTEMIC_DECIDED = "EPISTEMIC_DECIDED"
@@ -72,6 +74,7 @@ PAYLOAD_FIELDS = {
     },
     EventType.ARTIFACT_RECORDED: {"artifact_type", "artifact"},
     EventType.PROPOSAL_RECORDED: {"proposal", "members"},
+    EventType.LOGIC_CHECK_RECORDED: {"check", "witnesses"},
     EventType.ASSESSMENT_RECORDED: {"assessment_type", "assessment"},
     EventType.MONITOR_FAILED: {"failure", "assessment_type", "assessment"},
     EventType.EPISTEMIC_DECIDED: {"decision", "requests", "revisions", "transition"},
@@ -95,6 +98,19 @@ PRESENT_FIELDS = {
         "relied_on_claim_version_ids",
         "authority_assessment_ids",
     },
+    "LogicalAssessment": {
+        "checked_rule_ids",
+        "violated_rule_ids",
+        "logic_check_record_ids",
+    },
+    "LogicCheckRecord": {
+        "context_state_digests",
+        "translated_record_ids",
+        "checked_rule_ids",
+        "violated_rule_ids",
+        "violation_witness_ids",
+    },
+    "ViolationWitness": {"witness_record_ids"},
 }
 
 
@@ -106,6 +122,8 @@ class ProtocolProjection:
     objects: dict[str, dict[str, Any]] = field(default_factory=dict)
     artifact_ids: set[str] = field(default_factory=set)
     assessment_ids: set[str] = field(default_factory=set)
+    logic_check_ids: set[str] = field(default_factory=set)
+    violation_witness_ids: set[str] = field(default_factory=set)
     monitor_failure_ids: set[str] = field(default_factory=set)
     epistemic_decision_ids: set[str] = field(default_factory=set)
     authorization_decision_ids: set[str] = field(default_factory=set)
@@ -215,6 +233,7 @@ class ProtocolLedger:
             EventType.EXTERNAL_SNAPSHOT_ANCHORED: self._anchor,
             EventType.ARTIFACT_RECORDED: self._artifact,
             EventType.PROPOSAL_RECORDED: self._proposal,
+            EventType.LOGIC_CHECK_RECORDED: self._logic_check,
             EventType.ASSESSMENT_RECORDED: self._assessment,
             EventType.MONITOR_FAILED: self._monitor_failure,
             EventType.EPISTEMIC_DECIDED: self._epistemic,
@@ -254,9 +273,49 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: AuthorityGrant grantor must be the generating actor"
             )
+        if artifact_type == "LogicContractArtifact":
+            self._validate_logic_contract_artifact(projection, artifact, event)
         self._validate_sources(artifact, projection.objects, event)
         self._add_objects(projection, {artifact["id"]: _wrapped(artifact_type, artifact)}, event)
         projection.artifact_ids.add(artifact["id"])
+
+    def _validate_logic_contract_artifact(
+        self,
+        projection: ProtocolProjection,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        _canonical_unique(artifact["rule_ids"], f"event {event['event_id']} rule_ids")
+        _nonblank_values(artifact["rule_ids"], f"event {event['event_id']} rule_ids")
+        if not artifact["rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract has no rules")
+        if artifact["ruleset_id"] not in artifact["source_record_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract sources must include ruleset")
+        ruleset = self._artifact_ref(
+            projection,
+            artifact["ruleset_id"],
+            artifact["ruleset_record_hash"],
+            "RULE_SET",
+        )
+        if artifact["ruleset_version"] != ruleset["artifact_version"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract ruleset_version mismatch")
+        if artifact["ruleset_artifact_hash"] != ruleset["artifact_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract ruleset artifact hash mismatch")
+        require_digest(artifact["ontology_hash"], f"event {event['event_id']} ontology_hash")
+        expected_hash = logic_contract_digest(
+            schema_version=artifact["logic_contract_schema_version"],
+            contract_id=artifact["id"],
+            contract_version=artifact["artifact_version"],
+            ontology_hash=artifact["ontology_hash"],
+            fact_contract_version=artifact["fact_contract_version"],
+            ruleset_id=artifact["ruleset_id"],
+            ruleset_version=artifact["ruleset_version"],
+            rule_ids=artifact["rule_ids"],
+            timeout_seconds=artifact["timeout_seconds"],
+            ruleset_hash=artifact["ruleset_artifact_hash"],
+        )
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"event {event['event_id']}: logic contract semantic hash mismatch")
 
     def _proposal(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -333,6 +392,182 @@ class ProtocolLedger:
             projection.authorization_states[action_id] = AuthorizationState.PENDING
             projection.latest_action_by_key[action["action_key"]] = action_id
 
+    def _logic_check(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
+        self._require_anchor(projection, event)
+        payload = event["payload"]
+        check = self._record("LogicCheckRecord", payload["check"], event)
+        proposal = self._object(projection.objects, check["proposal_id"], "ProposedSubgraph")
+        if projection.proposal_states[proposal["id"]] != ProposalState.PROPOSED:
+            raise ProtocolError(f"event {event['event_id']}: proposal is not open for logic check")
+        self._same_proposal(check, proposal, event)
+        if check["base_acceptance_head"] != proposal["base_acceptance_head"]:
+            raise ProtocolError(f"event {event['event_id']}: logic check base mismatch")
+        if check["base_acceptance_head"] != projection.acceptance_head:
+            raise ProtocolError(f"event {event['event_id']}: logic check has stale acceptance head")
+
+        monitor = self._artifact_ref(
+            projection,
+            check["monitor_id"],
+            check["monitor_hash"],
+            "MONITOR_SPECIFICATION",
+        )
+        if check["monitor_version"] != monitor["artifact_version"]:
+            raise ProtocolError(f"event {event['event_id']}: monitor_version mismatch")
+        contract = self._artifact_ref(
+            projection,
+            check["logic_contract_id"],
+            check["logic_contract_record_hash"],
+            "LOGIC_CONTRACT",
+            record_type="LogicContractArtifact",
+        )
+        if check["logic_contract_version"] != contract["artifact_version"]:
+            raise ProtocolError(f"event {event['event_id']}: logic_contract_version mismatch")
+        if check["logic_contract_artifact_hash"] != contract["artifact_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: logic contract artifact hash mismatch")
+        ruleset = self._artifact_ref(
+            projection,
+            check["ruleset_id"],
+            check["ruleset_record_hash"],
+            "RULE_SET",
+        )
+        if check["ruleset_version"] != ruleset["artifact_version"]:
+            raise ProtocolError(f"event {event['event_id']}: ruleset_version mismatch")
+        if check["ruleset_artifact_hash"] != ruleset["artifact_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: ruleset artifact hash mismatch")
+        self._require_sources(
+            check,
+            {
+                check["proposal_id"],
+                check["monitor_id"],
+                check["logic_contract_id"],
+                check["ruleset_id"],
+            },
+            event,
+        )
+        contract_bindings = {
+            "ontology_hash": "ontology hash",
+            "fact_contract_version": "fact contract version",
+            "ruleset_id": "ruleset",
+            "ruleset_version": "ruleset version",
+            "ruleset_artifact_hash": "ruleset artifact hash",
+            "timeout_seconds": "timeout",
+        }
+        for name, label in contract_bindings.items():
+            if check[name] != contract[name]:
+                raise ProtocolError(f"event {event['event_id']}: logic check {label} differs from contract")
+        _nonblank(
+            check,
+            (
+                "monitor_id",
+                "monitor_version",
+                "logic_contract_id",
+                "logic_contract_version",
+                "ruleset_id",
+                "ruleset_version",
+                "engine_name",
+                "engine_version",
+            ),
+            event["event_id"],
+        )
+
+        for name in (
+            "candidate_digest",
+            "base_state_digest",
+            "candidate_state_digest",
+            "ontology_hash",
+            "facts_hash",
+        ):
+            require_digest(check[name], f"event {event['event_id']} {name}")
+        for digest in check["context_state_digests"]:
+            require_digest(digest, f"event {event['event_id']} context_state_digest")
+        for name in (
+            "context_state_digests",
+            "translated_record_ids",
+            "checked_rule_ids",
+            "violated_rule_ids",
+        ):
+            _canonical_unique(check[name], f"event {event['event_id']} {name}")
+        _unique(check["violation_witness_ids"], f"event {event['event_id']} violation_witness_ids")
+        if not check["translated_record_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: logic check translated no records")
+        for name in ("translated_record_ids", "checked_rule_ids", "violated_rule_ids"):
+            _nonblank_values(check[name], f"event {event['event_id']} {name}")
+        if not check["checked_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: logic check checked no rules")
+        if check["checked_rule_ids"] != contract["rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: checked rules differ from logic contract")
+        if not set(check["violated_rule_ids"]).issubset(check["checked_rule_ids"]):
+            raise ProtocolError(f"event {event['event_id']}: violated rules were not checked")
+        if check["check_outcome"] == "SATISFIED" and check["violated_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: SATISFIED logic check has violations")
+        if check["check_outcome"] == "VIOLATED" and not check["violated_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: VIOLATED logic check has no violations")
+
+        if not isinstance(payload["witnesses"], list):
+            raise ProtocolError(f"event {event['event_id']}: witnesses must be a list")
+        witnesses: dict[str, dict[str, Any]] = {}
+        for index, value in enumerate(payload["witnesses"]):
+            witness = self._record("ViolationWitness", value, event)
+            if witness["id"] in witnesses or witness["id"] in projection.objects:
+                raise ProtocolError(
+                    f"event {event['event_id']} witness {index}: duplicate object id '{witness['id']}'"
+                )
+            if witness["logic_check_id"] != check["id"]:
+                raise ProtocolError(f"event {event['event_id']}: witness logic_check_id mismatch")
+            self._require_sources(witness, {check["id"]}, event)
+            if witness["rule_id"] not in check["violated_rule_ids"]:
+                raise ProtocolError(f"event {event['event_id']}: witness cites nonviolated rule")
+            _nonblank(
+                witness,
+                ("logic_check_id", "rule_id", "violation_code"),
+                event["event_id"],
+            )
+            _canonical_unique(
+                witness["witness_record_ids"],
+                f"event {event['event_id']} witness_record_ids",
+            )
+            if not witness["witness_record_ids"]:
+                raise ProtocolError(f"event {event['event_id']}: witness record IDs must be nonempty")
+            _nonblank_values(
+                witness["witness_record_ids"],
+                f"event {event['event_id']} witness_record_ids",
+            )
+            if not set(witness["witness_record_ids"]).issubset(check["translated_record_ids"]):
+                raise ProtocolError(f"event {event['event_id']}: witness cites untranslated record")
+            expected_binding_hash = content_digest({
+                "rule_id": witness["rule_id"],
+                "violation_code": witness["violation_code"],
+                "witness_record_ids": witness["witness_record_ids"],
+            })
+            if witness["witness_binding_hash"] != expected_binding_hash:
+                raise ProtocolError(f"event {event['event_id']}: witness binding hash mismatch")
+            witnesses[witness["id"]] = _wrapped("ViolationWitness", witness)
+
+        _same_unique_set(
+            check["violation_witness_ids"],
+            witnesses,
+            f"event {event['event_id']} violation_witness_ids",
+        )
+        witness_records = [item["record"] for item in witnesses.values()]
+        if set(check["violated_rule_ids"]) != {item["rule_id"] for item in witness_records}:
+            raise ProtocolError(f"event {event['event_id']}: every violated rule requires a witness")
+        _unique(
+            [item["witness_binding_hash"] for item in witness_records],
+            "witness_binding_hash values",
+        )
+
+        introduced = {
+            check["id"]: _wrapped("LogicCheckRecord", check),
+            **witnesses,
+        }
+        combined = {**projection.objects, **introduced}
+        self._validate_sources(check, combined, event)
+        for item in witnesses.values():
+            self._validate_sources(item["record"], combined, event)
+        self._add_objects(projection, introduced, event)
+        projection.logic_check_ids.add(check["id"])
+        projection.violation_witness_ids.update(witnesses)
+
     def _assessment(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
         payload = event["payload"]
@@ -340,14 +575,12 @@ class ProtocolLedger:
         assessment = self._record(assessment_type, payload["assessment"], event, root="Assessment")
         if assessment_type == "MonitorFailure":
             raise ProtocolError("MonitorFailure is not an Assessment")
-        self._validate_assessment_context(projection, assessment_type, assessment, event)
         if assessment["assessment_outcome"] == "UNKNOWN":
-            failure_id = assessment.get("monitor_failure_id")
-            if failure_id not in projection.monitor_failure_ids:
-                raise ProtocolError(
-                    f"event {event['event_id']}: UNKNOWN assessment requires applied MonitorFailure"
-                )
-        elif assessment.get("monitor_failure_id") is not None:
+            raise ProtocolError(
+                f"event {event['event_id']}: UNKNOWN assessment requires atomic MONITOR_FAILED event"
+            )
+        self._validate_assessment_context(projection, assessment_type, assessment, event)
+        if assessment.get("monitor_failure_id") is not None:
             raise ProtocolError(
                 f"event {event['event_id']}: non-UNKNOWN assessment cannot cite MonitorFailure"
             )
@@ -376,11 +609,50 @@ class ProtocolLedger:
             "monitor_id",
             "monitor_version",
             "monitor_hash",
+            "responsible_role",
         ):
             if assessment[name] != failure[name]:
                 raise ProtocolError(f"event {event['event_id']}: failure and assessment {name} differ")
         if assessment["assessment_kind"] != failure["failed_assessment_kind"]:
             raise ProtocolError(f"event {event['event_id']}: failed assessment kind mismatch")
+        required_failure_sources = {failure["proposal_id"], failure["monitor_id"]}
+        required_assessment_sources = {
+            assessment["proposal_id"],
+            assessment["monitor_id"],
+            failure["id"],
+        }
+        if assessment_type == "LogicalAssessment":
+            for name in (
+                "logic_contract_id",
+                "logic_contract_record_hash",
+                "ruleset_id",
+                "ruleset_hash",
+            ):
+                if name not in failure or failure[name] != assessment[name]:
+                    raise ProtocolError(
+                        f"event {event['event_id']}: failure and assessment {name} differ"
+                    )
+            required_failure_sources.update({failure["logic_contract_id"], failure["ruleset_id"]})
+            required_assessment_sources.update(
+                {assessment["logic_contract_id"], assessment["ruleset_id"]}
+            )
+            contract = self._artifact_ref(
+                projection,
+                assessment["logic_contract_id"],
+                assessment["logic_contract_record_hash"],
+                "LOGIC_CONTRACT",
+                record_type="LogicContractArtifact",
+            )
+            if assessment["ruleset_id"] != contract["ruleset_id"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: failed logical assessment ruleset differs from contract"
+                )
+            if assessment["ruleset_hash"] != contract["ruleset_record_hash"]:
+                raise ProtocolError(
+                    f"event {event['event_id']}: failed logical assessment ruleset hash mismatch"
+                )
+        self._require_sources(failure, required_failure_sources, event)
+        self._require_sources(assessment, required_assessment_sources, event)
         self._validate_assessment_context(projection, assessment_type, assessment, event)
         combined = {
             **projection.objects,
@@ -410,6 +682,8 @@ class ProtocolLedger:
         self._same_proposal(decision, proposal, event)
         if decision["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"event {event['event_id']}: decision has stale acceptance head")
+        if proposal["base_acceptance_head"] != projection.acceptance_head:
+            raise ProtocolError(f"event {event['event_id']}: proposal has stale acceptance head")
         self._artifact_ref(projection, decision["policy_id"], decision["policy_hash"], "EPISTEMIC_POLICY")
         self._artifact_ref(projection, decision["ruleset_id"], decision["ruleset_hash"], "RULE_SET")
         _unique(decision["assessment_ids"], "assessment_ids")
@@ -421,6 +695,8 @@ class ProtocolLedger:
                 raise ProtocolError(f"event {event['event_id']}: assessment was not applied")
             assessment = self._object(projection.objects, assessment_id, "Assessment")
             self._same_proposal(assessment, proposal, event)
+            if assessment["base_acceptance_head"] != projection.acceptance_head:
+                raise ProtocolError(f"event {event['event_id']}: assessment has stale acceptance head")
             assessments.append(assessment)
         verdict = decision["epistemic_verdict"]
         if verdict not in EPISTEMIC_TARGETS:
@@ -710,6 +986,102 @@ class ProtocolLedger:
                 assessment[requirement[1]],
                 requirement[2],
             )
+        if assessment_type == "LogicalAssessment":
+            self._validate_logical_assessment(projection, assessment, event)
+
+    def _validate_logical_assessment(
+        self,
+        projection: ProtocolProjection,
+        assessment: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        for name in ("checked_rule_ids", "violated_rule_ids"):
+            _canonical_unique(assessment[name], f"event {event['event_id']} {name}")
+        _unique(
+            assessment["logic_check_record_ids"],
+            f"event {event['event_id']} logic_check_record_ids",
+        )
+        contract = self._artifact_ref(
+            projection,
+            assessment["logic_contract_id"],
+            assessment["logic_contract_record_hash"],
+            "LOGIC_CONTRACT",
+            record_type="LogicContractArtifact",
+        )
+        outcome = assessment["assessment_outcome"]
+        required_sources = {
+            assessment["proposal_id"],
+            assessment["monitor_id"],
+            assessment["logic_contract_id"],
+            assessment["ruleset_id"],
+        }
+        if outcome == "UNKNOWN":
+            self._require_sources(
+                assessment,
+                {*required_sources, assessment["monitor_failure_id"]},
+                event,
+            )
+            if any(
+                assessment[name]
+                for name in ("checked_rule_ids", "violated_rule_ids", "logic_check_record_ids")
+            ):
+                raise ProtocolError(
+                    f"event {event['event_id']}: UNKNOWN logical assessment cannot cite a completed check"
+                )
+            return
+        if not assessment["checked_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: logical assessment checked no rules")
+        _nonblank_values(
+            assessment["checked_rule_ids"],
+            f"event {event['event_id']} checked_rule_ids",
+        )
+        _nonblank_values(
+            assessment["violated_rule_ids"],
+            f"event {event['event_id']} violated_rule_ids",
+        )
+        if not set(assessment["violated_rule_ids"]).issubset(assessment["checked_rule_ids"]):
+            raise ProtocolError(f"event {event['event_id']}: violated rules were not checked")
+        if outcome == "SATISFIED" and assessment["violated_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: SATISFIED logical assessment has violations")
+        if outcome == "VIOLATED" and not assessment["violated_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: VIOLATED logical assessment has no violations")
+        if len(assessment["logic_check_record_ids"]) != 1:
+            raise ProtocolError(
+                f"event {event['event_id']}: completed logical assessment requires one logic check"
+            )
+        check_id = assessment["logic_check_record_ids"][0]
+        self._require_sources(assessment, {*required_sources, check_id}, event)
+        if check_id not in projection.logic_check_ids:
+            raise ProtocolError(f"event {event['event_id']}: logic check was not applied")
+        if check_id not in assessment["input_record_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment inputs must include logic check")
+        check = self._object(projection.objects, check_id, "LogicCheckRecord")
+        for name in (
+            "proposal_id",
+            "proposal_content_hash",
+            "base_acceptance_head",
+            "monitor_id",
+            "monitor_version",
+            "monitor_hash",
+        ):
+            if assessment[name] != check[name]:
+                raise ProtocolError(f"event {event['event_id']}: assessment and logic check {name} differ")
+        if assessment["ruleset_id"] != check["ruleset_id"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment and logic check ruleset differ")
+        if assessment["ruleset_hash"] != check["ruleset_record_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment ruleset hash mismatch")
+        if assessment["logic_contract_id"] != check["logic_contract_id"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment logic contract differs")
+        if assessment["logic_contract_record_hash"] != check["logic_contract_record_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: assessment logic contract hash mismatch")
+        if contract["id"] != check["logic_contract_id"]:
+            raise ProtocolError(f"event {event['event_id']}: applied logic contract differs")
+        if assessment["checked_rule_ids"] != check["checked_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: checked rules differ from logic check")
+        if assessment["violated_rule_ids"] != check["violated_rule_ids"]:
+            raise ProtocolError(f"event {event['event_id']}: violated rules differ from logic check")
+        if outcome != check["check_outcome"]:
+            raise ProtocolError(f"event {event['event_id']}: outcome differs from logic check")
 
     def _validate_claim_acceptance(
         self,
@@ -972,6 +1344,19 @@ class ProtocolLedger:
             if source_id not in objects:
                 raise ProtocolError(f"event {event['event_id']}: unknown source record '{source_id}'")
 
+    def _require_sources(
+        self,
+        record: Mapping[str, Any],
+        required: set[str],
+        event: Mapping[str, Any],
+    ) -> None:
+        missing = sorted(required - set(record["source_record_ids"]))
+        if missing:
+            raise ProtocolError(
+                f"event {event['event_id']}: {record['id']} source_record_ids missing "
+                f"required records: {', '.join(missing)}"
+            )
+
     def _object(
         self,
         objects: Mapping[str, dict[str, Any]],
@@ -1011,6 +1396,7 @@ class ProtocolLedger:
         required = {
             "ProtocolRecord",
             "ProtocolArtifact",
+            "LogicContractArtifact",
             "AuthorityGrant",
             "ProposedSubgraph",
             "ClaimVersion",
@@ -1023,6 +1409,8 @@ class ProtocolLedger:
             "ConflictAssessment",
             "UncertaintyAssessment",
             "LogicalAssessment",
+            "LogicCheckRecord",
+            "ViolationWitness",
             "TemporalAssessment",
             "AuthorityAssessment",
             "Decision",
@@ -1048,6 +1436,7 @@ class ProtocolLedger:
         inheritance = {
             "ProtocolRecord": "Entity",
             "ProtocolArtifact": "ProtocolRecord",
+            "LogicContractArtifact": "ProtocolArtifact",
             "AuthorityGrant": "ProtocolArtifact",
             "ProposedSubgraph": "ProtocolRecord",
             "ClaimVersion": "ProtocolRecord",
@@ -1060,6 +1449,8 @@ class ProtocolLedger:
             "ConflictAssessment": "Assessment",
             "UncertaintyAssessment": "Assessment",
             "LogicalAssessment": "Assessment",
+            "LogicCheckRecord": "ProtocolRecord",
+            "ViolationWitness": "ProtocolRecord",
             "TemporalAssessment": "Assessment",
             "AuthorityAssessment": "Assessment",
             "MonitorFailure": "ProtocolRecord",
@@ -1082,6 +1473,7 @@ class ProtocolLedger:
             raise ProtocolError("Assent ontology MonitorFailure must not be an Assessment")
         enum_values = {
             "AssessmentOutcome": {"SATISFIED", "VIOLATED", "UNKNOWN"},
+            "LogicCheckOutcome": {"SATISFIED", "VIOLATED"},
             "EpistemicVerdict": {"ACCEPT", "REJECT", "DEFER", "CONTEST"},
             "AuthorizationVerdict": {"AUTHORIZE", "BLOCK", "CLARIFY"},
             "RequestState": {"OPEN", "FULFILLED", "CANCELLED"},
@@ -1119,6 +1511,17 @@ def _unique(values: Any, context: str) -> None:
         raise ProtocolError(f"{context} must be a list")
     if len(values) != len(set(values)):
         raise ProtocolError(f"{context} contains duplicates")
+
+
+def _canonical_unique(values: Any, context: str) -> None:
+    _unique(values, context)
+    if values != sorted(values):
+        raise ProtocolError(f"{context} must be in canonical sorted order")
+
+
+def _nonblank_values(values: list[Any], context: str) -> None:
+    if any(not isinstance(value, str) or not value.strip() for value in values):
+        raise ProtocolError(f"{context} must contain nonblank strings")
 
 
 def _same_unique_set(actual: Any, expected: Iterable[Any], context: str) -> None:
