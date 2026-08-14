@@ -257,6 +257,13 @@ to prevent.
    true, trusted, or safe to act on is a separate question, answered at level
    4 or 5, or by your application. Do not let "it is in the graph" mean "it is
    true" anywhere in your code or prose.
+9. A citation pins bytes. If a record quotes a source, the quote is verified
+   verbatim against that source when the record is written, and the source
+   hash invalidates the citation when the source changes rather than serving
+   as a cache key.
+10. Nothing self-corrects. Every automatic acceptance names its judge and
+    records what it saw; everything it declines lands in a queue whose age is
+    measured and whose age eventually blocks. Running longer repairs nothing.
 
 ## Contract for the assistant
 
@@ -276,6 +283,8 @@ compiles from it.
 
 ## Going deeper
 
+- `docs/PRINCIPLES.md`: what malleus claims, what it does not, and why the
+  rules above take the shape they do.
 - `docs/ONTOLOGY_PROTOCOL.md`: the full schema-authoring reference.
 - `docs/KNOWLEDGE_GRAPH_PROTOCOL.md`: why the ontology constructs the graph instead of validating it.
 - `docs/ARCHITECTURE.md`: the layer-by-layer walkthrough.

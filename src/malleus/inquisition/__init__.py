@@ -33,15 +33,40 @@ _PRIMITIVES = ("Entity", "Event", "Signal", "Relation")
 _TYPE_SLOTS = {"Event": "event_type", "Relation": "relation_type", "Signal": "signal_type"}
 
 
-def _rubric_config() -> dict:
-    data = yaml.safe_load((Path(__file__).parent / "rubric.yaml").read_text(encoding="utf-8"))
-    return data.get("config", {}) if isinstance(data, dict) else {}
+RUBRIC_PATH = Path(__file__).parent / "rubric.yaml"
 
 
-def _formula_tokens() -> tuple[str, ...]:
-    tokens = _rubric_config().get("formula_slot_tokens") or [
-        "formula", "formal_expression", "expression",
-    ]
+class RubricError(RuntimeError):
+    """The rubric is missing, unparseable, or malformed.
+
+    The rubric is the instrument, not the subject. A malformed schema becomes
+    a finding; a malformed rubric refuses, because a tuning error that
+    degrades to built-in defaults ignores the operator in silence.
+    """
+
+
+def _rubric(path: Path | None = None) -> dict:
+    path = path or RUBRIC_PATH
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise RubricError(f"rubric at {path} could not be read: {exc}") from exc
+    if not isinstance(data, dict) or not isinstance(data.get("config"), dict):
+        raise RubricError(
+            f"rubric at {path} has no `config:` mapping. This is the inquisitor's "
+            "instrument, not the schema under inspection: fix or reinstall the rubric."
+        )
+    return data
+
+
+def _formula_tokens(path: Path | None = None) -> tuple[str, ...]:
+    tokens = _rubric(path)["config"].get("formula_slot_tokens")
+    if not isinstance(tokens, list):
+        raise RubricError(
+            "rubric `config.formula_slot_tokens` must be a list. "
+            "An empty list disables the inert_formula rite; a missing or "
+            "mistyped key is a broken rubric and is not assumed away."
+        )
     return tuple(str(token).lower() for token in tokens)
 
 

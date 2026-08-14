@@ -8,7 +8,15 @@ from pathlib import Path
 
 import pytest
 
-from malleus.inquisition import HERESY, SUSPICION, run_rites
+from malleus.inquisition import (
+    HERESY,
+    NOTE,
+    SUSPICION,
+    RubricError,
+    _formula_tokens,
+    _rubric,
+    run_rites,
+)
 from malleus.inquisition.cli import main
 from malleus.ontology import OntologyRegistry, bundled_ontology_path
 
@@ -232,6 +240,61 @@ class TestFormulaTokensAreData:
         report = run_rites(schema, import_map=ROOT_MAP)
         formula = [f for f in report.findings if f.rite == "inert_formula"]
         assert formula and formula[0].subject == "Model.growth_equation"
+
+
+class TestRubricIsWellFormedAndFailsLoud:
+    """The rubric is shipped data adopters tune. A malformed rubric must
+    refuse, never degrade to built-in defaults: silent fallback is the
+    silent_drop rite firing on the inspector's own instrument."""
+
+    def test_every_rite_declares_question_severity_and_lesson(self):
+        rubric = _rubric()
+        rites = rubric["mechanical"] + rubric["judgment"]
+        assert len(rites) > 25
+        for rite in rites:
+            assert rite["question"].strip(), rite
+            assert rite["severity"] in (HERESY, SUSPICION, NOTE), rite
+            assert rite["lesson"].strip(), rite
+
+    def test_rite_ids_are_unique(self):
+        rubric = _rubric()
+        ids = [r["id"] for r in rubric["mechanical"] + rubric["judgment"]]
+        assert len(ids) == len(set(ids))
+
+    def test_principles_rites_are_present(self):
+        """docs/PRINCIPLES.md names these; a rite named in prose and absent
+        from the rubric is a remediation that exists only in documentation."""
+        ids = {r["id"] for r in _rubric()["judgment"]}
+        assert {
+            "encoding_is_load_bearing",
+            "quotation_is_byte_exact",
+            "arbiter_is_accountable",
+            "evidence_does_not_transfer",
+            "module_declares_its_interface",
+        } <= ids
+
+    def test_unparseable_rubric_refuses(self, tmp_path):
+        path = tmp_path / "rubric.yaml"
+        path.write_text("config: {formula_slot_tokens: [oops")
+        with pytest.raises(RubricError, match="could not be read"):
+            _formula_tokens(path)
+
+    def test_missing_config_refuses(self, tmp_path):
+        path = tmp_path / "rubric.yaml"
+        path.write_text("judgment: []\n")
+        with pytest.raises(RubricError, match="no `config:` mapping"):
+            _formula_tokens(path)
+
+    def test_mistyped_token_list_refuses_instead_of_defaulting(self, tmp_path):
+        path = tmp_path / "rubric.yaml"
+        path.write_text("config:\n  formula_slot_token: [formula]\n")
+        with pytest.raises(RubricError, match="must be a list"):
+            _formula_tokens(path)
+
+    def test_empty_token_list_is_an_explicit_disable(self, tmp_path):
+        path = tmp_path / "rubric.yaml"
+        path.write_text("config:\n  formula_slot_tokens: []\n")
+        assert _formula_tokens(path) == ()
 
 
 class TestPinnedContractMatchesLiveOntology:

@@ -24,6 +24,17 @@ formula, the write-only sink. Every finding must name the file and line,
 the fix, and a mechanical acceptance criterion. A finding without an
 acceptance criterion is a sermon, not an inquisition.
 
+Four properties from `PRINCIPLES.md` are what the rites ultimately defend,
+and they are the questions to hold while reading unfamiliar code. Is there a
+typed intermediate, and is it the thing being checked, or does the pipeline
+run text to answer with the gate nowhere? Does a citation pin bytes, verified
+at write time, or does it pin a hash consumed as a cache key? Does every
+automatic acceptance name its judge and record what it saw, and does the
+queue it defers to have a measured age and a person who drains it? And is any
+result being quoted for a claim it did not test? Nothing in this system
+self-corrects by running longer, so an unnamed arbiter and an undrained queue
+are findings, not backlog.
+
 ## Procedure
 
 1. **Locate the schema(s)** in the target project (LinkML YAML importing

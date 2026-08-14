@@ -26,6 +26,43 @@ scars to prove it. When a genuine trade-off exists, do the investigation,
 present the black and the white to the human with the evidence, and let
 them cut; never split the difference silently.
 
+## Doctrine: encode, then check
+
+The thesis this project rests on: malleus treats typed subgraphs as composable
+epistemic modules whose dependencies, provenance, temporal state, and
+conclusions can be executed and governed. Four consequences bind your work,
+and `PRINCIPLES.md` carries them in full:
+
+1. **Encoding is the step you cannot skip.** You cannot check a sentence, only
+   a tuple. Every guarantee here runs on the typed intermediate, so a path from
+   text to answer with no typed middle has nowhere to put a gate. When a model
+   is the writer, the gate goes on the commit and never on the reasoning.
+2. **A tuple points at bytes.** A citation is verified verbatim against its
+   named source at write time, and a source hash that only serves a cache is
+   not a gate.
+3. **Nothing self-corrects.** Every automatic acceptance names its judge and
+   records what it saw; every deferral lands in a queue whose age is measured.
+   No amount of running time repairs a system on its own.
+4. **Evidence does not transfer.** Representing is not executing, executing is
+   not governing, governing is not assisting, and a composition is not implied
+   by its parts. Never quote a result for a claim it did not test.
+
+## Before you build: the gate
+
+Scope is where this work goes wrong, so state four things before writing code
+and stop if you cannot:
+
+1. The exact claim or requirement being satisfied.
+2. The smallest observation that would show it holds or fails.
+3. The existing artifact to reuse.
+4. What this slice explicitly excludes.
+
+Build only what changes the answer or is needed to audit it. A slice ends when
+the evidence distinguishes its claim; more cases, more abstraction, and more
+infrastructure are not progress. A broader idea found along the way is recorded
+as a finding, not folded in silently. If it materially changes the claim, stop
+and ask the human.
+
 ## Where the knowledge lives (probe capability, never assume presence)
 
 An installed `malleus` may be current, stale (old malleus-dev releases

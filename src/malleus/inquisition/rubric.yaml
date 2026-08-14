@@ -10,7 +10,7 @@
 # severities, disable rites, add your own. Learnings flow back upstream:
 # open an issue or PR against malleus-dev with the generic lesson only.
 
-version: 4
+version: 5
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -296,4 +296,95 @@ judgment:
       because the task was recall. Demos need entities the model cannot know
       or state it cannot reconstruct, or they prove nothing. State the prompt
       style too: tool-call propensity varied 25x across models on identical
-      prompts.
+      prompts. Size is not a result either: a larger graph with no
+      discriminating observation proves nothing a smaller one did not.
+
+  # Principles rites. These five defend the properties in docs/PRINCIPLES.md:
+  # the typed intermediate, the byte-exact citation, the named arbiter, the
+  # separation of claims, and the interface a reusable subgraph must declare.
+
+  - id: encoding_is_load_bearing
+    question: >-
+      Is there a typed intermediate between source and conclusion, and is that
+      intermediate the thing that gets checked, rather than the prose before it
+      or the answer after it?
+    severity: HERESY
+    lesson: >-
+      You cannot validate a sentence. Every guarantee in this stack (ranges,
+      endpoint contracts, executable rules, staging, assent, replay) operates
+      on tuples, so a pipeline that runs text to answer with no typed middle
+      has nowhere to put a gate: it can be careful, it cannot be checked.
+      Observed: systems that validate the prompt and lint the final string
+      while the only structured artifact is assembled after the last check,
+      and systems whose typed layer exists but is written from the answer
+      rather than read to produce it. The model-facing corollary: the gate
+      belongs on the commit, never on the reasoning. Let it think in
+      sentences, make it commit in tuples, hand back the violated constraint.
+
+  - id: quotation_is_byte_exact
+    question: >-
+      Does every citation pin bytes, with the quoted span verified as a
+      verbatim substring of the named source at write time, and does a change
+      in the source invalidate the citation rather than merely refreshing a
+      cache?
+    severity: HERESY
+    lesson: >-
+      A citation graph is what lets a system claim it preserved the original
+      intent, and it is the property most often faked by accident, because a
+      hand-copied quote is indistinguishable from a verified one until someone
+      measures. Measured in the field: of 67 evidence quotes, 15 did not
+      appear in the source they cited, and one file's five quotes were all
+      invented, including one asserting a term that occurs zero times in the
+      cited text. The content hash sitting beside them was consumed only as a
+      cache key, so seven stale quotes shipped from changed sources and the
+      newest file carried no hash at all. Companion to citation_integrity:
+      that rite checks the cited id resolves, this one checks the cited bytes
+      do.
+
+  - id: arbiter_is_accountable
+    question: >-
+      When acceptance is decided automatically, is the decision a typed record
+      carrying its inputs, verdict, reason, and the identity and version of the
+      judge, and does everything it declines land in a queue whose age is
+      measured and past a threshold blocks?
+    severity: HERESY
+    lesson: >-
+      Nothing here self-corrects. Biology tolerates enormous error rates
+      because proofreading and selection run over deep time; a designed system
+      has neither, so an automatic judge whose reasons are not recorded and a
+      review queue nobody drains are both silent acceptance wearing a process.
+      Observed: approval gates that were filesystem conventions, one with a
+      suggestion file open four months and no age recorded anywhere; and
+      machine verdicts stored as a bare boolean, so when the judge changed
+      version no decision could be attributed to either. Name the corrector,
+      record what it saw, measure the queue.
+
+  - id: evidence_does_not_transfer
+    question: >-
+      Is any result reported as evidence for a claim it did not test: a
+      representation result quoted as an execution result, a passing rule
+      quoted as governance, or a composed module's validity inferred from the
+      validity of its parts?
+    severity: HERESY
+    lesson: >-
+      Representing a domain is not executing it, executing rules is not
+      governing what gets accepted, and governing acceptance does not help
+      anybody do anything. Each tier is a separate claim needing its own
+      observation. Composition needs its own check too, because two sound
+      modules can compose into an unsound one at the interface. The failure is
+      always quiet: the first honestly measured link in a chain gets cited for
+      every later one, and no reader can tell which link was measured.
+
+  - id: module_declares_its_interface
+    question: >-
+      Does a subgraph meant to be reused declare typed inputs, typed outputs,
+      and the constraints it enforces, so that composing it with another is a
+      checkable operation rather than a copy and a hope?
+    severity: NOTE
+    lesson: >-
+      A subgraph without a declared interface is a region, not a module, and
+      reuse degenerates into duplication that drifts. Whether well-designed
+      primitives compose into richer domain models without losing
+      checkability is an open question in this project, not a settled
+      property, so this rite asks and does not condemn. Raise its severity in
+      your own copy of the rubric when your project depends on composition.
