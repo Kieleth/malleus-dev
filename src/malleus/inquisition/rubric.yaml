@@ -10,7 +10,7 @@
 # severities, disable rites, add your own. Learnings flow back upstream:
 # open an issue or PR against malleus-dev with the generic lesson only.
 
-version: 3
+version: 4
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -30,7 +30,13 @@ mechanical:
     lesson: >-
       A schema that cannot load is not a source of truth. Observed: a broken
       symlink to a renamed directory left a project unable to regenerate for
-      months, and nothing noticed because nothing tried.
+      months, and nothing noticed because nothing tried. Observed, worse: an
+      early import resolver that silently skipped unresolvable imports let a
+      flagship adopter run in production with the root never loaded; its
+      zero-rejection record reflected an open gate, and a quarter of its
+      largest graph failed once the root resolved. An import that resolves
+      to nothing must be its own loud refusal, distinct from a parse
+      failure, and a rejection rate of zero is not evidence of a gate.
   - id: root
     question: Are the five primitives present, and does each declared primitive have a speaker?
     severity: NOTE
@@ -75,6 +81,10 @@ mechanical:
       Five systems in one fleet wrote formulas down as data and none executed
       them; each kept a hand-written twin in code that drifted. A formula the
       engine cannot evaluate is documentation wearing the graph's clothes.
+      Judgment-tier corollary the token scan cannot see: algorithm NAMES
+      declared as enum values with no implementing code are the same defect
+      (the slot named `algorithm` itself is canonical Signal provenance and
+      must not be flagged; the unimplemented value behind it must be).
 
 judgment:
   - id: gate_integrity
@@ -152,6 +162,8 @@ judgment:
     lesson: >-
       Symlinks to sibling checkouts, hash pins with no upgrade path, and
       sed-rewritten Dockerfiles all failed in the field. The working pattern:
+      probe capability, never presence (an installed package may be stale
+      or a name-squatter; import the symbol you need, not the module name);
       resolve from the installed package, gate on a version floor, assert
       check_compatibility in a test, regenerate in CI and fail on dirty diff.
   - id: trusted_explicit
@@ -246,7 +258,8 @@ judgment:
   - id: the_rite_survives_its_subject
     question: >-
       Does the mechanical inspector convert every way its subject can be
-      malformed into a recorded finding, rather than into an exception?
+      malformed into a recorded finding, rather than into an exception, and
+      does it refuse to judge a document that is not its format?
     severity: HERESY
     lesson: >-
       An inspector that catches only its own error type crashes on the most
@@ -260,6 +273,21 @@ judgment:
       currency check built on the producer-side variant certifies a root
       whose validator it should condemn, and the guidance shipped to
       adopters tends to carry the same confusion.
+  - id: remediation_actually_remediates
+    question: >-
+      Does every documented remediation, when executed exactly as the
+      operator would, produce the promised effect, proven by a test that
+      performs the operator's steps?
+    severity: HERESY
+    lesson: >-
+      Observed: documentation promised that quarantined data is re-evaluated
+      when the ontology changes; the operator performed exactly that change
+      through the local API and the data stayed invisible, surviving even a
+      reopen from disk. A remediation that exists only in prose is worse
+      than no remediation: it consumes the operator's one diagnostic guess.
+      Every "to recover, do X" sentence needs a test that does X and
+      asserts the recovery.
+
   - id: graph_load_bearing
     question: For any LLM-facing demo or eval, can the model answer from parametric memory alone?
     severity: SUSPICION

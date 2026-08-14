@@ -316,6 +316,15 @@ Three tiers:
   no project named. It is data on purpose: tune it, extend it, and send
   generic lessons back as issues or PRs. That is how the Ordo learns.
 
+And for every project that uses malleus, there is the acolyte:
+`malleus-inquisitor install-skills --user` (or `--project .`) copies the
+shipped agent skills into your `.claude/skills`, so any coding-assistant
+session gets the `malleus-acolyte` companion: the adoption playbook as
+standing orders, self-inquisitions, and, unlike the central inquisitor,
+license to fix its own project's findings. Generic lessons flow upstream as
+issues and PRs; releases carry the grown rubric and skills back down.
+Re-run the installer after upgrading.
+
 ## Tests
 
 ```bash

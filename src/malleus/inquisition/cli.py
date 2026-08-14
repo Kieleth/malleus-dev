@@ -3,6 +3,7 @@
 Usage:
     malleus-inquisitor path/to/schema.yaml
     malleus-inquisitor path/to/schema.yaml --map malleus=vendor/malleus.yaml --json
+    malleus-inquisitor install-skills [--user | --project DIR]
 
 Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage.
 """
@@ -10,7 +11,10 @@ Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage.
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
+import sysconfig
+from pathlib import Path
 
 from malleus.inquisition import COMMENDATION, HERESY, NOTE, SUSPICION, run_rites
 
@@ -18,7 +22,52 @@ _BADGES = {HERESY: "✠ HERESY     ", SUSPICION: "? suspicion  ",
            NOTE: "· note       ", COMMENDATION: "+ commended  "}
 
 
+def _bundled_skills_dir() -> Path:
+    """Resolve the shipped skills, source tree first, installed data second."""
+    source = Path(__file__).resolve().parents[3] / ".claude" / "skills"
+    if source.is_dir():
+        return source
+    installed = Path(sysconfig.get_path("data")) / "share" / "malleus" / "skills"
+    if installed.is_dir():
+        return installed
+    raise FileNotFoundError(
+        "Bundled skills not found in the source tree or the installed data "
+        "directory; reinstall malleus-dev or run from a checkout."
+    )
+
+
+def _install_skills(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="malleus-inquisitor install-skills",
+        description="Copy the shipped agent skills into a .claude/skills directory.",
+    )
+    target = parser.add_mutually_exclusive_group()
+    target.add_argument("--user", action="store_true",
+                        help="install into ~/.claude/skills (every project on this machine)")
+    target.add_argument("--project", metavar="DIR", default=None,
+                        help="install into DIR/.claude/skills (default: current directory)")
+    args = parser.parse_args(argv)
+
+    base = Path.home() if args.user else Path(args.project or ".")
+    destination = base / ".claude" / "skills"
+    destination.mkdir(parents=True, exist_ok=True)
+    installed = []
+    for skill_dir in sorted(_bundled_skills_dir().iterdir()):
+        if not (skill_dir / "SKILL.md").is_file():
+            continue
+        shutil.copytree(skill_dir, destination / skill_dir.name, dirs_exist_ok=True)
+        installed.append(skill_dir.name)
+    for name in installed:
+        print(f"installed skill: {name} -> {destination / name}")
+    print("Re-run after upgrading malleus-dev; new rites exist because "
+          "someone paid for them.")
+    return 0 if installed else 1
+
+
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "install-skills":
+        return _install_skills(argv[1:])
     parser = argparse.ArgumentParser(
         prog="malleus-inquisitor",
         description="Ordo Malleus: mechanical rites over a malleus-derived schema.",

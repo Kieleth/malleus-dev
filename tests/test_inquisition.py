@@ -282,3 +282,53 @@ class TestPackagingTargetsAreTracked:
             f"declared in pyproject but not committed: {untracked}. "
             "Commit the manifest and its targets as one unit."
         )
+
+
+def test_wrong_format_document_is_refused_not_judged(tmp_path):
+    """JSON is valid YAML; a JSON ontology must be refused as not-my-format,
+    never certified as an empty schema (fleet inquisition lesson)."""
+    path = tmp_path / "ontology.json"
+    path.write_text('{"node_types": {"server": {}}, "edge_types": {}}')
+    report = run_rites(path)
+    construction = _rites(report, "construction")
+    assert construction[0].severity == HERESY
+    assert "not a schema" in construction[0].message
+    assert not report.purity
+    assert len(report.findings) == 1
+
+
+def test_construction_failure_still_explains_root_skew(tmp_path):
+    """When a schema fails to construct, the report names probable version
+    skew of the mapped root instead of hiding it (fleet inquisition lesson)."""
+    root_text = bundled_ontology_path("malleus.yaml").read_text()
+    aged = tmp_path / "old_malleus.yaml"
+    aged.write_text(root_text.replace("DESTROYED:", "OBLITERATED:"))
+    unpinned = tmp_path / "domain.yaml"
+    unpinned.write_text(
+        "id: https://example.org/schema/skew\n"
+        "name: skew\n"
+        "imports:\n"
+        "  - malleus\n"
+        "  - linkml:types\n"
+        "classes:\n"
+        "  LooseRelation:\n"
+        "    is_a: Relation\n"
+    )
+    report = run_rites(unpinned, import_map={"malleus": str(aged)})
+    assert _rites(report, "construction")[0].severity == HERESY
+    skew = _rites(report, "root_currency")
+    assert skew and "version skew" in skew[0].message
+
+
+class TestSkillsAreInstallable:
+    """Any project gets its acolyte at fingertips; releases refresh it
+    (the learnings flow back)."""
+
+    def test_install_skills_into_a_project(self, tmp_path, capsys):
+        assert main(["install-skills", "--project", str(tmp_path)]) == 0
+        out = capsys.readouterr().out
+        for name in ("malleus-acolyte", "malleus-inquisitor"):
+            assert (tmp_path / ".claude" / "skills" / name / "SKILL.md").is_file()
+            assert name in out
+        # Idempotent refresh: a second run overwrites without error.
+        assert main(["install-skills", "--project", str(tmp_path)]) == 0

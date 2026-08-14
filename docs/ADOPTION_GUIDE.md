@@ -60,6 +60,11 @@ Or vendor it: copy `ontology/malleus.yaml` into your repo (Logosphere does
 this, at `schema/malleus.yaml`). Vendoring works for non-Python projects.
 Record which malleus version you copied.
 
+While you are here: `malleus-inquisitor install-skills --project .` gives
+your coding assistant the `malleus-acolyte` skill, which carries this
+guide's playbook as standing orders and can self-check your adoption at any
+point. Everything below still applies; the skill just keeps it at hand.
+
 ### 2. Create your project schema
 
 ```

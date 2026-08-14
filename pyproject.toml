@@ -64,6 +64,8 @@ include = [
     "src/malleus/inquisition/__init__.py",
     "src/malleus/inquisition/cli.py",
     "src/malleus/inquisition/rubric.yaml",
+    ".claude/skills/malleus-inquisitor/SKILL.md",
+    ".claude/skills/malleus-acolyte/SKILL.md",
     "tests/test_inquisition.py",
     "ontology/**/*.yaml",
     "prolog/**/*.yaml",
@@ -92,6 +94,8 @@ core-metadata-version = "2.4"
 [tool.hatch.build.targets.wheel.shared-data]
 "ontology" = "share/malleus/ontology"
 "prolog" = "share/malleus/prolog"
+"docs" = "share/malleus/docs"
+".claude/skills" = "share/malleus/skills"
 
 [tool.hatch.build.targets.sdist]
 core-metadata-version = "2.4"

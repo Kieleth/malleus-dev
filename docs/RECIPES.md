@@ -66,16 +66,23 @@ The pattern: a LinkML schema imports malleus, every domain concept extends
 one of the five primitives, the loaded registry is a required constructor
 parameter, and invalid writes never materialize.
 
-**Best evidence it scales**: a clinical-records pipeline built a 65-class
-domain ontology over the primitives and runs production case graphs in the
-hundreds of nodes and thousands of operations with zero invalid records,
-under real regulatory stakes. Its architecture notes read "typed at
-write-time, Signal pattern for derived scores, audit log built in. Worth
-the dependency." Its most instructive test is a backward-compatibility
-gate: after any schema bump, the registry must still construct,
-legacy-shaped writes must still validate, and a deprecated class alias must
-still write. That is the missing chapter of every adoption guide: how to
-evolve an ontology without breaking a running system.
+**The deepest adoption, and the correction that made it the sharpest
+lesson**: a clinical-records pipeline built a 65-class domain ontology over
+the primitives and ran production case graphs in the hundreds of nodes and
+thousands of operations with zero rejections, under real regulatory stakes.
+An earlier version of this document cited that zero as evidence the gate
+scales. A mechanical audit then found the root ontology had never loaded:
+an early import resolver silently skipped the unresolvable import, so the
+registry never held the root's constraints, and once the root actually
+loads, roughly a quarter of the largest production graph fails validation.
+A rejection rate of zero is indistinguishable, from inside the system,
+between a perfect gate and an absent one. That is the recipe's real first
+rule: verify the gate mechanically (the root-currency and construction
+rites exist for exactly this); never infer it from a clean audit log. The
+pipeline's other discipline stands and is worth copying, above all its
+backward-compatibility gate: after any schema bump, the registry must still
+construct, legacy-shaped writes must still validate, and a deprecated class
+alias must still write.
 
 **Enforcement has two architectures, and they fail differently.** Malleus
 validates registry-side in Python, before I/O, with a legible reason. One

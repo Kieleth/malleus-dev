@@ -107,6 +107,34 @@ def run_rites(
         registry = OntologyRegistry(str(schema_path), import_map=import_map or None)
     except (OntologyError, OSError, ValueError) as exc:
         report.add("construction", HERESY, str(schema_path), f"schema does not construct: {exc}")
+        # A schema written against an old root often fails under current
+        # rules. Compare the mapped root to the installed one anyway, so the
+        # report explains the failure instead of hiding its likely cause.
+        mapped_root = (import_map or {}).get("malleus")
+        if mapped_root:
+            try:
+                vendored = OntologyRegistry(mapped_root)
+                installed = OntologyRegistry(
+                    str(Path(root_path) if root_path else bundled_ontology_path("malleus.yaml"))
+                )
+                verdict = vendored.check_compatibility_strict(
+                    installed.content_hash(), installed.strict_fingerprint()
+                )
+                if verdict not in ("identical", "superset"):
+                    report.add("root_currency", NOTE, mapped_root,
+                               f"the imported root is {verdict} against the installed "
+                               "malleus; the construction failure above likely follows "
+                               "from version skew, judged under current-malleus rules")
+            except (OntologyError, OSError, ValueError):
+                pass
+        return report
+    if not registry.type_names():
+        # JSON is valid YAML, so a wrong-format ontology parses into an
+        # empty registry. Judging it would certify a non-schema as an empty
+        # schema; refuse with the right diagnosis instead.
+        report.add("construction", HERESY, str(schema_path),
+                   "document parses but declares no LinkML classes; this is "
+                   "not a schema the rites can judge (wrong format?)")
         return report
     report.add("construction", COMMENDATION, str(schema_path),
                f"constructs; version {registry.schema_version or 'undeclared'}, "
