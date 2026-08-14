@@ -214,3 +214,25 @@ def test_proposal_has_no_mutable_state_or_unresolved_graph_member_ids():
     assert "node_record_ids" not in slots
     assert "relation_record_ids" not in slots
     assert "base_acceptance_head" in slots
+
+
+class TestResponsibleRoleIsClosed:
+    """The authority model turns on role; role is a closed vocabulary
+    (self-inquisition S2)."""
+
+    def test_out_of_vocabulary_role_is_rejected(self):
+        registry = OntologyRegistry(ASSENT_SCHEMA)
+        error = registry.validate_enum_field(
+            "EpistemicDecision", "responsible_role", "emperor"
+        )
+        assert error is not None and "emperor" in error
+        assert registry.validate_enum_field(
+            "EpistemicDecision", "responsible_role", "epistemic-controller"
+        ) is None
+
+    def test_protocol_actor_carries_the_agent_mixin(self):
+        registry = OntologyRegistry(ASSENT_SCHEMA)
+        assert registry.has_type("ProtocolActor")
+        assert registry.has_mixin("ProtocolActor", "Agent")
+        constraint = registry.get_slot_constraint("ProtocolActor", "agent_type")
+        assert constraint is not None and constraint.range == "ResponsibleRole"

@@ -28,6 +28,7 @@ from malleus.control import (
 )
 from malleus.kg import KnowledgeGraph
 from malleus.ledger import canonical_json, event_hash, record_hash
+from malleus.logic import LogicCheckResult, logic_contract_digest
 from malleus.ontology import OntologyRegistry
 from malleus.staging import ProposedOperation, stage_subgraph
 
@@ -142,16 +143,21 @@ def append_artifact(
     return record
 
 
-def register_graph_base(ledger: ProtocolLedger, minute: int = 1) -> dict:
+def register_graph_base(
+    ledger: ProtocolLedger,
+    minute: int = 1,
+    *,
+    intervals=(),
+) -> dict:
     base = ledger._accepted_graph_base
-    metadata = graph_base_metadata(base, [])
+    metadata = graph_base_metadata(base, list(intervals))
     artifact_id = "artifact:graph-base"
     fields = {
         "graph_schema_version": "1",
         "graph_ontology_hash": "sha256:" + base.registry.content_hash(),
         "base_state_digest": base.state_digest(),
         "base_record_metadata": metadata,
-        "base_record_count": 0,
+        "base_record_count": len(intervals),
     }
     return append_artifact(
         ledger,
@@ -170,7 +176,77 @@ def register_graph_base(ledger: ProtocolLedger, minute: int = 1) -> dict:
     )
 
 
-def setup_policy(ledger: ProtocolLedger, *, violation_verdict="REJECT") -> dict[str, dict]:
+def add_logic_artifacts(ledger: ProtocolLedger, rules: dict, minute: int = 3) -> dict[str, dict]:
+    """Register the pinned logic contract and the LOGICAL monitor that reads it."""
+    ontology_hash = "sha256:" + ledger.registry.content_hash()
+    contract_id = "artifact:logic-contract"
+    contract_fields = {
+        "logic_contract_schema_version": "1",
+        "ontology_hash": ontology_hash,
+        "fact_contract_version": "2",
+        "ruleset_id": rules["id"],
+        "ruleset_version": "1",
+        "ruleset_record_hash": rules["content_hash"],
+        "ruleset_artifact_hash": rules["artifact_hash"],
+        "rule_ids": ["RULE_ONE"],
+        "timeout_seconds": 5,
+    }
+    contract = append_artifact(
+        ledger,
+        "LogicContractArtifact",
+        contract_id,
+        "LOGIC_CONTRACT",
+        minute,
+        artifact_hash=logic_contract_digest(
+            schema_version="1",
+            contract_id=contract_id,
+            contract_version="1",
+            ontology_hash=ontology_hash,
+            fact_contract_version="2",
+            ruleset_id=rules["id"],
+            ruleset_version="1",
+            rule_ids=["RULE_ONE"],
+            timeout_seconds=5,
+            ruleset_hash=rules["artifact_hash"],
+        ),
+        source_record_ids=[rules["id"]],
+        **contract_fields,
+    )
+    monitor_id = "artifact:logic-monitor"
+    monitor_fields = {
+        "monitor_schema_version": "1",
+        "assessment_kind": "LOGICAL",
+        "monitor_implementation_hash": "sha256:" + "4" * 64,
+        "input_artifact_ids": [contract["id"]],
+        "input_artifact_record_hashes": [contract["content_hash"]],
+    }
+    monitor = append_artifact(
+        ledger,
+        "MonitorSpecificationArtifact",
+        monitor_id,
+        "MONITOR_SPECIFICATION",
+        minute,
+        artifact_hash=monitor_specification_digest(
+            schema_version="1",
+            monitor_id=monitor_id,
+            monitor_version="1",
+            assessment_kind="LOGICAL",
+            implementation_hash=monitor_fields["monitor_implementation_hash"],
+            input_artifact_ids=monitor_fields["input_artifact_ids"],
+            input_artifact_record_hashes=monitor_fields["input_artifact_record_hashes"],
+        ),
+        source_record_ids=[contract["id"]],
+        **monitor_fields,
+    )
+    return {"logic_contract": contract, "logic_monitor": monitor}
+
+
+def setup_policy(
+    ledger: ProtocolLedger,
+    *,
+    violation_verdict="REJECT",
+    include_logic: bool = False,
+) -> dict[str, dict]:
     rules = append_artifact(
         ledger,
         "ProtocolArtifact",
@@ -204,16 +280,23 @@ def setup_policy(ledger: ProtocolLedger, *, violation_verdict="REJECT") -> dict[
         ),
         **monitor_fields,
     )
+    extra = add_logic_artifacts(ledger, rules) if include_logic else {}
+    ordered = sorted(
+        [monitor, *([extra["logic_monitor"]] if include_logic else [])],
+        key=lambda item: item["id"],
+    )
+    required_ids = [item["id"] for item in ordered]
+    required_hashes = [item["content_hash"] for item in ordered]
     policy_id = "artifact:policy"
     policy_fields = {
         "policy_schema_version": "1",
         "ruleset_id": rules["id"],
         "ruleset_record_hash": rules["content_hash"],
         "ruleset_artifact_hash": rules["artifact_hash"],
-        "required_monitor_ids": [monitor["id"]],
-        "required_monitor_record_hashes": [monitor["content_hash"]],
-        "violation_verdicts": [violation_verdict],
-        "unknown_verdicts": ["DEFER"],
+        "required_monitor_ids": required_ids,
+        "required_monitor_record_hashes": required_hashes,
+        "violation_verdicts": [violation_verdict] * len(ordered),
+        "unknown_verdicts": ["DEFER"] * len(ordered),
         "control_precedence": ["REJECT", "CONTEST", "DEFER"],
     }
     policy = append_artifact(
@@ -229,16 +312,16 @@ def setup_policy(ledger: ProtocolLedger, *, violation_verdict="REJECT") -> dict[
             ruleset_id=rules["id"],
             ruleset_record_hash=rules["content_hash"],
             ruleset_artifact_hash=rules["artifact_hash"],
-            required_monitor_ids=[monitor["id"]],
-            required_monitor_record_hashes=[monitor["content_hash"]],
-            violation_verdicts=[violation_verdict],
-            unknown_verdicts=["DEFER"],
+            required_monitor_ids=required_ids,
+            required_monitor_record_hashes=required_hashes,
+            violation_verdicts=policy_fields["violation_verdicts"],
+            unknown_verdicts=policy_fields["unknown_verdicts"],
             control_precedence=["REJECT", "CONTEST", "DEFER"],
         ),
-        source_record_ids=[rules["id"], monitor["id"]],
+        source_record_ids=[rules["id"], *required_ids],
         **policy_fields,
     )
-    return {"rules": rules, "monitor": monitor, "policy": policy}
+    return {"rules": rules, "monitor": monitor, "policy": policy, **extra}
 
 
 def register_candidate(
@@ -392,6 +475,121 @@ def assess(
     return record
 
 
+def record_logic_check(
+    ledger: ProtocolLedger,
+    artifacts: dict[str, dict],
+    proposal: dict,
+    candidate: dict,
+    *,
+    suffix: str,
+    minute: int,
+    translated_record_ids: tuple[str, ...] = ("node:one",),
+) -> dict:
+    """Record one LogicCheckRecord bound to the supplied candidate's digests."""
+    event_id = f"event:logic-check:{suffix}"
+    timestamp = at(minute)
+    result = LogicCheckResult(
+        candidate_digest=candidate["candidate_digest"],
+        base_state_digest=candidate["base_state_digest"],
+        candidate_state_digest=candidate["candidate_state_digest"],
+        context_state_digests=(),
+        ontology_hash=candidate["graph_ontology_hash"],
+        fact_contract_version="2",
+        contract_id=artifacts["logic_contract"]["id"],
+        contract_version="1",
+        contract_hash=artifacts["logic_contract"]["artifact_hash"],
+        ruleset_id=artifacts["rules"]["id"],
+        ruleset_version="1",
+        ruleset_hash=artifacts["rules"]["artifact_hash"],
+        engine_name="SWI-Prolog",
+        engine_version="100002",
+        timeout_seconds=5,
+        facts_hash="sha256:" + "7" * 64,
+        fact_count=4,
+        translated_record_ids=translated_record_ids,
+        checked_rule_ids=("RULE_ONE",),
+        violations=(),
+    )
+    check, witnesses = result.to_protocol_records(
+        check_id=f"logic-check:{suffix}",
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:monitor",
+        role="logic-monitor",
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+        monitor_id=artifacts["logic_monitor"]["id"],
+        monitor_version="1",
+        monitor_hash=artifacts["logic_monitor"]["content_hash"],
+        logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+        ruleset_record_hash=artifacts["rules"]["content_hash"],
+    )
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.LOGIC_CHECK_RECORDED,
+        transaction_time=timestamp,
+        actor_id="actor:monitor",
+        payload={"check": check, "witnesses": list(witnesses)},
+    )
+    return check
+
+
+def record_logical_assessment(
+    ledger: ProtocolLedger,
+    artifacts: dict[str, dict],
+    proposal: dict,
+    check: dict,
+    *,
+    suffix: str,
+    minute: int,
+) -> dict:
+    event_id = f"event:logical-assessment:{suffix}"
+    timestamp = at(minute)
+    assessment = make_record(
+        "LogicalAssessment",
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:monitor",
+        role="logic-monitor",
+        source_record_ids=sorted({
+            proposal["id"],
+            artifacts["logic_monitor"]["id"],
+            check["id"],
+            artifacts["logic_contract"]["id"],
+            artifacts["rules"]["id"],
+        }),
+        id=f"assessment:logical:{suffix}",
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+        assessment_kind="LOGICAL",
+        assessment_outcome=check["check_outcome"],
+        monitor_id=artifacts["logic_monitor"]["id"],
+        monitor_version="1",
+        monitor_hash=artifacts["logic_monitor"]["content_hash"],
+        monitor_failure_id=None,
+        input_record_ids=[proposal["id"], check["id"]],
+        reason_codes=["LOGIC_CHECK_COMPLETED"],
+        rationale="The pinned logic check completed against this candidate.",
+        checked_rule_ids=check["checked_rule_ids"],
+        violated_rule_ids=check["violated_rule_ids"],
+        logic_check_record_ids=[check["id"]],
+        logic_contract_id=artifacts["logic_contract"]["id"],
+        logic_contract_record_hash=artifacts["logic_contract"]["content_hash"],
+        ruleset_id=artifacts["rules"]["id"],
+        ruleset_hash=artifacts["rules"]["content_hash"],
+    )
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.ASSESSMENT_RECORDED,
+        transaction_time=timestamp,
+        actor_id="actor:monitor",
+        payload={"assessment_type": "LogicalAssessment", "assessment": assessment},
+    )
+    return assessment
+
+
 def transition(event_id, timestamp, proposal_id, decision_id, target, sequence):
     return make_record(
         "TransitionRecord",
@@ -422,15 +620,22 @@ def decide(
     minute: int,
     include_application: bool = True,
     application_id: str | None = None,
+    extra_assessments: list[dict] | None = None,
     mutate_decision=None,
     mutate_application=None,
 ) -> dict:
     event_id = f"event:decision:{suffix}"
     timestamp = at(minute)
+    assessments = [assessment, *(extra_assessments or [])]
+    monitors = {
+        item["id"]: item
+        for item in artifacts.values()
+        if item.get("artifact_kind") == "MONITOR_SPECIFICATION"
+    }
     evaluation = evaluate_epistemic_policy(
         artifacts["policy"],
-        {artifacts["monitor"]["id"]: artifacts["monitor"]},
-        [assessment],
+        monitors,
+        assessments,
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
         base_acceptance_head=proposal["base_acceptance_head"],
@@ -446,13 +651,13 @@ def decide(
         generated_at=timestamp,
         actor_id="actor:reviewer",
         role="epistemic-controller",
-        source_record_ids=[
+        source_record_ids=sorted({
             proposal["id"],
-            assessment["id"],
             artifacts["policy"]["id"],
             artifacts["rules"]["id"],
             candidate["id"],
-        ],
+            *(item["id"] for item in assessments),
+        }),
         id=f"decision:{suffix}",
         proposal_id=proposal["id"],
         proposal_content_hash=proposal["content_hash"],
@@ -535,10 +740,10 @@ def decide(
     return decision
 
 
-def prepared(ledger, *, write, suffix="one", outcome="SATISFIED"):
+def prepared(ledger, *, write, suffix="one", outcome="SATISFIED", include_logic=False):
     anchor(ledger)
     graph_base = register_graph_base(ledger)
-    artifacts = setup_policy(ledger)
+    artifacts = setup_policy(ledger, include_logic=include_logic)
     candidate = register_candidate(
         ledger,
         graph_base,
@@ -555,6 +760,24 @@ def prepared(ledger, *, write, suffix="one", outcome="SATISFIED"):
         minute=7,
         outcome=outcome,
     )
+    if include_logic:
+        check = record_logic_check(
+            ledger,
+            artifacts,
+            proposal,
+            candidate,
+            suffix=suffix,
+            minute=7,
+        )
+        artifacts["logic_check"] = check
+        artifacts["logical_assessment"] = record_logical_assessment(
+            ledger,
+            artifacts,
+            proposal,
+            check,
+            suffix=suffix,
+            minute=8,
+        )
     return graph_base, artifacts, candidate, proposal, assessment
 
 
@@ -1363,3 +1586,181 @@ def test_historical_projection_verifies_later_ledger_semantics(ledger):
             transaction_sequence=9,
             valid_as_of=VALID_0,
         )
+
+
+class TestLogicalAssessmentBindsTheAppliedCandidate:
+    """The ACCEPT arm re-checks every LogicalAssessment against the candidate it
+    materializes (second self-inquisition S2, src/malleus/assent.py:1505-1517)."""
+
+    def test_candidate_bound_accept_carries_a_logical_assessment(self, ledger):
+        _, artifacts, candidate, proposal, assessment = prepared(
+            ledger,
+            write=node_write(),
+            include_logic=True,
+        )
+        logical = artifacts["logical_assessment"]
+        check = artifacts["logic_check"]
+        decision = decide(
+            ledger,
+            artifacts,
+            proposal,
+            candidate,
+            assessment,
+            suffix="one",
+            minute=9,
+            extra_assessments=[logical],
+        )
+        assert decision["epistemic_verdict"] == "ACCEPT"
+        assert logical["id"] in decision["assessment_ids"]
+        assert check["candidate_digest"] == candidate["candidate_digest"]
+        assert check["base_state_digest"] == candidate["base_state_digest"]
+        assert check["candidate_state_digest"] == candidate["candidate_state_digest"]
+        assert check["ontology_hash"] == candidate["graph_ontology_hash"]
+        projection = ledger.replay()
+        assert projection.accepted_graph.node_count == 1
+        assert len(projection.accepted_application_ids) == 1
+
+    def test_logic_check_for_another_candidate_never_reaches_the_accept_arm(self, ledger):
+        anchor(ledger)
+        graph_base = register_graph_base(ledger)
+        artifacts = setup_policy(ledger, include_logic=True)
+        candidate = register_candidate(
+            ledger,
+            graph_base,
+            [node_write()],
+            suffix="one",
+            minute=5,
+        )
+        other = register_candidate(
+            ledger,
+            graph_base,
+            [node_write("node:two")],
+            suffix="two",
+            minute=5,
+        )
+        proposal = propose(ledger, artifacts, candidate, suffix="one", minute=6)
+        assess(ledger, artifacts, proposal, suffix="one", minute=7)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="logic check targets a different candidate"):
+            record_logic_check(
+                ledger,
+                artifacts,
+                proposal,
+                other,
+                suffix="one",
+                minute=7,
+                translated_record_ids=("node:two",),
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestGraphBaseSupersessionLineage:
+    """A graph base may carry supersession lineage of its own
+    (second self-inquisition S2, src/malleus/accepted.py:650-680)."""
+
+    @staticmethod
+    def _base(registry, second_type="TestNode", third=False):
+        graph = KnowledgeGraph(registry)
+        graph.create_entity("TestNode", "node:one")
+        graph.create_entity(second_type, "node:two")
+        if third:
+            graph.create_entity("TestNode", "node:three")
+        return graph
+
+    @staticmethod
+    def _interval(record_id, valid_from, valid_to, supersedes=None):
+        return {
+            "record_id": record_id,
+            "valid_from": valid_from,
+            "valid_to": valid_to,
+            "supersedes_record_id": supersedes,
+        }
+
+    def test_superseded_base_record_is_closed_and_linked(self, tmp_path, registry):
+        base = self._base(registry)
+        ledger = ProtocolLedger(
+            tmp_path / "superseded.jsonl",
+            registry,
+            accepted_graph_base=base,
+        )
+        anchor(ledger)
+        register_graph_base(
+            ledger,
+            intervals=[
+                self._interval("node:one", VALID_0, VALID_1),
+                self._interval("node:two", VALID_1, None, "node:one"),
+            ],
+        )
+        metadata = ledger.replay().accepted_record_metadata
+        assert metadata["node:one"]["valid_to"] == VALID_1
+        assert metadata["node:one"]["superseded_by"] == "node:two"
+        assert metadata["node:one"]["supersedes_record_id"] is None
+        assert metadata["node:two"]["supersedes_record_id"] == "node:one"
+        assert metadata["node:two"]["superseded_by"] is None
+
+    def test_supersession_lineage_drives_the_valid_time_projection(self, tmp_path, registry):
+        base = self._base(registry)
+        ledger = ProtocolLedger(
+            tmp_path / "superseded-projection.jsonl",
+            registry,
+            accepted_graph_base=base,
+        )
+        anchor(ledger)
+        register_graph_base(
+            ledger,
+            intervals=[
+                self._interval("node:one", VALID_0, VALID_1),
+                self._interval("node:two", VALID_1, None, "node:one"),
+            ],
+        )
+        projector = AcceptedGraphProjector(ledger)
+        early = projector.current(valid_as_of=VALID_0).graph
+        late = projector.current(valid_as_of=VALID_2).graph
+        assert early.node_count == 1
+        assert late.node_count == 1
+        assert early.snapshot() != late.snapshot()
+
+    @pytest.mark.parametrize(
+        "case,message",
+        [
+            ("self", "cannot supersede itself"),
+            ("unknown", "supersedes unknown record 'node:absent'"),
+            ("fork", "base supersession forks record 'node:one'"),
+            ("type", "supersession type differs from prior record"),
+            ("gap", "must begin at the prior valid_to"),
+        ],
+    )
+    def test_base_supersession_lineage_fails_closed(self, registry, case, message):
+        graph = self._base(
+            registry,
+            second_type="TestFlaggedNode" if case == "type" else "TestNode",
+            third=case == "fork",
+        )
+        if case == "self":
+            intervals = [
+                self._interval("node:one", VALID_0, VALID_1, "node:one"),
+                self._interval("node:two", VALID_1, None),
+            ]
+        elif case == "unknown":
+            intervals = [
+                self._interval("node:one", VALID_0, VALID_1),
+                self._interval("node:two", VALID_1, None, "node:absent"),
+            ]
+        elif case == "fork":
+            intervals = [
+                self._interval("node:one", VALID_0, VALID_1),
+                self._interval("node:three", VALID_1, None, "node:one"),
+                self._interval("node:two", VALID_1, None, "node:one"),
+            ]
+        elif case == "type":
+            intervals = [
+                self._interval("node:one", VALID_0, VALID_1),
+                self._interval("node:two", VALID_1, None, "node:one"),
+            ]
+        else:
+            intervals = [
+                self._interval("node:one", VALID_0, VALID_2),
+                self._interval("node:two", VALID_1, None, "node:one"),
+            ]
+        with pytest.raises(AcceptedGraphError, match=message):
+            graph_base_metadata(graph, intervals)

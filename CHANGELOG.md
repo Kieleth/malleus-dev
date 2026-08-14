@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `malleus-inquisitor`: a CLI that runs mechanical rites over a malleus-derived schema (construction, root currency against the installed malleus via the strict consumer-side compatibility check, constrained type-slots, bound relation endpoints, derived-Signal shape, formula-shaped slots with no executor). Exit 0 grants the seal; findings are heresies, suspicions, and notes. Semi-serious by design; the findings are not.
+- Added the `malleus-inquisitor` agent skill (`.claude/skills/malleus-inquisitor/`) applying the judgment-tier rubric to a whole repository, and the rubric itself (`src/malleus/inquisition/rubric.yaml`) as tunable data. Every rite records the generic field lesson that paid for it; two self-inquisitions of this repository drove the fixes below, and their acceptance criteria are now tests.
+- Added `OntologyRegistry.schema_version`, exposing the entry schema's declared `version:`.
+- Added `KnowledgeGraph.get_relation()`, `KnowledgeGraph.export_records()`, and all-or-nothing validated rehydration via `KnowledgeGraph.from_records()`, replacing the private-attribute export and string-matched idempotency patterns observed in adopters.
+- Added `ResponsibleRole` (closed enum) and `ProtocolActor` (the `Agent`-mixin carrier) to the assent ontology; `responsible_role` is no longer an open string.
+- Added protocol test coverage with content for the request and claim-revision arm, `ConflictAssessment`, `UncertaintyAssessment`, and `TemporalAssessment`, `Evidence`/`EvidenceAssertion` proposal members, a candidate-bound `ACCEPT` citing a `LogicalAssessment`, and graph-base supersession lineage.
+- Added CI gates: releases require the full test suite and a clean-venv wheel install that invokes every console script; pull requests build and smoke the wheel; a guard test asserts every declared packaging target exists and is tracked.
+- Added adoption documentation: `docs/ADOPTION_GUIDE.md`, `docs/DELIMITATIONS.md`, `docs/RECIPES.md`.
+
+### Changed
+
+- **Breaking:** ontology identity is now derived from the resolved constraint table the validator consults, not from declaration syntax (`FINGERPRINT_VERSION` 3). Order-dependent mixin constraint conflicts are rejected at construction, making mixin order unobservable; every effective slot emits a membership fact regardless of attachment route; numeric bounds and inert declaration variants (explicit-false flags, duplicate mixins, no-op `slot_usage` entries) canonicalize. All content hashes and fingerprints change; the bundled CYP450 logic contract is re-pinned.
+- **Breaking:** assent ontology `0.6.0`: `responsible_role` narrowed to `ResponsibleRole`, `MONITOR_FAILURE` removed from `AssessmentKind` (it was dead vocabulary no monitor could declare), `AssessmentKind` pinned by the ledger's registry contract, and the write-only `request_states` projection field removed.
+- Changed the inquisitor's root-currency rite to the strict consumer-side check: a vendored root that silently dropped a `required` constraint now loses the seal instead of earning one.
+- Changed `status.py` to derive both ontology versions from the schema files instead of restating them.
+
+### Fixed
+
+- Fixed lone UTF-16 surrogates committing as valid writes and then crashing the digest, staging, and ledger layers untyped: they are now rejected at validation, and every encoding failure inside `canonical_json` is a `LedgerError` on both the write and the read path.
+- Fixed a `KeyError` when a domain schema relaxes `Signal.bearer_id`: the write is now a `REJECTED` operation with a reason.
+- Fixed YAML syntax errors and non-UTF-8 schema files raising parser exceptions through `OntologyRegistry`: both are now `OntologyError`, so the inquisitor records a construction finding instead of a traceback.
+- Fixed a missing `import_map` target being diagnosed as an absent map entry: the error now names the entry and the resolved path.
+- Fixed the mixin-conflict error message prescribing a remedy (the class's own `slot_usage`) that the merge order makes impossible.
+
 ## [0.6.0] - 2026-08-12
 
 ### Added

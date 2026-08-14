@@ -468,7 +468,7 @@ class TestStrictStructuralValidation:
     def test_nonstring_property_key_is_audited_rejection(self, cyp450_kg):
         op = cyp450_kg.create_entity("Drug", "drug-1", {"name": "A", 2: "bad"})
         assert op.op_status == OpStatus.REJECTED
-        assert "Property names must be strings" in op.rejection_reason
+        assert "Property names must be UTF-8 encodable strings" in op.rejection_reason
         assert cyp450_kg.node_count == 0
         assert cyp450_kg.rejected_operations() == [op]
 
@@ -771,3 +771,306 @@ class TestMixinQuery:
 
         persons_that_are_agents = kg.query(entity_type="Person", mixin="Agent")
         assert {p["id"] for p in persons_that_are_agents} == {"alice"}
+
+
+class TestRelaxedBearerIsRejectedNotRaised:
+    """A domain schema may relax bearer_id; the runtime must refuse with a
+    reason, never a KeyError (self-inquisition S1)."""
+
+    def test_signal_without_bearer_is_rejected_as_data(self, tmp_path):
+        schema = tmp_path / "loose.yaml"
+        schema.write_text(
+            "id: https://example.org/schema/loose\n"
+            "name: loose\n"
+            "imports:\n"
+            "  - malleus\n"
+            "  - linkml:types\n"
+            "classes:\n"
+            "  LooseSignal:\n"
+            "    is_a: Signal\n"
+            "    slot_usage:\n"
+            "      signal_type:\n"
+            "        range: LooseSignalType\n"
+            "      bearer_id:\n"
+            "        required: false\n"
+            "enums:\n"
+            "  LooseSignalType:\n"
+            "    permissible_values:\n"
+            "      LOOSE:\n"
+        )
+        from malleus.ontology import bundled_ontology_path
+
+        registry = OntologyRegistry(
+            schema, import_map={"malleus": str(bundled_ontology_path("malleus.yaml"))}
+        )
+        kg = KnowledgeGraph(registry)
+        op = kg.create_signal("LooseSignal", "s1", {"signal_type": "LOOSE"})
+        assert op.op_status == OpStatus.REJECTED
+        assert "bearer_id" in op.rejection_reason
+
+
+class TestSurrogatesAreRefusedAtTheGate:
+    """A value the validator accepts must survive the serialization the
+    identity layer performs (second self-inquisition H2)."""
+
+    @pytest.mark.parametrize("value", ["\ud800", "\udc00", "\ud800" "\udc00"])
+    def test_surrogate_value_is_rejected_with_reason(self, cyp450_kg, value):
+        op = cyp450_kg.create_entity("Drug", "drug-surrogate", {"name": value})
+        assert op.op_status == OpStatus.REJECTED
+        assert "UTF-8" in op.rejection_reason
+
+
+# --- Relation lookup by id ---
+
+
+class TestRelationLookup:
+    @pytest.fixture(autouse=True)
+    def setup_graph(self, cyp450_kg):
+        cyp450_kg.create_entity("Drug", "drug-cla", {"name": "Clarithromycin"})
+        cyp450_kg.create_entity("Enzyme", "enz-3a4", {"cyp_isoform": "CYP3A4"})
+        cyp450_kg.create_relation("InhibitsRelation", "rel-inh", "drug-cla", "enz-3a4", {
+            "relation_type": "INHIBITS",
+            "inhibition_strength": "STRONG",
+        })
+
+    def test_get_relation_returns_committed_record(self, cyp450_kg):
+        """Get a specific relation by ID, endpoints and properties included."""
+        assert cyp450_kg.get_relation("rel-inh") == {
+            "id": "rel-inh",
+            "source_id": "drug-cla",
+            "target_id": "enz-3a4",
+            "type": "InhibitsRelation",
+            "relation_type": "INHIBITS",
+            "inhibition_strength": "STRONG",
+        }
+
+    def test_get_missing_relation(self, cyp450_kg):
+        """Get returns None for missing relation."""
+        assert cyp450_kg.get_relation("rel-nonexistent") is None
+
+    def test_get_relation_ignores_node_ids(self, cyp450_kg):
+        """An entity ID is not a relation ID."""
+        assert cyp450_kg.get_relation("drug-cla") is None
+
+    def test_rejected_relation_is_not_retrievable(self, cyp450_kg):
+        """A refused write leaves nothing to retrieve."""
+        op = cyp450_kg.create_relation("InhibitsRelation", "rel-bad", "drug-cla", "enz-3a4", {
+            "relation_type": "SUBSTRATE_OF",
+        })
+        assert op.op_status == OpStatus.REJECTED
+        assert cyp450_kg.get_relation("rel-bad") is None
+
+    def test_returned_relation_cannot_mutate_graph(self, cyp450_kg):
+        """get_relation hands back a defensive copy."""
+        relation = cyp450_kg.get_relation("rel-inh")
+        relation["inhibition_strength"] = "WEAK"
+        assert cyp450_kg.get_relation("rel-inh")["inhibition_strength"] == "STRONG"
+
+    def test_idempotency_needs_no_rejection_string_match(self, cyp450_kg):
+        """Idempotent writes read the graph instead of parsing a refusal reason."""
+        def ensure_relation(relation_id):
+            existing = cyp450_kg.get_relation(relation_id)
+            if existing is not None:
+                return existing
+            op = cyp450_kg.create_relation("SubstrateOfRelation", relation_id, "drug-cla", "enz-3a4", {
+                "relation_type": "SUBSTRATE_OF",
+            })
+            assert op.op_status == OpStatus.COMMITTED
+            return cyp450_kg.get_relation(relation_id)
+
+        first = ensure_relation("rel-sub")
+        second = ensure_relation("rel-sub")
+        assert first == second
+        assert cyp450_kg.edge_count == 2
+        assert cyp450_kg.rejected_operations() == []
+
+
+# --- Structural export and rehydration ---
+
+
+@pytest.fixture
+def populated_kg(cyp450_kg):
+    cyp450_kg.create_entity("Drug", "drug-sim", {"name": "Simvastatin", "drug_class": "statin"})
+    cyp450_kg.create_entity("Drug", "drug-cla", {"name": "Clarithromycin"})
+    cyp450_kg.create_entity("Enzyme", "enz-3a4", {"cyp_isoform": "CYP3A4", "name": "CYP3A4"})
+    cyp450_kg.create_relation("SubstrateOfRelation", "rel-sub", "drug-sim", "enz-3a4", {
+        "relation_type": "SUBSTRATE_OF",
+    })
+    cyp450_kg.create_relation("InhibitsRelation", "rel-inh", "drug-cla", "enz-3a4", {
+        "relation_type": "INHIBITS",
+        "inhibition_strength": "STRONG",
+    })
+    cyp450_kg.create_signal("DrugSignal", "sig-risk", {
+        "signal_type": "INTERACTION_RISK",
+        "bearer_id": "rel-inh",
+        "value": 0.85,
+    })
+    cyp450_kg.create_event("DrugEvent", "evt-detected", {"event_type": "INTERACTION_DETECTED"})
+    return cyp450_kg
+
+
+class TestExportRecords:
+    def test_export_has_the_four_create_families(self, populated_kg):
+        """Export buckets match the four create_* families."""
+        export = populated_kg.export_records()
+        assert set(export) == {"entities", "relations", "signals", "events"}
+        assert [len(export[family]) for family in ("entities", "relations", "signals", "events")] == [3, 2, 1, 1]
+
+    def test_records_carry_create_arguments(self, populated_kg):
+        """Each record is exactly the argument set of its create_* call."""
+        export = populated_kg.export_records()
+        entities = {record["id"]: record for record in export["entities"]}
+        assert entities["drug-sim"] == {
+            "type": "Drug",
+            "id": "drug-sim",
+            "properties": {"name": "Simvastatin", "drug_class": "statin"},
+        }
+        assert export["relations"][0] == {
+            "type": "InhibitsRelation",
+            "id": "rel-inh",
+            "source_id": "drug-cla",
+            "target_id": "enz-3a4",
+            "properties": {"relation_type": "INHIBITS", "inhibition_strength": "STRONG"},
+        }
+        assert export["signals"][0] == {
+            "type": "DrugSignal",
+            "id": "sig-risk",
+            "properties": {
+                "signal_type": "INTERACTION_RISK",
+                "bearer_id": "rel-inh",
+                "value": 0.85,
+            },
+        }
+        assert export["events"][0] == {
+            "type": "DrugEvent",
+            "id": "evt-detected",
+            "properties": {"event_type": "INTERACTION_DETECTED"},
+        }
+
+    def test_export_is_json_serializable(self, populated_kg):
+        """The export survives a JSON round trip unchanged."""
+        import json
+        export = populated_kg.export_records()
+        assert json.loads(json.dumps(export)) == export
+
+    def test_export_cannot_mutate_graph(self, populated_kg):
+        """Mutating the export does not touch materialized state."""
+        digest = populated_kg.state_digest()
+        export = populated_kg.export_records()
+        export["entities"][0]["properties"]["name"] = "Tampered"
+        export["entities"].append({"type": "Drug", "id": "drug-ghost", "properties": {}})
+        export["relations"].clear()
+        assert populated_kg.state_digest() == digest
+        assert populated_kg.node_count == 5
+        assert populated_kg.edge_count == 2
+        assert populated_kg.export_records()["entities"][0]["properties"]["name"] != "Tampered"
+
+    def test_export_excludes_the_operation_audit_log(self, populated_kg):
+        """Refusals are execution-local: they leave no trace in the export."""
+        before = populated_kg.export_records()
+        op = populated_kg.create_entity("Enzyme", "enz-bad", {"cyp_isoform": "CYP99Z9"})
+        assert op.op_status == OpStatus.REJECTED
+        assert populated_kg.rejected_operations()
+        assert populated_kg.export_records() == before
+        assert "operations" not in before
+
+
+class TestFromRecords:
+    def test_round_trip_preserves_state(self, populated_kg, cyp450_registry):
+        """Export then rehydrate reproduces counts and state digest."""
+        rehydrated = KnowledgeGraph.from_records(cyp450_registry, populated_kg.export_records())
+        assert rehydrated.node_count == populated_kg.node_count
+        assert rehydrated.edge_count == populated_kg.edge_count
+        assert rehydrated.state_digest() == populated_kg.state_digest()
+        assert rehydrated.export_records() == populated_kg.export_records()
+
+    def test_round_trip_preserves_record_kinds(self, populated_kg, cyp450_registry):
+        """Signals and events come back as signals and events, not plain nodes."""
+        rehydrated = KnowledgeGraph.from_records(cyp450_registry, populated_kg.export_records())
+        assert rehydrated.get_node("sig-risk")["is_signal"] is True
+        assert rehydrated.get_node("evt-detected")["is_event"] is True
+        assert rehydrated.get_relation("rel-inh") == populated_kg.get_relation("rel-inh")
+
+    def test_rehydration_replays_through_the_validated_gate(self, populated_kg, cyp450_registry):
+        """Every rehydrated record is a committed operation in the new local audit."""
+        rehydrated = KnowledgeGraph.from_records(cyp450_registry, populated_kg.export_records())
+        assert len(rehydrated.operations) == 7
+        assert rehydrated.rejection_rate() == 0.0
+
+    def test_empty_records_build_an_empty_graph(self, cyp450_registry):
+        """An absent family means no records of that kind."""
+        graph = KnowledgeGraph.from_records(cyp450_registry, {})
+        assert graph.node_count == 0
+        assert graph.edge_count == 0
+
+    def test_invalid_record_aggregates_every_reason(self, cyp450_registry):
+        """One bad record fails the whole rehydration, with all reasons as data."""
+        records = {
+            "entities": [
+                {"type": "Drug", "id": "drug-ok", "properties": {"name": "Simvastatin"}},
+                {"type": "Enzyme", "id": "enz-bad", "properties": {"cyp_isoform": "CYP99Z9"}},
+            ],
+            "relations": [
+                {
+                    "type": "SubstrateOfRelation",
+                    "id": "rel-1",
+                    "source_id": "drug-ok",
+                    "target_id": "enz-bad",
+                    "properties": {"relation_type": "SUBSTRATE_OF"},
+                },
+            ],
+        }
+        with pytest.raises(ValueError) as excinfo:
+            KnowledgeGraph.from_records(cyp450_registry, records)
+        message = str(excinfo.value)
+        assert "entities[1] 'enz-bad'" in message
+        assert "Invalid value" in message
+        assert "relations[0] 'rel-1'" in message
+        assert "Target entity 'enz-bad' does not exist" in message
+
+    def test_failed_rehydration_leaves_the_source_untouched(self, populated_kg, cyp450_registry):
+        """Rehydration builds in isolation, so a failure cannot half-write anything."""
+        digest = populated_kg.state_digest()
+        records = populated_kg.export_records()
+        records["entities"].append({"type": "Drug", "id": "drug-sim", "properties": {}})
+        with pytest.raises(ValueError, match="already exists"):
+            KnowledgeGraph.from_records(cyp450_registry, records)
+        assert populated_kg.state_digest() == digest
+        assert populated_kg.node_count == 5
+
+    def test_unknown_type_is_rejected_despite_plausible_shape(self, cyp450_registry):
+        """A well-shaped record with a type the registry does not know is refused."""
+        records = {"entities": [{"type": "Spaceship", "id": "ship-1", "properties": {"name": "Rocinante"}}]}
+        with pytest.raises(ValueError, match="Unknown entity type"):
+            KnowledgeGraph.from_records(cyp450_registry, records)
+
+    def test_records_are_validated_against_the_target_registry(self, populated_kg, attack_registry):
+        """A CYP450 export does not rehydrate into an ATT&CK registry."""
+        with pytest.raises(ValueError, match="Unknown entity type"):
+            KnowledgeGraph.from_records(attack_registry, populated_kg.export_records())
+
+    def test_unknown_record_family_is_rejected(self, populated_kg, cyp450_registry):
+        """A snapshot dict is not a record export, and is refused as such."""
+        with pytest.raises(ValueError, match="Unknown record family: 'nodes'"):
+            KnowledgeGraph.from_records(cyp450_registry, populated_kg.snapshot())
+
+    def test_malformed_records_are_rejected_with_reasons(self, cyp450_registry):
+        """Missing, extra and non-mapping records each name what is wrong."""
+        records = {
+            "entities": [
+                {"type": "Drug", "id": "drug-1"},
+                {"type": "Drug", "id": "drug-2", "properties": {}, "bearer_id": "drug-1"},
+                "drug-3",
+            ],
+        }
+        with pytest.raises(ValueError) as excinfo:
+            KnowledgeGraph.from_records(cyp450_registry, records)
+        message = str(excinfo.value)
+        assert "entities[0] is missing required keys: ['properties']" in message
+        assert "entities[1] carries unexpected keys: ['bearer_id']" in message
+        assert "entities[2] is not a mapping" in message
+
+    def test_nonmapping_records_raise_type_error(self, cyp450_registry):
+        """The records container itself must be a mapping."""
+        with pytest.raises(TypeError, match="Records must be a mapping"):
+            KnowledgeGraph.from_records(cyp450_registry, [])

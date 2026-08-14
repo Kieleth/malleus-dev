@@ -1,7 +1,7 @@
 schema_version: "1"
 contract_id: malleus-cyp450-logic
 contract_version: "1"
-ontology_hash: sha256:0b73534d0453a2a06935ce6279f895a069f47db18cea284e08d7edc61a4af7ee
+ontology_hash: sha256:f763c889fee800b789f9bdd065632a1978deacafe43ae4d88a2ab6a3bef9c887
 fact_contract_version: "2"
 ruleset_id: malleus-cyp450-rules
 ruleset_version: "1"

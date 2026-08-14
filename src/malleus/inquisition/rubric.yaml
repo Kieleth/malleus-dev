@@ -1,0 +1,271 @@
+# The Ordo Malleus rubric.
+#
+# One file, two tiers. `mechanical` rites are implemented by the
+# malleus-inquisitor CLI and judged without taste. `judgment` rites need a
+# reader (human or LLM); the malleus-inquisitor skill applies them and writes
+# its findings to MALLEUS_INQUISITION.md in the inspected repo.
+#
+# Every rite was paid for by a real adoption. The `lesson` field records the
+# generic failure, never the project. This file is data on purpose: tune
+# severities, disable rites, add your own. Learnings flow back upstream:
+# open an issue or PR against malleus-dev with the generic lesson only.
+
+version: 3
+
+config:
+  # Tokens the inert_formula rite matches as substrings of slot names.
+  # Data on purpose: widen it when your domain spells "formula" differently.
+  formula_slot_tokens:
+    - formula
+    - formal_expression
+    - expression
+    - equation
+    - calculation
+    - computation
+
+mechanical:
+  - id: construction
+    question: Does the schema construct, with every import resolved?
+    severity: HERESY
+    lesson: >-
+      A schema that cannot load is not a source of truth. Observed: a broken
+      symlink to a renamed directory left a project unable to regenerate for
+      months, and nothing noticed because nothing tried.
+  - id: root
+    question: Are the five primitives present, and does each declared primitive have a speaker?
+    severity: NOTE
+    lesson: >-
+      Vocabulary with no reader or writer is where drift begins. Observed: a
+      narrative ontology fully declared and consumed by nothing; Signal, the
+      most distinctive primitive, adopted least across an entire fleet.
+  - id: root_currency
+    question: Is the imported root a superset-or-identical match of the installed malleus?
+    severity: HERESY
+    lesson: >-
+      Vendored root copies drift silently. Observed twice in one project:
+      stale 0.3.0 copies while upstream moved to 0.4.0 with changed ranges
+      and bounds. Regenerating against the wrong root produces different
+      storage schemas with no error anywhere.
+  - id: constrained_tongues
+    question: Is every event_type / relation_type / signal_type narrowed to an enum or pinned?
+    severity: HERESY
+    lesson: >-
+      A loose string type-slot admits anything. The root leaves these open on
+      purpose; the domain schema MUST close them (Ontology Protocol rule 3).
+  - id: bound_endpoints
+    question: Does every concrete Relation pin its predicate and narrow both endpoints?
+    severity: SUSPICION
+    lesson: >-
+      Observed: a generator assigned every relation type (Entity, Entity), so
+      endpoint validation degenerated to "does this name exist". The relation
+      contract must be generated from Relation subclasses, not harvested from
+      an enum.
+  - id: derived_signals
+    question: Does every Signal require a bearer and carry algorithm and computed_at?
+    severity: SUSPICION
+    lesson: >-
+      A Signal is computed, never asserted. Observed: signals written with an
+      empty bearer to satisfy the type checker, and a platform that redefined
+      Signal as an Event, inverting the BFO commitment. If it is not
+      recomputable from its inputs, it is not a Signal.
+  - id: inert_formula
+    question: Is any formula-shaped slot backed by an executor, or explicitly marked inert?
+    severity: SUSPICION
+    lesson: >-
+      Five systems in one fleet wrote formulas down as data and none executed
+      them; each kept a hand-written twin in code that drifted. A formula the
+      engine cannot evaluate is documentation wearing the graph's clothes.
+
+judgment:
+  - id: gate_integrity
+    question: >-
+      Is the registry constructor-required and enforced on EVERY write path:
+      typed API, string API, property updates, deserialization, load, merge?
+    severity: HERESY
+    lesson: >-
+      The advisory registry is the most common defect in the field: the
+      constitutive docstring shipped with a registry=None default, dead
+      validation methods, an unvalidated update path, or a load path that
+      bypasses everything. The gate is only real if there is no side door.
+  - id: silent_drop
+    question: Are unknown or renamed properties rejected loudly, never filtered?
+    severity: HERESY
+    lesson: >-
+      A write layer that silently filters unknown columns cost one project its
+      entire learning channel for months (a renamed column mapped nowhere and
+      every record landed empty). Silent drop is how a typed graph degrades
+      into an untyped one without anyone noticing.
+  - id: reader_census
+    question: Does every declared type have at least one writer AND one reader?
+    severity: SUSPICION
+    lesson: >-
+      A KG whose writes are never read is an expensive log. One research loop
+      audited itself and found eight of thirteen deviations were "learning
+      infrastructure written but inert". Write-only types need an explicit
+      write-only-with-reason annotation or a reader.
+  - id: citation_integrity
+    question: Do axiom references, rule ids, and cited node ids resolve mechanically?
+    severity: HERESY
+    lesson: >-
+      Cross-file string references (rule cites axiom id, alert ships it to the
+      UI) die silently on rename. The strongest observed pattern makes claims
+      committable only when every cited id resolves, and records the failure
+      to ground as a typed node.
+  - id: provenance_typed
+    question: Is provenance carried in typed fields, never substring markers in free text?
+    severity: SUSPICION
+    lesson: >-
+      Observed: source strings like "Set via AI [confidence=low]" recovered by
+      substring search, while proper enums existed one layer away. Provenance
+      that lives in string concatenation cannot be queried or enforced.
+  - id: fail_closed
+    question: Do critical rules fail closed, and do unknown conditions refuse rather than pass?
+    severity: HERESY
+    lesson: >-
+      Observed: a rule evaluator that catches all exceptions and returns no
+      alerts, so a broken critical safety rule silently stops firing for a
+      product with real users. A critical check that cannot run must block.
+  - id: flag_never_delete
+    question: Can any rule severity produce a deletion, directly or through a correction loop?
+    severity: HERESY
+    lesson: >-
+      Observed: an error-severity rule fed a correction loop that turned every
+      violation into a silent deletion of valid records on every run. A rule
+      sees one item and one predicate; the truth needs the record around it.
+      Violations are hints to a reviser, never drop lists.
+  - id: single_source
+    question: Does every threshold, enum, and formula have exactly one authoritative home?
+    severity: SUSPICION
+    lesson: >-
+      Observed: one runway threshold in axiom prose, rule condition, and code
+      literal, disagreeing; growth-stage bands triplicated across schema,
+      template, and prompt. If two copies exist, one is already wrong.
+  - id: derived_not_stored
+    question: Is any value the schema calls computed actually stored as a hand-typed input?
+    severity: SUSPICION
+    lesson: >-
+      Observed: a connection count hand-maintained in YAML while the schema
+      declared it a computed Signal. The graph then certifies a fiction.
+  - id: dependency_pin
+    question: Is the root dependency resolved from the installed package, version-gated, and drift-tested?
+    severity: HERESY
+    lesson: >-
+      Symlinks to sibling checkouts, hash pins with no upgrade path, and
+      sed-rewritten Dockerfiles all failed in the field. The working pattern:
+      resolve from the installed package, gate on a version floor, assert
+      check_compatibility in a test, regenerate in CI and fail on dirty diff.
+  - id: trusted_explicit
+    question: Is every validation bypass an explicit property of the operation, never inferred from context?
+    severity: SUSPICION
+    lesson: >-
+      Observed: checkpoint replay that skipped validation by context laundered
+      unvalidated data through compaction; two consecutive releases shipped
+      bugs on that fork, found in production downstream.
+  - id: rejection_as_data
+    question: Do rejections carry machine-readable diagnosis (reason, offending type, schema hash)?
+    severity: SUSPICION
+    lesson: >-
+      Observed: a quarantine that returns bare hashes with the rich error
+      discarded, forcing operators to re-derive why by hand. Malleus carries
+      rejection_reason; every layer built on it must keep that property.
+  - id: fingerprint_from_validator
+    question: >-
+      Is identity (hash and fingerprint) computed from the RESOLVED
+      constraint table the validator consults, never from the declaration
+      syntax, covering every enforced constraint including slot membership
+      and any resolution-order dependence?
+    severity: HERESY
+    lesson: >-
+      Verified in the field, then verified at home. Field: a hand-maintained
+      fingerprint emitter covered only enum constraints, so two peers with
+      incompatible numeric bounds read "identical" while one silently
+      quarantined the other's data. Home, first self-inquisition: mixin
+      declaration order changed the effective validator (last-wins merge)
+      while the identity hash sorted the mixin list, so two peers whose
+      validators rejected each other's data read "identical" on every
+      available check; and a slot attached by a documentation-only usage
+      entry grew the accepted-property set while emitting zero facts, so the
+      peer that would reject every record certified "superset". Where
+      declaration and resolution coincide the fingerprint is correct; where
+      they diverge it goes blind. Walk the resolved slot table. A
+      canonicalization that discards an ordering the resolver honors is not
+      canonicalization, it is data loss in the one function that must not
+      lose data. Better still: make resolution order unrepresentable by
+      rejecting order-dependent conflicts at construction.
+
+  - id: release_target_resolves
+    question: >-
+      Do packaging declarations (console scripts, include lists, extras)
+      resolve in a clean install, verified by CI invoking them, and is the
+      release path gated on the test suite?
+    severity: HERESY
+    lesson: >-
+      Packaging metadata is a cross-file string reference and dies silently
+      on a partial commit. Observed: a manifest declaring an entry point and
+      include paths for files that were not yet committed; the metadata
+      linter passed because it validates the manifest, never the target.
+      Install the built artifact into a clean environment and invoke every
+      declared entry point in CI. Separately: a release workflow that does
+      not depend on the test workflow is not gated, whatever the branch
+      protection says.
+
+  - id: divergence_signal_is_quiet
+    question: >-
+      Do semantically equal declarations, numeric spellings AND inert
+      variants (explicit-false flags, no-op overrides, repeated
+      declarations), canonicalize to the same identity?
+    severity: SUSPICION
+    lesson: >-
+      Observed: integer and float spellings of the same numeric bound
+      produced different facts, so schemas enforcing identical constraints
+      reported divergent. Second pass: an explicitly-false boolean where
+      absence means the same thing, a no-op override entry, and a repeated
+      mixin declaration each produced a different identity for the same
+      validator. All err safe, but a divergence check that cries wolf gets
+      muted, and a muted check is why the real divergence ships. Noise in a
+      safety signal is a defect in the safety signal.
+
+  - id: encodable_at_the_gate
+    question: >-
+      Does every value the validator accepts survive the serialization the
+      identity layer performs?
+    severity: HERESY
+    lesson: >-
+      A validator that checks a value's in-memory type while identity is
+      computed from its wire encoding has two different acceptance sets, and
+      the gap between them is a write that commits and then cannot be
+      hashed. Observed: a string that passed the type check and json.dumps
+      but could not be UTF-8 encoded; the write committed with no rejection,
+      and afterwards the state digest, the staging path, and both ledger
+      append and ledger read raised an untyped encoding error, including the
+      read path, whose whole purpose is to turn corruption into diagnosis.
+      Reject at the width of the narrowest layer downstream, and make the
+      serializer convert every encoding failure into the typed rejection its
+      callers already catch.
+
+  - id: the_rite_survives_its_subject
+    question: >-
+      Does the mechanical inspector convert every way its subject can be
+      malformed into a recorded finding, rather than into an exception?
+    severity: HERESY
+    lesson: >-
+      An inspector that catches only its own error type crashes on the most
+      common upstream failure, a syntax error in the very file it exists to
+      judge, and then reports nothing at all. To an operator a traceback
+      reads as a broken tool, not a broken subject, so the finding is not
+      merely missed, it is misattributed. Catch the parser's exception
+      hierarchy too, and prove it with a deliberately corrupt input. The
+      currency corollary: a drift rite must use the identity function that
+      includes every constraint the CONSUMER's validator enforces; a
+      currency check built on the producer-side variant certifies a root
+      whose validator it should condemn, and the guidance shipped to
+      adopters tends to carry the same confusion.
+  - id: graph_load_bearing
+    question: For any LLM-facing demo or eval, can the model answer from parametric memory alone?
+    severity: SUSPICION
+    lesson: >-
+      Measured: a no-tools, no-memory baseline beat the full architecture
+      because the task was recall. Demos need entities the model cannot know
+      or state it cannot reconstruct, or they prove nothing. State the prompt
+      style too: tool-call propensity varied 25x across models on identical
+      prompts.

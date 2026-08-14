@@ -7,6 +7,13 @@ and state machines.
 The assent schema is `ontology/assent.yaml`. It imports the minimal Malleus
 root ontology rather than expanding that root with protocol-specific concepts.
 
+
+A note on primitives, so the inquisitor's output reads as intent rather than
+omission: every protocol record extends `Entity` deliberately. The records
+are the durable commitments; occurrences live in the ledger's event
+envelopes, and graph content (including Event, Signal, and Relation
+subtypes) comes from the domain schema, not from the protocol.
+
 ## Record categories
 
 `ProtocolRecord` is the abstract root for immutable protocol records. Each

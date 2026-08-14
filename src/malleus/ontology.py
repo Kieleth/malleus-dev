@@ -17,7 +17,7 @@ import yaml
 
 
 BUILTIN_RANGES = frozenset({"string", "integer", "float", "boolean", "datetime"})
-FINGERPRINT_VERSION = 2
+FINGERPRINT_VERSION = 3
 
 
 def bundled_ontology_path(*parts: str) -> Path:
@@ -161,8 +161,48 @@ def _merge_constraint(base: SlotConstraint, override: SlotConstraint) -> SlotCon
     return SlotConstraint(**values)
 
 
+def _utf8_encodable(value: str) -> bool:
+    try:
+        value.encode("utf-8")
+    except UnicodeEncodeError:
+        return False
+    return True
+
+
+def _canonical_constraint_value(value: Any) -> Any:
+    # 0 and 0.0 enforce the same bound; identity must not distinguish them.
+    if isinstance(value, float) and not isinstance(value, bool) and value.is_integer():
+        return int(value)
+    return value
+
+
 def _constraint_dict(value: SlotConstraint) -> dict[str, Any]:
-    return {item.name: getattr(value, item.name) for item in fields(SlotConstraint)}
+    return {
+        item.name: _canonical_constraint_value(getattr(value, item.name))
+        for item in fields(SlotConstraint)
+    }
+
+
+_ABSENT_EQUALS_FALSE = ("required", "multivalued", "identifier")
+
+
+def _normalized_global_slot(constraint: SlotConstraint) -> SlotConstraint:
+    """At global-slot level an explicit False enforces exactly like absence;
+    identity must not distinguish them. (In slot_usage a False can override a
+    True base, so usage constraints stay raw.)"""
+    values = {item.name: getattr(constraint, item.name) for item in fields(SlotConstraint)}
+    for name in _ABSENT_EQUALS_FALSE:
+        if values[name] is False:
+            values[name] = None
+    return SlotConstraint(**values)
+
+
+def _inert_usage(typedef: TypeDef, slot_name: str, constraint: SlotConstraint) -> bool:
+    """An all-None slot_usage entry for a slot the class already lists in
+    slots: neither attaches nor constrains anything; identity skips it."""
+    return slot_name in typedef.slots and all(
+        getattr(constraint, item.name) is None for item in fields(SlotConstraint)
+    )
 
 
 class OntologyRegistry:
@@ -186,6 +226,7 @@ class OntologyRegistry:
         self._definition_sources: dict[tuple[str, str], Path] = {}
         self._loaded_paths: set[Path] = set()
         self._effective_slot_cache: dict[str, dict[str, SlotConstraint]] = {}
+        self._schema_version: str | None = None
         self._load_schema(self._schema_path)
         self._validate_schema()
 
@@ -212,10 +253,21 @@ class OntologyRegistry:
             raise OntologyError(f"Ontology file does not exist: '{path}'")
         self._loaded_paths.add(path)
 
-        with path.open(encoding="utf-8") as stream:
-            schema = yaml.load(stream, Loader=UniqueKeyLoader)
+        try:
+            with path.open(encoding="utf-8") as stream:
+                schema = yaml.load(stream, Loader=UniqueKeyLoader)
+        except yaml.YAMLError as error:
+            # Malformed YAML is the most common way a schema fails to load;
+            # it must be a typed refusal every caller already catches, not a
+            # parser traceback.
+            raise OntologyError(f"Ontology is not valid YAML: '{path}': {error}") from error
+        except UnicodeDecodeError as error:
+            raise OntologyError(f"Ontology is not UTF-8: '{path}': {error}") from error
         if not isinstance(schema, dict):
             raise OntologyError(f"Ontology must be a YAML mapping: '{path}'")
+        if path == self._schema_path.resolve():
+            declared_version = schema.get("version")
+            self._schema_version = None if declared_version is None else str(declared_version)
 
         imports = schema.get("imports", [])
         if not isinstance(imports, list) or not all(isinstance(item, str) for item in imports):
@@ -310,7 +362,7 @@ class OntologyRegistry:
                 slot_usage=slot_usage,
                 is_mixin=bool(definition.get("mixin", False)),
                 abstract=bool(definition.get("abstract", False)),
-                mixins=tuple(mixins),
+                mixins=tuple(dict.fromkeys(mixins)),
             )
             self._types[name] = typedef
             self._inheritance[name] = typedef.parent
@@ -325,7 +377,15 @@ class OntologyRegistry:
     def _resolve_import(self, start_dir: Path, name: str) -> Path | None:
         mapped = self._import_map.get(name)
         if mapped is not None:
-            return mapped.resolve() if mapped.is_file() else None
+            if not mapped.is_file():
+                # An explicit map entry that misses must be diagnosed as
+                # itself, not as the absence of a map entry.
+                raise OntologyError(
+                    f"import_map entry '{name}' resolves to '{mapped.resolve()}', "
+                    "which is not a file. Relative map paths resolve against the "
+                    "schema file's directory, not the working directory."
+                )
+            return mapped.resolve()
 
         explicit = Path(name)
         if explicit.suffix in {".yaml", ".yml"} or "/" in name:
@@ -394,6 +454,12 @@ class OntologyRegistry:
 
         for name in self._scalar_types:
             self._resolve_scalar_range(name, set())
+        # Force full constraint resolution now. Cyclic inheritance and
+        # order-dependent mixin conflicts are construction failures, not
+        # surprises at first use; identity can then treat mixin sets as
+        # unordered because order is unobservable.
+        for name in self._types:
+            self.effective_slots(name)
 
     def _validate_slot_range(self, subject: str, slot: SlotConstraint) -> None:
         if slot.range and not self._known_range(slot.range):
@@ -418,6 +484,11 @@ class OntologyRegistry:
         if name in seen:
             raise OntologyError(f"Cyclic scalar type definition at '{name}'")
         return self._resolve_scalar_range(self._scalar_types[name], seen | {name})
+
+    @property
+    def schema_version(self) -> str | None:
+        """The entry schema's declared `version:`, or None if it declares none."""
+        return self._schema_version
 
     def has_type(self, type_name: str) -> bool:
         return type_name in self._types
@@ -491,8 +562,20 @@ class OntologyRegistry:
         next_trail = (*trail, type_name)
         if typedef.parent:
             result.update(self._build_effective_slots(typedef.parent, next_trail))
+        mixin_origin: dict[str, str] = {}
         for mixin in typedef.mixins:
             for slot_name, constraint in self._build_effective_slots(mixin, next_trail).items():
+                prior = mixin_origin.get(slot_name)
+                if prior is not None and result[slot_name] != constraint:
+                    raise OntologyError(
+                        f"Type '{type_name}': mixins '{prior}' and '{mixin}' declare "
+                        f"conflicting constraints for slot '{slot_name}'. Mixin "
+                        "resolution must not depend on declaration order; resolve "
+                        "the conflict in the mixins themselves (a class's own "
+                        "slot_usage is applied after the mixin merge and cannot "
+                        "repair it)."
+                    )
+                mixin_origin[slot_name] = mixin
                 result[slot_name] = constraint
         for slot_name in typedef.slots:
             result.setdefault(slot_name, self._slots[slot_name])
@@ -521,9 +604,16 @@ class OntologyRegistry:
         if not isinstance(data, Mapping):
             return [f"Properties for '{type_name}' must be a mapping"]
 
-        non_string_keys = [repr(name) for name in data if not isinstance(name, str)]
+        non_string_keys = [
+            repr(name)
+            for name in data
+            if not isinstance(name, str) or not _utf8_encodable(name)
+        ]
         if non_string_keys:
-            return [f"Property names must be strings, got: {', '.join(non_string_keys)}"]
+            return [
+                "Property names must be UTF-8 encodable strings, got: "
+                + ", ".join(non_string_keys)
+            ]
 
         slots = self.effective_slots(type_name)
         errors = [
@@ -561,6 +651,16 @@ class OntologyRegistry:
 
     def _validate_scalar(self, name: str, value: Any, slot: SlotConstraint) -> list[str]:
         errors = []
+        if isinstance(value, str):
+            # The identity layer hashes UTF-8; a value the validator accepts
+            # must survive the serialization identity performs. Lone
+            # surrogates pass isinstance(str) and json.dumps, then crash the
+            # digest. Reject them here so the write is a refusal, not a
+            # KeyError three layers down.
+            try:
+                value.encode("utf-8")
+            except UnicodeEncodeError:
+                return [f"Property '{name}' must be valid UTF-8 (no lone surrogates)"]
         range_name = slot.range or "string"
         scalar_range = (
             self._resolve_scalar_range(range_name, set())
@@ -626,6 +726,7 @@ class OntologyRegistry:
                         "slot_usage": {
                             slot: _constraint_dict(constraint)
                             for slot, constraint in sorted(typedef.slot_usage.items())
+                            if not _inert_usage(typedef, slot, constraint)
                         },
                         "is_mixin": typedef.is_mixin,
                         "abstract": typedef.abstract,
@@ -638,7 +739,7 @@ class OntologyRegistry:
                     for name, definition in sorted(self._enums.items())
                 },
                 "slots": {
-                    name: _constraint_dict(definition)
+                    name: _constraint_dict(_normalized_global_slot(definition))
                     for name, definition in sorted(self._slots.items())
                 },
                 "scalar_types": dict(sorted(self._scalar_types.items())),
@@ -664,13 +765,23 @@ class OntologyRegistry:
                 for slot in typedef.slots:
                     facts.add(f"type:{name}:slot:{slot}")
                 for slot_name, constraint in typedef.slot_usage.items():
+                    if _inert_usage(typedef, slot_name, constraint):
+                        continue
                     facts.update(self._constraint_facts(f"type:{name}:usage:{slot_name}", constraint))
+                # Membership is an enforced constraint: it decides
+                # unknown-property rejection. Walk the same resolved slot
+                # table the validator walks, so a slot attached by ANY route
+                # (slots:, slot_usage:, parent, mixin) is a fact.
+                for slot_name in self.effective_slots(name):
+                    facts.add(f"type:{name}:effective_slot:{slot_name}")
             for name, definition in self._enums.items():
                 facts.add(f"enum:{name}")
                 facts.update(f"enum:{name}:{value}" for value in definition.values)
             for name, definition in self._slots.items():
                 facts.add(f"slot:{name}")
-                facts.update(self._constraint_facts(f"slot:{name}", definition))
+                facts.update(
+                    self._constraint_facts(f"slot:{name}", _normalized_global_slot(definition))
+                )
             for name, base in self._scalar_types.items():
                 facts.add(f"scalar_type:{name}:{base}")
             self._cached_fingerprint = frozenset(facts)
@@ -689,7 +800,7 @@ class OntologyRegistry:
         ):
             value = getattr(constraint, name)
             if value is not None:
-                facts.add(f"{prefix}:{name}:{value}")
+                facts.add(f"{prefix}:{name}:{_canonical_constraint_value(value)}")
         return facts
 
     def fingerprint_serializable(self) -> list[str]:

@@ -25,6 +25,16 @@ class OpStatus(str, Enum):
     REJECTED = "REJECTED"
 
 
+# Family order is replay order: a relation needs its endpoints and a signal
+# needs its bearer already materialized when its record is replayed.
+RECORD_FAMILIES: tuple[tuple[str, str], ...] = (
+    ("entities", "ENTITY"),
+    ("relations", "RELATION"),
+    ("signals", "SIGNAL"),
+    ("events", "EVENT"),
+)
+
+
 @dataclass
 class Operation:
     """A structurally validated graph operation and its materialization result."""
@@ -144,6 +154,97 @@ class KnowledgeGraph:
         operations.sort(key=lambda item: item["record_id"])
         return tuple(operations)
 
+    def export_records(self) -> dict[str, list[dict[str, Any]]]:
+        """Export materialized state as records that replay through from_records.
+
+        Structural state only. The operation audit log is deliberately not
+        exported: refusals and their reasons are execution-local diagnostics,
+        not transferable state (docs/DELIMITATIONS.md, "Deliberate boundaries").
+        Every record carries exactly the arguments of its create_* call.
+        """
+        export: dict[str, list[dict[str, Any]]] = {family: [] for family, _ in RECORD_FAMILIES}
+        families = {kind: family for family, kind in RECORD_FAMILIES}
+        for record in self.canonical_operations():
+            kind = record["kind"]
+            endpoints = (
+                {"source_id": record["source_id"], "target_id": record["target_id"]}
+                if kind == "RELATION"
+                else {}
+            )
+            export[families[kind]].append({
+                "type": record["record_type"],
+                "id": record["record_id"],
+                **endpoints,
+                "properties": record["properties"],
+            })
+        return export
+
+    @classmethod
+    def from_records(
+        cls,
+        registry: OntologyRegistry,
+        records: dict[str, list[dict[str, Any]]],
+    ) -> "KnowledgeGraph":
+        """Rehydrate a graph by replaying every record through the create_* gate.
+
+        All or nothing: the graph is built in isolation and returned only when
+        every record commits. Any refusal raises ValueError carrying every
+        reason, so a caller never holds a partially rehydrated graph. An absent
+        family means no records of that kind; an unknown family is a refusal.
+        """
+        if not isinstance(records, dict):
+            raise TypeError("Records must be a mapping")
+        graph = cls(registry)
+        known = {family for family, _ in RECORD_FAMILIES}
+        failures = [f"Unknown record family: '{name}'" for name in sorted(set(records) - known)]
+        for family, kind in RECORD_FAMILIES:
+            entries = records.get(family, [])
+            if not isinstance(entries, (list, tuple)):
+                failures.append(f"Record family '{family}' must be a list")
+                continue
+            for position, record in enumerate(entries):
+                failures.extend(graph._replay_record(family, kind, position, record))
+        if failures:
+            raise ValueError(f"Cannot rehydrate graph from records: {'; '.join(failures)}")
+        return graph
+
+    def _replay_record(
+        self,
+        family: str,
+        kind: str,
+        position: int,
+        record: Any,
+    ) -> list[str]:
+        label = f"{family}[{position}]"
+        if not isinstance(record, dict):
+            return [f"{label} is not a mapping"]
+        expected = ["type", "id", "properties"]
+        if kind == "RELATION":
+            expected = ["type", "id", "source_id", "target_id", "properties"]
+        missing = [key for key in expected if key not in record]
+        if missing:
+            return [f"{label} is missing required keys: {missing}"]
+        unexpected = sorted(set(record) - set(expected))
+        if unexpected:
+            return [f"{label} carries unexpected keys: {unexpected}"]
+        if kind == "ENTITY":
+            operation = self.create_entity(record["type"], record["id"], record["properties"])
+        elif kind == "RELATION":
+            operation = self.create_relation(
+                record["type"],
+                record["id"],
+                record["source_id"],
+                record["target_id"],
+                record["properties"],
+            )
+        elif kind == "SIGNAL":
+            operation = self.create_signal(record["type"], record["id"], record["properties"])
+        else:
+            operation = self.create_event(record["type"], record["id"], record["properties"])
+        if operation.op_status == OpStatus.REJECTED:
+            return [f"{label} '{record['id']}': {operation.rejection_reason}"]
+        return []
+
     def _replace_materialized_state(self, other: "KnowledgeGraph") -> None:
         """Atomically replace state from a fully validated isolated graph."""
         if not isinstance(other, KnowledgeGraph):
@@ -246,7 +347,11 @@ class KnowledgeGraph:
         structural = self._validate_payload(signal_type, {**properties, "id": signal_id})
         if not structural.valid:
             return structural
-        bearer_id = properties["bearer_id"]
+        bearer_id = properties.get("bearer_id")
+        if not bearer_id:
+            # Reachable when a domain schema relaxes bearer_id to optional.
+            # A refusal is data, never a KeyError.
+            return ValidationResult(False, "Signal requires bearer_id")
         bearer = self._identifiers.get(bearer_id)
         if bearer is None:
             return ValidationResult(False, f"Bearer '{bearer_id}' does not exist")
@@ -482,6 +587,18 @@ class KnowledgeGraph:
         if node_id not in self._graph:
             return None
         return deepcopy({"id": node_id, **self._graph.nodes[node_id]})
+
+    def get_relation(self, relation_id: str) -> dict[str, Any] | None:
+        """Return the committed relation record, or None when no such relation exists."""
+        for source, target, key, data in self._graph.edges(data=True, keys=True):
+            if key == relation_id:
+                return deepcopy({
+                    "id": key,
+                    "source_id": source,
+                    "target_id": target,
+                    **data,
+                })
+        return None
 
     def has_node(self, node_id: str) -> bool:
         return node_id in self._graph

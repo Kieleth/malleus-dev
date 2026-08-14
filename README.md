@@ -270,10 +270,51 @@ serialization remain outside version 0.6.0.
 For the layer-by-layer walkthrough (vocabulary, typed graph, ground truth loading, logic engine, distributed convergence), see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Adoption guides:
+- [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md): start here. How to adopt malleus from any project and keep it alive, written for a human and their coding assistant together
 - [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md): the current machine-checked capability boundary
 - [docs/ONTOLOGY_PROTOCOL.md](docs/ONTOLOGY_PROTOCOL.md): how to add malleus to an existing project
 - [docs/KNOWLEDGE_GRAPH_PROTOCOL.md](docs/KNOWLEDGE_GRAPH_PROTOCOL.md): how the ontology shapes the KG
 - [docs/ASSENT_PROTOCOL.md](docs/ASSENT_PROTOCOL.md): how proposals, assessments, decisions, authorization, and replay remain separate
+- [docs/DELIMITATIONS.md](docs/DELIMITATIONS.md): what malleus reuses, rejects, and can honestly claim against OWL, SHACL, TypeDB, XTDB, nanopublications, and the rest of the field
+- [docs/RECIPES.md](docs/RECIPES.md): six recipes for capturing and using domain knowledge in a KG, each grounded in working code from a surveyed fleet of adopting projects
+
+## The value is prevention
+
+Be clear-eyed about what malleus buys you, because it is easy to
+underestimate. The value is prevention: whole classes of bugs (definitions
+sliding between modules, invalid records entering the store, a rule silently
+citing an axiom that no longer exists) stop being possible. Prevention is
+invisible by nature; you never see the bug that could not happen, so the
+investment is hard to quantify from inside a healthy project. It becomes
+visible in exactly two places: in projects that adopted the vocabulary but
+not the enforcement and paid a measured cost for the gap, and in rebuilding
+a stuck project with these recipes and watching the difference. The recipes
+and delimitations documents exist to make that argument with evidence
+instead of conviction.
+
+## The Ordo Malleus
+
+Discipline decays without an auditor, so malleus ships its own inquisition.
+(An ontology named after a hammer was always going to attract inquisitors;
+we let it, within reason.)
+
+Three tiers:
+
+- `malleus-inquisitor <schema.yaml>`: the mechanical rites, a CLI that any
+  machine can judge. Does the schema construct, is the imported root current
+  against the installed malleus (staleness is detected via
+  `check_compatibility`), are the type-slots constrained, are relation
+  endpoints narrowed, are Signals genuinely derived, are formula-shaped
+  slots backed by an executor. Exit 0 grants the purity seal.
+- The `malleus-inquisitor` skill (`.claude/skills/malleus-inquisitor/`): the
+  judgment rites a coding assistant applies to a whole repo: write-path
+  enforcement, reader census, citation integrity, provenance quality,
+  fail-closed rules. It writes a ranked `MALLEUS_INQUISITION.md` into the
+  inspected project.
+- The rubric (`src/malleus/inquisition/rubric.yaml`): the single source both
+  tiers read. Every rite records the generic field lesson that paid for it,
+  no project named. It is data on purpose: tune it, extend it, and send
+  generic lessons back as issues or PRs. That is how the Ordo learns.
 
 ## Tests
 

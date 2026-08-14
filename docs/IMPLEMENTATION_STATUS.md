@@ -98,6 +98,10 @@ no authorization validity interval.
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
 - `action-execution`: execution after authorization
+- `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
+- `outcome-observation-recording`: recording what an executed action actually did; `OutcomeObservation` exists in the schema with no protocol door
+- `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
+- `evidence-assertion-recording`: proposals carrying `Evidence` and `EvidenceAssertion` members with content, including `EvidencePolarity`
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
 - `epistemic-policy-authority-and-scope`: deciding which policy is legitimate and applicable to a proposal
@@ -156,7 +160,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.5.0`.
+ontology is `0.4.0`; the assent ontology is `0.6.0`.
 
 ## History
 

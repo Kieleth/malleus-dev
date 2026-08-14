@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from malleus.ledger import JsonlLedger
 from malleus.ontology import OntologyRegistry
 from malleus.control import (
     MonitoringError,
@@ -133,6 +134,32 @@ def add_artifact(
     return record
 
 
+# kind -> (dependency artifact kind, dependency id, assessment type, id slot, hash slot)
+KIND_CONTRACTS = {
+    "CONFLICT": (
+        "CONFLICT_RULE",
+        "artifact:conflict-rule",
+        "ConflictAssessment",
+        "conflict_rule_id",
+        "conflict_rule_hash",
+    ),
+    "UNCERTAINTY": (
+        "UNCERTAINTY_CONTRACT",
+        "artifact:uncertainty-contract",
+        "UncertaintyAssessment",
+        "uncertainty_contract_id",
+        "uncertainty_contract_hash",
+    ),
+    "TEMPORAL": (
+        "TEMPORAL_CONTRACT",
+        "artifact:temporal-contract",
+        "TemporalAssessment",
+        "temporal_contract_id",
+        "temporal_contract_hash",
+    ),
+}
+
+
 def add_monitor(
     ledger: ProtocolLedger,
     monitor_id: str,
@@ -167,6 +194,24 @@ def add_monitor(
         ),
         **fields,
     )
+
+
+def add_kind_monitor(
+    ledger: ProtocolLedger,
+    kind: str,
+    minute: int = 5,
+) -> tuple[dict, dict]:
+    """Register the pinned dependency artifact and the monitor that reads it."""
+    artifact_kind, artifact_id, _, _, _ = KIND_CONTRACTS[kind]
+    dependency = add_artifact(ledger, artifact_id, artifact_kind, minute)
+    monitor = add_monitor(
+        ledger,
+        f"artifact:{kind.lower()}-monitor",
+        kind,
+        minute,
+        input_artifacts=[dependency],
+    )
+    return dependency, monitor
 
 
 def add_epistemic_policy(
@@ -250,6 +295,7 @@ def setup_artifacts(
     violation_verdict: str = "REJECT",
     unknown_verdict: str = "DEFER",
     include_grant: bool = True,
+    extra_kinds: tuple[str, ...] = (),
 ) -> dict[str, dict]:
     rules = add_artifact(ledger, "artifact:rules", "RULE_SET", 1)
     contract_fields = {
@@ -321,7 +367,7 @@ def setup_artifacts(
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
         ) if include_grant else None
-    return {
+    artifacts = {
         "monitor": monitor,
         "logic_monitor": logic_monitor,
         "authority_monitor": authority_monitor,
@@ -331,6 +377,11 @@ def setup_artifacts(
         "authorization_policy": authorization_policy,
         "grant": grant,
     }
+    for kind in extra_kinds:
+        dependency, kind_monitor = add_kind_monitor(ledger, kind, 5)
+        artifacts[f"{kind.lower()}_dependency"] = dependency
+        artifacts[f"{kind.lower()}_monitor"] = kind_monitor
+    return artifacts
 
 
 def record_proposal(
@@ -343,8 +394,14 @@ def record_proposal(
     proposal_id: str = "proposal:1",
     proposal_revision: int = 1,
     revises_proposal_id: str | None = None,
+    proposal_key: str = "proposal-key",
     claim_id: str = "claim:1",
     claim_key: str = "claim-key",
+    claim_revision: int = 1,
+    revises_claim_version_id: str | None = None,
+    evidence_count: int = 0,
+    assertion_claim_id: str | None = None,
+    assertion_evidence_id: str | None = None,
     action_id: str = "action:1",
     action_revision: int = 1,
     revises_action_id: str | None = None,
@@ -378,8 +435,8 @@ def record_proposal(
         role="proposer",
         id=claim_id,
         claim_key=claim_key,
-        revision=1,
-        revises_claim_version_id=None,
+        revision=claim_revision,
+        revises_claim_version_id=revises_claim_version_id,
         statement="The declared relation is structurally valid.",
         domain_valid_from=timestamp,
         domain_valid_to=None,
@@ -387,6 +444,34 @@ def record_proposal(
     )
     action = None
     members = [("ClaimVersion", claim)]
+    for index in range(1, evidence_count + 1):
+        evidence = make_record(
+            "Evidence",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:proposer",
+            role="proposer",
+            id=f"{proposal_id}:evidence:{index}",
+            evidence_kind="PUBLISHED_SOURCE",
+            source_version_id=f"source:{proposal_id}:{index}",
+            locator=f"malleus-moving/research_graph/source-{index}.json",
+            request_id=None,
+        )
+        assertion = make_record(
+            "EvidenceAssertion",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:proposer",
+            role="proposer",
+            source_record_ids=[claim["id"], evidence["id"]],
+            id=f"{proposal_id}:assertion:{index}",
+            claim_version_id=assertion_claim_id or claim["id"],
+            evidence_id=assertion_evidence_id or evidence["id"],
+            evidence_polarity="SUPPORTS",
+            rationale="The cited source states the claim verbatim.",
+        )
+        members.append(("Evidence", evidence))
+        members.append(("EvidenceAssertion", assertion))
     if include_action:
         action = make_record(
             "TestActionProposal",
@@ -414,7 +499,7 @@ def record_proposal(
         role="proposer",
         source_record_ids=[epistemic_policy["id"]],
         id=proposal_id,
-        proposal_key="proposal-key",
+        proposal_key=proposal_key,
         revision=proposal_revision,
         revises_proposal_id=revises_proposal_id,
         base_acceptance_head=projection.acceptance_head,
@@ -422,8 +507,14 @@ def record_proposal(
         epistemic_policy_hash=epistemic_policy["content_hash"],
         member_content_hashes=[record["content_hash"] for _, record in members],
         claim_version_ids=[claim["id"]],
-        evidence_ids=[],
-        evidence_assertion_ids=[],
+        evidence_ids=[
+            record["id"] for record_type, record in members if record_type == "Evidence"
+        ],
+        evidence_assertion_ids=[
+            record["id"]
+            for record_type, record in members
+            if record_type == "EvidenceAssertion"
+        ],
         action_proposal_ids=[action["id"]] if action else [],
     )
     ledger.append_event(
@@ -486,6 +577,63 @@ def record_type_assessment(
     return assessment
 
 
+def record_kind_assessment(
+    ledger: ProtocolLedger,
+    proposal: dict,
+    artifacts: dict[str, dict],
+    kind: str,
+    *,
+    outcome: str = "SATISFIED",
+    minute: int = 7,
+    assessment_id: str | None = None,
+    conflicting_assertion_ids: list[str] | None = None,
+    input_record_ids: list[str] | None = None,
+) -> dict:
+    """Record a CONFLICT, UNCERTAINTY, or TEMPORAL assessment with its pinned
+    dependency artifact."""
+    _, _, assessment_type, id_slot, hash_slot = KIND_CONTRACTS[kind]
+    monitor = artifacts[f"{kind.lower()}_monitor"]
+    dependency = artifacts[f"{kind.lower()}_dependency"]
+    assessment_id = assessment_id or f"assessment:{kind.lower()}:1"
+    event_id = f"event:{assessment_id}"
+    timestamp = time_at(minute)
+    extra = {id_slot: dependency["id"], hash_slot: dependency["content_hash"]}
+    if kind == "CONFLICT":
+        extra["conflicting_assertion_ids"] = list(conflicting_assertion_ids or [])
+    assessment = make_record(
+        assessment_type,
+        event_id=event_id,
+        generated_at=timestamp,
+        actor_id="actor:monitor",
+        role=f"{kind.lower()}-monitor",
+        source_record_ids=[proposal["id"], monitor["id"], dependency["id"]],
+        id=assessment_id,
+        proposal_id=proposal["id"],
+        proposal_content_hash=proposal["content_hash"],
+        base_acceptance_head=proposal["base_acceptance_head"],
+        assessment_kind=kind,
+        assessment_outcome=outcome,
+        monitor_id=monitor["id"],
+        monitor_version="1",
+        monitor_hash=monitor["content_hash"],
+        monitor_failure_id=None,
+        input_record_ids=(
+            input_record_ids if input_record_ids is not None else [proposal["id"]]
+        ),
+        reason_codes=[f"{kind}_RESULT"],
+        rationale=f"The pinned {kind.lower()} monitor completed.",
+        **extra,
+    )
+    ledger.append_event(
+        event_id=event_id,
+        event_type=EventType.ASSESSMENT_RECORDED,
+        transaction_time=timestamp,
+        actor_id="actor:monitor",
+        payload={"assessment_type": assessment_type, "assessment": assessment},
+    )
+    return assessment
+
+
 def record_logic_check(
     ledger: ProtocolLedger,
     proposal: dict,
@@ -495,13 +643,14 @@ def record_logic_check(
     minute: int = 7,
     check_id: str = "logic-check:1",
     event_id: str = "event:logic-check",
+    context_state_digests: tuple[str, ...] = (),
     mutate=None,
 ) -> tuple[dict, tuple[dict, ...]]:
     result = LogicCheckResult(
         candidate_digest="sha256:" + "3" * 64,
         base_state_digest="sha256:" + "4" * 64,
         candidate_state_digest="sha256:" + "5" * 64,
-        context_state_digests=(),
+        context_state_digests=tuple(context_state_digests),
         ontology_hash="sha256:" + "6" * 64,
         fact_contract_version="2",
         contract_id=artifacts["logic_contract"]["id"],
@@ -894,7 +1043,12 @@ def decide_epistemically(
     transition_id: str = "transition:proposal:1",
     decision_id: str = "decision:epistemic:1",
     event_id: str = "event:epistemic:1",
+    requests: list[tuple[str, dict]] | None = None,
+    revisions: list[dict] | None = None,
+    evidence_assertion_ids: list[str] | None = None,
 ) -> dict:
+    requests = requests or []
+    revisions = revisions or []
     timestamp = time_at(minute)
     policy = artifacts["epistemic_policy"]
     monitors = {
@@ -932,9 +1086,9 @@ def decide_epistemically(
         assessment_ids=list(evaluation.assessment_ids),
         triggered_assessment_ids=list(evaluation.triggered_assessment_ids),
         policy_evaluation_hash=evaluation.evaluation_hash,
-        evidence_assertion_ids=[],
-        request_ids=[],
-        claim_revision_ids=[],
+        evidence_assertion_ids=list(evidence_assertion_ids or []),
+        request_ids=[record["id"] for _, record in requests],
+        claim_revision_ids=[record["id"] for record in revisions],
         policy_id=artifacts["epistemic_policy"]["id"],
         policy_hash=artifacts["epistemic_policy"]["content_hash"],
         ruleset_id=artifacts["rules"]["id"],
@@ -959,8 +1113,14 @@ def decide_epistemically(
         actor_id="actor:reviewer",
         payload={
             "decision": decision,
-            "requests": [],
-            "revisions": [],
+            "requests": [
+                {"record_type": record_type, "record": record}
+                for record_type, record in requests
+            ],
+            "revisions": [
+                {"record_type": "ClaimRevision", "record": record}
+                for record in revisions
+            ],
             "application": None,
             "transition": transition(
                 event_id=event_id,
@@ -3195,3 +3355,393 @@ class TestLogicCheckProtocol:
         slots = registry.effective_slots("LogicalAssessment")
         assert "proof_record_ids" not in slots
         assert "logic_check_record_ids" in slots
+
+
+class TestRequestAndRevisionArm:
+    """The Request/Revision validation arm executed with content, not empty
+    lists (self-inquisition S6)."""
+
+    def test_accept_with_review_request_and_claim_revision(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal_one, claim_one, _ = record_proposal(ledger)
+        assessment_one = record_type_assessment(ledger, proposal_one, artifacts["monitor"])
+        decide_epistemically(ledger, proposal_one, assessment_one, artifacts)
+
+        proposal_two, claim_two, _ = record_proposal(
+            ledger,
+            minute=10,
+            proposal_id="proposal:2",
+            claim_id="claim:2",
+            claim_revision=2,
+            revises_claim_version_id=claim_one["id"],
+        )
+        assessment_two = record_type_assessment(
+            ledger,
+            proposal_two,
+            artifacts["monitor"],
+            minute=11,
+            assessment_id="assessment:satisfied:2",
+        )
+        decision_id = "decision:epistemic:2"
+        event_id = "event:epistemic:2"
+        timestamp = time_at(12)
+        revision = make_record(
+            "ClaimRevision",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="epistemic-controller",
+            source_record_ids=[claim_one["id"]],
+            id="revision:1",
+            replaced_claim_version_id=claim_one["id"],
+            replacement_claim_version_id=claim_two["id"],
+            triggering_decision_id=decision_id,
+            revision_justification="Replacing the accepted claim with its successor.",
+            dependency_ids=[],
+            replacement_valid_from=claim_two["domain_valid_from"],
+            replaced_valid_to=claim_two["domain_valid_from"],
+        )
+        request = make_record(
+            "HumanReviewRequest",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[proposal_two["id"]],
+            id="request:review:1",
+            triggering_decision_id=decision_id,
+            target_proposal_id=proposal_two["id"],
+            request_contract_id="contract:review:1",
+            request_contract_hash="sha256:" + "7" * 64,
+            requested_by_actor_id="actor:reviewer",
+            intended_recipient_id=None,
+            intended_role="reviewer",
+            issued_at=timestamp,
+            expires_at=None,
+            request_state="OPEN",
+            review_question="Does the successor claim reflect the reviewed evidence?",
+            reviewer_authority_requirement="reviewer",
+        )
+        decide_epistemically(
+            ledger,
+            proposal_two,
+            assessment_two,
+            artifacts,
+            minute=12,
+            transition_id="transition:proposal:2",
+            decision_id=decision_id,
+            event_id=event_id,
+            requests=[("HumanReviewRequest", request)],
+            revisions=[revision],
+        )
+        projection = ledger.replay()
+        assert projection.proposal_states[proposal_two["id"]] == ProposalState.ACCEPTED
+        assert projection.current_claim_by_key[claim_one["claim_key"]] == claim_two["id"]
+        assert claim_one["id"] in projection.superseded_claim_ids
+        assert projection.objects["revision:1"]["record_type"] == "ClaimRevision"
+        assert projection.objects["request:review:1"]["record_type"] == "HumanReviewRequest"
+
+
+class TestSurrogatesInTheLedgerAreDiagnosed:
+    """Every encoding failure in the identity layer is a LedgerError, on the
+    write path AND the read path (second self-inquisition H2)."""
+
+    @pytest.mark.parametrize("value", ["\ud800", "\udc00", "\ud800\udc00"])
+    def test_content_digest_raises_ledger_error(self, value):
+        with pytest.raises(LedgerError):
+            content_digest({"p": value})
+
+    def test_append_raises_ledger_error(self, tmp_path):
+        jsonl = JsonlLedger(tmp_path / "l.jsonl", "sha256:" + "1" * 64)
+        with pytest.raises(LedgerError):
+            jsonl.append(
+                event_id="e1",
+                event_type="X",
+                transaction_time="2026-08-13T00:00:00+00:00",
+                actor_id="a",
+                payload={"p": "\ud800"},
+                validate=lambda events: None,
+            )
+        assert not (tmp_path / "l.jsonl").exists()
+
+    def test_read_of_surrogate_bearing_line_raises_ledger_error(self, tmp_path):
+        path = tmp_path / "l.jsonl"
+        path.write_text('{"payload": "\\ud800"}\n', encoding="utf-8")
+        jsonl = JsonlLedger(path, "sha256:" + "1" * 64)
+        with pytest.raises(LedgerError):
+            jsonl.read()
+
+
+class TestAssessmentKindContractIsPinned:
+    """The one enum duplicated in Python twice is pinned by the ledger
+    contract (second self-inquisition S1)."""
+
+    def test_widened_assessment_kind_is_refused_by_the_ledger(self, tmp_path):
+        source = Path(__file__).parent.parent / "ontology" / "assent.yaml"
+        widened = tmp_path / "assent.yaml"
+        widened.write_text(
+            source.read_text().replace(
+                "      AUTHORITY:\n", "      AUTHORITY:\n      EXTRA:\n", 1
+            )
+        )
+        registry = OntologyRegistry(
+            widened,
+            import_map={"malleus": str((source.parent / "malleus.yaml").resolve())},
+        )
+        with pytest.raises(ProtocolError, match="AssessmentKind"):
+            ProtocolLedger(tmp_path / "ledger.jsonl", registry)
+
+
+class TestEvidenceMembersInProposals:
+    """EvidenceAssertion members resolve their ClaimVersion and their Evidence
+    (second self-inquisition S2, src/malleus/assent.py:811-813)."""
+
+    def test_proposal_carries_evidence_and_assertions_with_content(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        proposal, claim, _ = record_proposal(ledger, evidence_count=2)
+        projection = ledger.replay()
+        assert len(proposal["evidence_ids"]) == 2
+        assert len(proposal["evidence_assertion_ids"]) == 2
+        for evidence_id in proposal["evidence_ids"]:
+            assert projection.objects[evidence_id]["record_type"] == "Evidence"
+            assert projection.objects[evidence_id]["record"]["evidence_kind"]
+        for assertion_id in proposal["evidence_assertion_ids"]:
+            item = projection.objects[assertion_id]
+            assert item["record_type"] == "EvidenceAssertion"
+            assert item["record"]["claim_version_id"] == claim["id"]
+            assert item["record"]["evidence_id"] in proposal["evidence_ids"]
+            assert item["record"]["evidence_polarity"] == "SUPPORTS"
+
+    def test_assertion_citing_unknown_evidence_is_refused(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="Unknown referenced object"):
+            record_proposal(
+                ledger,
+                evidence_count=1,
+                assertion_evidence_id="evidence:absent",
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_assertion_whose_claim_reference_is_evidence_is_refused(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="expected ClaimVersion"):
+            record_proposal(
+                ledger,
+                evidence_count=1,
+                assertion_claim_id="proposal:1:evidence:1",
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestCoreAssessmentKindsAreRecorded:
+    """The ConflictAssessment arm of _validate_completed_assessment runs with
+    content, and every core AssessmentKind has one recorded instance
+    (second self-inquisition S2, src/malleus/assent.py:2026-2045)."""
+
+    def test_conflict_uncertainty_and_temporal_assessments_are_recorded(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(
+            ledger,
+            extra_kinds=("CONFLICT", "UNCERTAINTY", "TEMPORAL"),
+        )
+        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        conflicts = sorted(proposal["evidence_assertion_ids"])
+        conflict = record_kind_assessment(
+            ledger,
+            proposal,
+            artifacts,
+            "CONFLICT",
+            outcome="VIOLATED",
+            conflicting_assertion_ids=conflicts,
+            input_record_ids=[proposal["id"], *conflicts],
+        )
+        uncertainty = record_kind_assessment(
+            ledger,
+            proposal,
+            artifacts,
+            "UNCERTAINTY",
+            minute=8,
+        )
+        temporal = record_kind_assessment(
+            ledger,
+            proposal,
+            artifacts,
+            "TEMPORAL",
+            minute=9,
+        )
+        projection = ledger.replay()
+        recorded = {
+            identifier: projection.objects[identifier]["record_type"]
+            for identifier in (conflict["id"], uncertainty["id"], temporal["id"])
+        }
+        assert recorded == {
+            conflict["id"]: "ConflictAssessment",
+            uncertainty["id"]: "UncertaintyAssessment",
+            temporal["id"]: "TemporalAssessment",
+        }
+        assert projection.objects[conflict["id"]]["record"][
+            "conflicting_assertion_ids"
+        ] == conflicts
+        assert conflict["id"] in projection.assessment_ids
+
+    def test_satisfied_conflict_assessment_names_no_conflicts(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
+        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        conflict = record_kind_assessment(
+            ledger,
+            proposal,
+            artifacts,
+            "CONFLICT",
+            outcome="SATISFIED",
+            conflicting_assertion_ids=[],
+        )
+        assert ledger.replay().objects[conflict["id"]]["record"][
+            "conflicting_assertion_ids"
+        ] == []
+
+    @pytest.mark.parametrize(
+        "case,message",
+        [
+            ("satisfied_with_conflicts", "SATISFIED conflict assessment names conflicts"),
+            ("violated_with_one", "VIOLATED conflict assessment requires two assertions"),
+            ("outside_proposal", "conflict assertion is outside proposal"),
+            ("not_an_input", "conflict assertions must be assessment inputs"),
+            ("unsorted", "conflicting_assertion_ids must be in canonical sorted order"),
+        ],
+    )
+    def test_conflict_assessment_binds_its_assertions(self, ledger, case, message):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
+        first, _, _ = record_proposal(ledger, evidence_count=2)
+        second, _, _ = record_proposal(
+            ledger,
+            minute=6,
+            proposal_id="proposal:2",
+            proposal_key="proposal-key:2",
+            claim_id="claim:2",
+            claim_key="claim-key:2",
+            evidence_count=2,
+        )
+        own = sorted(second["evidence_assertion_ids"])
+        outcome = "VIOLATED"
+        conflicts = own
+        inputs = [second["id"], *own]
+        if case == "satisfied_with_conflicts":
+            outcome = "SATISFIED"
+        elif case == "violated_with_one":
+            conflicts = own[:1]
+            inputs = [second["id"], own[0]]
+        elif case == "outside_proposal":
+            conflicts = sorted([own[0], sorted(first["evidence_assertion_ids"])[0]])
+            inputs = [second["id"], *conflicts]
+        elif case == "not_an_input":
+            inputs = [second["id"]]
+        else:
+            conflicts = list(reversed(own))
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            record_kind_assessment(
+                ledger,
+                second,
+                artifacts,
+                "CONFLICT",
+                outcome=outcome,
+                conflicting_assertion_ids=conflicts,
+                input_record_ids=inputs,
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestDecisionEvidenceLiesInsideTheProposal:
+    """A decision may only cite evidence assertions carried by its own proposal
+    (second self-inquisition S2, src/malleus/assent.py:1318-1321)."""
+
+    def test_accept_cites_its_own_evidence_assertions(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        decision = decide_epistemically(
+            ledger,
+            proposal,
+            assessment,
+            artifacts,
+            evidence_assertion_ids=list(proposal["evidence_assertion_ids"]),
+        )
+        projection = ledger.replay()
+        assert decision["evidence_assertion_ids"] == proposal["evidence_assertion_ids"]
+        assert projection.proposal_states[proposal["id"]] == ProposalState.ACCEPTED
+
+    def test_decision_citing_another_proposals_evidence_is_refused(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        first, _, _ = record_proposal(ledger, evidence_count=1)
+        second, _, _ = record_proposal(
+            ledger,
+            minute=6,
+            proposal_id="proposal:2",
+            proposal_key="proposal-key:2",
+            claim_id="claim:2",
+            claim_key="claim-key:2",
+            evidence_count=1,
+        )
+        assessment = record_type_assessment(
+            ledger,
+            second,
+            artifacts["monitor"],
+            assessment_id="assessment:satisfied:2",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="evidence is outside proposal"):
+            decide_epistemically(
+                ledger,
+                second,
+                assessment,
+                artifacts,
+                evidence_assertion_ids=list(first["evidence_assertion_ids"]),
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestContextStateDigestsAreValidated:
+    """Every context state digest a logic check names is checked for digest
+    format (second self-inquisition S2, src/malleus/assent.py:967-968)."""
+
+    def test_logic_check_records_context_state_digests(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        digests = ("sha256:" + "8" * 64, "sha256:" + "9" * 64)
+        check, _ = record_logic_check(
+            ledger,
+            proposal,
+            artifacts,
+            context_state_digests=digests,
+        )
+        recorded = ledger.replay().objects[check["id"]]["record"]
+        assert recorded["context_state_digests"] == list(digests)
+
+    @pytest.mark.parametrize(
+        "digest",
+        ["sha256:not-a-digest", "", "8" * 64],
+    )
+    def test_malformed_context_state_digest_is_refused(self, ledger, digest):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(LedgerError, match="context_state_digest must be a sha256 digest"):
+            record_logic_check(
+                ledger,
+                proposal,
+                artifacts,
+                context_state_digests=(digest,),
+            )
+        assert ledger.path.read_bytes() == before

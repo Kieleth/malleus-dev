@@ -2,6 +2,15 @@
 
 from dataclasses import dataclass
 
+import yaml
+
+from malleus.ontology import bundled_ontology_path
+
+
+def _declared_schema_version(*parts: str) -> str:
+    with open(bundled_ontology_path(*parts), encoding="utf-8") as stream:
+        return str(yaml.safe_load(stream)["version"])
+
 
 @dataclass(frozen=True)
 class ImplementationStatus:
@@ -67,8 +76,12 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "typed-retraction-semantics",
         "multi-writer-ledger-serialization",
         "action-execution",
+        "review-report-recording",
+        "outcome-observation-recording",
+        "protocol-actor-registration",
+        "evidence-assertion-recording",
         "untrusted-rule-program-sandboxing",
     ),
-    root_ontology_version="0.4.0",
-    assent_ontology_version="0.5.0",
+    root_ontology_version=_declared_schema_version("malleus.yaml"),
+    assent_ontology_version=_declared_schema_version("assent.yaml"),
 )

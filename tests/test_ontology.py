@@ -881,3 +881,126 @@ class TestEffectiveSlotValidation:
         right = OntologyRegistry(plural)
         assert left.content_hash() != right.content_hash()
         assert left.fingerprint() != right.fingerprint()
+
+
+class TestIdentityFromResolution:
+    """Identity must derive from the resolved constraint table the validator
+    consults, never the declaration syntax (self-inquisition H1, H2, S5)."""
+
+    BASE = """
+id: https://example.org/schema/{name}
+name: {name}
+classes:
+  MixA:
+    mixin: true
+    slots: [alpha]
+  MixB:
+    mixin: true
+    slots: [beta]
+  Thing:
+    mixins: [{mixins}]
+    slots: [id]
+slots:
+  id:
+    range: string
+  alpha:
+    range: string
+  beta:
+    range: string
+"""
+
+    def _write(self, tmp_path, name, text):
+        path = tmp_path / f"{name}.yaml"
+        path.write_text(text)
+        return OntologyRegistry(path)
+
+    def test_mixin_order_is_unobservable(self, tmp_path):
+        a = self._write(tmp_path, "a", self.BASE.format(name="a", mixins="MixA, MixB"))
+        b = self._write(tmp_path, "b", self.BASE.format(name="a", mixins="MixB, MixA"))
+        assert a.effective_slots("Thing") == b.effective_slots("Thing")
+        assert a.content_hash() == b.content_hash()
+        assert a.fingerprint() == b.fingerprint()
+        assert a.check_compatibility(b.content_hash(), b.fingerprint()) == "identical"
+
+    def test_conflicting_mixin_constraints_refuse_construction(self, tmp_path):
+        conflicted = """
+id: https://example.org/schema/c
+name: c
+classes:
+  Cheap:
+    mixin: true
+    slot_usage:
+      severity:
+        maximum_value: 200
+  Critical:
+    mixin: true
+    slot_usage:
+      severity:
+        maximum_value: 10
+  Alert:
+    mixins: [{order}]
+    slots: [severity]
+slots:
+  severity:
+    range: integer
+"""
+        for order in ("Cheap, Critical", "Critical, Cheap"):
+            path = tmp_path / "c.yaml"
+            path.write_text(conflicted.format(order=order))
+            with pytest.raises(OntologyError, match="conflicting constraints"):
+                OntologyRegistry(path)
+
+    def test_effective_slot_membership_is_a_fact(self, tmp_path):
+        template = """
+id: https://example.org/schema/m
+name: m
+classes:
+  Thing:
+    slots: [id]{usage}
+slots:
+  id:
+    range: string
+  val:
+    range: string
+"""
+        with_doc_slot = self._write(
+            tmp_path, "with",
+            template.format(usage="\n    slot_usage:\n      val:\n        description: docs only\n"),
+        )
+        without = self._write(tmp_path, "without", template.format(usage=""))
+        assert "val" in with_doc_slot.effective_slots("Thing")
+        assert "val" not in without.effective_slots("Thing")
+        assert with_doc_slot.fingerprint() != without.fingerprint()
+        verdict = without.check_compatibility(
+            with_doc_slot.content_hash(), with_doc_slot.fingerprint()
+        )
+        assert verdict != "superset"
+        for registry in (with_doc_slot, without):
+            facts = registry.fingerprint()
+            for type_name in registry.type_names():
+                recovered = {
+                    fact.split(":", 3)[3]
+                    for fact in facts
+                    if fact.startswith(f"type:{type_name}:effective_slot:")
+                }
+                assert recovered == set(registry.effective_slots(type_name))
+
+    def test_numeric_bound_spelling_is_canonical(self, tmp_path):
+        template = """
+id: https://example.org/schema/n
+name: n
+classes:
+  Thing:
+    slots: [score]
+slots:
+  score:
+    range: float
+    minimum_value: {value}
+"""
+        as_int = self._write(tmp_path, "int", template.format(value="0"))
+        as_float = self._write(tmp_path, "float", template.format(value="0.0"))
+        assert as_int.content_hash() == as_float.content_hash()
+        assert as_int.fingerprint() == as_float.fingerprint()
+        assert as_int.check_compatibility(
+            as_float.content_hash(), as_float.fingerprint()
+        ) == "identical"

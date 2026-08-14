@@ -37,13 +37,19 @@ class LedgerError(ValueError):
 
 def canonical_json(value: Any) -> str:
     try:
-        return json.dumps(
+        blob = json.dumps(
             value,
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
             allow_nan=False,
         )
+        # Lone surrogates survive json.dumps but not the wire. Encode here,
+        # inside the typed handler (UnicodeEncodeError is a ValueError), so
+        # every digest, append, and read failure is a LedgerError, never an
+        # untyped crash.
+        blob.encode("utf-8")
+        return blob
     except (TypeError, ValueError) as error:
         raise LedgerError(f"Value is not canonical JSON: {error}") from error
 

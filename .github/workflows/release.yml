@@ -10,6 +10,24 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    name: Full test suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install SWI-Prolog
+        run: sudo apt-get update && sudo apt-get install -y swi-prolog
+      - name: Install malleus-dev with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Run tests
+        run: pytest -v
+
   build:
     name: Build wheel + sdist
     runs-on: ubuntu-latest
@@ -47,6 +65,17 @@ jobs:
       - name: twine check
         run: python -m twine check dist/*
 
+      - name: Smoke-test the built wheel in a clean environment
+        # twine check validates metadata, never entry-point targets. Install
+        # the wheel and invoke every declared console script so a manifest
+        # referencing uncommitted files fails here, not on a user's machine.
+        run: |
+          python -m venv /tmp/wheel-smoke
+          /tmp/wheel-smoke/bin/pip install --quiet dist/*.whl
+          cd /tmp
+          SCHEMA=$(/tmp/wheel-smoke/bin/python -c "from malleus.ontology import bundled_ontology_path; print(bundled_ontology_path('malleus.yaml'))")
+          /tmp/wheel-smoke/bin/malleus-inquisitor "$SCHEMA"
+
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -55,7 +84,7 @@ jobs:
 
   publish-pypi:
     name: Publish to PyPI
-    needs: build
+    needs: [build, test]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:

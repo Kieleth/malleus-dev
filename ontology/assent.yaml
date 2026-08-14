@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.5.0
+version: 0.6.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -19,6 +19,27 @@ imports:
   - malleus
 
 enums:
+  ResponsibleRole:
+    description: >-
+      Closed vocabulary for protocol responsibility. The authority model
+      turns on role; an open string here would let any caller claim any
+      authority unchecked.
+    permissible_values:
+      proposer:
+      registrar:
+      reviewer:
+      type-monitor:
+      evidence-monitor:
+      conflict-monitor:
+      uncertainty-monitor:
+      temporal-monitor:
+      logic-monitor:
+      authority-monitor:
+      epistemic-controller:
+      state-controller:
+      authorizer:
+      graph-materializer:
+
   AssessmentOutcome:
     permissible_values:
       SATISFIED:
@@ -39,7 +60,6 @@ enums:
       LOGICAL:
       TEMPORAL:
       AUTHORITY:
-      MONITOR_FAILURE:
 
   EpistemicVerdict:
     permissible_values:
@@ -123,6 +143,21 @@ classes:
       responsible_actor_id:
         required: true
       responsible_role:
+        required: true
+
+  ProtocolActor:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      An identified actor that can bear protocol responsibility: a proposer,
+      monitor, controller, or reviewer. Adopters register their actors as
+      ProtocolActor records; responsible_actor_id on protocol records names
+      one. The id slot stays a string range deliberately: actor records live
+      in the adopter's graph, not in every ledger.
+    slot_usage:
+      agent_type:
+        range: ResponsibleRole
         required: true
 
   ProtocolArtifact:
@@ -1123,7 +1158,7 @@ slots:
   responsible_actor_id:
     range: string
   responsible_role:
-    range: string
+    range: ResponsibleRole
   source_record_ids:
     range: string
     multivalued: true

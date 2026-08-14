@@ -8,6 +8,10 @@ description: >-
   and their relationships. Chain validity modeled via Attack Flow
   (MITRE CTID v3.0.0) as reference corpus. Scoped to technique
   chain reasoning, not incident response.
+  STATUS: a declaration-only shape example. No loader, seed data, or rules
+  ship for this domain, and most of its types have never been round-tripped
+  through a KnowledgeGraph. For the fully worked domain (loader, seed,
+  scenario, executable Prolog contract), copy cyp450.yaml instead.
 
 default_range: string
 

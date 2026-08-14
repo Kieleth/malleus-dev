@@ -203,7 +203,6 @@ class ProtocolProjection:
     authorization_decision_ids: set[str] = field(default_factory=set)
     proposal_states: dict[str, ProposalState] = field(default_factory=dict)
     authorization_states: dict[str, AuthorizationState] = field(default_factory=dict)
-    request_states: dict[str, str] = field(default_factory=dict)
     action_to_proposal: dict[str, str] = field(default_factory=dict)
     current_claim_by_key: dict[str, str] = field(default_factory=dict)
     latest_action_by_key: dict[str, str] = field(default_factory=dict)
@@ -1432,8 +1431,6 @@ class ProtocolLedger:
         self._add_objects(projection, introduced, event)
         projection.epistemic_decision_ids.add(decision["id"])
         projection.proposal_states[proposal["id"]] = EPISTEMIC_TARGETS[verdict]
-        for request_id in requests:
-            projection.request_states[request_id] = "OPEN"
         if application is not None:
             try:
                 staged.materialize_into(projection.accepted_graph)
@@ -2570,6 +2567,18 @@ class ProtocolLedger:
         if self.registry.is_subtype_of("MonitorFailure", "Assessment"):
             raise ProtocolError("Assent ontology MonitorFailure must not be an Assessment")
         enum_values = {
+            # The one enum duplicated in Python twice; pinning it here keeps
+            # all three copies honest (control.EPISTEMIC_MONITOR_KINDS,
+            # ASSESSMENT_TYPES_BY_KIND, and the schema).
+            "AssessmentKind": {
+                "TYPE",
+                "EVIDENCE_COMPLETENESS",
+                "CONFLICT",
+                "UNCERTAINTY",
+                "LOGICAL",
+                "TEMPORAL",
+                "AUTHORITY",
+            },
             "AssessmentOutcome": {"SATISFIED", "VIOLATED", "UNKNOWN"},
             "LogicCheckOutcome": {"SATISFIED", "VIOLATED"},
             "EpistemicVerdict": {"ACCEPT", "REJECT", "DEFER", "CONTEST"},

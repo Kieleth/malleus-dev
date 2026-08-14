@@ -200,6 +200,11 @@ The extension can add types, relations, properties. It cannot remove or contradi
 - It is not SHACL post-hoc validation. SHACL validates existing data. We prevent invalid data from existing.
 - It is not a runtime query the KG makes to an external ontology service. The ontology is inside the KG, not beside it.
 
+Write gating itself is not unique to malleus: TypeDB, Stardog's ICV guard
+mode, GraphDB's on-commit SHACL, and TerminusDB all reject invalid commits.
+The full formalism-by-formalism mapping, including what malleus can and cannot
+claim against each, is in DELIMITATIONS.md.
+
 ---
 
 *See also: ONTOLOGY_PROTOCOL.md for how to define the ontology. This document covers how to use it to construct a Knowledge Graph.*
