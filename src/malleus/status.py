@@ -25,7 +25,7 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.6.0",
+    package_version="0.7.0",
     current_stage="7c",
     boundary="stage-7c-policy-selected-authorization-control",
     completed_stages=("2", "3", "7a", "4", "5", "6", "7b", "7c"),

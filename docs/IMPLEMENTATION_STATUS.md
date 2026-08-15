@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.6.0` implements the
+Malleus package version `0.7.0` implements the
 `stage-7c-policy-selected-authorization-control` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -174,3 +174,4 @@ ontology is `0.4.0`; the assent ontology is `0.7.0`.
 | `0.4.0` | `stage-6-policy-selected-monitoring-control` | Typed monitor coverage and deterministic epistemic control selection |
 | `0.5.0` | `stage-7b-assent-gated-bitemporal-accepted-graph` | Exact proposed mutations, atomic accepted applications, and bitemporal replay |
 | `0.6.0` | `stage-7c-policy-selected-authorization-control` | Typed action-bound policy, exact authority coverage, and deterministic authorization control |
+| `0.7.0` | `stage-7c-policy-selected-authorization-control` | Same boundary, hardened: ontology identity from the resolved constraint table, closed arbiter vocabularies, and the inquisition toolchain |

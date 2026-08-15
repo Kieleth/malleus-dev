@@ -16,7 +16,7 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.6.0`, `stage-7c-policy-selected-authorization-control`. See
+Current package boundary: `0.7.0`, `stage-7c-policy-selected-authorization-control`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -263,7 +263,7 @@ timestamps are execution-local and are not ledger commitments.
 This is an accepted knowledge commitment, not a truth guarantee or action
 authorization. The caller must supply the exact graph committed by the graph
 base artifact. Remote graph-base resolution, typed retraction, and multi-writer
-serialization remain outside version 0.6.0.
+serialization remain outside version 0.7.0.
 
 ## Architecture
 
