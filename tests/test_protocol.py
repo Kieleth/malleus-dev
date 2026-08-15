@@ -44,6 +44,7 @@ from malleus.protocol import (
     MonitorEvent,
     MonitorFailurePlan,
     MonitorStep,
+    outcome_contract_digest,
     record_hash,
     source_artifact_fields,
     source_bytes_digest,
@@ -161,6 +162,34 @@ def add_source_artifact(
         "SOURCE",
         minute,
         record_type="SourceArtifact",
+        **fields,
+    )
+
+
+def add_outcome_contract(
+    ledger: ProtocolLedger,
+    *,
+    artifact_id: str = "artifact:outcome-contract:effect-present",
+    minute: int = 5,
+) -> dict:
+    fields = {
+        "outcome_contract_schema_version": "1",
+        "observation_type": "EXPECTED_EFFECT_PRESENT",
+        "observer_implementation_hash": "sha256:" + "b" * 64,
+    }
+    return add_artifact(
+        ledger,
+        artifact_id,
+        "OUTCOME_CONTRACT",
+        minute,
+        record_type="OutcomeContractArtifact",
+        artifact_hash=outcome_contract_digest(
+            schema_version=fields["outcome_contract_schema_version"],
+            contract_id=artifact_id,
+            contract_version="1",
+            observation_type=fields["observation_type"],
+            observer_implementation_hash=fields["observer_implementation_hash"],
+        ),
         **fields,
     )
 
@@ -1199,6 +1228,7 @@ class TestEnvelope:
         "kind,required_type",
         [
             ("SOURCE", "SourceArtifact"),
+            ("OUTCOME_CONTRACT", "OutcomeContractArtifact"),
             ("MONITOR_SPECIFICATION", "MonitorSpecificationArtifact"),
             ("EPISTEMIC_POLICY", "EpistemicPolicyArtifact"),
         ],
@@ -1671,6 +1701,350 @@ class TestThinAssentPlan:
         assert result.assessment_outcome == "UNKNOWN"
         assert unknown["logic_contract_id"] == artifacts["logic_contract"]["id"]
         assert unknown["ruleset_id"] == artifacts["rules"]["id"]
+
+
+class TestGenericEffectLifecycle:
+    @staticmethod
+    def authorized_action(ledger, *, authority_outcome: str = "SATISFIED"):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        outcome_contract = add_outcome_contract(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome=authority_outcome,
+            violated=(
+                ["actor_in_scope"] if authority_outcome == "VIOLATED" else []
+            ),
+        )
+        authorization = decide_authorization(
+            ledger,
+            proposal,
+            action,
+            claim,
+            epistemic,
+            [authority],
+            artifacts,
+        )
+        return artifacts, outcome_contract, proposal, action, authorization
+
+    @staticmethod
+    def dispatch(
+        ledger,
+        action,
+        authorization,
+        *,
+        suffix: str = "1",
+        minute: int = 10,
+        mutate=None,
+    ):
+        event_id = f"event:dispatch:{suffix}"
+        timestamp = time_at(minute)
+        record = make_record(
+            "ActionDispatch",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:dispatcher",
+            role="dispatcher",
+            source_record_ids=[action["id"], authorization["id"]],
+            id=f"dispatch:{suffix}",
+            action_proposal_id=action["id"],
+            action_content_hash=action["content_hash"],
+            authorization_decision_id=authorization["id"],
+            authorization_decision_hash=authorization["content_hash"],
+            executor_id="actor:executor",
+            dispatch_adapter_id="adapter:research-effect-store:v1",
+            base_acceptance_head=authorization["base_acceptance_head"],
+            dispatched_at=timestamp,
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("ActionDispatch", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.ACTION_DISPATCHED,
+            transaction_time=timestamp,
+            actor_id="actor:dispatcher",
+            payload={"dispatch": record},
+        )
+        return record
+
+    @staticmethod
+    def execute(ledger, dispatch, *, mutate=None):
+        event_id = "event:execution:1"
+        timestamp = time_at(11)
+        record = make_record(
+            "ActionExecution",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:executor",
+            role="executor",
+            source_record_ids=[dispatch["id"]],
+            id="execution:1",
+            dispatch_id=dispatch["id"],
+            dispatch_hash=dispatch["content_hash"],
+            executor_id="actor:executor",
+            execution_started_at=time_at(10),
+            execution_ended_at=timestamp,
+            execution_status="SUCCEEDED",
+            execution_result_hash="sha256:" + "c" * 64,
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("ActionExecution", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.ACTION_EXECUTED,
+            transaction_time=timestamp,
+            actor_id="actor:executor",
+            payload={"execution": record},
+        )
+        return record
+
+    @staticmethod
+    def observe(
+        ledger,
+        execution,
+        contract,
+        *,
+        observer_id: str = "actor:external-observer",
+        mutate=None,
+    ):
+        fields = source_artifact_fields(
+            artifact_id="artifact:source:effect-store",
+            artifact_version="1",
+            source_bytes=b'{"action_id":"action:1","status":"written"}\n',
+            media_type="application/x-ndjson",
+            locator="effects/payments.jsonl",
+        )
+        source = add_artifact(
+            ledger,
+            "artifact:source:effect-store",
+            "SOURCE",
+            11,
+            record_type="SourceArtifact",
+            **fields,
+        )
+        event_id = "event:outcome:1"
+        timestamp = time_at(12)
+        record = make_record(
+            "OutcomeObservation",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id=observer_id,
+            role="outcome-observer",
+            source_record_ids=[execution["id"], contract["id"], source["id"]],
+            id="outcome:1",
+            execution_id=execution["id"],
+            execution_hash=execution["content_hash"],
+            outcome_contract_id=contract["id"],
+            outcome_contract_hash=contract["content_hash"],
+            observer_id=observer_id,
+            observation_type=contract["observation_type"],
+            observation_result="CONFIRMED",
+            observed_at=timestamp,
+            observed_source_artifact_id=source["id"],
+            observed_source_artifact_hash=source["content_hash"],
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("OutcomeObservation", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.OUTCOME_OBSERVED,
+            transaction_time=timestamp,
+            actor_id=observer_id,
+            payload={"observation": record},
+        )
+        return source, record
+
+    def test_authorized_effect_lifecycle_reopens_with_complete_trace(self, ledger):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        source, observation = self.observe(ledger, execution, contract)
+        projection = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert projection.dispatch_by_action[action["id"]] == dispatch["id"]
+        assert projection.execution_by_dispatch[dispatch["id"]] == execution["id"]
+        assert projection.observation_by_execution_contract[
+            (execution["id"], contract["id"])
+        ] == observation["id"]
+        assert source["id"] in projection.artifact_ids
+        assert observation["id"] in projection.outcome_observation_ids
+
+    def test_blocked_action_cannot_create_dispatch(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(
+            ledger,
+            authority_outcome="VIOLATED",
+        )
+        assert authorization["authorization_verdict"] == "BLOCK"
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="not authorized for dispatch"):
+            self.dispatch(ledger, action, authorization)
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda record: record.update(
+                    authorization_decision_hash="sha256:" + "0" * 64
+                ),
+                "dispatch authorization hash mismatch",
+            ),
+            (
+                lambda record: record.update(executor_id="actor:someone-else"),
+                "dispatch executor mismatch",
+            ),
+            (
+                lambda record: record.update(dispatched_at=time_at(11)),
+                "dispatched_at must equal event time",
+            ),
+        ],
+    )
+    def test_dispatch_is_bound_to_exact_authorization(self, ledger, mutate, message):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            self.dispatch(ledger, action, authorization, mutate=mutate)
+        assert ledger.path.read_bytes() == before
+
+    def test_expired_authorization_cannot_dispatch(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="outside authorization validity"):
+            self.dispatch(ledger, action, authorization, minute=11)
+        assert ledger.path.read_bytes() == before
+
+    def test_changed_accepted_state_makes_authorization_stale(self, ledger):
+        artifacts, _, _, action, authorization = self.authorized_action(ledger)
+        other, _, _ = record_proposal(
+            ledger,
+            minute=10,
+            proposal_id="proposal:other",
+            proposal_key="proposal-key:other",
+            claim_id="claim:other",
+            claim_key="claim-key:other",
+        )
+        other_assessment = record_type_assessment(
+            ledger,
+            other,
+            artifacts["monitor"],
+            minute=10,
+            assessment_id="assessment:other",
+        )
+        decide_epistemically(
+            ledger,
+            other,
+            other_assessment,
+            artifacts,
+            minute=10,
+            decision_id="decision:epistemic:other",
+            event_id="event:epistemic:other",
+            transition_id="transition:proposal:other",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="dispatch authorization is stale"):
+            self.dispatch(ledger, action, authorization)
+        assert ledger.path.read_bytes() == before
+
+    def test_second_dispatch_is_refused_without_claiming_external_exactly_once(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        self.dispatch(ledger, action, authorization)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="already has a recorded dispatch"):
+            self.dispatch(ledger, action, authorization, suffix="2")
+        assert ledger.path.read_bytes() == before
+
+    def test_execution_must_bind_dispatch_and_executor(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="execution actor mismatch"):
+            self.execute(
+                ledger,
+                dispatch,
+                mutate=lambda record: record.update(executor_id="actor:other"),
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda record: record.update(observer_id="actor:executor"),
+                "observer must record its own observation",
+            ),
+            (
+                lambda record: record.update(
+                    observed_source_artifact_hash="sha256:" + "0" * 64
+                ),
+                "Artifact hash mismatch",
+            ),
+        ],
+    )
+    def test_outcome_requires_independent_observer_and_exact_state_source(
+        self,
+        ledger,
+        mutate,
+        message,
+    ):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        before_count = ledger.replay().event_count
+        with pytest.raises(ProtocolError, match=message):
+            self.observe(ledger, execution, contract, mutate=mutate)
+        projection = ledger.replay()
+        assert projection.event_count == before_count + 1
+        assert "outcome:1" not in projection.objects
+
+    def test_executor_cannot_certify_its_own_outcome(self, ledger):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        before_count = ledger.replay().event_count
+        with pytest.raises(ProtocolError, match="observer must differ from executor"):
+            self.observe(
+                ledger,
+                execution,
+                contract,
+                observer_id="actor:executor",
+            )
+        assert ledger.replay().event_count == before_count + 1
+
+    def test_outcome_contract_semantic_tampering_is_atomic(self, ledger):
+        anchor(ledger)
+        fields = {
+            "outcome_contract_schema_version": "1",
+            "observation_type": "EXPECTED_EFFECT_PRESENT",
+            "observer_implementation_hash": "sha256:" + "b" * 64,
+        }
+        artifact_hash = outcome_contract_digest(
+            schema_version="1",
+            contract_id="artifact:outcome-contract:tampered",
+            contract_version="1",
+            observation_type=fields["observation_type"],
+            observer_implementation_hash=fields["observer_implementation_hash"],
+        )
+        fields["observation_type"] = "DIFFERENT_CHECK"
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="outcome contract semantic hash mismatch"):
+            add_artifact(
+                ledger,
+                "artifact:outcome-contract:tampered",
+                "OUTCOME_CONTRACT",
+                1,
+                record_type="OutcomeContractArtifact",
+                artifact_hash=artifact_hash,
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
 
 
 class TestArtifactContracts:

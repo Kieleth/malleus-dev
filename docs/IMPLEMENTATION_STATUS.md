@@ -50,6 +50,22 @@ Stage 8b does not select policy or verdicts, orchestrate authority monitors,
 schedule or retry work, or provide whole-plan atomicity. See
 `docs/ASSENT_PLAN.md`.
 
+## Unreleased Stage 8c
+
+- `ActionDispatch` gated by an exact applied `AUTHORIZE` decision, executor,
+  acceptance head, and validity interval
+- Terminal `ActionExecution` receipts bound to one exact dispatch and adapter
+  result digest
+- Independent `OutcomeObservation` records bound to an exact execution,
+  content-addressed observation contract, and content-addressed external-state
+  snapshot
+- Replay indexes for the complete authorization-to-observation path
+
+Core Malleus records this path but performs no domain effect. The research
+adapter owns `payments.jsonl`; a separate observer owns the outcome check. One
+recorded dispatch per action and one execution per dispatch do not establish
+exactly-once external execution. See `docs/EFFECT_PROTOCOL.md`.
+
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
 runs every check in a fresh SWI-Prolog process, and validates the complete rule
@@ -123,9 +139,12 @@ no authorization validity interval.
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
-- `action-execution`: execution after authorization
+- `action-execution`: absent from the published 0.7.0 boundary. Unreleased
+  Stage 8c records dispatch and execution receipts, while domain effects remain
+  external by design
 - `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
-- `outcome-observation-recording`: recording what an executed action actually did; `OutcomeObservation` exists in the schema with no protocol door
+- `outcome-observation-recording`: absent from the published 0.7.0 boundary.
+  Unreleased Stage 8c opens the typed external-observation door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: general orchestration beyond the optional

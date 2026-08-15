@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added failure-atomic multi-event append for one related event group. A
   logical check and its logical assessment now enter together or not at all
   when emitted through `AssentPlan`.
+- Added the Stage 8c authorized-effect record path: `ActionDispatch`, terminal
+  `ActionExecution`, and independent `OutcomeObservation` events.
+- Added content-addressed `OutcomeContractArtifact` records and exact external
+  state binding through `SourceArtifact`.
 
 ### Changed
 
@@ -39,6 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stage 8b runs epistemic monitor adapters only. It does not select policy,
   decide epistemic control, run authority monitors, retry work, schedule work,
   or make a whole plan atomic.
+- Stage 8c records generic dispatch, execution receipts, and independently
+  observed outcomes. Domain adapters still perform effects. One recorded
+  dispatch per action does not guarantee exactly-once external execution.
 
 ## [0.7.0] - 2026-08-14
 

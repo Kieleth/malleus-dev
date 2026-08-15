@@ -22,10 +22,9 @@ actor and role, generation time, and referenced source records.
 
 The main categories are proposals and first-order members; assessments and
 monitor failures; epistemic and authorization decisions; requests, reports,
-and revisions; transition, execution, and outcome records (reports,
-executions, and outcome observations are schema only: the types exist with no
-protocol door, see `IMPLEMENTATION_STATUS.md`); and versioned
-monitor, policy, rule, contract, and authority-grant artifacts.
+and revisions; transition, dispatch, execution, and outcome records; and
+versioned monitor, policy, rule, contract, and authority-grant artifacts.
+`ReviewReport` remains schema only, with no protocol event door.
 
 Stage 6 makes two previously opaque artifacts concrete.
 `MonitorSpecificationArtifact` binds one assessment kind, implementation hash,
@@ -213,6 +212,17 @@ Authorization remains a record. Stage 7c validates recorded authority outputs;
 it does not execute authority monitors, determine policy legitimacy or grantor
 trust, or execute the action.
 
+Unreleased Stage 8c opens three later event doors. `ActionDispatch` requires an
+exact applied `AUTHORIZE` decision, its authorized executor, acceptance head,
+and a dispatch time inside the authorization interval. `ActionExecution`
+records the domain adapter's terminal receipt. `OutcomeObservation` records a
+different actor's result under a pinned `OutcomeContractArtifact` and binds the
+exact external-state bytes through `SourceArtifact`.
+
+Malleus records and validates these events. The domain adapter performs the
+effect and the external observer applies the outcome contract. See
+`EFFECT_PROTOCOL.md` for the trust and exactly-once boundaries.
+
 ## JSONL ledger
 
 `ProtocolLedger` uses one JSON object per line and one writer. Every event has a
@@ -288,8 +298,9 @@ materialized atomically, and reconstructed by transaction time and valid time.
 
 It does not establish truth, source authenticity, quoted-span correctness,
 policy legitimacy, authority-monitor orchestration, general workflow
-orchestration, action execution safety, concurrent-writer safety, formal
-PROV-O interoperability, or an empirical metacognitive effect.
+orchestration, domain-effect correctness, exactly-once external execution,
+concurrent-writer safety, formal PROV-O interoperability, or an empirical
+metacognitive effect.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

@@ -463,8 +463,15 @@ grant interval. `BLOCK` may cite the insufficient grant that a triggered
 authorization interval. `CLARIFY` also carries no authorization interval.
 
 This layer validates immutable authority outputs. It does not execute the
-authority monitors, establish a grantor trust root, select a legitimate policy,
-or execute an authorized action.
+authority monitors, establish a grantor trust root, or select a legitimate
+policy.
+
+Unreleased Stage 8c adds a later generic effect path. An exact `AUTHORIZE`
+decision may produce one `ActionDispatch`; a domain adapter may then report one
+terminal `ActionExecution`; a different actor may record an
+`OutcomeObservation` against a pinned observation contract and exact external
+state bytes. Core Malleus validates and replays these records but performs no
+domain action. See `EFFECT_PROTOCOL.md`.
 
 ---
 

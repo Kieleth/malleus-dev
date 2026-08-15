@@ -48,6 +48,7 @@ from malleus.orchestration import (
     MonitorRunResult,
     MonitorStep,
 )
+from malleus.execution import ExecutionError, outcome_contract_digest
 
 __all__ = [
     "AuthorizationState",
@@ -88,4 +89,6 @@ __all__ = [
     "MonitorFailurePlan",
     "MonitorRunResult",
     "MonitorStep",
+    "ExecutionError",
+    "outcome_contract_digest",
 ]

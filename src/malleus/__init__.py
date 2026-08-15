@@ -70,6 +70,7 @@ from malleus.orchestration import (
     MonitorRunResult,
     MonitorStep,
 )
+from malleus.execution import ExecutionError, outcome_contract_digest
 from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
 from malleus.control import (
     AuthorizationEvaluation,
@@ -148,6 +149,8 @@ __all__ = [
     "MonitorFailurePlan",
     "MonitorRunResult",
     "MonitorStep",
+    "ExecutionError",
+    "outcome_contract_digest",
     "ControlError",
     "AuthorizationEvaluation",
     "MonitoringError",
