@@ -104,6 +104,8 @@ no authorization validity interval.
 - `evidence-assertion-recording`: proposals carrying `Evidence` and `EvidenceAssertion` members with content, including `EvidencePolarity`
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
+- `citation-byte-verification`: verifying at write time that a quoted span is a verbatim substring of the source it cites, and invalidating the citation when the source hash changes. `Evidence.locator` and `Evidence.source_version_id` are unverified strings today. Principle 2 of `PRINCIPLES.md` states this as a property a malleus-shaped system must have; malleus does not yet provide it
+- `deferral-queue-aging`: measuring how long a `DEFERRED` proposal has been waiting and blocking past a threshold. `DEFERRED` is a terminal state with no aging, so a deferral is indistinguishable from a decision nobody revisited. Principle 3 of `PRINCIPLES.md` and the `arbiter_is_accountable` rite both require this of an adopter's application layer; malleus supplies the decision record, not the queue
 - `epistemic-policy-authority-and-scope`: deciding which policy is legitimate and applicable to a proposal
 - `authorization-policy-authority-and-scope`: deciding which authorization policy is legitimate and applicable to an action
 
@@ -160,7 +162,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.6.0`.
+ontology is `0.4.0`; the assent ontology is `0.7.0`.
 
 ## History
 

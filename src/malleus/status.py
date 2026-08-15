@@ -81,6 +81,8 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "protocol-actor-registration",
         "evidence-assertion-recording",
         "untrusted-rule-program-sandboxing",
+        "citation-byte-verification",
+        "deferral-queue-aging",
     ),
     root_ontology_version=_declared_schema_version("malleus.yaml"),
     assent_ontology_version=_declared_schema_version("assent.yaml"),

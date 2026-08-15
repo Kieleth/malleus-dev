@@ -189,6 +189,40 @@ def test_abstract_protocol_and_action_roots_cannot_materialize():
         assert "abstract" in operation.rejection_reason
 
 
+def test_monitor_failure_reason_vocabulary_is_closed():
+    """R3 S1. `arbiter_is_accountable` asks the judge to record its reason.
+    The reason was recorded as an open string, so "how many deferrals came
+    from a timeout" was a substring search rather than a query, one layer
+    away from enums this same schema already closes properly."""
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    for slot, enum_name in (("failure_category", "MonitorFailureCategory"),
+                            ("error_code", "MonitorErrorCode")):
+        constraint = registry.get_slot_constraint("MonitorFailure", slot)
+        assert constraint.range == enum_name
+        assert registry.has_enum(constraint.range)
+    assert registry.get_enum_values("MonitorFailureCategory") == {
+        "TIMEOUT", "DEPENDENCY", "EXECUTION",
+    }
+
+
+def test_unrecognised_failure_category_is_rejected():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    errors = registry.validate_instance("MonitorFailure", {
+        "id": "failure:1",
+        "monitor_id": "monitor:1",
+        "monitor_version": "1",
+        "monitor_hash": "sha256:" + "1" * 64,
+        "proposal_id": "proposal:1",
+        "proposal_content_hash": "sha256:" + "2" * 64,
+        "base_acceptance_head": "sha256:" + "3" * 64,
+        "failed_assessment_kind": "TYPE",
+        "failure_category": "FLAKY",
+        "error_code": "FAILED",
+        "error_message": "monitor did not answer",
+    })
+    assert any("Invalid value 'FLAKY'" in error for error in errors)
+
+
 def test_monitor_failure_has_no_decision_or_assessment_outcome_slot():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     slots = registry.effective_slots("MonitorFailure")

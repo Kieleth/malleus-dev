@@ -6,11 +6,25 @@
 # its findings to MALLEUS_INQUISITION.md in the inspected repo.
 #
 # Every rite was paid for by a real adoption. The `lesson` field records the
-# generic failure, never the project. This file is data on purpose: tune
-# severities, disable rites, add your own. Learnings flow back upstream:
-# open an issue or PR against malleus-dev with the generic lesson only.
+# generic failure, never the project. Learnings flow back upstream: open an
+# issue or PR against malleus-dev with the generic lesson only.
+#
+# This file is data on purpose, and the tuning contract is exact:
+#
+#   severity:      sets the severity of the rite's PRIMARY finding. Secondary
+#                  findings (commendations, and graded sub-findings below the
+#                  primary condition) carry their own severity at the call
+#                  site and are not tuned from here.
+#   enabled: false disables a rite. Deleting the entry does NOT disable it;
+#                  it breaks the instrument and the rites refuse to run, so a
+#                  mistyped id can never quietly switch a gate off.
+#   status:        required when severity is NOTE. `open_question` means the
+#                  underlying property is not yet established, `low_stakes`
+#                  means it is established and minor. A severity lowered for
+#                  convenience is forbidden by doctrine, so the reason is
+#                  data rather than an argument the reader reconstructs.
 
-version: 5
+version: 6
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -38,8 +52,20 @@ mechanical:
       to nothing must be its own loud refusal, distinct from a parse
       failure, and a rejection rate of zero is not evidence of a gate.
   - id: root
-    question: Are the five primitives present, and does each declared primitive have a speaker?
+    question: Are the primitives present at all?
+    severity: HERESY
+    lesson: >-
+      A schema missing the primitives never imported the root, and nothing
+      downstream can be judged: every later rite would be asking questions
+      about a vocabulary that is not there. This rite and root_has_speakers
+      were one entry until an inspection found the declared severity (NOTE)
+      disagreeing with the severity the code emitted (HERESY) for the primary
+      condition. Two questions at two volumes need two rites, or the rite
+      table itself becomes the thing that says one and does the other.
+  - id: root_has_speakers
+    question: Does each declared primitive have at least one concrete subtype?
     severity: NOTE
+    status: low_stakes
     lesson: >-
       Vocabulary with no reader or writer is where drift begins. Observed: a
       narrative ontology fully declared and consumed by nothing; Signal, the
@@ -165,7 +191,11 @@ judgment:
       probe capability, never presence (an installed package may be stale
       or a name-squatter; import the symbol you need, not the module name);
       resolve from the installed package, gate on a version floor, assert
-      check_compatibility in a test, regenerate in CI and fail on dirty diff.
+      check_compatibility_strict in a test (the consumer-side variant: the
+      producer-side check_compatibility is blind to a dropped `required`
+      constraint, and naming it here is the confusion that
+      the_rite_survives_its_subject warns about), regenerate in CI and fail
+      on dirty diff.
   - id: trusted_explicit
     question: Is every validation bypass an explicit property of the operation, never inferred from context?
     severity: SUSPICION
@@ -381,6 +411,7 @@ judgment:
       and the constraints it enforces, so that composing it with another is a
       checkable operation rather than a copy and a hope?
     severity: NOTE
+    status: open_question
     lesson: >-
       A subgraph without a declared interface is a region, not a module, and
       reuse degenerates into duplication that drifts. Whether well-designed

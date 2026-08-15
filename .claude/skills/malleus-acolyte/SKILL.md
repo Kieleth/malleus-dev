@@ -57,11 +57,21 @@ and stop if you cannot:
 3. The existing artifact to reuse.
 4. What this slice explicitly excludes.
 
-Build only what changes the answer or is needed to audit it. A slice ends when
-the evidence distinguishes its claim; more cases, more abstraction, and more
-infrastructure are not progress. A broader idea found along the way is recorded
-as a finding, not folded in silently. If it materially changes the claim, stop
-and ask the human.
+Build only what changes the answer or is needed to audit it. A slice is
+complete when the evidence distinguishes its claim, the guardrails pass, and
+the result and its limitations are preserved; all three. More cases, more
+abstraction, and more infrastructure are not progress. A broader idea found
+along the way is recorded as a finding, not folded in silently. If it
+materially changes the claim, stop and ask the human.
+
+**Where the two doctrines meet.** No half measures governs the quality of a
+decision inside the slice; the gate governs the size of the slice. Build less,
+and close what you build. They collide in exactly one case: you find an open
+gate mid-slice, out of scope. Doctrine says cut it now, the gate says do not
+widen, and neither wins by default. Record it as a finding and surface it to
+the human immediately: not closed silently, not deferred silently. The human
+decides whether it enters this slice. That is the same tiebreaker as always,
+present the black and the white and let them cut.
 
 ## Where the knowledge lives (probe capability, never assume presence)
 

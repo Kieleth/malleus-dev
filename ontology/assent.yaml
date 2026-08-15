@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.6.0
+version: 0.7.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -45,6 +45,30 @@ enums:
       SATISFIED:
       VIOLATED:
       UNKNOWN:
+
+  MonitorFailureCategory:
+    description: >-
+      Why a monitor failed to produce an output. Closed because the arbiter
+      must be able to answer "how many deferrals came from a timeout" with a
+      query rather than a substring search; free-text reasons are provenance
+      that cannot be enforced.
+    permissible_values:
+      TIMEOUT:
+      DEPENDENCY:
+      EXECUTION:
+
+  MonitorErrorCode:
+    description: >-
+      The specific failure a monitor reports. Closed for the same reason as
+      the category, and paired with error_message, which stays free text and
+      carries the detail. A new code is added here, never invented at a call
+      site.
+    permissible_values:
+      DEADLINE:
+      ENGINE_TIMEOUT:
+      ENGINE_FAILED:
+      FAILED:
+      AUTHORITY_SOURCE_UNAVAILABLE:
 
   LogicCheckOutcome:
     permissible_values:
@@ -1425,9 +1449,9 @@ slots:
   failed_assessment_kind:
     range: AssessmentKind
   failure_category:
-    range: string
+    range: MonitorFailureCategory
   error_code:
-    range: string
+    range: MonitorErrorCode
   error_message:
     range: string
 

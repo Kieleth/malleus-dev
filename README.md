@@ -304,7 +304,9 @@ Three tiers:
 - `malleus-inquisitor <schema.yaml>`: the mechanical rites, a CLI that any
   machine can judge. Does the schema construct, is the imported root current
   against the installed malleus (staleness is detected via
-  `check_compatibility`), are the type-slots constrained, are relation
+  `check_compatibility_strict`, the consumer-side check: the producer-side
+  `check_compatibility` is blind to a dropped `required` constraint, which is
+  the most silent drift there is), are the type-slots constrained, are relation
   endpoints narrowed, are Signals genuinely derived, are formula-shaped
   slots backed by an executor. Exit 0 grants the purity seal.
 - The `malleus-inquisitor` skill (`.claude/skills/malleus-inquisitor/`): the

@@ -44,15 +44,23 @@ needing separate evidence, and no amount of validation supplies it.
 
 ## 2. A tuple points at bytes
 
-Every asserted tuple names its source, and the reference is byte-exact. The
-quoted span is verified as a verbatim substring of the named source at write
-time, and the source is content-addressed so that a changed source invalidates
-the citation rather than refreshing a cache.
+Every asserted tuple should name its source, and the reference should be
+byte-exact: the quoted span verified as a verbatim substring of the named
+source at write time, and the source content-addressed so that a changed
+source invalidates the citation rather than refreshing a cache.
 
 That property is what turns "we preserved the original intent" from a claim
 about diligence into a statement anyone can recheck. It is also the property
 most often faked by accident, because a quote that was hand-copied looks
 exactly like a quote that was verified, right up until someone measures.
+
+The limit, stated in the same breath: **malleus does not provide this.** The
+root declares no citation slot, no quoted span, and no source hash;
+`Evidence.locator` and `Evidence.source_version_id` in the assent ontology are
+unverified strings. This is a property a malleus-shaped system must have and
+that the library has not built, tracked as `citation-byte-verification` in
+`IMPLEMENTATION_STATUS.md`. Until it exists, the verification belongs to the
+adopter's write path, and the rite exists to ask whether anyone built it.
 
 Rite: `quotation_is_byte_exact`, with `citation_integrity` as its companion.
 One checks that the cited id resolves. The other checks that the cited bytes
@@ -63,11 +71,21 @@ do.
 Every acceptance decision has a named decider, and the decider is a designed
 component, not an emergent property of the system running for a long time.
 
-If a machine decides, its decision is a typed record carrying the inputs it
-saw, the verdict, the reason, and the identity and version of the judge. If it
-declines to decide, the case lands in a queue, the queue's age is measured, and
-past a threshold the age blocks. A queue nobody drains is silent acceptance
-wearing a process.
+If a machine decides, its decision must be a typed record carrying the inputs
+it saw, the verdict, the reason, and the identity and version of the judge.
+Malleus provides this half: the assent protocol records decisions as immutable
+typed records bound to the exact revision, policy, and monitor outputs that
+produced them.
+
+If it declines to decide, the case must land in a queue whose age is measured
+and which past a threshold blocks, because a queue nobody drains is silent
+acceptance wearing a process. **Malleus does not provide this half.**
+`DEFERRED` is a terminal state: there is no open-deferral projection, no age,
+and no blocking threshold, so a deferral in a bare malleus system is
+indistinguishable from a decision nobody revisited, which is the exact
+condition the rite was written against. Tracked as `deferral-queue-aging` in
+`IMPLEMENTATION_STATUS.md`; until it exists, the queue is the adopter's to
+build and the rite is there to ask whether they did.
 
 Rite: `arbiter_is_accountable`.
 
@@ -105,7 +123,7 @@ claim. Everything past that is furniture.
 
 ## The genome analogy, and exactly where it stops
 
-The analogy is useful and it is load bearing in three places:
+The analogy is useful, and it shaped three decisions:
 
 - The ledger is the genome, non-coding regions included. Flavour text, examples,
   and asides are kept rather than deleted, because which parts express is not
@@ -124,11 +142,13 @@ readable, and the escalation queue only works if a person drains it. The
 metaphor must never be allowed to suggest that the system self-corrects. It does
 not. See principle 3.
 
-**DNA has no provenance.** A genome carries no citation to anything. The entire
-malleus claim is that every tuple points at bytes in a source, byte-exact. That
-is a citation graph, and it is exactly the property the genome analogy has
-nothing to say about. Keep it central where the analogy is silent. See
-principle 2.
+**DNA has no provenance.** A genome carries no citation to anything. The
+property this project is aiming at is the opposite one: every tuple points at
+bytes in a source, byte-exact. That is a citation graph, it is exactly what the
+genome analogy has nothing to say about, and it is the half of principle 2 the
+library has not built yet. Keep it central where the analogy is silent, and
+keep it honest about its tense. See principle 2 and
+`citation-byte-verification` in `IMPLEMENTATION_STATUS.md`.
 
 Use the analogy to motivate questions. Never cite it as support for a claim.
 
@@ -176,10 +196,26 @@ Before building anything, record four items:
 4. What is explicitly excluded from this slice.
 
 Build only what changes the interpretation of a claim or is needed to audit the
-result. A slice ends when the registered evidence distinguishes its claim; more
-cases and more machinery are not progress. If the work reveals a broader idea,
-record it as a finding, do not silently widen the slice. If the widening
-materially changes the claim, stop and ask.
+result. The default exclusions are new databases, orchestration layers,
+generalized proof engines, scale infrastructure, security machinery, extra case
+families, duplicated executions, and artifact ceremony beyond the identity,
+provenance, and reproducibility the claim needs. An exclusion is lifted only by
+an explicit recorded decision from the person you are working for.
+
+A slice is complete when the smallest registered evidence distinguishes its
+claim, the relevant guardrails pass, and the result and its limitations are
+preserved. All three. More cases and more machinery are not progress by
+themselves.
+
+If the work reveals a broader idea, a bug, or a possible experiment, record it
+as a finding or a pending action; do not silently widen the slice. If the
+widening materially changes the claim, the denominator, the intervention, or
+the interpretation, stop before implementation and obtain a decision.
+
+One case needs naming because the two doctrines meet there: an open gate found
+mid-slice and out of scope. Do not close it silently and do not defer it
+silently. Record it and surface it immediately, and let the human decide
+whether it enters this slice.
 
 Exploration stays welcome. Negative results are kept. Neither rewrites a
 finished result after the fact.

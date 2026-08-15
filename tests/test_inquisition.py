@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import json
+import re
 import textwrap
 from pathlib import Path
 
 import pytest
+import yaml
 
 from malleus.inquisition import (
     HERESY,
@@ -94,7 +97,70 @@ slots:
     range: string
 """
 
+VACUOUS_ENDPOINT_SCHEMA = """
+id: https://example.org/schema/vacuous
+name: vacuous
+imports:
+  - malleus
+  - linkml:types
+classes:
+  Creature:
+    is_a: Entity
+  TamesRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: VacuousRelationType
+        required: true
+        equals_string: TAMES
+enums:
+  VacuousRelationType:
+    permissible_values:
+      TAMES: {}
+"""
+
+ROOTLESS_SCHEMA = """
+id: https://example.org/schema/rootless
+name: rootless
+imports:
+  - linkml:types
+classes:
+  Thing:
+    attributes:
+      label:
+        range: string
+"""
+
 ROOT_MAP = {"malleus": str(bundled_ontology_path("malleus.yaml"))}
+
+
+def _tuned_rubric(tmp_path, severities=None, disable=None, delete=None,
+                  config=None, drop_keys=None):
+    """The shipped rubric with targeted edits, written to a temp file.
+
+    Every test that claims the rubric drives something proves it by editing
+    the rubric and observing the change, never by reading the code.
+    """
+    rubric = copy.deepcopy(_rubric())
+    if config is not None:
+        rubric["config"] = config
+    for section in ("mechanical", "judgment"):
+        kept = []
+        for entry in rubric[section]:
+            rite_id = entry["id"]
+            if delete and rite_id in delete:
+                continue
+            if severities and rite_id in severities:
+                entry["severity"] = severities[rite_id]
+            if disable and rite_id in disable:
+                entry["enabled"] = False
+            if drop_keys and rite_id in drop_keys:
+                entry.pop(drop_keys[rite_id], None)
+            kept.append(entry)
+        rubric[section] = kept
+    path = tmp_path / "tuned_rubric.yaml"
+    path.write_text(yaml.safe_dump(rubric, sort_keys=False), encoding="utf-8")
+    return path
 
 
 def test_pure_schema_earns_the_seal(tmp_path):
@@ -286,15 +352,141 @@ class TestRubricIsWellFormedAndFailsLoud:
             _formula_tokens(path)
 
     def test_mistyped_token_list_refuses_instead_of_defaulting(self, tmp_path):
-        path = tmp_path / "rubric.yaml"
-        path.write_text("config:\n  formula_slot_token: [formula]\n")
+        path = _tuned_rubric(tmp_path, config={"formula_slot_token": ["formula"]})
         with pytest.raises(RubricError, match="must be a list"):
             _formula_tokens(path)
 
-    def test_empty_token_list_is_an_explicit_disable(self, tmp_path):
+    def test_missing_rite_section_refuses_with_rubric_error_not_keyerror(self, tmp_path):
+        """R3 N3: the first hardening validated `config` and nothing else, so
+        a rubric with a good config and no rites raised KeyError downstream."""
         path = tmp_path / "rubric.yaml"
-        path.write_text("config:\n  formula_slot_tokens: []\n")
+        path.write_text("config:\n  formula_slot_tokens: []\njudgment: []\n")
+        with pytest.raises(RubricError, match="`mechanical:` must be a non-empty list"):
+            _rubric(path)
+
+    def test_rite_missing_its_lesson_refuses(self, tmp_path):
+        path = _tuned_rubric(tmp_path, drop_keys={"construction": "lesson"})
+        with pytest.raises(RubricError, match="has no `lesson:`"):
+            _rubric(path)
+
+    def test_unknown_severity_refuses(self, tmp_path):
+        path = _tuned_rubric(tmp_path, severities={"construction": "MILD_CONCERN"})
+        with pytest.raises(RubricError, match="declares severity"):
+            _rubric(path)
+
+    def test_note_severity_must_say_why(self, tmp_path):
+        """R3 N1: NOTE because the property is unproven and NOTE because it is
+        minor read identically. The reason is data or the rubric refuses."""
+        path = _tuned_rubric(tmp_path, severities={"construction": NOTE})
+        with pytest.raises(RubricError, match="must say why in `status:`"):
+            _rubric(path)
+
+    def test_shipped_note_rites_all_declare_their_reason(self):
+        rubric = _rubric()
+        for rite in rubric["mechanical"] + rubric["judgment"]:
+            if rite["severity"] == NOTE:
+                assert rite.get("status") in ("open_question", "low_stakes"), rite["id"]
+
+    def test_empty_token_list_is_an_explicit_disable(self, tmp_path):
+        path = _tuned_rubric(tmp_path, config={"formula_slot_tokens": []})
         assert _formula_tokens(path) == ()
+
+
+class TestTheRubricActuallyDrivesTheRites:
+    """R3 H1. The rubric invited adopters to tune severities and disable
+    rites while the CLI hardcoded both, so a rite raised to HERESY still
+    printed as a suspicion and a deleted rite still fired. An adopter who
+    believes a gate is closed while it is open is worse off than one whose
+    tuning never existed."""
+
+    def test_raising_a_severity_changes_the_verdict_and_denies_the_seal(self, tmp_path):
+        schema = _write_schema(tmp_path, VACUOUS_ENDPOINT_SCHEMA)
+        baseline = run_rites(schema, import_map=ROOT_MAP)
+        assert _rites(baseline, "bound_endpoints")[0].severity == SUSPICION
+        assert baseline.purity
+
+        tuned = _tuned_rubric(tmp_path, severities={"bound_endpoints": HERESY})
+        report = run_rites(schema, import_map=ROOT_MAP, rubric_path=tuned)
+        assert _rites(report, "bound_endpoints")[0].severity == HERESY
+        assert not report.purity
+
+    def test_disabling_a_rite_silences_it(self, tmp_path):
+        schema = _write_schema(tmp_path, VACUOUS_ENDPOINT_SCHEMA)
+        assert _rites(run_rites(schema, import_map=ROOT_MAP), "bound_endpoints")
+        tuned = _tuned_rubric(tmp_path, disable={"bound_endpoints"})
+        assert not _rites(run_rites(schema, import_map=ROOT_MAP, rubric_path=tuned),
+                          "bound_endpoints")
+
+    def test_deleting_a_rite_breaks_the_instrument_rather_than_the_gate(self, tmp_path):
+        """Absence is not consent. A mistyped id must never be the quiet way
+        to switch a gate off; `enabled: false` is the only way."""
+        schema = _write_schema(tmp_path, VACUOUS_ENDPOINT_SCHEMA)
+        tuned = _tuned_rubric(tmp_path, delete={"bound_endpoints"})
+        with pytest.raises(RubricError, match="absent from the rubric"):
+            run_rites(schema, import_map=ROOT_MAP, rubric_path=tuned)
+
+    def test_primary_verdict_severity_is_the_declared_one(self, tmp_path):
+        """R3 H2: rubric.yaml declared `root` at NOTE while the code emitted
+        HERESY. Reading the severity from the rubric makes that unrepresentable."""
+        schema = _write_schema(tmp_path, ROOTLESS_SCHEMA)
+        assert _rites(run_rites(schema), "root")[0].severity == HERESY
+        tuned = _tuned_rubric(tmp_path, severities={"root": SUSPICION})
+        assert _rites(run_rites(schema, rubric_path=tuned), "root")[0].severity == SUSPICION
+
+    def test_no_secondary_finding_can_deny_the_seal(self):
+        """Only a rite's primary verdict may be a heresy, and primary verdicts
+        come from the rubric. A `report.add(..., HERESY, ...)` call site would
+        be a severity the rubric cannot see or tune."""
+        source = (Path(__file__).parent.parent / "src" / "malleus"
+                  / "inquisition" / "__init__.py").read_text()
+        calls = re.findall(r"report\.add\(\s*\n?\s*\"[a-z_]+\",\s*([A-Z]+)", source)
+        assert calls, "the scan found no report.add call sites; the pattern rotted"
+        assert HERESY not in calls
+
+
+class TestBrokenInstrumentIsNeverABrokenSubject:
+    """R3 H6. A corrupt rubric produced a 40-line traceback headed by a YAML
+    parser error and exit 1, the same code that means 'your schema has
+    heresies'. An operator who just edited their schema reads that as their
+    fault, and a CI gate cannot tell the two apart."""
+
+    def test_cli_reports_a_broken_rubric_as_exit_two_without_a_traceback(
+        self, tmp_path, capsys, monkeypatch
+    ):
+        import malleus.inquisition as inq
+        broken = tmp_path / "rubric.yaml"
+        broken.write_text("config: {formula_slot_tokens: [oops")
+        monkeypatch.setattr(inq, "RUBRIC_PATH", broken)
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+
+        assert main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}"]) == 2
+        captured = capsys.readouterr()
+        assert "Traceback" not in captured.err
+        assert "rubric" in captured.err
+        assert "PURITY SEAL" not in captured.out
+
+    def test_a_broken_rubric_refuses_before_any_rite_runs(self, tmp_path):
+        """The refusal must precede the work, or a half-built report is
+        discarded and the operator sees nothing that was already known."""
+        broken = tmp_path / "rubric.yaml"
+        broken.write_text("config: {}\n")
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        with pytest.raises(RubricError):
+            run_rites(schema, import_map=ROOT_MAP, rubric_path=broken)
+
+
+class TestTheDiagnosticIsNeverDiscarded:
+    """R3 S3. When a schema fails to construct, the tool tries to explain it
+    as version skew. Every failure of that diagnostic was swallowed by
+    `except ...: pass`, and the likeliest cause of the failure is exactly the
+    case where the hint vanished."""
+
+    def test_unusable_mapped_root_is_reported_not_swallowed(self, tmp_path):
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        report = run_rites(schema, import_map={"malleus": str(tmp_path / "absent.yaml")})
+        assert _rites(report, "construction")[0].severity == HERESY
+        skew = _rites(report, "root_currency")
+        assert skew and "could not be attributed" in skew[0].message
 
 
 class TestPinnedContractMatchesLiveOntology:
@@ -308,6 +500,121 @@ class TestPinnedContractMatchesLiveOntology:
         )
         live = OntologyRegistry(bundled_ontology_path("domains", "cyp450.yaml"))
         assert contract["ontology_hash"] == "sha256:" + live.content_hash()
+
+
+class TestShippedGuidanceSaysWhatTheCodeDoes:
+    """Rites applied to the rite-givers. Every finding below was a real
+    divergence between what this repository shipped and what it did."""
+
+    ROOT = Path(__file__).parent.parent
+
+    def _docs(self):
+        paths = [self.ROOT / "README.md",
+                 self.ROOT / "src" / "malleus" / "inquisition" / "rubric.yaml"]
+        paths += sorted((self.ROOT / "docs").glob("*.md"))
+        paths += sorted((self.ROOT / ".claude" / "skills").glob("*/SKILL.md"))
+        return [(p, p.read_text(encoding="utf-8")) for p in paths]
+
+    def test_currency_guidance_never_names_the_producer_side_check(self):
+        """R3 H5. The producer-side check is blind to a dropped `required`
+        constraint. Naming it for the currency question hands the adopter a
+        green test over a root the rite should condemn, which is the
+        confusion `the_rite_survives_its_subject` warns about by name."""
+        offenders = [f"{p.name}:{line}" for p, text in self._docs()
+                     for line in _producer_check_for_currency(text)]
+        assert not offenders, (
+            "the producer-side check is named as the answer to a currency, "
+            f"staleness, or drift question at: {offenders}. Documenting the "
+            "producer-side API itself is fine; prescribing it for the "
+            "consumer question is the drift it cannot see."
+        )
+
+    def test_every_shipped_skill_carries_the_scope_gate(self):
+        """R3 H7. The CHANGELOG claimed both skills received the gate. One
+        did. A claim about a shipped artifact is checkable, so check it."""
+        skills = sorted((self.ROOT / ".claude" / "skills").glob("*/SKILL.md"))
+        assert len(skills) >= 2
+        for path in skills:
+            text = path.read_text(encoding="utf-8")
+            assert "## Before you build" in text, path
+            assert "smallest observation" in text, path
+            assert "exclude" in text.lower(), path
+
+    def test_the_two_doctrines_name_their_tiebreaker(self):
+        """R3 S2. No half measures says cut an open gate now; the scope gate
+        says do not widen the slice. They meet on an out-of-scope open gate
+        found mid-work, and an unresolved standing order is resolved
+        arbitrarily by whoever reads it."""
+        for path in sorted((self.ROOT / ".claude" / "skills").glob("*/SKILL.md")):
+            text = _flat(path.read_text(encoding="utf-8"))
+            if "no half measures" not in text.lower():
+                continue
+            assert "not closed silently, not deferred silently" in text, path
+            assert "The human decides whether it enters this slice" in text, path
+
+    def test_principles_name_the_capabilities_they_do_not_have(self):
+        """R3 H3, H4. Principles 2 and 3 asserted byte-exact citation and an
+        aging deferral queue as properties of malleus. Malleus has neither.
+        The capability boundary is the one document that must know."""
+        from malleus.status import IMPLEMENTATION_STATUS
+        principles = (self.ROOT / "docs" / "PRINCIPLES.md").read_text(encoding="utf-8")
+        guide = (self.ROOT / "docs" / "ADOPTION_GUIDE.md").read_text(encoding="utf-8")
+        for capability in ("citation-byte-verification", "deferral-queue-aging"):
+            assert capability in IMPLEMENTATION_STATUS.pending_capabilities
+            assert capability in principles
+            assert capability in guide
+
+    def test_load_bearing_is_reserved_for_checkable_properties(self):
+        """R3 N2. This repo names a HERESY-severity rite
+        `encoding_is_load_bearing`. Calling the biological analogy load
+        bearing two paragraphs before saying it is never support for a claim
+        is a reader trap in the one document about what supports what."""
+        principles = (self.ROOT / "docs" / "PRINCIPLES.md").read_text(encoding="utf-8")
+        for match in re.finditer(r"load[ -]bearing", principles):
+            window = principles[max(0, match.start() - 200):match.end() + 200]
+            assert "analogy" not in window.lower(), (
+                "'load bearing' used of the biological analogy at offset "
+                f"{match.start()}"
+            )
+
+    def test_public_and_private_doctrine_do_not_diverge(self):
+        """R3 S4. The thesis and the working rule exist in two copies, one of
+        them gitignored. `single_source` predicts one is already wrong, and
+        one was: the public copy had lost two of the completion rule's three
+        conditions and the whole exclusion list."""
+        private = self.ROOT / "malleus-moving" / "design" / "CLAIM_AND_EXECUTION_DOCTRINE.md"
+        if not private.is_file():
+            pytest.skip("the paper-program doctrine is not present in this tree")
+        doctrine = private.read_text(encoding="utf-8")
+        principles = (self.ROOT / "docs" / "PRINCIPLES.md").read_text(encoding="utf-8")
+        thesis = ("typed subgraphs as composable epistemic modules whose")
+        assert thesis in _flat(doctrine) and thesis in _flat(principles)
+        for condition in ("the relevant guardrails pass",
+                          "new databases, orchestration layers",
+                          "stop before implementation and obtain a decision"):
+            assert condition in _flat(doctrine), f"doctrine lost: {condition}"
+            assert condition in _flat(principles), f"public copy is weaker: {condition}"
+
+
+def _flat(text: str) -> str:
+    """Markdown wraps at different columns in different files; compare words."""
+    return " ".join(text.split())
+
+
+_CURRENCY_WORDS = re.compile(r"\b(current|currency|stale|staleness|drift|drifted)\b", re.I)
+
+
+def _producer_check_for_currency(text: str) -> list[int]:
+    """Line numbers where the producer-side check is offered as the answer to
+    a currency question with no mention of the strict variant nearby."""
+    hits = []
+    for match in re.finditer(r"check_compatibility(?!_strict)", text):
+        window = text[max(0, match.start() - 500):match.end() + 500]
+        if "check_compatibility_strict" in window:
+            continue
+        if _CURRENCY_WORDS.search(window):
+            hits.append(text.count("\n", 0, match.start()) + 1)
+    return hits
 
 
 class TestPackagingTargetsAreTracked:

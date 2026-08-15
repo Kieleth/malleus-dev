@@ -5,7 +5,10 @@ Usage:
     malleus-inquisitor path/to/schema.yaml --map malleus=vendor/malleus.yaml --json
     malleus-inquisitor install-skills [--user | --project DIR]
 
-Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage.
+Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage
+or a broken instrument (an unreadable or malformed rubric). A broken subject
+is a finding; a broken instrument is never reported as one, because an
+operator reading exit 1 must be able to trust that their schema was judged.
 """
 
 from __future__ import annotations
@@ -16,7 +19,14 @@ import sys
 import sysconfig
 from pathlib import Path
 
-from malleus.inquisition import COMMENDATION, HERESY, NOTE, SUSPICION, run_rites
+from malleus.inquisition import (
+    COMMENDATION,
+    HERESY,
+    NOTE,
+    SUSPICION,
+    RubricError,
+    run_rites,
+)
 
 _BADGES = {HERESY: "✠ HERESY     ", SUSPICION: "? suspicion  ",
            NOTE: "· note       ", COMMENDATION: "+ commended  "}
@@ -87,7 +97,16 @@ def main(argv: list[str] | None = None) -> int:
         name, _, path = entry.partition("=")
         import_map[name] = path
 
-    report = run_rites(args.schema, import_map=import_map or None, root_path=args.root)
+    try:
+        report = run_rites(args.schema, import_map=import_map or None, root_path=args.root)
+    except RubricError as exc:
+        # The rubric is the instrument, never the subject. Exit 2 keeps this
+        # distinguishable from exit 1 ("your schema has heresies") for any CI
+        # gate keyed on the documented codes, and no traceback reaches an
+        # operator who would read it as a fault in their own schema.
+        print(f"malleus-inquisitor: broken rubric, no schema was judged: {exc}",
+              file=sys.stderr)
+        return 2
 
     if args.json:
         print(report.to_json())

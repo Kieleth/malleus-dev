@@ -45,7 +45,12 @@ class RubricError(RuntimeError):
     """
 
 
+_DECLARABLE = (HERESY, SUSPICION, NOTE)
+_NOTE_REASONS = ("open_question", "low_stakes")
+
+
 def _rubric(path: Path | None = None) -> dict:
+    """Load and structurally validate the rubric. Nothing is assumed away."""
     path = path or RUBRIC_PATH
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -56,11 +61,75 @@ def _rubric(path: Path | None = None) -> dict:
             f"rubric at {path} has no `config:` mapping. This is the inquisitor's "
             "instrument, not the schema under inspection: fix or reinstall the rubric."
         )
+    for section in ("mechanical", "judgment"):
+        entries = data.get(section)
+        if not isinstance(entries, list) or not entries:
+            raise RubricError(f"rubric at {path}: `{section}:` must be a non-empty list of rites")
+        for entry in entries:
+            _validate_rite(path, section, entry)
     return data
 
 
-def _formula_tokens(path: Path | None = None) -> tuple[str, ...]:
-    tokens = _rubric(path)["config"].get("formula_slot_tokens")
+def _validate_rite(path: Path, section: str, entry: object) -> None:
+    if not isinstance(entry, dict):
+        raise RubricError(f"rubric at {path}: every {section} rite must be a mapping, got {entry!r}")
+    rite = entry.get("id")
+    if not isinstance(rite, str) or not rite.strip():
+        raise RubricError(f"rubric at {path}: a {section} rite has no `id:`")
+    for key in ("question", "lesson"):
+        if not isinstance(entry.get(key), str) or not entry[key].strip():
+            raise RubricError(f"rubric at {path}: rite {rite!r} has no `{key}:`")
+    if entry.get("severity") not in _DECLARABLE:
+        raise RubricError(
+            f"rubric at {path}: rite {rite!r} declares severity "
+            f"{entry.get('severity')!r}; expected one of {_DECLARABLE}"
+        )
+    if not isinstance(entry.get("enabled", True), bool):
+        raise RubricError(f"rubric at {path}: rite {rite!r} has a non-boolean `enabled:`")
+    if entry["severity"] == NOTE and entry.get("status") not in _NOTE_REASONS:
+        raise RubricError(
+            f"rubric at {path}: rite {rite!r} is NOTE and must say why in `status:` "
+            f"(one of {_NOTE_REASONS}). A low severity because the underlying property "
+            "is unestablished reads identically to one softened for convenience, and "
+            "the difference must be data, not an argument a reader reconstructs."
+        )
+
+
+class Rites:
+    """The rite table exactly as the rubric declares it.
+
+    The rubric governs each rite's PRIMARY verdict and whether it runs at all.
+    Secondary findings (commendations, graded sub-findings below the primary
+    condition) carry their own severity at the call site and say so.
+    """
+
+    def __init__(self, rubric: dict) -> None:
+        self._severity: dict[str, str] = {}
+        self._enabled: dict[str, bool] = {}
+        for section in ("mechanical", "judgment"):
+            for entry in rubric[section]:
+                self._severity[entry["id"]] = entry["severity"]
+                self._enabled[entry["id"]] = entry.get("enabled", True)
+
+    def _known(self, rite: str) -> None:
+        if rite not in self._severity:
+            raise RubricError(
+                f"rite {rite!r} is emitted by the rites and absent from the rubric. "
+                "Disable a rite with `enabled: false`; deleting its entry leaves the "
+                "instrument unable to say how loud the finding should be."
+            )
+
+    def enabled(self, rite: str) -> bool:
+        self._known(rite)
+        return self._enabled[rite]
+
+    def severity(self, rite: str) -> str:
+        self._known(rite)
+        return self._severity[rite]
+
+
+def _tokens(rubric: dict) -> tuple[str, ...]:
+    tokens = rubric["config"].get("formula_slot_tokens")
     if not isinstance(tokens, list):
         raise RubricError(
             "rubric `config.formula_slot_tokens` must be a list. "
@@ -68,6 +137,10 @@ def _formula_tokens(path: Path | None = None) -> tuple[str, ...]:
             "mistyped key is a broken rubric and is not assumed away."
         )
     return tuple(str(token).lower() for token in tokens)
+
+
+def _formula_tokens(path: Path | None = None) -> tuple[str, ...]:
+    return _tokens(_rubric(path))
 
 
 @dataclass(frozen=True)
@@ -81,10 +154,19 @@ class Finding:
 @dataclass
 class Report:
     schema_path: str
+    rites: Rites
     findings: list[Finding] = field(default_factory=list)
 
+    def verdict(self, rite: str, subject: str, message: str) -> None:
+        """Emit a rite's PRIMARY finding at the severity the rubric declares."""
+        if self.rites.enabled(rite):
+            self.findings.append(Finding(rite, self.rites.severity(rite), subject, message))
+
     def add(self, rite: str, severity: str, subject: str, message: str) -> None:
-        self.findings.append(Finding(rite, severity, subject, message))
+        """Emit a secondary finding: a commendation, or a graded sub-finding
+        below the rite's primary condition, at an explicit severity."""
+        if self.rites.enabled(rite):
+            self.findings.append(Finding(rite, severity, subject, message))
 
     @property
     def heresies(self) -> list[Finding]:
@@ -122,16 +204,23 @@ def run_rites(
     schema_path: str | Path,
     import_map: dict[str, str] | None = None,
     root_path: str | Path | None = None,
+    rubric_path: str | Path | None = None,
 ) -> Report:
-    """Run every mechanical rite against one schema. Returns the full Report."""
-    report = Report(schema_path=str(schema_path))
+    """Run every mechanical rite against one schema. Returns the full Report.
+
+    Severities and enablement come from the rubric, loaded and validated
+    before any work is done, so a broken instrument refuses before it can
+    throw away a half-finished report.
+    """
+    rubric = _rubric(Path(rubric_path) if rubric_path else None)
+    report = Report(schema_path=str(schema_path), rites=Rites(rubric))
 
     # Rite of Construction: the schema must load, imports resolved, or nothing
     # else can be judged.
     try:
         registry = OntologyRegistry(str(schema_path), import_map=import_map or None)
     except (OntologyError, OSError, ValueError) as exc:
-        report.add("construction", HERESY, str(schema_path), f"schema does not construct: {exc}")
+        report.verdict("construction", str(schema_path), f"schema does not construct: {exc}")
         # A schema written against an old root often fails under current
         # rules. Compare the mapped root to the installed one anyway, so the
         # report explains the failure instead of hiding its likely cause.
@@ -150,41 +239,52 @@ def run_rites(
                                f"the imported root is {verdict} against the installed "
                                "malleus; the construction failure above likely follows "
                                "from version skew, judged under current-malleus rules")
-            except (OntologyError, OSError, ValueError):
-                pass
+            except (OntologyError, OSError, ValueError) as diag_exc:
+                # The likeliest reason the mapped root will not load is that
+                # the mapped root is itself broken, which is exactly when the
+                # operator needs to be told the tool tried and failed.
+                report.add("root_currency", NOTE, mapped_root,
+                           f"could not compare the mapped root to the installed malleus "
+                           f"({diag_exc}); the construction failure above could not be "
+                           "attributed to version skew")
         return report
     if not registry.type_names():
         # JSON is valid YAML, so a wrong-format ontology parses into an
         # empty registry. Judging it would certify a non-schema as an empty
         # schema; refuse with the right diagnosis instead.
-        report.add("construction", HERESY, str(schema_path),
-                   "document parses but declares no LinkML classes; this is "
-                   "not a schema the rites can judge (wrong format?)")
+        report.verdict("construction", str(schema_path),
+                       "document parses but declares no LinkML classes; this is "
+                       "not a schema the rites can judge (wrong format?)")
         return report
     report.add("construction", COMMENDATION, str(schema_path),
                f"constructs; version {registry.schema_version or 'undeclared'}, "
                f"content hash {registry.content_hash()[:12]}…, "
                f"{len(registry.type_names())} types")
 
-    # Rite of the Root: the five primitives must be present, and unused
-    # primitives are worth knowing about (in the field, Signal is the most
-    # distinctive primitive and the least adopted).
+    # Rite of the Root: the primitives must be present. A schema that never
+    # imported the root cannot be judged at all, which is why this is the
+    # rite's primary condition and why it denies the seal.
     missing = [p for p in _PRIMITIVES if not registry.has_type(p)]
     if missing:
-        report.add("root", HERESY, ",".join(missing),
-                   "root primitives absent: the schema does not import the malleus root")
+        report.verdict("root", ",".join(missing),
+                       "root primitives absent: the schema does not import the malleus root")
         return report
+
+    # Rite of Speakers: a declared primitive nobody extends is vocabulary with
+    # no speaker. Separate from the root rite because it is a different
+    # question at a different volume (in the field, Signal is the most
+    # distinctive primitive and the least adopted).
     for primitive in _PRIMITIVES:
         subtypes = _concrete_subtypes(registry, primitive)
         if not subtypes and primitive != "Entity":
-            report.add("root", NOTE, primitive,
-                       f"no concrete subtype extends {primitive}; declared vocabulary "
-                       "with no speaker is how drift begins")
+            report.verdict("root_has_speakers", primitive,
+                           f"no concrete subtype extends {primitive}; declared vocabulary "
+                           "with no speaker is how drift begins")
     agents = registry.types_with_mixin("Agent")
     if not agents:
-        report.add("root", NOTE, "Agent",
-                   "no type carries the Agent mixin; if the domain has actors who "
-                   "decide or authorize, they are currently unmodeled")
+        report.verdict("root_has_speakers", "Agent",
+                       "no type carries the Agent mixin; if the domain has actors who "
+                       "decide or authorize, they are currently unmodeled")
 
     # Rite of Root Currency: compare against the installed root. A vendored
     # copy that drifted from the installed malleus is the single most repeated
@@ -205,11 +305,11 @@ def run_rites(
             report.add("root_currency", COMMENDATION, str(root),
                        f"schema {phrase} the installed root (strict): root is current")
         else:
-            report.add("root_currency", HERESY, str(root),
-                       f"schema is {verdict} against the installed root under the "
-                       "strict (consumer-side) check: the imported root has drifted "
-                       "from the installed malleus. Re-vendor or fix the import map, "
-                       "then regenerate all artifacts.")
+            report.verdict("root_currency", str(root),
+                           f"schema is {verdict} against the installed root under the "
+                           "strict (consumer-side) check: the imported root has drifted "
+                           "from the installed malleus. Re-vendor or fix the import map, "
+                           "then regenerate all artifacts.")
             producer = registry.check_compatibility(
                 root_registry.content_hash(), root_registry.fingerprint()
             )
@@ -230,9 +330,9 @@ def run_rites(
             pinned = bool(constraint and constraint.equals_string)
             if pinned or (rng and registry.has_enum(rng)):
                 continue
-            report.add("constrained_tongues", HERESY, name,
-                       f"{slot_name} is not constrained to an enum or pinned with "
-                       "equals_string; any string will validate")
+            report.verdict("constrained_tongues", name,
+                           f"{slot_name} is not constrained to an enum or pinned with "
+                           "equals_string; any string will validate")
 
     # Rite of Bound Endpoints: a concrete Relation narrows both endpoints.
     # (Predicate pinning via equals_string is enforced at construction since
@@ -244,9 +344,9 @@ def run_rites(
             c = registry.get_slot_constraint(name, endpoint)
             rng = c.range if c else None
             if rng in (None, "string", "Entity"):
-                report.add("bound_endpoints", SUSPICION, name,
-                           f"{endpoint} range is {rng or 'undeclared'}; the endpoint "
-                           "contract is vacuous, narrow it to a domain class")
+                report.verdict("bound_endpoints", name,
+                               f"{endpoint} range is {rng or 'undeclared'}; the endpoint "
+                               "contract is vacuous, narrow it to a domain class")
 
     # Rite of the Derived: a Signal is a computed quality. It must name its
     # bearer, and should carry its algorithm and computation time, or it is an
@@ -255,9 +355,9 @@ def run_rites(
         slots = registry.effective_slots(name)
         bearer = slots.get("bearer_id")
         if not (bearer and bearer.required):
-            report.add("derived_signals", SUSPICION, name,
-                       "bearer_id is not required; a quality with no bearer is "
-                       "not a derived quality")
+            report.verdict("derived_signals", name,
+                           "bearer_id is not required; a quality with no bearer is "
+                           "not a derived quality")
         for expected in ("algorithm", "computed_at"):
             if expected not in slots:
                 report.add("derived_signals", NOTE, name,
@@ -267,7 +367,7 @@ def run_rites(
     # Rite Against Inert Formulas: a slot shaped like a formula, with nothing
     # declaring an executor, is documentation pretending to be knowledge. In
     # the field, five systems wrote the formula down and none executed it.
-    tokens = _formula_tokens()
+    tokens = _tokens(rubric)
     for name in registry.type_names():
         typedef = registry.get_type(name)
         if typedef.is_mixin or typedef.abstract:
@@ -275,8 +375,8 @@ def run_rites(
         for slot_name in registry.effective_slots(name):
             lowered = slot_name.lower()
             if any(token in lowered for token in tokens):
-                report.add("inert_formula", SUSPICION, f"{name}.{slot_name}",
-                           "formula-shaped slot; either wire an executor for it or "
-                           "mark it inert in its description (see docs/RECIPES.md, "
-                           "recipe 4)")
+                report.verdict("inert_formula", f"{name}.{slot_name}",
+                               "formula-shaped slot; either wire an executor for it or "
+                               "mark it inert in its description (see docs/RECIPES.md, "
+                               "recipe 4)")
     return report

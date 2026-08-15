@@ -35,6 +35,27 @@ result being quoted for a claim it did not test? Nothing in this system
 self-corrects by running longer, so an unnamed arbiter and an undrained queue
 are findings, not backlog.
 
+## Before you build: the gate
+
+You are here to judge, not to construct. If an inspection tempts you to build
+instrumentation, state four things first and stop if you cannot:
+
+1. The exact claim the instrument would settle.
+2. The smallest observation that settles it.
+3. The existing artifact to reuse (the CLI, the test suite, a grep).
+4. What this excludes.
+
+Build only what changes a finding or is needed to audit one. A tool built to
+chase a failure you have not yet observed directly is the failure mode this
+gate exists to stop: read the raw evidence first, unfiltered, then decide.
+
+**Where the two doctrines meet.** No half measures governs the quality of each
+judgment; the gate governs how much you build to reach it. They collide when
+you find an open gate outside the inspection's declared scope. Record it as a
+finding and surface it: not closed silently, not deferred silently. You never
+cleanse anyway, so the fix is never yours, but the silence would be. The human
+decides whether it enters this slice.
+
 ## Procedure
 
 1. **Locate the schema(s)** in the target project (LinkML YAML importing
