@@ -205,6 +205,25 @@ def test_monitor_failure_reason_vocabulary_is_closed():
     }
 
 
+def test_unavailable_assessment_reason_codes_carry_the_closed_vocabulary():
+    """R4 S4. The category and code were closed at their origin and left open
+    at the place the finding named: `UnavailableAssessment.reason_codes` is
+    populated from `error_code`, so an arbitrary string replayed clean through
+    the vocabulary that had just been closed. Narrowed at the class, because
+    decisions use the shared slot for a different vocabulary."""
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    constraint = registry.get_slot_constraint("UnavailableAssessment", "reason_codes")
+    assert constraint.range == "MonitorErrorCode"
+    assert registry.get_slot_constraint("TypeAssessment", "reason_codes").range == "string"
+    errors = registry.validate_instance("UnavailableAssessment", {
+        "id": "assessment:1",
+        "assessment_kind": "TYPE",
+        "assessment_outcome": "UNKNOWN",
+        "reason_codes": ["Set via AI [confidence=low]"],
+    })
+    assert any("Invalid value" in error for error in errors)
+
+
 def test_unrecognised_failure_category_is_rejected():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     errors = registry.validate_instance("MonitorFailure", {

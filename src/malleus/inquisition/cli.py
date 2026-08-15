@@ -87,6 +87,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="import map entry, repeatable (e.g. malleus=vendor/malleus.yaml)")
     parser.add_argument("--root", default=None,
                         help="path to the reference malleus root (default: the installed one)")
+    parser.add_argument("--rubric", default=None, metavar="PATH",
+                        help="path to a tuned rubric (default: the packaged one). "
+                             "Tune severities and set `enabled: false` in a copy; "
+                             "editing the packaged file is reverted by the next upgrade")
     parser.add_argument("--json", action="store_true", help="machine-readable output")
     args = parser.parse_args(argv)
 
@@ -98,7 +102,8 @@ def main(argv: list[str] | None = None) -> int:
         import_map[name] = path
 
     try:
-        report = run_rites(args.schema, import_map=import_map or None, root_path=args.root)
+        report = run_rites(args.schema, import_map=import_map or None,
+                           root_path=args.root, rubric_path=args.rubric)
     except RubricError as exc:
         # The rubric is the instrument, never the subject. Exit 2 keeps this
         # distinguishable from exit 1 ("your schema has heresies") for any CI
@@ -112,7 +117,11 @@ def main(argv: list[str] | None = None) -> int:
         print(report.to_json())
         return 0 if report.purity else 1
 
+    disabled = report.rites.disabled
     print(f"ORDO MALLEUS :: inquisition of {args.schema}")
+    print(f"rubric {report.rites.path} (v{report.rites.version}), "
+          f"{len(disabled)} rites disabled"
+          + (f": {', '.join(disabled)}" if disabled else ""))
     print("=" * 60)
     for finding in report.findings:
         print(f"{_BADGES[finding.severity]}[{finding.rite}] {finding.subject}")
@@ -120,9 +129,14 @@ def main(argv: list[str] | None = None) -> int:
     print("=" * 60)
     heresies = len(report.heresies)
     if report.purity:
-        print("PURITY SEAL GRANTED. The schema may serve.")
+        # A seal is only as wide as the rubric that granted it, and it says so
+        # on its face: silence from a rite that never ran is not a pass.
+        print("PURITY SEAL GRANTED"
+              + (f" UNDER A REDUCED RUBRIC ({len(disabled)} rites disabled). "
+                 "The unjudged are not thereby innocent."
+                 if disabled else ". The schema may serve."))
         return 0
-    print(f"{heresies} heresy{'ies' if heresies != 1 else ''} recorded. "
+    print(f"{heresies} {'heresies' if heresies != 1 else 'heresy'} recorded. "
           "No seal until the schema recants.")
     return 1
 

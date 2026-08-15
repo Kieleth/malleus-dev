@@ -63,9 +63,20 @@ decides whether it enters this slice.
 2. **Run the mechanical rites**: `malleus-inquisitor <schema> [--map
    malleus=<path>]` (or `python -m malleus.inquisition.cli` from a malleus
    checkout). Include its verdict verbatim in the findings file.
-3. **Apply the judgment rites** from `src/malleus/inquisition/rubric.yaml`
-   (the `judgment:` section) in the malleus repo. That file is the single
-   source of the rubric; read it, do not paraphrase it from memory. For each
+3. **Apply the judgment rites** from the `judgment:` section of the rubric.
+   Resolve its path, never assume one: this skill installs into projects
+   that have no malleus checkout, and the packaged rubric lives inside
+   site-packages.
+
+   ```bash
+   python3 -c "import malleus.inquisition as i, pathlib; print(pathlib.Path(i.__file__).parent / 'rubric.yaml')"
+   ```
+
+   If that fails, malleus is not installed here; fall back to
+   `<checkout>/src/malleus/inquisition/rubric.yaml` and say plainly which
+   copy you used, since a stale checkout and the installed package can
+   disagree. That file is the single source of the rubric: read it, do not
+   paraphrase it from memory. For each
    rite, inspect the actual code paths: constructors, every write path
    including property updates and deserialization, readers per declared
    type, rule engines, provenance fields.

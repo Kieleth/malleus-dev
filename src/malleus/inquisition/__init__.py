@@ -48,6 +48,27 @@ class RubricError(RuntimeError):
 _DECLARABLE = (HERESY, SUSPICION, NOTE)
 _NOTE_REASONS = ("open_question", "low_stakes")
 
+# Every rite id the mechanical rites can emit. The rubric must declare all of
+# them, checked when the rubric loads rather than when a rite happens to fire:
+# a lazy check means a deleted entry is only noticed if that rite would have
+# spoken, so a schema tripping nothing gets a seal from a rubric with holes.
+EMITTED_RITES = (
+    "construction",
+    "root",
+    "root_has_speakers",
+    "root_currency",
+    "root_currency_answerable",
+    "constrained_tongues",
+    "bound_endpoints",
+    "derived_signals",
+    "inert_formula",
+)
+
+# Rites that may never be switched off. `construction` is the precondition for
+# judging anything at all: with it disabled, a document that does not even
+# parse would collect no findings and take the seal.
+UNDISABLABLE_RITES = ("construction",)
+
 
 def _rubric(path: Path | None = None) -> dict:
     """Load and structurally validate the rubric. Nothing is assumed away."""
@@ -61,13 +82,42 @@ def _rubric(path: Path | None = None) -> dict:
             f"rubric at {path} has no `config:` mapping. This is the inquisitor's "
             "instrument, not the schema under inspection: fix or reinstall the rubric."
         )
+    seen: set[str] = set()
     for section in ("mechanical", "judgment"):
         entries = data.get(section)
         if not isinstance(entries, list) or not entries:
             raise RubricError(f"rubric at {path}: `{section}:` must be a non-empty list of rites")
         for entry in entries:
             _validate_rite(path, section, entry)
+            if entry["id"] in seen:
+                raise RubricError(
+                    f"rubric at {path}: rite {entry['id']!r} is declared twice. A duplicate "
+                    "silently last-wins, so the losing entry's severity is a setting the "
+                    "operator can read and the instrument ignores."
+                )
+            seen.add(entry["id"])
+    _validate_rite_table(path, data, seen)
     return data
+
+
+def _validate_rite_table(path: Path, data: dict, declared: set[str]) -> None:
+    """The rite table as a whole, not one rite at a time."""
+    missing = [rite for rite in EMITTED_RITES if rite not in declared]
+    if missing:
+        raise RubricError(
+            f"rubric at {path} declares no entry for {missing}, which the rites emit. "
+            "Disable a rite with `enabled: false`; deleting its entry leaves the "
+            "instrument unable to say how loud the finding should be."
+        )
+    by_id = {entry["id"]: entry for section in ("mechanical", "judgment")
+             for entry in data[section]}
+    for rite in UNDISABLABLE_RITES:
+        if by_id[rite].get("enabled", True) is False:
+            raise RubricError(
+                f"rubric at {path}: rite {rite!r} cannot be disabled. It is the "
+                "precondition for judging anything, and an instrument that skips it "
+                "would grant the seal to a document that does not parse."
+            )
 
 
 def _validate_rite(path: Path, section: str, entry: object) -> None:
@@ -93,6 +143,15 @@ def _validate_rite(path: Path, section: str, entry: object) -> None:
             "is unestablished reads identically to one softened for convenience, and "
             "the difference must be data, not an argument a reader reconstructs."
         )
+    if entry.get("status") == "low_stakes" and not str(entry.get("status_reason", "")).strip():
+        # `low_stakes` on its own is an unverifiable self-assertion, and a
+        # sanctioned field is exactly where a severity softened to keep a
+        # build green would hide. Make the claim carry its argument.
+        raise RubricError(
+            f"rubric at {path}: rite {rite!r} claims `status: low_stakes` and must say "
+            "why in `status_reason:`. Nobody can check the claim itself; the reason is "
+            "what a reviewer reads to catch a severity softened for convenience."
+        )
 
 
 class Rites:
@@ -103,13 +162,25 @@ class Rites:
     condition) carry their own severity at the call site and say so.
     """
 
-    def __init__(self, rubric: dict) -> None:
+    def __init__(self, rubric: dict, path: Path | None = None) -> None:
+        self.path = str(path or RUBRIC_PATH)
+        self.version = rubric.get("version")
         self._severity: dict[str, str] = {}
         self._enabled: dict[str, bool] = {}
         for section in ("mechanical", "judgment"):
             for entry in rubric[section]:
                 self._severity[entry["id"]] = entry["severity"]
                 self._enabled[entry["id"]] = entry.get("enabled", True)
+
+    @property
+    def disabled(self) -> tuple[str, ...]:
+        """Mechanical rites the rubric switched off, in emission order.
+
+        A seal is only as wide as the rubric that granted it, so this travels
+        with every report: the record of what was not judged belongs beside
+        the record of what was.
+        """
+        return tuple(r for r in EMITTED_RITES if not self._enabled.get(r, True))
 
     def _known(self, rite: str) -> None:
         if rite not in self._severity:
@@ -164,7 +235,17 @@ class Report:
 
     def add(self, rite: str, severity: str, subject: str, message: str) -> None:
         """Emit a secondary finding: a commendation, or a graded sub-finding
-        below the rite's primary condition, at an explicit severity."""
+        below the rite's primary condition, at an explicit severity.
+
+        Never a heresy. Only a rite's primary verdict may deny the seal, and
+        primary verdicts take their severity from the rubric; a heresy raised
+        here would be a severity the rubric can neither see nor tune.
+        """
+        if severity == HERESY:
+            raise RubricError(
+                f"rite {rite!r} tried to raise a heresy through add(); only verdict() "
+                "may, because only verdict() reads its severity from the rubric"
+            )
         if self.rites.enabled(rite):
             self.findings.append(Finding(rite, severity, subject, message))
 
@@ -181,6 +262,9 @@ class Report:
             {
                 "schema": self.schema_path,
                 "purity": self.purity,
+                "rubric": self.rites.path,
+                "rubric_version": self.rites.version,
+                "disabled": list(self.rites.disabled),
                 "findings": [f.__dict__ for f in self.findings],
             },
             indent=2,
@@ -212,8 +296,9 @@ def run_rites(
     before any work is done, so a broken instrument refuses before it can
     throw away a half-finished report.
     """
-    rubric = _rubric(Path(rubric_path) if rubric_path else None)
-    report = Report(schema_path=str(schema_path), rites=Rites(rubric))
+    path = Path(rubric_path) if rubric_path else None
+    rubric = _rubric(path)
+    report = Report(schema_path=str(schema_path), rites=Rites(rubric, path))
 
     # Rite of Construction: the schema must load, imports resolved, or nothing
     # else can be judged.
@@ -318,7 +403,13 @@ def run_rites(
                            "producer-compatible but consumer-divergent: the drift is "
                            "in required constraints, the most silent kind")
     except (OntologyError, OSError) as exc:
-        report.add("root_currency", SUSPICION, str(root), f"root not comparable: {exc}")
+        # "I could not determine whether your root is current" is an unknown
+        # condition, and an unknown condition refuses. Its own rite, because
+        # "the root drifted" and "the root could not be read" are two
+        # questions at two volumes.
+        report.verdict("root_currency_answerable", str(root),
+                       f"the reference root could not be read, so currency could not be "
+                       f"judged at all: {exc}")
 
     # Rite of Constrained Tongues: every concrete Event/Relation/Signal
     # subtype must narrow its type-slot to an enum or pin it with

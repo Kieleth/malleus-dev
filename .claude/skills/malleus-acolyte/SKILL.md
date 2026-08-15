@@ -20,7 +20,12 @@ investigation (read the schema, the validator, the actual code paths, the
 evidence; research prior art when the design is new; never decide from
 memory or vibes), then cut once, exactly. Forbidden by doctrine: advisory
 modes, "mostly validated", temporary bypasses, TODO-gates, softened
-severities to keep a build green, and any state between open and closed. A
+severities to keep a build green, and any state between open and closed. One exception exists and it is
+a declaration, not a loophole: a rite may sit at NOTE when the property it
+asks about is genuinely unestablished, and the rubric makes it say so in
+`status: open_question`. `status: low_stakes` additionally requires
+`status_reason`, because that is the field a softened severity would hide in.
+A
 half-closed gate is an open gate that lies about it, and the fleet has the
 scars to prove it. When a genuine trade-off exists, do the investigation,
 present the black and the white to the human with the evidence, and let
@@ -39,10 +44,13 @@ and `PRINCIPLES.md` carries them in full:
    is the writer, the gate goes on the commit and never on the reasoning.
 2. **A tuple points at bytes.** A citation is verified verbatim against its
    named source at write time, and a source hash that only serves a cache is
-   not a gate.
+   not a gate. **You build this**: malleus declares no citation slot and
+   verifies no quote (`citation-byte-verification`, not implemented).
 3. **Nothing self-corrects.** Every automatic acceptance names its judge and
    records what it saw; every deferral lands in a queue whose age is measured.
-   No amount of running time repairs a system on its own.
+   No amount of running time repairs a system on its own. Malleus gives you
+   the decision record; the queue is yours, because `DEFERRED` is terminal
+   and nothing ages (`deferral-queue-aging`, not implemented).
 4. **Evidence does not transfer.** Representing is not executing, executing is
    not governing, governing is not assisting, and a composition is not implied
    by its parts. Never quote a result for a claim it did not test.

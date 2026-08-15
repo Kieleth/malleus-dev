@@ -308,7 +308,11 @@ Three tiers:
   `check_compatibility` is blind to a dropped `required` constraint, which is
   the most silent drift there is), are the type-slots constrained, are relation
   endpoints narrowed, are Signals genuinely derived, are formula-shaped
-  slots backed by an executor. Exit 0 grants the purity seal.
+  slots backed by an executor. Exit 0 grants the purity seal, 1 records
+  heresies, 2 means the instrument itself is broken and nothing was judged.
+  Severities are data: copy `rubric.yaml`, tune it, and pass
+  `--rubric PATH`. Every run prints the rubric it used and how many rites
+  were disabled, because a seal is only as wide as the rubric that granted it.
 - The `malleus-inquisitor` skill (`.claude/skills/malleus-inquisitor/`): the
   judgment rites a coding assistant applies to a whole repo: write-path
   enforcement, reader census, citation integrity, provenance quality,

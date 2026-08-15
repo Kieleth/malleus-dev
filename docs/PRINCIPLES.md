@@ -183,7 +183,8 @@ defined only where the interfaces are compatible, and it needs its own check.
 Malleus ships the pieces this would be built from. It does not demonstrate
 composition across abstraction levels, so it does not claim it. The rite
 `module_declares_its_interface` carries severity NOTE for that reason: it asks,
-it does not condemn. Raise the severity in your own rubric when your project
+it does not condemn. Raise the severity in a copy of the rubric passed with
+`malleus-inquisitor --rubric PATH` when your project
 depends on composition.
 
 ## The working rule
@@ -213,9 +214,8 @@ widening materially changes the claim, the denominator, the intervention, or
 the interpretation, stop before implementation and obtain a decision.
 
 One case needs naming because the two doctrines meet there: an open gate found
-mid-slice and out of scope. Do not close it silently and do not defer it
-silently. Record it and surface it immediately, and let the human decide
-whether it enters this slice.
+mid-slice and out of scope. Record it and surface it: not closed silently, not
+deferred silently. The human decides whether it enters this slice.
 
 Exploration stays welcome. Negative results are kept. Neither rewrites a
 finished result after the fact.

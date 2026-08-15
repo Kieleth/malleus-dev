@@ -20,11 +20,16 @@
 #                  mistyped id can never quietly switch a gate off.
 #   status:        required when severity is NOTE. `open_question` means the
 #                  underlying property is not yet established, `low_stakes`
-#                  means it is established and minor. A severity lowered for
-#                  convenience is forbidden by doctrine, so the reason is
-#                  data rather than an argument the reader reconstructs.
+#                  means it is established and minor and additionally requires
+#                  `status_reason:`, because nobody can check "low stakes" and
+#                  a sanctioned field is where a severity softened to keep a
+#                  build green would otherwise hide.
+#
+# Tune a COPY and pass it with `malleus-inquisitor --rubric PATH`. Editing the
+# packaged file works and is reverted without warning by the next upgrade,
+# taking every severity you raised with it.
 
-version: 6
+version: 7
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -66,6 +71,9 @@ mechanical:
     question: Does each declared primitive have at least one concrete subtype?
     severity: NOTE
     status: low_stakes
+    status_reason: >-
+      An unextended primitive costs nothing today and is worth knowing about;
+      the schema still loads, still validates, and still converges.
     lesson: >-
       Vocabulary with no reader or writer is where drift begins. Observed: a
       narrative ontology fully declared and consumed by nothing; Signal, the
@@ -78,6 +86,17 @@ mechanical:
       stale 0.3.0 copies while upstream moved to 0.4.0 with changed ranges
       and bounds. Regenerating against the wrong root produces different
       storage schemas with no error anywhere.
+  - id: root_currency_answerable
+    question: Could the currency question be answered at all?
+    severity: HERESY
+    lesson: >-
+      A check that cannot run must block. Observed at home: when the reference
+      root could not be read (corrupt file, absent path), the currency rite
+      recorded a hardcoded suspicion and the schema took the purity seal at
+      exit 0, so the single most repeated adoption failure in the field went
+      unjudged and the tool said everything was fine. "I could not determine
+      whether your root is current" is an unknown condition, and an unknown
+      condition refuses.
   - id: constrained_tongues
     question: Is every event_type / relation_type / signal_type narrowed to an enum or pinned?
     severity: HERESY
@@ -418,4 +437,5 @@ judgment:
       primitives compose into richer domain models without losing
       checkability is an open question in this project, not a settled
       property, so this rite asks and does not condemn. Raise its severity in
-      your own copy of the rubric when your project depends on composition.
+      a copy of this file passed with `malleus-inquisitor --rubric PATH` when
+      your project depends on composition.

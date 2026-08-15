@@ -2153,7 +2153,10 @@ class TestMonitorFailureAndAuthorization:
             assessment_outcome="UNKNOWN",
             monitor_failure_id=failure["id"],
             input_record_ids=[context["proposal_id"]],
-            reason_codes=["MONITOR_FAILED"],
+            # A valid MonitorErrorCode on purpose: the record must be
+            # structurally sound so that the protocol invariant below is what
+            # rejects it, not the schema catching a placeholder first.
+            reason_codes=["FAILED"],
             rationale="Attempted reuse of an earlier monitor failure.",
             **context,
         )

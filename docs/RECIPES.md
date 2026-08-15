@@ -288,9 +288,12 @@ Production examples, in increasing ambition:
 4. **Rules as entities** (Logosphere): a live engine behavior is a 7-line
    entity declaration; the trigger enum parses through generated code so
    schema and loader cannot drift.
-5. **Verdicts with rollback**: malleus's own loop: stage, verify in Prolog,
-   and on violation roll back both graph and log, returning the violated
-   rule and proof trace.
+5. **Verdicts without a write**: malleus's own loop: stage into an isolated
+   candidate subgraph that never touches the base, verify against a
+   pinned logic contract, and on violation return exhaustive typed
+   `ViolationWitness` records naming the rule and the bindings that tripped
+   it. Nothing is undone, because nothing was applied; the witnesses are
+   execution attestations, not proof certificates.
 6. **The write loop closed** (Logosphere): the one place in the fleet where
    a graph write demonstrably changes a running physical simulation. Its
    lever discipline is the safety recipe: expose the honest lever, refuse

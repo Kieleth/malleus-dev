@@ -573,6 +573,12 @@ classes:
     slot_usage:
       assessment_outcome:
         equals_string: UNKNOWN
+      reason_codes:
+        # This assessment's reason codes are the paired MonitorFailure's
+        # error_code, so they carry that closed vocabulary. The shared slot
+        # stays open because decisions use it for a different vocabulary;
+        # narrowing at the class is what keeps both honest.
+        range: MonitorErrorCode
 
   UnavailableAuthorityAssessment:
     is_a: UnavailableAssessment

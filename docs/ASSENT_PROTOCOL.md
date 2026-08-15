@@ -22,7 +22,9 @@ actor and role, generation time, and referenced source records.
 
 The main categories are proposals and first-order members; assessments and
 monitor failures; epistemic and authorization decisions; requests, reports,
-and revisions; transition, execution, and outcome records; and versioned
+and revisions; transition, execution, and outcome records (reports,
+executions, and outcome observations are schema only: the types exist with no
+protocol door, see `IMPLEMENTATION_STATUS.md`); and versioned
 monitor, policy, rule, contract, and authority-grant artifacts.
 
 Stage 6 makes two previously opaque artifacts concrete.
