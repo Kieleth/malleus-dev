@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added replay and atomic-rejection tests for changed source bytes, altered
   source metadata, generic records pretending to be sources, and evidence
   citing the wrong source record hash.
+- Added the optional Stage 8b `AssentPlan`. It verifies one proposal's exact
+  epistemic-policy coverage, invokes each declared adapter once, commits valid
+  completed outputs, and converts adapter exceptions or refused outputs into
+  the existing `MonitorFailure` plus `UNKNOWN` record pair.
+- Added failure-atomic multi-event append for one related event group. A
+  logical check and its logical assessment now enter together or not at all
+  when emitted through `AssentPlan`.
 
 ### Changed
 
@@ -29,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   record an evidence item cited. It does not establish authenticity, truth, or
   byte-exact quotation. Resolving a quoted span against the registered bytes
   remains `citation-byte-verification` and is not implemented.
+- Stage 8b runs epistemic monitor adapters only. It does not select policy,
+  decide epistemic control, run authority monitors, retry work, schedule work,
+  or make a whole plan atomic.
 
 ## [0.7.0] - 2026-08-14
 

@@ -297,14 +297,33 @@ class ProtocolLedger:
         payload: Mapping[str, Any],
     ) -> dict[str, Any]:
         name = event_type.value if isinstance(event_type, EventType) else event_type
-        return self._storage.append(
-            event_id=event_id,
-            event_type=name,
-            transaction_time=transaction_time,
-            actor_id=actor_id,
-            payload=payload,
-            validate=self._replay_events,
-        )
+        return self.append_events(
+            (
+                {
+                    "event_id": event_id,
+                    "event_type": name,
+                    "transaction_time": transaction_time,
+                    "actor_id": actor_id,
+                    "payload": payload,
+                },
+            )
+        )[0]
+
+    def append_events(
+        self,
+        events: Iterable[Mapping[str, Any]],
+    ) -> tuple[dict[str, Any], ...]:
+        """Append a related event group through one failure-atomic replacement."""
+        entries = []
+        for event in events:
+            if not isinstance(event, Mapping):
+                raise ProtocolError("protocol event batch entries must be mappings")
+            entry = dict(event)
+            event_type = entry.get("event_type")
+            if isinstance(event_type, EventType):
+                entry["event_type"] = event_type.value
+            entries.append(entry)
+        return self._storage.append_many(entries, validate=self._replay_events)
 
     def replay(
         self,

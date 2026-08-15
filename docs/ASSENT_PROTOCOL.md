@@ -146,6 +146,17 @@ implementations in Stage 6. A missing execution is never inferred from absence.
 It must be reported as `MonitorFailure` plus `UnavailableAssessment`; otherwise
 the decision fails for incomplete coverage.
 
+Unreleased Stage 8b adds the optional `AssentPlan` described in
+`ASSENT_PLAN.md`. It replays one proposal's exact epistemic policy, verifies a
+canonical adapter step for every required monitor, invokes each once, and
+records either its completed assessment or the existing typed failure plus
+`UNKNOWN` pair. A logical adapter supplies its check and assessment as one
+failure-atomic event batch. The whole plan remains non-atomic.
+
+`AssentPlan` does not select the policy or epistemic verdict and does not run
+authority monitors. The existing deterministic evaluator still selects
+control only after the required outputs exist.
+
 Assessments can be recorded while a proposal remains `PROPOSED`. Adding the
 policy-derived decision is a separate event. This gives the empirical design a
 mechanical C3 condition with monitoring recorded and control disabled, and a C4
@@ -276,9 +287,9 @@ action authorization. Exact proposed mutations can be bound to acceptance,
 materialized atomically, and reconstructed by transaction time and valid time.
 
 It does not establish truth, source authenticity, quoted-span correctness,
-policy legitimacy, domain-specific monitor execution orchestration, action
-execution safety, concurrent-writer safety, formal PROV-O interoperability,
-or an empirical metacognitive effect.
+policy legitimacy, authority-monitor orchestration, general workflow
+orchestration, action execution safety, concurrent-writer safety, formal
+PROV-O interoperability, or an empirical metacognitive effect.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

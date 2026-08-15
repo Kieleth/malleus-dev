@@ -36,6 +36,20 @@ Stage 8a identifies the registered bytes. It does not authenticate them,
 establish their truth, or verify that a quotation occurs within them. Those
 are separate checks.
 
+## Unreleased Stage 8b
+
+- Optional immutable `AssentPlan` over exact policy-declared epistemic monitor
+  records and caller-supplied adapters
+- One invocation per required monitor, with exact preflight coverage and hash
+  checks before the first adapter runs
+- Adapter exceptions and refused outputs recorded as typed `UNKNOWN` monitor
+  failures, without retry
+- Failure-atomic paired commit of a logical check and its logical assessment
+
+Stage 8b does not select policy or verdicts, orchestrate authority monitors,
+schedule or retry work, or provide whole-plan atomicity. See
+`docs/ASSENT_PLAN.md`.
+
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
 runs every check in a fresh SWI-Prolog process, and validates the complete rule
@@ -114,7 +128,9 @@ no authorization validity interval.
 - `outcome-observation-recording`: recording what an executed action actually did; `OutcomeObservation` exists in the schema with no protocol door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
-- `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
+- `monitor-execution-orchestration`: general orchestration beyond the optional
+  Stage 8b epistemic `AssentPlan`, including authority monitors, retries,
+  scheduling, resume, and cross-plan coordination
 - `citation-byte-verification`: resolving registered source bytes and verifying
   at write time that a quoted span is a verbatim substring. Stage 8a binds
   `Evidence` to a content-addressed source record, but declares no quoted-span
@@ -132,13 +148,12 @@ remains a structural API and has no effect on protocol replay. Stage 7b accepted
 materialization is still single-writer. It records epistemic commitment, not
 truth, authorization, external-world currency, or multi-writer correctness.
 
-Stage 6 selects control from recorded monitor outputs. It does not orchestrate
-type, evidence, conflict, uncertainty, temporal, or logical monitor execution,
-and it does not choose request payloads or recipients. Stage 5's logical
-verifier remains an explicitly invoked component. Monitor implementation and
-input hashes make these dependencies inspectable without pretending that
-Malleus independently reproduced their results. Numeric confidence remains
-excluded until a calibration contract exists.
+Stage 6 selects control from recorded monitor outputs. Unreleased Stage 8b can
+invoke caller-supplied epistemic monitor adapters, including a logical adapter,
+but still does not choose request payloads or recipients. Monitor
+implementation and input hashes make these dependencies inspectable without
+pretending that Malleus independently reproduced their results. Numeric
+confidence remains excluded until a calibration contract exists.
 
 Core assessment kinds are closed to their declared concrete types. Extensible
 assessment kinds require a future explicit capability contract; a domain class

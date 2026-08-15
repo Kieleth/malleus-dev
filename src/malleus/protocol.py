@@ -39,6 +39,15 @@ from malleus.source import (
     source_artifact_fields,
     source_bytes_digest,
 )
+from malleus.orchestration import (
+    AssentPlan,
+    AssentPlanError,
+    MonitorContext,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorRunResult,
+    MonitorStep,
+)
 
 __all__ = [
     "AuthorizationState",
@@ -72,4 +81,11 @@ __all__ = [
     "source_artifact_digest",
     "source_artifact_fields",
     "source_bytes_digest",
+    "AssentPlan",
+    "AssentPlanError",
+    "MonitorContext",
+    "MonitorEvent",
+    "MonitorFailurePlan",
+    "MonitorRunResult",
+    "MonitorStep",
 ]

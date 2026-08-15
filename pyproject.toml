@@ -59,6 +59,7 @@ include = [
     "src/malleus/staging.py",
     "src/malleus/control.py",
     "src/malleus/logic.py",
+    "src/malleus/orchestration.py",
     "src/malleus/status.py",
     "src/malleus/source.py",
     "src/malleus/prolog_verifier.py",

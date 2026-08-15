@@ -29,6 +29,8 @@ from malleus.logic import (
     logic_monitor_failure_records,
 )
 from malleus.protocol import (
+    AssentPlan,
+    AssentPlanError,
     AuthorizationState,
     EventType,
     LedgerError,
@@ -39,6 +41,9 @@ from malleus.protocol import (
     content_digest,
     event_hash,
     make_record,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorStep,
     record_hash,
     source_artifact_fields,
     source_bytes_digest,
@@ -1283,6 +1288,389 @@ class TestContentAddressedSources:
                 source_artifact=mismatched,
             )
         assert ledger.path.read_bytes() == before
+
+
+class TestAtomicEventBatches:
+    def test_empty_batch_fails_without_change(self, ledger):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(LedgerError, match="batch must not be empty"):
+            ledger.append_events(())
+        assert ledger.path.read_bytes() == before
+
+    def test_invalid_second_event_leaves_neither_event(self, ledger):
+        anchor(ledger)
+        timestamp = time_at(1)
+        first = make_record(
+            "ProtocolArtifact",
+            event_id="event:batch:1",
+            generated_at=timestamp,
+            actor_id="actor:system",
+            role="registrar",
+            id="artifact:batch:1",
+            artifact_kind="RULE_SET",
+            artifact_version="1",
+            artifact_hash=ARTIFACT_BODY,
+        )
+        second = make_record(
+            "ProtocolArtifact",
+            event_id="event:batch:2",
+            generated_at=timestamp,
+            actor_id="actor:system",
+            role="registrar",
+            id="artifact:batch:2",
+            artifact_kind="SOURCE",
+            artifact_version="1",
+            artifact_hash=ARTIFACT_BODY,
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="SOURCE requires SourceArtifact"):
+            ledger.append_events((
+                {
+                    "event_id": "event:batch:1",
+                    "event_type": EventType.ARTIFACT_RECORDED,
+                    "transaction_time": timestamp,
+                    "actor_id": "actor:system",
+                    "payload": {
+                        "artifact_type": "ProtocolArtifact",
+                        "artifact": first,
+                    },
+                },
+                {
+                    "event_id": "event:batch:2",
+                    "event_type": EventType.ARTIFACT_RECORDED,
+                    "transaction_time": timestamp,
+                    "actor_id": "actor:system",
+                    "payload": {
+                        "artifact_type": "ProtocolArtifact",
+                        "artifact": second,
+                    },
+                },
+            ))
+        assert ledger.path.read_bytes() == before
+
+
+class TestThinAssentPlan:
+    @staticmethod
+    def failure_plan(
+        *,
+        suffix: str = "type",
+        role: str = "type-monitor",
+    ) -> MonitorFailurePlan:
+        return MonitorFailurePlan(
+            event_id=f"event:plan:{suffix}:failed",
+            failure_id=f"failure:plan:{suffix}",
+            assessment_id=f"assessment:plan:{suffix}:unknown",
+            transaction_time=time_at(7),
+            actor_id="actor:monitor",
+            role=role,
+            failure_category="EXECUTION",
+            error_code="FAILED",
+        )
+
+    @staticmethod
+    def completed_type_event(context, *, missing_source: bool = False) -> MonitorEvent:
+        event_id = "event:plan:type:satisfied"
+        timestamp = time_at(7)
+        sources = [context.proposal["id"], context.monitor["id"]]
+        if missing_source:
+            sources.append("record:does-not-exist")
+        assessment = make_record(
+            "TypeAssessment",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="type-monitor",
+            source_record_ids=sources,
+            id="assessment:plan:type:satisfied",
+            proposal_id=context.proposal["id"],
+            proposal_content_hash=context.proposal["content_hash"],
+            base_acceptance_head=context.proposal["base_acceptance_head"],
+            assessment_kind="TYPE",
+            assessment_outcome="SATISFIED",
+            monitor_id=context.monitor["id"],
+            monitor_version=context.monitor["artifact_version"],
+            monitor_hash=context.monitor["content_hash"],
+            monitor_failure_id=None,
+            input_record_ids=[context.proposal["id"]],
+            reason_codes=["TYPE_RESULT"],
+            rationale="The declared type adapter completed.",
+        )
+        return MonitorEvent(
+            event_id=event_id,
+            event_type=EventType.ASSESSMENT_RECORDED,
+            transaction_time=timestamp,
+            actor_id="actor:monitor",
+            payload={"assessment_type": "TypeAssessment", "assessment": assessment},
+        )
+
+    def plan(self, proposal, monitor, adapter) -> AssentPlan:
+        return AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=monitor["id"],
+                monitor_record_hash=monitor["content_hash"],
+                adapter=adapter,
+                failure=self.failure_plan(),
+            ),),
+        )
+
+    def test_runs_exact_declared_adapter_once_and_replays(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+
+        def adapter(context):
+            calls.append(context.monitor["id"])
+            with pytest.raises(TypeError):
+                context.proposal["id"] = "proposal:mutated"
+            return self.completed_type_event(context)
+
+        results = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)
+        assert calls == [artifacts["monitor"]["id"]]
+        assert results[0].assessment_outcome == "SATISFIED"
+        reopened = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert results[0].assessment_id in reopened.assessment_ids
+        assert reopened.proposal_states[proposal["id"]] == ProposalState.PROPOSED
+
+    def test_adapter_exception_records_unknown_without_retry(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = 0
+
+        def adapter(_context):
+            nonlocal calls
+            calls += 1
+            raise RuntimeError("adapter dependency failed")
+
+        result = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)[0]
+        projection = ledger.replay()
+        assert calls == 1
+        assert result.assessment_outcome == "UNKNOWN"
+        assert result.assessment_id in projection.assessment_ids
+        failure = projection.objects["failure:plan:type"]["record"]
+        assert failure["error_message"] == "adapter dependency failed"
+
+    def test_invalid_adapter_record_becomes_unknown_atomically(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        before_count = ledger.replay().event_count
+
+        def adapter(context):
+            return self.completed_type_event(context, missing_source=True)
+
+        result = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)[0]
+        projection = ledger.replay()
+        assert result.assessment_outcome == "UNKNOWN"
+        assert projection.event_count == before_count + 1
+        assert "assessment:plan:type:satisfied" not in projection.objects
+        assert result.assessment_id in projection.assessment_ids
+
+    def test_hash_drift_fails_before_call_or_append(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["monitor"]["id"],
+                monitor_record_hash="sha256:" + "0" * 64,
+                adapter=lambda context: calls.append(context),
+                failure=self.failure_plan(),
+            ),),
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(AssentPlanError, match="record hash differs from policy"):
+            plan.run(ledger)
+        assert calls == []
+        assert ledger.path.read_bytes() == before
+
+    def test_policy_coverage_mismatch_fails_before_call(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=lambda context: calls.append(context),
+                failure=self.failure_plan(),
+            ),),
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(AssentPlanError, match="policy's exact monitors"):
+            plan.run(ledger)
+        assert calls == []
+        assert ledger.path.read_bytes() == before
+
+    def test_logical_check_and_assessment_commit_as_one_batch(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        policy = add_epistemic_policy(
+            ledger,
+            artifacts["rules"],
+            [(artifacts["logic_monitor"], "REJECT", "DEFER")],
+            5,
+            policy_id="artifact:logic-only-policy",
+        )
+        proposal, _, _ = record_proposal(ledger, epistemic_policy=policy)
+
+        def adapter(context):
+            contract = context.input_artifacts[0]
+            result = LogicCheckResult(
+                candidate_digest="sha256:" + "3" * 64,
+                base_state_digest="sha256:" + "4" * 64,
+                candidate_state_digest="sha256:" + "5" * 64,
+                context_state_digests=(),
+                ontology_hash="sha256:" + "6" * 64,
+                fact_contract_version="2",
+                contract_id=contract["id"],
+                contract_version=contract["artifact_version"],
+                contract_hash=contract["artifact_hash"],
+                ruleset_id=contract["ruleset_id"],
+                ruleset_version=contract["ruleset_version"],
+                ruleset_hash=contract["ruleset_artifact_hash"],
+                engine_name="SWI-Prolog",
+                engine_version="100002",
+                timeout_seconds=contract["timeout_seconds"],
+                facts_hash="sha256:" + "7" * 64,
+                fact_count=4,
+                translated_record_ids=("graph:1",),
+                checked_rule_ids=tuple(contract["rule_ids"]),
+                violations=(),
+            )
+            check_event_id = "event:plan:logic:check"
+            check_time = time_at(7)
+            check, witnesses = result.to_protocol_records(
+                check_id="logic-check:plan:1",
+                event_id=check_event_id,
+                generated_at=check_time,
+                actor_id="actor:monitor",
+                role="logic-monitor",
+                proposal_id=context.proposal["id"],
+                proposal_content_hash=context.proposal["content_hash"],
+                base_acceptance_head=context.proposal["base_acceptance_head"],
+                monitor_id=context.monitor["id"],
+                monitor_version=context.monitor["artifact_version"],
+                monitor_hash=context.monitor["content_hash"],
+                logic_contract_record_hash=contract["content_hash"],
+                ruleset_record_hash=contract["ruleset_record_hash"],
+            )
+            assessment_event_id = "event:plan:logic:assessment"
+            assessment_time = time_at(8)
+            assessment = make_record(
+                "LogicalAssessment",
+                event_id=assessment_event_id,
+                generated_at=assessment_time,
+                actor_id="actor:monitor",
+                role="logic-monitor",
+                source_record_ids=[
+                    context.proposal["id"],
+                    context.monitor["id"],
+                    check["id"],
+                    contract["id"],
+                    contract["ruleset_id"],
+                ],
+                id="assessment:plan:logic:satisfied",
+                proposal_id=context.proposal["id"],
+                proposal_content_hash=context.proposal["content_hash"],
+                base_acceptance_head=context.proposal["base_acceptance_head"],
+                assessment_kind="LOGICAL",
+                assessment_outcome="SATISFIED",
+                monitor_id=context.monitor["id"],
+                monitor_version=context.monitor["artifact_version"],
+                monitor_hash=context.monitor["content_hash"],
+                monitor_failure_id=None,
+                input_record_ids=[context.proposal["id"], check["id"]],
+                reason_codes=["LOGIC_CHECK_COMPLETED"],
+                rationale="The declared logic adapter completed.",
+                checked_rule_ids=check["checked_rule_ids"],
+                violated_rule_ids=check["violated_rule_ids"],
+                logic_check_record_ids=[check["id"]],
+                logic_contract_id=contract["id"],
+                logic_contract_record_hash=contract["content_hash"],
+                ruleset_id=contract["ruleset_id"],
+                ruleset_hash=contract["ruleset_record_hash"],
+            )
+            return (
+                MonitorEvent(
+                    event_id=check_event_id,
+                    event_type=EventType.LOGIC_CHECK_RECORDED,
+                    transaction_time=check_time,
+                    actor_id="actor:monitor",
+                    payload={"check": check, "witnesses": list(witnesses)},
+                ),
+                MonitorEvent(
+                    event_id=assessment_event_id,
+                    event_type=EventType.ASSESSMENT_RECORDED,
+                    transaction_time=assessment_time,
+                    actor_id="actor:monitor",
+                    payload={
+                        "assessment_type": "LogicalAssessment",
+                        "assessment": assessment,
+                    },
+                ),
+            )
+
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=adapter,
+                failure=self.failure_plan(suffix="logic", role="logic-monitor"),
+            ),),
+        )
+        before_count = ledger.replay().event_count
+        result = plan.run(ledger)[0]
+        projection = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert result.assessment_outcome == "SATISFIED"
+        assert result.event_ids == (
+            "event:plan:logic:check",
+            "event:plan:logic:assessment",
+        )
+        assert projection.event_count == before_count + 2
+        assert "logic-check:plan:1" in projection.logic_check_ids
+        assert result.assessment_id in projection.assessment_ids
+
+    def test_logical_adapter_exception_records_bound_unknown(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        policy = add_epistemic_policy(
+            ledger,
+            artifacts["rules"],
+            [(artifacts["logic_monitor"], "REJECT", "DEFER")],
+            5,
+            policy_id="artifact:logic-failure-policy",
+        )
+        proposal, _, _ = record_proposal(ledger, epistemic_policy=policy)
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=lambda _context: (_ for _ in ()).throw(
+                    LogicExecutionError("Prolog process unavailable")
+                ),
+                failure=self.failure_plan(suffix="logic", role="logic-monitor"),
+            ),),
+        )
+        result = plan.run(ledger)[0]
+        unknown = ledger.replay().objects[result.assessment_id]["record"]
+        assert result.assessment_outcome == "UNKNOWN"
+        assert unknown["logic_contract_id"] == artifacts["logic_contract"]["id"]
+        assert unknown["ruleset_id"] == artifacts["rules"]["id"]
 
 
 class TestArtifactContracts:

@@ -61,6 +61,15 @@ from malleus.staging import (
     StaleCandidateError,
     stage_subgraph,
 )
+from malleus.orchestration import (
+    AssentPlan,
+    AssentPlanError,
+    MonitorContext,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorRunResult,
+    MonitorStep,
+)
 from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
 from malleus.control import (
     AuthorizationEvaluation,
@@ -132,6 +141,13 @@ __all__ = [
     "StagingError",
     "StaleCandidateError",
     "stage_subgraph",
+    "AssentPlan",
+    "AssentPlanError",
+    "MonitorContext",
+    "MonitorEvent",
+    "MonitorFailurePlan",
+    "MonitorRunResult",
+    "MonitorStep",
     "ControlError",
     "AuthorizationEvaluation",
     "MonitoringError",
