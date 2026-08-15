@@ -42,7 +42,7 @@ The limit, stated in the same breath: encoding a domain does not make the
 encoding correct. Whether the schema captures the world is a separate claim
 needing separate evidence, and no amount of validation supplies it.
 
-## 2. A tuple points at bytes
+## 2. A tuple should point at bytes
 
 Every asserted tuple should name its source, and the reference should be
 byte-exact: the quoted span verified as a verbatim substring of the named

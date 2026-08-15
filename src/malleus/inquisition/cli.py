@@ -117,11 +117,15 @@ def main(argv: list[str] | None = None) -> int:
         print(report.to_json())
         return 0 if report.purity else 1
 
-    disabled = report.rites.disabled
+    rites = report.rites
+    disabled, downgraded = rites.disabled, rites.downgraded
     print(f"ORDO MALLEUS :: inquisition of {args.schema}")
-    print(f"rubric {report.rites.path} (v{report.rites.version}), "
-          f"{len(disabled)} rites disabled"
-          + (f": {', '.join(disabled)}" if disabled else ""))
+    print(f"rubric {rites.path} (v{rites.version}, sha256 {rites.digest[:12]}…)")
+    print(f"{len(rites.disabled_mechanical)} mechanical and "
+          f"{len(rites.disabled_judgment)} judgment rites disabled"
+          + (f": {', '.join(disabled)}" if disabled else "")
+          + (f"; {len(downgraded)} downgraded: {', '.join(downgraded)}"
+             if downgraded else ""))
     print("=" * 60)
     for finding in report.findings:
         print(f"{_BADGES[finding.severity]}[{finding.rite}] {finding.subject}")
@@ -132,10 +136,17 @@ def main(argv: list[str] | None = None) -> int:
         # A seal is only as wide as the rubric that granted it, and it says so
         # on its face: silence from a rite that never ran is not a pass.
         print("PURITY SEAL GRANTED"
-              + (f" UNDER A REDUCED RUBRIC ({len(disabled)} rites disabled). "
+              + (f" UNDER A TUNED RUBRIC ({len(disabled)} disabled, "
+                 f"{len(downgraded)} downgraded). "
                  "The unjudged are not thereby innocent."
-                 if disabled else ". The schema may serve."))
+                 if rites.narrowed else ". The schema may serve."))
         return 0
+    if report.unconstructed:
+        # The floor the rubric cannot lower. Say which floor, so nobody hunts
+        # for a heresy that is not there.
+        print("NO SEAL: the schema did not construct, so nothing could be "
+              "judged. No rubric severity lowers this.")
+        return 1
     print(f"{heresies} {'heresies' if heresies != 1 else 'heresy'} recorded. "
           "No seal until the schema recants.")
     return 1

@@ -291,9 +291,10 @@ Production examples, in increasing ambition:
 5. **Verdicts without a write**: malleus's own loop: stage into an isolated
    candidate subgraph that never touches the base, verify against a
    pinned logic contract, and on violation return exhaustive typed
-   `ViolationWitness` records naming the rule and the bindings that tripped
-   it. Nothing is undone, because nothing was applied; the witnesses are
-   execution attestations, not proof certificates.
+   violations naming the rule and the bindings that tripped it, serializable
+   as content-addressed `ViolationWitness` records. Nothing is undone,
+   because nothing was applied; the witnesses are execution attestations,
+   not proof certificates.
 6. **The write loop closed** (Logosphere): the one place in the fleet where
    a graph write demonstrably changes a running physical simulation. Its
    lever discipline is the safety recipe: expose the honest lever, refuse

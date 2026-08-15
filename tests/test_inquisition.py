@@ -17,6 +17,7 @@ from malleus.inquisition import (
     NOTE,
     SUSPICION,
     UNDISABLABLE_RITES,
+    RiteContractError,
     RubricError,
     _formula_tokens,
     _rubric,
@@ -137,7 +138,7 @@ ROOT_MAP = {"malleus": str(bundled_ontology_path("malleus.yaml"))}
 
 
 def _tuned_rubric(tmp_path, severities=None, disable=None, delete=None,
-                  config=None, drop_keys=None):
+                  config=None, drop_keys=None, extra=None):
     """The shipped rubric with targeted edits, written to a temp file.
 
     Every test that claims the rubric drives something proves it by editing
@@ -158,6 +159,8 @@ def _tuned_rubric(tmp_path, severities=None, disable=None, delete=None,
                 entry["enabled"] = False
             if drop_keys and rite_id in drop_keys:
                 entry.pop(drop_keys[rite_id], None)
+            if extra and rite_id in extra:
+                entry.update(extra[rite_id])
             kept.append(entry)
         rubric[section] = kept
     path = tmp_path / "tuned_rubric.yaml"
@@ -362,7 +365,7 @@ class TestRubricIsWellFormedAndFailsLoud:
         """R3 N3: the first hardening validated `config` and nothing else, so
         a rubric with a good config and no rites raised KeyError downstream."""
         path = tmp_path / "rubric.yaml"
-        path.write_text("config:\n  formula_slot_tokens: []\njudgment: []\n")
+        path.write_text("version: 1\nconfig:\n  formula_slot_tokens: []\njudgment: []\n")
         with pytest.raises(RubricError, match="`mechanical:` must be a non-empty list"):
             _rubric(path)
 
@@ -485,7 +488,7 @@ class TestASealIsOnlyAsWideAsItsRubric:
         assert main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
                      "--rubric", str(tuned)]) == 0
         out = capsys.readouterr().out
-        assert "REDUCED RUBRIC" in out
+        assert "TUNED RUBRIC" in out
         assert "rites disabled: " in out
         assert "bound_endpoints" in out
 
@@ -503,8 +506,132 @@ class TestASealIsOnlyAsWideAsItsRubric:
         schema = _write_schema(tmp_path, GOOD_SCHEMA)
         main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}"])
         out = capsys.readouterr().out
-        assert "0 rites disabled" in out
+        assert "0 mechanical and 0 judgment rites disabled" in out
         assert "REDUCED" not in out
+
+    def test_a_downgraded_construction_cannot_seal_an_unparseable_file(self, tmp_path):
+        """R5 H1. The floor went on `enabled:` and not on `severity:`, one
+        word apart in the same entry. A rubric identical to the packaged one
+        except `severity: NOTE` on `construction` sealed a file that is not
+        valid YAML, at exit 0, under a header reading 0 rites disabled."""
+        broken = tmp_path / "broken.yaml"
+        broken.write_text("classes: {Thing: {is_a: Entity")
+        for severity in (NOTE, SUSPICION):
+            tuned = _tuned_rubric(
+                tmp_path, severities={"construction": severity},
+                extra={"construction": {"status": "open_question"}},
+            )
+            report = run_rites(broken, rubric_path=tuned)
+            assert _rites(report, "construction")[0].severity == severity
+            assert not report.purity, f"{severity} on construction sealed a non-schema"
+            assert main([str(broken), "--rubric", str(tuned)]) == 1
+
+    def test_a_downgraded_construction_cannot_seal_a_wrong_format_document(self, tmp_path):
+        doc = tmp_path / "ontology.json"
+        doc.write_text('{"name": "not a linkml schema"}')
+        tuned = _tuned_rubric(tmp_path, severities={"construction": NOTE},
+                              extra={"construction": {"status": "open_question"}})
+        assert main([str(doc), "--rubric", str(tuned)]) == 1
+
+    def test_disabled_judgment_rites_are_disclosed_too(self, tmp_path, capsys):
+        """R5 H2. The disclosure counted the mechanical tier only, so all 24
+        judgment rites could be switched off under "0 rites disabled"."""
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        tuned = _tuned_rubric(tmp_path, disable={"gate_integrity", "silent_drop"})
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+              "--rubric", str(tuned), "--json"])
+        assert "gate_integrity" in json.loads(capsys.readouterr().out)["disabled"]
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+              "--rubric", str(tuned)])
+        out = capsys.readouterr().out
+        assert "2 judgment rites disabled" in out
+        assert "gate_integrity" in out
+
+
+class TestTheDisclosureCannotBeForged:
+    """R5 S1, S2. The version is the operator's own word in a file they
+    control, and a downgrade narrows the gate exactly as much as a disable."""
+
+    def test_the_digest_is_reported_and_tracks_the_bytes(self, tmp_path, capsys):
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        tuned = _tuned_rubric(tmp_path, severities={"bound_endpoints": HERESY})
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+              "--rubric", str(tuned), "--json"])
+        first = json.loads(capsys.readouterr().out)
+        assert len(first["rubric_sha256"]) == 64
+        assert first["rubric"] == "tuned_rubric.yaml"  # a name, not an install path
+
+        again = _tuned_rubric(tmp_path, severities={"bound_endpoints": SUSPICION})
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+              "--rubric", str(again), "--json"])
+        assert json.loads(capsys.readouterr().out)["rubric_sha256"] != first["rubric_sha256"]
+
+    def test_a_non_scalar_version_is_refused(self, tmp_path):
+        rubric = copy.deepcopy(_rubric())
+        rubric["version"] = {"pretend": "7"}
+        path = tmp_path / "forged.yaml"
+        path.write_text(yaml.safe_dump(rubric, sort_keys=False), encoding="utf-8")
+        with pytest.raises(RubricError, match="scalar `version:`"):
+            _rubric(path)
+
+    def test_a_downgrade_is_disclosed_like_a_disable(self, tmp_path, capsys):
+        schema = _write_schema(tmp_path, LOOSE_SCHEMA)
+        tuned = _tuned_rubric(tmp_path, severities={"constrained_tongues": NOTE},
+                              extra={"constrained_tongues": {"status": "low_stakes",
+                                                             "status_reason": "test"}})
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+              "--rubric", str(tuned), "--json"])
+        assert "constrained_tongues" in json.loads(capsys.readouterr().out)["downgraded"]
+        main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}", "--rubric", str(tuned)])
+        out = capsys.readouterr().out
+        assert "downgraded: constrained_tongues" in out
+        assert "TUNED RUBRIC" in out
+
+    def test_the_packaged_rubric_reports_no_tuning(self, tmp_path, capsys):
+        main([str(_write_schema(tmp_path, GOOD_SCHEMA)),
+              "--map", f"malleus={ROOT_MAP['malleus']}", "--json"])
+        parsed = json.loads(capsys.readouterr().out)
+        assert parsed["downgraded"] == [] and parsed["disabled"] == []
+
+    def test_the_two_rite_constants_cannot_drift(self):
+        """R5 S4: a floor named against a rite the code never emits would be
+        enforced on an entry nothing checks."""
+        assert set(UNDISABLABLE_RITES) <= set(EMITTED_RITES)
+        declared = {r["id"] for r in _rubric()["mechanical"]}
+        assert set(EMITTED_RITES) == declared
+
+
+class TestTheReferenceRootIsJudgedToo:
+    """R5 H3. A reference root that parses and declares no classes has an
+    empty fingerprint, which makes every subject a trivial superset, so the
+    rite answered "root is current" precisely when it knew least. The subject
+    side already refuses this exact shape fourteen lines earlier."""
+
+    def test_an_empty_reference_root_denies_the_seal(self, tmp_path):
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        empty = tmp_path / "truncated.yaml"
+        empty.write_text("id: https://example.org/schema/x\nname: x\n")
+        report = run_rites(schema, import_map=ROOT_MAP, root_path=str(empty))
+        assert not report.purity
+        assert not [f for f in _rites(report, "root_currency")
+                    if f.severity == "COMMENDATION"]
+        assert _rites(report, "root_currency_answerable")[0].severity == HERESY
+
+    def test_a_json_reference_root_denies_the_seal(self, tmp_path):
+        schema = _write_schema(tmp_path, GOOD_SCHEMA)
+        doc = tmp_path / "root.json"
+        doc.write_text('{"name": "not a root"}')
+        assert main([str(schema), "--map", f"malleus={ROOT_MAP['malleus']}",
+                     "--root", str(doc)]) == 1
+
+    def test_the_other_rites_still_run_on_a_good_subject(self, tmp_path):
+        """The fault is in the reference; the subject is fine and still judged."""
+        schema = _write_schema(tmp_path, LOOSE_SCHEMA)
+        empty = tmp_path / "truncated.yaml"
+        empty.write_text("id: https://example.org/schema/x\nname: x\n")
+        report = run_rites(schema, import_map=ROOT_MAP, root_path=str(empty))
+        assert _rites(report, "constrained_tongues")
+        assert _rites(report, "inert_formula")
 
 
 class TestTheTuningContractIsReachable:
@@ -555,7 +682,7 @@ class TestOnlyAVerdictMayDenyTheSeal:
 
     def test_add_refuses_to_raise_a_heresy(self, tmp_path):
         report = run_rites(_write_schema(tmp_path, GOOD_SCHEMA), import_map=ROOT_MAP)
-        with pytest.raises(RubricError, match="only verdict"):
+        with pytest.raises(RiteContractError, match="only verdict"):
             report.add("root", HERESY, "x", "y")
 
     def test_the_plural_is_spelled_correctly(self, tmp_path, capsys):
@@ -778,13 +905,19 @@ class TestShippedGuidanceSaysWhatTheCodeDoes:
         them gitignored. `single_source` predicts one is already wrong, and
         one was: the public copy had lost two of the completion rule's three
         conditions and the whole exclusion list."""
+        principles = _flat((self.ROOT / "docs" / "PRINCIPLES.md").read_text(encoding="utf-8"))
+        thesis = ("typed subgraphs as composable epistemic modules whose")
+        # R5 N3: half this guard needs no private file, and that half must
+        # run in CI and on every adopter's machine, not on one laptop.
+        assert thesis in principles
+        for condition in _SHARED_DOCTRINE:
+            assert condition in principles, f"public copy is weaker: {condition}"
+
         private = self.ROOT / "malleus-moving" / "design" / "CLAIM_AND_EXECUTION_DOCTRINE.md"
         if not private.is_file():
             pytest.skip("the paper-program doctrine is not present in this tree")
         doctrine = private.read_text(encoding="utf-8")
-        principles = (self.ROOT / "docs" / "PRINCIPLES.md").read_text(encoding="utf-8")
-        thesis = ("typed subgraphs as composable epistemic modules whose")
-        assert thesis in _flat(doctrine) and thesis in _flat(principles)
+        assert thesis in _flat(doctrine)
         for condition in ("the relevant guardrails pass",
                           "new databases, orchestration layers",
                           "stop before implementation and obtain a decision",
@@ -793,7 +926,15 @@ class TestShippedGuidanceSaysWhatTheCodeDoes:
                           "not closed silently, not deferred silently",
                           "The human decides whether it enters this slice"):
             assert condition in _flat(doctrine), f"doctrine lost: {condition}"
-            assert condition in _flat(principles), f"public copy is weaker: {condition}"
+
+
+_SHARED_DOCTRINE = (
+    "the relevant guardrails pass",
+    "new databases, orchestration layers",
+    "stop before implementation and obtain a decision",
+    "not closed silently, not deferred silently",
+    "The human decides whether it enters this slice",
+)
 
 
 def _flat(text: str) -> str:

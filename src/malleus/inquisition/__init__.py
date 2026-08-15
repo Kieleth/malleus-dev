@@ -16,6 +16,7 @@ records the lesson; no project is named.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -45,6 +46,11 @@ class RubricError(RuntimeError):
     """
 
 
+class RiteContractError(AssertionError):
+    """A rite call site broke the contract. A bug here, never the operator's
+    rubric: distinct from RubricError so the CLI cannot blame the wrong file."""
+
+
 _DECLARABLE = (HERESY, SUSPICION, NOTE)
 _NOTE_REASONS = ("open_question", "low_stakes")
 
@@ -69,6 +75,13 @@ EMITTED_RITES = (
 # parse would collect no findings and take the seal.
 UNDISABLABLE_RITES = ("construction",)
 
+if not set(UNDISABLABLE_RITES) <= set(EMITTED_RITES):  # pragma: no cover - import-time guard
+    raise RuntimeError(
+        "UNDISABLABLE_RITES names a rite the code never emits: the two constants "
+        f"drifted ({sorted(set(UNDISABLABLE_RITES) - set(EMITTED_RITES))}). The "
+        "floor would then be enforced against an entry nothing checks."
+    )
+
 
 def _rubric(path: Path | None = None) -> dict:
     """Load and structurally validate the rubric. Nothing is assumed away."""
@@ -81,6 +94,12 @@ def _rubric(path: Path | None = None) -> dict:
         raise RubricError(
             f"rubric at {path} has no `config:` mapping. This is the inquisitor's "
             "instrument, not the schema under inspection: fix or reinstall the rubric."
+        )
+    if not isinstance(data.get("version"), (int, str)):
+        raise RubricError(
+            f"rubric at {path} must declare a scalar `version:`; got "
+            f"{data.get('version')!r}. It is reported with every verdict, so a "
+            "consumer parses it."
         )
     seen: set[str] = set()
     for section in ("mechanical", "judgment"):
@@ -162,25 +181,61 @@ class Rites:
     condition) carry their own severity at the call site and say so.
     """
 
-    def __init__(self, rubric: dict, path: Path | None = None) -> None:
+    def __init__(self, rubric: dict, path: Path | None = None,
+                 digest: str = "", baseline: dict[str, str] | None = None) -> None:
         self.path = str(path or RUBRIC_PATH)
         self.version = rubric.get("version")
+        # The version is the operator's own word. The digest is not, so a CI
+        # reader keyed on "which instrument granted this" has one handle that
+        # a copy cannot forge for free.
+        self.digest = digest
+        self._baseline = baseline or {}
         self._severity: dict[str, str] = {}
         self._enabled: dict[str, bool] = {}
+        self._order: list[str] = []
         for section in ("mechanical", "judgment"):
             for entry in rubric[section]:
                 self._severity[entry["id"]] = entry["severity"]
                 self._enabled[entry["id"]] = entry.get("enabled", True)
+                self._order.append(entry["id"])
 
     @property
     def disabled(self) -> tuple[str, ...]:
-        """Mechanical rites the rubric switched off, in emission order.
+        """EVERY rite the rubric switched off, mechanical and judgment.
 
         A seal is only as wide as the rubric that granted it, so this travels
         with every report: the record of what was not judged belongs beside
-        the record of what was.
+        the record of what was. Counting only the mechanical tier let all 24
+        judgment rites be switched off under a header reading "0 rites
+        disabled", which is the disclosure lying about its own coverage.
         """
-        return tuple(r for r in EMITTED_RITES if not self._enabled.get(r, True))
+        return tuple(r for r in self._order if not self._enabled[r])
+
+    @property
+    def disabled_mechanical(self) -> tuple[str, ...]:
+        return tuple(r for r in self.disabled if r in EMITTED_RITES)
+
+    @property
+    def disabled_judgment(self) -> tuple[str, ...]:
+        return tuple(r for r in self.disabled if r not in EMITTED_RITES)
+
+    @property
+    def downgraded(self) -> tuple[str, ...]:
+        """Rites the operator lowered below the packaged severity.
+
+        A downgrade narrows the gate exactly as much as a disable: a heresy
+        tuned to NOTE is visible, inert, and still seals. Reporting one and
+        not the other discloses one of the two dimensions along which the
+        instrument can be narrowed.
+        """
+        order = {NOTE: 0, SUSPICION: 1, HERESY: 2}
+        return tuple(r for r in self._order
+                     if r in self._baseline
+                     and order.get(self._severity[r], 0) < order.get(self._baseline[r], 0))
+
+    @property
+    def narrowed(self) -> bool:
+        return bool(self.disabled or self.downgraded)
 
     def _known(self, rite: str) -> None:
         if rite not in self._severity:
@@ -197,6 +252,24 @@ class Rites:
     def severity(self, rite: str) -> str:
         self._known(rite)
         return self._severity[rite]
+
+
+def _packaged_severities(path: Path | None) -> dict[str, str]:
+    """The shipped severities, to measure a tuned rubric against.
+
+    Empty when the packaged rubric is the one in use (nothing to compare) or
+    when it cannot be read (a broken install is already reported elsewhere;
+    it must not turn a tuned run into a crash).
+    """
+    if path is None:
+        return {}
+    try:
+        packaged = _rubric(RUBRIC_PATH)
+    except RubricError:
+        return {}
+    return {entry["id"]: entry["severity"]
+            for section in ("mechanical", "judgment")
+            for entry in packaged[section]}
 
 
 def _tokens(rubric: dict) -> tuple[str, ...]:
@@ -242,7 +315,10 @@ class Report:
         here would be a severity the rubric can neither see nor tune.
         """
         if severity == HERESY:
-            raise RubricError(
+            # Not a RubricError: the operator's rubric is fine, this is a bug
+            # in a call site, and telling them their rubric is broken would
+            # send them to fix the one file that is not at fault.
+            raise RiteContractError(
                 f"rite {rite!r} tried to raise a heresy through add(); only verdict() "
                 "may, because only verdict() reads its severity from the rubric"
             )
@@ -254,21 +330,46 @@ class Report:
         return [f for f in self.findings if f.severity == HERESY]
 
     @property
+    def unconstructed(self) -> list[Finding]:
+        """Anything `construction` said that was not a commendation."""
+        return [f for f in self.findings
+                if f.rite == "construction" and f.severity != COMMENDATION]
+
+    @property
     def purity(self) -> bool:
-        return not self.heresies
+        """The seal, with one floor the rubric cannot lower.
+
+        A document that did not construct is never sealed, whatever severity
+        the rubric puts on saying so. The rubric governs how loud a finding
+        is; it may not govern whether an unjudgeable document can pass.
+        Round 4 closed this on `enabled:` and left it open on `severity:`,
+        which is one word in the same entry: a half-closed gate.
+        """
+        return not self.heresies and not self.unconstructed
 
     def to_json(self) -> str:
         return json.dumps(
             {
                 "schema": self.schema_path,
                 "purity": self.purity,
-                "rubric": self.rites.path,
+                "rubric": Path(self.rites.path).name,
                 "rubric_version": self.rites.version,
+                "rubric_sha256": self.rites.digest,
                 "disabled": list(self.rites.disabled),
+                "downgraded": list(self.rites.downgraded),
                 "findings": [f.__dict__ for f in self.findings],
             },
             indent=2,
         )
+
+
+class _ReferenceUnusable(Exception):
+    """Internal: the reference root cannot answer the currency question.
+
+    Not an error the caller sees. The finding is already recorded; this only
+    skips the comparison, because the fault is in the reference and every
+    other rite still has a perfectly good subject to judge.
+    """
 
 
 def _concrete_subtypes(registry: OntologyRegistry, root: str) -> list[str]:
@@ -298,7 +399,9 @@ def run_rites(
     """
     path = Path(rubric_path) if rubric_path else None
     rubric = _rubric(path)
-    report = Report(schema_path=str(schema_path), rites=Rites(rubric, path))
+    digest = hashlib.sha256((path or RUBRIC_PATH).read_bytes()).hexdigest()
+    report = Report(schema_path=str(schema_path),
+                    rites=Rites(rubric, path, digest, _packaged_severities(path)))
 
     # Rite of Construction: the schema must load, imports resolved, or nothing
     # else can be judged.
@@ -381,6 +484,19 @@ def run_rites(
     root = Path(root_path) if root_path else bundled_ontology_path("malleus.yaml")
     try:
         root_registry = OntologyRegistry(str(root))
+        # The reference gets the same wrong-format refusal the subject got
+        # fourteen lines up. An empty or non-malleus reference has an empty
+        # fingerprint, which makes every subject a trivial superset, so the
+        # rite would answer "root is current" precisely when it knows least.
+        absent = [p for p in _PRIMITIVES if not root_registry.has_type(p)]
+        if absent:
+            # Only the currency question is unanswerable. The subject is fine,
+            # so the rites below still run.
+            report.verdict("root_currency_answerable", str(root),
+                           f"the reference root declares no {', '.join(absent)}; this is not "
+                           "a malleus root, and currency cannot be asked against it "
+                           "(an empty reference makes every schema a superset)")
+            raise _ReferenceUnusable
         verdict = registry.check_compatibility_strict(
             root_registry.content_hash(), root_registry.strict_fingerprint()
         )
@@ -402,6 +518,8 @@ def run_rites(
                 report.add("root_currency", NOTE, str(root),
                            "producer-compatible but consumer-divergent: the drift is "
                            "in required constraints, the most silent kind")
+    except _ReferenceUnusable:
+        pass  # already recorded above; the remaining rites still apply
     except (OntologyError, OSError) as exc:
         # "I could not determine whether your root is current" is an unknown
         # condition, and an unknown condition refuses. Its own rite, because
