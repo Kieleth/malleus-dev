@@ -101,6 +101,7 @@ core-metadata-version = "2.4"
 core-metadata-version = "2.4"
 
 [tool.pytest.ini_options]
+pythonpath = ["src"]
 testpaths = [
     "tests/test_ontology.py",
     "tests/test_kg.py",

@@ -23,6 +23,8 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 - Stage 7c: typed authorization policies, proposal-time action-policy commitment, exact
   required authority-monitor coverage, deterministic `AUTHORIZE`, `BLOCK`, or
   `CLARIFY` selection, and verdict-scoped grant validation
+- Evidence and evidence-assertion proposal members with typed polarity, exact
+  claim and evidence references, and decision-local citation checks
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -101,7 +103,6 @@ no authorization validity interval.
 - `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
 - `outcome-observation-recording`: recording what an executed action actually did; `OutcomeObservation` exists in the schema with no protocol door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
-- `evidence-assertion-recording`: proposals carrying `Evidence` and `EvidenceAssertion` members with content, including `EvidencePolarity`
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
 - `citation-byte-verification`: verifying at write time that a quoted span is a verbatim substring of the source it cites, and invalidating the citation when the source hash changes. `Evidence.locator` and `Evidence.source_version_id` are unverified strings today. Principle 2 of `PRINCIPLES.md` states this as a property a malleus-shaped system must have; malleus does not yet provide it
