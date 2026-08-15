@@ -1002,7 +1002,10 @@ class TestPackagingTargetsAreTracked:
 
     def test_declared_targets_exist_and_are_tracked(self):
         import subprocess
-        import tomllib
+        try:
+            import tomllib
+        except ModuleNotFoundError:  # Python 3.10
+            import tomli as tomllib
         root = Path(__file__).parent.parent
         if not (root / ".git").exists():
             pytest.skip("not a git checkout")
