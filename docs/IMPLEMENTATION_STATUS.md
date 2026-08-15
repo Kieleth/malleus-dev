@@ -26,6 +26,16 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 - Evidence and evidence-assertion proposal members with typed polarity, exact
   claim and evidence references, and decision-local citation checks
 
+## Unreleased Stage 8a
+
+- Content-addressed `SourceArtifact` records derived from exact source bytes
+- Exact `Evidence` binding to an applied source artifact ID and record hash
+- Replay validation of source semantic hashes and atomic refusal of tampering
+
+Stage 8a identifies the registered bytes. It does not authenticate them,
+establish their truth, or verify that a quotation occurs within them. Those
+are separate checks.
+
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
 runs every check in a fresh SWI-Prolog process, and validates the complete rule
@@ -105,7 +115,10 @@ no authorization validity interval.
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: executing every selected monitor rather than validating its recorded output
-- `citation-byte-verification`: verifying at write time that a quoted span is a verbatim substring of the source it cites, and invalidating the citation when the source hash changes. `Evidence.locator` and `Evidence.source_version_id` are unverified strings today. Principle 2 of `PRINCIPLES.md` states this as a property a malleus-shaped system must have; malleus does not yet provide it
+- `citation-byte-verification`: resolving registered source bytes and verifying
+  at write time that a quoted span is a verbatim substring. Stage 8a binds
+  `Evidence` to a content-addressed source record, but declares no quoted-span
+  slot and performs no substring check
 - `deferral-queue-aging`: measuring how long a `DEFERRED` proposal has been waiting and blocking past a threshold. `DEFERRED` is a terminal state with no aging, so a deferral is indistinguishable from a decision nobody revisited. Principle 3 of `PRINCIPLES.md` and the `arbiter_is_accountable` rite both require this of an adopter's application layer; malleus supplies the decision record, not the queue
 - `epistemic-policy-authority-and-scope`: deciding which policy is legitimate and applicable to a proposal
 - `authorization-policy-authority-and-scope`: deciding which authorization policy is legitimate and applicable to an action

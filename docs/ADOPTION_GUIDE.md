@@ -260,9 +260,11 @@ to prevent.
 9. A citation pins bytes. If a record quotes a source, the quote is verified
    verbatim against that source when the record is written, and the source
    hash invalidates the citation when the source changes rather than serving
-   as a cache key. **You build this.** Malleus declares no citation slot and
-   verifies no quote: `citation-byte-verification` is on the not-implemented
-   list. The rule still does not bend, it just does not bend for you.
+   as a cache key. Malleus supplies `SourceArtifact` and requires `Evidence` to
+   bind the exact source record. **You build the quoted-span check.** Malleus
+   declares no quotation slot and verifies no quote:
+   `citation-byte-verification` is on the not-implemented list. The rule still
+   does not bend, it just does not bend for you.
 10. Nothing self-corrects. Every automatic acceptance names its judge and
     records what it saw; everything it declines lands in a queue whose age is
     measured and whose age eventually blocks. Running longer repairs nothing.

@@ -66,6 +66,19 @@ def test_stage_six_artifacts_are_concrete_protocol_types():
     assert policy_kind.equals_string == "EPISTEMIC_POLICY"
 
 
+def test_source_artifact_replaces_free_form_evidence_source_version():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("SourceArtifact", "ProtocolArtifact")
+    assert (
+        registry.get_slot_constraint("SourceArtifact", "artifact_kind").equals_string
+        == "SOURCE"
+    )
+    evidence = registry.effective_slots("Evidence")
+    assert evidence["source_artifact_id"].required
+    assert evidence["source_artifact_hash"].required
+    assert "source_version_id" not in evidence
+
+
 def test_stage_seven_c_authorization_contract_is_typed_and_action_bound():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     assert registry.is_subtype_of("AuthorizationPolicyArtifact", "ProtocolArtifact")

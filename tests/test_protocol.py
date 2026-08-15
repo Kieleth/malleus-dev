@@ -40,6 +40,8 @@ from malleus.protocol import (
     event_hash,
     make_record,
     record_hash,
+    source_artifact_fields,
+    source_bytes_digest,
 )
 
 
@@ -132,6 +134,30 @@ def add_artifact(
         payload={"artifact_type": record_type, "artifact": record},
     )
     return record
+
+
+def add_source_artifact(
+    ledger: ProtocolLedger,
+    *,
+    artifact_id: str = "artifact:source:invoice",
+    minute: int = 5,
+    source_bytes: bytes = b"invoice INV-104 amount 42000",
+) -> dict:
+    fields = source_artifact_fields(
+        artifact_id=artifact_id,
+        artifact_version="1",
+        source_bytes=source_bytes,
+        media_type="application/pdf",
+        locator="documents/INV-104.pdf",
+    )
+    return add_artifact(
+        ledger,
+        artifact_id,
+        "SOURCE",
+        minute,
+        record_type="SourceArtifact",
+        **fields,
+    )
 
 
 # kind -> (dependency artifact kind, dependency id, assessment type, id slot, hash slot)
@@ -400,12 +426,15 @@ def record_proposal(
     claim_revision: int = 1,
     revises_claim_version_id: str | None = None,
     evidence_count: int = 0,
+    source_artifact: dict | None = None,
     assertion_claim_id: str | None = None,
     assertion_evidence_id: str | None = None,
     action_id: str = "action:1",
     action_revision: int = 1,
     revises_action_id: str | None = None,
 ) -> tuple[dict, dict, dict | None]:
+    if evidence_count and source_artifact is None:
+        raise ValueError("source_artifact is required when evidence_count is nonzero")
     projection = ledger.replay()
     if epistemic_policy is None:
         policies = [
@@ -451,9 +480,11 @@ def record_proposal(
             generated_at=timestamp,
             actor_id="actor:proposer",
             role="proposer",
+            source_record_ids=[source_artifact["id"]],
             id=f"{proposal_id}:evidence:{index}",
             evidence_kind="PUBLISHED_SOURCE",
-            source_version_id=f"source:{proposal_id}:{index}",
+            source_artifact_id=source_artifact["id"],
+            source_artifact_hash=source_artifact["content_hash"],
             locator=f"malleus-moving/research_graph/source-{index}.json",
             request_id=None,
         )
@@ -1162,17 +1193,99 @@ class TestEnvelope:
     @pytest.mark.parametrize(
         "kind,required_type",
         [
+            ("SOURCE", "SourceArtifact"),
             ("MONITOR_SPECIFICATION", "MonitorSpecificationArtifact"),
             ("EPISTEMIC_POLICY", "EpistemicPolicyArtifact"),
         ],
     )
-    def test_stage_six_artifact_kinds_require_typed_records(self, ledger, kind, required_type):
+    def test_typed_artifact_kinds_refuse_generic_records(self, ledger, kind, required_type):
         anchor(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match=required_type):
             add_artifact(ledger, f"artifact:opaque:{kind}", kind, 1)
         assert ledger.path.read_bytes() == before
 
+
+class TestContentAddressedSources:
+    def test_source_builder_binds_exact_bytes(self):
+        first = source_artifact_fields(
+            artifact_id="artifact:source:1",
+            artifact_version="1",
+            source_bytes=b"invoice amount 42000",
+            media_type="application/pdf",
+            locator="documents/invoice.pdf",
+        )
+        changed = source_artifact_fields(
+            artifact_id="artifact:source:1",
+            artifact_version="1",
+            source_bytes=b"invoice amount 42001",
+            media_type="application/pdf",
+            locator="documents/invoice.pdf",
+        )
+        assert first["source_content_digest"] == source_bytes_digest(
+            b"invoice amount 42000"
+        )
+        assert first["source_byte_length"] == len(b"invoice amount 42000")
+        assert first["source_content_digest"] != changed["source_content_digest"]
+        assert first["artifact_hash"] != changed["artifact_hash"]
+
+    def test_source_artifact_is_replay_visible(self, ledger):
+        anchor(ledger)
+        source = add_source_artifact(ledger)
+        replayed = ledger.replay().objects[source["id"]]
+        assert replayed["record_type"] == "SourceArtifact"
+        assert replayed["record"]["source_content_digest"] == source_bytes_digest(
+            b"invoice INV-104 amount 42000"
+        )
+
+    @pytest.mark.parametrize(
+        "field,value",
+        [
+            ("source_content_digest", "sha256:" + "0" * 64),
+            ("source_byte_length", 1),
+            ("source_media_type", "text/plain"),
+            ("source_locator", "documents/other.pdf"),
+        ],
+    )
+    def test_source_semantic_tampering_is_atomic(self, ledger, field, value):
+        anchor(ledger)
+        fields = source_artifact_fields(
+            artifact_id="artifact:source:tampered",
+            artifact_version="1",
+            source_bytes=b"original bytes",
+            media_type="application/pdf",
+            locator="documents/original.pdf",
+        )
+        fields[field] = value
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="source artifact semantic hash mismatch"):
+            add_artifact(
+                ledger,
+                "artifact:source:tampered",
+                "SOURCE",
+                4,
+                record_type="SourceArtifact",
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_evidence_cannot_reuse_a_different_source_record_hash(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
+        mismatched = deepcopy(source)
+        mismatched["content_hash"] = "sha256:" + "0" * 64
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="Artifact hash mismatch"):
+            record_proposal(
+                ledger,
+                evidence_count=1,
+                source_artifact=mismatched,
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestArtifactContracts:
     @pytest.mark.parametrize(
         "case,message",
         [
@@ -3503,7 +3616,12 @@ class TestEvidenceMembersInProposals:
     def test_proposal_carries_evidence_and_assertions_with_content(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
-        proposal, claim, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, claim, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         projection = ledger.replay()
         assert len(proposal["evidence_ids"]) == 2
         assert len(proposal["evidence_assertion_ids"]) == 2
@@ -3520,11 +3638,13 @@ class TestEvidenceMembersInProposals:
     def test_assertion_citing_unknown_evidence_is_refused(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match="Unknown referenced object"):
             record_proposal(
                 ledger,
                 evidence_count=1,
+                source_artifact=source,
                 assertion_evidence_id="evidence:absent",
             )
         assert ledger.path.read_bytes() == before
@@ -3532,11 +3652,13 @@ class TestEvidenceMembersInProposals:
     def test_assertion_whose_claim_reference_is_evidence_is_refused(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match="expected ClaimVersion"):
             record_proposal(
                 ledger,
                 evidence_count=1,
+                source_artifact=source,
                 assertion_claim_id="proposal:1:evidence:1",
             )
         assert ledger.path.read_bytes() == before
@@ -3553,7 +3675,12 @@ class TestCoreAssessmentKindsAreRecorded:
             ledger,
             extra_kinds=("CONFLICT", "UNCERTAINTY", "TEMPORAL"),
         )
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         conflicts = sorted(proposal["evidence_assertion_ids"])
         conflict = record_kind_assessment(
             ledger,
@@ -3596,7 +3723,12 @@ class TestCoreAssessmentKindsAreRecorded:
     def test_satisfied_conflict_assessment_names_no_conflicts(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         conflict = record_kind_assessment(
             ledger,
             proposal,
@@ -3622,7 +3754,12 @@ class TestCoreAssessmentKindsAreRecorded:
     def test_conflict_assessment_binds_its_assertions(self, ledger, case, message):
         anchor(ledger)
         artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
-        first, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        first, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         second, _, _ = record_proposal(
             ledger,
             minute=6,
@@ -3631,6 +3768,7 @@ class TestCoreAssessmentKindsAreRecorded:
             claim_id="claim:2",
             claim_key="claim-key:2",
             evidence_count=2,
+            source_artifact=source,
         )
         own = sorted(second["evidence_assertion_ids"])
         outcome = "VIOLATED"
@@ -3669,7 +3807,12 @@ class TestDecisionEvidenceLiesInsideTheProposal:
     def test_accept_cites_its_own_evidence_assertions(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
         decision = decide_epistemically(
             ledger,
@@ -3685,7 +3828,12 @@ class TestDecisionEvidenceLiesInsideTheProposal:
     def test_decision_citing_another_proposals_evidence_is_refused(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
-        first, _, _ = record_proposal(ledger, evidence_count=1)
+        source = add_source_artifact(ledger)
+        first, _, _ = record_proposal(
+            ledger,
+            evidence_count=1,
+            source_artifact=source,
+        )
         second, _, _ = record_proposal(
             ledger,
             minute=6,
@@ -3694,6 +3842,7 @@ class TestDecisionEvidenceLiesInsideTheProposal:
             claim_id="claim:2",
             claim_key="claim-key:2",
             evidence_count=1,
+            source_artifact=source,
         )
         assessment = record_type_assessment(
             ledger,

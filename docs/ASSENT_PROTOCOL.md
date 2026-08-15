@@ -53,6 +53,16 @@ proposal. The policy pins a canonical, nonempty set of exact `AUTHORITY`
 monitor records. The policy depends on those monitor records; the monitors do
 not depend on the composed policy, which avoids a content-hash cycle.
 
+Unreleased Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact
+ID and version to the SHA-256 digest and length of the exact source bytes, plus
+their media type and locator. `Evidence` must name that applied source record
+and its exact ledger record hash. A changed source therefore requires a new
+source record and invalidates the old evidence binding.
+
+This is source identity, not source truth. Replay validates the recorded
+commitment but does not fetch the locator, authenticate its publisher, or
+verify a quoted span against the bytes.
+
 Precommitment does not establish policy legitimacy. Any applied typed policy
 can currently be selected by a proposal. Policy authority, domain scope,
 eligibility, and effective-time rules remain unimplemented. Exact monitor
@@ -265,9 +275,10 @@ separate proposals, monitor failures, assessments, epistemic decisions, and
 action authorization. Exact proposed mutations can be bound to acceptance,
 materialized atomically, and reconstructed by transaction time and valid time.
 
-It does not establish truth, policy legitimacy, domain-specific monitor
-execution orchestration, action execution safety, concurrent-writer safety,
-formal PROV-O interoperability, or an empirical metacognitive effect.
+It does not establish truth, source authenticity, quoted-span correctness,
+policy legitimacy, domain-specific monitor execution orchestration, action
+execution safety, concurrent-writer safety, formal PROV-O interoperability,
+or an empirical metacognitive effect.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

@@ -54,13 +54,13 @@ about diligence into a statement anyone can recheck. It is also the property
 most often faked by accident, because a quote that was hand-copied looks
 exactly like a quote that was verified, right up until someone measures.
 
-The limit, stated in the same breath: **malleus does not provide this.** The
-root declares no citation slot, no quoted span, and no source hash;
-`Evidence.locator` and `Evidence.source_version_id` in the assent ontology are
-unverified strings. This is a property a malleus-shaped system must have and
-that the library has not built, tracked as `citation-byte-verification` in
-`IMPLEMENTATION_STATUS.md`. Until it exists, the verification belongs to the
-adopter's write path, and the rite exists to ask whether anyone built it.
+Malleus now provides half of this property. `SourceArtifact` binds exact bytes
+by SHA-256 digest, length, media type, and locator. `Evidence` must cite the
+exact applied source record by ID and record hash, so changing the registered
+bytes invalidates the old evidence binding. Malleus still declares no quoted
+span and does not reopen the source to verify a quotation. That remaining
+boundary is `citation-byte-verification` in `IMPLEMENTATION_STATUS.md`. Until
+it exists, quoted-span verification belongs to the adopter's write path.
 
 Rite: `quotation_is_byte_exact`, with `citation_integrity` as its companion.
 One checks that the cited id resolves. The other checks that the cited bytes
@@ -144,10 +144,10 @@ not. See principle 3.
 
 **DNA has no provenance.** A genome carries no citation to anything. The
 property this project is aiming at is the opposite one: every tuple points at
-bytes in a source, byte-exact. That is a citation graph, it is exactly what the
-genome analogy has nothing to say about, and it is the half of principle 2 the
-library has not built yet. Keep it central where the analogy is silent, and
-keep it honest about its tense. See principle 2 and
+bytes in a source, byte-exact. That is a citation graph, and it is exactly what
+the genome analogy has nothing to say about. Malleus now binds evidence to a
+content-addressed source record, but it does not yet verify quoted spans. Keep
+that boundary central where the analogy is silent. See principle 2 and
 `citation-byte-verification` in `IMPLEMENTATION_STATUS.md`.
 
 Use the analogy to motivate questions. Never cite it as support for a claim.

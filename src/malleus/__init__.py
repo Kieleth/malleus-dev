@@ -48,6 +48,10 @@ from malleus.protocol import (
     graph_base_artifact_digest,
     graph_base_metadata,
     make_record,
+    SourceError,
+    source_artifact_digest,
+    source_artifact_fields,
+    source_bytes_digest,
     temporal_write,
 )
 from malleus.staging import (
@@ -106,6 +110,10 @@ __all__ = [
     "ProposalState",
     "AuthorizationState",
     "make_record",
+    "SourceError",
+    "source_artifact_digest",
+    "source_artifact_fields",
+    "source_bytes_digest",
     "AcceptedGraphError",
     "AcceptedGraphProjector",
     "AcceptedGraphView",

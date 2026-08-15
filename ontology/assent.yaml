@@ -130,6 +130,7 @@ enums:
 
   ArtifactKind:
     permissible_values:
+      SOURCE:
       GRAPH_BASE:
       CANDIDATE_SUBGRAPH:
       MONITOR_SPECIFICATION:
@@ -196,6 +197,32 @@ classes:
       artifact_version:
         required: true
       artifact_hash:
+        required: true
+
+  SourceArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Content-addressed identity of exact source bytes used by evidence. This
+      record proves byte identity, not source authenticity or truth.
+    slots:
+      - source_schema_version
+      - source_content_digest
+      - source_byte_length
+      - source_media_type
+      - source_locator
+    slot_usage:
+      artifact_kind:
+        equals_string: SOURCE
+      source_schema_version:
+        required: true
+        equals_string: "1"
+      source_content_digest:
+        required: true
+      source_byte_length:
+        required: true
+      source_media_type:
+        required: true
+      source_locator:
         required: true
 
   MonitorSpecificationArtifact:
@@ -466,13 +493,16 @@ classes:
     is_a: ProtocolRecord
     slots:
       - evidence_kind
-      - source_version_id
+      - source_artifact_id
+      - source_artifact_hash
       - locator
       - request_id
     slot_usage:
       evidence_kind:
         required: true
-      source_version_id:
+      source_artifact_id:
+        required: true
+      source_artifact_hash:
         required: true
       locator:
         required: true
@@ -1238,7 +1268,20 @@ slots:
 
   evidence_kind:
     range: string
-  source_version_id:
+  source_artifact_id:
+    range: string
+  source_artifact_hash:
+    range: string
+  source_schema_version:
+    range: string
+  source_content_digest:
+    range: string
+  source_byte_length:
+    range: integer
+    minimum_value: 0
+  source_media_type:
+    range: string
+  source_locator:
     range: string
   locator:
     range: string

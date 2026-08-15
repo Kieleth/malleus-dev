@@ -60,6 +60,7 @@ include = [
     "src/malleus/control.py",
     "src/malleus/logic.py",
     "src/malleus/status.py",
+    "src/malleus/source.py",
     "src/malleus/prolog_verifier.py",
     "src/malleus/inquisition/__init__.py",
     "src/malleus/inquisition/cli.py",

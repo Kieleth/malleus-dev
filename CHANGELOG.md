@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added the Stage 8a source-provenance boundary. `SourceArtifact` records bind
+  an artifact ID, version, media type, locator, byte length, and SHA-256 digest
+  into one replay-validated semantic hash. The standard builder derives this
+  record from exact source bytes.
+- Added replay and atomic-rejection tests for changed source bytes, altered
+  source metadata, generic records pretending to be sources, and evidence
+  citing the wrong source record hash.
+
+### Changed
+
+- **Breaking:** `Evidence.source_version_id` has been removed. Every `Evidence`
+  record must now bind an applied `SourceArtifact` by exact ID and ledger record
+  hash. There is no legacy fallback or implicit source record.
+
+### Boundary
+
+- Stage 8a proves which exact bytes were registered and which exact source
+  record an evidence item cited. It does not establish authenticity, truth, or
+  byte-exact quotation. Resolving a quoted span against the registered bytes
+  remains `citation-byte-verification` and is not implemented.
+
 ## [0.7.0] - 2026-08-14
 
 ### Added

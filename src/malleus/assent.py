@@ -35,6 +35,7 @@ from malleus.accepted import (
     validate_temporal_writes,
 )
 from malleus.staging import StagingError, stage_subgraph
+from malleus.source import SourceError, source_artifact_digest
 from malleus.control import (
     ControlError,
     EPISTEMIC_MONITOR_KINDS,
@@ -401,6 +402,7 @@ class ProtocolLedger:
                     f"event {event['event_id']}: AuthorityGrant permits no action types"
                 )
         typed_artifacts = {
+            "SOURCE": "SourceArtifact",
             "GRAPH_BASE": "GraphBaseArtifact",
             "CANDIDATE_SUBGRAPH": "CandidateSubgraphArtifact",
             "MONITOR_SPECIFICATION": "MonitorSpecificationArtifact",
@@ -414,7 +416,9 @@ class ProtocolLedger:
                 f"event {event['event_id']}: {artifact['artifact_kind']} requires {expected_type}"
             )
         candidate_manifest = None
-        if artifact_type == "GraphBaseArtifact":
+        if artifact_type == "SourceArtifact":
+            self._validate_source_artifact(artifact, event)
+        elif artifact_type == "GraphBaseArtifact":
             self._validate_graph_base_artifact(projection, artifact, event)
         elif artifact_type == "CandidateSubgraphArtifact":
             candidate_manifest = self._validate_candidate_artifact(
@@ -447,6 +451,26 @@ class ProtocolLedger:
             )
         elif artifact_type == "CandidateSubgraphArtifact":
             projection.candidate_manifests[artifact["id"]] = candidate_manifest
+
+    def _validate_source_artifact(
+        self,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        try:
+            expected_hash = source_artifact_digest(
+                schema_version=artifact["source_schema_version"],
+                artifact_id=artifact["id"],
+                artifact_version=artifact["artifact_version"],
+                source_content_digest=artifact["source_content_digest"],
+                source_byte_length=artifact["source_byte_length"],
+                source_media_type=artifact["source_media_type"],
+                source_locator=artifact["source_locator"],
+            )
+        except SourceError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"event {event['event_id']}: source artifact semantic hash mismatch")
 
     def _validate_graph_base_artifact(
         self,
@@ -808,7 +832,16 @@ class ProtocolLedger:
             record_type = item["record_type"]
             record = item["record"]
             self._validate_sources(record, combined, event)
-            if record_type == "EvidenceAssertion":
+            if record_type == "Evidence":
+                source = self._artifact_ref(
+                    projection,
+                    record["source_artifact_id"],
+                    record["source_artifact_hash"],
+                    "SOURCE",
+                    record_type="SourceArtifact",
+                )
+                self._require_sources(record, {source["id"]}, event)
+            elif record_type == "EvidenceAssertion":
                 self._object(combined, record["claim_version_id"], "ClaimVersion")
                 self._object(combined, record["evidence_id"], "Evidence")
             elif record_type == "ClaimVersion":
@@ -2475,6 +2508,7 @@ class ProtocolLedger:
         required = {
             "ProtocolRecord",
             "ProtocolArtifact",
+            "SourceArtifact",
             "GraphBaseArtifact",
             "CandidateSubgraphArtifact",
             "MonitorSpecificationArtifact",
@@ -2523,6 +2557,7 @@ class ProtocolLedger:
         inheritance = {
             "ProtocolRecord": "Entity",
             "ProtocolArtifact": "ProtocolRecord",
+            "SourceArtifact": "ProtocolArtifact",
             "GraphBaseArtifact": "ProtocolArtifact",
             "CandidateSubgraphArtifact": "ProtocolArtifact",
             "MonitorSpecificationArtifact": "ProtocolArtifact",
