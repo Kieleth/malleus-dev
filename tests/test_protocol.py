@@ -29,6 +29,8 @@ from malleus.logic import (
     logic_monitor_failure_records,
 )
 from malleus.protocol import (
+    AssentPlan,
+    AssentPlanError,
     AuthorizationState,
     EventType,
     LedgerError,
@@ -39,7 +41,13 @@ from malleus.protocol import (
     content_digest,
     event_hash,
     make_record,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorStep,
+    outcome_contract_digest,
     record_hash,
+    source_artifact_fields,
+    source_bytes_digest,
 )
 
 
@@ -132,6 +140,58 @@ def add_artifact(
         payload={"artifact_type": record_type, "artifact": record},
     )
     return record
+
+
+def add_source_artifact(
+    ledger: ProtocolLedger,
+    *,
+    artifact_id: str = "artifact:source:invoice",
+    minute: int = 5,
+    source_bytes: bytes = b"invoice INV-104 amount 42000",
+) -> dict:
+    fields = source_artifact_fields(
+        artifact_id=artifact_id,
+        artifact_version="1",
+        source_bytes=source_bytes,
+        media_type="application/pdf",
+        locator="documents/INV-104.pdf",
+    )
+    return add_artifact(
+        ledger,
+        artifact_id,
+        "SOURCE",
+        minute,
+        record_type="SourceArtifact",
+        **fields,
+    )
+
+
+def add_outcome_contract(
+    ledger: ProtocolLedger,
+    *,
+    artifact_id: str = "artifact:outcome-contract:effect-present",
+    minute: int = 5,
+) -> dict:
+    fields = {
+        "outcome_contract_schema_version": "1",
+        "observation_type": "EXPECTED_EFFECT_PRESENT",
+        "observer_implementation_hash": "sha256:" + "b" * 64,
+    }
+    return add_artifact(
+        ledger,
+        artifact_id,
+        "OUTCOME_CONTRACT",
+        minute,
+        record_type="OutcomeContractArtifact",
+        artifact_hash=outcome_contract_digest(
+            schema_version=fields["outcome_contract_schema_version"],
+            contract_id=artifact_id,
+            contract_version="1",
+            observation_type=fields["observation_type"],
+            observer_implementation_hash=fields["observer_implementation_hash"],
+        ),
+        **fields,
+    )
 
 
 # kind -> (dependency artifact kind, dependency id, assessment type, id slot, hash slot)
@@ -400,12 +460,15 @@ def record_proposal(
     claim_revision: int = 1,
     revises_claim_version_id: str | None = None,
     evidence_count: int = 0,
+    source_artifact: dict | None = None,
     assertion_claim_id: str | None = None,
     assertion_evidence_id: str | None = None,
     action_id: str = "action:1",
     action_revision: int = 1,
     revises_action_id: str | None = None,
 ) -> tuple[dict, dict, dict | None]:
+    if evidence_count and source_artifact is None:
+        raise ValueError("source_artifact is required when evidence_count is nonzero")
     projection = ledger.replay()
     if epistemic_policy is None:
         policies = [
@@ -451,9 +514,11 @@ def record_proposal(
             generated_at=timestamp,
             actor_id="actor:proposer",
             role="proposer",
+            source_record_ids=[source_artifact["id"]],
             id=f"{proposal_id}:evidence:{index}",
             evidence_kind="PUBLISHED_SOURCE",
-            source_version_id=f"source:{proposal_id}:{index}",
+            source_artifact_id=source_artifact["id"],
+            source_artifact_hash=source_artifact["content_hash"],
             locator=f"malleus-moving/research_graph/source-{index}.json",
             request_id=None,
         )
@@ -1162,17 +1227,827 @@ class TestEnvelope:
     @pytest.mark.parametrize(
         "kind,required_type",
         [
+            ("SOURCE", "SourceArtifact"),
+            ("OUTCOME_CONTRACT", "OutcomeContractArtifact"),
             ("MONITOR_SPECIFICATION", "MonitorSpecificationArtifact"),
             ("EPISTEMIC_POLICY", "EpistemicPolicyArtifact"),
         ],
     )
-    def test_stage_six_artifact_kinds_require_typed_records(self, ledger, kind, required_type):
+    def test_typed_artifact_kinds_refuse_generic_records(self, ledger, kind, required_type):
         anchor(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match=required_type):
             add_artifact(ledger, f"artifact:opaque:{kind}", kind, 1)
         assert ledger.path.read_bytes() == before
 
+
+class TestContentAddressedSources:
+    def test_source_builder_binds_exact_bytes(self):
+        first = source_artifact_fields(
+            artifact_id="artifact:source:1",
+            artifact_version="1",
+            source_bytes=b"invoice amount 42000",
+            media_type="application/pdf",
+            locator="documents/invoice.pdf",
+        )
+        changed = source_artifact_fields(
+            artifact_id="artifact:source:1",
+            artifact_version="1",
+            source_bytes=b"invoice amount 42001",
+            media_type="application/pdf",
+            locator="documents/invoice.pdf",
+        )
+        assert first["source_content_digest"] == source_bytes_digest(
+            b"invoice amount 42000"
+        )
+        assert first["source_byte_length"] == len(b"invoice amount 42000")
+        assert first["source_content_digest"] != changed["source_content_digest"]
+        assert first["artifact_hash"] != changed["artifact_hash"]
+
+    def test_source_artifact_is_replay_visible(self, ledger):
+        anchor(ledger)
+        source = add_source_artifact(ledger)
+        replayed = ledger.replay().objects[source["id"]]
+        assert replayed["record_type"] == "SourceArtifact"
+        assert replayed["record"]["source_content_digest"] == source_bytes_digest(
+            b"invoice INV-104 amount 42000"
+        )
+
+    @pytest.mark.parametrize(
+        "field,value",
+        [
+            ("source_content_digest", "sha256:" + "0" * 64),
+            ("source_byte_length", 1),
+            ("source_media_type", "text/plain"),
+            ("source_locator", "documents/other.pdf"),
+        ],
+    )
+    def test_source_semantic_tampering_is_atomic(self, ledger, field, value):
+        anchor(ledger)
+        fields = source_artifact_fields(
+            artifact_id="artifact:source:tampered",
+            artifact_version="1",
+            source_bytes=b"original bytes",
+            media_type="application/pdf",
+            locator="documents/original.pdf",
+        )
+        fields[field] = value
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="source artifact semantic hash mismatch"):
+            add_artifact(
+                ledger,
+                "artifact:source:tampered",
+                "SOURCE",
+                4,
+                record_type="SourceArtifact",
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_evidence_cannot_reuse_a_different_source_record_hash(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
+        mismatched = deepcopy(source)
+        mismatched["content_hash"] = "sha256:" + "0" * 64
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="Artifact hash mismatch"):
+            record_proposal(
+                ledger,
+                evidence_count=1,
+                source_artifact=mismatched,
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestAtomicEventBatches:
+    def test_empty_batch_fails_without_change(self, ledger):
+        anchor(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(LedgerError, match="batch must not be empty"):
+            ledger.append_events(())
+        assert ledger.path.read_bytes() == before
+
+    def test_invalid_second_event_leaves_neither_event(self, ledger):
+        anchor(ledger)
+        timestamp = time_at(1)
+        first = make_record(
+            "ProtocolArtifact",
+            event_id="event:batch:1",
+            generated_at=timestamp,
+            actor_id="actor:system",
+            role="registrar",
+            id="artifact:batch:1",
+            artifact_kind="RULE_SET",
+            artifact_version="1",
+            artifact_hash=ARTIFACT_BODY,
+        )
+        second = make_record(
+            "ProtocolArtifact",
+            event_id="event:batch:2",
+            generated_at=timestamp,
+            actor_id="actor:system",
+            role="registrar",
+            id="artifact:batch:2",
+            artifact_kind="SOURCE",
+            artifact_version="1",
+            artifact_hash=ARTIFACT_BODY,
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="SOURCE requires SourceArtifact"):
+            ledger.append_events((
+                {
+                    "event_id": "event:batch:1",
+                    "event_type": EventType.ARTIFACT_RECORDED,
+                    "transaction_time": timestamp,
+                    "actor_id": "actor:system",
+                    "payload": {
+                        "artifact_type": "ProtocolArtifact",
+                        "artifact": first,
+                    },
+                },
+                {
+                    "event_id": "event:batch:2",
+                    "event_type": EventType.ARTIFACT_RECORDED,
+                    "transaction_time": timestamp,
+                    "actor_id": "actor:system",
+                    "payload": {
+                        "artifact_type": "ProtocolArtifact",
+                        "artifact": second,
+                    },
+                },
+            ))
+        assert ledger.path.read_bytes() == before
+
+
+class TestThinAssentPlan:
+    @staticmethod
+    def failure_plan(
+        *,
+        suffix: str = "type",
+        role: str = "type-monitor",
+    ) -> MonitorFailurePlan:
+        return MonitorFailurePlan(
+            event_id=f"event:plan:{suffix}:failed",
+            failure_id=f"failure:plan:{suffix}",
+            assessment_id=f"assessment:plan:{suffix}:unknown",
+            transaction_time=time_at(7),
+            actor_id="actor:monitor",
+            role=role,
+            failure_category="EXECUTION",
+            error_code="FAILED",
+        )
+
+    @staticmethod
+    def completed_type_event(context, *, missing_source: bool = False) -> MonitorEvent:
+        event_id = "event:plan:type:satisfied"
+        timestamp = time_at(7)
+        sources = [context.proposal["id"], context.monitor["id"]]
+        if missing_source:
+            sources.append("record:does-not-exist")
+        assessment = make_record(
+            "TypeAssessment",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:monitor",
+            role="type-monitor",
+            source_record_ids=sources,
+            id="assessment:plan:type:satisfied",
+            proposal_id=context.proposal["id"],
+            proposal_content_hash=context.proposal["content_hash"],
+            base_acceptance_head=context.proposal["base_acceptance_head"],
+            assessment_kind="TYPE",
+            assessment_outcome="SATISFIED",
+            monitor_id=context.monitor["id"],
+            monitor_version=context.monitor["artifact_version"],
+            monitor_hash=context.monitor["content_hash"],
+            monitor_failure_id=None,
+            input_record_ids=[context.proposal["id"]],
+            reason_codes=["TYPE_RESULT"],
+            rationale="The declared type adapter completed.",
+        )
+        return MonitorEvent(
+            event_id=event_id,
+            event_type=EventType.ASSESSMENT_RECORDED,
+            transaction_time=timestamp,
+            actor_id="actor:monitor",
+            payload={"assessment_type": "TypeAssessment", "assessment": assessment},
+        )
+
+    def plan(self, proposal, monitor, adapter) -> AssentPlan:
+        return AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=monitor["id"],
+                monitor_record_hash=monitor["content_hash"],
+                adapter=adapter,
+                failure=self.failure_plan(),
+            ),),
+        )
+
+    def test_runs_exact_declared_adapter_once_and_replays(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+
+        def adapter(context):
+            calls.append(context.monitor["id"])
+            with pytest.raises(TypeError):
+                context.proposal["id"] = "proposal:mutated"
+            return self.completed_type_event(context)
+
+        results = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)
+        assert calls == [artifacts["monitor"]["id"]]
+        assert results[0].assessment_outcome == "SATISFIED"
+        reopened = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert results[0].assessment_id in reopened.assessment_ids
+        assert reopened.proposal_states[proposal["id"]] == ProposalState.PROPOSED
+
+    def test_adapter_exception_records_unknown_without_retry(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = 0
+
+        def adapter(_context):
+            nonlocal calls
+            calls += 1
+            raise RuntimeError("adapter dependency failed")
+
+        result = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)[0]
+        projection = ledger.replay()
+        assert calls == 1
+        assert result.assessment_outcome == "UNKNOWN"
+        assert result.assessment_id in projection.assessment_ids
+        failure = projection.objects["failure:plan:type"]["record"]
+        assert failure["error_message"] == "adapter dependency failed"
+
+    def test_invalid_adapter_record_becomes_unknown_atomically(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        before_count = ledger.replay().event_count
+
+        def adapter(context):
+            return self.completed_type_event(context, missing_source=True)
+
+        result = self.plan(proposal, artifacts["monitor"], adapter).run(ledger)[0]
+        projection = ledger.replay()
+        assert result.assessment_outcome == "UNKNOWN"
+        assert projection.event_count == before_count + 1
+        assert "assessment:plan:type:satisfied" not in projection.objects
+        assert result.assessment_id in projection.assessment_ids
+
+    def test_hash_drift_fails_before_call_or_append(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["monitor"]["id"],
+                monitor_record_hash="sha256:" + "0" * 64,
+                adapter=lambda context: calls.append(context),
+                failure=self.failure_plan(),
+            ),),
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(AssentPlanError, match="record hash differs from policy"):
+            plan.run(ledger)
+        assert calls == []
+        assert ledger.path.read_bytes() == before
+
+    def test_policy_coverage_mismatch_fails_before_call(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        calls = []
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=lambda context: calls.append(context),
+                failure=self.failure_plan(),
+            ),),
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(AssentPlanError, match="policy's exact monitors"):
+            plan.run(ledger)
+        assert calls == []
+        assert ledger.path.read_bytes() == before
+
+    def test_logical_check_and_assessment_commit_as_one_batch(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        policy = add_epistemic_policy(
+            ledger,
+            artifacts["rules"],
+            [(artifacts["logic_monitor"], "REJECT", "DEFER")],
+            5,
+            policy_id="artifact:logic-only-policy",
+        )
+        proposal, _, _ = record_proposal(ledger, epistemic_policy=policy)
+
+        def adapter(context):
+            contract = context.input_artifacts[0]
+            result = LogicCheckResult(
+                candidate_digest="sha256:" + "3" * 64,
+                base_state_digest="sha256:" + "4" * 64,
+                candidate_state_digest="sha256:" + "5" * 64,
+                context_state_digests=(),
+                ontology_hash="sha256:" + "6" * 64,
+                fact_contract_version="2",
+                contract_id=contract["id"],
+                contract_version=contract["artifact_version"],
+                contract_hash=contract["artifact_hash"],
+                ruleset_id=contract["ruleset_id"],
+                ruleset_version=contract["ruleset_version"],
+                ruleset_hash=contract["ruleset_artifact_hash"],
+                engine_name="SWI-Prolog",
+                engine_version="100002",
+                timeout_seconds=contract["timeout_seconds"],
+                facts_hash="sha256:" + "7" * 64,
+                fact_count=4,
+                translated_record_ids=("graph:1",),
+                checked_rule_ids=tuple(contract["rule_ids"]),
+                violations=(),
+            )
+            check_event_id = "event:plan:logic:check"
+            check_time = time_at(7)
+            check, witnesses = result.to_protocol_records(
+                check_id="logic-check:plan:1",
+                event_id=check_event_id,
+                generated_at=check_time,
+                actor_id="actor:monitor",
+                role="logic-monitor",
+                proposal_id=context.proposal["id"],
+                proposal_content_hash=context.proposal["content_hash"],
+                base_acceptance_head=context.proposal["base_acceptance_head"],
+                monitor_id=context.monitor["id"],
+                monitor_version=context.monitor["artifact_version"],
+                monitor_hash=context.monitor["content_hash"],
+                logic_contract_record_hash=contract["content_hash"],
+                ruleset_record_hash=contract["ruleset_record_hash"],
+            )
+            assessment_event_id = "event:plan:logic:assessment"
+            assessment_time = time_at(8)
+            assessment = make_record(
+                "LogicalAssessment",
+                event_id=assessment_event_id,
+                generated_at=assessment_time,
+                actor_id="actor:monitor",
+                role="logic-monitor",
+                source_record_ids=[
+                    context.proposal["id"],
+                    context.monitor["id"],
+                    check["id"],
+                    contract["id"],
+                    contract["ruleset_id"],
+                ],
+                id="assessment:plan:logic:satisfied",
+                proposal_id=context.proposal["id"],
+                proposal_content_hash=context.proposal["content_hash"],
+                base_acceptance_head=context.proposal["base_acceptance_head"],
+                assessment_kind="LOGICAL",
+                assessment_outcome="SATISFIED",
+                monitor_id=context.monitor["id"],
+                monitor_version=context.monitor["artifact_version"],
+                monitor_hash=context.monitor["content_hash"],
+                monitor_failure_id=None,
+                input_record_ids=[context.proposal["id"], check["id"]],
+                reason_codes=["LOGIC_CHECK_COMPLETED"],
+                rationale="The declared logic adapter completed.",
+                checked_rule_ids=check["checked_rule_ids"],
+                violated_rule_ids=check["violated_rule_ids"],
+                logic_check_record_ids=[check["id"]],
+                logic_contract_id=contract["id"],
+                logic_contract_record_hash=contract["content_hash"],
+                ruleset_id=contract["ruleset_id"],
+                ruleset_hash=contract["ruleset_record_hash"],
+            )
+            return (
+                MonitorEvent(
+                    event_id=check_event_id,
+                    event_type=EventType.LOGIC_CHECK_RECORDED,
+                    transaction_time=check_time,
+                    actor_id="actor:monitor",
+                    payload={"check": check, "witnesses": list(witnesses)},
+                ),
+                MonitorEvent(
+                    event_id=assessment_event_id,
+                    event_type=EventType.ASSESSMENT_RECORDED,
+                    transaction_time=assessment_time,
+                    actor_id="actor:monitor",
+                    payload={
+                        "assessment_type": "LogicalAssessment",
+                        "assessment": assessment,
+                    },
+                ),
+            )
+
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=adapter,
+                failure=self.failure_plan(suffix="logic", role="logic-monitor"),
+            ),),
+        )
+        before_count = ledger.replay().event_count
+        result = plan.run(ledger)[0]
+        projection = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert result.assessment_outcome == "SATISFIED"
+        assert result.event_ids == (
+            "event:plan:logic:check",
+            "event:plan:logic:assessment",
+        )
+        assert projection.event_count == before_count + 2
+        assert "logic-check:plan:1" in projection.logic_check_ids
+        assert result.assessment_id in projection.assessment_ids
+
+    def test_logical_adapter_exception_records_bound_unknown(self, ledger):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        policy = add_epistemic_policy(
+            ledger,
+            artifacts["rules"],
+            [(artifacts["logic_monitor"], "REJECT", "DEFER")],
+            5,
+            policy_id="artifact:logic-failure-policy",
+        )
+        proposal, _, _ = record_proposal(ledger, epistemic_policy=policy)
+        plan = AssentPlan(
+            proposal_id=proposal["id"],
+            proposal_record_hash=proposal["content_hash"],
+            steps=(MonitorStep(
+                monitor_id=artifacts["logic_monitor"]["id"],
+                monitor_record_hash=artifacts["logic_monitor"]["content_hash"],
+                adapter=lambda _context: (_ for _ in ()).throw(
+                    LogicExecutionError("Prolog process unavailable")
+                ),
+                failure=self.failure_plan(suffix="logic", role="logic-monitor"),
+            ),),
+        )
+        result = plan.run(ledger)[0]
+        unknown = ledger.replay().objects[result.assessment_id]["record"]
+        assert result.assessment_outcome == "UNKNOWN"
+        assert unknown["logic_contract_id"] == artifacts["logic_contract"]["id"]
+        assert unknown["ruleset_id"] == artifacts["rules"]["id"]
+
+
+class TestGenericEffectLifecycle:
+    @staticmethod
+    def authorized_action(ledger, *, authority_outcome: str = "SATISFIED"):
+        anchor(ledger)
+        artifacts = setup_artifacts(ledger)
+        outcome_contract = add_outcome_contract(ledger)
+        proposal, claim, action = record_proposal(ledger, include_action=True)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        epistemic = decide_epistemically(ledger, proposal, assessment, artifacts)
+        authority = record_authority_assessment(
+            ledger,
+            proposal,
+            action,
+            artifacts,
+            outcome=authority_outcome,
+            violated=(
+                ["actor_in_scope"] if authority_outcome == "VIOLATED" else []
+            ),
+        )
+        authorization = decide_authorization(
+            ledger,
+            proposal,
+            action,
+            claim,
+            epistemic,
+            [authority],
+            artifacts,
+        )
+        return artifacts, outcome_contract, proposal, action, authorization
+
+    @staticmethod
+    def dispatch(
+        ledger,
+        action,
+        authorization,
+        *,
+        suffix: str = "1",
+        minute: int = 10,
+        mutate=None,
+    ):
+        event_id = f"event:dispatch:{suffix}"
+        timestamp = time_at(minute)
+        record = make_record(
+            "ActionDispatch",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:dispatcher",
+            role="dispatcher",
+            source_record_ids=[action["id"], authorization["id"]],
+            id=f"dispatch:{suffix}",
+            action_proposal_id=action["id"],
+            action_content_hash=action["content_hash"],
+            authorization_decision_id=authorization["id"],
+            authorization_decision_hash=authorization["content_hash"],
+            executor_id="actor:executor",
+            dispatch_adapter_id="adapter:research-effect-store:v1",
+            base_acceptance_head=authorization["base_acceptance_head"],
+            dispatched_at=timestamp,
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("ActionDispatch", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.ACTION_DISPATCHED,
+            transaction_time=timestamp,
+            actor_id="actor:dispatcher",
+            payload={"dispatch": record},
+        )
+        return record
+
+    @staticmethod
+    def execute(ledger, dispatch, *, mutate=None):
+        event_id = "event:execution:1"
+        timestamp = time_at(11)
+        record = make_record(
+            "ActionExecution",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:executor",
+            role="executor",
+            source_record_ids=[dispatch["id"]],
+            id="execution:1",
+            dispatch_id=dispatch["id"],
+            dispatch_hash=dispatch["content_hash"],
+            executor_id="actor:executor",
+            execution_started_at=time_at(10),
+            execution_ended_at=timestamp,
+            execution_status="SUCCEEDED",
+            execution_result_hash="sha256:" + "c" * 64,
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("ActionExecution", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.ACTION_EXECUTED,
+            transaction_time=timestamp,
+            actor_id="actor:executor",
+            payload={"execution": record},
+        )
+        return record
+
+    @staticmethod
+    def observe(
+        ledger,
+        execution,
+        contract,
+        *,
+        observer_id: str = "actor:external-observer",
+        mutate=None,
+    ):
+        fields = source_artifact_fields(
+            artifact_id="artifact:source:effect-store",
+            artifact_version="1",
+            source_bytes=b'{"action_id":"action:1","status":"written"}\n',
+            media_type="application/x-ndjson",
+            locator="effects/payments.jsonl",
+        )
+        source = add_artifact(
+            ledger,
+            "artifact:source:effect-store",
+            "SOURCE",
+            11,
+            record_type="SourceArtifact",
+            **fields,
+        )
+        event_id = "event:outcome:1"
+        timestamp = time_at(12)
+        record = make_record(
+            "OutcomeObservation",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id=observer_id,
+            role="outcome-observer",
+            source_record_ids=[execution["id"], contract["id"], source["id"]],
+            id="outcome:1",
+            execution_id=execution["id"],
+            execution_hash=execution["content_hash"],
+            outcome_contract_id=contract["id"],
+            outcome_contract_hash=contract["content_hash"],
+            observer_id=observer_id,
+            observation_type=contract["observation_type"],
+            observation_result="CONFIRMED",
+            observed_at=timestamp,
+            observed_source_artifact_id=source["id"],
+            observed_source_artifact_hash=source["content_hash"],
+        )
+        if mutate is not None:
+            mutate(record)
+            record["content_hash"] = record_hash("OutcomeObservation", record)
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.OUTCOME_OBSERVED,
+            transaction_time=timestamp,
+            actor_id=observer_id,
+            payload={"observation": record},
+        )
+        return source, record
+
+    def test_authorized_effect_lifecycle_reopens_with_complete_trace(self, ledger):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        source, observation = self.observe(ledger, execution, contract)
+        projection = ProtocolLedger(ledger.path, ledger.registry).replay()
+        assert projection.dispatch_by_action[action["id"]] == dispatch["id"]
+        assert projection.execution_by_dispatch[dispatch["id"]] == execution["id"]
+        assert projection.observation_by_execution_contract[
+            (execution["id"], contract["id"])
+        ] == observation["id"]
+        assert source["id"] in projection.artifact_ids
+        assert observation["id"] in projection.outcome_observation_ids
+
+    def test_blocked_action_cannot_create_dispatch(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(
+            ledger,
+            authority_outcome="VIOLATED",
+        )
+        assert authorization["authorization_verdict"] == "BLOCK"
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="not authorized for dispatch"):
+            self.dispatch(ledger, action, authorization)
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda record: record.update(
+                    authorization_decision_hash="sha256:" + "0" * 64
+                ),
+                "dispatch authorization hash mismatch",
+            ),
+            (
+                lambda record: record.update(executor_id="actor:someone-else"),
+                "dispatch executor mismatch",
+            ),
+            (
+                lambda record: record.update(dispatched_at=time_at(11)),
+                "dispatched_at must equal event time",
+            ),
+        ],
+    )
+    def test_dispatch_is_bound_to_exact_authorization(self, ledger, mutate, message):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            self.dispatch(ledger, action, authorization, mutate=mutate)
+        assert ledger.path.read_bytes() == before
+
+    def test_expired_authorization_cannot_dispatch(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="outside authorization validity"):
+            self.dispatch(ledger, action, authorization, minute=11)
+        assert ledger.path.read_bytes() == before
+
+    def test_changed_accepted_state_makes_authorization_stale(self, ledger):
+        artifacts, _, _, action, authorization = self.authorized_action(ledger)
+        other, _, _ = record_proposal(
+            ledger,
+            minute=10,
+            proposal_id="proposal:other",
+            proposal_key="proposal-key:other",
+            claim_id="claim:other",
+            claim_key="claim-key:other",
+        )
+        other_assessment = record_type_assessment(
+            ledger,
+            other,
+            artifacts["monitor"],
+            minute=10,
+            assessment_id="assessment:other",
+        )
+        decide_epistemically(
+            ledger,
+            other,
+            other_assessment,
+            artifacts,
+            minute=10,
+            decision_id="decision:epistemic:other",
+            event_id="event:epistemic:other",
+            transition_id="transition:proposal:other",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="dispatch authorization is stale"):
+            self.dispatch(ledger, action, authorization)
+        assert ledger.path.read_bytes() == before
+
+    def test_second_dispatch_is_refused_without_claiming_external_exactly_once(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        self.dispatch(ledger, action, authorization)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="already has a recorded dispatch"):
+            self.dispatch(ledger, action, authorization, suffix="2")
+        assert ledger.path.read_bytes() == before
+
+    def test_execution_must_bind_dispatch_and_executor(self, ledger):
+        _, _, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="execution actor mismatch"):
+            self.execute(
+                ledger,
+                dispatch,
+                mutate=lambda record: record.update(executor_id="actor:other"),
+            )
+        assert ledger.path.read_bytes() == before
+
+    @pytest.mark.parametrize(
+        "mutate,message",
+        [
+            (
+                lambda record: record.update(observer_id="actor:executor"),
+                "observer must record its own observation",
+            ),
+            (
+                lambda record: record.update(
+                    observed_source_artifact_hash="sha256:" + "0" * 64
+                ),
+                "Artifact hash mismatch",
+            ),
+        ],
+    )
+    def test_outcome_requires_independent_observer_and_exact_state_source(
+        self,
+        ledger,
+        mutate,
+        message,
+    ):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        before_count = ledger.replay().event_count
+        with pytest.raises(ProtocolError, match=message):
+            self.observe(ledger, execution, contract, mutate=mutate)
+        projection = ledger.replay()
+        assert projection.event_count == before_count + 1
+        assert "outcome:1" not in projection.objects
+
+    def test_executor_cannot_certify_its_own_outcome(self, ledger):
+        _, contract, _, action, authorization = self.authorized_action(ledger)
+        dispatch = self.dispatch(ledger, action, authorization)
+        execution = self.execute(ledger, dispatch)
+        before_count = ledger.replay().event_count
+        with pytest.raises(ProtocolError, match="observer must differ from executor"):
+            self.observe(
+                ledger,
+                execution,
+                contract,
+                observer_id="actor:executor",
+            )
+        assert ledger.replay().event_count == before_count + 1
+
+    def test_outcome_contract_semantic_tampering_is_atomic(self, ledger):
+        anchor(ledger)
+        fields = {
+            "outcome_contract_schema_version": "1",
+            "observation_type": "EXPECTED_EFFECT_PRESENT",
+            "observer_implementation_hash": "sha256:" + "b" * 64,
+        }
+        artifact_hash = outcome_contract_digest(
+            schema_version="1",
+            contract_id="artifact:outcome-contract:tampered",
+            contract_version="1",
+            observation_type=fields["observation_type"],
+            observer_implementation_hash=fields["observer_implementation_hash"],
+        )
+        fields["observation_type"] = "DIFFERENT_CHECK"
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="outcome contract semantic hash mismatch"):
+            add_artifact(
+                ledger,
+                "artifact:outcome-contract:tampered",
+                "OUTCOME_CONTRACT",
+                1,
+                record_type="OutcomeContractArtifact",
+                artifact_hash=artifact_hash,
+                **fields,
+            )
+        assert ledger.path.read_bytes() == before
+
+
+class TestArtifactContracts:
     @pytest.mark.parametrize(
         "case,message",
         [
@@ -3503,7 +4378,12 @@ class TestEvidenceMembersInProposals:
     def test_proposal_carries_evidence_and_assertions_with_content(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
-        proposal, claim, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, claim, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         projection = ledger.replay()
         assert len(proposal["evidence_ids"]) == 2
         assert len(proposal["evidence_assertion_ids"]) == 2
@@ -3520,11 +4400,13 @@ class TestEvidenceMembersInProposals:
     def test_assertion_citing_unknown_evidence_is_refused(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match="Unknown referenced object"):
             record_proposal(
                 ledger,
                 evidence_count=1,
+                source_artifact=source,
                 assertion_evidence_id="evidence:absent",
             )
         assert ledger.path.read_bytes() == before
@@ -3532,11 +4414,13 @@ class TestEvidenceMembersInProposals:
     def test_assertion_whose_claim_reference_is_evidence_is_refused(self, ledger):
         anchor(ledger)
         setup_artifacts(ledger)
+        source = add_source_artifact(ledger)
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match="expected ClaimVersion"):
             record_proposal(
                 ledger,
                 evidence_count=1,
+                source_artifact=source,
                 assertion_claim_id="proposal:1:evidence:1",
             )
         assert ledger.path.read_bytes() == before
@@ -3553,7 +4437,12 @@ class TestCoreAssessmentKindsAreRecorded:
             ledger,
             extra_kinds=("CONFLICT", "UNCERTAINTY", "TEMPORAL"),
         )
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         conflicts = sorted(proposal["evidence_assertion_ids"])
         conflict = record_kind_assessment(
             ledger,
@@ -3596,7 +4485,12 @@ class TestCoreAssessmentKindsAreRecorded:
     def test_satisfied_conflict_assessment_names_no_conflicts(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         conflict = record_kind_assessment(
             ledger,
             proposal,
@@ -3622,7 +4516,12 @@ class TestCoreAssessmentKindsAreRecorded:
     def test_conflict_assessment_binds_its_assertions(self, ledger, case, message):
         anchor(ledger)
         artifacts = setup_artifacts(ledger, extra_kinds=("CONFLICT",))
-        first, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        first, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         second, _, _ = record_proposal(
             ledger,
             minute=6,
@@ -3631,6 +4530,7 @@ class TestCoreAssessmentKindsAreRecorded:
             claim_id="claim:2",
             claim_key="claim-key:2",
             evidence_count=2,
+            source_artifact=source,
         )
         own = sorted(second["evidence_assertion_ids"])
         outcome = "VIOLATED"
@@ -3669,7 +4569,12 @@ class TestDecisionEvidenceLiesInsideTheProposal:
     def test_accept_cites_its_own_evidence_assertions(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
-        proposal, _, _ = record_proposal(ledger, evidence_count=2)
+        source = add_source_artifact(ledger)
+        proposal, _, _ = record_proposal(
+            ledger,
+            evidence_count=2,
+            source_artifact=source,
+        )
         assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
         decision = decide_epistemically(
             ledger,
@@ -3685,7 +4590,12 @@ class TestDecisionEvidenceLiesInsideTheProposal:
     def test_decision_citing_another_proposals_evidence_is_refused(self, ledger):
         anchor(ledger)
         artifacts = setup_artifacts(ledger)
-        first, _, _ = record_proposal(ledger, evidence_count=1)
+        source = add_source_artifact(ledger)
+        first, _, _ = record_proposal(
+            ledger,
+            evidence_count=1,
+            source_artifact=source,
+        )
         second, _, _ = record_proposal(
             ledger,
             minute=6,
@@ -3694,6 +4604,7 @@ class TestDecisionEvidenceLiesInsideTheProposal:
             claim_id="claim:2",
             claim_key="claim-key:2",
             evidence_count=1,
+            source_artifact=source,
         )
         assessment = record_type_assessment(
             ledger,

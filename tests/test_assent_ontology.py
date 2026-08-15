@@ -66,6 +66,47 @@ def test_stage_six_artifacts_are_concrete_protocol_types():
     assert policy_kind.equals_string == "EPISTEMIC_POLICY"
 
 
+def test_source_artifact_replaces_free_form_evidence_source_version():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("SourceArtifact", "ProtocolArtifact")
+    assert (
+        registry.get_slot_constraint("SourceArtifact", "artifact_kind").equals_string
+        == "SOURCE"
+    )
+    evidence = registry.effective_slots("Evidence")
+    assert evidence["source_artifact_id"].required
+    assert evidence["source_artifact_hash"].required
+    assert "source_version_id" not in evidence
+
+
+def test_dispatch_execution_and_external_outcome_are_distinct_records():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.is_subtype_of("OutcomeContractArtifact", "ProtocolArtifact")
+    assert (
+        registry.get_slot_constraint(
+            "OutcomeContractArtifact",
+            "artifact_kind",
+        ).equals_string
+        == "OUTCOME_CONTRACT"
+    )
+    for record_type in ("ActionDispatch", "ActionExecution", "OutcomeObservation"):
+        assert registry.is_subtype_of(record_type, "ProtocolRecord")
+    assert registry.get_enum_values("ExecutionStatus") == {
+        "SUCCEEDED",
+        "FAILED",
+        "ABORTED",
+    }
+    assert registry.get_enum_values("OutcomeResult") == {
+        "CONFIRMED",
+        "CONTRADICTED",
+        "INDETERMINATE",
+    }
+    observation = registry.effective_slots("OutcomeObservation")
+    assert observation["observed_source_artifact_id"].required
+    assert observation["observed_source_artifact_hash"].required
+    assert "evidence_ids" not in observation
+
+
 def test_stage_seven_c_authorization_contract_is_typed_and_action_bound():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     assert registry.is_subtype_of("AuthorizationPolicyArtifact", "ProtocolArtifact")

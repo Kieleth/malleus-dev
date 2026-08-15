@@ -11,7 +11,7 @@ import tempfile
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 
 SCHEMA_VERSION = "1"
@@ -115,23 +115,66 @@ class JsonlLedger:
         validate: Callable[[list[dict[str, Any]]], None],
     ) -> dict[str, Any]:
         """Validate history, then commit one line by failure-atomic replacement."""
+        return self.append_many(
+            (
+                {
+                    "event_id": event_id,
+                    "event_type": event_type,
+                    "transaction_time": transaction_time,
+                    "actor_id": actor_id,
+                    "payload": payload,
+                },
+            ),
+            validate=validate,
+        )[0]
+
+    def append_many(
+        self,
+        entries: Iterable[Mapping[str, Any]],
+        *,
+        validate: Callable[[list[dict[str, Any]]], None],
+    ) -> tuple[dict[str, Any], ...]:
+        """Validate and commit one or more events by one atomic replacement."""
+        pending = list(entries)
+        if not pending:
+            raise LedgerError("Ledger event batch must not be empty")
         events = self.read()
-        event = {
-            "schema_version": SCHEMA_VERSION,
-            "sequence": len(events) + 1,
-            "event_id": event_id,
-            "event_type": event_type,
-            "transaction_time": transaction_time,
-            "actor_id": actor_id,
-            "ontology_hash": self.ontology_hash,
-            "payload": deepcopy(dict(payload)) if isinstance(payload, Mapping) else payload,
-            "previous_event_hash": events[-1]["event_hash"] if events else GENESIS,
+        appended = []
+        previous_hash = events[-1]["event_hash"] if events else GENESIS
+        expected = {
+            "event_id",
+            "event_type",
+            "transaction_time",
+            "actor_id",
+            "payload",
         }
-        event["event_hash"] = event_hash(event)
-        candidate = [*events, event]
+        for offset, entry in enumerate(pending, start=1):
+            if not isinstance(entry, Mapping):
+                raise LedgerError(f"Ledger batch entry {offset} must be a mapping")
+            _exact_fields(entry, expected, f"Ledger batch entry {offset}")
+            payload = entry["payload"]
+            event = {
+                "schema_version": SCHEMA_VERSION,
+                "sequence": len(events) + offset,
+                "event_id": entry["event_id"],
+                "event_type": entry["event_type"],
+                "transaction_time": entry["transaction_time"],
+                "actor_id": entry["actor_id"],
+                "ontology_hash": self.ontology_hash,
+                "payload": (
+                    deepcopy(dict(payload)) if isinstance(payload, Mapping) else payload
+                ),
+                "previous_event_hash": previous_hash,
+            }
+            event["event_hash"] = event_hash(event)
+            appended.append(event)
+            previous_hash = event["event_hash"]
+        candidate = [*events, *appended]
         self._validate_envelopes(candidate)
         validate(deepcopy(candidate))
-        encoded = (canonical_json(event) + "\n").encode("utf-8")
+        encoded = "".join(
+            canonical_json(event) + "\n" for event in appended
+        ).encode("utf-8")
         self.path.parent.mkdir(parents=True, exist_ok=True)
         current = self.path.read_bytes() if self.path.exists() else b""
         descriptor, temporary_name = tempfile.mkstemp(
@@ -161,7 +204,7 @@ class JsonlLedger:
                     os.unlink(temporary_name)
                 except FileNotFoundError:
                     pass
-        return deepcopy(event)
+        return tuple(deepcopy(appended))
 
     def read(
         self,

@@ -16,7 +16,7 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.7.0`, `stage-7c-policy-selected-authorization-control`. See
+Current package boundary: `0.8.0`, `stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -263,7 +263,7 @@ timestamps are execution-local and are not ledger commitments.
 This is an accepted knowledge commitment, not a truth guarantee or action
 authorization. The caller must supply the exact graph committed by the graph
 base artifact. Remote graph-base resolution, typed retraction, and multi-writer
-serialization remain outside version 0.7.0.
+serialization remain outside version 0.8.0.
 
 ## Architecture
 
@@ -276,6 +276,8 @@ Adoption guides:
 - [docs/ONTOLOGY_PROTOCOL.md](docs/ONTOLOGY_PROTOCOL.md): how to add malleus to an existing project
 - [docs/KNOWLEDGE_GRAPH_PROTOCOL.md](docs/KNOWLEDGE_GRAPH_PROTOCOL.md): how the ontology shapes the KG
 - [docs/ASSENT_PROTOCOL.md](docs/ASSENT_PROTOCOL.md): how proposals, assessments, decisions, authorization, and replay remain separate
+- [docs/ASSENT_PLAN.md](docs/ASSENT_PLAN.md): the thin adapter runner for policy-declared epistemic monitors
+- [docs/EFFECT_PROTOCOL.md](docs/EFFECT_PROTOCOL.md): the generic authorization-to-external-observation path and its composable delivery profiles
 - [docs/DELIMITATIONS.md](docs/DELIMITATIONS.md): what malleus reuses, rejects, and can honestly claim against OWL, SHACL, TypeDB, XTDB, nanopublications, and the rest of the field
 - [docs/RECIPES.md](docs/RECIPES.md): six recipes for capturing and using domain knowledge in a KG, each grounded in working code from a surveyed fleet of adopting projects
 

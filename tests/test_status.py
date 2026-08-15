@@ -13,6 +13,12 @@ from malleus.status import IMPLEMENTATION_STATUS
 ROOT = Path(__file__).parent.parent
 
 
+def test_suite_imports_malleus_from_this_checkout():
+    package = Path(malleus.__file__).resolve()
+    source = (ROOT / "src").resolve()
+    assert package.is_relative_to(source), f"imported Malleus outside this checkout: {package}"
+
+
 def test_package_runtime_and_project_versions_match():
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     project = pyproject.split("[project]", 1)[1]
@@ -21,11 +27,11 @@ def test_package_runtime_and_project_versions_match():
     assert version.group(1) == malleus.__version__ == IMPLEMENTATION_STATUS.package_version
 
 
-def test_stage_seven_c_boundary_is_explicit():
-    assert IMPLEMENTATION_STATUS.current_stage == "7c"
+def test_stage_eight_c_boundary_is_explicit():
+    assert IMPLEMENTATION_STATUS.current_stage == "8c"
     assert (
         IMPLEMENTATION_STATUS.boundary
-        == "stage-7c-policy-selected-authorization-control"
+        == "stage-8c-executable-provenance-and-effect-closure"
     )
     assert IMPLEMENTATION_STATUS.completed_stages == (
         "2",
@@ -36,6 +42,9 @@ def test_stage_seven_c_boundary_is_explicit():
         "6",
         "7b",
         "7c",
+        "8a",
+        "8b",
+        "8c",
     )
     assert "isolated-proposed-subgraph-staging" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "failure-atomic-ledger-replacement" in IMPLEMENTATION_STATUS.implemented_capabilities
@@ -54,6 +63,19 @@ def test_stage_seven_c_boundary_is_explicit():
     assert "bitemporal-as-of-replay" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "typed-authorization-policies" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "action-bound-authorization-policy" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "evidence-assertion-recording" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "content-addressed-source-artifacts" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "epistemic-monitor-adapter-orchestration" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "authorized-action-dispatch-recording" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "independent-outcome-observation-recording" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
     assert (
         "deterministic-authorization-control-selection"
         in IMPLEMENTATION_STATUS.implemented_capabilities
@@ -68,6 +90,17 @@ def test_stage_seven_c_boundary_is_explicit():
     assert "authorization-policy-authority-and-scope" in (
         IMPLEMENTATION_STATUS.pending_capabilities
     )
+    assert "exactly-once-effect-delivery-profile" in (
+        IMPLEMENTATION_STATUS.pending_capabilities
+    )
+
+
+def test_capability_status_sets_are_unique_and_disjoint():
+    implemented = IMPLEMENTATION_STATUS.implemented_capabilities
+    pending = IMPLEMENTATION_STATUS.pending_capabilities
+    assert len(implemented) == len(set(implemented))
+    assert len(pending) == len(set(pending))
+    assert set(implemented).isdisjoint(pending)
 
 
 def test_ontology_versions_match_status_boundary():

@@ -35,6 +35,8 @@ from malleus.accepted import (
     validate_temporal_writes,
 )
 from malleus.staging import StagingError, stage_subgraph
+from malleus.source import SourceError, source_artifact_digest
+from malleus.execution import ExecutionError, outcome_contract_digest
 from malleus.control import (
     ControlError,
     EPISTEMIC_MONITOR_KINDS,
@@ -61,6 +63,9 @@ class EventType(str, Enum):
     MONITOR_FAILED = "MONITOR_FAILED"
     EPISTEMIC_DECIDED = "EPISTEMIC_DECIDED"
     AUTHORIZATION_DECIDED = "AUTHORIZATION_DECIDED"
+    ACTION_DISPATCHED = "ACTION_DISPATCHED"
+    ACTION_EXECUTED = "ACTION_EXECUTED"
+    OUTCOME_OBSERVED = "OUTCOME_OBSERVED"
 
 
 class ProposalState(str, Enum):
@@ -119,6 +124,9 @@ PAYLOAD_FIELDS = {
         "application",
     },
     EventType.AUTHORIZATION_DECIDED: {"decision", "transition"},
+    EventType.ACTION_DISPATCHED: {"dispatch"},
+    EventType.ACTION_EXECUTED: {"execution"},
+    EventType.OUTCOME_OBSERVED: {"observation"},
 }
 PRESENT_FIELDS = {
     "MonitorSpecificationArtifact": {
@@ -201,6 +209,14 @@ class ProtocolProjection:
     monitor_failure_ids: set[str] = field(default_factory=set)
     epistemic_decision_ids: set[str] = field(default_factory=set)
     authorization_decision_ids: set[str] = field(default_factory=set)
+    dispatch_ids: set[str] = field(default_factory=set)
+    execution_ids: set[str] = field(default_factory=set)
+    outcome_observation_ids: set[str] = field(default_factory=set)
+    dispatch_by_action: dict[str, str] = field(default_factory=dict)
+    execution_by_dispatch: dict[str, str] = field(default_factory=dict)
+    observation_by_execution_contract: dict[tuple[str, str], str] = field(
+        default_factory=dict
+    )
     proposal_states: dict[str, ProposalState] = field(default_factory=dict)
     authorization_states: dict[str, AuthorizationState] = field(default_factory=dict)
     action_to_proposal: dict[str, str] = field(default_factory=dict)
@@ -296,14 +312,33 @@ class ProtocolLedger:
         payload: Mapping[str, Any],
     ) -> dict[str, Any]:
         name = event_type.value if isinstance(event_type, EventType) else event_type
-        return self._storage.append(
-            event_id=event_id,
-            event_type=name,
-            transaction_time=transaction_time,
-            actor_id=actor_id,
-            payload=payload,
-            validate=self._replay_events,
-        )
+        return self.append_events(
+            (
+                {
+                    "event_id": event_id,
+                    "event_type": name,
+                    "transaction_time": transaction_time,
+                    "actor_id": actor_id,
+                    "payload": payload,
+                },
+            )
+        )[0]
+
+    def append_events(
+        self,
+        events: Iterable[Mapping[str, Any]],
+    ) -> tuple[dict[str, Any], ...]:
+        """Append a related event group through one failure-atomic replacement."""
+        entries = []
+        for event in events:
+            if not isinstance(event, Mapping):
+                raise ProtocolError("protocol event batch entries must be mappings")
+            entry = dict(event)
+            event_type = entry.get("event_type")
+            if isinstance(event_type, EventType):
+                entry["event_type"] = event_type.value
+            entries.append(entry)
+        return self._storage.append_many(entries, validate=self._replay_events)
 
     def replay(
         self,
@@ -352,6 +387,9 @@ class ProtocolLedger:
             EventType.MONITOR_FAILED: self._monitor_failure,
             EventType.EPISTEMIC_DECIDED: self._epistemic,
             EventType.AUTHORIZATION_DECIDED: self._authorization,
+            EventType.ACTION_DISPATCHED: self._dispatch,
+            EventType.ACTION_EXECUTED: self._execution,
+            EventType.OUTCOME_OBSERVED: self._outcome,
         }
         handlers[event_type](projection, event)
         projection.events.append(deepcopy(event))
@@ -401,6 +439,8 @@ class ProtocolLedger:
                     f"event {event['event_id']}: AuthorityGrant permits no action types"
                 )
         typed_artifacts = {
+            "SOURCE": "SourceArtifact",
+            "OUTCOME_CONTRACT": "OutcomeContractArtifact",
             "GRAPH_BASE": "GraphBaseArtifact",
             "CANDIDATE_SUBGRAPH": "CandidateSubgraphArtifact",
             "MONITOR_SPECIFICATION": "MonitorSpecificationArtifact",
@@ -414,7 +454,11 @@ class ProtocolLedger:
                 f"event {event['event_id']}: {artifact['artifact_kind']} requires {expected_type}"
             )
         candidate_manifest = None
-        if artifact_type == "GraphBaseArtifact":
+        if artifact_type == "SourceArtifact":
+            self._validate_source_artifact(artifact, event)
+        elif artifact_type == "OutcomeContractArtifact":
+            self._validate_outcome_contract_artifact(artifact, event)
+        elif artifact_type == "GraphBaseArtifact":
             self._validate_graph_base_artifact(projection, artifact, event)
         elif artifact_type == "CandidateSubgraphArtifact":
             candidate_manifest = self._validate_candidate_artifact(
@@ -447,6 +491,46 @@ class ProtocolLedger:
             )
         elif artifact_type == "CandidateSubgraphArtifact":
             projection.candidate_manifests[artifact["id"]] = candidate_manifest
+
+    def _validate_source_artifact(
+        self,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        try:
+            expected_hash = source_artifact_digest(
+                schema_version=artifact["source_schema_version"],
+                artifact_id=artifact["id"],
+                artifact_version=artifact["artifact_version"],
+                source_content_digest=artifact["source_content_digest"],
+                source_byte_length=artifact["source_byte_length"],
+                source_media_type=artifact["source_media_type"],
+                source_locator=artifact["source_locator"],
+            )
+        except SourceError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(f"event {event['event_id']}: source artifact semantic hash mismatch")
+
+    def _validate_outcome_contract_artifact(
+        self,
+        artifact: dict[str, Any],
+        event: dict[str, Any],
+    ) -> None:
+        try:
+            expected_hash = outcome_contract_digest(
+                schema_version=artifact["outcome_contract_schema_version"],
+                contract_id=artifact["id"],
+                contract_version=artifact["artifact_version"],
+                observation_type=artifact["observation_type"],
+                observer_implementation_hash=artifact["observer_implementation_hash"],
+            )
+        except ExecutionError as error:
+            raise ProtocolError(f"event {event['event_id']}: {error}") from error
+        if artifact["artifact_hash"] != expected_hash:
+            raise ProtocolError(
+                f"event {event['event_id']}: outcome contract semantic hash mismatch"
+            )
 
     def _validate_graph_base_artifact(
         self,
@@ -808,7 +892,16 @@ class ProtocolLedger:
             record_type = item["record_type"]
             record = item["record"]
             self._validate_sources(record, combined, event)
-            if record_type == "EvidenceAssertion":
+            if record_type == "Evidence":
+                source = self._artifact_ref(
+                    projection,
+                    record["source_artifact_id"],
+                    record["source_artifact_hash"],
+                    "SOURCE",
+                    record_type="SourceArtifact",
+                )
+                self._require_sources(record, {source["id"]}, event)
+            elif record_type == "EvidenceAssertion":
                 self._object(combined, record["claim_version_id"], "ClaimVersion")
                 self._object(combined, record["evidence_id"], "Evidence")
             elif record_type == "ClaimVersion":
@@ -1737,6 +1830,201 @@ class ProtocolLedger:
         projection.authorization_decision_ids.add(decision["id"])
         projection.authorization_states[action_id] = AUTHORIZATION_TARGETS[verdict]
 
+    def _dispatch(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
+        self._require_anchor(projection, event)
+        dispatch = self._record("ActionDispatch", event["payload"]["dispatch"], event)
+        action_id = dispatch["action_proposal_id"]
+        action = self._object(projection.objects, action_id, "ActionProposal")
+        if projection.authorization_states.get(action_id) != AuthorizationState.AUTHORIZED:
+            raise ProtocolError(
+                f"event {event['event_id']}: action is not authorized for dispatch"
+            )
+        if action["content_hash"] != dispatch["action_content_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: dispatch action hash mismatch")
+        decision = self._object(
+            projection.objects,
+            dispatch["authorization_decision_id"],
+            "AuthorizationDecision",
+        )
+        if decision["id"] not in projection.authorization_decision_ids:
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch decision was not applied"
+            )
+        if decision["content_hash"] != dispatch["authorization_decision_hash"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch authorization hash mismatch"
+            )
+        if (
+            decision["authorization_verdict"] != "AUTHORIZE"
+            or decision["action_proposal_id"] != action_id
+            or decision["action_content_hash"] != action["content_hash"]
+        ):
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch is outside authorization"
+            )
+        if dispatch["executor_id"] != decision["authorized_actor_id"]:
+            raise ProtocolError(f"event {event['event_id']}: dispatch executor mismatch")
+        if dispatch["base_acceptance_head"] != decision["base_acceptance_head"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch acceptance head mismatch"
+            )
+        if dispatch["base_acceptance_head"] != projection.acceptance_head:
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch authorization is stale"
+            )
+        if dispatch["responsible_role"] != "dispatcher":
+            raise ProtocolError(f"event {event['event_id']}: dispatch requires dispatcher role")
+        _nonblank(
+            dispatch,
+            ("executor_id", "dispatch_adapter_id"),
+            event["event_id"],
+        )
+        dispatched_at = aware_datetime(dispatch["dispatched_at"], "dispatched_at")
+        if dispatched_at != aware_datetime(dispatch["generated_at"], "generated_at"):
+            raise ProtocolError(f"event {event['event_id']}: dispatched_at must equal event time")
+        valid_from = aware_datetime(
+            decision["authorization_valid_from"],
+            "authorization_valid_from",
+        )
+        valid_to_value = decision.get("authorization_valid_to")
+        if dispatched_at < valid_from or (
+            valid_to_value is not None
+            and dispatched_at >= aware_datetime(valid_to_value, "authorization_valid_to")
+        ):
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch is outside authorization validity"
+            )
+        if action_id in projection.dispatch_by_action:
+            raise ProtocolError(
+                f"event {event['event_id']}: action already has a recorded dispatch"
+            )
+        self._require_sources(dispatch, {action_id, decision["id"]}, event)
+        self._validate_sources(dispatch, projection.objects, event)
+        self._add_objects(
+            projection,
+            {dispatch["id"]: _wrapped("ActionDispatch", dispatch)},
+            event,
+        )
+        projection.dispatch_ids.add(dispatch["id"])
+        projection.dispatch_by_action[action_id] = dispatch["id"]
+
+    def _execution(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
+        self._require_anchor(projection, event)
+        execution = self._record("ActionExecution", event["payload"]["execution"], event)
+        dispatch = self._object(
+            projection.objects,
+            execution["dispatch_id"],
+            "ActionDispatch",
+        )
+        if dispatch["id"] not in projection.dispatch_ids:
+            raise ProtocolError(
+                f"event {event['event_id']}: execution dispatch was not applied"
+            )
+        if dispatch["content_hash"] != execution["dispatch_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: execution dispatch hash mismatch")
+        if execution["executor_id"] != dispatch["executor_id"]:
+            raise ProtocolError(f"event {event['event_id']}: execution actor mismatch")
+        if execution["responsible_actor_id"] != execution["executor_id"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: executor must record its own execution"
+            )
+        if execution["responsible_role"] != "executor":
+            raise ProtocolError(f"event {event['event_id']}: execution requires executor role")
+        started = aware_datetime(execution["execution_started_at"], "execution_started_at")
+        ended = aware_datetime(execution["execution_ended_at"], "execution_ended_at")
+        if started < aware_datetime(dispatch["dispatched_at"], "dispatched_at"):
+            raise ProtocolError(
+                f"event {event['event_id']}: execution began before dispatch"
+            )
+        if ended != aware_datetime(execution["generated_at"], "generated_at"):
+            raise ProtocolError(
+                f"event {event['event_id']}: execution_ended_at must equal event time"
+            )
+        if dispatch["id"] in projection.execution_by_dispatch:
+            raise ProtocolError(
+                f"event {event['event_id']}: dispatch already has an execution receipt"
+            )
+        self._require_sources(execution, {dispatch["id"]}, event)
+        self._validate_sources(execution, projection.objects, event)
+        self._add_objects(
+            projection,
+            {execution["id"]: _wrapped("ActionExecution", execution)},
+            event,
+        )
+        projection.execution_ids.add(execution["id"])
+        projection.execution_by_dispatch[dispatch["id"]] = execution["id"]
+
+    def _outcome(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
+        self._require_anchor(projection, event)
+        observation = self._record(
+            "OutcomeObservation",
+            event["payload"]["observation"],
+            event,
+        )
+        execution = self._object(
+            projection.objects,
+            observation["execution_id"],
+            "ActionExecution",
+        )
+        if execution["id"] not in projection.execution_ids:
+            raise ProtocolError(
+                f"event {event['event_id']}: observed execution was not applied"
+            )
+        if execution["content_hash"] != observation["execution_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: observation execution hash mismatch")
+        contract = self._artifact_ref(
+            projection,
+            observation["outcome_contract_id"],
+            observation["outcome_contract_hash"],
+            "OUTCOME_CONTRACT",
+            record_type="OutcomeContractArtifact",
+        )
+        if observation["observation_type"] != contract["observation_type"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: observation type differs from contract"
+            )
+        source = self._artifact_ref(
+            projection,
+            observation["observed_source_artifact_id"],
+            observation["observed_source_artifact_hash"],
+            "SOURCE",
+            record_type="SourceArtifact",
+        )
+        if observation["observer_id"] != observation["responsible_actor_id"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: observer must record its own observation"
+            )
+        if observation["observer_id"] == execution["executor_id"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: outcome observer must differ from executor"
+            )
+        if observation["responsible_role"] != "outcome-observer":
+            raise ProtocolError(
+                f"event {event['event_id']}: observation requires outcome-observer role"
+            )
+        observed_at = aware_datetime(observation["observed_at"], "observed_at")
+        if observed_at != aware_datetime(observation["generated_at"], "generated_at"):
+            raise ProtocolError(f"event {event['event_id']}: observed_at must equal event time")
+        if observed_at < aware_datetime(execution["execution_ended_at"], "execution_ended_at"):
+            raise ProtocolError(
+                f"event {event['event_id']}: outcome was observed before execution ended"
+            )
+        key = (execution["id"], contract["id"])
+        if key in projection.observation_by_execution_contract:
+            raise ProtocolError(
+                f"event {event['event_id']}: outcome contract already observed execution"
+            )
+        required_sources = {execution["id"], contract["id"], source["id"]}
+        self._require_sources(observation, required_sources, event)
+        self._validate_sources(observation, projection.objects, event)
+        self._add_objects(
+            projection,
+            {observation["id"]: _wrapped("OutcomeObservation", observation)},
+            event,
+        )
+        projection.outcome_observation_ids.add(observation["id"])
+        projection.observation_by_execution_contract[key] = observation["id"]
+
     def _validate_assessment_context(
         self,
         projection: ProtocolProjection,
@@ -2475,6 +2763,8 @@ class ProtocolLedger:
         required = {
             "ProtocolRecord",
             "ProtocolArtifact",
+            "SourceArtifact",
+            "OutcomeContractArtifact",
             "GraphBaseArtifact",
             "CandidateSubgraphArtifact",
             "MonitorSpecificationArtifact",
@@ -2510,6 +2800,7 @@ class ProtocolLedger:
             "ReviewReport",
             "ClaimRevision",
             "TransitionRecord",
+            "ActionDispatch",
             "ActionExecution",
             "OutcomeObservation",
         }
@@ -2523,6 +2814,8 @@ class ProtocolLedger:
         inheritance = {
             "ProtocolRecord": "Entity",
             "ProtocolArtifact": "ProtocolRecord",
+            "SourceArtifact": "ProtocolArtifact",
+            "OutcomeContractArtifact": "ProtocolArtifact",
             "GraphBaseArtifact": "ProtocolArtifact",
             "CandidateSubgraphArtifact": "ProtocolArtifact",
             "MonitorSpecificationArtifact": "ProtocolArtifact",
@@ -2558,6 +2851,7 @@ class ProtocolLedger:
             "ReviewReport": "ProtocolRecord",
             "ClaimRevision": "ProtocolRecord",
             "TransitionRecord": "ProtocolRecord",
+            "ActionDispatch": "ProtocolRecord",
             "ActionExecution": "ProtocolRecord",
             "OutcomeObservation": "ProtocolRecord",
         }
@@ -2585,6 +2879,8 @@ class ProtocolLedger:
             "ViolationEpistemicVerdict": {"REJECT", "DEFER", "CONTEST"},
             "UnknownEpistemicVerdict": {"DEFER", "CONTEST"},
             "AuthorizationVerdict": {"AUTHORIZE", "BLOCK", "CLARIFY"},
+            "ExecutionStatus": {"SUCCEEDED", "FAILED", "ABORTED"},
+            "OutcomeResult": {"CONFIRMED", "CONTRADICTED", "INDETERMINATE"},
             "RequestState": {"OPEN", "FULFILLED", "CANCELLED"},
         }
         for name, expected in enum_values.items():

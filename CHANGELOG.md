@@ -5,6 +5,50 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-08-15
+
+### Added
+
+- Added the Stage 8a source-provenance boundary. `SourceArtifact` records bind
+  an artifact ID, version, media type, locator, byte length, and SHA-256 digest
+  into one replay-validated semantic hash. The standard builder derives this
+  record from exact source bytes.
+- Added replay and atomic-rejection tests for changed source bytes, altered
+  source metadata, generic records pretending to be sources, and evidence
+  citing the wrong source record hash.
+- Added the optional Stage 8b `AssentPlan`. It verifies one proposal's exact
+  epistemic-policy coverage, invokes each declared adapter once, commits valid
+  completed outputs, and converts adapter exceptions or refused outputs into
+  the existing `MonitorFailure` plus `UNKNOWN` record pair.
+- Added failure-atomic multi-event append for one related event group. A
+  logical check and its logical assessment now enter together or not at all
+  when emitted through `AssentPlan`.
+- Added the Stage 8c authorized-effect record path: `ActionDispatch`, terminal
+  `ActionExecution`, and independent `OutcomeObservation` events.
+- Added content-addressed `OutcomeContractArtifact` records and exact external
+  state binding through `SourceArtifact`.
+
+### Changed
+
+- **Breaking:** `Evidence.source_version_id` has been removed. Every `Evidence`
+  record must now bind an applied `SourceArtifact` by exact ID and ledger record
+  hash. There is no legacy fallback or implicit source record.
+
+### Boundary
+
+- Stage 8a proves which exact bytes were registered and which exact source
+  record an evidence item cited. It does not establish authenticity, truth, or
+  byte-exact quotation. Resolving a quoted span against the registered bytes
+  remains `citation-byte-verification` and is not implemented.
+- Stage 8b runs epistemic monitor adapters only. It does not select policy,
+  decide epistemic control, run authority monitors, retry work, schedule work,
+  or make a whole plan atomic.
+- Stage 8c records generic dispatch, execution receipts, and independently
+  observed outcomes. Domain adapters still perform effects. The current profile
+  records one dispatch per action and one execution per dispatch. A future
+  delivery profile can add idempotency, outbox, deduplication, and external
+  effect-ledger records without moving domain effects into core Malleus.
+
 ## [0.7.0] - 2026-08-14
 
 ### Added

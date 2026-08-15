@@ -33,6 +33,22 @@ from malleus.accepted import (
     graph_base_metadata,
     temporal_write,
 )
+from malleus.source import (
+    SourceError,
+    source_artifact_digest,
+    source_artifact_fields,
+    source_bytes_digest,
+)
+from malleus.orchestration import (
+    AssentPlan,
+    AssentPlanError,
+    MonitorContext,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorRunResult,
+    MonitorStep,
+)
+from malleus.execution import ExecutionError, outcome_contract_digest
 
 __all__ = [
     "AuthorizationState",
@@ -62,4 +78,17 @@ __all__ = [
     "graph_base_artifact_digest",
     "graph_base_metadata",
     "temporal_write",
+    "SourceError",
+    "source_artifact_digest",
+    "source_artifact_fields",
+    "source_bytes_digest",
+    "AssentPlan",
+    "AssentPlanError",
+    "MonitorContext",
+    "MonitorEvent",
+    "MonitorFailurePlan",
+    "MonitorRunResult",
+    "MonitorStep",
+    "ExecutionError",
+    "outcome_contract_digest",
 ]

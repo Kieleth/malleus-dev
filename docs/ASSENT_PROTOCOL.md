@@ -22,10 +22,9 @@ actor and role, generation time, and referenced source records.
 
 The main categories are proposals and first-order members; assessments and
 monitor failures; epistemic and authorization decisions; requests, reports,
-and revisions; transition, execution, and outcome records (reports,
-executions, and outcome observations are schema only: the types exist with no
-protocol door, see `IMPLEMENTATION_STATUS.md`); and versioned
-monitor, policy, rule, contract, and authority-grant artifacts.
+and revisions; transition, dispatch, execution, and outcome records; and
+versioned monitor, policy, rule, contract, and authority-grant artifacts.
+`ReviewReport` remains schema only, with no protocol event door.
 
 Stage 6 makes two previously opaque artifacts concrete.
 `MonitorSpecificationArtifact` binds one assessment kind, implementation hash,
@@ -52,6 +51,16 @@ exact authorization policy by ID and record hash before it can enter a
 proposal. The policy pins a canonical, nonempty set of exact `AUTHORITY`
 monitor records. The policy depends on those monitor records; the monitors do
 not depend on the composed policy, which avoids a content-hash cycle.
+
+Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact
+ID and version to the SHA-256 digest and length of the exact source bytes, plus
+their media type and locator. `Evidence` must name that applied source record
+and its exact ledger record hash. A changed source therefore requires a new
+source record and invalidates the old evidence binding.
+
+This is source identity, not source truth. Replay validates the recorded
+commitment but does not fetch the locator, authenticate its publisher, or
+verify a quoted span against the bytes.
 
 Precommitment does not establish policy legitimacy. Any applied typed policy
 can currently be selected by a proposal. Policy authority, domain scope,
@@ -136,6 +145,17 @@ implementations in Stage 6. A missing execution is never inferred from absence.
 It must be reported as `MonitorFailure` plus `UnavailableAssessment`; otherwise
 the decision fails for incomplete coverage.
 
+Stage 8b adds the optional `AssentPlan` described in
+`ASSENT_PLAN.md`. It replays one proposal's exact epistemic policy, verifies a
+canonical adapter step for every required monitor, invokes each once, and
+records either its completed assessment or the existing typed failure plus
+`UNKNOWN` pair. A logical adapter supplies its check and assessment as one
+failure-atomic event batch. The whole plan remains non-atomic.
+
+`AssentPlan` does not select the policy or epistemic verdict and does not run
+authority monitors. The existing deterministic evaluator still selects
+control only after the required outputs exist.
+
 Assessments can be recorded while a proposal remains `PROPOSED`. Adding the
 policy-derived decision is a separate event. This gives the empirical design a
 mechanical C3 condition with monitoring recorded and control disabled, and a C4
@@ -191,6 +211,18 @@ authority remains an external trust-root and policy question.
 Authorization remains a record. Stage 7c validates recorded authority outputs;
 it does not execute authority monitors, determine policy legitimacy or grantor
 trust, or execute the action.
+
+Stage 8c opens three later event doors. `ActionDispatch` requires an
+exact applied `AUTHORIZE` decision, its authorized executor, acceptance head,
+and a dispatch time inside the authorization interval. `ActionExecution`
+records the domain adapter's terminal receipt. `OutcomeObservation` records a
+different actor's result under a pinned `OutcomeContractArtifact` and binds the
+exact external-state bytes through `SourceArtifact`.
+
+Malleus records and validates these events. The domain adapter performs the
+effect and the external observer applies the outcome contract. See
+`EFFECT_PROTOCOL.md` for the trust boundary and optional stronger delivery
+profiles.
 
 ## JSONL ledger
 
@@ -265,9 +297,12 @@ separate proposals, monitor failures, assessments, epistemic decisions, and
 action authorization. Exact proposed mutations can be bound to acceptance,
 materialized atomically, and reconstructed by transaction time and valid time.
 
-It does not establish truth, policy legitimacy, domain-specific monitor
-execution orchestration, action execution safety, concurrent-writer safety,
-formal PROV-O interoperability, or an empirical metacognitive effect.
+It does not establish truth, source authenticity, quoted-span correctness,
+policy legitimacy, authority-monitor orchestration, general workflow
+orchestration, domain-effect correctness, concurrent-writer safety, formal
+PROV-O interoperability, or an empirical metacognitive effect. The Stage 8c
+effect path does not select an exactly-once delivery profile; such a profile
+can extend its dispatch, receipt, and observation records.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

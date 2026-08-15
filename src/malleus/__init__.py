@@ -48,6 +48,10 @@ from malleus.protocol import (
     graph_base_artifact_digest,
     graph_base_metadata,
     make_record,
+    SourceError,
+    source_artifact_digest,
+    source_artifact_fields,
+    source_bytes_digest,
     temporal_write,
 )
 from malleus.staging import (
@@ -57,6 +61,16 @@ from malleus.staging import (
     StaleCandidateError,
     stage_subgraph,
 )
+from malleus.orchestration import (
+    AssentPlan,
+    AssentPlanError,
+    MonitorContext,
+    MonitorEvent,
+    MonitorFailurePlan,
+    MonitorRunResult,
+    MonitorStep,
+)
+from malleus.execution import ExecutionError, outcome_contract_digest
 from malleus.status import IMPLEMENTATION_STATUS, ImplementationStatus
 from malleus.control import (
     AuthorizationEvaluation,
@@ -106,6 +120,10 @@ __all__ = [
     "ProposalState",
     "AuthorizationState",
     "make_record",
+    "SourceError",
+    "source_artifact_digest",
+    "source_artifact_fields",
+    "source_bytes_digest",
     "AcceptedGraphError",
     "AcceptedGraphProjector",
     "AcceptedGraphView",
@@ -124,6 +142,15 @@ __all__ = [
     "StagingError",
     "StaleCandidateError",
     "stage_subgraph",
+    "AssentPlan",
+    "AssentPlanError",
+    "MonitorContext",
+    "MonitorEvent",
+    "MonitorFailurePlan",
+    "MonitorRunResult",
+    "MonitorStep",
+    "ExecutionError",
+    "outcome_contract_digest",
     "ControlError",
     "AuthorizationEvaluation",
     "MonitoringError",

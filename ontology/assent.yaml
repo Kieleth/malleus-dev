@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.7.0
+version: 0.8.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -39,6 +39,9 @@ enums:
       state-controller:
       authorizer:
       graph-materializer:
+      dispatcher:
+      executor:
+      outcome-observer:
 
   AssessmentOutcome:
     permissible_values:
@@ -123,13 +126,19 @@ enums:
 
   ExecutionStatus:
     permissible_values:
-      STARTED:
       SUCCEEDED:
       FAILED:
       ABORTED:
 
+  OutcomeResult:
+    permissible_values:
+      CONFIRMED:
+      CONTRADICTED:
+      INDETERMINATE:
+
   ArtifactKind:
     permissible_values:
+      SOURCE:
       GRAPH_BASE:
       CANDIDATE_SUBGRAPH:
       MONITOR_SPECIFICATION:
@@ -142,6 +151,7 @@ enums:
       UNCERTAINTY_CONTRACT:
       TEMPORAL_CONTRACT:
       AUTHORITY_GRANT:
+      OUTCOME_CONTRACT:
 
 classes:
   ProtocolRecord:
@@ -196,6 +206,53 @@ classes:
       artifact_version:
         required: true
       artifact_hash:
+        required: true
+
+  SourceArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Content-addressed identity of exact source bytes used by evidence. This
+      record proves byte identity, not source authenticity or truth.
+    slots:
+      - source_schema_version
+      - source_content_digest
+      - source_byte_length
+      - source_media_type
+      - source_locator
+    slot_usage:
+      artifact_kind:
+        equals_string: SOURCE
+      source_schema_version:
+        required: true
+        equals_string: "1"
+      source_content_digest:
+        required: true
+      source_byte_length:
+        required: true
+      source_media_type:
+        required: true
+      source_locator:
+        required: true
+
+  OutcomeContractArtifact:
+    is_a: ProtocolArtifact
+    description: >-
+      Content-addressed contract used by an external observer to interpret
+      post-execution state. It specifies a check, not whether the result is
+      true.
+    slots:
+      - outcome_contract_schema_version
+      - observation_type
+      - observer_implementation_hash
+    slot_usage:
+      artifact_kind:
+        equals_string: OUTCOME_CONTRACT
+      outcome_contract_schema_version:
+        required: true
+        equals_string: "1"
+      observation_type:
+        required: true
+      observer_implementation_hash:
         required: true
 
   MonitorSpecificationArtifact:
@@ -466,13 +523,16 @@ classes:
     is_a: ProtocolRecord
     slots:
       - evidence_kind
-      - source_version_id
+      - source_artifact_id
+      - source_artifact_hash
       - locator
       - request_id
     slot_usage:
       evidence_kind:
         required: true
-      source_version_id:
+      source_artifact_id:
+        required: true
+      source_artifact_hash:
         required: true
       locator:
         required: true
@@ -1131,17 +1191,17 @@ classes:
       transition_time:
         required: true
 
-  ActionExecution:
+  ActionDispatch:
     is_a: ProtocolRecord
     slots:
       - action_proposal_id
       - action_content_hash
       - authorization_decision_id
+      - authorization_decision_hash
       - executor_id
+      - dispatch_adapter_id
       - base_acceptance_head
-      - execution_started_at
-      - execution_ended_at
-      - execution_status
+      - dispatched_at
     slot_usage:
       action_proposal_id:
         required: true
@@ -1149,33 +1209,76 @@ classes:
         required: true
       authorization_decision_id:
         required: true
+      authorization_decision_hash:
+        required: true
       executor_id:
+        required: true
+      dispatch_adapter_id:
         required: true
       base_acceptance_head:
         required: true
+      dispatched_at:
+        required: true
+
+  ActionExecution:
+    is_a: ProtocolRecord
+    slots:
+      - dispatch_id
+      - dispatch_hash
+      - executor_id
+      - execution_started_at
+      - execution_ended_at
+      - execution_status
+      - execution_result_hash
+    slot_usage:
+      dispatch_id:
+        required: true
+      dispatch_hash:
+        required: true
+      executor_id:
+        required: true
       execution_started_at:
         required: true
+      execution_ended_at:
+        required: true
       execution_status:
+        required: true
+      execution_result_hash:
         required: true
 
   OutcomeObservation:
     is_a: ProtocolRecord
     slots:
       - execution_id
+      - execution_hash
+      - outcome_contract_id
+      - outcome_contract_hash
       - observer_id
       - observation_type
+      - observation_result
       - observed_at
-      - evidence_ids
+      - observed_source_artifact_id
+      - observed_source_artifact_hash
     slot_usage:
       execution_id:
+        required: true
+      execution_hash:
+        required: true
+      outcome_contract_id:
+        required: true
+      outcome_contract_hash:
         required: true
       observer_id:
         required: true
       observation_type:
         required: true
+      observation_result:
+        required: true
       observed_at:
         required: true
-      evidence_ids:
+      observed_source_artifact_id:
+        required: true
+      observed_source_artifact_hash:
         required: true
 
 slots:
@@ -1238,7 +1341,20 @@ slots:
 
   evidence_kind:
     range: string
-  source_version_id:
+  source_artifact_id:
+    range: string
+  source_artifact_hash:
+    range: string
+  source_schema_version:
+    range: string
+  source_content_digest:
+    range: string
+  source_byte_length:
+    range: integer
+    minimum_value: 0
+  source_media_type:
+    range: string
+  source_locator:
     range: string
   locator:
     range: string
@@ -1591,7 +1707,17 @@ slots:
 
   authorization_decision_id:
     range: string
+  authorization_decision_hash:
+    range: string
   executor_id:
+    range: string
+  dispatch_adapter_id:
+    range: string
+  dispatched_at:
+    range: datetime
+  dispatch_id:
+    range: string
+  dispatch_hash:
     range: string
   execution_started_at:
     range: datetime
@@ -1599,14 +1725,32 @@ slots:
     range: datetime
   execution_status:
     range: ExecutionStatus
+  execution_result_hash:
+    range: string
   execution_id:
+    range: string
+  execution_hash:
+    range: string
+  outcome_contract_id:
+    range: string
+  outcome_contract_hash:
+    range: string
+  outcome_contract_schema_version:
     range: string
   observer_id:
     range: string
+  observer_implementation_hash:
+    range: string
   observation_type:
     range: string
+  observation_result:
+    range: OutcomeResult
   observed_at:
     range: datetime
+  observed_source_artifact_id:
+    range: string
+  observed_source_artifact_hash:
+    range: string
   artifact_kind:
     range: ArtifactKind
   artifact_version:
