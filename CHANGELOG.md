@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.8.0] - 2026-08-15
 
 ### Added
 
@@ -44,8 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   decide epistemic control, run authority monitors, retry work, schedule work,
   or make a whole plan atomic.
 - Stage 8c records generic dispatch, execution receipts, and independently
-  observed outcomes. Domain adapters still perform effects. One recorded
-  dispatch per action does not guarantee exactly-once external execution.
+  observed outcomes. Domain adapters still perform effects. The current profile
+  records one dispatch per action and one execution per dispatch. A future
+  delivery profile can add idempotency, outbox, deduplication, and external
+  effect-ledger records without moving domain effects into core Malleus.
 
 ## [0.7.0] - 2026-08-14
 

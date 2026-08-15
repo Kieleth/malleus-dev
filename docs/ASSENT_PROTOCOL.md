@@ -52,7 +52,7 @@ proposal. The policy pins a canonical, nonempty set of exact `AUTHORITY`
 monitor records. The policy depends on those monitor records; the monitors do
 not depend on the composed policy, which avoids a content-hash cycle.
 
-Unreleased Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact
+Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact
 ID and version to the SHA-256 digest and length of the exact source bytes, plus
 their media type and locator. `Evidence` must name that applied source record
 and its exact ledger record hash. A changed source therefore requires a new
@@ -145,7 +145,7 @@ implementations in Stage 6. A missing execution is never inferred from absence.
 It must be reported as `MonitorFailure` plus `UnavailableAssessment`; otherwise
 the decision fails for incomplete coverage.
 
-Unreleased Stage 8b adds the optional `AssentPlan` described in
+Stage 8b adds the optional `AssentPlan` described in
 `ASSENT_PLAN.md`. It replays one proposal's exact epistemic policy, verifies a
 canonical adapter step for every required monitor, invokes each once, and
 records either its completed assessment or the existing typed failure plus
@@ -212,7 +212,7 @@ Authorization remains a record. Stage 7c validates recorded authority outputs;
 it does not execute authority monitors, determine policy legitimacy or grantor
 trust, or execute the action.
 
-Unreleased Stage 8c opens three later event doors. `ActionDispatch` requires an
+Stage 8c opens three later event doors. `ActionDispatch` requires an
 exact applied `AUTHORIZE` decision, its authorized executor, acceptance head,
 and a dispatch time inside the authorization interval. `ActionExecution`
 records the domain adapter's terminal receipt. `OutcomeObservation` records a
@@ -221,7 +221,8 @@ exact external-state bytes through `SourceArtifact`.
 
 Malleus records and validates these events. The domain adapter performs the
 effect and the external observer applies the outcome contract. See
-`EFFECT_PROTOCOL.md` for the trust and exactly-once boundaries.
+`EFFECT_PROTOCOL.md` for the trust boundary and optional stronger delivery
+profiles.
 
 ## JSONL ledger
 
@@ -298,9 +299,10 @@ materialized atomically, and reconstructed by transaction time and valid time.
 
 It does not establish truth, source authenticity, quoted-span correctness,
 policy legitimacy, authority-monitor orchestration, general workflow
-orchestration, domain-effect correctness, exactly-once external execution,
-concurrent-writer safety, formal PROV-O interoperability, or an empirical
-metacognitive effect.
+orchestration, domain-effect correctness, concurrent-writer safety, formal
+PROV-O interoperability, or an empirical metacognitive effect. The Stage 8c
+effect path does not select an exactly-once delivery profile; such a profile
+can extend its dispatch, receipt, and observation records.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

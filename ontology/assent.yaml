@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.7.0
+version: 0.8.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,

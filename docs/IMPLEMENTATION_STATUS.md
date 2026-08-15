@@ -1,7 +1,7 @@
 # Implementation Status
 
-Malleus package version `0.7.0` implements the
-`stage-7c-policy-selected-authorization-control` boundary.
+Malleus package version `0.8.0` implements the
+`stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
@@ -26,7 +26,7 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 - Evidence and evidence-assertion proposal members with typed polarity, exact
   claim and evidence references, and decision-local citation checks
 
-## Unreleased Stage 8a
+## Stage 8a
 
 - Content-addressed `SourceArtifact` records derived from exact source bytes
 - Exact `Evidence` binding to an applied source artifact ID and record hash
@@ -36,7 +36,7 @@ Stage 8a identifies the registered bytes. It does not authenticate them,
 establish their truth, or verify that a quotation occurs within them. Those
 are separate checks.
 
-## Unreleased Stage 8b
+## Stage 8b
 
 - Optional immutable `AssentPlan` over exact policy-declared epistemic monitor
   records and caller-supplied adapters
@@ -50,7 +50,7 @@ Stage 8b does not select policy or verdicts, orchestrate authority monitors,
 schedule or retry work, or provide whole-plan atomicity. See
 `docs/ASSENT_PLAN.md`.
 
-## Unreleased Stage 8c
+## Stage 8c
 
 - `ActionDispatch` gated by an exact applied `AUTHORIZE` decision, executor,
   acceptance head, and validity interval
@@ -63,8 +63,10 @@ schedule or retry work, or provide whole-plan atomicity. See
 
 Core Malleus records this path but performs no domain effect. The research
 adapter owns `payments.jsonl`; a separate observer owns the outcome check. One
-recorded dispatch per action and one execution per dispatch do not establish
-exactly-once external execution. See `docs/EFFECT_PROTOCOL.md`.
+recorded dispatch per action and one execution per dispatch define the current
+profile. A future delivery profile may add idempotency, outbox, deduplication,
+and external effect-ledger records without changing the core boundary. See
+`docs/EFFECT_PROTOCOL.md`.
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -139,12 +141,7 @@ no authorization validity interval.
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
-- `action-execution`: absent from the published 0.7.0 boundary. Unreleased
-  Stage 8c records dispatch and execution receipts, while domain effects remain
-  external by design
 - `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
-- `outcome-observation-recording`: absent from the published 0.7.0 boundary.
-  Unreleased Stage 8c opens the typed external-observation door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: general orchestration beyond the optional
@@ -155,6 +152,11 @@ no authorization validity interval.
   `Evidence` to a content-addressed source record, but declares no quoted-span
   slot and performs no substring check
 - `deferral-queue-aging`: measuring how long a `DEFERRED` proposal has been waiting and blocking past a threshold. `DEFERRED` is a terminal state with no aging, so a deferral is indistinguishable from a decision nobody revisited. Principle 3 of `PRINCIPLES.md` and the `arbiter_is_accountable` rite both require this of an adopter's application layer; malleus supplies the decision record, not the queue
+- `exactly-once-effect-delivery-profile`: an optional stronger profile binding
+  idempotency, outbox, adapter deduplication, and external effect-ledger records
+  to the Stage 8c dispatch. The current profile records dispatch, terminal
+  receipt, and outcome observation without selecting external delivery
+  semantics
 - `epistemic-policy-authority-and-scope`: deciding which policy is legitimate and applicable to a proposal
 - `authorization-policy-authority-and-scope`: deciding which authorization policy is legitimate and applicable to an action
 
@@ -167,7 +169,7 @@ remains a structural API and has no effect on protocol replay. Stage 7b accepted
 materialization is still single-writer. It records epistemic commitment, not
 truth, authorization, external-world currency, or multi-writer correctness.
 
-Stage 6 selects control from recorded monitor outputs. Unreleased Stage 8b can
+Stage 6 selects control from recorded monitor outputs. Stage 8b can
 invoke caller-supplied epistemic monitor adapters, including a logical adapter,
 but still does not choose request payloads or recipients. Monitor
 implementation and input hashes make these dependencies inspectable without
@@ -184,10 +186,11 @@ authority, eligibility, domain scope, or effective time for that policy. Exact
 coverage is relative to the proposal's precommitted policy, not system-wide.
 
 Stage 7c selects authorization control from recorded authority outputs. It does
-not execute authority monitors, establish a grantor trust root, decide which
-authorization policy is legitimate, or execute an authorized action. The
-fixed outcome-to-control mapping is protocol behavior, not proof that an input
-authority assessment is correct.
+not execute authority monitors, establish a grantor trust root, or decide which
+authorization policy is legitimate. Stage 8c can record the later generic
+dispatch, receipt, and observation path, but domain adapters still execute the
+action. The fixed outcome-to-control mapping is protocol behavior, not proof
+that an input authority assessment is correct.
 
 The graph base is intentionally explicit. The opaque Stage 1 snapshot anchor
 contributes no graph records. A `GraphBaseArtifact` is usable only when the
@@ -210,7 +213,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.7.0`.
+ontology is `0.4.0`; the assent ontology is `0.8.0`.
 
 ## History
 
@@ -223,3 +226,4 @@ ontology is `0.4.0`; the assent ontology is `0.7.0`.
 | `0.5.0` | `stage-7b-assent-gated-bitemporal-accepted-graph` | Exact proposed mutations, atomic accepted applications, and bitemporal replay |
 | `0.6.0` | `stage-7c-policy-selected-authorization-control` | Typed action-bound policy, exact authority coverage, and deterministic authorization control |
 | `0.7.0` | `stage-7c-policy-selected-authorization-control` | Same boundary, hardened: ontology identity from the resolved constraint table, closed arbiter vocabularies, and the inquisition toolchain |
+| `0.8.0` | `stage-8c-executable-provenance-and-effect-closure` | Exact source bytes, thin epistemic monitor adapters, authorized dispatch, execution receipts, and independent outcome observations |

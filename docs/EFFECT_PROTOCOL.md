@@ -44,16 +44,23 @@ It does not prove that the external state is authentic, that the observer is
 honest, or that the observation contract correctly captures the domain. Those
 remain separate empirical and trust questions.
 
-## Exactly-once boundary
+## Delivery profiles
 
 Replay permits one `ActionDispatch` per authorized action and one
 `ActionExecution` per dispatch. This prevents duplicate recorded protocol
-transitions. It does not guarantee exactly-once external execution.
+transitions. The Stage 8c profile governs and records the path through dispatch,
+receipt, and observation. It does not select an external delivery guarantee.
 
 A process can write an external effect and crash before recording its receipt.
-Retrying outside Malleus could then repeat the effect. Solving that requires an
-idempotent adapter, transactional outbox, or external deduplication contract.
-None is claimed here.
+An optional stronger profile can close that gap by binding an idempotency key,
+transactional outbox, adapter deduplication record, and external effect ledger
+to the same action and dispatch. Those records can extend the protocol without
+putting domain payloads or effect execution into core Malleus.
+
+The current profile is therefore the plain composable layer: one governed
+dispatch, one recorded terminal receipt, and one recorded outcome observation.
+Exactly-once effect delivery is future profile work, not a universal guarantee
+required from every Malleus consumer.
 
 ## Failure boundary
 
