@@ -16,7 +16,39 @@ from typing import Any, Mapping
 import yaml
 
 
-BUILTIN_RANGES = frozenset({"string", "integer", "float", "boolean", "datetime"})
+# The five kinds the validator enforces directly.
+BASE_RANGES = frozenset({"string", "integer", "float", "boolean", "datetime"})
+
+# The rest of LinkML's built-in types, each mapped to the base kind that is
+# actually checked. Declaring `uri` or `double` is legal in the schema
+# language, and refusing it punished adopters for using their tools
+# correctly: two independent projects lost a schema to this in one week, one
+# on `uri` and one on `double`.
+#
+# The mapping is honest about its limit. `uri` is checked as a string, not
+# parsed as a URI; `date` is checked as a string, not parsed as a date. The
+# lexical form is NOT enforced, and that boundary is
+# `lexical-format-validation` in IMPLEMENTATION_STATUS.md. Accepting the
+# declaration and checking the base kind is strictly more than refusing the
+# schema, and it is stated rather than implied.
+LEXICAL_RANGES = {
+    "double": "float",
+    "decimal": "float",
+    "date": "string",
+    "time": "string",
+    "date_or_datetime": "string",
+    "uri": "string",
+    "uriorcurie": "string",
+    "curie": "string",
+    "ncname": "string",
+    "objectidentifier": "string",
+    "nodeidentifier": "string",
+    "jsonpointer": "string",
+    "jsonpath": "string",
+    "sparqlpath": "string",
+}
+
+BUILTIN_RANGES = frozenset(BASE_RANGES | set(LEXICAL_RANGES))
 FINGERPRINT_VERSION = 3
 
 
@@ -401,8 +433,19 @@ class OntologyRegistry:
                 if candidate.is_file():
                     return candidate.resolve()
             if current.parent == current:
-                return None
+                break
             current = current.parent
+
+        # Last resort: an ontology this package ships. `imports: [malleus]`
+        # with malleus installed is the commonest adoption shape there is,
+        # and refusing it made the inspector report correct schemas as
+        # construction heresies on an adopter's first run. A vendored or
+        # local copy still wins, above, so root-currency drift stays visible.
+        try:
+            bundled = bundled_ontology_path(f"{name}.yaml")
+        except (OntologyError, OSError):
+            return None
+        return bundled.resolve() if bundled.is_file() else None
 
     def _validate_schema(self) -> None:
         range_names = [set(self._types), set(self._enums), set(self._scalar_types)]
@@ -477,7 +520,9 @@ class OntologyRegistry:
         return name in BUILTIN_RANGES or name in self._scalar_types or name in self._enums or name in self._types
 
     def _resolve_scalar_range(self, name: str, seen: set[str]) -> str:
-        if name in BUILTIN_RANGES:
+        if name in LEXICAL_RANGES:
+            return LEXICAL_RANGES[name]
+        if name in BASE_RANGES:
             return name
         if name not in self._scalar_types:
             raise OntologyError(f"Scalar type chain terminates in unsupported range '{name}'")

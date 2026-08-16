@@ -162,6 +162,41 @@ operating manual and this skill is its enforcement arm.
     the strict consumer-side check is the one that sees dropped
     constraints.
 
+## What changed in 0.9.0 (read this after upgrading)
+
+Four adopter-facing changes, all in the loader and the inspector. Three of
+them mean the tool was previously wrong about your project.
+
+1. **`imports: [malleus]` now resolves with no `--map`.** The installed root
+   is the last-resort fallback, after any local or vendored copy. Before
+   this, a correct schema on a machine with malleus installed was reported
+   as a construction heresy, which was most adopters' first contact with the
+   inspector. If you carried a `--map malleus=...` purely to work around
+   that, you can drop it. Keep it if you are deliberately inspecting against
+   a specific root.
+2. **All of LinkML's built-in ranges load.** `uri`, `double`, `decimal`,
+   `date`, `time`, `curie`, `uriorcurie`, `ncname`, `jsonpointer` and the
+   rest. Previously five were accepted and the other fourteen were
+   construction failures, so a schema using `uri` could not load at all.
+   Each validates as its base kind: `double` and `decimal` as numbers, the
+   others as strings. **The lexical form is not checked**: `"not a uri"` in a
+   `uri` slot commits. That boundary is `lexical-format-validation` on the
+   not-implemented list. If your project needs the finer check, it belongs in
+   your write path today.
+3. **A construction failure now names the rites it skipped.** Rite one
+   failing short-circuits the run, so one unresolvable range used to blind
+   every later rite silently. A report showing one heresy and nothing else
+   was inviting you to conclude the rest passed. It now says how many rites
+   did not run and which.
+4. **The CLI header prints the installed malleus version and the resolved
+   root.** One command answers "which malleus am I actually running
+   against". If your install is stale, it now says so instead of surfacing a
+   confusing `ImportError` from the bootstrap probe.
+
+Re-run your rite after upgrading. Items 1 and 2 mean schemas that previously
+could not be judged at all will now be judged for the first time, and rites
+that never executed will start reporting.
+
 ## The self-check (your rite)
 
 When asked to check, audit, or inquisit this project, or after major schema

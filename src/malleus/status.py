@@ -25,7 +25,7 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.8.0",
+    package_version="0.9.0",
     current_stage="8c",
     boundary="stage-8c-executable-provenance-and-effect-closure",
     completed_stages=(
@@ -97,6 +97,7 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "portable-graph-base-resolution",
         "typed-retraction-semantics",
         "multi-writer-ledger-serialization",
+        "lexical-format-validation",
         "action-execution",
         "review-report-recording",
         "protocol-actor-registration",

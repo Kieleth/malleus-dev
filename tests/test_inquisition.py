@@ -1184,7 +1184,38 @@ def test_wrong_format_document_is_refused_not_judged(tmp_path):
     assert construction[0].severity == HERESY
     assert "not a schema" in construction[0].message
     assert not report.purity
-    assert len(report.findings) == 1
+    # Nothing was judged, so nothing may be reported as judged. The only
+    # other finding permitted here is the coverage note saying so.
+    judged = [f for f in report.findings if f.severity != NOTE]
+    assert len(judged) == 1
+    coverage = [f for f in report.findings if f.subject == "coverage"]
+    assert coverage and "did not run" in coverage[0].message
+
+
+def test_a_construction_failure_names_the_rites_it_skipped(tmp_path):
+    """A report showing one heresy and nothing else invites the reader to
+    conclude the rest passed. In the field a construction failure left seven
+    of eight rites unexecuted across a repository, and the report was
+    silent about it."""
+    path = tmp_path / "broken.yaml"
+    path.write_text("classes: {Thing: {is_a: Entity")
+    report = run_rites(path)
+    coverage = [f for f in report.findings if f.subject == "coverage"]
+    assert coverage, "a construction failure reported no coverage"
+    for rite in ("constrained_tongues", "bound_endpoints", "inert_formula"):
+        assert rite in coverage[0].message
+    assert "Their silence is not a pass." in coverage[0].message
+
+
+def test_the_coverage_note_respects_disabled_rites(tmp_path):
+    """A disabled rite did not run because it was switched off, not because
+    the schema stopped it. Naming it here would double-count the loss."""
+    path = tmp_path / "broken.yaml"
+    path.write_text("classes: {Thing: {is_a: Entity")
+    tuned = _tuned_rubric(tmp_path, disable={"inert_formula"})
+    report = run_rites(path, rubric_path=tuned)
+    coverage = [f for f in report.findings if f.subject == "coverage"]
+    assert coverage and "inert_formula" not in coverage[0].message
 
 
 def test_construction_failure_still_explains_root_skew(tmp_path):

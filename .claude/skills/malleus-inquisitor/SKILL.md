@@ -94,6 +94,26 @@ decides whether it enters this slice.
    when working for the malleus author, a GitHub issue or PR against
    malleus-dev otherwise. This is how the Ordo learns.
 
+## What changed in 0.9.0 (affects how you read a report)
+
+- **Do not add `--map malleus=...` reflexively.** `imports: [malleus]` now
+  resolves to the installed root on its own. Earlier versions reported a
+  correct schema as a construction heresy without the map, so past
+  inquisition files may contain construction findings that were the tool's
+  fault, not the project's. When re-inspecting a repo with an older
+  findings file, re-run before trusting its construction verdicts.
+- **A construction failure now names the rites it skipped.** Read that line.
+  A schema that fails rite one has been judged on nothing else, and the
+  older reports did not say so: one field inspection found seven of eight
+  rites silently unexecuted across an entire repository.
+- **All LinkML built-in ranges load now.** A schema that previously could
+  not construct because it used `uri` or `double` will construct, so rites
+  that never ran will report for the first time. Expect new findings on a
+  repo that looked clean, and say in the file that they are newly visible
+  rather than newly introduced.
+- **The header prints the malleus version and the resolved root.** Quote it
+  in the findings file so a reader knows which instrument produced them.
+
 ## Confidentiality
 
 Findings stay in the inspected repo. Anything that travels upstream to

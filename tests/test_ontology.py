@@ -1004,3 +1004,84 @@ slots:
         assert as_int.check_compatibility(
             as_float.content_hash(), as_float.fingerprint()
         ) == "identical"
+
+
+class TestLinkMLBuiltinRangesAreAccepted:
+    """Two independent projects lost a schema in one week to the same hole:
+    the loader accepted five of LinkML's nineteen built-in ranges, so `uri`
+    and `double` were construction failures. Refusing a legal type punishes
+    an adopter for using their schema language correctly."""
+
+    def _schema(self, tmp_path, range_name):
+        path = tmp_path / "domain.yaml"
+        path.write_text(
+            "id: https://example.org/schema/d\nname: d\n"
+            "imports: [malleus, 'linkml:types']\n"
+            "classes:\n  Thing:\n    is_a: Entity\n    slots: [probe]\n"
+            f"slots:\n  probe:\n    range: {range_name}\n"
+        )
+        return path
+
+    @pytest.mark.parametrize("range_name", [
+        "uri", "double", "decimal", "date", "time", "uriorcurie",
+        "curie", "ncname", "jsonpointer", "sparqlpath",
+    ])
+    def test_a_legal_builtin_range_constructs(self, tmp_path, range_name):
+        registry = OntologyRegistry(self._schema(tmp_path, range_name))
+        assert registry.has_type("Thing")
+
+    def test_the_base_kind_is_still_enforced(self, tmp_path):
+        """Accepting the declaration must not mean accepting anything."""
+        registry = OntologyRegistry(self._schema(tmp_path, "double"))
+        errors = registry.validate_instance("Thing", {"id": "t:1", "probe": "not a number"})
+        assert any("must be a number" in error for error in errors)
+
+    def test_the_lexical_boundary_is_what_it_says(self, tmp_path):
+        """`uri` is checked as a string, not parsed as a URI. Pinned as a
+        test so the boundary is proven rather than described, and so any
+        future claim to validate the lexical form has something to fail
+        against. Tracked as `lexical-format-validation`."""
+        registry = OntologyRegistry(self._schema(tmp_path, "uri"))
+        assert registry.validate_instance("Thing", {"id": "t:1", "probe": "not a uri"}) == []
+        assert registry.validate_instance("Thing", {"id": "t:1", "probe": 7}) != []
+
+
+class TestTheBundledRootResolvesWithoutAMap:
+    """`pip install malleus-dev`, write `imports: [malleus]`, run the tool.
+    That path reported a construction heresy against a correct schema, which
+    is an adopter's first contact with the inspector."""
+
+    def _schema(self, tmp_path):
+        path = tmp_path / "domain.yaml"
+        path.write_text(
+            "id: https://example.org/schema/d\nname: d\n"
+            "imports: [malleus, 'linkml:types']\n"
+            "classes:\n  Thing:\n    is_a: Entity\n"
+        )
+        return path
+
+    def test_an_unmapped_malleus_import_resolves_to_the_installed_root(self, tmp_path):
+        registry = OntologyRegistry(self._schema(tmp_path))
+        for primitive in ("Entity", "Event", "Signal", "Relation"):
+            assert registry.has_type(primitive)
+
+    def test_a_local_copy_still_wins(self, tmp_path):
+        """Precedence matters: if the bundled root outranked a vendored copy,
+        the root-currency rite could never see a drifted vendor again."""
+        vendored = tmp_path / "malleus.yaml"
+        text = bundled_ontology_path("malleus.yaml").read_text()
+        vendored.write_text(text.replace("DESTROYED:", "OBLITERATED:"))
+        registry = OntologyRegistry(self._schema(tmp_path))
+        installed = OntologyRegistry(bundled_ontology_path("malleus.yaml"))
+        assert registry.check_compatibility_strict(
+            installed.content_hash(), installed.strict_fingerprint()
+        ) == "divergent"
+
+    def test_a_genuinely_absent_import_still_refuses(self, tmp_path):
+        path = tmp_path / "domain.yaml"
+        path.write_text(
+            "id: https://example.org/schema/d\nname: d\n"
+            "imports: [no_such_ontology]\nclasses:\n  Thing: {}\n"
+        )
+        with pytest.raises(OntologyError, match="Cannot resolve import"):
+            OntologyRegistry(path)

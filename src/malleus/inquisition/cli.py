@@ -119,7 +119,19 @@ def main(argv: list[str] | None = None) -> int:
 
     rites = report.rites
     disabled, downgraded = rites.disabled, rites.downgraded
+    # The version and the resolved root, on every run. An adopter reading a
+    # current rubric while running a package several minor versions old sees
+    # a confusing ImportError instead of a version complaint; one command
+    # should answer "which malleus am I actually running against".
+    import malleus
+    from malleus.ontology import bundled_ontology_path
+    try:
+        root_used = str(Path(args.root).resolve()) if args.root \
+            else str(bundled_ontology_path("malleus.yaml").resolve())
+    except Exception:  # noqa: BLE001 - reporting must never outrank the report
+        root_used = args.root or "<no bundled root found>"
     print(f"ORDO MALLEUS :: inquisition of {args.schema}")
+    print(f"malleus {malleus.__version__}, root {root_used}")
     print(f"rubric {rites.path} (v{rites.version}, sha256 {rites.digest[:12]}…)")
     print(f"{len(rites.disabled_mechanical)} mechanical and "
           f"{len(rites.disabled_judgment)} judgment rites disabled"

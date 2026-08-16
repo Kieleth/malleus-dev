@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.8.0` implements the
+Malleus package version `0.9.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -144,6 +144,13 @@ no authorization validity interval.
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
+- `lexical-format-validation`: checking that a value declared `uri`, `date`,
+  `curie` or another lexical built-in actually has that form. All of LinkML's
+  built-in ranges are accepted and each is validated as its base kind
+  (`double` and `decimal` as numbers, the rest as strings), so `"not a uri"`
+  in a `uri` slot commits. Accepting the declaration and checking the base
+  kind is strictly more than refusing the schema, which is what happened
+  before, and the finer form is not enforced
 - `action-execution`: performing an authorized action. Stage 8c records a
   dispatch and hashes an outcome contract (`src/malleus/execution.py`), which
   is a commitment about how an outcome would be checked. Malleus executes
@@ -235,3 +242,4 @@ ontology is `0.4.0`; the assent ontology is `0.8.0`.
 | `0.6.0` | `stage-7c-policy-selected-authorization-control` | Typed action-bound policy, exact authority coverage, and deterministic authorization control |
 | `0.7.0` | `stage-7c-policy-selected-authorization-control` | Same boundary, hardened: ontology identity from the resolved constraint table, closed arbiter vocabularies, and the inquisition toolchain |
 | `0.8.0` | `stage-8c-executable-provenance-and-effect-closure` | Exact source bytes, thin epistemic monitor adapters, authorized dispatch, execution receipts, and independent outcome observations |
+| `0.9.0` | `stage-8c-executable-provenance-and-effect-closure` | Same boundary; all LinkML built-in ranges load, the bundled root resolves without a map, and a construction failure names the rites it skipped |

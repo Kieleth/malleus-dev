@@ -363,6 +363,23 @@ class Report:
         )
 
 
+def _skipped_after(report: "Report", reached: str) -> None:
+    """Name the rites an early return prevented from running.
+
+    A report showing one heresy and nothing else invites the reader to
+    conclude the rest passed. Observed in the field: a construction failure
+    left seven of eight rites unexecuted across a whole repository and the
+    report said nothing about it.
+    """
+    remaining = [r for r in EMITTED_RITES[EMITTED_RITES.index(reached) + 1:]
+                 if report.rites.enabled(r)]
+    if remaining:
+        report.add(reached, NOTE, "coverage",
+                   f"{len(remaining)} rites did not run, because nothing past "
+                   f"`{reached}` could be judged: {', '.join(remaining)}. "
+                   "Their silence is not a pass.")
+
+
 class _ReferenceUnusable(Exception):
     """Internal: the reference root cannot answer the currency question.
 
@@ -435,6 +452,7 @@ def run_rites(
                            f"could not compare the mapped root to the installed malleus "
                            f"({diag_exc}); the construction failure above could not be "
                            "attributed to version skew")
+        _skipped_after(report, "construction")
         return report
     if not registry.type_names():
         # JSON is valid YAML, so a wrong-format ontology parses into an
@@ -443,6 +461,7 @@ def run_rites(
         report.verdict("construction", str(schema_path),
                        "document parses but declares no LinkML classes; this is "
                        "not a schema the rites can judge (wrong format?)")
+        _skipped_after(report, "construction")
         return report
     report.add("construction", COMMENDATION, str(schema_path),
                f"constructs; version {registry.schema_version or 'undeclared'}, "
@@ -456,6 +475,7 @@ def run_rites(
     if missing:
         report.verdict("root", ",".join(missing),
                        "root primitives absent: the schema does not import the malleus root")
+        _skipped_after(report, "root")
         return report
 
     # Rite of Speakers: a declared primitive nobody extends is vocabulary with
