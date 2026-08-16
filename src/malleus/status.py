@@ -97,6 +97,7 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "portable-graph-base-resolution",
         "typed-retraction-semantics",
         "multi-writer-ledger-serialization",
+        "action-execution",
         "review-report-recording",
         "protocol-actor-registration",
         "untrusted-rule-program-sandboxing",

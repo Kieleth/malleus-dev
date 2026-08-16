@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import re
+import sys
 import textwrap
 from pathlib import Path
 
@@ -850,6 +851,65 @@ class TestShippedGuidanceSaysWhatTheCodeDoes:
                     "resolution nearby; that path does not exist where this skill installs"
                 )
 
+    # R6 H2. The prior guard checked that a pending capability was NAMED in
+    # the document. It was, and three sentences above the naming the same
+    # paragraph asserted the capability exists. Naming is not disclaiming, and
+    # a guard that cannot tell them apart is the criterion tested instead of
+    # the property. This table is data: when a capability joins the pending
+    # list, add the words a document would use to claim it.
+    UNIMPLEMENTED_CLAIMS = {
+        "citation-byte-verification": (
+            ("evidence binding", "quoted span", "registered bytes", "source bytes",
+             "byte identity"),
+            ("invalidates", "verifies", "proves", "guarantees", "enforces", "detects"),
+        ),
+        "deferral-queue-aging": (
+            ("deferral", "deferred proposal", "review queue"),
+            ("ages", "expires", "blocks past", "escalates"),
+        ),
+        "action-execution": (
+            ("the action", "authorized action"),
+            ("executes", "performs", "carries out"),
+        ),
+    }
+    # A denial clears a sentence, and so does a modal: `PRINCIPLES.md` states
+    # norms ("a tuple SHOULD point at bytes") beside boundaries, and a norm is
+    # not a capability claim. Only the present indicative claims.
+    _DENIAL = re.compile(
+        r"\b(not|never|no|nor|without|cannot|does not|neither|declares no"
+        r"|should|must|would|ought|belongs to)\b", re.I)
+
+    def test_no_document_asserts_a_capability_on_the_pending_list(self):
+        from malleus.status import IMPLEMENTATION_STATUS
+        offenders = []
+        for capability, (subjects, verbs) in self.UNIMPLEMENTED_CLAIMS.items():
+            assert capability in IMPLEMENTATION_STATUS.pending_capabilities, (
+                f"{capability} is no longer pending; move it out of this table "
+                "and prove the capability with a test instead"
+            )
+            for path, text in self._docs():
+                if path.name == "CHANGELOG.md":
+                    continue  # history records what was claimed, including wrongly
+                for verb in verbs:
+                    for match in re.finditer(rf"\b{re.escape(verb)}\b", text, re.I):
+                        sentence = _sentence_around(text, match.start(), match.end())
+                        if not any(s in sentence.lower() for s in subjects):
+                            continue
+                        # The exemption must govern the CLAUSE that carries the
+                        # verb, not merely appear somewhere in the sentence:
+                        # "Evidence must cite the record, so changing the bytes
+                        # invalidates the binding" is a requirement followed by
+                        # a capability claim, and the first cleared the second.
+                        clause = _clause_around(sentence, verb)
+                        if self._DENIAL.search(clause):
+                            continue
+                        line = text.count("\n", 0, match.start()) + 1
+                        offenders.append(f"{path.name}:{line} ({capability}: '{verb}')")
+        assert not offenders, (
+            "a shipped document asserts a capability that is on the "
+            f"not-implemented list: {offenders}"
+        )
+
     def test_the_two_doctrines_name_their_tiebreaker(self):
         """R3 S2. No half measures says cut an open gate now; the scope gate
         says do not widen the slice. They meet on an out-of-scope open gate
@@ -960,6 +1020,29 @@ def _sentence_around(text: str, start: int, end: int) -> str:
     return text[left:right]
 
 
+_CLAUSE_BREAK = re.compile(r"\bso that\b|\bso\b|\bwhich\b|\btherefore\b|\bthus\b|;", re.I)
+
+
+def _clause_around(sentence: str, verb: str) -> str:
+    """The clause of `sentence` containing `verb`.
+
+    A modal or a denial in one clause does not govern the next: the sentence
+    that relapsed read "Evidence must cite the exact record, so changing the
+    registered bytes invalidates the old evidence binding", and a
+    sentence-wide exemption let the second half through on the strength of
+    the first half's "must".
+    """
+    pieces, last = [], 0
+    for brk in _CLAUSE_BREAK.finditer(sentence):
+        pieces.append(sentence[last:brk.start()])
+        last = brk.start()
+    pieces.append(sentence[last:])
+    for piece in pieces:
+        if re.search(rf"\b{re.escape(verb)}\b", piece, re.I):
+            return piece
+    return sentence
+
+
 def _sections(text: str) -> list[tuple[int, str]]:
     """(offset, body) per markdown/comment section, split on headings."""
     bounds = [m.start() for m in re.finditer(r"^#{1,6} ", text, re.M)] or [0]
@@ -992,6 +1075,63 @@ def _producer_check_for_currency(text: str) -> list[int]:
             if _CURRENCY_WORDS.search(near):
                 hits.append(text.count("\n", 0, offset + match.start()) + 1)
     return hits
+
+
+class TestNoPrivateMaterialCanReachARelease:
+    """R6 H1. A branch un-gitignored the private research directory, and the
+    build silently absorbed it: main's sdist held 49 files and zero private
+    ones, the branch's held 70 and sixteen, because `pyproject.toml`'s bare
+    `README.md` include matches at every depth. The wheel stayed clean, which
+    is why nothing noticed: `twine check` validates metadata and never reads
+    content, and CI smoke-tests only the wheel.
+
+    The instance was one `.gitignore` line. The property is that no path
+    outside the manifest may ride a release artifact, whatever anyone edits.
+    That property is what this test holds, so the next careless edit fails
+    here rather than on PyPI, where nothing can be withdrawn.
+    """
+
+    ROOT = Path(__file__).parent.parent
+    # Directory prefixes that must never appear in a built artifact, whatever
+    # the working tree or .gitignore says on the day.
+    FORBIDDEN = ("malleus-moving/", "paper/", "paper-rebuild/", "private/",
+                 "experiments/", "scripts/", "local/")
+
+    def _build(self, tmp_path):
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, "-m", "build", "--sdist", "--wheel",
+             "--outdir", str(tmp_path), str(self.ROOT)],
+            capture_output=True, text=True,
+        )
+        if result.returncode != 0:
+            pytest.skip(f"build unavailable in this environment: {result.stderr[-200:]}")
+        return sorted(tmp_path.iterdir())
+
+    def _members(self, artifact):
+        if artifact.suffix == ".whl":
+            import zipfile
+            with zipfile.ZipFile(artifact) as archive:
+                return archive.namelist()
+        import tarfile
+        with tarfile.open(artifact) as archive:
+            # strip the leading "malleus_dev-X.Y.Z/" component
+            return [name.partition("/")[2] for name in archive.getnames()]
+
+    def test_no_forbidden_path_rides_any_release_artifact(self, tmp_path):
+        for artifact in self._build(tmp_path):
+            offenders = [name for name in self._members(artifact)
+                         if any(name.startswith(p) for p in self.FORBIDDEN)]
+            assert not offenders, (
+                f"{artifact.name} carries private material: {offenders[:10]}. "
+                "A release artifact is irrevocable once published."
+            )
+
+    def test_the_guard_would_catch_a_planted_file(self, tmp_path):
+        """A guard nobody has seen fail is a guard nobody should trust."""
+        planted = "malleus-moving/README.md"
+        assert any(planted.startswith(p) for p in self.FORBIDDEN)
+        assert not any("src/malleus/kg.py".startswith(p) for p in self.FORBIDDEN)
 
 
 class TestPackagingTargetsAreTracked:

@@ -211,8 +211,9 @@ classes:
   SourceArtifact:
     is_a: ProtocolArtifact
     description: >-
-      Content-addressed identity of exact source bytes used by evidence. This
-      record proves byte identity, not source authenticity or truth.
+      Content-addressed record of a caller-declared byte identity used by
+      evidence. It commits to a digest and a length; it does not read the
+      bytes, so it proves neither byte identity, nor authenticity, nor truth.
     slots:
       - source_schema_version
       - source_content_digest

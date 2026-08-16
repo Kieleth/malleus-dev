@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed three shipped documents claiming a capability the library does not have, found by a sixth inquisition. `PRINCIPLES.md` and `ASSENT_PROTOCOL.md` both stated that changing the registered bytes "invalidates the old evidence binding"; proven false through a real ledger, where both artifacts sit in the projection as equals, the evidence still resolves to the first, and nothing is marked stale. `ASSENT_PROTOCOL.md` conceded four lines below its own claim that replay "does not fetch the locator", which is why the claim could not be true. That sentence is the second clause of the `quotation_is_byte_exact` rite restated as a feature, and it is the third time this exact overclaim has been removed from these files.
+- Fixed `SourceArtifact` being described as proving byte identity in the ontology, the implementation status, and the principles. Nothing in the package reads the bytes: a digest and a length describing no file are accepted and replay. The record makes a caller's assertion immutable and attributable, which is worth having and is now what the documents say. A test pins the boundary rather than describing it.
+- Fixed `action-execution` being deleted from the not-implemented list while malleus still executes nothing. Stage 8c records a dispatch and hashes an outcome contract; it performs no action and observes no outcome. The entry is restored with that distinction stated.
+
+### Added
+
+- Added a release-artifact allowlist gate. A branch un-gitignored the private research directory and the sdist silently absorbed sixteen files of it, on an irrevocable path to PyPI, while the wheel stayed clean: `twine check` validates metadata and never reads content, and CI smoke-tests only the wheel. The gate builds both artifacts and fails on any path under a forbidden prefix, so the property holds whatever a future `.gitignore` edit forgets. Verified to fire on the branch that carried the leak: 17 forbidden members of 71.
+- Added a capability-assertion guard covering the class the previous guard missed. That guard checked a pending capability was *named* nearby and could not see the sentence three lines up asserting the capability exists; naming is not disclaiming. The new one is clause-scoped, because a requirement and a capability claim can share a sentence and the first was clearing the second. Verified to fire on all three relapsed sentences and to stay silent on the norms beside them.
+
 ## [0.8.0] - 2026-08-15
 
 ### Added

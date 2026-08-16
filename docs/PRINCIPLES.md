@@ -47,20 +47,31 @@ needing separate evidence, and no amount of validation supplies it.
 Every asserted tuple should name its source, and the reference should be
 byte-exact: the quoted span verified as a verbatim substring of the named
 source at write time, and the source content-addressed so that a changed
-source invalidates the citation rather than refreshing a cache.
+source should invalidate the citation rather than refresh a cache.
 
 That property is what turns "we preserved the original intent" from a claim
 about diligence into a statement anyone can recheck. It is also the property
 most often faked by accident, because a quote that was hand-copied looks
 exactly like a quote that was verified, right up until someone measures.
 
-Malleus now provides half of this property. `SourceArtifact` binds exact bytes
-by SHA-256 digest, length, media type, and locator. `Evidence` must cite the
-exact applied source record by ID and record hash, so changing the registered
-bytes invalidates the old evidence binding. Malleus still declares no quoted
-span and does not reopen the source to verify a quotation. That remaining
-boundary is `citation-byte-verification` in `IMPLEMENTATION_STATUS.md`. Until
-it exists, quoted-span verification belongs to the adopter's write path.
+Malleus now provides part of this property, and the part matters less than the
+part it does not. `SourceArtifact` records a **declared** byte identity: a
+SHA-256 digest, a length, a media type, and a locator, all supplied by the
+caller and hashed together. Nothing in the library reads the bytes, so a
+digest and a length that describe no file anywhere are accepted and replay.
+What the record gives you is immutability and attribution: the assertion
+cannot be edited later without detection, and `Evidence` names exactly which
+assertion it was made against.
+
+What it does not give you, stated so nobody has to discover it: malleus does
+not verify the digest against any bytes, does not reopen the locator, does not
+declare a quoted span, and **does not detect that a source changed**. Register
+new bytes and you get a second artifact; the first stays valid for the bytes
+it describes and the old evidence keeps pointing at it, unflagged. Nothing
+goes stale, because nothing is watching. That boundary is
+`citation-byte-verification` in `IMPLEMENTATION_STATUS.md`, and until it
+exists both the verification and the supersession check belong to the
+adopter's write path.
 
 Rite: `quotation_is_byte_exact`, with `citation_integrity` as its companion.
 One checks that the cited id resolves. The other checks that the cited bytes

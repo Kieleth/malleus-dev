@@ -46,6 +46,7 @@ from malleus.protocol import (
     MonitorStep,
     outcome_contract_digest,
     record_hash,
+    source_artifact_digest,
     source_artifact_fields,
     source_bytes_digest,
 )
@@ -1263,6 +1264,42 @@ class TestContentAddressedSources:
         assert first["source_byte_length"] == len(b"invoice amount 42000")
         assert first["source_content_digest"] != changed["source_content_digest"]
         assert first["artifact_hash"] != changed["artifact_hash"]
+
+    def test_the_builder_is_optional_and_a_fabricated_digest_is_accepted(self):
+        """R6 H3. `source_artifact_fields` is the only function in the package
+        that touches a `bytes` object, and it is a caller-side convenience
+        with no callers in `src/`. Everything downstream reads
+        `source_content_digest` as a given, so a digest and a length that
+        describe no file anywhere commit and replay.
+
+        This is not a defect to fix at this stage; it is the boundary. The
+        record makes a caller's assertion immutable and attributable, which is
+        worth having, and it verifies nothing. The test exists so that the
+        boundary is proven rather than described, and so that any future claim
+        that the artifact 'proves byte identity' has something to fail
+        against.
+        """
+        fabricated = source_artifact_digest(
+            schema_version="1",
+            artifact_id="artifact:source:phantom",
+            artifact_version="1",
+            source_content_digest="sha256:" + "b1" * 32,
+            source_byte_length=999999,          # no such file
+            source_media_type="application/pdf",
+            source_locator="documents/never-existed.pdf",
+        )
+        assert fabricated.startswith("sha256:")
+        honest = source_artifact_fields(
+            artifact_id="artifact:source:phantom",
+            artifact_version="1",
+            source_bytes=b"31 bytes of entirely real data.",
+            media_type="application/pdf",
+            locator="documents/never-existed.pdf",
+        )
+        # Same identity function, and it cannot tell the two apart: nothing
+        # in the package ever compares a declared length to real bytes.
+        assert honest["source_byte_length"] == 31
+        assert fabricated != honest["artifact_hash"]
 
     def test_source_artifact_is_replay_visible(self, ledger):
         anchor(ledger)

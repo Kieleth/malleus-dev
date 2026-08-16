@@ -52,11 +52,13 @@ proposal. The policy pins a canonical, nonempty set of exact `AUTHORITY`
 monitor records. The policy depends on those monitor records; the monitors do
 not depend on the composed policy, which avoids a content-hash cycle.
 
-Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact
-ID and version to the SHA-256 digest and length of the exact source bytes, plus
-their media type and locator. `Evidence` must name that applied source record
-and its exact ledger record hash. A changed source therefore requires a new
-source record and invalidates the old evidence binding.
+Stage 8a adds `SourceArtifact`. Its semantic hash binds the artifact ID and
+version to a caller-declared SHA-256 digest and length, plus a media type and
+locator. `Evidence` must name that applied source record and its exact ledger
+record hash. A changed source therefore requires a new source record, and the
+old evidence continues to name the old record, which remains valid for the
+bytes it declares. Nothing marks the earlier binding stale: malleus does not
+observe that a source changed.
 
 This is source identity, not source truth. Replay validates the recorded
 commitment but does not fetch the locator, authenticate its publisher, or

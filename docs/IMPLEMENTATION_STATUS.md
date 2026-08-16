@@ -28,13 +28,16 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 
 ## Stage 8a
 
-- Content-addressed `SourceArtifact` records derived from exact source bytes
+- Content-addressed `SourceArtifact` records declaring a source digest and length
 - Exact `Evidence` binding to an applied source artifact ID and record hash
 - Replay validation of source semantic hashes and atomic refusal of tampering
 
-Stage 8a identifies the registered bytes. It does not authenticate them,
-establish their truth, or verify that a quotation occurs within them. Those
-are separate checks.
+Stage 8a records what the caller declared about the bytes and makes that
+declaration immutable and attributable. It does not read the bytes: a digest
+and length describing no file are accepted and replay. It does not
+authenticate the source, establish its truth, verify that a quotation occurs
+within it, or notice that it changed. Those are separate checks, and the first
+of them is `citation-byte-verification` below.
 
 ## Stage 8b
 
@@ -141,6 +144,11 @@ no authorization validity interval.
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
+- `action-execution`: performing an authorized action. Stage 8c records a
+  dispatch and hashes an outcome contract (`src/malleus/execution.py`), which
+  is a commitment about how an outcome would be checked. Malleus executes
+  nothing and observes nothing. This entry was removed at 0.8.0 while the
+  capability remained absent; it is restored
 - `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
