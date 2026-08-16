@@ -171,6 +171,12 @@ promotion needs a second consumer.
 its user, and revisit when three adapters exist and the shape has stopped
 moving. Design the facade from three examples or not at all.
 
+Design under grooming: `design/COMMITMENT_LIFECYCLE.md`. Three layers, a
+four-slot adapter protocol, and explicit promotion criteria so the move to
+core is a move rather than a rewrite. Note the survey behind it: level 5 has
+no consumer outside this repository, so the abstraction axis is
+benchmark-to-benchmark, not application-to-application.
+
 ### B2. Make a construction failure report its blast radius
 
 Same as A5 (2), reached independently: a report that shows one heresy per
