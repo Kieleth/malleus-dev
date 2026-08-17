@@ -1,0 +1,4 @@
+interface:
+  display_name: "Malleus Acolyte"
+  short_description: "Ontology-first project implementation companion"
+  default_prompt: "Use $malleus-acolyte to implement this change under the project's Malleus ontology and validation rules."

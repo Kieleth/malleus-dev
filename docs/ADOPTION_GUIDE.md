@@ -60,10 +60,12 @@ Or vendor it: copy `ontology/malleus.yaml` into your repo (Logosphere does
 this, at `schema/malleus.yaml`). Vendoring works for non-Python projects.
 Record which malleus version you copied.
 
-While you are here: `malleus-inquisitor install-skills --project .` gives
-your coding assistant the `malleus-acolyte` skill, which carries this
-guide's playbook as standing orders and can self-check your adoption at any
-point. Everything below still applies; the skill just keeps it at hand.
+While you are here: `malleus-inquisitor install-skills --project .` installs
+the Malleus skills for Claude, preserving the original default. Add `--agent
+codex` for Codex or `--agent all` for both. The `malleus-acolyte` skill carries
+this guide's playbook and can self-check your adoption. `malleus-recon` handles
+bounded literature and prior-art investigations when those arise. Everything
+below still applies; the skills keep the relevant procedure at hand.
 
 ### 2. Create your project schema
 
@@ -230,7 +232,7 @@ pack to root). One consumer is project-specific. Two independent consumers is
 shared vocabulary. Do not push down speculatively before the second consumer
 exists.
 
-**An LLM is writing to the graph.**
+**Shelob is writing to the graph.**
 Let it reason freely, then make it commit conclusions only through typed
 operations. Feed rejections back to it verbatim; models correct course well
 when told exactly which constraint they violated. If it keeps producing valid

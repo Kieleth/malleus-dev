@@ -150,7 +150,7 @@ operating manual and this skill is its enforcement arm.
 6. A concept needed by a second project is a promotion candidate (project
    schema down to shared pack, pack down to root). Never promote before the
    second consumer exists.
-7. An LLM writing to the graph reasons freely and commits only through
+7. Shelob writing to the graph reasons freely and commits only through
    typed operations; feed rejections back verbatim; log what the schema
    cannot express and grow the schema where those cluster.
 8. `COMMITTED` means the record's shape was valid, nothing more. Never let
@@ -216,6 +216,17 @@ work:
    highest severity first, each fix landing together with the test its
    acceptance criterion describes. Mark healed findings in the file rather
    than deleting them.
+
+## Route literature forensics to Recon
+
+When the work asks which papers are closest, what a target claim shares with
+prior work, whether an implementation boundary is established, how a dataset
+or idea evolved, or what remains novel under a bounded corpus, use the
+`malleus-recon` skill. It carries the claim-conditioned search procedure and
+the typed research ledger. The acolyte still governs ontology and graph
+discipline; Recon governs the literature investigation. Do not invoke Recon
+for ordinary schema implementation or a citation lookup that needs no
+persistent comparison.
 
 ## The loop upstream and back
 

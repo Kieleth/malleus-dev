@@ -12,6 +12,7 @@ from malleus.recon import (
     ReconProject,
     RecordCandidate,
     build_outputs,
+    bundled_contract_path,
     compare_subjects,
     visualize,
 )
@@ -21,6 +22,12 @@ from malleus.recon.store import load_record_file
 
 
 NOW = lambda: "2026-08-16T12:00:00+00:00"
+
+
+def test_bundled_contract_is_resolvable():
+    path = bundled_contract_path()
+    assert path.name == "RECON_CONTRACT.md"
+    assert path.read_text(encoding="utf-8").startswith("# Malleus Recon contract")
 
 
 def _record(project, record_type, record, supersedes=None):

@@ -3,7 +3,7 @@
 Usage:
     malleus-inquisitor path/to/schema.yaml
     malleus-inquisitor path/to/schema.yaml --map malleus=vendor/malleus.yaml --json
-    malleus-inquisitor install-skills [--user | --project DIR]
+    malleus-inquisitor install-skills [--user | --project DIR] [--agent AGENT]
 
 Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage
 or a broken instrument (an unreadable or malformed rubric). A broken subject
@@ -30,6 +30,7 @@ from malleus.inquisition import (
 
 _BADGES = {HERESY: "✠ HERESY     ", SUSPICION: "? suspicion  ",
            NOTE: "· note       ", COMMENDATION: "+ commended  "}
+_AGENT_DIRECTORIES = {"claude": ".claude", "codex": ".codex"}
 
 
 def _bundled_skills_dir() -> Path:
@@ -49,26 +50,35 @@ def _bundled_skills_dir() -> Path:
 def _install_skills(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         prog="malleus-inquisitor install-skills",
-        description="Copy the shipped agent skills into a .claude/skills directory.",
+        description="Copy the shipped Malleus skills into an agent's skills directory.",
     )
     target = parser.add_mutually_exclusive_group()
     target.add_argument("--user", action="store_true",
-                        help="install into ~/.claude/skills (every project on this machine)")
+                        help="install for this user (every project on this machine)")
     target.add_argument("--project", metavar="DIR", default=None,
-                        help="install into DIR/.claude/skills (default: current directory)")
+                        help="install for DIR (default: current directory)")
+    parser.add_argument(
+        "--agent",
+        choices=("claude", "codex", "all"),
+        default="claude",
+        help="target agent; default claude preserves the existing installer behavior",
+    )
     args = parser.parse_args(argv)
 
     base = Path.home() if args.user else Path(args.project or ".")
-    destination = base / ".claude" / "skills"
-    destination.mkdir(parents=True, exist_ok=True)
+    agents = tuple(_AGENT_DIRECTORIES) if args.agent == "all" else (args.agent,)
     installed = []
-    for skill_dir in sorted(_bundled_skills_dir().iterdir()):
-        if not (skill_dir / "SKILL.md").is_file():
-            continue
-        shutil.copytree(skill_dir, destination / skill_dir.name, dirs_exist_ok=True)
-        installed.append(skill_dir.name)
-    for name in installed:
-        print(f"installed skill: {name} -> {destination / name}")
+    for agent in agents:
+        destination = base / _AGENT_DIRECTORIES[agent] / "skills"
+        destination.mkdir(parents=True, exist_ok=True)
+        for skill_dir in sorted(_bundled_skills_dir().iterdir()):
+            if not (skill_dir / "SKILL.md").is_file():
+                continue
+            target_dir = destination / skill_dir.name
+            shutil.copytree(skill_dir, target_dir, dirs_exist_ok=True)
+            installed.append((agent, skill_dir.name, target_dir))
+    for agent, name, target_dir in installed:
+        print(f"installed {agent} skill: {name} -> {target_dir}")
     print("Re-run after upgrading malleus-dev; new rites exist because "
           "someone paid for them.")
     return 0 if installed else 1

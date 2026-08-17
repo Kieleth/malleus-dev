@@ -1,0 +1,4 @@
+interface:
+  display_name: "Malleus Inquisitor"
+  short_description: "Audit ontology and typed-graph discipline"
+  default_prompt: "Use $malleus-inquisitor to audit this project's ontology and typed knowledge-graph discipline."

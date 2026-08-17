@@ -1248,8 +1248,29 @@ class TestSkillsAreInstallable:
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
         out = capsys.readouterr().out
-        for name in ("malleus-acolyte", "malleus-inquisitor"):
+        for name in ("malleus-acolyte", "malleus-inquisitor", "malleus-recon"):
             assert (tmp_path / ".claude" / "skills" / name / "SKILL.md").is_file()
             assert name in out
         # Idempotent refresh: a second run overwrites without error.
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
+
+    def test_install_skills_for_codex(self, tmp_path, capsys):
+        assert main(
+            ["install-skills", "--project", str(tmp_path), "--agent", "codex"]
+        ) == 0
+        out = capsys.readouterr().out
+        for name in ("malleus-acolyte", "malleus-inquisitor", "malleus-recon"):
+            skill = tmp_path / ".codex" / "skills" / name
+            assert (skill / "SKILL.md").is_file()
+            assert (skill / "agents" / "openai.yaml").is_file()
+            assert f"installed codex skill: {name}" in out
+        assert not (tmp_path / ".claude").exists()
+
+    def test_install_skills_for_both_agents(self, tmp_path):
+        assert main(
+            ["install-skills", "--project", str(tmp_path), "--agent", "all"]
+        ) == 0
+        for directory in (".claude", ".codex"):
+            assert (
+                tmp_path / directory / "skills" / "malleus-recon" / "SKILL.md"
+            ).is_file()

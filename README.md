@@ -43,6 +43,13 @@ pip install malleus-dev
 
 The Python package contains the logic compiler and verifier. Executing logic checks also requires a `swipl` executable on `PATH`; absence fails explicitly at check time.
 
+Recon's core recording and export code ships with Malleus. Install its optional
+dependency set for the interactive graph view:
+
+```bash
+pip install malleus-dev[recon]
+```
+
 ## Quick start
 
 ```python
@@ -280,6 +287,34 @@ Adoption guides:
 - [docs/EFFECT_PROTOCOL.md](docs/EFFECT_PROTOCOL.md): the generic authorization-to-external-observation path and its composable delivery profiles
 - [docs/DELIMITATIONS.md](docs/DELIMITATIONS.md): what malleus reuses, rejects, and can honestly claim against OWL, SHACL, TypeDB, XTDB, nanopublications, and the rest of the field
 - [docs/RECIPES.md](docs/RECIPES.md): six recipes for capturing and using domain knowledge in a KG, each grounded in working code from a surveyed fleet of adopting projects
+- [docs/RECON_CONTRACT.md](docs/RECON_CONTRACT.md): the claim, evidence, comparison, revision, and export boundaries for Malleus Recon
+
+## Malleus Recon
+
+Recon is the literature-forensics part of Malleus. It records a bounded review
+as typed works, claims, results, evidence, search events, comparison axes, and
+relations in an append-only ledger. It can then rebuild the graph, exact set
+comparisons, matrix, bibliography, readable report, and checksum manifest.
+
+```bash
+malleus-recon init research/recon \
+  --title "Closest work to typed graph admission" \
+  --target target:typed-graph-admission \
+  --actor reviewer
+malleus-recon record research/recon ReviewTarget target.json --actor reviewer
+malleus-recon validate research/recon
+malleus-recon build research/recon
+```
+
+`RECORDED` means the candidate passed the ontology and local ledger rules. It
+does not mean the claim is true. Recon reports union, intersection, directional
+differences, partial coverage, and unresolved axes. It does not turn those
+facts into an automatic novelty, plagiarism, truth, or paper-quality verdict.
+
+The `malleus-recon` skill carries the research procedure: claim-first search,
+bounded citation recursion, source inspection, cautious negative findings, and
+human-reviewed conclusions. The Python module is provider-independent and
+makes no remote calls.
 
 ## The value is prevention
 
@@ -325,14 +360,13 @@ Three tiers:
   no project named. It is data on purpose: tune it, extend it, and send
   generic lessons back as issues or PRs. That is how the Ordo learns.
 
-And for every project that uses malleus, there is the acolyte:
-`malleus-inquisitor install-skills --user` (or `--project .`) copies the
-shipped agent skills into your `.claude/skills`, so any coding-assistant
-session gets the `malleus-acolyte` companion: the adoption playbook as
-standing orders, self-inquisitions, and, unlike the central inquisitor,
-license to fix its own project's findings. Generic lessons flow upstream as
-issues and PRs; releases carry the grown rubric and skills back down.
-Re-run the installer after upgrading.
+Every project can also install the acolyte and Recon procedure:
+`malleus-inquisitor install-skills --project .` preserves the existing Claude
+default. Add `--agent codex` for Codex or `--agent all` for both. The acolyte
+carries the adoption playbook and can fix its own project's findings. Recon
+carries the evidence-first literature workflow. Generic lessons flow upstream
+as issues and PRs; releases carry the grown rubric and skills back down. Re-run
+the installer after upgrading.
 
 ## Tests
 
