@@ -1,0 +1,552 @@
+id: https://malleus.dev/schema/recon
+name: recon
+version: 0.1.0
+title: Malleus Recon Literature Forensics Extension
+description: >-
+  Typed records for bounded, evidence-linked literature review and
+  claim-level comparison. Structural recording does not establish truth,
+  novelty, copying, intent, or paper quality.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  recon: https://malleus.dev/schema/recon/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  ReviewState:
+    permissible_values:
+      PROPOSED:
+        description: Recorded for inspection but not yet reviewed.
+      REVIEWED:
+        description: Reviewed against the attached evidence.
+      CONTESTED:
+        description: Material reviewer disagreement remains visible.
+      RETIRED:
+        description: Excluded from current analysis without erasing history.
+
+  PublicationStatus:
+    permissible_values:
+      PEER_REVIEWED: {}
+      ACCEPTED: {}
+      PREPRINT: {}
+      STANDARD: {}
+      DOCUMENTATION: {}
+      SOFTWARE: {}
+      PATENT: {}
+      UNKNOWN: {}
+
+  EvidenceSourceClass:
+    permissible_values:
+      PUBLISHER: {}
+      PREPRINT: {}
+      AUTHOR_COPY: {}
+      STANDARD: {}
+      PROJECT_DOCUMENTATION: {}
+      REPOSITORY: {}
+      DATASET: {}
+      PATENT: {}
+      INDEX: {}
+      OTHER: {}
+
+  EvidenceAccessStatus:
+    permissible_values:
+      INSPECTED: {}
+      ABSTRACT_ONLY: {}
+      INACCESSIBLE: {}
+      UNVERIFIED: {}
+
+  AssertionStatus:
+    permissible_values:
+      SOURCE_EXPLICIT:
+        description: The inspected source states or directly links the assertion.
+      REVIEWER_INFERENCE:
+        description: The reviewer derived the assertion from named evidence.
+      NEGATIVE_AUDIT:
+        description: A named bounded artifact was inspected for an absent item.
+
+  CoverageLevel:
+    permissible_values:
+      CENTRAL: {}
+      MATERIAL: {}
+      PARTIAL: {}
+      ADJACENT: {}
+      NOT_ESTABLISHED: {}
+      CONTRADICTED: {}
+      NOT_APPLICABLE: {}
+
+  SearchOutcome:
+    permissible_values:
+      MATERIAL_SOURCE_FOUND: {}
+      ADJACENT_SOURCE_FOUND: {}
+      NO_MATERIAL_SOURCE_FOUND: {}
+      ACCESS_BLOCKED: {}
+      UNRESOLVED: {}
+
+  ReconEventType:
+    permissible_values:
+      SEARCH: {}
+
+  ReconRelationType:
+    permissible_values:
+      HAS_CLAIM: {}
+      HAS_RESULT: {}
+      CITES: {}
+      EXPLICITLY_BUILDS_ON: {}
+      CLAIM_ABOUT_AXIS: {}
+      RESULT_ABOUT_AXIS: {}
+      COVERS_AXIS: {}
+      QUALIFIES_CLAIM: {}
+
+classes:
+  ReviewedEntity:
+    mixin: true
+    slots:
+      - label
+      - review_state
+      - evidence_ids
+      - notes
+
+  ReviewedRelation:
+    mixin: true
+    slots:
+      - review_state
+      - assertion_status
+      - confidence
+      - basis
+      - evidence_ids
+      - notes
+    slot_usage:
+      review_state:
+        required: true
+      assertion_status:
+        required: true
+      confidence:
+        required: true
+      basis:
+        required: true
+      evidence_ids:
+        required: true
+
+  ReviewSubject:
+    is_a: Entity
+    abstract: true
+    mixins:
+      - ReviewedEntity
+
+  Work:
+    is_a: ReviewSubject
+    slots:
+      - title
+      - authors
+      - venue
+      - identifiers
+      - priority_date
+      - priority_date_basis
+      - publication_status
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      title:
+        required: true
+      priority_date:
+        required: true
+      priority_date_basis:
+        required: true
+      publication_status:
+        required: true
+    class_uri: recon:Work
+
+  ReviewTarget:
+    is_a: ReviewSubject
+    slots:
+      - scope
+      - cutoff_date
+      - review_method
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      scope:
+        required: true
+      cutoff_date:
+        required: true
+      review_method:
+        required: true
+    class_uri: recon:ReviewTarget
+
+  Claim:
+    is_a: Entity
+    mixins:
+      - ReviewedEntity
+    slots:
+      - statement
+      - claim_kind
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      statement:
+        required: true
+      claim_kind:
+        required: true
+    class_uri: recon:Claim
+
+  Result:
+    is_a: Entity
+    mixins:
+      - ReviewedEntity
+    slots:
+      - statement
+      - result_kind
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      statement:
+        required: true
+      result_kind:
+        required: true
+    class_uri: recon:Result
+
+  ComparisonAxis:
+    is_a: Entity
+    mixins:
+      - ReviewedEntity
+    slots:
+      - axis_definition
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      axis_definition:
+        required: true
+    class_uri: recon:ComparisonAxis
+
+  EvidenceAttachment:
+    is_a: Entity
+    mixins:
+      - ReviewedEntity
+    slots:
+      - source_uri
+      - local_path
+      - locator
+      - evidence_description
+      - source_class
+      - accessed_on
+      - access_status
+      - artifact_sha256
+      - artifact_byte_length
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      locator:
+        required: true
+      evidence_description:
+        required: true
+      source_class:
+        required: true
+      accessed_on:
+        required: true
+      access_status:
+        required: true
+    class_uri: recon:EvidenceAttachment
+
+  ReviewBoundary:
+    is_a: Entity
+    mixins:
+      - ReviewedEntity
+    slots:
+      - boundary_kind
+      - boundary_reason
+    slot_usage:
+      label:
+        required: true
+      review_state:
+        required: true
+      boundary_kind:
+        required: true
+      boundary_reason:
+        required: true
+    class_uri: recon:ReviewBoundary
+
+  SearchEvent:
+    is_a: Event
+    slots:
+      - query
+      - search_rationale
+      - search_outcome
+      - review_state
+      - notes
+    slot_usage:
+      event_type:
+        range: ReconEventType
+        required: true
+        equals_string: SEARCH
+      occurred_at:
+        required: true
+      query:
+        required: true
+      search_rationale:
+        required: true
+      search_outcome:
+        required: true
+      review_state:
+        required: true
+    class_uri: recon:SearchEvent
+
+  HasClaimRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: HAS_CLAIM
+      source_id:
+        range: ReviewSubject
+      target_id:
+        range: Claim
+    class_uri: recon:HasClaimRelation
+
+  HasResultRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: HAS_RESULT
+      source_id:
+        range: Work
+      target_id:
+        range: Result
+    class_uri: recon:HasResultRelation
+
+  CitesRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: CITES
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:CitesRelation
+
+  ExplicitlyBuildsOnRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: EXPLICITLY_BUILDS_ON
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:ExplicitlyBuildsOnRelation
+
+  ClaimAboutAxisRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: CLAIM_ABOUT_AXIS
+      source_id:
+        range: Claim
+      target_id:
+        range: ComparisonAxis
+    class_uri: recon:ClaimAboutAxisRelation
+
+  ResultAboutAxisRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: RESULT_ABOUT_AXIS
+      source_id:
+        range: Result
+      target_id:
+        range: ComparisonAxis
+    class_uri: recon:ResultAboutAxisRelation
+
+  CoversAxisRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slots:
+      - coverage_level
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: COVERS_AXIS
+      source_id:
+        range: ReviewSubject
+      target_id:
+        range: ComparisonAxis
+      coverage_level:
+        required: true
+    class_uri: recon:CoversAxisRelation
+
+  QualifiesClaimRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: QUALIFIES_CLAIM
+      source_id:
+        range: Claim
+      target_id:
+        range: Claim
+    class_uri: recon:QualifiesClaimRelation
+
+slots:
+  label:
+    range: string
+    description: Short human-readable record label.
+
+  review_state:
+    range: ReviewState
+
+  evidence_ids:
+    range: EvidenceAttachment
+    multivalued: true
+    description: Evidence records inspected for this assertion.
+
+  notes:
+    range: string
+    multivalued: true
+
+  title:
+    range: string
+
+  authors:
+    range: string
+    multivalued: true
+
+  venue:
+    range: string
+
+  identifiers:
+    range: string
+    multivalued: true
+    description: CURIE-like identifiers such as DOI or arXiv identifiers.
+
+  priority_date:
+    range: date
+
+  priority_date_basis:
+    range: string
+
+  publication_status:
+    range: PublicationStatus
+
+  scope:
+    range: string
+
+  cutoff_date:
+    range: date
+
+  review_method:
+    range: string
+
+  statement:
+    range: string
+
+  claim_kind:
+    range: string
+
+  result_kind:
+    range: string
+
+  axis_definition:
+    range: string
+
+  source_uri:
+    range: uri
+
+  local_path:
+    range: string
+
+  locator:
+    range: string
+
+  evidence_description:
+    range: string
+
+  source_class:
+    range: EvidenceSourceClass
+
+  accessed_on:
+    range: date
+
+  access_status:
+    range: EvidenceAccessStatus
+
+  artifact_sha256:
+    range: string
+
+  artifact_byte_length:
+    range: integer
+    minimum_value: 0
+
+  boundary_kind:
+    range: string
+
+  boundary_reason:
+    range: string
+
+  query:
+    range: string
+
+  search_rationale:
+    range: string
+
+  search_outcome:
+    range: SearchOutcome
+
+  assertion_status:
+    range: AssertionStatus
+
+  confidence:
+    range: float
+    minimum_value: 0.0
+    maximum_value: 1.0
+
+  basis:
+    range: string
+
+  coverage_level:
+    range: CoverageLevel

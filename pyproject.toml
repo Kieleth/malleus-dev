@@ -70,6 +70,7 @@ include = [
     ".claude/skills/malleus-inquisitor/SKILL.md",
     ".claude/skills/malleus-acolyte/SKILL.md",
     "tests/test_inquisition.py",
+    "tests/test_recon_ontology.py",
     "ontology/**/*.yaml",
     "prolog/**/*.yaml",
     "prolog/**/*.pl",
@@ -117,5 +118,6 @@ testpaths = [
     "tests/test_logic.py",
     "tests/test_status.py",
     "tests/test_inquisition.py",
+    "tests/test_recon_ontology.py",
 ]
 python_files = ["test_*.py"]
