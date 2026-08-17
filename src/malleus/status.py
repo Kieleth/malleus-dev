@@ -25,7 +25,7 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.9.0",
+    package_version="0.10.0",
     current_stage="8c",
     boundary="stage-8c-executable-provenance-and-effect-closure",
     completed_stages=(
@@ -89,6 +89,10 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "authorized-action-dispatch-recording",
         "terminal-execution-receipts",
         "independent-outcome-observation-recording",
+        "typed-literature-review-ledger",
+        "evidence-linked-literature-comparison",
+        "deterministic-recon-artifact-builds",
+        "legacy-literature-kg-v1-import",
     ),
     pending_capabilities=(
         "monitor-execution-orchestration",

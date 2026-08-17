@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.9.0` implements the
+Malleus package version `0.10.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -70,6 +70,26 @@ recorded dispatch per action and one execution per dispatch define the current
 profile. A future delivery profile may add idempotency, outbox, deduplication,
 and external effect-ledger records without changing the core boundary. See
 `docs/EFFECT_PROTOCOL.md`.
+
+## Recon tooling in 0.10.0
+
+The package also ships Malleus Recon without advancing the core assent stage:
+
+- a typed literature-review ontology and append-only, replay-validated ledger;
+- evidence-linked works, claims, results, searches, review boundaries, and
+  claim-level comparison relations;
+- exact intersection, union, directional difference, partial, unresolved, and
+  contested comparison views;
+- deterministic JSON, JSON-LD, GraphML, CSV, BibTeX, Markdown, manifest, and
+  ZIP outputs;
+- an atomic typed importer for the existing literature-forensics graph v1.x;
+  and
+- the `malleus-recon` agent skill, installable for Claude, Codex, or both.
+
+`RECORDED` establishes structural and ledger validity, not truth or novelty.
+Recon has no crawler, provider integration, automatic novelty adjudicator, or
+multi-writer store. Its source digests preserve caller declarations and do not
+independently authenticate source bytes. See `docs/RECON_CONTRACT.md`.
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -243,3 +263,4 @@ ontology is `0.4.0`; the assent ontology is `0.8.0`.
 | `0.7.0` | `stage-7c-policy-selected-authorization-control` | Same boundary, hardened: ontology identity from the resolved constraint table, closed arbiter vocabularies, and the inquisition toolchain |
 | `0.8.0` | `stage-8c-executable-provenance-and-effect-closure` | Exact source bytes, thin epistemic monitor adapters, authorized dispatch, execution receipts, and independent outcome observations |
 | `0.9.0` | `stage-8c-executable-provenance-and-effect-closure` | Same boundary; all LinkML built-in ranges load, the bundled root resolves without a map, and a construction failure names the rites it skipped |
+| `0.10.0` | `stage-8c-executable-provenance-and-effect-closure` | Same core boundary; adds typed, replayable literature forensics, deterministic comparison artifacts, the v1 literature-KG importer, and the Recon agent skill |

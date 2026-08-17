@@ -5,6 +5,53 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-08-16
+
+This release adds Malleus Recon as a provider-independent literature-forensics
+tool. The core assent protocol remains at Stage 8c.
+
+### Added
+
+- Added the Recon ontology for evidence-linked review targets, works, claims,
+  reported results, search events, comparison axes, review boundaries, and
+  typed analytical relations.
+- Added the `malleus.recon` module and `malleus-recon` CLI. A local Recon
+  project records candidates in a hash-linked append-only ledger, preserves
+  rejected candidates outside current graph state, requires exact
+  supersession for revision, and rebuilds its current graph by replay.
+- Added exact claim-level set comparison and deterministic JSON, JSON-LD,
+  GraphML, CSV, BibTeX, Markdown, checksum-manifest, and ZIP outputs.
+- Added an atomic typed importer for the literature-forensics graph v1.x. An
+  unknown relation blocks the import unless the operator explicitly accepts a
+  recorded unmapped boundary. The current 1.5 corpus imports 329 nodes and
+  1,791 edges as 2,357 typed records with no unmapped relations.
+- Added the `malleus-recon` agent skill for claim-conditioned search, bounded
+  recursive exploration, source inspection, paper atomization, comparison,
+  and cautious conclusion writing. The acolyte now routes literature work to
+  Recon.
+- Added Codex metadata for all shipped skills and `--agent claude`, `--agent
+  codex`, and `--agent all` installation targets. The prior Claude default is
+  unchanged.
+
+### Changed
+
+- Changed Recon batch validation and artifact building to validate one
+  verified snapshot instead of replaying the complete graph for every record
+  or paper. On the current local 2,357-record corpus, import and build each
+  complete in under one second on the development machine.
+- Added `malleus-recon` to clean-wheel console-script smoke testing. CI had
+  claimed to invoke every declared script while invoking only the inquisitor.
+
+### Boundary
+
+- `RECORDED` means a candidate passed the Recon ontology and local integrity
+  rules. It is not a truth, novelty, plagiarism, priority, or quality verdict.
+- Recon performs no remote search or provider call, does not authenticate
+  caller-supplied source digests, and provides no database server or
+  multi-writer protocol.
+- The imported local literature graph is an acceptance and usability corpus,
+  not a packaged benchmark fixture or an encoded scientific conclusion.
+
 ## [0.9.0] - 2026-08-16
 
 Four adopter-facing defects, all found by the fleet rather than by us. Three of them mean the tooling was wrong about a correct project, and two independent adopters lost a schema to the same hole in one week.

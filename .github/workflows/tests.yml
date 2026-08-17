@@ -54,3 +54,4 @@ jobs:
           cd /tmp
           SCHEMA=$(/tmp/wheel-smoke/bin/python -c "from malleus.ontology import bundled_ontology_path; print(bundled_ontology_path('malleus.yaml'))")
           /tmp/wheel-smoke/bin/malleus-inquisitor "$SCHEMA"
+          /tmp/wheel-smoke/bin/malleus-recon --help
