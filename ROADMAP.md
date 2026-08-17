@@ -82,6 +82,10 @@ digest; it should also print the installed malleus version and the resolved
 bundled root, so one command answers "which root am I actually running
 against" and a stale install announces itself.
 
+This is one leaf of B3. A bootstrap version line detects one mismatch; an
+execution bundle commits the complete code, schema, data, producer, runtime,
+interaction, and budget combination used by an executable stage.
+
 **Verdict: accept the rite, and do the CLI line soon.** It is one line and it
 closes a confusing first-contact failure.
 
@@ -184,3 +188,34 @@ file and says nothing about the seven rites it skipped invites the reader to
 conclude that everything else passed.
 
 **Verdict: accept, groom with A5.**
+
+### B3. Content-address the complete execution combination
+
+The paper pilot and the retained benchmark harness independently need one
+identity for a combination currently scattered across commits, package
+versions, ontologies, rules, corpora, producer settings, prompts, tools,
+runtime dependencies, condition definitions, and budgets. A package version
+or model alias alone cannot identify the executable system.
+
+The adopted design is `design/EXECUTION_BUNDLE.md`. Each executable stage gets
+one immutable `ExecutionBundleManifest`; any material input change creates a
+new digest. The feasibility pilot and final experiment therefore have
+different roots. A later authorization names one exact digest rather than a
+mutable set of filenames and version strings. The authorization also names the
+stage gate-record digest plus the exact bundle `SourceArtifact` and ledger
+record identities, so the portable content identity and one concrete protocol
+registration remain distinct and cross-checked.
+
+The first implementation stays in the research harness and records canonical
+bundle bytes as a Malleus 0.9.0 `SourceArtifact`. It preserves the public
+boundary: core commits caller declarations but does not authenticate bytes,
+providers, licenses, hidden inputs, or actual execution.
+
+The reserved core type is `ExecutionBundleArtifact`. Do not add it to the
+assent ontology from this roadmap item alone. Promotion requires explicit core
+authorization, exact historical-ontology replay policy, a second non-paper
+consumer, and renewed protocol, API, fingerprint, and replay review. The paper
+must not silently rebase from its frozen 0.9.0 substrate.
+
+**Verdict: accept the shared design and paper-local implementation path. Core
+implementation remains a separately authorized change.**
