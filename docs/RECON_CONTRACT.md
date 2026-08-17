@@ -132,18 +132,28 @@ under `build/`; the ledger remains the authority.
 The first CLI surface is:
 
 ```text
-malleus-recon init DIRECTORY --title TITLE --target TARGET
+malleus-recon init DIRECTORY --title TITLE --target TARGET --actor ACTOR
 malleus-recon record DIRECTORY TYPE RECORD.json --actor ACTOR
 malleus-recon record DIRECTORY TYPE RECORD.json --actor ACTOR --supersedes EVENT_ID
 malleus-recon validate DIRECTORY
 malleus-recon build DIRECTORY
 malleus-recon compare DIRECTORY TARGET_ID WORK_ID
 malleus-recon visualize DIRECTORY
+malleus-recon import-v1 DIRECTORY literature_kg.json --actor ACTOR
 ```
 
-`build` emits canonical JSON, JSON-LD, GraphML, node and edge CSV files, a
-work-by-axis matrix, a Markdown report, and a checksum manifest. Interactive
-HTML visualization requires the `recon` optional dependency set.
+`build` emits canonical JSON, JSON-LD, GraphML, node and edge CSV files, an
+evidence table, a work-by-axis matrix, exact per-work comparisons, metrics, a
+BibTeX bibliography, a Markdown report, a checksum manifest, and a
+deterministic ZIP. Interactive HTML visualization requires the `recon`
+optional dependency set.
+
+`import-v1` is a typed adapter for the canonical literature-forensics graph
+schema used to derive Recon. It requires an empty ledger and maps every known
+node and relationship family before committing one atomic batch. An unknown
+endpoint pattern blocks the whole import unless the operator explicitly uses
+`--allow-unmapped`; the resulting boundary and exact unmapped counts then enter
+the ledger.
 
 ## Acceptance boundary for version 0.1
 

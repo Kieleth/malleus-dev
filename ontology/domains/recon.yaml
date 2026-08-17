@@ -102,6 +102,25 @@ enums:
       RESULT_ABOUT_AXIS: {}
       COVERS_AXIS: {}
       QUALIFIES_CLAIM: {}
+      CLAIM_BUILDS_ON: {}
+      WORK_COMPARES_TO: {}
+      CLAIM_COMPARES_TO: {}
+      COMPLEMENTS: {}
+      CONTRASTS_WITH: {}
+      DEPENDS_ON: {}
+      EVALUATES_ON: {}
+      EXTENDS: {}
+      IMPLEMENTS: {}
+      OMITS_RELEVANT_CITATION_TO: {}
+      POSSIBLE_PRIOR_ART_FOR: {}
+      PRECEDES: {}
+      QUALIFIES_WORK: {}
+      WORK_QUALIFIES_CLAIM: {}
+      SIMULTANEOUS_WITH: {}
+      SUBSTANTIALLY_OVERLAPS_WITH: {}
+      SUPPORTS_CLAIM: {}
+      SURVEYS: {}
+      USES: {}
 
 classes:
   ReviewedEntity:
@@ -188,6 +207,7 @@ classes:
     slots:
       - statement
       - claim_kind
+      - confidence
     slot_usage:
       label:
         required: true
@@ -206,6 +226,7 @@ classes:
     slots:
       - statement
       - result_kind
+      - confidence
     slot_usage:
       label:
         required: true
@@ -223,6 +244,8 @@ classes:
       - ReviewedEntity
     slots:
       - axis_definition
+      - axis_code
+      - axis_scope
     slot_usage:
       label:
         required: true
@@ -402,6 +425,7 @@ classes:
       - ReviewedRelation
     slots:
       - coverage_level
+      - coverage_maturity
     slot_usage:
       relation_type:
         range: ReconRelationType
@@ -429,6 +453,291 @@ classes:
       target_id:
         range: Claim
     class_uri: recon:QualifiesClaimRelation
+
+  ClaimBuildsOnRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: CLAIM_BUILDS_ON
+      source_id:
+        range: Claim
+      target_id:
+        range: Claim
+    class_uri: recon:ClaimBuildsOnRelation
+
+  WorkComparesToRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: WORK_COMPARES_TO
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:WorkComparesToRelation
+
+  ClaimComparesToRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: CLAIM_COMPARES_TO
+      source_id:
+        range: Claim
+      target_id:
+        range: Claim
+    class_uri: recon:ClaimComparesToRelation
+
+  ComplementsRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: COMPLEMENTS
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:ComplementsRelation
+
+  ContrastsWithRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: CONTRASTS_WITH
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:ContrastsWithRelation
+
+  DependsOnRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: DEPENDS_ON
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:DependsOnRelation
+
+  EvaluatesOnRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: EVALUATES_ON
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:EvaluatesOnRelation
+
+  ExtendsRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: EXTENDS
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:ExtendsRelation
+
+  ImplementsRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: IMPLEMENTS
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:ImplementsRelation
+
+  OmitsRelevantCitationRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: OMITS_RELEVANT_CITATION_TO
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:OmitsRelevantCitationRelation
+
+  PossiblePriorArtForRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: POSSIBLE_PRIOR_ART_FOR
+      source_id:
+        range: Claim
+      target_id:
+        range: Claim
+    class_uri: recon:PossiblePriorArtForRelation
+
+  PrecedesRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: PRECEDES
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:PrecedesRelation
+
+  QualifiesWorkRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: QUALIFIES_WORK
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:QualifiesWorkRelation
+
+  WorkQualifiesClaimRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: WORK_QUALIFIES_CLAIM
+      source_id:
+        range: Work
+      target_id:
+        range: Claim
+    class_uri: recon:WorkQualifiesClaimRelation
+
+  SimultaneousWithRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: SIMULTANEOUS_WITH
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:SimultaneousWithRelation
+
+  SubstantiallyOverlapsWithRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: SUBSTANTIALLY_OVERLAPS_WITH
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:SubstantiallyOverlapsWithRelation
+
+  SupportsClaimRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: SUPPORTS_CLAIM
+      source_id:
+        range: Result
+      target_id:
+        range: Claim
+    class_uri: recon:SupportsClaimRelation
+
+  SurveysRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: SURVEYS
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:SurveysRelation
+
+  UsesRelation:
+    is_a: Relation
+    mixins:
+      - ReviewedRelation
+    slot_usage:
+      relation_type:
+        range: ReconRelationType
+        required: true
+        equals_string: USES
+      source_id:
+        range: Work
+      target_id:
+        range: Work
+    class_uri: recon:UsesRelation
 
 slots:
   label:
@@ -492,6 +801,12 @@ slots:
   axis_definition:
     range: string
 
+  axis_code:
+    range: string
+
+  axis_scope:
+    range: string
+
   source_uri:
     range: uri
 
@@ -548,3 +863,6 @@ slots:
 
   coverage_level:
     range: CoverageLevel
+
+  coverage_maturity:
+    range: string

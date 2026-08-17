@@ -92,3 +92,29 @@ def test_work_allows_an_unknown_priority_date_but_not_an_unknown_basis():
         },
     )
     assert errors == []
+
+
+def test_recon_has_explicit_types_for_every_legacy_relation_family():
+    registry = OntologyRegistry(SCHEMA)
+    expected = {
+        "ClaimBuildsOnRelation",
+        "WorkComparesToRelation",
+        "ClaimComparesToRelation",
+        "ComplementsRelation",
+        "ContrastsWithRelation",
+        "DependsOnRelation",
+        "EvaluatesOnRelation",
+        "ExtendsRelation",
+        "ImplementsRelation",
+        "OmitsRelevantCitationRelation",
+        "PossiblePriorArtForRelation",
+        "PrecedesRelation",
+        "QualifiesWorkRelation",
+        "WorkQualifiesClaimRelation",
+        "SimultaneousWithRelation",
+        "SubstantiallyOverlapsWithRelation",
+        "SupportsClaimRelation",
+        "SurveysRelation",
+        "UsesRelation",
+    }
+    assert expected <= set(registry.type_names())

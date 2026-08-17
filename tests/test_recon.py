@@ -10,11 +10,13 @@ from malleus.ledger import LedgerError
 from malleus.recon import (
     ReconError,
     ReconProject,
+    RecordCandidate,
     build_outputs,
     compare_subjects,
     visualize,
 )
 from malleus.recon.cli import main
+from malleus.recon.import_v1 import import_literature_kg_v1
 from malleus.recon.store import load_record_file
 
 
@@ -58,6 +60,106 @@ def _relation(identifier, source, target, coverage):
         "basis": "The cited section was inspected against the axis definition.",
         "evidence_ids": ["evidence:paper"],
         "coverage_level": coverage,
+    }
+
+
+def _legacy_evidence():
+    return {
+        "url": "https://example.org/paper",
+        "locator": "section 3",
+        "description": "Inspected source section.",
+        "source_class": "publisher",
+        "accessed": "2026-08-16",
+    }
+
+
+def _legacy_graph(extra_edges=None):
+    evidence = [_legacy_evidence()]
+    return {
+        "meta": {
+            "version": "1.4.0",
+            "as_of": "2026-08-16",
+            "method": "Claim-conditioned primary-source review",
+            "set_comparison": {"target_paper_id": "claim:target"},
+        },
+        "nodes": [
+            {
+                "id": "axis:atomic",
+                "type": "concept",
+                "label": "Atomic commitment",
+                "summary": "The accepted transition and graph application are atomic.",
+                "comparison_code": "A13",
+                "comparison_scope": "TARGET_CURRENT",
+            },
+            {
+                "id": "claim:target",
+                "type": "claim",
+                "label": "Target claim",
+                "text": "The target implements atomic commitment.",
+                "claim_kind": "systems_claim",
+                "confidence": 0.95,
+                "evidence": evidence,
+                "set_profile": {
+                    "axis:atomic": {
+                        "strength": 3,
+                        "maturity": "IMPLEMENTED_TESTED",
+                        "basis": "The target transaction binds acceptance and application.",
+                    }
+                },
+            },
+            {
+                "id": "work:paper-a",
+                "type": "paper",
+                "label": "Paper A",
+                "title": "Paper A",
+                "authors": ["Ada Example"],
+                "venue": "ExampleConf",
+                "identifiers": {"doi": "10.0000/example"},
+                "priority_date": "2025-01-02",
+                "priority_date_basis": "First public preprint",
+                "peer_review_status": "preprint",
+                "summary": "A system with material atomic commitment.",
+                "evidence": evidence,
+                "notes": [],
+                "concept_scores": {"axis:atomic": 2},
+                "set_profile": {
+                    "axis:atomic": {
+                        "strength": 2,
+                        "maturity": "REPORTED_IMPLEMENTED",
+                        "basis": "The paper reports a transaction around the update.",
+                    }
+                },
+            },
+        ],
+        "edges": [
+            {
+                "id": "edge:work-axis",
+                "source": "work:paper-a",
+                "target": "axis:atomic",
+                "relation": "about_concept",
+                "assertion_status": "reviewer_inference",
+                "confidence": 0.9,
+                "basis": "Concept score 2/3.",
+                "dimensions": [],
+                "evidence": evidence,
+                "review_notes": [],
+                "symmetric": False,
+            },
+            {
+                "id": "edge:claim-axis",
+                "source": "claim:target",
+                "target": "axis:atomic",
+                "relation": "about_concept",
+                "assertion_status": "reviewer_inference",
+                "confidence": 0.95,
+                "basis": "The target claim names atomic commitment.",
+                "dimensions": [],
+                "evidence": evidence,
+                "review_notes": [],
+                "symmetric": False,
+            },
+            *(extra_edges or []),
+        ],
     }
 
 
@@ -202,6 +304,60 @@ def test_revision_requires_the_latest_recorded_event_and_preserves_history(tmp_p
         "RECORDED",
     ]
     assert accepted["payload"]["supersedes_event_id"] == first["event_id"]
+
+
+def test_required_batch_is_atomic_when_one_candidate_would_be_rejected(tmp_path):
+    project = _project(tmp_path, complete=False)
+    candidates = [
+        RecordCandidate("EvidenceAttachment", _evidence()),
+        RecordCandidate(
+            "Work",
+            {
+                "id": "work:unsupported",
+                "label": "Unsupported",
+                "title": "Unsupported",
+                "priority_date_basis": "No date verified",
+                "publication_status": "UNKNOWN",
+                "review_state": "REVIEWED",
+                "evidence_ids": ["evidence:missing"],
+            },
+        ),
+    ]
+    with pytest.raises(
+        ReconError,
+        match="batch final state is invalid.*references missing evidence",
+    ):
+        project.record_many(
+            candidates,
+            actor_id="reviewer:luis",
+            require_all_recorded=True,
+        )
+    assert project.events() == []
+
+
+def test_valid_batch_commits_as_one_failure_atomic_append(tmp_path):
+    project = _project(tmp_path, complete=False)
+    events = project.record_many(
+        [
+            RecordCandidate("EvidenceAttachment", _evidence()),
+            RecordCandidate(
+                "Work",
+                {
+                    "id": "work:batched",
+                    "label": "Batched",
+                    "title": "Batched work",
+                    "priority_date_basis": "No date verified",
+                    "publication_status": "UNKNOWN",
+                    "review_state": "REVIEWED",
+                    "evidence_ids": ["evidence:paper"],
+                },
+            ),
+        ],
+        actor_id="reviewer:luis",
+        require_all_recorded=True,
+    )
+    assert [event["sequence"] for event in events] == [1, 2]
+    assert set(project.current_records()) == {"evidence:paper", "work:batched"}
 
 
 def test_comparison_reports_exact_set_algebra_and_keeps_partial_separate(tmp_path):
@@ -358,8 +514,10 @@ def test_generated_graph_matrix_and_report_are_inspectable(tmp_path):
     assert rows["target:malleus"]["axis:history"] == "MATERIAL"
     assert rows["work:paper-a"]["axis:history"] == "PARTIAL"
     report = paths["report.md"].read_text(encoding="utf-8")
-    assert "Target-only: axis:history" in report
+    assert "Paper A (`work:paper-a`) | 2 | 1 | 1 | 1 | 1" in report
     assert "not proof of absence" in report
+    comparisons = json.loads(paths["comparisons.json"].read_text(encoding="utf-8"))
+    assert comparisons["work:paper-a"]["target_difference"] == ["axis:history"]
 
 
 def test_ledger_edit_is_detected_before_projection(tmp_path):
@@ -407,3 +565,103 @@ def test_visualization_dependency_failure_is_actionable(tmp_path, monkeypatch):
     monkeypatch.setitem(modules, "pyvis.network", None)
     with pytest.raises(ReconError, match=r"malleus-dev\[recon\]"):
         visualize(project)
+
+
+def test_v1_import_preserves_profiles_evidence_and_source_identity(tmp_path):
+    source = tmp_path / "legacy.json"
+    source.write_text(json.dumps(_legacy_graph(), sort_keys=True), encoding="utf-8")
+    project = ReconProject.initialize(
+        tmp_path / "imported",
+        title="Imported review",
+        target_id="target:imported",
+        creator_id="reviewer:luis",
+        clock=NOW,
+    )
+    report = import_literature_kg_v1(
+        project, source, actor_id="reviewer:luis"
+    )
+    assert report["source_version"] == "1.4.0"
+    assert report["unmapped_edges"] == []
+    assert report["mapped_relations"] == 3
+    records = project.current_records()
+    assert records["work:paper-a"].record_type == "Work"
+    assert records["edge:work-axis"].record["coverage_level"] == "MATERIAL"
+    assert records["edge:work-axis"].record["coverage_maturity"] == "REPORTED_IMPLEMENTED"
+    evidence = next(
+        item.record
+        for item in records.values()
+        if item.record_type == "EvidenceAttachment"
+        and item.record.get("source_uri") == "https://example.org/paper"
+    )
+    assert evidence["access_status"] == "UNVERIFIED"
+    source_record = records[f"evidence:import-source:{report['source_sha256']}"]
+    assert source_record.record["artifact_byte_length"] == source.stat().st_size
+    comparison = compare_subjects(project, "target:imported", "work:paper-a")
+    assert comparison["intersection"] == ["axis:atomic"]
+
+
+def test_v1_import_refuses_unmapped_edges_before_any_ledger_write(tmp_path):
+    alien = {
+        "id": "edge:alien",
+        "source": "work:paper-a",
+        "target": "work:paper-a",
+        "relation": "unknown_relation",
+        "assertion_status": "reviewer_inference",
+        "confidence": 0.5,
+        "basis": "Deliberate adapter test.",
+        "dimensions": [],
+        "evidence": [_legacy_evidence()],
+        "review_notes": [],
+        "symmetric": False,
+    }
+    source = tmp_path / "legacy.json"
+    source.write_text(
+        json.dumps(_legacy_graph(extra_edges=[alien]), sort_keys=True), encoding="utf-8"
+    )
+    project = ReconProject.initialize(
+        tmp_path / "imported",
+        title="Imported review",
+        target_id="target:imported",
+        creator_id="reviewer:luis",
+        clock=NOW,
+    )
+    with pytest.raises(ReconError, match="1 unmapped edges"):
+        import_literature_kg_v1(project, source, actor_id="reviewer:luis")
+    assert project.events() == []
+
+
+def test_explicit_unmapped_import_records_the_boundary(tmp_path):
+    alien = {
+        "id": "edge:alien",
+        "source": "work:paper-a",
+        "target": "work:paper-a",
+        "relation": "unknown_relation",
+        "assertion_status": "reviewer_inference",
+        "confidence": 0.5,
+        "basis": "Deliberate adapter test.",
+        "dimensions": [],
+        "evidence": [_legacy_evidence()],
+        "review_notes": [],
+        "symmetric": False,
+    }
+    source = tmp_path / "legacy.json"
+    source.write_text(
+        json.dumps(_legacy_graph(extra_edges=[alien]), sort_keys=True), encoding="utf-8"
+    )
+    project = ReconProject.initialize(
+        tmp_path / "imported",
+        title="Imported review",
+        target_id="target:imported",
+        creator_id="reviewer:luis",
+        clock=NOW,
+    )
+    report = import_literature_kg_v1(
+        project,
+        source,
+        actor_id="reviewer:luis",
+        allow_unmapped=True,
+    )
+    assert report["unmapped_by_relation"] == {"unknown_relation": 1}
+    boundary = project.current_records()[report["boundary_id"]].record
+    assert "1 source edges were not mapped" in boundary["boundary_reason"]
+    assert "Unmapped unknown_relation: 1" in boundary["notes"]

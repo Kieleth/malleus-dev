@@ -5,10 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from pathlib import Path
-
 from malleus.ledger import LedgerError
 from malleus.recon.analysis import build_outputs, compare_subjects, visualize
+from malleus.recon.import_v1 import import_literature_kg_v1
 from malleus.recon.store import ReconError, ReconProject, load_record_file
 
 
@@ -47,6 +46,14 @@ def _parser() -> argparse.ArgumentParser:
     graph = subcommands.add_parser("visualize", help="write an interactive HTML graph")
     graph.add_argument("directory")
     graph.add_argument("--output", default=None)
+
+    importer = subcommands.add_parser(
+        "import-v1", help="import one canonical literature-forensics graph v1.x"
+    )
+    importer.add_argument("directory")
+    importer.add_argument("source")
+    importer.add_argument("--actor", required=True, dest="actor_id")
+    importer.add_argument("--allow-unmapped", action="store_true")
     return parser
 
 
@@ -96,6 +103,21 @@ def _run(args: argparse.Namespace) -> int:
         print(
             json.dumps(
                 compare_subjects(project, args.target_id, args.work_id),
+                indent=2,
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
+        return 0
+    if args.command == "import-v1":
+        print(
+            json.dumps(
+                import_literature_kg_v1(
+                    project,
+                    args.source,
+                    actor_id=args.actor_id,
+                    allow_unmapped=args.allow_unmapped,
+                ),
                 indent=2,
                 ensure_ascii=False,
                 sort_keys=True,

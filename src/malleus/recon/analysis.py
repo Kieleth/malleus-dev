@@ -80,8 +80,7 @@ def _split_records(
     return nodes, edges
 
 
-def _meta(project: ReconProject) -> dict[str, Any]:
-    events = project.events()
+def _meta(project: ReconProject, events: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "schema_version": "1",
         "title": project.config["title"],
@@ -96,16 +95,24 @@ def _meta(project: ReconProject) -> dict[str, Any]:
     }
 
 
-def canonical_graph(project: ReconProject) -> dict[str, Any]:
-    errors = project.validate()
+def _canonical_snapshot(
+    project: ReconProject,
+    events: list[dict[str, Any]],
+    records: Mapping[str, StoredRecord],
+) -> dict[str, Any]:
+    errors = project.validate(records)
     if errors:
         raise ReconError("Recon project is incomplete: " + "; ".join(errors))
-    nodes, edges = _split_records(project, project.current_records())
-    return {"meta": _meta(project), "nodes": nodes, "edges": edges}
+    nodes, edges = _split_records(project, records)
+    return {"meta": _meta(project, events), "nodes": nodes, "edges": edges}
 
 
-def current_graph(project: ReconProject) -> nx.MultiDiGraph:
-    canonical = canonical_graph(project)
+def canonical_graph(project: ReconProject) -> dict[str, Any]:
+    events, records = project.snapshot()
+    return _canonical_snapshot(project, events, records)
+
+
+def _networkx_graph(canonical: Mapping[str, Any]) -> nx.MultiDiGraph:
     graph = nx.MultiDiGraph(**canonical["meta"])
     for node in canonical["nodes"]:
         attributes = {key: _graphml_value(value) for key, value in node.items() if key != "id"}
@@ -126,6 +133,10 @@ def current_graph(project: ReconProject) -> nx.MultiDiGraph:
     return graph
 
 
+def current_graph(project: ReconProject) -> nx.MultiDiGraph:
+    return _networkx_graph(canonical_graph(project))
+
+
 def _graphml_value(value: Any) -> str | int | float | bool:
     if value is None:
         return ""
@@ -134,9 +145,9 @@ def _graphml_value(value: Any) -> str | int | float | bool:
     return json.dumps(value, ensure_ascii=False, sort_keys=True)
 
 
-def _profiles(project: ReconProject) -> dict[str, dict[str, str]]:
+def _profiles(records: Mapping[str, StoredRecord]) -> dict[str, dict[str, str]]:
     profiles: dict[str, dict[str, str]] = {}
-    for stored in project.current_records().values():
+    for stored in records.values():
         if stored.record_type != "CoversAxisRelation":
             continue
         record = stored.record
@@ -148,9 +159,11 @@ def _profiles(project: ReconProject) -> dict[str, dict[str, str]]:
     return profiles
 
 
-def _contested_profiles(project: ReconProject) -> dict[str, dict[str, str]]:
+def _contested_profiles(
+    records: Mapping[str, StoredRecord],
+) -> dict[str, dict[str, str]]:
     profiles: dict[str, dict[str, str]] = {}
-    for stored in project.current_records().values():
+    for stored in records.values():
         if stored.record_type != "CoversAxisRelation":
             continue
         record = stored.record
@@ -168,6 +181,15 @@ def compare_subjects(
     work_id: str,
 ) -> dict[str, Any]:
     records = project.current_records()
+    return _compare_subjects(project, records, target_id, work_id)
+
+
+def _compare_subjects(
+    project: ReconProject,
+    records: Mapping[str, StoredRecord],
+    target_id: str,
+    work_id: str,
+) -> dict[str, Any]:
     for identifier in (target_id, work_id):
         stored = records.get(identifier)
         if stored is None:
@@ -179,8 +201,8 @@ def compare_subjects(
             )
         if stored.record.get("review_state") == "RETIRED":
             raise ReconError(f"Comparison subject '{identifier}' is retired")
-    profiles = _profiles(project)
-    contested_profiles = _contested_profiles(project)
+    profiles = _profiles(records)
+    contested_profiles = _contested_profiles(records)
     target_profile = profiles.get(target_id, {})
     work_profile = profiles.get(work_id, {})
     target_contested = contested_profiles.get(target_id, {})
@@ -243,7 +265,17 @@ def compare_subjects(
 
 
 def metrics(project: ReconProject) -> dict[str, Any]:
-    records = project.current_records()
+    events, records = project.snapshot()
+    canonical = _canonical_snapshot(project, events, records)
+    return _metrics_snapshot(project, events, records, _networkx_graph(canonical))
+
+
+def _metrics_snapshot(
+    project: ReconProject,
+    events: list[dict[str, Any]],
+    records: Mapping[str, StoredRecord],
+    graph: nx.MultiDiGraph,
+) -> dict[str, Any]:
     nodes, edges = _split_records(project, records)
     active_nodes = [node for node in nodes if node.get("review_state") != "RETIRED"]
     active_node_ids = {node["id"] for node in active_nodes}
@@ -277,7 +309,6 @@ def metrics(project: ReconProject) -> dict[str, Any]:
         in {"Work", "Claim", "Result", *{edge["type"] for edge in active_edges}}
     ]
     supported = [record for record in evidence_bearing if record.get("evidence_ids")]
-    graph = current_graph(project)
     undirected = nx.Graph(graph.subgraph(active_node_ids))
     return {
         "records": len(records),
@@ -286,9 +317,9 @@ def metrics(project: ReconProject) -> dict[str, Any]:
         "relations_excluded_by_inactive_endpoint": excluded_relations,
         "nodes": len(active_nodes),
         "relations": len(relations),
-        "events": len(project.events()),
+        "events": len(events),
         "rejections": sum(
-            event["payload"]["decision"] == "REJECTED" for event in project.events()
+            event["payload"]["decision"] == "REJECTED" for event in events
         ),
         "works": sum(node["type"] == "Work" for node in active_nodes),
         "claims": len(claims),
@@ -311,8 +342,10 @@ def metrics(project: ReconProject) -> dict[str, Any]:
     }
 
 
-def _matrix(project: ReconProject) -> tuple[list[str], list[dict[str, Any]]]:
-    records = project.current_records()
+def _matrix(
+    project: ReconProject,
+    records: Mapping[str, StoredRecord],
+) -> tuple[list[str], list[dict[str, Any]]]:
     subjects = sorted(
         identifier
         for identifier, stored in records.items()
@@ -325,8 +358,8 @@ def _matrix(project: ReconProject) -> tuple[list[str], list[dict[str, Any]]]:
         if stored.record_type == "ComparisonAxis"
         and stored.record.get("review_state") != "RETIRED"
     )
-    profiles = _profiles(project)
-    contested = _contested_profiles(project)
+    profiles = _profiles(records)
+    contested = _contested_profiles(records)
     rows = []
     for subject in subjects:
         row = {"subject_id": subject}
@@ -384,9 +417,9 @@ def _graphml_bytes(graph: nx.MultiDiGraph) -> bytes:
     return text.encode("utf-8")
 
 
-def _bibtex(project: ReconProject) -> str:
+def _bibtex(records: Mapping[str, StoredRecord]) -> str:
     entries = []
-    for stored in sorted(project.current_records().values(), key=lambda item: item.record["id"]):
+    for stored in sorted(records.values(), key=lambda item: item.record["id"]):
         if stored.record_type != "Work" or stored.record.get("review_state") == "RETIRED":
             continue
         record = stored.record
@@ -428,8 +461,12 @@ def _bibtex_escape(value: str) -> str:
     )
 
 
-def _report(project: ReconProject, canonical: Mapping[str, Any], result_metrics: Mapping[str, Any]) -> str:
-    records = project.current_records()
+def _report(
+    project: ReconProject,
+    records: Mapping[str, StoredRecord],
+    result_metrics: Mapping[str, Any],
+    comparisons: Mapping[str, Mapping[str, Any]],
+) -> str:
     works = sorted(
         (
             item.record
@@ -464,28 +501,42 @@ def _report(project: ReconProject, canonical: Mapping[str, Any], result_metrics:
             f"{work['publication_status']} |"
         )
     target_id = project.config["target_id"]
-    lines.extend(["", "## Claim-level comparisons", ""])
+    target_profile = _profiles(records).get(target_id, {})
+    target_set = sorted(
+        axis for axis, level in target_profile.items() if level in MATERIAL_LEVELS
+    )
+    lines.extend(
+        [
+            "",
+            "## Target material set",
+            "",
+            ", ".join(target_set) or "None recorded.",
+            "",
+            "## Claim-level comparison summary",
+            "",
+            "| Work | Material axes | Shared | Target-only | Work-only | Partial | Unresolved | Contested |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
     for work in works:
-        comparison = compare_subjects(project, target_id, work["id"])
-        lines.extend(
-            [
-                f"### {work['title']}",
-                "",
-                f"- Intersection: {', '.join(comparison['intersection']) or 'none'}",
-                f"- Target-only: {', '.join(comparison['target_difference']) or 'none'}",
-                f"- Work-only: {', '.join(comparison['work_difference']) or 'none'}",
-                f"- Symmetric difference: {', '.join(comparison['symmetric_difference']) or 'none'}",
-                f"- Unresolved axes: {', '.join(comparison['unresolved']) or 'none'}",
-                f"- Contested axes: {', '.join(comparison['contested']) or 'none'}",
-                "",
-            ]
+        comparison = comparisons[work["id"]]
+        lines.append(
+            f"| {work['title']} (`{work['id']}`) | "
+            f"{sum(level in MATERIAL_LEVELS for level in comparison['work_profile'].values())} | "
+            f"{len(comparison['intersection'])} | {len(comparison['target_difference'])} | "
+            f"{len(comparison['work_difference'])} | "
+            f"{len(comparison['partial_or_adjacent'])} | {len(comparison['unresolved'])} | "
+            f"{len(comparison['contested'])} |"
         )
     lines.extend(
         [
+            "",
             "## Boundary",
             "",
             "The sets above contain only reviewer-coded CENTRAL or MATERIAL axes. Missing",
             "coverage means not established in the recorded review, not proof of absence.",
+            "Exact per-work sets and unresolved axes are in `comparisons.json` and are",
+            "also available through `malleus-recon compare`.",
             "",
         ]
     )
@@ -505,10 +556,25 @@ def build_outputs(
     project: ReconProject,
     output_directory: str | Path | None = None,
 ) -> dict[str, Path]:
-    canonical = canonical_graph(project)
-    graph = current_graph(project)
-    result_metrics = metrics(project)
-    matrix_columns, matrix_rows = _matrix(project)
+    events, records = project.snapshot()
+    canonical = _canonical_snapshot(project, events, records)
+    graph = _networkx_graph(canonical)
+    result_metrics = _metrics_snapshot(project, events, records, graph)
+    matrix_columns, matrix_rows = _matrix(project, records)
+    works = sorted(
+        identifier
+        for identifier, stored in records.items()
+        if stored.record_type == "Work" and stored.record.get("review_state") != "RETIRED"
+    )
+    comparisons = {
+        work_id: _compare_subjects(
+            project,
+            records,
+            project.config["target_id"],
+            work_id,
+        )
+        for work_id in works
+    }
     evidence_rows = [
         node for node in canonical["nodes"] if node["type"] == "EvidenceAttachment"
     ]
@@ -534,9 +600,15 @@ def build_outputs(
             evidence_rows,
         ).encode("utf-8"),
         "work_axis_matrix.csv": _csv_text(matrix_columns, matrix_rows).encode("utf-8"),
-        "bibliography.bib": _bibtex(project).encode("utf-8"),
+        "bibliography.bib": _bibtex(records).encode("utf-8"),
+        "comparisons.json": _json_text(comparisons).encode("utf-8"),
         "metrics.json": _json_text(result_metrics).encode("utf-8"),
-        "report.md": _report(project, canonical, result_metrics).encode("utf-8"),
+        "report.md": _report(
+            project,
+            records,
+            result_metrics,
+            comparisons,
+        ).encode("utf-8"),
     }
     manifest = {
         "schema_version": "1",
