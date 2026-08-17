@@ -156,8 +156,6 @@ classes:
         required: true
       title:
         required: true
-      priority_date:
-        required: true
       priority_date_basis:
         required: true
       publication_status:

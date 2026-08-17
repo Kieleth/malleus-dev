@@ -76,3 +76,19 @@ def test_reviewed_work_requires_priority_basis_and_evidence_slot_is_typed():
     )
     assert "Required slot 'priority_date_basis' missing for Work" in errors
     assert registry.effective_slots("Work")["evidence_ids"].range == "EvidenceAttachment"
+
+
+def test_work_allows_an_unknown_priority_date_but_not_an_unknown_basis():
+    registry = OntologyRegistry(SCHEMA)
+    errors = registry.validate_instance(
+        "Work",
+        {
+            "id": "work:undated",
+            "label": "Undated",
+            "title": "Undated work",
+            "priority_date_basis": "No verified public date located in this review",
+            "publication_status": "UNKNOWN",
+            "review_state": "PROPOSED",
+        },
+    )
+    assert errors == []

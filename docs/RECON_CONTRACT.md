@@ -87,7 +87,9 @@ keeps both events. A rejected revision leaves the earlier current value
 unchanged.
 
 This is transaction history, not publication history. Work records preserve
-first-public, issue, revision, or other date evidence separately.
+first-public, issue, revision, or other date evidence separately. An unknown
+first-public date remains absent with an explicit basis; Recon does not invent
+a calendar value to make sorting easier.
 
 ## Source boundary
 
