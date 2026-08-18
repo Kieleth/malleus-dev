@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the release gate dying on Python 3.10. Its version check ran
+  `python -c "import tomllib"`, which is stdlib only from 3.11, so on the 3.10
+  matrix a policy gate reported a `ModuleNotFoundError` traceback where it owed
+  an actionable refusal, and the v0.11.0 release stopped there without
+  publishing. The gate now reads the version without a parser and refuses with
+  its own message if it cannot, and a test holds that extraction to what a real
+  TOML parse returns so the shortcut cannot drift from the manifest. Every test
+  in the repository already carried a `tomli` fallback; the workflow was the
+  one place that did not.
+
 ### Added
 
 - Added five rites sent up by an adopting project and accepted on the roadmap,

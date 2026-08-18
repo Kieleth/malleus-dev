@@ -1683,3 +1683,25 @@ def test_every_rite_accepted_on_the_roadmap_exists_in_the_rubric():
         "An accepted rite that does not ship never reaches the adopter who "
         "paid for the next one."
     )
+
+
+def test_the_release_gate_reads_the_same_version_a_parser_would():
+    """The gate extracts the version with sed, because a policy gate that
+    dies on a missing stdlib module reports a traceback where it owes an
+    actionable refusal: `tomllib` is stdlib only from 3.11 and the 3.10 CI
+    matrix caught it. This holds the shortcut to the manifest so it cannot
+    drift."""
+    import subprocess
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # pragma: no cover - 3.10 path
+        import tomli as tomllib
+    root = Path(__file__).parent.parent
+    parsed = tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
+    extracted = subprocess.run(
+        ["sed", "-n", r's/^version = "\(.*\)"$/\1/p', "pyproject.toml"],
+        cwd=root, capture_output=True, text=True,
+    ).stdout.splitlines()
+    assert extracted and extracted[0] == parsed, (
+        f"gate would read {extracted[:1]} where the manifest says {parsed!r}"
+    )
