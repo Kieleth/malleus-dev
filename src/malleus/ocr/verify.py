@@ -76,7 +76,9 @@ def _walk(value: Any, path: str = ""):
 def verify_bundle(bundle: Bundle) -> VerificationResult:
     """Run every profile check. Collect all diagnostics; never stop at the first."""
     out: list[Diagnostic] = []
-    add = lambda code, subject, detail: out.append(Diagnostic(code, subject, detail))
+
+    def add(code: str, subject: str, detail: str) -> None:
+        out.append(Diagnostic(code, subject, detail))
 
     sources = bundle.by_id("sources")
     rasters = bundle.by_id("rasters")

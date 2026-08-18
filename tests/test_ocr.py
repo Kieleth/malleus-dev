@@ -6,8 +6,6 @@ a claim the profile cannot support.
 
 from __future__ import annotations
 
-import dataclasses
-
 import pytest
 
 from malleus.ocr import (
@@ -25,7 +23,9 @@ from malleus.ocr import (
 )
 from malleus.ocr.verify import currency_verdict
 
-D = lambda n: "sha256:" + str(n) * 64
+def D(n: int) -> str:
+    """A distinct full-length digest per seed."""
+    return "sha256:" + str(n) * 64
 
 
 def _class(**over):

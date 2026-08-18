@@ -1705,3 +1705,27 @@ def test_the_release_gate_reads_the_same_version_a_parser_would():
     assert extracted and extracted[0] == parsed, (
         f"gate would read {extracted[:1]} where the manifest says {parsed!r}"
     )
+
+
+def test_the_lint_gate_ci_runs_passes_locally():
+    """Run the exact lint CI runs, so `pytest` alone is a sufficient
+    pre-tag check.
+
+    A v0.11.0 tag was cut twice because the local check was the test suite
+    and the CI check was the test suite plus ruff over `src/malleus`. The
+    paths are read from the workflow rather than repeated here, so widening
+    CI's lint scope cannot silently leave the local check behind.
+    """
+    import re
+    import shutil
+    import subprocess
+    root = Path(__file__).parent.parent
+    if shutil.which("ruff") is None:
+        pytest.skip("ruff is not installed; it is in the dev extra")
+    workflow = (root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    invocation = re.search(r"python -m ruff check ([^\n]+)", workflow)
+    assert invocation, "the release workflow no longer runs ruff; this guard rotted"
+    targets = invocation.group(1).split()
+    result = subprocess.run(["ruff", "check", *targets], cwd=root,
+                            capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout or result.stderr

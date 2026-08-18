@@ -13,7 +13,7 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import asdict, dataclass, field, is_dataclass
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping
 
 from malleus.ledger import canonical_json
 

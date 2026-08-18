@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the local pre-tag check being narrower than CI's. The suite ran
+  pytest; CI ran pytest and `ruff check src/malleus`, so lint errors reached a
+  tag twice before anyone saw them. `pytest` now runs the exact lint CI runs,
+  reading the target paths out of the workflow rather than repeating them, so
+  widening CI's scope cannot silently leave the local check behind.
 - Fixed the release gate dying on Python 3.10. Its version check ran
   `python -c "import tomllib"`, which is stdlib only from 3.11, so on the 3.10
   matrix a policy gate reported a `ModuleNotFoundError` traceback where it owed
