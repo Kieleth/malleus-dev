@@ -1707,25 +1707,46 @@ def test_the_release_gate_reads_the_same_version_a_parser_would():
     )
 
 
-def test_the_lint_gate_ci_runs_passes_locally():
-    """Run the exact lint CI runs, so `pytest` alone is a sufficient
-    pre-tag check.
+def test_the_release_gate_step_runs_locally():
+    """Run the whole CI step, not one command from it.
 
-    A v0.11.0 tag was cut twice because the local check was the test suite
-    and the CI check was the test suite plus ruff over `src/malleus`. The
-    paths are read from the workflow rather than repeated here, so widening
-    CI's lint scope cannot silently leave the local check behind.
+    The v0.11.0 tag was cut three times. The third failure was this guard's
+    own fault: it extracted the `ruff` line from a step that runs two
+    commands, so the conformance slice CI executes stayed outside the local
+    suite and a digest it pins drifted unnoticed. The step is now executed
+    verbatim, so `pytest` alone answers "is this taggable" for everything
+    that step covers, whatever is added to it later.
     """
-    import re
+    import os
     import shutil
     import subprocess
+    import sys
+    import tempfile
+    import yaml as _yaml
+
     root = Path(__file__).parent.parent
     if shutil.which("ruff") is None:
         pytest.skip("ruff is not installed; it is in the dev extra")
-    workflow = (root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
-    invocation = re.search(r"python -m ruff check ([^\n]+)", workflow)
-    assert invocation, "the release workflow no longer runs ruff; this guard rotted"
-    targets = invocation.group(1).split()
-    result = subprocess.run(["ruff", "check", *targets], cwd=root,
-                            capture_output=True, text=True)
-    assert result.returncode == 0, result.stdout or result.stderr
+    workflow = _yaml.safe_load((root / ".github" / "workflows" / "release.yml").read_text())
+    steps = [
+        step
+        for job in workflow["jobs"].values()
+        for step in job.get("steps", [])
+        if "ruff check" in str(step.get("run", ""))
+    ]
+    assert steps, "no CI step runs ruff any more; this guard rotted"
+
+    # CI calls `python`; a dev machine may only have `python3`. Bind the name
+    # to this interpreter rather than assuming the runner's PATH.
+    with tempfile.TemporaryDirectory() as shim:
+        os.symlink(sys.executable, Path(shim) / "python")
+        env = {**os.environ, "PATH": f"{shim}{os.pathsep}{os.environ['PATH']}"}
+        for step in steps:
+            result = subprocess.run(
+                ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
+                cwd=root, capture_output=True, text=True, env=env,
+            )
+            assert result.returncode == 0, (
+                f"CI step {step.get('name', '<unnamed>')!r} fails locally:\n"
+                f"{result.stdout[-3000:]}{result.stderr[-2000:]}"
+            )
