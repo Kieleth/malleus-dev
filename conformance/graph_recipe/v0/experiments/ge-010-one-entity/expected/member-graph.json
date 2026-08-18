@@ -1,0 +1,18 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "members": [
+    {
+      "member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-010/01-person",
+      "operation_kind": "https://malleus.dev/graph-recipe/base/CreateEntity",
+      "record_type": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person",
+      "record_id": "person:alice"
+    }
+  ],
+  "dependencies": [],
+  "acyclic": true,
+  "topological_order": [
+    "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-010/01-person"
+  ]
+}
+

@@ -1,0 +1,6 @@
+{
+  "schema_version": "1",
+  "status": "not-produced",
+  "blocked_by": "CONSTRUCTION_DEPENDENCY_CYCLE",
+  "operations": []
+}

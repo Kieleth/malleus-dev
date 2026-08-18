@@ -1,0 +1,92 @@
+schema_version: "1"
+experiment_id: GE-010-ONE-ENTITY
+case_id: alice
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/person-only
+profile: ../../profile.json
+artifact_digests:
+  "../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f"
+  "input/ontology-symbol-bindings.json": "sha256:55059fbfe0ed152738262dc455b819e9d546dab67746c43c9c801a3993484318"
+  "input/recipe.stottr": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336"
+  "input/recipe.lock.json": "sha256:866c89bcffb101b49647c46214ca8285a67d168611473e7c77813b92ecd7fef7"
+  "input/invocations.json": "sha256:2aaa5026442b2d89ed4704a1b296cadf26db1cad644308e82dc6be1fb727086c"
+  "input/identity-policy.json": "sha256:4e9caf4bec98738d707588049832ab08c527db36669fda1429eef52a7f4271f3"
+  "input/prior-graph.json": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e"
+  "expected/logical-contract.json": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352"
+  "expected/terminal-facts.json": "sha256:ae561f993a0e7912fa09940daae62178f3941fd331c48dd50b48061d8ba137b7"
+  "expected/member-graph.json": "sha256:08dd5d0eca05f19853ebd0840645d22a92352209208a56ee12b30209bf15a24d"
+  "expected/proposed-operations.json": "sha256:1fb2c2e7fbdabbc634463d68af963480f6b20259a52eb8b68dbfb8b2a12736a8"
+  "expected/graph.json": "sha256:9b427c72e18ba1cb60c3e136cf1b84e3c50605013fc7bbcd06e154b4c513efbe"
+  "expected/lineage.json": "sha256:7add08f0670c85f54089f433ccca225f8ab146eb03caebf4919c5fa94c735aa8"
+  "expected/diagnostics.json": "sha256:6905067ffa5b784d67b65f5bf75220786f2fce7c9fe2f91512e12a0a0b955995"
+purpose: One typed invocation lowers directly to one Person entity operation.
+population_input_mode: direct-typed-invocation
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  recipe: input/recipe.stottr
+  recipe_lock: input/recipe.lock.json
+  invocations: input/invocations.json
+  identity_policy: input/identity-policy.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: success
+digest_expectations:
+  source:
+    status: complete
+    algorithm: source-bytes-sha256-v1
+    value: sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336
+  effective_recipe:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:2f89b69280072397caa0a0e932a1797dcf3d56c885175ed50d8b636262c9a838
+  invocation:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:2cb1ba3ad107b7a6a1051fe0bfab9a8493b7152505de6e44b8cd645eb993869a
+  plan:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:0206843c63bb9747cd1a3e9cd23924925369ca7da1a961e28ca50294fbecf8c3
+  candidate:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:b34f8742c550b12a9ea479c6a70a1769c5fb9e0015d017a8e5353aa643dc7f65
+  final_state:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:d128154ac377b81f2474ec3d3ceed821d8b74ebb54cb5842abff54f0393e035b
+metamorphic_obligations:
+  - transform: alpha-rename-variables
+    source_digest: changes
+    invariant_digests:
+      - effective_recipe
+      - plan
+      - final_state
+  - transform: formatting-and-safe-prefix-aliases
+    source_digest: changes
+    invariant_digests:
+      - effective_recipe
+      - plan
+      - final_state
+  - transform: pattern-permutation
+    invariant_artifacts:
+      - terminal-facts
+      - member-graph
+      - proposed-operations
+      - graph
+      - lineage-semantics
+negative_cases:
+  - case_id: mandatory-recipe-value-missing
+    manifest: negative/mandatory-recipe-value-missing/case.yaml
+  - case_id: recipe-argument-type-mismatch
+    manifest: negative/recipe-argument-type-mismatch/case.yaml
+  - case_id: forbidden-blank-node
+    manifest: negative/forbidden-blank-node/case.yaml

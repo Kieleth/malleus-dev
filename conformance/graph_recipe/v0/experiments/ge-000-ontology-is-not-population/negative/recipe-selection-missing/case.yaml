@@ -1,0 +1,43 @@
+schema_version: "1"
+experiment_id: GE-000-ONTOLOGY-IS-NOT-POPULATION
+case_id: recipe-selection-missing
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/person-only
+profile: ../../../../profile.json
+artifact_digests:
+  "../../../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f"
+  "input/ontology-symbol-bindings.json": "sha256:0f388f39ab319eaf99d555dcfde9c7e92a559589a55142dc222c6da45ebcfe88"
+  "input/invocations.json": "sha256:703075b86c5076aa8cf81aedfdde76b754ccca0ca69980732071618fe1fec677"
+  "input/prior-graph.json": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e"
+  "expected/logical-contract.json": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352"
+  "expected/terminal-facts.json": "sha256:3126b6c548e0084be4ec0f55dbebaef02486062fbe8025daae7500ddabce0eb2"
+  "expected/member-graph.json": "sha256:dbbcef7b9575f7c33cb2537057c67af44be088dfe2bc994600715b58d89570ec"
+  "expected/proposed-operations.json": "sha256:2eb135a12d6b288e9473abee01e2439c657855240eda77320d04fec2c747f019"
+  "expected/graph.json": "sha256:4d9b2ee4c84976e010f23906ed47c770efa2e3ca8df3a8290a50a12085fdd966"
+  "expected/lineage.json": "sha256:fc2895b4ebf958fbfa31956acbbcd48c843e198aa8e855b9978be3dfb8d6d978"
+  "expected/diagnostics.json": "sha256:8d78b2c9db70c6f914561c2fdbd44839240e22a698732df2ec16bbaccd5e4b52"
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  invocations: input/invocations.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: rejected
+expected_diagnostic: RECIPE_SELECTION_MISSING
+digest_expectations:
+  source: not-applicable-no-recipe
+  effective_recipe: not-applicable-recipe-selection-failed
+  invocation: not-applicable-recipe-selection-failed
+  plan: not-applicable-recipe-selection-failed
+  candidate: not-applicable-recipe-selection-failed
+  final_state:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:8b518e6e3a7a35ae13fa6022e2700a4a8129065a424a6760dcc650a174c0be6f

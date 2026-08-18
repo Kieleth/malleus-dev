@@ -1,0 +1,10 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "operations": [
+    {"op_type": "CREATE_ENTITY", "record_type": "Person", "record_id": "person:alice", "properties": {"name": "Alice"}, "source_id": null, "target_id": null},
+    {"op_type": "CREATE_ENTITY", "record_type": "Organization", "record_id": "org:acme", "properties": {"name": "Acme"}, "source_id": null, "target_id": null},
+    {"op_type": "CREATE_RELATION", "record_type": "WorksForRelation", "record_id": "employment:alice-acme", "properties": {"relation_type": "WORKS_FOR"}, "source_id": "person:alice", "target_id": "org:acme"}
+  ]
+}
+

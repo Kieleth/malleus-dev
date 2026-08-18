@@ -1,0 +1,5 @@
+{
+  "schema_version": "1", "lock_id": "https://fixtures.malleus.dev/graph-recipe/v0/lock/ge-020-wrong-endpoint", "root_template": "https://fixtures.malleus.dev/graph-recipe/v0/recipe/Employment-1.0.0", "root_artifact": "recipe.stottr",
+  "root_source_digest": {"status": "complete", "algorithm": "source-bytes-sha256-v1", "value": "sha256:12b00be8382eda6492dc7299edb55b026c5d4623331990e3e3a6d641490d5cc7"}, "network_access": "forbidden",
+  "libraries": [{"library_id": "https://malleus.dev/graph-recipe/base/v0", "version": "0.0.0-fixture-v0", "media_type": "text/stottr", "path": "../../../../../base/malleus-base-v0.stottr", "source_digest": {"status": "complete", "algorithm": "source-bytes-sha256-v1", "value": "sha256:aa96a10166143b1d6d59a2020ae33789cf3e322c0f5bc60822e33e9414c109f1"}}]
+}

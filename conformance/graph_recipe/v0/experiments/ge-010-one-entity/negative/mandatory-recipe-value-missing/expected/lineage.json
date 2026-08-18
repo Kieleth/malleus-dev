@@ -1,0 +1,15 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "expansion_paths": [],
+  "operations": [],
+  "failures": [
+    {
+      "code": "MANDATORY_RECIPE_VALUE_MISSING",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-mandatory-missing",
+      "argument": "personName",
+      "completed_layer": "effective-recipe"
+    }
+  ]
+}
+

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1",
+  "binding_id": "https://fixtures.malleus.dev/graph-recipe/v0/symbol-bindings/person-only",
+  "ontology_artifact": "ontology.yaml",
+  "derivation": "explicit-validated-input",
+  "types": [
+    {
+      "iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity",
+      "local_symbol": "Entity"
+    },
+    {
+      "iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person",
+      "local_symbol": "Person"
+    }
+  ],
+  "properties": [
+    {
+      "iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id",
+      "local_symbol": "id"
+    },
+    {
+      "iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/name",
+      "local_symbol": "name"
+    }
+  ]
+}

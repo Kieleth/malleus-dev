@@ -1,0 +1,15 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "operations": [
+    {
+      "op_type": "CREATE_ENTITY",
+      "record_type": "Person",
+      "record_id": "person:alice",
+      "properties": {"name": "Alice"},
+      "source_id": null,
+      "target_id": null
+    }
+  ]
+}
+

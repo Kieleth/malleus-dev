@@ -1,0 +1,544 @@
+{
+  "schema_version": "graph-recipe-first-slice-conformance-report-v1",
+  "report_id": "https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance",
+  "recorded_date": "2026-08-17",
+  "scope": {
+    "experiment_ids": [
+      "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+      "GE-010-ONE-ENTITY",
+      "GE-020-TWO-NODES-ONE-RELATION"
+    ],
+    "case_count": 10,
+    "metamorphic_obligation_count": 7,
+    "classification": "public-synthetic-offline",
+    "implementation_location": "research-local"
+  },
+  "repository_snapshot": {
+    "base_git_commit": "384ecc37917c8191d17ffa44867024a36dfdd313",
+    "branch": "codex/malleus-recon",
+    "worktree_clean": false,
+    "dirty_worktree_boundary": {
+      "command": "git status --short",
+      "entries": [
+        " M .github/workflows/release.yml",
+        " M .github/workflows/tests.yml",
+        " M CHANGELOG.md",
+        " M README.md",
+        " M ROADMAP.md",
+        " M design/EXECUTION_BUNDLE.md",
+        " M docs/ASSENT_PROTOCOL.md",
+        " M docs/IMPLEMENTATION_STATUS.md",
+        " M ontology/assent.yaml",
+        " M pyproject.toml",
+        " M src/malleus/__init__.py",
+        " M src/malleus/accepted.py",
+        " M src/malleus/assent.py",
+        " M src/malleus/ontology.py",
+        " M src/malleus/protocol.py",
+        " M src/malleus/status.py",
+        " M tests/test_accepted.py",
+        " M tests/test_assent_ontology.py",
+        " M tests/test_ontology.py",
+        " M tests/test_protocol.py",
+        " M tests/test_status.py",
+        "?? MALLEUS_INQUISITION.md",
+        "?? MALLEUS_INQUISITION_R3.md",
+        "?? MALLEUS_INQUISITION_R4.md",
+        "?? MALLEUS_INQUISITION_R5.md",
+        "?? MALLEUS_INQUISITION_R6_080.md",
+        "?? conformance/",
+        "?? design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+        "?? design/GRAPH_RECIPE_OTTR_PROFILE.md",
+        "?? design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+        "?? design/MALLEUS_INTELLECTUAL_SUBSTRATE.md",
+        "?? design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+        "?? design/PROTOCOL_FOUNDATION_GRAPH.md",
+        "?? design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+        "?? docs/COST_AWARE_MODEL_ARCHITECTURE_RECON.md",
+        "?? malleus_literature_kg/",
+        "?? research/",
+        "?? src/malleus/valid_time.py",
+        "?? tests/test_valid_time.py"
+      ],
+      "meaning": "The commit and branch identify ancestry only. This report is not a clean-commit attestation. Its conclusion binds only the exact corpus, runner, core-dependency, and package-boundary bytes identified below. Every other modified or untracked path is outside the conclusion."
+    }
+  },
+  "runtime_boundary": {
+    "python_implementation": "CPython",
+    "python_version": "3.12.9",
+    "malleus_package_version": "0.10.0",
+    "malleus_current_stage": "8c",
+    "malleus_boundary": "stage-8c-executable-provenance-and-effect-closure",
+    "core_effect_boundary": "Core Malleus records authorized action dispatch, terminal execution receipts, and independent outcome observations, but performs no domain effect. External research adapters own effects and observations.",
+    "graph_recipe_boundary": "GraphRecipe is a research-local experiment. It is not a public Malleus API and is not included in release artifacts."
+  },
+  "corpus_identities": {
+    "identity_algorithm": "source-bytes-sha256-v1",
+    "corpus": {
+      "path": "conformance/graph_recipe/v0/corpus.json",
+      "id": "https://fixtures.malleus.dev/graph-recipe/v0/corpus",
+      "sha256": "sha256:44270826825d059c7be7be097bf6c2e784a019a9cc17fdd400669128d39d683c"
+    },
+    "profile": {
+      "path": "conformance/graph_recipe/v0/profile.json",
+      "id": "https://malleus.dev/graph-recipe/profile/v0",
+      "sha256": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+    },
+    "checksum_set": {
+      "path": "conformance/graph_recipe/v0/checksums.json",
+      "sha256": "sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2",
+      "algorithm": "source-bytes-sha256-v1",
+      "covered_file_count": 149,
+      "excluded_paths": [
+        "checksums.json"
+      ]
+    }
+  },
+  "semantic_identity_boundary": {
+    "definition_source": "conformance/graph_recipe/v0/profile.json",
+    "definition_source_digest": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8",
+    "canonical_payload_status": "frozen-runner-v1",
+    "source_bytes_algorithm": {
+      "input": "exact file bytes",
+      "encoding": "bytes as stored; no newline or Unicode normalization",
+      "output": "lowercase sha256:<64 hexadecimal digits>"
+    },
+    "canonical_json_algorithm": {
+      "input": "the artifact-specific canonical payload",
+      "encoding": "UTF-8 JSON; object keys sorted; separators ',' and ':'; ensure_ascii=false; finite JSON numbers only; no Unicode normalization",
+      "output": "lowercase sha256:<64 hexadecimal digits>"
+    },
+    "canonical_payloads": {
+      "logical_contract": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "schema_version",
+          "registry_hash",
+          "symbol_bindings",
+          "record_types",
+          "constructible_record_types"
+        ],
+        "rule": "Use the complete values emitted by LogicalGraphContract.identity_payload(). The descriptive contract_id is not part of semantic identity."
+      },
+      "effective_recipe": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "profile_id",
+          "root_template",
+          "terminal_abi",
+          "templates"
+        ],
+        "rule": "Bind the selected root, the complete closed terminal signatures, and every canonical template sorted by template IRI. Alpha-normalize variables and sort semantic patterns. Exact source bytes, source locators, source digests, and lock metadata remain separate execution-input identities."
+      },
+      "invocation": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "effective_recipe_digest",
+          "contract_digest",
+          "arguments",
+          "expansion_profile_id"
+        ],
+        "rule": "Encode complete typed arguments in the selected root template's parameter order."
+      },
+      "plan": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "schema_version",
+          "contract_digest",
+          "invocation_digests",
+          "member_graph",
+          "proposed_operations"
+        ],
+        "rule": "schema_version is graph-recipe-plan-v0; sort invocation digests; include the complete member-graph and proposed-operations artifacts."
+      },
+      "candidate": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "ontology_hash",
+          "base_state_digest",
+          "writes"
+        ],
+        "rule": "Use the existing CandidateSubgraph digest payload and preserve proposed write order."
+      },
+      "final_state": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "ontology_hash",
+          "nodes",
+          "relations"
+        ],
+        "rule": "Hash the complete KnowledgeGraph.snapshot() value."
+      }
+    },
+    "red_test_obligation": {
+      "obligation_id": "GRV0-DIGEST-001",
+      "status": "closed",
+      "required_behavior": "The conformance runner must fail every case whose required semantic digest is pending, generate reviewed candidate values only through an explicit propose-golden action, and never substitute a sentinel or fabricated digest."
+    }
+  },
+  "bound_file_identities": {
+    "algorithm": "source-bytes-sha256-v1",
+    "runner_and_tests": {
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/__init__.py": "sha256:9b2f52adbaf8c569e36ae22a921db9970026d62ed9b9592f0f5d34ac1a66c902",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/assembly.py": "sha256:ca2286a4277318f71094db08f7e86c9b8d4e44a7b28df9ebf62e0aec9de4cd5b",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/case_harness.py": "sha256:db3bbf978f6ec8b8006526329d104a201389267dca16cc080ba73379a9bfd840",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/contract.py": "sha256:8710396587500791b4a2f2a0d8ff6bfdaae8d4bb7622bcf9cc2d6b20a4265891",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/model.py": "sha256:14f94ef7355b79ea6afef64e58aa57350c1525a7a2ab384de7c37171d3e71c8a",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/run_cases.py": "sha256:0ce93e733cda9acb53afdcb178fde61d24dea5b88cc370b50a66ca895a242a88",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/stottr.py": "sha256:cae7bac0f70eaaa69cb26c7d0d21d962357e1d2d57e64b0bad2779b50a0bfb71",
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py": "sha256:46ba56b33004b520b71639f9e21d2a4d3b4d984ed90f034ab0c60fdc718952ef"
+    },
+    "direct_core_dependencies": {
+      "src/malleus/kg.py": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
+      "src/malleus/ledger.py": "sha256:5e5aa2ab4f16259b3aff3e6df7315ce2f81d90332687f10447fc95e6163d2637",
+      "src/malleus/ontology.py": "sha256:3bf3b9258a1aa1cddbac560a3b504ba36f6d68e9fef9f6d2dbb954ca9ee521cf",
+      "src/malleus/source.py": "sha256:6e04af0a6187322a72521a6f73cccf1fe73e715b7a491d5fca7e90ab82e82e4a",
+      "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
+    },
+    "package_boundary_sources": {
+      "pyproject.toml": "sha256:070eae87caaa328e8a21053294c1a28bdfd2bfc8e697a1bf4601e6035d65f06f",
+      "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
+      "src/malleus/status.py": "sha256:164aaebcfdc7aae1f0b70e2abd32016672bdc0236be47d725236ecb0939cba97",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:22e9810813cc525d42ddd950aca0410c2b33a572542d3462066f6f1b9922c5a2"
+    }
+  },
+  "case_receipt_identities": {
+    "algorithm": "canonical-json-sha256-v1",
+    "payload": "the complete ConformanceReceipt.as_dict() value",
+    "cases": [
+      {
+        "experiment_id": "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+        "case_id": "baseline",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-000-ontology-is-not-population/experiment.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:b301f24ffbddd7dc93503d271b2bb6c5f05dd867036fb13e5de48c606b16cf69"
+        },
+        "actual_outcome": "success-with-no-population",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "proposed_operations",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:2c68335e411744f21ceb537238b822e96de9b03f324854844c43b90e370d7001"
+      },
+      {
+        "experiment_id": "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+        "case_id": "recipe-selection-missing",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:c26e79779ad586595064aae400118a5d7a501fb741eb7494c41d84a4588a67d1"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:0e6fdd126edaf4ba614915247f2069c3f672915ebe5cba951b164cb4b3983993"
+      },
+      {
+        "experiment_id": "GE-010-ONE-ENTITY",
+        "case_id": "alice",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-010-one-entity/experiment.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:763ee8fa92db823b94c1db5acac5feef9d08adef8cd361c215d5af80b6c1927e"
+        },
+        "actual_outcome": "success",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "proposed_operations",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:5a9ea86cc105fe769b303c8ba2f6691bb71ba0b08a7d547909b48bfd8d6682ac"
+      },
+      {
+        "experiment_id": "GE-010-ONE-ENTITY",
+        "case_id": "mandatory-recipe-value-missing",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:d28738ef29e8ca09d7663a0c324007b1a692632043bedec8b14aea51ccdac6ab"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:eea7ce2c4c7bffbd83d9f15730ab436e556d277bc9f7362f9147a2c028fdf83c"
+      },
+      {
+        "experiment_id": "GE-010-ONE-ENTITY",
+        "case_id": "recipe-argument-type-mismatch",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:df5e4347c75a9f33c1d04af5b9661a0234a5a06dc138addebf1914988d5567f1"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:05fdac401095d4cd3b9c5a668de8d2268e040f36a92e7b006849f782e5ce38b9"
+      },
+      {
+        "experiment_id": "GE-010-ONE-ENTITY",
+        "case_id": "forbidden-blank-node",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:ee1b85a54c3308481bfe247b7604e4f3613c8a5a28db9f2a4059c098a8866963"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:ff40f1f3e498739d91588d71e761ff65ecd252a0642ddf1ed0b8344ca21ee2af"
+      },
+      {
+        "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+        "case_id": "alice-works-for-acme-relation-first",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-020-two-nodes-one-relation/experiment.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:f45727f0190effb66197f59338026f1677c941ae5abe0242912ad2cf7d7f93ea"
+        },
+        "actual_outcome": "success",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "proposed_operations",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:b1a4cda7cd1d4b93534cf5f1dffb8839927718ddcfa8b6da14085ecfa3491e4e"
+      },
+      {
+        "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+        "case_id": "local-reference-dependency-missing",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:e81f4c0c695d05b4ba091cd949ac2b9ef43034084c260d1e5da288bfb4faab47"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:a74ee9eb4c57d16376f2ffc99bbb05634ba8bd30f993b52443fb5f018bd21802"
+      },
+      {
+        "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+        "case_id": "wrong-endpoint-role",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:b53bd284ab9b0e5b402b910d814df302496ac1370e6ec95b0eb3f61781803d0e"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "proposed_operations",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:eaad8e1206d7ac3dee6ea39beba28b54d9e3ff14daa42d1b906e0a32bcf9c143"
+      },
+      {
+        "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+        "case_id": "construction-dependency-cycle",
+        "selected_manifest_identity": {
+          "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/case.yaml",
+          "algorithm": "source-bytes-sha256-v1",
+          "sha256": "sha256:f23d15c8d1c9f52ec8ab0bcb14023e81df76b783f971857f0331791f384ad6dc"
+        },
+        "actual_outcome": "rejected",
+        "completed_layers": [
+          "logical_contract",
+          "terminal_facts",
+          "member_graph",
+          "graph",
+          "lineage",
+          "diagnostics"
+        ],
+        "canonical_receipt_digest": "sha256:3610be49c1701dde0a9602e198c66655491dae8073f6806b8ab79fa90e4a21ca"
+      }
+    ]
+  },
+  "metamorphic_obligation_coverage": [
+    {
+      "experiment_id": "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+      "declaration_manifest": "experiments/ge-000-ontology-is-not-population/experiment.yaml",
+      "obligation": "repeated-execution-preserves-all-semantic-artifacts",
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_case_receipt_is_repeatable",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+      "declaration_manifest": "experiments/ge-000-ontology-is-not-population/experiment.yaml",
+      "obligation": "ontology-formatting-only-change-preserves-logical-contract-and-graph",
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_ontology_formatting_preserves_the_logical_contract_and_empty_graph",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-010-ONE-ENTITY",
+      "declaration_manifest": "experiments/ge-010-one-entity/experiment.yaml",
+      "obligation": {
+        "transform": "alpha-rename-variables",
+        "source_digest": "changes",
+        "invariant_digests": [
+          "effective_recipe",
+          "plan",
+          "final_state"
+        ]
+      },
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_person_alpha_rename_alone_is_semantically_invariant",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-010-ONE-ENTITY",
+      "declaration_manifest": "experiments/ge-010-one-entity/experiment.yaml",
+      "obligation": {
+        "transform": "formatting-and-safe-prefix-aliases",
+        "source_digest": "changes",
+        "invariant_digests": [
+          "effective_recipe",
+          "plan",
+          "final_state"
+        ]
+      },
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_person_formatting_and_prefix_aliases_alone_are_semantically_invariant",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-010-ONE-ENTITY",
+      "declaration_manifest": "experiments/ge-010-one-entity/experiment.yaml",
+      "obligation": {
+        "transform": "pattern-permutation",
+        "invariant_artifacts": [
+          "terminal-facts",
+          "member-graph",
+          "proposed-operations",
+          "graph",
+          "lineage-semantics"
+        ]
+      },
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_person_pattern_permutation_alone_is_semantically_invariant",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+      "declaration_manifest": "experiments/ge-020-two-nodes-one-relation/experiment.yaml",
+      "obligation": {
+        "transform": "pattern-permutation",
+        "invariant_artifacts": [
+          "terminal-facts",
+          "member-graph",
+          "proposed-operations",
+          "graph",
+          "lineage-semantics"
+        ]
+      },
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_relation_first_and_node_first_patterns_produce_the_same_plan",
+      "result": "passed-in-frozen-first-slice-test-run"
+    },
+    {
+      "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+      "declaration_manifest": "experiments/ge-020-two-nodes-one-relation/experiment.yaml",
+      "obligation": {
+        "transform": "formatting-safe-prefix-alias-and-alpha-renaming",
+        "source_digest": "changes",
+        "invariant_digests": [
+          "effective_recipe",
+          "plan",
+          "final_state"
+        ]
+      },
+      "executable_test": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py::test_employment_formatting_prefix_and_alpha_changes_are_semantically_invariant",
+      "result": "passed-in-frozen-first-slice-test-run"
+    }
+  ],
+  "test_results": [
+    {
+      "scope": "frozen-first-slice",
+      "command": "PYTHONPATH=src python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py",
+      "exit_code": 0,
+      "passed": 39,
+      "skipped": 0,
+      "failed": 0,
+      "duration_seconds": 0.81
+    },
+    {
+      "scope": "relevant-core",
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_staging.py tests/test_ontology.py tests/test_kg.py",
+      "exit_code": 0,
+      "passed": 236,
+      "skipped": 2,
+      "failed": 0,
+      "duration_seconds": 2.46
+    },
+    {
+      "scope": "full-configured-suite",
+      "command": "PYTHONPATH=src python -m pytest -q",
+      "exit_code": 1,
+      "passed": 743,
+      "skipped": 3,
+      "failed": 1,
+      "duration_seconds": 36.2,
+      "failure": {
+        "node_id": "tests/test_inquisition.py::TestPackagingTargetsAreTracked::test_declared_targets_exist_and_are_tracked",
+        "assertion": "declared in pyproject but not committed: ['src/malleus/valid_time.py', 'tests/test_valid_time.py', 'tests/test_valid_time.py']. Commit the manifest and its targets as one unit.",
+        "reason": "The dirty worktree leaves src/malleus/valid_time.py and tests/test_valid_time.py untracked while pyproject.toml declares them. tests/test_valid_time.py appears twice because the guard examines both build includes and pytest testpaths.",
+        "relation_to_graph_recipe_slice": "The failed packaging targets are outside this GraphRecipe corpus and runner. The dedicated first-slice and relevant-core commands passed."
+      }
+    }
+  ],
+  "bounded_conclusion": {
+    "status": "first-slice-conforms-at-bound-snapshot",
+    "established": [
+      "The current research-local runner matches every frozen artifact, diagnostic, and semantic digest for all ten declared synthetic GE-000 through GE-020 cases.",
+      "All seven declared metamorphic obligations map to executable tests that passed in the dedicated first-slice run.",
+      "The checksum set binds every corpus regular file except the checksum file itself, whose exact source-byte identity is bound by this report.",
+      "The dedicated first-slice and relevant-core test selections pass at the exact file identities recorded here."
+    ],
+    "excluded": [
+      "GraphRecipe as a public or shipped Malleus capability",
+      "GE-030 and later behavior",
+      "unrestricted OTTR language support or Lutra differential equivalence",
+      "property-only add-ons and multivalued expansion",
+      "backend independence beyond the existing in-memory graph",
+      "networked, production-data, performance, or security claims",
+      "universal completeness of the Malleus research program",
+      "a clean-worktree or releasable-package attestation"
+    ]
+  }
+}

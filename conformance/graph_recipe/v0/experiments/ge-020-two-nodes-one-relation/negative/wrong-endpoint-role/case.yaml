@@ -1,0 +1,48 @@
+schema_version: "1"
+experiment_id: GE-020-TWO-NODES-ONE-RELATION
+case_id: wrong-endpoint-role
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/employment
+profile: ../../../../profile.json
+artifact_digests:
+  "../../../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:3eccbf930477bd92511f50ac46b98bec991449abe2fce6a3ee2a9f01c61f3416"
+  "input/ontology-symbol-bindings.json": "sha256:7215e5ab7ae9ee4c2b091a26872bbf579ae77c27c485cee7de41bffb984e0a49"
+  "input/recipe.stottr": "sha256:12b00be8382eda6492dc7299edb55b026c5d4623331990e3e3a6d641490d5cc7"
+  "input/recipe.lock.json": "sha256:22c3b19d8dc4b1a6f67bc09a851c9f163bf94cd769ca14d02dd346e42ce4640c"
+  "input/invocations.json": "sha256:ed48c5a27e0a5db69ed020f841b2efeb32afb924a12d962be7dd8c6e27fe2f34"
+  "input/identity-policy.json": "sha256:07e71737d08d532d7d82ed90447a4b072f97ddc53cbe82b5eacd9fcf98f8a3dd"
+  "input/prior-graph.json": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22"
+  "expected/logical-contract.json": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e"
+  "expected/terminal-facts.json": "sha256:789980182f61432cc5712f9cc63e036394ff451ee89ab99f917f5a08ca739ece"
+  "expected/member-graph.json": "sha256:8d9072c3b6aefae59115c1264df3dd289cd51ffc96e68d56bc4f365a68919b8e"
+  "expected/proposed-operations.json": "sha256:56bd6772b03dd55335cd31a1174ecd3d70904b709907b7ccc3667974e50c49d5"
+  "expected/graph.json": "sha256:45df664de0199d80e119a492fb997bdb23d11be3078acfeaa979018a6a9386af"
+  "expected/lineage.json": "sha256:17bc366dec3bd4c74886f8164b29fb764b100585fc13a7b84e1c9d7cce0b2d1e"
+  "expected/diagnostics.json": "sha256:6dc2d3cdc8f4d454b5ed7210aa306a58fbbfc5220f8618615729e7974515deae"
+population_input_mode: direct-typed-invocation
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  recipe: input/recipe.stottr
+  recipe_lock: input/recipe.lock.json
+  invocations: input/invocations.json
+  identity_policy: input/identity-policy.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: rejected
+expected_diagnostic: PLAN_GATE_REJECTION
+retained_endpoint_diagnostic: "Source 'org:acme' has type 'Organization', expected 'Person' for WorksForRelation"
+digest_expectations:
+  source: {status: complete, algorithm: source-bytes-sha256-v1, value: "sha256:12b00be8382eda6492dc7299edb55b026c5d4623331990e3e3a6d641490d5cc7"}
+  effective_recipe: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:05dc8ff72527003de5b91d13f0726b3f3f17b88f226ec62fd81395f793bb1b26"}
+  invocation: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:f9b706d40828ee1d3e73c5f6a1688c442632c02cde435a39d90c78fe5f0f60fa"}
+  plan: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:21060a42111f7d4e9285a49277b25da9e4f29e0d1d6807ba4d13ce33abe09cb8"}
+  candidate: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:269729d5c24e35e161169bb0ed1b309253ce28e4eccb8f3eb0ec526cad824ee2"}
+  final_state: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:3860d77c28d2b70923e571f5128d25b79c7185a7493925f39e5aeecdb6e74dd0"}

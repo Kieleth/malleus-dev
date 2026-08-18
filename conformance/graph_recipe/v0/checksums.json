@@ -1,0 +1,760 @@
+{
+  "schema_version": "graph-recipe-checksums-v1",
+  "algorithm": "source-bytes-sha256-v1",
+  "scope": {
+    "root": ".",
+    "include": "all recursive regular files",
+    "exclude": [
+      "checksums.json"
+    ]
+  },
+  "file_count": 149,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "sha256:09de8ee21e4153bd2b2440d709165d8a27b561e4cea29d9d885b360ab15360bb",
+      "size_bytes": 1374
+    },
+    {
+      "path": "base/malleus-base-v0.stottr",
+      "sha256": "sha256:aa96a10166143b1d6d59a2020ae33789cf3e322c0f5bc60822e33e9414c109f1",
+      "size_bytes": 612
+    },
+    {
+      "path": "base/recipe.lock.json",
+      "sha256": "sha256:a165712a7fdca8fb59c4dab3d3e79a4844688a1d7d9c76efa7e761077e7ef261",
+      "size_bytes": 562
+    },
+    {
+      "path": "corpus.json",
+      "sha256": "sha256:44270826825d059c7be7be097bf6c2e784a019a9cc17fdd400669128d39d683c",
+      "size_bytes": 1567
+    },
+    {
+      "path": "diagnostics.json",
+      "sha256": "sha256:d70dee67802d01d28e8b2b5fee7a9b7c14c1aadb044587589176c0fd54fda864",
+      "size_bytes": 2668
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/diagnostics.json",
+      "sha256": "sha256:b50ca62087c3a372cb9c1b5caf73a6e3ac071970b997f6efb9209b33e12d1279",
+      "size_bytes": 50
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/graph.json",
+      "sha256": "sha256:37cac695fec2b37974458af32d92c93cd5bdd54f94bab9df4d826f8e0cab0dbf",
+      "size_bytes": 420
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/lineage.json",
+      "sha256": "sha256:2e2e26e3acccb8621421751bc3f094d04daf7721cb6e94cc338be486ae47f04c",
+      "size_bytes": 116
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/member-graph.json",
+      "sha256": "sha256:9c61251f7522bbc5c6db8d44816884d39e59573f1793ca96d141073136a15b94",
+      "size_bytes": 138
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/proposed-operations.json",
+      "sha256": "sha256:45927a63c6d03c501f23a4aba3c366a92b4aa81a4916c469c79a789ed30a8324",
+      "size_bytes": 73
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/expected/terminal-facts.json",
+      "sha256": "sha256:d8ecaeb751061f6d3d76fd50d5d27efc9f7100fc9d2b4da846a9c9cf53b1e77e",
+      "size_bytes": 179
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/experiment.yaml",
+      "sha256": "sha256:b301f24ffbddd7dc93503d271b2bb6c5f05dd867036fb13e5de48c606b16cf69",
+      "size_bytes": 2649
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:0f388f39ab319eaf99d555dcfde9c7e92a559589a55142dc222c6da45ebcfe88",
+      "size_bytes": 715
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/input/ontology.yaml",
+      "sha256": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f",
+      "size_bytes": 625
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/input/prior-graph.json",
+      "sha256": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e",
+      "size_bytes": 74
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/case.yaml",
+      "sha256": "sha256:c26e79779ad586595064aae400118a5d7a501fb741eb7494c41d84a4588a67d1",
+      "size_bytes": 2487
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/diagnostics.json",
+      "sha256": "sha256:8d78b2c9db70c6f914561c2fdbd44839240e22a698732df2ec16bbaccd5e4b52",
+      "size_bytes": 478
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/graph.json",
+      "sha256": "sha256:4d9b2ee4c84976e010f23906ed47c770efa2e3ca8df3a8290a50a12085fdd966",
+      "size_bytes": 378
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/lineage.json",
+      "sha256": "sha256:fc2895b4ebf958fbfa31956acbbcd48c843e198aa8e855b9978be3dfb8d6d978",
+      "size_bytes": 315
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/member-graph.json",
+      "sha256": "sha256:dbbcef7b9575f7c33cb2537057c67af44be088dfe2bc994600715b58d89570ec",
+      "size_bytes": 186
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/proposed-operations.json",
+      "sha256": "sha256:2eb135a12d6b288e9473abee01e2439c657855240eda77320d04fec2c747f019",
+      "size_bytes": 121
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/expected/terminal-facts.json",
+      "sha256": "sha256:3126b6c548e0084be4ec0f55dbebaef02486062fbe8025daae7500ddabce0eb2",
+      "size_bytes": 249
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/input/invocations.json",
+      "sha256": "sha256:703075b86c5076aa8cf81aedfdde76b754ccca0ca69980732071618fe1fec677",
+      "size_bytes": 202
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:0f388f39ab319eaf99d555dcfde9c7e92a559589a55142dc222c6da45ebcfe88",
+      "size_bytes": 715
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/input/ontology.yaml",
+      "sha256": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f",
+      "size_bytes": 625
+    },
+    {
+      "path": "experiments/ge-000-ontology-is-not-population/negative/recipe-selection-missing/input/prior-graph.json",
+      "sha256": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e",
+      "size_bytes": 74
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/diagnostics.json",
+      "sha256": "sha256:6905067ffa5b784d67b65f5bf75220786f2fce7c9fe2f91512e12a0a0b955995",
+      "size_bytes": 44
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/graph.json",
+      "sha256": "sha256:9b427c72e18ba1cb60c3e136cf1b84e3c50605013fc7bbcd06e154b4c513efbe",
+      "size_bytes": 608
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/lineage.json",
+      "sha256": "sha256:7add08f0670c85f54089f433ccca225f8ab146eb03caebf4919c5fa94c735aa8",
+      "size_bytes": 1186
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/member-graph.json",
+      "sha256": "sha256:08dd5d0eca05f19853ebd0840645d22a92352209208a56ee12b30209bf15a24d",
+      "size_bytes": 516
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/proposed-operations.json",
+      "sha256": "sha256:1fb2c2e7fbdabbc634463d68af963480f6b20259a52eb8b68dbfb8b2a12736a8",
+      "size_bytes": 276
+    },
+    {
+      "path": "experiments/ge-010-one-entity/expected/terminal-facts.json",
+      "sha256": "sha256:ae561f993a0e7912fa09940daae62178f3941fd331c48dd50b48061d8ba137b7",
+      "size_bytes": 1135
+    },
+    {
+      "path": "experiments/ge-010-one-entity/experiment.yaml",
+      "sha256": "sha256:763ee8fa92db823b94c1db5acac5feef9d08adef8cd361c215d5af80b6c1927e",
+      "size_bytes": 4295
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/identity-policy.json",
+      "sha256": "sha256:4e9caf4bec98738d707588049832ab08c527db36669fda1429eef52a7f4271f3",
+      "size_bytes": 353
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/invocations.json",
+      "sha256": "sha256:2aaa5026442b2d89ed4704a1b296cadf26db1cad644308e82dc6be1fb727086c",
+      "size_bytes": 924
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:55059fbfe0ed152738262dc455b819e9d546dab67746c43c9c801a3993484318",
+      "size_bytes": 716
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/ontology.yaml",
+      "sha256": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f",
+      "size_bytes": 625
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/prior-graph.json",
+      "sha256": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e",
+      "size_bytes": 74
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/recipe.lock.json",
+      "sha256": "sha256:866c89bcffb101b49647c46214ca8285a67d168611473e7c77813b92ecd7fef7",
+      "size_bytes": 875
+    },
+    {
+      "path": "experiments/ge-010-one-entity/input/recipe.stottr",
+      "sha256": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336",
+      "size_bytes": 536
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/case.yaml",
+      "sha256": "sha256:ee1b85a54c3308481bfe247b7604e4f3613c8a5a28db9f2a4059c098a8866963",
+      "size_bytes": 3135
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/diagnostics.json",
+      "sha256": "sha256:c275e3c7743ddd67f1a8295749169de64ce266430abc5178b89ddb38acb72107",
+      "size_bytes": 540
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/graph.json",
+      "sha256": "sha256:f56b336e2e40411c1d9cebc081d3e4df360daa64b28b58b50ce173f964386d00",
+      "size_bytes": 370
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/lineage.json",
+      "sha256": "sha256:a448810d4d478efddcd4fab1d90520db246ccdd157ccda43f4a7809f0a3f752e",
+      "size_bytes": 341
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/member-graph.json",
+      "sha256": "sha256:61250c1fa1386436d9a1ca20c4482471868496367d2aa2b45bb14d58f0728825",
+      "size_bytes": 166
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/proposed-operations.json",
+      "sha256": "sha256:273ba49aa7f206f3173951b924d07cb8b61fcfcd015a7bb5d04bfe14b30c6652",
+      "size_bytes": 107
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/expected/terminal-facts.json",
+      "sha256": "sha256:cf5cabb741db5abebe42baf36e53adc681d9c13950d6a4874d523bd9bd29c796",
+      "size_bytes": 226
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/identity-policy.json",
+      "sha256": "sha256:0795419c00b013aab94fe1ca1ff497bdb4092b6c09cafe430f3bfeecaa69346c",
+      "size_bytes": 275
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/invocations.json",
+      "sha256": "sha256:2760064d3ed10b5188aa06f1ba352ac00f2d89bdb3296795bc3d2475963e40b9",
+      "size_bytes": 724
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:58bce541dc34561324a67ddec5cd891beccceb31221fbe84ebf50eb8a34f168a",
+      "size_bytes": 644
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/ontology.yaml",
+      "sha256": "sha256:bf7b246afee342d8c64af8765899d813c2de9a25ea7d1d71e556e8e67a26dba4",
+      "size_bytes": 584
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/prior-graph.json",
+      "sha256": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22",
+      "size_bytes": 63
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/recipe.lock.json",
+      "sha256": "sha256:2c333a4aafe55db2b3607203948d8e761ae724ba07eed1c6afe915d9b2f6e7db",
+      "size_bytes": 838
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/forbidden-blank-node/input/recipe.stottr",
+      "sha256": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336",
+      "size_bytes": 536
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/case.yaml",
+      "sha256": "sha256:d28738ef29e8ca09d7663a0c324007b1a692632043bedec8b14aea51ccdac6ab",
+      "size_bytes": 3122
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/diagnostics.json",
+      "sha256": "sha256:8c4c89e2003f895e0f5649fcdd586fe51356bee505a26ecdc7626d95ed57306a",
+      "size_bytes": 489
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/graph.json",
+      "sha256": "sha256:f56b336e2e40411c1d9cebc081d3e4df360daa64b28b58b50ce173f964386d00",
+      "size_bytes": 370
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/lineage.json",
+      "sha256": "sha256:6ff57f0e031cc818ed4adc59bf30220e3dae3fafb026652dfc8bd3422d345e01",
+      "size_bytes": 356
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/member-graph.json",
+      "sha256": "sha256:fbde03208d3bb154ef7a06c1e5f367e3f806799f535059be733c75ffe9353a42",
+      "size_bytes": 176
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/proposed-operations.json",
+      "sha256": "sha256:ceadc4631e6a35dfa5e33564c99f642ec883e15d35b2588b8644e8e9a4e5b2b4",
+      "size_bytes": 117
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/expected/terminal-facts.json",
+      "sha256": "sha256:768b1a189c18fba8b8b39b025a72b69c7f7fd03129a330e7660ad77ea7bbb26c",
+      "size_bytes": 225
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/identity-policy.json",
+      "sha256": "sha256:4e9caf4bec98738d707588049832ab08c527db36669fda1429eef52a7f4271f3",
+      "size_bytes": 353
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/invocations.json",
+      "sha256": "sha256:77901cbf97ad2dfbac5d2cea7fca918c40869e04367e02dfbf50c0b7700112cd",
+      "size_bytes": 655
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:58bce541dc34561324a67ddec5cd891beccceb31221fbe84ebf50eb8a34f168a",
+      "size_bytes": 644
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/ontology.yaml",
+      "sha256": "sha256:bf7b246afee342d8c64af8765899d813c2de9a25ea7d1d71e556e8e67a26dba4",
+      "size_bytes": 584
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/prior-graph.json",
+      "sha256": "sha256:36b778af6a8b3d5c9e70590279d0abb19696a07c109a753cdc59df8f290563bf",
+      "size_bytes": 64
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/recipe.lock.json",
+      "sha256": "sha256:f1160438f1c7950f3a163b17d666bebe78621c0550d7b8a8c8b3946a2374a2c4",
+      "size_bytes": 845
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/mandatory-recipe-value-missing/input/recipe.stottr",
+      "sha256": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336",
+      "size_bytes": 536
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/case.yaml",
+      "sha256": "sha256:df5e4347c75a9f33c1d04af5b9661a0234a5a06dc138addebf1914988d5567f1",
+      "size_bytes": 3120
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/diagnostics.json",
+      "sha256": "sha256:14ff7d7c64206e78c1dc9f51dc7fbb5a1fb39f60e6a087c666a4d5d6c5921cea",
+      "size_bytes": 716
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/graph.json",
+      "sha256": "sha256:f56b336e2e40411c1d9cebc081d3e4df360daa64b28b58b50ce173f964386d00",
+      "size_bytes": 370
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/lineage.json",
+      "sha256": "sha256:d359f772189a7a672446035b81c6c456e757e3f1f768f43bc0d7fd840a604ebe",
+      "size_bytes": 351
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/logical-contract.json",
+      "sha256": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352",
+      "size_bytes": 2387
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/member-graph.json",
+      "sha256": "sha256:ebe752411900ce97665860cbe28831eb93b8461e2a466346f2debf893e87e27b",
+      "size_bytes": 175
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/proposed-operations.json",
+      "sha256": "sha256:7256c3f102738bee869cfb013d66446dc4655103ea11d6d41e2b552724fdf1be",
+      "size_bytes": 116
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/expected/terminal-facts.json",
+      "sha256": "sha256:ced0d204684b3f445efd9753e8ffa9030cef0560d4382f68448e44551593b07e",
+      "size_bytes": 220
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/identity-policy.json",
+      "sha256": "sha256:a635aa5dfb50b31a30d4fe4800afee31a375ea48e6e81cb325867070804c9cb4",
+      "size_bytes": 329
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/invocations.json",
+      "sha256": "sha256:736b28b2fba256ba69f8af42440b41f5282a0a0bf92a73a35d19a323f68f7548",
+      "size_bytes": 727
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:58bce541dc34561324a67ddec5cd891beccceb31221fbe84ebf50eb8a34f168a",
+      "size_bytes": 644
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/ontology.yaml",
+      "sha256": "sha256:bf7b246afee342d8c64af8765899d813c2de9a25ea7d1d71e556e8e67a26dba4",
+      "size_bytes": 584
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/prior-graph.json",
+      "sha256": "sha256:36b778af6a8b3d5c9e70590279d0abb19696a07c109a753cdc59df8f290563bf",
+      "size_bytes": 64
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/recipe.lock.json",
+      "sha256": "sha256:4f54ed900be95b817d1963115f40ea45bd7292f3c2c714c549ccd2dbdd0a9856",
+      "size_bytes": 841
+    },
+    {
+      "path": "experiments/ge-010-one-entity/negative/recipe-argument-type-mismatch/input/recipe.stottr",
+      "sha256": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336",
+      "size_bytes": 536
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/diagnostics.json",
+      "sha256": "sha256:5704f2c90d1bb6d16f3e431c54fa78b01b48bb6c67962b2a725bd64ac2745b94",
+      "size_bytes": 43
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/graph.json",
+      "sha256": "sha256:029834186c6941aded66b3b637445147efcbbadf7fa94cab4af66b9445e7c661",
+      "size_bytes": 1191
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/lineage.json",
+      "sha256": "sha256:0cea2c6e8c78f0915df6d875f0d5cea9b7e9243aebb7763901b28f4527a7991c",
+      "size_bytes": 4713
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/logical-contract.json",
+      "sha256": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e",
+      "size_bytes": 7024
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/member-graph.json",
+      "sha256": "sha256:ea2fe09a4ccfc671926de85b06d639ecc043ce259c45a9081a313f6aa1d4eac0",
+      "size_bytes": 1599
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/proposed-operations.json",
+      "sha256": "sha256:4a40d1213787f0544b494bdd10c9b784c2657fd88bba0c9ca638108751ef76c0",
+      "size_bytes": 603
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/expected/terminal-facts.json",
+      "sha256": "sha256:06a610edcf1f4f7a563c1f7e3fcf2c420a070b544d18834fe9323e240b42c4b2",
+      "size_bytes": 3966
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/experiment.yaml",
+      "sha256": "sha256:f45727f0190effb66197f59338026f1677c941ae5abe0242912ad2cf7d7f93ea",
+      "size_bytes": 4152
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/identity-policy.json",
+      "sha256": "sha256:b2b6e4036050e8c32a5cb0538efb2ade9a9d421dae17276ba3d1fc44cc218461",
+      "size_bytes": 648
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/invocations.json",
+      "sha256": "sha256:1b15732dc8ad8cfc4ba10a66268cc4dffec9a2ad5274e7e17e9d96c169c148d4",
+      "size_bytes": 1349
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:d0c8b108024e073b50dbf79bfd6df7d6c9bab6e8ebd8e26963ef8a30c64f541d",
+      "size_bytes": 1323
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/ontology.yaml",
+      "sha256": "sha256:bb157876f9e8da9b851ee791285b6003fa2eeed611602788da1cbeae33a50735",
+      "size_bytes": 1425
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/prior-graph.json",
+      "sha256": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22",
+      "size_bytes": 63
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/recipe.lock.json",
+      "sha256": "sha256:9529f7756edfcc5fc02692203769bbcc1292cefaff77249e09a34126a1c6a2c8",
+      "size_bytes": 836
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/input/recipe.stottr",
+      "sha256": "sha256:f3b92d3cc5d947b277c4454f4e4ba9c18b4ada4d21982203c74a8da1806056d0",
+      "size_bytes": 1241
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/case.yaml",
+      "sha256": "sha256:f23d15c8d1c9f52ec8ab0bcb14023e81df76b783f971857f0331791f384ad6dc",
+      "size_bytes": 3255
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/diagnostics.json",
+      "sha256": "sha256:5daa46c6fe13a86ce2386d2d97ea12d0910ed13ecd35a92e95ce064e8fc708ee",
+      "size_bytes": 835
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/graph.json",
+      "sha256": "sha256:2d1f751e85a96d096030038a38e1b96560af24137c9838e10546385d247785e7",
+      "size_bytes": 369
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/lineage.json",
+      "sha256": "sha256:483d1054584ba2b18cbda42259d5e2e8589fd94ae2da62c6708d26c42ba6cde4",
+      "size_bytes": 6202
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/logical-contract.json",
+      "sha256": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e",
+      "size_bytes": 7024
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/member-graph.json",
+      "sha256": "sha256:a406902e2e4e79a66d69c185de90e18f771b0c005d6e3038b6c6cfcffe5b4595",
+      "size_bytes": 2006
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/proposed-operations.json",
+      "sha256": "sha256:4f42575b16c7ca3d4c0f6d6b09b8bdbb4bf97f54c70e6722e1fbb55c33a08b05",
+      "size_bytes": 125
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/expected/terminal-facts.json",
+      "sha256": "sha256:3f836471d0aa3f0d7befdd6e2c4975c33e34b85f6d10434f0e99ca1d082c640b",
+      "size_bytes": 4746
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/identity-policy.json",
+      "sha256": "sha256:07e71737d08d532d7d82ed90447a4b072f97ddc53cbe82b5eacd9fcf98f8a3dd",
+      "size_bytes": 642
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/invocations.json",
+      "sha256": "sha256:4da4196d95f5429c7c12a95efa887d53cc6836b6551ab54f26550d2444d0c2b3",
+      "size_bytes": 1257
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:7215e5ab7ae9ee4c2b091a26872bbf579ae77c27c485cee7de41bffb984e0a49",
+      "size_bytes": 1301
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/ontology.yaml",
+      "sha256": "sha256:3eccbf930477bd92511f50ac46b98bec991449abe2fce6a3ee2a9f01c61f3416",
+      "size_bytes": 1371
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/prior-graph.json",
+      "sha256": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22",
+      "size_bytes": 63
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/recipe.lock.json",
+      "sha256": "sha256:0fc8fc3a694427e483dff43f34d47a9828bf94d1b90d58376553b6c1fa3fa133",
+      "size_bytes": 785
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/construction-dependency-cycle/input/recipe.stottr",
+      "sha256": "sha256:2bbb198a7bf78cbf400618de32914ae53dc0f07ef81a8556a26b05e4d772b9f0",
+      "size_bytes": 1283
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/case.yaml",
+      "sha256": "sha256:e81f4c0c695d05b4ba091cd949ac2b9ef43034084c260d1e5da288bfb4faab47",
+      "size_bytes": 3265
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/diagnostics.json",
+      "sha256": "sha256:2902f500aa9a6636cbfb9fe1696a200bf8d3a89e94f02427a5638da3dc19ea8b",
+      "size_bytes": 920
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/graph.json",
+      "sha256": "sha256:441aa9fdb84acf5da9e71f5631687ebdc063d35c38476e5f18d27fd582ef6a42",
+      "size_bytes": 370
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/lineage.json",
+      "sha256": "sha256:6a07118a3ce4ce069116ebda497202a4d4ea84e4df8910839ec1f61b242bc9b0",
+      "size_bytes": 5837
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/logical-contract.json",
+      "sha256": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e",
+      "size_bytes": 7024
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/member-graph.json",
+      "sha256": "sha256:383c0b87b7451fdec03dd46be3cb3dce2e47972b0e5755069126703c6bb532b5",
+      "size_bytes": 1345
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/proposed-operations.json",
+      "sha256": "sha256:d0df8c74d542c868719a46f91e4007c22ce6dde165f699494760e2debda2a5e5",
+      "size_bytes": 130
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/expected/terminal-facts.json",
+      "sha256": "sha256:abb523b1a1aa113aa15b0328091df618f7123bfa54d8e14754661c2fdd97ab74",
+      "size_bytes": 4270
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/identity-policy.json",
+      "sha256": "sha256:cc0f7793105e89f3a4ae43be2ece5430561717b2b634f70faaa0e714b96367ab",
+      "size_bytes": 644
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/invocations.json",
+      "sha256": "sha256:fe32eea637f3c2351e26b26cc01bc174e651bcf6739c087fdf1f0b6ae7705eed",
+      "size_bytes": 1325
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:6bfcbfde7b0a68753fc31062dc921101fe8b4ba2feab3a8918ca516b8c597768",
+      "size_bytes": 1317
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/ontology.yaml",
+      "sha256": "sha256:e12c4a0aa413150704cbc43ee695626246088cb21b17754047ae8d1310f7ed5e",
+      "size_bytes": 1397
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/prior-graph.json",
+      "sha256": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22",
+      "size_bytes": 63
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/recipe.lock.json",
+      "sha256": "sha256:cef091bfd3d51ee2715a1d333ffae37d47e0540ab9987e3018df49a2424a8ef9",
+      "size_bytes": 798
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/local-reference-dependency-missing/input/recipe.stottr",
+      "sha256": "sha256:fdbb968e8363078288f655c3c918374f617ec8cb4eff500d6889f8c3b1d31aab",
+      "size_bytes": 1173
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/case.yaml",
+      "sha256": "sha256:b53bd284ab9b0e5b402b910d814df302496ac1370e6ec95b0eb3f61781803d0e",
+      "size_bytes": 3555
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/diagnostics.json",
+      "sha256": "sha256:6dc2d3cdc8f4d454b5ed7210aa306a58fbbfc5220f8618615729e7974515deae",
+      "size_bytes": 681
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/graph.json",
+      "sha256": "sha256:45df664de0199d80e119a492fb997bdb23d11be3078acfeaa979018a6a9386af",
+      "size_bytes": 378
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/lineage.json",
+      "sha256": "sha256:17bc366dec3bd4c74886f8164b29fb764b100585fc13a7b84e1c9d7cce0b2d1e",
+      "size_bytes": 6163
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/logical-contract.json",
+      "sha256": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e",
+      "size_bytes": 7024
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/member-graph.json",
+      "sha256": "sha256:8d9072c3b6aefae59115c1264df3dd289cd51ffc96e68d56bc4f365a68919b8e",
+      "size_bytes": 1741
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/proposed-operations.json",
+      "sha256": "sha256:56bd6772b03dd55335cd31a1174ecd3d70904b709907b7ccc3667974e50c49d5",
+      "size_bytes": 776
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/expected/terminal-facts.json",
+      "sha256": "sha256:789980182f61432cc5712f9cc63e036394ff451ee89ab99f917f5a08ca739ece",
+      "size_bytes": 4574
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/identity-policy.json",
+      "sha256": "sha256:07e71737d08d532d7d82ed90447a4b072f97ddc53cbe82b5eacd9fcf98f8a3dd",
+      "size_bytes": 642
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/invocations.json",
+      "sha256": "sha256:ed48c5a27e0a5db69ed020f841b2efeb32afb924a12d962be7dd8c6e27fe2f34",
+      "size_bytes": 1275
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/ontology-symbol-bindings.json",
+      "sha256": "sha256:7215e5ab7ae9ee4c2b091a26872bbf579ae77c27c485cee7de41bffb984e0a49",
+      "size_bytes": 1301
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/ontology.yaml",
+      "sha256": "sha256:3eccbf930477bd92511f50ac46b98bec991449abe2fce6a3ee2a9f01c61f3416",
+      "size_bytes": 1371
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/prior-graph.json",
+      "sha256": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22",
+      "size_bytes": 63
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/recipe.lock.json",
+      "sha256": "sha256:22c3b19d8dc4b1a6f67bc09a851c9f163bf94cd769ca14d02dd346e42ce4640c",
+      "size_bytes": 794
+    },
+    {
+      "path": "experiments/ge-020-two-nodes-one-relation/negative/wrong-endpoint-role/input/recipe.stottr",
+      "sha256": "sha256:12b00be8382eda6492dc7299edb55b026c5d4623331990e3e3a6d641490d5cc7",
+      "size_bytes": 1231
+    },
+    {
+      "path": "profile.json",
+      "sha256": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8",
+      "size_bytes": 8764
+    }
+  ]
+}
+

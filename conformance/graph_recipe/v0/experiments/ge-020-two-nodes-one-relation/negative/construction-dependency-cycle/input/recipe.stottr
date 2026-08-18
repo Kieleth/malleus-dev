@@ -1,0 +1,23 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix ont: <https://fixtures.malleus.dev/graph-recipe/v0/ontology/> .
+@prefix recipe: <https://fixtures.malleus.dev/graph-recipe/v0/recipe/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+recipe:Employment-1.0.0 [
+  ! ottr:IRI ?personMember, ! xsd:string ?personId, ! xsd:string ?personName,
+  ! ottr:IRI ?organizationMember, ! xsd:string ?organizationId, ! xsd:string ?organizationName,
+  ! ottr:IRI ?employmentMember, ! xsd:string ?employmentId
+] :: {
+  mgrp:Record(?employmentMember, mgrp:CreateRelation, ont:WorksForRelation, ?employmentId),
+  mgrp:Property(?employmentMember, ont:relation_type, "WORKS_FOR"),
+  mgrp:RelationSource(?employmentMember, ?personId),
+  mgrp:RelationTarget(?employmentMember, ?organizationId),
+  mgrp:DependsOn(?employmentMember, ?personMember),
+  mgrp:DependsOn(?employmentMember, ?organizationMember),
+  mgrp:Record(?personMember, mgrp:CreateEntity, ont:Person, ?personId),
+  mgrp:Property(?personMember, ont:name, ?personName),
+  mgrp:Record(?organizationMember, mgrp:CreateEntity, ont:Organization, ?organizationId),
+  mgrp:Property(?organizationMember, ont:name, ?organizationName),
+  mgrp:DependsOn(?personMember, ?employmentMember)
+} .

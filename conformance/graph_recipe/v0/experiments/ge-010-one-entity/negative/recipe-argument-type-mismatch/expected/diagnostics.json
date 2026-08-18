@@ -1,0 +1,18 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "RECIPE_ARGUMENT_TYPE_MISMATCH",
+      "phase": "invocation-binding",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-type-mismatch",
+      "details": {"message": "Recipe parameter 'personName' requires 'http://www.w3.org/2001/XMLSchema#string', received 'http://www.w3.org/2001/XMLSchema#integer'."},
+      "evidence": {
+        "invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-type-mismatch",
+        "parameter": "personName",
+        "expected_type": "http://www.w3.org/2001/XMLSchema#string",
+        "actual_type": "http://www.w3.org/2001/XMLSchema#integer"
+      }
+    }
+  ]
+}
+

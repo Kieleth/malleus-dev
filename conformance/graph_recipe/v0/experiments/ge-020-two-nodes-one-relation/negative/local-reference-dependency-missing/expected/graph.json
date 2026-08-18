@@ -1,0 +1,6 @@
+{
+  "schema_version": "1", "status": "complete", "staging": "not-entered", "materialization": "not-entered",
+  "snapshot": {"ontology_hash": "sha256:b962ee582090ad4c66107d6d325894be13d5b5e562afac515699c545d710665d", "nodes": [], "relations": []},
+  "canonical_operations": [], "state_digest": "sha256:3860d77c28d2b70923e571f5128d25b79c7185a7493925f39e5aeecdb6e74dd0"
+}
+

@@ -1,0 +1,8 @@
+{
+  "schema_version": "1",
+  "status": "not-produced",
+  "blocked_by": "FORBIDDEN_BLANK_NODE",
+  "invocation_digest": {"status": "not-produced", "reason": "Profile validation rejected identity binding."},
+  "emissions": []
+}
+

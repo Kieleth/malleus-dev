@@ -1,0 +1,17 @@
+{
+  "schema_version": "1", "plan_id": "https://fixtures.malleus.dev/graph-recipe/v0/plan/ge-020-missing-dependency",
+  "invocations": [{
+    "invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-020-missing-dependency", "template": "https://fixtures.malleus.dev/graph-recipe/v0/recipe/Employment-1.0.0",
+    "arguments": [
+      {"parameter": "personMember", "identity_binding": {"identity_key": "person", "field": "member_iri"}},
+      {"parameter": "personId", "identity_binding": {"identity_key": "person", "field": "record_id"}},
+      {"parameter": "personName", "term": {"kind": "literal", "datatype": "http://www.w3.org/2001/XMLSchema#string", "lexical_form": "Alice"}},
+      {"parameter": "organizationMember", "identity_binding": {"identity_key": "organization", "field": "member_iri"}},
+      {"parameter": "organizationId", "identity_binding": {"identity_key": "organization", "field": "record_id"}},
+      {"parameter": "organizationName", "term": {"kind": "literal", "datatype": "http://www.w3.org/2001/XMLSchema#string", "lexical_form": "Acme"}},
+      {"parameter": "employmentMember", "identity_binding": {"identity_key": "employment", "field": "member_iri"}},
+      {"parameter": "employmentId", "identity_binding": {"identity_key": "employment", "field": "record_id"}}
+    ]
+  }]
+}
+

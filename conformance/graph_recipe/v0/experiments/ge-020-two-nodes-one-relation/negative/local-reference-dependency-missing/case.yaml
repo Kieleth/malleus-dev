@@ -1,0 +1,47 @@
+schema_version: "1"
+experiment_id: GE-020-TWO-NODES-ONE-RELATION
+case_id: local-reference-dependency-missing
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/employment
+profile: ../../../../profile.json
+artifact_digests:
+  "../../../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:e12c4a0aa413150704cbc43ee695626246088cb21b17754047ae8d1310f7ed5e"
+  "input/ontology-symbol-bindings.json": "sha256:6bfcbfde7b0a68753fc31062dc921101fe8b4ba2feab3a8918ca516b8c597768"
+  "input/recipe.stottr": "sha256:fdbb968e8363078288f655c3c918374f617ec8cb4eff500d6889f8c3b1d31aab"
+  "input/recipe.lock.json": "sha256:cef091bfd3d51ee2715a1d333ffae37d47e0540ab9987e3018df49a2424a8ef9"
+  "input/invocations.json": "sha256:fe32eea637f3c2351e26b26cc01bc174e651bcf6739c087fdf1f0b6ae7705eed"
+  "input/identity-policy.json": "sha256:cc0f7793105e89f3a4ae43be2ece5430561717b2b634f70faaa0e714b96367ab"
+  "input/prior-graph.json": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22"
+  "expected/logical-contract.json": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e"
+  "expected/terminal-facts.json": "sha256:abb523b1a1aa113aa15b0328091df618f7123bfa54d8e14754661c2fdd97ab74"
+  "expected/member-graph.json": "sha256:383c0b87b7451fdec03dd46be3cb3dce2e47972b0e5755069126703c6bb532b5"
+  "expected/proposed-operations.json": "sha256:d0df8c74d542c868719a46f91e4007c22ce6dde165f699494760e2debda2a5e5"
+  "expected/graph.json": "sha256:441aa9fdb84acf5da9e71f5631687ebdc063d35c38476e5f18d27fd582ef6a42"
+  "expected/lineage.json": "sha256:6a07118a3ce4ce069116ebda497202a4d4ea84e4df8910839ec1f61b242bc9b0"
+  "expected/diagnostics.json": "sha256:2902f500aa9a6636cbfb9fe1696a200bf8d3a89e94f02427a5638da3dc19ea8b"
+population_input_mode: direct-typed-invocation
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  recipe: input/recipe.stottr
+  recipe_lock: input/recipe.lock.json
+  invocations: input/invocations.json
+  identity_policy: input/identity-policy.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: rejected
+expected_diagnostic: LOCAL_REFERENCE_DEPENDENCY_MISSING
+digest_expectations:
+  source: {status: complete, algorithm: source-bytes-sha256-v1, value: "sha256:fdbb968e8363078288f655c3c918374f617ec8cb4eff500d6889f8c3b1d31aab"}
+  effective_recipe: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:d3534b67eb59dee35cf66f07a7b0c9b95d7a3223e09d24cac58d965593da4792"}
+  invocation: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:25df56b6711b767e296769fc6359f9c4ade7a57ed8d651eb715880e56bdf1ed6"}
+  plan: not-produced-member-graph-rejected
+  candidate: not-produced-member-graph-rejected
+  final_state: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:3860d77c28d2b70923e571f5128d25b79c7185a7493925f39e5aeecdb6e74dd0"}

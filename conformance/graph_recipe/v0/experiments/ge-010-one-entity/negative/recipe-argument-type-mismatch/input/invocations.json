@@ -1,0 +1,16 @@
+{
+  "schema_version": "1",
+  "plan_id": "https://fixtures.malleus.dev/graph-recipe/v0/plan/ge-010-type-mismatch",
+  "invocations": [
+    {
+      "invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-type-mismatch",
+      "template": "https://fixtures.malleus.dev/graph-recipe/v0/recipe/Person-1.0.0",
+      "arguments": [
+        {"parameter": "personMember", "identity_binding": {"identity_key": "person", "field": "member_iri"}},
+        {"parameter": "personId", "identity_binding": {"identity_key": "person", "field": "record_id"}},
+        {"parameter": "personName", "term": {"kind": "literal", "datatype": "http://www.w3.org/2001/XMLSchema#integer", "lexical_form": "7"}}
+      ]
+    }
+  ]
+}
+

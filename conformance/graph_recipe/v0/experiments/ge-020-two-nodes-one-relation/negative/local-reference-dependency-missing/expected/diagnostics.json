@@ -1,0 +1,19 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "LOCAL_REFERENCE_DEPENDENCY_MISSING",
+      "phase": "member-graph",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment",
+      "details": {
+        "message": "Member 'https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment' references local record 'org:acme' through 'RelationTarget' without DependsOn('https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment', 'https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/02-organization')."
+      },
+      "evidence": {
+        "member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment",
+        "record_id": "org:acme",
+        "reference_kind": "RelationTarget",
+        "required_prerequisite_member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/02-organization"
+      }
+    }
+  ]
+}

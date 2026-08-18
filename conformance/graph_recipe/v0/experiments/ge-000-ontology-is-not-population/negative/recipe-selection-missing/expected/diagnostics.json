@@ -1,0 +1,16 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "RECIPE_SELECTION_MISSING",
+      "phase": "population-plan",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/request/ge-000-missing-selection",
+      "details": {
+        "message": "Realization was requested without a selected GraphRecipeSet."
+      },
+      "evidence": {
+        "request_id": "https://fixtures.malleus.dev/graph-recipe/v0/request/ge-000-missing-selection"
+      }
+    }
+  ]
+}

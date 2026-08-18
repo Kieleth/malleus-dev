@@ -42,6 +42,11 @@ jobs:
         # Bare pytest so CI and a local run collect the identical testpaths set.
         run: pytest -v
 
+      - name: Run GraphRecipe conformance slice
+        run: |
+          python -m ruff check research/ontology_driven_kg_realization/experiments/graph_recipe
+          PYTHONPATH=src python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py
+
       - name: Build wheel and smoke-test it in a clean environment
         # Editable installs resolve from the working tree, so a manifest
         # referencing missing files is invisible to pytest. Build the real

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "PLAN_GATE_REJECTION",
+      "phase": "staging",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment",
+      "details": {
+        "message": "The structural plan gate rejected proposed operation 2: Source 'org:acme' has type 'Organization', expected 'Person' for WorksForRelation"
+      },
+      "evidence": {
+        "operation_index": 2,
+        "recipe_member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment",
+        "endpoint_diagnostic": "Source 'org:acme' has type 'Organization', expected 'Person' for WorksForRelation"
+      }
+    }
+  ]
+}

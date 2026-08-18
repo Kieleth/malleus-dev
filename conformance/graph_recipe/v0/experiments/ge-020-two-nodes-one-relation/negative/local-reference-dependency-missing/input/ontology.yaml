@@ -1,0 +1,38 @@
+id: https://fixtures.malleus.dev/graph-recipe/v0/ontology/employment
+name: graph_recipe_employment
+version: 1.0.0
+default_range: string
+prefixes: {fixture: "https://fixtures.malleus.dev/graph-recipe/v0/ontology/", linkml: "https://w3id.org/linkml/"}
+classes:
+  Entity:
+    abstract: true
+    slots: [id]
+    slot_usage: {id: {required: true, identifier: true}}
+  Relation:
+    abstract: true
+    slots: [id, relation_type, source_id, target_id]
+    slot_usage: {id: {required: true, identifier: true}, relation_type: {required: true}, source_id: {required: true}, target_id: {required: true}}
+  Person:
+    is_a: Entity
+    slots: [name]
+    slot_usage: {name: {required: true}}
+    class_uri: fixture:Person
+  Organization:
+    is_a: Entity
+    slots: [name]
+    slot_usage: {name: {required: true}}
+    class_uri: fixture:Organization
+  WorksForRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type: {range: string, required: true, equals_string: WORKS_FOR}
+      source_id: {range: Person, required: true}
+      target_id: {range: Organization, required: true}
+    class_uri: fixture:WorksForRelation
+slots:
+  id: {range: string, slot_uri: fixture:id}
+  name: {range: string, slot_uri: fixture:name}
+  relation_type: {range: string, slot_uri: fixture:relation_type}
+  source_id: {range: Entity, slot_uri: fixture:source_id}
+  target_id: {range: Entity, slot_uri: fixture:target_id}
+

@@ -1,0 +1,18 @@
+{
+  "schema_version": "graph-recipe-lock-v0",
+  "lock_id": "https://fixtures.malleus.dev/graph-recipe/v0/lock/base",
+  "network_access": "forbidden",
+  "libraries": [
+    {
+      "library_id": "https://malleus.dev/graph-recipe/base/v0",
+      "version": "0.0.0-fixture-v0",
+      "media_type": "text/stottr",
+      "path": "malleus-base-v0.stottr",
+      "source_digest": {
+        "status": "complete",
+        "algorithm": "source-bytes-sha256-v1",
+        "value": "sha256:aa96a10166143b1d6d59a2020ae33789cf3e322c0f5bc60822e33e9414c109f1"
+      }
+    }
+  ]
+}

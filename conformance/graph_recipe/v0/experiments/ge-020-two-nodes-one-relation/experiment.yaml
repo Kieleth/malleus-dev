@@ -1,0 +1,60 @@
+schema_version: "1"
+experiment_id: GE-020-TWO-NODES-ONE-RELATION
+case_id: alice-works-for-acme-relation-first
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/employment
+profile: ../../profile.json
+artifact_digests:
+  "../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:bb157876f9e8da9b851ee791285b6003fa2eeed611602788da1cbeae33a50735"
+  "input/ontology-symbol-bindings.json": "sha256:d0c8b108024e073b50dbf79bfd6df7d6c9bab6e8ebd8e26963ef8a30c64f541d"
+  "input/recipe.stottr": "sha256:f3b92d3cc5d947b277c4454f4e4ba9c18b4ada4d21982203c74a8da1806056d0"
+  "input/recipe.lock.json": "sha256:9529f7756edfcc5fc02692203769bbcc1292cefaff77249e09a34126a1c6a2c8"
+  "input/invocations.json": "sha256:1b15732dc8ad8cfc4ba10a66268cc4dffec9a2ad5274e7e17e9d96c169c148d4"
+  "input/identity-policy.json": "sha256:b2b6e4036050e8c32a5cb0538efb2ade9a9d421dae17276ba3d1fc44cc218461"
+  "input/prior-graph.json": "sha256:92b72155a04169ebaac34a29a60f46dd841e444d3f1d74a98a080b2f23358d22"
+  "expected/logical-contract.json": "sha256:27dc4193a1bb4b97d0d0616e1750b13cff1f557d2ac8ae8a21703d96f5d0b13e"
+  "expected/terminal-facts.json": "sha256:06a610edcf1f4f7a563c1f7e3fcf2c420a070b544d18834fe9323e240b42c4b2"
+  "expected/member-graph.json": "sha256:ea2fe09a4ccfc671926de85b06d639ecc043ce259c45a9081a313f6aa1d4eac0"
+  "expected/proposed-operations.json": "sha256:4a40d1213787f0544b494bdd10c9b784c2657fd88bba0c9ca638108751ef76c0"
+  "expected/graph.json": "sha256:029834186c6941aded66b3b637445147efcbbadf7fa94cab4af66b9445e7c661"
+  "expected/lineage.json": "sha256:0cea2c6e8c78f0915df6d875f0d5cea9b7e9243aebb7763901b28f4527a7991c"
+  "expected/diagnostics.json": "sha256:5704f2c90d1bb6d16f3e431c54fa78b01b48bb6c67962b2a725bd64ac2745b94"
+purpose: Relation-first recipe source lowers by explicit dependencies and stable member-IRI topological order.
+population_input_mode: direct-typed-invocation
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  recipe: input/recipe.stottr
+  recipe_lock: input/recipe.lock.json
+  invocations: input/invocations.json
+  identity_policy: input/identity-policy.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: success
+digest_expectations:
+  source: {status: complete, algorithm: source-bytes-sha256-v1, value: "sha256:f3b92d3cc5d947b277c4454f4e4ba9c18b4ada4d21982203c74a8da1806056d0"}
+  effective_recipe: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:0829775251053427019dd94f0740bf9eb448089143a311ea91e2dc2e3431bec4"}
+  invocation: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:8506f2b1fe997e0a776ac52ad8ec293cba6f202bca319a23d166b3b5a7c78dce"}
+  plan: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:04a2f9d07b3410d904e957858be44208d81bd8333e9065bfa94e1981e9589641"}
+  candidate: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:8827fcba92e369f137764676385937219c337bddbbb3d8c4b6c1e486ec778fec"}
+  final_state: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:6530c038a783b7a5451f9d2725d05dfaa2746c6b78e7b12151491692d2798ab7"}
+metamorphic_obligations:
+  - transform: pattern-permutation
+    invariant_artifacts: [terminal-facts, member-graph, proposed-operations, graph, lineage-semantics]
+  - transform: formatting-safe-prefix-alias-and-alpha-renaming
+    source_digest: changes
+    invariant_digests: [effective_recipe, plan, final_state]
+negative_cases:
+  - case_id: local-reference-dependency-missing
+    manifest: negative/local-reference-dependency-missing/case.yaml
+  - case_id: wrong-endpoint-role
+    manifest: negative/wrong-endpoint-role/case.yaml
+  - case_id: construction-dependency-cycle
+    manifest: negative/construction-dependency-cycle/case.yaml

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1",
+  "plan_id": "https://fixtures.malleus.dev/graph-recipe/v0/plan/ge-010-alice",
+  "invocations": [
+    {
+      "invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-alice",
+      "template": "https://fixtures.malleus.dev/graph-recipe/v0/recipe/Person-1.0.0",
+      "arguments": [
+        {
+          "parameter": "personMember",
+          "identity_binding": {
+            "identity_key": "person",
+            "field": "member_iri"
+          }
+        },
+        {
+          "parameter": "personId",
+          "identity_binding": {
+            "identity_key": "person",
+            "field": "record_id"
+          }
+        },
+        {
+          "parameter": "personName",
+          "term": {
+            "kind": "literal",
+            "datatype": "http://www.w3.org/2001/XMLSchema#string",
+            "lexical_form": "Alice"
+          }
+        }
+      ]
+    }
+  ]
+}
+

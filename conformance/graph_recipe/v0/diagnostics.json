@@ -1,0 +1,92 @@
+{
+  "schema_version": "graph-recipe-diagnostics-v0",
+  "closed_for_experiments": [
+    "GE-000",
+    "GE-010",
+    "GE-020"
+  ],
+  "diagnostics": [
+    {
+      "code": "RECIPE_SELECTION_MISSING",
+      "layer": "population-plan",
+      "severity": "error",
+      "message_template": "Realization was requested without a selected GraphRecipeSet.",
+      "required_evidence": [
+        "request_id"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "MANDATORY_RECIPE_VALUE_MISSING",
+      "layer": "invocation-binding",
+      "severity": "error",
+      "message_template": "Mandatory recipe parameter '{parameter}' cannot bind none.",
+      "required_evidence": [
+        "invocation_id",
+        "parameter"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "RECIPE_ARGUMENT_TYPE_MISMATCH",
+      "layer": "invocation-binding",
+      "severity": "error",
+      "message_template": "Recipe parameter '{parameter}' requires '{expected_type}', received '{actual_type}'.",
+      "required_evidence": [
+        "invocation_id",
+        "parameter",
+        "expected_type",
+        "actual_type"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "FORBIDDEN_BLANK_NODE",
+      "layer": "profile-validation",
+      "severity": "error",
+      "message_template": "Blank-node identity '{value}' is forbidden in effective topology.",
+      "required_evidence": [
+        "invocation_id",
+        "parameter",
+        "value"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "LOCAL_REFERENCE_DEPENDENCY_MISSING",
+      "layer": "member-graph",
+      "severity": "error",
+      "message_template": "Member '{member}' references local record '{record_id}' through '{reference_kind}' without DependsOn('{member}', '{required_prerequisite_member}').",
+      "required_evidence": [
+        "member",
+        "record_id",
+        "reference_kind",
+        "required_prerequisite_member"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "PLAN_GATE_REJECTION",
+      "layer": "staging",
+      "severity": "error",
+      "message_template": "The structural plan gate rejected proposed operation {operation_index}: {endpoint_diagnostic}",
+      "required_evidence": [
+        "operation_index",
+        "recipe_member",
+        "endpoint_diagnostic"
+      ],
+      "graph_outcome": "unchanged"
+    },
+    {
+      "code": "CONSTRUCTION_DEPENDENCY_CYCLE",
+      "layer": "member-graph",
+      "severity": "error",
+      "message_template": "Construction dependency cycle: {cycle}.",
+      "required_evidence": [
+        "cycle"
+      ],
+      "graph_outcome": "unchanged"
+    }
+  ]
+}
+

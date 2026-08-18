@@ -1,0 +1,18 @@
+{
+  "schema_version": "1", "binding_id": "https://fixtures.malleus.dev/graph-recipe/v0/symbol-bindings/employment", "ontology_artifact": "ontology.yaml", "derivation": "explicit-validated-input",
+  "types": [
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity", "local_symbol": "Entity"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization", "local_symbol": "Organization"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person", "local_symbol": "Person"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Relation", "local_symbol": "Relation"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/WorksForRelation", "local_symbol": "WorksForRelation"}
+  ],
+  "properties": [
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "local_symbol": "id"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/name", "local_symbol": "name"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/relation_type", "local_symbol": "relation_type"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/source_id", "local_symbol": "source_id"},
+    {"iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/target_id", "local_symbol": "target_id"}
+  ]
+}
+

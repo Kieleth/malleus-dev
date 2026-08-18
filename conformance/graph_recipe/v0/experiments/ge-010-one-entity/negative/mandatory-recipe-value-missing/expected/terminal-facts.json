@@ -1,0 +1,8 @@
+{
+  "schema_version": "1",
+  "status": "not-produced",
+  "blocked_by": "MANDATORY_RECIPE_VALUE_MISSING",
+  "invocation_digest": {"status": "not-produced", "reason": "Mandatory argument binding failed."},
+  "emissions": []
+}
+

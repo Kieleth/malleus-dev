@@ -1,0 +1,47 @@
+schema_version: "1"
+experiment_id: GE-010-ONE-ENTITY
+case_id: mandatory-recipe-value-missing
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/person-only
+profile: ../../../../profile.json
+artifact_digests:
+  "../../../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:bf7b246afee342d8c64af8765899d813c2de9a25ea7d1d71e556e8e67a26dba4"
+  "input/ontology-symbol-bindings.json": "sha256:58bce541dc34561324a67ddec5cd891beccceb31221fbe84ebf50eb8a34f168a"
+  "input/recipe.stottr": "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336"
+  "input/recipe.lock.json": "sha256:f1160438f1c7950f3a163b17d666bebe78621c0550d7b8a8c8b3946a2374a2c4"
+  "input/invocations.json": "sha256:77901cbf97ad2dfbac5d2cea7fca918c40869e04367e02dfbf50c0b7700112cd"
+  "input/identity-policy.json": "sha256:4e9caf4bec98738d707588049832ab08c527db36669fda1429eef52a7f4271f3"
+  "input/prior-graph.json": "sha256:36b778af6a8b3d5c9e70590279d0abb19696a07c109a753cdc59df8f290563bf"
+  "expected/logical-contract.json": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352"
+  "expected/terminal-facts.json": "sha256:768b1a189c18fba8b8b39b025a72b69c7f7fd03129a330e7660ad77ea7bbb26c"
+  "expected/member-graph.json": "sha256:fbde03208d3bb154ef7a06c1e5f367e3f806799f535059be733c75ffe9353a42"
+  "expected/proposed-operations.json": "sha256:ceadc4631e6a35dfa5e33564c99f642ec883e15d35b2588b8644e8e9a4e5b2b4"
+  "expected/graph.json": "sha256:f56b336e2e40411c1d9cebc081d3e4df360daa64b28b58b50ce173f964386d00"
+  "expected/lineage.json": "sha256:6ff57f0e031cc818ed4adc59bf30220e3dae3fafb026652dfc8bd3422d345e01"
+  "expected/diagnostics.json": "sha256:8c4c89e2003f895e0f5649fcdd586fe51356bee505a26ecdc7626d95ed57306a"
+population_input_mode: direct-typed-invocation
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  recipe: input/recipe.stottr
+  recipe_lock: input/recipe.lock.json
+  invocations: input/invocations.json
+  identity_policy: input/identity-policy.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: rejected
+expected_diagnostic: MANDATORY_RECIPE_VALUE_MISSING
+digest_expectations:
+  source: {status: complete, algorithm: source-bytes-sha256-v1, value: "sha256:274cd2c4824405df7f374ca2780bd617021add1cf13b89f56cd7c6a1b8538336"}
+  effective_recipe: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:2f89b69280072397caa0a0e932a1797dcf3d56c885175ed50d8b636262c9a838"}
+  invocation: not-produced-binding-failed
+  plan: not-produced-binding-failed
+  candidate: not-produced-binding-failed
+  final_state: {status: complete, algorithm: canonical-json-sha256-v1, value: "sha256:8b518e6e3a7a35ae13fa6022e2700a4a8129065a424a6760dcc650a174c0be6f"}

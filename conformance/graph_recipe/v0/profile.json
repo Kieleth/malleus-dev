@@ -1,0 +1,245 @@
+{
+  "schema_version": "graph-recipe-profile-v0",
+  "profile_id": "https://malleus.dev/graph-recipe/profile/v0",
+  "status": "accepted-design",
+  "authored_language": {
+    "media_type": "text/stottr",
+    "stottr": "0.1.4",
+    "mottr": "0.1.2",
+    "rottr": "0.2.0",
+    "other_frontends_allowed": false
+  },
+  "namespaces": {
+    "base": "https://malleus.dev/graph-recipe/base/",
+    "fixture": "https://fixtures.malleus.dev/graph-recipe/v0/",
+    "ontology": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/",
+    "ottr": "http://ns.ottr.xyz/0.4/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "accepted_decisions": [
+    {
+      "decision_id": "OKG-D007",
+      "semantics": "Terminal member, operation-kind, record-type, and property symbols are absolute IRIs. Graph record IDs remain strings."
+    },
+    {
+      "decision_id": "OKG-D008",
+      "semantics": "Terminal facts assemble across one complete atomic PopulationPlan. This slice has one invocation per plan and does not exercise property-only add-ons."
+    },
+    {
+      "decision_id": "OKG-D009",
+      "semantics": "Every reference to a record created in the same plan requires an explicit DependsOn fact, including each relation endpoint."
+    },
+    {
+      "decision_id": "OKG-D010",
+      "semantics": "Unordered multivalued slots canonicalize as semantic sets while retaining every derivation path; ordered slots preserve contract-declared order. This slice has no multivalued input."
+    },
+    {
+      "decision_id": "OKG-D011",
+      "semantics": "The offline fixture corpus is the primary gate. A separate pinned Lutra differential gate becomes required only after its complete tool lock exists."
+    }
+  ],
+  "terminal_abi": {
+    "library": "base/malleus-base-v0.stottr",
+    "closed": true,
+    "operation_kinds": {
+      "https://malleus.dev/graph-recipe/base/CreateEntity": "CREATE_ENTITY",
+      "https://malleus.dev/graph-recipe/base/CreateRelation": "CREATE_RELATION",
+      "https://malleus.dev/graph-recipe/base/CreateSignal": "CREATE_SIGNAL",
+      "https://malleus.dev/graph-recipe/base/CreateEvent": "CREATE_EVENT"
+    },
+    "fact_kinds": {
+      "Record": [
+        "member",
+        "operation_kind",
+        "record_type",
+        "record_id"
+      ],
+      "Property": [
+        "member",
+        "property",
+        "value"
+      ],
+      "RelationSource": [
+        "member",
+        "record_id"
+      ],
+      "RelationTarget": [
+        "member",
+        "record_id"
+      ],
+      "DependsOn": [
+        "member",
+        "prerequisite_member"
+      ]
+    },
+    "rdf_term_encoding": {
+      "iri": {
+        "required": [
+          "kind",
+          "value"
+        ]
+      },
+      "literal": {
+        "required": [
+          "kind",
+          "datatype",
+          "lexical_form"
+        ]
+      },
+      "none": {
+        "required": [
+          "kind"
+        ]
+      }
+    },
+    "fact_order": [
+      "member IRI ascending",
+      "Record before Property before RelationSource before RelationTarget before DependsOn",
+      "remaining fields as canonical JSON ascending"
+    ],
+    "member_graph_edge_direction": "prerequisite_member-to-member",
+    "topological_tie_breaker": "member IRI ascending",
+    "source_pattern_indexes": "zero-based"
+  },
+  "assembly": {
+    "scope": "complete-atomic-population-plan",
+    "empty_operation_sequence": "skip-staging-and-materialization",
+    "required_local_reference_dependency": true,
+    "emit_before_complete_validation": false,
+    "lowering_cardinality": "one-operation-per-record-member"
+  },
+  "ontology_symbol_binding": {
+    "required_input": "ontology-symbol-bindings.json",
+    "derivation": "explicit-validated-input",
+    "rule": "Every terminal type and property IRI must resolve bijectively to one ontology-registry local symbol. Schema IDs and prefixes are not implicit symbol identities.",
+    "temporary_boundary": "Required until the contract-kernel SymbolIdentityPolicy is implemented."
+  },
+  "lineage_identity": {
+    "emission_order": "accepted canonical terminal fact order",
+    "expansion_path_order": "the same canonical semantic emission order; duplicate semantic calls are tie-broken by canonical call payload and multiplicity ordinal",
+    "source_pattern_index": "evidence only; excluded from semantic emission and expansion-path identity"
+  },
+  "fixture_limits": {
+    "maximum_template_depth": 8,
+    "maximum_invocation_count": 16,
+    "maximum_list_size": 16,
+    "maximum_cross_product_size": 64,
+    "maximum_terminal_member_count": 64,
+    "maximum_output_bytes": 1048576
+  },
+  "artifact_contract": {
+    "expected_artifacts": [
+      "logical-contract.json",
+      "terminal-facts.json",
+      "member-graph.json",
+      "proposed-operations.json",
+      "graph.json",
+      "lineage.json",
+      "diagnostics.json"
+    ],
+    "artifact_statuses": [
+      "complete",
+      "not-produced"
+    ],
+    "negative_case_inheritance": false,
+    "graph_snapshot_api": "KnowledgeGraph.snapshot()",
+    "graph_operations_api": "KnowledgeGraph.canonical_operations()",
+    "proposed_operation_api": "ProposedOperation.as_dict()"
+  },
+  "digest_contract": {
+    "source-bytes-sha256-v1": {
+      "input": "exact file bytes",
+      "encoding": "bytes as stored; no newline or Unicode normalization",
+      "output": "lowercase sha256:<64 hexadecimal digits>"
+    },
+    "canonical-json-sha256-v1": {
+      "input": "the artifact-specific canonical payload",
+      "encoding": "UTF-8 JSON; object keys sorted; separators ',' and ':'; ensure_ascii=false; finite JSON numbers only; no Unicode normalization",
+      "output": "lowercase sha256:<64 hexadecimal digits>"
+    },
+    "canonical_payloads": {
+      "logical_contract": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "schema_version",
+          "registry_hash",
+          "symbol_bindings",
+          "record_types",
+          "constructible_record_types"
+        ],
+        "rule": "Use the complete values emitted by LogicalGraphContract.identity_payload(). The descriptive contract_id is not part of semantic identity."
+      },
+      "effective_recipe": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "profile_id",
+          "root_template",
+          "terminal_abi",
+          "templates"
+        ],
+        "rule": "Bind the selected root, the complete closed terminal signatures, and every canonical template sorted by template IRI. Alpha-normalize variables and sort semantic patterns. Exact source bytes, source locators, source digests, and lock metadata remain separate execution-input identities."
+      },
+      "invocation": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "effective_recipe_digest",
+          "contract_digest",
+          "arguments",
+          "expansion_profile_id"
+        ],
+        "rule": "Encode complete typed arguments in the selected root template's parameter order."
+      },
+      "plan": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "schema_version",
+          "contract_digest",
+          "invocation_digests",
+          "member_graph",
+          "proposed_operations"
+        ],
+        "rule": "schema_version is graph-recipe-plan-v0; sort invocation digests; include the complete member-graph and proposed-operations artifacts."
+      },
+      "candidate": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "ontology_hash",
+          "base_state_digest",
+          "writes"
+        ],
+        "rule": "Use the existing CandidateSubgraph digest payload and preserve proposed write order."
+      },
+      "final_state": {
+        "algorithm": "canonical-json-sha256-v1",
+        "fields": [
+          "ontology_hash",
+          "nodes",
+          "relations"
+        ],
+        "rule": "Hash the complete KnowledgeGraph.snapshot() value."
+      }
+    },
+    "canonical_payload_status": "frozen-runner-v1",
+    "red_test_obligation": {
+      "obligation_id": "GRV0-DIGEST-001",
+      "status": "closed",
+      "required_behavior": "The conformance runner must fail every case whose required semantic digest is pending, generate reviewed candidate values only through an explicit propose-golden action, and never substitute a sentinel or fabricated digest."
+    },
+    "required_semantic_digests": [
+      "source",
+      "effective_recipe",
+      "invocation",
+      "plan",
+      "candidate",
+      "final_state"
+    ]
+  },
+  "network_policy": "forbidden",
+  "excluded_scope": [
+    "GE-030 and later behavior",
+    "property-only add-on execution",
+    "multivalued expansion",
+    "Lutra execution before a complete tool lock",
+    "backend selection beyond the existing in-memory graph"
+  ]
+}

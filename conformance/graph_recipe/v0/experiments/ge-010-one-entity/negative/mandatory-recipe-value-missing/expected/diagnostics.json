@@ -1,0 +1,13 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "MANDATORY_RECIPE_VALUE_MISSING",
+      "phase": "invocation-binding",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-mandatory-missing",
+      "details": {"message": "Mandatory recipe parameter 'personName' cannot bind none."},
+      "evidence": {"invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-mandatory-missing", "parameter": "personName"}
+    }
+  ]
+}
+

@@ -1,0 +1,53 @@
+{
+  "schema_version": "graph-recipe-corpus-v0",
+  "corpus_id": "https://fixtures.malleus.dev/graph-recipe/v0/corpus",
+  "classification": "public-synthetic",
+  "profile": "profile.json",
+  "diagnostics": "diagnostics.json",
+  "base_lock": "base/recipe.lock.json",
+  "digest_gate": {
+    "status": "complete",
+    "obligation_id": "GRV0-DIGEST-001",
+    "reason": "Frozen runner v1 generated every required semantic digest and the values were reviewed into the corpus."
+  },
+  "experiments": [
+    {
+      "experiment_id": "GE-000-ONTOLOGY-IS-NOT-POPULATION",
+      "manifest": "experiments/ge-000-ontology-is-not-population/experiment.yaml",
+      "positive_case": "baseline",
+      "negative_cases": [
+        "recipe-selection-missing"
+      ]
+    },
+    {
+      "experiment_id": "GE-010-ONE-ENTITY",
+      "manifest": "experiments/ge-010-one-entity/experiment.yaml",
+      "positive_case": "alice",
+      "negative_cases": [
+        "mandatory-recipe-value-missing",
+        "recipe-argument-type-mismatch",
+        "forbidden-blank-node"
+      ]
+    },
+    {
+      "experiment_id": "GE-020-TWO-NODES-ONE-RELATION",
+      "manifest": "experiments/ge-020-two-nodes-one-relation/experiment.yaml",
+      "positive_case": "alice-works-for-acme-relation-first",
+      "negative_cases": [
+        "local-reference-dependency-missing",
+        "wrong-endpoint-role",
+        "construction-dependency-cycle"
+      ]
+    }
+  ],
+  "excluded_experiments": [
+    "GE-030",
+    "GE-040",
+    "GE-050",
+    "GE-060",
+    "GE-070",
+    "GE-080",
+    "GE-090",
+    "GE-100"
+  ]
+}

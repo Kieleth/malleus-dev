@@ -1,0 +1,20 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "members": [
+    {"member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person", "operation_kind": "https://malleus.dev/graph-recipe/base/CreateEntity", "record_type": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person", "record_id": "person:alice"},
+    {"member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/02-organization", "operation_kind": "https://malleus.dev/graph-recipe/base/CreateEntity", "record_type": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization", "record_id": "org:acme"},
+    {"member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment", "operation_kind": "https://malleus.dev/graph-recipe/base/CreateRelation", "record_type": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/WorksForRelation", "record_id": "employment:alice-acme"}
+  ],
+  "dependencies": [
+    {"prerequisite_member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person", "member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment"},
+    {"prerequisite_member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/02-organization", "member": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment"}
+  ],
+  "acyclic": true,
+  "topological_order": [
+    "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person",
+    "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/02-organization",
+    "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment"
+  ]
+}
+

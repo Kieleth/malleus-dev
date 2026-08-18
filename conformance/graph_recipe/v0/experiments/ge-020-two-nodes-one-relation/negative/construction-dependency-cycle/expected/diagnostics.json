@@ -1,0 +1,20 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "CONSTRUCTION_DEPENDENCY_CYCLE",
+      "phase": "member-graph",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person",
+      "details": {
+        "message": "Construction dependency cycle: https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person -> https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment -> https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person."
+      },
+      "evidence": {
+        "cycle": [
+          "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person",
+          "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/03-employment",
+          "https://fixtures.malleus.dev/graph-recipe/v0/member/ge-020/01-person"
+        ]
+      }
+    }
+  ]
+}

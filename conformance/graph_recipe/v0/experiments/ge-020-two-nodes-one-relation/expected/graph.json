@@ -1,0 +1,23 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "staging": "accepted",
+  "materialization": "committed-atomically",
+  "snapshot": {
+    "ontology_hash": "sha256:b962ee582090ad4c66107d6d325894be13d5b5e562afac515699c545d710665d",
+    "nodes": [
+      {"id": "org:acme", "type": "Organization", "name": "Acme"},
+      {"id": "person:alice", "type": "Person", "name": "Alice"}
+    ],
+    "relations": [
+      {"source_id": "person:alice", "target_id": "org:acme", "key": "employment:alice-acme", "type": "WorksForRelation", "relation_type": "WORKS_FOR"}
+    ]
+  },
+  "canonical_operations": [
+    {"kind": "RELATION", "record_type": "WorksForRelation", "record_id": "employment:alice-acme", "properties": {"relation_type": "WORKS_FOR"}, "source_id": "person:alice", "target_id": "org:acme"},
+    {"kind": "ENTITY", "record_type": "Organization", "record_id": "org:acme", "properties": {"name": "Acme"}, "source_id": null, "target_id": null},
+    {"kind": "ENTITY", "record_type": "Person", "record_id": "person:alice", "properties": {"name": "Alice"}, "source_id": null, "target_id": null}
+  ],
+  "state_digest": "sha256:6530c038a783b7a5451f9d2725d05dfaa2746c6b78e7b12151491692d2798ab7"
+}
+

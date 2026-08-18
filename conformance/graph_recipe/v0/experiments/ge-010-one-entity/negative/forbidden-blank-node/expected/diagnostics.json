@@ -1,0 +1,16 @@
+{
+  "schema_version": "1",
+  "diagnostics": [
+    {
+      "code": "FORBIDDEN_BLANK_NODE",
+      "phase": "profile-validation",
+      "subject": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-blank-node",
+      "details": {"message": "Blank-node identity '_:person-alice' is forbidden in effective topology."},
+      "evidence": {
+        "invocation_id": "https://fixtures.malleus.dev/graph-recipe/v0/invocation/ge-010-blank-node",
+        "parameter": "personMember",
+        "value": "_:person-alice"
+      }
+    }
+  ]
+}

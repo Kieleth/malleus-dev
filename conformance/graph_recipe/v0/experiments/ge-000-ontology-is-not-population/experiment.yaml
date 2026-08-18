@@ -1,0 +1,48 @@
+schema_version: "1"
+experiment_id: GE-000-ONTOLOGY-IS-NOT-POPULATION
+case_id: baseline
+contract_id: https://fixtures.malleus.dev/graph-recipe/v0/contract/person-only
+profile: ../../profile.json
+artifact_digests:
+  "../../profile.json": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8"
+  "input/ontology.yaml": "sha256:005b862ab63666ec8e467ee49964ac899e02014e649299fb64f750cd1d33447f"
+  "input/ontology-symbol-bindings.json": "sha256:0f388f39ab319eaf99d555dcfde9c7e92a559589a55142dc222c6da45ebcfe88"
+  "input/prior-graph.json": "sha256:03967b1dc304a861c9cc9aa488d931f7a8149809e046d0bd71004e41f705cb1e"
+  "expected/logical-contract.json": "sha256:841caf37dc0ba6fe6b51bb2f88913de0cd360a77e235aef89df3a1f1391d0352"
+  "expected/terminal-facts.json": "sha256:d8ecaeb751061f6d3d76fd50d5d27efc9f7100fc9d2b4da846a9c9cf53b1e77e"
+  "expected/member-graph.json": "sha256:9c61251f7522bbc5c6db8d44816884d39e59573f1793ca96d141073136a15b94"
+  "expected/proposed-operations.json": "sha256:45927a63c6d03c501f23a4aba3c366a92b4aa81a4916c469c79a789ed30a8324"
+  "expected/graph.json": "sha256:37cac695fec2b37974458af32d92c93cd5bdd54f94bab9df4d826f8e0cab0dbf"
+  "expected/lineage.json": "sha256:2e2e26e3acccb8621421751bc3f094d04daf7721cb6e94cc338be486ae47f04c"
+  "expected/diagnostics.json": "sha256:b50ca62087c3a372cb9c1b5caf73a6e3ac071970b997f6efb9209b33e12d1279"
+purpose: An ontology derives a logical contract but never guesses population.
+input:
+  ontology: input/ontology.yaml
+  ontology_symbol_bindings: input/ontology-symbol-bindings.json
+  prior_graph: input/prior-graph.json
+expected:
+  logical_contract: expected/logical-contract.json
+  terminal_facts: expected/terminal-facts.json
+  member_graph: expected/member-graph.json
+  proposed_operations: expected/proposed-operations.json
+  graph: expected/graph.json
+  lineage: expected/lineage.json
+  diagnostics: expected/diagnostics.json
+expected_outcome: success-with-no-population
+staging: skipped-empty-operation-sequence
+digest_expectations:
+  source: not-applicable-no-recipe
+  effective_recipe: not-applicable-no-recipe
+  invocation: not-applicable-no-invocation
+  plan: not-applicable-no-population-plan
+  candidate: not-applicable-empty-operation-sequence
+  final_state:
+    status: complete
+    algorithm: canonical-json-sha256-v1
+    value: sha256:8b518e6e3a7a35ae13fa6022e2700a4a8129065a424a6760dcc650a174c0be6f
+metamorphic_obligations:
+  - repeated-execution-preserves-all-semantic-artifacts
+  - ontology-formatting-only-change-preserves-logical-contract-and-graph
+negative_cases:
+  - case_id: recipe-selection-missing
+    manifest: negative/recipe-selection-missing/case.yaml

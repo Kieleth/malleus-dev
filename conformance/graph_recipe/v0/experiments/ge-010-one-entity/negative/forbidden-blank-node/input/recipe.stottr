@@ -1,0 +1,14 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix ont: <https://fixtures.malleus.dev/graph-recipe/v0/ontology/> .
+@prefix recipe: <https://fixtures.malleus.dev/graph-recipe/v0/recipe/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+recipe:Person-1.0.0 [
+  ! ottr:IRI ?personMember,
+  ! xsd:string ?personId,
+  ! xsd:string ?personName
+] :: {
+  mgrp:Record(?personMember, mgrp:CreateEntity, ont:Person, ?personId),
+  mgrp:Property(?personMember, ont:name, ?personName)
+} .

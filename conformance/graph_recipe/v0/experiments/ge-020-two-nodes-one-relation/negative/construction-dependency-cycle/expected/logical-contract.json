@@ -1,0 +1,75 @@
+{
+  "schema_version": "1",
+  "status": "complete",
+  "contract_id": "https://fixtures.malleus.dev/graph-recipe/v0/contract/employment",
+  "record_types": [
+    {
+      "type_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity",
+      "runtime_symbol": "Entity",
+      "role": "ENTITY",
+      "abstract": true,
+      "required_properties": [{"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "runtime_symbol": "id", "position": 0, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": true, "equals_string": null, "minimum_value": null, "maximum_value": null}}],
+      "optional_properties": [],
+      "legal_operation_kind": null
+    },
+    {
+      "type_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization",
+      "runtime_symbol": "Organization",
+      "role": "ENTITY",
+      "abstract": false,
+      "required_properties": [
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "runtime_symbol": "id", "position": 0, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": true, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/name", "runtime_symbol": "name", "position": 1, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}}
+      ],
+      "optional_properties": [],
+      "legal_operation_kind": "https://malleus.dev/graph-recipe/base/CreateEntity"
+    },
+    {
+      "type_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person",
+      "runtime_symbol": "Person",
+      "role": "ENTITY",
+      "abstract": false,
+      "required_properties": [
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "runtime_symbol": "id", "position": 0, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": true, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/name", "runtime_symbol": "name", "position": 1, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}}
+      ],
+      "optional_properties": [],
+      "legal_operation_kind": "https://malleus.dev/graph-recipe/base/CreateEntity"
+    },
+    {
+      "type_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Relation",
+      "runtime_symbol": "Relation",
+      "role": "RELATION",
+      "abstract": true,
+      "required_properties": [
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "runtime_symbol": "id", "position": 0, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": true, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/relation_type", "runtime_symbol": "relation_type", "position": 1, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/source_id", "runtime_symbol": "source_id", "position": 2, "constraints": {"required": true, "range": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/target_id", "runtime_symbol": "target_id", "position": 3, "constraints": {"required": true, "range": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}}
+      ],
+      "optional_properties": [],
+      "endpoint_constraints": {"source": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity", "target": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Entity"},
+      "legal_operation_kind": null
+    },
+    {
+      "type_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/WorksForRelation",
+      "runtime_symbol": "WorksForRelation",
+      "role": "RELATION",
+      "abstract": false,
+      "required_properties": [
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/id", "runtime_symbol": "id", "position": 0, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": true, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/relation_type", "runtime_symbol": "relation_type", "position": 1, "constraints": {"required": true, "range": "http://www.w3.org/2001/XMLSchema#string", "multivalued": false, "inlined": false, "identifier": false, "equals_string": "WORKS_FOR", "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/source_id", "runtime_symbol": "source_id", "position": 2, "constraints": {"required": true, "range": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}},
+        {"property_iri": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/target_id", "runtime_symbol": "target_id", "position": 3, "constraints": {"required": true, "range": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization", "multivalued": false, "inlined": false, "identifier": false, "equals_string": null, "minimum_value": null, "maximum_value": null}}
+      ],
+      "optional_properties": [],
+      "endpoint_constraints": {"source": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person", "target": "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization"},
+      "legal_operation_kind": "https://malleus.dev/graph-recipe/base/CreateRelation"
+    }
+  ],
+  "constructible_record_types": [
+    "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Organization",
+    "https://fixtures.malleus.dev/graph-recipe/v0/ontology/Person",
+    "https://fixtures.malleus.dev/graph-recipe/v0/ontology/WorksForRelation"
+  ]
+}
