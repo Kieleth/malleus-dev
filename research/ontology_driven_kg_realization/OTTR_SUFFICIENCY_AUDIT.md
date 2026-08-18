@@ -6,8 +6,9 @@ Inspected: 2026-08-17
 
 Evidence cutoff: 2026-08-17
 
-Repository snapshot: `codex/malleus-recon` at
-`384ecc37917c8191d17ffa44867024a36dfdd313`
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
+The reviewed GraphRecipe source bytes are identified by the conformance report
+and checksum set, not by a self-referential release commit.
 
 ## 1. Result
 

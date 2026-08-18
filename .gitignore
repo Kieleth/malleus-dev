@@ -59,5 +59,7 @@ Thumbs.db
 # published deliberately; the source may not travel by accident.
 /design/MALLEUS_INTELLECTUAL_SUBSTRATE.md
 /malleus_literature_kg/
-/research/
+/research/cost_aware_model_architecture_recon/
+/research/malleus_library_protocol_recon/
+/research/malleus_library_protocol_recon.*/
 /MALLEUS_INQUISITION*.md

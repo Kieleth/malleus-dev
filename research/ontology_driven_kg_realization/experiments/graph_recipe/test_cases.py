@@ -228,6 +228,25 @@ def test_checksum_set_and_report_bind_the_current_executable_snapshot():
         assert identity["canonical_receipt_digest"] == content_digest(receipt.as_dict())
 
 
+def test_report_public_snapshot_boundary_is_classified_and_non_enumerating():
+    snapshot = _load_json(REPORT)["repository_snapshot"]
+    assert "dirty_worktree_boundary" not in snapshot
+
+    boundary = snapshot["working_tree_boundary"]
+    assert boundary["enumeration"] == "non-enumerating"
+    assert boundary["classification"]
+    assert boundary["private_or_excluded_path_names_disclosed"] is False
+    assert not {"command", "entries", "files", "paths"}.intersection(boundary)
+
+    path_suffixes = (".json", ".md", ".py", ".toml", ".ttl", ".yaml", ".yml")
+    for value in boundary.values():
+        if not isinstance(value, str):
+            continue
+        assert "/" not in value and "\\" not in value and "\n" not in value
+        tokens = (token.strip("`'\"()[]{}.,:;") for token in value.split())
+        assert not any(token.endswith(path_suffixes) for token in tokens)
+
+
 def test_execution_never_opens_expected_artifacts(monkeypatch):
     original_open = Path.open
 

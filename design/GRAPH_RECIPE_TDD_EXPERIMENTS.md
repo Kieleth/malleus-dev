@@ -14,12 +14,14 @@ Depends on:
 3. Resume checkpoint
    [`OKG-CP001`](GRAPH_REALIZATION_SESSION_CHECKPOINT.md).
 
-Repository base: `codex/malleus-recon` at
-`1657e6564c1f8ab872d56b9ec97e34a015fce765`
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
+This is an ancestry base only, not the tested implementation snapshot. The
+intended release locator is `v0.11.0`; exact report, file, and checksum
+identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 9,
-`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
+revision 10,
+`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
 
 Shipped capability: none
 
@@ -494,14 +496,14 @@ The first implementation slice was limited to `GE-000` through `GE-020`:
 6. Add explicit dependency assembly and stable topological sorting.
 7. Refactor only after all three remain green under their metamorphic cases.
 
-That slice is complete at its bound repository snapshot. The checksum set
+That slice is complete at its declared evidence boundary. The checksum set
 covers 149 corpus files. Ten cases emit canonical receipts, and seven declared
-metamorphic obligations map to executable tests. The dedicated slice passed 39
-tests. The relevant core selection passed 236 tests with 2 skips. Exact
-evidence lives in
+metamorphic obligations map to executable tests. The dedicated slice passed 40
+tests, the relevant core selection passed 257 tests with 2 skips, and the full
+configured suite recorded 807 passes with 2 skips. Exact evidence lives in
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
 The checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
@@ -511,21 +513,24 @@ report and produced retained identity
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
 which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The current report refresh binds the changed `ontology.py`, `pyproject.toml`,
-`status.py`, and implementation-status bytes plus package version `0.11.0`.
-Its active identity above supersedes `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
-The checksum-set identity and 39-test result did not change. Runner, direct-core,
-and package-boundary bytes remain load-bearing execution inputs even when the
-frozen case results are unchanged.
+A later bound-source refresh produced
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+which supersedes `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
+The active release-boundary refresh adds the final ontology and status-document
+bytes, three relevant-core test sources, current observations, and the
+non-enumerating public-snapshot guard. Its identity above supersedes
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+The checksum-set identity did not change.
 
 Each receipt's canonical identity covers its complete serialized value,
 including the exact selected-manifest path and source-byte digest. This binds
 manifest discovery to the result: selecting different case bytes cannot retain
-the same conforming receipt. The report also binds the runner, direct core
-dependencies, package-boundary sources, corpus identities, and case-receipt
-identities. Exact execution identity is therefore learned from the selected
-manifest and the complete bound input closure, not from a branch or commit name
-alone.
+the same conforming receipt. The report also binds declared runner, direct-core,
+package-boundary, and relevant-core test sources. Declared evidence identity
+here means those exact source bytes, selected manifests, receipts, and recorded
+observation objects. It does not establish complete transitive dependency or
+execution-environment closure. The public ancestry base and intended release
+locator do not identify the tested implementation bytes.
 
 Red tests live on the active implementation branch. Main CI remains green;
 future unimplemented cases stay in this experiment contract until their TDD
@@ -582,7 +587,7 @@ gate for `GE-000` through `GE-020`; it does not implement the planned Lutra
 differential lane or authorize public promotion.
 
 Each dedicated step first runs `python -m ruff check` over the complete
-research-local GraphRecipe directory, then runs the 39-test conformance slice.
+research-local GraphRecipe directory, then runs the 40-test conformance slice.
 
 The complete promotion design has two required lanes.
 
@@ -661,16 +666,14 @@ two workflow steps. It does not add a packaged runtime module or public API.
 
 The recorded evidence is:
 
-1. GraphRecipe first slice: 39 passed.
+1. GraphRecipe first slice: 40 passed.
 2. Relevant core, `tests/test_staging.py`, `tests/test_ontology.py`, and
-   `tests/test_kg.py`: 236 passed, 2 skipped.
-3. Full configured suite: 743 passed, 3 skipped, 1 failed.
+   `tests/test_kg.py`: 257 passed, 2 skipped.
+3. Full configured suite: 807 passed, 2 skipped.
 
-The single full-suite failure is the packaging guard detecting separately
-edited, untracked `valid_time` targets in the dirty worktree. Those targets are
-outside the bound GraphRecipe corpus and runner. The report explicitly excludes
-a clean-worktree or releasable-package attestation, so the full configured
-suite is not recorded as green.
+The first two selections bind their declared test and directly exercised source
+bytes. The full configured result is an observation bound by the report, not a
+claim of complete suite-source, transitive-dependency, or environment identity.
 
 ## 11. Promotion gates
 
@@ -837,13 +840,13 @@ okg:GraphRecipeExperimentalLearning rdf:type mfg:DesignObject ;
     mfg:derivedFrom okg:GE-010 ;
     mfg:derivedFrom okg:GE-020 ;
     mfg:derivedFrom okg:GraphRecipeFirstSliceConformanceResult ;
-    mfg:derivedFrom okg:GraphRecipeExactExecutionIdentityLearning ;
+    mfg:derivedFrom okg:GraphRecipeDeclaredEvidenceIdentityLearning ;
     mfg:derivedFrom okg:OntologyToPopulationCompositionSeamEvidence ;
     mfg:status mfg:Partial .
 
 <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance>
     rdf:type mfg:DesignObject ;
-    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
+    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0
@@ -856,6 +859,10 @@ okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc68338
 okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0
     rdf:type mfg:DesignObject ;
     mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97 .
+
+okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8
+    rdf:type mfg:DesignObject ;
+    mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 .
 
 okg:GraphRecipeFirstSliceReportIdentityGuard rdf:type mfg:Invariant ;
     mfg:governs <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> ;
@@ -878,6 +885,13 @@ okg:GraphRecipeReportBoundSourceRefreshObservation rdf:type mfg:Observation ;
     mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
     mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
     mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
+    mfg:status mfg:Implemented .
+
+okg:GraphRecipeReportReleaseBoundaryRefreshObservation rdf:type mfg:Observation ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
+    mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
+    mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceChecksumSet rdf:type mfg:DesignObject ;
@@ -904,8 +918,15 @@ okg:GraphRecipeFirstSliceExecutionIdentity rdf:type mfg:DesignObject ;
     mfg:dependsOn okg:GraphRecipeSelectedManifestReceiptBinding ;
     mfg:status mfg:Implemented .
 
+okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity rdf:type mfg:DesignObject ;
+    mfg:binds <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> ;
+    mfg:binds okg:GraphRecipeFirstSliceChecksumSet ;
+    mfg:dependsOn okg:GraphRecipeSelectedManifestReceiptBinding ;
+    mfg:status mfg:Implemented ;
+    mfg:supersedes okg:GraphRecipeFirstSliceExecutionIdentity .
+
 okg:GraphRecipeFirstSliceConformanceObservation rdf:type mfg:Observation ;
-    mfg:derivedFrom okg:GraphRecipeFirstSliceExecutionIdentity ;
+    mfg:derivedFrom okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity ;
     mfg:produces okg:GraphRecipeFirstSliceConformanceResult ;
     mfg:status mfg:Implemented .
 
@@ -916,7 +937,7 @@ okg:GraphRecipeFirstSliceConformanceResult rdf:type mfg:DesignObject ;
     mfg:binds okg:GE-020 ;
     mfg:binds okg:GraphRecipeFirstSliceChecksumSet ;
     mfg:binds okg:GraphRecipeFirstSliceEvidenceBoundary ;
-    mfg:binds okg:GraphRecipeFirstSliceExecutionIdentity ;
+    mfg:binds okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity ;
     mfg:dependsOn okg:GraphRecipeConformanceFixture ;
     mfg:status mfg:Implemented .
 
@@ -933,9 +954,11 @@ okg:GraphRecipeFirstSliceEvidenceBundle rdf:type mfg:DesignObject ;
     mfg:binds <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> ;
     mfg:binds okg:GraphRecipeFirstSliceChecksumSet ;
     mfg:binds okg:GraphRecipeFirstSliceEvidenceBoundary ;
-    mfg:binds okg:GraphRecipeFirstSliceExecutionIdentity ;
+    mfg:binds okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity ;
+    mfg:binds okg:GraphRecipeIncompleteExecutionEnvironmentClosureObservation ;
     mfg:binds okg:GraphRecipeReportBoundSourceRefreshObservation ;
     mfg:binds okg:GraphRecipeReportDependencyClosedRefreshObservation ;
+    mfg:binds okg:GraphRecipeReportReleaseBoundaryRefreshObservation ;
     mfg:dependsOn okg:GraphRecipeFirstSliceConformanceResult ;
     mfg:status mfg:Implemented .
 
@@ -946,6 +969,21 @@ okg:GraphRecipeExactExecutionIdentityLearning rdf:type mfg:Observation ;
     mfg:derivedFrom okg:GraphRecipeReportDependencyClosedRefreshObservation ;
     mfg:informedBy okg:GraphRecipeSelectedManifestReceiptBinding ;
     mfg:status mfg:Partial .
+
+okg:GraphRecipeDeclaredEvidenceIdentityLearning rdf:type mfg:Observation ;
+    mfg:binds okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity ;
+    mfg:derivedFrom okg:GraphRecipeFirstSliceConformanceResult ;
+    mfg:derivedFrom okg:GraphRecipeReportBoundSourceRefreshObservation ;
+    mfg:derivedFrom okg:GraphRecipeReportDependencyClosedRefreshObservation ;
+    mfg:derivedFrom okg:GraphRecipeReportReleaseBoundaryRefreshObservation ;
+    mfg:informedBy okg:GraphRecipeSelectedManifestReceiptBinding ;
+    mfg:status mfg:Partial ;
+    mfg:supersedes okg:GraphRecipeExactExecutionIdentityLearning .
+
+okg:GraphRecipeIncompleteExecutionEnvironmentClosureObservation
+    rdf:type mfg:Observation ;
+    mfg:binds okg:GraphRecipeFirstSliceDeclaredEvidenceIdentity ;
+    mfg:status mfg:Open .
 
 okg:OntologyToPopulationCompositionSeamEvidence rdf:type mfg:Observation ;
     mfg:derivedFrom okg:GraphRecipeFirstSliceConformanceResult ;

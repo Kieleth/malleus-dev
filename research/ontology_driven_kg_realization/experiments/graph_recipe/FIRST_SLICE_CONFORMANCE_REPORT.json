@@ -14,53 +14,21 @@
     "implementation_location": "research-local"
   },
   "repository_snapshot": {
-    "base_git_commit": "384ecc37917c8191d17ffa44867024a36dfdd313",
-    "branch": "codex/malleus-recon",
-    "worktree_clean": false,
-    "dirty_worktree_boundary": {
-      "command": "git status --short",
-      "entries": [
-        " M .github/workflows/release.yml",
-        " M .github/workflows/tests.yml",
-        " M CHANGELOG.md",
-        " M README.md",
-        " M ROADMAP.md",
-        " M design/EXECUTION_BUNDLE.md",
-        " M docs/ASSENT_PROTOCOL.md",
-        " M docs/IMPLEMENTATION_STATUS.md",
-        " M ontology/assent.yaml",
-        " M pyproject.toml",
-        " M src/malleus/__init__.py",
-        " M src/malleus/accepted.py",
-        " M src/malleus/assent.py",
-        " M src/malleus/ontology.py",
-        " M src/malleus/protocol.py",
-        " M src/malleus/status.py",
-        " M tests/test_accepted.py",
-        " M tests/test_assent_ontology.py",
-        " M tests/test_ontology.py",
-        " M tests/test_protocol.py",
-        " M tests/test_status.py",
-        "?? MALLEUS_INQUISITION.md",
-        "?? MALLEUS_INQUISITION_R3.md",
-        "?? MALLEUS_INQUISITION_R4.md",
-        "?? MALLEUS_INQUISITION_R5.md",
-        "?? MALLEUS_INQUISITION_R6_080.md",
-        "?? conformance/",
-        "?? design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
-        "?? design/GRAPH_RECIPE_OTTR_PROFILE.md",
-        "?? design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
-        "?? design/MALLEUS_INTELLECTUAL_SUBSTRATE.md",
-        "?? design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
-        "?? design/PROTOCOL_FOUNDATION_GRAPH.md",
-        "?? design/PROTOCOL_FOUNDATION_GRAPH.ttl",
-        "?? docs/COST_AWARE_MODEL_ARCHITECTURE_RECON.md",
-        "?? malleus_literature_kg/",
-        "?? research/",
-        "?? src/malleus/valid_time.py",
-        "?? tests/test_valid_time.py"
-      ],
-      "meaning": "The commit and branch identify ancestry only. This report is not a clean-commit attestation. Its conclusion binds only the exact corpus, runner, core-dependency, and package-boundary bytes identified below. Every other modified or untracked path is outside the conclusion."
+    "base_git_commit": "27ca54c33fe705827bc845e876cb6ff24293c8f0",
+    "base_git_commit_meaning": "Public ancestry base only. It is not the GraphRecipe implementation snapshot and does not identify the tested working tree.",
+    "intended_release_locator": "v0.11.0",
+    "implementation_snapshot_identity": {
+      "authority": "The exact report, declared source-byte, corpus, selected-manifest, receipt, and recorded-observation identities in this artifact are authoritative.",
+      "git_commit_identity_status": "not-established",
+      "clean_worktree_attestation": false
+    },
+    "working_tree_boundary": {
+      "classification": "staged-intended-release-scope-with-excluded-local-material",
+      "enumeration": "non-enumerating",
+      "included_scope": "Only artifacts carrying exact identities in this report contribute to its conclusion.",
+      "excluded_scope": "All other workspace material is outside the conclusion, regardless of tracking or staging state.",
+      "private_or_excluded_path_names_disclosed": false,
+      "meaning": "This boundary records classification without publishing a raw workspace inventory. It is not a clean-commit or complete repository-snapshot attestation."
     }
   },
   "runtime_boundary": {
@@ -97,6 +65,10 @@
   "semantic_identity_boundary": {
     "definition_source": "conformance/graph_recipe/v0/profile.json",
     "definition_source_digest": "sha256:cd8d595748c568e3b144b1f1182d80267b64d2ff57ae8dcf17c537c65b4c23a8",
+    "identity_scope": "Within this report, exact identity means exact declared source-byte, selected-manifest, receipt, and recorded-observation identity only.",
+    "dependency_closure_status": "not-established",
+    "execution_environment_closure_status": "not-established",
+    "observation_binding": "Each test-result object is bound as a complete member of this externally source-byte-identified report. That binding identifies the recorded observation, not every dependency or environmental input to the observed process.",
     "canonical_payload_status": "frozen-runner-v1",
     "source_bytes_algorithm": {
       "input": "exact file bytes",
@@ -186,12 +158,12 @@
       "research/ontology_driven_kg_realization/experiments/graph_recipe/model.py": "sha256:14f94ef7355b79ea6afef64e58aa57350c1525a7a2ab384de7c37171d3e71c8a",
       "research/ontology_driven_kg_realization/experiments/graph_recipe/run_cases.py": "sha256:0ce93e733cda9acb53afdcb178fde61d24dea5b88cc370b50a66ca895a242a88",
       "research/ontology_driven_kg_realization/experiments/graph_recipe/stottr.py": "sha256:cae7bac0f70eaaa69cb26c7d0d21d962357e1d2d57e64b0bad2779b50a0bfb71",
-      "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py": "sha256:46ba56b33004b520b71639f9e21d2a4d3b4d984ed90f034ab0c60fdc718952ef"
+      "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py": "sha256:1a75888f41302bf8455cead11003912e558306d28bb3fa68587c77c8299552cc"
     },
     "direct_core_dependencies": {
       "src/malleus/kg.py": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
       "src/malleus/ledger.py": "sha256:5e5aa2ab4f16259b3aff3e6df7315ce2f81d90332687f10447fc95e6163d2637",
-      "src/malleus/ontology.py": "sha256:0f56bceae5c321103bba266d9081a9c6780c9995ffda4e9cfb87b77c5731d376",
+      "src/malleus/ontology.py": "sha256:0a50ca8d8b570eb8af7938e32566f0622e75a9e8f6526c0216bd5ebfb8c131af",
       "src/malleus/source.py": "sha256:6e04af0a6187322a72521a6f73cccf1fe73e715b7a491d5fca7e90ab82e82e4a",
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
@@ -199,7 +171,12 @@
       "pyproject.toml": "sha256:b1287a3a254161c303d3ab1726f3ed3d47039d62ba0196267f899ffe997c4450",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
       "src/malleus/status.py": "sha256:a4e5d538620c38de23a8b609e52a3f5e54faf38c8287fe14b25bad5c98951f92",
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:3253e7d064a07f5a302dcf263555c2f131b9bcb1c8eb722a9fca03c1813d17b5"
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:c151d4535c7d84d4265453e50a01a5e4d250041082ff9cf28416993edfdb0c3a"
+    },
+    "relevant_core_test_sources": {
+      "tests/test_kg.py": "sha256:3c5546215f84d371ffffcfb9ee560e316722783b5e2a7705fd0d1e206d35bf63",
+      "tests/test_ontology.py": "sha256:ac51639c2cf9933d8f27d2211c0f6bc12b258b1ea2617244e8f7988169a5926c",
+      "tests/test_staging.py": "sha256:f2584b8441eabb18ec70b932da027d26a549ccdf70ecfb027ca3dda265e47791"
     }
   },
   "case_receipt_identities": {
@@ -492,34 +469,31 @@
       "scope": "frozen-first-slice",
       "command": "PYTHONPATH=src python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py",
       "exit_code": 0,
-      "passed": 39,
+      "passed": 40,
       "skipped": 0,
       "failed": 0,
-      "duration_seconds": 0.81
+      "duration_seconds": 1.55,
+      "identity_boundary": "Declared GraphRecipe runner, test, direct-core, package-boundary, corpus, selection, and receipt sources are byte-bound. Dependency and execution-environment closure is not established."
     },
     {
       "scope": "relevant-core",
       "command": "PYTHONPATH=src python -m pytest -q tests/test_staging.py tests/test_ontology.py tests/test_kg.py",
       "exit_code": 0,
-      "passed": 236,
+      "passed": 257,
       "skipped": 2,
       "failed": 0,
-      "duration_seconds": 2.46
+      "duration_seconds": 2.6,
+      "identity_boundary": "The three selected test sources and declared directly exercised GraphRecipe/core sources are byte-bound. Transitive dependency and execution-environment closure is not established."
     },
     {
       "scope": "full-configured-suite",
       "command": "PYTHONPATH=src python -m pytest -q",
-      "exit_code": 1,
-      "passed": 743,
-      "skipped": 3,
-      "failed": 1,
-      "duration_seconds": 36.2,
-      "failure": {
-        "node_id": "tests/test_inquisition.py::TestPackagingTargetsAreTracked::test_declared_targets_exist_and_are_tracked",
-        "assertion": "declared in pyproject but not committed: ['src/malleus/valid_time.py', 'tests/test_valid_time.py', 'tests/test_valid_time.py']. Commit the manifest and its targets as one unit.",
-        "reason": "The dirty worktree leaves src/malleus/valid_time.py and tests/test_valid_time.py untracked while pyproject.toml declares them. tests/test_valid_time.py appears twice because the guard examines both build includes and pytest testpaths.",
-        "relation_to_graph_recipe_slice": "The failed packaging targets are outside this GraphRecipe corpus and runner. The dedicated first-slice and relevant-core commands passed."
-      }
+      "exit_code": 0,
+      "passed": 807,
+      "skipped": 2,
+      "failed": 0,
+      "duration_seconds": 34.54,
+      "identity_boundary": "Observation-only. The result object is bound by the report identity, but the complete configured-suite source set, transitive dependencies, and execution environment are not identity-bound by this report."
     }
   ],
   "bounded_conclusion": {
@@ -528,7 +502,8 @@
       "The current research-local runner matches every frozen artifact, diagnostic, and semantic digest for all ten declared synthetic GE-000 through GE-020 cases.",
       "All seven declared metamorphic obligations map to executable tests that passed in the dedicated first-slice run.",
       "The checksum set binds every corpus regular file except the checksum file itself, whose exact source-byte identity is bound by this report.",
-      "The dedicated first-slice and relevant-core test selections pass at the exact file identities recorded here."
+      "The dedicated first-slice and relevant-core test selections pass for the exact declared source bytes recorded here.",
+      "The full configured suite passed as a recorded observation at the intended v0.11.0 release boundary. This report does not establish complete source, dependency, or execution-environment identity for that suite."
     ],
     "excluded": [
       "GraphRecipe as a public or shipped Malleus capability",
@@ -538,7 +513,9 @@
       "backend independence beyond the existing in-memory graph",
       "networked, production-data, performance, or security claims",
       "universal completeness of the Malleus research program",
-      "a clean-worktree or releasable-package attestation"
+      "generated-schema parity with the runtime registry",
+      "complete dependency or execution-environment closure",
+      "a clean-worktree, commit-snapshot, or independently reproducible release attestation"
     ]
   }
 }

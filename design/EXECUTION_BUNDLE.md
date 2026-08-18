@@ -30,6 +30,13 @@ unchanged. The harness records the canonical manifest bytes as a
 `SourceArtifact`, registers every component record first, and includes the
 bundle source record in the proposal's existing source lineage.
 
+The active paper uses a split version policy. Its feasibility and experiment
+execution bundles keep Malleus 0.9.0 as `CORE_CODE`. Malleus 0.10.0 Recon is
+separate, preparation-only literature tooling. Recon does not enter
+`CORE_CODE`, `EXECUTOR_CODE`, `RUNTIME`, or any other execution-bundle role
+unless a later stage actually imports or invokes those bytes. A research-tool
+version never upgrades an execution substrate by implication.
+
 This is a declared-input commitment. It is not proof that the declared bytes
 were authentic, available, complete, or actually used. The harness owns those
 checks.
@@ -93,9 +100,8 @@ Rules:
    `malleus.ledger.canonical_json(value).encode("utf-8")` from the frozen
    Malleus 0.9.0 substrate: lexicographically sorted object keys, compact
    separators `,` and `:`, Unicode preserved, nonfinite values forbidden, and
-   no trailing newline. The research-local pilot helper
-   `slcrr_pilot.strict.canonical_json_bytes` adds a newline and must not be
-   reused for this manifest.
+   no trailing newline. A research-local helper that appends a newline must not
+   be reused for this manifest.
 6. `components` contains exactly nine rows, one for each required role, sorted
    by `(role, artifact_id)`. Roles and artifact IDs are each unique.
 7. P2 must freeze a machine-readable JSON Schema and positive and negative

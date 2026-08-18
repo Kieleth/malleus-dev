@@ -14,12 +14,14 @@ Opened: 2026-08-17
 
 Decision authority: author
 
-Repository snapshot: `codex/malleus-recon` at
-`1657e6564c1f8ab872d56b9ec97e34a015fce765`
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
+This is an ancestry base only, not the tested implementation snapshot. The
+intended release locator is `v0.11.0`; exact report, file, and checksum
+identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 9,
-`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
+revision 10,
+`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
 
 Evidence:
 [`OTTR_SUFFICIENCY_AUDIT.md`](../research/ontology_driven_kg_realization/OTTR_SUFFICIENCY_AUDIT.md)
@@ -371,10 +373,11 @@ The complete promotion fixture must include:
 
 The research-local offline fixture now implements the bounded `GE-000` through
 `GE-020` slice. Its report binds 149 checksummed corpus files, 10 case receipts,
-and 7 executable metamorphic obligations. The dedicated slice passed 39 tests.
-The relevant core selection passed 236 tests with 2 skips. The report is
+and 7 executable metamorphic obligations. The dedicated slice passed 40 tests.
+The relevant core selection passed 257 tests with 2 skips, and the full
+configured suite recorded 807 passes with 2 skips. The report is
 identified by
-`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`,
 and its checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
@@ -383,19 +386,27 @@ identity guard rejected the stale report and produced retained report identity
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
 which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The current refresh binds the changed direct-core and package-boundary bytes and
-package version `0.11.0`; its active identity above supersedes the retained
+A later bound-source refresh produced
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+which supersedes the retained
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
-identity. Both dedicated GraphRecipe workflow steps run Ruff over
-the complete research-local runner directory before running the 39-test slice.
+identity. The active release-boundary refresh binds the final declared sources,
+three relevant-core test files, current observations, and the public-snapshot
+privacy guard; it supersedes
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+Both dedicated
+GraphRecipe workflow steps run Ruff over the complete research-local runner
+directory before running the 40-test slice.
 
 Each receipt includes the exact selected-manifest source-byte identity in its
-canonical payload. Selection is therefore bound to the case result and exact
-execution identity. A runner cannot substitute a different manifest while
-retaining the same conforming receipt. The report and checksum set bind the
-evidence bytes, while semantic digests continue to identify the canonical
-logical contract, effective recipe, invocation, plan, candidate, and final
-state at their declared boundaries.
+canonical payload. Selection is therefore bound to the case result and declared
+evidence identity. A runner cannot substitute a different manifest while
+retaining the same conforming receipt. That identity covers exact declared
+source bytes, selected manifests, receipts, and recorded observations. It does
+not establish complete transitive dependency or execution-environment closure.
+Semantic digests continue to identify the canonical logical contract,
+effective recipe, invocation, plan, candidate, and final state at their
+declared boundaries.
 
 This result does not cover `GE-030` or later experiments, Lutra equivalence, a
 second backend, dependency-closed evolution, unrestricted OTTR, or public

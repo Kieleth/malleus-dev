@@ -2,20 +2,22 @@
 
 Status: human-readable projection of candidate and accepted design
 
-Snapshot: `codex/malleus-recon` at
-`1657e6564c1f8ab872d56b9ec97e34a015fce765`, inspected on 2026-08-17
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`,
+inspected on 2026-08-17. This is an ancestry base only, not the tested
+implementation snapshot. The intended release locator is `v0.11.0`; exact
+report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 9,
-`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
+revision 10,
+`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
 the public API, ontology, roadmap, implementation status, paper contract, or
 execution-bundle design.
 
-The live edits to `ROADMAP.md`, `design/EXECUTION_BUNDLE.md`, and the paper-dojo
-worktree were treated as read-only parallel work.
+Parallel roadmap, execution-bundle, and paper/research worktrees were treated
+as read-only work outside this snapshot.
 
 ## 1. Candidate conclusion
 
@@ -95,7 +97,9 @@ LinkML-shaped YAML
 The same YAML can also be passed to external LinkML generators, but the graph
 does not consume those generated schemas. There is no bound lineage from a
 generated JSON Schema, Python model, TypeScript type, or SHACL shape back to
-the runtime registry.
+the runtime registry. `GeneratedSchemaParityLimitationObservation` records this
+as open and is bound by the 0.11 release-boundary observation; it is not a
+shipped capability claim.
 
 `OntologyRegistry` currently combines six jobs:
 
@@ -1601,10 +1605,15 @@ mfg:DependencyClosedValidTimeProjection rdf:type mfg:DesignObject ;
 
 mfg:Malleus011ReleaseBoundaryObservation rdf:type mfg:Observation ;
     mfg:binds mfg:DependencyClosedValidTimeProjection ;
+    mfg:binds mfg:GeneratedSchemaParityLimitationObservation ;
     mfg:binds mfg:HistoricalTimezoneDatabaseMigration ;
     mfg:binds mfg:PrecisionAwareValidTime ;
     mfg:binds mfg:ThreeValuedAcceptedGraphProjection ;
     mfg:status mfg:Implemented .
+
+mfg:GeneratedSchemaParityLimitationObservation rdf:type mfg:Observation ;
+    mfg:binds mfg:GeneratedSchemaLineage ;
+    mfg:status mfg:Open .
 ```
 
 The author elevated ontology-driven KG realization to a pillar on 2026-08-17.
@@ -1632,9 +1641,9 @@ obligations. The completed research-local `GE-000` through `GE-020` slice gives
 partial evidence only to component-boundary conformance, the
 ontology-to-population composition seam, and known-exclusion accounting. It
 binds 149 checksummed corpus files, 10 case receipts, 7 executable metamorphic
-obligations, the selected manifest for each receipt, and the exact execution
+obligations, the selected manifest for each receipt, and the declared evidence
 identity recorded by the conformance report. The report identity is
-`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`;
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`;
 the checksum-set identity is
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 Declared-component coverage, full cross-protocol scenarios, and
@@ -1645,14 +1654,23 @@ guard rejected the stale report and produced retained report identity
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
 which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The current refresh binds the changed `ontology.py`, `pyproject.toml`,
-`status.py`, and implementation-status bytes plus package version `0.11.0`.
-Its active identity above supersedes the retained
+A later bound-source refresh produced
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+which supersedes the retained
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
-identity. Both
-dedicated CI steps run Ruff over the full research-local runner directory before
-the 39-test slice. These changes refresh evidence identity; they do not change
-any status conclusion.
+identity. The active release-boundary refresh binds the final declared sources,
+three relevant-core test files, current test observations, and the
+non-enumerating public-snapshot guard. Its identity above supersedes
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+Both dedicated CI steps run Ruff over the full research-local runner directory
+before the 40-test slice.
+
+Declared evidence identity covers exact declared source bytes, selections,
+receipts, and recorded observations only. Complete transitive dependency and
+execution-environment closure remain open and are represented by an explicit
+open observation in the evidence bundle. The full configured suite recorded
+807 passes with 2 skips, but that result is observation-bound rather than a
+complete execution identity.
 
 The broader `GraphRecipeTDDProgram` and `GraphRecipeExperimentalLearning` are
 therefore `Partial`. The fixture and offline CI gate are `Implemented` only at

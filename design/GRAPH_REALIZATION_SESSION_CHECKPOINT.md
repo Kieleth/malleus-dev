@@ -18,13 +18,14 @@ and `malleus.IMPLEMENTATION_STATUS`.
 
 ## 1. Repository coordinate and live-worktree boundary
 
-Base branch: `codex/malleus-recon`
-
-GraphRecipe baseline commit: `1657e6564c1f8ab872d56b9ec97e34a015fce765`
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
+This is an ancestry base only, not the tested implementation snapshot. The
+intended release locator is `v0.11.0`; exact report, file, and checksum
+identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 9,
-`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
+revision 10,
+`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
 
 The 0.11.0 consolidation after that baseline adds precision-aware valid time,
 the accepted `OKG-D012` maintainer doctrine, explicit release guardrails, and
@@ -226,36 +227,43 @@ The evaluation exposed and the author resolved these design gaps:
 These gaps became explicit test obligations. The completed first slice now
 freezes `GE-000` through `GE-020` as 10 case receipts over 149 checksummed
 corpus files. Seven declared metamorphic obligations map to executable tests.
-The dedicated slice passed 39 tests, and the relevant core selection passed
-236 tests with 2 skips.
+The dedicated slice passed 40 tests, the relevant core selection passed 257
+tests with 2 skips, and the full configured suite recorded 807 passes with 2
+skips.
 
 The conformance report is
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
 Its checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 Each case receipt binds the selected manifest's exact source-byte identity.
 The report binds that selected-manifest identity to the complete canonical
-receipt identity, which makes case selection part of exact execution identity
-rather than an ambient runner choice.
+receipt identity, which makes case selection part of declared evidence
+identity rather than an ambient runner choice. That identity covers exact
+declared source bytes, selections, receipts, and recorded observations; it does
+not establish complete transitive dependency or execution-environment closure.
 
 Removing one unused runner import changed the bound runner bytes. The hard
 identity guard rejected the then-stale report and produced retained identity
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
 which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The current refresh binds the changed direct-core and package-boundary bytes and
-package version `0.11.0`; its active identity above supersedes the retained
+A later bound-source refresh produced
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+which supersedes the retained
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
-identity. Both dedicated workflow steps run Ruff over the complete
-research-local GraphRecipe directory before running the 39-test slice.
+identity. The active release-boundary refresh binds the final declared sources,
+three relevant-core test files, current observations, and the public-snapshot
+privacy guard; its identity above supersedes
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+Both dedicated workflow steps run Ruff over the complete research-local
+GraphRecipe directory before running the 40-test slice.
 
-The full configured suite recorded 743 passes, 3 skips, and one failure in the
-dirty-worktree packaging guard because separately edited package targets were
-untracked. The report excludes a clean-worktree and releasable-package
-attestation, and it identifies that failure as outside the GraphRecipe corpus
-and runner. This does not turn the full configured suite green.
+The full configured suite is green, but its result is an observation bound by
+the report rather than a complete suite-source, transitive-dependency, or
+execution-environment identity. The report does not attest a clean commit or
+independently reproducible release snapshot.
 
 The author's cross-protocol completeness intuition is retained separately as
 the candidate falsifiable `ProtocolCompositionCompleteness` claim. The first

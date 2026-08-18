@@ -211,6 +211,11 @@ bundle bytes as a Malleus 0.9.0 `SourceArtifact`. It preserves the public
 boundary: core commits caller declarations but does not authenticate bytes,
 providers, licenses, hidden inputs, or actual execution.
 
+The active paper binds Malleus 0.9.0 as its executable core and Malleus 0.10.0
+Recon as separate literature tooling. Recon is not a paper execution-bundle
+component. A later core migration requires its own author decision and renewed
+G3 review even when the newer package contains byte-identical assent code.
+
 The reserved core type is `ExecutionBundleArtifact`. Do not add it to the
 assent ontology from this roadmap item alone. Promotion requires explicit core
 authorization, exact historical-ontology replay policy, a second non-paper
@@ -219,3 +224,56 @@ must not silently rebase from its frozen 0.9.0 substrate.
 
 **Verdict: accept the shared design and paper-local implementation path. Core
 implementation remains a separately authorized change.**
+
+### B4. Cost-aware producer orchestration around commitment control
+
+Status: `open_question`.
+
+The evidence review in
+`research/cost_aware_model_architecture_recon` asks whether a cheaper producer,
+typed external memory, deterministic checks, one bounded repair, and selective
+escalation can lower expected cost at matched reliability. Published systems
+report conditional savings from routing, task-specific harnesses, reusable
+memory, and executable checks. They also show that escalation overhead,
+incomplete verification, stale memory, orchestration failures, and fixed setup
+cost can reverse the result. No reviewed evidence establishes the complete
+lifecycle claim.
+
+The candidate boundary keeps model selection outside Malleus. An external
+scheduler chooses a producer or escalation path. Malleus receives a proposed
+transaction, runs the declared checks, records witnesses, derives a
+fail-closed decision, and retains replayable accepted or unresolved state. A
+study contract may permit at most one linked diagnostic revision. Core does not
+schedule calls, manage memory, or claim a cost advantage.
+
+The current paper is one prospective consumer and tests only the commitment
+layer with a fixed producer and fixed generation budget. A literature corpus is
+not a second consumer. Do not add routing, memory management, or escalation to
+core from this item alone.
+
+Any three-tier study is a separate follow-on after a valid
+`P4_FEASIBILITY_REVIEW`, not an extension of the current P2 attempt. The choice
+to compare small, medium, and strong producer tiers is an experimental design
+decision, not a finding from the Recon corpus. That follow-on requires a new
+claim and estimand, a new contract, a separate execution-bundle root, and its
+own author authorization. It must not reuse the inspected P2 identity or treat
+P2 feasibility evidence as a tier-comparison result.
+
+After a valid P4 review, retain the pilot result as project study evidence in
+a separate experimental-evidence graph. Do not append it to or rewrite the
+Recon literature KG. A later contract may reference both immutable roots while
+keeping reviewed publications and project-generated measurements distinct.
+Invalid or halted pilot roots remain provenance evidence only.
+
+Promotion requires a second non-paper consumer and a controlled study against
+strong-only, medium-only, small-only, simple-routing, and cheap-first-cascade
+baselines. The study must count setup, calibration, calls, tokens, latency,
+monetary cost, storage, adapter work, unresolved coverage, human intervention,
+recovery, and drift maintenance. A cost claim fails if the strongest simple
+baseline wins at the prespecified risk and coverage points.
+
+The bounded synthesis and candidate paper motivation are in
+`docs/COST_AWARE_MODEL_ARCHITECTURE_RECON.md`.
+
+**Verdict: retain as a measured research question. No core implementation or
+paper outcome claim is authorized.**

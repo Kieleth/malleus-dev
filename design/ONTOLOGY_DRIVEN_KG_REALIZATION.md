@@ -11,12 +11,14 @@ Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 
 Decision date: 2026-08-17
 
-Repository snapshot: `codex/malleus-recon` at
-`1657e6564c1f8ab872d56b9ec97e34a015fce765`
+Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
+This is an ancestry base only, not the tested implementation snapshot. The
+intended release locator is `v0.11.0`; exact report, file, and checksum
+identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 9,
-`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
+revision 10,
+`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
 
 Evidence cutoff: 2026-08-17
 
@@ -30,9 +32,8 @@ Implementation status: the `GE-000` through `GE-020` GraphRecipe slice is
 implemented research-locally. No public API or shipped GraphRecipe capability
 is asserted here. This document records the evidence, boundary, dependency
 graph, accepted GraphRecipe microdecisions, and candidate
-protocol-completeness claim. Live edits to `ROADMAP.md`,
-`design/EXECUTION_BUNDLE.md`, and the paper-dojo worktree remain outside this
-document.
+protocol-completeness claim. Parallel roadmap, execution-bundle, and
+paper/research worktrees remain outside this document.
 
 ## 1. Decision and scope
 
@@ -1068,7 +1069,8 @@ protocol:
 6. Pre-materialization staging through the same structural gate as every other
    write.
 7. Optional evidence audit and epistemic decision before accepted graph state.
-8. Exact execution identity and replay.
+8. Declared evidence identity and replay with explicit dependency and
+   environment boundaries.
 9. Dependency-closed contract evolution and graph migration without rewriting
    history.
 
@@ -1106,7 +1108,7 @@ The results may inform frontend-neutrality, logical-derivation, no-bypass,
 evidence, governance, and execution-identity experiments. They do not discharge
 those experiments. The report binds 149 checksummed corpus files, 10 case
 receipts, and 7 executable metamorphic obligations. Its identity is
-`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`;
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`;
 the checksum-set identity is
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
@@ -1115,13 +1117,22 @@ The hard identity guard rejected the stale report and produced retained identity
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
 which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The current refresh binds the changed direct-core and package-boundary bytes and
-package version `0.11.0`; its active identity above supersedes the retained
+A later bound-source refresh produced
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
+which supersedes the retained
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
-identity. The unchanged checksum-set identity and unchanged
-39-test result do not erase either identity change. Both dedicated CI steps
-require a clean Ruff check over the full GraphRecipe runner directory before the
-slice tests.
+identity. The active release-boundary refresh binds the final declared sources,
+three relevant-core test files, current observations, and the non-enumerating
+public-snapshot guard. Its identity above supersedes
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+Both dedicated CI steps require a clean Ruff check over the full GraphRecipe
+runner directory before the 40-test slice.
+
+The superseding declared-evidence identity covers exact declared source bytes,
+selected manifests, receipts, and recorded observation objects. It does not
+establish complete transitive dependency or execution-environment closure.
+Generated-schema parity with the runtime registry also remains open; neither
+limitation is promoted to shipped capability.
 
 The claim is expressly not universal. It does not cover undeclared protocols,
 arbitrary future components, all profile versions, all backends, all workloads,
@@ -1153,11 +1164,11 @@ tests the boundary before defining a public API:
 6. Every case receipt binds its selected-manifest source-byte identity. The
    report binds the complete receipt identities, checksum set, runner, direct
    core dependencies, and package-boundary sources.
-7. The dedicated slice passed 39 tests. The relevant core selection passed 236
+7. The dedicated slice passed 40 tests. The relevant core selection passed 257
    tests with 2 skips.
-8. The full configured suite recorded 743 passes, 3 skips, and one unrelated
-   dirty-worktree packaging-guard failure. The report therefore excludes a
-   clean-worktree and release attestation.
+8. The full configured suite recorded 807 passes and 2 skips. That result is a
+   report-bound observation, not complete suite-source, dependency, or
+   execution-environment identity.
 
 The result is bounded. It does not establish optional add-ons or multivalue
 expansion, mappings and identity collisions, all record families,
@@ -1226,13 +1237,13 @@ Performed on 2026-08-17:
 
 1. The 27 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,071 RDF triples.
+   1,103 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,071 triples. Both directed set differences
+   the same 1,103 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 91 nodes and 90 edges, with no directed
+3. The canonical `dependsOn` graph has 93 nodes and 92 edges, with no directed
    dependency cycle.
-4. All 209 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 214 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1247,20 +1258,21 @@ Performed on 2026-08-17:
 8. The first-slice fixture and offline core CI gate have exactly `Implemented`
    status; the wider TDD program and experimental learning have exactly
    `Partial` status. `GE-030` through `GE-100`, Lutra, second-backend
-   conformance, and public promotion remain open.
-9. The active report identity supersedes the retained prior identity, and the
-   addressable refresh observation binds the runner-byte change to the hard
-   identity guard. Both workflow-step nodes bind the Ruff gate and the 39-test
-   fixture.
-10. The canonical body contains 1,071 unique, lexically sorted N-Triples. Its
+   conformance, public promotion, generated-schema parity, and execution-
+   environment closure remain open.
+9. The active report identity supersedes three retained identities. Each
+   addressable refresh observation binds adjacent identities to the hard guard.
+   Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
+10. The canonical body contains 1,103 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`, and every
-   owned Markdown graph reference names revision 9 and that digest.
+   `7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`, and every
+   owned Markdown graph reference names revision 10 and that digest.
 11. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 12. None of the five owned Markdown documents or the canonical Turtle artifact
    contains an absolute home-directory or local-file URI locator.
-13. Trailing-whitespace checks over all six owned files report no error.
+13. Trailing-whitespace checks over the seven identity files and the privacy
+    regression test report no error.
 
-The test results above are retained from the exact conformance report rather
-than rerun after this design-graph projection update.
+The GraphRecipe, relevant-core, and full configured commands were rerun before
+the report and graph identities were frozen.

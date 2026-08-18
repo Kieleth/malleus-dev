@@ -1247,6 +1247,29 @@ class TestNoPrivateMaterialCanReachARelease:
             ["README.md", "src/malleus/kg.py", "research/private/README.md"],
         ) == ["research/private/README.md"]
 
+    def test_execution_bundle_names_only_public_python_namespaces(self):
+        """Public design notes must not publish adopter-local module names."""
+        import re
+
+        text = (self.ROOT / "design" / "EXECUTION_BUNDLE.md").read_text(
+            encoding="utf-8"
+        )
+        code_spans = re.findall(r"(?<!`)`([^`\n]+)`(?!`)", text)
+        module_names = {
+            value
+            for value in code_spans
+            if value[0].islower()
+            and len(value.split(".")) >= 3
+            and all(part.isidentifier() for part in value.split("."))
+        }
+        non_public = sorted(
+            name for name in module_names if not name.startswith("malleus.")
+        )
+        assert not non_public, (
+            "execution-bundle design names a non-public Python namespace: "
+            f"{non_public}"
+        )
+
 
 class TestPackagingTargetsAreTracked:
     """Every declared packaging target must exist AND be tracked by git;
