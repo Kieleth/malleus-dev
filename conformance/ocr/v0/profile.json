@@ -1,0 +1,33 @@
+{
+  "capability": "AUDIT_ONLY",
+  "decision_record": "design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md",
+  "diagnostics": {
+    "OCR-D001": "an integrity value is not a full algorithm-tagged digest",
+    "OCR-D002": "credential-shaped material is present in the bundle",
+    "OCR-D003": "a reading has no resolvable path to source bytes",
+    "OCR-D004": "a corrected reading moved the region identity",
+    "OCR-D005": "two attempts share an identity",
+    "OCR-D006": "a correction reviews a hypothesis the bundle does not retain",
+    "OCR-D007": "a hypothesis origin is ambiguous or absent",
+    "OCR-D008": "a selection claims human verification with no review record",
+    "OCR-D009": "the source class is not frozen before ingest",
+    "OCR-D010": "a required policy declaration is unbound",
+    "OCR-D011": "a selection names a hypothesis it did not consider",
+    "OCR-D012": "no coverage metric family is declared"
+  },
+  "does_not_prove": [
+    "source authenticity",
+    "factual truth of a reading",
+    "quote fairness or representativeness",
+    "downstream consequence"
+  ],
+  "profile_id": "malleus.ocr.evidence_integrity",
+  "profile_version": "v0",
+  "proves": [
+    "source-to-reading lineage",
+    "separation of identity planes",
+    "declared coverage and policy precommitment"
+  ],
+  "selector_profile_default": "w3c-web-annotation+iiif",
+  "selector_profile_replaceable": true
+}

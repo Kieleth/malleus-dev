@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added the OCR evidence-integrity profile at capability `AUDIT_ONLY`
+  (`malleus.ocr`, decision record `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md`).
+  It verifies that a document evidence bundle preserves the lineage from an
+  accepted reading back to exact source bytes. It performs no recognition,
+  renders nothing, calls no provider and selects no engine: adopters keep
+  their own OCR stacks and conform by emitting a bundle that passes.
+  Twelve typed diagnostics, each with a negative conformance case, enforced by
+  a test that fails if any diagnostic lacks one.
+- Added the swappable region-selector boundary. W3C Web Annotation, PROV and
+  IIIF are the first-party default profile with no privilege; any selector
+  layer replaces them by passing the same conformance suite, the pattern
+  already accepted for the LinkML contract frontend. Only that one plane is
+  OCR-specific, so a later modality replaces a plane rather than the design.
+- Added two-plane staleness. Changed source or raster bytes invalidate prior
+  readings, because they describe pixels that no longer exist. A changed
+  prompt, model, ontology, mapping or policy demotes them from current while
+  they stay valid observations of the same bytes. Collapsing the two would
+  have made engine comparison impossible, since the older reading would be
+  stale by definition while the profile's metric families exist to compare
+  engines.
+- Added the frozen source-class declaration carrying required-unit inventory,
+  coverage metric families and temporal policy. It is frozen before ingest:
+  a metric family chosen after seeing the scan is a metric family chosen to
+  flatter it.
+
+### Boundary
+
+- `AUDIT_ONLY` is the only capability. Nothing writes to a protocol ledger,
+  because human review has no ledger event door and `review-report-recording`
+  is unimplemented. The profile proves source-to-reading lineage and the
+  separation of identity planes. It does not prove source authenticity,
+  factual truth, quote fairness, or downstream consequence, and the shipped
+  projection states both sides.
+- Designed from two audited adopters, neither of which has run the suite. The
+  profile is not claimed portable until an adapter passes it.
+- No `malleus-ocr` skill ships. A skill before an accepted profile and a
+  conformance slice would be premature.
+
 ## [0.11.0] - 2026-08-17
 
 This release keeps the public core at Stage 8c. It adds precision-aware valid
