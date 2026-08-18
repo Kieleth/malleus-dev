@@ -11,7 +11,12 @@ Two standing rules govern promotion into this file and out of it:
   is shared vocabulary. Designing a general API from a single example
   produces an API shaped by that example's accidents.
 - **Rites for capabilities malleus does not provide enter at NOTE with
-  `status: open_question`, never at HERESY.** Condemning adopters for lacking
+  `status: open_question`, never at HERESY.**
+- **An accepted rite names its id here and exists in the rubric.** A section
+  carrying a `Rite:` line whose id is absent from `rubric.yaml` fails the
+  suite. Five accepted rites once sat here for a release while the code fixes
+  shipped without them, so the lesson an adopter paid for never travelled back
+  to anyone else. The loop is only closed when the rite ships. Condemning adopters for lacking
   what we do not offer is the defect three self-inquisitions removed from our
   own documents.
 
@@ -23,6 +28,8 @@ Lessons sent up by an adopting project, already written project-free. Source
 document held locally by that project; only the generic lesson travels.
 
 ### A1. Per-instance reader coverage (refines `reader_census`)
+
+Rite: `instance_reader_coverage` (landed, rubric v8)
 
 A reader census is satisfied by one reader touching one instance, so a type
 can be read once, extended with a hundred new instances, and stay green while
@@ -46,6 +53,8 @@ journal).
 
 ### A2. Fidelity, coherence and consequence are three claims
 
+Rite: `claim_kinds_distinguished` (landed, rubric v8)
+
 Projects conflate them because they are all "the checks pass". Fidelity: the
 data matches its source. Coherence: the assembled graph is well-formed.
 Consequence: the system acts on it. A project can hold the first two to an
@@ -56,6 +65,8 @@ strength of the first two is what makes the absence invisible.
 
 ### A3. A declared-unread annotation
 
+Rite: `unread_declared` (landed, rubric v8)
+
 Schemas commonly have a slot for a partially expressed rule. There is no
 mirror for a record that is fully expressed and never invoked. Without a
 declared-exception slot a coverage gate has two settings, pass and nuisance,
@@ -65,6 +76,8 @@ argued exceptions instead of a silence.
 **Verdict: accept at NOTE.** Pairs with A1; groom them together.
 
 ### A4. Guidance newer than runtime
+
+Rite: `guidance_newer_than_runtime` (landed, rubric v8)
 
 A resolution order that tries the installed package first and a local
 checkout second degrades in the dangerous direction: the fallback is not
@@ -90,6 +103,8 @@ interaction, and budget combination used by an executable stage.
 closes a confusing first-contact failure.
 
 ### A5. Unknown-range blast radius (highest value in this batch)
+
+Rite: `unknown_range_blast_radius` (landed, rubric v8)
 
 Three defects, one root:
 

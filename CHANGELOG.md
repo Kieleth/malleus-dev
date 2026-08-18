@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added five rites sent up by an adopting project and accepted on the roadmap,
+  landing rubric v8: `instance_reader_coverage` (a type-level census passes
+  while whole subgraphs stay unread, because one reader touching one instance
+  satisfies it), `claim_kinds_distinguished` (fidelity, coherence and
+  consequence are three claims and the strength of the first two is what hides
+  the absence of the third), `unread_declared` (a record must be able to say
+  nothing reaches me yet and why, or a coverage gate has only two settings,
+  pass and nuisance), `guidance_newer_than_runtime` (a resolution order that
+  falls through to a local checkout degrades upward, so the reader follows
+  newer guidance than the code they run), and `unknown_range_blast_radius`
+  (one unrecognised range blinds every later rite on that file and everything
+  importing it).
+- Added a guard binding roadmap acceptance to the rubric. These five were
+  accepted and then sat through a release while their code fixes shipped
+  without them, so the lessons an adopter paid for never travelled back to
+  anyone else. The test reads the roadmap's own `Rite:` lines, so a rite
+  accepted tomorrow is covered without anyone remembering to maintain a list,
+  and it was verified to fail on an unshipped id before it was trusted.
+
+### Added
+
 - Added the OCR evidence-integrity profile at capability `AUDIT_ONLY`
   (`malleus.ocr`, decision record `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md`).
   It verifies that a document evidence bundle preserves the lineage from an

@@ -1660,3 +1660,26 @@ class TestSkillsAreInstallable:
         ) == 0
         for directory in (".claude", ".codex"):
             self._assert_installed_tree(tmp_path / directory / "skills")
+
+
+def test_every_rite_accepted_on_the_roadmap_exists_in_the_rubric():
+    """The loop is only closed when an accepted rite ships.
+
+    Five rites were accepted on the roadmap and sat there through a release
+    while their code fixes shipped without them, so the lessons an adopter
+    paid for never reached anyone else. This reads the roadmap's own `Rite:`
+    lines rather than a list maintained beside it, so a rite accepted
+    tomorrow is covered without anyone remembering to add it here.
+    """
+    root = Path(__file__).parent.parent
+    roadmap = (root / "ROADMAP.md").read_text(encoding="utf-8")
+    declared = set(re.findall(r"^Rite: `(\w+)`", roadmap, re.M))
+    assert declared, "no roadmap section declares a rite id; the link rotted"
+    rubric = _rubric()
+    shipped = {entry["id"] for entry in rubric["mechanical"] + rubric["judgment"]}
+    missing = sorted(declared - shipped)
+    assert not missing, (
+        f"accepted on the roadmap and absent from the rubric: {missing}. "
+        "An accepted rite that does not ship never reaches the adopter who "
+        "paid for the next one."
+    )

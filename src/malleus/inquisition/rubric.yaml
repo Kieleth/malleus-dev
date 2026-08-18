@@ -29,7 +29,7 @@
 # packaged file works and is reverted without warning by the next upgrade,
 # taking every severity you raised with it.
 
-version: 7
+version: 8
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -439,3 +439,119 @@ judgment:
       property, so this rite asks and does not condemn. Raise its severity in
       a copy of this file passed with `malleus-inquisitor --rubric PATH` when
       your project depends on composition.
+
+  # Rites sent up the loop by an adopting project and accepted on the roadmap
+  # (A1 to A5). Each was paid for in a repository that is not this one. The
+  # generic lesson travels; the project does not.
+
+  - id: instance_reader_coverage
+    question: >-
+      Is every populated region of the graph reached at runtime, or does a
+      type-level reader census pass while whole subgraphs stay unread?
+    severity: SUSPICION
+    lesson: >-
+      A reader census is satisfied by one reader touching one instance. A type
+      can be read on Monday, extended with a hundred new instances on Tuesday,
+      and the census still reports it healthy while none of the hundred is ever
+      reached. Observed: a table of two dozen rows, every row cited to its
+      source, every count asserted by an invariant, referenced by exactly one
+      thing in the repository, which was the generator that wrote it. A
+      neighbouring path reached the same content through a side door, so the
+      type had a reader and the census was clean. Every generated result was a
+      step short of the source for as long as the feature had existed, and an
+      audit of OUTPUT found it because no gate could. The escalation condition
+      is whether the engine EXECUTES the graph: where unread data means only
+      wasted storage this is a suspicion, and where the graph is the program it
+      is a heresy, because unread rules are silently absent behaviour rather
+      than dead weight. Two discharges, catching different amounts: a static
+      walk from entry points is cheap and blind to side doors, which was
+      seventeen of twenty-three in the observed case; a runtime journal of
+      touched ids plus a sweep is complete and costs a journal.
+
+  - id: claim_kinds_distinguished
+    question: >-
+      Do the project's gates distinguish fidelity, coherence and consequence,
+      or does a wall of green on the first two read as assurance about the
+      third?
+    severity: NOTE
+    status: low_stakes
+    status_reason: >-
+      The distinction is established and the cost of missing it is a
+      misread rather than a broken gate; the underlying checks still run.
+    lesson: >-
+      Three independent claims get conflated because they are all "the checks
+      pass". FIDELITY is that the data matches its source: citations resolve,
+      values appear in the text they quote. COHERENCE is that the assembled
+      graph is well formed: no dangling references, ranges tile, ordered parts
+      are contiguous. CONSEQUENCE is that the system acts on it. A project can
+      hold the first two to an unusually high standard and have no vocabulary
+      at all for the third, and the strength of the first two is precisely what
+      makes the absence invisible. Observed: a verifier proving every citation
+      resolved in the vendored source and every number appeared in the sentence
+      it quoted, which had caught real defects including four in a published
+      book, and which said nothing whatever about whether the engine read the
+      data. Name the three in the docs and state which gate serves which.
+
+  - id: unread_declared
+    question: >-
+      Can a record say "nothing reaches me yet, and here is why", or is silence
+      the only way to express it?
+    severity: NOTE
+    status: low_stakes
+    status_reason: >-
+      An annotation gap costs signal quality rather than correctness, and a
+      project can carry it indefinitely without a wrong answer.
+    lesson: >-
+      Partial absorption already has a home in most adopting schemas: a slot
+      recording the part of a rule the graph does not yet express, so a partial
+      rule cannot look whole. That slot describes a record whose EXPRESSION is
+      incomplete. It has no answer for a record that is fully expressed and
+      never invoked, which is the failure a coverage gate surfaces. Without a
+      declared-exception slot the gate has only two settings, pass and
+      nuisance, and the second one gets it switched off. With one, the gap is a
+      countable number of argued exceptions instead of a silence. Pairs with
+      instance_reader_coverage; neither is much use without the other.
+
+  - id: guidance_newer_than_runtime
+    question: >-
+      When the documented resolution order falls through from the installed
+      package to a local checkout, does anything notice that the reader is now
+      following guidance newer than the code they run?
+    severity: SUSPICION
+    lesson: >-
+      A resolution order that tries the installed package first and a developer
+      checkout second degrades in the dangerous direction. The fallback is not
+      equivalent, it is NEWER: the adopter reads the newest rubric, rites and
+      protocol docs while their runtime executes a package several minor
+      versions old. Observed: a bootstrap command from a current skill raising
+      ImportError against an installed 0.1.0 while a 0.6.0 checkout sat beside
+      it, the symbol having been added in between, so five minor versions of
+      drift surfaced as a confusing import error rather than a version
+      complaint. This is root_currency inverted, and worse, because that rite
+      compares two copies of the root while this compares documentation against
+      code and nothing diffs them. Make the version a first-class output of the
+      bootstrap step: print the installed version and the resolved root, and
+      refuse when they disagree, instead of letting an ImportError stand in for
+      "your package is old".
+
+  - id: unknown_range_blast_radius
+    question: >-
+      When a schema names a range the loader does not recognise, does the
+      failure stay on the SLOT, or does it take the whole file and everything
+      importing it, silently?
+    severity: HERESY
+    lesson: >-
+      An unknown range fails construction, construction is the first rite, and
+      a failed first rite short-circuits the run. So one unrecognised name does
+      not reject one slot: it blinds every later rite on that file and on every
+      file importing it. Observed: an adopter used a range that is a legal
+      built-in of the schema language and simply absent from the loader's
+      allowlist; five files of thirteen failed to construct, and seven of eight
+      mechanical rites had therefore never executed anywhere in that
+      repository, with the report showing one heresy per file and saying
+      nothing about what it had skipped. A second, unrelated adopter lost a
+      schema to the same gap in the same week on a different type name. Two
+      independent fixes: accept the schema language's full set of built-ins,
+      because rejecting a legal type punishes an adopter for using their tools
+      correctly, and make a construction failure REPORT the rites it prevented
+      from running, so the blast radius is visible rather than inferred.
