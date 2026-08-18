@@ -7,7 +7,6 @@ for distributed ontology convergence.
 """
 
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -15,7 +14,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
+from malleus.ontology import (
+    OntologyError,
+    OntologyRegistry,
+    SlotConstraint,
+    bundled_ontology_path,
+)
 
 ONTOLOGY_DIR = Path(__file__).parent.parent / "ontology"
 ROOT_SCHEMA = ONTOLOGY_DIR / "malleus.yaml"
@@ -36,16 +40,21 @@ def run_linkml(command: str, schema: Path) -> subprocess.CompletedProcess:
 
 def test_no_isolation_build_backend_is_declared_for_development():
     """The development extra must install the configured build backend."""
-    text = PYPROJECT.read_text()
-    build_backend = re.search(r'requires = \["([a-zA-Z0-9_.=-]+)', text)
-    dev_extra = re.search(r'dev = \[(.+)\]', text)
-    assert build_backend and dev_extra
-    assert build_backend.group(1) in dev_extra.group(1)
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # Python 3.10
+        import tomli as tomllib
+
+    project = tomllib.loads(PYPROJECT.read_text())
+    build_backend = project["build-system"]["requires"][0]
+    assert build_backend in project["project"]["optional-dependencies"]["dev"]
 
 
 def test_distribution_metadata_toolchain_is_reproducible():
     text = PYPROJECT.read_text()
     assert 'requires = ["hatchling==1.31.0"]' in text
+    assert '"build==1.2.2.post1"' in text
+    assert '"ruff==0.11.9"' in text
     assert '"twine==6.2.0"' in text
     assert text.count('core-metadata-version = "2.4"') == 2
 
@@ -680,7 +689,8 @@ class TestMixinTracking:
 
     def test_mixin_affects_content_hash(self, agent_domain, tmp_path):
         """A schema that declares an extra mixin must hash differently."""
-        import textwrap, shutil
+        import shutil
+        import textwrap
         no_mixin = tmp_path / "no_mixin.yaml"
         no_mixin.write_text(textwrap.dedent("""
             id: https://example.org/schema/agent_test
@@ -881,6 +891,425 @@ class TestEffectiveSlotValidation:
         right = OntologyRegistry(plural)
         assert left.content_hash() != right.content_hash()
         assert left.fingerprint() != right.fingerprint()
+
+    def test_inlined_class_values_are_closed_world_validated_and_hashed(self, tmp_path):
+        template = (
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Inner:\n    slots: [code]\n"
+            "  Outer:\n    slots: [payload]\n"
+            "slots:\n"
+            "  code:\n    range: string\n    required: true\n"
+            "  payload:\n    range: Inner\n    inlined: {inlined}\n"
+        )
+        inlined_path = tmp_path / "inlined.yaml"
+        reference_path = tmp_path / "reference.yaml"
+        inlined_path.write_text(template.format(inlined="true"))
+        reference_path.write_text(template.format(inlined="false"))
+        registry = OntologyRegistry(inlined_path)
+        assert registry.validate_instance("Outer", {"payload": {"code": "x"}}) == []
+        assert registry.validate_instance("Outer", {"payload": "inner:1"}) == [
+            "Inlined property 'payload' must be a mapping"
+        ]
+        errors = registry.validate_instance("Outer", {"payload": {"fabricated": "x"}})
+        assert any("Unknown property 'fabricated' for Inner" in error for error in errors)
+        reference = OntologyRegistry(reference_path)
+        assert registry.content_hash() != reference.content_hash()
+        assert registry.fingerprint() != reference.fingerprint()
+
+    def test_inlined_does_not_reinterpret_the_public_positional_signature(self):
+        prior_positional = SlotConstraint(False, "string", False, True)
+        assert prior_positional.identifier is True
+        assert prior_positional.inlined is None
+        assert prior_positional.value_presence is None
+
+
+class TestExactlyOneOfClassExpressions:
+    CHOICE_SCHEMA = """
+id: https://example.org/schema/choice
+name: choice
+classes:
+  Choice:
+    slots: [kind, left, right]
+    exactly_one_of:
+{branches}
+slots:
+  kind:
+    range: ChoiceKind
+    required: true
+  left:
+    range: string
+  right:
+    range: string
+enums:
+  ChoiceKind:
+    permissible_values:
+      A:
+      B:
+      C:
+"""
+
+    BRANCH_A = """      - slot_conditions:
+          kind:
+            equals_string: A
+          left:
+            required: true
+          right:
+            value_presence: ABSENT
+"""
+    BRANCH_B = """      - slot_conditions:
+          kind:
+            equals_string: B
+          left:
+            value_presence: ABSENT
+          right:
+            required: true
+"""
+
+    def _registry(self, tmp_path, name, branches):
+        path = tmp_path / f"{name}.yaml"
+        path.write_text(self.CHOICE_SCHEMA.format(branches=branches))
+        return OntologyRegistry(path)
+
+    def test_union_enforces_required_forbidden_and_forbidden_null(self, tmp_path):
+        registry = self._registry(tmp_path, "choice", self.BRANCH_A + self.BRANCH_B)
+        assert registry.validate_instance("Choice", {"kind": "A", "left": "x"}) == []
+        assert registry.validate_instance("Choice", {"kind": "B", "right": "x"}) == []
+
+        missing = registry.validate_instance("Choice", {"kind": "A"})
+        forbidden = registry.validate_instance(
+            "Choice",
+            {"kind": "A", "left": "x", "right": "y"},
+        )
+        forbidden_null = registry.validate_instance(
+            "Choice",
+            {"kind": "A", "left": "x", "right": None},
+        )
+        assert any("missing left" in error for error in missing)
+        assert any("Property 'right' must be absent" in error for error in forbidden)
+        assert any("Property 'right' must be absent" in error for error in forbidden_null)
+
+    def test_union_rejects_zero_and_multiple_matching_alternatives(self, tmp_path):
+        schema = tmp_path / "overlap.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n  Choice:\n    slots: [left, right]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n          left:\n            required: true\n"
+            "      - slot_conditions:\n          right:\n            required: true\n"
+            "slots:\n  left:\n    range: string\n  right:\n    range: string\n"
+        )
+        registry = OntologyRegistry(schema)
+        assert registry.validate_instance("Choice", {"left": "x"}) == []
+        zero = registry.validate_instance("Choice", {})
+        multiple = registry.validate_instance(
+            "Choice",
+            {"left": "x", "right": "y"},
+        )
+        assert any("matched 0" in error for error in zero)
+        assert any("matched 2" in error for error in multiple)
+
+    @pytest.mark.parametrize(
+        "expression,message",
+        [
+            (
+                "      - any_of: []\n        slot_conditions:\n"
+                "          left:\n            required: true\n",
+                "unsupported expression keys",
+            ),
+            (
+                "      - slot_conditions:\n"
+                "          left:\n            pattern: x\n",
+                "unsupported condition keys",
+            ),
+            (
+                "      - slot_conditions:\n"
+                "          absent_slot:\n            required: true\n",
+                "references unknown slot",
+            ),
+            (
+                "      - slot_conditions:\n"
+                "          left:\n            required: true\n"
+                "            value_presence: ABSENT\n",
+                "cannot be required",
+            ),
+            (
+                "      - slot_conditions:\n"
+                "          left:\n            equals_string: x\n"
+                "            value_presence: ABSENT\n",
+                "cannot declare equals_string",
+            ),
+        ],
+    )
+    def test_unsupported_or_contradictory_expressions_fail_closed(
+        self,
+        tmp_path,
+        expression,
+        message,
+    ):
+        with pytest.raises(OntologyError, match=message):
+            self._registry(tmp_path, "broken", expression)
+
+    @pytest.mark.parametrize(
+        "schema_text",
+        [
+            (
+                "id: test\nname: test\n"
+                "classes:\n  Choice:\n    slots: [left]\n"
+                "slots:\n  left:\n    range: string\n"
+                "    value_presence: UNCOMMITTED\n"
+            ),
+            (
+                "id: test\nname: test\n"
+                "classes:\n"
+                "  Choice:\n"
+                "    slots: [left]\n"
+                "    slot_usage:\n"
+                "      left:\n"
+                "        value_presence: UNCOMMITTED\n"
+                "slots:\n  left:\n    range: string\n"
+            ),
+            (
+                "id: test\nname: test\n"
+                "classes:\n"
+                "  Choice:\n"
+                "    slots: [left]\n"
+                "    exactly_one_of:\n"
+                "      - slot_conditions:\n"
+                "          left:\n"
+                "            value_presence: UNCOMMITTED\n"
+                "slots:\n  left:\n    range: string\n"
+            ),
+        ],
+        ids=["global-slot", "slot-usage", "class-expression"],
+    )
+    def test_uncommitted_presence_fails_closed_in_every_supported_location(
+        self,
+        tmp_path,
+        schema_text,
+    ):
+        schema = tmp_path / "uncommitted-presence.yaml"
+        schema.write_text(schema_text)
+        with pytest.raises(
+            OntologyError,
+            match=r"value_presence must be one of \['ABSENT', 'PRESENT'\]",
+        ):
+            OntologyRegistry(schema)
+
+    @pytest.mark.parametrize(
+        "composition",
+        ["    is_a: Restriction\n", "    mixins: [Restriction]\n"],
+    )
+    def test_absent_rejects_inherited_or_mixin_equals_string(
+        self,
+        tmp_path,
+        composition,
+    ):
+        schema = tmp_path / "merged-contradiction.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Restriction:\n"
+            "    mixin: true\n"
+            "    slots: [left]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          left:\n"
+            "            value_presence: ABSENT\n"
+            "  Choice:\n"
+            f"{composition}"
+            "    slot_usage:\n"
+            "      left:\n"
+            "        equals_string: x\n"
+            "slots:\n"
+            "  left:\n"
+            "    range: string\n"
+        )
+        with pytest.raises(OntologyError, match="cannot declare equals_string"):
+            OntologyRegistry(schema)
+
+    @pytest.mark.parametrize(
+        ("base", "condition", "message"),
+        [
+            (
+                "    equals_string: A\n",
+                "            equals_string: B\n",
+                "conflicting equals_string values",
+            ),
+            (
+                "    value_presence: PRESENT\n",
+                "            value_presence: ABSENT\n",
+                "conflicting value_presence values",
+            ),
+            (
+                "    value_presence: ABSENT\n",
+                "            value_presence: PRESENT\n",
+                "conflicting value_presence values",
+            ),
+        ],
+    )
+    def test_expression_constraints_cannot_relax_effective_constraints(
+        self,
+        tmp_path,
+        base,
+        condition,
+        message,
+    ):
+        schema = tmp_path / "monotonic-conflict.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Choice:\n"
+            "    slots: [left]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          left:\n"
+            f"{condition}"
+            "slots:\n"
+            "  left:\n"
+            "    range: string\n"
+            f"{base}"
+        )
+        with pytest.raises(OntologyError, match=message):
+            OntologyRegistry(schema)
+
+    def test_construction_checks_conflict_before_last_sorted_condition(self, tmp_path):
+        schema = tmp_path / "non-last-conflict.yaml"
+        template = (
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Choice:\n"
+            "    slots: [alpha, zeta]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          alpha:\n"
+            "            equals_string: {condition}\n"
+            "          zeta:\n"
+            "            required: true\n"
+            "slots:\n"
+            "  alpha:\n"
+            "    range: string\n"
+            "    equals_string: A\n"
+            "  zeta:\n"
+            "    range: string\n"
+        )
+        schema.write_text(template.format(condition="B"))
+        with pytest.raises(OntologyError, match="conflicting equals_string"):
+            OntologyRegistry(schema)
+
+        schema.write_text(template.format(condition="A"))
+        registry = OntologyRegistry(schema)
+        errors = registry.validate_instance("Choice", {"alpha": "A"})
+        assert any("missing zeta" in error for error in errors)
+
+    def test_required_false_does_not_relax_effective_required_true(self, tmp_path):
+        schema = tmp_path / "required-conjunction.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Choice:\n"
+            "    slots: [left]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          left:\n"
+            "            required: false\n"
+            "slots:\n"
+            "  left:\n"
+            "    range: string\n"
+            "    required: true\n"
+        )
+        registry = OntologyRegistry(schema)
+        assert registry.validate_instance("Choice", {"left": "x"}) == []
+        assert any(
+            "Required slot 'left' missing" in error
+            for error in registry.validate_instance("Choice", {})
+        )
+
+    def test_slot_usage_cannot_create_uninhabitable_effective_presence(self, tmp_path):
+        schema = tmp_path / "effective-presence-conflict.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  Parent:\n"
+            "    slots: [left]\n"
+            "  Child:\n"
+            "    is_a: Parent\n"
+            "    slot_usage:\n"
+            "      left:\n"
+            "        value_presence: ABSENT\n"
+            "slots:\n"
+            "  left:\n"
+            "    range: string\n"
+            "    required: true\n"
+        )
+        with pytest.raises(OntologyError, match="cannot be required"):
+            OntologyRegistry(schema)
+
+    def test_inherited_and_local_exactly_one_of_groups_remain_conjunctive(
+        self,
+        tmp_path,
+    ):
+        schema = tmp_path / "grouped-unions.yaml"
+        schema.write_text(
+            "id: test\nname: test\n"
+            "classes:\n"
+            "  ParentChoice:\n"
+            "    slots: [left, right]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          left:\n"
+            "            required: true\n"
+            "      - slot_conditions:\n"
+            "          right:\n"
+            "            required: true\n"
+            "  ChildChoice:\n"
+            "    is_a: ParentChoice\n"
+            "    slots: [top, bottom]\n"
+            "    exactly_one_of:\n"
+            "      - slot_conditions:\n"
+            "          top:\n"
+            "            required: true\n"
+            "      - slot_conditions:\n"
+            "          bottom:\n"
+            "            required: true\n"
+            "slots:\n"
+            "  left:\n    range: string\n"
+            "  right:\n    range: string\n"
+            "  top:\n    range: string\n"
+            "  bottom:\n    range: string\n"
+        )
+        registry = OntologyRegistry(schema)
+        assert registry.validate_instance(
+            "ChildChoice",
+            {"left": "l", "top": "t"},
+        ) == []
+        assert any(
+            "matched 0" in error
+            for error in registry.validate_instance("ChildChoice", {"left": "l"})
+        )
+        assert any(
+            "matched 2" in error
+            for error in registry.validate_instance(
+                "ChildChoice",
+                {"left": "l", "right": "r", "top": "t"},
+            )
+        )
+
+    def test_operand_order_is_identity_invariant_but_conditions_are_not(self, tmp_path):
+        forward = self._registry(tmp_path, "forward", self.BRANCH_A + self.BRANCH_B)
+        reverse = self._registry(tmp_path, "reverse", self.BRANCH_B + self.BRANCH_A)
+        changed = self._registry(
+            tmp_path,
+            "changed",
+            self.BRANCH_A + self.BRANCH_B.replace("equals_string: B", "equals_string: C"),
+        )
+        assert forward.content_hash() == reverse.content_hash()
+        assert forward.fingerprint() == reverse.fingerprint()
+        assert forward.strict_fingerprint() == reverse.strict_fingerprint()
+        assert forward.content_hash() != changed.content_hash()
+        assert forward.fingerprint() != changed.fingerprint()
+        assert "fingerprint_version:4" in forward.fingerprint()
+        assert "fingerprint_version:3" in OntologyRegistry(ROOT_SCHEMA).fingerprint()
 
 
 class TestIdentityFromResolution:

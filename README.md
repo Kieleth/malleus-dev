@@ -10,13 +10,13 @@ A root ontology in LinkML, and the opinion that words have power.
 
 I believe words have power. The closer we work with them, the more carefully we pin down what they mean and how they relate, the closer we get to something a machine can use without guessing. An ontology is that pinning-down, made explicit and machine-readable. Borges and Le Guin understood this long before software did: to name something precisely is to begin controlling it.
 
-The practical bet: if you define your domain once, in an ontology, you can propagate that definition through every layer of a system. LinkML already compiles a schema down to JSON Schema, Pydantic, SQL DDL, OWL, SHACL, TypeScript, whatever you need. So the same five concepts, with the same constraints, can shape the frontend form, the backend validator, the ML training contract, Shelob's tool schema, the knowledge graph's node types, and the Prolog rules that reason over them. One source. All layers speaking the same vocabulary.
+The practical bet: if you define your domain once, in an ontology, you can propagate that definition through every layer of a system. LinkML can project a schema into JSON Schema, Pydantic, SQL DDL, OWL, SHACL, TypeScript, and other targets. Generated-schema parity is neither tested nor enforced in 0.11. `OntologyRegistry` is authoritative for the structural union used by `ValidTime`, and `ValidTime.from_value` is authoritative for lexical and cross-field temporal semantics. Treat a generated artifact as an equivalent validator only after a conformance test proves it preserves the relevant constraints.
 
 When that actually happens across a codebase, something unexpectedly useful shows up. Components stop drifting apart. The frontend and backend stop disagreeing about what a "Drug" is. A new contributor learns one vocabulary instead of five. Whole classes of bugs (the ones caused by definitions sliding between modules) just stop existing. Adding a new concept becomes one change in one file, flowing outward through whatever code generators you've wired up.
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.10.0`, `stage-8c-executable-provenance-and-effect-closure`. See
+Current package boundary: `0.11.0`, `stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -47,7 +47,7 @@ Recon's core recording and export code ships with Malleus. Install its optional
 dependency set for the interactive graph view:
 
 ```bash
-pip install malleus-dev[recon]
+pip install 'malleus-dev[recon]'
 ```
 
 ## Quick start
@@ -101,11 +101,14 @@ result = reg.check_compatibility(foreign_hash, foreign_fingerprint)
 # "identical" | "superset" | "subset" | "divergent"
 ```
 
-Under additive-only evolution (add types, enum values, or slots; relax required to optional), a newer ontology's fingerprint is always a strict superset of an older one's. Peers can tag every write with the hash they used, and receivers can decide: accept (we're compatible), quarantine (we'll understand this after we upgrade), or reject (we've forked, this is a bug).
+Within one fingerprint format, adding represented types, enum values, or slots makes the newer fingerprint a strict superset of the older one. Fingerprint-format changes fail closed: version 3 and version 4 carry different format facts and compare as `divergent`, even when the schema change would otherwise be additive. Peers can tag every write with the hash they used, but the set-relation label is input to caller policy, not an automatic accept decision.
 
-This matters in fleets running rolling updates. Without it, CRDT sync during the upgrade window can silently drop properties the older node doesn't recognize. With it, the older node says "I can't validate this yet, hold it" and nothing is lost.
+This matters in fleets running rolling updates. An application can combine the
+label with validation and its own policy to hold data an older node does not
+understand. Malleus returns the label; it does not accept, quarantine, store, or
+replay peer writes.
 
-One caveat, worth saying plainly. Relaxing a slot from required to optional is additive on the producer side (you're loosening a guarantee) but subtractive on the consumer side (code that hardcoded the field's presence will crash when a new producer omits it). The default `check_compatibility()` answers the producer question: can data flow safely between us? For the consumer question, use `strict_fingerprint()` and `check_compatibility_strict()`, which include required-constraint facts. A relaxation shows up there as divergence, surfacing the risk that would otherwise stay hidden.
+Required facts are deliberately absent from the default fingerprint. Relaxing a slot from required to optional therefore leaves the lax fact sets equal, so `check_compatibility()` cannot identify that removal. Use `strict_fingerprint()` and `check_compatibility_strict()` when field presence matters. For a required-to-optional change, the old required side reports `superset` when it compares itself with the relaxed side, and the relaxed side reports `subset` in the reverse comparison. It is not `divergent`. Caller policy must interpret every non-`identical` strict result in the direction data will flow; the labels alone do not prove writer-to-reader safety.
 
 ## Domain extensions
 
@@ -237,8 +240,8 @@ proposal's domain; those checks remain outside Stage 6.
 
 Stage 7b makes the proposed graph mutation replayable and binds it to assent.
 A `GraphBaseArtifact` commits an externally supplied base graph. A
-`CandidateSubgraphArtifact` stores exact ordered writes, an explicit valid-time
-interval for every write, supersession links, ontology hash, acceptance and
+`CandidateSubgraphArtifact` stores ordered writes, precision-aware valid-time
+boundaries for every write, supersession links, ontology hash, acceptance and
 materialization heads, and pre-state and post-state digests. `ProposedSubgraph`
 and `EpistemicDecision` both bind that candidate by ID, record hash, and
 candidate digest.
@@ -260,17 +263,36 @@ historical = projector.as_of(
 )
 ```
 
-Valid intervals are half-open. Valid time is always explicit and is never
-inferred from transaction time. A later retroactive supersession affects only
-transaction views that include the later event. The JSONL ledger is the
-authority; NetworkX is rebuilt as a defensive projection. Accepted projections
-omit the local `KnowledgeGraph.operations` audit because those operation
-timestamps are execution-local and are not ledger commitments.
+`ValidTime` supports an exact timestamp, a calendar day, a bounded interval,
+an order-only transition, or an unresolved prior boundary. Calendar days
+require an IANA timezone and embed the timezone database version. Malleus loads
+the pinned `tzdata==2026.3` rules, IANA release `2026c`, directly instead of
+relying on the host operating system. The database release is a semantic input:
+version 0.11.0 replays only `2026c`, and provides no cross-version timezone
+migration. Every non-exact value requires the caller's extracted
+`indeterminacy_reason`; Malleus commits that reason but does not infer it from
+transaction, invoice, authorization, or payment time.
+
+Exact intervals remain half-open. Before the earliest possible transition an
+as-of view returns the prior record, at or after the latest possible transition
+it returns the replacement, and inside the window it returns `INDETERMINATE`.
+When the definite records form a structurally complete graph, an indeterminate
+view exposes that graph, three-valued record states, the prior and replacement
+IDs, machine reason code, extracted reason, bounds, and a resolution digest.
+Its `graph` property fails loudly so an incomplete definite graph cannot be
+mistaken for the complete state. Projection also refuses if selected records
+lose a required endpoint; dependency-closed temporal projection remains open.
+
+A later retroactive supersession affects only transaction views that include
+the later event. The JSONL ledger is the authority; NetworkX is rebuilt as a
+defensive projection. Accepted projections omit the local
+`KnowledgeGraph.operations` audit because those operation timestamps are
+execution-local and are not ledger commitments.
 
 This is an accepted knowledge commitment, not a truth guarantee or action
 authorization. The caller must supply the exact graph committed by the graph
 base artifact. Remote graph-base resolution, typed retraction, and multi-writer
-serialization remain outside version 0.10.0.
+serialization remain outside version 0.11.0.
 
 ## Architecture
 
@@ -341,12 +363,12 @@ Three tiers:
 - `malleus-inquisitor <schema.yaml>`: the mechanical rites, a CLI that any
   machine can judge. Does the schema construct, is the imported root current
   against the installed malleus (staleness is detected via
-  `check_compatibility_strict`, the consumer-side check: the producer-side
-  `check_compatibility` is blind to a dropped `required` constraint, which is
-  the most silent drift there is), are the type-slots constrained, are relation
-  endpoints narrowed, are Signals genuinely derived, are formula-shaped
-  slots backed by an executor. Exit 0 grants the purity seal, 1 records
-  heresies, 2 means the instrument itself is broken and nothing was judged.
+  `check_compatibility_strict`, whose direction-sensitive result exposes
+  `required` drift that `check_compatibility` cannot see), are the type-slots
+  constrained, are relation endpoints narrowed, are Signals genuinely derived,
+  are formula-shaped slots backed by an executor. Exit 0 grants the purity
+  seal, 1 records heresies, 2 means the instrument itself is broken and nothing
+  was judged.
   Severities are data: copy `rubric.yaml`, tune it, and pass
   `--rubric PATH`. Every run prints the rubric it used and how many rites
   were disabled, because a seal is only as wide as the rubric that granted it.
@@ -360,18 +382,19 @@ Three tiers:
   no project named. It is data on purpose: tune it, extend it, and send
   generic lessons back as issues or PRs. That is how the Ordo learns.
 
-Every project can also install the acolyte and Recon procedure:
+Every project can also install the adopter, maintainer, and Recon procedures:
 `malleus-inquisitor install-skills --project .` preserves the existing Claude
 default. Add `--agent codex` for Codex or `--agent all` for both. The acolyte
-carries the adoption playbook and can fix its own project's findings. Recon
-carries the evidence-first literature workflow. Generic lessons flow upstream
-as issues and PRs; releases carry the grown rubric and skills back down. Re-run
-the installer after upgrading.
+carries the adoption playbook and can fix its own project's findings.
+`malleus-dev` governs library architecture through small, replaceable,
+conformance-tested protocol stages. Recon carries the evidence-first literature
+workflow. Generic lessons flow upstream as issues and PRs; releases carry the
+grown rubric and skills back down. Re-run the installer after upgrading.
 
 ## Tests
 
 ```bash
-pip install -e .[dev]
+pip install -e '.[dev]'
 pytest tests/ -v
 ```
 

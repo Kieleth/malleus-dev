@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.10.0` implements the
+Malleus package version `0.11.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is
@@ -17,9 +17,10 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
   logic-monitoring records
 - Stage 6: typed monitor specifications, typed epistemic policies, exact
   required-monitor coverage, and deterministic epistemic control selection
-- Stage 7b: content-addressed external graph bases, exact temporal candidate
-  manifests, proposal and decision binding, atomic accepted applications,
-  derived accepted-graph projection, and transaction-time plus valid-time replay
+- Stage 7b: content-addressed external graph bases, precision-aware temporal
+  candidate manifests, proposal and decision binding, atomic accepted
+  applications, derived accepted-graph projection, and transaction-time plus
+  three-valued valid-time replay
 - Stage 7c: typed authorization policies, proposal-time action-policy commitment, exact
   required authority-monitor coverage, deterministic `AUTHORIZE`, `BLOCK`, or
   `CLARIFY` selection, and verdict-scoped grant validation
@@ -34,10 +35,12 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 
 Stage 8a records what the caller declared about the bytes and makes that
 declaration immutable and attributable. It does not read the bytes: a digest
-and length describing no file are accepted and replay. It does not
-authenticate the source, establish its truth, verify that a quotation occurs
-within it, or notice that it changed. Those are separate checks, and the first
-of them is `citation-byte-verification` below.
+and length describing no file are accepted and replay.
+`source_artifact_fields_from_bytes` derives the declared fields when a caller
+does supply bytes, but the ledger cannot prove that helper was used. It does
+not authenticate the source, establish its truth, verify that a quotation
+occurs within it, or notice that it changed. Those are separate checks, and the
+first of them is `citation-byte-verification` below.
 
 ## Stage 8b
 
@@ -114,18 +117,48 @@ recomputes the verdict, trigger assessments, and policy-evaluation hash.
 
 The Stage 7b boundary adds three concrete records. `GraphBaseArtifact` commits
 the ontology, state digest, and valid-time metadata for an externally supplied
-base graph. `CandidateSubgraphArtifact` stores the exact ordered structural
-writes, their explicit half-open valid-time intervals, supersession links, and
+base graph. `CandidateSubgraphArtifact` stores the ordered structural writes,
+their precision-aware valid-time boundaries, supersession links, and
 pre-state and post-state digests. `AcceptedGraphApplication` binds one accepted
 decision to that exact candidate in the same `EPISTEMIC_DECIDED` event.
 
 Replay restages every candidate against the reconstructed accepted graph. A
 candidate-bound `ACCEPT` requires exactly one application; every other verdict
 requires none. Replay keeps `acceptance_head`, `materialization_head`, cumulative
-accepted graph digest, and valid-time view digest separate. `AcceptedGraphProjector`
-rebuilds current or historical views from the verified ledger and requires an
-explicit valid-time query. NetworkX remains a derived projection, not a second
-authority.
+accepted graph digest, visible definite-graph digest, and valid-time resolution
+digest separate. `AcceptedGraphProjector` rebuilds current or historical views
+from the verified ledger and requires an explicit timezone-aware query. Exact
+timestamps, zoned calendar days, bounded intervals, order-only transitions,
+and unresolved prior boundaries share one inlined variant-shaped representation
+in graph writes and claims. Protocol serialization and replay require that form
+to be canonical. Non-exact boundaries require a committed extracted reason.
+When the definite records remain structurally closed, views expose
+`INDETERMINATE` record membership and its cause instead of selecting an
+unsupported state. A projection whose selected relation loses a required
+endpoint refuses as structurally incomplete. Propagating endpoint uncertainty
+through dependent records is not implemented. NetworkX remains a derived
+projection, not a second authority.
+
+Version 0.11.0 accepts only graph-base and candidate schema version 2 and the
+inlined `ValidTime` form in claims and claim revisions. Version 1 temporal
+artifacts and scalar claim timestamps do not replay through an implicit
+fallback. Existing ledgers require an explicit migration or a new ledger under
+assent ontology 0.9.0. No migration utility is provided. Calendar-day replay is
+also bound to pinned `tzdata==2026.3`, IANA release `2026c`; a later database
+version requires an explicit migration rather than silent reinterpretation.
+
+The assent LinkML source declares `ValidTime` as a closed five-way structural
+union with class-level `exactly_one_of` and `slot_conditions`.
+`OntologyRegistry` enforces that union at graph write time, including required
+fields, forbidden fields, forbidden nulls, and the pinned timezone-database
+identifier. The exercised LinkML runtime loads this declaration and official
+JSON Schema generation is smoke-tested, but generated-schema parity for the
+class-level union is neither tested nor enforced. Generated JSON Schema is not
+an enforcement substitute. Canonical date and datetime encoding, timezone
+existence, timezone-aware timestamps, and interval ordering remain runtime
+semantics enforced by `ValidTime.from_value` during protocol serialization and
+replay. Direct `OntologyRegistry` and `KnowledgeGraph` enforce structure,
+not those runtime semantics.
 
 Protocol commits use same-directory failure-atomic replacement. Interrupted
 writes, file syncs, and replacements preserve the last valid ledger. This does
@@ -163,6 +196,12 @@ no authorization validity interval.
 
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph
 - `typed-retraction-semantics`: removing a record without replacing it with a new immutable record
+- `historical-timezone-database-migration`: moving a stored calendar-day
+  boundary to a different IANA timezone database while retaining the old
+  interpretation, lineage, and an explicit migration result
+- `dependency-closed-valid-time-projection`: propagating an indeterminate
+  endpoint or referenced record through dependent relations and properties
+  instead of refusing a structurally incomplete definite projection
 - `multi-writer-ledger-serialization`: safe concurrent append coordination
 - `lexical-format-validation`: checking that a value declared `uri`, `date`,
   `curie` or another lexical built-in actually has that form. All of LinkML's
@@ -248,7 +287,7 @@ The distribution build and installed-wheel smoke test must pass before that
 stage is published.
 
 Package versions and ontology versions are independent. The current root
-ontology is `0.4.0`; the assent ontology is `0.8.0`.
+ontology is `0.4.0`; the assent ontology is `0.9.0`.
 
 ## History
 
@@ -261,6 +300,7 @@ ontology is `0.4.0`; the assent ontology is `0.8.0`.
 | `0.5.0` | `stage-7b-assent-gated-bitemporal-accepted-graph` | Exact proposed mutations, atomic accepted applications, and bitemporal replay |
 | `0.6.0` | `stage-7c-policy-selected-authorization-control` | Typed action-bound policy, exact authority coverage, and deterministic authorization control |
 | `0.7.0` | `stage-7c-policy-selected-authorization-control` | Same boundary, hardened: ontology identity from the resolved constraint table, closed arbiter vocabularies, and the inquisition toolchain |
-| `0.8.0` | `stage-8c-executable-provenance-and-effect-closure` | Exact source bytes, thin epistemic monitor adapters, authorized dispatch, execution receipts, and independent outcome observations |
+| `0.8.0` | `stage-8c-executable-provenance-and-effect-closure` | Caller-declared source byte identity, thin epistemic monitor adapters, authorized dispatch, execution receipts, and independent outcome observations |
 | `0.9.0` | `stage-8c-executable-provenance-and-effect-closure` | Same boundary; all LinkML built-in ranges load, the bundled root resolves without a map, and a construction failure names the rites it skipped |
 | `0.10.0` | `stage-8c-executable-provenance-and-effect-closure` | Same core boundary; adds typed, replayable literature forensics, deterministic comparison artifacts, the v1 literature-KG importer, and the Recon agent skill |
+| `0.11.0` | `stage-8c-executable-provenance-and-effect-closure` | Same core boundary; adds precision-aware valid time, three-valued temporal projection, the maintainer stage-contract doctrine, and research-local GraphRecipe conformance evidence |

@@ -15,11 +15,11 @@ Depends on:
    [`OKG-CP001`](GRAPH_REALIZATION_SESSION_CHECKPOINT.md).
 
 Repository base: `codex/malleus-recon` at
-`384ecc37917ffa44867024a36dfdd313`
+`1657e6564c1f8ab872d56b9ec97e34a015fce765`
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 7,
-`sha256:0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`
+revision 9,
+`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
 
 Shipped capability: none
 
@@ -501,18 +501,22 @@ tests. The relevant core selection passed 236 tests with 2 skips. Exact
 evidence lives in
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
 The checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
 An unused-import removal changed `assembly.py` bytes without changing the
 bounded semantic result. The hard identity test correctly rejected the stale
-report. Refreshing its dependency closure produced the active report identity
-above, which supersedes retained identity
+report and produced retained identity
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The checksum-set identity did not change. This is direct evidence that runner
-bytes are load-bearing execution inputs even when the frozen case results are
-unchanged.
+The current report refresh binds the changed `ontology.py`, `pyproject.toml`,
+`status.py`, and implementation-status bytes plus package version `0.11.0`.
+Its active identity above supersedes `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
+The checksum-set identity and 39-test result did not change. Runner, direct-core,
+and package-boundary bytes remain load-bearing execution inputs even when the
+frozen case results are unchanged.
 
 Each receipt's canonical identity covers its complete serialized value,
 including the exact selected-manifest path and source-byte digest. This binds
@@ -839,7 +843,7 @@ okg:GraphRecipeExperimentalLearning rdf:type mfg:DesignObject ;
 
 <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance>
     rdf:type mfg:DesignObject ;
-    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97 ;
+    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0
@@ -848,6 +852,10 @@ okg:GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c
 okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97
     rdf:type mfg:DesignObject ;
     mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0 .
+
+okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0
+    rdf:type mfg:DesignObject ;
+    mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97 .
 
 okg:GraphRecipeFirstSliceReportIdentityGuard rdf:type mfg:Invariant ;
     mfg:governs <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> ;
@@ -863,6 +871,13 @@ okg:GraphRecipeReportDependencyClosedRefreshObservation rdf:type mfg:Observation
     mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
     mfg:derivedFrom okg:GraphRecipeRunnerByteChangeObservation ;
     mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97 ;
+    mfg:status mfg:Implemented .
+
+okg:GraphRecipeReportBoundSourceRefreshObservation rdf:type mfg:Observation ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97 ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
+    mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
+    mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceChecksumSet rdf:type mfg:DesignObject ;
@@ -919,6 +934,7 @@ okg:GraphRecipeFirstSliceEvidenceBundle rdf:type mfg:DesignObject ;
     mfg:binds okg:GraphRecipeFirstSliceChecksumSet ;
     mfg:binds okg:GraphRecipeFirstSliceEvidenceBoundary ;
     mfg:binds okg:GraphRecipeFirstSliceExecutionIdentity ;
+    mfg:binds okg:GraphRecipeReportBoundSourceRefreshObservation ;
     mfg:binds okg:GraphRecipeReportDependencyClosedRefreshObservation ;
     mfg:dependsOn okg:GraphRecipeFirstSliceConformanceResult ;
     mfg:status mfg:Implemented .
@@ -926,6 +942,7 @@ okg:GraphRecipeFirstSliceEvidenceBundle rdf:type mfg:DesignObject ;
 okg:GraphRecipeExactExecutionIdentityLearning rdf:type mfg:Observation ;
     mfg:binds okg:GraphRecipeFirstSliceExecutionIdentity ;
     mfg:derivedFrom okg:GraphRecipeFirstSliceConformanceResult ;
+    mfg:derivedFrom okg:GraphRecipeReportBoundSourceRefreshObservation ;
     mfg:derivedFrom okg:GraphRecipeReportDependencyClosedRefreshObservation ;
     mfg:informedBy okg:GraphRecipeSelectedManifestReceiptBinding ;
     mfg:status mfg:Partial .

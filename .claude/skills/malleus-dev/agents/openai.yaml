@@ -1,0 +1,4 @@
+interface:
+  display_name: "Malleus Dev"
+  short_description: "Build Malleus through replaceable protocol stages"
+  default_prompt: "Use $malleus-dev to design or implement this Malleus change through explicit, replaceable, conformance-tested boundaries."

@@ -25,7 +25,7 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.10.0",
+    package_version="0.11.0",
     current_stage="8c",
     boundary="stage-8c-executable-provenance-and-effect-closure",
     completed_stages=(
@@ -77,6 +77,10 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "accepted-graph-projection",
         "bitemporal-as-of-replay",
         "half-open-valid-time-intervals",
+        "precision-aware-valid-time-boundaries",
+        "iana-timezone-calendar-day-enforcement",
+        "three-valued-valid-time-projection",
+        "indeterminacy-reason-commitments",
         "explicit-record-supersession",
         "accepted-graph-materialization-head",
         "typed-authorization-policies",
@@ -100,6 +104,8 @@ IMPLEMENTATION_STATUS = ImplementationStatus(
         "authorization-policy-authority-and-scope",
         "portable-graph-base-resolution",
         "typed-retraction-semantics",
+        "historical-timezone-database-migration",
+        "dependency-closed-valid-time-projection",
         "multi-writer-ledger-serialization",
         "lexical-format-validation",
         "action-execution",

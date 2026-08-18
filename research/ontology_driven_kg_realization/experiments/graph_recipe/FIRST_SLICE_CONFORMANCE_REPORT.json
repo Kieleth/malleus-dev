@@ -66,7 +66,7 @@
   "runtime_boundary": {
     "python_implementation": "CPython",
     "python_version": "3.12.9",
-    "malleus_package_version": "0.10.0",
+    "malleus_package_version": "0.11.0",
     "malleus_current_stage": "8c",
     "malleus_boundary": "stage-8c-executable-provenance-and-effect-closure",
     "core_effect_boundary": "Core Malleus records authorized action dispatch, terminal execution receipts, and independent outcome observations, but performs no domain effect. External research adapters own effects and observations.",
@@ -191,15 +191,15 @@
     "direct_core_dependencies": {
       "src/malleus/kg.py": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
       "src/malleus/ledger.py": "sha256:5e5aa2ab4f16259b3aff3e6df7315ce2f81d90332687f10447fc95e6163d2637",
-      "src/malleus/ontology.py": "sha256:3bf3b9258a1aa1cddbac560a3b504ba36f6d68e9fef9f6d2dbb954ca9ee521cf",
+      "src/malleus/ontology.py": "sha256:0f56bceae5c321103bba266d9081a9c6780c9995ffda4e9cfb87b77c5731d376",
       "src/malleus/source.py": "sha256:6e04af0a6187322a72521a6f73cccf1fe73e715b7a491d5fca7e90ab82e82e4a",
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
     "package_boundary_sources": {
-      "pyproject.toml": "sha256:070eae87caaa328e8a21053294c1a28bdfd2bfc8e697a1bf4601e6035d65f06f",
+      "pyproject.toml": "sha256:b1287a3a254161c303d3ab1726f3ed3d47039d62ba0196267f899ffe997c4450",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
-      "src/malleus/status.py": "sha256:164aaebcfdc7aae1f0b70e2abd32016672bdc0236be47d725236ecb0939cba97",
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:22e9810813cc525d42ddd950aca0410c2b33a572542d3462066f6f1b9922c5a2"
+      "src/malleus/status.py": "sha256:a4e5d538620c38de23a8b609e52a3f5e54faf38c8287fe14b25bad5c98951f92",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:3253e7d064a07f5a302dcf263555c2f131b9bcb1c8eb722a9fca03c1813d17b5"
     }
   },
   "case_receipt_identities": {

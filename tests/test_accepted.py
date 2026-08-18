@@ -10,6 +10,7 @@ import pytest
 from malleus.accepted import (
     AcceptedGraphError,
     AcceptedGraphProjector,
+    AcceptedGraphView,
     acceptance_result_head,
     accepted_application_record,
     candidate_artifact_digest,
@@ -31,6 +32,7 @@ from malleus.ledger import canonical_json, event_hash, record_hash
 from malleus.logic import LogicCheckResult, logic_contract_digest
 from malleus.ontology import OntologyRegistry
 from malleus.staging import ProposedOperation, stage_subgraph
+from malleus.valid_time import ValidTime
 
 
 ASSENT_SCHEMA = Path(__file__).parent.parent / "ontology" / "assent.yaml"
@@ -39,6 +41,9 @@ ARTIFACT_BODY = "sha256:" + "2" * 64
 VALID_0 = "2026-01-01T00:00:00+00:00"
 VALID_1 = "2026-02-01T00:00:00+00:00"
 VALID_2 = "2026-03-01T00:00:00+00:00"
+EXACT_0 = ValidTime.exact(VALID_0)
+EXACT_1 = ValidTime.exact(VALID_1)
+EXACT_2 = ValidTime.exact(VALID_2)
 
 
 def at(minute: int) -> str:
@@ -153,7 +158,7 @@ def register_graph_base(
     metadata = graph_base_metadata(base, list(intervals))
     artifact_id = "artifact:graph-base"
     fields = {
-        "graph_schema_version": "1",
+        "graph_schema_version": "2",
         "graph_ontology_hash": "sha256:" + base.registry.content_hash(),
         "base_state_digest": base.state_digest(),
         "base_record_metadata": metadata,
@@ -390,7 +395,7 @@ def propose(
         revision=1,
         revises_claim_version_id=None,
         statement=f"Candidate {suffix} is proposed.",
-        domain_valid_from=VALID_0,
+        domain_valid_from=EXACT_0.as_dict(),
         domain_valid_to=None,
         dependency_ids=[],
     )
@@ -781,7 +786,7 @@ def prepared(ledger, *, write, suffix="one", outcome="SATISFIED", include_logic=
     return graph_base, artifacts, candidate, proposal, assessment
 
 
-def node_write(node_id="node:one", *, valid_from=VALID_0, valid_to=None, supersedes=None):
+def node_write(node_id="node:one", *, valid_from=EXACT_0, valid_to=None, supersedes=None):
     return temporal_write(
         ProposedOperation.entity("TestNode", node_id, {"name": node_id}),
         valid_from=valid_from,
@@ -792,14 +797,36 @@ def node_write(node_id="node:one", *, valid_from=VALID_0, valid_to=None, superse
 
 def test_candidate_manifest_binds_order_payload_and_temporal_envelope():
     first = node_write("node:one")
-    second = node_write("node:two", valid_from=VALID_1)
+    second = node_write("node:two", valid_from=EXACT_1)
     original = candidate_manifest([first, second])
     reversed_manifest = candidate_manifest([second, first])
-    changed_time = candidate_manifest([first, node_write("node:two", valid_from=VALID_2)])
+    changed_time = candidate_manifest([first, node_write("node:two", valid_from=EXACT_2)])
     assert candidate_manifest_hash(original) != candidate_manifest_hash(reversed_manifest)
     assert candidate_manifest_hash(original) != candidate_manifest_hash(changed_time)
-    with pytest.raises(AcceptedGraphError, match="canonical ISO"):
+    with pytest.raises(AcceptedGraphError, match="precision-aware object"):
         node_write(valid_from="2026-01-01T00:00:00Z")
+
+
+def test_candidate_manifest_v1_exact_time_path_is_dead():
+    parsed = json.loads(candidate_manifest([node_write()]))
+    parsed["schema_version"] = "1"
+    with pytest.raises(AcceptedGraphError, match="unsupported candidate manifest schema '1'"):
+        candidate_manifest_hash(canonical_json(parsed))
+
+
+def test_graph_base_v1_exact_time_path_is_dead(registry):
+    graph = KnowledgeGraph(registry)
+    metadata = graph_base_metadata(graph, [])
+    parsed = json.loads(metadata)
+    parsed["schema_version"] = "1"
+    with pytest.raises(AcceptedGraphError, match="unsupported graph base schema '1'"):
+        graph_base_artifact_digest(
+            artifact_id="artifact:graph-base:v1",
+            artifact_version="1",
+            graph_ontology_hash="sha256:" + registry.content_hash(),
+            base_state_digest=graph.state_digest(),
+            base_record_metadata=canonical_json(parsed),
+        )
 
 
 def test_candidate_artifact_recomputes_semantics_before_append(ledger):
@@ -1235,7 +1262,7 @@ def test_bitemporal_supersession_and_transaction_prefix(ledger):
         [
             node_write(
                 "node:new",
-                valid_from=VALID_1,
+                valid_from=EXACT_1,
                 supersedes="node:old",
             )
         ],
@@ -1276,12 +1303,198 @@ def test_bitemporal_supersession_and_transaction_prefix(ledger):
     assert after_revision_new_time.graph.has_node("node:new")
 
 
+def test_accepted_graph_view_constructor_break_is_explicit_and_projector_binds_it(
+    ledger,
+):
+    graph = KnowledgeGraph(ledger.registry)
+    with pytest.raises(TypeError) as failure:
+        AcceptedGraphView(
+            graph=graph,
+            protocol_head_hash="sha256:" + "1" * 64,
+            event_count=1,
+            acceptance_head="sha256:" + "2" * 64,
+            materialization_head="sha256:" + "3" * 64,
+            accepted_history_state_digest=graph.state_digest(),
+            visible_graph_digest=graph.state_digest(),
+            transaction_as_of=at(1),
+            transaction_sequence=1,
+            valid_as_of=VALID_2,
+            application_ids=(),
+        )
+    message = str(failure.value)
+    for field in (
+        "valid_time_resolution_digest",
+        "valid_time_state",
+        "record_states",
+        "indeterminate_transitions",
+    ):
+        assert field in message
+
+    _, artifacts, candidate, proposal, assessment = prepared(
+        ledger,
+        write=node_write(),
+    )
+    decide(
+        ledger,
+        artifacts,
+        proposal,
+        candidate,
+        assessment,
+        suffix="one",
+        minute=8,
+    )
+    view = AcceptedGraphProjector(ledger).current(valid_as_of=VALID_2)
+    assert view.valid_time_resolution_digest.startswith("sha256:")
+    assert view.valid_time_state == "DETERMINATE"
+    assert view.record_states == {"node:one": "DEFINITELY_PRESENT"}
+    assert view.indeterminate_transitions == ()
+
+
+@pytest.mark.parametrize(
+    "boundary,before,inside,after,reason_code",
+    [
+        (
+            ValidTime.calendar_day(
+                "2026-02-01",
+                timezone="America/Los_Angeles",
+                indeterminacy_reason=(
+                    "The invoice establishes the service day but no installation time."
+                ),
+            ),
+            "2026-02-01T07:59:59+00:00",
+            "2026-02-01T12:00:00-08:00",
+            "2026-02-02T08:00:00+00:00",
+            "CALENDAR_DAY_TRANSITION_WINDOW",
+        ),
+        (
+            ValidTime.bounded_interval(
+                "2026-02-01T09:00:00-08:00",
+                "2026-02-01T17:00:00-08:00",
+                indeterminacy_reason=(
+                    "The source establishes opening and closing bounds only."
+                ),
+            ),
+            "2026-02-01T08:59:59-08:00",
+            "2026-02-01T12:00:00-08:00",
+            "2026-02-01T17:00:00-08:00",
+            "BOUNDED_TRANSITION_WINDOW",
+        ),
+    ],
+)
+def test_uncertain_transition_returns_prior_then_reason_then_replacement(
+    ledger,
+    boundary,
+    before,
+    inside,
+    after,
+    reason_code,
+):
+    graph_base, artifacts, first, proposal, assessment = prepared(
+        ledger,
+        write=node_write("node:old"),
+        suffix="old",
+    )
+    decide(ledger, artifacts, proposal, first, assessment, suffix="old", minute=8)
+    second = register_candidate(
+        ledger,
+        graph_base,
+        [node_write("node:new", valid_from=boundary, supersedes="node:old")],
+        suffix="new",
+        minute=9,
+    )
+    second_proposal = propose(ledger, artifacts, second, suffix="new", minute=10)
+    second_assessment = assess(
+        ledger,
+        artifacts,
+        second_proposal,
+        suffix="new",
+        minute=11,
+    )
+    decide(
+        ledger,
+        artifacts,
+        second_proposal,
+        second,
+        second_assessment,
+        suffix="new",
+        minute=12,
+    )
+
+    projector = AcceptedGraphProjector(ledger)
+    prior = projector.current(valid_as_of=before)
+    uncertain = projector.current(valid_as_of=inside)
+    replacement = projector.current(valid_as_of=after)
+
+    assert prior.valid_time_state == "DETERMINATE"
+    assert prior.graph.has_node("node:old")
+    assert not prior.graph.has_node("node:new")
+    assert replacement.valid_time_state == "DETERMINATE"
+    assert not replacement.graph.has_node("node:old")
+    assert replacement.graph.has_node("node:new")
+
+    assert uncertain.valid_time_state == "INDETERMINATE"
+    assert uncertain.record_states == {
+        "node:new": "INDETERMINATE",
+        "node:old": "INDETERMINATE",
+    }
+    assert uncertain.definite_graph.node_count == 0
+    with pytest.raises(AcceptedGraphError, match="inspect indeterminate_transitions"):
+        _ = uncertain.graph
+    assert len(uncertain.indeterminate_transitions) == 1
+    transition = uncertain.indeterminate_transitions[0]
+    assert transition.prior_record_id == "node:old"
+    assert transition.replacement_record_id == "node:new"
+    assert transition.reason_code == reason_code
+    assert transition.reason == boundary.indeterminacy_reason
+    assert transition.valid_time == boundary
+    assert uncertain.valid_time_resolution_digest.startswith("sha256:")
+
+
+@pytest.mark.parametrize(
+    "boundary,reason_code",
+    [
+        (
+            ValidTime.order_only(
+                order_scope="service:114430",
+                order_index=2,
+                indeterminacy_reason=(
+                    "The invoice establishes operation order but no physical time."
+                ),
+            ),
+            "ORDER_ONLY_WITHOUT_ABSOLUTE_BOUNDARY",
+        ),
+        (
+            ValidTime.unresolved_prior_boundary(
+                indeterminacy_reason=(
+                    "The removed component has no established installation boundary."
+                )
+            ),
+            "UNRESOLVED_PRIOR_BOUNDARY",
+        ),
+    ],
+)
+def test_unbounded_indeterminacy_returns_the_extracted_reason(ledger, boundary, reason_code):
+    _, artifacts, candidate, proposal, assessment = prepared(
+        ledger,
+        write=node_write("node:uncertain", valid_from=boundary),
+    )
+    decide(ledger, artifacts, proposal, candidate, assessment, suffix="one", minute=8)
+    view = AcceptedGraphProjector(ledger).current(valid_as_of=VALID_2)
+    assert view.valid_time_state == "INDETERMINATE"
+    assert view.record_states == {"node:uncertain": "INDETERMINATE"}
+    transition = view.indeterminate_transitions[0]
+    assert transition.reason_code == reason_code
+    assert transition.reason == boundary.indeterminacy_reason
+    assert transition.earliest_possible is None
+    assert transition.latest_possible is None
+
+
 def test_visible_relation_requires_visible_endpoints(ledger):
     anchor(ledger)
     graph_base = register_graph_base(ledger)
     artifacts = setup_policy(ledger)
     writes = [
-        node_write("node:left", valid_to=VALID_1),
+        node_write("node:left", valid_to=EXACT_1),
         node_write("node:right"),
         temporal_write(
             ProposedOperation.relation(
@@ -1291,7 +1504,7 @@ def test_visible_relation_requires_visible_endpoints(ledger):
                 "node:right",
                 {"relation_type": "TEST_LINK"},
             ),
-            valid_from=VALID_0,
+            valid_from=EXACT_0,
         ),
     ]
     candidate = register_candidate(
@@ -1321,7 +1534,7 @@ def test_graph_base_is_required_and_must_match_external_graph(tmp_path, registry
     anchor(no_base)
     metadata = graph_base_metadata(KnowledgeGraph(registry), [])
     fields = {
-        "graph_schema_version": "1",
+        "graph_schema_version": "2",
         "graph_ontology_hash": "sha256:" + registry.content_hash(),
         "base_state_digest": KnowledgeGraph(registry).state_digest(),
         "base_record_metadata": metadata,
@@ -1370,7 +1583,7 @@ def test_graph_base_artifact_cannot_substitute_external_state(tmp_path, registry
                 base_state_digest=substituted,
                 base_record_metadata=metadata,
             ),
-            graph_schema_version="1",
+            graph_schema_version="2",
             graph_ontology_hash="sha256:" + registry.content_hash(),
             base_state_digest=substituted,
             base_record_metadata=metadata,
@@ -1427,19 +1640,29 @@ def test_nonempty_graph_base_requires_complete_valid_time_metadata(tmp_path, reg
     anchor(ledger)
     with pytest.raises(AcceptedGraphError, match="exactly cover graph records"):
         graph_base_metadata(base, [])
+    with pytest.raises(AcceptedGraphError, match="precision-aware object"):
+        graph_base_metadata(
+            base,
+            [{
+                "record_id": "node:base",
+                "valid_from": VALID_0,
+                "valid_to": None,
+                "supersedes_record_id": None,
+            }],
+        )
     metadata = graph_base_metadata(
         base,
         [
             {
                 "record_id": "node:base",
-                "valid_from": VALID_0,
-                "valid_to": VALID_1,
+                "valid_from": EXACT_0.as_dict(),
+                "valid_to": EXACT_1.as_dict(),
                 "supersedes_record_id": None,
             }
         ],
     )
     fields = {
-        "graph_schema_version": "1",
+        "graph_schema_version": "2",
         "graph_ontology_hash": "sha256:" + registry.content_hash(),
         "base_state_digest": base.state_digest(),
         "base_record_metadata": metadata,
@@ -1494,7 +1717,7 @@ def test_graph_base_round_trips_entity_event_and_signal(tmp_path, registry):
     intervals = [
         {
             "record_id": record_id,
-            "valid_from": VALID_0,
+            "valid_from": EXACT_0.as_dict(),
             "valid_to": None,
             "supersedes_record_id": None,
         }
@@ -1508,7 +1731,7 @@ def test_graph_base_round_trips_entity_event_and_signal(tmp_path, registry):
     ]
     metadata = graph_base_metadata(base, intervals)
     fields = {
-        "graph_schema_version": "1",
+        "graph_schema_version": "2",
         "graph_ontology_hash": "sha256:" + registry.content_hash(),
         "base_state_digest": base.state_digest(),
         "base_record_metadata": metadata,
@@ -1671,8 +1894,8 @@ class TestGraphBaseSupersessionLineage:
     def _interval(record_id, valid_from, valid_to, supersedes=None):
         return {
             "record_id": record_id,
-            "valid_from": valid_from,
-            "valid_to": valid_to,
+            "valid_from": valid_from.as_dict(),
+            "valid_to": valid_to.as_dict() if valid_to is not None else None,
             "supersedes_record_id": supersedes,
         }
 
@@ -1687,12 +1910,12 @@ class TestGraphBaseSupersessionLineage:
         register_graph_base(
             ledger,
             intervals=[
-                self._interval("node:one", VALID_0, VALID_1),
-                self._interval("node:two", VALID_1, None, "node:one"),
+                self._interval("node:one", EXACT_0, EXACT_1),
+                self._interval("node:two", EXACT_1, None, "node:one"),
             ],
         )
         metadata = ledger.replay().accepted_record_metadata
-        assert metadata["node:one"]["valid_to"] == VALID_1
+        assert metadata["node:one"]["valid_to"] == EXACT_1.as_dict()
         assert metadata["node:one"]["superseded_by"] == "node:two"
         assert metadata["node:one"]["supersedes_record_id"] is None
         assert metadata["node:two"]["supersedes_record_id"] == "node:one"
@@ -1709,8 +1932,8 @@ class TestGraphBaseSupersessionLineage:
         register_graph_base(
             ledger,
             intervals=[
-                self._interval("node:one", VALID_0, VALID_1),
-                self._interval("node:two", VALID_1, None, "node:one"),
+                self._interval("node:one", EXACT_0, EXACT_1),
+                self._interval("node:two", EXACT_1, None, "node:one"),
             ],
         )
         projector = AcceptedGraphProjector(ledger)
@@ -1738,29 +1961,29 @@ class TestGraphBaseSupersessionLineage:
         )
         if case == "self":
             intervals = [
-                self._interval("node:one", VALID_0, VALID_1, "node:one"),
-                self._interval("node:two", VALID_1, None),
+                self._interval("node:one", EXACT_0, EXACT_1, "node:one"),
+                self._interval("node:two", EXACT_1, None),
             ]
         elif case == "unknown":
             intervals = [
-                self._interval("node:one", VALID_0, VALID_1),
-                self._interval("node:two", VALID_1, None, "node:absent"),
+                self._interval("node:one", EXACT_0, EXACT_1),
+                self._interval("node:two", EXACT_1, None, "node:absent"),
             ]
         elif case == "fork":
             intervals = [
-                self._interval("node:one", VALID_0, VALID_1),
-                self._interval("node:three", VALID_1, None, "node:one"),
-                self._interval("node:two", VALID_1, None, "node:one"),
+                self._interval("node:one", EXACT_0, EXACT_1),
+                self._interval("node:three", EXACT_1, None, "node:one"),
+                self._interval("node:two", EXACT_1, None, "node:one"),
             ]
         elif case == "type":
             intervals = [
-                self._interval("node:one", VALID_0, VALID_1),
-                self._interval("node:two", VALID_1, None, "node:one"),
+                self._interval("node:one", EXACT_0, EXACT_1),
+                self._interval("node:two", EXACT_1, None, "node:one"),
             ]
         else:
             intervals = [
-                self._interval("node:one", VALID_0, VALID_2),
-                self._interval("node:two", VALID_1, None, "node:one"),
+                self._interval("node:one", EXACT_0, EXACT_2),
+                self._interval("node:two", EXACT_1, None, "node:one"),
             ]
         with pytest.raises(AcceptedGraphError, match=message):
             graph_base_metadata(graph, intervals)

@@ -49,7 +49,12 @@ LEXICAL_RANGES = {
 }
 
 BUILTIN_RANGES = frozenset(BASE_RANGES | set(LEXICAL_RANGES))
-FINGERPRINT_VERSION = 3
+LEGACY_FINGERPRINT_VERSION = 3
+FINGERPRINT_VERSION = 4
+
+_CLASS_EXPRESSION_KEYS = frozenset({"slot_conditions"})
+_SLOT_CONDITION_KEYS = frozenset({"required", "equals_string", "value_presence"})
+_VALUE_PRESENCE_VALUES = frozenset({"PRESENT", "ABSENT"})
 
 
 def bundled_ontology_path(*parts: str) -> Path:
@@ -130,6 +135,15 @@ class SlotConstraint:
     equals_string: str | None = None
     minimum_value: int | float | None = None
     maximum_value: int | float | None = None
+    inlined: bool | None = None
+    value_presence: str | None = None
+
+
+@dataclass(frozen=True)
+class ClassExpression:
+    """One supported flat LinkML class expression."""
+
+    slot_conditions: tuple[tuple[str, SlotConstraint], ...]
 
 
 @dataclass(frozen=True)
@@ -143,6 +157,7 @@ class TypeDef:
     is_mixin: bool = False
     abstract: bool = False
     mixins: tuple[str, ...] = ()
+    exactly_one_of: tuple[ClassExpression, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -158,10 +173,12 @@ def _constraint(data: Mapping[str, Any]) -> SlotConstraint:
         required=data.get("required") if "required" in data else None,
         range=data.get("range"),
         multivalued=data.get("multivalued") if "multivalued" in data else None,
+        inlined=data.get("inlined") if "inlined" in data else None,
         identifier=data.get("identifier") if "identifier" in data else None,
         equals_string=data.get("equals_string"),
         minimum_value=data.get("minimum_value"),
         maximum_value=data.get("maximum_value"),
+        value_presence=data.get("value_presence"),
     )
 
 
@@ -171,9 +188,9 @@ def _require_optional_type(subject: str, name: str, value: Any, expected: type) 
 
 
 def _validate_constraint_definition(subject: str, constraint: SlotConstraint) -> None:
-    for name in ("required", "multivalued", "identifier"):
+    for name in ("required", "multivalued", "inlined", "identifier"):
         _require_optional_type(subject, name, getattr(constraint, name), bool)
-    for name in ("range", "equals_string"):
+    for name in ("range", "equals_string", "value_presence"):
         _require_optional_type(subject, name, getattr(constraint, name), str)
     for name in ("minimum_value", "maximum_value"):
         value = getattr(constraint, name)
@@ -183,6 +200,22 @@ def _validate_constraint_definition(subject: str, constraint: SlotConstraint) ->
             or not math.isfinite(float(value))
         ):
             raise OntologyError(f"{subject} {name} must be a finite number")
+    if (
+        constraint.value_presence is not None
+        and constraint.value_presence not in _VALUE_PRESENCE_VALUES
+    ):
+        raise OntologyError(
+            f"{subject} value_presence must be one of "
+            f"{sorted(_VALUE_PRESENCE_VALUES)}"
+        )
+    if constraint.required and constraint.value_presence == "ABSENT":
+        raise OntologyError(
+            f"{subject} cannot be required and have value_presence ABSENT"
+        )
+    if constraint.equals_string is not None and constraint.value_presence == "ABSENT":
+        raise OntologyError(
+            f"{subject} cannot declare equals_string and have value_presence ABSENT"
+        )
 
 
 def _merge_constraint(base: SlotConstraint, override: SlotConstraint) -> SlotConstraint:
@@ -191,6 +224,52 @@ def _merge_constraint(base: SlotConstraint, override: SlotConstraint) -> SlotCon
         value = getattr(override, item.name)
         values[item.name] = getattr(base, item.name) if value is None else value
     return SlotConstraint(**values)
+
+
+def _conjoin_expression_constraint(
+    base: SlotConstraint,
+    condition: SlotConstraint,
+    subject: str,
+) -> SlotConstraint:
+    if (
+        base.equals_string is not None
+        and condition.equals_string is not None
+        and base.equals_string != condition.equals_string
+    ):
+        raise OntologyError(
+            f"{subject} has conflicting equals_string values "
+            f"'{base.equals_string}' and '{condition.equals_string}'"
+        )
+
+    base_presence = base.value_presence
+    condition_presence = condition.value_presence
+    if (
+        base_presence is not None
+        and condition_presence is not None
+        and base_presence != condition_presence
+    ):
+        raise OntologyError(
+            f"{subject} has conflicting value_presence values "
+            f"'{base_presence}' and '{condition_presence}'"
+        )
+
+    values = {item.name: getattr(base, item.name) for item in fields(SlotConstraint)}
+    if base.required is True or condition.required is True:
+        values["required"] = True
+    elif condition.required is not None:
+        values["required"] = condition.required
+    values["equals_string"] = (
+        condition.equals_string
+        if condition.equals_string is not None
+        else base.equals_string
+    )
+    values["value_presence"] = (
+        condition_presence
+        or base_presence
+    )
+    result = SlotConstraint(**values)
+    _validate_constraint_definition(subject, result)
+    return result
 
 
 def _utf8_encodable(value: str) -> bool:
@@ -209,13 +288,19 @@ def _canonical_constraint_value(value: Any) -> Any:
 
 
 def _constraint_dict(value: SlotConstraint) -> dict[str, Any]:
-    return {
-        item.name: _canonical_constraint_value(getattr(value, item.name))
-        for item in fields(SlotConstraint)
-    }
+    result = {}
+    for item in fields(SlotConstraint):
+        field_value = getattr(value, item.name)
+        # `inlined` was added after fingerprint version 3. Omitting its absent
+        # value preserves every ontology identity whose enforced behavior did
+        # not change.
+        if item.name in {"inlined", "value_presence"} and field_value is None:
+            continue
+        result[item.name] = _canonical_constraint_value(field_value)
+    return result
 
 
-_ABSENT_EQUALS_FALSE = ("required", "multivalued", "identifier")
+_ABSENT_EQUALS_FALSE = ("required", "multivalued", "inlined", "identifier")
 
 
 def _normalized_global_slot(constraint: SlotConstraint) -> SlotConstraint:
@@ -235,6 +320,84 @@ def _inert_usage(typedef: TypeDef, slot_name: str, constraint: SlotConstraint) -
     return slot_name in typedef.slots and all(
         getattr(constraint, item.name) is None for item in fields(SlotConstraint)
     )
+
+
+def _sparse_constraint_dict(value: SlotConstraint) -> dict[str, Any]:
+    return {
+        item.name: _canonical_constraint_value(field_value)
+        for item in fields(SlotConstraint)
+        if (field_value := getattr(value, item.name)) is not None
+    }
+
+
+def _expression_dict(expression: ClassExpression) -> dict[str, Any]:
+    return {
+        "slot_conditions": {
+            name: _sparse_constraint_dict(constraint)
+            for name, constraint in expression.slot_conditions
+        }
+    }
+
+
+def _expression_blob(expression: ClassExpression) -> str:
+    return json.dumps(_expression_dict(expression), sort_keys=True, separators=(",", ":"))
+
+
+def _parse_exactly_one_of(
+    subject: str,
+    definition: Mapping[str, Any],
+) -> tuple[ClassExpression, ...]:
+    for key in ("any_of", "all_of", "none_of"):
+        if key in definition:
+            raise OntologyError(
+                f"{subject} uses unsupported class expression key '{key}'"
+            )
+    if "exactly_one_of" not in definition:
+        return ()
+    raw_expressions = definition["exactly_one_of"]
+    if not isinstance(raw_expressions, list) or not raw_expressions:
+        raise OntologyError(f"{subject} exactly_one_of must be a nonempty list")
+    expressions = []
+    for index, raw_expression in enumerate(raw_expressions):
+        expression_subject = f"{subject} exactly_one_of[{index}]"
+        if not isinstance(raw_expression, Mapping):
+            raise OntologyError(f"{expression_subject} must be a mapping")
+        unsupported = sorted(set(raw_expression) - _CLASS_EXPRESSION_KEYS)
+        if unsupported:
+            raise OntologyError(
+                f"{expression_subject} uses unsupported expression keys: {unsupported}"
+            )
+        conditions = raw_expression.get("slot_conditions")
+        if not isinstance(conditions, Mapping) or not conditions:
+            raise OntologyError(
+                f"{expression_subject} slot_conditions must be a nonempty mapping"
+            )
+        parsed_conditions = []
+        for slot_name, raw_condition in conditions.items():
+            condition_subject = f"{expression_subject} slot '{slot_name}'"
+            if not isinstance(slot_name, str):
+                raise OntologyError(
+                    f"{expression_subject} slot condition names must be strings"
+                )
+            if not isinstance(raw_condition, Mapping):
+                raise OntologyError(f"{condition_subject} must be a mapping")
+            unsupported = sorted(set(raw_condition) - _SLOT_CONDITION_KEYS)
+            if unsupported:
+                raise OntologyError(
+                    f"{condition_subject} uses unsupported condition keys: {unsupported}"
+                )
+            condition = _constraint(raw_condition)
+            _validate_constraint_definition(condition_subject, condition)
+            if all(
+                getattr(condition, item.name) is None
+                for item in fields(SlotConstraint)
+            ):
+                raise OntologyError(f"{condition_subject} must declare a constraint")
+            parsed_conditions.append((slot_name, condition))
+        expressions.append(
+            ClassExpression(tuple(sorted(parsed_conditions, key=lambda item: item[0])))
+        )
+    return tuple(sorted(expressions, key=_expression_blob))
 
 
 class OntologyRegistry:
@@ -395,6 +558,10 @@ class OntologyRegistry:
                 is_mixin=bool(definition.get("mixin", False)),
                 abstract=bool(definition.get("abstract", False)),
                 mixins=tuple(dict.fromkeys(mixins)),
+                exactly_one_of=_parse_exactly_one_of(
+                    f"Class '{name}'",
+                    definition,
+                ),
             )
             self._types[name] = typedef
             self._inheritance[name] = typedef.parent
@@ -472,7 +639,10 @@ class OntologyRegistry:
         for name, typedef in self._types.items():
             for slot_name, slot in typedef.slot_usage.items():
                 self._validate_slot_range(f"Class '{name}' slot '{slot_name}'", slot)
-            self.effective_slots(name)
+            for slot_name, slot in self.effective_slots(name).items():
+                subject = f"Class '{name}' effective slot '{slot_name}'"
+                _validate_constraint_definition(subject, slot)
+                self._validate_slot_range(subject, slot)
 
         for name, typedef in self._types.items():
             if name != "Relation" and self.is_subtype_of(name, "Relation") and not typedef.abstract:
@@ -503,6 +673,29 @@ class OntologyRegistry:
         # unordered because order is unobservable.
         for name in self._types:
             self.effective_slots(name)
+        for name in self._types:
+            slots = self.effective_slots(name)
+            for group_index, group in enumerate(
+                self._class_expression_groups(name, ())
+            ):
+                for expression_index, expression in enumerate(group):
+                    for slot_name, override in expression.slot_conditions:
+                        if slot_name not in slots:
+                            raise OntologyError(
+                                f"Class '{name}' exactly_one_of[{group_index}]"
+                                f"[{expression_index}] references unknown slot "
+                                f"'{slot_name}'"
+                            )
+                        subject = (
+                            f"Class '{name}' exactly_one_of[{group_index}]"
+                            f"[{expression_index}] slot '{slot_name}'"
+                        )
+                        constraint = _conjoin_expression_constraint(
+                            slots[slot_name],
+                            override,
+                            subject,
+                        )
+                        self._validate_slot_range(subject, constraint)
 
     def _validate_slot_range(self, subject: str, slot: SlotConstraint) -> None:
         if slot.range and not self._known_range(slot.range):
@@ -666,12 +859,99 @@ class OntologyRegistry:
             for name in sorted(set(data) - set(slots))
         ]
         for name, slot in slots.items():
-            if slot.required and self._missing_required(name, data):
+            if (
+                slot.required or slot.value_presence == "PRESENT"
+            ) and self._missing_required(name, data):
                 errors.append(f"Required slot '{name}' missing for {type_name}")
+            if slot.value_presence == "ABSENT" and name in data:
+                errors.append(f"Property '{name}' must be absent for {type_name}")
         for name, value in data.items():
             slot = slots.get(name)
-            if slot is not None and value is not None:
+            if (
+                slot is not None
+                and slot.value_presence != "ABSENT"
+                and value is not None
+            ):
                 errors.extend(self._validate_value(name, value, slot))
+        errors.extend(self._validate_class_expressions(type_name, data, slots))
+        return errors
+
+    def _validate_class_expressions(
+        self,
+        type_name: str,
+        data: Mapping[str, Any],
+        slots: Mapping[str, SlotConstraint],
+    ) -> list[str]:
+        errors = []
+        for group in self._class_expression_groups(type_name, ()):
+            results = [
+                self._class_expression_errors(expression, data, slots)
+                for expression in group
+            ]
+            matches = [index for index, result in enumerate(results) if not result]
+            if len(matches) == 1:
+                continue
+            if matches:
+                detail = f"matched alternatives {matches}"
+            else:
+                _, nearest = min(
+                    enumerate(results),
+                    key=lambda item: (len(item[1]), _expression_blob(group[item[0]])),
+                )
+                detail = "nearest alternative: " + "; ".join(nearest)
+            errors.append(
+                f"Class '{type_name}' must satisfy exactly one declared "
+                f"alternative; matched {len(matches)}; {detail}"
+            )
+        return errors
+
+    def _class_expression_groups(
+        self,
+        type_name: str,
+        trail: tuple[str, ...],
+    ) -> tuple[tuple[ClassExpression, ...], ...]:
+        if type_name in trail:
+            return ()
+        typedef = self._types[type_name]
+        next_trail = (*trail, type_name)
+        groups = []
+        if typedef.parent:
+            groups.extend(self._class_expression_groups(typedef.parent, next_trail))
+        for mixin in typedef.mixins:
+            groups.extend(self._class_expression_groups(mixin, next_trail))
+        if typedef.exactly_one_of:
+            groups.append(typedef.exactly_one_of)
+        return tuple(dict.fromkeys(groups))
+
+    def _class_expression_errors(
+        self,
+        expression: ClassExpression,
+        data: Mapping[str, Any],
+        slots: Mapping[str, SlotConstraint],
+    ) -> list[str]:
+        errors = []
+        for name, override in expression.slot_conditions:
+            constraint = _conjoin_expression_constraint(
+                slots[name],
+                override,
+                f"Expression slot '{name}'",
+            )
+            if constraint.value_presence == "ABSENT":
+                if name in data:
+                    errors.append(f"Property '{name}' must be absent")
+                continue
+            if (
+                constraint.required or constraint.value_presence == "PRESENT"
+            ) and self._missing_required(name, data):
+                errors.append(f"missing {name} (required slot '{name}')")
+                continue
+            if name not in data or data[name] is None:
+                if constraint.equals_string is not None:
+                    errors.append(
+                        f"Property '{name}' must equal '{constraint.equals_string}'"
+                    )
+                continue
+            errors.extend(self._validate_value(name, data[name], constraint))
         return errors
 
     @staticmethod
@@ -733,8 +1013,17 @@ class OntologyRegistry:
             if not isinstance(value, str) or value not in self._enums[range_name].values:
                 valid = sorted(self._enums[range_name].values)
                 errors.append(f"Invalid value '{value}' for {name}. Valid: {valid}")
-        elif range_name in self._types and (not isinstance(value, str) or not value.strip()):
-            errors.append(f"Reference '{name}' must be a nonblank identifier")
+        elif range_name in self._types:
+            if slot.inlined:
+                if not isinstance(value, Mapping):
+                    errors.append(f"Inlined property '{name}' must be a mapping")
+                else:
+                    errors.extend(
+                        f"Inlined property '{name}': {error}"
+                        for error in self.validate_instance(range_name, value)
+                    )
+            elif not isinstance(value, str) or not value.strip():
+                errors.append(f"Reference '{name}' must be a nonblank identifier")
 
         if slot.equals_string is not None and value != slot.equals_string:
             errors.append(
@@ -763,7 +1052,7 @@ class OntologyRegistry:
         """Return the versioned hash of every enforced structural fact."""
         if not hasattr(self, "_cached_hash"):
             canonical = {
-                "fingerprint_version": FINGERPRINT_VERSION,
+                "fingerprint_version": self._fingerprint_version(),
                 "types": {
                     name: {
                         "parent": typedef.parent,
@@ -776,6 +1065,16 @@ class OntologyRegistry:
                         "is_mixin": typedef.is_mixin,
                         "abstract": typedef.abstract,
                         "mixins": sorted(typedef.mixins),
+                        **(
+                            {
+                                "exactly_one_of": [
+                                    _expression_dict(expression)
+                                    for expression in typedef.exactly_one_of
+                                ]
+                            }
+                            if typedef.exactly_one_of
+                            else {}
+                        ),
                     }
                     for name, typedef in sorted(self._types.items())
                 },
@@ -796,7 +1095,7 @@ class OntologyRegistry:
     def fingerprint(self) -> frozenset[str]:
         """Return producer-side structural facts, excluding required constraints."""
         if not hasattr(self, "_cached_fingerprint"):
-            facts = {f"fingerprint_version:{FINGERPRINT_VERSION}"}
+            facts = {f"fingerprint_version:{self._fingerprint_version()}"}
             for name, typedef in self._types.items():
                 facts.add(f"type:{name}")
                 if typedef.parent:
@@ -819,6 +1118,15 @@ class OntologyRegistry:
                 # (slots:, slot_usage:, parent, mixin) is a fact.
                 for slot_name in self.effective_slots(name):
                     facts.add(f"type:{name}:effective_slot:{slot_name}")
+                if typedef.exactly_one_of:
+                    expressions = [
+                        _expression_dict(expression)
+                        for expression in typedef.exactly_one_of
+                    ]
+                    facts.add(
+                        f"type:{name}:exactly_one_of:"
+                        + json.dumps(expressions, sort_keys=True, separators=(",", ":"))
+                    )
             for name, definition in self._enums.items():
                 facts.add(f"enum:{name}")
                 facts.update(f"enum:{name}:{value}" for value in definition.values)
@@ -832,16 +1140,34 @@ class OntologyRegistry:
             self._cached_fingerprint = frozenset(facts)
         return self._cached_fingerprint
 
+    def _fingerprint_version(self) -> int:
+        if any(typedef.exactly_one_of for typedef in self._types.values()):
+            return FINGERPRINT_VERSION
+        if any(
+            constraint.inlined is True or constraint.value_presence is not None
+            for constraint in self._slots.values()
+        ):
+            return FINGERPRINT_VERSION
+        if any(
+            constraint.inlined is not None or constraint.value_presence is not None
+            for typedef in self._types.values()
+            for constraint in typedef.slot_usage.values()
+        ):
+            return FINGERPRINT_VERSION
+        return LEGACY_FINGERPRINT_VERSION
+
     @staticmethod
     def _constraint_facts(prefix: str, constraint: SlotConstraint) -> set[str]:
         facts = set()
         for name in (
             "range",
             "multivalued",
+            "inlined",
             "identifier",
             "equals_string",
             "minimum_value",
             "maximum_value",
+            "value_presence",
         ):
             value = getattr(constraint, name)
             if value is not None:

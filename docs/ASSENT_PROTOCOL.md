@@ -39,8 +39,8 @@ monitor outputs were observed.
 
 Stage 7b adds `GraphBaseArtifact`, `CandidateSubgraphArtifact`, and
 `AcceptedGraphApplication`. The graph base commits the external graph used to
-seed replay. The candidate artifact contains the exact ordered structural
-writes and an explicit valid-time envelope for each write. The proposal and
+seed replay. The candidate artifact contains the ordered structural writes and
+a precision-aware valid-time boundary for each write. The proposal and
 decision bind the candidate by ID, record hash, and candidate digest. An
 accepted application binds that proposal, decision, candidate, ontology,
 acceptance heads, materialization heads, and graph state digests in one event.
@@ -273,8 +273,31 @@ graph. Non-accepting verdicts forbid applications. Epistemic acceptance can
 therefore change accepted knowledge, but it cannot authorize or execute an
 action.
 
-`AcceptedGraphProjector.current()` and `.as_of()` require explicit valid time.
-Intervals use `valid_from <= query < valid_to`; a missing end is unbounded.
+`AcceptedGraphProjector.current()` and `.as_of()` require an explicit,
+timezone-aware query instant. Exact intervals use
+`valid_from <= query < valid_to`; a missing end is unbounded. A valid-time
+boundary is one of `EXACT_TIMESTAMP`, `CALENDAR_DAY`, `BOUNDED_INTERVAL`,
+`ORDER_ONLY`, or `UNRESOLVED_PRIOR_BOUNDARY`. Calendar days require an IANA
+timezone and the canonical object records the timezone database version,
+including when source material crosses countries. Runtime interpretation loads
+the pinned `tzdata==2026.3` database directly rather than host operating-system
+rules. Canonical values record its IANA release, `2026c`. Every non-exact
+boundary requires an extracted `indeterminacy_reason`;
+the candidate manifest and supporting `ClaimVersion` hash the same canonical
+object. Version 0.11.0 rejects any other stored timezone-database version and
+provides no cross-version migration utility.
+
+Before the earliest possible transition the prior record is definite. At or
+after the latest possible transition the replacement is definite. Inside the
+window both record memberships are `INDETERMINATE`. When the definite records
+remain structurally closed, the view exposes their graph, every record's
+three-valued state, the prior and replacement IDs, the machine reason code, the
+extracted reason, the bounds, and a separate resolution digest. Accessing
+`.graph` on an indeterminate view fails loudly; `.definite_graph` remains
+available. A definite record whose required endpoint is unavailable makes the
+projection structurally incomplete and refuses. Dependency-closed propagation
+of endpoint uncertainty is not implemented.
+
 Transaction-time views use the ledger event prefix, with sequence as the tie
 breaker. A retroactive revision affects only transaction prefixes that include
 the later revision. Active relations whose endpoints are not active fail

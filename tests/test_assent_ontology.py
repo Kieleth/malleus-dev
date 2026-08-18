@@ -1,12 +1,34 @@
 """Ontology-level separation guarantees for the assent protocol."""
 
+import json
+import subprocess
+import sys
 from pathlib import Path
+
+import pytest
+from linkml_runtime.utils.schemaview import SchemaView
 
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ontology import OntologyRegistry
+from malleus.valid_time import ValidTime, ValidTimeError
 
 
 ASSENT_SCHEMA = Path(__file__).parent.parent / "ontology" / "assent.yaml"
+
+
+def claim_version_properties(valid_time):
+    return {
+        "content_hash": "sha256:" + "0" * 64,
+        "generation_event_id": "event:1",
+        "generated_at": "2026-08-17T00:00:00+00:00",
+        "responsible_actor_id": "actor:1",
+        "responsible_role": "proposer",
+        "source_record_ids": [],
+        "claim_key": "claim:alpha",
+        "revision": 1,
+        "statement": "A claim with an explicit valid-time boundary.",
+        "domain_valid_from": valid_time,
+    }
 
 
 def test_assent_ontology_loads_with_disjoint_outcome_vocabularies():
@@ -41,6 +63,220 @@ def test_assent_ontology_loads_with_disjoint_outcome_vocabularies():
         "DEFER",
         "CONTEST",
     }
+    assert registry.get_enum_values("ValidTimePrecision") == {
+        "EXACT_TIMESTAMP",
+        "CALENDAR_DAY",
+        "BOUNDED_INTERVAL",
+        "ORDER_ONLY",
+        "UNRESOLVED_PRIOR_BOUNDARY",
+    }
+
+
+def test_claim_and_revision_times_use_the_same_inlined_valid_time_object():
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    for record_type, field in (
+        ("ClaimVersion", "domain_valid_from"),
+        ("ClaimVersion", "domain_valid_to"),
+        ("ClaimRevision", "replacement_valid_from"),
+        ("ClaimRevision", "replaced_valid_to"),
+    ):
+        constraint = registry.get_slot_constraint(record_type, field)
+        assert constraint.range == "ValidTime"
+        assert constraint.inlined is True
+    exact = {
+        "valid_time_precision": "EXACT_TIMESTAMP",
+        "exact_timestamp": "2026-01-27T12:00:00-08:00",
+    }
+    assert registry.validate_instance("ValidTime", exact) == []
+    errors = registry.validate_instance(
+        "ClaimVersion",
+        {"domain_valid_from": exact["exact_timestamp"]},
+    )
+    assert any("Inlined property 'domain_valid_from' must be a mapping" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        {
+            "valid_time_precision": "EXACT_TIMESTAMP",
+            "exact_timestamp": "2026-08-17T00:00:00+00:00",
+        },
+        {
+            "valid_time_precision": "CALENDAR_DAY",
+            "calendar_date": "2026-08-17",
+            "timezone": "America/Los_Angeles",
+            "timezone_database_version": "2026c",
+            "indeterminacy_reason": "The source establishes only a day.",
+        },
+        {
+            "valid_time_precision": "BOUNDED_INTERVAL",
+            "earliest_possible": "2026-08-17T00:00:00+00:00",
+            "latest_possible": "2026-08-18T00:00:00+00:00",
+            "indeterminacy_reason": "The source establishes an interval.",
+        },
+        {
+            "valid_time_precision": "ORDER_ONLY",
+            "order_scope": "claim:alpha",
+            "order_index": 2,
+            "indeterminacy_reason": "The source establishes only order.",
+        },
+        {
+            "valid_time_precision": "UNRESOLVED_PRIOR_BOUNDARY",
+            "indeterminacy_reason": "The prior boundary is not recoverable.",
+        },
+    ],
+)
+def test_valid_time_exactly_one_of_accepts_each_canonical_variant(value):
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.validate_instance("ValidTime", value) == []
+
+
+@pytest.mark.parametrize(
+    ("value", "detail"),
+    [
+        ({"valid_time_precision": "EXACT_TIMESTAMP"}, "exact_timestamp"),
+        (
+            {
+                "valid_time_precision": "CALENDAR_DAY",
+                "calendar_date": "2026-08-17",
+                "timezone": "America/Los_Angeles",
+                "timezone_database_version": "2026c",
+            },
+            "indeterminacy_reason",
+        ),
+        (
+            {
+                "valid_time_precision": "BOUNDED_INTERVAL",
+                "earliest_possible": "2026-08-17T00:00:00+00:00",
+                "indeterminacy_reason": "The upper bound is missing.",
+            },
+            "latest_possible",
+        ),
+        (
+            {
+                "valid_time_precision": "ORDER_ONLY",
+                "order_scope": "claim:alpha",
+                "indeterminacy_reason": "The index is missing.",
+            },
+            "order_index",
+        ),
+        (
+            {"valid_time_precision": "UNRESOLVED_PRIOR_BOUNDARY"},
+            "indeterminacy_reason",
+        ),
+    ],
+)
+def test_valid_time_exactly_one_of_rejects_incomplete_variants(value, detail):
+    errors = OntologyRegistry(ASSENT_SCHEMA).validate_instance("ValidTime", value)
+    assert any("matched 0" in error and detail in error for error in errors)
+
+
+@pytest.mark.parametrize("forbidden", ["unexpected", None])
+def test_valid_time_exact_variant_rejects_present_reason_even_when_null(forbidden):
+    value = {
+        "valid_time_precision": "EXACT_TIMESTAMP",
+        "exact_timestamp": "2026-08-17T00:00:00+00:00",
+        "indeterminacy_reason": forbidden,
+    }
+    errors = OntologyRegistry(ASSENT_SCHEMA).validate_instance("ValidTime", value)
+    assert any("indeterminacy_reason" in error and "absent" in error for error in errors)
+
+
+def test_valid_time_calendar_day_rejects_unpinned_timezone_database():
+    value = {
+        "valid_time_precision": "CALENDAR_DAY",
+        "calendar_date": "2026-08-17",
+        "timezone": "America/Los_Angeles",
+        "timezone_database_version": "2025b",
+        "indeterminacy_reason": "The source establishes only a day.",
+    }
+    errors = OntologyRegistry(ASSENT_SCHEMA).validate_instance("ValidTime", value)
+    assert any("timezone_database_version" in error and "2026c" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        {
+            "valid_time_precision": "EXACT_TIMESTAMP",
+            "exact_timestamp": "2026-08-17T00:00:00",
+        },
+        {
+            "valid_time_precision": "BOUNDED_INTERVAL",
+            "earliest_possible": "2026-08-18T00:00:00+00:00",
+            "latest_possible": "2026-08-17T00:00:00+00:00",
+            "indeterminacy_reason": "The interval order is invalid.",
+        },
+    ],
+)
+def test_valid_time_lexical_and_temporal_semantics_remain_runtime_checked(value):
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    assert registry.validate_instance("ValidTime", value) == []
+    with pytest.raises(ValidTimeError):
+        ValidTime.from_value(value)
+
+
+def test_malformed_inlined_valid_time_cannot_commit_a_claim_version():
+    graph = KnowledgeGraph(OntologyRegistry(ASSENT_SCHEMA))
+    operation = graph.create_entity(
+        "ClaimVersion",
+        "claim-version:malformed-time",
+        claim_version_properties(
+            {
+                "valid_time_precision": "EXACT_TIMESTAMP",
+            }
+        ),
+    )
+    assert operation.op_status is OpStatus.REJECTED
+    assert "exact_timestamp" in operation.rejection_reason
+    assert graph.canonical_operations() == ()
+
+
+def test_standalone_kg_validates_shape_not_valid_time_runtime_semantics():
+    naive_time = {
+        "valid_time_precision": "EXACT_TIMESTAMP",
+        "exact_timestamp": "2026-08-17T00:00:00",
+    }
+    graph = KnowledgeGraph(OntologyRegistry(ASSENT_SCHEMA))
+    operation = graph.create_entity(
+        "ClaimVersion",
+        "claim-version:structural-time",
+        claim_version_properties(naive_time),
+    )
+    assert operation.op_status is OpStatus.COMMITTED
+    with pytest.raises(ValidTimeError, match="timezone"):
+        ValidTime.from_value(naive_time)
+
+
+def test_official_linkml_loads_union_and_smoke_generates_json_schema():
+    schema_view = SchemaView(str(ASSENT_SCHEMA))
+    valid_time = schema_view.get_class("ValidTime")
+    assert valid_time is not None
+    assert len(valid_time.exactly_one_of) == 5
+    assert {
+        str(expression.slot_conditions["valid_time_precision"].equals_string)
+        for expression in valid_time.exactly_one_of
+    } == {
+        "EXACT_TIMESTAMP",
+        "CALENDAR_DAY",
+        "BOUNDED_INTERVAL",
+        "ORDER_ONLY",
+        "UNRESOLVED_PRIOR_BOUNDARY",
+    }
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "linkml.generators.jsonschemagen",
+            str(ASSENT_SCHEMA),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    generated = json.loads(result.stdout)
+    assert "ValidTime" in generated["$defs"]
 
 
 def test_records_assessments_and_failures_are_distinct_categories():

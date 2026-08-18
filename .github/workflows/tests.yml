@@ -44,7 +44,7 @@ jobs:
 
       - name: Run GraphRecipe conformance slice
         run: |
-          python -m ruff check research/ontology_driven_kg_realization/experiments/graph_recipe
+          python -m ruff check src/malleus research/ontology_driven_kg_realization/experiments/graph_recipe
           PYTHONPATH=src python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py
 
       - name: Build wheel and smoke-test it in a clean environment
@@ -52,7 +52,6 @@ jobs:
         # referencing missing files is invisible to pytest. Build the real
         # artifact and invoke its console script on every push and PR.
         run: |
-          pip install build
           python -m build --wheel
           python -m venv /tmp/wheel-smoke
           /tmp/wheel-smoke/bin/pip install --quiet dist/*.whl

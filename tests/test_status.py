@@ -61,6 +61,18 @@ def test_stage_eight_c_boundary_is_explicit():
     assert "atomic-assent-gated-materialization" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "accepted-graph-projection" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "bitemporal-as-of-replay" in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "precision-aware-valid-time-boundaries" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "iana-timezone-calendar-day-enforcement" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "three-valued-valid-time-projection" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
+    assert "indeterminacy-reason-commitments" in (
+        IMPLEMENTATION_STATUS.implemented_capabilities
+    )
     assert "typed-authorization-policies" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "action-bound-authorization-policy" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert "evidence-assertion-recording" in IMPLEMENTATION_STATUS.implemented_capabilities
@@ -95,8 +107,8 @@ def test_stage_eight_c_boundary_is_explicit():
     )
 
 
-def test_recon_tooling_release_keeps_the_core_stage_boundary():
-    assert IMPLEMENTATION_STATUS.package_version == "0.10.0"
+def test_011_release_keeps_the_core_stage_boundary():
+    assert IMPLEMENTATION_STATUS.package_version == "0.11.0"
     assert IMPLEMENTATION_STATUS.current_stage == "8c"
     assert {
         "typed-literature-review-ledger",
@@ -104,6 +116,14 @@ def test_recon_tooling_release_keeps_the_core_stage_boundary():
         "deterministic-recon-artifact-builds",
         "legacy-literature-kg-v1-import",
     } <= set(IMPLEMENTATION_STATUS.implemented_capabilities)
+    assert "graph-recipe" not in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "contract-frontend" not in IMPLEMENTATION_STATUS.implemented_capabilities
+    assert "historical-timezone-database-migration" in (
+        IMPLEMENTATION_STATUS.pending_capabilities
+    )
+    assert "dependency-closed-valid-time-projection" in (
+        IMPLEMENTATION_STATUS.pending_capabilities
+    )
 
 
 def test_capability_status_sets_are_unique_and_disjoint():

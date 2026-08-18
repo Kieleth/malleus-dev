@@ -2,20 +2,21 @@
 
 Design status: accepted pillar, candidate protocol and completeness claim
 
-Design revision: 6
+Design revision: 7
 
 Decision authority: author
 
-Accepted decision: `OKG-D000`, ontology-driven KG realization is a pillar
+Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
+`OKG-D012`, LinkML is the replaceable first-party contract frontend for v0
 
 Decision date: 2026-08-17
 
 Repository snapshot: `codex/malleus-recon` at
-`384ecc37917c8191d17ffa44867024a36dfdd313`
+`1657e6564c1f8ab872d56b9ec97e34a015fce765`
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 7,
-`sha256:0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`
+revision 9,
+`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
 
 Evidence cutoff: 2026-08-17
 
@@ -53,7 +54,8 @@ path. It produces an exact construction plan whose operations pass through the
 existing structural gate, staging, monitoring, decision, and materialization
 mechanisms.
 
-The pillar is accepted. The object model, wire formats, template formalism,
+The pillar, OTTR recipe formalism, and replaceable LinkML frontend boundary are
+accepted. The exact contract object model, backend profiles, mapping artifacts,
 ledger integration, and public API remain candidate design.
 
 ## 2. “KG structure” names four different things
@@ -753,8 +755,11 @@ Reuse: effective-schema derivation and target generation.
 
 Malleus composition: a frontend-independent contract identity, a declared
 support profile, fail-closed unsupported semantics, target coverage and loss,
-and runtime conformance tests. LinkML is a reference frontend, not a mandatory
-runtime dependency.
+and runtime conformance tests. `OKG-D012` selects official,
+execution-identified LinkML as the sole first-party v0 frontend, not as a
+mandatory runtime dependency. A custom frontend may replace it only by
+emitting the same normative intermediate and passing the same conformance
+boundary.
 
 ### 9.2 Source mapping and population
 
@@ -1101,18 +1106,22 @@ The results may inform frontend-neutrality, logical-derivation, no-bypass,
 evidence, governance, and execution-identity experiments. They do not discharge
 those experiments. The report binds 149 checksummed corpus files, 10 case
 receipts, and 7 executable metamorphic obligations. Its identity is
-`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`;
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`;
 the checksum-set identity is
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
 Removing an unused runner import changed the report's bound execution bytes.
-The hard identity guard rejected the stale report and forced a
-dependency-closed refresh. The active report identity supersedes retained
-identity
+The hard identity guard rejected the stale report and produced retained identity
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-The unchanged checksum-set identity and unchanged 39-test result do not erase
-the runner-identity change. Both dedicated CI steps now require a clean Ruff
-check over the full GraphRecipe runner directory before the slice tests.
+The current refresh binds the changed direct-core and package-boundary bytes and
+package version `0.11.0`; its active identity above supersedes the retained
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
+identity. The unchanged checksum-set identity and unchanged
+39-test result do not erase either identity change. Both dedicated CI steps
+require a clean Ruff check over the full GraphRecipe runner directory before the
+slice tests.
 
 The claim is expressly not universal. It does not cover undeclared protocols,
 arbitrary future components, all profile versions, all backends, all workloads,
@@ -1192,10 +1201,17 @@ backend, broad workload quality, or public capability. Those remain in
 11. `OKG-D011`, CI split, was **accepted on 2026-08-17**. The offline Malleus
     corpus is primary and a separate pinned Lutra job is the required
     differential oracle once its tool lock exists.
+12. `OKG-D012`, contract frontend and modularity policy, was **accepted on
+    2026-08-17**. Official, execution-identified LinkML is the sole first-party
+    v0 authoring frontend. The compiled runtime remains LinkML-free, direct
+    facts remain bootstrap and conformance inputs, and a custom frontend may
+    replace LinkML only through the same normative artifact boundary and
+    conformance suite.
 
-`OKG-D001` and `OKG-D007` through `OKG-D011` are closed. OTTR is sufficient for
-the narrowed topology role, and the five experiment-exposed microdecisions are
-accepted design. A later change requires addressable counterevidence and a
+`OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
+the narrowed topology role, the five experiment-exposed microdecisions are
+accepted design, and LinkML is selected without becoming a privileged protocol
+dependency. A later change requires addressable counterevidence and a
 superseding decision, not an implicit implementation choice.
 
 The literature and local implementation audits are closed for this design
@@ -1208,17 +1224,19 @@ GraphRecipe branch resumes at `GE-030` without changing that main sequence.
 
 Performed on 2026-08-17:
 
-1. The 25 Turtle blocks across the foundation, pillar, GraphRecipe profile,
+1. The 27 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,000 RDF triples.
+   1,071 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,000 triples. Both directed set differences
+   the same 1,071 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 84 nodes and 85 edges, with no directed
+3. The canonical `dependsOn` graph has 91 nodes and 90 edges, with no directed
    dependency cycle.
-4. All 193 subjects carrying `mfg:status` have
-   exactly one distinct status.
-5. `OKG-D007` through `OKG-D011` each have exactly `DecisionRecord`,
+4. All 209 subjects carrying `mfg:status` have exactly one distinct status.
+   The 0.11 temporal slice has the required three dependency edges, two
+   implemented capabilities, two open obligations, and one implemented
+   observation binding all four.
+5. `OKG-D007` through `OKG-D012` each have exactly `DecisionRecord`,
    `decidedBy Author`, `decisionDate "2026-08-17"`, and
    `status AcceptedDesign`.
 6. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
@@ -1234,10 +1252,10 @@ Performed on 2026-08-17:
    addressable refresh observation binds the runner-byte change to the hard
    identity guard. Both workflow-step nodes bind the Ruff gate and the 39-test
    fixture.
-10. The canonical body contains 1,000 unique, lexically sorted N-Triples. Its
+10. The canonical body contains 1,071 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`, and every
-   owned Markdown graph reference names revision 7 and that digest.
+   `046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`, and every
+   owned Markdown graph reference names revision 9 and that digest.
 11. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 12. None of the five owned Markdown documents or the canonical Turtle artifact

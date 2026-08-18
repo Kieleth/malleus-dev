@@ -499,7 +499,7 @@ check_compatibility(foreign_hash, foreign_fingerprint) →
   "divergent"  neither is a superset (incompatible fork)
 ```
 
-Under additive-only evolution (adding types, enum values, slots, or relaxing required constraints), a newer ontology's fingerprint is always a strict superset of an older one's. The check is a set-membership test: `foreign_fingerprint ⊆ my_fingerprint`.
+Within one fingerprint format, adding represented types, enum values, or slots makes the newer ontology's fingerprint a strict superset of the older one's. The check is a set-membership test: `foreign_fingerprint ⊆ my_fingerprint`. A fingerprint-format transition is different: version 3 and version 4 contain different format facts and fail closed as `divergent`.
 
 ```
 Node A (ontology v2)          Node B (ontology v1)
@@ -514,24 +514,29 @@ fp_A = {type:Drug,            fp_B = {type:Drug,
                                       
          B sends data to A:
          A.check_compatibility(h_B, fp_B) = "superset"
-         → A accepts: B's data validates against older fp, A's ontology supports it.
+         → A's policy may accept after validating B's data against A's schema.
          
          A sends data to B:
          B.check_compatibility(h_A, fp_A) = "subset"
-         → B quarantines entries using types it doesn't know yet,
-           replays them when B upgrades to v2.
+         → B's application policy may quarantine entries using unknown types
+           and replay them after B upgrades to v2.
 ```
 
-**What's excluded from the default fingerprint, and why that matters.** Required/optional flags are deliberately left out, because additive-only evolution permits relaxation (required → optional) and the default check is meant to answer the producer question: "can data produced under their schema flow safely into mine?" Under relaxation, yes, a newer producer can send data without a field the older schema marked required, and the sync doesn't care (the consumer's validator will).
+The arrows describe application policy. Core Malleus only returns the relation
+label; it does not accept, quarantine, store, or replay peer writes.
+
+**What's excluded from the default fingerprint, and why that matters.** Required/optional flags are deliberately left out. Relaxing a slot from required to optional leaves the lax fact sets equal, so the default fingerprint cannot identify that a presence guarantee disappeared. `check_compatibility()` is a structural set comparison, not proof that data can flow safely in either direction.
 
 That's the soft spot. Relaxation is additive for the producer and subtractive for the consumer, because code written against the old schema may have hardcoded the field's presence. The library surfaces this through a second pair of APIs:
 
 - `OntologyRegistry.strict_fingerprint()` includes required-constraint facts (one per required slot usage).
 - `OntologyRegistry.check_compatibility_strict()` uses it.
 
-A relaxation breaks the strict superset check: the schema that relaxed has fewer required-facts, so its strict fingerprint is no longer a superset. The strict check returns "divergent" where the lax check would have returned "superset". Use the strict variant when your downstream code relies on presence assumptions.
+A relaxation removes a strict required fact. When the old required side compares itself with the relaxed side, `check_compatibility_strict()` returns `superset`; in the reverse direction, the relaxed side returns `subset`. It does not return `divergent`. Caller policy must interpret every non-`identical` result in the direction data will flow, especially when downstream code relies on field presence.
 
-Tightening (optional → required) is not an additive change and isn't supported under either guarantee.
+Tightening (optional → required) adds a strict required fact, producing the
+opposite `superset`/`subset` directions. It is also a caller-policy decision,
+not proof that either data-flow direction is safe.
 
 **Tests** verify: hash determinism, SHA-256 format, distinct schemas produce distinct hashes, caching, fingerprint content (types, mixins, enum values, serialization), strict-superset relationships (root ⊂ cyp450, root ⊂ attack), divergence (cyp450 and attack share root but diverge on domain types), all four `check_compatibility` outcomes, and that strict fingerprints catch constraint relaxation.
 

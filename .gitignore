@@ -53,3 +53,11 @@ Thumbs.db
 /paper/
 /scripts/
 /malleus-moving/
+
+# Private research and reviewer synthesis. These retain workspace coordinates,
+# paper internals, or unredacted adopter detail. A redacted projection may be
+# published deliberately; the source may not travel by accident.
+/design/MALLEUS_INTELLECTUAL_SUBSTRATE.md
+/malleus_literature_kg/
+/research/
+/MALLEUS_INQUISITION*.md

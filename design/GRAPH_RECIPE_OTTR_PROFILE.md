@@ -15,11 +15,11 @@ Opened: 2026-08-17
 Decision authority: author
 
 Repository snapshot: `codex/malleus-recon` at
-`384ecc37917c8191d17ffa44867024a36dfdd313`
+`1657e6564c1f8ab872d56b9ec97e34a015fce765`
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 7,
-`sha256:0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`
+revision 9,
+`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
 
 Evidence:
 [`OTTR_SUFFICIENCY_AUDIT.md`](../research/ontology_driven_kg_realization/OTTR_SUFFICIENCY_AUDIT.md)
@@ -374,17 +374,20 @@ The research-local offline fixture now implements the bounded `GE-000` through
 and 7 executable metamorphic obligations. The dedicated slice passed 39 tests.
 The relevant core selection passed 236 tests with 2 skips. The report is
 identified by
-`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
 and its checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
-The report identity changed after removal of an unused runner import changed
-the bound runner bytes. The hard identity guard rejected the stale report and
-forced its dependency-closed refresh. The active identity supersedes retained
-report identity
+Removal of an unused runner import changed the bound runner bytes. The hard
+identity guard rejected the stale report and produced retained report identity
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-Both dedicated GraphRecipe workflow steps run Ruff over the complete
-research-local runner directory before running the 39-test slice.
+The current refresh binds the changed direct-core and package-boundary bytes and
+package version `0.11.0`; its active identity above supersedes the retained
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
+identity. Both dedicated GraphRecipe workflow steps run Ruff over
+the complete research-local runner directory before running the 39-test slice.
 
 Each receipt includes the exact selected-manifest source-byte identity in its
 canonical payload. Selection is therefore bound to the case result and exact

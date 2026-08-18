@@ -37,6 +37,12 @@ from malleus.accepted import (
 from malleus.staging import StagingError, stage_subgraph
 from malleus.source import SourceError, source_artifact_digest
 from malleus.execution import ExecutionError, outcome_contract_digest
+from malleus.valid_time import (
+    ValidTime,
+    ValidTimeError,
+    ValidTimePrecision,
+    transition_cannot_follow,
+)
 from malleus.control import (
     ControlError,
     EPISTEMIC_MONITOR_KINDS,
@@ -2472,7 +2478,11 @@ class ProtocolLedger:
                     raise ProtocolError(
                         f"event {event['event_id']}: prior claim valid_to disagrees with revision"
                     )
-                _valid_interval(old["domain_valid_from"], revision["replaced_valid_to"], "claim revision")
+                _valid_time_interval(
+                    old["domain_valid_from"],
+                    revision["replaced_valid_to"],
+                    "claim revision",
+                )
         if set(by_new) != {
             claim["id"] for claim in proposed_claims if projection.current_claim_by_key.get(claim["claim_key"])
         }:
@@ -2882,6 +2892,7 @@ class ProtocolLedger:
             "ExecutionStatus": {"SUCCEEDED", "FAILED", "ABORTED"},
             "OutcomeResult": {"CONFIRMED", "CONTRADICTED", "INDETERMINATE"},
             "RequestState": {"OPEN", "FULFILLED", "CANCELLED"},
+            "ValidTimePrecision": {item.value for item in ValidTimePrecision},
         }
         for name, expected in enum_values.items():
             if not self.registry.has_enum(name) or self.registry.get_enum_values(name) != expected:
@@ -2957,11 +2968,27 @@ def _hash_fields(value: Any, context: str) -> None:
 
 
 def _time_fields(record: Mapping[str, Any], context: str) -> None:
+    precision_aware = {
+        "domain_valid_from",
+        "domain_valid_to",
+        "replacement_valid_from",
+        "replaced_valid_to",
+    }
     for name, value in record.items():
-        if value is not None and name.endswith(("_at", "_from", "_to")):
+        if value is not None and name in precision_aware:
+            try:
+                ValidTime.from_value(value, f"{context} {name}")
+            except ValidTimeError as error:
+                raise ProtocolError(str(error)) from error
+        elif value is not None and name.endswith(("_at", "_from", "_to")):
             aware_datetime(value, f"{context} {name}")
+    if record.get("domain_valid_from") is not None:
+        _valid_time_interval(
+            record["domain_valid_from"],
+            record.get("domain_valid_to"),
+            f"{context} domain_valid_from/domain_valid_to",
+        )
     for start, end in (
-        ("domain_valid_from", "domain_valid_to"),
         ("issued_at", "expires_at"),
         ("authorization_valid_from", "authorization_valid_to"),
         ("grant_valid_from", "grant_valid_to"),
@@ -2975,3 +3002,13 @@ def _valid_interval(start: str, end: str | None, context: str) -> None:
     parsed_start = aware_datetime(start, f"{context} start")
     if end is not None and aware_datetime(end, f"{context} end") <= parsed_start:
         raise ProtocolError(f"{context}: end must be later than start")
+
+
+def _valid_time_interval(start: Any, end: Any | None, context: str) -> None:
+    try:
+        parsed_start = ValidTime.from_value(start, f"{context} start")
+        parsed_end = ValidTime.from_value(end, f"{context} end") if end is not None else None
+    except ValidTimeError as error:
+        raise ProtocolError(str(error)) from error
+    if parsed_end is not None and transition_cannot_follow(parsed_start, parsed_end):
+        raise ProtocolError(f"{context}: end contradicts start ordering")

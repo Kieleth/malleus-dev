@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "malleus-dev"
-version = "0.10.0"
+version = "0.11.0"
 description = "Root ontology in LinkML for ontology-typed knowledge graphs with write-time validation and content-addressable convergence"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -29,12 +29,21 @@ dependencies = [
     "linkml-runtime>=1.10",
     "networkx>=3.0",
     "pyyaml>=6.0",
+    "tzdata==2026.3",
 ]
 
 [project.optional-dependencies]
 research = ["anthropic>=0.49", "openai>=1.0"]
 recon = ["pyvis>=0.3.2"]
-dev = ["pytest>=8", "pytest-cov>=5", "build>=1.0", "hatchling==1.31.0", "tomli>=2.0; python_version < '3.11'", "twine==6.2.0"]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "build==1.2.2.post1",
+    "hatchling==1.31.0",
+    "ruff==0.11.9",
+    "tomli>=2.0; python_version < '3.11'",
+    "twine==6.2.0",
+]
 
 [project.scripts]
 malleus-inquisitor = "malleus.inquisition.cli:main"
@@ -51,52 +60,76 @@ Issues = "https://github.com/kieleth/malleus-dev/issues"
 # in the working tree (local scratch files, experimental modules, notes) is
 # ignored by the build.
 include = [
-    "src/malleus/__init__.py",
-    "src/malleus/ontology.py",
-    "src/malleus/kg.py",
-    "src/malleus/protocol.py",
-    "src/malleus/assent.py",
-    "src/malleus/accepted.py",
-    "src/malleus/ledger.py",
-    "src/malleus/staging.py",
-    "src/malleus/control.py",
-    "src/malleus/logic.py",
-    "src/malleus/orchestration.py",
-    "src/malleus/execution.py",
-    "src/malleus/status.py",
-    "src/malleus/source.py",
-    "src/malleus/prolog_verifier.py",
-    "src/malleus/inquisition/__init__.py",
-    "src/malleus/inquisition/cli.py",
-    "src/malleus/inquisition/rubric.yaml",
-    "src/malleus/recon/*.py",
-    ".claude/skills/malleus-inquisitor/SKILL.md",
-    ".claude/skills/malleus-inquisitor/agents/openai.yaml",
-    ".claude/skills/malleus-acolyte/SKILL.md",
-    ".claude/skills/malleus-acolyte/agents/openai.yaml",
-    ".claude/skills/malleus-recon/SKILL.md",
-    ".claude/skills/malleus-recon/agents/openai.yaml",
-    "tests/test_inquisition.py",
-    "tests/test_recon_ontology.py",
-    "tests/test_recon.py",
-    "ontology/**/*.yaml",
-    "prolog/**/*.yaml",
-    "prolog/**/*.pl",
-    "tests/test_ontology.py",
-    "tests/test_kg.py",
-    "tests/test_assent_ontology.py",
-    "tests/test_protocol.py",
-    "tests/test_accepted.py",
-    "tests/test_staging.py",
-    "tests/test_control.py",
-    "tests/test_logic.py",
-    "tests/test_status.py",
-    "tests/test_prolog_verifier.py",
-    "docs/**/*.md",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md",
-    "pyproject.toml",
+    "/src/malleus/__init__.py",
+    "/src/malleus/ontology.py",
+    "/src/malleus/kg.py",
+    "/src/malleus/protocol.py",
+    "/src/malleus/assent.py",
+    "/src/malleus/accepted.py",
+    "/src/malleus/ledger.py",
+    "/src/malleus/staging.py",
+    "/src/malleus/control.py",
+    "/src/malleus/logic.py",
+    "/src/malleus/orchestration.py",
+    "/src/malleus/execution.py",
+    "/src/malleus/status.py",
+    "/src/malleus/source.py",
+    "/src/malleus/valid_time.py",
+    "/src/malleus/prolog_verifier.py",
+    "/src/malleus/inquisition/__init__.py",
+    "/src/malleus/inquisition/cli.py",
+    "/src/malleus/inquisition/rubric.yaml",
+    "/src/malleus/recon/__init__.py",
+    "/src/malleus/recon/analysis.py",
+    "/src/malleus/recon/cli.py",
+    "/src/malleus/recon/import_v1.py",
+    "/src/malleus/recon/store.py",
+    "/.claude/skills/malleus-inquisitor/SKILL.md",
+    "/.claude/skills/malleus-inquisitor/agents/openai.yaml",
+    "/.claude/skills/malleus-acolyte/SKILL.md",
+    "/.claude/skills/malleus-acolyte/agents/openai.yaml",
+    "/.claude/skills/malleus-dev/SKILL.md",
+    "/.claude/skills/malleus-dev/agents/openai.yaml",
+    "/.claude/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md",
+    "/.claude/skills/malleus-recon/SKILL.md",
+    "/.claude/skills/malleus-recon/agents/openai.yaml",
+    "/tests/test_inquisition.py",
+    "/tests/test_recon_ontology.py",
+    "/tests/test_recon.py",
+    "/ontology/malleus.yaml",
+    "/ontology/assent.yaml",
+    "/ontology/domains/attack.yaml",
+    "/ontology/domains/cyp450.yaml",
+    "/ontology/domains/recon.yaml",
+    "/prolog/cyp450_logic.yaml",
+    "/prolog/cyp450_rules.pl",
+    "/tests/test_ontology.py",
+    "/tests/test_kg.py",
+    "/tests/test_assent_ontology.py",
+    "/tests/test_protocol.py",
+    "/tests/test_accepted.py",
+    "/tests/test_staging.py",
+    "/tests/test_control.py",
+    "/tests/test_logic.py",
+    "/tests/test_status.py",
+    "/tests/test_valid_time.py",
+    "/tests/test_prolog_verifier.py",
+    "/docs/ADOPTION_GUIDE.md",
+    "/docs/ARCHITECTURE.md",
+    "/docs/ASSENT_PLAN.md",
+    "/docs/ASSENT_PROTOCOL.md",
+    "/docs/DELIMITATIONS.md",
+    "/docs/EFFECT_PROTOCOL.md",
+    "/docs/IMPLEMENTATION_STATUS.md",
+    "/docs/KNOWLEDGE_GRAPH_PROTOCOL.md",
+    "/docs/ONTOLOGY_PROTOCOL.md",
+    "/docs/PRINCIPLES.md",
+    "/docs/RECIPES.md",
+    "/docs/RECON_CONTRACT.md",
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+    "/pyproject.toml",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -104,10 +137,34 @@ packages = ["src/malleus"]
 core-metadata-version = "2.4"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"ontology" = "share/malleus/ontology"
-"prolog" = "share/malleus/prolog"
-"docs" = "share/malleus/docs"
-".claude/skills" = "share/malleus/skills"
+"ontology/malleus.yaml" = "share/malleus/ontology/malleus.yaml"
+"ontology/assent.yaml" = "share/malleus/ontology/assent.yaml"
+"ontology/domains/attack.yaml" = "share/malleus/ontology/domains/attack.yaml"
+"ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"
+"ontology/domains/recon.yaml" = "share/malleus/ontology/domains/recon.yaml"
+"prolog/cyp450_logic.yaml" = "share/malleus/prolog/cyp450_logic.yaml"
+"prolog/cyp450_rules.pl" = "share/malleus/prolog/cyp450_rules.pl"
+"docs/ADOPTION_GUIDE.md" = "share/malleus/docs/ADOPTION_GUIDE.md"
+"docs/ARCHITECTURE.md" = "share/malleus/docs/ARCHITECTURE.md"
+"docs/ASSENT_PLAN.md" = "share/malleus/docs/ASSENT_PLAN.md"
+"docs/ASSENT_PROTOCOL.md" = "share/malleus/docs/ASSENT_PROTOCOL.md"
+"docs/DELIMITATIONS.md" = "share/malleus/docs/DELIMITATIONS.md"
+"docs/EFFECT_PROTOCOL.md" = "share/malleus/docs/EFFECT_PROTOCOL.md"
+"docs/IMPLEMENTATION_STATUS.md" = "share/malleus/docs/IMPLEMENTATION_STATUS.md"
+"docs/KNOWLEDGE_GRAPH_PROTOCOL.md" = "share/malleus/docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+"docs/ONTOLOGY_PROTOCOL.md" = "share/malleus/docs/ONTOLOGY_PROTOCOL.md"
+"docs/PRINCIPLES.md" = "share/malleus/docs/PRINCIPLES.md"
+"docs/RECIPES.md" = "share/malleus/docs/RECIPES.md"
+"docs/RECON_CONTRACT.md" = "share/malleus/docs/RECON_CONTRACT.md"
+".claude/skills/malleus-acolyte/SKILL.md" = "share/malleus/skills/malleus-acolyte/SKILL.md"
+".claude/skills/malleus-acolyte/agents/openai.yaml" = "share/malleus/skills/malleus-acolyte/agents/openai.yaml"
+".claude/skills/malleus-dev/SKILL.md" = "share/malleus/skills/malleus-dev/SKILL.md"
+".claude/skills/malleus-dev/agents/openai.yaml" = "share/malleus/skills/malleus-dev/agents/openai.yaml"
+".claude/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md" = "share/malleus/skills/malleus-dev/references/UNIX_DESIGN_DOCTRINE.md"
+".claude/skills/malleus-inquisitor/SKILL.md" = "share/malleus/skills/malleus-inquisitor/SKILL.md"
+".claude/skills/malleus-inquisitor/agents/openai.yaml" = "share/malleus/skills/malleus-inquisitor/agents/openai.yaml"
+".claude/skills/malleus-recon/SKILL.md" = "share/malleus/skills/malleus-recon/SKILL.md"
+".claude/skills/malleus-recon/agents/openai.yaml" = "share/malleus/skills/malleus-recon/agents/openai.yaml"
 
 [tool.hatch.build.targets.sdist]
 core-metadata-version = "2.4"
@@ -125,8 +182,20 @@ testpaths = [
     "tests/test_control.py",
     "tests/test_logic.py",
     "tests/test_status.py",
+    "tests/test_valid_time.py",
     "tests/test_inquisition.py",
     "tests/test_recon_ontology.py",
     "tests/test_recon.py",
 ]
 python_files = ["test_*.py"]
+
+[tool.ruff]
+extend-exclude = [
+    "src/malleus/conditions.py",
+    "src/malleus/evaluator.py",
+    "src/malleus/llm_client.py",
+    "src/malleus/runner.py",
+    "src/malleus/session.py",
+    "src/malleus/static_loader.py",
+    "src/malleus/tools.py",
+]

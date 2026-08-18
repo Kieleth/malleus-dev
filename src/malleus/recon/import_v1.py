@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping
 

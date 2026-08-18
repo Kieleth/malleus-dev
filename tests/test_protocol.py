@@ -49,6 +49,7 @@ from malleus.protocol import (
     source_artifact_digest,
     source_artifact_fields,
     source_bytes_digest,
+    ValidTime,
 )
 
 
@@ -60,6 +61,10 @@ ARTIFACT_BODY = "sha256:" + "2" * 64
 
 def time_at(minute: int) -> str:
     return f"2026-08-12T08:{minute:02d}:00Z"
+
+
+def valid_time_at(value: str) -> dict:
+    return ValidTime.exact(value.replace("Z", "+00:00")).as_dict()
 
 
 @pytest.fixture
@@ -460,6 +465,7 @@ def record_proposal(
     claim_key: str = "claim-key",
     claim_revision: int = 1,
     revises_claim_version_id: str | None = None,
+    claim_valid_from=None,
     evidence_count: int = 0,
     source_artifact: dict | None = None,
     assertion_claim_id: str | None = None,
@@ -502,7 +508,9 @@ def record_proposal(
         revision=claim_revision,
         revises_claim_version_id=revises_claim_version_id,
         statement="The declared relation is structurally valid.",
-        domain_valid_from=timestamp,
+        domain_valid_from=(
+            valid_time_at(timestamp) if claim_valid_from is None else claim_valid_from
+        ),
         domain_valid_to=None,
         dependency_ids=[],
     )
@@ -2339,6 +2347,68 @@ class TestProposalAndEpistemicState:
         assert "state" not in proposal
 
     @pytest.mark.parametrize(
+        "claim_valid_from,message",
+        [
+            (
+                "2026-01-27T12:00:00-08:00",
+                "Inlined property 'domain_valid_from' must be a mapping",
+            ),
+            (
+                {
+                    "valid_time_precision": "CALENDAR_DAY",
+                    "calendar_date": "2026-01-27",
+                    "timezone_database_version": "2026c",
+                    "indeterminacy_reason": "The source establishes only the day.",
+                },
+                "missing timezone",
+            ),
+            (
+                {
+                    "valid_time_precision": "CALENDAR_DAY",
+                    "calendar_date": "2026-01-27",
+                    "timezone": "PST",
+                    "timezone_database_version": "2026c",
+                    "indeterminacy_reason": "The source establishes only the day.",
+                },
+                "installed IANA zone",
+            ),
+            (
+                {
+                    "valid_time_precision": "CALENDAR_DAY",
+                    "calendar_date": "2026-01-27",
+                    "timezone": "America/Los_Angeles",
+                    "timezone_database_version": "2026c",
+                },
+                "missing indeterminacy_reason",
+            ),
+        ],
+    )
+    def test_claim_valid_time_old_path_and_unexplained_uncertainty_fail_closed(
+        self,
+        ledger,
+        claim_valid_from,
+        message,
+    ):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            record_proposal(ledger, claim_valid_from=claim_valid_from)
+        assert ledger.path.read_bytes() == before
+
+    def test_claim_calendar_day_preserves_zone_and_extracted_reason(self, ledger):
+        anchor(ledger)
+        setup_artifacts(ledger)
+        valid_time = ValidTime.calendar_day(
+            "2026-01-27",
+            timezone="America/Los_Angeles",
+            indeterminacy_reason="The invoice states the day but no installation time.",
+        ).as_dict()
+        _, claim, _ = record_proposal(ledger, claim_valid_from=valid_time)
+        replayed = ledger.replay().objects[claim["id"]]["record"]
+        assert replayed["domain_valid_from"] == valid_time
+
+    @pytest.mark.parametrize(
         "verdict,state",
         [
             ("REJECT", ProposalState.REJECTED),
@@ -2736,7 +2806,7 @@ class TestProposalAndEpistemicState:
             revision=1,
             revises_claim_version_id=None,
             statement="test",
-            domain_valid_from=timestamp,
+            domain_valid_from=valid_time_at(timestamp),
             domain_valid_to=None,
             dependency_ids=[],
         )
@@ -4283,6 +4353,11 @@ class TestRequestAndRevisionArm:
         assessment_one = record_type_assessment(ledger, proposal_one, artifacts["monitor"])
         decide_epistemically(ledger, proposal_one, assessment_one, artifacts)
 
+        replacement_time = ValidTime.calendar_day(
+            "2026-08-13",
+            timezone="UTC",
+            indeterminacy_reason="The source establishes the revision day only.",
+        ).as_dict()
         proposal_two, claim_two, _ = record_proposal(
             ledger,
             minute=10,
@@ -4290,6 +4365,7 @@ class TestRequestAndRevisionArm:
             claim_id="claim:2",
             claim_revision=2,
             revises_claim_version_id=claim_one["id"],
+            claim_valid_from=replacement_time,
         )
         assessment_two = record_type_assessment(
             ledger,
@@ -4355,6 +4431,7 @@ class TestRequestAndRevisionArm:
         assert projection.current_claim_by_key[claim_one["claim_key"]] == claim_two["id"]
         assert claim_one["id"] in projection.superseded_claim_ids
         assert projection.objects["revision:1"]["record_type"] == "ClaimRevision"
+        assert projection.objects["revision:1"]["record"]["replacement_valid_from"] == replacement_time
         assert projection.objects["request:review:1"]["record_type"] == "HumanReviewRequest"
 
 

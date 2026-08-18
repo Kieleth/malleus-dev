@@ -778,7 +778,7 @@ class TestShippedGuidanceSaysWhatTheCodeDoes:
                  self.ROOT / "CHANGELOG.md",
                  self.ROOT / "src" / "malleus" / "inquisition" / "rubric.yaml"]
         paths += sorted((self.ROOT / "docs").glob("*.md"))
-        paths += sorted((self.ROOT / ".claude" / "skills").glob("*/SKILL.md"))
+        paths += sorted((self.ROOT / ".claude" / "skills").rglob("*.md"))
         return [(p, p.read_text(encoding="utf-8")) for p in paths]
 
     def test_no_shipped_document_claims_a_capability_the_library_lacks(self):
@@ -1085,27 +1085,51 @@ class TestNoPrivateMaterialCanReachARelease:
     is why nothing noticed: `twine check` validates metadata and never reads
     content, and CI smoke-tests only the wheel.
 
-    The instance was one `.gitignore` line. The property is that no path
-    outside the manifest may ride a release artifact, whatever anyone edits.
-    That property is what this test holds, so the next careless edit fails
-    here rather than on PyPI, where nothing can be withdrawn.
+    The instance was one `.gitignore` line. The property is that every archive
+    member belongs to a declared public root and every sdist source is tracked.
+    That is what this test holds, so the next broad glob fails here rather than
+    after publication.
     """
 
     ROOT = Path(__file__).parent.parent
-    # Directory prefixes that must never appear in a built artifact, whatever
-    # the working tree or .gitignore says on the day.
-    FORBIDDEN = ("malleus-moving/", "paper/", "paper-rebuild/", "private/",
-                 "experiments/", "scripts/", "local/")
+    SDIST_ALLOWED_FILES = {
+        ".gitignore",
+        "CHANGELOG.md",
+        "LICENSE",
+        "PKG-INFO",
+        "README.md",
+        "pyproject.toml",
+    }
+    SDIST_ALLOWED_ROOTS = (
+        ".claude/skills/",
+        "docs/",
+        "ontology/",
+        "prolog/",
+        "src/malleus/",
+        "tests/",
+    )
+    WHEEL_SHARED_ROOTS = ("docs", "ontology", "prolog", "skills")
 
     def _build(self, tmp_path):
         import subprocess
         result = subprocess.run(
-            [sys.executable, "-m", "build", "--sdist", "--wheel",
-             "--outdir", str(tmp_path), str(self.ROOT)],
+            [
+                sys.executable,
+                "-m",
+                "build",
+                "--no-isolation",
+                "--sdist",
+                "--wheel",
+                "--outdir",
+                str(tmp_path),
+                str(self.ROOT),
+            ],
             capture_output=True, text=True,
         )
-        if result.returncode != 0:
-            pytest.skip(f"build unavailable in this environment: {result.stderr[-200:]}")
+        assert result.returncode == 0, (
+            "release artifact build failed:\n"
+            f"{result.stdout[-1000:]}\n{result.stderr[-1000:]}"
+        )
         return sorted(tmp_path.iterdir())
 
     def _members(self, artifact):
@@ -1116,22 +1140,112 @@ class TestNoPrivateMaterialCanReachARelease:
         import tarfile
         with tarfile.open(artifact) as archive:
             # strip the leading "malleus_dev-X.Y.Z/" component
-            return [name.partition("/")[2] for name in archive.getnames()]
+            return [
+                member.name.partition("/")[2]
+                for member in archive.getmembers()
+                if member.isfile()
+            ]
 
-    def test_no_forbidden_path_rides_any_release_artifact(self, tmp_path):
+    def _unexpected_members(self, artifact, members):
+        if artifact.suffix != ".whl":
+            return sorted(
+                name
+                for name in members
+                if name
+                and name not in self.SDIST_ALLOWED_FILES
+                and not name.startswith(self.SDIST_ALLOWED_ROOTS)
+            )
+
+        dist_info_roots = {
+            name.partition("/")[0]
+            for name in members
+            if name.partition("/")[0].endswith(".dist-info")
+        }
+        assert len(dist_info_roots) == 1, (
+            f"{artifact.name} has ambiguous metadata roots: {sorted(dist_info_roots)}"
+        )
+        dist_info_root = next(iter(dist_info_roots))
+        distribution_root = dist_info_root.removesuffix(".dist-info")
+        shared_root = f"{distribution_root}.data/data/share/malleus/"
+        allowed_shared = tuple(
+            f"{shared_root}{root}/" for root in self.WHEEL_SHARED_ROOTS
+        )
+        return sorted(
+            name
+            for name in members
+            if not name.startswith("malleus/")
+            and not name.startswith(f"{dist_info_root}/")
+            and not name.startswith(allowed_shared)
+        )
+
+    def _untracked_sdist_members(self, members):
+        import subprocess
+
+        if not (self.ROOT / ".git").exists():
+            pytest.skip("not a git checkout")
+        result = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=self.ROOT,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        tracked = set(result.stdout.rstrip("\0").split("\0"))
+        generated = {"PKG-INFO"}
+        return sorted(
+            name
+            for name in members
+            if name and name not in generated and name not in tracked
+        )
+
+    def test_release_artifacts_are_bounded_and_carry_every_skill(self, tmp_path):
+        skill_root = self.ROOT / ".claude" / "skills"
+        skill_files = sorted(
+            path.relative_to(skill_root).as_posix()
+            for path in skill_root.rglob("*")
+            if path.is_file()
+        )
+        assert skill_files
         for artifact in self._build(tmp_path):
-            offenders = [name for name in self._members(artifact)
-                         if any(name.startswith(p) for p in self.FORBIDDEN)]
-            assert not offenders, (
-                f"{artifact.name} carries private material: {offenders[:10]}. "
+            members = self._members(artifact)
+            unexpected = self._unexpected_members(artifact, members)
+            assert not unexpected, (
+                f"{artifact.name} carries files outside allowed roots: "
+                f"{unexpected[:10]}. "
                 "A release artifact is irrevocable once published."
+            )
+            if artifact.suffix != ".whl":
+                untracked = self._untracked_sdist_members(members)
+                assert not untracked, (
+                    f"{artifact.name} carries untracked source files: {untracked[:10]}. "
+                    "Build and publish from one committed source identity."
+                )
+            if artifact.suffix == ".whl":
+                missing = [
+                    path
+                    for path in skill_files
+                    if not any(
+                        member.endswith(f"share/malleus/skills/{path}")
+                        for member in members
+                    )
+                ]
+            else:
+                missing = [
+                    path
+                    for path in skill_files
+                    if f".claude/skills/{path}" not in members
+                ]
+            assert not missing, (
+                f"{artifact.name} omits shipped skill files: {missing}"
             )
 
     def test_the_guard_would_catch_a_planted_file(self, tmp_path):
         """A guard nobody has seen fail is a guard nobody should trust."""
-        planted = "malleus-moving/README.md"
-        assert any(planted.startswith(p) for p in self.FORBIDDEN)
-        assert not any("src/malleus/kg.py".startswith(p) for p in self.FORBIDDEN)
+        planted = tmp_path / "malleus_dev-1.0.0.tar.gz"
+        assert self._unexpected_members(
+            planted,
+            ["README.md", "src/malleus/kg.py", "research/private/README.md"],
+        ) == ["research/private/README.md"]
 
 
 class TestPackagingTargetsAreTracked:
@@ -1154,23 +1268,179 @@ class TestPackagingTargetsAreTracked:
         declared += config["tool"]["pytest"]["ini_options"]["testpaths"]
         missing, untracked = [], []
         for entry in declared:
+            filesystem_entry = entry.removeprefix("/")
             if any(char in entry for char in "*?["):
-                if not list(root.glob(entry)):
+                targets = sorted(root.glob(filesystem_entry))
+                if not targets:
                     missing.append(entry)
-                continue
-            if not (root / entry).exists():
-                missing.append(entry)
-                continue
-            probe = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", entry],
-                cwd=root, capture_output=True,
-            )
-            if probe.returncode != 0:
-                untracked.append(entry)
+            else:
+                targets = [root / filesystem_entry]
+                if not targets[0].exists():
+                    missing.append(entry)
+                    continue
+            for target in targets:
+                relative = target.relative_to(root).as_posix()
+                probe = subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", relative],
+                    cwd=root,
+                    capture_output=True,
+                )
+                if probe.returncode != 0:
+                    untracked.append(relative)
         assert not missing, f"declared but absent: {missing}"
         assert not untracked, (
             f"declared in pyproject but not committed: {untracked}. "
             "Commit the manifest and its targets as one unit."
+        )
+
+
+class TestReleaseWorkflowIsFailClosed:
+    """Publishing can start only from the exact version tag on main history."""
+
+    ROOT = Path(__file__).parent.parent
+    RELEASE = ROOT / ".github" / "workflows" / "release.yml"
+    CI = ROOT / ".github" / "workflows" / "tests.yml"
+
+    def _jobs(self):
+        return yaml.safe_load(self.RELEASE.read_text(encoding="utf-8"))["jobs"]
+
+    def _validation_script(self):
+        return "\n".join(
+            step.get("run", "")
+            for step in self._jobs()["validate-release"]["steps"]
+        )
+
+    def test_release_has_no_manual_publish_path(self):
+        workflow = self.RELEASE.read_text(encoding="utf-8")
+        assert "workflow_dispatch" not in workflow
+        assert re.search(
+            r'^on:\n  push:\n    tags:\n      - "v\*"$',
+            workflow,
+            re.MULTILINE,
+        )
+
+    def test_validation_precedes_every_release_consumer(self):
+        jobs = self._jobs()
+        validation = self._validation_script()
+        assert '"$GITHUB_REF_TYPE" != "tag"' in validation
+        assert 'EXPECTED_TAG="v${FILE_VERSION}"' in validation
+        assert '"$GITHUB_REF_NAME" != "$EXPECTED_TAG"' in validation
+        assert (
+            'git fetch --no-tags origin "+refs/heads/main:refs/remotes/origin/main"'
+            in validation
+        )
+        assert 'git rev-parse "${GITHUB_REF_NAME}^{commit}"' in validation
+        assert 'git merge-base --is-ancestor "$TAG_COMMIT" refs/remotes/origin/main' in validation
+        for job_name in ("test", "build"):
+            assert jobs[job_name]["needs"] == "validate-release"
+        assert set(jobs["publish-pypi"]["needs"]) == {"build", "test"}
+
+    def test_release_gate_refuses_non_tags_and_commits_outside_main(self, tmp_path):
+        import os
+        import subprocess
+
+        origin = tmp_path / "origin.git"
+        checkout = tmp_path / "checkout"
+
+        def git(*arguments):
+            result = subprocess.run(
+                ["git", *arguments],
+                cwd=checkout if checkout.exists() else tmp_path,
+                capture_output=True,
+                text=True,
+            )
+            assert result.returncode == 0, result.stderr
+
+        subprocess.run(
+            ["git", "init", "--bare", str(origin)],
+            cwd=tmp_path,
+            check=True,
+            capture_output=True,
+        )
+        subprocess.run(
+            ["git", "init", "--initial-branch=main", str(checkout)],
+            cwd=tmp_path,
+            check=True,
+            capture_output=True,
+        )
+        git("config", "user.name", "Release Gate Test")
+        git("config", "user.email", "release-gate@example.invalid")
+        (checkout / "pyproject.toml").write_text(
+            '[project]\nname = "fixture"\nversion = "1.2.3"\n',
+            encoding="utf-8",
+        )
+        git("add", "pyproject.toml")
+        git("commit", "-m", "main")
+        git("remote", "add", "origin", str(origin))
+        git("push", "-u", "origin", "main")
+        git("switch", "-c", "feature")
+        (checkout / "feature.txt").write_text("outside main\n", encoding="utf-8")
+        git("add", "feature.txt")
+        git("commit", "-m", "feature")
+        git("tag", "v1.2.3")
+
+        def run_gate(ref_type, ref_name):
+            environment = os.environ.copy()
+            environment.update(
+                GITHUB_REF_TYPE=ref_type,
+                GITHUB_REF_NAME=ref_name,
+            )
+            return subprocess.run(
+                ["bash", "-e", "-o", "pipefail", "-c", self._validation_script()],
+                cwd=checkout,
+                env=environment,
+                capture_output=True,
+                text=True,
+            )
+
+        assert run_gate("branch", "main").returncode != 0
+        assert run_gate("tag", "v9.9.9").returncode != 0
+        off_main = run_gate("tag", "v1.2.3")
+        assert off_main.returncode != 0
+        assert "is not on origin/main" in off_main.stdout
+
+        git("tag", "-f", "v1.2.3", "main")
+        assert run_gate("tag", "v1.2.3").returncode == 0
+
+    def test_release_runs_every_supported_python_and_the_research_gate(self):
+        jobs = self._jobs()
+        assert jobs["test"]["strategy"]["matrix"]["python-version"] == [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+        ]
+        gate = (
+            "PYTHONPATH=src python -m pytest -q "
+            "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py"
+        )
+        lint_gate = (
+            "python -m ruff check src/malleus "
+            "research/ontology_driven_kg_realization/experiments/graph_recipe"
+        )
+        for workflow_path in (self.RELEASE, self.CI):
+            workflow = workflow_path.read_text(encoding="utf-8")
+            assert lint_gate in workflow
+            assert gate in workflow
+
+    def test_workflows_cannot_invoke_undeclared_ruff(self):
+        try:
+            import tomllib
+        except ModuleNotFoundError:  # Python 3.10
+            import tomli as tomllib
+
+        config = tomllib.loads((self.ROOT / "pyproject.toml").read_text())
+        declared = {
+            re.split(r"[<>=!~;\[\s]", dependency, maxsplit=1)[0].lower()
+            for dependency in config["project"]["optional-dependencies"]["dev"]
+        }
+        invokers = [
+            workflow_path.name
+            for workflow_path in (self.RELEASE, self.CI)
+            if "python -m ruff" in workflow_path.read_text(encoding="utf-8")
+        ]
+        assert not invokers or "ruff" in declared, (
+            f"workflows invoke undeclared Ruff: {invokers}"
         )
 
 
@@ -1242,14 +1512,111 @@ def test_construction_failure_still_explains_root_skew(tmp_path):
 
 
 class TestSkillsAreInstallable:
-    """Any project gets its acolyte at fingertips; releases refresh it
-    (the learnings flow back)."""
+    """Any project gets every shipped procedure; releases refresh them so
+    generic learnings flow back."""
+
+    ROOT = Path(__file__).parent.parent
+    SKILL_ROOT = ROOT / ".claude" / "skills"
+    SKILL_DIRS = tuple(
+        path.parent for path in sorted(SKILL_ROOT.glob("*/SKILL.md"))
+    )
+    SKILL_NAMES = tuple(path.name for path in SKILL_DIRS)
+
+    def _assert_installed_tree(self, target_root):
+        for source in self.SKILL_DIRS:
+            target = target_root / source.name
+            source_files = sorted(
+                path for path in source.rglob("*") if path.is_file()
+            )
+            for source_file in source_files:
+                relative = source_file.relative_to(source)
+                target_file = target / relative
+                assert target_file.is_file(), target_file
+                assert target_file.read_bytes() == source_file.read_bytes(), target_file
+
+    def test_every_shipped_skill_has_valid_metadata(self):
+        assert self.SKILL_NAMES
+        assert len(self.SKILL_NAMES) == len(set(self.SKILL_NAMES))
+        for skill_dir in self.SKILL_DIRS:
+            skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+            assert skill_text.startswith("---\n"), skill_dir
+            _, frontmatter, _ = skill_text.split("---", 2)
+            metadata = yaml.safe_load(frontmatter)
+            assert metadata["name"] == skill_dir.name
+            assert re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", metadata["name"])
+            assert isinstance(metadata["description"], str)
+            assert metadata["description"].strip()
+            assert set(metadata) == {"name", "description"}
+
+            agent_path = skill_dir / "agents" / "openai.yaml"
+            agent = yaml.safe_load(agent_path.read_text(encoding="utf-8"))["interface"]
+            assert isinstance(agent["display_name"], str) and agent["display_name"].strip()
+            assert isinstance(agent["short_description"], str)
+            assert 25 <= len(agent["short_description"]) <= 64
+            assert f"${skill_dir.name}" in agent["default_prompt"]
+
+    def test_skill_files_are_explicit_packaging_targets(self):
+        try:
+            import tomllib
+        except ModuleNotFoundError:  # Python 3.10
+            import tomli as tomllib
+        config = tomllib.loads((self.ROOT / "pyproject.toml").read_text())
+        included = {
+            entry.removeprefix("/")
+            for entry in config["tool"]["hatch"]["build"]["include"]
+        }
+        expected = {
+            path.relative_to(self.ROOT).as_posix()
+            for skill_dir in self.SKILL_DIRS
+            for path in skill_dir.rglob("*")
+            if path.is_file()
+        }
+        missing = sorted(expected - included)
+        assert not missing, f"skill files absent from package allowlist: {missing}"
+
+    def test_malleus_dev_skill_carries_the_accepted_modularity_doctrine(self):
+        skill_dir = self.SKILL_ROOT / "malleus-dev"
+        skill = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+        normalized_skill = " ".join(skill.split())
+        doctrine = (
+            skill_dir / "references" / "UNIX_DESIGN_DOCTRINE.md"
+        ).read_text(encoding="utf-8")
+        assert "LinkML is not the protocol" in skill
+        assert "Any custom frontend may replace LinkML" in skill
+        assert "must run without LinkML installed" in skill
+        assert (
+            "a second implementation passes the same conformance suite"
+            in normalized_skill
+        )
+        rules = {
+            "Modularity",
+            "Clarity",
+            "Composition",
+            "Separation",
+            "Simplicity",
+            "Parsimony",
+            "Transparency",
+            "Robustness",
+            "Representation",
+            "Least surprise",
+            "Silence",
+            "Repair",
+            "Economy",
+            "Generation",
+            "Optimization",
+            "Diversity",
+            "Extensibility",
+        }
+        missing_rules = sorted(
+            rule for rule in rules if f"| {rule} |" not in doctrine
+        )
+        assert not missing_rules, f"Unix doctrine omits rules: {missing_rules}"
 
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
         out = capsys.readouterr().out
-        for name in ("malleus-acolyte", "malleus-inquisitor", "malleus-recon"):
-            assert (tmp_path / ".claude" / "skills" / name / "SKILL.md").is_file()
+        self._assert_installed_tree(tmp_path / ".claude" / "skills")
+        for name in self.SKILL_NAMES:
             assert name in out
         # Idempotent refresh: a second run overwrites without error.
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
@@ -1259,10 +1626,8 @@ class TestSkillsAreInstallable:
             ["install-skills", "--project", str(tmp_path), "--agent", "codex"]
         ) == 0
         out = capsys.readouterr().out
-        for name in ("malleus-acolyte", "malleus-inquisitor", "malleus-recon"):
-            skill = tmp_path / ".codex" / "skills" / name
-            assert (skill / "SKILL.md").is_file()
-            assert (skill / "agents" / "openai.yaml").is_file()
+        self._assert_installed_tree(tmp_path / ".codex" / "skills")
+        for name in self.SKILL_NAMES:
             assert f"installed codex skill: {name}" in out
         assert not (tmp_path / ".claude").exists()
 
@@ -1271,6 +1636,4 @@ class TestSkillsAreInstallable:
             ["install-skills", "--project", str(tmp_path), "--agent", "all"]
         ) == 0
         for directory in (".claude", ".codex"):
-            assert (
-                tmp_path / directory / "skills" / "malleus-recon" / "SKILL.md"
-            ).is_file()
+            self._assert_installed_tree(tmp_path / directory / "skills")

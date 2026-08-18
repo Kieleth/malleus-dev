@@ -4,9 +4,9 @@ Checkpoint ID: `OKG-CP001`
 
 Recorded: 2026-08-17T17:48:31-0700
 
-Updated: 2026-08-17 after author acceptance of `OKG-D007` through `OKG-D011`
-and dependency-closed refresh of the research-local GraphRecipe first-slice
-evidence
+Updated: 2026-08-17 after author acceptance of `OKG-D007` through `OKG-D012`,
+adoption of the Malleus Unix modularity doctrine, and dependency-closed refresh
+of the research-local GraphRecipe first-slice evidence
 
 Purpose: preserve the accepted baseline, the larger reinforcement program,
 the GraphRecipe TDD evaluation result, and the exact post-evaluation resumption
@@ -20,17 +20,18 @@ and `malleus.IMPLEMENTATION_STATUS`.
 
 Base branch: `codex/malleus-recon`
 
-Base commit: `384ecc37917c8191d17ffa44867024a36dfdd313`
+GraphRecipe baseline commit: `1657e6564c1f8ab872d56b9ec97e34a015fce765`
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 7,
-`sha256:0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`
+revision 9,
+`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
 
-The shared worktree contains active parallel changes to roadmap, execution
-bundle, documentation, ontology, protocol, accepted-graph, package status, and
-tests. Those changes are outside this checkpoint and must be preserved. This
-checkpoint does not authorize staging, committing, reverting, or incorporating
-them.
+The 0.11.0 consolidation after that baseline adds precision-aware valid time,
+the accepted `OKG-D012` maintainer doctrine, explicit release guardrails, and
+the versioned package boundary. Private literature substrate, quarantined
+concurrent-writer evidence, historical inquisition reports, cost research,
+roadmap edits, and paper-bound execution-bundle edits remain outside the
+release commit and must not be deleted or published by implication.
 
 The completed first slice added research-local GraphRecipe code, tests, frozen
 fixtures, a conformance report, and offline workflow steps. It did not add a
@@ -99,6 +100,27 @@ the full profile or promote a public capability. Later changes require
 addressable counterevidence, superseding decisions, and dependency-closed
 impact.
 
+### `OKG-D012`: LinkML is selected behind a replaceable contract boundary
+
+Accepted: 2026-08-17.
+
+Official, execution-identified LinkML is the sole first-party human-authored
+contract frontend for v0. It compiles retained source bytes under a versioned,
+fail-closed support profile into a frontend-neutral
+`ContractCompilationResult`. Runtime graph construction consumes the compiled
+effective contract and must not require LinkML.
+
+LinkML receives no privileged graph or admission path. A custom frontend may
+replace it if it emits the same normative intermediate, diagnostics, and
+lineage and passes the same boundary conformance suite. Direct facts remain an
+internal bootstrap and conformance input, not a competing first-party language.
+
+The governing software doctrine adapts Eric S. Raymond's *The Art of Unix
+Programming*: small stages, artifact-mediated composition, separation of
+policy and mechanism, inspectable state, deterministic generation, and
+explicit extension. Malleus rejects permissive semantic guessing. Unsupported
+or ambiguous meaning fails before effects.
+
 ## 3. Current protocol boundary
 
 ```text
@@ -137,7 +159,7 @@ admission, authorization, or evolution.
 
 Generated LinkML artifacts remain optional projections. A future adopter may
 consume a compiled effective-contract artifact without running LinkML. This is
-accepted direction, not current implementation.
+accepted design under `OKG-D012`, not current implementation.
 
 ## 4. High-level program for this session
 
@@ -210,7 +232,7 @@ The dedicated slice passed 39 tests, and the relevant core selection passed
 The conformance report is
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
 Its checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 Each case receipt binds the selected manifest's exact source-byte identity.
@@ -219,12 +241,15 @@ receipt identity, which makes case selection part of exact execution identity
 rather than an ambient runner choice.
 
 Removing one unused runner import changed the bound runner bytes. The hard
-identity guard rejected the then-stale report and forced a dependency-closed
-refresh. The active report identity above supersedes the retained prior
-identity
+identity guard rejected the then-stale report and produced retained identity
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-Both dedicated workflow steps now run Ruff over the complete research-local
-GraphRecipe directory before running the 39-test slice.
+The current refresh binds the changed direct-core and package-boundary bytes and
+package version `0.11.0`; its active identity above supersedes the retained
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
+identity. Both dedicated workflow steps run Ruff over the complete
+research-local GraphRecipe directory before running the 39-test slice.
 
 The full configured suite recorded 743 passes, 3 skips, and one failure in the
 dirty-worktree packaging guard because separately edited package targets were
@@ -276,7 +301,10 @@ Resume the main reinforcement program here:
    other boundary/conformance experiments, preserving failed hypotheses.
 2. Reassess only the `OKG-D001` clauses touched by recorded revisit evidence.
    Otherwise keep the accepted profile fixed.
-3. Close the exact contract-kernel object model and seed metamodel decision.
+3. Close the exact contract-kernel object model and seed metamodel decision,
+   keeping the `OKG-D012` frontend boundary fixed. The first contract slice
+   must include the test-only alternate producer and clean LinkML-free runtime
+   check required by that decision.
 4. Close `OKG-D002`, the second backend, using experiment evidence rather than
    preference.
 5. Close `OKG-D003`, construction-history placement. Current evidence favors a
@@ -320,7 +348,7 @@ Private local evidence, bound from public design by digest only:
 2. Downstream adoption registry:
    `sha256:4b373134bb7af272216cb788c28180e07a333530e5b6caf885f8243d33fd4d41`
 
-The private files are ignored and not durable off-machine. Moving them to a
+The private files are untracked and not durable off-machine. Moving them to a
 private repository or encrypted evidence store requires an explicit decision.
 Do not preserve them by publishing private workspace paths.
 
@@ -345,6 +373,7 @@ okg:OKG-CP001 rdf:type mfg:DesignObject ;
     mfg:binds okg:OKG-D009 ;
     mfg:binds okg:OKG-D010 ;
     mfg:binds okg:OKG-D011 ;
+    mfg:binds okg:OKG-D012 ;
     mfg:binds okg:OntologyDrivenKGRealization ;
     mfg:binds okg:MalleusGraphRecipeProfileV0 ;
     mfg:binds okg:GraphRecipeFirstSliceEvidenceBundle ;

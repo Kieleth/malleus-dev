@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.8.0
+version: 0.9.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -136,6 +136,14 @@ enums:
       CONTRADICTED:
       INDETERMINATE:
 
+  ValidTimePrecision:
+    permissible_values:
+      EXACT_TIMESTAMP:
+      CALENDAR_DAY:
+      BOUNDED_INTERVAL:
+      ORDER_ONLY:
+      UNRESOLVED_PRIOR_BOUNDARY:
+
   ArtifactKind:
     permissible_values:
       SOURCE:
@@ -154,6 +162,134 @@ enums:
       OUTCOME_CONTRACT:
 
 classes:
+  ValidTime:
+    description: >-
+      Structural carrier for a transition boundary preserving the precision
+      established by evidence. Every non-exact variant carries the extracted
+      reason why an exact boundary is unavailable. Malleus runtime validation
+      enforces lexical and cross-field temporal semantics.
+    slots:
+      - valid_time_precision
+      - exact_timestamp
+      - calendar_date
+      - timezone
+      - timezone_database_version
+      - earliest_possible
+      - latest_possible
+      - order_scope
+      - order_index
+      - indeterminacy_reason
+    slot_usage:
+      valid_time_precision:
+        required: true
+    exactly_one_of:
+      - slot_conditions:
+          valid_time_precision:
+            equals_string: EXACT_TIMESTAMP
+          exact_timestamp:
+            required: true
+          calendar_date:
+            value_presence: ABSENT
+          timezone:
+            value_presence: ABSENT
+          timezone_database_version:
+            value_presence: ABSENT
+          earliest_possible:
+            value_presence: ABSENT
+          latest_possible:
+            value_presence: ABSENT
+          order_scope:
+            value_presence: ABSENT
+          order_index:
+            value_presence: ABSENT
+          indeterminacy_reason:
+            value_presence: ABSENT
+      - slot_conditions:
+          valid_time_precision:
+            equals_string: CALENDAR_DAY
+          exact_timestamp:
+            value_presence: ABSENT
+          calendar_date:
+            required: true
+          timezone:
+            required: true
+          timezone_database_version:
+            required: true
+            equals_string: "2026c"
+          earliest_possible:
+            value_presence: ABSENT
+          latest_possible:
+            value_presence: ABSENT
+          order_scope:
+            value_presence: ABSENT
+          order_index:
+            value_presence: ABSENT
+          indeterminacy_reason:
+            required: true
+      - slot_conditions:
+          valid_time_precision:
+            equals_string: BOUNDED_INTERVAL
+          exact_timestamp:
+            value_presence: ABSENT
+          calendar_date:
+            value_presence: ABSENT
+          timezone:
+            value_presence: ABSENT
+          timezone_database_version:
+            value_presence: ABSENT
+          earliest_possible:
+            required: true
+          latest_possible:
+            required: true
+          order_scope:
+            value_presence: ABSENT
+          order_index:
+            value_presence: ABSENT
+          indeterminacy_reason:
+            required: true
+      - slot_conditions:
+          valid_time_precision:
+            equals_string: ORDER_ONLY
+          exact_timestamp:
+            value_presence: ABSENT
+          calendar_date:
+            value_presence: ABSENT
+          timezone:
+            value_presence: ABSENT
+          timezone_database_version:
+            value_presence: ABSENT
+          earliest_possible:
+            value_presence: ABSENT
+          latest_possible:
+            value_presence: ABSENT
+          order_scope:
+            required: true
+          order_index:
+            required: true
+          indeterminacy_reason:
+            required: true
+      - slot_conditions:
+          valid_time_precision:
+            equals_string: UNRESOLVED_PRIOR_BOUNDARY
+          exact_timestamp:
+            value_presence: ABSENT
+          calendar_date:
+            value_presence: ABSENT
+          timezone:
+            value_presence: ABSENT
+          timezone_database_version:
+            value_presence: ABSENT
+          earliest_possible:
+            value_presence: ABSENT
+          latest_possible:
+            value_presence: ABSENT
+          order_scope:
+            value_presence: ABSENT
+          order_index:
+            value_presence: ABSENT
+          indeterminacy_reason:
+            required: true
+
   ProtocolRecord:
     abstract: true
     is_a: Entity
@@ -392,7 +528,7 @@ classes:
         equals_string: GRAPH_BASE
       graph_schema_version:
         required: true
-        equals_string: "1"
+        equals_string: "2"
       graph_ontology_hash:
         required: true
       base_state_digest:
@@ -405,8 +541,9 @@ classes:
   CandidateSubgraphArtifact:
     is_a: ProtocolArtifact
     description: >-
-      Exact ordered graph writes and temporal envelopes staged against one
-      accepted graph state. A digest-only candidate is not replayable.
+      Ordered graph writes and precision-aware temporal boundaries staged
+      against one accepted graph state. A digest-only candidate is not
+      replayable.
     slots:
       - candidate_schema_version
       - graph_base_id
@@ -425,7 +562,7 @@ classes:
         equals_string: CANDIDATE_SUBGRAPH
       candidate_schema_version:
         required: true
-        equals_string: "1"
+        equals_string: "2"
       graph_base_id:
         required: true
       graph_base_hash:
@@ -1333,12 +1470,36 @@ slots:
   statement:
     range: string
   domain_valid_from:
-    range: datetime
+    range: ValidTime
+    inlined: true
   domain_valid_to:
-    range: datetime
+    range: ValidTime
+    inlined: true
   dependency_ids:
     range: string
     multivalued: true
+
+  valid_time_precision:
+    range: ValidTimePrecision
+  exact_timestamp:
+    range: datetime
+  calendar_date:
+    range: date
+  timezone:
+    range: string
+  timezone_database_version:
+    range: string
+  earliest_possible:
+    range: datetime
+  latest_possible:
+    range: datetime
+  order_scope:
+    range: string
+  order_index:
+    range: integer
+    minimum_value: 1
+  indeterminacy_reason:
+    range: string
 
   evidence_kind:
     range: string
@@ -1686,9 +1847,11 @@ slots:
   revision_justification:
     range: string
   replacement_valid_from:
-    range: datetime
+    range: ValidTime
+    inlined: true
   replaced_valid_to:
-    range: datetime
+    range: ValidTime
+    inlined: true
 
   transition_subject_id:
     range: string

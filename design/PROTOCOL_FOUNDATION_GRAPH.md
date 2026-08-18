@@ -3,11 +3,11 @@
 Status: human-readable projection of candidate and accepted design
 
 Snapshot: `codex/malleus-recon` at
-`384ecc37917c8191d17ffa44867024a36dfdd313`, inspected on 2026-08-17
+`1657e6564c1f8ab872d56b9ec97e34a015fce765`, inspected on 2026-08-17
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 7,
-`sha256:0a308fa3e3b99b71a677fbc0bec6d3efec455d1d74b693b3a2bfd43d69cee53e`
+revision 9,
+`sha256:046d20def4c127afecd82811fd19ad8adf2a06e9247373e1fbf7a5dde47a3905`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -57,10 +57,14 @@ contract source bytes
 ```
 
 Generated schemas are optional projections. They are not an obligatory stage
-between ontology and graph. In the candidate design, LinkML becomes one
-authoring frontend, not the runtime contract itself. An adopter would load a
-compiled `EffectiveContractArtifact` without installing or invoking LinkML.
-That is not current behavior: LinkML packages are mandatory dependencies and
+between ontology and graph. `OKG-D012` accepts official, execution-identified
+LinkML as the sole first-party human-authored frontend for v0, but not as the
+runtime contract itself. The `ContractFrontend` boundary remains
+language-neutral: a custom implementation may replace LinkML only by producing
+the same normative intermediate, diagnostics, and lineage under the same
+conformance suite. An adopter should load a compiled
+`EffectiveContractArtifact` without installing or invoking LinkML. That is not
+current behavior: LinkML packages are mandatory dependencies and
 `KnowledgeGraph` requires a concrete `OntologyRegistry`.
 
 This package comes first because every other requested reinforcement needs it:
@@ -404,7 +408,7 @@ mfg:ValidatedContractFactSet rdf:type rdfs:Class ;
     mfg:status mfg:Candidate .
 
 mfg:LinkMLFrontend rdf:type mfg:ContractFrontend ;
-    mfg:status mfg:Candidate .
+    mfg:status mfg:AcceptedDesign .
 
 mfg:DirectFactFrontend rdf:type mfg:ContractFrontend ;
     mfg:status mfg:Candidate .
@@ -454,6 +458,97 @@ mfg:AcceptedTemporalGraphVersion rdf:type rdfs:Class ;
     mfg:governedBy mfg:ContractComposition ;
     mfg:identifiedBy mfg:AcceptedTemporalGraphVersionHash ;
     mfg:status mfg:Candidate .
+```
+
+### 4.1.1 Accepted frontend and modularity policy
+
+`OKG-D012` closes the source-policy choice without collapsing the protocol
+onto LinkML. The first-party v0 authoring surface is deliberately narrow:
+LinkML source, interpreted by an exact official compiler under a versioned,
+fail-closed Malleus support profile. Direct facts remain an independently
+authored bootstrap and conformance input, not a second first-party authoring
+language.
+
+The protocol boundary is deliberately broader than the first-party product
+surface. A `ContractFrontend` receives retained source bytes, an explicit
+resolver, and a support profile. It emits a `ContractCompilationResult` with
+contract facts, annotations, typed diagnostics, and complete lineage. It
+receives no graph handle and performs no admission. A custom frontend may
+replace LinkML only if the frontend-neutrality suite establishes identical
+normative output and downstream behavior for the claimed profile. The default
+implementation receives no bypass or hidden semantic privilege.
+
+The accepted Malleus Unix modularity doctrine governs the whole library-protocol
+architecture; this frontend boundary is its first concrete application. The
+doctrine adapts Eric S. Raymond's *The Art of Unix Programming*: small stages,
+artifact-mediated composition, policy-mechanism separation, inspectable state,
+knowledge represented as data, deterministic generation, fail-loud repair, and
+explicit extension. For Malleus, permissive repair never means semantic
+guessing. Only declared, deterministic, lossless, provenance-recorded
+normalization is admissible; unknown or ambiguous meaning rejects before
+effects.
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mfg: <https://malleus.dev/foundation-graph/> .
+@prefix okg: <https://malleus.dev/ontology-kg-realization/> .
+
+mfg:TheArtOfUnixProgramming rdf:type mfg:Observation ;
+    rdfs:seeAlso <https://www.catb.org/esr/writings/taoup/html/> .
+
+mfg:MalleusLibraryProtocolArchitecture rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:UnixModularProtocolDoctrine rdf:type mfg:DesignObject ;
+    mfg:informedBy mfg:TheArtOfUnixProgramming ;
+    mfg:governs mfg:MalleusLibraryProtocolArchitecture ;
+    mfg:governs mfg:ContractFrontend ;
+    mfg:governs mfg:AdmissionImplementation ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ReplaceableContractFrontendBoundary rdf:type mfg:Boundary ;
+    mfg:governedBy mfg:UnixModularProtocolDoctrine ;
+    mfg:tests mfg:FrontendParity ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:MalleusLinkMLSupportProfileV0 rdf:type mfg:SupportProfile ;
+    mfg:status mfg:Candidate .
+
+mfg:FrontendConformanceSuite rdf:type mfg:TestObligation ;
+    mfg:tests mfg:FrontendParity ;
+    mfg:status mfg:Candidate .
+
+mfg:LinkMLFrontend
+    mfg:governedBy mfg:MalleusLinkMLSupportProfileV0 ;
+    mfg:validatedBy mfg:FrontendConformanceSuite .
+
+mfg:CustomContractFrontend rdf:type mfg:ContractFrontend ;
+    mfg:optionalExtensionOf mfg:ReplaceableContractFrontendBoundary ;
+    mfg:validatedBy mfg:FrontendConformanceSuite ;
+    mfg:status mfg:Candidate .
+
+mfg:DirectFactBootstrapUse rdf:type mfg:Boundary ;
+    mfg:governs mfg:DirectFactFrontend ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLFreeCompiledContractRuntime rdf:type mfg:Invariant ;
+    mfg:dependsOn mfg:EffectiveContractArtifact ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:PrivilegedContractFrontend rdf:type mfg:DesignObject ;
+    mfg:status mfg:Excluded .
+
+okg:OKG-D012 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-17" ;
+    mfg:selects mfg:LinkMLFrontend ;
+    mfg:selects mfg:ReplaceableContractFrontendBoundary ;
+    mfg:selects mfg:DirectFactBootstrapUse ;
+    mfg:selects mfg:LinkMLFreeCompiledContractRuntime ;
+    mfg:selects mfg:UnixModularProtocolDoctrine ;
+    mfg:rejects mfg:PrivilegedContractFrontend ;
+    mfg:status mfg:AcceptedDesign .
 ```
 
 Current `KnowledgeGraph.state_digest()` is closest to the structural-snapshot
@@ -1484,13 +1579,44 @@ authorization, not of the change-authority DAG. The graph tuples above control
 exact dependencies; the waves state a practical order without inventing extra
 edges.
 
+The 0.11 temporal slice is also dependency-addressable. These graph statuses
+record the release-boundary observation; `src/malleus/status.py` and tests
+remain authoritative for shipped capability.
+
+```turtle
+mfg:PrecisionAwareValidTime rdf:type mfg:DesignObject ;
+    mfg:status mfg:Implemented .
+
+mfg:ThreeValuedAcceptedGraphProjection rdf:type mfg:DesignObject ;
+    mfg:dependsOn mfg:PrecisionAwareValidTime ;
+    mfg:status mfg:Implemented .
+
+mfg:HistoricalTimezoneDatabaseMigration rdf:type mfg:DesignObject ;
+    mfg:dependsOn mfg:PrecisionAwareValidTime ;
+    mfg:status mfg:Open .
+
+mfg:DependencyClosedValidTimeProjection rdf:type mfg:DesignObject ;
+    mfg:dependsOn mfg:ThreeValuedAcceptedGraphProjection ;
+    mfg:status mfg:Open .
+
+mfg:Malleus011ReleaseBoundaryObservation rdf:type mfg:Observation ;
+    mfg:binds mfg:DependencyClosedValidTimeProjection ;
+    mfg:binds mfg:HistoricalTimezoneDatabaseMigration ;
+    mfg:binds mfg:PrecisionAwareValidTime ;
+    mfg:binds mfg:ThreeValuedAcceptedGraphProjection ;
+    mfg:status mfg:Implemented .
+```
+
 The author elevated ontology-driven KG realization to a pillar on 2026-08-17.
 `design/ONTOLOGY_DRIVEN_KG_REALIZATION.md` carries its detailed candidate
 protocol and evidence. `mfg:AcceptedDesign` applies to the pillar and its
 no-privileged-writer boundary. The author accepted `OKG-D001`, the pinned OTTR
 profile, and `OKG-D007` through `OKG-D011`, the GraphRecipe ABI, assembly,
 dependency, canonicalization, and CI decisions, on 2026-08-17. Backend profiles,
-ledger integration, and the public API remain unselected.
+ledger integration, and the public API remain unselected. The author also
+accepted `OKG-D012`: LinkML is the sole first-party contract frontend for v0,
+the compiled runtime is LinkML-free, and any custom frontend must cross the
+same language-neutral artifact boundary without semantic privilege.
 
 ### 10.1 Candidate composition-completeness claim
 
@@ -1508,19 +1634,25 @@ ontology-to-population composition seam, and known-exclusion accounting. It
 binds 149 checksummed corpus files, 10 case receipts, 7 executable metamorphic
 obligations, the selected manifest for each receipt, and the exact execution
 identity recorded by the conformance report. The report identity is
-`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`;
+`sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`;
 the checksum-set identity is
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 Declared-component coverage, full cross-protocol scenarios, and
 dependency-closed change conformance remain candidate obligations.
 
 An unused-import removal changed the bound runner bytes. The hard identity
-guard rejected the stale report and forced dependency-closed evidence refresh.
-The active identity supersedes retained report identity
+guard rejected the stale report and produced retained report identity
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`,
+which supersedes
 `sha256:41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0`.
-Both dedicated CI steps now run Ruff over the full research-local runner
-directory before the 39-test slice. These changes refresh evidence identity;
-they do not change any status conclusion.
+The current refresh binds the changed `ontology.py`, `pyproject.toml`,
+`status.py`, and implementation-status bytes plus package version `0.11.0`.
+Its active identity above supersedes the retained
+`sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
+identity. Both
+dedicated CI steps run Ruff over the full research-local runner directory before
+the 39-test slice. These changes refresh evidence identity; they do not change
+any status conclusion.
 
 The broader `GraphRecipeTDDProgram` and `GraphRecipeExperimentalLearning` are
 therefore `Partial`. The fixture and offline CI gate are `Implemented` only at
@@ -1569,14 +1701,17 @@ must expose those mechanisms and test their consequences.
 ## 12. First research-local slice
 
 No public API should be designed from prose alone. The smallest discriminating
-slice is a two-frontend neutrality fixture outside `src/malleus/`. It tests
-source-language neutrality through one admission implementation. It does not
-yet test graph-backend neutrality.
+slice is a frontend-boundary neutrality fixture outside `src/malleus/`. It
+tests the selected LinkML frontend against an independently authored,
+test-only contract-fact producer through one admission implementation. The
+direct-fact producer is a bootstrap and conformance oracle, not a second
+first-party source language. The slice does not yet test graph-backend
+neutrality.
 
 **Claim**
 
-A LinkML-shaped source and a direct fact source that express the same supported
-semantics compile to the same independently expected
+A LinkML source and a test-only direct-fact producer that express the same
+supported semantics produce the same independently expected
 `ValidatedContractFactSet`, the same `EffectiveContract` under one
 `NormativeAdmissionProfile`, and the same ordered typed validation results
 through one conforming `AdmissionImplementation`.
@@ -1588,8 +1723,8 @@ through one conforming `AdmissionImplementation`.
 3. Versioned LinkML support profile for the exercised subset.
 4. Exact retained source bytes, import closure, and compilation-result record.
 5. LinkML frontend adapter over the current parser behavior.
-6. Independently authored direct fact source and frozen expected fact set. It
-   must not be copied or generated from LinkML frontend output.
+6. Independently authored direct-fact conformance input and frozen expected
+   fact set. Neither may be copied or generated from LinkML frontend output.
 7. Normative admission profile for current runtime semantics.
 8. One identified admission implementation and conformance result.
 9. Diagnostic profile and typed violation vocabulary.
@@ -1649,8 +1784,8 @@ That creates an explicit bootstrap boundary, not a paradox.
    records.
 2. The first slice defines a seed meta-contract for these node and predicate
    kinds.
-3. The same seed graph is expressed through the LinkML and direct-fact
-   frontends.
+3. The same seed graph is expressed through the LinkML frontend and the
+   test-only direct-fact conformance producer.
 4. Parity requires the same effective contract identity and validation result.
 5. Only after author acceptance can a versioned graph become authority for
    later design decisions.
@@ -1672,26 +1807,30 @@ mfg:AcceptedFoundationGraph rdf:type mfg:DesignObject ;
 
 ## 14. Decisions required before implementation
 
-The reconstruction supports the contract kernel as the dependency root. It
-does not settle these author choices:
+The reconstruction supports the contract kernel as the dependency root.
+`OKG-D012` closes the source-policy decision: use LinkML as the sole
+first-party v0 frontend, keep the runtime contract frontend-neutral and
+LinkML-free, and admit custom frontends only through conformance at the same
+artifact boundary. These author choices remain open:
 
 1. **Root abstraction.** Accept `EffectiveContract =
    ValidatedContractFactSet + NormativeAdmissionProfile`, or keep
    `OntologyRegistry` as the public root.
 2. **Logical vocabulary.** Accept the object boundaries in section 4 before
    selecting an exact JSON, YAML, or Turtle wire encoding.
-3. **Source policy.** Make LinkML an optional frontend and compiled contracts a
-   runtime input, or retain LinkML-shaped YAML as the only supported source.
-4. **Contract composition.** Keep one combined protocol and domain contract,
+3. **Contract composition.** Keep one combined protocol and domain contract,
    or define `ProtocolRecordContract`, `GovernedGraphContract`, and
    `GovernanceContract` as separately evolving roles in one explicit
    composition.
-5. **Compatibility scope.** Start with concrete graph replay compatibility, or
+4. **Compatibility scope.** Start with concrete graph replay compatibility, or
    also define schema-theoretic writer-to-reader analysis in the first package.
-6. **Governance topology.** Protected partition in one accepted graph, or a
+5. **Governance topology.** Protected partition in one accepted graph, or a
    separate governance graph.
-7. **Promotion boundary.** Keep the first slice research-local until parity and
-   a second frontend are demonstrated, or authorize an immediate core API.
+6. **Promotion boundary.** Keep the first slice research-local until the
+   canonical intermediate and frontend conformance fixture are demonstrated,
+   or authorize an immediate core API. A third-party frontend is not required
+   for v0 promotion, but the test-only alternate producer must prove that
+   downstream stages do not import LinkML internals.
 
 No core or public-package implementation follows from these unclosed
 contract-kernel decisions. The separate GraphRecipe research slice does not

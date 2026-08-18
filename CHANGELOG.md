@@ -5,6 +5,83 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.11.0] - 2026-08-17
+
+This release keeps the public core at Stage 8c. It adds precision-aware valid
+time to accepted knowledge and ships the maintainer procedure that defines
+small, replaceable protocol stages. The GraphRecipe slice remains
+research-local evidence, not a public API.
+
+### Added
+
+- Added the `malleus-dev` maintainer skill and its Unix design doctrine. New
+  protocol stages must have one responsibility, versioned artifact contracts,
+  explicit failure and effect boundaries, and replacement conformance. LinkML
+  is the selected first-party contract frontend, not a privileged runtime
+  dependency; custom frontends may implement the same protocol boundary.
+- Added one canonical precision-aware `ValidTime` value for exact timestamps,
+  IANA-zoned calendar days, bounded intervals, order-only transitions, and
+  unresolved prior boundaries.
+- Added three-valued accepted-graph projection. Indeterminate views commit
+  record states, transition endpoints, machine reason codes, extracted reasons,
+  uncertainty bounds, and a resolution digest.
+
+### Changed
+
+- Replaced exact datetime strings in `TemporalWrite`, graph-base metadata,
+  `ClaimVersion`, and `ClaimRevision`. Candidate and graph-base serialization
+  are version 2 with no version 1 fallback.
+- Required an IANA timezone for every calendar-day boundary and a nonblank
+  extracted reason for every non-exact boundary. Calendar-day values record
+  IANA release `2026c` and load it from pinned `tzdata==2026.3` instead of host
+  timezone rules. No transaction, invoice, authorization, or payment time is
+  substituted for a physical transition.
+- Declared `ValidTime` as a closed five-way LinkML `exactly_one_of` union and
+  enforced its required and forbidden fields in `OntologyRegistry`, including
+  inlined graph writes. Lexical date and timezone validity and interval order
+  remain runtime checks in `ValidTime.from_value`.
+
+### Breaking
+
+- Direct `AcceptedGraphView` construction now requires four additional
+  keyword-only arguments: `valid_time_resolution_digest`, `valid_time_state`,
+  `record_states`, and `indeterminate_transitions`. The pre-0.11 constructor
+  shape fails explicitly when they are absent. Normal construction remains
+  through `AcceptedGraphProjector`, which binds all four from replayed state.
+- Advanced the assent ontology from 0.8.0 to 0.9.0 and the graph-base and
+  candidate serialization formats from version 1 to version 2. Temporal writes,
+  `ClaimVersion`, and `ClaimRevision` protocol serialization and replay now
+  require canonical inlined `ValidTime` objects. Standalone ontology and graph
+  writes enforce the variant shape, not runtime lexical or temporal semantics.
+  Version 1 artifacts and scalar claim timestamps have no fallback or migration
+  utility. Use a new ledger or perform an explicit external migration.
+- Bound calendar-day interpretation to `tzdata==2026.3`, IANA release `2026c`.
+  Other stored timezone-database versions fail explicitly. Cross-version
+  timezone migration remains unimplemented.
+- Added structural fingerprint version 4 for ontologies that use class unions,
+  value-presence constraints, or inlined-object enforcement. Version 3 and
+  version 4 fingerprints are deliberately divergent; additive subset and
+  superset compatibility applies only within one fingerprint version. Schemas
+  without these constraints retain their version 3 identity.
+
+### Boundary
+
+- The accepted LinkML frontend decision, contract artifacts, and Unix design
+  doctrine are design constraints. No public `ContractFrontend`,
+  `EffectiveContractArtifact`, or LinkML-free compiled runtime ships in 0.11.0.
+- The committed `GE-000` through `GE-020` GraphRecipe corpus and runner are a
+  research-local conformance slice. They are release-gated but excluded from
+  the wheel and do not establish full profile coverage or replaceability.
+- The exercised LinkML runtime loads the `ValidTime` class expression and
+  official JSON Schema generation is smoke-tested. Generated-schema parity for
+  the class-level union is neither tested nor enforced. Malleus runtime
+  validation, not generated JSON Schema, is the 0.11 enforcement boundary.
+- A valid-time projection refuses when its definite records are structurally
+  incomplete. Dependency-closed propagation through uncertain endpoints is
+  still open.
+
 ## [0.10.0] - 2026-08-16
 
 This release adds Malleus Recon as a provider-independent literature-forensics
@@ -103,10 +180,12 @@ Four adopter-facing defects, all found by the fleet rather than by us. Three of 
 
 ### Boundary
 
-- Stage 8a proves which exact bytes were registered and which exact source
-  record an evidence item cited. It does not establish authenticity, truth, or
-  byte-exact quotation. Resolving a quoted span against the registered bytes
-  remains `citation-byte-verification` and is not implemented.
+- Stage 8a records which byte identity the caller declared and which exact
+  source record an evidence item cited. `source_artifact_fields_from_bytes`
+  derives those fields when a caller supplies bytes, but the ledger itself does
+  not read them. It does not establish authenticity, truth, or byte-exact
+  quotation. Resolving a quoted span against the registered bytes remains
+  `citation-byte-verification` and is not implemented.
 - Stage 8b runs epistemic monitor adapters only. It does not select policy,
   decide epistemic control, run authority monitors, retry work, schedule work,
   or make a whole plan atomic.

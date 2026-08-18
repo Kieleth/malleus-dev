@@ -124,7 +124,43 @@ is in the graph" mean "it is true" in code or in prose. This is rule 8 of the
 Adoption Guide and it is repeated here because it is the rule most often lost
 first.
 
-## 6. Scale is not a result
+## 6. Contracts are stable; implementations are replaceable
+
+Protocol meaning belongs to an explicit boundary, never to the first engine
+that implements it. Each stage should do one job, consume and produce
+versioned typed artifacts, declare its effects and refusals, and expose enough
+state for an independent conformance suite to judge it. Policy stays separate
+from mechanism. Pure compilation and planning stay separate from mutation and
+external effects.
+
+For contract sources, the accepted v0 design selects official, execution-pinned
+LinkML as the sole first-party human-authored frontend. It does not make LinkML
+the protocol. The frontend compiles retained sources under an explicit resolver
+and support profile into the frontend-neutral contract facts that Malleus
+validates and canonicalizes. A custom frontend may replace it only by producing
+the same normative intermediate and passing the same conformance suite. The
+compiled runtime must not require LinkML.
+
+That is an accepted architectural constraint, not a shipped plugin claim. The
+current `OntologyRegistry` still interprets LinkML-shaped YAML directly, the
+public package still declares LinkML dependencies, and no public
+`ContractFrontend` or `EffectiveContractArtifact` API exists. The contract
+kernel and frontend-neutrality experiment must establish those boundaries
+before promotion.
+
+The broader software doctrine adapts Eric S. Raymond's
+[*The Art of Unix Programming*](https://www.catb.org/esr/writings/taoup/html/):
+small modules, clean composition, policy-mechanism separation, inspectable
+state, knowledge represented as data, deterministic generation, fail-loud
+repair, and explicit extension. Malleus qualifies the tradition in one crucial
+way: permissive input handling never licenses semantic guessing. Only a
+declared, deterministic, lossless, provenance-recorded normalization may
+repair input. Ambiguity and unsupported meaning reject before effects.
+
+The `malleus-dev` maintainer skill turns this principle into a stage-contract
+and replacement checklist.
+
+## 7. Scale is not a result
 
 A larger graph is not more knowledge, and more infrastructure is not more
 progress. The deliverable is the smallest observation that distinguishes the

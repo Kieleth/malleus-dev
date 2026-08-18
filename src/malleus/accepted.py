@@ -23,13 +23,21 @@ from malleus.staging import (
     StagingError,
     stage_subgraph,
 )
+from malleus.valid_time import (
+    BoundaryRelation,
+    TemporalRecordState,
+    ValidTime,
+    ValidTimeError,
+    ValidTimeViewState,
+    transition_cannot_follow,
+)
 
 if TYPE_CHECKING:
     from malleus.assent import ProtocolLedger, ProtocolProjection
 
 
-GRAPH_BASE_SCHEMA_VERSION = "1"
-CANDIDATE_SCHEMA_VERSION = "1"
+GRAPH_BASE_SCHEMA_VERSION = "2"
+CANDIDATE_SCHEMA_VERSION = "2"
 
 
 class AcceptedGraphError(ValueError):
@@ -38,21 +46,23 @@ class AcceptedGraphError(ValueError):
 
 @dataclass(frozen=True)
 class TemporalWrite:
-    """One exact structural write with a half-open valid-time interval."""
+    """One structural write with precision-aware valid-time boundaries."""
 
     operation: ProposedOperation
-    valid_from: str
-    valid_to: str | None = None
+    valid_from: ValidTime
+    valid_to: ValidTime | None = None
     supersedes_record_id: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.operation, ProposedOperation):
             raise TypeError("operation must be a ProposedOperation")
-        start = _stored_time(self.valid_from, "valid_from")
+        start = _stored_valid_time(self.valid_from, "valid_from")
+        object.__setattr__(self, "valid_from", start)
         if self.valid_to is not None:
-            end = _stored_time(self.valid_to, "valid_to")
-            if end <= start:
-                raise AcceptedGraphError("valid_to must be later than valid_from")
+            end = _stored_valid_time(self.valid_to, "valid_to")
+            object.__setattr__(self, "valid_to", end)
+            if transition_cannot_follow(start, end):
+                raise AcceptedGraphError("valid_to contradicts valid_from ordering")
         if self.supersedes_record_id is not None:
             _text(self.supersedes_record_id, "supersedes_record_id")
             if self.supersedes_record_id == self.operation.record_id:
@@ -61,9 +71,33 @@ class TemporalWrite:
     def as_dict(self) -> dict[str, Any]:
         return {
             "operation": self.operation.as_dict(),
-            "valid_from": self.valid_from,
-            "valid_to": self.valid_to,
+            "valid_from": self.valid_from.as_dict(),
+            "valid_to": self.valid_to.as_dict() if self.valid_to is not None else None,
             "supersedes_record_id": self.supersedes_record_id,
+        }
+
+
+@dataclass(frozen=True)
+class IndeterminateTransition:
+    """One unresolved boundary and the extracted reason it cannot be resolved."""
+
+    prior_record_id: str | None
+    replacement_record_id: str | None
+    reason_code: str
+    reason: str
+    earliest_possible: str | None
+    latest_possible: str | None
+    valid_time: ValidTime
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "prior_record_id": self.prior_record_id,
+            "replacement_record_id": self.replacement_record_id,
+            "reason_code": self.reason_code,
+            "reason": self.reason,
+            "earliest_possible": self.earliest_possible,
+            "latest_possible": self.latest_possible,
+            "valid_time": self.valid_time.as_dict(),
         }
 
 
@@ -78,10 +112,14 @@ class AcceptedGraphView:
     materialization_head: str
     accepted_history_state_digest: str
     visible_graph_digest: str
+    valid_time_resolution_digest: str
+    valid_time_state: str
     transaction_as_of: str
     transaction_sequence: int
     valid_as_of: str
     application_ids: tuple[str, ...]
+    indeterminate_transitions: tuple[IndeterminateTransition, ...]
+    _record_states: dict[str, str]
 
     def __init__(
         self,
@@ -93,10 +131,14 @@ class AcceptedGraphView:
         materialization_head: str,
         accepted_history_state_digest: str,
         visible_graph_digest: str,
+        valid_time_resolution_digest: str,
+        valid_time_state: str,
         transaction_as_of: str,
         transaction_sequence: int,
         valid_as_of: str,
         application_ids: Iterable[str],
+        record_states: Mapping[str, str],
+        indeterminate_transitions: Iterable[IndeterminateTransition],
     ) -> None:
         object.__setattr__(self, "_graph", graph.state_projection())
         object.__setattr__(self, "protocol_head_hash", protocol_head_hash)
@@ -105,14 +147,44 @@ class AcceptedGraphView:
         object.__setattr__(self, "materialization_head", materialization_head)
         object.__setattr__(self, "accepted_history_state_digest", accepted_history_state_digest)
         object.__setattr__(self, "visible_graph_digest", visible_graph_digest)
+        object.__setattr__(self, "valid_time_resolution_digest", valid_time_resolution_digest)
+        object.__setattr__(self, "valid_time_state", valid_time_state)
         object.__setattr__(self, "transaction_as_of", transaction_as_of)
         object.__setattr__(self, "transaction_sequence", transaction_sequence)
         object.__setattr__(self, "valid_as_of", valid_as_of)
         object.__setattr__(self, "application_ids", tuple(application_ids))
+        object.__setattr__(self, "_record_states", dict(record_states))
+        object.__setattr__(
+            self,
+            "indeterminate_transitions",
+            tuple(indeterminate_transitions),
+        )
 
     @property
     def graph(self) -> KnowledgeGraph:
+        if self.valid_time_state == ValidTimeViewState.INDETERMINATE.value:
+            raise AcceptedGraphError(
+                "valid-time view is indeterminate; inspect indeterminate_transitions "
+                "and use definite_graph"
+            )
         return self._graph.state_projection()
+
+    @property
+    def definite_graph(self) -> KnowledgeGraph:
+        return self._graph.state_projection()
+
+    @property
+    def record_states(self) -> dict[str, str]:
+        return dict(self._record_states)
+
+
+@dataclass(frozen=True)
+class _VisibleProjection:
+    graph: KnowledgeGraph
+    record_states: dict[str, str]
+    indeterminate_transitions: tuple[IndeterminateTransition, ...]
+    resolution_digest: str
+    state: ValidTimeViewState
 
 
 class AcceptedGraphProjector:
@@ -172,31 +244,35 @@ class AcceptedGraphProjector:
     ) -> AcceptedGraphView:
         if projection.graph_base_id is None or projection.accepted_graph is None:
             raise AcceptedGraphError("verified graph base is unavailable at this transaction prefix")
-        visible = visible_graph(
+        visible = _visible_projection(
             projection.accepted_graph.registry,
             projection.accepted_record_metadata,
             valid_as_of=valid_as_of,
         )
         return AcceptedGraphView(
-            graph=visible,
+            graph=visible.graph,
             protocol_head_hash=projection.head_hash,
             event_count=projection.event_count,
             acceptance_head=projection.acceptance_head,
             materialization_head=projection.materialization_head,
             accepted_history_state_digest=projection.accepted_graph.state_digest(),
-            visible_graph_digest=visible.state_digest(),
+            visible_graph_digest=visible.graph.state_digest(),
+            valid_time_resolution_digest=visible.resolution_digest,
+            valid_time_state=visible.state.value,
             transaction_as_of=transaction_as_of,
             transaction_sequence=transaction_sequence,
             valid_as_of=valid_as_of,
             application_ids=projection.accepted_application_order,
+            record_states=visible.record_states,
+            indeterminate_transitions=visible.indeterminate_transitions,
         )
 
 
 def temporal_write(
     operation: ProposedOperation,
     *,
-    valid_from: str,
-    valid_to: str | None = None,
+    valid_from: ValidTime | Mapping[str, Any],
+    valid_to: ValidTime | Mapping[str, Any] | None = None,
     supersedes_record_id: str | None = None,
 ) -> TemporalWrite:
     return TemporalWrite(operation, valid_from, valid_to, supersedes_record_id)
@@ -283,11 +359,19 @@ def graph_base_metadata(
                 value["supersedes_record_id"],
                 f"base interval {index} supersedes_record_id",
             )
-        start = _stored_time(value["valid_from"], f"base interval {index} valid_from")
+        start = _stored_valid_time(
+            value["valid_from"],
+            f"base interval {index} valid_from",
+        )
+        value["valid_from"] = start.as_dict()
         if value["valid_to"] is not None:
-            end = _stored_time(value["valid_to"], f"base interval {index} valid_to")
-            if end <= start:
-                raise AcceptedGraphError(f"base interval {index} is inverted")
+            end = _stored_valid_time(
+                value["valid_to"],
+                f"base interval {index} valid_to",
+            )
+            value["valid_to"] = end.as_dict()
+            if transition_cannot_follow(start, end):
+                raise AcceptedGraphError(f"base interval {index} ordering is contradictory")
         values.append(value)
     values.sort(key=lambda item: item["record_id"])
     identifiers = [item["record_id"] for item in values]
@@ -327,12 +411,26 @@ def parse_graph_base_metadata(value: Any) -> tuple[dict[str, Any], ...]:
                 item["supersedes_record_id"],
                 f"base record {index} supersedes_record_id",
             )
-        start = _stored_time(item["valid_from"], f"base record {index} valid_from")
+        start = _stored_valid_time(
+            item["valid_from"],
+            f"base record {index} valid_from",
+        )
         if item["valid_to"] is not None:
-            end = _stored_time(item["valid_to"], f"base record {index} valid_to")
-            if end <= start:
-                raise AcceptedGraphError(f"base record {index} interval is inverted")
-        result.append(dict(item))
+            end = _stored_valid_time(
+                item["valid_to"],
+                f"base record {index} valid_to",
+            )
+            if transition_cannot_follow(start, end):
+                raise AcceptedGraphError(
+                    f"base record {index} interval ordering is contradictory"
+                )
+        else:
+            end = None
+        result.append({
+            **item,
+            "valid_from": start.as_dict(),
+            "valid_to": end.as_dict() if end is not None else None,
+        })
     identifiers = [item["record_id"] for item in result]
     if identifiers != sorted(set(identifiers)):
         raise AcceptedGraphError("base record metadata must be canonical and unique")
@@ -588,23 +686,26 @@ def validate_temporal_writes(
                 raise AcceptedGraphError(
                     f"candidate write {index} supersession type differs from prior record"
                 )
-            prior_start = _time(prior["valid_from"], "prior valid_from")
-            replacement_start = _time(temporal.valid_from, "replacement valid_from")
-            if replacement_start <= prior_start:
+            prior_start = _stored_valid_time(prior["valid_from"], "prior valid_from")
+            replacement_start = temporal.valid_from
+            if transition_cannot_follow(prior_start, replacement_start):
                 raise AcceptedGraphError(
-                    f"candidate write {index} replacement must start after prior record"
+                    f"candidate write {index} replacement contradicts prior ordering"
                 )
             prior_end = prior.get("valid_to")
-            if prior_end is not None and _time(prior_end, "prior valid_to") != replacement_start:
+            if (
+                prior_end is not None
+                and _stored_valid_time(prior_end, "prior valid_to") != replacement_start
+            ):
                 raise AcceptedGraphError(
                     f"candidate write {index} replacement disagrees with prior valid_to"
                 )
-            prior["valid_to"] = temporal.valid_from
+            prior["valid_to"] = temporal.valid_from.as_dict()
             prior["superseded_by"] = operation.record_id
         working[operation.record_id] = {
             "operation": operation.as_dict(),
-            "valid_from": temporal.valid_from,
-            "valid_to": temporal.valid_to,
+            "valid_from": temporal.valid_from.as_dict(),
+            "valid_to": temporal.valid_to.as_dict() if temporal.valid_to is not None else None,
             "supersedes_record_id": supersedes,
             "superseded_by": None,
         }
@@ -623,12 +724,12 @@ def apply_temporal_writes(
     for index, temporal in enumerate(values):
         supersedes = temporal.supersedes_record_id
         if supersedes is not None:
-            metadata[supersedes]["valid_to"] = temporal.valid_from
+            metadata[supersedes]["valid_to"] = temporal.valid_from.as_dict()
             metadata[supersedes]["superseded_by"] = temporal.operation.record_id
         metadata[temporal.operation.record_id] = {
             "operation": temporal.operation.as_dict(),
-            "valid_from": temporal.valid_from,
-            "valid_to": temporal.valid_to,
+            "valid_from": temporal.valid_from.as_dict(),
+            "valid_to": temporal.valid_to.as_dict() if temporal.valid_to is not None else None,
             "supersedes_record_id": supersedes,
             "superseded_by": None,
             "transaction_time": transaction_time,
@@ -671,12 +772,12 @@ def _validate_base_lineage(
             raise AcceptedGraphError(
                 f"base interval {index} must begin at the prior valid_to"
             )
-        if _time(item["valid_from"], "base replacement valid_from") <= _time(
-            prior["valid_from"],
-            "base prior valid_from",
+        if transition_cannot_follow(
+            _stored_valid_time(prior["valid_from"], "base prior valid_from"),
+            _stored_valid_time(item["valid_from"], "base replacement valid_from"),
         ):
             raise AcceptedGraphError(
-                f"base interval {index} replacement must start after prior record"
+                f"base interval {index} replacement contradicts prior ordering"
             )
 
 
@@ -720,31 +821,133 @@ def visible_graph(
     *,
     valid_as_of: str,
 ) -> KnowledgeGraph:
-    point = _time(valid_as_of, "valid_as_of")
-    selected = [
-        item
-        for item in metadata.values()
-        if _time(item["valid_from"], "record valid_from") <= point
-        and (
-            item.get("valid_to") is None
-            or point < _time(item["valid_to"], "record valid_to")
+    projection = _visible_projection(registry, metadata, valid_as_of=valid_as_of)
+    if projection.state is ValidTimeViewState.INDETERMINATE:
+        raise AcceptedGraphError(
+            "valid-time projection is indeterminate; use AcceptedGraphProjector "
+            "to inspect its reasons"
         )
-    ]
+    return projection.graph.state_projection()
+
+
+def _visible_projection(
+    registry: Any,
+    metadata: Mapping[str, Mapping[str, Any]],
+    *,
+    valid_as_of: str,
+) -> _VisibleProjection:
+    point = _time(valid_as_of, "valid_as_of")
+    states: dict[str, TemporalRecordState] = {}
+    transitions: dict[str, IndeterminateTransition] = {}
+    selected = []
+    for record_id, item in metadata.items():
+        start = _stored_valid_time(item["valid_from"], f"record {record_id} valid_from")
+        end = (
+            _stored_valid_time(item["valid_to"], f"record {record_id} valid_to")
+            if item.get("valid_to") is not None
+            else None
+        )
+        state = _record_state(start, end, point)
+        states[record_id] = state
+        if state is TemporalRecordState.DEFINITELY_PRESENT:
+            selected.append(item)
+        _add_indeterminate_transition(
+            transitions,
+            start,
+            point,
+            prior_record_id=item.get("supersedes_record_id"),
+            replacement_record_id=record_id,
+        )
+        if end is not None:
+            _add_indeterminate_transition(
+                transitions,
+                end,
+                point,
+                prior_record_id=record_id,
+                replacement_record_id=item.get("superseded_by"),
+            )
     selected.sort(key=lambda item: item["order"])
     graph = KnowledgeGraph(registry)
-    if not selected:
-        return graph
-    candidate = stage_subgraph(
-        graph,
-        [_operation(item["operation"], "accepted metadata operation") for item in selected],
-    )
-    if not candidate.valid:
-        raise AcceptedGraphError(
-            "valid-time projection is structurally incomplete: "
-            f"{candidate.rejection_reason}"
+    if selected:
+        candidate = stage_subgraph(
+            graph,
+            [_operation(item["operation"], "accepted metadata operation") for item in selected],
         )
-    candidate.materialize_into(graph)
-    return graph.state_projection()
+        if not candidate.valid:
+            raise AcceptedGraphError(
+                "valid-time projection is structurally incomplete: "
+                f"{candidate.rejection_reason}"
+            )
+        candidate.materialize_into(graph)
+    result_graph = graph.state_projection()
+    ordered_transitions = tuple(
+        transitions[key] for key in sorted(transitions)
+    )
+    view_state = (
+        ValidTimeViewState.INDETERMINATE
+        if any(state is TemporalRecordState.INDETERMINATE for state in states.values())
+        else ValidTimeViewState.DETERMINATE
+    )
+    record_states = {
+        record_id: states[record_id].value for record_id in sorted(states)
+    }
+    resolution_digest = content_digest({
+        "valid_as_of": valid_as_of,
+        "valid_time_state": view_state.value,
+        "definite_graph_digest": result_graph.state_digest(),
+        "record_states": record_states,
+        "indeterminate_transitions": [
+            item.as_dict() for item in ordered_transitions
+        ],
+    })
+    return _VisibleProjection(
+        result_graph,
+        record_states,
+        ordered_transitions,
+        resolution_digest,
+        view_state,
+    )
+
+
+def _record_state(
+    start: ValidTime,
+    end: ValidTime | None,
+    point: datetime,
+) -> TemporalRecordState:
+    start_relation = start.relation_at(point)
+    end_relation = end.relation_at(point) if end is not None else BoundaryRelation.BEFORE
+    if start_relation is BoundaryRelation.BEFORE or end_relation is BoundaryRelation.AFTER:
+        return TemporalRecordState.DEFINITELY_ABSENT
+    if start_relation is BoundaryRelation.AFTER and end_relation is BoundaryRelation.BEFORE:
+        return TemporalRecordState.DEFINITELY_PRESENT
+    return TemporalRecordState.INDETERMINATE
+
+
+def _add_indeterminate_transition(
+    transitions: dict[str, IndeterminateTransition],
+    boundary: ValidTime,
+    point: datetime,
+    *,
+    prior_record_id: str | None,
+    replacement_record_id: str | None,
+) -> None:
+    if boundary.relation_at(point) is not BoundaryRelation.INDETERMINATE:
+        return
+    reason_code = boundary.reason_code
+    reason = boundary.indeterminacy_reason
+    if reason_code is None or reason is None:
+        raise AcceptedGraphError("indeterminate valid time lacks its canonical reason")
+    earliest, latest = boundary.display_bounds()
+    item = IndeterminateTransition(
+        prior_record_id,
+        replacement_record_id,
+        reason_code,
+        reason,
+        earliest,
+        latest,
+        boundary,
+    )
+    transitions[canonical_json(item.as_dict())] = item
 
 
 def _graph_operations(graph: KnowledgeGraph) -> dict[str, ProposedOperation]:
@@ -871,11 +1074,11 @@ def _time(value: Any, name: str) -> datetime:
         raise AcceptedGraphError(str(error)) from error
 
 
-def _stored_time(value: Any, name: str) -> datetime:
-    parsed = _time(value, name)
-    if parsed.isoformat() != value:
-        raise AcceptedGraphError(f"{name} must use canonical ISO 8601 encoding")
-    return parsed
+def _stored_valid_time(value: Any, name: str) -> ValidTime:
+    try:
+        return ValidTime.from_value(value, name)
+    except ValidTimeError as error:
+        raise AcceptedGraphError(str(error)) from error
 
 
 def _canonical_time(value: Any, name: str) -> str:
