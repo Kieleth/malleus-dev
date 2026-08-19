@@ -265,3 +265,167 @@ def test_the_projection_states_both_sides_of_the_boundary():
     )
     assert shipped["does_not_prove"], "a profile that claims no limits claims too much"
     assert shipped["selector_profile_replaceable"] is True
+
+
+class TestOntologyGovernance:
+    """The planes are typed records under the root primitives, not loose
+    dataclasses. Every case below was granted a purity seal by 0.11.0, whose
+    verifier had no schema to consult: the dataclass proved a field was a
+    string and nothing proved the string meant anything."""
+
+    def test_an_attempt_status_outside_the_enum_is_refused(self):
+        bundle = _bundle(attempts=(
+            OCRAttempt("att:1", "reg:1", D(3), {"model": "engine-a@1"}, "banana", D(4)),
+        ))
+        result = verify_bundle(bundle)
+        assert "OCR-D013" in result.codes()
+        assert "attempt_status" in str(result.diagnostics[0])
+
+    def test_a_review_verdict_outside_the_enum_is_refused(self):
+        bundle = _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "looks fine", D(6)),
+        ))
+        assert "OCR-D013" in verify_bundle(bundle).codes()
+
+    def test_a_byte_count_that_is_not_an_integer_is_refused(self):
+        bundle = _bundle(sources=(
+            SourceRepresentation("src:1", D(1), "2048", "application/pdf", "docs/a.pdf"),
+        ))
+        assert "OCR-D013" in verify_bundle(bundle).codes()
+
+    def test_a_human_verified_flag_that_is_not_a_boolean_is_refused(self):
+        bundle = _bundle(selections=(
+            Selection("sel:1", "reg:1", ("hyp:1", "hyp:2"), "hyp:2", "r", human_verified="yes"),
+        ))
+        assert "OCR-D013" in verify_bundle(bundle).codes()
+
+    def test_a_freeze_timestamp_that_is_not_a_timestamp_is_refused(self):
+        """OCR-D009 only ever asked whether frozen_at was non-blank, so
+        'last tuesday' froze a source class for a whole release."""
+        assert "OCR-D013" in verify_bundle(_bundle(source_class=_class(frozen_at="last tuesday"))).codes()
+
+    def test_the_profile_registry_is_replaceable(self):
+        """Doctrine rule 6: the default implementation is ordinary. A caller
+        supplying its own registry gets the same path, not a lesser one."""
+        from malleus.ocr.verify import profile_registry
+        assert verify_bundle(_bundle(), registry=profile_registry()).conforms
+
+
+# Every dataclass field either reaches a graph slot under its own name or is
+# named here with the slot it is content-addressed into. A field in neither
+# column is governed by nothing, which is the defect this whole class exists
+# to prevent recurring. Keep it a countable set of argued exceptions rather
+# than a silence (rite `unread_declared`).
+CONTENT_ADDRESSED = {
+    ("SourceClass", "metric_families"): "metric_families_digest",
+    ("Region", "selector"): "selector_digest",
+    ("OCRAttempt", "config_identity"): "config_identity_digest",
+    ("EvidenceBundle", "transport_metadata"): "transport_metadata_digest",
+}
+CONTAINED = {
+    ("EvidenceBundle", name): "member_ids"
+    for name in ("sources", "rasters", "regions", "attempts",
+                 "hypotheses", "corrections", "selections")
+}
+RENAMED = {
+    ("Raster", "source_id"): "source_representation_id",
+    ("OCRAttempt", "status"): "attempt_status",
+    ("ReviewCorrection", "verdict"): "review_verdict",
+    ("EvidenceBundle", "source_class"): "source_class_id",
+}
+
+
+class TestTheCarrierAndTheSchemaCannotDrift:
+    """The checking thing and the checked thing must be compared by something.
+    bundle.py is a carrier; ontology/domains/ocr.yaml is the authority. This
+    is the only thing that notices when they stop agreeing."""
+
+    def _planes(self):
+        from dataclasses import fields
+        from malleus.ocr.verify import PLANES, profile_registry
+        bundle = _bundle()
+        registry = profile_registry()
+        for attribute, type_name, _family in PLANES:
+            obj = bundle if attribute == "bundle" else (
+                bundle.source_class if attribute == "source_class"
+                else getattr(bundle, attribute)[0]
+            )
+            yield type_name, obj, fields(obj), registry
+
+    def test_every_record_key_is_a_slot_the_schema_declares(self):
+        for type_name, obj, _fields, registry in self._planes():
+            declared = set(registry.effective_slots(type_name))
+            unknown = set(obj.record()) - declared
+            assert not unknown, f"{type_name} records undeclared slots {sorted(unknown)}"
+
+    def test_every_required_slot_is_produced_by_a_conforming_object(self):
+        for type_name, obj, _fields, registry in self._planes():
+            record = obj.record()
+            missing = [
+                name for name, slot in registry.effective_slots(type_name).items()
+                if slot.required and name not in record
+            ]
+            assert not missing, f"{type_name} never produces required {missing}"
+
+    def test_every_dataclass_field_reaches_the_graph_or_is_declared(self):
+        """Reaching the graph means the schema declares a slot for it, not
+        that this fixture happened to populate it: an unset optional field is
+        absent from one record and still governed."""
+        for type_name, _obj, dataclass_fields, registry in self._planes():
+            declared = set(registry.effective_slots(type_name))
+            for field_ in dataclass_fields:
+                name = field_.name
+                if name in declared:
+                    continue
+                target = (
+                    CONTENT_ADDRESSED.get((type_name, name))
+                    or RENAMED.get((type_name, name))
+                    or CONTAINED.get((type_name, name))
+                )
+                assert target, (
+                    f"{type_name}.{name} reaches no slot and is not declared as "
+                    f"content-addressed or renamed"
+                )
+                assert target in declared, (
+                    f"{type_name}.{name} declares {target}, which the schema does not"
+                )
+
+    def test_the_declared_exceptions_are_all_real(self):
+        """An exception list that outlives its exceptions is a lie that passes."""
+        from dataclasses import fields
+        from malleus.ocr.verify import PLANES
+        import malleus.ocr.bundle as mod
+        by_type = {t: a for a, t, _ in PLANES}
+        for (type_name, field_name) in {**CONTENT_ADDRESSED, **RENAMED, **CONTAINED}:
+            assert type_name in by_type, f"{type_name} is not a plane"
+            cls = getattr(mod, "Bundle" if type_name == "EvidenceBundle" else type_name)
+            assert field_name in {f.name for f in fields(cls)}, (
+                f"{type_name}.{field_name} is declared as an exception and does not exist"
+            )
+
+
+def test_the_profile_ontology_is_packaged():
+    """A schema the wheel does not carry is a schema the adopter cannot load."""
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    pyproject = (root / "pyproject.toml").read_text()
+    assert '"/ontology/domains/ocr.yaml"' in pyproject, "not in the build include list"
+    assert 'share/malleus/ontology/domains/ocr.yaml' in pyproject, "not in shared data"
+
+
+def test_every_plane_is_governed():
+    """No identity plane may be carried by a dataclass alone."""
+    from dataclasses import fields
+    from malleus.ocr.verify import PLANES
+    import malleus.ocr.bundle as mod
+    planes = {t for _a, t, _f in PLANES}
+    carriers = {
+        name for name in dir(mod)
+        if isinstance(getattr(mod, name), type)
+        and hasattr(getattr(mod, name), "__dataclass_fields__")
+    }
+    ungoverned = {c for c in carriers if c not in planes and c != "Bundle"}
+    assert not ungoverned, f"dataclasses governed by no schema: {sorted(ungoverned)}"
+    for plane in planes:
+        cls = getattr(mod, "Bundle" if plane == "EvidenceBundle" else plane)
+        assert fields(cls), f"{plane} carries no fields"

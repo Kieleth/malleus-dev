@@ -1,0 +1,513 @@
+id: https://malleus.dev/schema/ocr
+name: ocr
+version: 0.1.0
+title: Malleus OCR Evidence Integrity Extension
+description: >-
+  Typed identity planes for a document evidence bundle. The planes exist so
+  that a change in one cannot silently rewrite another: correcting a reading
+  must not move the region it read, and a retry must not overwrite the attempt
+  before it. Structural recording establishes lineage from an accepted reading
+  back to exact source bytes. It does not establish source authenticity, the
+  factual truth of a reading, quote fairness, or downstream consequence.
+
+  Capability is AUDIT_ONLY. Nothing typed here is written to a protocol
+  ledger. Decisions governing this vocabulary are recorded in
+  design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  ocr: https://malleus.dev/schema/ocr/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  OCREventType:
+    description: >-
+      Closed per Ontology Protocol rule 3. The root leaves event_type open;
+      the domain schema narrows it.
+    permissible_values:
+      OCR_ATTEMPT:
+        description: One execution attempt against one region.
+      REVIEW_CORRECTION:
+        description: One append-only human review of one reading.
+
+  AttemptStatus:
+    description: >-
+      What happened to the call. Distinct from what the document said: a
+      completed attempt over a blank region is COMPLETED, and the blankness is
+      the reviewer's verdict, not the call's status.
+    permissible_values:
+      COMPLETED:
+        description: The provider returned a response that was retained.
+      FAILED:
+        description: The call was made and did not produce a usable response.
+      UNAVAILABLE:
+        description: The call could not be made. unavailable_reason states why.
+
+  ReviewVerdict:
+    description: >-
+      Mandate B2. Verified blank, unreadable, unavailable, failed, excluded and
+      absent stay distinct. None may be padded, snapped, or converted into
+      another, here or downstream. UNAVAILABLE and FAILED are attempt states
+      and live in AttemptStatus; a reviewer never inherits them.
+    permissible_values:
+      CONFIRMED:
+        description: The reviewed reading stands unchanged.
+      CORRECTED:
+        description: The reviewer produced a different reading of the same region.
+      VERIFIED_BLANK:
+        description: A reviewer looked and the region carries no content.
+      UNREADABLE:
+        description: The region carries content that cannot be read.
+      EXCLUDED:
+        description: The region is out of scope by a declared rule.
+      ABSENT:
+        description: The unit the region belongs to is not present in the source.
+
+classes:
+
+  # -----------------------------------------------------------------
+  # Precommitment
+  # -----------------------------------------------------------------
+
+  SourceClass:
+    is_a: Entity
+    description: >-
+      Declared before ingest and frozen at it (decision C8). Carries the three
+      per-class declarations that decisions C2, C3 and C4 each needed
+      separately. A metric family chosen after seeing the scan is a metric
+      family chosen to flatter it.
+    slots:
+      - required_units
+      - metric_family_names
+      - metric_families_digest
+      - temporal_policy
+      - frozen_at
+      - inventory_basis
+    slot_usage:
+      required_units:
+        required: true
+      metric_family_names:
+        required: true
+      metric_families_digest:
+        required: true
+      temporal_policy:
+        required: true
+      frozen_at:
+        required: true
+      inventory_basis:
+        required: true
+    class_uri: ocr:SourceClass
+
+  EvidenceBundle:
+    is_a: Entity
+    description: >-
+      The container. Binds the frozen source class and the two mandatory
+      policy declarations (decision C5). The profile enforces that a
+      declaration exists and is bound; it never enforces what the declaration
+      says.
+    slots:
+      - source_class_id
+      - member_ids
+      - data_handling_policy_id
+      - hostile_content_policy_id
+      - observed_units
+      - transport_metadata_digest
+    slot_usage:
+      source_class_id:
+        required: true
+      member_ids:
+        required: true
+      data_handling_policy_id:
+        required: true
+      hostile_content_policy_id:
+        required: true
+      transport_metadata_digest:
+        required: true
+    class_uri: ocr:EvidenceBundle
+
+  # -----------------------------------------------------------------
+  # Identity planes, source to reading
+  # -----------------------------------------------------------------
+
+  SourceRepresentation:
+    is_a: Entity
+    description: Exact original bytes. Never replaced by a normalized derivative.
+    slots:
+      - digest
+      - byte_length
+      - media_type
+      - locator
+    slot_usage:
+      digest:
+        required: true
+      byte_length:
+        required: true
+      media_type:
+        required: true
+      locator:
+        required: true
+    class_uri: ocr:SourceRepresentation
+
+  Raster:
+    is_a: Entity
+    description: A rendering derived from a source. Derived, never a replacement.
+    slots:
+      - source_representation_id
+      - digest
+      - render_contract
+    slot_usage:
+      source_representation_id:
+        required: true
+      digest:
+        required: true
+      render_contract:
+        required: true
+    class_uri: ocr:Raster
+
+  Region:
+    is_a: Entity
+    description: >-
+      A stable spatial identity over a raster. The selector is governed by a
+      declared profile; W3C Web Annotation and IIIF are the first-party default
+      and hold no privilege (decision C1). The selector itself is
+      content-addressed rather than stored as a graph record (decision 2), so
+      the coordinate contract stays the specification's and this schema does
+      not fork it.
+    slots:
+      - raster_id
+      - selector_digest
+      - selector_profile
+    slot_usage:
+      raster_id:
+        required: true
+      selector_digest:
+        required: true
+      selector_profile:
+        required: true
+    class_uri: ocr:Region
+
+  Hypothesis:
+    is_a: Entity
+    description: >-
+      One reading of one region, from exactly one origin. A machine reading
+      names its attempt; a human correction names its review. Never both, so
+      the provenance of a reading is never ambiguous.
+
+      An Entity and deliberately not a Signal: a Signal is computed and
+      recomputable from its inputs, and a provider reading is neither. It is
+      retained precisely because it cannot be regenerated.
+    slots:
+      - region_id
+      - text_digest
+      - attempt_id
+      - correction_id
+      - confidence
+    slot_usage:
+      region_id:
+        required: true
+      text_digest:
+        required: true
+    class_uri: ocr:Hypothesis
+
+  Selection:
+    is_a: Entity
+    description: >-
+      Which reading is current, and why. Currency is not validity (decision
+      C7): a demoted hypothesis remains a valid observation of the same bytes,
+      it is simply not the selected one.
+    slots:
+      - region_id
+      - candidate_ids
+      - selected_id
+      - reason
+      - human_verified
+    slot_usage:
+      region_id:
+        required: true
+      candidate_ids:
+        required: true
+      selected_id:
+        required: true
+      reason:
+        required: true
+      human_verified:
+        required: true
+    class_uri: ocr:Selection
+
+  # -----------------------------------------------------------------
+  # Acts
+  # -----------------------------------------------------------------
+
+  OCRAttempt:
+    is_a: Event
+    description: >-
+      One execution attempt. Attempts never collapse, including retries: a
+      second try is a second record, never an overwrite of the first.
+      Credentials never enter the bundle (decision C6), so the request is bound
+      by digest and cannot be replayed byte-for-byte without out-of-band
+      credentials. That consequence is stated rather than discovered.
+    slots:
+      - region_id
+      - request_digest
+      - config_identity_digest
+      - attempt_status
+      - response_digest
+      - unavailable_reason
+    slot_usage:
+      event_type:
+        required: true
+        equals_string: OCR_ATTEMPT
+      region_id:
+        required: true
+      request_digest:
+        required: true
+      config_identity_digest:
+        required: true
+      attempt_status:
+        required: true
+    class_uri: ocr:OCRAttempt
+
+  ReviewCorrection:
+    is_a: Event
+    description: >-
+      Append-only human review. Overwrites nothing. A separate reviewer is an
+      identity that did not produce the hypothesis under review (mandate B3);
+      reviewer_id is a bare string because protocol-actor-registration is not
+      implemented, so this schema records the claim and cannot check it.
+    slots:
+      - reviewed_hypothesis_id
+      - reviewer_id
+      - review_verdict
+      - corrected_text_digest
+      - predecessor_id
+    slot_usage:
+      event_type:
+        required: true
+        equals_string: REVIEW_CORRECTION
+      reviewed_hypothesis_id:
+        required: true
+      reviewer_id:
+        required: true
+      review_verdict:
+        required: true
+    class_uri: ocr:ReviewCorrection
+
+slots:
+
+  required_units:
+    range: string
+    multivalued: true
+    description: >-
+      The unit inventory this source class requires, derived from the source
+      and then explicitly confirmed or overridden as a recorded act, so a
+      truncated source cannot certify itself.
+
+      DECLARED UNREAD in v0. Nothing in malleus.ocr.verify consumes this slot.
+      Decision C2, dependency-closed partial claims, is the reader: a claim
+      whose evidence does not depend on a missing unit may promote, marked
+      partial. C2 needs unit-to-claim closure, claim-to-claim closure, cycle
+      detection and replay semantics, each with its own fixtures, and none is
+      built. The slot is declared here so the gap is one argued exception
+      rather than a silence.
+
+  metric_family_names:
+    range: string
+    multivalued: true
+    description: >-
+      The names of the precommitted coverage metric families. Read by the
+      profile, which refuses a source class declaring none.
+
+  metric_families_digest:
+    range: string
+    description: >-
+      Content address of the full metric family declaration, including each
+      family's denominator and threshold. The declaration is an artifact, not
+      a graph record (decision 2).
+
+  temporal_policy:
+    range: string
+    description: >-
+      What a printed date on this class of document means, and whether the
+      class can be ordered by valid time (decision C4). No invented defaults.
+      An undated class is usable for content and carries no timeline.
+
+  frozen_at:
+    range: datetime
+    description: When the declaration was frozen. Freezing precedes ingest.
+
+  inventory_basis:
+    range: string
+    description: How the required-unit inventory was arrived at and confirmed.
+
+  source_class_id:
+    range: string
+    description: The frozen source class this bundle was ingested under.
+
+  data_handling_policy_id:
+    range: string
+    description: >-
+      Bound declaration of classification, local versus remote processing,
+      provider retention, encryption, access, export, deletion and raw-response
+      policy (decision C5).
+
+  hostile_content_policy_id:
+    range: string
+    description: >-
+      Bound isolation declaration. Document text is untrusted data everywhere:
+      it cannot alter prompts, tools, policy, ontology, permissions or
+      execution instructions.
+
+  member_ids:
+    range: string
+    multivalued: true
+    description: >-
+      Every plane record this bundle contains. Without it a bundle record
+      names its precommitment and its policies and cannot answer which
+      readings belong to it, so two bundles over the same source class are
+      indistinguishable in the graph.
+
+  observed_units:
+    range: string
+    multivalued: true
+    description: The units actually present in this bundle.
+
+  transport_metadata_digest:
+    range: string
+    description: >-
+      Content address of the transport metadata, which is scanned for
+      credential-shaped material before it is bound.
+
+  digest:
+    range: string
+    description: Full algorithm-tagged content address. A truncated digest may be displayed and may never be an integrity value.
+
+  byte_length:
+    range: integer
+    description: Exact byte count of the represented source.
+
+  media_type:
+    range: string
+    description: IANA media type of the source bytes.
+
+  locator:
+    range: string
+    description: Where the bytes were obtained. Not proof that they are authentic.
+
+  source_representation_id:
+    range: string
+    description: The source representation this raster was rendered from.
+
+  render_contract:
+    range: string
+    description: The exact rendering contract, including resolution and version.
+
+  raster_id:
+    range: string
+    description: The raster this region is defined over.
+
+  selector_digest:
+    range: string
+    description: Content address of the region selector under its declared profile.
+
+  selector_profile:
+    range: string
+    description: >-
+      The selector profile this region is expressed in. Replaceable: any
+      profile that emits the same normative intermediate and passes the
+      selector conformance suite takes the default's place with no privilege
+      lost or gained (decision C1).
+
+  region_id:
+    range: string
+    description: The region a reading, attempt or selection is bound to.
+
+  text_digest:
+    range: string
+    description: Content address of the read text. The text itself is untrusted data.
+
+  attempt_id:
+    range: string
+    description: The machine attempt that produced this reading, if any.
+
+  correction_id:
+    range: string
+    description: The human review that produced this reading, if any.
+
+  confidence:
+    range: float
+    description: >-
+      Provider-reported confidence. Uncalibrated by construction and therefore
+      never permitted to control acceptance (mandate B1).
+
+  candidate_ids:
+    range: string
+    multivalued: true
+    description: Every reading this selection considered.
+
+  selected_id:
+    range: string
+    description: The reading this selection made current. Must be among the candidates.
+
+  reason:
+    range: string
+    description: Why this reading was selected over the others considered.
+
+  human_verified:
+    range: boolean
+    description: >-
+      Whether a human verified the selected reading. Cannot be asserted without
+      a retained review record.
+
+  request_digest:
+    range: string
+    description: Content address of the request semantics, credentials excluded.
+
+  config_identity_digest:
+    range: string
+    description: >-
+      Content address of the exact prompt, config, model and tool identity used.
+      A change here demotes prior readings from current without destroying them
+      (decision C7).
+
+  attempt_status:
+    range: AttemptStatus
+    description: What happened to the call.
+
+  response_digest:
+    range: string
+    description: >-
+      Content address of the raw response, retained under the adopter's
+      declared retention rule.
+
+  unavailable_reason:
+    range: string
+    description: Why the call could not be made. Required reading when status is UNAVAILABLE.
+
+  reviewed_hypothesis_id:
+    range: string
+    description: The reading under review. Retained; a review never erases what it reviewed.
+
+  reviewer_id:
+    range: string
+    description: >-
+      The reviewing identity. A bare string until protocol-actor-registration
+      lands, so separateness from the producing identity is recorded and not
+      checked.
+
+  review_verdict:
+    range: ReviewVerdict
+    description: What the reviewer concluded.
+
+  corrected_text_digest:
+    range: string
+    description: Content address of the corrected reading, when the verdict is CORRECTED.
+
+  predecessor_id:
+    range: string
+    description: The prior review in an append-only correction chain.

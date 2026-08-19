@@ -104,6 +104,7 @@ include = [
     "/ontology/malleus.yaml",
     "/ontology/assent.yaml",
     "/ontology/domains/attack.yaml",
+    "/ontology/domains/ocr.yaml",
     "/ontology/domains/cyp450.yaml",
     "/ontology/domains/recon.yaml",
     "/prolog/cyp450_logic.yaml",
@@ -145,6 +146,7 @@ core-metadata-version = "2.4"
 "ontology/malleus.yaml" = "share/malleus/ontology/malleus.yaml"
 "ontology/assent.yaml" = "share/malleus/ontology/assent.yaml"
 "ontology/domains/attack.yaml" = "share/malleus/ontology/domains/attack.yaml"
+"ontology/domains/ocr.yaml" = "share/malleus/ontology/domains/ocr.yaml"
 "ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"
 "ontology/domains/recon.yaml" = "share/malleus/ontology/domains/recon.yaml"
 "prolog/cyp450_logic.yaml" = "share/malleus/prolog/cyp450_logic.yaml"

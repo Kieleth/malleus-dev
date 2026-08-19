@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the OCR profile being governed by nothing. Its nine identity planes
+  shipped as Python dataclasses with no schema anywhere, in a library whose
+  own rubric condemns declared vocabulary with no reader, so `status="banana"`,
+  a byte count of `"2048"`, a boolean of `"yes"` and a freeze timestamp of
+  `"last tuesday"` all took a clean pass from the 0.11.0 verifier. The planes
+  are now `ontology/domains/ocr.yaml`, a LinkML domain schema under the root
+  primitives, and `verify_bundle` validates every record through
+  `KnowledgeGraph` before running a profile check. `malleus.recon` had carried
+  its own domain ontology since 0.10.0; the profile built to that pattern
+  diverged on the one part that mattered. Established by running 0.11.0's own
+  code against a bundle carrying all five violations: it granted the seal.
+- Added `EvidenceBundle.member_ids`, without which a bundle record named its
+  precommitment and its policies and could not answer which readings belonged
+  to it, leaving two bundles over one source class indistinguishable in the
+  graph.
+
 - Fixed the local pre-tag check being narrower than CI's. `pytest` now
   executes CI's release-gate step verbatim, read out of the workflow, so it
   answers "is this taggable" for everything that step covers. Three tags were
@@ -47,8 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   anyone else. The test reads the roadmap's own `Rite:` lines, so a rite
   accepted tomorrow is covered without anyone remembering to maintain a list,
   and it was verified to fail on an unshipped id before it was trusted.
-
-### Added
 
 - Added the OCR evidence-integrity profile at capability `AUDIT_ONLY`
   (`malleus.ocr`, decision record `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md`).

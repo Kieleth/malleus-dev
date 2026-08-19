@@ -4,6 +4,17 @@ Every object here is one identity plane. The planes exist so that a change in
 one cannot silently rewrite another: correcting a reading must not move the
 region it read, and a retry must not overwrite the attempt before it.
 
+These dataclasses are a carrier, never the authority. The authority is
+`ontology/domains/ocr.yaml`, and every object here answers `record()` with the
+graph record the registry validates. A field that does not reach a record is
+governed by nothing, which is the defect this profile spent a release
+committing before its own rubric caught it.
+
+Nested structures do not become graph records. A selector, a config identity
+and transport metadata are content-addressed artifacts (decision 2), so the
+coordinate contract stays the selector specification's and this schema does
+not fork it.
+
 Digests reuse `malleus.ledger.canonical_json`, so a bundle object hashes the
 same way a protocol record does. Nothing in this module writes to a ledger.
 """
@@ -42,6 +53,11 @@ def canonical_digest(value: Any) -> str:
     return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
 
 
+def _present(record: dict[str, Any]) -> dict[str, Any]:
+    """Drop unset optional slots. An absent optional slot is not a null one."""
+    return {key: value for key, value in record.items() if value is not None}
+
+
 @dataclass(frozen=True)
 class SourceClass:
     """Declared before ingest and frozen at it (decision C8).
@@ -60,6 +76,17 @@ class SourceClass:
     frozen_at: str
     inventory_basis: str = "derived_then_confirmed"
 
+    def record(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "required_units": list(self.required_units),
+            "metric_family_names": sorted(self.metric_families),
+            "metric_families_digest": canonical_digest(self.metric_families),
+            "temporal_policy": self.temporal_policy,
+            "frozen_at": self.frozen_at,
+            "inventory_basis": self.inventory_basis,
+        }
+
 
 @dataclass(frozen=True)
 class SourceRepresentation:
@@ -71,6 +98,15 @@ class SourceRepresentation:
     media_type: str
     locator: str
 
+    def record(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "digest": self.digest,
+            "byte_length": self.byte_length,
+            "media_type": self.media_type,
+            "locator": self.locator,
+        }
+
 
 @dataclass(frozen=True)
 class Raster:
@@ -80,6 +116,14 @@ class Raster:
     source_id: str
     digest: str
     render_contract: str
+
+    def record(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "source_representation_id": self.source_id,
+            "digest": self.digest,
+            "render_contract": self.render_contract,
+        }
 
 
 @dataclass(frozen=True)
@@ -96,6 +140,14 @@ class Region:
     selector: Mapping[str, Any]
     selector_profile: str = "w3c-web-annotation+iiif"
 
+    def record(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "raster_id": self.raster_id,
+            "selector_digest": canonical_digest(self.selector),
+            "selector_profile": self.selector_profile,
+        }
+
 
 @dataclass(frozen=True)
 class OCRAttempt:
@@ -108,6 +160,18 @@ class OCRAttempt:
     status: str
     response_digest: str | None = None
     unavailable_reason: str | None = None
+
+    def record(self) -> dict[str, Any]:
+        return _present({
+            "id": self.id,
+            "event_type": "OCR_ATTEMPT",
+            "region_id": self.region_id,
+            "request_digest": self.request_digest,
+            "config_identity_digest": canonical_digest(self.config_identity),
+            "attempt_status": self.status,
+            "response_digest": self.response_digest,
+            "unavailable_reason": self.unavailable_reason,
+        })
 
 
 @dataclass(frozen=True)
@@ -125,6 +189,16 @@ class Hypothesis:
     correction_id: str | None = None
     confidence: float | None = None
 
+    def record(self) -> dict[str, Any]:
+        return _present({
+            "id": self.id,
+            "region_id": self.region_id,
+            "text_digest": self.text_digest,
+            "attempt_id": self.attempt_id,
+            "correction_id": self.correction_id,
+            "confidence": self.confidence,
+        })
+
 
 @dataclass(frozen=True)
 class ReviewCorrection:
@@ -136,6 +210,17 @@ class ReviewCorrection:
     verdict: str
     corrected_text_digest: str | None = None
     predecessor_id: str | None = None
+
+    def record(self) -> dict[str, Any]:
+        return _present({
+            "id": self.id,
+            "event_type": "REVIEW_CORRECTION",
+            "reviewed_hypothesis_id": self.reviewed_hypothesis_id,
+            "reviewer_id": self.reviewer_id,
+            "review_verdict": self.verdict,
+            "corrected_text_digest": self.corrected_text_digest,
+            "predecessor_id": self.predecessor_id,
+        })
 
 
 @dataclass(frozen=True)
@@ -152,6 +237,16 @@ class Selection:
     selected_id: str
     reason: str
     human_verified: bool = False
+
+    def record(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "region_id": self.region_id,
+            "candidate_ids": list(self.candidate_ids),
+            "selected_id": self.selected_id,
+            "reason": self.reason,
+            "human_verified": self.human_verified,
+        }
 
 
 @dataclass(frozen=True)
@@ -171,6 +266,23 @@ class Bundle:
     data_handling_policy_id: str | None = None
     hostile_content_policy_id: str | None = None
     transport_metadata: Mapping[str, Any] = field(default_factory=dict)
+
+    def record(self) -> dict[str, Any]:
+        return _present({
+            "id": self.id,
+            "source_class_id": self.source_class.id,
+            "member_ids": [item.id for item in self._members()],
+            "data_handling_policy_id": self.data_handling_policy_id,
+            "hostile_content_policy_id": self.hostile_content_policy_id,
+            "observed_units": list(self.observed_units),
+            "transport_metadata_digest": canonical_digest(self.transport_metadata),
+        })
+
+    def _members(self) -> tuple[Any, ...]:
+        return (
+            *self.sources, *self.rasters, *self.regions, *self.attempts,
+            *self.hypotheses, *self.corrections, *self.selections,
+        )
 
     def by_id(self, kind: str) -> dict[str, Any]:
         return {item.id: item for item in getattr(self, kind)}

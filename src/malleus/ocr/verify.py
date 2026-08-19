@@ -16,7 +16,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ocr.bundle import DIGEST, SECRET_KEYS, Bundle
+from malleus.ontology import OntologyRegistry, bundled_ontology_path
 
 CAPABILITY = "AUDIT_ONLY"
 
@@ -36,7 +38,34 @@ CODES = {
     "OCR-D010": "a required policy declaration is unbound",
     "OCR-D011": "a selection names a hypothesis it did not consider",
     "OCR-D012": "no coverage metric family is declared",
+    "OCR-D013": "a bundle record violates the profile ontology",
 }
+
+ONTOLOGY = ("domains", "ocr.yaml")
+
+# Entities before events, the order KnowledgeGraph replays record families in.
+PLANES: tuple[tuple[str, str, str], ...] = (
+    ("source_class", "SourceClass", "entity"),
+    ("sources", "SourceRepresentation", "entity"),
+    ("rasters", "Raster", "entity"),
+    ("regions", "Region", "entity"),
+    ("hypotheses", "Hypothesis", "entity"),
+    ("selections", "Selection", "entity"),
+    ("bundle", "EvidenceBundle", "entity"),
+    ("attempts", "OCRAttempt", "event"),
+    ("corrections", "ReviewCorrection", "event"),
+)
+
+
+def profile_registry() -> OntologyRegistry:
+    """The ontology that governs this profile.
+
+    Constructed from the schema shipped with the package, the way
+    `malleus.recon` constructs its own. Pass a different registry to
+    `verify_bundle` to run a bundle against a different profile version; the
+    default receives no privilege the replacement lacks.
+    """
+    return OntologyRegistry(bundled_ontology_path(*ONTOLOGY))
 
 
 @dataclass(frozen=True)
@@ -73,12 +102,35 @@ def _walk(value: Any, path: str = ""):
             yield from _walk(item, f"{path}[{index}]")
 
 
-def verify_bundle(bundle: Bundle) -> VerificationResult:
+def verify_bundle(
+    bundle: Bundle,
+    registry: OntologyRegistry | None = None,
+) -> VerificationResult:
     """Run every profile check. Collect all diagnostics; never stop at the first."""
     out: list[Diagnostic] = []
 
     def add(code: str, subject: str, detail: str) -> None:
         out.append(Diagnostic(code, subject, detail))
+
+    # Write-time validation first. Every plane is a typed record under the
+    # root primitives, and the registry refuses an unknown property, a missing
+    # required slot, a value outside a closed enum or a range violation. The
+    # checks below it are the cross-plane questions a schema cannot ask.
+    graph = KnowledgeGraph(registry if registry is not None else profile_registry())
+    for attribute, type_name, family in PLANES:
+        if attribute == "bundle":
+            objects: tuple[Any, ...] = (bundle,)
+        else:
+            value = getattr(bundle, attribute)
+            objects = value if isinstance(value, tuple) else (value,)
+        create = graph.create_entity if family == "entity" else graph.create_event
+        for item in objects:
+            record = item.record()
+            operation = create(type_name, record["id"], {
+                key: value for key, value in record.items() if key != "id"
+            })
+            if operation.op_status is OpStatus.REJECTED:
+                add("OCR-D013", record["id"], f"{type_name}: {operation.rejection_reason}")
 
     sources = bundle.by_id("sources")
     rasters = bundle.by_id("rasters")
@@ -221,6 +273,7 @@ def profile_projection() -> dict:
         "profile_id": "malleus.ocr.evidence_integrity",
         "profile_version": "v0",
         "capability": CAPABILITY,
+        "ontology": "ontology/domains/ocr.yaml",
         "decision_record": "design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md",
         "selector_profile_default": "w3c-web-annotation+iiif",
         "selector_profile_replaceable": True,
@@ -229,6 +282,7 @@ def profile_projection() -> dict:
             "source-to-reading lineage",
             "separation of identity planes",
             "declared coverage and policy precommitment",
+            "every plane typed under the malleus root primitives",
         ],
         "does_not_prove": [
             "source authenticity",

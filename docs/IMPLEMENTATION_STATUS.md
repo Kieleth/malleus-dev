@@ -192,6 +192,37 @@ grant, so an exact changed context can be re-evaluated while competing output
 for the same context remains forbidden. Non-authorizing verdicts carry
 no authorization validity interval.
 
+## OCR evidence-integrity profile
+
+Capability `AUDIT_ONLY`. The package ships a profile that verifies a document
+evidence bundle and writes nothing to a protocol ledger, because human review
+has no ledger event door while `review-report-recording` stays unimplemented.
+
+The profile's vocabulary is `ontology/domains/ocr.yaml`, a LinkML domain schema
+importing the root, and every identity plane is a typed record under a root
+primitive: nine classes, two of them Events. `verify_bundle` validates every
+plane through `KnowledgeGraph` before it runs a single profile check, so an
+unknown property, a missing required slot, a value outside a closed enum, or a
+range violation is refused as `OCR-D013`. Thirteen typed diagnostics, each with
+a negative case.
+
+The Python dataclasses in `malleus.ocr.bundle` are a carrier, not the
+authority. Each answers `record()` with the graph record the registry
+validates, and a test compares every dataclass field against the schema's
+slots, so the two cannot separate again without something noticing.
+
+What the profile proves: source-to-reading lineage, separation of identity
+planes, declared coverage and policy precommitment, and that every plane is
+typed under the root. What it does not prove: source authenticity, the factual
+truth of a reading, quote fairness, or downstream consequence.
+
+Not built: decision C2, dependency-closed partial claims. `required_units` is
+declared and read by nothing, recorded as such in the schema rather than left
+silent. No adapter has passed the conformance suite, so the profile is designed
+from two audited adopters and is not yet established as portable. Coverage
+metric families are precommitted and counted; no coverage measurement exists,
+which is why no Signal subtype is declared.
+
 ## Not implemented
 
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph

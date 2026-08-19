@@ -27,7 +27,12 @@ corrected before acceptance.
 This settles proposal decisions 5, 12, 13, 16, 18 and 26. Each bites only if
 v0 touches Assent, and v0 cannot.
 
-**A2. Nothing new enters core.** Replaceability is empirical and no adapter has
+**A2. Nothing new enters core.** *(Landed: the profile ontology is
+`ontology/domains/ocr.yaml`, importing the root and adding nothing to it. It
+was written a release late. v0 shipped with the planes as Python dataclasses
+governed by no schema, which is the defect `root_has_speakers` and
+`instance_reader_coverage` both name, in the module that shipped alongside the
+rubric carrying them.)* Replaceability is empirical and no adapter has
 crossed the boundary. `StageExecutionDeclaration` and `StageExecutionRealization`
 stay profile-local (17), the new graph vocabulary lands in the profile's own
 ontology rather than the root (31), spatial data and raw responses are

@@ -10,6 +10,12 @@ OCR-specific: the region selector, and decision C1 makes that swappable. Bring
 audio and you replace the selector profile while the identity planes, digest
 rules, staleness semantics and coverage declarations stand unchanged.
 
+The authority for this vocabulary is `ontology/domains/ocr.yaml`. Every plane
+is a typed record under a root primitive, and `verify_bundle` validates each
+one through `KnowledgeGraph` before it runs a profile check. The dataclasses
+here are a carrier: they answer `record()` and hold no meaning the schema does
+not declare.
+
 Decisions governing this package are recorded in
 `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md` (`OCR-D001`). Capability level is
 `AUDIT_ONLY`: nothing here writes to a protocol ledger, because human review
@@ -32,6 +38,7 @@ from malleus.ocr.verify import (
     CAPABILITY,
     Diagnostic,
     VerificationResult,
+    profile_registry,
     verify_bundle,
 )
 
@@ -49,5 +56,6 @@ __all__ = [
     "SourceRepresentation",
     "VerificationResult",
     "canonical_digest",
+    "profile_registry",
     "verify_bundle",
 ]

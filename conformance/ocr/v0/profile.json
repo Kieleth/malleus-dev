@@ -13,7 +13,8 @@
     "OCR-D009": "the source class is not frozen before ingest",
     "OCR-D010": "a required policy declaration is unbound",
     "OCR-D011": "a selection names a hypothesis it did not consider",
-    "OCR-D012": "no coverage metric family is declared"
+    "OCR-D012": "no coverage metric family is declared",
+    "OCR-D013": "a bundle record violates the profile ontology"
   },
   "does_not_prove": [
     "source authenticity",
@@ -21,12 +22,14 @@
     "quote fairness or representativeness",
     "downstream consequence"
   ],
+  "ontology": "ontology/domains/ocr.yaml",
   "profile_id": "malleus.ocr.evidence_integrity",
   "profile_version": "v0",
   "proves": [
     "source-to-reading lineage",
     "separation of identity planes",
-    "declared coverage and policy precommitment"
+    "declared coverage and policy precommitment",
+    "every plane typed under the malleus root primitives"
   ],
   "selector_profile_default": "w3c-web-annotation+iiif",
   "selector_profile_replaceable": true

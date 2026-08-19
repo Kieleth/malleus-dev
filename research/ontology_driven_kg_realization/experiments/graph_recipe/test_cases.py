@@ -214,7 +214,11 @@ def test_checksum_set_and_report_bind_the_current_executable_snapshot():
         if not isinstance(group, dict):
             continue
         for relative_path, expected_digest in group.items():
-            assert source_bytes_digest((ROOT / relative_path).read_bytes()) == expected_digest
+            assert source_bytes_digest((ROOT / relative_path).read_bytes()) == expected_digest, (
+                f"{relative_path} drifted from its binding; rebind with "
+                f"research/ontology_driven_kg_realization/experiments/graph_recipe/"
+                f"rebind_report.py rather than editing a digest by hand"
+            )
 
     receipt_identities = {
         (item["experiment_id"], item["case_id"]): item
