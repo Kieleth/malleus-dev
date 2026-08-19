@@ -171,6 +171,59 @@ rite enters at NOTE with `status: open_question` like
 
 ---
 
+### A7. The version marker makes "superset" unreachable (confirmed here)
+
+Reported through the upstream channel and reproduced against the shipped
+registry before acceptance. `strict_fingerprint()` carries
+`fingerprint_version:N` as an ordinary member of the fact set, and
+`check_compatibility_strict` answers by plain subset test. A project that is a
+strict structural superset of a legacy root, and that uses a feature lifting
+its marker from 3 to 4, therefore differs from that root by one fact in each
+direction. Neither set contains the other, so the answer is `divergent` no
+matter what the structures actually say.
+
+```text
+newer project asked about the legacy root    -> divergent
+same pair with the version marker normalized -> superset
+```
+
+The reporter proposed normalizing the version before the subset test, and that
+is the right shape: the marker describes which fingerprint grammar produced the
+set, so comparing it as though it were a structural fact asks the wrong
+question. The version relationship still has to be judged, separately and
+explicitly, rather than dropped.
+
+Cost of leaving it: `root_currency` is a HERESY rite and it consults the strict
+consumer-side check, so an adopter whose root is genuinely current is told it
+is divergent and cannot get a seal. Reported blocking a release pipeline whose
+gate runs the full suite.
+
+**Verdict: accept, and it precedes the other upstream work.** A rite that
+condemns a correct schema is worse than a missing rite.
+
+### A8. Content-hash semantics changed between releases with no migration path
+
+Reported, not yet reproduced here. A content hash that has been written into
+accepted append-only ledgers is a public contract, because the ledger cannot
+be rewritten to match a new hashing rule. Changing the rule between releases
+leaves existing ledgers permanently unverifiable, with no supported way
+forward.
+
+Two possible shapes and they are not equivalent. Hash stability, meaning the
+rule may never change once a release has written it. Or a first-class migration
+receipt, a typed record binding the old identity, the new identity, the rule
+that changed, and the exact boundary event, so a ledger can carry both and say
+which applies where.
+
+Related and already accepted: `historical-timezone-database-migration` in the
+not-implemented list is the same problem for a different stored value, and
+`FINGERPRINT_VERSION` at 4 with a legacy 3 is the same problem already
+half-handled for a third.
+
+**Verdict: accept for grooming. Reproduce first.** The reported symptom is
+consistent with A7, so part of it may be A7 wearing a second face. Establish
+which before designing a migration record.
+
 ---
 
 ## B. From our own use
