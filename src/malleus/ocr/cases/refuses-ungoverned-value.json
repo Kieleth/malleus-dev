@@ -1,0 +1,124 @@
+{
+  "case": "refuses-ungoverned-value",
+  "description": "The attempt declares a status the profile ontology does not define. Every field is a string of the right shape and the string means nothing.",
+  "document": {
+    "bundle": {
+      "attempts": [
+        {
+          "config_identity": {
+            "model": "engine-a@1"
+          },
+          "id": "att:1",
+          "region_id": "reg:1",
+          "request_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "response_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "status": "banana",
+          "unavailable_reason": null
+        }
+      ],
+      "corrections": [
+        {
+          "corrected_text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "id": "cor:1",
+          "predecessor_id": null,
+          "reviewed_hypothesis_id": "hyp:1",
+          "reviewer_id": "reviewer:kim",
+          "verdict": "CORRECTED"
+        }
+      ],
+      "data_handling_policy_id": "policy:dh:1",
+      "hostile_content_policy_id": "policy:hc:1",
+      "hypotheses": [
+        {
+          "attempt_id": "att:1",
+          "confidence": 0.7,
+          "correction_id": null,
+          "id": "hyp:1",
+          "region_id": "reg:1",
+          "text_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+        },
+        {
+          "attempt_id": null,
+          "confidence": null,
+          "correction_id": "cor:1",
+          "id": "hyp:2",
+          "region_id": "reg:1",
+          "text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        }
+      ],
+      "id": "bundle:1",
+      "observed_units": [
+        "page:1",
+        "page:2"
+      ],
+      "rasters": [
+        {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "id": "ras:1",
+          "render_contract": "render:v1@300dpi",
+          "source_id": "src:1"
+        }
+      ],
+      "regions": [
+        {
+          "id": "reg:1",
+          "raster_id": "ras:1",
+          "selector": {
+            "type": "FragmentSelector",
+            "value": "xywh=0,0,10,10"
+          },
+          "selector_profile": "w3c-web-annotation+iiif"
+        }
+      ],
+      "selections": [
+        {
+          "candidate_ids": [
+            "hyp:1",
+            "hyp:2"
+          ],
+          "human_verified": true,
+          "id": "sel:1",
+          "reason": "human correction supersedes",
+          "region_id": "reg:1",
+          "selected_id": "hyp:2"
+        }
+      ],
+      "source_class": {
+        "frozen_at": "2026-08-18T00:00:00+00:00",
+        "id": "class:invoice",
+        "inventory_basis": "derived_then_confirmed",
+        "metric_families": {
+          "coverage": {
+            "denominator": "declared_units",
+            "threshold": 1.0
+          },
+          "semantics": {
+            "denominator": "required_fields",
+            "threshold": 0.9
+          }
+        },
+        "required_units": [
+          "page:1",
+          "page:2"
+        ],
+        "temporal_policy": "printed_date_is_issue_date"
+      },
+      "sources": [
+        {
+          "byte_length": 2048,
+          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "id": "src:1",
+          "locator": "docs/a.pdf",
+          "media_type": "application/pdf"
+        }
+      ],
+      "transport_metadata": {}
+    },
+    "document_version": 1,
+    "profile": "malleus.ocr.evidence_integrity",
+    "profile_version": "v0"
+  },
+  "expect": [
+    "OCR-D013"
+  ]
+}

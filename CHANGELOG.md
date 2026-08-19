@@ -20,6 +20,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   its own domain ontology since 0.10.0; the profile built to that pattern
   diverged on the one part that mattered. Established by running 0.11.0's own
   code against a bundle carrying all five violations: it granted the seal.
+- Added the portable bundle document and the `malleus-ocr` command. The
+  profile's only expression was nine Python dataclasses, so "emit a bundle and
+  pass the conformance suite" was unrunnable by anyone who had installed the
+  wheel: the suite was 52 pytest cases the wheel does not carry.
+  `Bundle.document()` and `Bundle.from_document()` are now the boundary, and
+  reading fails closed on an unrecognised profile, either direction of version
+  drift, an undeclared key and a missing required key rather than repairing
+  what it does not understand. Three cases ship inside the package, one
+  accepted and two refused, because a verifier that refuses nothing is
+  indistinguishable from one that is not running. An emitter that imports no
+  plane class conforms, which is the replacement evidence the boundary owed.
 - Added `EvidenceBundle.member_ids`, without which a bundle record named its
   precommitment and its policies and could not answer which readings belonged
   to it, leaving two bundles over one source class indistinguishable in the

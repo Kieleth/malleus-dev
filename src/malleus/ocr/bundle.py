@@ -23,10 +23,22 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import asdict, dataclass, field, is_dataclass
+from dataclasses import MISSING, asdict, dataclass, field, fields, is_dataclass
 from typing import Any, Mapping
 
 from malleus.ledger import canonical_json
+
+# The portable identity of this profile. A document that does not name all
+# three is not refused for tidiness: a reader that guesses which profile and
+# version produced a bundle is a reader that will one day guess wrong.
+PROFILE_ID = "malleus.ocr.evidence_integrity"
+PROFILE_VERSION = "v0"
+DOCUMENT_VERSION = 1
+
+
+class BundleError(ValueError):
+    """A document cannot be read as a bundle. Refuse; never repair."""
+
 
 # Full, algorithm-tagged digests only. A truncated digest may be displayed and
 # may never be stored as an integrity value (decision C6 and OCR-090).
@@ -51,6 +63,41 @@ def canonical_digest(value: Any) -> str:
     if is_dataclass(value) and not isinstance(value, type):
         value = asdict(value)
     return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+# Fields carried as tuples in Python and as arrays in a document.
+_TUPLE_FIELDS = frozenset({
+    "required_units", "candidate_ids", "observed_units",
+    "sources", "rasters", "regions", "attempts", "hypotheses",
+    "corrections", "selections",
+})
+
+
+def _construct(cls: type, data: Any, where: str) -> Any:
+    """Build one plane from a document fragment, or refuse and say why.
+
+    Closed to undeclared keys. A document carrying a field this version does
+    not know is a document from a profile this version cannot verify, and
+    dropping it silently would let the unknown part travel unexamined.
+    """
+    if not isinstance(data, Mapping):
+        raise BundleError(f"{where} must be a mapping, got {type(data).__name__}")
+    declared = {f.name for f in fields(cls)}
+    unknown = sorted(set(data) - declared)
+    if unknown:
+        raise BundleError(f"{where} carries undeclared keys: {', '.join(unknown)}")
+    required = {
+        f.name for f in fields(cls)
+        if f.default is MISSING and f.default_factory is MISSING
+    }
+    absent = sorted(required - set(data))
+    if absent:
+        raise BundleError(f"{where} is missing required keys: {', '.join(absent)}")
+    payload = {
+        name: tuple(value) if name in _TUPLE_FIELDS and isinstance(value, list) else value
+        for name, value in data.items()
+    }
+    return cls(**payload)
 
 
 def _present(record: dict[str, Any]) -> dict[str, Any]:
@@ -278,6 +325,73 @@ class Bundle:
             "transport_metadata_digest": canonical_digest(self.transport_metadata),
         })
 
+    def document(self) -> dict[str, Any]:
+        """The portable form. This, not the Python object, is the artifact.
+
+        An adapter conforms by emitting one of these. It may be written in any
+        language: the dataclasses in this module are one carrier for the
+        records, never the contract.
+        """
+        return {
+            "profile": PROFILE_ID,
+            "profile_version": PROFILE_VERSION,
+            "document_version": DOCUMENT_VERSION,
+            "bundle": asdict(self),
+        }
+
+    @classmethod
+    def from_document(cls, document: Any) -> "Bundle":
+        """Read a document, or refuse. Never partially read one."""
+        if not isinstance(document, Mapping):
+            raise BundleError(f"a bundle document must be a mapping, got {type(document).__name__}")
+        expected = {
+            "profile": PROFILE_ID,
+            "profile_version": PROFILE_VERSION,
+            "document_version": DOCUMENT_VERSION,
+        }
+        unknown = sorted(set(document) - set(expected) - {"bundle"})
+        if unknown:
+            raise BundleError(f"document carries undeclared keys: {', '.join(unknown)}")
+        for key, value in expected.items():
+            if key not in document:
+                raise BundleError(f"document does not declare '{key}'")
+            if document[key] != value:
+                raise BundleError(
+                    f"document declares {key}={document[key]!r}; this reader verifies "
+                    f"{value!r} and will not guess at the difference"
+                )
+        if "bundle" not in document:
+            raise BundleError("document carries no bundle")
+        payload = document["bundle"]
+        if not isinstance(payload, Mapping):
+            raise BundleError("document bundle must be a mapping")
+        declared = {f.name for f in fields(cls)}
+        unknown = sorted(set(payload) - declared)
+        if unknown:
+            raise BundleError(f"bundle carries undeclared keys: {', '.join(unknown)}")
+        if "source_class" not in payload:
+            raise BundleError("bundle declares no source class")
+        built: dict[str, Any] = {
+            "source_class": _construct(SourceClass, payload["source_class"], "source_class"),
+        }
+        for name, plane in _PLANES.items():
+            if name not in payload:
+                continue
+            items = payload[name]
+            if not isinstance(items, (list, tuple)):
+                raise BundleError(f"{name} must be an array")
+            built[name] = tuple(
+                _construct(plane, item, f"{name}[{index}]")
+                for index, item in enumerate(items)
+            )
+        for name in set(payload) - set(built):
+            built[name] = (
+                tuple(payload[name])
+                if name in _TUPLE_FIELDS and isinstance(payload[name], list)
+                else payload[name]
+            )
+        return _construct(cls, built, "bundle")
+
     def _members(self) -> tuple[Any, ...]:
         return (
             *self.sources, *self.rasters, *self.regions, *self.attempts,
@@ -286,3 +400,16 @@ class Bundle:
 
     def by_id(self, kind: str) -> dict[str, Any]:
         return {item.id: item for item in getattr(self, kind)}
+
+
+# Plane name to carrier, read by `Bundle.from_document`. Declared after the
+# classes it names, and after Bundle, so the module has one reading order.
+_PLANES: dict[str, type] = {
+    "sources": SourceRepresentation,
+    "rasters": Raster,
+    "regions": Region,
+    "attempts": OCRAttempt,
+    "hypotheses": Hypothesis,
+    "corrections": ReviewCorrection,
+    "selections": Selection,
+}

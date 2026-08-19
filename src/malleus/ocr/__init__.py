@@ -10,6 +10,11 @@ OCR-specific: the region selector, and decision C1 makes that swappable. Bring
 audio and you replace the selector profile while the identity planes, digest
 rules, staleness semantics and coverage declarations stand unchanged.
 
+The artifact is the bundle document, not the Python object. `Bundle.document()`
+and `Bundle.from_document()` are the boundary, `malleus-ocr` verifies one from
+the command line, and `malleus-ocr --conformance` runs the packaged cases. An
+adapter conforms by emitting a document; it may be written in any language.
+
 The authority for this vocabulary is `ontology/domains/ocr.yaml`. Every plane
 is a typed record under a root primitive, and `verify_bundle` validates each
 one through `KnowledgeGraph` before it runs a profile check. The dataclasses

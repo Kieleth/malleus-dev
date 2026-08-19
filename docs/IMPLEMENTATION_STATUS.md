@@ -216,6 +216,16 @@ planes, declared coverage and policy precommitment, and that every plane is
 typed under the root. What it does not prove: source authenticity, the factual
 truth of a reading, quote fairness, or downstream consequence.
 
+The portable artifact is the bundle document: `Bundle.document()` and
+`Bundle.from_document()`, fail-closed on an unrecognised profile, either
+direction of version drift, an undeclared key and a missing required key. The
+`malleus-ocr` command verifies a document (exit 0 conforms, 1 refused, 2
+unreadable, so a malformed file is never reported as failed evidence) and
+`malleus-ocr --conformance` runs the three cases shipped inside the package.
+An emitter that imports no plane class and touches no dataclass conforms,
+which establishes the emitter role as replaceable; no production OCR stack has
+crossed it yet.
+
 Not built: decision C2, dependency-closed partial claims. `required_units` is
 declared and read by nothing, recorded as such in the schema rather than left
 silent. No adapter has passed the conformance suite, so the profile is designed

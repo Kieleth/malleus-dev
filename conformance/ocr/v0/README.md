@@ -6,9 +6,24 @@ Capability: `AUDIT_ONLY`. Decisions: `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md
 `malleus.ocr.verify`. Do not edit it; run `conformance/ocr/v0/generate.py`.
 `tests/test_ocr.py` fails when the two disagree.
 
-The executable cases live in `tests/test_ocr.py`, one negative per diagnostic,
+Three cases ship inside the package, at `malleus/ocr/cases/`. An adopter with
+only the wheel runs them:
+
+```text
+malleus-ocr --conformance
+malleus-ocr path/to/their-bundle.json
+```
+
+They are the wiring check: one document that must be accepted, two that must
+be refused, because a verifier that refuses nothing is indistinguishable from
+one that is not running. Their `expect` lists are checked against the live
+verifier on every test run, so a case that stops meaning what it says fails
+rather than drifts.
+
+The exhaustive cases live in `tests/test_ocr.py`, one negative per diagnostic,
 plus the currency matrix for decision C7. A diagnostic with no negative case
-is a claim the profile cannot support, and a test enforces that too.
+is a claim the profile cannot support, and a test enforces that too. Those
+test the verifier; the packaged three test an adopter's emitter.
 
 Everything here is invented. No production document, credential, network
 dependency or adopter fixture is present, and none may be added: an adopter's
@@ -30,4 +45,10 @@ engine.
 
 Two adopters were audited while designing this profile. Neither has yet run
 this suite, so the profile is designed from evidence and is not yet proven
-portable. That claim waits on the first adapter to pass.
+portable by a real adapter. That claim waits on the first one to pass.
+
+What is established: a document emitter that imports no plane class and knows
+nothing about Python dataclasses crosses the boundary and conforms
+(`test_an_emitter_that_never_touches_the_carrier_conforms`). That is a
+deliberately different implementation of the emitter role, not proof that a
+production OCR stack will fit.

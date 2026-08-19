@@ -429,3 +429,204 @@ def test_every_plane_is_governed():
     for plane in planes:
         cls = getattr(mod, "Bundle" if plane == "EvidenceBundle" else plane)
         assert fields(cls), f"{plane} carries no fields"
+
+
+class TestThePortableDocument:
+    """The artifact is the document, not the Python object. An adapter in
+    another language conforms by emitting one of these; the dataclasses are
+    one carrier for the records and were, for a release, the only one."""
+
+    def test_a_document_round_trips_through_json(self):
+        import json
+        from malleus.ocr.bundle import Bundle
+        bundle = _bundle()
+        assert Bundle.from_document(json.loads(json.dumps(bundle.document()))) == bundle
+
+    def test_a_document_names_its_profile_and_version(self):
+        from malleus.ocr.bundle import DOCUMENT_VERSION, PROFILE_ID, PROFILE_VERSION
+        document = _bundle().document()
+        assert document["profile"] == PROFILE_ID
+        assert document["profile_version"] == PROFILE_VERSION
+        assert document["document_version"] == DOCUMENT_VERSION
+
+    @pytest.mark.parametrize("mutate,fragment", [
+        (lambda d: d.update(profile="somebody.else"), "will not guess"),
+        (lambda d: d.update(profile_version="v1"), "will not guess"),
+        (lambda d: d.update(document_version=2), "will not guess"),
+        (lambda d: d.update(extra=1), "undeclared keys"),
+        (lambda d: d.pop("profile"), "does not declare"),
+        (lambda d: d["bundle"]["regions"][0].update(rotation=90), "undeclared keys"),
+        (lambda d: d["bundle"]["sources"][0].pop("digest"), "missing required keys"),
+        (lambda d: d["bundle"].update(pages=[]), "undeclared keys"),
+        (lambda d: d["bundle"].update(regions={}), "must be an array"),
+        (lambda d: d["bundle"].pop("source_class"), "no source class"),
+    ])
+    def test_a_document_this_reader_cannot_verify_is_refused(self, mutate, fragment):
+        """Fail closed on both directions of version drift. A newer document
+        is refused for the same reason an older one is: a reader that repairs
+        what it does not understand reports on something nobody wrote."""
+        import json
+        from malleus.ocr.bundle import Bundle, BundleError
+        document = json.loads(json.dumps(_bundle().document()))
+        mutate(document)
+        with pytest.raises(BundleError) as raised:
+            Bundle.from_document(document)
+        assert fragment in str(raised.value)
+
+    def test_reading_a_document_is_all_or_nothing(self):
+        """No partial bundle escapes a refusal."""
+        import json
+        from malleus.ocr.bundle import Bundle, BundleError
+        document = json.loads(json.dumps(_bundle().document()))
+        document["bundle"]["hypotheses"][1].pop("region_id")
+        with pytest.raises(BundleError):
+            Bundle.from_document(document)
+
+
+class TestThePackagedConformanceCases:
+    """An adopter with only the wheel must be able to run something. Until
+    these shipped, 'passes the conformance suite' meant 'cloned our repo'."""
+
+    def test_every_declared_case_is_installed_and_expects_what_it_gets(self):
+        from malleus.ocr.bundle import Bundle
+        from malleus.ocr.conformance import CASES, load_case
+        assert CASES, "a conformance suite with no cases is a claim with no evidence"
+        for name in CASES:
+            case = load_case(name)
+            assert case["case"] == name
+            assert case["description"].strip()
+            result = verify_bundle(Bundle.from_document(case["document"]))
+            assert sorted(set(result.codes())) == sorted(case["expect"]), (
+                f"case {name} no longer means what it says"
+            )
+
+    def test_the_suite_contains_a_refusal(self):
+        """A verifier that refuses nothing is indistinguishable from one that
+        is not running, so a corpus of only accepted bundles proves nothing."""
+        from malleus.ocr.conformance import CASES, load_case
+        assert any(load_case(name)["expect"] for name in CASES)
+        assert any(not load_case(name)["expect"] for name in CASES)
+
+    def test_an_undeclared_case_is_refused_rather_than_read(self):
+        from malleus.ocr.conformance import load_case
+        with pytest.raises(KeyError):
+            load_case("../../../etc/passwd")
+
+    def test_the_cases_and_the_cli_are_packaged(self):
+        from pathlib import Path
+        pyproject = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
+        from malleus.ocr.conformance import CASES
+        for name in CASES:
+            assert f'"/src/malleus/ocr/cases/{name}.json"' in pyproject, f"{name} is not packaged"
+        for module in ("cli.py", "conformance.py", "__main__.py"):
+            assert f'"/src/malleus/ocr/{module}"' in pyproject, f"{module} is not packaged"
+        assert 'malleus-ocr = "malleus.ocr.cli:main"' in pyproject
+
+
+class TestTheCommandLine:
+    """The operator's path. Verified by running it, not by reading it."""
+
+    def _run(self, argv, capsys):
+        from malleus.ocr.cli import main
+        code = main(argv)
+        return code, capsys.readouterr().out
+
+    def test_a_conforming_document_exits_zero(self, tmp_path, capsys):
+        import json
+        path = tmp_path / "bundle.json"
+        path.write_text(json.dumps(_bundle().document()))
+        code, out = self._run([str(path)], capsys)
+        assert code == 0 and "CONFORMS" in out
+
+    def test_a_refused_document_exits_one_and_names_every_diagnostic(self, tmp_path, capsys):
+        import json
+        path = tmp_path / "bundle.json"
+        bundle = _bundle(attempts=(
+            OCRAttempt("att:1", "reg:1", D(3), {"model": "engine-a@1"}, "banana", D(4)),
+        ))
+        path.write_text(json.dumps(bundle.document()))
+        code, out = self._run([str(path)], capsys)
+        assert code == 1 and "OCR-D013" in out and "REFUSED" in out
+
+    def test_an_unreadable_document_exits_two_and_is_not_confused_with_a_refusal(
+        self, tmp_path, capsys
+    ):
+        """A malformed file and a non-conforming bundle are different answers.
+        Collapsing them tells an adopter their evidence failed when their JSON
+        did."""
+        path = tmp_path / "bundle.json"
+        path.write_text("{not json")
+        code, out = self._run([str(path)], capsys)
+        assert code == 2 and "cannot read" in out
+        missing = tmp_path / "absent.json"
+        code, _ = self._run([str(missing)], capsys)
+        assert code == 2
+
+    def test_the_packaged_suite_passes_from_the_command_line(self, capsys):
+        code, out = self._run(["--conformance"], capsys)
+        assert code == 0 and "conformance suite passed" in out
+
+    def test_the_header_states_what_is_running(self, capsys):
+        """`guidance_newer_than_runtime`: one command answers which profile,
+        which malleus and which ontology bytes produced this verdict."""
+        import malleus
+        _code, out = self._run(["--conformance"], capsys)
+        assert malleus.__version__ in out
+        assert "AUDIT_ONLY" in out and "ocr.yaml" in out
+
+    def test_exactly_one_input_is_required(self, capsys):
+        from malleus.ocr.cli import main
+        for argv in ([], ["--conformance", "--case", "conforming"]):
+            with pytest.raises(SystemExit):
+                main(argv)
+
+
+def test_an_emitter_that_never_touches_the_carrier_conforms():
+    """Replacement is empirical. This emitter builds the document as literal
+    JSON, imports no plane class and knows nothing about dataclasses, which is
+    the position an adapter written in another language is in. If it can only
+    be produced by constructing nine Python objects, the profile is a module
+    with a schema attached, not a portable contract."""
+    from malleus.ocr.bundle import Bundle
+    digest = lambda seed: "sha256:" + str(seed) * 64  # noqa: E731
+    document = {
+        "profile": "malleus.ocr.evidence_integrity",
+        "profile_version": "v0",
+        "document_version": 1,
+        "bundle": {
+            "id": "bundle:hand-written",
+            "source_class": {
+                "id": "class:receipt",
+                "required_units": ["page:1"],
+                "metric_families": {"coverage": {"denominator": "declared_units",
+                                                 "threshold": 1.0}},
+                "temporal_policy": "undated_class_carries_no_timeline",
+                "frozen_at": "2026-08-19T00:00:00+00:00",
+                "inventory_basis": "derived_then_confirmed",
+            },
+            "sources": [{"id": "src:a", "digest": digest(7), "byte_length": 91,
+                         "media_type": "image/tiff", "locator": "scans/a.tiff"}],
+            "rasters": [{"id": "ras:a", "source_id": "src:a", "digest": digest(8),
+                         "render_contract": "render:v1@600dpi"}],
+            "regions": [{"id": "reg:a", "raster_id": "ras:a",
+                         "selector": {"type": "FragmentSelector", "value": "xywh=1,1,4,4"},
+                         "selector_profile": "w3c-web-annotation+iiif"}],
+            "attempts": [{"id": "att:a", "region_id": "reg:a", "request_digest": digest(9),
+                          "config_identity": {"model": "engine-b@2"},
+                          "status": "COMPLETED", "response_digest": digest(1),
+                          "unavailable_reason": None}],
+            "hypotheses": [{"id": "hyp:a", "region_id": "reg:a", "text_digest": digest(2),
+                            "attempt_id": "att:a", "correction_id": None,
+                            "confidence": 0.9}],
+            "corrections": [],
+            "selections": [{"id": "sel:a", "region_id": "reg:a", "candidate_ids": ["hyp:a"],
+                            "selected_id": "hyp:a", "reason": "only candidate",
+                            "human_verified": False}],
+            "observed_units": ["page:1"],
+            "data_handling_policy_id": "policy:local-only",
+            "hostile_content_policy_id": "policy:isolate",
+            "transport_metadata": {},
+        },
+    }
+    result = verify_bundle(Bundle.from_document(document))
+    assert result.conforms, [str(d) for d in result.diagnostics]

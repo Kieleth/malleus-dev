@@ -48,6 +48,7 @@ dev = [
 
 [project.scripts]
 malleus-inquisitor = "malleus.inquisition.cli:main"
+malleus-ocr = "malleus.ocr.cli:main"
 malleus-recon = "malleus.recon.cli:main"
 
 [project.urls]
@@ -83,6 +84,12 @@ include = [
     "/src/malleus/ocr/__init__.py",
     "/src/malleus/ocr/bundle.py",
     "/src/malleus/ocr/verify.py",
+    "/src/malleus/ocr/cli.py",
+    "/src/malleus/ocr/__main__.py",
+    "/src/malleus/ocr/conformance.py",
+    "/src/malleus/ocr/cases/conforming.json",
+    "/src/malleus/ocr/cases/refuses-ungoverned-value.json",
+    "/src/malleus/ocr/cases/refuses-broken-lineage.json",
     "/src/malleus/recon/__init__.py",
     "/src/malleus/recon/analysis.py",
     "/src/malleus/recon/cli.py",
