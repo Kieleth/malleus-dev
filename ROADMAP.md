@@ -471,12 +471,52 @@ No model, prompt, config, attempt or provider identity is recorded anywhere.
 `OCRAttempt` and `Hypothesis`, which is to say it blocks every plane the
 profile exists to verify.
 
+### D9. Recursive ingestion by pointer is blocked by the same refusal as D1
+
+Wanted: ingest a URL, a GitHub repository for example, discover what it points
+at, and ingest that too, recording each pointer as an edge so the graph grows
+as the discovery does.
+
+The graph can hold the result. Nothing performs it, and the write path refuses
+the intermediate state. Demonstrated against the shipped registry:
+
+```text
+A cites something not yet fetched -> REJECTED | Target entity does not exist
+same edge, after inventing a stub -> COMMITTED
+```
+
+`kg.py:317` refuses a relation whose endpoint entity is absent. So the pointer
+edge cannot be recorded until the pointed-at thing is a full record, and a
+`Work` requires `label`, `title`, `priority_date_basis`, `publication_status`
+and `review_state`. A discovered URL therefore forces four inventions, and the
+invented stub commits with no rejection and no mark. `Work` has no URL slot at
+all; the URI lives on `EvidenceAttachment`.
+
+This is D1 wearing different clothes. A pointer seen and not yet fetched is
+addressable, is referenced, names the source location that forced it, must not
+be consumed by any executable path, and is cleared only by the thing being
+fetched and judged. That is A6's description word for word.
+
+Consequence for promotion: A6 now has a second consumer, the pointer frontier,
+which is independent of the provisional-concept case that motivated it. The
+roadmap's own rule, that a concept promotes on the second consumer and not the
+first, is satisfied.
+
+Still open even with the capability: the frontier needs a stopping rule, and
+dedup by content address across pointers that resolve to the same bytes.
+Neither is a graph question.
+
 ### D7. `confidence` means opposite things in the two schemas
 
 Recon's `confidence` is the reviewer's, required on every relation. The OCR
 profile's is provider-reported and explicitly barred from controlling
 acceptance, because confidence without calibration cannot. Two schemas about to
 meet, one word, two meanings. Resolve before they meet, not after.
+
+Direction taken: the concept is solved in core, with an override available to
+anyone who needs a different one. These two are malleus modules rather than
+third-party adopters, so they harmonize on the core definition rather than each
+keeping a local one. An adopter outside malleus may still override.
 
 ### D8. No verbatim source text is retained
 
@@ -501,4 +541,9 @@ on them.
 5. D2. Independent of the OCR work, and it is the ontology sanitization.
 6. D5, then D6. `Region` before the readings that select over it. Both need a
    document-reading pipeline that exists nowhere in the repository today.
-7. A6 capability in core, then D1.
+7. A6 capability in core, then D1 and D9 together.
+
+D9 moved A6 up rather than leaving it last. URL and pointer ingestion is
+blocked on the same capability as provisional concepts, so building the
+fetcher before the capability means building the stub-inventing path first and
+removing it afterwards.
