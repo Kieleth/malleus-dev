@@ -360,3 +360,43 @@ Established: an emitter that imports no plane class and touches no dataclass
 builds a bundle document by hand and conforms, so the emitter role is
 replaceable. Not established: that a production OCR stack fits. The profile
 does not claim portability and must not until an adapter passes.
+
+### C4. The verifier walks lineage only from readings
+
+Found by an independent investigation into whether another subpackage could
+be the profile's first adapter, then reproduced directly. Three bundles, each
+granted a purity seal:
+
+1. A `Region` naming a raster the bundle does not carry, with no hypothesis
+   referencing that region.
+2. A `Raster` naming a source the bundle does not carry, with no hypothesis
+   referencing it.
+3. A bundle with one source, zero regions, zero attempts and zero readings.
+
+The cause is one loop: OCR-D003 walks hypothesis to region to raster to source
+and nothing walks the planes that no reading reaches. An orphan plane is
+therefore unexamined rather than refused.
+
+The third case is the one that matters, and it is not a cosmetic gap. The
+profile's open claim is that it becomes portable when the first adapter passes
+the suite. An adapter that emits a source and no readings passes today, so
+that milestone could be reached without a single reading ever being verified.
+A rejection rate of zero is not evidence of a gate.
+
+Discharge: check every plane's references regardless of what points at it, and
+decide separately whether a bundle carrying no readings is a conforming bundle
+or an incomplete one. The second is a judgement about what the profile is for,
+not a bug fix, and it wants an explicit answer rather than a quiet threshold.
+
+### C5. Recon's classification vocabularies are ungoverned
+
+Adjacent finding from the same investigation, verified against the live
+ledger. `claim_kind` and `coverage_maturity` in `ontology/domains/recon.yaml`
+are `range: string`. One project's ledger carries 78 distinct `claim_kind`
+values across 121 claims, 59 of them used exactly once. This is not
+`constrained_tongues`, which governs `event_type`, `relation_type` and
+`signal_type`, so no rite fires. It is the same disease in a slot the rite does
+not name: a classification field that classifies nothing, because a vocabulary
+where half the values appear once is free text with a schema slot around it.
+
+Belongs to recon rather than the OCR profile, kept here so it is not lost.
