@@ -169,6 +169,8 @@ rite enters at NOTE with `status: open_question` like
 
 ---
 
+---
+
 ## B. From our own use
 
 ### B1. A commitment-lifecycle facade
@@ -292,3 +294,69 @@ The bounded synthesis and candidate paper motivation are in
 
 **Verdict: retain as a measured research question. No core implementation or
 paper outcome claim is authorized.**
+
+---
+
+## C. OCR evidence-integrity profile
+
+Profile-local work. Not core capabilities and not rites: these are defects and
+gaps in `malleus.ocr` itself, found by probing the verifier rather than by
+reading it.
+
+### C1. Conditional requirements the schema states and does not enforce
+
+Four probes were run against a conforming bundle with one field changed. All
+four were accepted. Three are defects and one is not.
+
+**Defect: an unavailable attempt need not say why.** `status="UNAVAILABLE"`
+with no `unavailable_reason` verifies clean. The slot's own description in
+`ontology/domains/ocr.yaml` reads "Required reading when status is
+UNAVAILABLE". A schema that states a requirement and does not perform it is
+the same class of defect as a document claiming a capability the code lacks,
+which three self-inquisitions removed from our own prose. Discharge: a LinkML
+class expression, since `OntologyRegistry._validate_class_expressions` already
+evaluates them, so this needs no new mechanism.
+
+**Defect: a correction can say CORRECTED and supply no correction.**
+`verdict="CORRECTED"` with no `corrected_text_digest` verifies clean. The
+record asserts a different reading was produced and does not carry it. Two
+discharges, and they are not equivalent. Requiring the digest to be present is
+cheap. Requiring it to equal the `text_digest` of the hypothesis carrying that
+`correction_id` is stronger: it asserts the two planes agree about what the
+corrected text is, and catches a correction whose digest and whose resulting
+reading have drifted apart. Groom which.
+
+**Defect, weak: mandate B3 is recorded and never checked.** A correction whose
+`reviewer_id` equals the model identity in the attempt that produced the
+reviewed hypothesis verifies clean. B3 says a separate reviewer is an identity
+that did not produce the hypothesis under review. The bundle carries both
+identities today, so an exact-string check is possible without
+`protocol-actor-registration`. It catches only exact equality, which raises a
+real question before it is built: a check that catches the naive case and
+nothing else may read as enforcement and be worth less than an honest absence.
+Decide that before writing it.
+
+**Not a defect: a completed attempt need not retain a response.**
+`status="COMPLETED"` with no `response_digest` verifies clean, and that is
+correct. Decision C6 retains the raw response under the adopter's declared
+retention rule, so an adopter whose policy is no retention is right to omit
+it. Recorded here because closing it looked obvious and would have contradicted
+an owner decision.
+
+### C2. Dependency-closed partial claims (decision C2, unbuilt)
+
+The largest unbuilt piece of the profile and the reader `required_units` is
+waiting for. `required_units` is declared in the schema and consumed by
+nothing, recorded there as declared-unread rather than left silent.
+
+Needs, each with fixtures: a frozen required-unit inventory, a map from claim
+to the units its evidence occupies, a map from claim to claim, transitive
+closure over both, cycle detection, and replay semantics so the same bundle
+re-verified yields the same partial set.
+
+### C3. No adapter has crossed the boundary
+
+Established: an emitter that imports no plane class and touches no dataclass
+builds a bundle document by hand and conforms, so the emitter role is
+replaceable. Not established: that a production OCR stack fits. The profile
+does not claim portability and must not until an adapter passes.
