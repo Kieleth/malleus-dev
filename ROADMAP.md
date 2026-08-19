@@ -162,6 +162,22 @@ accommodation asks whether a concept is fully known. A staged claim about a
 settled concept and a committed claim about a half-known concept are
 different states.
 
+**Direction taken.** The frontier belongs in the graph. A node that is known
+to exist and has not been fetched or understood is kept as a node, marked as
+needing work, not withheld until it is complete. We do not maintain only what
+we have confirmed. We maintain leads, and following leads is how the graph
+grows at all.
+
+This is a solved shape elsewhere: a crawler keeps a frontier of URLs it has
+seen and not yet fetched, separate from the pages it has. What the crawler
+adds beyond a list is the part worth copying, namely a seen-set so the same
+target is not queued twice, and dedup by content so two addresses resolving to
+the same bytes collapse into one node.
+
+The malleus-specific constraint stays: nothing marked as needing work may be
+consumed by an executable path, and the mark clears only when the thing is
+actually fetched and judged, never by how many records point at it.
+
 **Verdict: the design deserves real consideration; the rite does not enter at
 HERESY.** As proposed it would condemn every adopter for lacking a capability
 malleus does not offer, which is the exact defect rounds three through six
@@ -416,6 +432,26 @@ builds a bundle document by hand and conforms, so the emitter role is
 replaceable. Not established: that a production OCR stack fits. The profile
 does not claim portability and must not until an adapter passes.
 
+### C0. A bundle declares whether it is finished (decided)
+
+Today a bundle with one source and no readings takes a purity seal, and a
+bundle with nothing at all fails. The line between them is an accident: it
+falls where it does because `member_ids` is required and an empty list counts
+as missing, a slot added for bundle membership and not as a rule about
+readings. Nothing about that boundary reflects whether a reading was verified.
+
+Decided: the bundle declares its own kind. A finished reading carrying no
+readings is refused. A registration, meaning a source recorded now and read
+later, is allowed to be nearly empty and may never be counted as evidence that
+an outside adapter conforms.
+
+The case that forced the third option rather than a flat refusal: recon holds
+255 evidence attachments it has registered and not read. Refusing that state
+outright would make the profile reject the exact situation its first real
+consumer is in.
+
+Sequencing: this decides the shape of C4, so it lands with it.
+
 ### C4. The verifier walks lineage only from readings
 
 Found by an independent investigation into whether another subpackage could
@@ -604,3 +640,33 @@ D9 moved A6 up rather than leaving it last. URL and pointer ingestion is
 blocked on the same capability as provisional concepts, so building the
 fetcher before the capability means building the stub-inventing path first and
 removing it afterwards.
+
+### D10. Recon as a personal research graph, with an Obsidian interface
+
+Direction, recorded because it changes what recon is for. Recon was built as a
+bounded literature review that produces an artifact and stops. The intended use
+is now a personal research graph that is kept, revisited, and grown: papers,
+notes, and the connections between them, held so that knowledge relates to
+other knowledge rather than sitting in separate reviews.
+
+That changes three things already on this list. D9's pointer frontier stops
+being a crawler feature and becomes the main way the graph grows. D1's
+half-known concepts become ordinary rather than exceptional, because a personal
+graph is always mid-thought. And the ledger's append-only history becomes a
+record of how understanding changed, which is worth reading rather than only
+worth replaying.
+
+Wanted: a two-way interface with Obsidian, so the same graph can be explored
+and edited as linked notes rather than only through a command line, in the
+context of a problem being studied.
+
+Open before this is designed, and none of it is an Obsidian question:
+
+- Which side is authoritative when both change. The ledger is canonical today
+  and a note edited in an editor is a write with no actor, no evidence and no
+  candidate hash.
+- What a note is in the ontology. A `Work` is a paper. A personal note about
+  three papers is not a `Work`, not a `Claim`, and has no home.
+- Whether an Obsidian vault is a projection generated from the ledger, an
+  ingest source that produces candidates, or both in one loop. Both in one loop
+  needs a conflict rule before a single file is written.
