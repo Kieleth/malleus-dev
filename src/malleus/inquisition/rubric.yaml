@@ -29,7 +29,7 @@
 # packaged file works and is reverted without warning by the next upgrade,
 # taking every severity you raised with it.
 
-version: 8
+version: 9
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -555,3 +555,60 @@ judgment:
       because rejecting a legal type punishes an adopter for using their tools
       correctly, and make a construction failure REPORT the rites it prevented
       from running, so the blast radius is visible rather than inferred.
+
+  # Rites earned at home, by inquisiting our own second subpackage. Both name
+  # defects the nine mechanical rites cannot see, which is why that subpackage
+  # held a purity seal while carrying them.
+
+  - id: classification_is_closed
+    question: >-
+      Does every slot that classifies draw from a closed vocabulary, or is it a
+      free string that classifies nothing?
+    severity: SUSPICION
+    lesson: >-
+      Measured at home: one required classification slot carried 78 distinct
+      values across 121 records, 59 of them used exactly once. A vocabulary
+      where half the values appear once is free text with a schema slot around
+      it. Nothing groups, nothing compares, and every query is a guess about
+      spelling. This is the disease constrained_tongues names, in slots that
+      rite does not reach: it governs event_type, relation_type and signal_type
+      by name because the root leaves those three open on purpose, and a slot
+      the domain invented is outside it.
+
+      Judgment tier deliberately. The mechanical form would be a suffix rule
+      over slot names, and on the pair that earned this rite a suffix rule
+      catches claim_kind and misses coverage_maturity. A gate that catches half
+      the instances reads as enforcement and is worth less than an honest
+      absence, so the reader decides which slots classify and the rite says
+      what to look for: a required slot, range string, no enum, no pattern,
+      whose recorded values cluster into a set somebody could have written down.
+
+  - id: provisional_declared
+    question: >-
+      Can a record say "I am referenced and not yet known", or must every
+      reference be resolved before it can be recorded at all?
+    severity: NOTE
+    status: open_question
+    lesson: >-
+      A knowledge system with no provisional state offers three moves and all
+      three are bad: invent the definition, refuse the passage, or store an
+      unresolved string and promise to fix it later. Malleus does not offer the
+      capability, so this rite asks and does not condemn. It enters at NOTE for
+      the same reason module_declares_its_interface does: condemning an adopter
+      for lacking what we do not supply is the defect three self-inquisitions
+      removed from our own documents.
+
+      Two consumers found at home, which is what moved this from an idea to a
+      rite. First: a concept slot required regardless of review state, so a
+      half-known concept cannot be staged at all while a claim with no evidence
+      can. Second, and independent: a pointer discovered inside a source and
+      not yet fetched. Demonstrated, the edge naming it is REJECTED because the
+      target does not exist, and the same edge COMMITS once a stub is invented
+      with a fabricated title and a fabricated status. The refusal is right and
+      the workaround it forces is the first bad move, taken silently.
+
+      Reference counting may rank such a backlog and must never settle it. A
+      concept referenced forty times and never defined is the most important
+      open question in the ingest, not thereby defined. Promotion by
+      accumulated weight rebuilds a half-open gate on exactly the entities the
+      graph leans on hardest.

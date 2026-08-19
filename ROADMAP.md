@@ -136,6 +136,8 @@ from a real one.
 
 ### A6. Provisional concepts (feature, not just a rite)
 
+Rite: `provisional_declared` (landed at NOTE, rubric v9)
+
 Documents introduce terms before defining them; that is normal prose, not a
 defect in the source. A knowledge system with no provisional state offers its
 writers three moves and all three are bad: invent the definition, refuse the
@@ -435,6 +437,8 @@ stops working and A6's three bad moves are the only ones left. Depends on the
 A6 capability existing in core. Recon is the consumer that motivates it.
 
 ### D2. Classification vocabularies are free strings
+
+Rite: `classification_is_closed` (landed, rubric v9)
 
 `claim_kind` and `coverage_maturity` are `range: string`. One project's ledger
 carries 78 distinct `claim_kind` values across 121 claims, 59 used exactly
