@@ -400,3 +400,105 @@ not name: a classification field that classifies nothing, because a vocabulary
 where half the values appear once is free text with a schema slot around it.
 
 Belongs to recon rather than the OCR profile, kept here so it is not lost.
+
+---
+
+## D. Recon: standing on the root instead of beside it
+
+Recon answered a problem the root has no answer for, locally. That is not
+disobedience, because malleus does not offer the capability either, and it is
+exactly the case where the requirement travels upstream first and recon
+consumes it afterwards. Nothing here is discharged by recon alone.
+
+Two facts frame the section. Recon's schema takes a purity seal today, and
+that seal covers the 9 mechanical rites; the other 29 are judgment tier, are
+declared rather than implemented in `rubric.yaml`, and have never been run
+against recon by anyone. Separately, two of the defects below are named by no
+rite at all, so even a complete inquisition would walk past them.
+
+### D1. No provisional-concept state (blocked on core)
+
+`ComparisonAxis` requires `axis_definition`, and requiredness does not vary by
+review state. Verified: an axis in `PROPOSED` with no definition is refused, and
+so is one with an empty definition. A claim may be staged with no evidence; a
+concept may not be staged at all without its definition.
+
+Recon does not need this today, because a human reads the paper and authors a
+defined axis. Five relations in the live ledger record that a source does not
+define something, and in every one the axis exists, fully defined by the
+reviewer, with the gap recorded on the coverage edge as `PARTIAL` or
+`NOT_ESTABLISHED` plus prose. The under-definition lands on the edge, never on
+the concept.
+
+The moment the ingest reads source text rather than a reviewer's summary, that
+stops working and A6's three bad moves are the only ones left. Depends on the
+A6 capability existing in core. Recon is the consumer that motivates it.
+
+### D2. Classification vocabularies are free strings
+
+`claim_kind` and `coverage_maturity` are `range: string`. One project's ledger
+carries 78 distinct `claim_kind` values across 121 claims, 59 used exactly
+once. `constrained_tongues` governs `event_type`, `relation_type` and
+`signal_type`, so no rite names these. A vocabulary where half the values
+appear once is free text with a schema slot around it.
+
+### D3. No media type on an evidence attachment
+
+`EvidenceAttachment` has no `media_type` slot anywhere in recon. The OCR
+profile's `SourceRepresentation` requires one. Blocks the one plane recon
+could otherwise populate.
+
+### D4. Source bytes are declared, not computed
+
+`artifact_sha256` and `artifact_byte_length` are optional and must be supplied
+together. Filled on 14 of 255 attachments in one project and 3 of 59 in
+another. Recon preserves caller declarations and computes nothing from bytes,
+which `docs/RECON_CONTRACT.md` states openly and names as future adapter work.
+Recon's digest pattern is byte-identical to the OCR profile's, so the two
+already agree on the shape of an identity and disagree on who produces it.
+
+### D5. Position is prose
+
+`locator` is free text: "pp. 312-313, §6 Evaluation", "Entire file at commit
+384ecc3". Of 255 attachments, 25 mention pages, 31 mention sections, 197
+neither. No page, span, offset or coordinate is a typed slot. Blocks `Region`,
+and `Region` is where the OCR selector profile would carry the work.
+
+### D6. No extraction provenance
+
+No model, prompt, config, attempt or provider identity is recorded anywhere.
+`SearchEvent` records the act of searching, not the act of reading. Blocks
+`OCRAttempt` and `Hypothesis`, which is to say it blocks every plane the
+profile exists to verify.
+
+### D7. `confidence` means opposite things in the two schemas
+
+Recon's `confidence` is the reviewer's, required on every relation. The OCR
+profile's is provider-reported and explicitly barred from controlling
+acceptance, because confidence without calibration cannot. Two schemas about to
+meet, one word, two meanings. Resolve before they meet, not after.
+
+### D8. No verbatim source text is retained
+
+`statement` is a reviewer paraphrase and `evidence_description` is a summary.
+Nothing holds the bytes a claim came from. `quotation_is_byte_exact` is a
+HERESY-tier rite and `citation-byte-verification` is an unimplemented core
+capability, so this is the same gap seen from two sides. Recon does satisfy
+`citation_integrity`, the companion rite: a cited id must resolve, enforced at
+replay and at final-state validation.
+
+### Dependency order
+
+Upstream before recon, and within recon, planes before the things that stand
+on them.
+
+1. OCR C4, the lineage walk. Until an empty bundle stops taking a seal, no
+   adapter passing the suite means anything, including recon.
+2. OCR C1, the conditional requirements the schema states and does not enforce.
+3. D7. One word, two meanings, cheapest to fix while nothing depends on it.
+4. D3 and D4 together. They complete `SourceRepresentation`, the one plane
+   recon nearly has.
+5. D2. Independent of the OCR work, and it is the ontology sanitization.
+6. D5, then D6. `Region` before the readings that select over it. Both need a
+   document-reading pipeline that exists nowhere in the repository today.
+7. A6 capability in core, then D1.
