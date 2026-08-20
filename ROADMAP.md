@@ -251,10 +251,71 @@ grammar actually verified. Declared, never assumed: a ledger that declares no
 history still refuses, and a genuinely foreign hash is refused even when a
 history is declared.
 
+**Correction, from the reporter, after the fix shipped.** The mechanism above is
+real and the fix was necessary, and it was not the whole cause of the incident
+that produced the report. The reporter recovered the exact wheel that wrote the
+original ledger and reproduced the original hash bit for bit against their
+current schema files: their ontology bytes never moved in a hash-relevant way.
+What moved was their *vendored copy* of a protocol ontology, overwritten by the
+upgrade. The grammar change alone was survivable, because the envelope accepts
+both grammars. Two further asks follow as A9 and A10, and both are sharper than
+this entry was.
+
 Still open, and the smaller half: a migration receipt. Re-anchoring under the
 current grammar produces no typed record binding the old identity, the new
 identity and the boundary event. Verification is fixed; migration is not
 recorded.
+
+### A9. The envelope accepts two grammars; everything else still compares one
+
+The ledger envelope verifies a recorded `ontology_hash` under each known payload
+grammar. Nothing else does. Every other site compares a single hash for
+equality, and each of them can see a value recorded under an earlier grammar.
+Located by inspection rather than reported:
+
+- `assent.py:568`, a recorded `graph_ontology_hash` against a hash computed
+  now. This is the site the reporter named.
+- `assent.py:620`, two *recorded* hashes against each other. A graph base
+  written under one grammar and a candidate under another name the same
+  ontology and compare unequal.
+- `prolog_verifier.py:74`, a pinned logic contract's recorded hash.
+- `logic.py:290`, which requires the input set to contain exactly one hash. A
+  history spanning a release boundary legitimately contains two that name one
+  ontology.
+
+Two sites that must NOT be widened, and the distinction is the whole design:
+`assent.py:296` and `staging.py:210` compare two hashes both computed now by
+the running code. They share a grammar by construction, so equality is the
+right question and widening would accept two genuinely different ontologies.
+
+The rule to generalise: wherever a *recorded* hash is compared, whether against
+a computed one or another recorded one, ask which grammar verifies it. Where
+both sides are computed now, ask for equality.
+
+**Verdict: accept, and it is the completion of A8 rather than a new item.**
+
+### A10. Nothing pins the vendored ontology bytes in force at publication
+
+An adopting project vendors a protocol ontology. Those bytes participate in the
+hash that anchors an accepted ledger. Nothing pins them, nothing records them,
+and an upgrade task can overwrite them, silently re-anchoring an authoritative
+ledger. Reported after exactly that happened, and it is the real cause of the
+incident behind A8.
+
+Two adjacent absences, both confirmed here. Ledger events carry ten fields and
+none of them is build or producer provenance: an event says which ontology hash
+was in force and nothing about what produced it. And a project's recorded
+malleus version is updated in place on upgrade, so the publish-time record is
+destroyed by the act of upgrading.
+
+This is B3, `design/EXECUTION_BUNDLE.md`, arriving from a direction that
+matters. B3's promotion criteria name a second non-paper consumer as a
+condition, and this is one: an adopting project that needs the exact code,
+schema, and vendored-dependency combination bound at publication, independently
+of the paper. The abstraction axis is no longer benchmark-to-benchmark.
+
+**Verdict: accept. B3's consumer condition is met; the rest of its promotion
+criteria are not, and this does not authorise core implementation by itself.**
 
 ---
 
