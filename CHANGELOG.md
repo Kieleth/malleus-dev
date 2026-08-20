@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-08-20
+
+Released as `0.13.1`. `0.13.0` was never published and is burned, like `0.8.0`
+and `0.10.0` before it.
+
+### Fixed
+
+- Fixed a recorded content hash being unverifiable after the payload grammar
+  changed. The grammar version sits inside the hashed payload and 0.11.0 made
+  it conditional, `3` unconditionally before and `4` afterwards for a schema
+  using `exactly_one_of`, `inlined` or `value_presence`. Every hash a
+  feature-using schema computed therefore changed between releases without one
+  ontology byte changing, and an accepted ledger anchored under the earlier
+  hash failed replay with "ontology_hash does not match this ledger". Reported
+  by an adopting project whose deploy gate this blocked, with a reproduction
+  against a real ledger, and reproduced here independently: `assent.yaml`
+  produces two different content hashes from identical bytes.
+
+  This is the same principle 0.12.0 applied to the fingerprint comparison,
+  found in a second place. A hash written into an accepted append-only ledger
+  is a public contract; the ledger cannot be rewritten to match a new rule, so
+  the rule verifies what the ledger already holds.
+
+### Added
+
+- Added `OntologyRegistry.content_hashes()`, the schema's identity under every
+  grammar in `KNOWN_PAYLOAD_GRAMMARS`, and `verifying_grammar()`, which answers
+  which grammar makes a recorded hash match or `None` for a real mismatch.
+- Added an optional declared history to `JsonlLedger`, plus
+  `verified_ontology_hashes` reporting which grammar a read actually
+  encountered. Accepting an earlier grammar is a declaration and never an
+  assumption: a ledger that declares no history still refuses, and a foreign
+  hash is refused even when a history is declared. Callers constructing
+  `JsonlLedger` directly must pass the earlier hashes to accept them;
+  `AssentLedger` and `ReconProject` derive them from the registry.
+- Added `OCR-D014` and `OCR-D015`. A rendering must name a unit the bundle
+  observes, or a typo reports the page as never rendered and reads as an honest
+  gap. A declared state must agree with the detail it requires: an
+  `UNAVAILABLE` attempt says why, a `CORRECTED` verdict carries the correction
+  and what it carries is what the hypothesis plane holds, and a verdict that is
+  not `CORRECTED` carries no corrected text.
+- Added the reference walk over every plane. Lineage was traced outward from
+  readings, so a region over a missing raster and a raster over a missing source
+  each took a purity seal while nothing referenced them.
+
 ## [0.12.0] - 2026-08-19
 
 ### Fixed
