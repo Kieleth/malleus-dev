@@ -1,0 +1,161 @@
+id: https://malleus.dev/schema/gedanken-diagnosis
+name: gedanken_diagnosis
+version: 0.1.0
+title: Gedanken Toy 3 — Differential Required
+description: >-
+  The diagnosis toy from research/domain_reasoning_controls_recon/GEDANKEN.md,
+  made executable. The captured pattern is that a diagnosis may not be
+  concluded until competing hypotheses have been entertained and eliminated.
+
+  `entered_at` is declared exactly as the sketch declares it, an integer turn
+  number on every step. Note what the executed rules do with it: nothing. The
+  sketch's two rules are pure existence conditions and never read the ordinal,
+  which is why a differential reverse-engineered after the fact compiles to the
+  same facts as one that was actually done.
+
+  Departure from the sketch, forced by the library. GEDANKEN types TestOrder
+  and TestResult as `is_a: Event`. `OntologyRegistry` refuses that at load
+  time: a concrete relation's `source_id` range must be an Entity subtype
+  (src/malleus/ontology.py:718-722), and both are relation sources. Both are
+  therefore Entities, and `m_record/3` reads `entity` for every node.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  dx: https://malleus.dev/schema/gedanken-diagnosis/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  TestVerdict:
+    description: What a result does to the hypothesis it bears on.
+    permissible_values:
+      SUPPORTS:
+      REFUTES:
+      INCONCLUSIVE:
+
+  DiagnosisRelationType:
+    description: Closed set of edges this domain asserts.
+    permissible_values:
+      PRESENTS:
+      EXPLAINS:
+      DISCRIMINATES:
+      BEARS_ON:
+      CONCLUDES:
+
+classes:
+  Patient:
+    is_a: Entity
+    description: The person presenting findings.
+
+  Finding:
+    is_a: Entity
+    description: One observed sign or symptom.
+
+  ReasoningStep:
+    is_a: Entity
+    abstract: true
+    description: >-
+      Anything the clinician entered, carrying the turn on which they say they
+      entered it. Abstract; never instantiated directly.
+    slots:
+      - entered_at
+    slot_usage:
+      entered_at:
+        required: true
+
+  Hypothesis:
+    is_a: ReasoningStep
+    description: A candidate condition.
+
+  TestOrder:
+    is_a: ReasoningStep
+    description: A test ordered to discriminate between hypotheses.
+
+  TestResult:
+    is_a: ReasoningStep
+    description: What a test returned, and what it does to a hypothesis.
+    slots:
+      - verdict
+    slot_usage:
+      verdict:
+        required: true
+
+  Diagnosis:
+    is_a: ReasoningStep
+    description: The concluded condition.
+
+  PresentsRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DiagnosisRelationType
+        required: true
+        equals_string: PRESENTS
+      source_id:
+        range: Patient
+      target_id:
+        range: Finding
+
+  ExplainsRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DiagnosisRelationType
+        required: true
+        equals_string: EXPLAINS
+      source_id:
+        range: Hypothesis
+      target_id:
+        range: Finding
+
+  DiscriminatesRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DiagnosisRelationType
+        required: true
+        equals_string: DISCRIMINATES
+      source_id:
+        range: TestOrder
+      target_id:
+        range: Hypothesis
+
+  BearsOnRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DiagnosisRelationType
+        required: true
+        equals_string: BEARS_ON
+      source_id:
+        range: TestResult
+      target_id:
+        range: Hypothesis
+
+  ConcludesRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DiagnosisRelationType
+        required: true
+        equals_string: CONCLUDES
+      source_id:
+        range: Diagnosis
+      target_id:
+        range: Hypothesis
+
+slots:
+  entered_at:
+    range: integer
+    description: >-
+      Turn on which the clinician says they entered this step. The domain's own
+      word for order, and no executed rule below reads it.
+
+  verdict:
+    range: TestVerdict
+    description: What the result does to the hypothesis it bears on.

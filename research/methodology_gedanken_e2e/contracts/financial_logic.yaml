@@ -1,0 +1,11 @@
+schema_version: "1"
+contract_id: gedanken-financial-logic
+contract_version: "1"
+ontology_hash: sha256:5f69541011784376f1fff53c530adb47499dafac7a780fa3a81353e907372697
+fact_contract_version: "2"
+ruleset_id: gedanken-financial-rules
+ruleset_version: "1"
+rules_file: financial_rules.pl
+rule_ids:
+  - PROVENANCE_PATTERN
+timeout_seconds: 5

@@ -1,0 +1,11 @@
+schema_version: "1"
+contract_id: gedanken-diagnosis-logic
+contract_version: "1"
+ontology_hash: sha256:981275212376085c06edb12f62d3f9b25d11c1edfbdb790658f135127c334a07
+fact_contract_version: "2"
+ruleset_id: gedanken-diagnosis-rules
+ruleset_version: "1"
+rules_file: diagnosis_rules.pl
+rule_ids:
+  - DIFFERENTIAL_REQUIRED
+timeout_seconds: 5

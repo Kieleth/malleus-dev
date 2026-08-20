@@ -1,0 +1,167 @@
+id: https://malleus.dev/schema/gedanken-financial
+name: gedanken_financial
+version: 0.1.0
+title: Gedanken Toy 2 — Provenance Pattern
+description: >-
+  The financial-recommendation toy from
+  research/domain_reasoning_controls_recon/GEDANKEN.md, made executable. The
+  captured pattern is evidence, comparison, risk assessment, recommendation,
+  and each stage must have existed before the stage that consumes it.
+
+  `asserted_at` is the load-bearing slot and it is the trap the toy exists to
+  demonstrate: it is a writer-supplied string on a domain class, not the
+  protocol's valid time. The protocol's own ordering lives on the
+  CandidateSubgraphArtifact and never reaches GraphFactCompiler.
+
+  Departure from the sketch, forced by the library. GEDANKEN types Observation
+  as `is_a: Event` and Comparison and RiskAssessment as `is_a: Signal`.
+  `OntologyRegistry` refuses that at load time: a concrete relation's endpoint
+  ranges must be Entity subtypes (src/malleus/ontology.py:718-722), and every
+  one of those types is a DerivedFrom endpoint. All four analysis stages are
+  therefore Entities, and `m_record/3` reads `entity` for all of them.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  fin: https://malleus.dev/schema/gedanken-financial/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  Stance:
+    description: The recommendation's direction.
+    permissible_values:
+      BUY:
+      HOLD:
+      SELL:
+
+  FinancialRelationType:
+    description: Closed set of edges this domain asserts.
+    permissible_values:
+      DERIVED_FROM:
+      ABOUT:
+
+classes:
+  Company:
+    is_a: Entity
+    description: The subject of the analysis.
+
+  ProvenanceNode:
+    is_a: Entity
+    abstract: true
+    description: >-
+      Anything that may sit in a provenance chain. Abstract so DerivedFrom has
+      one narrowed endpoint range instead of the root's bare Entity.
+
+  Metric:
+    is_a: ProvenanceNode
+    description: A measured quantity the analysis reads.
+    slots:
+      - metric_name
+      - period
+    slot_usage:
+      metric_name:
+        required: true
+
+  Peer:
+    is_a: ProvenanceNode
+    description: A comparison company.
+
+  AnalysisStep:
+    is_a: ProvenanceNode
+    abstract: true
+    description: >-
+      A stage of the captured reasoning pattern. Carries the writer's own
+      account of when it was asserted.
+    slots:
+      - asserted_at
+    slot_usage:
+      asserted_at:
+        required: true
+
+  Observation:
+    is_a: AnalysisStep
+    description: A statement read off a metric.
+    slots:
+      - statement
+    slot_usage:
+      statement:
+        required: true
+
+  Comparison:
+    is_a: AnalysisStep
+    description: A statement relating an observation to peers.
+    slots:
+      - statement
+    slot_usage:
+      statement:
+        required: true
+
+  RiskAssessment:
+    is_a: AnalysisStep
+    description: A statement of risk derived from observations.
+    slots:
+      - statement
+    slot_usage:
+      statement:
+        required: true
+
+  Recommendation:
+    is_a: AnalysisStep
+    description: The conclusion.
+    slots:
+      - stance
+    slot_usage:
+      stance:
+        required: true
+
+  DerivedFromRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: FinancialRelationType
+        required: true
+        equals_string: DERIVED_FROM
+      source_id:
+        range: ProvenanceNode
+      target_id:
+        range: ProvenanceNode
+
+  AboutRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: FinancialRelationType
+        required: true
+        equals_string: ABOUT
+      source_id:
+        range: ProvenanceNode
+      target_id:
+        range: Company
+
+slots:
+  asserted_at:
+    range: string
+    description: >-
+      ISO-8601 date the writer says this stage was asserted. Writer-supplied
+      and freely settable; the protocol does not bind it to anything.
+
+  statement:
+    range: string
+    description: What the stage says, in prose, for readability only.
+
+  metric_name:
+    range: string
+    description: Name of the measured quantity.
+
+  period:
+    range: string
+    description: Reporting period the metric covers.
+
+  stance:
+    range: Stance
+    description: The recommendation's direction.
