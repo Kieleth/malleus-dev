@@ -379,6 +379,9 @@ reading it.
 Four probes were run against a conforming bundle with one field changed. All
 four were accepted. Three are defects and one is not.
 
+*(C1 landed as OCR-D015, except the reviewer check below, which is still a
+decision rather than a task.)*
+
 **Defect: an unavailable attempt need not say why.** `status="UNAVAILABLE"`
 with no `unavailable_reason` verifies clean. The slot's own description in
 `ontology/domains/ocr.yaml` reads "Required reading when status is
@@ -397,7 +400,8 @@ cheap. Requiring it to equal the `text_digest` of the hypothesis carrying that
 corrected text is, and catches a correction whose digest and whose resulting
 reading have drifted apart. Groom which.
 
-**Defect, weak: mandate B3 is recorded and never checked.** A correction whose
+**Still open, and the only one of the four that is. Defect, weak: mandate B3 is
+recorded and never checked.** A correction whose
 `reviewer_id` equals the model identity in the attempt that produced the
 reviewed hypothesis verifies clean. B3 says a separate reviewer is an identity
 that did not produce the hypothesis under review. The bundle carries both

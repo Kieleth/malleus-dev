@@ -722,11 +722,11 @@ SLOT_READERS = {
     "config_identity_digest": STRUCTURAL + "content address; drives currency_verdict",
     "attempt_status": ("OCR-D013",),
     "response_digest": ("OCR-D001",),
-    "unavailable_reason": UNBUILT + "required reading per the slot's own description; unenforced",
+    "unavailable_reason": ("OCR-D015",),
     "reviewed_hypothesis_id": ("OCR-D006",),
     "reviewer_id": UNBUILT + "mandate B3 cannot be checked without actor registration",
     "review_verdict": ("OCR-D013",),
-    "corrected_text_digest": UNBUILT + "not compared to the hypothesis it produced",
+    "corrected_text_digest": ("OCR-D015",),
     "predecessor_id": UNBUILT + "correction chains are recorded and never walked",
 }
 
@@ -784,7 +784,7 @@ class TestNothingIsDischargedByAssertion:
         """The number that matters. If this is a surprise, that is the finding."""
         unbuilt = sorted(k for k, v in SLOT_READERS.items()
                          if isinstance(v, str) and v.startswith(UNBUILT))
-        assert len(unbuilt) >= 8, (
+        assert len(unbuilt) >= 6, (
             "the unbuilt list shrank without this count being updated; confirm "
             "each one really gained a reader"
         )
@@ -926,3 +926,55 @@ class TestEveryReferenceIsWalked:
     def test_the_complete_example_is_still_clean(self):
         """The wider walk must not condemn a sound bundle."""
         assert verify_bundle(_bundle()).conforms
+
+
+class TestAStateAgreesWithTheDetailItRequires:
+    """The schema can say a slot is required. It cannot say "required when the
+    status is UNAVAILABLE", and LinkML's exactly_one_of cannot express the
+    implication without also accepting the case it exists to refuse. The slot
+    description said it anyway and nothing performed it."""
+
+    def test_an_unavailable_attempt_must_say_why(self):
+        bundle = _bundle(attempts=(
+            OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),
+            OCRAttempt("att:2", "reg:2", D(9), {"m": "e"}, "UNAVAILABLE"),
+        ))
+        assert "OCR-D015" in verify_bundle(bundle).codes()
+
+    def test_an_attempt_that_was_made_carries_no_unavailable_reason(self):
+        """The mirror. A reason on a completed call means one of the two is
+        wrong, and neither may be assumed to be the mistake."""
+        bundle = _bundle(attempts=(
+            OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4),
+                       unavailable_reason="provider quota"),
+            OCRAttempt("att:2", "reg:2", D(9), {"m": "e"}, "COMPLETED", D(1)),
+        ))
+        assert "OCR-D015" in verify_bundle(bundle).codes()
+
+    def test_a_correction_that_says_corrected_must_carry_the_correction(self):
+        bundle = _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED"),
+            ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "VERIFIED_BLANK"),
+        ))
+        assert "OCR-D015" in verify_bundle(bundle).codes()
+
+    def test_the_corrected_text_must_be_the_reading_it_produced(self):
+        """The stronger of the two available discharges. Presence alone would
+        let the correction record and the hypothesis plane disagree about what
+        the corrected text is, with nothing preferring either."""
+        bundle = _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(3)),
+            ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "VERIFIED_BLANK"),
+        ))
+        result = verify_bundle(bundle)
+        assert "OCR-D015" in result.codes()
+        assert "disagrees with the reading it produced" in str(result.diagnostics[0])
+
+    def test_a_blank_page_carries_no_corrected_text(self):
+        """B2 keeps the verdicts distinct. A page verified blank that also
+        carries corrected text is claiming both at once."""
+        bundle = _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6)),
+            ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "VERIFIED_BLANK", D(2)),
+        ))
+        assert "OCR-D015" in verify_bundle(bundle).codes()

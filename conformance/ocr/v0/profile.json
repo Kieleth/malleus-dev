@@ -15,7 +15,8 @@
     "OCR-D011": "a selection names a hypothesis it did not consider",
     "OCR-D012": "no coverage metric family is declared",
     "OCR-D013": "a bundle record violates the profile ontology",
-    "OCR-D014": "a rendering claims a unit the bundle does not observe"
+    "OCR-D014": "a rendering claims a unit the bundle does not observe",
+    "OCR-D015": "a declared state and the detail it requires disagree"
   },
   "does_not_prove": [
     "source authenticity",

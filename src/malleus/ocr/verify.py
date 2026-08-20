@@ -40,6 +40,7 @@ CODES = {
     "OCR-D012": "no coverage metric family is declared",
     "OCR-D013": "a bundle record violates the profile ontology",
     "OCR-D014": "a rendering claims a unit the bundle does not observe",
+    "OCR-D015": "a declared state and the detail it requires disagree",
 }
 
 # Every reference one plane makes to another, walked regardless of what points
@@ -350,6 +351,41 @@ def verify_bundle(
         ):
             add("OCR-D008", selection.id,
                 f"{selection.selected_id!r} carries no review record")
+
+    # C1 (roadmap): a state and the detail it requires must agree. The schema
+    # can say a slot is required; it cannot say "required when the status is
+    # UNAVAILABLE", and LinkML's exactly_one_of cannot express that implication
+    # without also accepting the case it exists to refuse. So it lives here,
+    # beside the check, rather than in a slot description nothing performs.
+    for attempt in bundle.attempts:
+        stated = bool(attempt.unavailable_reason and attempt.unavailable_reason.strip())
+        if attempt.status == "UNAVAILABLE" and not stated:
+            add("OCR-D015", attempt.id,
+                "status is UNAVAILABLE and no unavailable_reason is given")
+        if attempt.status != "UNAVAILABLE" and stated:
+            add("OCR-D015", attempt.id,
+                f"status is {attempt.status} and carries an unavailable_reason")
+
+    # A correction that says it produced a different reading must carry it, and
+    # what it carries must be what the hypothesis plane holds. Mandate B2 keeps
+    # the verdicts distinct; this keeps the two planes agreeing about what the
+    # corrected text actually is.
+    for correction in bundle.corrections:
+        produced = [h for h in bundle.hypotheses if h.correction_id == correction.id]
+        if correction.verdict == "CORRECTED":
+            if not correction.corrected_text_digest:
+                add("OCR-D015", correction.id,
+                    "verdict is CORRECTED and no corrected text is carried")
+            elif len(produced) != 1:
+                add("OCR-D015", correction.id,
+                    f"verdict is CORRECTED and produced {len(produced)} readings, not one")
+            elif produced[0].text_digest != correction.corrected_text_digest:
+                add("OCR-D015", correction.id,
+                    f"corrected text {correction.corrected_text_digest} disagrees with "
+                    f"the reading it produced, {produced[0].text_digest}")
+        elif correction.corrected_text_digest:
+            add("OCR-D015", correction.id,
+                f"verdict is {correction.verdict} and carries a corrected text")
 
     # C8 and the declaration half of C3 and C4: the source class is frozen
     # before ingest and names its metric families. This is NOT C3. C3 measures
