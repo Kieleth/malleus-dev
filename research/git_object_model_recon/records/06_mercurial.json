@@ -1,0 +1,373 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:hg:hashrevisionsha1",
+      "label": "Mercurial 6.7 source: hashrevisionsha1()",
+      "review_state": "REVIEWED",
+      "source_uri": "https://files.pythonhosted.org/packages/source/m/mercurial/mercurial-6.7.tar.gz",
+      "locator": "mercurial-6.7/mercurial/utils/storageutil.py lines 34-56, and its call site mercurial-6.7/mercurial/revlog.py lines 2779-2785",
+      "evidence_description": "The function that computes a Mercurial node id, read from the shipped source rather than from a description of it. Its docstring: 'Compute the SHA-1 for revision data and its parents. This hash combines both the current file contents and its history in a manner that makes it easy to distinguish nodes with the same content in the revision graph.' The body sorts the two parent node ids, hashes them, then hashes the text. revlog.hash(self, text, p1, p2) delegates to it, and addrevision computes node = self.hash(rawtext, p1, p2).",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:5358ed20604c67a7bc7ff81141f735586c328fbb6a18440d2e1e6cd0c044a4c6",
+      "artifact_byte_length": 8300870,
+      "notes": [
+        "Digest and byte length are of the mercurial-6.7 source distribution as downloaded, not of the individual file. repo.mercurial-scm.org and its raw-file endpoint were behind a proof-of-work challenge and were not fetchable in this pass; the released sdist was used instead."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:hg:revlogs-internals",
+      "label": "Mercurial 6.7 internals help: revlogs",
+      "review_state": "REVIEWED",
+      "source_uri": "https://files.pythonhosted.org/packages/source/m/mercurial/mercurial-6.7.tar.gz",
+      "locator": "mercurial-6.7/mercurial/helptext/internals/revlogs.txt, opening section, 'Delta Chains', 'File Format'",
+      "evidence_description": "Mercurial's own format documentation. 'Revision logs - or revlogs - are an append only data structure for storing discrete entries, or revisions.' 'Revision data is stored as a series of compressed deltas against ancestor revisions.' 'Revlogs are written in an append-only fashion. We never need to rewrite a file to insert nor do we need to remove data.' 'Revlogs can be modeled as 0-indexed arrays. The first revision is revision #0 and the second is revision #1.' On reconstruction: 'The full text for a revision is reconstructed by loading the original full text for the base revision of a delta chain and then applying deltas until the target revision is reconstructed.' On cost: 'Delta chains are limited in length so lookup time is bound. They are limited to ~2x the length of the revision's data. The linear distance between the base chunk and the final chunk is also limited so the amount of read I/O to load all chunks in the delta chain is bound.' On base choice: deltas are computed against the previous revision, or against an arbitrary revision under the generaldelta feature, 'enabled by default in Mercurial 3.7'.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:5358ed20604c67a7bc7ff81141f735586c328fbb6a18440d2e1e6cd0c044a4c6",
+      "artifact_byte_length": 8300870
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:hg:wiki-revlog",
+      "label": "Mercurial wiki, Revlog page",
+      "review_state": "REVIEWED",
+      "source_uri": "https://wiki.mercurial-scm.org/Revlog",
+      "locator": "index/data description",
+      "evidence_description": "States that each revlog has an index, for example .hg/store/data/somefile.i, containing one fixed-size record per version, and that the record contains the nodeid of the file version, the nodeids of its parents, the length of the revision data, the offset in the revlog, the base of the delta chain, and the linkrev pointing to the corresponding changeset. Also: 'Each version is stored compressed in its entirety or stored as a compressed binary delta (difference) relative to the preceeding version in the revlog. Whether to store a full version is decided by how much data would be needed to reconstruct the file.'",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Read through a page-summarising fetch. The structural facts it supplies are corroborated by the shipped internals help and the source, which were read directly."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:mercurial-revlog",
+      "label": "Mercurial revlog: per-file append-only delta log with history-bearing node ids",
+      "title": "Mercurial revlog storage format",
+      "authors": ["Matt Mackall", "Mercurial contributors"],
+      "identifiers": [
+        "software:mercurial",
+        "version:6.7",
+        "url:https://www.mercurial-scm.org/"
+      ],
+      "priority_date_basis": "Not established in this pass. The inspected artifact is the Mercurial 6.7 source distribution. The shipped internals help dates revlog version 1 (RevlogNG) to 2006 and the generaldelta default to Mercurial 3.7, but this review did not establish a first-public date for the format and does not invent one.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:hg:hashrevisionsha1",
+        "evidence:hg:revlogs-internals",
+        "evidence:hg:wiki-revlog"
+      ],
+      "notes": [
+        "Mercurial and git were started within weeks of each other in 2005 in response to the same event, which makes their opposite identity choices unusually comparable."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hg:nodeid-includes-parents",
+      "label": "Mercurial deliberately puts history into the identity so equal content does not converge",
+      "statement": "A Mercurial node id is SHA-1 over the two sorted parent node ids followed by the revision text. The shipped docstring states the intent: 'This hash combines both the current file contents and its history in a manner that makes it easy to distinguish nodes with the same content in the revision graph.' Mercurial made the exact choice git refused. In git, two files with the same bytes are the same object; in Mercurial, the same bytes at two places in the graph are two different nodes, and that is the stated goal.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.97,
+      "evidence_ids": ["evidence:hg:hashrevisionsha1"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hg:delta-primary-append-only",
+      "label": "The revlog is delta-primary and append-only, per tracked file",
+      "statement": "'Revision logs - or revlogs - are an append only data structure for storing discrete entries, or revisions', and 'Revision data is stored as a series of compressed deltas against ancestor revisions.' Unlike git, where the delta is an encoding detail chosen at repack time, the delta is the revlog's stored unit and the format's index records the base of each delta chain. There is one revlog per tracked file plus one for the changelog, so per-file history is a stored structure rather than a computed one.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hg:reconstruction-cost-is-capped",
+      "label": "Mercurial caps replay cost explicitly in the format",
+      "statement": "Because a revision is a delta, reading it means replaying a chain, and Mercurial bounds that in the format rather than leaving it to a packer: 'Delta chains are limited in length so lookup time is bound. They are limited to ~2x the length of the revision's data. The linear distance between the base chunk and the final chunk is also limited so the amount of read I/O to load all chunks in the delta chain is bound.' A full text is written whenever the chain would otherwise exceed the bound. This is periodic snapshotting as a first-class format rule, and it is the direct answer a delta-primary store must give to the derivation-cost question.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hg:two-addressing-schemes",
+      "label": "Mercurial addresses a revision two ways at once: by position and by hash",
+      "statement": "'Revlogs can be modeled as 0-indexed arrays. The first revision is revision #0 and the second is revision #1.' Index entries reference parents by revision number, while the node id is the global content-and-history hash. The local integer is fast and repository-relative; the hash is stable and portable. Mercurial keeps both and uses each where it is cheaper.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.93,
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hg:nodeid",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "claim:hg:nodeid-includes-parents",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.97,
+      "basis": "Read from the shipped source: the function body and its docstring state both the computation and the intent.",
+      "evidence_ids": ["evidence:hg:hashrevisionsha1"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hg:delta-primary",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "claim:hg:delta-primary-append-only",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated in Mercurial's shipped internals help and corroborated by the wiki's description of the index record.",
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hg:cost-cap",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "claim:hg:reconstruction-cost-is-capped",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The bound and its rationale are stated verbatim in the Delta Chains section.",
+      "evidence_ids": ["evidence:hg:revlogs-internals"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hg:two-addressing",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "claim:hg:two-addressing-schemes",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The array model and the index record layout are stated in the internals help; the node id is established from the source.",
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:hashrevisionsha1"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.97,
+      "basis": "Identity is hash(sorted parents, text) plus a local integer revision number. Content and history are both inside the name, on purpose.",
+      "evidence_ids": ["evidence:hg:hashrevisionsha1", "evidence:hg:revlogs-internals"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The axis is addressed centrally and answered negatively: the hash is built specifically to make nodes with the same content distinguishable. Equal content never collapses to one node.",
+      "evidence_ids": ["evidence:hg:hashrevisionsha1"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The delta is the stored unit and the index names each chain's base. Full texts appear only as chain heads, written when the bound would otherwise be exceeded.",
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "'Revlogs effectively model a directed acyclic graph (DAG). Each node has edges to 1 or 2 parent nodes.' The DAG is realised as an append-only array per tracked file, with references always pointing at earlier entries.",
+      "evidence_ids": ["evidence:hg:revlogs-internals"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Reconstruction cost is bounded in the format itself: chain length limited to about twice the revision's data length, and linear read distance bounded as well.",
+      "evidence_ids": ["evidence:hg:revlogs-internals"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Because a node id hashes both the text and the parent node ids, each revlog entry is a link in a hash chain and checkhash verifies it on read. The reviewer did not audit how far that chaining extends across the manifest and changelog, so this is coded MATERIAL rather than CENTRAL.",
+      "evidence_ids": ["evidence:hg:hashrevisionsha1"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:authority",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:index-vs-authority",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "The index is part of the format, not a derived cache: it carries offsets, chain bases, parent revision numbers and linkrevs that the data file alone does not encode. Mercurial answers this axis the opposite way to git, where the pack index is regenerable from the objects.",
+      "evidence_ids": ["evidence:hg:revlogs-internals", "evidence:hg:wiki-revlog"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:reclaim",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:reclamation",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.7,
+      "basis": "The internals help states only that revlogs never need data removed and that in-progress writes can be rolled back by truncation. This pass did not inspect strip, obsolescence markers, or any reclamation mechanism, so the axis is recorded as not established rather than as absent.",
+      "evidence_ids": ["evidence:hg:revlogs-internals"],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hg:select",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "axis:selective-replay",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.7,
+      "basis": "This pass inspected the storage format only. Mercurial's rebase, graft and Mercurial Queues were not inspected, so no coverage of selective replay is established here. Note that the parent-bearing node id makes moving a revision impossible without minting a new id, the same structural consequence git has.",
+      "evidence_ids": ["evidence:hg:hashrevisionsha1"],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:git:hg-identity",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:git-object-model",
+      "target_id": "work:mercurial-revlog",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Two systems built weeks apart, for the same repository, in response to the same event, that answered the identity question in opposite directions and said so. Git excludes history from content objects because 'Two objects with the same name are identical, and that means that they are easy to share'. Mercurial includes it because doing so 'makes it easy to distinguish nodes with the same content in the revision graph'. The consequences follow mechanically: git gets free cross-repository deduplication and cannot tell two identical states apart without consulting the commit layer; Mercurial can always tell them apart and never deduplicates them. The same split appears at the storage unit, where git stores snapshots and deltas opportunistically at repack time while Mercurial stores deltas and writes full texts only to bound reconstruction.",
+      "evidence_ids": [
+        "evidence:linus:no-history-in-objects",
+        "evidence:hg:hashrevisionsha1",
+        "evidence:hg:revlogs-internals",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

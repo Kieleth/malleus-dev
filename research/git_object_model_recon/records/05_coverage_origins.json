@@ -1,0 +1,138 @@
+[
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:first-commit:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-first-commit",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "'The object database is literally just a content-addressable collection of objects. All objects are named by their content'. The 2005 name was the hash of the compressed form, which is the one part of the answer that later changed.",
+      "evidence_ids": ["evidence:git:first-commit-readme", "evidence:git:first-commit-read-cache"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:first-commit:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-first-commit",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "'two separate but identical trees will always share the exact same object', stated in the README on day one.",
+      "evidence_ids": ["evidence:git:first-commit-readme"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:first-commit:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-first-commit",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The TRUST section states that naming a changeset fixes a whole history with full contents and that git handles content integrity only, with trust coming from outside.",
+      "evidence_ids": ["evidence:git:first-commit-readme"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:first-commit:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-first-commit",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "'The \"changeset\" object is an object that introduces the notion of history into the picture.' History enters through exactly one object type and nowhere else.",
+      "evidence_ids": ["evidence:git:first-commit-readme"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:linus-messages:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "'It's fundamentally the git notion of \"content determines objects\"'.",
+      "evidence_ids": ["evidence:linus:content-determines-objects"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:linus-messages:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "'Two objects with the same name are identical, and that means that they are easy to share', with the warning that adding history to content objects breaks the separation of time and space.",
+      "evidence_ids": ["evidence:linus:no-history-in-objects"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:linus-messages:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "'GIT fundamentally doesn't do the \"delta-within-a-file\" model', given as the reason rename tracking would buy nothing.",
+      "evidence_ids": ["evidence:linus:renames-dont-matter"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:linus-messages:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "The rename argument moves a derivation from write time to read time on purpose: 'that \"where did this come from\" decision should be done at _search_ time, not commit time.' What is recorded is state; what is wanted is recomputed on demand.",
+      "evidence_ids": ["evidence:linus:detection-at-search-time"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  }
+]

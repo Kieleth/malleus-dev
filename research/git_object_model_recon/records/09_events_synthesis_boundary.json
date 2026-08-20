@@ -1,0 +1,365 @@
+[
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:git-local-docs",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T16:20:00-07:00",
+      "query": "Full read of the shipped git documentation on the local installation: gitglossary(7), gitformat-pack(5), gitrepository-layout(5), gitcore-tutorial(7), git-gc(1), git-prune(1) at git 2.50.1 (Apple Git-155), with sha256 and byte length recorded for each man page source file",
+      "search_rationale": "Establish the object model from the producer's own normative documentation before reading any secondary account of it.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The strongest single statement found is gitglossary's object entry, which derives immutability rather than asserting it: 'It is uniquely identified by the SHA-1 of its contents. Consequently, an object cannot be changed.'"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:git-probe",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:10:00-07:00",
+      "query": "Written reproducible probe against git 2.50.1: hash preimage reconstruction, two unrelated repositories reaching identical content, two branches reconverging, 31 revisions of one file loose and packed with delta chains and full-text bases mapped to revision numbers, reachability and prune, index deletion and rebuild, and an object-set signature under three pack encodings",
+      "search_rationale": "Documentation states parts; the consequences that decide the design question, in particular whether equal states collapse and whether equal states produce equal history nodes, had to be measured rather than inferred.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "Two consecutive runs of the final script produced byte-identical output apart from the temporary directory path. An earlier run of the same script before sections G and H were added produced a different full-text delta base for the same object set; that output is retained as evidence and the discrepancy is recorded rather than explained."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:git-origins-2005",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:00:00-07:00",
+      "query": "April 2005 origin record: LKML 'Kernel SCM saga..' and its replies, git-list 'Handling renames.' and 'Merge with git-pasky II.', the first commit e83c5163 with its README and read-cache.c, plus git's current technical documents on pack heuristics, the hash function transition, shallow clones and the user manual",
+      "search_rationale": "The design decisions and their stated reasons are only in the correspondence and the first commit; the shipped documentation records the result, not the argument.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "lore.kernel.org is behind a proof-of-work challenge and was not fetchable; marc.info, lkml.iu.edu and public-inbox.org were used as mirrors, with Message-IDs recorded so the canonical URLs can be reconstructed.",
+        "Documentation/technical/pack-format.txt no longer exists; that content is now in Documentation/gitformat-pack.adoc. A bibliography citing the old path points at nothing.",
+        "No single April 2005 message stating speed, distribution and integrity together was found. Those three appear in three different places."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:hash-preimage-transition",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:25:00-07:00",
+      "query": "Which commit changed git's object name from the hash of the compressed bytes to the hash of the uncompressed type-and-length preimage: web search plus a listing of every git.git commit touching read-cache.c up to 2005-05-15",
+      "search_rationale": "The two endpoints are established from primary sources and they disagree, so the change is real; locating it would date one of the few places where git's identity scheme was revised.",
+      "search_outcome": "UNRESOLVED",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The commit listing inspected contains no such subject line. The change may lie outside that window or in another file. This is a bounded negative result, not evidence that the change did not happen: it demonstrably did, since the first commit's code hashes the deflated buffer and the shipped binary hashes the preimage."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:mercurial-primary",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:30:00-07:00",
+      "query": "Mercurial's node-id computation and revlog format from the producer: mercurial 6.7 source distribution, files mercurial/utils/storageutil.py, mercurial/revlog.py and mercurial/helptext/internals/revlogs.txt, plus Mackall's OLS 2006 design paper and the project wiki",
+      "search_rationale": "Whether a Mercurial node id includes its parents decides the whole comparison on the identity axis, so it had to be read in the code rather than taken from a description.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "repo.mercurial-scm.org and its raw-file endpoint were behind a proof-of-work challenge, and a clone of the development repository failed; the released source distribution from PyPI was used instead and its sha256 recorded.",
+        "A parallel pass reported the ~2x delta chain bound as not found in any primary source. It is stated verbatim in the shipped internals help, which that pass did not reach: 'They are limited to ~2x the length of the revision's data.'"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:patch-theory",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:40:00-07:00",
+      "query": "Darcs patch theory and its costs: Roundy's theory appendix, darcs.net Theory/Conflictors, FAQ/ConflictsDarcs1, Internals/Repository, Theory/GaneshPatchAlgebra, the darcs 2.18.5 changelog entry for the darcs-3 theory, and Pijul's manual pages why_pijul and theory",
+      "search_rationale": "The patch model is the genuine alternative to a snapshot DAG for a store whose entries are decisions rather than states, so it had to be examined on its own terms and on its record rather than on its reputation.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The folklore that darcs 2 fixed the exponential merge is contradicted by darcs' own FAQ: 'Recursive conflicts exhibit the exponential time/memory usage in Darcs 2, too.' The quadratic bound arrived with darcs-3 in 2020 and was marked unstable at that release.",
+        "No darcs source was found stating that cherry-picking an arbitrary subset is first-class in those words; what is documented is dependency-driven minimal selection.",
+        "pijul.org/model/ renders via JavaScript and fetched empty. No category-theory language was found on pijul's own theory page, contrary to how its model is usually described elsewhere."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:content-addressing-prior-art",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:45:00-07:00",
+      "query": "Prior art for content addressing and immutable versioned structure: Venti (FAST 2002), monotone's manual, Merkle's 1979 Stanford thesis and 1987 CRYPTO paper, Fowler's Event Sourcing, Driscoll Sarnak Sleator Tarjan on persistence, and the customary hash-consing attributions to Ershov 1958 and Goto 1974",
+      "search_rationale": "The owner asked where the ideas came from. Establishing what existed before April 2005, and with what stated properties, is the only way to answer that without repeating folklore.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "USENIX's copies of Venti and of the Single Instance Storage paper returned 403; Venti was recovered from the Bell Labs canonical copy. monotone.ca was behind an anti-bot wall and the manual was read from its Texinfo source in the author's own repository."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:merkle-term-in-git",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:50:00-07:00",
+      "query": "Case-insensitive recursive search for 'merkle', 'monotone' and 'darcs' over a full checkout of git at commit dea0ea3582e6980ddbc1173cc8e3e9f9db91cde0 (4,847 tracked files) and over the official Pro Git book source",
+      "search_rationale": "Before describing git as a Merkle DAG on the project's authority, check whether the project ever says so.",
+      "search_outcome": "NO_MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "Zero hits for all three terms in git's tree, and zero for 'merkle' in Pro Git. The structure is there; the vocabulary is not the project's."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:greg-young-canonical",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:55:00-07:00",
+      "query": "A citable canonical written source by Greg Young on event sourcing and CQRS: the CQRS Documents PDF, his blog's event-sourcing tag, a conference slide deck, and a vendor-hosted transcript",
+      "search_rationale": "Fowler's article is the definition; Young is the other name always attached to the pattern, and a second primary voice would strengthen the event-log branch of the comparison.",
+      "search_outcome": "ACCESS_BLOCKED",
+      "review_state": "REVIEWED",
+      "notes": [
+        "All four candidate URLs failed: two 403s, one TLS verification failure, one redirect to a blog index. The Wayback availability API reports no snapshot of the CQRS Documents PDF. No Young source is cited in this project; the event-log branch rests on Fowler alone."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:hash-consing-primary",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T17:58:00-07:00",
+      "query": "Primary sources for hash consing: Ershov's 1958 CACM paper and Goto's 1974 University of Tokyo technical report TR-74-03",
+      "search_rationale": "Git's collapse of equal trees is hash consing on disk; naming the technique's origin correctly requires reading it rather than repeating an encyclopaedia sentence.",
+      "search_outcome": "NO_MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The ACM Digital Library returned 403 for Ershov; dblp and Crossref disagree on the page range. Goto's report was not retrievable in any form and appears only as a citation in later work. The standard one-line definition of hash consing could not be traced to a primary source in this pass and is not quoted as anyone's."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:synthesis:no-inspected-system-keys-history-by-state",
+      "label": "Not one inspected system names a history node by the state it produces",
+      "statement": "Across every system inspected, the history node is named by something other than the state it yields. Git names it by the state plus every ancestor plus metadata. Mercurial names it by the content plus the parent node ids, and its designer records the failure that forced this: a revert reproduces an earlier hash and the graph acquires a cycle. Pijul names a vertex by the change that introduced it plus a position in that change. An event log names an entry by its position in the sequence. Content-only naming appears everywhere in these systems, but only below the history layer, on the objects that carry state. The convergence the owner wants is real and is what content addressing is for; it is available at the state layer and is refused at the history layer, consistently, by every design examined.",
+      "claim_kind": "synthesis_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:hg:mackall-ols-2006",
+        "evidence:hg:hashrevisionsha1",
+        "evidence:pijul:why-and-theory",
+        "evidence:fowler:event-sourcing",
+        "evidence:linus:no-history-in-objects"
+      ],
+      "notes": [
+        "Bounded to the systems inspected in this pass. It is not a claim that no such system exists."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:synthesis:content-addressing-requires-materialisation",
+      "label": "Keying by state requires materialising and serialising the state at write time",
+      "statement": "A content-addressed name is a hash of bytes, so the bytes must exist in a single canonical serialisation before the name exists. In git this is free: a blob's bytes are the file, already in hand. Where the state is a derived quantity that is expensive to compute, keying a node by state converts a deferred derivation into a mandatory one at write time, and additionally requires a canonical serialisation of the whole world state whose stability is now part of the identity contract, so that an irrelevant representational change silently forks the graph. Git's own history contains the smaller version of this hazard: the 2005 name hashed the compressed bytes, which made identity depend on the compressor, and the project moved to hashing a canonical uncompressed form.",
+      "claim_kind": "design_tradeoff",
+      "review_state": "REVIEWED",
+      "confidence": 0.8,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:first-commit-read-cache",
+        "evidence:git:first-commit-readme"
+      ],
+      "notes": [
+        "Reviewer inference from the mechanism, not a measurement. Nothing in this pass measured the cost of deriving a world state in the review target's engine; the review did not read that codebase by instruction."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:synthesis:one-essential-two-optional",
+      "label": "Of git's three storage parts, one is the model and two are optimisations, and the evidence distinguishes them",
+      "statement": "The content-addressed object store is the model: every object name, every reference between objects, and the whole integrity argument live there. The packfile is an encoding: three different pack encodings of the same repository produced an identical object-set signature while the on-disk size moved between 44 KB and 340 KB, and git's own tutorial introduces packing as something immutability makes possible after the fact. The index is a cache: deleting it and rebuilding it from a commit reproduced the same tree name, with one documented exception, an unresolved merge, whose second and third stages exist in no tree. A store that adopts the object model without packfiles is still git-shaped; a store that adopts packfiles without content addressing has taken the part that does not matter.",
+      "claim_kind": "synthesis_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitcore-tutorial",
+        "evidence:git:gitglossary",
+        "evidence:git:gitformat-pack"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:synthesis:tape-is-an-event-log-that-wants-a-prefix-dag",
+      "label": "The tape is an event log by construction; what it borrows from git is prefix sharing, not the snapshot model",
+      "statement": "A tape is a sequence of decisions plus a seed, from which everything else is derived by replay. That is Fowler's event sourcing without modification: changes captured in sequence, state discarded and rebuilt by re-running them. What event sourcing does not supply is the shape the owner actually observed, many runs sharing a long prefix and diverging at one decision, because an event log is a line and not a graph. What git supplies is exactly that shape: immutable nodes each naming their predecessor, so a shared prefix is shared storage with no comparison pass and no copying. The accurate reading is that the tape store is an event log whose entries should be arranged in a git-shaped DAG, not a snapshot store. Git's snapshot layer, the part that makes tree names converge, has no counterpart in the tape unless the derived world is materialised, which is the cost the tape exists to avoid.",
+      "claim_kind": "synthesis_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:fowler:event-sourcing",
+        "evidence:git:gitglossary",
+        "evidence:probe:output",
+        "evidence:pijul:why-and-theory"
+      ],
+      "notes": [
+        "This is the reviewer's reading of the recorded evidence against the declared design brief. It is a structurally recorded claim, which is not the same as a true one, and it is not a decision: the owner decides."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:synthesis:patch-model-costs-are-documented-and-large",
+      "label": "The patch model buys reordering and charges for it in merge complexity",
+      "statement": "If the tape's decisions are treated as patches rather than as a chain, the payoff is that selecting, reordering and reapplying a decision becomes a modelled operation with inverses and commutation rather than a reconstruction. The recorded price is merge complexity: darcs' own FAQ reports exponential time in conflict-nesting depth in darcs 1 and states that recursive conflicts still exhibit it in darcs 2, and only the darcs-3 theory, released as unstable in 2020, reduced the worst case to quadratic in the number of patches. Fifteen years separated the model from a sound implementation of it. Whether a decision tape even needs commutation is a question about the tape, since two decisions in a simulation are unlikely to commute in the way two textual hunks do.",
+      "claim_kind": "synthesis_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:darcs:conflicts-faq",
+        "evidence:darcs:changelog-darcs3",
+        "evidence:darcs:theory-of-patches"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:target:no-state-keyed-history",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:decision-tape-store",
+      "target_id": "claim:synthesis:no-inspected-system-keys-history-by-state",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Assembled from four independently recorded primary sources that each state their own half; no single source states the pattern.",
+      "evidence_ids": [
+        "evidence:hg:mackall-ols-2006",
+        "evidence:pijul:why-and-theory",
+        "evidence:fowler:event-sourcing",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:target:materialisation-cost",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:decision-tape-store",
+      "target_id": "claim:synthesis:content-addressing-requires-materialisation",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Follows from the hash preimage established in the probe plus git's own revision of that preimage in 2005. Not measured against the target's engine, which was out of scope.",
+      "evidence_ids": ["evidence:probe:output", "evidence:git:first-commit-read-cache"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:target:essential-vs-optional",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:decision-tape-store",
+      "target_id": "claim:synthesis:one-essential-two-optional",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The invariance measurement and the index reconstruction are from the probe; the framing as model versus encoding versus cache is the reviewer's.",
+      "evidence_ids": ["evidence:probe:output", "evidence:git:gitcore-tutorial"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:target:event-log-with-dag",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:decision-tape-store",
+      "target_id": "claim:synthesis:tape-is-an-event-log-that-wants-a-prefix-dag",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The tape's declared construction matches Fowler's definition; the observed prefix-sharing shape matches git's commit DAG; neither source addresses the other.",
+      "evidence_ids": ["evidence:fowler:event-sourcing", "evidence:git:gitglossary", "evidence:probe:output"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:target:patch-costs",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:decision-tape-store",
+      "target_id": "claim:synthesis:patch-model-costs-are-documented-and-large",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The complexity statements are darcs' own; their application to a decision tape is the reviewer's, and the question of whether decisions commute at all is left open rather than answered.",
+      "evidence_ids": ["evidence:darcs:conflicts-faq", "evidence:darcs:changelog-darcs3"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ReviewBoundary",
+    "record": {
+      "id": "boundary:git-object-model-2026-08-19",
+      "label": "Declared scope: git's shipped documentation and a live probe, its April 2005 origin record, and five comparison models",
+      "review_state": "REVIEWED",
+      "boundary_kind": "DECLARED_SCOPE_LIMIT",
+      "boundary_reason": "This pass inspected: git's shipped documentation on the local installation at version 2.50.1 with each man page source digested; a written probe run against that binary, whose script and output are stored in this project; git's April 2005 origin record, being the first commit e83c5163 with its README and read-cache.c and Torvalds' LKML and git-list messages of 6 to 15 April 2005; git's current technical documents on pack heuristics, the hash function transition, shallow clones and the user manual; the Mercurial 6.7 source distribution plus Mackall's OLS 2006 paper and the project wiki; darcs' own theory, internals, FAQ and changelog pages plus Sittampalam's algebra; Pijul's manual; Venti's FAST 2002 paper; monotone's manual source; Merkle's 1979 Stanford thesis; Fowler's Event Sourcing article; and the abstract of Driscoll, Sarnak, Sleator and Tarjan on persistence. Not inspected, and therefore not established either way: the review target's own tape implementation and its engine, which were out of scope by instruction and were not read; git's optional auxiliary indexes (commit-graph, multi-pack-index, reachability bitmaps) beyond their mention in the inspected pages; git's partial-clone and promisor mechanisms; Mercurial's strip, obsolescence markers, rebase, graft and Mercurial Queues; darcs' and Pijul's implementations, as opposed to their documentation; the formal patch-theory literature (Jacobson's inverse-semigroup formalisation, Camp, Homotopical Patch Theory, Mimram and Di Giusto), which was identified bibliographically and not read; Merkle's 1987 CRYPTO paper, whose abstract the publisher elided; the body of the persistence paper; and any primary source for hash consing. Sources that were blocked rather than skipped are recorded as search events with their outcomes. A NOT_ESTABLISHED coverage level inside this boundary means this pass did not establish the item; it is not proof of absence. Nothing here decides the design: the recon records what each model commits to and what it costs, and the owner decides.",
+      "evidence_ids": [
+        "evidence:probe:script",
+        "evidence:negative:merkle-absent-from-git",
+        "evidence:hashconsing:ershov-1958-bibliographic"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

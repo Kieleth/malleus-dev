@@ -1,0 +1,559 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:theory-of-patches",
+      "label": "David Roundy, 'Theory of patches', darcs manual appendix",
+      "review_state": "REVIEWED",
+      "source_uri": "https://www.cs.tufts.edu/~nr/cs257/archive/david-roundy/Theory%20of%20patches.html",
+      "locator": "sections Introduction, Patch Relationships, Commuting Patches, Merge",
+      "evidence_description": "The patch-theory appendix of the older darcs manual, generated from darcs' literate Haskell source and attributed by darcs.net/Theory to David Roundy. Defines a patch as a change to the tree, primitive or composite; defines the inverse of a patch P as the simplest patch for which P^-1 P makes no change; defines commutation as P2 P1 <-> P1' P2', where P1' describes the same change as P1 but applied after P2' rather than before P2; and defines a tree as the result of a series of patches applied to the empty tree.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Quotes reached through a page-summarising fetch rather than raw byte extraction, so wording is near-verbatim rather than citable-verbatim. The page carries no date."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:conflictors",
+      "label": "darcs.net, Theory/Conflictors",
+      "review_state": "REVIEWED",
+      "source_uri": "https://darcs.net/Theory/Conflictors",
+      "locator": "sections 'What are they?', 'How do they work?', 'What is the design principle?'",
+      "evidence_description": "States the design principle in the project's own words: 'Darcs has a principle of \"a repo is a set of patches\", so obliterating patches or reordering patches should do The Right Thing'. Defines a conflictor as a special patch type representing a conflict between primitive patches, used for darcs 2 repositories, and describes it as an attempt to encode or flatten the conflict graph 'down into a linear sequence of patches, such that we can later recover the structure', so that the patches in a repository carry the conflict DAG themselves.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "These quotes were extracted from the page source rather than through a summariser."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:conflicts-faq",
+      "label": "darcs.net, FAQ/ConflictsDarcs1",
+      "review_state": "REVIEWED",
+      "source_uri": "https://darcs.net/FAQ/ConflictsDarcs1",
+      "locator": "whole page",
+      "evidence_description": "The project's own account of the exponential merge problem: nested conflicts, where a pulled patch depends on another patch that is in conflict, and 'The time needed to pull the patches from A grows exponentially by the depth of nesting. The Darcs commuting algorithm has O(e_N_) complexity in respect to the nesting depth'. On darcs 2: 'Due to extensive optimizations, the darcs 2 is much faster in conflict cases. In addition doppelganger patches (identical patches) no longer conflict', but also 'Recursive conflicts exhibit the exponential time/memory usage in Darcs 2, too.'",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:changelog-darcs3",
+      "label": "darcs 2.18.5 changelog, darcs-3 patch theory entry",
+      "review_state": "REVIEWED",
+      "source_uri": "https://hackage.haskell.org/package/darcs-2.18.5/changelog",
+      "locator": "entry for darcs 2.16.1, released 2020-08-14",
+      "evidence_description": "Records that a new patch theory named 'darcs-3', 'largely based on the pioneering work of Ian Lynagh for camp', 'reduces the worst case asymptotic runtime for commutation and merging from exponential to merely quadratic in the number of patches involved' and 'finally solves all the well-known consistency problems that plagued the earlier ones'. Fifteen years after darcs 1, and support was still marked preliminary and unstable at that release.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:repository-layout",
+      "label": "darcs.net, Internals/Repository",
+      "review_state": "REVIEWED",
+      "source_uri": "https://darcs.net/Internals/Repository",
+      "locator": "entries _darcs/patches, _darcs/hashed_inventory, _darcs/inventories, _darcs/pristine.hashed",
+      "evidence_description": "On-disk layout. _darcs/patches is 'A directory containing gzipped files, each one containing a named patch'. _darcs/hashed_inventory begins with a line giving the hash of the root of the pristine tree, followed by the latest patches of the history. _darcs/pristine.hashed contains gzipped files holding directory and file contents that together are 'the last saved state of the working copy'. So darcs stores history as patches and also keeps a content-addressed snapshot of the current state.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Reached through a page-summarising fetch; wording is near-verbatim."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:darcs:ganesh-patch-algebra",
+      "label": "darcs.net, Theory/GaneshPatchAlgebra",
+      "review_state": "REVIEWED",
+      "source_uri": "https://darcs.net/Theory/GaneshPatchAlgebra",
+      "locator": "definitions of patch components, parallelism, commutation",
+      "evidence_description": "Ganesh Sittampalam's algebra states that a darcs patch has three components: an identity, a context, and an effect. Two patches are parallel when they have the same context. Commutation is written AB <-> B'A'. The separation of identity from context is the property git's commit object does not have.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Reached through a page-summarising fetch; wording is near-verbatim."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:pijul:why-and-theory",
+      "label": "Pijul manual, 'Why Pijul' and 'Theory'",
+      "review_state": "REVIEWED",
+      "source_uri": "https://pijul.org/manual/theory.html",
+      "locator": "manual pages why_pijul.html and theory.html",
+      "evidence_description": "States the contrast directly: 'Pijul stores changes (or patches), whereas Git deals only with snapshots (or versions).' States the commutation property: 'For any two changes A and B, either A and B can be applied in any order, or A depends on B, or B depends on A', and an associativity property for applying sets of changes. States that conflicts are not stored decisions: 'Many changes can be applied to it, and the presence or absence of conflicts are only computed afterward by looking at the pristine.' The storage model is a directed graph of lines where 'vertices are uniquely identified, by the hash of the change that introduced them, along with a position in that change'.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Reached through a page-summarising fetch; wording is near-verbatim. The page is graph-theoretic; no category-theory or pushout language was found on it, contrary to how pijul's model is often described elsewhere. https://pijul.org/model/ renders via JavaScript and fetched empty."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:darcs-patch-theory",
+      "label": "Darcs: a repository as a set of patches, with commutation and inverses",
+      "title": "Darcs and its theory of patches",
+      "authors": ["David Roundy", "Ganesh Sittampalam", "darcs contributors"],
+      "identifiers": [
+        "software:darcs",
+        "doi:10.1145/1088348.1088349",
+        "url:https://darcs.net/"
+      ],
+      "priority_date": "2005-09-30",
+      "priority_date_basis": "David Roundy, 'Darcs: distributed version management in Haskell', Proceedings of the 2005 ACM SIGPLAN Workshop on Haskell, Tallinn, Estonia, 30 September 2005, DOI 10.1145/1088348.1088349. Bibliographic detail taken from search results; the ACM Digital Library returned 403 and the abstract was not retrieved. Darcs itself predates that paper; this review did not establish its first-public date.",
+      "publication_status": "PEER_REVIEWED",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:darcs:theory-of-patches",
+        "evidence:darcs:conflictors",
+        "evidence:darcs:conflicts-faq",
+        "evidence:darcs:changelog-darcs3",
+        "evidence:darcs:repository-layout",
+        "evidence:darcs:ganesh-patch-algebra"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:pijul",
+      "label": "Pijul: changes as the stored unit, over a graph of lines",
+      "title": "Pijul",
+      "authors": ["Pierre-Étienne Meunier", "Pijul contributors"],
+      "identifiers": ["software:pijul", "url:https://pijul.org/"],
+      "priority_date_basis": "Not established in this pass. The inspected artifact is the current pijul.org manual; no first-public date was read from a primary source and none is invented here.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:pijul:why-and-theory"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:darcs:repo-is-a-set-of-patches",
+      "label": "A darcs repository is a set of patches, not a sequence of states",
+      "statement": "darcs.net states the principle plainly: 'Darcs has a principle of \"a repo is a set of patches\", so obliterating patches or reordering patches should do The Right Thing'. A tree is defined as the result of applying a series of patches to the empty tree, so state is derived and change is stored. This is the genuine alternative to git's model, not a variation of it: git stores states and derives changes, darcs stores changes and derives states.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": ["evidence:darcs:conflictors", "evidence:darcs:theory-of-patches"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:darcs:identity-separate-from-context",
+      "label": "A darcs patch has an identity separate from its context, which is what makes reordering meaningful",
+      "statement": "In Sittampalam's algebra a patch has three components: an identity, a context, and an effect. Commutation rewrites AB as B'A', where the primed patches are the same changes carrying different contexts, and every patch has an inverse. Because identity survives a change of context, the same change can be moved, reordered, or applied elsewhere and still be the same patch. Git's commit has no such separation: its identity is a hash over its content and its parents together, so moving it produces a different object.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:darcs:ganesh-patch-algebra",
+        "evidence:darcs:theory-of-patches",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:darcs:exponential-merge-cost",
+      "label": "The patch model's known cost is merge complexity, and darcs 2 mitigated rather than removed it",
+      "statement": "darcs' own FAQ states that nested conflicts make pull time grow exponentially with nesting depth, that the commuting algorithm has exponential complexity in that depth, and, on darcs 2, that 'Recursive conflicts exhibit the exponential time/memory usage in Darcs 2, too.' The fix arrived only with the darcs-3 theory, whose changelog entry of 2020-08-14 records that it 'reduces the worst case asymptotic runtime for commutation and merging from exponential to merely quadratic in the number of patches involved' and that it 'finally solves all the well-known consistency problems that plagued the earlier ones'. Fifteen years elapsed, and support was still marked preliminary and unstable at that release.",
+      "claim_kind": "measurement_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:darcs:conflicts-faq",
+        "evidence:darcs:changelog-darcs3"
+      ],
+      "notes": [
+        "The common summary that darcs 2 fixed the exponential merge is contradicted by the project's own FAQ. This correction matters for anyone weighing the patch model on the strength of its reputation rather than its record."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:darcs:keeps-a-snapshot-anyway",
+      "label": "Even a patch-based store keeps a content-addressed snapshot of the current state",
+      "statement": "darcs stores history as patches in _darcs/patches, and also keeps _darcs/pristine.hashed, gzipped content-addressed files that together hold 'the last saved state of the working copy', with the hashed inventory's first line giving the hash of the root of that pristine tree. The purest patch-theoretic system in this comparison still materialises one snapshot, because deriving the current state from the whole patch set on every read is not affordable.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": ["evidence:darcs:repository-layout"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:pijul:vertices-keyed-by-the-change-that-introduced-them",
+      "label": "Pijul keys content by the change that produced it, not by the content",
+      "statement": "Pijul's manual states 'Pijul stores changes (or patches), whereas Git deals only with snapshots (or versions)' and, in its model, that graph vertices 'are uniquely identified, by the hash of the change that introduced them, along with a position in that change'. This is the third identity option in explicit form: not the content, and not the content plus ancestry, but the operation that produced it plus an offset. Commutativity is the stated payoff: for any two changes, either they can be applied in any order, or one depends on the other. Conflicts are not stored as decisions; their presence or absence 'are only computed afterward by looking at the pristine'.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": ["evidence:pijul:why-and-theory"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:darcs:set-of-patches",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "claim:darcs:repo-is-a-set-of-patches",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The principle is quoted from darcs.net's own conflictors page and the tree definition from the patch-theory appendix.",
+      "evidence_ids": ["evidence:darcs:conflictors", "evidence:darcs:theory-of-patches"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:darcs:identity-context",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "claim:darcs:identity-separate-from-context",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The three-component patch and the commutation law are stated by darcs; the comparison to git's commit identity is the reviewer's.",
+      "evidence_ids": ["evidence:darcs:ganesh-patch-algebra", "evidence:git:gitglossary"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:darcs:exponential",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "claim:darcs:exponential-merge-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Both the problem and the persistence of the problem into darcs 2 are stated on the project's own FAQ; the quadratic bound is stated in the released changelog.",
+      "evidence_ids": ["evidence:darcs:conflicts-faq", "evidence:darcs:changelog-darcs3"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:darcs:pristine",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "claim:darcs:keeps-a-snapshot-anyway",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "The pristine.hashed directory and the inventory's pristine root hash are documented in darcs' own internals page.",
+      "evidence_ids": ["evidence:darcs:repository-layout"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:pijul:change-keyed-vertices",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:pijul",
+      "target_id": "claim:pijul:vertices-keyed-by-the-change-that-introduced-them",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Stated on pijul's own theory and why-pijul manual pages.",
+      "evidence_ids": ["evidence:pijul:why-and-theory"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "A patch carries an identity distinct from its context and its effect, so identity is neither the content nor the position in history.",
+      "evidence_ids": ["evidence:darcs:ganesh-patch-algebra"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The patch is the stored unit and the tree is defined as the result of applying patches to the empty tree. The one snapshot darcs keeps, pristine.hashed, is the current state only, not history.",
+      "evidence_ids": ["evidence:darcs:theory-of-patches", "evidence:darcs:repository-layout"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:select",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:selective-replay",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "This is the axis darcs exists to answer. Commutation and inverses make reordering and removing patches modelled operations rather than reconstructions, and dependency analysis computes the minimal set that must accompany a chosen patch.",
+      "evidence_ids": ["evidence:darcs:conflictors", "evidence:darcs:theory-of-patches"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "History is a set of patches with a partial dependency order rather than a chain of named predecessors. Conflictors exist precisely to flatten a conflict DAG back into a linear sequence, which is evidence that the set model and the graph model are not the same thing.",
+      "evidence_ids": ["evidence:darcs:conflictors"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Cost is the model's known weak point and it appears in commutation and merging rather than in reading: exponential in nesting depth in darcs 1 and 2, quadratic in the number of patches under darcs-3. State reading is answered separately by keeping a pristine snapshot.",
+      "evidence_ids": ["evidence:darcs:conflicts-faq", "evidence:darcs:changelog-darcs3", "evidence:darcs:repository-layout"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "darcs 2 made identical patches, called doppelgangers, stop conflicting, which is convergence of equal changes rather than of equal states. Whether two different patch sets that produce the same tree are recognised as equivalent was not established in this pass.",
+      "evidence_ids": ["evidence:darcs:conflicts-faq"],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:authority",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:index-vs-authority",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "The patches are the authority and the pristine tree is a materialised derivation of them, with inventories listing which patches are present. This is the same split the review target is asking about, already implemented by a patch-based system.",
+      "evidence_ids": ["evidence:darcs:repository-layout"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:darcs:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:darcs-patch-theory",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.6,
+      "basis": "darcs uses hashed storage, where a file is saved under its own hash as its name, and the inventory records the pristine root hash. Whether the patch history itself is hash-chained so that naming one patch fixes everything before it was not established in this pass.",
+      "evidence_ids": ["evidence:darcs:repository-layout"],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:pijul:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:pijul",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Vertices are identified by the hash of the change that introduced them plus a position within that change. Identity is the operation, not the content and not the position in history.",
+      "evidence_ids": ["evidence:pijul:why-and-theory"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:pijul:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:pijul",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "'Pijul stores changes (or patches), whereas Git deals only with snapshots (or versions).'",
+      "evidence_ids": ["evidence:pijul:why-and-theory"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:pijul:select",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:pijul",
+      "target_id": "axis:selective-replay",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Commutativity is stated as a property of the model: for any two changes, either they commute or one depends on the other, and applying sets of changes is associative.",
+      "evidence_ids": ["evidence:pijul:why-and-theory"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:pijul:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:pijul",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "Pijul keeps a pristine that changes are applied into, and computes conflict status by looking at the pristine rather than by replaying history. No cost figures were established in this pass.",
+      "evidence_ids": ["evidence:pijul:why-and-theory"],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:git:darcs",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:git-object-model",
+      "target_id": "work:darcs-patch-theory",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The two systems trade the same difficulty in opposite directions. Git stores states and derives changes, so reading a state is a lookup and reordering history is a reconstruction that mints new names. Darcs stores changes and derives states, so reordering is a modelled operation with inverses and commutation, and the cost lands on merging, exponentially in conflict-nesting depth in darcs 1 and 2 and quadratically under darcs-3. Neither model escapes the tradeoff: darcs still materialises a pristine snapshot to make reading affordable, and git still runs a delta-based packer to make storage affordable. What differs is which one is the model and which one is the cache.",
+      "evidence_ids": [
+        "evidence:darcs:theory-of-patches",
+        "evidence:darcs:conflicts-faq",
+        "evidence:darcs:repository-layout",
+        "evidence:probe:output",
+        "evidence:git:gitformat-pack"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:git:pijul",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:git-object-model",
+      "target_id": "work:pijul",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Pijul states the contrast itself: it stores changes where git deals only with snapshots. The identity consequence is the sharpest available illustration of the review target's first open question: pijul names a line by the change that introduced it, git names it by its bytes.",
+      "evidence_ids": ["evidence:pijul:why-and-theory", "evidence:probe:output"]
+    },
+    "supersedes_event_id": null
+  }
+]

@@ -1,0 +1,798 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:hg:mackall-ols-2006",
+      "label": "Matt Mackall, 'Towards a Better SCM: Revlog and Mercurial', OLS 2006",
+      "review_state": "REVIEWED",
+      "source_uri": "https://kernel.org/doc/ols/2006/ols2006v2-pages-91-98.pdf",
+      "locator": "Abstract and section 3 (Revlog design)",
+      "evidence_description": "Mercurial's designer stating the revlog's design and, decisively, why parent hashes go into a node id. On identity: 'Mercurial generates identifiers from a strong hash of its contents (currently using SHA1)', followed by the problem that forced the change: 'But if we revert a change, we will have the same hash value appearing in two places on the graph, which results in a cycle! Revlogs address this by incorporating the hash of the parent revisions into a given revision's hash identifier, thus making the hash dependent on both the revision's contents and its position in the tree.' And the payoff: 'Not only does this avoid our cycle problem, it makes merging DAGs from multiple revlogs trivial: simply throw out any revisions with duplicate hashes and append the remainder.' On layout: 'The fundamental scheme is to store a separate index and data file for each file managed.' On cost: 'By limiting the total length of the hunks needed to reconstruct a given version to a small multiple of that version's uncompressed size, we guarantee that we'll never need to read more than O(1) file equivalents'. On appends: 'To add a new version, we simply append a new index record and data hunk to our revlog, again an O(1) operation.'",
+      "source_class": "PUBLISHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Proceedings of the Linux Symposium, Volume Two, Ottawa, 19-22 July 2006, running heads pages 83-90 although the file name says 91-98. Quotes extracted from the PDF text layer, not through a summariser."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:venti:fast-2002",
+      "label": "Quinlan and Dorward, 'Venti: a new approach to archival storage', FAST 2002",
+      "review_state": "REVIEWED",
+      "source_uri": "https://9p.io/sys/doc/venti/venti.html",
+      "locator": "Abstract and section 4, Applications",
+      "evidence_description": "Bell Labs' archival block store, three years before git. Abstract: 'In this system, a unique hash of a block's contents acts as the block identifier for read and write operations. This approach enforces a write-once policy, preventing accidental or malicious destruction of data. In addition, duplicate copies of a block can be coalesced, reducing the consumption of storage and simplifying the implementation of clients.' Section 4 builds the tree: 'One approach is to pack the fingerprints into additional blocks, called pointer blocks, that are also written to the server, a process that can be repeated recursively until a single fingerprint is obtained', and 'This fingerprint represents the root of a tree of blocks and corresponds to a hierarchical hash of the original data.'",
+      "source_class": "AUTHOR_COPY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Proceedings of the FAST 2002 Conference on File and Storage Technologies, Monterey, California, 28-30 January 2002, pages 89-101. The USENIX-hosted copy returned 403; the Bell Labs canonical copy at 9p.io was used. Abstract quotes extracted from page source; the section 4 quotes came through a page-summarising fetch."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:monotone:manual-texinfo",
+      "label": "monotone manual, Texinfo source",
+      "review_state": "REVIEWED",
+      "source_uri": "https://raw.githubusercontent.com/graydon/monotone/master/monotone.texi",
+      "locator": "Concepts chapter, nodes 'Versions of files' (lines 145, 187) and 'Certificates' (line 527)",
+      "evidence_description": "monotone's own manual on identity: 'we will compute a cryptographic hash function, called SHA1, of each version ... the SHA1 function takes a version of a file and produces a short string of 20 bytes, which we will use to uniquely identify the version', and 'When dealing with versions of files, we will dispense with writing out file names, and identify versions purely by their SHA1 value, which we will also refer to as their file ID.' On certificates: a statement about a revision has an ID naming the revision, a name giving the statement type such as changelog, date or testresult, and a value. Content addressing of file versions independent of filename, plus a separate signed-assertion layer, both present before git.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "monotone.ca and its mirrors were behind an anti-bot wall and returned 403. The manual's Texinfo source was read from Graydon Hoare's own repository instead. Quotes extracted from raw source."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:merkle:thesis-1979",
+      "label": "Ralph C. Merkle, 'Secrecy, Authentication, and Public Key Systems', Stanford PhD thesis, June 1979",
+      "review_state": "REVIEWED",
+      "source_uri": "http://www.ralphmerkle.com/papers/Thesis1979.pdf",
+      "locator": "Chapter V section 4 'Tree Authentication' (pages 40 and 42), Chapter VI section 6",
+      "evidence_description": "The origin of the hash tree. Problem statement: 'Given a vector of data items Y1, Y2, ... Yn design an algorithm which can quickly authenticate a randomly chosen Yi but which has modest memory requirements'. The method: 'The method is called tree authentication because the computation of H(1,n,Y) forms a binary tree of recursive calls', with the cost 'we require 100 log2 n bits of information to authenticate an arbitrary Yi'. The idea in one line, Merkle's own: 'The essence of tree authentication is to authenticate the entire public file by \"divide and conquer.\"'",
+      "source_class": "AUTHOR_COPY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Information Systems Laboratory, Stanford Electronics Laboratories, Technical Report No. 1979-1, also numbered SEL 79-017. No DOI. Quotes taken from the PDF's OCR text layer, which mangles subscripts. The 1987 CRYPTO paper 'A Digital Signature Based on a Conventional Encryption Function' (pages 369-378, DOI 10.1007/3-540-48184-2_32) was identified bibliographically but its abstract was elided by the publisher and no verbatim text was retrieved."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:negative:merkle-absent-from-git",
+      "label": "Negative audit: the term 'Merkle' in git's source tree and in Pro Git",
+      "review_state": "REVIEWED",
+      "source_uri": "https://github.com/git/git",
+      "locator": "full checkout at commit dea0ea3582e6980ddbc1173cc8e3e9f9db91cde0 dated 2026-08-18, 4,847 tracked files; and the progit2 book source",
+      "evidence_description": "A case-insensitive recursive search for 'merkle' over every tracked file of git at HEAD returned zero files: not in Documentation, not in source, not in tests, not in comments. The same search over the official Pro Git book source returned zero. Searches for 'monotone' and 'darcs' over git's tree also returned zero. What git's documentation says instead is 'At its core, the Git version control system is a content addressable filesystem', and the closest it comes to the Merkle property without naming it is 'Object names can be signed and third parties can trust the hash to address the signed object and all objects it references.'",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "Mechanical search over a full checkout, not a recollection. This is a bounded negative audit: the term is absent from those two artifacts at those revisions. It is not a claim that git is not a Merkle DAG."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:fowler:event-sourcing",
+      "label": "Martin Fowler, 'Event Sourcing', 2005-12-12",
+      "review_state": "REVIEWED",
+      "source_uri": "https://martinfowler.com/eaaDev/EventSourcing.html",
+      "locator": "definition line, 'How it Works', 'Application State Storage'",
+      "evidence_description": "Definition: 'Capture all changes to an application state as a sequence of events.' Mechanism: 'The fundamental idea of Event Sourcing is that of ensuring every change to the state of an application is captured in an event object, and that these event objects are themselves stored in the sequence they were applied for the same lifetime as the application state itself.' Rebuild: 'We can discard the application state completely and rebuild it by re-running the events from the event log on an empty application.' Derived state: 'Since an application state is purely derivable from the event log, you can cache it anywhere you like', and 'The official system of record can either be the event logs or the current application state.' On snapshots, all four mentions are operational rather than definitional: starting the day from an overnight snapshot, taking a new snapshot at day's end, taking snapshots in parallel without bringing the application down, and 'all the capabilities of reversing events can be done instead by reverting to a past snapshot and replaying the event stream.'",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "The snapshot sentences were extracted mechanically from the page source; the definition and How it Works quotes came through a summarising fetch. Fowler does not use the word 'optimization' next to 'snapshot' anywhere on the page; describing snapshots that way is a paraphrase."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:dsst:making-data-structures-persistent",
+      "label": "Driscoll, Sarnak, Sleator, Tarjan, 'Making data structures persistent', JCSS 1989",
+      "review_state": "REVIEWED",
+      "source_uri": "https://collaborate.princeton.edu/en/publications/making-data-structures-persistent/",
+      "locator": "abstract",
+      "evidence_description": "The definition of persistence: 'Ordinary data structures are ephemeral in the sense that a change to the structure destroys the old version, leaving only the new version available for use. In contrast, a persistent structure allows access to any version, old or new, at any time.' The paper develops techniques for making linked structures persistent with logarithmic access, insertion and deletion and O(1) space per update.",
+      "source_class": "INDEX",
+      "accessed_on": "2026-08-19",
+      "access_status": "ABSTRACT_ONLY",
+      "notes": [
+        "Journal of Computer and System Sciences 38(1), February 1989, pages 86-124, DOI 10.1016/0022-0000(89)90034-2; preliminary version STOC '86, Berkeley, 28-30 May 1986. ScienceDirect and the ACM Digital Library were not reachable in this pass, so only the abstract was read. The phrases 'path copying' and 'structural sharing' do not appear in the abstract and are not attributed to this paper here; the paper's own named contributions are fat nodes and node copying."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:hashconsing:ershov-1958-bibliographic",
+      "label": "A. P. Ershov, 'On Programming of Arithmetic Operations', CACM 1958, bibliographic record only",
+      "review_state": "REVIEWED",
+      "source_uri": "https://doi.org/10.1145/368892.368907",
+      "locator": "bibliographic record",
+      "evidence_description": "Communications of the ACM volume 1, issue 8, 1958, DOI 10.1145/368892.368907. Two bibliographic databases disagree on the page range: dblp gives 3-9, Crossref gives 3-6 and an issue date of August 1958. The ACM Digital Library returned 403 and the text was not read. This item is recorded to mark the customary origin attribution for hash consing, not to support a quotation.",
+      "source_class": "INDEX",
+      "accessed_on": "2026-08-19",
+      "access_status": "INACCESSIBLE",
+      "notes": [
+        "E. Goto's 1974 technical report 'Monocopy and Associative Algorithms in Extended Lisp', University of Tokyo TR-74-03, was not retrievable in any form; it appears only as a citation in later literature. The standard statement of hash consing, that structure is kept maximally shared so that structural equality becomes pointer equality, could not be traced to a primary source in this pass."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:venti",
+      "label": "Venti: content-addressed, write-once archival block storage with hierarchical hashes",
+      "title": "Venti: a new approach to archival storage",
+      "authors": ["Sean Quinlan", "Sean Dorward"],
+      "venue": "Proceedings of the FAST 2002 Conference on File and Storage Technologies",
+      "identifiers": ["url:https://9p.io/sys/doc/venti/venti.html"],
+      "priority_date": "2002-01-28",
+      "priority_date_basis": "FAST 2002 was held in Monterey, California, 28-30 January 2002; the conference start date is used as the first-public date. Pages 89-101.",
+      "publication_status": "PEER_REVIEWED",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:venti:fast-2002"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:monotone",
+      "label": "monotone: SHA-1 file IDs independent of filename, plus a certificate layer",
+      "title": "monotone",
+      "authors": ["Graydon Hoare", "monotone contributors"],
+      "identifiers": ["software:monotone", "url:https://www.monotone.ca/"],
+      "priority_date_basis": "Not established in this pass. monotone.ca was unreachable behind an anti-bot wall and the manual's Texinfo source carries no release date that was read here. What is established is that monotone existed and was known to Linus Torvalds by 2005-04-06.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:monotone:manual-texinfo", "evidence:linus:kernel-scm-saga"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:merkle-tree-authentication",
+      "label": "Merkle's tree authentication: one root hash authenticates many items",
+      "title": "Secrecy, Authentication, and Public Key Systems",
+      "authors": ["Ralph C. Merkle"],
+      "venue": "Stanford University, Department of Electrical Engineering, Technical Report No. 1979-1 (SEL 79-017)",
+      "identifiers": ["url:http://www.ralphmerkle.com/papers/Thesis1979.pdf"],
+      "priority_date": "1979-06-01",
+      "priority_date_basis": "The thesis cover page is dated June 1979 and the doctorate was conferred that month; the day is not stated, so the first of the month is used and the basis is recorded here rather than presented as an exact date.",
+      "publication_status": "UNKNOWN",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:merkle:thesis-1979"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:event-sourcing",
+      "label": "Event sourcing: state as a fold over an append-only event log",
+      "title": "Event Sourcing",
+      "authors": ["Martin Fowler"],
+      "identifiers": ["url:https://martinfowler.com/eaaDev/EventSourcing.html"],
+      "priority_date": "2005-12-12",
+      "priority_date_basis": "Date printed on the article page, 12 December 2005.",
+      "publication_status": "DOCUMENTATION",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:fowler:event-sourcing"],
+      "notes": [
+        "Greg Young's canonical written material on event sourcing and CQRS could not be reached: the CQRS Documents PDF returns 403 with no Wayback snapshot, his blog tag page returns 403, and a conference slide deck failed TLS verification. No Young source is cited in this project."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:persistent-data-structures",
+      "label": "Persistent data structures: every version stays addressable after an update",
+      "title": "Making data structures persistent",
+      "authors": ["James R. Driscoll", "Neil Sarnak", "Daniel D. Sleator", "Robert E. Tarjan"],
+      "venue": "Journal of Computer and System Sciences 38(1)",
+      "identifiers": ["doi:10.1016/0022-0000(89)90034-2"],
+      "priority_date": "1986-05-28",
+      "priority_date_basis": "Preliminary version at the Eighteenth Annual ACM Symposium on Theory of Computing, Berkeley, 28-30 May 1986; the journal version is JCSS 38(1), February 1989, pages 86-124. The earlier of the two dates is recorded as first-public.",
+      "publication_status": "PEER_REVIEWED",
+      "review_state": "REVIEWED",
+      "evidence_ids": ["evidence:dsst:making-data-structures-persistent"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:hash-consing",
+      "label": "Hash consing: maximal structural sharing by interning on construction",
+      "title": "Hash consing (origin attribution)",
+      "authors": ["A. P. Ershov", "E. Goto"],
+      "identifiers": ["doi:10.1145/368892.368907"],
+      "priority_date_basis": "Customarily attributed to Ershov's 1958 CACM paper and popularised by Goto in 1974. Neither text was retrievable in this pass, the two bibliographic databases disagree on Ershov's page range, and no primary statement of the technique was read. Recorded with an explicitly unresolved basis rather than an invented one.",
+      "publication_status": "UNKNOWN",
+      "review_state": "CONTESTED",
+      "evidence_ids": ["evidence:hashconsing:ershov-1958-bibliographic"],
+      "notes": [
+        "Kept in the graph because the idea is directly relevant, git's automatic collapse of equal trees is hash consing over an on-disk structure, but its provenance is unresolved here and the record must not be read as establishing it."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hg:parents-in-hash-prevent-cycles",
+      "label": "Keying a history node by its state alone produces cycles when a change is reverted",
+      "statement": "Mercurial's designer records the exact failure that content-only identity causes in a history graph: 'But if we revert a change, we will have the same hash value appearing in two places on the graph, which results in a cycle! Revlogs address this by incorporating the hash of the parent revisions into a given revision's hash identifier, thus making the hash dependent on both the revision's contents and its position in the tree.' A second payoff followed: merging DAGs from multiple revlogs becomes trivial, since duplicate hashes can simply be discarded. This is the strongest available technical argument against keying a history node by its resulting state, and it comes from a designer who tried the other way first.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:hg:mackall-ols-2006"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:two-layers-are-the-answer-to-the-cycle-problem",
+      "label": "Git's two-layer split is a resolution of the same cycle problem, reached differently",
+      "statement": "Git and Mercurial faced the same fact, that a revert reproduces an earlier state, and answered it differently. Mercurial fused state and position into one identifier so the graph could not cycle. Git kept them apart: trees may repeat freely, since a tree is not a history node, and acyclicity is carried by the commit layer, whose names include parents. gitglossary states the acyclicity as a property of commits specifically: 'The commit objects form a directed acyclic graph, because they have parents (directed), and the graph of commit objects is acyclic'. The probe exhibits the repeated state directly: two commits, one tree. The general lesson is that convergence of states and acyclicity of history can coexist only if they are carried by different objects.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:hg:mackall-ols-2006",
+        "evidence:git:gitglossary",
+        "evidence:probe:output",
+        "evidence:linus:no-history-in-objects"
+      ],
+      "notes": [
+        "The comparison is the reviewer's. Neither project states it in these terms; each states its own half."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:venti:content-addressing-predates-git-by-three-years",
+      "label": "Venti had content-addressed write-once blocks with automatic coalescing and a hierarchical hash in 2002",
+      "statement": "Venti's abstract states all three properties git is usually credited with: 'a unique hash of a block's contents acts as the block identifier for read and write operations', that this 'enforces a write-once policy', and that 'duplicate copies of a block can be coalesced, reducing the consumption of storage and simplifying the implementation of clients'. Its section on applications then builds the tree: fingerprints are packed into pointer blocks which are themselves written and hashed 'recursively until a single fingerprint is obtained', which 'represents the root of a tree of blocks and corresponds to a hierarchical hash of the original data'. Published January 2002, three years before git's first commit.",
+      "claim_kind": "lineage_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.93,
+      "evidence_ids": ["evidence:venti:fast-2002"],
+      "notes": [
+        "This establishes that the idea existed and was published in a filesystem venue before git. It does not establish that git took it from Venti; no such statement was found in this pass."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:monotone:file-ids-by-hash-independent-of-name",
+      "label": "monotone identified file versions purely by SHA-1, independent of filename, before git",
+      "statement": "monotone's manual states 'we will dispense with writing out file names, and identify versions purely by their SHA1 value, which we will also refer to as their file ID', and separates assertions about a revision into certificates carrying an ID, a name such as changelog or date, and a value. Both moves, naming content by hash rather than by path and putting statements about a revision in a separate signed layer, were present in the system Torvalds publicly pointed at on the day the kernel left BitKeeper.",
+      "claim_kind": "lineage_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": ["evidence:monotone:manual-texinfo", "evidence:linus:kernel-scm-saga"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:merkle:one-root-authenticates-many-with-log-proof",
+      "label": "Merkle 1979: a root hash authenticates any item with a logarithmic proof",
+      "statement": "Merkle's 1979 Stanford thesis poses the problem, to authenticate a randomly chosen item from a vector with modest memory, and solves it by recursive hashing: 'The method is called tree authentication because the computation of H(1,n,Y) forms a binary tree of recursive calls', costing '100 log2 n bits of information to authenticate an arbitrary Yi'. His own summary: 'The essence of tree authentication is to authenticate the entire public file by \"divide and conquer.\"' Git's transitive naming property is this construction, twenty-six years later, applied to directories.",
+      "claim_kind": "concept_definition",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": ["evidence:merkle:thesis-1979"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:negative:git-never-calls-itself-a-merkle-tree",
+      "label": "Git's own documentation never uses the term Merkle",
+      "statement": "A case-insensitive search for 'merkle' over all 4,847 tracked files of git at commit dea0ea3582e6980ddbc1173cc8e3e9f9db91cde0 returned zero files, and the same search over the official Pro Git book source returned zero. Searches for 'monotone' and 'darcs' over git's tree also returned zero. Git describes itself as 'a content addressable filesystem' and states the transitive property without naming it: 'Object names can be signed and third parties can trust the hash to address the signed object and all objects it references.' The Merkle framing is applied to git by others.",
+      "claim_kind": "negative_finding",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:negative:merkle-absent-from-git",
+        "evidence:git:hash-function-transition"
+      ],
+      "notes": [
+        "Absence of the term is not absence of the structure. This is recorded so that nobody cites git's documentation for a word it does not contain."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:event-sourcing:state-is-a-fold-over-the-log",
+      "label": "Event sourcing is the model a decision tape already implements",
+      "statement": "Fowler's 2005 definition is 'Capture all changes to an application state as a sequence of events', with the events 'stored in the sequence they were applied for the same lifetime as the application state itself', and the consequence 'We can discard the application state completely and rebuild it by re-running the events from the event log on an empty application.' On derived state: 'Since an application state is purely derivable from the event log, you can cache it anywhere you like', and the system of record may be either the log or the current state. A tape of decisions plus a seed, from which everything else is derived by replay, is this pattern without modification.",
+      "claim_kind": "concept_definition",
+      "review_state": "REVIEWED",
+      "confidence": 0.93,
+      "evidence_ids": ["evidence:fowler:event-sourcing"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:event-sourcing:snapshots-are-operational-not-definitional",
+      "label": "In event sourcing the snapshot is an operational device, not part of the model",
+      "statement": "Every mention of a snapshot in Fowler's article is about running the system rather than defining it: starting the day from an overnight snapshot, taking a new one at the end of the day, taking them in parallel without stopping the application, and reverting to a past snapshot and replaying the stream instead of reversing events. The model is the log; the snapshot exists because replaying from empty is not always affordable. Fowler never writes the word optimization next to snapshot, so calling it one is a paraphrase, but the article's own usage supports the reading.",
+      "claim_kind": "concept_definition",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": ["evidence:fowler:event-sourcing"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:persistence:old-versions-stay-addressable",
+      "label": "Persistence names the property all of these systems share",
+      "statement": "Driscoll, Sarnak, Sleator and Tarjan give the definition the whole comparison rests on: 'Ordinary data structures are ephemeral in the sense that a change to the structure destroys the old version, leaving only the new version available for use. In contrast, a persistent structure allows access to any version, old or new, at any time.' Git's object database, Mercurial's revlog, darcs' patch set, and an append-only tape are all instances of this one idea, differing only in what a version is named by and what is stored per version.",
+      "claim_kind": "concept_definition",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": ["evidence:dsst:making-data-structures-persistent"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:hashconsing:provenance-unresolved",
+      "label": "Hash consing names what git does to trees, but its primary sources were not reached",
+      "statement": "Git's automatic collapse of equal trees to one object is hash consing applied to an on-disk structure: intern on construction so that equal values are one value and equality is identity. The customary attribution is Ershov 1958 and Goto 1974. In this pass neither text was retrievable, dblp and Crossref disagree on Ershov's page range (3-9 versus 3-6), Goto's technical report could not be found in any form, and no primary statement of the technique was read. The concept is recorded; its lineage is not established.",
+      "claim_kind": "lineage_claim",
+      "review_state": "CONTESTED",
+      "confidence": 0.6,
+      "evidence_ids": ["evidence:hashconsing:ershov-1958-bibliographic"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hg:cycles",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:mercurial-revlog",
+      "target_id": "claim:hg:parents-in-hash-prevent-cycles",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated by Mercurial's designer in the OLS 2006 paper, including the failure that prompted it.",
+      "evidence_ids": ["evidence:hg:mackall-ols-2006"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:two-layers-cycle",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:two-layers-are-the-answer-to-the-cycle-problem",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.88,
+      "basis": "Each project states its own half. The comparison, that the two are alternative resolutions of one problem, is the reviewer's, supported by the probe's demonstration of a repeated tree under two commits.",
+      "evidence_ids": ["evidence:probe:output", "evidence:git:gitglossary", "evidence:hg:mackall-ols-2006"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:venti:predates",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:venti",
+      "target_id": "claim:venti:content-addressing-predates-git-by-three-years",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "All three properties are in the paper's own abstract and applications section; the date is the conference date.",
+      "evidence_ids": ["evidence:venti:fast-2002"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:monotone:file-ids",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:monotone",
+      "target_id": "claim:monotone:file-ids-by-hash-independent-of-name",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Stated in monotone's own manual source.",
+      "evidence_ids": ["evidence:monotone:manual-texinfo"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:merkle:tree-authentication",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:merkle-tree-authentication",
+      "target_id": "claim:merkle:one-root-authenticates-many-with-log-proof",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Problem statement, construction and cost are all in Chapter V of the thesis.",
+      "evidence_ids": ["evidence:merkle:thesis-1979"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:no-merkle-term",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:negative:git-never-calls-itself-a-merkle-tree",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.95,
+      "basis": "Mechanical search over a full checkout of git at a named commit and over the Pro Git book source.",
+      "evidence_ids": ["evidence:negative:merkle-absent-from-git"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:event-sourcing:fold",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:event-sourcing",
+      "target_id": "claim:event-sourcing:state-is-a-fold-over-the-log",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "Definition and rebuild statements are quoted from the article.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:event-sourcing:snapshots",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:event-sourcing",
+      "target_id": "claim:event-sourcing:snapshots-are-operational-not-definitional",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Every occurrence of the word snapshot on the page was extracted mechanically and read in context; the characterisation is the reviewer's, and the absence of the word optimization is recorded with it.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:persistence:definition",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:persistent-data-structures",
+      "target_id": "claim:persistence:old-versions-stay-addressable",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The definition is quoted from the paper's abstract; the application of it to the four systems compared here is the reviewer's.",
+      "evidence_ids": ["evidence:dsst:making-data-structures-persistent"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:hashconsing:unresolved",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:hash-consing",
+      "target_id": "claim:hashconsing:provenance-unresolved",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.6,
+      "basis": "Both customary primary sources were sought and neither was retrievable; the bibliographic databases that were reachable disagree.",
+      "evidence_ids": ["evidence:hashconsing:ershov-1958-bibliographic"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:venti:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:venti",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "'a unique hash of a block's contents acts as the block identifier for read and write operations'.",
+      "evidence_ids": ["evidence:venti:fast-2002"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:venti:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:venti",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "'duplicate copies of a block can be coalesced, reducing the consumption of storage and simplifying the implementation of clients'. The second half of that sentence is the underrated one: convergence simplifies the client, it does not only save space.",
+      "evidence_ids": ["evidence:venti:fast-2002"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:venti:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:venti",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Pointer blocks recursively hashed to one root fingerprint that 'corresponds to a hierarchical hash of the original data', plus a write-once policy that prevents destruction of stored data.",
+      "evidence_ids": ["evidence:venti:fast-2002"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:merkle:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:merkle-tree-authentication",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The whole contribution is the axis: one root value authenticates any member of a large collection with a logarithmic proof.",
+      "evidence_ids": ["evidence:merkle:thesis-1979"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:monotone:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:monotone",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "File versions are identified purely by their SHA-1 value, explicitly dispensing with filenames.",
+      "evidence_ids": ["evidence:monotone:manual-texinfo"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:event-sourcing:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:event-sourcing",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "The event is the stored unit and the state is derived by replay; snapshots appear only as operational devices for restart and for avoiding event reversal.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:event-sourcing:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:event-sourcing",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "History is a sequence: events 'stored in the sequence they were applied'. A linear log, not a graph. Branching runs that share a prefix are not a shape this pattern describes on its own.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:event-sourcing:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:event-sourcing",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Replay cost is the pattern's standing problem and snapshots are its standing answer, taken at points chosen operationally rather than by any rule the pattern supplies.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:event-sourcing:authority",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:event-sourcing",
+      "target_id": "axis:index-vs-authority",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "'Since an application state is purely derivable from the event log, you can cache it anywhere you like', and the system of record may be either the log or the current state. The pattern answers the target's second open question directly and permissively.",
+      "evidence_ids": ["evidence:fowler:event-sourcing"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:persistence:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:persistent-data-structures",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Persistence is defined by access to any version at any time, which is the property every store compared here provides and the reason they can all be discussed together.",
+      "evidence_ids": ["evidence:dsst:making-data-structures-persistent"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_SECONDARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:hash-consing:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:hash-consing",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.6,
+      "basis": "The technique is exactly this axis: intern on construction so equal values are one value. Coded PARTIAL because no primary source for the technique was reached in this pass, only the customary attribution.",
+      "evidence_ids": ["evidence:hashconsing:ershov-1958-bibliographic"],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "NOT_INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "PrecedesRelation",
+    "record": {
+      "id": "relation:precedes:merkle:venti",
+      "relation_type": "PRECEDES",
+      "source_id": "work:merkle-tree-authentication",
+      "target_id": "work:venti",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Merkle's 1979 recursive hash construction precedes Venti's 2002 pointer-block recursion by twenty-three years, and Venti's 'hierarchical hash' is that construction applied to storage blocks. This records temporal precedence and structural sameness, not a citation trail; Venti's reference list was not inspected.",
+      "evidence_ids": ["evidence:merkle:thesis-1979", "evidence:venti:fast-2002"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "PrecedesRelation",
+    "record": {
+      "id": "relation:precedes:venti:git",
+      "relation_type": "PRECEDES",
+      "source_id": "work:venti",
+      "target_id": "work:git-object-model",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Venti published content-addressed write-once blocks with duplicate coalescing and a hierarchical hash in January 2002; git's first commit is April 2005. Precedence is established. Influence is not: no statement connecting them was found in this pass, and git's tree contains no reference to Venti's authors or to monotone or darcs.",
+      "evidence_ids": ["evidence:venti:fast-2002", "evidence:git:first-commit-readme", "evidence:negative:merkle-absent-from-git"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "PrecedesRelation",
+    "record": {
+      "id": "relation:precedes:monotone:git",
+      "relation_type": "PRECEDES",
+      "source_id": "work:monotone",
+      "target_id": "work:git-object-model",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Torvalds pointed the kernel list at monotone on 2005-04-06 as 'the most viable alternative' and rejected it on speed on 2005-04-07, one day before and one day after git's first commit respectively. Precedence and awareness are established by his own messages; borrowing is not.",
+      "evidence_ids": ["evidence:linus:kernel-scm-saga", "evidence:linus:monotone-too-slow", "evidence:monotone:manual-texinfo"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:git:event-sourcing",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:git-object-model",
+      "target_id": "work:event-sourcing",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Both are append-only and both keep every version reachable, but they store opposite things and therefore pay opposite costs. Git stores states, so reading is a lookup and the storage layer works to compress redundancy between states. Event sourcing stores changes, so writing is trivial and reading an old point costs a replay, which is why snapshots reappear as an operational device. The models are also shaped differently: git's history is a DAG whose nodes name their predecessors, while an event log is a sequence with no branching notion of its own.",
+      "evidence_ids": ["evidence:fowler:event-sourcing", "evidence:git:gitglossary", "evidence:probe:output"]
+    },
+    "supersedes_event_id": null
+  }
+]
