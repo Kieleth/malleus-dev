@@ -4854,3 +4854,55 @@ class TestALedgerAnchoredUnderAnEarlierGrammarStillReplays:
         reader = JsonlLedger(tmp_path / "l.jsonl", current, (legacy,))
         with pytest.raises(LedgerError, match="under any payload grammar"):
             reader.read()
+
+
+class TestRecordedHashesAreVerifiedNotCompared:
+    """The ledger envelope verified a recorded hash under each known grammar.
+    Nothing else did. Reported by an adopting project after an upgrade
+    re-anchored an authoritative ledger, and widened here after checking each
+    site: two of the five candidates compare values computed now and must stay
+    equalities, because widening those accepts two different ontologies."""
+
+    def _registry(self):
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+        return OntologyRegistry(bundled_ontology_path("assent.yaml"))
+
+    def test_verifies_accepts_an_earlier_grammar_and_refuses_a_stranger(self):
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+        registry = self._registry()
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        current = f"sha256:{registry.content_hash()}"
+        assert registry.verifies(current)
+        assert registry.verifies(legacy)
+        assert registry.verifies(current, legacy), "both name these exact bytes"
+        assert not registry.verifies("sha256:" + "0" * 64)
+        assert not registry.verifies(current, "sha256:" + "0" * 64), (
+            "one stranger in the set must refuse the set"
+        )
+
+    def test_a_pinned_logic_contract_written_under_an_earlier_grammar_verifies(self):
+        """The contract is loaded from a document, so its ontology hash is a
+        recorded value. The compiled-versus-candidate comparison beside it is
+        between two values computed now and stays an equality."""
+        import inspect
+        from malleus import prolog_verifier
+        source = inspect.getsource(prolog_verifier.PrologVerifier.verify_candidate_subgraph)
+        assert "overlay.registry.verifies(self.contract.ontology_hash)" in source
+        assert "compiled.ontology_hash != candidate.ontology_hash" in source, (
+            "the computed-versus-computed comparison must remain an equality"
+        )
+
+    def test_the_sites_that_compare_two_live_registries_are_untouched(self):
+        """`staging.py` and the ledger constructor compare hashes both computed
+        now. They share a grammar by construction, so equality is the right
+        question and widening them would accept two different ontologies as
+        one. A guard, because the temptation to widen every comparison at once
+        is exactly what makes this class of fix dangerous."""
+        import inspect
+        from malleus import staging, logic
+        assert "ontology_hash != self._ontology_hash" in inspect.getsource(
+            staging.CandidateSubgraph.materialize_into
+        )
+        assert "len(ontology_hashes) != 1" in inspect.getsource(
+            logic.GraphFactCompiler.compile
+        )

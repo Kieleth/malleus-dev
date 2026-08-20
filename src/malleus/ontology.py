@@ -1132,6 +1132,19 @@ class OntologyRegistry:
                 return grammar
         return None
 
+    def verifies(self, *recorded_hashes: str) -> bool:
+        """Whether every recorded hash names this schema under some known grammar.
+
+        Use this wherever a hash read back from a record is compared. Equality
+        is the wrong question there: the same schema has one identity per
+        payload grammar, so a value written by an earlier release compares
+        unequal while naming exactly these bytes. Where both sides are computed
+        now by the running code they share a grammar by construction, and
+        equality is the right question; widening those would accept two
+        genuinely different ontologies as one.
+        """
+        return all(self.verifying_grammar(h) is not None for h in recorded_hashes)
+
     def content_hash_under(self, grammar: int) -> str:
         """The hash this schema would carry under one payload grammar."""
         if not hasattr(self, "_cached_hashes"):

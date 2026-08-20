@@ -4,15 +4,15 @@
     "direct_core_dependencies": {
       "src/malleus/kg.py": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
       "src/malleus/ledger.py": "sha256:f9ef7a53f01ffba150240d8c0f8f3cbe1cfeba04ba216289df39a3e622eb3c7f",
-      "src/malleus/ontology.py": "sha256:01c459de66438c7fc5faccb695aeee5caa45a6622af238b7d31fb0a82f064a14",
+      "src/malleus/ontology.py": "sha256:c3b1a0fe5a9ee289625ba3801c083365b09a9491c0340cc26d5131403dfc2093",
       "src/malleus/source.py": "sha256:6e04af0a6187322a72521a6f73cccf1fe73e715b7a491d5fca7e90ab82e82e4a",
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
     "package_boundary_sources": {
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:73d3908bb3834847c2b054c5e8d6e19db0e5ca6ca3fb7863c7507d9d507e7462",
-      "pyproject.toml": "sha256:367e6952735a909dc149319d998bfc32d138cacea3f1c8ad2fe40687ba6c8295",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:4e9c693f90e5984b711b1feac87b9876760b80932c8569764003af61870ec0b3",
+      "pyproject.toml": "sha256:87dc00d6e558e1b725ecc8f2bc664611d0b3126092d967f8e210dfe847fca154",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
-      "src/malleus/status.py": "sha256:18c85590ec42d06d88e083176199c6c8bf613d423a36b679b8e878cff3f5e9dd"
+      "src/malleus/status.py": "sha256:2a3a706edc3349d818c2ae82c5d4b5a995fd329f97f5fe78899d7db20a2587eb"
     },
     "relevant_core_test_sources": {
       "tests/test_kg.py": "sha256:3c5546215f84d371ffffcfb9ee560e316722783b5e2a7705fd0d1e206d35bf63",

@@ -278,21 +278,27 @@ Located by inspection rather than reported:
 - `assent.py:620`, two *recorded* hashes against each other. A graph base
   written under one grammar and a candidate under another name the same
   ontology and compare unequal.
-- `prolog_verifier.py:74`, a pinned logic contract's recorded hash.
-- `logic.py:290`, which requires the input set to contain exactly one hash. A
-  history spanning a release boundary legitimately contains two that name one
-  ontology.
+- `prolog_verifier.py:74`, a pinned logic contract's hash, which is read off a
+  document and is therefore recorded.
 
-Two sites that must NOT be widened, and the distinction is the whole design:
-`assent.py:296` and `staging.py:210` compare two hashes both computed now by
-the running code. They share a grammar by construction, so equality is the
-right question and widening would accept two genuinely different ontologies.
+Three sites, not four. Checking each rather than pattern-matching removed one
+candidate from this list: `logic.py:290` takes every hash from a live registry
+in the same process, so its inputs share a grammar by construction. The same
+went for `prolog_verifier.py:72`, which compares two values computed now and
+sits one line above a site that did need widening.
+
+Three sites that must NOT be widened, and the distinction is the whole design:
+`assent.py:296`, `staging.py:210` and `logic.py:290` compare hashes both
+computed now by the running code. They share a grammar by construction, so
+equality is the right question and widening would accept two genuinely
+different ontologies as one. A test guards them against a later sweep.
 
 The rule to generalise: wherever a *recorded* hash is compared, whether against
 a computed one or another recorded one, ask which grammar verifies it. Where
 both sides are computed now, ask for equality.
 
-**Verdict: accept, and it is the completion of A8 rather than a new item.**
+**Landed.** `OntologyRegistry.verifies()` is the one helper; three sites use it
+and three are guarded against being widened.
 
 ### A10. Nothing pins the vendored ontology bytes in force at publication
 

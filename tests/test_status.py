@@ -108,7 +108,7 @@ def test_stage_eight_c_boundary_is_explicit():
 
 
 def test_011_release_keeps_the_core_stage_boundary():
-    assert IMPLEMENTATION_STATUS.package_version == "0.13.1"
+    assert IMPLEMENTATION_STATUS.package_version == "0.13.2"
     assert IMPLEMENTATION_STATUS.current_stage == "8c"
     assert {
         "typed-literature-review-ledger",

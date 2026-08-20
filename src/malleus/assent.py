@@ -564,8 +564,7 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"{context}: GraphBaseArtifact requires an externally supplied graph base"
             )
-        expected_ontology = f"sha256:{self._accepted_graph_base.registry.content_hash()}"
-        if artifact["graph_ontology_hash"] != expected_ontology:
+        if not self._accepted_graph_base.registry.verifies(artifact["graph_ontology_hash"]):
             raise ProtocolError(f"{context}: graph base ontology hash mismatch")
         if artifact["base_state_digest"] != self._accepted_graph_base.state_digest():
             raise ProtocolError(f"{context}: graph base state digest mismatch")
@@ -617,7 +616,9 @@ class ProtocolLedger:
         )
         if graph_base["id"] != projection.graph_base_id:
             raise ProtocolError(f"{context}: candidate graph base is not active")
-        if artifact["graph_ontology_hash"] != graph_base["graph_ontology_hash"]:
+        if not self._names_one_ontology(
+            artifact["graph_ontology_hash"], graph_base["graph_ontology_hash"]
+        ):
             raise ProtocolError(f"{context}: candidate ontology differs from graph base")
         if artifact["base_acceptance_head"] != projection.acceptance_head:
             raise ProtocolError(f"{context}: candidate has stale base_acceptance_head")
@@ -2779,6 +2780,19 @@ class ProtocolLedger:
             raise ProtocolError(
                 f"event {event['event_id']}: first event must anchor an external snapshot"
             )
+
+    def _names_one_ontology(self, *recorded: str) -> bool:
+        """Do these recorded hashes name one ontology?
+
+        Both sides are history here, and history can span a release that
+        changed the payload grammar. A graph base written under one grammar and
+        a candidate under another name the same ontology and compare unequal.
+        """
+        if len(set(recorded)) == 1:
+            return True
+        base = self._accepted_graph_base
+        registry = base.registry if base is not None else self.registry
+        return registry.verifies(*recorded)
 
     def _validate_registry_contract(self) -> None:
         required = {

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.2] - 2026-08-20
+
+### Fixed
+
+- Fixed three more places where a recorded ontology hash was compared for
+  equality. 0.13.1 taught the ledger envelope to verify a recorded hash under
+  each known payload grammar and left every other site comparing one hash, so a
+  value written by an earlier release still compared unequal while naming
+  exactly the same bytes. Reported by an adopting project after an upgrade
+  re-anchored an authoritative ledger.
+
+  Widened: a recorded graph-base ontology hash against one computed now; two
+  recorded hashes against each other, where a graph base written under one
+  grammar and a candidate under another name the same ontology; and a pinned
+  logic contract's hash, which is read off a document and is therefore
+  recorded.
+
+  Left alone deliberately, and now guarded by a test: three sites comparing
+  hashes both computed now by the running code. They share a grammar by
+  construction, equality is the right question there, and widening them would
+  accept two genuinely different ontologies as one. Checking each site rather
+  than pattern-matching removed two candidates from the reported list.
+
+### Added
+
+- Added `OntologyRegistry.verifies()`, the single helper for asking whether
+  recorded hashes name this schema under any known grammar.
+
 ## [0.13.1] - 2026-08-20
 
 Released as `0.13.1`. `0.13.0` was never published and is burned, like `0.8.0`

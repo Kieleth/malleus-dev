@@ -71,7 +71,11 @@ class PrologVerifier:
         compiled = self._compiler.compile(*context, overlay)
         if compiled.ontology_hash != candidate.ontology_hash:
             raise LogicError("Compiled facts and candidate use different ontologies")
-        if compiled.ontology_hash != self.contract.ontology_hash:
+        # The contract is pinned and loaded from a document, so its hash is a
+        # recorded value and may have been written under an earlier payload
+        # grammar. The comparison above is between two values computed now and
+        # stays an equality.
+        if not overlay.registry.verifies(self.contract.ontology_hash):
             raise LogicError("Logic contract and compiled facts use different ontologies")
 
         execution = self._execute(compiled.facts)
