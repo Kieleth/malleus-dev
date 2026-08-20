@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-19
+
+### Fixed
+
+- Fixed the fingerprint grammar version being compared as though it were a
+  structural fact. `fingerprint_version:N` says which grammar produced a fact
+  set, not what the schema contains, and comparing it as an ordinary member
+  made `superset` unreachable for the pair that most needs the answer: a root
+  using none of the conditional features against a project using one. They
+  differ by one fact in each direction, neither set contains the other, and the
+  answer was `divergent`. `root_currency` is a HERESY rite, so a correct schema
+  could not be sealed and an adopting project's release pipeline stopped.
+  Reported upstream and reproduced here against our own ontologies before the
+  fix: `assent.yaml` carries every fact `malleus.yaml` has, zero missing, and
+  answered divergent. The marker is now excluded from the structural comparison
+  and answered by `fingerprint_grammar`, so it is qualified rather than
+  dropped, and it stays published in the fingerprint.
+
+### Added
+
+- Added the coverage account. Verification returns two answers, because
+  "passed" was carrying several questions at once and a bundle that read
+  nothing took the same word as one that read everything. Integrity stays a
+  bit. `Account` reports what became of every declared unit in the mandate B2
+  vocabulary and measures each precommitted metric family against the threshold
+  frozen before ingest. A unit read and found blank is `VERIFIED_BLANK` and
+  counts as accounted for; a failed call is `FAILED` and does not; never
+  fetched, never rendered and never attempted stay distinct. Completeness is
+  the adopter's own thresholds and nothing else. An uncomputable denominator
+  reports `UNMEASURED` and blocks completeness rather than passing.
+- Added `Raster.unit` and `EvidenceBundle.bundle_kind`. Without the first a
+  bundle could count units and never say what happened to one. The second lets
+  a bundle claim a registration rather than pose as an empty reading, which
+  matters because holding a document unread is an honest state.
+- Added `DECISION_DISCHARGE` and `SLOT_READERS`, two censuses that fail when a
+  decision or a slot has nothing recorded about what discharges or reads it.
+  They exist because a coverage rule was designed while a complete coverage
+  declaration sat unread in the schema, and both facts were already written
+  down by the author who did not consult them.
+
 ### Fixed
 
 - Fixed the OCR profile being governed by nothing. Its nine identity planes

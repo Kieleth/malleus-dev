@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "malleus-dev"
-version = "0.11.0"
+version = "0.12.0"
 description = "Root ontology in LinkML for ontology-typed knowledge graphs with write-time validation and content-addressable convergence"
 readme = "README.md"
 license = { text = "Apache-2.0" }

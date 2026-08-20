@@ -1,6 +1,6 @@
 # Implementation Status
 
-Malleus package version `0.11.0` implements the
+Malleus package version `0.12.0` implements the
 `stage-8c-executable-provenance-and-effect-closure` boundary.
 
 This is a capability boundary, not a claim that the research program is

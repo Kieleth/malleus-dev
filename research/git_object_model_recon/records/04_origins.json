@@ -1,0 +1,633 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:kernel-scm-saga",
+      "label": "Linus Torvalds, 'Kernel SCM saga..', LKML, 2005-04-06",
+      "review_state": "REVIEWED",
+      "source_uri": "https://marc.info/?l=linux-kernel&m=111280216717070&w=2",
+      "locator": "LKML thread 'Kernel SCM saga..', message of 2005-04-06 15:42:08 UTC, opening paragraphs and postscript",
+      "evidence_description": "The message announcing that the kernel would leave BitKeeper. States that the BitKeeper conflict had not worked out and that the kernel team is looking at alternatives, asks readers not to blame BitMover, and closes with the postscript: 'Don't bother telling me about subversion. If you must, start reading up on \"monotone\". That seems to be the most viable alternative'. Dated one day before git's first commit.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "lore.kernel.org is behind a proof-of-work challenge and was not fetchable in this pass; marc.info was used as the archive mirror."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:lwn:bitkeeper-part-ways",
+      "label": "LWN, 'The kernel and BitKeeper part ways', 2005-04-06",
+      "review_state": "REVIEWED",
+      "source_uri": "https://lwn.net/Articles/130746/",
+      "locator": "whole article",
+      "evidence_description": "Contemporary third-party account, dated 2005-04-06, that BitMover decided it could no longer make BitKeeper available to the free software community, which is the event that put the kernel in need of a new tool.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "UNVERIFIED",
+      "notes": [
+        "Read through a page-summarising fetch rather than extracted from raw bytes. The date and the substance are recorded; exact wording is not byte-verified and is not quoted as verbatim anywhere in this project."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:monotone-too-slow",
+      "label": "Linus Torvalds, 'Re: Kernel SCM saga..', LKML, 2005-04-07",
+      "review_state": "REVIEWED",
+      "source_uri": "https://lkml.iu.edu/hypermail/linux/kernel/0504.0/2022.html",
+      "locator": "LKML archive stamp Thu Apr 07 2005 - 23:41:58 EST",
+      "evidence_description": "Design message written two days into the work. On monotone: 'it doesn't actually seem to be _doing_ anything while it's slow ... It seems to have some exponential function on the number of pathnames involved', and 'I'm hoping they can fix it, though. The basic notions do not sound wrong.' On what he was building: 'Another way of looking at it is to say that it's really a content-addressable filesystem, used to track directory trees', 'Never mind merging. It's not an SCM, it's a distribution and archival mechanism', and 'The database is designed so that you can do the equivalent of a nonmerging (ie pure superset) push/pull with just plain rsync'.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:renames-dont-matter",
+      "label": "Linus Torvalds, 'Re: more git updates..', LKML, 2005-04-10",
+      "review_state": "REVIEWED",
+      "source_uri": "https://lkml.iu.edu/hypermail/linux/kernel/0504.1/0563.html",
+      "locator": "LKML archive stamp Sun Apr 10 2005 - 10:44:22 EST, reply to Junio C Hamano",
+      "evidence_description": "The rename decision, stated as a design choice rather than an omission: 'GIT doesn't care. There is _zero_ space efficiency in trying to track renames. In fact, it would add overhead to the system, not lessen it. That's because GIT fundamentally doesn't do the \"delta-within-a-file\" model.' Also 'So consider me deficient, or consider me radical. It boils down to the same thing. Renames don't matter.' and 'I really really designed it coming at the problem from the viewpoint of a _filesystem_ person'.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "The hypermail header stamp and the timestamp quoted in a reply differ by about an hour; the date 2005-04-10 is not in doubt."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:no-history-in-objects",
+      "label": "Linus Torvalds, 'Re: Handling renames.', git list, 2005-04-14",
+      "review_state": "REVIEWED",
+      "source_uri": "https://public-inbox.org/git/Pine.LNX.4.58.0504141124220.7211@ppc970.osdl.org/",
+      "locator": "git mailing list, 2005-04-14 11:32:34 -0700, Message-ID Pine.LNX.4.58.0504141124220.7211@ppc970.osdl.org",
+      "evidence_description": "The clearest primary statement of why history is kept out of content objects: 'There fundamentally is no history in objects, _except_ for the commit object. Two objects with the same name are identical, and that means that they are easy to share.' and 'Any time you break that model, you break the whole point of git ... because it breaks the clean separation of \"time\" and \"space\".'",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:content-determines-objects",
+      "label": "Linus Torvalds, 'Re: Handling renames.', git list, 2005-04-14 (earlier message)",
+      "review_state": "REVIEWED",
+      "source_uri": "https://public-inbox.org/git/Pine.LNX.4.58.0504141102430.7211@ppc970.osdl.org/",
+      "locator": "git mailing list, 2005-04-14 11:11:53 -0700, Message-ID Pine.LNX.4.58.0504141102430.7211@ppc970.osdl.org",
+      "evidence_description": "States the naming principle and its consequence for what git models: 'It's fundamentally the git notion of \"content determines objects\"' and 'A \"rename\" really doesn't exist in the git model. The git model really is about tracking data, not about tracking what happened to _create_ that data.'",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:linus:detection-at-search-time",
+      "label": "Linus Torvalds, 'Re: Merge with git-pasky II.', git list, 2005-04-15",
+      "review_state": "REVIEWED",
+      "source_uri": "https://public-inbox.org/git/Pine.LNX.4.58.0504150753440.7211@ppc970.osdl.org/",
+      "locator": "git mailing list, 2005-04-15 08:32:46 -0700, Message-ID Pine.LNX.4.58.0504150753440.7211@ppc970.osdl.org",
+      "evidence_description": "The replacement mechanism for the rejected feature: 'let's just posit that \"files\" do not matter. The only thing that matters is how \"content\" moved in the tree', and 'that \"where did this come from\" decision should be done at _search_ time, not commit time.' Provenance is recomputed on demand from content rather than recorded at write time.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:first-commit-readme",
+      "label": "git README at the first commit, e83c5163",
+      "review_state": "REVIEWED",
+      "source_uri": "https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README",
+      "locator": "sections: title line; opening paragraph; 'The Object Database (SHA1_FILE_DIRECTORY)'; 'TREE:'; 'CHANGESET:'; 'Note on changesets:'; 'TRUST:'",
+      "evidence_description": "The design document written with the code on 2005-04-07. States 'GIT - the stupid content tracker'; 'The object database is literally just a content-addressable collection of objects. All objects are named by their content, which is approximated by the SHA1 hash of the object itself'; 'The SHA1 hash is always the hash of the _compressed_ object, not the original one'; 'the tree object is uniquely determined by the set contents, and so two separate but identical trees will always share the exact same object'; 'The \"changeset\" object is an object that introduces the notion of history into the picture'; 'unlike real SCM's, changesets do not contain rename information or file mode chane information. All of that is implicit in the trees involved'; and, under TRUST, 'a single named changeset specifies uniquely a whole set of history, with full contents. You can't later fake any step of the way once you have the name of a changeset' and \"'git' itself only handles content integrity, the trust has to come from outside\".",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "notes": [
+        "At this commit the object store lived under .dircache/ and the history object was called a 'changeset', not a 'commit'."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:first-commit-read-cache",
+      "label": "git read-cache.c at the first commit, e83c5163",
+      "review_state": "REVIEWED",
+      "source_uri": "https://raw.githubusercontent.com/git/git/e83c5163316f89bfbde7d9ab23ca2e25604af290/read-cache.c",
+      "locator": "function write_sha1_file()",
+      "evidence_description": "Direct code check of the 2005 hashing order. The function deflates the buffer first (deflateInit, deflate to Z_FINISH, deflateEnd, size = stream.total_out) and only then computes SHA1_Init, SHA1_Update(&c, compressed, size), SHA1_Final. The 2005 object name is therefore the hash of the compressed bytes, confirming the README's statement against the producer rather than against a description of it.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:pack-heuristics",
+      "label": "git Documentation/technical/pack-heuristics.adoc",
+      "review_state": "REVIEWED",
+      "source_uri": "https://github.com/git/git/blob/master/Documentation/technical/pack-heuristics.adoc",
+      "locator": "IRC transcript, Junio C Hamano and Linus Torvalds on delta selection and packing order",
+      "evidence_description": "The preserved design discussion of the packer's heuristics. Junio: 'and finally sort by size, larger to smaller' and 'we prefer to delta against larger objects, so that we have lots of removals'. Linus, separating placement from delta choice: 'The recency ordering (which is basically: put objects _physically_ into the pack in the order that they are \"reachable\" from the head) is important' but 'recency ordering is totally useless for deciding how to actually generate the deltas, so the delta ordering is something else.'",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:progit:packfiles",
+      "label": "Pro Git 2nd edition, 10.4 Packfiles",
+      "review_state": "REVIEWED",
+      "source_uri": "https://git-scm.com/book/en/v2/Git-Internals-Packfiles",
+      "locator": "chapter 10.4, final paragraphs",
+      "evidence_description": "The widely read account of delta direction: 'When Git packs objects, it looks for files that are named and sized similarly, and stores just the deltas from one version of the file to the next', and, on a worked example, that the second (newer) version of the file is the one stored intact while the original is stored as a delta, 'because you're most likely to need faster access to the most recent version of the file'.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:hash-function-transition",
+      "label": "git Documentation/technical/hash-function-transition.adoc",
+      "review_state": "REVIEWED",
+      "source_uri": "https://github.com/git/git/blob/master/Documentation/technical/hash-function-transition.adoc",
+      "locator": "sections 'Background' and 'Choice of Hash'",
+      "evidence_description": "Git's own statement of what content addressing buys and what it costs. Buys: 'Integrity checking is easy. Bit flips, for example, are easily detected, as the hash of corrupted content does not match its name' and 'Object names can be signed and third parties can trust the hash to address the signed object and all objects it references.' Costs: the SHAttered collision of 23 February 2017, the move to a hardened SHA-1 in v2.13.0, and the statement that if SHA-1 were truly broken 'we could not trust that a given hash value represented the known good version of content that the speaker intended'. SHA-256 was picked as the successor in late 2018. Stated requirements: collision and second-preimage resistance, not length-extension resistance.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:user-manual-blob-dedup",
+      "label": "git Documentation/user-manual.adoc, Blob Object and Trust sections",
+      "review_state": "REVIEWED",
+      "source_uri": "https://github.com/git/git/blob/master/Documentation/user-manual.adoc",
+      "locator": "sections [[blob-object]] and [[trust]]",
+      "evidence_description": "Dedup stated by git's own manual: 'Since the blob is entirely defined by its data, if two files in a directory tree (or in multiple different versions of the repository) have the same contents, they will share the same blob object. The object is totally independent of its location in the directory tree, and renaming a file does not change the object that file is associated with.' Trust: 'the immutability of the history of commits tells others that they can trust the whole history' and that a whole archive can be validated by publishing the name of the top commit and signing that.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:git-prune",
+      "label": "git git-prune(1), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man1/git-prune.1",
+      "locator": "DESCRIPTION",
+      "evidence_description": "States that prune runs fsck --unreachable using the refs available and prunes unpacked objects unreachable from those heads, and adds: 'Note that unreachable, packed objects will remain. If this is not desired, see git-repack(1).' Reclamation therefore depends on where an object physically sits, not only on reachability.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:1cce75d8f89199e1c77bd1942693e25e7304a2db21245cff9ac03f4b9f490cdb",
+      "artifact_byte_length": 3482
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:git-first-commit",
+      "label": "Initial revision of git (e83c5163), with its README",
+      "title": "Initial revision of \"git\", the information manager from hell",
+      "authors": ["Linus Torvalds"],
+      "identifiers": [
+        "commit:e83c5163316f89bfbde7d9ab23ca2e25604af290",
+        "url:https://github.com/git/git/commit/e83c5163316f89bfbde7d9ab23ca2e25604af290"
+      ],
+      "priority_date": "2005-04-07",
+      "priority_date_basis": "Author and committer timestamp on commit e83c5163316f89bfbde7d9ab23ca2e25604af290, 2005-04-07T22:13:13Z, read from the GitHub API record of that commit. Eleven files: Makefile, README, cache.h, cat-file.c, commit-tree.c, init-db.c, read-cache.c, read-tree.c, show-diff.c, update-cache.c, write-tree.c.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:git:first-commit-readme",
+        "evidence:git:first-commit-read-cache"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:linus-2005-design-messages",
+      "label": "Linus Torvalds' April 2005 design correspondence on LKML and the git list",
+      "title": "April 2005 design correspondence: Kernel SCM saga, more git updates, Handling renames, Merge with git-pasky II",
+      "authors": ["Linus Torvalds"],
+      "identifiers": [
+        "msgid:Pine.LNX.4.58.0504141102430.7211@ppc970.osdl.org",
+        "msgid:Pine.LNX.4.58.0504141124220.7211@ppc970.osdl.org",
+        "msgid:Pine.LNX.4.58.0504150753440.7211@ppc970.osdl.org"
+      ],
+      "priority_date": "2005-04-06",
+      "priority_date_basis": "Date of the earliest message in the set, 'Kernel SCM saga..' of 2005-04-06 15:42:08 UTC. The set runs to 2005-04-15.",
+      "publication_status": "UNKNOWN",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:linus:kernel-scm-saga",
+        "evidence:linus:monotone-too-slow",
+        "evidence:linus:renames-dont-matter",
+        "evidence:linus:content-determines-objects",
+        "evidence:linus:no-history-in-objects",
+        "evidence:linus:detection-at-search-time"
+      ],
+      "notes": [
+        "Public mailing-list correspondence, not a publication. Recorded as a Work because it is the primary record of the design decisions and their stated reasons."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:no-history-in-content-objects",
+      "label": "History is deliberately excluded from content objects so that equal content can be shared",
+      "statement": "Linus Torvalds stated the reason for keeping history out of everything except the commit object: 'There fundamentally is no history in objects, _except_ for the commit object. Two objects with the same name are identical, and that means that they are easy to share.' He described any change to that as breaking 'the clean separation of \"time\" and \"space\"'. Sharing is not an emergent benefit of content addressing; it is the stated purpose of excluding history from the objects that carry content.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:linus:no-history-in-objects"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:identical-trees-share-by-construction",
+      "label": "Convergence of identical trees was an explicit day-one property",
+      "statement": "The first commit's README already states it: 'the tree object is uniquely determined by the set contents, and so two separate but identical trees will always share the exact same object.' Convergence of equal state was designed in at the start, not discovered later.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:git:first-commit-readme"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:renames-rejected-on-purpose",
+      "label": "Rename tracking was rejected on purpose, and provenance moved to query time",
+      "statement": "Git's most-criticised omission was a decision with a stated reason. 'There is _zero_ space efficiency in trying to track renames ... That's because GIT fundamentally doesn't do the \"delta-within-a-file\" model'; 'A \"rename\" really doesn't exist in the git model. The git model really is about tracking data, not about tracking what happened to _create_ that data'; and the replacement: 'that \"where did this come from\" decision should be done at _search_ time, not commit time.' Recording what happened was rejected in favour of recording what is, and recovering what happened by search.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:linus:renames-dont-matter",
+        "evidence:linus:content-determines-objects",
+        "evidence:linus:detection-at-search-time"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:monotone-named-not-credited",
+      "label": "Monotone was named as the alternative and rejected on speed; no primary statement of borrowing was found",
+      "statement": "The primary record establishes that Linus Torvalds pointed the list at monotone on 2005-04-06 ('start reading up on \"monotone\". That seems to be the most viable alternative'), and that a day later he rejected it on performance while accepting its ideas ('monotone really _is_ that slow'; 'The basic notions do not sound wrong'). This review did not find a primary statement by Torvalds that git's content-addressed object naming was taken from monotone. The frequently repeated claim that git borrowed content addressing from monotone is therefore NOT ESTABLISHED here; what is established is proximity, a pointer, and an explicit rejection on speed.",
+      "claim_kind": "lineage_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:linus:kernel-scm-saga",
+        "evidence:linus:monotone-too-slow"
+      ],
+      "notes": [
+        "NOT ESTABLISHED is not proof of absence. A statement of borrowing may exist in sources this pass did not reach, including the 2007 Google Tech Talk and later interviews."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:not-an-scm",
+      "label": "Git was first described as a content-addressable filesystem and a distribution mechanism, not an SCM",
+      "statement": "Two days into the work Torvalds wrote: 'Another way of looking at it is to say that it's really a content-addressable filesystem, used to track directory trees' and 'Never mind merging. It's not an SCM, it's a distribution and archival mechanism.' Replication was a design target from the start: 'The database is designed so that you can do the equivalent of a nonmerging (ie pure superset) push/pull with just plain rsync.' A store whose objects are named by content and never mutate can be replicated by a dumb file copier.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:linus:monotone-too-slow"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:origin:hash-preimage-changed-after-2005",
+      "label": "Git originally hashed the compressed bytes; today it hashes the canonical uncompressed form",
+      "statement": "At the first commit the object name was the SHA-1 of the deflated bytes: write_sha1_file() in read-cache.c deflates first and then calls SHA1_Update on the compressed buffer, and the README says so in words ('The SHA1 hash is always the hash of the _compressed_ object, not the original one'). At git 2.50.1 the name is the SHA-1 of the uncompressed preimage: the probe reproduced an object name by hashing 'blob 6\\0hello\\n' outside git. Hashing the encoding makes identity depend on the compressor's version and settings; hashing a canonical uncompressed form does not. Git moved from the first to the second.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:git:first-commit-read-cache",
+        "evidence:git:first-commit-readme",
+        "evidence:probe:output"
+      ],
+      "notes": [
+        "The commit that made the change was not identified. A listing of git.git commits touching read-cache.c up to 2005-05-15 was inspected and contains no such subject line; the change may sit outside that window or in another file. Recorded as NOT ESTABLISHED, not as absence."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:delta-base-selected-by-size-not-recency",
+      "label": "Delta bases are picked by a size-ordered sort; recency governs physical placement only",
+      "statement": "git's own pack-heuristics transcript separates the two orderings. Junio C Hamano on delta selection: 'and finally sort by size, larger to smaller' and 'we prefer to delta against larger objects, so that we have lots of removals'. Linus Torvalds on placement: recency ordering puts objects physically into the pack in reachability order from the head, but 'recency ordering is totally useless for deciding how to actually generate the deltas, so the delta ordering is something else.' Pro Git's account, that the newest version is stored intact for faster access, describes the common outcome (files usually grow, so newest is usually largest) rather than the selection rule. The probe's result is consistent with the size rule and not with a recency rule: the whole-stored bases were revisions 1 and 18 of 31, not revision 31.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:git:pack-heuristics",
+        "evidence:progit:packfiles",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:integrity-is-the-stated-payoff-and-the-standing-liability",
+      "label": "Content addressing buys integrity and signing, and owes a hash migration",
+      "statement": "git's hash-function-transition document names the payoff: 'Integrity checking is easy. Bit flips, for example, are easily detected, as the hash of corrupted content does not match its name', and 'Object names can be signed and third parties can trust the hash to address the signed object and all objects it references.' It also names the bill: SHAttered demonstrated a practical SHA-1 collision on 23 February 2017, git moved to a hardened SHA-1 in v2.13.0, SHA-256 was chosen as successor in late 2018, and the transition is still being carried. Putting a cryptographic function in the identity layer means every identifier ever published depends on that function's continued strength.",
+      "claim_kind": "design_tradeoff",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:git:hash-function-transition"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:trust-boundary-stated-at-birth",
+      "label": "Naming gives content integrity; trust must come from outside",
+      "statement": "The first README drew the line that git still holds: 'a single named changeset specifies uniquely a whole set of history, with full contents. You can't later fake any step of the way once you have the name of a changeset', but also \"'git' itself only handles content integrity, the trust has to come from outside.\" The current user manual restates it: publish and sign the name of the top commit and the whole archive is validated.",
+      "claim_kind": "design_rationale",
+      "review_state": "REVIEWED",
+      "confidence": 0.93,
+      "evidence_ids": [
+        "evidence:git:first-commit-readme",
+        "evidence:git:user-manual-blob-dedup"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:packed-unreachable-objects-survive-prune",
+      "label": "Reachability decides liveness, but packing decides whether prune can act",
+      "statement": "git-prune's own description states: 'Note that unreachable, packed objects will remain. If this is not desired, see git-repack(1).' Deletion is therefore not a pure function of reachability; it depends on whether the object is loose or already inside a pack, which is a storage-layer fact. Reclamation in git is reachability plus a grace period plus a physical-layout condition.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": ["evidence:git:git-prune", "evidence:git:git-gc"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:no-history-in-objects",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "claim:origin:no-history-in-content-objects",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated verbatim in the 2005-04-14 message on the git list.",
+      "evidence_ids": ["evidence:linus:no-history-in-objects"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:trees-share",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-first-commit",
+      "target_id": "claim:origin:identical-trees-share-by-construction",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated verbatim in the TREE section of the first commit's README.",
+      "evidence_ids": ["evidence:git:first-commit-readme"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:renames",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "claim:origin:renames-rejected-on-purpose",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Three separate messages of 2005-04-10, 2005-04-14 and 2005-04-15 state the decision and its replacement.",
+      "evidence_ids": [
+        "evidence:linus:renames-dont-matter",
+        "evidence:linus:content-determines-objects",
+        "evidence:linus:detection-at-search-time"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:monotone",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "claim:origin:monotone-named-not-credited",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.8,
+      "basis": "The two named messages establish the pointer and the speed rejection. The absence of a borrowing statement is a negative audit over the April 2005 messages reached in this pass, not over everything Torvalds has said about monotone.",
+      "evidence_ids": [
+        "evidence:linus:kernel-scm-saga",
+        "evidence:linus:monotone-too-slow"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:not-an-scm",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "claim:origin:not-an-scm",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated verbatim in the 2005-04-07 message.",
+      "evidence_ids": ["evidence:linus:monotone-too-slow"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:origin:preimage-changed",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-first-commit",
+      "target_id": "claim:origin:hash-preimage-changed-after-2005",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The 2005 endpoint was read from the first commit's own source; the current endpoint was measured in the probe. The change between them is the reviewer's comparison of the two endpoints, and the commit responsible was not located.",
+      "evidence_ids": [
+        "evidence:git:first-commit-read-cache",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:delta-size-rule",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:delta-base-selected-by-size-not-recency",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The size rule and the placement/selection separation are stated in git's own pack-heuristics document; the probe's measured bases agree with it.",
+      "evidence_ids": ["evidence:git:pack-heuristics", "evidence:probe:output"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:integrity-payoff",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:integrity-is-the-stated-payoff-and-the-standing-liability",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Both the payoff and the SHA-1 liability are stated in git's hash-function-transition document.",
+      "evidence_ids": ["evidence:git:hash-function-transition"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:trust-boundary",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-first-commit",
+      "target_id": "claim:git:trust-boundary-stated-at-birth",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "Stated in the TRUST section of the 2005 README and restated in the current user manual.",
+      "evidence_ids": ["evidence:git:first-commit-readme", "evidence:git:user-manual-blob-dedup"]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:packed-unreachable",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:packed-unreachable-objects-survive-prune",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated in git-prune's description on the local installation.",
+      "evidence_ids": ["evidence:git:git-prune"]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ExtendsRelation",
+    "record": {
+      "id": "relation:extends:git-object-model:first-commit",
+      "relation_type": "EXTENDS",
+      "source_id": "work:git-object-model",
+      "target_id": "work:git-first-commit",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Same system, twenty-one years apart. The four object types, content naming, tree convergence and the trust argument survive verbatim from the first README into the shipped documentation. Two things changed: the hash preimage moved from the compressed bytes to the canonical uncompressed form, and 'changeset' became 'commit'.",
+      "evidence_ids": [
+        "evidence:git:first-commit-readme",
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "PrecedesRelation",
+    "record": {
+      "id": "relation:precedes:linus-messages:git-object-model",
+      "relation_type": "PRECEDES",
+      "source_id": "work:linus-2005-design-messages",
+      "target_id": "work:git-object-model",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The correspondence of 2005-04-06 to 2005-04-15 states the design decisions that the shipped object model implements.",
+      "evidence_ids": [
+        "evidence:linus:kernel-scm-saga",
+        "evidence:linus:no-history-in-objects"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

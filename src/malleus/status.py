@@ -25,7 +25,7 @@ class ImplementationStatus:
 
 
 IMPLEMENTATION_STATUS = ImplementationStatus(
-    package_version="0.11.0",
+    package_version="0.12.0",
     current_stage="8c",
     boundary="stage-8c-executable-provenance-and-effect-closure",
     completed_stages=(

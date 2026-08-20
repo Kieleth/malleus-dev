@@ -36,6 +36,21 @@ enums:
       REVIEW_CORRECTION:
         description: One append-only human review of one reading.
 
+  BundleKind:
+    description: >-
+      What a bundle claims to be. The distinction exists because "we hold this
+      document and have not read it" is an honest state, and a profile that
+      refuses it would reject the situation its first real consumer is in.
+    permissible_values:
+      FINISHED_READING:
+        description: >-
+          A completed reading. Every declared unit must be accounted for, and
+          the source class's own thresholds decide whether it succeeded.
+      REGISTRATION:
+        description: >-
+          The source is held and not yet read. May carry no readings, and may
+          never be counted as evidence that an adapter conforms.
+
   AttemptStatus:
     description: >-
       What happened to the call. Distinct from what the document said: a
@@ -112,6 +127,7 @@ classes:
       declaration exists and is bound; it never enforces what the declaration
       says.
     slots:
+      - bundle_kind
       - source_class_id
       - member_ids
       - data_handling_policy_id
@@ -119,6 +135,8 @@ classes:
       - observed_units
       - transport_metadata_digest
     slot_usage:
+      bundle_kind:
+        required: true
       source_class_id:
         required: true
       member_ids:
@@ -159,10 +177,13 @@ classes:
     description: A rendering derived from a source. Derived, never a replacement.
     slots:
       - source_representation_id
+      - unit
       - digest
       - render_contract
     slot_usage:
       source_representation_id:
+        required: true
+      unit:
         required: true
       digest:
         required: true
@@ -362,6 +383,20 @@ slots:
       Bound isolation declaration. Document text is untrusted data everywhere:
       it cannot alter prompts, tools, policy, ontology, permissions or
       execution instructions.
+
+  bundle_kind:
+    range: BundleKind
+    description: >-
+      Whether this bundle claims a completed reading or only a registration.
+      A pass means nothing until this says which question was answered.
+
+  unit:
+    range: string
+    description: >-
+      Which declared unit of the source class this rendering is of, for example
+      a page. Without it a bundle can say how many units it required and how
+      many it observed, and cannot say what happened to any one of them, so
+      coverage stays a count rather than an account.
 
   member_ids:
     range: string
