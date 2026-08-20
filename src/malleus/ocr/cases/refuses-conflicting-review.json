@@ -1,6 +1,6 @@
 {
-  "case": "absence-is-not-a-reading",
-  "description": "A reviewer states that page:2 is not present in this source. The unit inventory was derived from the class and confirmed as a recorded act, so a unit can be required and absent at once. ABSENT is an answer: somebody looked and can say what they found, so the unit is accounted for. It is not a reading, and the census must say ABSENT rather than READ. For a release it said READ, because the outcome vocabulary declared ABSENT and no code path could produce it. Read the shape of page:2 before copying this case. It carries a raster, a region on it, a completed attempt and a reading of those pixels, and that is not the bundle contradicting itself. ReviewVerdict.ABSENT is defined as 'the unit the region belongs to is not present in the source', so it is reached THROUGH a region and cannot be recorded without one: the reading is the evidence the reviewer disowns, not evidence against them. What this document records is a rendering the pipeline produced and a human rejected as not being the required unit, a separator sheet counted as a page, a duplicate, a page the renderer synthesised. A unit that was never rendered at all is NOT_RENDERED and looks nothing like this. Decision C9.",
+  "case": "refuses-conflicting-review",
+  "description": "Two reviewers answer the same region differently and neither supersedes the other: reviewer:kim records ABSENT on reg:2 and reviewer:lee records VERIFIED_BLANK on it. The census reports one outcome per unit, so before OCR-D016 it silently reported the higher of the two and said nothing about the reviewer it overruled. That is mandate B2's literal prohibition, one of the six states converted into another. Two regions of one unit answering differently is a different situation and stays clean, because two regions are two subjects; this is one subject with two answers, and no summary of it is anything but a conversion. An emitter satisfies the gate by recording one terminal verdict per region, or by chaining the second onto the first with predecessor_id, which is a revision rather than a disagreement. Decision C9. Note what the census says while the bundle is refused: every unit is still accounted for and the coverage bar is still met. Integrity is a bit and coverage is a census, and this document is the reminder that a complete census is not a clean seal.",
   "document": {
     "bundle": {
       "attempts": [
@@ -35,6 +35,14 @@
           "reviewed_hypothesis_id": "hyp:4",
           "reviewer_id": "reviewer:kim",
           "verdict": "ABSENT"
+        },
+        {
+          "corrected_text_digest": null,
+          "id": "cor:3",
+          "predecessor_id": null,
+          "reviewed_hypothesis_id": "hyp:5",
+          "reviewer_id": "reviewer:lee",
+          "verdict": "VERIFIED_BLANK"
         }
       ],
       "data_handling_policy_id": "policy:dh:1",
@@ -55,9 +63,17 @@
           "id": "hyp:4",
           "region_id": "reg:2",
           "text_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+        },
+        {
+          "attempt_id": "att:2",
+          "confidence": null,
+          "correction_id": null,
+          "id": "hyp:5",
+          "region_id": "reg:2",
+          "text_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
         }
       ],
-      "id": "bundle:absent-page",
+      "id": "bundle:disagreed-page",
       "kind": "FINISHED_READING",
       "observed_units": [
         "page:1",
@@ -142,7 +158,9 @@
     "profile": "malleus.ocr.evidence_integrity",
     "profile_version": "v0"
   },
-  "expect": [],
+  "expect": [
+    "OCR-D016"
+  ],
   "expect_complete": true,
   "expect_units": {
     "page:1": [

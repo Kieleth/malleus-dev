@@ -21,6 +21,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the package read the vocabulary, so nothing could notice. The cause is
   recorded as the finding rather than the missing branch.
 
+- Fixed the census choosing between two co-recorded verdicts in silence. The
+  unit outcome came from a hardcoded precedence tuple with no diagnostic beside
+  it, so a unit whose regions carried both `VERIFIED_BLANK` and `ABSENT`
+  reported `ABSENT`, and `UNREADABLE` beside `VERIFIED_BLANK` reported
+  `UNREADABLE`, each under a clean seal with the coverage bar met. Both were
+  one of mandate B2's six states becoming another. Reproduced on 0.13.2 before
+  the fix; the collapse predates the ABSENT defect above.
+
+  Split rather than fixed as one, because the cases are not one case. Two
+  regions of one unit are two subjects, and the unit's answer is the worst of
+  them, in the order now published as `unit_verdict_precedence`; that is stated
+  rather than left to be inferred. Two live verdicts about the same region are
+  one subject with two answers and are refused as `OCR-D016`.
+
+- Fixed a superseded review verdict outranking the review that replaced it.
+  `predecessor_id` is documented as "the prior review in an append-only
+  correction chain" and nothing walked it, so a reviewer who recorded
+  `UNREADABLE` and then superseded it with `VERIFIED_BLANK` was still reported
+  `UNREADABLE`, clean. Found while building the OCR-D016 reader, not reported
+  by anyone. `SLOT_READERS` had carried `predecessor_id` as UNBUILT since that
+  table was written; what the table could not say is that the unbuilt reader
+  was load-bearing.
+
+- Fixed `ontology/domains/ocr.yaml`, `ROADMAP.md` section C2 and
+  `DECISION_DISCHARGE["C2"]` all stating that `required_units` has no reader.
+  `account_for` iterates it, one census row per unit, and it is the
+  `declared_units` denominator every metric family is measured against. The
+  slot description said DECLARED UNREAD for a release after the reader landed,
+  which is the same defect as the one this release exists to remove, pointing
+  the other way: a document asserting a gap the code had closed. Decision C2
+  itself, dependency-closed partial claims, remains genuinely unbuilt and is
+  now described as the promotion rule rather than as a missing reader.
+
+- Fixed `test_a_replacement_registry_governs_the_census_too`, which claimed
+  doctrine rule 6 in its name and docstring and called `account_for` with the
+  default registry, so it could not distinguish a replaceable census from a
+  hardcoded one. It now builds a second profile ontology with `ABSENT` moved
+  between the outcome enums and asserts the census, the coverage number and
+  completeness all follow the schema it was handed.
+
+- Fixed a conformance-case guard asserting that a case's `required_units` was
+  truthy where its context required that each censused unit be a member of it.
+  The census expectations of a case and the units its source class declares
+  must now be the same set.
+
 ### Added
 
 - Added `UnitDisposition` to `ontology/domains/ocr.yaml`: `ACCOUNTED`,
@@ -34,12 +79,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replaces the census vocabulary with it.
 
 - Added two packaged conformance cases and a per-unit census expectation to all
-  six. `absence-is-not-a-reading` fixes ABSENT as an accounted answer that is
+  seven. `absence-is-not-a-reading` fixes ABSENT as an accounted answer that is
   not a reading. `silence-is-not-success` carries a `FINISHED_READING` bundle
   with zero diagnostics that is not complete, one unit whose call failed and
   one never fetched, so an adopter running only the packaged suite sees the two
   kept apart. Cases stated completeness and nothing else, so four green cases
   coexisted with every unit's outcome being wrong.
+
+- Added `OCR-D016`, refusing two live review records that assign different
+  terminal verdicts to one region, and `OCR-D017`, refusing a supersession
+  chain that never reaches an earliest review. The second exists because the
+  first's reader created the exposure: once `predecessor_id` is walked, a
+  correction that supersedes itself would leave the census without a word being
+  said. Records on a broken chain stay live, so the diagnostic reports a hole
+  rather than digging one.
+
+- Added a seventh packaged conformance case, `refuses-conflicting-review`. It
+  is `absence-is-not-a-reading` with a second reviewer answering the same
+  region `VERIFIED_BLANK`, so an adopter running only the packaged suite sees
+  both the shape that is accepted and the shape that is refused. It is also the
+  suite's reminder that the two answers are separate: the bundle is refused and
+  its census is complete.
+
+- Added `malleus.ocr.verify.terminal_verdicts`, which derives the verdicts that
+  speak for a unit by intersecting `ReviewVerdict` with the declared unit
+  outcomes rather than listing them. `CONFIRMED` and `CORRECTED` are excluded
+  because the schema does not declare them as unit outcomes, and mandate B2's
+  "a reviewer never inherits an attempt state" becomes a consequence of the
+  schema instead of a sentence in a description. Refuses in both directions: a
+  declared verdict with no rank, and a rank for a verdict the schema does not
+  declare, which is the shape ABSENT was in for a release.
+
+- Added `unit_verdict_precedence` to the published profile projection. An
+  adopter whose page carries two region verdicts is entitled to know which one
+  the census will report before it does.
+
+- Added decision C9 to `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md`. It records
+  what `ABSENT` means when the same bundle carries a rendering of the unit, a
+  completed attempt over a region on it and a reading of those pixels: not a
+  contradiction. `ReviewVerdict.ABSENT` is defined as "the unit the region
+  belongs to is not present in the source", so it is reached through a region
+  and cannot be recorded without one. A rule refusing `ABSENT` in the presence
+  of a reading would refuse it everywhere and put an unreachable value back in
+  a closed enum. What it records is a rendering the pipeline produced and a
+  human rejected as not being the required unit; the unit that was never
+  rendered is `NOT_RENDERED`. The section states what it excludes: a
+  `Selection` naming a reading of a unit declared `ABSENT` is a genuine
+  contradiction and is not refused, recorded as roadmap C7 rather than guessed
+  at.
 
 ### Changed
 
@@ -51,6 +138,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the `malleus-ocr` report to print each unit's disposition beside its
   outcome, and to split `INCOMPLETE` into never-checked and check-failed lists.
+
+### Removed
+
+- Removed `malleus.ocr.verify.ACCOUNTED`, a `frozenset[str]` of outcomes in
+  0.13.2, and named the three disposition constants that replace it
+  `DISPOSITION_ACCOUNTED`, `DISPOSITION_NOT_CHECKED` and
+  `DISPOSITION_CHECK_FAILED`. Rebinding `ACCOUNTED` to the string `"ACCOUNTED"`
+  under the released name would have left `outcome in ACCOUNTED` running as a
+  substring test that answers `False` for all five accounted outcomes: a silent
+  wrong answer, which is the defect class this release exists to remove. The
+  import now raises `ImportError` instead. This is a breaking change to a name
+  released in 0.13.2 and it is deliberate; the name was never in
+  `malleus.ocr.__all__`, so the blast radius is a caller who imported it from
+  the submodule, and a patch release is the last moment that costs nothing.
 
 ## [0.13.2] - 2026-08-20
 

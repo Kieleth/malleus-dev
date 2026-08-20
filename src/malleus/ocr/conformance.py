@@ -1,7 +1,7 @@
 """The packaged conformance cases.
 
 An adapter emits bundle documents. These are what it checks its wiring
-against: four documents that must be accepted, two that must be refused,
+against: four documents that must be accepted, three that must be refused,
 because a verifier that refuses nothing is indistinguishable from one that is
 not running. Each case also fixes whether the bundle is a complete reading, so
 a case cannot pass on integrity while quietly accounting for nothing.
@@ -34,6 +34,7 @@ CASES: tuple[str, ...] = (
     "registration-is-not-a-reading",
     "absence-is-not-a-reading",
     "silence-is-not-success",
+    "refuses-conflicting-review",
 )
 
 

@@ -64,6 +64,21 @@ mapping from there, and a test requires every declared outcome to have a
 fixture proving a bundle can produce it. The census answer is also three-valued
 now rather than the single `accounted` bit: a unit nobody fetched and a unit
 whose only call failed were one word for two different repairs.)*
+
+*(Second correction, from the review of the first. The census reports one
+outcome per unit, a unit may carry several verdicts, so something has to
+choose, and a hardcoded precedence tuple was choosing in silence. Two of those
+choices were the prohibition again: a unit whose regions carried both
+`VERIFIED_BLANK` and `ABSENT` reported `ABSENT`, and `UNREADABLE` beside
+`VERIFIED_BLANK` reported `UNREADABLE`, each under a clean seal. A third was
+worse and nobody had reported it: a superseded verdict outranked the review
+that replaced it, so a reviewer revising `UNREADABLE` to `VERIFIED_BLANK` was
+still reported `UNREADABLE`. C9 below splits the cases. Summarising a unit's
+several regions is a stated scope rule with a published order; two live
+verdicts about one region are refused as `OCR-D016`, because no summary of
+those is anything but a conversion; and a superseded verdict no longer
+speaks.)*
+
 **B3** (decision 6). A separate reviewer is an identity that did not produce the
 hypothesis under review.
 
@@ -146,6 +161,65 @@ selection rule with its own fixtures.
 metric families and temporal policy all vary by class of document and all must
 be frozen before ingest. That is one declaration per source class, not three
 independent ones. The proposal has no single name for it and needs one.
+
+**C9. `ABSENT` is a disowned rendering, not a missing one, and a unit's answer
+is summarised from its regions by scope before severity.**
+
+Accepted on 2026-08-20, after a review asked what `ABSENT` means when the same
+bundle carries a rendering of the unit, a completed attempt over a region on
+it, and a reading of those pixels. The reference case
+`absence-is-not-a-reading.json` carries exactly that shape and verifies clean,
+and the review's reading was that the planes contradict each other.
+
+They do not, and the schema settles it rather than taste. `ReviewVerdict.ABSENT`
+is defined as "the unit the region belongs to is not present in the source": it
+is reached **through a region**. A correction reviews a hypothesis, a hypothesis
+names a region, a region names a raster, and a raster names the unit it renders.
+So a raster of the unit, a region on it and a reading of that region are not
+evidence contradicting `ABSENT`; they are the mechanism by which a reviewer
+points at what they looked at, and the profile cannot record `ABSENT` without
+them. A rule refusing `ABSENT` in their presence would refuse it everywhere,
+putting an unreachable value back in a closed enum, which is the defect this
+release exists to remove.
+
+What `ABSENT` therefore means: the renderer emitted a unit, the pipeline read
+it, and a human states that what was emitted is not the required unit. A
+scanner separator sheet counted as page 7. A duplicated page. A page the
+renderer synthesised. The unit that was never rendered at all is
+`NOT_RENDERED`, and the distinction between the two is the whole reason both
+exist.
+
+Consequences, stated rather than discovered:
+
+- `ABSENT` outranks the region-scoped verdicts for the same unit. That is not
+  a precedence convenience. It is scope: `VERIFIED_BLANK` is an answer about
+  one region of a rendering that `ABSENT` says does not represent the unit, so
+  it was never a unit-level answer to displace. `VERDICT_PRECEDENCE` in
+  `malleus.ocr.verify` carries the order and `unit_verdict_precedence` in the
+  published projection carries it to an adopter.
+- Below `ABSENT` the three region-scoped verdicts rank worst-first, so a unit
+  is `VERIFIED_BLANK` only when every region answer is blank. Summarising
+  several regions into one unit is not converting one of the six into another;
+  it is answering a different question from the one each region answered.
+- Two live verdicts about the **same** region have no such story. Whichever the
+  census reported would convert the other, which is mandate B2's literal
+  prohibition, so the bundle is refused as `OCR-D016`. An adopter satisfies it
+  by recording one terminal verdict per region.
+- A review chain supersedes. `predecessor_id` is now read: a correction another
+  correction names as its predecessor no longer speaks, so revising a verdict
+  changes the census. Superseding is not erasing and the superseded record
+  stays in the bundle. A chain with no earliest review is refused as
+  `OCR-D017`, so reading supersession cannot make a verdict vanish quietly.
+
+Reversible: delete the `OCR-D016` and `OCR-D017` blocks, stop filtering by
+`_live_correction_ids`, and the profile is back where it was, with this section
+recording what was given up.
+
+**Excluded from this decision, recorded rather than closed.** A `Selection`
+naming a reading of a unit a reviewer has declared `ABSENT` is not refused
+today. That is a bundle both disowning a unit and keeping a reading of it
+current, and it is a genuine contradiction, but it lives in the selection plane
+rather than the verdict plane and no adopter has produced one. Roadmap C7.
 
 ## D. Accepted as proposed, revisited at the first adapter
 

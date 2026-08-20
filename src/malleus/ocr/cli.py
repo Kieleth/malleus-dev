@@ -18,8 +18,8 @@ from malleus.ocr.bundle import PROFILE_ID, PROFILE_VERSION, Bundle, BundleError
 from malleus.ocr.conformance import CASES, load_case
 from malleus.ocr.verify import (
     CAPABILITY,
-    CHECK_FAILED,
-    NOT_CHECKED,
+    DISPOSITION_CHECK_FAILED,
+    DISPOSITION_NOT_CHECKED,
     ONTOLOGY,
     VerificationResult,
     profile_registry,
@@ -73,8 +73,8 @@ def _report(result: VerificationResult, stream) -> int:
         # nobody fetched is fetched, a unit whose call failed is retried, and
         # an operator handed a single list has to open the bundle to find out
         # which they are looking at.
-        never = ", ".join(account.units_with(NOT_CHECKED)) or "none"
-        failed = ", ".join(account.units_with(CHECK_FAILED)) or "none"
+        never = ", ".join(account.units_with(DISPOSITION_NOT_CHECKED)) or "none"
+        failed = ", ".join(account.units_with(DISPOSITION_CHECK_FAILED)) or "none"
         print("INCOMPLETE. Paperwork sound, and sound paperwork is not a reading.",
               file=stream)
         print(f"  never checked: {never}", file=stream)

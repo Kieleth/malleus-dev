@@ -93,6 +93,7 @@ include = [
     "/src/malleus/ocr/cases/registration-is-not-a-reading.json",
     "/src/malleus/ocr/cases/absence-is-not-a-reading.json",
     "/src/malleus/ocr/cases/silence-is-not-success.json",
+    "/src/malleus/ocr/cases/refuses-conflicting-review.json",
     "/src/malleus/recon/__init__.py",
     "/src/malleus/recon/analysis.py",
     "/src/malleus/recon/cli.py",

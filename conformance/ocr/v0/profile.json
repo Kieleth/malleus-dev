@@ -16,7 +16,9 @@
     "OCR-D012": "no coverage metric family is declared",
     "OCR-D013": "a bundle record violates the profile ontology",
     "OCR-D014": "a rendering claims a unit the bundle does not observe",
-    "OCR-D015": "a declared state and the detail it requires disagree"
+    "OCR-D015": "a declared state and the detail it requires disagree",
+    "OCR-D016": "two live review records disagree about one region",
+    "OCR-D017": "a review chain has no earliest review"
   },
   "does_not_prove": [
     "source authenticity",
@@ -32,7 +34,8 @@
     "separation of identity planes",
     "declared coverage and policy precommitment",
     "every plane typed under the malleus root primitives",
-    "a three-valued unit census: looked-at, never looked at, look failed"
+    "a three-valued unit census: looked-at, never looked at, look failed",
+    "that a superseded verdict does not outrank the review replacing it"
   ],
   "selector_profile_default": "w3c-web-annotation+iiif",
   "selector_profile_replaceable": true,
@@ -47,5 +50,11 @@
     "UNAVAILABLE": "CHECK_FAILED",
     "UNREADABLE": "ACCOUNTED",
     "VERIFIED_BLANK": "ACCOUNTED"
-  }
+  },
+  "unit_verdict_precedence": [
+    "ABSENT",
+    "UNREADABLE",
+    "EXCLUDED",
+    "VERIFIED_BLANK"
+  ]
 }
