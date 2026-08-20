@@ -479,10 +479,16 @@ the suite. An adapter that emits a source and no readings passes today, so
 that milestone could be reached without a single reading ever being verified.
 A rejection rate of zero is not evidence of a gate.
 
-Discharge: check every plane's references regardless of what points at it, and
-decide separately whether a bundle carrying no readings is a conforming bundle
-or an incomplete one. The second is a judgement about what the profile is for,
-not a bug fix, and it wants an explicit answer rather than a quiet threshold.
+Landed. Every reference each plane makes is walked regardless of what points at
+the holder, driven by a declared table so a new reference cannot be forgotten.
+The third case is answered by C0 rather than by this walk: a bundle with no
+readings is sound paperwork and an incomplete reading, which the account says
+in as many words.
+
+One check came out of it that was not in the report. A rendering names the unit
+it renders, and a unit the bundle does not observe cannot have been rendered
+from bytes the bundle holds. Without OCR-D014 a typo in a unit name reports the
+page as never rendered, which reads as an honest gap rather than a mistake.
 
 ### C5. Recon's classification vocabularies are ungoverned
 

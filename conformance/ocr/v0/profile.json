@@ -14,7 +14,8 @@
     "OCR-D010": "a required policy declaration is unbound",
     "OCR-D011": "a selection names a hypothesis it did not consider",
     "OCR-D012": "no coverage metric family is declared",
-    "OCR-D013": "a bundle record violates the profile ontology"
+    "OCR-D013": "a bundle record violates the profile ontology",
+    "OCR-D014": "a rendering claims a unit the bundle does not observe"
   },
   "does_not_prove": [
     "source authenticity",

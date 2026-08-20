@@ -696,7 +696,7 @@ SLOT_READERS = {
     "source_class_id": STRUCTURAL + "binds the bundle to its frozen precommitment",
     "member_ids": STRUCTURAL + "answers which records the bundle contains",
     "bundle_kind": STRUCTURAL + "a REGISTRATION is never complete and never counts as conformance",
-    "unit": STRUCTURAL + "links a rendering to the declared unit it renders",
+    "unit": ("OCR-D014",),
     "data_handling_policy_id": ("OCR-D010",),
     "hostile_content_policy_id": ("OCR-D010",),
     "transport_metadata_digest": ("OCR-D002",),
@@ -874,3 +874,55 @@ def test_a_source_class_declaring_no_measure_is_never_complete():
     otherwise certify a bundle nobody measured."""
     account = verify_bundle(_bundle(source_class=_class(metric_families={}))).account
     assert not account.metrics and not account.complete
+
+
+class TestEveryReferenceIsWalked:
+    """Lineage was traced outward from readings, so a plane nothing referenced
+    was never examined. A region over a missing raster and a raster over a
+    missing source both took a purity seal. The bundle is the unit of
+    verification, not the reading."""
+
+    def test_a_region_over_a_missing_raster_is_refused_even_when_unread(self):
+        from malleus.ocr.bundle import Region
+        bundle = _bundle(regions=(*_bundle().regions, Region("reg:orphan", "ras:absent", {"t": "F"})))
+        result = verify_bundle(bundle)
+        assert "OCR-D003" in result.codes()
+        assert any("reg:orphan" in d.subject for d in result.diagnostics)
+
+    def test_a_raster_over_a_missing_source_is_refused_even_when_unread(self):
+        from malleus.ocr.bundle import Raster
+        bundle = _bundle(rasters=(*_bundle().rasters,
+                                  Raster("ras:orphan", "src:absent", "page:1", D(9), "r")))
+        assert "OCR-D003" in verify_bundle(bundle).codes()
+
+    def test_an_attempt_over_a_missing_region_is_refused(self):
+        from malleus.ocr.bundle import OCRAttempt
+        bundle = _bundle(attempts=(*_bundle().attempts,
+                                   OCRAttempt("att:9", "reg:absent", D(3), {"m": "e"}, "COMPLETED", D(4))))
+        assert "OCR-D003" in verify_bundle(bundle).codes()
+
+    def test_a_selection_over_a_missing_region_is_refused(self):
+        from malleus.ocr.bundle import Selection
+        bundle = _bundle(selections=(Selection("sel:1", "reg:absent", ("hyp:1", "hyp:2"),
+                                               "hyp:2", "r", True),))
+        assert "OCR-D003" in verify_bundle(bundle).codes()
+
+    def test_a_correction_chain_naming_a_missing_predecessor_is_refused(self):
+        bundle = _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6),
+                             predecessor_id="cor:absent"),
+            ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "VERIFIED_BLANK"),
+        ))
+        assert "OCR-D003" in verify_bundle(bundle).codes()
+
+    def test_a_rendering_of_a_unit_the_bundle_does_not_observe_is_refused(self):
+        """A typo in a unit name would otherwise report the page as never
+        rendered, which reads as an honest gap rather than a mistake."""
+        from malleus.ocr.bundle import Raster
+        bundle = _bundle(rasters=(Raster("ras:1", "src:1", "page:7", D(2), "r"),
+                                  Raster("ras:2", "src:1", "page:2", D(8), "r")))
+        assert "OCR-D014" in verify_bundle(bundle).codes()
+
+    def test_the_complete_example_is_still_clean(self):
+        """The wider walk must not condemn a sound bundle."""
+        assert verify_bundle(_bundle()).conforms

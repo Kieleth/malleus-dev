@@ -39,7 +39,26 @@ CODES = {
     "OCR-D011": "a selection names a hypothesis it did not consider",
     "OCR-D012": "no coverage metric family is declared",
     "OCR-D013": "a bundle record violates the profile ontology",
+    "OCR-D014": "a rendering claims a unit the bundle does not observe",
 }
+
+# Every reference one plane makes to another, walked regardless of what points
+# at the holder. Lineage used to be traced from readings outward, so a plane
+# nothing referenced was never examined: a region over a missing raster and a
+# raster over a missing source both took a purity seal. An unexamined record is
+# not thereby sound, and the bundle is the unit of verification, not the
+# reading. `optional` references are skipped when unset rather than refused.
+REFERENCES: tuple[tuple[str, str, str, bool], ...] = (
+    ("rasters", "source_id", "sources", False),
+    ("regions", "raster_id", "rasters", False),
+    ("attempts", "region_id", "regions", False),
+    ("hypotheses", "region_id", "regions", False),
+    ("hypotheses", "attempt_id", "attempts", True),
+    ("hypotheses", "correction_id", "corrections", True),
+    ("selections", "region_id", "regions", False),
+    ("selections", "selected_id", "hypotheses", False),
+    ("corrections", "predecessor_id", "corrections", True),
+)
 
 ONTOLOGY = ("domains", "ocr.yaml")
 
@@ -260,18 +279,31 @@ def verify_bundle(
             if key.lower() in SECRET_KEYS:
                 add("OCR-D002", scope, f"key {key!r}")
 
-    # Identity planes: a reading must reach the pixels it claims to have read.
-    for hypothesis in bundle.hypotheses:
-        region = regions.get(hypothesis.region_id)
-        if region is None:
-            add("OCR-D003", hypothesis.id, f"unknown region {hypothesis.region_id!r}")
-            continue
-        raster = rasters.get(region.raster_id)
-        if raster is None:
-            add("OCR-D003", hypothesis.id, f"unknown raster {region.raster_id!r}")
-            continue
-        if raster.source_id not in sources:
-            add("OCR-D003", hypothesis.id, f"unknown source {raster.source_id!r}")
+    # Identity planes: every reference resolves, whoever made it. A reading
+    # must reach the pixels it claims to have read, and a plane no reading
+    # touches must still point at something that exists.
+    by_plane = {
+        "sources": sources, "rasters": rasters, "regions": regions,
+        "attempts": attempts, "hypotheses": hypotheses, "corrections": corrections,
+        "selections": bundle.by_id("selections"),
+    }
+    for plane, attribute, target, optional in REFERENCES:
+        known = by_plane[target]
+        for item in getattr(bundle, plane):
+            referenced = getattr(item, attribute)
+            if referenced is None and optional:
+                continue
+            if referenced not in known:
+                add("OCR-D003", item.id,
+                    f"{attribute} names {referenced!r}, absent from {target}")
+
+    # A rendering names the unit it renders, and a unit the bundle does not
+    # observe cannot have been rendered from bytes the bundle holds. Without
+    # this a typo in a unit name silently reports the page as never rendered.
+    for raster in bundle.rasters:
+        if raster.unit not in bundle.observed_units:
+            add("OCR-D014", raster.id,
+                f"unit {raster.unit!r} is not among the observed units")
 
     # A hypothesis has exactly one origin, so provenance is never ambiguous.
     for hypothesis in bundle.hypotheses:
