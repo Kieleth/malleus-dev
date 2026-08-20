@@ -169,6 +169,24 @@ Chronology and novelty are different questions. Independent arrival can be a
 documented chronology statement when dated artifacts support it. It does not
 erase prior art, grant priority, or make the contribution novel by itself.
 
+## Where a recon project lives
+
+A recon project is personal working notes: a ledger, its records, and whatever
+the build generates. It is not repository content.
+
+Create it under a path the repository ignores, and confirm the ignore covers
+it before writing the first record. `git check-ignore -v <path>` answers in one
+command. If nothing covers it, add the rule first, then create the project.
+
+Two reasons, and the second is the one that bites. A ledger mid-ingest is a
+half-formed thought and committing it publishes a draft nobody finished. And a
+repository is not always yours alone: an unignored project directory is picked
+up by anyone else's broad `git add`, which is how one landed inside another
+session's release commit.
+
+Never stage a recon project by hand either. If it needs to be shared, that is a
+decision for the human, made once, with a destination chosen on purpose.
+
 ## Hard boundaries
 
 Recon has no crawler, provider integration, automatic truth judge, automatic
