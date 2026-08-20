@@ -238,6 +238,44 @@ def _constraint(data: Mapping[str, Any]) -> SlotConstraint:
     )
 
 
+def _declares_adoption(definition: Mapping[str, Any] | None) -> bool:
+    """Whether a definition says it adopts an existing name rather than claiming it.
+
+    Carried in LinkML's own `annotations`, so the declaration travels with the
+    slot and other LinkML tooling ignores it rather than choking. Deliberately
+    NOT part of the content-hash payload: adopting a name changes no structural
+    fact, and if it did, declaring an adoption would re-anchor every ledger,
+    which is absurd for a statement that two definitions already agree.
+    """
+    if not isinstance(definition, Mapping):
+        return False
+    annotations = definition.get("annotations")
+    if not isinstance(annotations, Mapping):
+        return False
+    return annotations.get("adopts") is True
+
+
+def _constraint_difference(
+    existing: Mapping[str, Any] | None,
+    adopting: Mapping[str, Any] | None,
+) -> str:
+    """Name every enforced field on which two slot definitions disagree.
+
+    Compares what the validator enforces, not the prose. Description and
+    annotations are excluded on purpose: they carry meaning a machine cannot
+    check, which is why the adoption has to be declared by a human as well.
+    """
+    if existing is None or adopting is None:
+        return "one of the definitions was not retained for comparison"
+    mine, theirs = _constraint(existing), _constraint(adopting)
+    differences = [
+        f"{field.name} {getattr(mine, field.name)!r} vs {getattr(theirs, field.name)!r}"
+        for field in fields(SlotConstraint)
+        if getattr(mine, field.name) != getattr(theirs, field.name)
+    ]
+    return ", ".join(differences)
+
+
 def _require_optional_type(subject: str, name: str, value: Any, expected: type) -> None:
     if value is not None and not isinstance(value, expected):
         raise OntologyError(f"{subject} {name} must be {expected.__name__}")
@@ -475,6 +513,8 @@ class OntologyRegistry:
         self._scalar_types: dict[str, str] = {}
         self._inheritance: dict[str, str | None] = {}
         self._definition_sources: dict[tuple[str, str], Path] = {}
+        # Kept so a declared adoption can be checked against what it adopts.
+        self._claimed_definitions: dict[tuple[str, str], Any] = {}
         self._loaded_paths: set[Path] = set()
         self._effective_slot_cache: dict[str, dict[str, SlotConstraint]] = {}
         self._schema_version: str | None = None
@@ -487,14 +527,60 @@ class OntologyRegistry:
             mapped = self._schema_path.parent / mapped
         return mapped
 
-    def _claim_name(self, kind: str, name: str, source: Path) -> None:
+    def _claim_name(
+        self,
+        kind: str,
+        name: str,
+        source: Path,
+        definition: Mapping[str, Any] | None = None,
+    ) -> bool:
+        """Claim one name, or accept a declared adoption of an existing one.
+
+        Returns True when the caller owns the name and should record its
+        definition, False when the name was adopted and the existing definition
+        stands.
+
+        A duplicate is a collision by default and stays one. It is an adoption
+        only when the second occurrence says so and the two definitions already
+        agree. Both halves are load-bearing. Structural agreement alone is not
+        enough: two slots can share a range and mean opposite things, which is
+        the case that made this necessary, so a human declares the adoption and
+        the loader checks the structure. Silence remains an error.
+
+        Without this a promotion is an outage. Pushing a concept up into the
+        root, which `ONTOLOGY_PROTOCOL.md` rule 2 asks for once two projects
+        need it independently, made every domain that already named it stop
+        loading. Not degrade: stop.
+        """
         key = (kind, name)
         prior = self._definition_sources.get(key)
-        if prior is not None:
+        if prior is None:
+            self._definition_sources[key] = source
+            self._claimed_definitions[key] = definition
+            return True
+        if not _declares_adoption(definition):
             raise OntologyError(
-                f"Duplicate {kind} '{name}' in '{source}' conflicts with '{prior}'"
+                f"Duplicate {kind} '{name}' in '{source}' conflicts with '{prior}'. "
+                f"If '{source}' adopts the definition in '{prior}', declare it with "
+                f"`annotations: {{adopts: true}}` on that {kind}; silence is a collision."
             )
-        self._definition_sources[key] = source
+        if kind != "slot":
+            raise OntologyError(
+                f"{kind.capitalize()} '{name}' in '{source}' declares adoption, which is "
+                f"supported for slots only. A {kind} that already exists upstream is "
+                f"reused by importing it, not by redeclaring it."
+            )
+        difference = _constraint_difference(
+            self._claimed_definitions.get(key), definition
+        )
+        if difference:
+            raise OntologyError(
+                f"Slot '{name}' in '{source}' declares adoption of '{prior}' and differs "
+                f"from it: {difference}. Adoption is for a definition that already "
+                f"agrees. A different definition is a different concept and needs its "
+                f"own name."
+            )
+        return False
 
     def _load_schema(self, path: Path) -> None:
         path = path.resolve()
@@ -537,7 +623,7 @@ class OntologyRegistry:
         for name, definition in self._mapping(schema, "types", path).items():
             if not isinstance(name, str):
                 raise OntologyError(f"Type names in '{path}' must be strings")
-            self._claim_name("type", name, path)
+            self._claim_name("type", name, path, definition if isinstance(definition, dict) else None)
             if not isinstance(definition, dict) or not definition.get("typeof"):
                 raise OntologyError(f"Type '{name}' in '{path}' requires typeof")
             if not isinstance(definition["typeof"], str):
@@ -547,7 +633,7 @@ class OntologyRegistry:
         for name, definition in self._mapping(schema, "enums", path).items():
             if not isinstance(name, str):
                 raise OntologyError(f"Enum names in '{path}' must be strings")
-            self._claim_name("enum", name, path)
+            self._claim_name("enum", name, path, definition if isinstance(definition, dict) else None)
             if not isinstance(definition, dict):
                 raise OntologyError(f"Enum '{name}' in '{path}' must be a mapping")
             permissible = definition.get("permissible_values", {})
@@ -562,11 +648,12 @@ class OntologyRegistry:
         for name, definition in self._mapping(schema, "slots", path).items():
             if not isinstance(name, str):
                 raise OntologyError(f"Slot names in '{path}' must be strings")
-            self._claim_name("slot", name, path)
             if not isinstance(definition, dict):
                 raise OntologyError(f"Slot '{name}' in '{path}' must be a mapping")
             slot = _constraint(definition)
             _validate_constraint_definition(f"Slot '{name}'", slot)
+            if not self._claim_name("slot", name, path, definition):
+                continue  # adopted: the existing definition stands, unchanged
             self._slots[name] = slot
             if slot.range:
                 self._slot_ranges[name] = slot.range
@@ -574,7 +661,7 @@ class OntologyRegistry:
         for name, definition in self._mapping(schema, "classes", path).items():
             if not isinstance(name, str):
                 raise OntologyError(f"Class names in '{path}' must be strings")
-            self._claim_name("class", name, path)
+            self._claim_name("class", name, path, definition if isinstance(definition, dict) else None)
             if not isinstance(definition, dict):
                 raise OntologyError(f"Class '{name}' in '{path}' must be a mapping")
             direct_slots = definition.get("slots", []) or []

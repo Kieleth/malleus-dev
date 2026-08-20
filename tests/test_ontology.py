@@ -7,8 +7,10 @@ for distributed ontology convergence.
 """
 
 import json
+import re
 import subprocess
 import sys
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -1590,3 +1592,155 @@ class TestTheGrammarVersionIsNotAStructuralFact:
             strict, loose = OntologyRegistry(strict_path), OntologyRegistry(loose_path)
             assert loose.check_compatibility_strict(
                 strict.content_hash(), strict.strict_fingerprint()) != "superset"
+
+
+class TestPromotionIsADuplicateThatIsNotAnError:
+    """Pushing a concept up into the root, which `ONTOLOGY_PROTOCOL.md` rule 2
+    asks for once two projects need it independently, made every domain that
+    already named it stop loading. Not degrade: stop. Verified before this
+    existed: adding `confidence` to the root refused both `recon` and `ocr`.
+
+    A duplicate is still a collision. It is an adoption only when the second
+    occurrence says so and the two definitions already agree. Both halves
+    matter: `recon` and `ocr` both declare `confidence` as a float and mean
+    opposite things, a reviewer's judgment against a provider's uncalibrated
+    number, so structural agreement alone would silently unify them."""
+
+    ROOT = textwrap.dedent("""
+        id: https://example.org/up
+        name: up
+        version: 0.1.0
+        default_range: string
+        imports: [linkml:types]
+        prefixes: {linkml: 'https://w3id.org/linkml/'}
+        classes:
+          Thing:
+            slots: [locator]
+        slots:
+          locator:
+            range: string
+    """)
+
+    def _pair(self, tmp_path, slot_body):
+        (tmp_path / "up.yaml").write_text(self.ROOT)
+        (tmp_path / "down.yaml").write_text(textwrap.dedent("""
+            id: https://example.org/down
+            name: down
+            version: 0.1.0
+            default_range: string
+            imports: [linkml:types, up]
+            prefixes: {linkml: 'https://w3id.org/linkml/'}
+            classes:
+              Other:
+                slots: [locator]
+            slots:
+              locator:
+        """) + slot_body + "\n")
+        return tmp_path / "down.yaml"
+
+    def test_a_silent_duplicate_is_still_refused(self, tmp_path):
+        """The default does not move. Silence is a collision."""
+        path = self._pair(tmp_path, "    range: string")
+        with pytest.raises(OntologyError) as raised:
+            OntologyRegistry(path)
+        assert "conflicts with" in str(raised.value)
+        assert "adopts: true" in str(raised.value), (
+            "a refusal that does not say how to proceed costs the reader a guess"
+        )
+
+    def test_a_declared_adoption_of_an_identical_definition_loads(self, tmp_path):
+        path = self._pair(tmp_path, "    range: string\n    annotations: {adopts: true}")
+        registry = OntologyRegistry(path)
+        assert registry.effective_slots("Other")["locator"].range == "string"
+
+    def test_the_adopted_definition_is_the_upstream_one(self, tmp_path):
+        """Adoption keeps what it adopted. If the downstream copy won, the
+        declaration would be a way to override upstream while claiming to
+        agree with it."""
+        (tmp_path / "up.yaml").write_text(
+            self.ROOT.replace("    range: string", "    range: string\n    required: true")
+        )
+        (tmp_path / "down.yaml").write_text(textwrap.dedent("""
+            id: https://example.org/down
+            name: down
+            version: 0.1.0
+            default_range: string
+            imports: [linkml:types, up]
+            prefixes: {linkml: 'https://w3id.org/linkml/'}
+            classes:
+              Other:
+                slots: [locator]
+            slots:
+              locator:
+                range: string
+                required: true
+                annotations: {adopts: true}
+        """))
+        registry = OntologyRegistry(tmp_path / "down.yaml")
+        assert registry.effective_slots("Other")["locator"].required is True
+
+    @pytest.mark.parametrize("body,expected", [
+        ("    range: integer\n    annotations: {adopts: true}", "range"),
+        ("    range: string\n    minimum_value: 1\n    annotations: {adopts: true}", "minimum_value"),
+        ("    range: string\n    required: true\n    annotations: {adopts: true}", "required"),
+        ("    range: string\n    multivalued: true\n    annotations: {adopts: true}", "multivalued"),
+    ])
+    def test_adoption_of_a_definition_that_disagrees_is_refused(self, tmp_path, body, expected):
+        """Adoption is for a definition that already agrees. Anything else is a
+        different concept and needs its own name. The refusal names the field."""
+        path = self._pair(tmp_path, body)
+        with pytest.raises(OntologyError) as raised:
+            OntologyRegistry(path)
+        assert expected in str(raised.value)
+        assert "different concept" in str(raised.value)
+
+    def test_prose_may_differ_because_a_machine_cannot_check_it(self, tmp_path):
+        """Description is excluded from the comparison on purpose. A machine
+        cannot tell whether two descriptions mean the same thing, which is
+        exactly why the adoption is declared by a human as well."""
+        path = self._pair(
+            tmp_path,
+            "    range: string\n    description: local prose\n    annotations: {adopts: true}",
+        )
+        assert OntologyRegistry(path).effective_slots("Other")["locator"].range == "string"
+
+    def test_adoption_applies_to_slots_only(self, tmp_path):
+        """A class or enum that already exists upstream is reused by importing
+        it. Redeclaring one is not adoption, and letting it through would give
+        two definitions of one type."""
+        (tmp_path / "up.yaml").write_text(self.ROOT)
+        (tmp_path / "down.yaml").write_text(textwrap.dedent("""
+            id: https://example.org/down
+            name: down
+            version: 0.1.0
+            default_range: string
+            imports: [linkml:types, up]
+            prefixes: {linkml: 'https://w3id.org/linkml/'}
+            classes:
+              Thing:
+                slots: [locator]
+                annotations: {adopts: true}
+            slots: {}
+        """))
+        with pytest.raises(OntologyError, match="supported for slots only"):
+            OntologyRegistry(tmp_path / "down.yaml")
+
+    def test_promotion_of_a_real_shared_name_becomes_a_no_op(self, tmp_path):
+        """The case that motivated this, on the real schemas. `locator` is
+        declared by `assent`, `recon` and `ocr`. Before this, the root adopting
+        it refused all three."""
+        import shutil
+        from malleus.ontology import bundled_ontology_path
+        source = bundled_ontology_path("malleus.yaml").parent
+        shutil.copytree(source, tmp_path / "ontology")
+        root = tmp_path / "ontology" / "malleus.yaml"
+        root.write_text(root.read_text() + "\n  locator:\n    range: string\n")
+        for name in ("assent.yaml", "domains/recon.yaml", "domains/ocr.yaml"):
+            target = tmp_path / "ontology" / name
+            with pytest.raises(OntologyError, match="conflicts with"):
+                OntologyRegistry(target)
+            target.write_text(re.sub(
+                r"^(  locator:\n)", r"\1    annotations: {adopts: true}\n",
+                target.read_text(), count=1, flags=re.M,
+            ))
+            OntologyRegistry(target)

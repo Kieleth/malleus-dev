@@ -228,3 +228,35 @@ malleus/
   ONTOLOGY_PROTOCOL.md    # this file
   research_ontology_best_practices_March2026.md
 ```
+
+## Adoption: a duplicate that is not an error
+
+Rule 2 asks you to push a concept up once two projects need it independently.
+Until 0.13.4 that request was an outage: the loader treated every duplicate
+name as a collision, so the moment the root adopted a concept a domain had
+already named, the domain stopped loading. Not degraded, stopped.
+
+A duplicate is still a collision by default. It is an adoption when the
+downstream definition says so and already agrees with the upstream one:
+
+```yaml
+slots:
+  locator:
+    range: string
+    annotations: {adopts: true}
+```
+
+Both halves are load-bearing. The declaration is a human saying these are the
+same concept, which no machine can check: `recon` and `ocr` both declare
+`confidence` as a float and mean opposite things, a reviewer's judgment against
+a provider's uncalibrated number. The structural check is the machine refusing
+a declaration that is wrong about the parts it can see, naming the field that
+disagrees.
+
+Adoption keeps the upstream definition. Description and annotations are
+excluded from the comparison, because a machine cannot judge prose. Slots only:
+a class or enum that exists upstream is reused by importing it.
+
+The declaration is not part of the content hash. Adopting a name changes no
+structural fact, and if it did, declaring an adoption would re-anchor every
+ledger, which is absurd for a statement that two definitions already agree.
