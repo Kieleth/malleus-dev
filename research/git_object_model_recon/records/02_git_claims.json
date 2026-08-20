@@ -1,0 +1,521 @@
+[
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:name-is-content-hash",
+      "label": "An object's name is a hash over a type-and-length header plus the exact bytes, and nothing else",
+      "statement": "A git object's name is SHA-1 (or SHA-256 in a SHA-256 repository) over the byte string '<type> <byte-length>\\0<content>'. No filename, path, timestamp, author, or history enters the name. The probe reproduced the object name of a six-byte file by hashing 'blob 6\\0hello\\n' outside git and got the identical 40-hex name, and inflating the loose object file yielded exactly that preimage.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.99,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitglossary",
+        "evidence:git:gitformat-pack"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:four-object-types",
+      "label": "The object database has exactly four types",
+      "statement": "Blob, tree, commit and tag are the only object types. gitformat-pack states 'Conceptually there are only four object types: commit, tree, tag and blob'; the two additional pack type codes, OBJ_OFS_DELTA and OBJ_REF_DELTA, are storage representations valid only inside a pack file and are not object types in the database sense.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.99,
+      "evidence_ids": [
+        "evidence:git:gitformat-pack",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:blob-carries-no-name",
+      "label": "A blob is untyped bytes; the name and mode live in the referring tree",
+      "statement": "gitglossary defines a blob object as an 'Untyped object, e.g. the contents of a file' and a tree object as 'An object containing a list of file names and modes along with refs to the associated blob and/or tree objects'. The probe confirmed that copying a file to a second filename yields the same blob name, so identity is content, and structure is one level up.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.99,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:commit-binds-state-lineage-and-metadata",
+      "label": "A commit's name covers state, lineage, and metadata together",
+      "statement": "A commit object contains one tree name, zero or more parent commit names, author and committer identities with timestamps, and a message. Because the object name is a hash of that whole body, the commit name is a function of the state, the entire ancestry, and the metadata simultaneously. The probe printed two commit bodies showing 'tree <oid>' and 'parent <oid>' lines verbatim.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.99,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:state-converges-history-does-not",
+      "label": "Git converges state automatically and refuses to converge history",
+      "statement": "Git splits identity across two layers. Blobs and trees name state, so equal states collapse to one stored object with no coordination. Commits name state plus ancestry plus metadata, so equal states reached by different routes stay distinct forever. The probe demonstrated both halves: two repositories that never communicated produced the same tree name 68ba7e4f... by different commit routes and different commit names; and inside one repository, two branches that arrived at byte-identical content produced the same tree 72334f9a... under two different commit names.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.97,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitglossary"
+      ],
+      "notes": [
+        "This is the load-bearing observation for the review target. Git does not answer 'key by the answer or by the resulting state' with one choice; it keys the state layer by state and the history layer by answer-plus-ancestry, and lets the first deduplicate underneath the second."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:cross-repository-dedup-without-coordination",
+      "label": "Deduplication needs no comparison pass and no shared registry",
+      "statement": "Because the name is a pure function of content, two stores that never communicated assign the same name to the same bytes. The probe built two repositories independently and found identical blob names (4a580070..., 65b2df87...) and an identical tree name for the resulting directory. Sharing is therefore a property of the naming scheme, not of a merge, an interning table, or a background dedup job.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.97,
+      "evidence_ids": [
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:objects-immutable",
+      "label": "Objects are immutable once written",
+      "statement": "gitcore-tutorial states plainly: 'Objects are immutable.' and, when introducing repacking, 'Since Git objects are immutable once they are created, there is a way to optimize the storage by \"packing them together\"'. Writing is therefore add-only; nothing already named is ever edited in place.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.99,
+      "evidence_ids": [
+        "evidence:git:gitcore-tutorial"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:pack-is-encoding-not-identity",
+      "label": "The packfile is an encoding of an object set, not part of any object's identity",
+      "statement": "The probe computed a signature over every object name, type and size in a repository under three different pack encodings: the default gc pack with deltas, a forcibly delta-free repack, and a normal repack. All three produced the identical signature d519f453... while the on-disk size moved between 44 KB and 340 KB. The pack format is therefore a compression and locality decision that commits to nothing semantically.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitcore-tutorial",
+        "evidence:git:gitformat-pack"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:delta-base-not-history-adjacent",
+      "label": "Delta bases are chosen by the packer, not by history position",
+      "statement": "In the probe's 31-revision repository, git gc stored two blobs whole (revision 1 and revision 18 of 31) and expressed the other 29 as deltas in chains up to depth 7, with several revisions deltifying against a base many revisions away. gitformat-pack confirms the freedom: a base may itself be deltified inside the same pack, and a ref-delta in a thin pack may even name a base outside the pack. Delta structure and history structure are independent.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitformat-pack",
+        "evidence:probe:earlier-run"
+      ],
+      "notes": [
+        "An earlier run of the same probe produced a different full-text base for the same object set. This review did not isolate why and does not claim that git's delta selection is nondeterministic in general; the recorded point is only that the choice is the packer's and is not derivable from the commit graph."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:delta-carries-the-compression",
+      "label": "Deltas, not zlib, carry the bulk of the space saving for near-identical versions",
+      "statement": "Thirty-one revisions of one ~190 KB file occupied 620 KiB as loose zlib-compressed objects and 30.4 KiB after git gc. Repacking the identical object set with deltas disabled produced 340 KiB. So zlib alone gave roughly 1.8x and delta compression gave a further 7.7x. Storing many near-identical states costs approximately the size of their differences, but only after the packer runs.",
+      "claim_kind": "measurement_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:mutation-confined-to-refs",
+      "label": "All mutation is confined to refs",
+      "statement": "The object graph never changes; branches are mutable named pointers into it, stored under refs. gitrepository-layout states that git prune preserves objects reachable from refs found in the refs directory, and gitglossary defines a branch's tip as referenced by a branch head that moves forward as development proceeds. Advancing a branch is a pointer write, not a rewrite of history.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:git:gitrepository-layout",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:reachability-is-liveness",
+      "label": "Liveness is reachability from named roots, with a grace period",
+      "statement": "gitglossary defines reachability as following tags to their targets, commits to their parents and trees, and trees to their contents. git-gc removes unreachable objects but only after a default two-week grace period (gc.pruneExpire, prune --expire 2.weeks.ago) and by default writes them to a separate cruft pack rather than deleting them at once. The probe deleted a branch, found its tip still readable while the reflog referenced it, and found it gone only after expiring the reflog and running gc --prune=now.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:git:git-gc",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:index-is-a-rebuildable-cache-with-one-exception",
+      "label": "The index is a rebuildable cache, except while a merge is unresolved",
+      "statement": "gitglossary calls the index 'A collection of files with stat information, whose contents are stored as objects', i.e. it holds object names plus stat data, not content. The probe deleted .git/index entirely, rebuilt it with git read-tree from the commit, and got the identical tree name back. The exception is stated in the same entry: the index 'can also contain a second, and even a third version of a working tree, which are used when merging', so during an unresolved merge it holds state that exists in no tree.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:no-per-path-revision-structure",
+      "label": "There is no per-path revision structure; file history is derived by walking and diffing",
+      "statement": "None of the four object types records a per-path revision list: a blob is contentless of its own name, a tree is one directory at one instant, a commit points at one whole tree, and a tag points at one object. The history of a path is therefore not stored; it is computed by walking commits and comparing trees. This is the direct structural consequence of choosing whole-state snapshots as the unit.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:git:gitrepository-layout"
+      ],
+      "notes": [
+        "Coded as reviewer inference from the object type definitions and the on-disk layout, both of which describe an object store with no path-indexed structure. The reviewer did not audit every optional auxiliary index git can build (commit-graph, multi-pack-index, reachability bitmaps) for a path-indexed variant; those are named in the inspected pages as ancillary indexes."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:git:name-transitively-fixes-everything-reachable",
+      "label": "One name fixes every byte reachable from it",
+      "statement": "Because each object's name hashes its bytes, and its bytes include the names of the objects it references, a commit name is a hash over its tree name, which is a hash over its entries' names, and so on. Naming a commit therefore fixes the whole reachable subgraph: no content anywhere under it can change without changing the name. Verification is a byproduct of lookup rather than an added mechanism.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:name-is-content-hash",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:name-is-content-hash",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.99,
+      "basis": "gitglossary defines the object name as the unique identifier of an object; the probe reproduced the preimage byte-for-byte outside git.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:four-object-types",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:four-object-types",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.99,
+      "basis": "Stated verbatim in gitformat-pack's Deltified representation section and in gitglossary's object type entry.",
+      "evidence_ids": [
+        "evidence:git:gitformat-pack",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:blob-carries-no-name",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:blob-carries-no-name",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.98,
+      "basis": "gitglossary states the blob is untyped and the tree carries names and modes; the probe showed a copied file keeps the same blob name.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:commit-binds",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:commit-binds-state-lineage-and-metadata",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.98,
+      "basis": "gitglossary's commit object entry names parents, committer, author, date and tree as the contents; the probe printed the raw commit bodies.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:state-converges",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:state-converges-history-does-not",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Git's documentation states the parts (content-named objects; commits containing parents) but does not state the two-layer consequence as such. The consequence was established directly by the probe, which exhibited a shared tree name under two distinct commit names in two separate constructions.",
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:cross-repo-dedup",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:cross-repository-dedup-without-coordination",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Established by construction in the probe: two repositories built independently produced identical blob and tree names.",
+      "evidence_ids": [
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:immutable",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:objects-immutable",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.99,
+      "basis": "gitcore-tutorial states 'Objects are immutable.' in the plumbing walkthrough.",
+      "evidence_ids": [
+        "evidence:git:gitcore-tutorial"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:pack-is-encoding",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:pack-is-encoding-not-identity",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.93,
+      "basis": "gitcore-tutorial frames packing as an optimization enabled by immutability; the probe established invariance of the object-set signature across three encodings, which the documentation does not state as such.",
+      "evidence_ids": [
+        "evidence:probe:output",
+        "evidence:git:gitcore-tutorial"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:delta-base-free",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:delta-base-not-history-adjacent",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.88,
+      "basis": "gitformat-pack states the structural freedom (chained bases, thin packs); the probe measured which revisions actually became full-text bases in a concrete pack.",
+      "evidence_ids": [
+        "evidence:git:gitformat-pack",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:delta-compression-magnitude",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:delta-carries-the-compression",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Measured in the probe on one synthetic corpus of 31 revisions of one file; the ratio is specific to that corpus and is recorded as such.",
+      "evidence_ids": [
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:refs-mutation",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:mutation-confined-to-refs",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "gitrepository-layout and gitglossary describe refs as the moving pointers and the roots prune preserves.",
+      "evidence_ids": [
+        "evidence:git:gitrepository-layout",
+        "evidence:git:gitglossary"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:reachability",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:reachability-is-liveness",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Definition in gitglossary, policy in git-gc, behaviour confirmed in the probe.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:git:git-gc",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:index-cache",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:index-is-a-rebuildable-cache-with-one-exception",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "Both halves are in gitglossary's index entry; the reconstruction was verified in the probe.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:no-per-path-structure",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:no-per-path-revision-structure",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Inferred from the four object type definitions and the on-disk layout, neither of which contains a path-indexed revision structure. Not stated as an absence by the inspected pages.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:git:gitrepository-layout"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:git:transitive-fixing",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:git-object-model",
+      "target_id": "claim:git:name-transitively-fixes-everything-reachable",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Follows from the hash preimage established in the probe plus the reference structure defined in gitglossary; the inspected git pages describe the structure without naming the property.",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

@@ -450,7 +450,12 @@ The case that forced the third option rather than a flat refusal: recon holds
 outright would make the profile reject the exact situation its first real
 consumer is in.
 
-Sequencing: this decides the shape of C4, so it lands with it.
+Landed. `Raster.unit` links a rendering to the unit it renders, without which
+a bundle could count units and never say what happened to one. `EvidenceBundle.
+bundle_kind` carries the claim. `Account` reports the census and measures the
+precommitted families. Completeness is the adopter's declared thresholds and
+nothing else: an all-units rule on top would have made their declaration
+decorative, which is the same substitution this design replaced.
 
 ### C4. The verifier walks lineage only from readings
 

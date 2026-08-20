@@ -161,6 +161,7 @@ class Raster:
 
     id: str
     source_id: str
+    unit: str
     digest: str
     render_contract: str
 
@@ -168,6 +169,7 @@ class Raster:
         return {
             "id": self.id,
             "source_representation_id": self.source_id,
+            "unit": self.unit,
             "digest": self.digest,
             "render_contract": self.render_contract,
         }
@@ -302,6 +304,7 @@ class Bundle:
 
     id: str
     source_class: SourceClass
+    kind: str = "FINISHED_READING"
     sources: tuple[SourceRepresentation, ...] = ()
     rasters: tuple[Raster, ...] = ()
     regions: tuple[Region, ...] = ()
@@ -317,6 +320,7 @@ class Bundle:
     def record(self) -> dict[str, Any]:
         return _present({
             "id": self.id,
+            "bundle_kind": self.kind,
             "source_class_id": self.source_class.id,
             "member_ids": [item.id for item in self._members()],
             "data_handling_policy_id": self.data_handling_policy_id,

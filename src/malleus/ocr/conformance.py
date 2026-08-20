@@ -1,9 +1,10 @@
 """The packaged conformance cases.
 
 An adapter emits bundle documents. These are what it checks its wiring
-against: one document that must be accepted and two that must be refused,
+against: two documents that must be accepted, two that must be refused,
 because a verifier that refuses nothing is indistinguishable from one that is
-not running.
+not running. Each case also fixes whether the bundle is a complete reading, so
+a case cannot pass on integrity while quietly accounting for nothing.
 
 The cases are authored, not generated. Their `expect` lists are checked
 against the live verifier on every test run, so a case that stops meaning what
@@ -24,6 +25,7 @@ CASES: tuple[str, ...] = (
     "conforming",
     "refuses-ungoverned-value",
     "refuses-broken-lineage",
+    "registration-is-not-a-reading",
 )
 
 

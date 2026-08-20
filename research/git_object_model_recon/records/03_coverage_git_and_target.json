@@ -1,0 +1,312 @@
+[
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.98,
+      "basis": "Every object is named by a hash of its own bytes with a type-and-length header, verified byte-for-byte in the probe. Identity is content, exclusively.",
+      "evidence_ids": ["evidence:git:gitglossary", "evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Equal states collapse with zero coordination at the blob and tree layer, demonstrated across two unrelated repositories and across two branches in one repository; equal states never collapse at the commit layer.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.97,
+      "basis": "The semantic unit is a whole-tree snapshot: a commit names one complete tree. Deltas exist only inside packs, are chosen by the packer, and change no object's name. Git answers this axis by putting snapshots in the model and deltas in the encoding.",
+      "evidence_ids": ["evidence:git:gitformat-pack", "evidence:git:gitcore-tutorial", "evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.98,
+      "basis": "gitglossary: commit objects form a directed acyclic graph because they have parents and no chain begins and ends with the same object. Each node names its predecessors inside the bytes that determine its own name.",
+      "evidence_ids": ["evidence:git:gitglossary"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:select",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:selective-replay",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The object model contains no movable change object. A commit is welded to its parents by its own name, so cherry-pick and rebase cannot move a commit; they compute a diff, apply it elsewhere, and mint new commits with new names. Selective replay exists as porcelain behaviour, not as a modelled operation, which is why this axis is coded PARTIAL rather than CENTRAL.",
+      "evidence_ids": ["evidence:git:gitglossary", "evidence:probe:output"],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reading a state at an arbitrary point requires no replay: the commit names a tree that already denotes the full state. Cost reappears only inside the pack, bounded by delta chain depth (depth 7 in the probe's pack), and is invisible above the object layer.",
+      "evidence_ids": ["evidence:probe:output", "evidence:git:gitformat-pack"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.95,
+      "basis": "Names hash bytes, and bytes contain the names of referenced objects, so a commit name transitively fixes its entire reachable subgraph. Verification is a byproduct of lookup.",
+      "evidence_ids": ["evidence:git:gitglossary", "evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:authority",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:index-vs-authority",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.93,
+      "basis": "The object store is the authority; the staging index, pack index files, commit-graph and multi-pack-index are derived and rebuildable. The probe deleted the index and reconstructed it from a commit to the same tree name. The one documented exception is an unresolved merge, whose second and third index stages exist in no tree.",
+      "evidence_ids": ["evidence:git:gitglossary", "evidence:git:gitrepository-layout", "evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:git:reclaim",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:git-object-model",
+      "target_id": "axis:reclamation",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Reachability from refs decides liveness; unreachable objects survive a two-week default grace period and are moved to a cruft pack rather than deleted at once. Nothing is deleted because it was superseded, only because nothing names it any more.",
+      "evidence_ids": ["evidence:git:git-gc", "evidence:git:gitglossary", "evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:identity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:identity-basis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated as the first open question of the design: is a node keyed by the answer taken, or by the resulting state? Today a tape line records an answer and the legal alternatives at that moment; nothing in the tape is keyed by the world it produces.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "DESIGN_QUESTION",
+      "notes": [
+        "Evidence is attached only to satisfy the relation's evidence requirement; the target's profile comes from the reviewer's declared design brief, not from an inspected artifact. Reading the tape implementation itself was out of scope for this pass by instruction."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:convergence",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:automatic-convergence",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated in the brief: two different answers can converge on the same resulting world, and the question is whether the store should notice. Convergence is therefore a live requirement, not an incidental property.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:unit",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:snapshot-vs-delta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The tape already commits to the change side of this axis: one line is one decision, and no line contains a world. The world is a derived quantity, recovered by replaying answers against the seed.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:shape",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:history-shape",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated in the brief: many runs share long identical prefixes and diverge at one decision. That is a prefix tree over answer sequences, which becomes a DAG only if converging states are merged, which is exactly the first open question.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:select",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:selective-replay",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "Recording the legal alternatives at each decision means the store is expected to support 'replay this prefix, then take a different branch'. Whether it must also support extracting or reordering decisions out of sequence is not stated in the brief and was not established here.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:cost",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:derivation-cost",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "Stated in the brief: the resulting world is expensive to compute. Since the tape stores only answers, obtaining the world at a point requires replaying the prefix through the engine. Derivation cost is therefore central, and it is the axis on which the tape differs most sharply from git.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:integrity",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:integrity-by-naming",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "The brief states no requirement for tamper evidence, signing, untrusted transport, or third-party verification of a tape. NOT_ESTABLISHED records that this review did not establish the requirement; it is not a finding that integrity is unwanted. This matters because integrity is the single property git's naming scheme buys most decisively, and if it is not required, the strongest argument for hashing is not in play.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:authority",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:index-vs-authority",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Stated as the second open question: is the store a file format, or is it derived on demand from a directory of tapes? The tapes themselves are already an authority; what is undecided is whether anything durable sits beside them.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:target:reclaim",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:decision-tape-store",
+      "target_id": "axis:reclamation",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "The brief says nothing about deleting tapes or reclaiming space, and an append-only JSONL directory has no reachability notion of its own. Recorded as NOT_ESTABLISHED rather than as an absence of need.",
+      "evidence_ids": ["evidence:probe:output"],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "DESIGN_QUESTION"
+    },
+    "supersedes_event_id": null
+  }
+]

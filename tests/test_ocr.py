@@ -32,8 +32,7 @@ def _class(**over):
     base = dict(
         id="class:invoice",
         required_units=("page:1", "page:2"),
-        metric_families={"coverage": {"denominator": "declared_units", "threshold": 1.0},
-                         "semantics": {"denominator": "required_fields", "threshold": 0.9}},
+        metric_families={"coverage": {"denominator": "declared_units", "threshold": 1.0}},
         temporal_policy="printed_date_is_issue_date",
         frozen_at="2026-08-18T00:00:00+00:00",
     )
@@ -47,14 +46,19 @@ def _bundle(**over):
         id="bundle:1",
         source_class=_class(),
         sources=(SourceRepresentation("src:1", D(1), 2048, "application/pdf", "docs/a.pdf"),),
-        rasters=(Raster("ras:1", "src:1", D(2), "render:v1@300dpi"),),
-        regions=(Region("reg:1", "ras:1", {"type": "FragmentSelector", "value": "xywh=0,0,10,10"}),),
-        attempts=(OCRAttempt("att:1", "reg:1", D(3), {"model": "engine-a@1"}, "COMPLETED", D(4)),),
+        rasters=(Raster("ras:1", "src:1", "page:1", D(2), "render:v1@300dpi"),
+                 Raster("ras:2", "src:1", "page:2", D(8), "render:v1@300dpi")),
+        regions=(Region("reg:1", "ras:1", {"type": "FragmentSelector", "value": "xywh=0,0,10,10"}),
+                 Region("reg:2", "ras:2", {"type": "FragmentSelector", "value": "xywh=0,0,10,10"})),
+        attempts=(OCRAttempt("att:1", "reg:1", D(3), {"model": "engine-a@1"}, "COMPLETED", D(4)),
+                  OCRAttempt("att:2", "reg:2", D(9), {"model": "engine-a@1"}, "COMPLETED", D(1))),
         hypotheses=(
             Hypothesis("hyp:1", "reg:1", D(5), attempt_id="att:1", confidence=0.7),
             Hypothesis("hyp:2", "reg:1", D(6), correction_id="cor:1"),
+            Hypothesis("hyp:4", "reg:2", D(7), attempt_id="att:2"),
         ),
-        corrections=(ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6)),),
+        corrections=(ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6)),
+                     ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "VERIFIED_BLANK")),
         selections=(Selection("sel:1", "reg:1", ("hyp:1", "hyp:2"), "hyp:2",
                               "human correction supersedes", human_verified=True),),
         observed_units=("page:1", "page:2"),
@@ -120,7 +124,7 @@ class TestReadingsReachTheirPixels:
         assert "OCR-D003" in verify_bundle(_bundle(regions=(detached,))).codes()
 
     def test_a_raster_over_an_unknown_source_refuses(self):
-        floating = Raster("ras:1", "src:missing", D(2), "render:v1")
+        floating = Raster("ras:1", "src:missing", "page:1", D(2), "render:v1")
         assert "OCR-D003" in verify_bundle(_bundle(rasters=(floating,))).codes()
 
 
@@ -329,6 +333,7 @@ CONTAINED = {
 }
 RENAMED = {
     ("Raster", "source_id"): "source_representation_id",
+    ("EvidenceBundle", "kind"): "bundle_kind",
     ("OCRAttempt", "status"): "attempt_status",
     ("ReviewCorrection", "verdict"): "review_verdict",
     ("EvidenceBundle", "source_class"): "source_class_id",
@@ -499,6 +504,17 @@ class TestThePackagedConformanceCases:
             assert sorted(set(result.codes())) == sorted(case["expect"]), (
                 f"case {name} no longer means what it says"
             )
+            assert result.account.complete == case["expect_complete"], (
+                f"case {name} changed what it accounts for"
+            )
+
+    def test_the_suite_distinguishes_sound_paperwork_from_a_finished_reading(self):
+        """Without a registration case the suite could not tell the two apart,
+        which is the confusion the account exists to end."""
+        from malleus.ocr.conformance import CASES, load_case
+        cases = {name: load_case(name) for name in CASES}
+        assert any(c["expect"] == [] and c["expect_complete"] for c in cases.values())
+        assert any(c["expect"] == [] and not c["expect_complete"] for c in cases.values())
 
     def test_the_suite_contains_a_refusal(self):
         """A verifier that refuses nothing is indistinguishable from one that
@@ -531,12 +547,13 @@ class TestTheCommandLine:
         code = main(argv)
         return code, capsys.readouterr().out
 
-    def test_a_conforming_document_exits_zero(self, tmp_path, capsys):
+    def test_a_complete_reading_exits_zero_and_shows_what_it_accounted_for(self, tmp_path, capsys):
         import json
         path = tmp_path / "bundle.json"
         path.write_text(json.dumps(_bundle().document()))
         code, out = self._run([str(path)], capsys)
-        assert code == 0 and "CONFORMS" in out
+        assert code == 0 and "COMPLETE" in out
+        assert "page:1: READ" in out and "page:2: VERIFIED_BLANK" in out
 
     def test_a_refused_document_exits_one_and_names_every_diagnostic(self, tmp_path, capsys):
         import json
@@ -595,6 +612,7 @@ def test_an_emitter_that_never_touches_the_carrier_conforms():
         "document_version": 1,
         "bundle": {
             "id": "bundle:hand-written",
+            "kind": "FINISHED_READING",
             "source_class": {
                 "id": "class:receipt",
                 "required_units": ["page:1"],
@@ -606,8 +624,8 @@ def test_an_emitter_that_never_touches_the_carrier_conforms():
             },
             "sources": [{"id": "src:a", "digest": digest(7), "byte_length": 91,
                          "media_type": "image/tiff", "locator": "scans/a.tiff"}],
-            "rasters": [{"id": "ras:a", "source_id": "src:a", "digest": digest(8),
-                         "render_contract": "render:v1@600dpi"}],
+            "rasters": [{"id": "ras:a", "source_id": "src:a", "unit": "page:1",
+                         "digest": digest(8), "render_contract": "render:v1@600dpi"}],
             "regions": [{"id": "reg:a", "raster_id": "ras:a",
                          "selector": {"type": "FragmentSelector", "value": "xywh=1,1,4,4"},
                          "selector_profile": "w3c-web-annotation+iiif"}],
@@ -656,7 +674,8 @@ DECISION_DISCHARGE = {
     "B3": UNBUILT + "reviewer separateness is recorded and never checked (roadmap C1)",
     "C1": STRUCTURAL + "selector_profile is a declared slot; the default holds no privilege",
     "C2": UNBUILT + "dependency-closed partial claims; required_units has no reader",
-    "C3": UNBUILT + "coverage is declared and never measured; only emptiness is checked",
+    "C3": STRUCTURAL + "account_for measures each declared family; an uncomputable "
+                       "denominator reports UNMEASURED rather than passing",
     "C4": ("OCR-D013",),
     "C5": ("OCR-D010",),
     "C6": ("OCR-D001", "OCR-D002"),
@@ -667,8 +686,8 @@ DECISION_DISCHARGE = {
 # What reads each slot the profile ontology declares. Being written into a
 # record is emitting, not reading, and the difference is the whole lesson.
 SLOT_READERS = {
-    "required_units": UNBUILT + "the C2 denominator; nothing computes with it",
-    "observed_units": UNBUILT + "the C3 numerator; nothing computes with it",
+    "required_units": STRUCTURAL + "the units account_for censuses, one row each",
+    "observed_units": STRUCTURAL + "read by the account; a unit absent from it is NOT_OBSERVED",
     "metric_families_digest": STRUCTURAL + "content address only",
     "metric_family_names": ("OCR-D012",),
     "temporal_policy": UNBUILT + "declared per C4; no ordering code consults it",
@@ -676,6 +695,8 @@ SLOT_READERS = {
     "inventory_basis": UNBUILT + "records how the inventory was confirmed; unused until C2",
     "source_class_id": STRUCTURAL + "binds the bundle to its frozen precommitment",
     "member_ids": STRUCTURAL + "answers which records the bundle contains",
+    "bundle_kind": STRUCTURAL + "a REGISTRATION is never complete and never counts as conformance",
+    "unit": STRUCTURAL + "links a rendering to the declared unit it renders",
     "data_handling_policy_id": ("OCR-D010",),
     "hostile_content_policy_id": ("OCR-D010",),
     "transport_metadata_digest": ("OCR-D002",),
@@ -763,7 +784,93 @@ class TestNothingIsDischargedByAssertion:
         """The number that matters. If this is a surprise, that is the finding."""
         unbuilt = sorted(k for k, v in SLOT_READERS.items()
                          if isinstance(v, str) and v.startswith(UNBUILT))
-        assert len(unbuilt) >= 10, (
+        assert len(unbuilt) >= 8, (
             "the unbuilt list shrank without this count being updated; confirm "
             "each one really gained a reader"
         )
+
+
+class TestTheAccount:
+    """Integrity and coverage are two answers. A bundle that read nothing used
+    to take the same word as one that read everything, which is what made
+    "passed" mean "passed what"."""
+
+    def test_a_page_read_and_found_blank_is_accounted_for(self):
+        """The objection that produced this design. Blank is an answer, not a
+        failure, and mandate B2 forbids converting it into one."""
+        account = verify_bundle(_bundle()).account
+        outcomes = {u.unit: u.outcome for u in account.units}
+        assert outcomes == {"page:1": "READ", "page:2": "VERIFIED_BLANK"}
+        assert all(u.accounted for u in account.units)
+        assert account.complete
+
+    def test_a_bundle_that_read_nothing_is_sound_and_not_complete(self):
+        from malleus.ocr.bundle import Bundle, SourceRepresentation
+        bundle = Bundle(id="b:2", source_class=_class(),
+                        sources=(SourceRepresentation("src:1", D(1), 2048, "application/pdf", "a.pdf"),),
+                        data_handling_policy_id="p", hostile_content_policy_id="p")
+        result = verify_bundle(bundle)
+        assert result.conforms, "the paperwork holds together and that is all it means"
+        assert not result.account.complete
+        assert result.account.unaccounted == ("page:1", "page:2")
+
+    def test_a_registration_is_never_complete_and_never_counts(self):
+        from malleus.ocr.bundle import Bundle, SourceRepresentation
+        bundle = Bundle(id="b:3", source_class=_class(), kind="REGISTRATION",
+                        sources=(SourceRepresentation("src:1", D(1), 2048, "application/pdf", "a.pdf"),),
+                        data_handling_policy_id="p", hostile_content_policy_id="p")
+        result = verify_bundle(bundle)
+        assert result.conforms and not result.account.complete
+        assert result.account.kind == "REGISTRATION"
+
+    @pytest.mark.parametrize("unit,expected", [
+        ("page:2", "NOT_OBSERVED"),
+    ])
+    def test_a_unit_never_fetched_is_distinct_from_one_never_rendered(self, unit, expected):
+        """Three ways to go unaccounted, kept apart: never fetched, held and
+        never rendered, rendered and never looked at. Different fixes."""
+        from malleus.ocr.bundle import Raster
+        not_observed = _bundle(observed_units=("page:1",))
+        assert {u.unit: u.outcome for u in verify_bundle(not_observed).account.units}[unit] == expected
+        not_rendered = _bundle(rasters=(Raster("ras:1", "src:1", "page:1", D(2), "r"),))
+        assert {u.unit: u.outcome for u in verify_bundle(not_rendered).account.units}["page:2"] == "NOT_RENDERED"
+
+    def test_a_failed_attempt_is_not_a_blank_page(self):
+        from malleus.ocr.bundle import OCRAttempt
+        bundle = _bundle(
+            attempts=(OCRAttempt("att:1", "reg:1", D(3), {"model": "e@1"}, "COMPLETED", D(4)),
+                      OCRAttempt("att:2", "reg:2", D(9), {"model": "e@1"}, "FAILED")),
+            hypotheses=(Hypothesis("hyp:1", "reg:1", D(5), attempt_id="att:1"),
+                        Hypothesis("hyp:2", "reg:1", D(6), correction_id="cor:1")),
+            corrections=(ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6)),),
+        )
+        outcomes = {u.unit: u.outcome for u in verify_bundle(bundle).account.units}
+        assert outcomes["page:2"] == "FAILED", "a failed call must never read as a blank page"
+
+    def test_a_metric_we_cannot_compute_does_not_read_as_a_pass(self):
+        """Fail closed. An unmeasured metric reported as met is worse than a
+        missing one, because it certifies something nobody measured."""
+        bundle = _bundle(source_class=_class(metric_families={
+            "coverage": {"denominator": "declared_units", "threshold": 1.0},
+            "semantics": {"denominator": "required_fields", "threshold": 0.9},
+        }))
+        account = verify_bundle(bundle).account
+        verdicts = {m.family: m.verdict for m in account.metrics}
+        assert verdicts == {"coverage": "MET", "semantics": "UNMEASURED"}
+        assert not account.complete, "an unmeasured declaration blocks completeness"
+
+    def test_the_threshold_is_the_adopters_own(self):
+        """Frozen before ingest, so it cannot be lowered after seeing the scan."""
+        lenient = _bundle(observed_units=("page:1",), source_class=_class(
+            metric_families={"coverage": {"denominator": "declared_units", "threshold": 0.5}}))
+        assert verify_bundle(lenient).account.complete
+        strict = _bundle(observed_units=("page:1",), source_class=_class(
+            metric_families={"coverage": {"denominator": "declared_units", "threshold": 1.0}}))
+        assert not verify_bundle(strict).account.complete
+
+
+def test_a_source_class_declaring_no_measure_is_never_complete():
+    """With nothing declared there is no bar, and an empty all() would
+    otherwise certify a bundle nobody measured."""
+    account = verify_bundle(_bundle(source_class=_class(metric_families={}))).account
+    assert not account.metrics and not account.complete

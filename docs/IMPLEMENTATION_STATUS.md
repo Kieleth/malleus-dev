@@ -226,12 +226,28 @@ An emitter that imports no plane class and touches no dataclass conforms,
 which establishes the emitter role as replaceable; no production OCR stack has
 crossed it yet.
 
-Not built: decision C2, dependency-closed partial claims. `required_units` is
-declared and read by nothing, recorded as such in the schema rather than left
-silent. No adapter has passed the conformance suite, so the profile is designed
-from two audited adopters and is not yet established as portable. Coverage
-metric families are precommitted and counted; no coverage measurement exists,
-which is why no Signal subtype is declared.
+Verification returns two answers, not one. Integrity is a bit: the paperwork
+either holds together or it does not. Coverage is a census and cannot be one.
+`Account` reports what became of every unit the source class declared, in the
+mandate B2 vocabulary, and measures each precommitted metric family against the
+threshold frozen before ingest. A unit read and found blank is `VERIFIED_BLANK`
+and counts as accounted for; a failed call is `FAILED` and does not. The three
+ways to go unaccounted stay distinct: never fetched, held and never rendered,
+rendered and never looked at.
+
+Completeness is judged against the adopter's own thresholds and nothing else.
+A source class declaring a denominator this profile cannot compute reports
+`UNMEASURED` and blocks completeness rather than passing. A source class
+declaring no measure is never complete. A bundle declaring itself a
+`REGISTRATION` is never complete and may never count as adapter conformance.
+
+Not built: decision C2, dependency-closed partial claims, which is the rule for
+promoting a claim whose evidence does not depend on a missing unit. The account
+says which units are missing; it does not decide what may be promoted despite
+them. No adapter has passed the conformance suite, so the profile is designed
+from two audited adopters and is not yet established as portable. No Signal
+subtype is declared because coverage is computed on demand rather than
+recorded.
 
 ## Not implemented
 

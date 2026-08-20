@@ -78,14 +78,113 @@ class Diagnostic:
         return f"{self.code} [{self.subject}] {CODES[self.code]}: {self.detail}"
 
 
+# What happened to one declared unit. Mandate B2: verified blank, unreadable,
+# unavailable, failed, excluded and absent stay distinct, and none may be
+# padded, snapped or converted into another. NOT_OBSERVED, NOT_RENDERED and
+# NOT_ATTEMPTED are the three ways a unit goes unaccounted for, kept apart for
+# the same reason: "we never fetched it", "we have it and never rendered it"
+# and "we rendered it and never looked" are different failures with different
+# fixes.
+READ = "READ"
+UNIT_OUTCOMES = (
+    READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT",
+    "FAILED", "UNAVAILABLE", "NOT_OBSERVED", "NOT_RENDERED", "NOT_ATTEMPTED",
+)
+ACCOUNTED = frozenset({READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT"})
+
+# Denominators this profile can compute. A family naming anything else is
+# reported UNMEASURED rather than quietly passing, because an unmeasured
+# metric that reads as a pass is worse than a missing one.
+DENOMINATORS = {"declared_units"}
+
+
+@dataclass(frozen=True)
+class UnitAccount:
+    """One declared unit and what became of it."""
+
+    unit: str
+    outcome: str
+
+    @property
+    def accounted(self) -> bool:
+        """Accounted means somebody looked and can say what they found.
+
+        A blank page that was read and found blank is accounted for. So is one
+        ruled out of scope. A page nobody opened is not, however sound the
+        paperwork around it.
+        """
+        return self.outcome in ACCOUNTED
+
+
+@dataclass(frozen=True)
+class MetricResult:
+    """One precommitted measure, its value, and whether it met its own bar."""
+
+    family: str
+    denominator: str
+    value: float | None
+    threshold: float | None
+    verdict: str  # MET, UNMET, or UNMEASURED
+
+    def __str__(self) -> str:
+        if self.value is None:
+            return f"{self.family}: UNMEASURED (denominator {self.denominator!r} is not computable here)"
+        return (f"{self.family}: {self.value:.3f} against {self.threshold} "
+                f"over {self.denominator} -> {self.verdict}")
+
+
+@dataclass(frozen=True)
+class Account:
+    """What was covered. Separate from whether the paperwork holds together.
+
+    Integrity is a bit: a reading either reaches its pixels or it does not.
+    Coverage is a census and cannot be one, which is why they are two answers.
+    A bundle passing integrity while accounting for nothing was taking a seal
+    that meant only "nothing in here is wrong".
+    """
+
+    kind: str
+    units: tuple[UnitAccount, ...]
+    metrics: tuple[MetricResult, ...]
+
+    @property
+    def unaccounted(self) -> tuple[str, ...]:
+        return tuple(u.unit for u in self.units if not u.accounted)
+
+    @property
+    def complete(self) -> bool:
+        """Every declared bar met, judged against the adopter's own thresholds.
+
+        Deliberately not "every unit accounted for". An adopter who froze a
+        coverage threshold of 0.5 said half is enough for their purpose, and
+        adding an all-units rule on top would make their declaration
+        decorative and put our bar back over theirs. That substitution is the
+        error this whole design replaced.
+
+        A source class declaring no measure cannot be complete: with nothing
+        declared there is no bar to meet, and an empty `all()` would otherwise
+        certify a bundle nobody measured. OCR-D012 refuses that source class
+        anyway; this does not rely on it.
+
+        A registration is never complete. It claims no reading, so there is
+        nothing for completeness to be true of, and it may never stand as
+        evidence that an adapter conforms.
+        """
+        if self.kind != "FINISHED_READING" or not self.metrics:
+            return False
+        return all(m.verdict == "MET" for m in self.metrics)
+
+
 @dataclass(frozen=True)
 class VerificationResult:
     bundle_id: str
     capability: str
     diagnostics: tuple[Diagnostic, ...]
+    account: Account
 
     @property
     def conforms(self) -> bool:
+        """The paperwork holds together. Says nothing about what was read."""
         return not self.diagnostics
 
     def codes(self) -> tuple[str, ...]:
@@ -238,7 +337,67 @@ def verify_bundle(
         if not value:
             add("OCR-D010", bundle.id, f"{label} policy unbound")
 
-    return VerificationResult(bundle.id, CAPABILITY, tuple(out))
+    return VerificationResult(bundle.id, CAPABILITY, tuple(out), account_for(bundle))
+
+
+def _unit_outcome(bundle: Bundle, unit: str) -> str:
+    """What became of one declared unit, in mandate B2's vocabulary."""
+    if unit not in bundle.observed_units:
+        return "NOT_OBSERVED"
+    rasters = [r for r in bundle.rasters if r.unit == unit]
+    if not rasters:
+        return "NOT_RENDERED"
+    raster_ids = {r.id for r in rasters}
+    regions = {r.id for r in bundle.regions if r.raster_id in raster_ids}
+    if not regions:
+        return "NOT_ATTEMPTED"
+
+    # A human verdict outranks the machine: a reviewer who looked and found the
+    # region blank has accounted for it, and no attempt status may overwrite
+    # that. Mandate B2 forbids converting one state into another, so the order
+    # is fixed here rather than left to whichever record is read last.
+    reviewed = {h.id for h in bundle.hypotheses if h.region_id in regions}
+    verdicts = [c.verdict for c in bundle.corrections if c.reviewed_hypothesis_id in reviewed]
+    for verdict in ("UNREADABLE", "EXCLUDED", "VERIFIED_BLANK"):
+        if verdict in verdicts:
+            return verdict
+    if any(h.region_id in regions for h in bundle.hypotheses):
+        return READ
+
+    attempts = [a for a in bundle.attempts if a.region_id in regions]
+    if not attempts:
+        return "NOT_ATTEMPTED"
+    for status in ("UNAVAILABLE", "FAILED"):
+        if any(a.status == status for a in attempts):
+            return status
+    return "NOT_ATTEMPTED"
+
+
+def account_for(bundle: Bundle) -> Account:
+    """Census every declared unit, then measure what the source class precommitted.
+
+    The declaration was frozen before ingest precisely so this cannot be graded
+    against a bar chosen after seeing the scan.
+    """
+    units = tuple(
+        UnitAccount(unit, _unit_outcome(bundle, unit))
+        for unit in bundle.source_class.required_units
+    )
+    accounted = sum(1 for u in units if u.accounted)
+    metrics = []
+    for family, declaration in sorted(bundle.source_class.metric_families.items()):
+        denominator = str(declaration.get("denominator", ""))
+        threshold = declaration.get("threshold")
+        if denominator not in DENOMINATORS or not isinstance(threshold, (int, float)):
+            metrics.append(MetricResult(family, denominator, None, None, "UNMEASURED"))
+            continue
+        total = len(units)
+        value = 1.0 if total == 0 else accounted / total
+        metrics.append(MetricResult(
+            family, denominator, value, float(threshold),
+            "MET" if value >= threshold else "UNMET",
+        ))
+    return Account(bundle.kind, units, tuple(metrics))
 
 
 # C7: staleness is two properties. Invalidation follows bytes; currency

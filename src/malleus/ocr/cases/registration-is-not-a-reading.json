@@ -1,0 +1,50 @@
+{
+  "case": "registration-is-not-a-reading",
+  "description": "The source is held and has not been read. The paperwork is sound and the bundle says so: it claims a registration, not a reading, and may never be counted as evidence that an adapter conforms.",
+  "document": {
+    "bundle": {
+      "attempts": [],
+      "corrections": [],
+      "data_handling_policy_id": "policy:dh:1",
+      "hostile_content_policy_id": "policy:hc:1",
+      "hypotheses": [],
+      "id": "bundle:registered",
+      "kind": "REGISTRATION",
+      "observed_units": [],
+      "rasters": [],
+      "regions": [],
+      "selections": [],
+      "source_class": {
+        "frozen_at": "2026-08-18T00:00:00+00:00",
+        "id": "class:invoice",
+        "inventory_basis": "derived_then_confirmed",
+        "metric_families": {
+          "coverage": {
+            "denominator": "declared_units",
+            "threshold": 1.0
+          }
+        },
+        "required_units": [
+          "page:1",
+          "page:2"
+        ],
+        "temporal_policy": "printed_date_is_issue_date"
+      },
+      "sources": [
+        {
+          "byte_length": 2048,
+          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "id": "src:1",
+          "locator": "docs/a.pdf",
+          "media_type": "application/pdf"
+        }
+      ],
+      "transport_metadata": {}
+    },
+    "document_version": 1,
+    "profile": "malleus.ocr.evidence_integrity",
+    "profile_version": "v0"
+  },
+  "expect": [],
+  "expect_complete": false
+}

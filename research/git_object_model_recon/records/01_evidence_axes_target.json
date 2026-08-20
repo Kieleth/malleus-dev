@@ -1,0 +1,302 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:gitglossary",
+      "label": "git gitglossary(7), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man7/gitglossary.7",
+      "locator": "entries: blob object; commit object; DAG; dangling object; index; index entry; object database; object identifier; object name; object type; reachable; tree object",
+      "evidence_description": "Git's own normative definitions of the object database and its four object types. States that an object is identified by its object name, that a blob is an untyped object, that a tree lists names and modes with refs to blobs and trees, that a commit contains parents and a tree, that commit objects form a DAG, that the index is a collection of files with stat information whose contents are stored as objects, and that reachability follows tags to their targets, commits to parents and trees, and trees to their contents.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:29b67e81a4e2a2816133d1dc6b1572d430b095dbd00172d789683555126dcee3",
+      "artifact_byte_length": 32509
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:gitformat-pack",
+      "label": "git gitformat-pack(5), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man5/gitformat-pack.5",
+      "locator": "sections: CHECKSUMS AND OBJECT IDS; PACK-*.PACK FILES HAVE THE FOLLOWING FORMAT; Object types; Deltified representation; Original (version 1) pack-*.idx files; Version 2 pack-*.idx files",
+      "evidence_description": "Normative pack format. States that conceptually there are only four object types and that an object may be stored as a delta of a base object to save space; distinguishes OBJ_OFS_DELTA from OBJ_REF_DELTA; states that a base object may itself be deltified within the same pack, that ref-delta may point outside the pack in a thin pack, and that an on-disk pack should be self contained.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:099e24eab95b837204ffcfbdc22209591cfb6dde7af810ece3e7eb93424cd436",
+      "artifact_byte_length": 34905
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:gitrepository-layout",
+      "label": "git gitrepository-layout(5), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man5/gitrepository-layout.5",
+      "locator": "entries: objects; objects/[0-9a-f][0-9a-f]; objects/pack; objects/info/alternates; refs; index",
+      "evidence_description": "On-disk layout. States that an object store is usually self sufficient, that loose objects are splayed over 256 directories by the first two characters of the object name, that packs store many objects in compressed form with index files allowing random access, and that git prune preserves objects reachable from refs.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:7657bd685164674e19b31471e9e49a5ab6d6adcb53b6dfcc12fa645241574a63",
+      "artifact_byte_length": 17864
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:gitcore-tutorial",
+      "label": "git gitcore-tutorial(7), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man7/gitcore-tutorial.7",
+      "locator": "rendered lines 158-159 and 1037-1044 at MANWIDTH=100",
+      "evidence_description": "Git's own plumbing tutorial. States 'Objects are immutable.' and, introducing git repack, states 'Since Git objects are immutable once they are created, there is a way to optimize the storage by \"packing them together\"'. This makes packing an explicitly post-hoc storage optimization over an already-immutable object set.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:80dd39213d34e13b4344c36432c49a767f43ab77b11ab9278c982021f2e2d67a",
+      "artifact_byte_length": 72506
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:git:git-gc",
+      "label": "git git-gc(1), git 2.50.1",
+      "review_state": "REVIEWED",
+      "local_path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man1/git-gc.1",
+      "locator": "DESCRIPTION; --prune=<date>; --[no-]cruft; gc.pruneExpire; gc.cruftPacks",
+      "evidence_description": "Reclamation policy. Housekeeping removes unreachable objects; loose objects are pruned only after a default two-week grace period (gc.pruneExpire, prune --expire 2.weeks.ago); unreachable objects are by default written to a separate cruft pack rather than deleted immediately, and the grace period exists to prevent corruption when gc runs concurrently with a writer.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:952cc872d7ae87eb4d1ae93d03085d7ff7bc13d5aa03f3b2f46cb2add6abb33e",
+      "artifact_byte_length": 17269
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:probe:script",
+      "label": "Local git object-database probe, script",
+      "review_state": "REVIEWED",
+      "local_path": "/Users/luis/Projects/malleus-dev/research/git_object_model_recon/probe/git_object_probe.sh",
+      "locator": "sections A through H",
+      "evidence_description": "Reproducible probe with fixed author identity and fixed commit dates. A: hash preimage. B: two unrelated repositories reaching identical content. C: two branches reconverging on identical content. D: 31 revisions of one file, loose then packed, with delta chains and full-text bases mapped to their revision numbers. E: reachability, reflog and prune. F: index deletion and reconstruction. G: object-set signature under three pack encodings. H: full-text base after a forced repack.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:42f4d41000da26b9bd1eedced488e1a7411096343c1262a0ac9dfa5ba7d1ca51",
+      "artifact_byte_length": 6995,
+      "notes": [
+        "Written for this review, not a third-party artifact. Run against git version 2.50.1 (Apple Git-155) on macOS 24.6.0."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:probe:output",
+      "label": "Local git object-database probe, recorded output",
+      "review_state": "REVIEWED",
+      "local_path": "/Users/luis/Projects/malleus-dev/research/git_object_model_recon/probe/git_object_probe.out",
+      "locator": "sections A through H",
+      "evidence_description": "Captured output of the probe. Two consecutive runs of this script produced byte-identical output apart from the temporary working directory path.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:e4d11b4f3b4e859249f15004aa45fcb42551bf951d50e6c20be91436a12bb8f8",
+      "artifact_byte_length": 5405
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:probe:earlier-run",
+      "label": "Local git object-database probe, earlier run without sections G and H",
+      "review_state": "REVIEWED",
+      "local_path": "/Users/luis/Projects/malleus-dev/research/git_object_model_recon/probe/git_object_probe.earlier_run.out",
+      "locator": "section D, delta chain listing",
+      "evidence_description": "An earlier run of the same probe up to section F. Every object name matches the later run, but the pack produced by git gc placed a different revision at depth 0 as the full-text delta base (acc590a5..., 194446 bytes) than the later runs did (458f9358..., 194471 bytes). Retained as the evidence that pack delta assignment varied across runs while object names did not.",
+      "source_class": "OTHER",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:8207888774a74cb2fe21c6e7c2a70a1765b1cb4b94e3ea5ca22c86d375c70998",
+      "artifact_byte_length": 4460,
+      "notes": [
+        "The two runs differ only in reporting code added after the pack was built. This review did not isolate the cause of the differing delta assignment and does not claim git's packing is nondeterministic in general."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:identity-basis",
+      "label": "What names a stored node",
+      "axis_definition": "The function that produces a node's identifier. Content of the state it denotes; the operation or answer that produced it; a sequence number or position; or an externally minted opaque id. Question: given only a node's identity, what can be concluded about it without reading the store?",
+      "axis_code": "IDENTITY",
+      "axis_scope": "storage model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:automatic-convergence",
+      "label": "Automatic convergence of equal things",
+      "axis_definition": "Whether two independently produced but equal artifacts become one stored artifact with no coordination, comparison pass, or merge step, and at which layer that happens. Question: does equality of content force equality of identity?",
+      "axis_code": "CONVERGENCE",
+      "axis_scope": "storage model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:snapshot-vs-delta",
+      "label": "Snapshot or change as the primary unit",
+      "axis_definition": "Whether a version is modelled as a complete state or as a change relative to another version, and whether that choice is semantic (the model's unit of meaning) or an encoding detail invisible above the storage layer.",
+      "axis_code": "UNIT",
+      "axis_scope": "storage model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:history-shape",
+      "label": "Shape of recorded history",
+      "axis_definition": "The structure history takes: a DAG of immutable nodes each naming its predecessors; a linear append-only log; a per-item revision list; or an unordered or partially-ordered set of operations. Question: what does 'this happened after that' mean structurally?",
+      "axis_code": "SHAPE",
+      "axis_scope": "history model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:selective-replay",
+      "label": "Selecting, reordering and reapplying recorded steps",
+      "axis_definition": "Whether a subset of recorded steps can be extracted, reordered, or replayed onto a different base as a first-class operation with defined semantics, versus being a derived operation that reconstructs new nodes and may fail or conflict.",
+      "axis_code": "SELECT",
+      "axis_scope": "history model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:derivation-cost",
+      "label": "Cost of obtaining a usable state at a point",
+      "axis_definition": "What must be recomputed, replayed, or reconstructed to obtain a usable state at an arbitrary recorded point, and what the store does about that cost (materialized states, periodic snapshots, delta chain depth caps, or nothing).",
+      "axis_code": "COST",
+      "axis_scope": "read path",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:integrity-by-naming",
+      "label": "Integrity carried by the naming scheme",
+      "axis_definition": "Whether the identifier of a node cryptographically certifies its contents and, transitively, everything it references, so that verification is a byproduct of lookup rather than a separate mechanism.",
+      "axis_code": "INTEGRITY",
+      "axis_scope": "storage model",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:index-vs-authority",
+      "label": "Separation of authority from index",
+      "axis_definition": "Whether the system distinguishes an authoritative store from derived indexes and caches, and whether every derived structure can be discarded and rebuilt from the authority alone.",
+      "axis_code": "AUTHORITY",
+      "axis_scope": "system structure",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:reclamation",
+      "label": "Rule for deleting recorded material",
+      "axis_definition": "How the store decides what may be deleted: reachability from a set of named roots, a retention or expiry policy, explicit deletion, or never. Question: what makes a recorded node worth keeping?",
+      "axis_code": "RECLAIM",
+      "axis_scope": "lifecycle",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "ReviewTarget",
+    "record": {
+      "id": "target:decision-tape-store",
+      "label": "Decision-tape store: append-only per-run answer logs with shared prefixes and recorded legal alternatives",
+      "review_state": "REVIEWED",
+      "scope": "A tape is an append-only JSONL file: one line per decision taken during a run, plus a seed. Every other property of the run is derived from the seed and the recorded answers, so replaying the answers reproduces the run exactly. Each entry also records which other answers were legal at that moment. Many runs share long identical prefixes and diverge at a single decision. The design question under review is what storage model the tape store should be built on. Compare git's object model, its acknowledged and probable ancestors, and the two genuinely different models available (a history of patches, and an event log with derived read models) against nine axes covering identity, convergence, unit of storage, history shape, selective replay, derivation cost, integrity, authority, and reclamation. This review does not decide the design; it records what each model commits to and what the evidence shows.",
+      "cutoff_date": "2026-08-19",
+      "review_method": "Primary-source inspection of git's own shipped documentation on the local installation (git 2.50.1, man page files digested by sha256), plus a written, reproducible probe against a live git binary whose script and output are stored in this project, plus web inspection of origin correspondence, format documentation, and the primary literature for the alternative models. Coverage levels are coded per axis for each work and for the target itself.",
+      "notes": [
+        "The target is the reviewer's declared design problem, not a published work. Its axis profile records what the tape store already commits to, so the set comparison against each candidate model is exact rather than rhetorical."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:git-object-model",
+      "label": "Git object database (blobs, trees, commits, tags; refs; packfiles; index)",
+      "title": "Git object database as documented and as observed at version 2.50.1",
+      "authors": [
+        "Linus Torvalds",
+        "Junio C Hamano",
+        "git contributors"
+      ],
+      "identifiers": [
+        "software:git",
+        "version:2.50.1 (Apple Git-155)",
+        "url:https://git-scm.com/docs"
+      ],
+      "priority_date": "2005-04-07",
+      "priority_date_basis": "Date of git's first commit, e83c5163316f89bfbde7d9ab23ca2e25604af290, 'Initial revision of git, the information manager from hell'. Recorded here as the first-public date of the object model; the local artifact inspected is version 2.50.1.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:git:gitglossary",
+        "evidence:git:gitformat-pack",
+        "evidence:git:gitrepository-layout",
+        "evidence:git:gitcore-tutorial",
+        "evidence:git:git-gc",
+        "evidence:probe:script",
+        "evidence:probe:output"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

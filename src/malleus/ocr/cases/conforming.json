@@ -1,6 +1,6 @@
 {
   "case": "conforming",
-  "description": "A complete bundle: one region, one machine reading, one human correction that supersedes it, and a selection that names both candidates.",
+  "description": "A complete reading. Two declared pages: one read with a human correction that supersedes the machine reading, one looked at and found blank. Both accounted for, and the coverage measure the source class froze before ingest is met.",
   "document": {
     "bundle": {
       "attempts": [
@@ -14,6 +14,17 @@
           "response_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
           "status": "COMPLETED",
           "unavailable_reason": null
+        },
+        {
+          "config_identity": {
+            "model": "engine-a@1"
+          },
+          "id": "att:2",
+          "region_id": "reg:2",
+          "request_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+          "response_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "status": "COMPLETED",
+          "unavailable_reason": null
         }
       ],
       "corrections": [
@@ -24,6 +35,14 @@
           "reviewed_hypothesis_id": "hyp:1",
           "reviewer_id": "reviewer:kim",
           "verdict": "CORRECTED"
+        },
+        {
+          "corrected_text_digest": null,
+          "id": "cor:2",
+          "predecessor_id": null,
+          "reviewed_hypothesis_id": "hyp:4",
+          "reviewer_id": "reviewer:kim",
+          "verdict": "VERIFIED_BLANK"
         }
       ],
       "data_handling_policy_id": "policy:dh:1",
@@ -44,9 +63,18 @@
           "id": "hyp:2",
           "region_id": "reg:1",
           "text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        },
+        {
+          "attempt_id": "att:2",
+          "confidence": null,
+          "correction_id": null,
+          "id": "hyp:4",
+          "region_id": "reg:2",
+          "text_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
         }
       ],
       "id": "bundle:1",
+      "kind": "FINISHED_READING",
       "observed_units": [
         "page:1",
         "page:2"
@@ -56,13 +84,30 @@
           "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
           "id": "ras:1",
           "render_contract": "render:v1@300dpi",
-          "source_id": "src:1"
+          "source_id": "src:1",
+          "unit": "page:1"
+        },
+        {
+          "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+          "id": "ras:2",
+          "render_contract": "render:v1@300dpi",
+          "source_id": "src:1",
+          "unit": "page:2"
         }
       ],
       "regions": [
         {
           "id": "reg:1",
           "raster_id": "ras:1",
+          "selector": {
+            "type": "FragmentSelector",
+            "value": "xywh=0,0,10,10"
+          },
+          "selector_profile": "w3c-web-annotation+iiif"
+        },
+        {
+          "id": "reg:2",
+          "raster_id": "ras:2",
           "selector": {
             "type": "FragmentSelector",
             "value": "xywh=0,0,10,10"
@@ -91,10 +136,6 @@
           "coverage": {
             "denominator": "declared_units",
             "threshold": 1.0
-          },
-          "semantics": {
-            "denominator": "required_fields",
-            "threshold": 0.9
           }
         },
         "required_units": [
@@ -118,5 +159,6 @@
     "profile": "malleus.ocr.evidence_integrity",
     "profile_version": "v0"
   },
-  "expect": []
+  "expect": [],
+  "expect_complete": true
 }

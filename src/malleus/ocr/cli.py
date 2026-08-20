@@ -41,14 +41,39 @@ def _header(stream) -> None:
 
 
 def _report(result: VerificationResult, stream) -> int:
-    if result.conforms:
-        print(f"CONFORMS. {result.bundle_id} preserves lineage at {result.capability}.", file=stream)
-        return CONFORMS
+    """Two answers, printed as two. Integrity is a bit; coverage is a census.
+
+    Printing only the bit is what made "passed" mean "passed what": a bundle
+    that read nothing took the same word as one that read everything.
+    """
+    account = result.account
     for diagnostic in result.diagnostics:
         print(diagnostic, file=stream)
-    plural = "" if len(result.diagnostics) == 1 else "s"
-    print(f"REFUSED. {len(result.diagnostics)} diagnostic{plural}.", file=stream)
-    return REFUSED
+    integrity = "sound" if result.conforms else (
+        f"{len(result.diagnostics)} diagnostic"
+        f"{'' if len(result.diagnostics) == 1 else 's'}"
+    )
+    print(f"integrity: {integrity}", file=stream)
+    print(f"claim:     {account.kind}", file=stream)
+    for unit in account.units:
+        print(f"  {unit.unit}: {unit.outcome}", file=stream)
+    for metric in account.metrics:
+        print(f"  {metric}", file=stream)
+    if not result.conforms:
+        print("REFUSED. The paperwork does not hold together.", file=stream)
+        return REFUSED
+    if account.kind != "FINISHED_READING":
+        print("REGISTERED. The source is held and not read; this is not a reading.",
+              file=stream)
+        return CONFORMS
+    if not account.complete:
+        unaccounted = ", ".join(account.unaccounted) or "none"
+        print(f"INCOMPLETE. Paperwork sound. Unaccounted units: {unaccounted}.",
+              file=stream)
+        return REFUSED
+    print(f"COMPLETE. {result.bundle_id} accounts for every declared unit and meets "
+          "the thresholds its source class froze before ingest.", file=stream)
+    return CONFORMS
 
 
 def _verify(path: Path, stream) -> int:
@@ -77,9 +102,12 @@ def _conformance(stream) -> int:
         result = verify_bundle(Bundle.from_document(case["document"]))
         observed = sorted(set(result.codes()))
         expected = sorted(case["expect"])
-        ok = observed == expected
+        complete = result.account.complete
+        ok = observed == expected and complete == case["expect_complete"]
         verdict = "ok  " if ok else "FAIL"
-        print(f"{verdict} {name}: expected {expected or 'no diagnostics'}, got {observed or 'none'}", file=stream)
+        print(f"{verdict} {name}: diagnostics {observed or 'none'} "
+              f"(expected {expected or 'none'}), complete={complete} "
+              f"(expected {case['expect_complete']})", file=stream)
         if not ok:
             worst = REFUSED
     print("conformance suite passed" if worst == CONFORMS else "conformance suite FAILED", file=stream)
