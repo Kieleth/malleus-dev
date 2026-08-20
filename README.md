@@ -16,7 +16,7 @@ When that actually happens across a codebase, something unexpectedly useful show
 
 That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
 
-Current package boundary: `0.13.2`, `stage-8c-executable-provenance-and-effect-closure`. See
+Current package boundary: `0.13.3`, `stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -268,7 +268,7 @@ an order-only transition, or an unresolved prior boundary. Calendar days
 require an IANA timezone and embed the timezone database version. Malleus loads
 the pinned `tzdata==2026.3` rules, IANA release `2026c`, directly instead of
 relying on the host operating system. The database release is a semantic input:
-version 0.13.2 replays only `2026c`, and provides no cross-version timezone
+version 0.13.3 replays only `2026c`, and provides no cross-version timezone
 migration. Every non-exact value requires the caller's extracted
 `indeterminacy_reason`; Malleus commits that reason but does not infer it from
 transaction, invoice, authorization, or payment time.
@@ -292,7 +292,7 @@ execution-local and are not ledger commitments.
 This is an accepted knowledge commitment, not a truth guarantee or action
 authorization. The caller must supply the exact graph committed by the graph
 base artifact. Remote graph-base resolution, typed retraction, and multi-writer
-serialization remain outside version 0.13.2.
+serialization remain outside version 0.13.3.
 
 ## Architecture
 
