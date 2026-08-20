@@ -1,0 +1,733 @@
+[
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:dl:readme",
+      "label": "Description-logics sample README",
+      "review_state": "REVIEWED",
+      "locator": "README.md:7,38-40,122-133,207-213,421-424 at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb",
+      "evidence_description": "Repository README stating that replacing LLM reasoning with ontological reasoning yields provably correct answers, describing the self-modifying-program loop, and stating that description logic has no declarative query language.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:f1c49333a947faf5f46bac57ca0e55dfe216ba3000c7b289989473e28aa2032a",
+      "artifact_byte_length": 19016,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:dl:builder",
+      "label": "Description-logics sample control harness",
+      "review_state": "REVIEWED",
+      "locator": "ontology_qa_cli/builder.py:111-496,503-673 at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb",
+      "evidence_description": "The evolve loop: seed, execute, judge, write TASK.md, invoke the external coding agent, repeat until judged accuracy crosses the threshold or max_iterations is reached.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:5ebf907765472abbc458c962f1eb50d3b870cba7a2028e5371d348ddce0385ae",
+      "artifact_byte_length": 28720,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:dl:fixer",
+      "label": "Description-logics sample fixer",
+      "review_state": "REVIEWED",
+      "locator": "ontology_qa_cli/fixer.py:37-190,92-95,278-293 at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb",
+      "evidence_description": "The repair step that writes TASK.md and spawns kiro-cli over a PTY, including the prompt-stated rule that core reasoning must use owlready2 and the instruction not to emit ontology identifiers.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:ff84c6bf15424719805d7bac875515cd3e3b2bb0c6f8311408df6aa4cc733749",
+      "artifact_byte_length": 10970,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:dl:seed-program",
+      "label": "Description-logics sample seed program",
+      "review_state": "REVIEWED",
+      "locator": "ontology_qa_cli/seed_program.py:4-5,11-30 at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb",
+      "evidence_description": "The degenerate seed program that loads the OWL file through owlready2 and always answers 'I don't know', carrying the stated contract that the LLM never sees the answer.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:67961c0df5bdd643a23aaec54da3139858bd29c62ec51f81662dcbab2dcb9c21",
+      "artifact_byte_length": 1075,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:dl:iteration4-program",
+      "label": "Description-logics sample final evolved program",
+      "review_state": "REVIEWED",
+      "locator": "assets/sample-run/iteration_4/query_program.py:292-313 at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb",
+      "evidence_description": "The shipped final evolved query program: SQLite retrieval over asserted axioms followed by an LLM narration step prompted to add pathophysiology and clinical significance beyond the retrieved set.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:6b0854c9fcc42f7726d9ea68408e5dc067ba62450df781817e94b917b8b1602b",
+      "artifact_byte_length": 14251,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics",
+      "notes": [
+        "Byte-identical to assets/sample-run/iteration_3/query_program.py (same sha256) although a 12,235-byte changes.patch separates the two iterations; the fixer overwrites the per-iteration program in place, so the stored artifact for iteration N is the post-fix program."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:readme",
+      "label": "Text-to-SQL planner README",
+      "review_state": "REVIEWED",
+      "locator": "README.md:13,40-42,215-237,276-282 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "Repository README stating the near-SOTA BIRD claim, the 'unsat or nothing' emission contract, the documented operator table, and the deliberate exclusion of row order and count from the equivalence proof.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:d2b1955923e6f5b91a262d415c7f2a69f4cd2606fc07fe5b1e80fef90d26b4c4",
+      "artifact_byte_length": 37249,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:main",
+      "label": "Text-to-SQL planner entry point",
+      "review_state": "REVIEWED",
+      "locator": "text_to_sql_planner/main.py:154-183 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "Deterministic SQL generation from the proven operator tree, including the simplifier fixpoint and the skip for UNION and EXCEPT derived tables.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:771c6bbb1f54c6832d251641fd239189fdf3d30eeccb8b8017cf8757eccfb1bb",
+      "artifact_byte_length": 6137,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:planner",
+      "label": "Text-to-SQL planner loop",
+      "review_state": "REVIEWED",
+      "locator": "text_to_sql_planner/planner/planner.py:258-260,262-467,469-512,513-517,527-531 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "The greedy forward-chaining plan loop, operator self-validation before state mutation, the cvc5 goal test, the salvage re-check, and the best_indeterminate_node return path.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:f718e8f0fb27647a327f5cd3220ac0dee1f00a7e54b25bb40967351979b63a4d",
+      "artifact_byte_length": 23934,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:llm-client",
+      "label": "Text-to-SQL planner LLM client",
+      "review_state": "REVIEWED",
+      "locator": "text_to_sql_planner/planner/llm_client.py:139-152,257-268,659-662,690-693,707 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "The four narrow Bedrock calls, the forced tool call whose input schema enumerates the legal operators, and the DISTINCT decision that defaults to False on infrastructure failure.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:fd8e3f63d8db701feccbde93ac20dde54bc463a08ea79ca29d17268cd9b4c14b",
+      "artifact_byte_length": 42547,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:equivalence-checker",
+      "label": "Text-to-SQL equivalence checker",
+      "review_state": "REVIEWED",
+      "locator": "text_to_sql_planner/equivalence/equivalence_checker.py:176-178,278-300,366-377 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "The cvc5 equivalence decision including the cheap pre-checks that protect the solver, and the syntactic function-name match used for aggregate equivalence.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:071afd2026d8e565d07bfb96c1ff67427ecd7125656760f12e6d0685f7308b8d",
+      "artifact_byte_length": 43905,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:sql:bird-runner",
+      "label": "Text-to-SQL BIRD evaluation harness",
+      "review_state": "REVIEWED",
+      "locator": "bird_benchmark/runner.py:892-896,918-945 at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+      "evidence_description": "The BIRD dual-signal harness: cvc5 logical equivalence against a DRC translation of the gold SQL with injected foreign-key axioms and a projection-tolerance retry, alongside SQLite execution comparison.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:190fee51029996e2cfbbb86c5c8c0d9d7f6997fb55fcde83219c90451cf55e81",
+      "artifact_byte_length": 89461,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:kinetics:readme",
+      "label": "Kinetics research agent README",
+      "review_state": "REVIEWED",
+      "locator": "README.md:1-10,7,9-10,98-100 at commit 12a6975f2f9472c112a6ed99935603e5c4702340",
+      "evidence_description": "Repository README stating the provably correct framing and the claim that a reliable system can be assembled from a hybrid collection of unreliable components.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:fc2dae05e7d00358e6f85bcecfd7218f80b6ab5542eb3798c7cedeed865bf7e7",
+      "artifact_byte_length": 15748,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:kinetics:engine",
+      "label": "Kinetics research agent engine",
+      "review_state": "REVIEWED",
+      "locator": "engine.py:108-124,173-189,208-217,224-239,252-266,268-291,293-312,342-351,442-461,463-482,525,578-586 at commit 12a6975f2f9472c112a6ed99935603e5c4702340",
+      "evidence_description": "The two nested propose, execute, critique and repair loops, the sandbox-per-edit artifact chain, the executability gate on stderr and exit code, and the critique-then-classify gates.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:1c063de61fc3f881e31713dd284c191fd23f56bd7e4c477f298eba166d293897",
+      "artifact_byte_length": 26934,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:kinetics:utils",
+      "label": "Kinetics research agent utilities",
+      "review_state": "REVIEWED",
+      "locator": "utils.py:215-226,300-303,361-368 at commit 12a6975f2f9472c112a6ed99935603e5c4702340",
+      "evidence_description": "The unsandboxed subprocess invocation with trust-all-tools, the example-code lookup, and extract_result_block which reduces a free-text critique to a True or False token.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:9493548366b62dc4e201e3c6916bdee571570df39879a6279df3786420af08ef",
+      "artifact_byte_length": 11070,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:kinetics:prompts",
+      "label": "Kinetics research agent prompts",
+      "review_state": "REVIEWED",
+      "locator": "prompts.yaml:40-48,69-73,133-155,212-244 at commit 12a6975f2f9472c112a6ed99935603e5c4702340",
+      "evidence_description": "The prompt set that carries the chosen analysis type into code generation and both critique prompts, the curated-model selection prompt with its refusal path, and the report prompt that appends source, stdout and plots as appendices.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:933aa84acf7bd9604ae7fb68a67c08ba6d2468b7bae3fcc7eebc7248e1b97e3e",
+      "artifact_byte_length": 6788,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:kinetics:analysis-types",
+      "label": "Kinetics research agent analysis types",
+      "review_state": "REVIEWED",
+      "locator": "analysis-types.yaml:1-26 at commit 12a6975f2f9472c112a6ed99935603e5c4702340",
+      "evidence_description": "The pre-registered menu of four named in-silico protocols, each written as the question it answers, committed before any simulation code exists.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:3c146e96e8e318788d8b9f07c06d586f10d868bf8c56b5c23d7ed56378006dbe",
+      "artifact_byte_length": 1573,
+      "source_uri": "https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:clinical:readme",
+      "label": "Clinical verified chatbot README",
+      "review_state": "REVIEWED",
+      "locator": "README.md:17-30,49-50,91-93,96,99,105-106,113,120 at commit d25ae1278068d73825948318f58ed42a0eb88a61",
+      "evidence_description": "Repository README stating that the system labels each response valid, invalid or unknown rather than correcting it, that cvc5 performs the check, that the natural-language to logic translation is itself unverified, and that enforcement is future work.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:7289d1766cb1ea53876cac06eba78194535c83ea1e9747dd74490caebafd7693",
+      "artifact_byte_length": 11921,
+      "source_uri": "https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:clinical:core",
+      "label": "Clinical verified chatbot theory and prover core",
+      "review_state": "REVIEWED",
+      "locator": "core.py:99-141,186-229,232-349,383-386,405-414,419-422,800-863,881-894,914-921,982-1003,1018-1022,1097-1298 at commit d25ae1278068d73825948318f58ed42a0eb88a61",
+      "evidence_description": "The programmatic theory-to-English rendering, the closed-world axioms, the three-valued diagnosis datatype, the per-query theory rebuild, the entailment and fallback branches, the retrieved unsat core, and the nineteen prover-semantics test functions.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:346b36e71e9e4a4d6de67fc66df674bc9fc9016c9ff48d476f6bec0a8225d593",
+      "artifact_byte_length": 57066,
+      "source_uri": "https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:clinical:interface",
+      "label": "Clinical verified chatbot interface layer",
+      "review_state": "REVIEWED",
+      "locator": "interface.py:93-188,209-235,320-337 at commit d25ae1278068d73825948318f58ed42a0eb88a61",
+      "evidence_description": "The single unverified Sonnet call that translates a natural-language answer into one well-formed formula, the deliberate response corruptor, and the extraction path that delivers the answer unverified when extraction fails.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:494913fadc0e3db3731afb69e817b04a81c0d8f030dc4088da766deceb646d39",
+      "artifact_byte_length": 20497,
+      "source_uri": "https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:clinical:app",
+      "label": "Clinical verified chatbot demo application",
+      "review_state": "REVIEWED",
+      "locator": "app.py:27-40,36 at commit d25ae1278068d73825948318f58ed42a0eb88a61",
+      "evidence_description": "The demo user interface that renders the contradicted answer to the user with a red cross and takes no other action on an invalid verdict.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:d07203c3ea8e3735758f8df165d2356f3ce6a46b930ba0c8cc1dabe0b50c28b0",
+      "artifact_byte_length": 1371,
+      "source_uri": "https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:aws:clinical:github-workflow",
+      "label": "Clinical verified chatbot GitHub test workflow",
+      "review_state": "REVIEWED",
+      "locator": ".github/workflows/tests.tml (entire file) at commit d25ae1278068d73825948318f58ed42a0eb88a61",
+      "evidence_description": "The GitHub Actions test workflow file, named tests.tml rather than tests.yml, which GitHub therefore never executes.",
+      "source_class": "REPOSITORY",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:a8c17478884067e62bbad7a42161a1aae4b6f1ac0b4d50e760b0bd2f87c45d73",
+      "artifact_byte_length": 594,
+      "source_uri": "https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-positioning",
+      "label": "autoresearch-et positioning document",
+      "review_state": "REVIEWED",
+      "locator": "POSITIONING-2026-04-24.md:7-13,19-31,33-44,46-63,65-76,78-90,92-164,166-194,199-204",
+      "evidence_description": "The thesis statement, the six novelty claims with author confidence, the explicit non-claims, and the plan for three future papers.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:50c7272d2295f0fbe2154638dd6eade133cbf76aae830658e4d945ea90e675b0",
+      "artifact_byte_length": 8621,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/POSITIONING-2026-04-24.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-related-work",
+      "label": "autoresearch-et related-work document",
+      "review_state": "REVIEWED",
+      "locator": "RELATED-WORK-2026-04-24.md:71-74,206-213,269-277 and a full-document keyword sweep",
+      "evidence_description": "The surveyed systems and the controller-position argument. A keyword sweep for description logic, OWL, SHACL, Prolog, Datalog, answer set, neurosymbolic, symbolic plan, formal verification, theorem prover, SMT and constraint solver returns zero matches in this document.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:f0103eccc2d6919bfa485cf75f3ed82fc712f5681d34da437ab614d2a5203e29",
+      "artifact_byte_length": 16058,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/RELATED-WORK-2026-04-24.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-audit-2026-05-06",
+      "label": "autoresearch-et vision-deviation audit",
+      "review_state": "REVIEWED",
+      "locator": "AUDIT-2026-05-06-vision-deviation.md:8-45,12-14,28-43",
+      "evidence_description": "The project's own audit recording knowledge-graph isolation per run and per problem, similar_solved_examples never populating, a vector store that cannot search at runtime, a flat-string producer prompt with no graph traversal, and zero knowledge-graph algorithm references in the producer path.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:efb7fd6f053031b158284067bb3b934c10a00d37836918bd4dd272aa038883ad",
+      "artifact_byte_length": 16860,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/AUDIT-2026-05-06-vision-deviation.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-bird-milestone",
+      "label": "autoresearch-et BIRD-SQL milestone",
+      "review_state": "REVIEWED",
+      "locator": "MILESTONE-bird-sql.md:1-108,18-27",
+      "evidence_description": "The pre-registered BIRD result: 223 of 500 at 44.6 percent execution accuracy against a 50 percent pre-registered minimum and a naive one-shot baseline near 57 percent, the difficulty split, the infrastructure counts, and the diagnosis of early clause commitment under a seven-slot linear decomposition.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:74579a362709caa4016d73e49f460c5d973e0176fe18bab778c34ce763e974f8",
+      "artifact_byte_length": 7878,
+      "local_path": "/Users/luis/Projects/autoresearch-et/demos/bird_sql/experiments/MILESTONE-bird-sql.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-adr-006",
+      "label": "autoresearch-et ADR-006 grounded rationale",
+      "review_state": "REVIEWED",
+      "locator": "006-grounded-rationale-hard-reject.md:10-26",
+      "evidence_description": "The decision that write_rationale resolves every cited node identifier before commit and that a missing identifier raises and creates an AuditFailure node, with flag-in-metadata and auto-repair recorded as rejected alternatives.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:81b78eafa2b649d3c57889f794f55f27b0cbf047d6e2c307156e0c73899be6a5",
+      "artifact_byte_length": 2298,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/ADR/006-grounded-rationale-hard-reject.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-adr-013",
+      "label": "autoresearch-et ADR-013 agent-facing KG channels",
+      "review_state": "REVIEWED",
+      "locator": "013-agent-facing-kg-channels.md:8-59",
+      "evidence_description": "The six precomputed read channels intended to close the write-only-sink gap, including similar_solved_examples, which the 2026-05-06 audit records as never populating.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:62193b429be3fca4ec2791b9e4962ad441f7157aef4e9e9fa3fc50a9aef7355e",
+      "artifact_byte_length": 7373,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/ADR/013-agent-facing-kg-channels.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-adr-016",
+      "label": "autoresearch-et ADR-016 dreamer output router",
+      "review_state": "REVIEWED",
+      "locator": "016-dreamer-output-router.md:12-45",
+      "evidence_description": "The recorded failure in which the dreamer identified the winning move on six of seven lost problems but could only advise the prompt, and the routing fix that sends pins into frontier selection and plans through a materializer that writes chains atomically.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:5f7b93610cd47dbff7402e46b6787e46a1f6be9d90c7188d536acc951a0402af",
+      "artifact_byte_length": 14123,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/ADR/016-dreamer-output-router.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "EvidenceAttachment",
+    "record": {
+      "id": "evidence:local:autoresearch-adr-018",
+      "label": "autoresearch-et ADR-018 stuck signal trigger",
+      "review_state": "REVIEWED",
+      "locator": "018-stuck-signal-trigger.md:16-99",
+      "evidence_description": "The StuckSignal design: an open dictionary of normalized measured signals combined into a weighted score behind a domain-extensible trigger factory that decides when a meta-agent is dispatched.",
+      "source_class": "PROJECT_DOCUMENTATION",
+      "accessed_on": "2026-08-19",
+      "access_status": "INSPECTED",
+      "artifact_sha256": "sha256:17b8658292fa43f438d5e784eddaef445e5a2b1146e1ccc863353578b7d620cb",
+      "artifact_byte_length": 8079,
+      "local_path": "/Users/luis/Projects/autoresearch-et/docs/ADR/018-stuck-signal-trigger.md"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:symbolic-layer-write-position",
+      "label": "Position of the symbolic layer in the write path",
+      "axis_definition": "Position of the symbolic layer in the write path: admission gate at write time vs verification of output at read time vs no symbolic layer. Question: can an invalid or ungrounded assertion ever enter the store and be read later?",
+      "axis_code": "WRITE_POSITION",
+      "axis_scope": "symbolic layer placement",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:constraint-language-pinning",
+      "label": "Expressivity and pinning of the constraint language",
+      "axis_definition": "Expressivity and pinning of the constraint language: type conformance, decidable description-logic entailment, Horn rules over compiled facts, or ad-hoc checks - and is the rule program content-pinned? Question: what class of error can the system catch, and can a check's result be reproduced later?",
+      "axis_code": "CONSTRAINT_LANGUAGE",
+      "axis_scope": "verification substrate",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:rejection-preserved",
+      "label": "Rejection preserved as a typed record",
+      "axis_definition": "Does a rejection produce a preserved typed record, or a silent retry or discard? Question: is the failure surface auditable; can rejection rate be measured over time? Ask each repository: what happens to attempt N-1 after a failed verification?",
+      "axis_code": "REJECTION_RECORD",
+      "axis_scope": "failure surface",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:validation-vs-acceptance",
+      "label": "Validation separated from epistemic acceptance",
+      "axis_definition": "Does passing validation constitute acceptance, or is structural commitment held separate from epistemic acceptance and action authorization? Question: does a validated write silently become a truth claim the system acts on?",
+      "axis_code": "ACCEPTANCE_SEPARATION",
+      "axis_scope": "commitment semantics",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:trace-persistence-verified-reach",
+      "label": "Persistence and verified reach of the reasoning trace",
+      "axis_definition": "Persistence and reach of the reasoning trace: per-query discarded, per-session, per-problem-namespace, or genuinely cross-problem - scored on VERIFIED reach. Question: does structure accumulate knowledge, or is it scaffolding rebuilt every call? (autoresearch-et's own audit shows claimed reach can fail in practice - score everyone on verified reach.)",
+      "axis_code": "TRACE_REACH",
+      "axis_scope": "state persistence",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:meta-control-gating",
+      "label": "Control of meta-reasoning dispatch",
+      "axis_definition": "Control of meta-reasoning: inline, deterministic every step, or gated dispatch on externally measured telemetry. Question: what decides WHEN the expensive reasoning component runs, and does that depend on LLM self-report? Discriminator: skip rate.",
+      "axis_code": "META_GATING",
+      "axis_scope": "meta-agent dispatch",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:output-reaches-search",
+      "label": "Reach of the meta or symbolic component's output",
+      "axis_definition": "Does the meta or symbolic component's output reach the search mechanism, or only the prompt? Question: can the reasoning layer FORCE an action, or only advise? A symbolic layer that only advises looks neurosymbolic on the diagram and behaves like a prompt suffix in the ablation.",
+      "axis_code": "OUTPUT_REACH",
+      "axis_scope": "control authority",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ComparisonAxis",
+    "record": {
+      "id": "axis:evidence-discipline",
+      "label": "Evidence discipline of the reported result",
+      "axis_definition": "Evidence discipline: pre-registered bands with a same-model naive control and per-item attribution, vs aggregate benchmark accuracy. Question: would this system's own authors have been able to report a null? Does an ablation isolate the symbolic layer at all?",
+      "axis_code": "EVIDENCE_DISCIPLINE",
+      "axis_scope": "result reporting",
+      "review_state": "REVIEWED"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:aws:neurosymbolic-dl",
+      "label": "sample-neurosymbolic-framework-with-description-logics",
+      "title": "sample-neurosymbolic-framework-with-description-logics",
+      "identifiers": [
+        "url:https://github.com/aws-samples/sample-neurosymbolic-framework-with-description-logics",
+        "commit:6b7b884889d6d9420fde097f21ebe8fe8d5327fb"
+      ],
+      "priority_date": "2026-05-12",
+      "priority_date_basis": "Last commit date 2026-05-12 ('tweak docs') observed in a shallow clone at 6b7b884889d6d9420fde097f21ebe8fe8d5327fb. Shallow clone shows only the tip commit, so no earlier first-public date was observable in this pass.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:aws:dl:readme",
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:fixer",
+        "evidence:aws:dl:seed-program",
+        "evidence:aws:dl:iteration4-program"
+      ],
+      "notes": [
+        "Repository URL constructed from the aws-samples organization and the repository name recorded in the intake file; the intake file names the repository, not the full URL.",
+        "Sample repository under MIT-0, 3,424 Python lines, one shipped run over one ontology, 15 tests covering only executor string and subprocess handling, no library API."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:aws:text-to-sql-planner",
+      "label": "sample-neurosymbolic-text-to-SQL-with-symbolic-planner",
+      "title": "sample-neurosymbolic-text-to-SQL-with-symbolic-planner",
+      "identifiers": [
+        "url:https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner",
+        "commit:f32efa42bbddc6448bf769c1bb12e67a8fa1c115"
+      ],
+      "priority_date": "2026-06-25",
+      "priority_date_basis": "Last commit date 2026-06-25 (f32efa4, author Simon Handley) observed in a shallow clone. Shallow clone shows only the tip commit, so no earlier first-public date was observable in this pass.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:aws:sql:readme",
+        "evidence:aws:sql:main",
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:llm-client",
+        "evidence:aws:sql:equivalence-checker",
+        "evidence:aws:sql:bird-runner"
+      ],
+      "notes": [
+        "Sample by publication (aws-samples, 'sample-' prefix, version 0.1.0) but framework-scale by content: 42,526 Python lines across two installable packages, 723 test functions with LLM and cvc5 mocked, and empty integration, properties and strategies test scaffolding."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:aws:kinetics-research-agent",
+      "label": "sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways",
+      "title": "sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways",
+      "identifiers": [
+        "url:https://github.com/aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways",
+        "commit:12a6975f2f9472c112a6ed99935603e5c4702340"
+      ],
+      "priority_date": "2026-05-16",
+      "priority_date_basis": "Last commit date 2026-05-16 (12a6975, 'update docs', author Simon Handley) observed in a shallow clone. Shallow clone shows only the tip commit, so no earlier first-public date was observable in this pass.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:aws:kinetics:readme",
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils",
+        "evidence:aws:kinetics:prompts",
+        "evidence:aws:kinetics:analysis-types"
+      ],
+      "notes": [
+        "Sample repository, roughly 2,890 Python, TypeScript and TSX lines plus 474 lines of YAML and Markdown prompts and 870 lines of .kiro specifications. Ships no test files, contradicting its own design document."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:aws:clinical-verified-chatbot",
+      "label": "sample-clinical-chatbot-with-logically-verified-responses",
+      "title": "sample-clinical-chatbot-with-logically-verified-responses",
+      "identifiers": [
+        "url:https://github.com/aws-samples/sample-clinical-chatbot-with-logically-verified-responses",
+        "commit:d25ae1278068d73825948318f58ed42a0eb88a61"
+      ],
+      "priority_date": "2025-11-03",
+      "priority_date_basis": "Last commit date 2025-11-03 (d25ae12, 'add (approx= X Y); not hooked up yet', author Simon Handley), a single squashed commit. Shallow clone shows only the tip commit, so no earlier first-public date was observable in this pass.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:interface",
+        "evidence:aws:clinical:app",
+        "evidence:aws:clinical:github-workflow"
+      ],
+      "notes": [
+        "Single-patient illustrative demo under MIT-0, described by its own README as a promising first step. Roughly 3,100 Python and 3,240 non-test TypeScript lines."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Work",
+    "record": {
+      "id": "work:local:autoresearch-et",
+      "label": "autoresearch-et (local research system)",
+      "title": "autoresearch-et",
+      "identifiers": [
+        "path:/Users/luis/Projects/autoresearch-et"
+      ],
+      "priority_date_basis": "Local unpublished repository; no public release or first-public date was established in this pass. Dated internal documents inspected run from POSITIONING-2026-04-24.md to AUDIT-2026-05-06-vision-deviation.md. No calendar value is recorded rather than inventing one.",
+      "publication_status": "SOFTWARE",
+      "review_state": "REVIEWED",
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-related-work",
+        "evidence:local:autoresearch-audit-2026-05-06",
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:local:autoresearch-adr-006",
+        "evidence:local:autoresearch-adr-013",
+        "evidence:local:autoresearch-adr-016",
+        "evidence:local:autoresearch-adr-018"
+      ],
+      "notes": [
+        "Recorded so work-to-work relations can name the internal system. Axis coverage for the internal system is recorded once, on the review target target:autoresearch-et-thesis, and is not duplicated on this Work record.",
+        "No paper file exists in autoresearch-et; the reviewed artifact is the positioning, related-work and methodology documents."
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

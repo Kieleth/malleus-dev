@@ -1,0 +1,122 @@
+##### A. object name is a pure function of (type, length, bytes)
+git hash-object     : ce013625030ba8dba906f756967f9e9ca394464a
+sha1('blob 6\0hello'): ce013625030ba8dba906f756967f9e9ca394464a
+empty blob          : e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+same bytes, other name:
+  g.txt -> ce013625030ba8dba906f756967f9e9ca394464a
+raw object file on disk:
+013625030ba8dba906f756967f9e9ca394464a
+loose object is zlib of the same preimage:
+  inflated = b'blob 6\x00hello\n'
+
+##### B. two independent repos, same content -> same blob AND same tree, different commit
+r1 tree  : 68ba7e4f796cbce5ed86bad3e9df986fb138d99f   commit: f84c493444c48d356e70af761aeb1cbb72cb30ea
+r2 tree  : 68ba7e4f796cbce5ed86bad3e9df986fb138d99f   commit: ebcae8fde9383147cb66cc1e6aac32701759d74f
+r1 a.txt blob: 4a58007052a65fbc2fc3f910f2855f45a4058e74
+r2 a.txt blob: 4a58007052a65fbc2fc3f910f2855f45a4058e74
+r1 commit object body:
+    tree 68ba7e4f796cbce5ed86bad3e9df986fb138d99f
+    author R <r@x> 1577836800 +0000
+    committer R <r@x> 1577836800 +0000
+    
+    one
+r2 commit object body:
+    tree 68ba7e4f796cbce5ed86bad3e9df986fb138d99f
+    parent 139225b21d9c6ffb11d8c314aa04baf4ae5ee107
+    author R <r@x> 1577836800 +0000
+    committer R <r@x> 1577836800 +0000
+    
+    z
+r1 tree object body:
+    100644 blob 4a58007052a65fbc2fc3f910f2855f45a4058e74	a.txt
+    100644 blob 65b2df87f7df3aeedef04be96703e55ac19c2cfb	b.txt
+
+##### C. divergence and re-convergence inside one repo
+left  : commit b4fc3bc2dcd838d2381fe86f59e13e4b54ef6d83  tree 72334f9adbea7570b6b4feaf190095fb48787409
+right : commit 79fca6bd6b039dfa11e5440a73f035e364de0d5b tree 72334f9adbea7570b6b4feaf190095fb48787409
+-> identical content on two branches: trees converge, commits do not.
+object count in this repo (all four objects for one file state, shared):
+count: 7
+size: 28
+in-pack: 0
+packs: 0
+size-pack: 0
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+
+##### D. packing and deltas
+loose object store before gc:
+count: 93
+size: 620.00 KiB
+in-pack: 0
+packs: 0
+size-pack: 0 bytes
+prune-packable: 0
+garbage: 0
+size-garbage: 0 bytes
+  du: 620K	.git/objects
+after gc:
+count: 0
+size: 0 bytes
+in-pack: 93
+packs: 1
+size-pack: 30.35 KiB
+prune-packable: 0
+garbage: 0
+size-garbage: 0 bytes
+  du:  44K	.git/objects
+delta chains (verify-pack, blobs only, first 12):
+    458f935818e3a9e593ba8f128bd4d5eaf1e8617f blob   194471 10460 3962
+    440e5d194f87fc7af4dcadc9763fac6eafea8410 blob   39 49 14422 1 458f935818e3a9e593ba8f128bd4d5eaf1e8617f
+    de07788b50c0c4b50f9af52965ba138ce13daec5 blob   39 48 14471 2 440e5d194f87fc7af4dcadc9763fac6eafea8410
+    db1541b1b01581de24b20001e185c92d087d374a blob   28 40 14519 3 de07788b50c0c4b50f9af52965ba138ce13daec5
+    e7e572ba6ba317430b574b25eda3bd4cff4a37e5 blob   39 48 14559 4 db1541b1b01581de24b20001e185c92d087d374a
+    514b10103b0bc8dfcbd1289bc8a14c8b0b1e153b blob   39 48 14607 5 e7e572ba6ba317430b574b25eda3bd4cff4a37e5
+    85815641ec12916f9f79cacfab0fd116954017ea blob   39 48 14655 6 514b10103b0bc8dfcbd1289bc8a14c8b0b1e153b
+    0d785f736d6df69753346ca5660c55e023a49f6a blob   39 51 14703 7 85815641ec12916f9f79cacfab0fd116954017ea
+    b183910489e300833564dcc469f4a426b4d8ed45 blob   28 41 14845 7 85815641ec12916f9f79cacfab0fd116954017ea
+    020e4fdd39cd0e2dbc424be6da66e6795dc35823 blob   28 41 14978 6 514b10103b0bc8dfcbd1289bc8a14c8b0b1e153b
+    f5eba5133ca18902c2e5b072340c0fe28985c18b blob   28 41 15111 5 e7e572ba6ba317430b574b25eda3bd4cff4a37e5
+    9b3aaa415fc3797b51fce07e97603e465db32508 blob   28 41 15244 4 db1541b1b01581de24b20001e185c92d087d374a
+  (columns: sha1 type size size-in-pack offset [depth base-sha1])
+how many blobs are stored whole vs as deltas:
+      29 delta
+       2 full-text
+which revisions are the full-text bases (git gc pack):
+    revision 1 of 31 -> 7eed4b33ef4534ba9a9429186b72e1c8a766438c (stored whole)
+    revision 18 of 31 -> 458f935818e3a9e593ba8f128bd4d5eaf1e8617f (stored whole)
+    newest revision is 0d785f736d6df69753346ca5660c55e023a49f6a
+
+##### E. reachability and gc
+deleted branch tip bdbb39feeef2f089ef6aab463b71e828c65415a1 still readable: commit
+fsck says:
+reflog still references it:
+    reflog entries: 5
+after reflog expire + gc --prune=now:
+    fatal: git cat-file: could not get object info
+
+##### F. the index
+index entries:
+    100644 4a58007052a65fbc2fc3f910f2855f45a4058e74 0	a.txt
+    100644 65b2df87f7df3aeedef04be96703e55ac19c2cfb 0	b.txt
+index file size:      209 bytes
+tree from original index : 68ba7e4f796cbce5ed86bad3e9df986fb138d99f
+index deleted, rebuilt from commit, tree again: 68ba7e4f796cbce5ed86bad3e9df986fb138d99f
+-> index reconstructible from the object db for a clean tree.
+
+##### G. object identity is invariant under re-encoding of the pack
+object-set signature, default deltas : d519f453331c7d0b4c5f55c5d44a8d28bdb2cd2859acdfe6c8ff8353e02b015f
+  pack bytes:  44K
+object-set signature, deltas disabled: d519f453331c7d0b4c5f55c5d44a8d28bdb2cd2859acdfe6c8ff8353e02b015f
+  pack bytes: 340K
+  deltified blobs now: 0
+-> the pack encoding is not part of any object's name.
+
+##### H. which revision became the full-text delta base?
+non-delta (full-text) blob in pack: 7eed4b33ef4534ba9a9429186b72e1c8a766438c
+  it is revision 1 of 31 (v1)
+  oldest revision blob: 7eed4b33ef4534ba9a9429186b72e1c8a766438c
+  newest revision blob: 0d785f736d6df69753346ca5660c55e023a49f6a
+
+WORKDIR=/var/folders/wc/9t5t5_vs70s76vcx3fgcnb800000gn/T/tmp.ouMpVGGCG4

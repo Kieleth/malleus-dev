@@ -1,0 +1,67 @@
+{
+  "_intake_note": "Verbatim Opus subagent findings, 2026-08-19. Evidence-first inspection of shallow clone. Basis marks preserved. Ledger records derived from this file are in ../records/.",
+  "repo": "https://github.com/aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner",
+  "commit_sha": "f32efa42bbddc6448bf769c1bb12e67a8fa1c115",
+  "purpose": "A natural-language-to-SQL system that routes generation through a formal intermediate language (Domain Relational Calculus) instead of having an LLM emit SQL directly. An LLM translates the question into DRC, then a loop composes relational-algebra operators over the schema's table relations until an SMT solver (cvc5) proves the built relation logically equivalent to the target DRC; SQL is then generated deterministically from the proven operator tree. It ships a second package, bird_benchmark/, that evaluates the planner against BIRD using both cvc5 logical equivalence against a DRC translation of the gold SQL and SQLite execution comparison.",
+  "planner_layer": {
+    "kind": "NOT PDDL, NOT a classical search planner, NOT grammar-constrained decoding. It is an LLM-proposes / symbolic-verifier-disposes loop over a closed, typed algebra of relational-algebra operators. No A*/beam/BFS/backtracking; greedy forward chaining, available-relations list only grows (planner.py:419). Only backward-looking move is a 'salvage scan' re-running cvc5 on already-built intermediates when retries are exhausted.",
+    "plans_over": "DRC relation expressions: state is a list of available DRC relations (seeded one-per-table from CREATE TABLE), actions are 11 typed RA operators (selection, join, projection, cartesian_product, union, difference, division, rename, aggregate, ratio, anti_join), goal is a target DRC produced by the LLM from the question. Goal test = SMT-proved logical equivalence.",
+    "constrains_or_checks": "BOTH, at three gates: (1) CONSTRAINS at generation — operator selection is a forced Bedrock tool call whose input_schema enums the legal operators (llm_client.py:129-167,267); (2) CONSTRAINS at application — indices range-checked, params type-built, operator self-validates arity/columns/compatibility returning OperatorFailure (planner.py:342-376); (3) CHECKS after — cvc5 decides equivalence after each application, loop terminates only on unsat (planner.py:440-467). The LLM never emits SQL; SQL derives deterministically from the proven tree (main.py:154-183). Rejections from all gates feed back as negative memory."
+  },
+  "llm_layer": {
+    "models": "Single configured model: Bedrock 'global.anthropic.claude-opus-4-6-v1' via converse(). Bedrock only, no Anthropic API.",
+    "role": "Four narrow LLM calls, none producing SQL: (a) question->DRC (temp 0.0, ~180-line DRC system prompt); (b) select_operator (forced tool use, temp escalating 0.0+0.2*retry); (c) summarize_relation (cosmetic label); (d) decide_distinct (boolean, defaults False on any error)."
+  },
+  "interaction_pattern": "NL question + CREATE TABLE schema (+ optional BIRD evidence string) -> LLM emits Lisp DRC, parsed + free-variable-validated, auto-repaired (unquantified free vars wrapped in existential) or re-prompted, up to 3 attempts (question_converter.py:60-64,170-190). Extended-DRC LIMIT/ORDER_BY wrappers stripped; inner core DRC is the planner target. Each table becomes a seed DRC relation. plan() tries two degenerate short-circuits, then iterates up to 50 times x 5 retries: LLM proposes operator+inputs+params under forced tool schema -> validated -> applied -> DRC-simplified -> deduplicated -> appended + summarized -> cvc5 equivalence check vs target. Every rejection recorded and replayed into next prompt. On unsat: proven tree -> simplified -> deterministic flat SELECT with DISTINCT/ORDER BY/LIMIT -> SQL simplifier to fixpoint (skipped for UNION/EXCEPT because the simplifier mis-parses set ops in derived tables, main.py:176-183).",
+  "evaluation": {
+    "benchmarks": "BIRD-SQL only (dev split 1,534 pairs, 11 DBs; test split rejected by installer; Mini-Dev unsupported out of the box). No Spider, no WikiSQL.",
+    "metrics": "Dual: (1) logical equivalence via cvc5 over generated DRC vs gold DRC (gold SQL translated by the repo's own SQL->DRC converter), nine Verdict values; (2) execution equivalence on BIRD's SQLite snapshot, set_match (BIRD official) + stricter multiset_match recorded separately. Disagreement cells treated as primary diagnostic. Two relaxations: BIRD FKs injected as SMT referential-integrity axioms; projection-tolerance retry truncates generated DRC to gold's arity.",
+    "reported_results": "NOT_ESTABLISHED. README claims 'near-SOTA performance on the BIRD-SQL benchmark suite' (README.md:13) but the repository contains NO accuracy figure, results JSON, manifest, report artifact, or leaderboard comparison anywhere."
+  },
+  "key_concepts": [
+    {"concept": "Domain Relational Calculus (DRC)", "definition": "First-order set-builder intermediate language {x1..xn | phi} in Lisp S-expressions, the formal meaning representation between question and SQL."},
+    {"concept": "Extended DRC", "definition": "LIMIT/ORDER_BY wrappers strictly outside the set-based core, so row order/count are never part of the equivalence proof."},
+    {"concept": "Operation tree", "definition": "Typed RA operator tree over table leaves, each node carrying its DRC and columns; the only thing SQL is generated from."},
+    {"concept": "Equivalence as goal test", "definition": "Terminate when cvc5 returns unsat for (not (forall (rv...) (= C_built C_target)))."},
+    {"concept": "Relations as uninterpreted functions", "definition": "Each table predicate is an uninterpreted Bool SMT function, so the proof ranges over every possible database state."},
+    {"concept": "Negative memory / rejected proposals", "definition": "Per-iteration typed list of failed proposals replayed into the next prompt under a DO NOT repeat instruction."},
+    {"concept": "Salvage re-check", "definition": "On retry exhaustion, previously built intermediates of matching arity/kind are re-submitted to cvc5."},
+    {"concept": "Multi-strategy parallel solving", "definition": "Three cvc5 quantifier-instantiation profiles run concurrently; first decisive answer wins."},
+    {"concept": "FK referential-integrity axioms", "definition": "BIRD's declared FKs rendered as SMT forall/implies/exists assertions prepended to the equivalence script."},
+    {"concept": "Dual-signal evaluation", "definition": "Every BIRD case carries a proof verdict (all DB states) and an observation (execution on the snapshot); disagreement is the diagnostic."},
+    {"concept": "Expected-fail list", "definition": "Operator-curated Test_Case_IDs reclassified as expected_fail, with stale-entry detection."}
+  ],
+  "claims_selected": [
+    {"claim": "The emitted SQL is the SQL whose DRC the planner proved equivalent to the target — 'unsat or nothing'.", "basis": "SOURCE_EXPLICIT", "evidence": "README.md:40-42"},
+    {"claim": "Contradicted by code: when cvc5 returns indeterminate the node is stashed in best_indeterminate_node and on retry-exhaustion/max-iterations returned as PlannerSuccess, so main.py emits SQL for a relation never proved equivalent.", "basis": "REVIEWER_INFERENCE", "evidence": "planner.py:258-260,462-464,513-517,527-531 vs README.md:40-42"},
+    {"claim": "The LLM never generates SQL anywhere in the pipeline.", "basis": "REVIEWER_INFERENCE", "evidence": "main.py:154-183; llm_client.py all four entry points"},
+    {"claim": "No search over plan space: greedy forward chaining, no backtracking, no heuristic.", "basis": "REVIEWER_INFERENCE", "evidence": "planner.py:262-467,469-512"},
+    {"claim": "Equivalence proof covers set membership only; row order and count excluded by design.", "basis": "SOURCE_EXPLICIT", "evidence": "README.md:276-282"},
+    {"claim": "Aggregate equivalence is syntactic function-name match + SMT over the underlying condition, not semantic aggregation modelling.", "basis": "REVIEWER_INFERENCE", "evidence": "equivalence_checker.py:278-300,366-377"},
+    {"claim": "Near-SOTA claim unsupported in-repo: no number committed anywhere.", "basis": "REVIEWER_INFERENCE", "evidence": "grep sota/accuracy/leaderboard -> README.md:13 only"},
+    {"claim": "BIRD 'equivalent' verdict is weaker than unconditional equivalence: proved under injected FK axioms, plus projection-tolerance retry.", "basis": "REVIEWER_INFERENCE", "evidence": "runner.py:892-896,918-945"},
+    {"claim": "Operator choice constrained at generation time by forced tool call with enum schema.", "basis": "REVIEWER_INFERENCE", "evidence": "llm_client.py:139-152,257-268"},
+    {"claim": "Eleventh operator 'ratio' is LLM-selectable but undocumented in README's operator table.", "basis": "REVIEWER_INFERENCE", "evidence": "operators.py:11-18 vs README.md:215-237"},
+    {"claim": "DISTINCT decision silently defaults to False on infra failure, degrading correctness without surfacing an error.", "basis": "REVIEWER_INFERENCE", "evidence": "llm_client.py:659-662,690-693,707"}
+  ],
+  "maturity": {
+    "kind": "Sample by publication (aws-samples, 'sample-' prefix, v0.1.0) but framework-scale by content: 42,526 Python lines across two installable packages with CLIs, documented library API, evaluation harness with resume/manifest/expected-fail machinery.",
+    "tests": "723 test functions (README claims 747 collected), 16,718 test lines — more than the 15,824-line planner package. LLM and cvc5 mocked, fully offline. tests/integration, tests/properties, tests/strategies are empty scaffolding. Coverage targets the risky seams: SMT preprocessing, sort unification, FK axioms, projection tolerance, negative memory, equivalence strategies.",
+    "last_commit_date": "2026-06-25 (f32efa4, author Simon Handley)"
+  },
+  "evidence_digests": [
+    {"path": "README.md", "sha256": "d2b1955923e6f5b91a262d415c7f2a69f4cd2606fc07fe5b1e80fef90d26b4c4", "bytes": 37249},
+    {"path": "text_to_sql_planner/main.py", "sha256": "771c6bbb1f54c6832d251641fd239189fdf3d30eeccb8b8017cf8757eccfb1bb", "bytes": 6137},
+    {"path": "text_to_sql_planner/planner/planner.py", "sha256": "f718e8f0fb27647a327f5cd3220ac0dee1f00a7e54b25bb40967351979b63a4d", "bytes": 23934},
+    {"path": "text_to_sql_planner/planner/llm_client.py", "sha256": "fd8e3f63d8db701feccbde93ac20dde54bc463a08ea79ca29d17268cd9b4c14b", "bytes": 42547},
+    {"path": "text_to_sql_planner/equivalence/equivalence_checker.py", "sha256": "071afd2026d8e565d07bfb96c1ff67427ecd7125656760f12e6d0685f7308b8d", "bytes": 43905},
+    {"path": "text_to_sql_planner/equivalence/smt_converter.py", "sha256": "01918e1c491d46fff64e44c4c194b744d6115b8ac700308641eccd433653854d", "bytes": 33589},
+    {"path": "text_to_sql_planner/types/operators.py", "sha256": "1e25d6c1336841d5d4fe7d4558094a2d963dbec47bac92ff966c9a8ed04a47d7", "bytes": 6134},
+    {"path": "text_to_sql_planner/converter/question_converter.py", "sha256": "6eeafd35caa2402abe0f9f3ff64a8ddc1de8b70f6fe907f531be193d0c0abf53", "bytes": 33720},
+    {"path": "bird_benchmark/runner.py", "sha256": "190fee51029996e2cfbbb86c5c8c0d9d7f6997fb55fcde83219c90451cf55e81", "bytes": 89461},
+    {"path": "bird_benchmark/exec_eq.py", "sha256": "f6d9b04b60a15ffbda247580f1ea4d800c4f171048b98a4775795e9bad1bc970", "bytes": 9548},
+    {"path": "bird_benchmark/types.py", "sha256": "801f168b18ae4f3701559bfd6d9789a8bac686f2fa4ee7ec1f5b99629596b294", "bytes": 12741},
+    {"path": "pyproject.toml", "sha256": "1ffd8972efd3010941688acaa6e46485032363da9f334d3879e6f88dae284e53", "bytes": 640}
+  ],
+  "resonances": "Typed KG: NOT_ESTABLISHED as a graph; nearest analogue is a typed closed algebra (11 operator kinds, typed DRC AST) plus schema lifted into typed facts (per-position sort unification; FKs as first-class SMT axioms). Schema-validated generation: STRONG at two layers — DRC output parsed/semantically validated/auto-repaired-or-reprompted; operator choice made unproducible outside the algebra by forced tool schema, then re-validated before mutating state. Repair-over-reject is explicit ('rather than burning a retry'). Planning gates before expensive generation: PARTIAL and INVERTED — cheap gates short-circuit the SMT solve, but the scarce resource being protected is the SOLVER, not the LLM; the code states 'still cheap relative to the LLM calls' (equivalence_checker.py:176-178), the reverse of the usual LLM-pipeline cost model. Grounded audit trails: STRONG and arguably most transferable — every intermediate human-readable and printed (target DRC in Lisp + Unicode, relations with LLM one-liners, operator selections with reasoning, full SMT-LIB script per check with verdict, SQL before/after simplification); proof scripts carry lhs/rhs labels so generated-vs-gold is readable post-hoc; BIRD harness emits one markdown transcript per case. Closed loops: STRONG on rejection (typed RejectedProposal replayed as negative memory), weak on promotion (only final unsat promotes), and entirely WITHIN-RUN — rejected_proposals reset per iteration, nothing persists for later runs, no cross-run learning; the operator-curated expected-fail list is the only durable accept/reject artifact."
+}

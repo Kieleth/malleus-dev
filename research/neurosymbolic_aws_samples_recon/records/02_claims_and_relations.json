@@ -1,0 +1,1618 @@
+[
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-dl:provably-correct",
+      "label": "Ontological reasoning yields provably correct answers",
+      "statement": "Replacing LLM reasoning with ontological reasoning over a large biomedical OWL ontology produces provably correct answers to natural-language questions.",
+      "claim_kind": "capability_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:dl:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-dl:no-reasoner-invoked",
+      "label": "No description-logic reasoner is invoked",
+      "statement": "No description-logic reasoner is invoked anywhere in the repository: a repository-wide search for sync_reasoner, HermiT, Pellet, ELK, consistency, subsumption, satisfiability and entailment returns zero code hits, owlready2 is used only to load and count, and the shipped symbolic operation is breadth-first transitive closure over asserted subclass edges plus set intersection over asserted role triples in SQLite. No proof object, entailment or consistency check exists.",
+      "claim_kind": "mechanism_refutation",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:dl:readme",
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-dl:rule-in-prompt-not-mechanism",
+      "label": "The owlready2 rule is prompt-stated and unenforced",
+      "statement": "The harness rule that core reasoning must use owlready2 is stated in the fixer's prompt (fixer.py:92) and enforced by no mechanism; all four shipped evolved programs import only sqlite3 and boto3 and none import owlready2.",
+      "claim_kind": "enforcement_gap",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:dl:fixer",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-dl:answer-not-axiom-derived",
+      "label": "The concept set is axiom-derived, the answer is not",
+      "statement": "The stated contract that the LLM never sees the answer (seed_program.py:4-5) does not hold for the shipped final program: an LLM narrates the retrieved labels and is prompted to add pathophysiology and clinical significance beyond the retrieved set (iteration_4/query_program.py:292-313). Together with LLM-authored broader search terms matched against labels and a LIKE label fallback, the concept set is axiom-derived while the delivered answer is not.",
+      "claim_kind": "provenance_refutation",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:dl:seed-program",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-sql:unsat-or-nothing",
+      "label": "Emitted SQL is proved equivalent to the target",
+      "statement": "The emitted SQL is the SQL whose domain relational calculus the planner proved equivalent to the target: unsat or nothing.",
+      "claim_kind": "guarantee_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:sql:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-sql:indeterminate-escape",
+      "label": "Indeterminate nodes are emitted as successes",
+      "statement": "The unsat-or-nothing contract is contradicted by code: when cvc5 returns indeterminate the node is stashed in best_indeterminate_node and, on retry exhaustion or maximum iterations, returned as a PlannerSuccess, so the entry point emits SQL for a relation that was never proved equivalent.",
+      "claim_kind": "guarantee_refutation",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:main",
+        "evidence:aws:sql:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-sql:no-plan-space-search",
+      "label": "The planner does not search a plan space",
+      "statement": "The symbolic planner performs no search over a plan space: it is greedy forward chaining with no A-star, beam, breadth-first search or backtracking and no heuristic; the available relations list only grows, and the sole backward-looking move is a salvage scan that re-runs cvc5 on already-built intermediates once retries are exhausted.",
+      "claim_kind": "mechanism_qualification",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:sql:planner"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-sql:near-sota-unsupported",
+      "label": "The near-SOTA BIRD claim has no in-repository number",
+      "statement": "The README's claim of near state-of-the-art performance on the BIRD-SQL benchmark suite is unsupported in the repository: no accuracy figure, results JSON, manifest, report artifact or leaderboard comparison is committed anywhere.",
+      "claim_kind": "evidence_gap",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:sql:readme",
+        "evidence:aws:sql:bird-runner"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-kinetics:provably-correct",
+      "label": "Provably correct answers about pathway kinetics",
+      "statement": "The system provides provably correct answers about the kinetics of biochemical pathways by grounding responses in a simulator rather than LLM recall.",
+      "claim_kind": "capability_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:kinetics:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-kinetics:reliable-from-unreliable",
+      "label": "A reliable system from unreliable components",
+      "statement": "A reliable system can be assembled from a hybrid collection of unreliable components.",
+      "claim_kind": "architecture_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:kinetics:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-kinetics:no-provability-mechanism",
+      "label": "Every correctness gate is an LLM classifying its own critique",
+      "statement": "Nothing in the repository establishes provability: there is no proof obligation, no formal property over the scientific output and no test suite. Every correctness gate is an LLM reducing its own free-text critique to a True or False token; the only mechanical check is exit code zero with empty stderr, which gates executability alone.",
+      "claim_kind": "guarantee_refutation",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-kinetics:pre-committed-protocol",
+      "label": "The analysis type is a pre-committed protocol carried into every critique",
+      "statement": "The named analysis type is chosen before any simulation code exists and then carried as a constraint into code generation and into both critique prompts, so the reviewing step judges fidelity to a pre-committed in-silico protocol rather than to an open goal.",
+      "claim_kind": "methodology_observation",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:aws:kinetics:analysis-types",
+        "evidence:aws:kinetics:prompts",
+        "evidence:aws:kinetics:engine"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-clinical:cvc5-verifies",
+      "label": "cvc5 checks each response against the patient theory",
+      "statement": "cvc5 performs the verification: valid means no contradiction between the extracted well-formed formulas and the formal theory of the patient record.",
+      "claim_kind": "mechanism_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:clinical:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-clinical:no-enforcement",
+      "label": "A failed verification triggers nothing",
+      "statement": "Verification failure triggers no refusal, repair, regeneration or retry anywhere in the code; the verdict is a displayed string and both user interfaces render the contradicted answer to the user with a red cross. The README concedes that enforcement is future work.",
+      "claim_kind": "enforcement_gap",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:app"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-clinical:false-is-non-entailment",
+      "label": "A false verdict is non-entailment surfaced as contradiction",
+      "statement": "The false verdict proves only non-entailment: satisfiability of the theory together with the negated formula is surfaced to the user as a contradiction. This is near-correct here only because the closed-world axioms decide almost everything in vocabulary, and is unsound in general.",
+      "claim_kind": "semantics_qualification",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:app"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-clinical:consistency-stamped-valid",
+      "label": "On prover-unknown, mere consistency is stamped valid",
+      "statement": "On a prover-unknown result the fallback branch returns true when the theory together with the formula is merely satisfiable, so an unsupported but non-contradictory claim is stamped valid. The branch is reachable because the resource limit is finite and the quantified queries are undecidable.",
+      "claim_kind": "semantics_qualification",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:aws:clinical:core"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:aws-clinical:translation-unverified",
+      "label": "The natural-language to logic translation is itself unverified",
+      "statement": "The translation from the natural-language answer into a well-formed formula is a single unverified LLM call with no round-trip check, no consensus and no proof that the formula means what the sentence said, so the entire guarantee is conditional on an unverified neural step.",
+      "claim_kind": "trust_boundary",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:interface"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:autoresearch-et:thesis",
+      "label": "autoresearch-et thesis",
+      "statement": "A weak LLM plus a persistent, typed, bitemporal knowledge graph plus telemetry-gated meta-agents plus pre-registered per-problem methodology can reach the same performance zone as a strong LLM with inline reasoning, and the knowledge graph lets us explain which mechanism moved which problem.",
+      "claim_kind": "thesis",
+      "review_state": "REVIEWED",
+      "confidence": 0.95,
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:autoresearch-et:trajectory-kg-medium",
+      "label": "The live search trajectory is the reasoning medium",
+      "statement": "Persisting the live search trajectory as typed bitemporal nodes queryable from inside prompt construction is the primary reasoning medium, distinct from per-query discarded trees, corpus indexing and conversational memory.",
+      "claim_kind": "novelty_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-013"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:autoresearch-et:telemetry-gated-meta",
+      "label": "Meta-agent dispatch is gated on externally measured telemetry",
+      "statement": "Meta-agent dispatch is gated by rule-based, externally measured telemetry rather than by LLM self-assessment, with a measured silence rate of 57.6 percent that is bimodal per problem.",
+      "claim_kind": "novelty_claim",
+      "review_state": "REVIEWED",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-018",
+        "evidence:local:autoresearch-related-work"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:autoresearch-et:audit-contradicts-reach",
+      "label": "The claimed cross-problem reach is contradicted in practice",
+      "statement": "The claimed cross-problem reach of the knowledge graph is contradicted by the project's own 2026-05-06 audit: the graph is isolated per run and per problem so cross-run and cross-problem learning is impossible by construction, similar_solved_examples never populates, the vector store cannot search at runtime, the producer prompt is a flat string with no graph traversal, and the graph algorithms have zero references in the producer path. Several deviations are bugs rather than architectural choices. Any score of autoresearch-et on claimed capability without this caveat overstates it.",
+      "claim_kind": "self_audit_caveat",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:local:autoresearch-audit-2026-05-06",
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-013"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "Claim",
+    "record": {
+      "id": "claim:autoresearch-et:bird-null-reported",
+      "label": "The BIRD hypothesis missed and the null was reported",
+      "statement": "On BIRD the pre-registered hypothesis missed and the null was reported rather than withdrawn: 223 of 500 at 44.6 percent execution accuracy against a 50 percent pre-registered minimum and a naive one-shot baseline near 57 percent, with the infrastructure half of the claim holding (11,737 PartialStates, 3,310 audit events, zero AuditFailure nodes, every solved path reconstructable). The diagnosed cause is architectural: a seven-slot linear clause decomposition commits early clauses before later-clause constraints are visible.",
+      "claim_kind": "reported_result",
+      "review_state": "REVIEWED",
+      "confidence": 0.9,
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-dl-provably-correct",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "claim:aws-dl:provably-correct",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The inspected README states the claim at README.md:7, 38-40 and 421-424.",
+      "evidence_ids": [
+        "evidence:aws:dl:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-dl-no-reasoner-invoked",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "claim:aws-dl:no-reasoner-invoked",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer derived this from a repository-wide keyword sweep with zero code hits and from reading the shipped evolved program's SQLite queries; it refutes the README's provably correct framing.",
+      "evidence_ids": [
+        "evidence:aws:dl:readme",
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-dl-rule-in-prompt-not-mechanism",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "claim:aws-dl:rule-in-prompt-not-mechanism",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer compared the prompt text at fixer.py:92 against the imports of the four shipped evolved programs.",
+      "evidence_ids": [
+        "evidence:aws:dl:fixer",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-dl-answer-not-axiom-derived",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "claim:aws-dl:answer-not-axiom-derived",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer compared the seed program's stated contract with the shipped final program's narration prompt.",
+      "evidence_ids": [
+        "evidence:aws:dl:seed-program",
+        "evidence:aws:dl:iteration4-program"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-sql-unsat-or-nothing",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "claim:aws-sql:unsat-or-nothing",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The inspected README states the contract at README.md:40-42.",
+      "evidence_ids": [
+        "evidence:aws:sql:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-sql-indeterminate-escape",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "claim:aws-sql:indeterminate-escape",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer traced planner.py:258-260, 462-464, 513-517 and 527-531 into the SQL generation path and compared it against README.md:40-42.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:main",
+        "evidence:aws:sql:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-sql-no-plan-space-search",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "claim:aws-sql:no-plan-space-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer read the plan loop at planner.py:262-467 and 469-512 and found no backtracking or heuristic ranking.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-sql-near-sota-unsupported",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "claim:aws-sql:near-sota-unsupported",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "A repository-wide sweep for sota, accuracy and leaderboard returns only README.md:13; the evaluation harness is present but no result artifact is committed.",
+      "evidence_ids": [
+        "evidence:aws:sql:readme",
+        "evidence:aws:sql:bird-runner"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-kinetics-provably-correct",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "claim:aws-kinetics:provably-correct",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The inspected README states the claim at README.md:7 and 9-10.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-kinetics-reliable-from-unreliable",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "claim:aws-kinetics:reliable-from-unreliable",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The inspected README states the claim at README.md:98-100.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-kinetics-no-provability-mechanism",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "claim:aws-kinetics:no-provability-mechanism",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer traced the gates at engine.py:256, 293-312 and 442-461 into utils.py:361-368 and found no other rejection mechanism.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-kinetics-pre-committed-protocol",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "claim:aws-kinetics:pre-committed-protocol",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Reviewer followed the analysis type from analysis-types.yaml:1-26 through engine.py:208-217 and 582-586 into prompts.yaml:44-48 and 69-73.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:analysis-types",
+        "evidence:aws:kinetics:prompts",
+        "evidence:aws:kinetics:engine"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-clinical-cvc5-verifies",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "claim:aws-clinical:cvc5-verifies",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The inspected README states the mechanism at README.md:49-50 and 99.",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-clinical-no-enforcement",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "claim:aws-clinical:no-enforcement",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The README concedes the gap at README.md:106 and the demo application renders the contradicted answer at app.py:27-40.",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:app"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-clinical-false-is-non-entailment",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "claim:aws-clinical:false-is-non-entailment",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer read the verdict branches at core.py:984-986 and the rendering at app.py:27-28.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:app"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-clinical-consistency-stamped-valid",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "claim:aws-clinical:consistency-stamped-valid",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer read the fallback branch at core.py:989-997 against the primary branch at core.py:982-987.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:aws-clinical-translation-unverified",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "claim:aws-clinical:translation-unverified",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The README names the risk at README.md:96 and 113 and the single extraction call is at interface.py:93-188.",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:interface"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:autoresearch-et-thesis",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "claim:autoresearch-et:thesis",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.95,
+      "basis": "The positioning document states the thesis verbatim at POSITIONING-2026-04-24.md:7-13.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:autoresearch-et-trajectory-kg-medium",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "claim:autoresearch-et:trajectory-kg-medium",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The positioning document asserts the claim with high author confidence at POSITIONING-2026-04-24.md:19-31; the read channels are specified in ADR-013:8-59.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-013"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:autoresearch-et-telemetry-gated-meta",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "claim:autoresearch-et:telemetry-gated-meta",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "The positioning document states the claim with medium-high author confidence at POSITIONING-2026-04-24.md:46-63 and contrasts it with MeCo's self-assessed score at RELATED-WORK-2026-04-24.md:206-213 and 269-277; the trigger is specified in ADR-018:16-99.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-018",
+        "evidence:local:autoresearch-related-work"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:autoresearch-et-audit-contradicts-reach",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "claim:autoresearch-et:audit-contradicts-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Reviewer set the audit findings at AUDIT-2026-05-06-vision-deviation.md:8-45 against the positioning claim at POSITIONING-2026-04-24.md:19-31 and the ADR-013 channel design; the contradiction is recorded as the reviewer's reading of two internal documents, not as a single source statement.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-audit-2026-05-06",
+        "evidence:local:autoresearch-positioning",
+        "evidence:local:autoresearch-adr-013"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "HasClaimRelation",
+    "record": {
+      "id": "relation:has-claim:autoresearch-et-bird-null-reported",
+      "relation_type": "HAS_CLAIM",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "claim:autoresearch-et:bird-null-reported",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "The milestone document states the numbers, the pre-registered band and the diagnosis at MILESTONE-bird-sql.md:1-108.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:write-position",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:symbolic-layer-write-position",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "ADR-006 places the check at write time: write_rationale resolves every cited node identifier before commit and a missing identifier raises and creates an AuditFailure node, with flag-in-metadata and auto-repair explicitly rejected as alternatives.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-006"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:constraint-language",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:constraint-language-pinning",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "Typed node conformance and bitemporal validity are established in the positioning document, but this pass inspected no decidable entailment and no content-pinned rule program for autoresearch-et itself; the pinned-contract mechanism belongs to malleus, which is a different system and was not scored here.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-positioning"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:rejection-preserved",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:rejection-preserved",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "A failed grounding check produces a typed AuditFailure node rather than a silent retry, and the decision record names auto-repair as a rejected alternative (ADR-006:10-26).",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-006"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:validation-vs-acceptance",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:validation-vs-acceptance",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "Structural commitment and epistemic acceptance are separate events: writes commit, and a separate auditor pass over committed state can expire a promotion. The BIRD run records 3,310 audit events against committed state with zero AuditFailure nodes.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-006",
+        "evidence:local:autoresearch-bird-milestone"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:trace-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:trace-persistence-verified-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "Scored on verified reach, not on the claim. Within-run and per-problem persistence is verified (11,737 PartialStates, 11,237 MergeSteps across 498 namespaces, every solved path reconstructable), but the claimed cross-problem reach is contradicted by the project's own 2026-05-06 audit: isolation per run and per problem, similar_solved_examples never populating, and no graph traversal in the producer prompt.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-audit-2026-05-06",
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:local:autoresearch-positioning"
+      ],
+      "coverage_level": "CONTRADICTED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:meta-gating",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:meta-control-gating",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.85,
+      "basis": "Dispatch is decided by a trigger predicate over normalized measured signals (ADR-018:16-99) rather than by LLM self-report, and the discriminator the axis asks for is reported: a 57.6 percent silence rate, bimodal per problem (POSITIONING:46-63).",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-018",
+        "evidence:local:autoresearch-positioning"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:output-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:output-reaches-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "ADR-016 records the failure the axis names (the dreamer found the winning move on six of seven lost problems but could only advise the prompt) and specifies routing into frontier selection and atomic plan materialization. The routed path's effect is not verified: the June campaign found plan-materialized BIRD terminals were never gold-executed, so the mechanism was unmeasurable rather than merely ineffective.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-016",
+        "evidence:local:autoresearch-audit-2026-05-06"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:autoresearch-et:evidence-discipline",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "target:autoresearch-et-thesis",
+      "target_id": "axis:evidence-discipline",
+      "review_state": "REVIEWED",
+      "assertion_status": "SOURCE_EXPLICIT",
+      "confidence": 0.9,
+      "basis": "Pre-registered bands with a mandatory same-model naive control, a missed hypothesis reported as a null (44.6 percent against a 50 percent band and a 57 percent naive baseline), a difficulty split, and a later run classified as a pre-registered regression with mandatory halt and root-cause analysis.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:local:autoresearch-positioning"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:write-position",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:symbolic-layer-write-position",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.85,
+      "basis": "The ontology is strictly read-only and nothing ever writes to it, so admission gating cannot arise. The symbolic layer is the answer source between two LLM calls, and no mechanism rejects a statement for inconsistency or a failed subsumption test. This review did not establish coverage; that is not proof of absence beyond the inspected commit.",
+      "evidence_ids": [
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:iteration4-program"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:constraint-language",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:constraint-language-pinning",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The repository is named for description logics and its README claims ontological reasoning, but no reasoner is invoked: the constraint language in code is asserted-axiom lookup, breadth-first transitive closure and set intersection over a SQLite cache built by a regex line-scanner over OWL functional syntax.",
+      "evidence_ids": [
+        "evidence:aws:dl:readme",
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:iteration4-program"
+      ],
+      "coverage_level": "CONTRADICTED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:rejection-preserved",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:rejection-preserved",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Every judged verdict stores its justification alongside stdout and stderr per iteration, so the critique of attempt N-1 survives; the rejected program itself does not, because the fixer overwrites query_program.py in place. Iterations 3 and 4 are byte-identical despite a 12,235-byte changes.patch between them.",
+      "evidence_ids": [
+        "evidence:aws:dl:fixer",
+        "evidence:aws:dl:iteration4-program"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:validation-vs-acceptance",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:validation-vs-acceptance",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "No separation exists: the LLM judge's verdict is simultaneously the stop criterion, the acceptance decision and the headline metric. There is no structural commitment held apart from an epistemic acceptance event.",
+      "evidence_ids": [
+        "evidence:aws:dl:builder"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:trace-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:trace-persistence-verified-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Verified reach is one run: per-iteration artifacts plus a run-level summary and report give linear versioning with provenance, degraded by the in-place overwrite. No cross-run or cross-problem state was established.",
+      "evidence_ids": [
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:fixer"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:meta-gating",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:meta-control-gating",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "An analogue exists but not the axis's discriminator: the loop continues until judged accuracy crosses a threshold or twenty iterations elapse, so dispatch is threshold-gated, but the measurement is an LLM judge's verdict rather than external telemetry, and no skip rate is reported.",
+      "evidence_ids": [
+        "evidence:aws:dl:builder"
+      ],
+      "coverage_level": "ADJACENT",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:output-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:output-reaches-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "The critique does not stop at the prompt: it is materialized as a durable TASK.md that drives an external coding agent to rewrite the program, so the meta layer forces a change to the artifact being searched over. The layer producing the critique is an LLM judge, not a symbolic check.",
+      "evidence_ids": [
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:fixer"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-dl:evidence-discipline",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:neurosymbolic-dl",
+      "target_id": "axis:evidence-discipline",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.85,
+      "basis": "The shipped sample result rests on four hand-written questions with a 0.95 threshold judged by an LLM against encyclopedic prose that no OWL file asserts. No baseline, no naive control and no ablation isolating the symbolic layer was found in the inspected commit.",
+      "evidence_ids": [
+        "evidence:aws:dl:readme",
+        "evidence:aws:dl:builder"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:write-position",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:symbolic-layer-write-position",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The symbolic layer gates before state changes at three points: a forced tool schema that makes an illegal operator unproducible, operator self-validation of arity, columns and compatibility before the relation list is mutated, and a cvc5 equivalence check after each application. SQL is never emitted by an LLM. The gate has a documented bypass: an indeterminate node can be returned as a success and emitted.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:llm-client",
+        "evidence:aws:sql:main"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:constraint-language",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:constraint-language-pinning",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The constraint language is first-order: domain relational calculus as the meaning representation, table predicates as uninterpreted SMT functions so the proof ranges over every database state, and cvc5 unsat as the goal test. Limits are named in code: aggregate equivalence is syntactic function-name match plus SMT over the underlying condition, and row order and count are excluded by design. Content-pinning of the solver configuration was not established in this pass.",
+      "evidence_ids": [
+        "evidence:aws:sql:equivalence-checker",
+        "evidence:aws:sql:readme"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:rejection-preserved",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:rejection-preserved",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Rejections are typed and reused: a failed proposal becomes a typed RejectedProposal replayed into the next prompt as negative memory. Reach is bounded: the rejected list resets per iteration and nothing persists across runs, leaving the operator-curated expected-fail list as the only durable accept-or-reject artifact.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:bird-runner"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:validation-vs-acceptance",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:validation-vs-acceptance",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.6,
+      "basis": "In the planner, passing the check is acceptance: unsat terminates the loop and SQL is emitted. The BIRD harness holds a partial analogue of the separation, recording a proof verdict over all database states beside an execution observation on one snapshot and treating disagreement as the primary diagnostic. That separation is evaluation-only and does not govern emission.",
+      "evidence_ids": [
+        "evidence:aws:sql:bird-runner",
+        "evidence:aws:sql:main"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:trace-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:trace-persistence-verified-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Verified reach is one run: every intermediate is human-readable and printed, each check writes a full SMT-LIB script with labelled sides, and the BIRD harness emits one markdown transcript per case. Nothing accumulates across runs; negative memory resets per iteration.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:bird-runner"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:meta-gating",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:meta-control-gating",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Gating exists and is inverted relative to the axis's usual cost model: cheap deterministic pre-checks short-circuit the expensive solve, and the code states the checks are still cheap relative to the LLM calls, so the protected resource is the solver, not the model. The gate is deterministic rather than telemetry-measured, and no skip rate is reported.",
+      "evidence_ids": [
+        "evidence:aws:sql:equivalence-checker",
+        "evidence:aws:sql:planner"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:output-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:output-reaches-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The symbolic layer forces actions rather than advising: an operator schema makes illegal choices unproducible, a validation failure blocks the state change, and the solver's verdict is the loop's only termination condition. Rejections re-enter the next proposal as typed negative memory.",
+      "evidence_ids": [
+        "evidence:aws:sql:planner",
+        "evidence:aws:sql:llm-client"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-sql:evidence-discipline",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:text-to-sql-planner",
+      "target_id": "axis:evidence-discipline",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The harness has real machinery: dual-signal evaluation with nine verdict values, a stricter multiset match recorded beside BIRD's official set match, disagreement as the primary diagnostic, and an expected-fail list with stale-entry detection. No accuracy figure, result artifact, baseline or symbolic-layer ablation is committed, so the near-SOTA claim rests on nothing in the repository.",
+      "evidence_ids": [
+        "evidence:aws:sql:bird-runner",
+        "evidence:aws:sql:readme"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:write-position",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:symbolic-layer-write-position",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "The simulator sits after generation and produces evidence rather than gating it. The only mechanical gate is an analogue of admission control one level down: non-empty stderr or a non-zero exit forces a repair round, so the interpreter gates executability alone. Every semantic gate is an LLM classifier.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils"
+      ],
+      "coverage_level": "ADJACENT",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:constraint-language",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:constraint-language-pinning",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "No theorem prover, planner, logic engine or ontology exists in the repository. The nearest analogue is closed vocabulary gating on generation: three curated models and four analysis types with an explicit refusal path. The vocabulary is not enforced on the write: a hallucinated accession fails late as a KeyError, and one of the four advertised analysis types has no example-code entry and raises when selected.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:analysis-types",
+        "evidence:aws:kinetics:utils",
+        "evidence:aws:kinetics:engine"
+      ],
+      "coverage_level": "ADJACENT",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:rejection-preserved",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:rejection-preserved",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Attempt N-1 survives as bytes: each code-writing step gets its own numbered sandbox directory with its task file and script, and every intermediate is preserved for the run. It does not survive as a typed record: the rejection is a True or False token parsed out of a free-text critique, and the declared provenance event for LLM calls is never emitted.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:validation-vs-acceptance",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:validation-vs-acceptance",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.85,
+      "basis": "The loop closes over the artifact, never over the biology: there is no hypothesis object, no prediction, no comparison against experimental or literature data and no accept-or-reject of a biological claim. Advance-or-retry is decided by an LLM classifier, so validation and acceptance are the same event.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:prompts"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:trace-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:trace-persistence-verified-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "Verified reach is one run: a complete ordered append-only trace of every prompt, response, code version, execution result and report revision, plus numbered sandbox directories. Across runs there is no index, database, graph or reuse. Two leaks: the report revision round-trips through the LLM and can silently drop its appendices, and the visible run identifier differs from the artifact directory identifier.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:meta-gating",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:meta-control-gating",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.7,
+      "basis": "A dispatch gate exists in shape only: a second LLM call reduces a free-text critique to a True or False token that decides advance or retry. The measurement is the model's own critique, not external telemetry; the repair loop is capped at ten attempts, the report loop at five, and the outer code loop has no iteration cap at all.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:utils"
+      ],
+      "coverage_level": "ADJACENT",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:output-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:output-reaches-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "The critique's verdict routes into an actual rewrite of the simulation script and a re-execution rather than into a prompt suffix, and the pre-committed analysis type propagates as a hard constraint into code generation and both critique prompts. The component whose output reaches the loop is an LLM, not the simulator.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:engine",
+        "evidence:aws:kinetics:prompts"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-kinetics:evidence-discipline",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:kinetics-research-agent",
+      "target_id": "axis:evidence-discipline",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Pre-commitment is real on one side: a menu of four named in-silico protocols is fixed before any code exists and injected into both critique prompts, and the design document literally pre-registers seven numbered correctness properties. Nothing tests them: the properties constrain interface plumbing only, the repository ships zero test files and no test-runner dependency while its task list marks all tests passing, and no baseline, ablation or reported result exists.",
+      "evidence_ids": [
+        "evidence:aws:kinetics:analysis-types",
+        "evidence:aws:kinetics:prompts",
+        "evidence:aws:kinetics:readme"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:write-position",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:symbolic-layer-write-position",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The work occupies the read-time verification position squarely: every answer is translated into a formula and checked against a fixed theory before display. It stops there by stated design: the verdict authorizes nothing, no refusal or repair exists, and the contradicted answer is rendered to the user.",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:app"
+      ],
+      "coverage_level": "MATERIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:constraint-language",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:constraint-language-pinning",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.9,
+      "basis": "The strongest constraint language of the four inspected repositories and the only pinned one: cvc5 1.3.1 pinned, many-sorted first-order logic with quantifiers and uninterpreted functions, a three-constructor datatype for epistemic unknown, IEEE-754 numerics chosen because reals have no NaN, the closed-world assumption materialised as explicit axioms, every predicate declared with sorted arguments, and a closed operator whitelist that keeps out-of-vocabulary formulas out of the solver.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:readme"
+      ],
+      "coverage_level": "CENTRAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:rejection-preserved",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:rejection-preserved",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "A schema violation is indistinguishable from a prover timeout: an unknown function raises a Python exception that is swallowed into an unknown verdict, nothing is quarantined or logged as a typed rejection, and extraction failure fails open by delivering the answer unverified. The computed unsat core, which is the per-claim citation trail into specific axioms, is retrieved and logged but never attached to the response.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:interface"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:validation-vs-acceptance",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:validation-vs-acceptance",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "The verdict is separate from action, but by omission rather than design: it labels and authorizes nothing, and the README concedes enforcement is future work. In the other direction the separation collapses, because on prover-unknown mere consistency is stamped valid, so an unsupported claim can be accepted.",
+      "evidence_ids": [
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:core"
+      ],
+      "coverage_level": "PARTIAL",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:trace-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:trace-persistence-verified-reach",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.9,
+      "basis": "Nothing persists: a fresh solver is created and the entire theory is regenerated from ten hardcoded facts on every validity check, with no incremental solving, no identifiers and no store. Reach is one query.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:meta-gating",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:meta-control-gating",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "The work occupies the deterministic-every-step position: the prover runs unconditionally on every response under a fixed resource limit. There is no dispatch gate, no telemetry and no skip rate to report.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core"
+      ],
+      "coverage_level": "ADJACENT",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:output-reach",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:output-reaches-search",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.9,
+      "basis": "The verdict is never fed back to any agent: a search for refusal, repair, regeneration or retry returns zero hits, and the verdict can even be lost in transport between the non-streaming API field and the field the frontend reads. The architecture diagram draws the feedback arrow the code does not close.",
+      "evidence_ids": [
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:app",
+        "evidence:aws:clinical:interface"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "CoversAxisRelation",
+    "record": {
+      "id": "relation:coverage:aws-clinical:evidence-discipline",
+      "relation_type": "COVERS_AXIS",
+      "source_id": "work:aws:clinical-verified-chatbot",
+      "target_id": "axis:evidence-discipline",
+      "review_state": "REVIEWED",
+      "assertion_status": "NEGATIVE_AUDIT",
+      "confidence": 0.85,
+      "basis": "Nineteen thoughtful prover-semantics tests exist but no continuous-integration path runs them: the GitHub workflow file is named tests.tml so GitHub never executes it, the GitLab pipeline runs doctests only, and the verification feature has zero coverage across 248 frontend test cases. There is no benchmark, baseline or ablation; the demonstration is one patient with deliberate fault injection.",
+      "evidence_ids": [
+        "evidence:aws:clinical:github-workflow",
+        "evidence:aws:clinical:core",
+        "evidence:aws:clinical:readme"
+      ],
+      "coverage_level": "NOT_ESTABLISHED",
+      "coverage_maturity": "INSPECTED_PRIMARY"
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:autoresearch-et:sql",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:local:autoresearch-et",
+      "target_id": "work:aws:text-to-sql-planner",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Shared ground is BIRD-SQL and execution accuracy. autoresearch-et's BIRD result is a reported null diagnosed as early clause commitment under a seven-slot linear decomposition, while the external planner builds one global relation and terminates only on a proved equivalence, so the contrast is over global versus incremental commitment rather than over reported scores; neither side's accuracy is comparable here because the external repository commits no number.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:aws:sql:readme",
+        "evidence:aws:sql:planner"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:autoresearch-et:clinical",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:local:autoresearch-et",
+      "target_id": "work:aws:clinical-verified-chatbot",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.85,
+      "basis": "The clinical chatbot computes the judgment autoresearch-et's ADR-006 uses to hard-reject a write, and does nothing with it: a verdict as label against a verdict as gate. Its constraint language is far stronger and pinned; its enforcement is absent by its own README's admission.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-adr-006",
+        "evidence:aws:clinical:readme",
+        "evidence:aws:clinical:app"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:autoresearch-et:dl",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:local:autoresearch-et",
+      "target_id": "work:aws:neurosymbolic-dl",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.8,
+      "basis": "Both close a propose, evaluate, critique and repair loop with a durable critique artifact and a stop criterion. The stop criterion differs in kind: an LLM judge scoring prose agreement against four hand-written questions, against pre-registered bands with a mandatory same-model naive control and a reported null.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:aws:dl:builder",
+        "evidence:aws:dl:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ContrastsWithRelation",
+    "record": {
+      "id": "relation:contrast:autoresearch-et:kinetics",
+      "relation_type": "CONTRASTS_WITH",
+      "source_id": "work:local:autoresearch-et",
+      "target_id": "work:aws:kinetics-research-agent",
+      "review_state": "REVIEWED",
+      "assertion_status": "REVIEWER_INFERENCE",
+      "confidence": 0.75,
+      "basis": "Both pre-commit a named methodology before generation. The kinetics agent's pre-registration is a menu of protocols plus seven numbered properties that constrain interface plumbing and that no test implements, while autoresearch-et's pre-registered bands decide an experiment's verdict and produced a halt-and-analyse classification when a run regressed.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-bird-milestone",
+        "evidence:aws:kinetics:analysis-types",
+        "evidence:aws:kinetics:readme"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

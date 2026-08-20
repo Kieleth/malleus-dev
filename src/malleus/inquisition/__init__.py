@@ -525,6 +525,16 @@ def run_rites(
                       else "is a superset of")
             report.add("root_currency", COMMENDATION, str(root),
                        f"schema {phrase} the installed root (strict): root is current")
+            # The grammar version is excluded from the structural comparison,
+            # so say it here rather than let it vanish. It used to be compared
+            # as an ordinary fact, which made this commendation unreachable for
+            # any schema using a conditional feature the root does not.
+            grammar = registry.fingerprint_grammar(root_registry.strict_fingerprint())
+            if grammar == "newer":
+                report.add("root_currency", NOTE, str(root),
+                           "the root declares a newer fingerprint grammar than this "
+                           "schema produces; the structural comparison above answered a "
+                           "narrower question than it appears to")
         else:
             report.verdict("root_currency", str(root),
                            f"schema is {verdict} against the installed root under the "

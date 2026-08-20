@@ -1,0 +1,99 @@
+[
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:aws:dl-repo-inspection",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T12:08:00-07:00",
+      "query": "Shallow clone and full read of aws-samples/sample-neurosymbolic-framework-with-description-logics at commit 6b7b884889d6d9420fde097f21ebe8fe8d5327fb, including a repository-wide sweep for sync_reasoner, HermiT, Pellet, ELK, consistency, subsumption, satisfiability and entailment",
+      "search_rationale": "Establish whether the repository's description-logic framing corresponds to an invoked reasoner and where its symbolic layer sits relative to generation.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The sweep returned zero code hits; owlready2 is a dependency used only to load and count."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:aws:sql-repo-inspection",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T12:11:00-07:00",
+      "query": "Shallow clone and full read of aws-samples/sample-neurosymbolic-text-to-SQL-with-symbolic-planner at commit f32efa42bbddc6448bf769c1bb12e67a8fa1c115, including a sweep for sota, accuracy and leaderboard across the repository",
+      "search_rationale": "Establish what the symbolic planner plans over, whether the solver constrains or only checks, and whether the near-SOTA BIRD claim is backed by a committed number.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The accuracy sweep returned only README.md:13; no result artifact is committed.",
+        "Benchmark overlap with autoresearch-et's BIRD track is direct."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:aws:kinetics-repo-inspection",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T12:10:00-07:00",
+      "query": "Shallow clone and full read of aws-samples/sample-neurosymbolic-research-agent-for-kinetics-of-biochemical-pathways at commit 12a6975f2f9472c112a6ed99935603e5c4702340, including its .kiro specifications and shipped sample run",
+      "search_rationale": "Establish whether the provably correct framing corresponds to any proof obligation and what the simulator gates.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "No theorem prover, planner, logic engine or ontology exists in the repository; the only mechanical gate is executability."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:aws:clinical-repo-inspection",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T12:12:00-07:00",
+      "query": "Shallow clone and full read of aws-samples/sample-clinical-chatbot-with-logically-verified-responses at commit d25ae1278068d73825948318f58ed42a0eb88a61, including a sweep for refusal, repair, regeneration and retry paths on an invalid verdict",
+      "search_rationale": "Establish what the prover actually verifies and whether a failed verification gates anything.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The refusal and repair sweep returned zero hits; the verdict is displayed and never fed back to any agent."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "SearchEvent",
+    "record": {
+      "id": "search:local:autoresearch-doc-sweep",
+      "event_type": "SEARCH",
+      "occurred_at": "2026-08-19T12:14:00-07:00",
+      "query": "Read of autoresearch-et positioning, related-work, audit, BIRD milestone and architecture decision records 006, 013, 016 and 018, plus a keyword sweep of both survey documents for description logic, OWL, SHACL, Prolog, Datalog, answer set, neurosymbolic, symbolic plan, formal verification, theorem prover, SMT and constraint solver",
+      "search_rationale": "Establish the internal thesis, its novelty claims and its own recorded contradictions, and determine whether the neurosymbolic line is already surveyed.",
+      "search_outcome": "MATERIAL_SOURCE_FOUND",
+      "review_state": "REVIEWED",
+      "notes": [
+        "The keyword sweep returned zero matches in both survey documents; the neurosymbolic line is absent from the existing related-work coverage.",
+        "No paper file exists in autoresearch-et; the reviewed artifact is positioning, related-work and methodology documents."
+      ]
+    },
+    "supersedes_event_id": null
+  },
+  {
+    "record_type": "ReviewBoundary",
+    "record": {
+      "id": "boundary:neurosymbolic-aws-samples-2026-08-19",
+      "label": "Declared scope: four aws-samples repositories at recorded head commits plus internal documents",
+      "review_state": "REVIEWED",
+      "boundary_kind": "DECLARED_SCOPE_LIMIT",
+      "boundary_reason": "This pass inspects exactly the four aws-samples repositories at the recorded head commit SHAs plus the named autoresearch-et documents. No recursive citation chase was performed: no reference, dependency or related system named inside those repositories was followed. Systems already surveyed in autoresearch-et's RELATED-WORK-2026-04-24.md (Tree of Thoughts, AlphaGeometry, s1, Snell 2024, ReAct, MindStar, MeCo, process reward models, Graph of Thoughts, GraphRAG, Zep and Graphiti, A-Mem, debate, AutoGen, Chain of Agents, DiMo, Reflexion, Voyager, LATS, AI Scientist, DeepSeek-R1 and the o1 system card) and in malleus-dev/paper/paper.md's related-work table (ontology-grounded GraphRAG, KG-Trie and GCR, logically constrained decoding, CRANE, LoRP, LINC, SHACL, Mundler 2025, MemGPT, Reflexion and A-MEM) are explicitly excluded from re-survey. A NOT_ESTABLISHED coverage level inside this boundary means this review did not establish the item at the inspected commit; it is not proof of absence.",
+      "evidence_ids": [
+        "evidence:local:autoresearch-related-work",
+        "evidence:local:autoresearch-positioning"
+      ]
+    },
+    "supersedes_event_id": null
+  }
+]

@@ -51,6 +51,49 @@ LEXICAL_RANGES = {
 BUILTIN_RANGES = frozenset(BASE_RANGES | set(LEXICAL_RANGES))
 LEGACY_FINGERPRINT_VERSION = 3
 FINGERPRINT_VERSION = 4
+FINGERPRINT_VERSION_PREFIX = "fingerprint_version:"
+
+
+def _structural_facts(facts: frozenset[str]) -> frozenset[str]:
+    """The facts that describe the schema, without the one that describes the grammar.
+
+    `fingerprint_version:N` says which fact grammar produced this set. It is
+    not a property of the schema, and comparing it as though it were makes
+    "superset" unreachable for exactly the pair that most needs the answer: a
+    root that uses none of the conditional features against a project that
+    uses one. They then differ by one fact in each direction, neither set
+    contains the other, and a correct schema is reported divergent.
+
+    Reported by an adopting project whose release pipeline this blocked, and
+    reproduced here against our own shipped ontologies: `assent.yaml` carries
+    every fact `malleus.yaml` has, zero missing, and answered divergent.
+    """
+    return frozenset(f for f in facts if not f.startswith(FINGERPRINT_VERSION_PREFIX))
+
+
+def _fingerprint_grammar(facts: frozenset[str]) -> int | None:
+    """The grammar version a fact set declares, or None when it declares none."""
+    declared = {
+        f[len(FINGERPRINT_VERSION_PREFIX):]
+        for f in facts
+        if f.startswith(FINGERPRINT_VERSION_PREFIX)
+    }
+    if len(declared) != 1:
+        return None
+    try:
+        return int(next(iter(declared)))
+    except ValueError:
+        return None
+
+
+def _compare_structure(mine: frozenset[str], foreign: frozenset[str]) -> str:
+    mine, foreign = _structural_facts(mine), _structural_facts(foreign)
+    if foreign.issubset(mine):
+        return "superset"
+    if mine.issubset(foreign):
+        return "subset"
+    return "divergent"
+
 
 _CLASS_EXPRESSION_KEYS = frozenset({"slot_conditions"})
 _SLOT_CONDITION_KEYS = frozenset({"required", "equals_string", "value_presence"})
@@ -1204,12 +1247,7 @@ class OntologyRegistry:
     ) -> str:
         if self.content_hash() == foreign_hash:
             return "identical"
-        mine = self.fingerprint()
-        if foreign_fingerprint.issubset(mine):
-            return "superset"
-        if mine.issubset(foreign_fingerprint):
-            return "subset"
-        return "divergent"
+        return _compare_structure(self.fingerprint(), foreign_fingerprint)
 
     def check_compatibility_strict(
         self,
@@ -1218,12 +1256,24 @@ class OntologyRegistry:
     ) -> str:
         if self.content_hash() == foreign_hash:
             return "identical"
-        mine = self.strict_fingerprint()
-        if foreign_strict_fingerprint.issubset(mine):
-            return "superset"
-        if mine.issubset(foreign_strict_fingerprint):
-            return "subset"
-        return "divergent"
+        return _compare_structure(self.strict_fingerprint(), foreign_strict_fingerprint)
+
+    def fingerprint_grammar(self, foreign_fingerprint: frozenset[str]) -> str:
+        """How the foreign fact grammar relates to this one.
+
+        The version is excluded from the structural comparison and answered
+        here instead, so it is qualified rather than dropped. `newer` is the
+        direction that warrants care: a set produced by a grammar this reader
+        does not know may carry fact kinds it cannot interpret, so a structural
+        subset test against it is answering a narrower question than it looks.
+        """
+        theirs = _fingerprint_grammar(foreign_fingerprint)
+        if theirs is None:
+            return "unknown"
+        mine = self._fingerprint_version()
+        if theirs == mine:
+            return "same"
+        return "older" if theirs < mine else "newer"
 
     @property
     def entity_types(self) -> list[str]:

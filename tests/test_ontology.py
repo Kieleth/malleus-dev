@@ -1514,3 +1514,79 @@ class TestTheBundledRootResolvesWithoutAMap:
         )
         with pytest.raises(OntologyError, match="Cannot resolve import"):
             OntologyRegistry(path)
+
+
+class TestTheGrammarVersionIsNotAStructuralFact:
+    """Reported by an adopting project whose release pipeline this blocked,
+    and reproduced against our own shipped ontologies before the fix."""
+
+    def _shipped(self, *parts):
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+        return OntologyRegistry(bundled_ontology_path(*parts))
+
+    def test_a_schema_using_a_conditional_feature_is_still_a_superset_of_the_root(self):
+        """`assent.yaml` uses value_presence, so it emits grammar 4 while the
+        root emits 3. It carries every fact the root has, zero missing, and
+        was reported divergent because the two markers differ in each
+        direction. A rite that condemns a correct schema is worse than a
+        missing rite."""
+        root, assent = self._shipped("malleus.yaml"), self._shipped("assent.yaml")
+        structural = {f for f in root.strict_fingerprint()
+                      if not f.startswith("fingerprint_version:")}
+        mine = {f for f in assent.strict_fingerprint()
+                if not f.startswith("fingerprint_version:")}
+        assert not structural - mine, "premise changed: assent no longer contains the root"
+        assert assent.check_compatibility_strict(
+            root.content_hash(), root.strict_fingerprint()) == "superset"
+        assert assent.check_compatibility(
+            root.content_hash(), root.fingerprint()) == "superset"
+
+    def test_the_grammar_relationship_is_answered_rather_than_dropped(self):
+        root, assent = self._shipped("malleus.yaml"), self._shipped("assent.yaml")
+        assert assent.fingerprint_grammar(root.strict_fingerprint()) == "older"
+        assert assent.fingerprint_grammar(assent.strict_fingerprint()) == "same"
+        assert root.fingerprint_grammar(assent.strict_fingerprint()) == "newer"
+        assert root.fingerprint_grammar(frozenset({"type:Thing"})) == "unknown"
+
+    def test_the_marker_is_still_published(self):
+        """Excluded from the comparison, not removed from the fact set. A
+        consumer reading the published fingerprint still learns which grammar
+        produced it."""
+        assent = self._shipped("assent.yaml")
+        assert "fingerprint_version:4" in assent.strict_fingerprint()
+        assert "fingerprint_version:4" in assent.fingerprint()
+
+    def test_genuinely_different_schemas_are_still_divergent(self):
+        """The fix must not make everything a superset."""
+        cyp, recon = self._shipped("domains", "cyp450.yaml"), self._shipped("domains", "recon.yaml")
+        assert cyp.check_compatibility_strict(
+            recon.content_hash(), recon.strict_fingerprint()) == "divergent"
+
+    def test_a_dropped_required_constraint_is_still_caught(self):
+        """The strict check exists to catch what the producer-side one misses.
+        Excluding the grammar marker must not blunt it."""
+        from malleus.ontology import OntologyRegistry
+        import tempfile, pathlib, textwrap
+        base = textwrap.dedent("""
+            id: https://example.org/s
+            name: s
+            version: 0.1.0
+            default_range: string
+            imports: [linkml:types]
+            prefixes: {linkml: 'https://w3id.org/linkml/'}
+            classes:
+              Thing:
+                slots: [tag]
+                slot_usage:
+                  tag: {required: %s}
+            slots:
+              tag: {range: string}
+        """)
+        with tempfile.TemporaryDirectory() as tmp:
+            strict_path = pathlib.Path(tmp) / "strict.yaml"
+            loose_path = pathlib.Path(tmp) / "loose.yaml"
+            strict_path.write_text(base % "true")
+            loose_path.write_text(base % "false")
+            strict, loose = OntologyRegistry(strict_path), OntologyRegistry(loose_path)
+            assert loose.check_compatibility_strict(
+                strict.content_hash(), strict.strict_fingerprint()) != "superset"

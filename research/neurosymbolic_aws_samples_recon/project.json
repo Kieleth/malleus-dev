@@ -1,0 +1,8 @@
+{
+  "created_at": "2026-08-19T19:02:45.333321+00:00",
+  "creator_id": "reviewer:neurosymbolic-recon",
+  "ontology_hash": "sha256:5a96d23889c5c9e8e498141add6ffb1905f8d091bb25accc0e579d19eed15721",
+  "schema_version": "1",
+  "target_id": "target:autoresearch-et-thesis",
+  "title": "Neurosymbolic AWS samples vs autoresearch-et thesis"
+}
