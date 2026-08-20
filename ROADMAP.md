@@ -266,6 +266,21 @@ current grammar produces no typed record binding the old identity, the new
 identity and the boundary event. Verification is fixed; migration is not
 recorded.
 
+Design decided in conversation and written up in
+`design/ONTOLOGY_MIGRATION_RECEIPT.md`. Its conclusions, so this file is
+sufficient without opening it: a malleus migration never transforms a record,
+it transforms how a record is read, because the ledger cannot be rewritten. A
+receipt is never revoked, only superseded forward. Every ontology a receipt
+names stays readable forever, which obliges a permanent conformance fixture per
+named grammar. The unit of guarantee is a bundled release, so the receipt binds
+bundle identities rather than single-ontology ones. The delta is recorded in
+KGCL form and checked against a derivation, so the record cannot lie. A change
+is legitimate when it carries a reading rule of a declared grade: total,
+partial and naming its own gaps, or an explicit hard break. What malleus
+refuses is an undeclared break. Unsettled: branch and merge of ontology
+versions, what mechanism records the authorisation, and granularity below the
+bundle.
+
 ### A9. The envelope accepts two grammars; everything else still compares one
 
 The ledger envelope verifies a recorded `ontology_hash` under each known payload
