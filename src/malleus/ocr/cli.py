@@ -18,6 +18,8 @@ from malleus.ocr.bundle import PROFILE_ID, PROFILE_VERSION, Bundle, BundleError
 from malleus.ocr.conformance import CASES, load_case
 from malleus.ocr.verify import (
     CAPABILITY,
+    DISPOSITION_CHECK_FAILED,
+    DISPOSITION_NOT_CHECKED,
     ONTOLOGY,
     VerificationResult,
     profile_registry,
@@ -56,7 +58,7 @@ def _report(result: VerificationResult, stream) -> int:
     print(f"integrity: {integrity}", file=stream)
     print(f"claim:     {account.kind}", file=stream)
     for unit in account.units:
-        print(f"  {unit.unit}: {unit.outcome}", file=stream)
+        print(f"  {unit.unit}: {unit.outcome} [{unit.disposition}]", file=stream)
     for metric in account.metrics:
         print(f"  {metric}", file=stream)
     if not result.conforms:
@@ -67,9 +69,16 @@ def _report(result: VerificationResult, stream) -> int:
               file=stream)
         return CONFORMS
     if not account.complete:
-        unaccounted = ", ".join(account.unaccounted) or "none"
-        print(f"INCOMPLETE. Paperwork sound. Unaccounted units: {unaccounted}.",
+        # Two lists, not one. "Unaccounted" was one word for two jobs: a unit
+        # nobody fetched is fetched, a unit whose call failed is retried, and
+        # an operator handed a single list has to open the bundle to find out
+        # which they are looking at.
+        never = ", ".join(account.units_with(DISPOSITION_NOT_CHECKED)) or "none"
+        failed = ", ".join(account.units_with(DISPOSITION_CHECK_FAILED)) or "none"
+        print("INCOMPLETE. Paperwork sound, and sound paperwork is not a reading.",
               file=stream)
+        print(f"  never checked: {never}", file=stream)
+        print(f"  check failed:  {failed}", file=stream)
         return REFUSED
     print(f"COMPLETE. {result.bundle_id} accounts for every declared unit and meets "
           "the thresholds its source class froze before ingest.", file=stream)
@@ -103,11 +112,19 @@ def _conformance(stream) -> int:
         observed = sorted(set(result.codes()))
         expected = sorted(case["expect"])
         complete = result.account.complete
-        ok = observed == expected and complete == case["expect_complete"]
+        # The census, not only the bit. A case agreeing on diagnostics and on
+        # completeness can still disagree about what happened to a unit, and
+        # that disagreement is the one this suite exists to catch.
+        census = {u.unit: [u.outcome, u.disposition] for u in result.account.units}
+        ok = (observed == expected
+              and complete == case["expect_complete"]
+              and census == case["expect_units"])
         verdict = "ok  " if ok else "FAIL"
         print(f"{verdict} {name}: diagnostics {observed or 'none'} "
               f"(expected {expected or 'none'}), complete={complete} "
               f"(expected {case['expect_complete']})", file=stream)
+        if census != case["expect_units"]:
+            print(f"     census {census} (expected {case['expect_units']})", file=stream)
         if not ok:
             worst = REFUSED
     print("conformance suite passed" if worst == CONFORMS else "conformance suite FAILED", file=stream)

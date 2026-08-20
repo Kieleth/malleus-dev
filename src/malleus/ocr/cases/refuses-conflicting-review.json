@@ -1,6 +1,6 @@
 {
-  "case": "refuses-broken-lineage",
-  "description": "A reading names a region the bundle does not carry, so it claims to have read pixels it cannot reach. The readings beside it are intact, which is the point: lineage is checked per reading and one broken chain does not hide behind sound ones.",
+  "case": "refuses-conflicting-review",
+  "description": "Two reviewers answer the same region differently and neither supersedes the other: reviewer:kim records ABSENT on reg:2 and reviewer:lee records VERIFIED_BLANK on it. The census reports one outcome per unit, so before OCR-D016 it silently reported the higher of the two and said nothing about the reviewer it overruled. That is mandate B2's literal prohibition, one of the six states converted into another. Two regions of one unit answering differently is a different situation and stays clean, because two regions are two subjects; this is one subject with two answers, and no summary of it is anything but a conversion. An emitter satisfies the gate by recording one terminal verdict per region, or by chaining the second onto the first with predecessor_id, which is a revision rather than a disagreement. Decision C9. Note what the census says while the bundle is refused: every unit is still accounted for and the coverage bar is still met. Integrity is a bit and coverage is a census, and this document is the reminder that a complete census is not a clean seal.",
   "document": {
     "bundle": {
       "attempts": [
@@ -29,19 +29,19 @@
       ],
       "corrections": [
         {
-          "corrected_text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
-          "id": "cor:1",
-          "predecessor_id": null,
-          "reviewed_hypothesis_id": "hyp:1",
-          "reviewer_id": "reviewer:kim",
-          "verdict": "CORRECTED"
-        },
-        {
           "corrected_text_digest": null,
           "id": "cor:2",
           "predecessor_id": null,
           "reviewed_hypothesis_id": "hyp:4",
           "reviewer_id": "reviewer:kim",
+          "verdict": "ABSENT"
+        },
+        {
+          "corrected_text_digest": null,
+          "id": "cor:3",
+          "predecessor_id": null,
+          "reviewed_hypothesis_id": "hyp:5",
+          "reviewer_id": "reviewer:lee",
           "verdict": "VERIFIED_BLANK"
         }
       ],
@@ -57,14 +57,6 @@
           "text_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
         },
         {
-          "attempt_id": null,
-          "confidence": null,
-          "correction_id": "cor:1",
-          "id": "hyp:2",
-          "region_id": "reg:1",
-          "text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-        },
-        {
           "attempt_id": "att:2",
           "confidence": null,
           "correction_id": null,
@@ -73,15 +65,15 @@
           "text_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
         },
         {
-          "attempt_id": "att:1",
+          "attempt_id": "att:2",
           "confidence": null,
           "correction_id": null,
-          "id": "hyp:9",
-          "region_id": "reg:absent",
+          "id": "hyp:5",
+          "region_id": "reg:2",
           "text_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
         }
       ],
-      "id": "bundle:1",
+      "id": "bundle:disagreed-page",
       "kind": "FINISHED_READING",
       "observed_units": [
         "page:1",
@@ -126,14 +118,13 @@
       "selections": [
         {
           "candidate_ids": [
-            "hyp:1",
-            "hyp:2"
+            "hyp:1"
           ],
-          "human_verified": true,
+          "human_verified": false,
           "id": "sel:1",
-          "reason": "human correction supersedes",
+          "reason": "only candidate",
           "region_id": "reg:1",
-          "selected_id": "hyp:2"
+          "selected_id": "hyp:1"
         }
       ],
       "source_class": {
@@ -168,7 +159,7 @@
     "profile_version": "v0"
   },
   "expect": [
-    "OCR-D003"
+    "OCR-D016"
   ],
   "expect_complete": true,
   "expect_units": {
@@ -177,7 +168,7 @@
       "ACCOUNTED"
     ],
     "page:2": [
-      "VERIFIED_BLANK",
+      "ABSENT",
       "ACCOUNTED"
     ]
   }

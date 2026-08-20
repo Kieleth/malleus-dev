@@ -18,7 +18,7 @@ from typing import Any, Mapping
 
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ocr.bundle import DIGEST, SECRET_KEYS, Bundle
-from malleus.ontology import OntologyRegistry, bundled_ontology_path
+from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
 
 CAPABILITY = "AUDIT_ONLY"
 
@@ -41,6 +41,8 @@ CODES = {
     "OCR-D013": "a bundle record violates the profile ontology",
     "OCR-D014": "a rendering claims a unit the bundle does not observe",
     "OCR-D015": "a declared state and the detail it requires disagree",
+    "OCR-D016": "two live review records disagree about one region",
+    "OCR-D017": "a review chain has no earliest review",
 }
 
 # Every reference one plane makes to another, walked regardless of what points
@@ -105,12 +107,59 @@ class Diagnostic:
 # the same reason: "we never fetched it", "we have it and never rendered it"
 # and "we rendered it and never looked" are different failures with different
 # fixes.
+#
+# The vocabulary itself is NOT declared here. It used to be, as a module tuple
+# that nothing read, and the cost was exact: ABSENT sat in that tuple for a
+# release while `_unit_outcome` could not produce it, so a reviewer stating a
+# page is not in the source got the page reported READ. A vocabulary no code
+# consults cannot notice that one of its values is unreachable. The enums in
+# `ontology/domains/ocr.yaml` are the authority now and `outcome_dispositions`
+# reads them.
 READ = "READ"
-UNIT_OUTCOMES = (
-    READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT",
-    "FAILED", "UNAVAILABLE", "NOT_OBSERVED", "NOT_RENDERED", "NOT_ATTEMPTED",
-)
-ACCOUNTED = frozenset({READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT"})
+
+# The three-valued answer. Not a bool: "we looked and can say what we found",
+# "nobody looked" and "somebody looked and the look failed" are three answers,
+# and a boolean makes two of them share a word.
+#
+# Prefixed rather than bare on purpose. In 0.13.2 this module bound `ACCOUNTED`
+# to a `frozenset[str]` of outcomes and asked `outcome in ACCOUNTED`. Rebinding
+# that name to the string "ACCOUNTED" would leave the same expression running
+# in a caller as a substring test that answers False for all five accounted
+# outcomes: a silent wrong answer, which is the exact defect class this profile
+# exists to remove. The old name is deleted, so the expression raises
+# ImportError instead. It was never in `malleus.ocr.__all__`, so the blast
+# radius is a caller who imported from the submodule.
+DISPOSITION_ACCOUNTED = "ACCOUNTED"
+DISPOSITION_NOT_CHECKED = "NOT_CHECKED"
+DISPOSITION_CHECK_FAILED = "CHECK_FAILED"
+
+DISPOSITION_ENUM = "UnitDisposition"
+VERDICT_ENUM = "ReviewVerdict"
+
+# The closed-world mapping, one enum per disposition. Declared in the schema
+# and read back, rather than assumed by whoever wrote the last branch.
+OUTCOME_ENUMS = {
+    DISPOSITION_ACCOUNTED: "AccountedUnitOutcome",
+    DISPOSITION_NOT_CHECKED: "NotCheckedUnitOutcome",
+    DISPOSITION_CHECK_FAILED: "CheckFailedUnitOutcome",
+}
+
+# Worst answer first. The SET of verdicts this ranks is the schema's, read by
+# `terminal_verdicts`; only the ORDER is this profile's policy, and it is a
+# rule about SCOPE before severity.
+#
+# ABSENT leads because it is the only verdict whose subject is the unit: the
+# schema defines it as "the unit the region belongs to is not present in the
+# source", so it is not outranked by an answer about one region of a rendering
+# it says does not represent the unit. The remaining three are region-scoped
+# and rank worst-first, so a unit is VERIFIED_BLANK only when every region
+# answer is blank, EXCLUDED when some region is out of scope and none
+# unreadable, and UNREADABLE when any region is unreadable.
+#
+# This is a rule for summarising regions into a unit, not a licence to pick
+# between two answers about the SAME region. Two live verdicts on one region
+# have no defensible summary and are refused as OCR-D016.
+VERDICT_PRECEDENCE = ("ABSENT", "UNREADABLE", "EXCLUDED", "VERIFIED_BLANK")
 
 # Denominators this profile can compute. A family naming anything else is
 # reported UNMEASURED rather than quietly passing, because an unmeasured
@@ -118,22 +167,138 @@ ACCOUNTED = frozenset({READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT
 DENOMINATORS = {"declared_units"}
 
 
+def outcome_dispositions(registry: OntologyRegistry | None = None) -> dict[str, str]:
+    """The declared mapping from a unit outcome to its disposition.
+
+    Read from the ontology, never assumed here. Refuses rather than repairs: a
+    disposition with no outcome enum, an outcome claimed by two dispositions,
+    or a disposition the schema does not declare are all schema errors, and
+    guessing which one was meant is how a census acquires a value nobody
+    declared.
+    """
+    registry = registry if registry is not None else profile_registry()
+    declared = registry.get_enum_values(DISPOSITION_ENUM)
+    unmapped = sorted(set(declared) - set(OUTCOME_ENUMS))
+    if unmapped:
+        raise OntologyError(
+            f"{DISPOSITION_ENUM} declares {unmapped} with no outcome enum to fill them"
+        )
+    mapping: dict[str, str] = {}
+    for disposition, enum_name in OUTCOME_ENUMS.items():
+        if disposition not in declared:
+            raise OntologyError(
+                f"'{disposition}' is not a value of {DISPOSITION_ENUM}"
+            )
+        for outcome in registry.get_enum_values(enum_name):
+            if outcome in mapping:
+                raise OntologyError(
+                    f"outcome '{outcome}' carries two dispositions: "
+                    f"{mapping[outcome]} and {disposition}"
+                )
+            mapping[outcome] = disposition
+    return mapping
+
+
+def terminal_verdicts(registry: OntologyRegistry | None = None) -> tuple[str, ...]:
+    """The reviewer verdicts the census reports for a unit, worst answer first.
+
+    Derived, not listed: a verdict speaks for a unit exactly when the schema
+    declares it both as a `ReviewVerdict` and as a unit outcome. CONFIRMED and
+    CORRECTED are verdicts about a reading and are not unit outcomes, so they
+    never displace one. FAILED and UNAVAILABLE are unit outcomes and are not
+    verdicts, which is mandate B2's "a reviewer never inherits them" acquiring
+    a reader instead of staying a sentence in a description.
+
+    Refuses rather than repairs, in both directions. A declared verdict this
+    profile has no rank for would be summarised by position in a tuple nobody
+    reviewed; a rank for a verdict the schema does not declare is a rule
+    nothing can trigger, which is how ABSENT spent a release unreachable.
+    """
+    registry = registry if registry is not None else profile_registry()
+    outcomes = outcome_dispositions(registry)
+    declared = set(registry.get_enum_values(VERDICT_ENUM)) & set(outcomes)
+    unranked = sorted(declared - set(VERDICT_PRECEDENCE))
+    if unranked:
+        raise OntologyError(
+            f"{VERDICT_ENUM} declares {unranked} as unit outcomes with no rank "
+            "in VERDICT_PRECEDENCE; the census cannot summarise a verdict it "
+            "cannot order"
+        )
+    unreachable = [v for v in VERDICT_PRECEDENCE if v not in declared]
+    if unreachable:
+        raise OntologyError(
+            f"VERDICT_PRECEDENCE ranks {unreachable}, which the schema does not "
+            f"declare as both a {VERDICT_ENUM} and a unit outcome"
+        )
+    return VERDICT_PRECEDENCE
+
+
+def _corrections_on_a_cycle(bundle: Bundle) -> frozenset[str]:
+    """Corrections whose supersession chain never reaches an earliest review.
+
+    A chain is append-only and therefore finite and rooted. A correction that
+    supersedes itself, or a pair that supersede each other, is neither, and
+    every record on it would drop out of the census silently once supersession
+    is read. Found by building the reader, and refused by the same slice.
+    """
+    predecessor = {c.id: c.predecessor_id for c in bundle.corrections}
+    on_cycle: set[str] = set()
+    for start in predecessor:
+        walked: list[str] = []
+        node: str | None = start
+        while node is not None and node in predecessor and node not in walked:
+            walked.append(node)
+            node = predecessor[node]
+        if node is not None and node in walked:
+            on_cycle.update(walked[walked.index(node):])
+    return frozenset(on_cycle)
+
+
+def _live_correction_ids(bundle: Bundle) -> frozenset[str]:
+    """The corrections that still speak.
+
+    `predecessor_id` is documented as "the prior review in an append-only
+    correction chain", and until now nothing walked it: a reviewer who revised
+    UNREADABLE to VERIFIED_BLANK still had UNREADABLE reported, because the
+    retracted record outranked the one that replaced it. Superseding is not
+    erasing; the superseded record stays in the bundle and stops being the
+    answer.
+
+    A correction on a broken chain is kept live rather than dropped. Losing it
+    quietly is the failure OCR-D017 exists to report, and a diagnostic that
+    also swallowed the data would be reporting a hole it dug.
+    """
+    on_cycle = _corrections_on_a_cycle(bundle)
+    superseded = {
+        c.predecessor_id for c in bundle.corrections
+        if c.predecessor_id and c.predecessor_id not in on_cycle
+    }
+    return frozenset(c.id for c in bundle.corrections if c.id not in superseded)
+
+
 @dataclass(frozen=True)
 class UnitAccount:
-    """One declared unit and what became of it."""
+    """One declared unit, what became of it, and which of the three that is."""
 
     unit: str
     outcome: str
+    disposition: str
 
     @property
     def accounted(self) -> bool:
         """Accounted means somebody looked and can say what they found.
 
         A blank page that was read and found blank is accounted for. So is one
-        ruled out of scope. A page nobody opened is not, however sound the
-        paperwork around it.
+        ruled out of scope, and so is one a reviewer states is not in the
+        source at all. A page nobody opened is not, however sound the
+        paperwork around it, and neither is one whose only attempt failed.
+
+        Kept as a bit because the coverage numerator is a count. It is derived
+        from the disposition and is not the authority: a caller asking why a
+        unit is unaccounted reads `disposition`, which distinguishes the unit
+        nobody fetched from the one whose call died.
         """
-        return self.outcome in ACCOUNTED
+        return self.disposition == DISPOSITION_ACCOUNTED
 
 
 @dataclass(frozen=True)
@@ -170,6 +335,16 @@ class Account:
     @property
     def unaccounted(self) -> tuple[str, ...]:
         return tuple(u.unit for u in self.units if not u.accounted)
+
+    def units_with(self, disposition: str) -> tuple[str, ...]:
+        """The units carrying one disposition.
+
+        `unaccounted` is the union of the two negative dispositions and cannot
+        say which. A caller acting on the answer needs to: an unfetched unit is
+        fetched, a failed call is retried, and reporting both as "unaccounted"
+        hands the operator one word for two jobs.
+        """
+        return tuple(u.unit for u in self.units if u.disposition == disposition)
 
     @property
     def complete(self) -> bool:
@@ -235,7 +410,8 @@ def verify_bundle(
     # root primitives, and the registry refuses an unknown property, a missing
     # required slot, a value outside a closed enum or a range violation. The
     # checks below it are the cross-plane questions a schema cannot ask.
-    graph = KnowledgeGraph(registry if registry is not None else profile_registry())
+    registry = registry if registry is not None else profile_registry()
+    graph = KnowledgeGraph(registry)
     for attribute, type_name, family in PLANES:
         if attribute == "bundle":
             objects: tuple[Any, ...] = (bundle,)
@@ -387,6 +563,36 @@ def verify_bundle(
             add("OCR-D015", correction.id,
                 f"verdict is {correction.verdict} and carries a corrected text")
 
+    # C9. A review chain is append-only, so it is finite and rooted. A cycle
+    # has no earliest review, and every record on it would leave the census
+    # without a word being said once supersession is read.
+    for correction_id in sorted(_corrections_on_a_cycle(bundle)):
+        add("OCR-D017", correction_id,
+            "the supersession chain it lies on never reaches an earliest review")
+
+    # C9 and mandate B2. The census summarises a unit's regions worst-first,
+    # and there is no defensible summary of two live verdicts about the SAME
+    # region: picking one converts the other, which is B2's literal
+    # prohibition. Superseded records are excluded first, because revising a
+    # verdict is not disagreeing with it.
+    live = _live_correction_ids(bundle)
+    ranked = set(terminal_verdicts(registry))
+    per_region: dict[str, dict[str, list[str]]] = {}
+    for correction in bundle.corrections:
+        if correction.id not in live or correction.verdict not in ranked:
+            continue
+        reviewed = hypotheses.get(correction.reviewed_hypothesis_id)
+        if reviewed is None:
+            continue  # OCR-D006 already says so; do not say it twice.
+        per_region.setdefault(reviewed.region_id, {}).setdefault(
+            correction.verdict, []).append(correction.id)
+    for region_id, verdicts in sorted(per_region.items()):
+        if len(verdicts) > 1:
+            add("OCR-D016", region_id, "; ".join(
+                f"{verdict} ({', '.join(sorted(ids))})"
+                for verdict, ids in sorted(verdicts.items())
+            ))
+
     # C8 and the declaration half of C3 and C4: the source class is frozen
     # before ingest and names its metric families. This is NOT C3. C3 measures
     # coverage against those families and their thresholds, and no code here
@@ -405,11 +611,18 @@ def verify_bundle(
         if not value:
             add("OCR-D010", bundle.id, f"{label} policy unbound")
 
-    return VerificationResult(bundle.id, CAPABILITY, tuple(out), account_for(bundle))
+    return VerificationResult(
+        bundle.id, CAPABILITY, tuple(out), account_for(bundle, registry)
+    )
 
 
-def _unit_outcome(bundle: Bundle, unit: str) -> str:
-    """What became of one declared unit, in mandate B2's vocabulary."""
+def _unit_outcome(bundle: Bundle, unit: str, verdicts: tuple[str, ...]) -> str:
+    """What became of one declared unit, in mandate B2's vocabulary.
+
+    `verdicts` is the ranked terminal vocabulary from the schema. It is passed
+    in rather than looked up so the census reads the same registry the record
+    validation ran under.
+    """
     if unit not in bundle.observed_units:
         return "NOT_OBSERVED"
     rasters = [r for r in bundle.rasters if r.unit == unit]
@@ -423,11 +636,25 @@ def _unit_outcome(bundle: Bundle, unit: str) -> str:
     # A human verdict outranks the machine: a reviewer who looked and found the
     # region blank has accounted for it, and no attempt status may overwrite
     # that. Mandate B2 forbids converting one state into another, so the order
-    # is fixed here rather than left to whichever record is read last.
+    # is fixed by `VERDICT_PRECEDENCE` rather than left to whichever record is
+    # read last, and the scope rule behind that order is written there.
+    #
+    # ABSENT was missing from the ranking for a release, and the consequence
+    # was not a missing row, it was the wrong row: the fall-through below
+    # reported the unit READ, converting a reviewer's statement of absence into
+    # a reading. That is the exact substitution mandate B2 exists to forbid.
+    #
+    # Only live corrections speak. A superseded verdict used to outrank the one
+    # that replaced it, so a reviewer revising UNREADABLE to VERIFIED_BLANK was
+    # still reported UNREADABLE.
+    live = _live_correction_ids(bundle)
     reviewed = {h.id for h in bundle.hypotheses if h.region_id in regions}
-    verdicts = [c.verdict for c in bundle.corrections if c.reviewed_hypothesis_id in reviewed]
-    for verdict in ("UNREADABLE", "EXCLUDED", "VERIFIED_BLANK"):
-        if verdict in verdicts:
+    recorded = [
+        c.verdict for c in bundle.corrections
+        if c.id in live and c.reviewed_hypothesis_id in reviewed
+    ]
+    for verdict in verdicts:
+        if verdict in recorded:
             return verdict
     if any(h.region_id in regions for h in bundle.hypotheses):
         return READ
@@ -441,16 +668,29 @@ def _unit_outcome(bundle: Bundle, unit: str) -> str:
     return "NOT_ATTEMPTED"
 
 
-def account_for(bundle: Bundle) -> Account:
+def account_for(bundle: Bundle, registry: OntologyRegistry | None = None) -> Account:
     """Census every declared unit, then measure what the source class precommitted.
 
     The declaration was frozen before ingest precisely so this cannot be graded
     against a bar chosen after seeing the scan.
+
+    Takes the same registry the record validation ran under, so a caller who
+    replaces the profile ontology replaces the census vocabulary with it. A
+    replacement that governed which records are legal while the outcome
+    vocabulary stayed hardcoded here would be half a replacement.
     """
-    units = tuple(
-        UnitAccount(unit, _unit_outcome(bundle, unit))
-        for unit in bundle.source_class.required_units
-    )
+    dispositions = outcome_dispositions(registry)
+    verdicts = terminal_verdicts(registry)
+    units = []
+    for unit in bundle.source_class.required_units:
+        outcome = _unit_outcome(bundle, unit, verdicts)
+        if outcome not in dispositions:
+            raise OntologyError(
+                f"unit outcome '{outcome}' is produced by this verifier and "
+                f"declared by no outcome enum in the profile ontology"
+            )
+        units.append(UnitAccount(unit, outcome, dispositions[outcome]))
+    units = tuple(units)
     accounted = sum(1 for u in units if u.accounted)
     metrics = []
     for family, declaration in sorted(bundle.source_class.metric_families.items()):
@@ -460,7 +700,16 @@ def account_for(bundle: Bundle) -> Account:
             metrics.append(MetricResult(family, denominator, None, None, "UNMEASURED"))
             continue
         total = len(units)
-        value = 1.0 if total == 0 else accounted / total
+        if total == 0:
+            # A ratio over an empty denominator is undefined, not perfect. This
+            # read 1.0 and therefore MET, so a source class requiring nothing
+            # scored full coverage on a census of nothing. The schema refuses an
+            # empty required_units today and that made the branch unreachable,
+            # which is a neighbouring gate holding a door this arithmetic left
+            # open. Fail closed here too, on its own.
+            metrics.append(MetricResult(family, denominator, None, None, "UNMEASURED"))
+            continue
+        value = accounted / total
         metrics.append(MetricResult(
             family, denominator, value, float(threshold),
             "MET" if value >= threshold else "UNMET",
@@ -509,11 +758,27 @@ def profile_projection() -> dict:
         "selector_profile_default": "w3c-web-annotation+iiif",
         "selector_profile_replaceable": True,
         "diagnostics": dict(sorted(CODES.items())),
+        # The census vocabulary, published because an adopter reading only this
+        # projection must be able to tell which outcomes count as looked-at.
+        # Derived from the ontology, so the projection cannot claim a mapping
+        # the schema does not declare.
+        "unit_dispositions": {
+            outcome: disposition
+            for outcome, disposition in sorted(outcome_dispositions().items())
+        },
+        # How a unit's regions are summarised into one answer, worst first.
+        # Published because an adopter whose page carries two region verdicts
+        # is entitled to know which one the census will report before it does,
+        # and because the rule is policy: another profile may rank differently
+        # and must say so here.
+        "unit_verdict_precedence": list(terminal_verdicts()),
         "proves": [
             "source-to-reading lineage",
             "separation of identity planes",
             "declared coverage and policy precommitment",
             "every plane typed under the malleus root primitives",
+            "a three-valued unit census: looked-at, never looked at, look failed",
+            "that a superseded verdict does not outrank the review replacing it",
         ],
         "does_not_prove": [
             "source authenticity",

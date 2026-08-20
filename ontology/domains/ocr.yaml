@@ -64,6 +64,77 @@ enums:
       UNAVAILABLE:
         description: The call could not be made. unavailable_reason states why.
 
+  UnitDisposition:
+    description: >-
+      What the profile knows about one declared unit, as three first-class
+      values rather than one bit with a silent negative. "We looked and can
+      say what we found", "nobody looked" and "somebody looked and the look
+      failed" are three different answers with three different fixes, and a
+      boolean forces two of them to share a word.
+
+      Read by malleus.ocr.verify. A unit outcome carries exactly one
+      disposition, declared by the three enums below and never inferred at a
+      call site.
+    permissible_values:
+      ACCOUNTED:
+        description: >-
+          Somebody looked and can say what they found. Blank, unreadable, out
+          of scope and not-present are all answers; only never-looking is not.
+      NOT_CHECKED:
+        description: >-
+          Nobody looked. The profile knows only that a step did not happen,
+          which is an explicit unknown and never a pass.
+      CHECK_FAILED:
+        description: >-
+          Somebody tried to look and the attempt produced no reading. Distinct
+          from NOT_CHECKED because the fix is different: a failed call is
+          retried, an unfetched unit is fetched.
+
+  AccountedUnitOutcome:
+    description: >-
+      The outcomes that map to ACCOUNTED. Half of the closed-world mapping
+      being declared rather than assumed: the verifier reads this enum, so a
+      new outcome joins the census by being declared here and cannot acquire a
+      disposition by resembling one.
+    permissible_values:
+      READ:
+        description: A reading of the unit exists and reaches its pixels.
+      VERIFIED_BLANK:
+        description: A reviewer looked and the region carries no content.
+      UNREADABLE:
+        description: A reviewer looked and the content cannot be read.
+      EXCLUDED:
+        description: A reviewer ruled the region out of scope by a declared rule.
+      ABSENT:
+        description: >-
+          A reviewer states the unit is not present in the source. An answer
+          about the unit, not about one region, which is why it outranks the
+          region-level verdicts when both are recorded.
+
+  NotCheckedUnitOutcome:
+    description: >-
+      The outcomes that map to NOT_CHECKED. Three ways to go unlooked-at, kept
+      apart because "we never fetched it", "we hold it and never rendered it"
+      and "we rendered it and never looked" are different failures.
+    permissible_values:
+      NOT_OBSERVED:
+        description: The unit is not among the units this bundle observed.
+      NOT_RENDERED:
+        description: The unit is observed and no rendering of it exists.
+      NOT_ATTEMPTED:
+        description: A rendering exists and no attempt or reading covers it.
+
+  CheckFailedUnitOutcome:
+    description: >-
+      The outcomes that map to CHECK_FAILED. These are attempt states, and a
+      reviewer never inherits them (mandate B2), so they reach the census from
+      AttemptStatus and never from ReviewVerdict.
+    permissible_values:
+      FAILED:
+        description: The call was made and did not produce a usable response.
+      UNAVAILABLE:
+        description: The call could not be made.
+
   ReviewVerdict:
     description: >-
       Mandate B2. Verified blank, unreadable, unavailable, failed, excluded and
@@ -329,13 +400,20 @@ slots:
       and then explicitly confirmed or overridden as a recorded act, so a
       truncated source cannot certify itself.
 
-      DECLARED UNREAD in v0. Nothing in malleus.ocr.verify consumes this slot.
-      Decision C2, dependency-closed partial claims, is the reader: a claim
-      whose evidence does not depend on a missing unit may promote, marked
-      partial. C2 needs unit-to-claim closure, claim-to-claim closure, cycle
-      detection and replay semantics, each with its own fixtures, and none is
-      built. The slot is declared here so the gap is one argued exception
-      rather than a silence.
+      Read by malleus.ocr.verify. account_for censuses this inventory, one row
+      per unit, and it is the declared_units denominator every coverage metric
+      family is measured against.
+
+      This description read DECLARED UNREAD for a release after account_for
+      began iterating the slot. That is the ABSENT defect pointing the other
+      way: a schema describing behaviour the code no longer lacked. Corrected
+      in 0.13.3.
+
+      Still unbuilt, and narrower than the sentence it replaces: decision C2,
+      dependency-closed partial claims. The census says which units are
+      missing; nothing decides which claims may be promoted despite them. C2
+      needs unit-to-claim closure, claim-to-claim closure, cycle detection and
+      replay semantics, each with its own fixtures, and none is built.
 
   metric_family_names:
     range: string

@@ -1,6 +1,6 @@
 {
-  "case": "refuses-broken-lineage",
-  "description": "A reading names a region the bundle does not carry, so it claims to have read pixels it cannot reach. The readings beside it are intact, which is the point: lineage is checked per reading and one broken chain does not hide behind sound ones.",
+  "case": "absence-is-not-a-reading",
+  "description": "A reviewer states that page:2 is not present in this source. The unit inventory was derived from the class and confirmed as a recorded act, so a unit can be required and absent at once. ABSENT is an answer: somebody looked and can say what they found, so the unit is accounted for. It is not a reading, and the census must say ABSENT rather than READ. For a release it said READ, because the outcome vocabulary declared ABSENT and no code path could produce it. Read the shape of page:2 before copying this case. It carries a raster, a region on it, a completed attempt and a reading of those pixels, and that is not the bundle contradicting itself. ReviewVerdict.ABSENT is defined as 'the unit the region belongs to is not present in the source', so it is reached THROUGH a region and cannot be recorded without one: the reading is the evidence the reviewer disowns, not evidence against them. What this document records is a rendering the pipeline produced and a human rejected as not being the required unit, a separator sheet counted as a page, a duplicate, a page the renderer synthesised. A unit that was never rendered at all is NOT_RENDERED and looks nothing like this. Decision C9.",
   "document": {
     "bundle": {
       "attempts": [
@@ -29,20 +29,12 @@
       ],
       "corrections": [
         {
-          "corrected_text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
-          "id": "cor:1",
-          "predecessor_id": null,
-          "reviewed_hypothesis_id": "hyp:1",
-          "reviewer_id": "reviewer:kim",
-          "verdict": "CORRECTED"
-        },
-        {
           "corrected_text_digest": null,
           "id": "cor:2",
           "predecessor_id": null,
           "reviewed_hypothesis_id": "hyp:4",
           "reviewer_id": "reviewer:kim",
-          "verdict": "VERIFIED_BLANK"
+          "verdict": "ABSENT"
         }
       ],
       "data_handling_policy_id": "policy:dh:1",
@@ -57,31 +49,15 @@
           "text_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
         },
         {
-          "attempt_id": null,
-          "confidence": null,
-          "correction_id": "cor:1",
-          "id": "hyp:2",
-          "region_id": "reg:1",
-          "text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-        },
-        {
           "attempt_id": "att:2",
           "confidence": null,
           "correction_id": null,
           "id": "hyp:4",
           "region_id": "reg:2",
           "text_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
-        },
-        {
-          "attempt_id": "att:1",
-          "confidence": null,
-          "correction_id": null,
-          "id": "hyp:9",
-          "region_id": "reg:absent",
-          "text_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
         }
       ],
-      "id": "bundle:1",
+      "id": "bundle:absent-page",
       "kind": "FINISHED_READING",
       "observed_units": [
         "page:1",
@@ -126,14 +102,13 @@
       "selections": [
         {
           "candidate_ids": [
-            "hyp:1",
-            "hyp:2"
+            "hyp:1"
           ],
-          "human_verified": true,
+          "human_verified": false,
           "id": "sel:1",
-          "reason": "human correction supersedes",
+          "reason": "only candidate",
           "region_id": "reg:1",
-          "selected_id": "hyp:2"
+          "selected_id": "hyp:1"
         }
       ],
       "source_class": {
@@ -167,9 +142,7 @@
     "profile": "malleus.ocr.evidence_integrity",
     "profile_version": "v0"
   },
-  "expect": [
-    "OCR-D003"
-  ],
+  "expect": [],
   "expect_complete": true,
   "expect_units": {
     "page:1": [
@@ -177,7 +150,7 @@
       "ACCOUNTED"
     ],
     "page:2": [
-      "VERIFIED_BLANK",
+      "ABSENT",
       "ACCOUNTED"
     ]
   }

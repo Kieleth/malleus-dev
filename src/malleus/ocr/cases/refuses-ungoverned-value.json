@@ -162,5 +162,15 @@
   "expect": [
     "OCR-D013"
   ],
-  "expect_complete": true
+  "expect_complete": true,
+  "expect_units": {
+    "page:1": [
+      "READ",
+      "ACCOUNTED"
+    ],
+    "page:2": [
+      "VERIFIED_BLANK",
+      "ACCOUNTED"
+    ]
+  }
 }

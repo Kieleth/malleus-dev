@@ -203,8 +203,8 @@ importing the root, and every identity plane is a typed record under a root
 primitive: nine classes, two of them Events. `verify_bundle` validates every
 plane through `KnowledgeGraph` before it runs a single profile check, so an
 unknown property, a missing required slot, a value outside a closed enum, or a
-range violation is refused as `OCR-D013`. Thirteen typed diagnostics, each with
-a negative case.
+range violation is refused as `OCR-D013`. Seventeen typed diagnostics, each
+with a negative case.
 
 The Python dataclasses in `malleus.ocr.bundle` are a carrier, not the
 authority. Each answers `record()` with the graph record the registry
@@ -221,7 +221,7 @@ The portable artifact is the bundle document: `Bundle.document()` and
 direction of version drift, an undeclared key and a missing required key. The
 `malleus-ocr` command verifies a document (exit 0 conforms, 1 refused, 2
 unreadable, so a malformed file is never reported as failed evidence) and
-`malleus-ocr --conformance` runs the three cases shipped inside the package.
+`malleus-ocr --conformance` runs the seven cases shipped inside the package.
 An emitter that imports no plane class and touches no dataclass conforms,
 which establishes the emitter role as replaceable; no production OCR stack has
 crossed it yet.
@@ -234,6 +234,26 @@ threshold frozen before ingest. A unit read and found blank is `VERIFIED_BLANK`
 and counts as accounted for; a failed call is `FAILED` and does not. The three
 ways to go unaccounted stay distinct: never fetched, held and never rendered,
 rendered and never looked at.
+
+The census vocabulary is the schema's, not the module's. `UnitDisposition` and
+three outcome enums in `ontology/domains/ocr.yaml` declare which outcomes count
+as looked-at, `outcome_dispositions` reads the mapping back, and `account_for`
+takes the same registry the record validation ran under, so replacing the
+profile ontology replaces the census with it. `terminal_verdicts` derives which
+reviewer verdicts speak for a unit by intersecting `ReviewVerdict` with the
+declared unit outcomes: `CONFIRMED` and `CORRECTED` are answers about a reading
+and never displace a unit's, and mandate B2's "a reviewer never inherits an
+attempt state" is a consequence of the schema rather than a sentence in a
+description. The order is policy, published as `unit_verdict_precedence`.
+
+What that order may and may not do is decision C9. A unit's several regions are
+summarised worst-first, with `ABSENT` leading because it is the only verdict
+whose subject is the unit. Two live verdicts about the same region are refused
+as `OCR-D016` instead, because either choice converts the other reviewer's
+answer. `predecessor_id` is now read, so a superseded verdict no longer
+outranks the review that replaced it, and a chain that never reaches an
+earliest review is refused as `OCR-D017` so the new reader cannot drop a record
+quietly.
 
 Completeness is judged against the adopter's own thresholds and nothing else.
 A source class declaring a denominator this profile cannot compute reports

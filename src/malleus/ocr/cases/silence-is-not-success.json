@@ -1,6 +1,6 @@
 {
-  "case": "refuses-broken-lineage",
-  "description": "A reading names a region the bundle does not carry, so it claims to have read pixels it cannot reach. The readings beside it are intact, which is the point: lineage is checked per reading and one broken chain does not hide behind sound ones.",
+  "case": "silence-is-not-success",
+  "description": "The negative case for explicit absence. Three declared units and one reading. page:2 was rendered and its only call failed; page:3 was never fetched. Zero diagnostics: the paperwork holds together, and holding together is not a reading. The two gaps are different answers with different fixes, so the census reports CHECK_FAILED and NOT_CHECKED and never one word for both, and the frozen coverage bar is not met.",
   "document": {
     "bundle": {
       "attempts": [
@@ -22,29 +22,12 @@
           "id": "att:2",
           "region_id": "reg:2",
           "request_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
-          "response_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-          "status": "COMPLETED",
+          "response_digest": null,
+          "status": "FAILED",
           "unavailable_reason": null
         }
       ],
-      "corrections": [
-        {
-          "corrected_text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
-          "id": "cor:1",
-          "predecessor_id": null,
-          "reviewed_hypothesis_id": "hyp:1",
-          "reviewer_id": "reviewer:kim",
-          "verdict": "CORRECTED"
-        },
-        {
-          "corrected_text_digest": null,
-          "id": "cor:2",
-          "predecessor_id": null,
-          "reviewed_hypothesis_id": "hyp:4",
-          "reviewer_id": "reviewer:kim",
-          "verdict": "VERIFIED_BLANK"
-        }
-      ],
+      "corrections": [],
       "data_handling_policy_id": "policy:dh:1",
       "hostile_content_policy_id": "policy:hc:1",
       "hypotheses": [
@@ -55,33 +38,9 @@
           "id": "hyp:1",
           "region_id": "reg:1",
           "text_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
-        },
-        {
-          "attempt_id": null,
-          "confidence": null,
-          "correction_id": "cor:1",
-          "id": "hyp:2",
-          "region_id": "reg:1",
-          "text_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-        },
-        {
-          "attempt_id": "att:2",
-          "confidence": null,
-          "correction_id": null,
-          "id": "hyp:4",
-          "region_id": "reg:2",
-          "text_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
-        },
-        {
-          "attempt_id": "att:1",
-          "confidence": null,
-          "correction_id": null,
-          "id": "hyp:9",
-          "region_id": "reg:absent",
-          "text_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
         }
       ],
-      "id": "bundle:1",
+      "id": "bundle:silent-gap",
       "kind": "FINISHED_READING",
       "observed_units": [
         "page:1",
@@ -126,14 +85,13 @@
       "selections": [
         {
           "candidate_ids": [
-            "hyp:1",
-            "hyp:2"
+            "hyp:1"
           ],
-          "human_verified": true,
+          "human_verified": false,
           "id": "sel:1",
-          "reason": "human correction supersedes",
+          "reason": "only candidate",
           "region_id": "reg:1",
-          "selected_id": "hyp:2"
+          "selected_id": "hyp:1"
         }
       ],
       "source_class": {
@@ -148,7 +106,8 @@
         },
         "required_units": [
           "page:1",
-          "page:2"
+          "page:2",
+          "page:3"
         ],
         "temporal_policy": "printed_date_is_issue_date"
       },
@@ -167,18 +126,20 @@
     "profile": "malleus.ocr.evidence_integrity",
     "profile_version": "v0"
   },
-  "expect": [
-    "OCR-D003"
-  ],
-  "expect_complete": true,
+  "expect": [],
+  "expect_complete": false,
   "expect_units": {
     "page:1": [
       "READ",
       "ACCOUNTED"
     ],
     "page:2": [
-      "VERIFIED_BLANK",
-      "ACCOUNTED"
+      "FAILED",
+      "CHECK_FAILED"
+    ],
+    "page:3": [
+      "NOT_OBSERVED",
+      "NOT_CHECKED"
     ]
   }
 }

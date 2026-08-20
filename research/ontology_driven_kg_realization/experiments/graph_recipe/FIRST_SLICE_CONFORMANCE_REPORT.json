@@ -9,8 +9,8 @@
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
     "package_boundary_sources": {
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:4e9c693f90e5984b711b1feac87b9876760b80932c8569764003af61870ec0b3",
-      "pyproject.toml": "sha256:87dc00d6e558e1b725ecc8f2bc664611d0b3126092d967f8e210dfe847fca154",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:f3406f52d775f0a35c0ab9a4685d80a67bb8ae38d4064999436710234fd85ff9",
+      "pyproject.toml": "sha256:3271c8658ee2b25174f14029f452706fc34d386b8872f779d7f1c5f2c3f6f337",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
       "src/malleus/status.py": "sha256:2a3a706edc3349d818c2ae82c5d4b5a995fd329f97f5fe78899d7db20a2587eb"
     },

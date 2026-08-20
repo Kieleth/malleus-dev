@@ -46,5 +46,15 @@
     "profile_version": "v0"
   },
   "expect": [],
-  "expect_complete": false
+  "expect_complete": false,
+  "expect_units": {
+    "page:1": [
+      "NOT_OBSERVED",
+      "NOT_CHECKED"
+    ],
+    "page:2": [
+      "NOT_OBSERVED",
+      "NOT_CHECKED"
+    ]
+  }
 }

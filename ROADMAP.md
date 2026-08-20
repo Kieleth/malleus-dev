@@ -503,9 +503,15 @@ an owner decision.
 
 ### C2. Dependency-closed partial claims (decision C2, unbuilt)
 
-The largest unbuilt piece of the profile and the reader `required_units` is
-waiting for. `required_units` is declared in the schema and consumed by
-nothing, recorded there as declared-unread rather than left silent.
+The largest unbuilt piece of the profile, and narrower than this entry used to
+claim. `required_units` is read, and has been since `account_for` landed: it is
+the census inventory, one row per unit, and the `declared_units` denominator
+every metric family is measured against. The slot description and
+`DECISION_DISCHARGE["C2"]` both went on saying it had no reader, which is a
+document asserting a gap the code had already closed. Corrected in 0.13.3.
+
+What is unbuilt is the promotion rule. The census says which units are missing.
+Nothing decides which claims may be promoted despite them.
 
 Needs, each with fixtures: a frozen required-unit inventory, a map from claim
 to the units its evidence occupies, a map from claim to claim, transitive
@@ -576,6 +582,82 @@ One check came out of it that was not in the report. A rendering names the unit
 it renders, and a unit the bundle does not observe cannot have been rendered
 from bytes the bundle holds. Without OCR-D014 a typo in a unit name reports the
 page as never rendered, which reads as an honest gap rather than a mistake.
+
+### C6. A declared verdict the census could not produce (landed)
+
+Found by importing three ideas from an outside system and checking whether the
+profile already honoured them, rather than by reading the code for tidiness.
+
+`ReviewVerdict.ABSENT` means the unit is not present in the source. The census
+tested `UNREADABLE`, `EXCLUDED` and `VERIFIED_BLANK` and not that one, so the
+record fell through to the machine branch and the unit was reported `READ`,
+with no diagnostic and the frozen coverage bar met. Mandate B2 forbids
+converting one state into another; this converted an absence into a reading.
+
+The missing branch is not the finding. `ABSENT` was declared in three places at
+once, `ReviewVerdict`, the module's outcome tuple and its accounted set, and
+producible from none, and nothing in the package read the outcome vocabulary.
+A vocabulary with no reader cannot report that one of its values is
+unreachable, which is the same disease as a slot with no reader and was already
+named in `SLOT_READERS` for slots only.
+
+Landed. The vocabulary is in the schema as `UnitDisposition` plus three outcome
+enums; `outcome_dispositions` reads the mapping from there and `account_for`
+takes the registry, so replacing the profile ontology replaces the census with
+it. The census answer is three-valued rather than the `accounted` bit, because
+a unit nobody fetched and a unit whose only call failed need different repairs.
+A test requires every declared outcome to carry a fixture proving a bundle can
+produce it, and `ENUM_READERS` does for enums what `SLOT_READERS` does for
+slots.
+
+Two adjacent items came out of it. `OCREventType` is declared in `ocr.yaml` and
+consumed by nothing: its description says the domain schema narrows the root's
+open `event_type`, and `equals_string` on the two event classes does that while
+this enum is not the slot's range. Recorded in `ENUM_READERS` as UNBUILT
+because binding it is a schema decision, not a defect fix. And
+`Selection.human_verified` is a boolean with a silent `False` default, so an
+emitter that omits it asserts "no human verified this" without saying so; a
+three-valued replacement changes the slot's range and the document contract,
+which is an owner decision and not a task.
+
+### C7. The census chose between verdicts in silence (landed, one part open)
+
+Found by an independent review of the C6 fix, then reproduced directly. Three
+bundles, each granted a purity seal with a met coverage bar:
+
+1. A unit whose regions carried `VERIFIED_BLANK` and `ABSENT` reported
+   `ABSENT`.
+2. A unit whose regions carried `VERIFIED_BLANK` and `UNREADABLE` reported
+   `UNREADABLE`.
+3. A reviewer who recorded `UNREADABLE` and then superseded it with
+   `VERIFIED_BLANK` was still reported `UNREADABLE`.
+
+The first two are one hardcoded precedence tuple with no diagnostic beside it.
+The third is worse and was in nobody's report: `predecessor_id` is documented as
+"the prior review in an append-only correction chain" and nothing walked it, so
+a retracted verdict outranked the review that replaced it.
+`SLOT_READERS["predecessor_id"]` had said UNBUILT since the table was written,
+which is exactly what that table is for; what it did not say is that the
+unbuilt reader was load-bearing.
+
+Landed, split three ways rather than fixed as one, because the three cases are
+not one case. Decision C9 in the decision record carries the reasoning.
+
+- Case 1 stays clean and is now stated. `ABSENT` is the only unit-scoped
+  verdict, so it does not compete with an answer about one region of a
+  rendering it says does not represent the unit.
+- Case 2 is refused as `OCR-D016`. Two live verdicts about the same region
+  have no summary that is not a conversion, which is mandate B2's literal
+  prohibition.
+- Case 3 is fixed by reading `predecessor_id`. A superseded verdict no longer
+  speaks, and a chain with no earliest review is refused as `OCR-D017`, so the
+  new reader cannot drop a record quietly.
+
+Open, and recorded rather than closed. A `Selection` naming a reading of a unit
+a reviewer has declared `ABSENT` is not refused. It is a real contradiction, a
+bundle disowning a unit while keeping a reading of it current, but it lives in
+the selection plane rather than the verdict plane and no adopter has emitted
+one. Deciding it needs an adopter's case, not a guess.
 
 ### C5. Recon's classification vocabularies are ungoverned
 
