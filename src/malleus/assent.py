@@ -302,7 +302,18 @@ class ProtocolLedger:
             if accepted_graph_base is not None
             else None
         )
-        self._storage = JsonlLedger(path, self.ontology_hash)
+        # A ledger anchored by an earlier release carries this ontology's hash
+        # under an earlier payload grammar. Same bytes, different identity,
+        # because the grammar version sits inside the hashed payload.
+        self._storage = JsonlLedger(
+            path,
+            self.ontology_hash,
+            tuple(
+                f"sha256:{digest}"
+                for digest in self.registry.content_hashes().values()
+                if f"sha256:{digest}" != self.ontology_hash
+            ),
+        )
 
     @property
     def path(self) -> Path:

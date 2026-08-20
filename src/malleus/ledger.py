@@ -99,10 +99,32 @@ def aware_datetime(value: Any, context: str) -> datetime:
 class JsonlLedger:
     """Persistence envelope with no domain transition policy."""
 
-    def __init__(self, path: str | Path, ontology_hash: str):
+    def __init__(
+        self,
+        path: str | Path,
+        ontology_hash: str,
+        historical_ontology_hashes: tuple[str, ...] = (),
+    ):
+        """`historical_ontology_hashes` are the same ontology's identity under
+        earlier payload grammars.
+
+        A hash written into an accepted append-only ledger is a public
+        contract. The ledger cannot be rewritten to match a new hashing rule,
+        so the rule must be able to verify what the ledger already holds. Every
+        accepted hash names the same bytes; declaring one that does not is the
+        caller's error and this envelope cannot detect it.
+        """
         self.path = Path(path)
         require_digest(ontology_hash, "ontology_hash")
+        for historical in historical_ontology_hashes:
+            require_digest(historical, "historical ontology_hash")
         self.ontology_hash = ontology_hash
+        self.historical_ontology_hashes = tuple(historical_ontology_hashes)
+        self.accepted_ontology_hashes = (ontology_hash, *self.historical_ontology_hashes)
+        # Which of them the last read actually encountered. A ledger replaying
+        # under an earlier grammar is a fact the caller may act on, so it is
+        # reported rather than absorbed.
+        self.verified_ontology_hashes: tuple[str, ...] = ()
 
     def append(
         self,
@@ -256,6 +278,7 @@ class JsonlLedger:
         prior_hash = GENESIS
         prior_time = None
         event_ids = set()
+        seen: set[str] = set()
         for index, event in enumerate(events, start=1):
             context = f"event {index}"
             _string_keys(event, context)
@@ -281,8 +304,12 @@ class JsonlLedger:
             )
             if prior_time is not None and transaction_time < prior_time:
                 raise LedgerError(f"{context}: transaction_time decreased")
-            if event["ontology_hash"] != self.ontology_hash:
-                raise LedgerError(f"{context}: ontology_hash does not match this ledger")
+            if event["ontology_hash"] not in self.accepted_ontology_hashes:
+                raise LedgerError(
+                    f"{context}: ontology_hash does not match this ledger under any "
+                    f"payload grammar it accepts"
+                )
+            seen.add(event["ontology_hash"])
             require_digest(event["ontology_hash"], f"{context} ontology_hash")
             if event["previous_event_hash"] != prior_hash:
                 raise LedgerError(f"{context}: previous_event_hash mismatch")
@@ -297,6 +324,9 @@ class JsonlLedger:
             event_ids.add(event["event_id"])
             prior_hash = event["event_hash"]
             prior_time = transaction_time
+        self.verified_ontology_hashes = tuple(
+            h for h in self.accepted_ontology_hashes if h in seen
+        )
 
 
 def _string_keys(value: Mapping[Any, Any], context: str) -> None:

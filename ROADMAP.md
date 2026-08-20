@@ -236,9 +236,25 @@ not-implemented list is the same problem for a different stored value, and
 `FINGERPRINT_VERSION` at 4 with a legacy 3 is the same problem already
 half-handled for a third.
 
-**Verdict: accept for grooming. Reproduce first.** The reported symptom is
-consistent with A7, so part of it may be A7 wearing a second face. Establish
-which before designing a migration record.
+**Reproduced and fixed.** It was not A7 wearing a second face. A7 was the
+fingerprint comparison; this is the content hash, a different payload, and the
+0.12.0 diff never touched it. Same principle, second place: the grammar version
+is not a property of the schema, and it was inside the hashed payload too.
+
+Established locally: `assent.yaml` produces two different content hashes under
+the two grammars, from identical bytes.
+
+Verification now happens under the recorded hash's own grammar.
+`content_hashes()` and `verifying_grammar()` on the registry, an optional
+declared history on the ledger, and `verified_ontology_hashes` reporting which
+grammar actually verified. Declared, never assumed: a ledger that declares no
+history still refuses, and a genuinely foreign hash is refused even when a
+history is declared.
+
+Still open, and the smaller half: a migration receipt. Re-anchoring under the
+current grammar produces no typed record binding the old identity, the new
+identity and the boundary event. Verification is fixed; migration is not
+recorded.
 
 ---
 

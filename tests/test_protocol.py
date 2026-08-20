@@ -4773,3 +4773,84 @@ class TestContextStateDigestsAreValidated:
                 context_state_digests=(digest,),
             )
         assert ledger.path.read_bytes() == before
+
+
+class TestALedgerAnchoredUnderAnEarlierGrammarStillReplays:
+    """Reported by an adopting project whose deploy gate this blocked, and
+    reproduced here: not one ontology byte changed and the recorded hash
+    stopped matching, because the payload grammar version sits inside the
+    hashed payload and 0.11.0 made it conditional.
+
+    A hash written into an accepted append-only ledger is a public contract.
+    The ledger cannot be rewritten to match a new hashing rule, so the rule
+    must be able to verify what the ledger already holds."""
+
+    def _legacy_hash(self):
+        from malleus.ontology import (
+            LEGACY_FINGERPRINT_VERSION,
+            OntologyRegistry,
+            bundled_ontology_path,
+        )
+        registry = OntologyRegistry(bundled_ontology_path("assent.yaml"))
+        return registry, f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+
+    def test_the_same_bytes_hash_differently_under_the_two_grammars(self):
+        """The premise. If this ever stops holding, the rest is theatre."""
+        registry, legacy = self._legacy_hash()
+        assert legacy != f"sha256:{registry.content_hash()}"
+        assert registry.verifying_grammar(legacy) == 3
+        assert registry.verifying_grammar(f"sha256:{registry.content_hash()}") == 4
+
+    def test_a_hash_matching_no_known_grammar_still_refuses(self):
+        registry, _legacy = self._legacy_hash()
+        assert registry.verifying_grammar("sha256:" + "0" * 64) is None
+
+    def test_a_ledger_written_under_the_old_grammar_replays(self, tmp_path):
+        from malleus.ledger import JsonlLedger
+        registry, legacy = self._legacy_hash()
+        current = f"sha256:{registry.content_hash()}"
+
+        written_then = JsonlLedger(tmp_path / "l.jsonl", legacy)
+        written_then.append(
+            event_id="e1", event_type="ARTIFACT_RECORDED",
+            transaction_time="2026-01-01T00:00:00+00:00",
+            actor_id="actor:1", payload={"artifact_type": "SourceArtifact", "artifact": {}},
+            validate=lambda events: None,
+        )
+
+        read_now = JsonlLedger(tmp_path / "l.jsonl", current, (legacy,))
+        events = read_now.read()
+        assert len(events) == 1
+        assert read_now.verified_ontology_hashes == (legacy,), (
+            "the grammar that verified must be reported, not absorbed"
+        )
+
+    def test_a_ledger_that_declares_no_history_still_refuses(self, tmp_path):
+        """Accepting an older grammar is a declaration, never an assumption."""
+        from malleus.ledger import JsonlLedger, LedgerError
+        registry, legacy = self._legacy_hash()
+        written_then = JsonlLedger(tmp_path / "l.jsonl", legacy)
+        written_then.append(
+            event_id="e1", event_type="ARTIFACT_RECORDED",
+            transaction_time="2026-01-01T00:00:00+00:00",
+            actor_id="actor:1", payload={"artifact_type": "SourceArtifact", "artifact": {}},
+            validate=lambda events: None,
+        )
+        strict = JsonlLedger(tmp_path / "l.jsonl", f"sha256:{registry.content_hash()}")
+        with pytest.raises(LedgerError, match="under any payload grammar"):
+            strict.read()
+
+    def test_a_genuinely_foreign_hash_is_refused_even_with_history_declared(self, tmp_path):
+        from malleus.ledger import JsonlLedger, LedgerError
+        registry, legacy = self._legacy_hash()
+        current = f"sha256:{registry.content_hash()}"
+        foreign = JsonlLedger(tmp_path / "l.jsonl", "sha256:" + "7" * 64)
+        foreign.append(
+            event_id="e1", event_type="ARTIFACT_RECORDED",
+            transaction_time="2026-01-01T00:00:00+00:00",
+            actor_id="actor:1", payload={"artifact_type": "SourceArtifact", "artifact": {}},
+            validate=lambda events: None,
+        )
+        reader = JsonlLedger(tmp_path / "l.jsonl", current, (legacy,))
+        with pytest.raises(LedgerError, match="under any payload grammar"):
+            reader.read()

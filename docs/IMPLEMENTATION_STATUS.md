@@ -249,6 +249,29 @@ from two audited adopters and is not yet established as portable. No Signal
 subtype is declared because coverage is computed on demand rather than
 recorded.
 
+## Content hash and payload grammar
+
+The content hash includes the payload grammar version, and 0.11.0 made that
+version conditional: `3` unconditionally before, `4` afterwards for a schema
+using `exactly_one_of`, `inlined` or `value_presence`. A feature-using schema's
+content hash therefore changed between releases without one ontology byte
+changing, and a ledger anchored under the earlier hash could not replay.
+
+A hash written into an accepted append-only ledger is a public contract. The
+ledger cannot be rewritten to match a new rule, so the rule verifies what the
+ledger already holds. `content_hashes()` gives this schema's identity under
+every grammar in `KNOWN_PAYLOAD_GRAMMARS`; `verifying_grammar()` answers which
+one makes a recorded hash match, or `None` for a real mismatch.
+
+A ledger accepts an earlier grammar only when the caller declares it, never by
+assumption, and `verified_ontology_hashes` reports which were encountered so a
+replay under an earlier grammar is a fact the caller can act on. Nothing is
+silently recomputed and nothing is silently accepted.
+
+Not implemented: a migration receipt. Re-anchoring under the current grammar
+produces no typed record binding the old identity, the new identity and the
+boundary event. Verification is fixed; migration is not recorded.
+
 ## Not implemented
 
 - `portable-graph-base-resolution`: retrieving graph bytes from an artifact locator rather than requiring the caller to supply the matching base graph

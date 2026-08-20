@@ -129,8 +129,17 @@ class ReconProject:
         self._clock = clock or _utc_now
         self.registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
         self.ontology_hash = f"sha256:{self.registry.content_hash()}"
+        # Same ontology, earlier payload grammar, different hash. A project
+        # recorded by an earlier release must still replay.
+        self.historical_ontology_hashes = tuple(
+            f"sha256:{digest}"
+            for digest in self.registry.content_hashes().values()
+            if f"sha256:{digest}" != self.ontology_hash
+        )
         self.config = self._read_config()
-        self.ledger = JsonlLedger(self.root / LEDGER_FILE, self.ontology_hash)
+        self.ledger = JsonlLedger(
+            self.root / LEDGER_FILE, self.ontology_hash, self.historical_ontology_hashes
+        )
 
     @classmethod
     def initialize(
@@ -199,10 +208,11 @@ class ReconProject:
             value["ontology_hash"]
         ) is None:
             raise ReconError(f"{PROJECT_FILE} ontology_hash must be sha256:<64 hex>")
-        if value["ontology_hash"] != self.ontology_hash:
+        if self.registry.verifying_grammar(value["ontology_hash"]) is None:
             raise ReconError(
-                "Recon ontology hash differs from this project; run an explicit migration "
-                "instead of replaying under changed types"
+                "Recon ontology hash differs from this project under every payload "
+                "grammar this release knows; run an explicit migration instead of "
+                "replaying under changed types"
             )
         return value
 

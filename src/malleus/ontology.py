@@ -53,6 +53,19 @@ LEGACY_FINGERPRINT_VERSION = 3
 FINGERPRINT_VERSION = 4
 FINGERPRINT_VERSION_PREFIX = "fingerprint_version:"
 
+# Every payload grammar a recorded content hash may have been written under,
+# newest first. The grammar version sits inside the hashed payload, and 0.11.0
+# made it conditional: 3 unconditionally before, 4 afterwards for a schema
+# using exactly_one_of, inlined or value_presence. So a feature-using schema's
+# content hash changed between releases without one ontology byte changing,
+# and a ledger anchored under the old hash could not replay.
+#
+# A hash written into an accepted append-only ledger is a public contract. The
+# ledger cannot be rewritten to match a new rule, so the rule must be able to
+# verify what the ledger already holds. Verify a recorded hash under its own
+# grammar, say which one verified it, and never silently recompute and reject.
+KNOWN_PAYLOAD_GRAMMARS: tuple[int, ...] = (FINGERPRINT_VERSION, LEGACY_FINGERPRINT_VERSION)
+
 
 def _structural_facts(facts: frozenset[str]) -> frozenset[str]:
     """The facts that describe the schema, without the one that describes the grammar.
@@ -1093,9 +1106,39 @@ class OntologyRegistry:
 
     def content_hash(self) -> str:
         """Return the versioned hash of every enforced structural fact."""
-        if not hasattr(self, "_cached_hash"):
+        return self.content_hash_under(self._fingerprint_version())
+
+    def content_hashes(self) -> dict[int, str]:
+        """This schema's content hash under every payload grammar it may carry.
+
+        One schema, several legitimate identities, because the grammar version
+        is part of the hashed payload and the rule for choosing it changed. All
+        of them describe the same bytes.
+        """
+        return {g: self.content_hash_under(g) for g in KNOWN_PAYLOAD_GRAMMARS}
+
+    def verifying_grammar(self, recorded_hash: str) -> int | None:
+        """Which payload grammar makes a recorded hash match, or None.
+
+        None means the recorded hash does not describe this schema under any
+        grammar this release knows, which is a real mismatch and must refuse.
+        A returned grammar older than the current one means the record is
+        sound and was written by an earlier release; the caller decides whether
+        to re-anchor and is told, rather than the hash being quietly redone.
+        """
+        digest = recorded_hash.split(":", 1)[1] if ":" in recorded_hash else recorded_hash
+        for grammar, candidate in self.content_hashes().items():
+            if candidate == digest:
+                return grammar
+        return None
+
+    def content_hash_under(self, grammar: int) -> str:
+        """The hash this schema would carry under one payload grammar."""
+        if not hasattr(self, "_cached_hashes"):
+            self._cached_hashes: dict[int, str] = {}
+        if grammar not in self._cached_hashes:
             canonical = {
-                "fingerprint_version": self._fingerprint_version(),
+                "fingerprint_version": grammar,
                 "types": {
                     name: {
                         "parent": typedef.parent,
@@ -1132,8 +1175,8 @@ class OntologyRegistry:
                 "scalar_types": dict(sorted(self._scalar_types.items())),
             }
             blob = json.dumps(canonical, sort_keys=True, separators=(",", ":"))
-            self._cached_hash = hashlib.sha256(blob.encode()).hexdigest()
-        return self._cached_hash
+            self._cached_hashes[grammar] = hashlib.sha256(blob.encode()).hexdigest()
+        return self._cached_hashes[grammar]
 
     def fingerprint(self) -> frozenset[str]:
         """Return producer-side structural facts, excluding required constraints."""

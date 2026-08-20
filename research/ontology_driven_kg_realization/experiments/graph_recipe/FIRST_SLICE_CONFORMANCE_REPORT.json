@@ -3,13 +3,13 @@
     "algorithm": "source-bytes-sha256-v1",
     "direct_core_dependencies": {
       "src/malleus/kg.py": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
-      "src/malleus/ledger.py": "sha256:5e5aa2ab4f16259b3aff3e6df7315ce2f81d90332687f10447fc95e6163d2637",
-      "src/malleus/ontology.py": "sha256:0b767dc3e66dc7720f2527f1a2eaae6b277f48029e9b4ab357929bef9c2ee73a",
+      "src/malleus/ledger.py": "sha256:f9ef7a53f01ffba150240d8c0f8f3cbe1cfeba04ba216289df39a3e622eb3c7f",
+      "src/malleus/ontology.py": "sha256:01c459de66438c7fc5faccb695aeee5caa45a6622af238b7d31fb0a82f064a14",
       "src/malleus/source.py": "sha256:6e04af0a6187322a72521a6f73cccf1fe73e715b7a491d5fca7e90ab82e82e4a",
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
     "package_boundary_sources": {
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:444237a5163441be0fb315e95af1f576db7347c229e32830837a127cd01a6723",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:fe9933909e9470e059f951f17f1aaec90126e43603fe7f0ee14921c997edb0ae",
       "pyproject.toml": "sha256:14a6b4ccbba72f7b0fada6921d6369320089cd5b18817cb0932f243b45c89bd3",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
       "src/malleus/status.py": "sha256:f2efb7e9aea4c0059044414278736deb2ebdef6a6e57124f7b5a58bf069492a0"
