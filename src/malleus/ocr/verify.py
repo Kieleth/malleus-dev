@@ -220,7 +220,11 @@ def verify_bundle(
             add("OCR-D008", selection.id,
                 f"{selection.selected_id!r} carries no review record")
 
-    # C3, C4, C8: the source class is declared and frozen before ingest.
+    # C8 and the declaration half of C3 and C4: the source class is frozen
+    # before ingest and names its metric families. This is NOT C3. C3 measures
+    # coverage against those families and their thresholds, and no code here
+    # does that. Citing a decision beside a check that does not perform it is
+    # how C3 came to look discharged.
     source_class = bundle.source_class
     if not source_class.frozen_at.strip():
         add("OCR-D009", source_class.id, "no frozen_at recorded")

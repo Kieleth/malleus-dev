@@ -630,3 +630,140 @@ def test_an_emitter_that_never_touches_the_carrier_conforms():
     }
     result = verify_bundle(Bundle.from_document(document))
     assert result.conforms, [str(d) for d in result.diagnostics]
+
+
+# Two tables that exist because of one mistake. The coverage machinery was in
+# the schema, complete and unread: required_units as denominator,
+# observed_units as numerator, metric_families carrying each measure's divisor
+# and threshold. A pass/fail rule was designed to replace it while it sat
+# there. `docs/IMPLEMENTATION_STATUS.md` already said "no coverage measurement
+# exists" and `verify.py` already said "a decision with no check is prose".
+# Both statements were true, neither was enforced, and the author of both did
+# not consult either. These tables make the answer a lookup instead of a
+# recollection.
+
+UNBUILT = "UNBUILT: "
+STRUCTURAL = "STRUCTURAL: "
+
+# What discharges each decision in the record. A diagnostic code, or an honest
+# statement that nothing does.
+DECISION_DISCHARGE = {
+    "A1": STRUCTURAL + "capability is AUDIT_ONLY; nothing here writes to a ledger",
+    "A2": STRUCTURAL + "the profile ontology imports the root and adds nothing to it",
+    "A3": STRUCTURAL + "no portability claim is made anywhere in the package",
+    "B1": STRUCTURAL + "no code path reads confidence, so it cannot control acceptance",
+    "B2": STRUCTURAL + "AttemptStatus and ReviewVerdict keep the six states distinct",
+    "B3": UNBUILT + "reviewer separateness is recorded and never checked (roadmap C1)",
+    "C1": STRUCTURAL + "selector_profile is a declared slot; the default holds no privilege",
+    "C2": UNBUILT + "dependency-closed partial claims; required_units has no reader",
+    "C3": UNBUILT + "coverage is declared and never measured; only emptiness is checked",
+    "C4": ("OCR-D013",),
+    "C5": ("OCR-D010",),
+    "C6": ("OCR-D001", "OCR-D002"),
+    "C7": STRUCTURAL + "currency_verdict separates invalidation from demotion",
+    "C8": ("OCR-D009",),
+}
+
+# What reads each slot the profile ontology declares. Being written into a
+# record is emitting, not reading, and the difference is the whole lesson.
+SLOT_READERS = {
+    "required_units": UNBUILT + "the C2 denominator; nothing computes with it",
+    "observed_units": UNBUILT + "the C3 numerator; nothing computes with it",
+    "metric_families_digest": STRUCTURAL + "content address only",
+    "metric_family_names": ("OCR-D012",),
+    "temporal_policy": UNBUILT + "declared per C4; no ordering code consults it",
+    "frozen_at": ("OCR-D009",),
+    "inventory_basis": UNBUILT + "records how the inventory was confirmed; unused until C2",
+    "source_class_id": STRUCTURAL + "binds the bundle to its frozen precommitment",
+    "member_ids": STRUCTURAL + "answers which records the bundle contains",
+    "data_handling_policy_id": ("OCR-D010",),
+    "hostile_content_policy_id": ("OCR-D010",),
+    "transport_metadata_digest": ("OCR-D002",),
+    "digest": ("OCR-D001",),
+    "byte_length": ("OCR-D013",),
+    "media_type": STRUCTURAL + "declares what the bytes are; not otherwise consumed",
+    "locator": STRUCTURAL + "where the bytes came from; never treated as authentication",
+    "source_representation_id": ("OCR-D003",),
+    "render_contract": UNBUILT + "no check compares two renderings of one source",
+    "raster_id": ("OCR-D003",),
+    "selector_digest": STRUCTURAL + "content address only",
+    "selector_profile": STRUCTURAL + "declares which selector spec applies",
+    "region_id": ("OCR-D003", "OCR-D004"),
+    "text_digest": ("OCR-D001",),
+    "attempt_id": ("OCR-D003", "OCR-D007"),
+    "correction_id": ("OCR-D003", "OCR-D007"),
+    "confidence": UNBUILT + "deliberately unread: mandate B1 bars it from acceptance",
+    "candidate_ids": ("OCR-D011",),
+    "selected_id": ("OCR-D008", "OCR-D011"),
+    "reason": UNBUILT + "why a reading was selected; recorded, never judged",
+    "human_verified": ("OCR-D008",),
+    "request_digest": ("OCR-D001",),
+    "config_identity_digest": STRUCTURAL + "content address; drives currency_verdict",
+    "attempt_status": ("OCR-D013",),
+    "response_digest": ("OCR-D001",),
+    "unavailable_reason": UNBUILT + "required reading per the slot's own description; unenforced",
+    "reviewed_hypothesis_id": ("OCR-D006",),
+    "reviewer_id": UNBUILT + "mandate B3 cannot be checked without actor registration",
+    "review_verdict": ("OCR-D013",),
+    "corrected_text_digest": UNBUILT + "not compared to the hypothesis it produced",
+    "predecessor_id": UNBUILT + "correction chains are recorded and never walked",
+}
+
+
+def _entries(table):
+    from malleus.ocr.verify import CODES
+    for key, value in table.items():
+        if isinstance(value, tuple):
+            for code in value:
+                assert code in CODES, f"{key} names {code}, which is not a diagnostic"
+        else:
+            assert value.startswith((UNBUILT, STRUCTURAL)), f"{key} has no honest discharge"
+            assert value.split(": ", 1)[1].strip(), f"{key} gives no reason"
+
+
+class TestNothingIsDischargedByAssertion:
+    """A decision with no check is prose, and a slot with no reader is
+    decoration. Both sentences were already written in this package. Neither
+    was enforced, so a coverage design was invented on top of a coverage
+    design that was already there."""
+
+    def test_every_decision_in_the_record_states_what_discharges_it(self):
+        import re
+        from pathlib import Path
+        record = (Path(__file__).resolve().parents[1] / "design"
+                  / "OCR_EVIDENCE_INTEGRITY_DECISIONS.md").read_text()
+        declared = set(re.findall(r"\*\*([ABC][0-9])[.*]", record))
+        assert declared, "the decision record stopped declaring ids; this guard rotted"
+        missing = sorted(declared - set(DECISION_DISCHARGE))
+        assert not missing, (
+            f"decisions with nothing recorded about their discharge: {missing}. "
+            "Name the diagnostic, or say UNBUILT and why."
+        )
+        _entries(DECISION_DISCHARGE)
+
+    def test_every_slot_the_schema_declares_states_what_reads_it(self):
+        import re
+        from pathlib import Path
+        schema = (Path(__file__).resolve().parents[1] / "ontology" / "domains"
+                  / "ocr.yaml").read_text()
+        body = schema.split("\nslots:\n", 1)[1]
+        declared = set(re.findall(r"^  ([a-z_]+):", body, re.M))
+        assert declared, "the schema stopped declaring slots; this guard rotted"
+        missing = sorted(declared - set(SLOT_READERS))
+        assert not missing, (
+            f"slots with no recorded reader: {missing}. Name the diagnostic that "
+            "consumes it, or say UNBUILT and why. Being written into a record is "
+            "emitting, not reading."
+        )
+        stale = sorted(set(SLOT_READERS) - declared)
+        assert not stale, f"recorded readers for slots that no longer exist: {stale}"
+        _entries(SLOT_READERS)
+
+    def test_the_unbuilt_set_is_visible_rather_than_inferred(self):
+        """The number that matters. If this is a surprise, that is the finding."""
+        unbuilt = sorted(k for k, v in SLOT_READERS.items()
+                         if isinstance(v, str) and v.startswith(UNBUILT))
+        assert len(unbuilt) >= 10, (
+            "the unbuilt list shrank without this count being updated; confirm "
+            "each one really gained a reader"
+        )
