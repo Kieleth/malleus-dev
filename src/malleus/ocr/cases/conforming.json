@@ -160,5 +160,15 @@
     "profile_version": "v0"
   },
   "expect": [],
-  "expect_complete": true
+  "expect_complete": true,
+  "expect_units": {
+    "page:1": [
+      "READ",
+      "ACCOUNTED"
+    ],
+    "page:2": [
+      "VERIFIED_BLANK",
+      "ACCOUNTED"
+    ]
+  }
 }

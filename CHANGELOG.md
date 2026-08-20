@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the OCR profile reporting a reviewer's statement of absence as a
+  reading. `ReviewVerdict.ABSENT` means the unit is not present in the source.
+  `_unit_outcome` tested three human verdicts and not that one, so the record
+  fell through to the machine branch and the unit was censused `READ`, with
+  zero diagnostics and the coverage bar met. That is mandate B2's exact
+  prohibition run backwards: an absence converted into a reading.
+
+  The value was declared in three places at once (`ReviewVerdict`, the module's
+  outcome tuple, its accounted set) and producible from none, and nothing in
+  the package read the vocabulary, so nothing could notice. The cause is
+  recorded as the finding rather than the missing branch.
+
+### Added
+
+- Added `UnitDisposition` to `ontology/domains/ocr.yaml`: `ACCOUNTED`,
+  `NOT_CHECKED`, `CHECK_FAILED`, with `AccountedUnitOutcome`,
+  `NotCheckedUnitOutcome` and `CheckFailedUnitOutcome` declaring which outcome
+  carries which. The census answer was one bit, `accounted`, so a unit nobody
+  fetched and a unit whose only call died read identically; the fixes differ.
+  `malleus.ocr.verify.outcome_dispositions` reads the mapping from the schema,
+  which is what gives the vocabulary a reader. `verify_bundle` now passes its
+  registry to `account_for`, so a caller replacing the profile ontology
+  replaces the census vocabulary with it.
+
+- Added two packaged conformance cases and a per-unit census expectation to all
+  six. `absence-is-not-a-reading` fixes ABSENT as an accounted answer that is
+  not a reading. `silence-is-not-success` carries a `FINISHED_READING` bundle
+  with zero diagnostics that is not complete, one unit whose call failed and
+  one never fetched, so an adopter running only the packaged suite sees the two
+  kept apart. Cases stated completeness and nothing else, so four green cases
+  coexisted with every unit's outcome being wrong.
+
+### Changed
+
+- Changed an OCR coverage ratio over an empty denominator from `1.000` and
+  `MET` to `UNMEASURED`. A source class requiring nothing scored full coverage
+  on a census of nothing. Unreachable through `verify_bundle`, because the
+  schema refuses an empty `required_units`, and a neighbouring gate holding a
+  door is not the same as this arithmetic being closed.
+
+- Changed the `malleus-ocr` report to print each unit's disposition beside its
+  outcome, and to split `INCOMPLETE` into never-checked and check-failed lists.
+
 ## [0.13.2] - 2026-08-20
 
 ### Fixed

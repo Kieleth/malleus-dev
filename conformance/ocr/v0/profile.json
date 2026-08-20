@@ -31,8 +31,21 @@
     "source-to-reading lineage",
     "separation of identity planes",
     "declared coverage and policy precommitment",
-    "every plane typed under the malleus root primitives"
+    "every plane typed under the malleus root primitives",
+    "a three-valued unit census: looked-at, never looked at, look failed"
   ],
   "selector_profile_default": "w3c-web-annotation+iiif",
-  "selector_profile_replaceable": true
+  "selector_profile_replaceable": true,
+  "unit_dispositions": {
+    "ABSENT": "ACCOUNTED",
+    "EXCLUDED": "ACCOUNTED",
+    "FAILED": "CHECK_FAILED",
+    "NOT_ATTEMPTED": "NOT_CHECKED",
+    "NOT_OBSERVED": "NOT_CHECKED",
+    "NOT_RENDERED": "NOT_CHECKED",
+    "READ": "ACCOUNTED",
+    "UNAVAILABLE": "CHECK_FAILED",
+    "UNREADABLE": "ACCOUNTED",
+    "VERIFIED_BLANK": "ACCOUNTED"
+  }
 }

@@ -507,6 +507,49 @@ class TestThePackagedConformanceCases:
             assert result.account.complete == case["expect_complete"], (
                 f"case {name} changed what it accounts for"
             )
+            census = {u.unit: [u.outcome, u.disposition] for u in result.account.units}
+            assert census == case["expect_units"], (
+                f"case {name} changed what became of its units"
+            )
+
+    def test_every_case_states_its_census_unit_by_unit(self):
+        """Completeness is one bit, and a bit cannot distinguish a unit nobody
+        fetched from one whose only call failed. A case stating only the bit
+        could agree with the verifier while disagreeing about every unit in
+        it, which is how a reviewer's ABSENT read as READ through four green
+        cases."""
+        from malleus.ocr.conformance import CASES, load_case
+        for name in CASES:
+            case = load_case(name)
+            assert "expect_units" in case, f"case {name} does not state its census"
+            for unit, (outcome, disposition) in case["expect_units"].items():
+                assert case["document"]["bundle"]["source_class"]["required_units"], unit
+                assert outcome and disposition
+
+    def test_the_suite_distinguishes_the_two_ways_a_unit_goes_unaccounted(self):
+        """A corpus that never exercises CHECK_FAILED beside NOT_CHECKED
+        cannot show that the profile keeps them apart, and an adopter running
+        only the packaged cases is the reader who needs to see it."""
+        from malleus.ocr.conformance import CASES, load_case
+        dispositions = {
+            pair[1]
+            for name in CASES
+            for pair in load_case(name)["expect_units"].values()
+        }
+        assert {"ACCOUNTED", "NOT_CHECKED", "CHECK_FAILED"} <= dispositions
+
+    def test_the_suite_carries_a_bundle_that_is_sound_and_not_a_success(self):
+        """The negative case for silence. Zero diagnostics and not complete:
+        paperwork that holds together is not a reading, and the suite must
+        contain a document that says so while claiming FINISHED_READING."""
+        from malleus.ocr.conformance import CASES, load_case
+        silent = [
+            load_case(name) for name in CASES
+            if not load_case(name)["expect"]
+            and not load_case(name)["expect_complete"]
+            and load_case(name)["document"]["bundle"]["kind"] == "FINISHED_READING"
+        ]
+        assert silent, "no case shows sound paperwork failing to be a reading"
 
     def test_the_suite_distinguishes_sound_paperwork_from_a_finished_reading(self):
         """Without a registration case the suite could not tell the two apart,
@@ -670,7 +713,12 @@ DECISION_DISCHARGE = {
     "A2": STRUCTURAL + "the profile ontology imports the root and adds nothing to it",
     "A3": STRUCTURAL + "no portability claim is made anywhere in the package",
     "B1": STRUCTURAL + "no code path reads confidence, so it cannot control acceptance",
-    "B2": STRUCTURAL + "AttemptStatus and ReviewVerdict keep the six states distinct",
+    "B2": STRUCTURAL + "AttemptStatus and ReviewVerdict keep the six states "
+                       "distinct, and the census maps each to one of three "
+                       "declared dispositions rather than to a bit. This read "
+                       "'the enums keep them distinct' while ABSENT was being "
+                       "reported READ: the enums were distinct and the code "
+                       "that consumed them was not",
     "B3": UNBUILT + "reviewer separateness is recorded and never checked (roadmap C1)",
     "C1": STRUCTURAL + "selector_profile is a declared slot; the default holds no privilege",
     "C2": UNBUILT + "dependency-closed partial claims; required_units has no reader",
@@ -681,6 +729,36 @@ DECISION_DISCHARGE = {
     "C6": ("OCR-D001", "OCR-D002"),
     "C7": STRUCTURAL + "currency_verdict separates invalidation from demotion",
     "C8": ("OCR-D009",),
+}
+
+# What reads each enum the profile ontology declares. The same table as
+# SLOT_READERS and for a sharper reason: an unread SLOT carries a value nobody
+# checks, an unread ENUM carries a value nobody can produce. ABSENT was
+# declared in ReviewVerdict, in the module's outcome tuple and in its accounted
+# set, and `_unit_outcome` could not return it, so a reviewer's statement of
+# absence was reported as a reading for a release. Nothing in the package could
+# have noticed, because nothing read the vocabulary.
+ENUM_READERS = {
+    "BundleKind": STRUCTURAL + "range of bundle_kind; Account.complete refuses "
+                               "to certify anything but FINISHED_READING",
+    "AttemptStatus": STRUCTURAL + "range of attempt_status; read by OCR-D015 and "
+                                  "by the census, which maps it to CHECK_FAILED",
+    "ReviewVerdict": STRUCTURAL + "range of review_verdict; read by OCR-D015 and "
+                                  "by the census, where a human verdict outranks "
+                                  "the machine",
+    "UnitDisposition": STRUCTURAL + "read by outcome_dispositions; the census's "
+                                    "three answers and the projection's",
+    "AccountedUnitOutcome": STRUCTURAL + "read by outcome_dispositions",
+    "NotCheckedUnitOutcome": STRUCTURAL + "read by outcome_dispositions",
+    "CheckFailedUnitOutcome": STRUCTURAL + "read by outcome_dispositions",
+    "OCREventType": UNBUILT + "declared and consumed by nothing. Its description "
+                              "says the domain schema narrows the root's open "
+                              "event_type; equals_string on OCRAttempt and "
+                              "ReviewCorrection does that, and this enum is not "
+                              "the slot's range, so it narrows nothing. Found "
+                              "while giving the census vocabulary a reader; "
+                              "recorded rather than closed, because binding it "
+                              "is a schema decision and not this slice's",
 }
 
 # What reads each slot the profile ontology declares. Being written into a
@@ -780,6 +858,36 @@ class TestNothingIsDischargedByAssertion:
         assert not stale, f"recorded readers for slots that no longer exist: {stale}"
         _entries(SLOT_READERS)
 
+    def test_every_enum_the_schema_declares_states_what_reads_it(self):
+        """A vocabulary nothing reads cannot notice that one of its values is
+        unreachable. That is not a tidiness point: it is exactly how ABSENT
+        spent a release being reported as READ."""
+        import re
+        from pathlib import Path
+        schema = (Path(__file__).resolve().parents[1] / "ontology" / "domains"
+                  / "ocr.yaml").read_text()
+        body = schema.split("\nenums:\n", 1)[1].split("\nclasses:\n", 1)[0]
+        declared = set(re.findall(r"^  ([A-Za-z][A-Za-z0-9_]*):", body, re.M))
+        assert declared, "the schema stopped declaring enums; this guard rotted"
+        missing = sorted(declared - set(ENUM_READERS))
+        assert not missing, (
+            f"enums with no recorded reader: {missing}. Name what consumes the "
+            "vocabulary, or say UNBUILT and why. Being a slot's range is not "
+            "enough on its own; something must read the values."
+        )
+        stale = sorted(set(ENUM_READERS) - declared)
+        assert not stale, f"recorded readers for enums that no longer exist: {stale}"
+        _entries(ENUM_READERS)
+
+    def test_the_census_vocabulary_is_read_and_not_merely_declared(self):
+        """The one enum group whose reader had to be built. If this stops
+        holding, the mapping has gone back into Python and the schema is
+        decoration again."""
+        from malleus.ocr.verify import DISPOSITION_ENUM, OUTCOME_ENUMS, outcome_dispositions
+        for enum_name in (DISPOSITION_ENUM, *OUTCOME_ENUMS.values()):
+            assert ENUM_READERS[enum_name].startswith(STRUCTURAL)
+        assert outcome_dispositions(), "the mapping resolves from the schema"
+
     def test_the_unbuilt_set_is_visible_rather_than_inferred(self):
         """The number that matters. If this is a surprise, that is the finding."""
         unbuilt = sorted(k for k, v in SLOT_READERS.items()
@@ -788,6 +896,173 @@ class TestNothingIsDischargedByAssertion:
             "the unbuilt list shrank without this count being updated; confirm "
             "each one really gained a reader"
         )
+
+
+class TestExplicitAbsenceIsData:
+    """Three-valued, and the three values are declared rather than assumed.
+
+    The profile already kept ten outcome strings apart. What it did not have
+    was a reader for the vocabulary that holds them, and the cost was exact:
+    ABSENT sat in the module tuple, in the accounted set and in ReviewVerdict
+    for a release while no code path could produce it, so a reviewer stating
+    that a page is not in the source got the page reported READ. A vocabulary
+    nothing consults cannot notice that one of its values is unreachable.
+    """
+
+    def _absent(self):
+        """A reviewer states page:2 is not present in this source."""
+        return _bundle(corrections=(
+            ReviewCorrection("cor:1", "hyp:1", "reviewer:kim", "CORRECTED", D(6)),
+            ReviewCorrection("cor:2", "hyp:4", "reviewer:kim", "ABSENT"),
+        ))
+
+    def test_a_reviewer_stating_absence_does_not_produce_a_reading(self):
+        """The regression. `_unit_outcome` fell through to the hypothesis test
+        and returned READ, which is mandate B2's exact prohibition run
+        backwards: an absence converted into a reading."""
+        outcomes = {u.unit: u.outcome for u in verify_bundle(self._absent()).account.units}
+        assert outcomes["page:2"] == "ABSENT", "absence must never be reported as a reading"
+
+    def test_absence_is_an_answer_and_therefore_accounted(self):
+        """Somebody looked and can say what they found. B2 keeps ABSENT
+        distinct from a blank page and from a page nobody opened; all three
+        are answers or non-answers on their own terms."""
+        units = {u.unit: u for u in verify_bundle(self._absent()).account.units}
+        assert units["page:2"].disposition == "ACCOUNTED"
+        assert units["page:2"].accounted
+
+    def test_never_checked_and_check_failed_are_two_answers(self):
+        """`accounted` is one bit and was the only judgment available, so a
+        unit nobody fetched and a unit whose only call died read identically.
+        The fixes are different: one is fetched, the other retried."""
+        bundle = _bundle(
+            source_class=_class(required_units=("page:1", "page:2", "page:3")),
+            attempts=(OCRAttempt("att:1", "reg:1", D(3), {"model": "e@1"}, "COMPLETED", D(4)),
+                      OCRAttempt("att:2", "reg:2", D(9), {"model": "e@1"}, "FAILED")),
+            hypotheses=(Hypothesis("hyp:1", "reg:1", D(5), attempt_id="att:1"),),
+            corrections=(),
+            selections=(),
+        )
+        account = verify_bundle(bundle).account
+        assert account.units_with("CHECK_FAILED") == ("page:2",)
+        assert account.units_with("NOT_CHECKED") == ("page:3",)
+        assert account.unaccounted == ("page:2", "page:3"), (
+            "the union still answers 'which units are not accounted for'"
+        )
+        assert not account.complete, "silence must not pass as success"
+
+    def test_the_disposition_of_every_outcome_comes_from_the_schema(self):
+        """Declared, not assumed. The mapping used to be a frozenset in this
+        module, which is the same defect as a rule stated in a slot
+        description: a reader of the schema could not learn it."""
+        from malleus.ocr.verify import OUTCOME_ENUMS, outcome_dispositions, profile_registry
+        registry = profile_registry()
+        mapping = outcome_dispositions(registry)
+        for disposition, enum_name in OUTCOME_ENUMS.items():
+            for outcome in registry.get_enum_values(enum_name):
+                assert mapping[outcome] == disposition
+
+    def test_no_outcome_carries_two_dispositions(self):
+        """A three-valued answer stops being one the moment a value can be
+        two of them."""
+        from malleus.ocr.verify import OUTCOME_ENUMS, profile_registry
+        registry = profile_registry()
+        seen: set[str] = set()
+        for enum_name in OUTCOME_ENUMS.values():
+            values = set(registry.get_enum_values(enum_name))
+            assert not (values & seen), f"{enum_name} overlaps an earlier disposition"
+            seen |= values
+
+    def test_a_disposition_with_no_outcomes_is_refused(self):
+        """Fail closed on a schema that declares a fourth answer and gives the
+        verifier no way to produce it. That silence is how ABSENT hid."""
+        from malleus.ontology import OntologyError
+        from malleus.ocr.verify import DISPOSITION_ENUM, outcome_dispositions
+
+        class Registry:
+            def get_enum_values(self, name):
+                if name == DISPOSITION_ENUM:
+                    return frozenset({"ACCOUNTED", "NOT_CHECKED", "CHECK_FAILED", "PENDING"})
+                return frozenset()
+
+        with pytest.raises(OntologyError) as raised:
+            outcome_dispositions(Registry())
+        assert "PENDING" in str(raised.value)
+
+    def test_every_declared_outcome_is_reachable(self):
+        """The guardrail for the class of defect, not the instance. A value
+        the schema declares and no bundle can produce is a promise the census
+        cannot keep, and reading the vocabulary is not enough to notice it:
+        ABSENT was declared in three places at once and produced by none."""
+        from malleus.ocr.verify import outcome_dispositions
+
+        def one(unit, **over):
+            return {u.unit: u.outcome
+                    for u in verify_bundle(_bundle(**over)).account.units}[unit]
+
+        base_h = (Hypothesis("hyp:1", "reg:1", D(5), attempt_id="att:1"),)
+        reached = {
+            "READ": one("page:1"),
+            "VERIFIED_BLANK": one("page:2"),
+            "ABSENT": one("page:2", corrections=(
+                ReviewCorrection("cor:1", "hyp:1", "r", "CORRECTED", D(6)),
+                ReviewCorrection("cor:2", "hyp:4", "r", "ABSENT"))),
+            "UNREADABLE": one("page:2", corrections=(
+                ReviewCorrection("cor:1", "hyp:1", "r", "CORRECTED", D(6)),
+                ReviewCorrection("cor:2", "hyp:4", "r", "UNREADABLE"))),
+            "EXCLUDED": one("page:2", corrections=(
+                ReviewCorrection("cor:1", "hyp:1", "r", "CORRECTED", D(6)),
+                ReviewCorrection("cor:2", "hyp:4", "r", "EXCLUDED"))),
+            "FAILED": one("page:2", hypotheses=base_h, corrections=(), selections=(),
+                          attempts=(OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),
+                                    OCRAttempt("att:2", "reg:2", D(9), {"m": "e"}, "FAILED"))),
+            "UNAVAILABLE": one("page:2", hypotheses=base_h, corrections=(), selections=(),
+                               attempts=(OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),
+                                         OCRAttempt("att:2", "reg:2", D(9), {"m": "e"}, "UNAVAILABLE",
+                                                    unavailable_reason="provider quota"))),
+            "NOT_OBSERVED": one("page:2", observed_units=("page:1",),
+                                rasters=(Raster("ras:1", "src:1", "page:1", D(2), "r"),),
+                                regions=(Region("reg:1", "ras:1", {"v": "a"}),),
+                                attempts=(OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),),
+                                hypotheses=base_h, corrections=(), selections=()),
+            "NOT_RENDERED": one("page:2",
+                                rasters=(Raster("ras:1", "src:1", "page:1", D(2), "r"),),
+                                regions=(Region("reg:1", "ras:1", {"v": "a"}),),
+                                attempts=(OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),),
+                                hypotheses=base_h, corrections=(), selections=()),
+            "NOT_ATTEMPTED": one("page:2",
+                                 regions=(Region("reg:1", "ras:1", {"v": "a"}),),
+                                 attempts=(OCRAttempt("att:1", "reg:1", D(3), {"m": "e"}, "COMPLETED", D(4)),),
+                                 hypotheses=base_h, corrections=(), selections=()),
+        }
+        wrong = {name: got for name, got in reached.items() if got != name}
+        assert not wrong, f"fixtures do not produce the outcome they claim: {wrong}"
+        declared = set(outcome_dispositions())
+        assert declared == set(reached), (
+            f"declared outcomes with no fixture proving they are reachable: "
+            f"{sorted(declared - set(reached))}"
+        )
+
+    def test_a_replacement_registry_governs_the_census_too(self):
+        """Doctrine rule 6. A caller replacing the profile ontology used to
+        replace which records are legal while the outcome vocabulary stayed
+        hardcoded in the verifier, which is half a replacement."""
+        from malleus.ocr.verify import account_for, profile_registry
+        account = account_for(_bundle(), profile_registry())
+        assert {u.unit: u.disposition for u in account.units} == {
+            "page:1": "ACCOUNTED", "page:2": "ACCOUNTED",
+        }
+
+    def test_a_ratio_over_an_empty_denominator_is_unmeasured_not_perfect(self):
+        """A source class requiring nothing scored 1.000 coverage over a
+        census of nothing and read MET. The schema refuses an empty
+        `required_units`, so the branch was unreachable through
+        `verify_bundle`; a neighbouring gate holding a door this arithmetic
+        left open is not the same as the arithmetic being closed."""
+        from malleus.ocr.verify import account_for
+        account = account_for(_bundle(source_class=_class(required_units=())))
+        assert [m.verdict for m in account.metrics] == ["UNMEASURED"]
+        assert not account.complete
 
 
 class TestTheAccount:

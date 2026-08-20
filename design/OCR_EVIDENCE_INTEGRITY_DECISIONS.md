@@ -50,6 +50,20 @@ corpus. This settles decision 7.
 **B2** (decision 15). Verified blank, unreadable, unavailable, failed, excluded
 and absent stay distinct; none may be padded, snapped or converted into
 another.
+
+*(Landed late, and the delay is the lesson. The six states were distinct in the
+schema from the first release and the census that consumed them was not:
+`ABSENT` had no branch, so a reviewer stating that a unit is not present in the
+source got the unit reported `READ`. Absence converted into a reading, which is
+this mandate's exact prohibition, under a clean verdict and a met coverage bar.
+Nothing caught it because nothing read the outcome vocabulary: it was a module
+tuple with no consumer, and a vocabulary nobody consults cannot report that one
+of its values is unreachable. The vocabulary now lives in the schema as
+`UnitDisposition` and three outcome enums, `malleus.ocr.verify` reads the
+mapping from there, and a test requires every declared outcome to have a
+fixture proving a bundle can produce it. The census answer is also three-valued
+now rather than the single `accounted` bit: a unit nobody fetched and a unit
+whose only call failed were one word for two different repairs.)*
 **B3** (decision 6). A separate reviewer is an identity that did not produce the
 hypothesis under review.
 

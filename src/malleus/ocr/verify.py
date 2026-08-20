@@ -18,7 +18,7 @@ from typing import Any, Mapping
 
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ocr.bundle import DIGEST, SECRET_KEYS, Bundle
-from malleus.ontology import OntologyRegistry, bundled_ontology_path
+from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
 
 CAPABILITY = "AUDIT_ONLY"
 
@@ -105,12 +105,32 @@ class Diagnostic:
 # the same reason: "we never fetched it", "we have it and never rendered it"
 # and "we rendered it and never looked" are different failures with different
 # fixes.
+#
+# The vocabulary itself is NOT declared here. It used to be, as a module tuple
+# that nothing read, and the cost was exact: ABSENT sat in that tuple for a
+# release while `_unit_outcome` could not produce it, so a reviewer stating a
+# page is not in the source got the page reported READ. A vocabulary no code
+# consults cannot notice that one of its values is unreachable. The enums in
+# `ontology/domains/ocr.yaml` are the authority now and `outcome_dispositions`
+# reads them.
 READ = "READ"
-UNIT_OUTCOMES = (
-    READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT",
-    "FAILED", "UNAVAILABLE", "NOT_OBSERVED", "NOT_RENDERED", "NOT_ATTEMPTED",
-)
-ACCOUNTED = frozenset({READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT"})
+
+# The three-valued answer. Not a bool: "we looked and can say what we found",
+# "nobody looked" and "somebody looked and the look failed" are three answers,
+# and a boolean makes two of them share a word.
+ACCOUNTED = "ACCOUNTED"
+NOT_CHECKED = "NOT_CHECKED"
+CHECK_FAILED = "CHECK_FAILED"
+
+DISPOSITION_ENUM = "UnitDisposition"
+
+# The closed-world mapping, one enum per disposition. Declared in the schema
+# and read back, rather than assumed by whoever wrote the last branch.
+OUTCOME_ENUMS = {
+    ACCOUNTED: "AccountedUnitOutcome",
+    NOT_CHECKED: "NotCheckedUnitOutcome",
+    CHECK_FAILED: "CheckFailedUnitOutcome",
+}
 
 # Denominators this profile can compute. A family naming anything else is
 # reported UNMEASURED rather than quietly passing, because an unmeasured
@@ -118,22 +138,61 @@ ACCOUNTED = frozenset({READ, "VERIFIED_BLANK", "UNREADABLE", "EXCLUDED", "ABSENT
 DENOMINATORS = {"declared_units"}
 
 
+def outcome_dispositions(registry: OntologyRegistry | None = None) -> dict[str, str]:
+    """The declared mapping from a unit outcome to its disposition.
+
+    Read from the ontology, never assumed here. Refuses rather than repairs: a
+    disposition with no outcome enum, an outcome claimed by two dispositions,
+    or a disposition the schema does not declare are all schema errors, and
+    guessing which one was meant is how a census acquires a value nobody
+    declared.
+    """
+    registry = registry if registry is not None else profile_registry()
+    declared = registry.get_enum_values(DISPOSITION_ENUM)
+    unmapped = sorted(set(declared) - set(OUTCOME_ENUMS))
+    if unmapped:
+        raise OntologyError(
+            f"{DISPOSITION_ENUM} declares {unmapped} with no outcome enum to fill them"
+        )
+    mapping: dict[str, str] = {}
+    for disposition, enum_name in OUTCOME_ENUMS.items():
+        if disposition not in declared:
+            raise OntologyError(
+                f"'{disposition}' is not a value of {DISPOSITION_ENUM}"
+            )
+        for outcome in registry.get_enum_values(enum_name):
+            if outcome in mapping:
+                raise OntologyError(
+                    f"outcome '{outcome}' carries two dispositions: "
+                    f"{mapping[outcome]} and {disposition}"
+                )
+            mapping[outcome] = disposition
+    return mapping
+
+
 @dataclass(frozen=True)
 class UnitAccount:
-    """One declared unit and what became of it."""
+    """One declared unit, what became of it, and which of the three that is."""
 
     unit: str
     outcome: str
+    disposition: str
 
     @property
     def accounted(self) -> bool:
         """Accounted means somebody looked and can say what they found.
 
         A blank page that was read and found blank is accounted for. So is one
-        ruled out of scope. A page nobody opened is not, however sound the
-        paperwork around it.
+        ruled out of scope, and so is one a reviewer states is not in the
+        source at all. A page nobody opened is not, however sound the
+        paperwork around it, and neither is one whose only attempt failed.
+
+        Kept as a bit because the coverage numerator is a count. It is derived
+        from the disposition and is not the authority: a caller asking why a
+        unit is unaccounted reads `disposition`, which distinguishes the unit
+        nobody fetched from the one whose call died.
         """
-        return self.outcome in ACCOUNTED
+        return self.disposition == ACCOUNTED
 
 
 @dataclass(frozen=True)
@@ -170,6 +229,16 @@ class Account:
     @property
     def unaccounted(self) -> tuple[str, ...]:
         return tuple(u.unit for u in self.units if not u.accounted)
+
+    def units_with(self, disposition: str) -> tuple[str, ...]:
+        """The units carrying one disposition.
+
+        `unaccounted` is the union of the two negative dispositions and cannot
+        say which. A caller acting on the answer needs to: an unfetched unit is
+        fetched, a failed call is retried, and reporting both as "unaccounted"
+        hands the operator one word for two jobs.
+        """
+        return tuple(u.unit for u in self.units if u.disposition == disposition)
 
     @property
     def complete(self) -> bool:
@@ -235,7 +304,8 @@ def verify_bundle(
     # root primitives, and the registry refuses an unknown property, a missing
     # required slot, a value outside a closed enum or a range violation. The
     # checks below it are the cross-plane questions a schema cannot ask.
-    graph = KnowledgeGraph(registry if registry is not None else profile_registry())
+    registry = registry if registry is not None else profile_registry()
+    graph = KnowledgeGraph(registry)
     for attribute, type_name, family in PLANES:
         if attribute == "bundle":
             objects: tuple[Any, ...] = (bundle,)
@@ -405,7 +475,9 @@ def verify_bundle(
         if not value:
             add("OCR-D010", bundle.id, f"{label} policy unbound")
 
-    return VerificationResult(bundle.id, CAPABILITY, tuple(out), account_for(bundle))
+    return VerificationResult(
+        bundle.id, CAPABILITY, tuple(out), account_for(bundle, registry)
+    )
 
 
 def _unit_outcome(bundle: Bundle, unit: str) -> str:
@@ -424,9 +496,17 @@ def _unit_outcome(bundle: Bundle, unit: str) -> str:
     # region blank has accounted for it, and no attempt status may overwrite
     # that. Mandate B2 forbids converting one state into another, so the order
     # is fixed here rather than left to whichever record is read last.
+    #
+    # ABSENT leads because it is the only verdict that speaks about the unit
+    # rather than about one region of it: "this page is not in the source" is
+    # not outranked by a reading of something else on the same page. It was
+    # missing from this list for a release, and the consequence was not a
+    # missing row, it was the wrong row: the fall-through below reported the
+    # unit READ, converting a reviewer's statement of absence into a reading.
+    # That is the exact substitution mandate B2 exists to forbid.
     reviewed = {h.id for h in bundle.hypotheses if h.region_id in regions}
     verdicts = [c.verdict for c in bundle.corrections if c.reviewed_hypothesis_id in reviewed]
-    for verdict in ("UNREADABLE", "EXCLUDED", "VERIFIED_BLANK"):
+    for verdict in ("ABSENT", "UNREADABLE", "EXCLUDED", "VERIFIED_BLANK"):
         if verdict in verdicts:
             return verdict
     if any(h.region_id in regions for h in bundle.hypotheses):
@@ -441,16 +521,28 @@ def _unit_outcome(bundle: Bundle, unit: str) -> str:
     return "NOT_ATTEMPTED"
 
 
-def account_for(bundle: Bundle) -> Account:
+def account_for(bundle: Bundle, registry: OntologyRegistry | None = None) -> Account:
     """Census every declared unit, then measure what the source class precommitted.
 
     The declaration was frozen before ingest precisely so this cannot be graded
     against a bar chosen after seeing the scan.
+
+    Takes the same registry the record validation ran under, so a caller who
+    replaces the profile ontology replaces the census vocabulary with it. A
+    replacement that governed which records are legal while the outcome
+    vocabulary stayed hardcoded here would be half a replacement.
     """
-    units = tuple(
-        UnitAccount(unit, _unit_outcome(bundle, unit))
-        for unit in bundle.source_class.required_units
-    )
+    dispositions = outcome_dispositions(registry)
+    units = []
+    for unit in bundle.source_class.required_units:
+        outcome = _unit_outcome(bundle, unit)
+        if outcome not in dispositions:
+            raise OntologyError(
+                f"unit outcome '{outcome}' is produced by this verifier and "
+                f"declared by no outcome enum in the profile ontology"
+            )
+        units.append(UnitAccount(unit, outcome, dispositions[outcome]))
+    units = tuple(units)
     accounted = sum(1 for u in units if u.accounted)
     metrics = []
     for family, declaration in sorted(bundle.source_class.metric_families.items()):
@@ -460,7 +552,16 @@ def account_for(bundle: Bundle) -> Account:
             metrics.append(MetricResult(family, denominator, None, None, "UNMEASURED"))
             continue
         total = len(units)
-        value = 1.0 if total == 0 else accounted / total
+        if total == 0:
+            # A ratio over an empty denominator is undefined, not perfect. This
+            # read 1.0 and therefore MET, so a source class requiring nothing
+            # scored full coverage on a census of nothing. The schema refuses an
+            # empty required_units today and that made the branch unreachable,
+            # which is a neighbouring gate holding a door this arithmetic left
+            # open. Fail closed here too, on its own.
+            metrics.append(MetricResult(family, denominator, None, None, "UNMEASURED"))
+            continue
+        value = accounted / total
         metrics.append(MetricResult(
             family, denominator, value, float(threshold),
             "MET" if value >= threshold else "UNMET",
@@ -509,11 +610,20 @@ def profile_projection() -> dict:
         "selector_profile_default": "w3c-web-annotation+iiif",
         "selector_profile_replaceable": True,
         "diagnostics": dict(sorted(CODES.items())),
+        # The census vocabulary, published because an adopter reading only this
+        # projection must be able to tell which outcomes count as looked-at.
+        # Derived from the ontology, so the projection cannot claim a mapping
+        # the schema does not declare.
+        "unit_dispositions": {
+            outcome: disposition
+            for outcome, disposition in sorted(outcome_dispositions().items())
+        },
         "proves": [
             "source-to-reading lineage",
             "separation of identity planes",
             "declared coverage and policy precommitment",
             "every plane typed under the malleus root primitives",
+            "a three-valued unit census: looked-at, never looked at, look failed",
         ],
         "does_not_prove": [
             "source authenticity",

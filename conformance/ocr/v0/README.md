@@ -6,7 +6,7 @@ Capability: `AUDIT_ONLY`. Decisions: `design/OCR_EVIDENCE_INTEGRITY_DECISIONS.md
 `malleus.ocr.verify`. Do not edit it; run `conformance/ocr/v0/generate.py`.
 `tests/test_ocr.py` fails when the two disagree.
 
-Three cases ship inside the package, at `malleus/ocr/cases/`. An adopter with
+Six cases ship inside the package, at `malleus/ocr/cases/`. An adopter with
 only the wheel runs them:
 
 ```text
@@ -14,11 +14,26 @@ malleus-ocr --conformance
 malleus-ocr path/to/their-bundle.json
 ```
 
-They are the wiring check: one document that must be accepted, two that must
+They are the wiring check: four documents that must be accepted, two that must
 be refused, because a verifier that refuses nothing is indistinguishable from
 one that is not running. Their `expect` lists are checked against the live
 verifier on every test run, so a case that stops meaning what it says fails
 rather than drifts.
+
+Each case also fixes its census, unit by unit, as `expect_units`: the outcome
+and the disposition that outcome carries. Cases used to state only whether the
+bundle was complete, which is one bit, and one bit cannot distinguish a unit
+nobody fetched from a unit whose only call failed. Four cases were green while
+a reviewer's `ABSENT` was being reported `READ`.
+
+Two of the six exist for that distinction. `absence-is-not-a-reading` holds a
+unit a reviewer states is not present in the source: an answer, so the unit is
+accounted for, and not a reading, so the census must not say `READ`.
+`silence-is-not-success` claims `FINISHED_READING`, raises no diagnostic, and
+is not complete: one unit was rendered and its only call failed, one was never
+fetched, and the suite requires those to report `CHECK_FAILED` and
+`NOT_CHECKED` rather than one word for both. Paperwork that holds together is
+not a reading.
 
 The exhaustive cases live in `tests/test_ocr.py`, one negative per diagnostic,
 plus the currency matrix for decision C7. A diagnostic with no negative case

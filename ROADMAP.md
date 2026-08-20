@@ -577,6 +577,43 @@ it renders, and a unit the bundle does not observe cannot have been rendered
 from bytes the bundle holds. Without OCR-D014 a typo in a unit name reports the
 page as never rendered, which reads as an honest gap rather than a mistake.
 
+### C6. A declared verdict the census could not produce (landed)
+
+Found by importing three ideas from an outside system and checking whether the
+profile already honoured them, rather than by reading the code for tidiness.
+
+`ReviewVerdict.ABSENT` means the unit is not present in the source. The census
+tested `UNREADABLE`, `EXCLUDED` and `VERIFIED_BLANK` and not that one, so the
+record fell through to the machine branch and the unit was reported `READ`,
+with no diagnostic and the frozen coverage bar met. Mandate B2 forbids
+converting one state into another; this converted an absence into a reading.
+
+The missing branch is not the finding. `ABSENT` was declared in three places at
+once, `ReviewVerdict`, the module's outcome tuple and its accounted set, and
+producible from none, and nothing in the package read the outcome vocabulary.
+A vocabulary with no reader cannot report that one of its values is
+unreachable, which is the same disease as a slot with no reader and was already
+named in `SLOT_READERS` for slots only.
+
+Landed. The vocabulary is in the schema as `UnitDisposition` plus three outcome
+enums; `outcome_dispositions` reads the mapping from there and `account_for`
+takes the registry, so replacing the profile ontology replaces the census with
+it. The census answer is three-valued rather than the `accounted` bit, because
+a unit nobody fetched and a unit whose only call failed need different repairs.
+A test requires every declared outcome to carry a fixture proving a bundle can
+produce it, and `ENUM_READERS` does for enums what `SLOT_READERS` does for
+slots.
+
+Two adjacent items came out of it. `OCREventType` is declared in `ocr.yaml` and
+consumed by nothing: its description says the domain schema narrows the root's
+open `event_type`, and `equals_string` on the two event classes does that while
+this enum is not the slot's range. Recorded in `ENUM_READERS` as UNBUILT
+because binding it is a schema decision, not a defect fix. And
+`Selection.human_verified` is a boolean with a silent `False` default, so an
+emitter that omits it asserts "no human verified this" without saying so; a
+three-valued replacement changes the slot's range and the document contract,
+which is an owner decision and not a task.
+
 ### C5. Recon's classification vocabularies are ungoverned
 
 Adjacent finding from the same investigation, verified against the live
