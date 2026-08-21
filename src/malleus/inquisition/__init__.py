@@ -468,6 +468,18 @@ def run_rites(
                f"content hash {registry.content_hash()[:12]}…, "
                f"{len(registry.type_names())} types")
 
+    # The other reader a retirement needs. The loader refuses a name past its
+    # boundary; without this, the ones still inside their window are visible
+    # only on the day they bite, which is a wall wearing a plan's clothes.
+    for retirement in registry.retirements():
+        successor = (
+            f"use '{retirement.replaced_by}'" if retirement.replaced_by
+            else "no replacement is offered"
+        )
+        report.add("construction", NOTE, retirement.slot,
+                   f"retires at version {retirement.stops_at_text} ({retirement.reason}); "
+                   f"{successor}")
+
     # Rite of the Root: the primitives must be present. A schema that never
     # imported the root cannot be judged at all, which is why this is the
     # rite's primary condition and why it denies the seal.

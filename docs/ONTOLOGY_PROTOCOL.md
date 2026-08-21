@@ -260,3 +260,39 @@ a class or enum that exists upstream is reused by importing it.
 The declaration is not part of the content hash. Adopting a name changes no
 structural fact, and if it did, declaring an adoption would re-anchor every
 ledger, which is absurd for a statement that two definitions already agree.
+
+## Retirement: a window, not a wall
+
+Before this there was no way to say a name is going away. Two moves existed and
+both were bad. Delete it, and every schema using it stops that instant with no
+warning. Leave it and add the replacement, and two names cover one concept
+forever with nothing saying which to follow.
+
+A retirement is declared on the slot itself:
+
+```yaml
+slots:
+  old_tag:
+    range: string
+    annotations:
+      retires:
+        replaced_by: new_tag
+        stops_at: "0.6.0"
+        reason: promoted into the shared root
+```
+
+`stops_at` is compared against the version of the schema that DECLARES the
+retirement, so the artifact carries both halves and no reader's clock decides
+the answer. Below it the name works and the inquisitor reports the retirement
+under `construction`. At it and past it the loader refuses and names the
+replacement.
+
+Three things are required and each closes a way for the plan to mean nothing.
+`stops_at`, because deprecated-forever is a note pretending to be a plan.
+`reason`, because a name removed without one leaves the next reader guessing.
+And a `replaced_by` that exists somewhere in the closure, because a retirement
+pointing nowhere sends the reader to a dead end. `replaced_by` may be omitted
+when a concept was wrong rather than renamed; the reason then carries the
+weight.
+
+Slots only, as with adoption.

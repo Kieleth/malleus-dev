@@ -238,6 +238,108 @@ def _constraint(data: Mapping[str, Any]) -> SlotConstraint:
     )
 
 
+@dataclass(frozen=True)
+class Retirement:
+    """A declared plan to remove a name, with the boundary where it stops working."""
+
+    slot: str
+    schema: str
+    stops_at: tuple[int, ...]
+    stops_at_text: str
+    reason: str
+    replaced_by: str | None = None
+
+    def __str__(self) -> str:
+        successor = f"; use '{self.replaced_by}'" if self.replaced_by else "; no replacement"
+        return f"'{self.slot}' retires at {self.schema} {self.stops_at_text}{successor}: {self.reason}"
+
+
+def _version_tuple(subject: str, text: Any) -> tuple[int, ...]:
+    """Parse a dotted numeric version, or refuse.
+
+    Deliberately strict. A boundary nobody can compare is a boundary that never
+    arrives, which is the whole failure mode a retirement exists to avoid.
+    """
+    if not isinstance(text, str) or not text.strip():
+        raise OntologyError(f"{subject} must be a dotted version string")
+    parts = text.strip().split(".")
+    if not all(part.isdigit() for part in parts):
+        raise OntologyError(
+            f"{subject} must be a dotted version of integers, got {text!r}"
+        )
+    return tuple(int(part) for part in parts)
+
+
+def _read_retirement(
+    slot: str,
+    definition: Mapping[str, Any] | None,
+    schema_version: str | None,
+    source: Path,
+) -> Retirement | None:
+    """Read a declared retirement, or refuse a malformed one.
+
+    A retirement without a boundary is the "deprecated forever" state: a marker
+    that changes nothing, which is the same defect as a value declared and
+    produced by nothing. The boundary is therefore required, and it is compared
+    against the version of the schema that DECLARES the retirement, so the
+    artifact carries both halves and no reader's clock decides the answer.
+    """
+    if not isinstance(definition, Mapping):
+        return None
+    annotations = definition.get("annotations")
+    if not isinstance(annotations, Mapping):
+        return None
+    declared = annotations.get("retires")
+    if declared is None:
+        return None
+    if not isinstance(declared, Mapping):
+        raise OntologyError(f"Slot '{slot}' in '{source}': `retires` must be a mapping")
+    unknown = sorted(set(declared) - {"stops_at", "reason", "replaced_by"})
+    if unknown:
+        raise OntologyError(
+            f"Slot '{slot}' in '{source}': `retires` carries undeclared keys: "
+            f"{', '.join(unknown)}"
+        )
+    reason = declared.get("reason")
+    if not isinstance(reason, str) or not reason.strip():
+        raise OntologyError(
+            f"Slot '{slot}' in '{source}': a retirement states its reason. A name "
+            f"removed without one leaves the next reader guessing why"
+        )
+    if "stops_at" not in declared:
+        raise OntologyError(
+            f"Slot '{slot}' in '{source}': a retirement declares `stops_at`. Without a "
+            f"boundary the marker never bites and nothing changes, which is a note "
+            f"pretending to be a plan"
+        )
+    stops_at = _version_tuple(f"Slot '{slot}' in '{source}': `stops_at`", declared["stops_at"])
+    replaced_by = declared.get("replaced_by")
+    if replaced_by is not None and (not isinstance(replaced_by, str) or not replaced_by.strip()):
+        raise OntologyError(f"Slot '{slot}' in '{source}': `replaced_by` must be a slot name")
+    if schema_version is None:
+        raise OntologyError(
+            f"Slot '{slot}' in '{source}': a retirement needs the schema to declare its "
+            f"own `version`, because the boundary is compared against it"
+        )
+    current = _version_tuple(f"Schema '{source}' version", schema_version)
+    if current >= stops_at:
+        successor = (
+            f" Use '{replaced_by}'." if replaced_by else " It has no replacement."
+        )
+        raise OntologyError(
+            f"Slot '{slot}' in '{source}' retired at version {declared['stops_at']} and "
+            f"this schema is {schema_version}: {reason}.{successor}"
+        )
+    return Retirement(
+        slot=slot,
+        schema=str(source),
+        stops_at=stops_at,
+        stops_at_text=str(declared["stops_at"]),
+        reason=reason,
+        replaced_by=replaced_by,
+    )
+
+
 def _declares_adoption(definition: Mapping[str, Any] | None) -> bool:
     """Whether a definition says it adopts an existing name rather than claiming it.
 
@@ -515,11 +617,28 @@ class OntologyRegistry:
         self._definition_sources: dict[tuple[str, str], Path] = {}
         # Kept so a declared adoption can be checked against what it adopts.
         self._claimed_definitions: dict[tuple[str, str], Any] = {}
+        self._retirements: dict[str, Retirement] = {}
         self._loaded_paths: set[Path] = set()
         self._effective_slot_cache: dict[str, dict[str, SlotConstraint]] = {}
         self._schema_version: str | None = None
         self._load_schema(self._schema_path)
+        self._validate_retirement_successors()
         self._validate_schema()
+
+    def _validate_retirement_successors(self) -> None:
+        """A retirement that points nowhere sends the reader to a dead end.
+
+        Checked after the whole closure loads, because the replacement is
+        commonly the promoted name in an upstream schema that had not been read
+        when the retiring slot was.
+        """
+        for retirement in self._retirements.values():
+            successor = retirement.replaced_by
+            if successor is not None and successor not in self._slots:
+                raise OntologyError(
+                    f"Slot '{retirement.slot}' in '{retirement.schema}' retires in favour "
+                    f"of '{successor}', which no schema in this closure declares"
+                )
 
     def _mapped_path(self, path: str | Path) -> Path:
         mapped = Path(path)
@@ -602,9 +721,10 @@ class OntologyRegistry:
             raise OntologyError(f"Ontology is not UTF-8: '{path}': {error}") from error
         if not isinstance(schema, dict):
             raise OntologyError(f"Ontology must be a YAML mapping: '{path}'")
+        declared_version = schema.get("version")
+        this_version = None if declared_version is None else str(declared_version)
         if path == self._schema_path.resolve():
-            declared_version = schema.get("version")
-            self._schema_version = None if declared_version is None else str(declared_version)
+            self._schema_version = this_version
 
         imports = schema.get("imports", [])
         if not isinstance(imports, list) or not all(isinstance(item, str) for item in imports):
@@ -652,6 +772,9 @@ class OntologyRegistry:
                 raise OntologyError(f"Slot '{name}' in '{path}' must be a mapping")
             slot = _constraint(definition)
             _validate_constraint_definition(f"Slot '{name}'", slot)
+            retirement = _read_retirement(name, definition, this_version, path)
+            if retirement is not None:
+                self._retirements[name] = retirement
             if not self._claim_name("slot", name, path, definition):
                 continue  # adopted: the existing definition stands, unchanged
             self._slots[name] = slot
@@ -1218,6 +1341,15 @@ class OntologyRegistry:
             if candidate == digest:
                 return grammar
         return None
+
+    def retirements(self) -> tuple[Retirement, ...]:
+        """Every name declared as retiring, in slot order.
+
+        The loader refuses a name past its boundary. This is the other reader:
+        the ones still inside their window, so a retirement is visible before
+        it bites rather than only when it does.
+        """
+        return tuple(self._retirements[name] for name in sorted(self._retirements))
 
     def verifies(self, *recorded_hashes: str) -> bool:
         """Whether every recorded hash names this schema under some known grammar.

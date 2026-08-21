@@ -1744,3 +1744,136 @@ class TestPromotionIsADuplicateThatIsNotAnError:
                 target.read_text(), count=1, flags=re.M,
             ))
             OntologyRegistry(target)
+
+
+class TestARetirementIsAWindowNotAWall:
+    """There was no way to say a name is going away. Two moves existed and
+    both were bad: delete it, and every schema using it stops that instant; or
+    leave it and add the replacement, and two names cover one concept forever
+    with nothing saying which to follow.
+
+    The trap on the way out is symmetrical. A marker nothing reads is
+    decoration, which is the defect found three times in one week in this
+    repository. A marker that bites the day it lands is the outage the adoption
+    work just removed, pointed the other way."""
+
+    def _schema(self, version, retires_lines, successor="new_tag"):
+        head = [
+            "id: https://example.org/s", "name: s", f"version: {version}",
+            "default_range: string", "imports: [linkml:types]",
+            "prefixes: {linkml: 'https://w3id.org/linkml/'}",
+            "classes:", "  Thing:", f"    slots: [old_tag, {successor}]",
+            "slots:", f"  {successor}:", "    range: string",
+            "  old_tag:", "    range: string",
+        ]
+        return "\n".join(head + retires_lines) + "\n"
+
+    FULL = ["    annotations:", "      retires:", "        replaced_by: new_tag",
+            "        stops_at: '0.6.0'", "        reason: superseded by new_tag"]
+
+    def _load(self, tmp_path, text):
+        path = tmp_path / "s.yaml"
+        path.write_text(text)
+        return OntologyRegistry(path)
+
+    def test_inside_the_window_the_name_still_works(self, tmp_path):
+        registry = self._load(tmp_path, self._schema("0.5.0", self.FULL))
+        assert registry.effective_slots("Thing")["old_tag"].range == "string"
+
+    def test_inside_the_window_the_retirement_is_reported(self, tmp_path):
+        """The second reader. Without it the plan is visible only on the day it
+        stops being a plan."""
+        registry = self._load(tmp_path, self._schema("0.5.0", self.FULL))
+        retirement = registry.retirements()[0]
+        assert retirement.slot == "old_tag"
+        assert retirement.replaced_by == "new_tag"
+        assert retirement.stops_at_text == "0.6.0"
+        assert "superseded" in retirement.reason
+
+    @pytest.mark.parametrize("version", ["0.6.0", "0.7.0", "1.0.0"])
+    def test_at_and_past_the_boundary_the_name_is_refused(self, tmp_path, version):
+        """At, not merely past. A boundary that the boundary version itself
+        slips through is off by one in the direction nobody notices."""
+        with pytest.raises(OntologyError) as raised:
+            self._load(tmp_path, self._schema(version, self.FULL))
+        assert "retired at version 0.6.0" in str(raised.value)
+        assert "new_tag" in str(raised.value), "a refusal must name the replacement"
+
+    def test_a_retirement_without_a_boundary_is_refused(self, tmp_path):
+        """Deprecated-forever is a note pretending to be a plan."""
+        with pytest.raises(OntologyError, match="never bites"):
+            self._load(tmp_path, self._schema("0.5.0", [
+                "    annotations:", "      retires:",
+                "        replaced_by: new_tag", "        reason: x"]))
+
+    def test_a_retirement_without_a_reason_is_refused(self, tmp_path):
+        with pytest.raises(OntologyError, match="states its reason"):
+            self._load(tmp_path, self._schema("0.5.0", [
+                "    annotations:", "      retires:",
+                "        stops_at: '0.6.0'", "        replaced_by: new_tag"]))
+
+    def test_a_retirement_may_have_no_replacement(self, tmp_path):
+        """A concept can be wrong rather than renamed. The reason carries the
+        weight, and the report says no replacement is offered."""
+        registry = self._load(tmp_path, self._schema("0.5.0", [
+            "    annotations:", "      retires:",
+            "        stops_at: '0.6.0'", "        reason: the concept was wrong"]))
+        assert registry.retirements()[0].replaced_by is None
+
+    def test_a_replacement_that_does_not_exist_is_refused(self, tmp_path):
+        """A retirement pointing nowhere sends the reader to a dead end."""
+        with pytest.raises(OntologyError, match="which no schema in this closure declares"):
+            self._load(tmp_path, self._schema("0.5.0", [
+                "    annotations:", "      retires:", "        replaced_by: ghost",
+                "        stops_at: '0.6.0'", "        reason: x"]))
+
+    def test_an_uncomparable_boundary_is_refused(self, tmp_path):
+        """A boundary nobody can compare never arrives."""
+        with pytest.raises(OntologyError, match="dotted version of integers"):
+            self._load(tmp_path, self._schema("0.5.0", [
+                "    annotations:", "      retires:",
+                "        stops_at: soon", "        reason: x"]))
+
+    def test_an_undeclared_key_in_a_retirement_is_refused(self, tmp_path):
+        """Never guess at an undeclared extension."""
+        with pytest.raises(OntologyError, match="undeclared keys: when"):
+            self._load(tmp_path, self._schema("0.5.0", [
+                "    annotations:", "      retires:", "        stops_at: '0.6.0'",
+                "        reason: x", "        when: later"]))
+
+    def test_a_schema_with_no_version_cannot_retire_anything(self, tmp_path):
+        """The boundary is compared against the declaring schema's own version,
+        so the artifact carries both halves and no reader's clock decides."""
+        text = self._schema("0.5.0", self.FULL).replace("version: 0.5.0\n", "")
+        with pytest.raises(OntologyError, match="declare its own `version`"):
+            self._load(tmp_path, text)
+
+    def test_the_replacement_may_live_upstream(self, tmp_path):
+        """The common case: a name retires in favour of one promoted into the
+        root, which had not been read when the retiring slot was."""
+        (tmp_path / "up.yaml").write_text("\n".join([
+            "id: https://example.org/up", "name: up", "version: 0.1.0",
+            "default_range: string", "imports: [linkml:types]",
+            "prefixes: {linkml: 'https://w3id.org/linkml/'}",
+            "classes:", "  Base:", "    slots: [promoted_tag]",
+            "slots:", "  promoted_tag:", "    range: string"]) + "\n")
+        (tmp_path / "down.yaml").write_text("\n".join([
+            "id: https://example.org/down", "name: down", "version: 0.5.0",
+            "default_range: string", "imports: [linkml:types, up]",
+            "prefixes: {linkml: 'https://w3id.org/linkml/'}",
+            "classes:", "  Thing:", "    slots: [old_tag]",
+            "slots:", "  old_tag:", "    range: string",
+            "    annotations:", "      retires:",
+            "        replaced_by: promoted_tag", "        stops_at: '0.6.0'",
+            "        reason: promoted into the shared root"]) + "\n")
+        registry = OntologyRegistry(tmp_path / "down.yaml")
+        assert registry.retirements()[0].replaced_by == "promoted_tag"
+
+    def test_the_inquisitor_reports_a_pending_retirement(self, tmp_path):
+        """Proven through the operator's path, not by reading the code."""
+        from malleus.inquisition import run_rites
+        path = tmp_path / "s.yaml"
+        path.write_text(self._schema("0.5.0", self.FULL))
+        report = run_rites(str(path))
+        messages = [f.message for f in report.findings if f.subject == "old_tag"]
+        assert messages and "retires at version 0.6.0" in messages[0]
