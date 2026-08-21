@@ -1,0 +1,12 @@
+[
+  {
+    "ontology": "recon",
+    "from_hash": "sha256:5a96d23889c5c9e8e498141add6ffb1905f8d091bb25accc0e579d19eed15721",
+    "to_hash": "sha256:58f26c833e4065951467f61c46ba6859609b7be3727ea18a80c4ae5ec6435476",
+    "grade": "TOTAL",
+    "reason": "reviewer_id promoted into the root, which assent and ocr already declared and recon did not. recon's slot closure grew by one name it never used, so no record written under the earlier identity means anything different: every one of them is read exactly as before",
+    "issued_at": "2026-08-20T00:00:00+00:00",
+    "previous_receipt": null,
+    "delta_digest": null
+  }
+]

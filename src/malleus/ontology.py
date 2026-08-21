@@ -990,6 +990,11 @@ class OntologyRegistry:
         return self._resolve_scalar_range(self._scalar_types[name], seen | {name})
 
     @property
+    def schema_path(self) -> Path:
+        """The file this registry was built from."""
+        return self._schema_path
+
+    @property
     def schema_version(self) -> str | None:
         """The entry schema's declared `version:`, or None if it declares none."""
         return self._schema_version

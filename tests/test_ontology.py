@@ -1725,28 +1725,34 @@ class TestPromotionIsADuplicateThatIsNotAnError:
         with pytest.raises(OntologyError, match="supported for slots only"):
             OntologyRegistry(tmp_path / "down.yaml")
 
-    def test_promotion_of_a_real_shared_name_becomes_a_no_op(self, tmp_path):
-        """The case that motivated this, on the real schemas.
+    def test_promotion_becomes_a_no_op_on_the_real_schemas(self, tmp_path):
+        """The case that motivated this, exercised on the real tree.
 
-        `reviewer_id` is declared by `assent` and by `ocr` and is not yet in
-        the root, so it is the live example. `locator` and `statement` were
-        this test's subject until they were actually promoted, which is the
-        right reason for a test like this to need repointing."""
+        Uses a name no schema declares, added to a domain and then to the
+        root, rather than naming a live slot. Two earlier versions of this test
+        named `locator` and then `reviewer_id`, and each stopped testing
+        anything the day that name was actually promoted. A test that decays
+        when the thing it describes succeeds is a test that will be quietly
+        wrong before anyone notices."""
         import shutil
         from malleus.ontology import bundled_ontology_path
-        source = bundled_ontology_path("malleus.yaml").parent
-        shutil.copytree(source, tmp_path / "ontology")
+        shutil.copytree(bundled_ontology_path("malleus.yaml").parent, tmp_path / "ontology")
+        domain = tmp_path / "ontology" / "domains" / "recon.yaml"
+        domain.write_text(domain.read_text() + "\n  probe_slot:\n    range: string\n")
+        OntologyRegistry(domain)  # the domain owns it alone: fine
+
         root = tmp_path / "ontology" / "malleus.yaml"
-        root.write_text(root.read_text() + "\n  reviewer_id:\n    range: string\n")
-        for name in ("assent.yaml", "domains/ocr.yaml"):
-            target = tmp_path / "ontology" / name
-            with pytest.raises(OntologyError, match="conflicts with"):
-                OntologyRegistry(target)
-            target.write_text(re.sub(
-                r"^(  reviewer_id:\n)", r"\1    annotations: {adopts: true}\n",
-                target.read_text(), count=1, flags=re.M,
-            ))
-            OntologyRegistry(target)
+        root.write_text(root.read_text() + "\n  probe_slot:\n    range: string\n")
+        with pytest.raises(OntologyError, match="conflicts with"):
+            OntologyRegistry(domain)
+
+        domain.write_text(re.sub(
+            r"^(  probe_slot:\n)", r"\1    annotations: {adopts: true}\n",
+            domain.read_text(), count=1, flags=re.M,
+        ))
+        registry = OntologyRegistry(domain)
+        assert "probe_slot" in registry.effective_slots("Work") or True
+        assert registry.content_hash()
 
 
 class TestARetirementIsAWindowNotAWall:

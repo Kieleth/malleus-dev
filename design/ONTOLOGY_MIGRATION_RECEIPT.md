@@ -2,7 +2,9 @@
 
 What a malleus ontology change is, what records it, and what malleus refuses.
 
-Status: decided in conversation, not built. Two recons are open on the parts
+Status: the total grade is built and shipped (`src/malleus/migration.py`).
+The partial and hard-break grades are declarable and their reading rules are
+not yet executable. Two recons are open on the parts
 this document marks unsettled. Nothing here authorises core implementation;
 `ROADMAP.md` A8 and B3 still govern that.
 
@@ -129,6 +131,35 @@ Posture: the default handles the common case without thought, and the rest is a
 declared extension point rather than a special case in the engine.
 
 ---
+
+## Built
+
+`MigrationReceipt` binds one ontology, the outgoing identity, the incoming
+identity, the grade, a reason, a timestamp, the digest of the receipt before
+it, and optionally the digest of a declared delta. `MigrationChain` validates
+the whole sequence at construction, because a chain checked lazily is a chain
+whose middle nobody has read.
+
+Four refusals, each closing a way the chain could lie. A gap, where one
+receipt does not start where the previous ended, because a chain with a hole
+cannot say what the records in the hole meant. A broken link, since naming the
+predecessor by digest is what makes the chain unskippable. A cycle, which makes
+"which rules governed this record" unanswerable. And a chain whose head is not
+the ontology it claims to describe.
+
+A hard break truncates what is readable, and the refusal that follows carries
+the recorded reason instead of silence. An identity the chain never mentions is
+told it is missing a receipt, not told it hit a break, because sending an
+operator to hunt for a decision nobody made is its own defect.
+
+Only the head can be verified against a live registry. Every earlier identity
+describes bytes that no longer exist, which is exactly why they are recorded at
+the time rather than derived later.
+
+The first customer is real: promoting `reviewer_id` into the root grew recon's
+slot closure by a name it never used and shut all ten recon projects. The
+receipt, graded TOTAL because no record means anything different, reopens them.
+Removing it shuts them again.
 
 ## Not settled
 

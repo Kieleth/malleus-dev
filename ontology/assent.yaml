@@ -1833,6 +1833,7 @@ slots:
     range: string
   reviewer_id:
     range: string
+    annotations: {adopts: true}
 
   review_outcome:
     range: string

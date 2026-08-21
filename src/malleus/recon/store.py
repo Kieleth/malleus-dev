@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ledger import JsonlLedger, LedgerError, canonical_json, record_hash
+from malleus.migration import migration_chain
 from malleus.ontology import OntologyRegistry, bundled_ontology_path
 
 
@@ -129,12 +130,21 @@ class ReconProject:
         self._clock = clock or _utc_now
         self.registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
         self.ontology_hash = f"sha256:{self.registry.content_hash()}"
-        # Same ontology, earlier payload grammar, different hash. A project
-        # recorded by an earlier release must still replay.
-        self.historical_ontology_hashes = tuple(
+        # Two different reasons an earlier identity is still readable, and they
+        # must not be confused. A payload grammar change means the same bytes
+        # hashed differently, so the identity is recoverable by recomputation.
+        # A recorded migration means the bytes genuinely changed and somebody
+        # wrote down what that means for records written before it.
+        grammars = tuple(
             f"sha256:{digest}"
             for digest in self.registry.content_hashes().values()
             if f"sha256:{digest}" != self.ontology_hash
+        )
+        self.migrations = migration_chain(self.registry)
+        self.historical_ontology_hashes = tuple(
+            dict.fromkeys(
+                (*grammars, *self.migrations.accepted_hashes(self.ontology_hash)[1:])
+            )
         )
         self.config = self._read_config()
         self.ledger = JsonlLedger(
@@ -208,11 +218,10 @@ class ReconProject:
             value["ontology_hash"]
         ) is None:
             raise ReconError(f"{PROJECT_FILE} ontology_hash must be sha256:<64 hex>")
-        if self.registry.verifying_grammar(value["ontology_hash"]) is None:
+        if value["ontology_hash"] not in (self.ontology_hash, *self.historical_ontology_hashes):
             raise ReconError(
-                "Recon ontology hash differs from this project under every payload "
-                "grammar this release knows; run an explicit migration instead of "
-                "replaying under changed types"
+                f"Recon ontology hash differs from this project. "
+                f"{self.migrations.explain(value['ontology_hash'], self.ontology_hash)}"
             )
         return value
 

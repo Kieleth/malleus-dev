@@ -1,7 +1,7 @@
 schema_version: "1"
 contract_id: gedanken-kitchen-logic
 contract_version: "1"
-ontology_hash: sha256:9716241c24aeeaf58a60f055fa9ac549d65a12bc13e131c5898a147d7731d17b
+ontology_hash: sha256:35ae3b996c48ebc6c2e7c1fc9388c6f5663b1df337d63b346a6d040da6e0e1a2
 fact_contract_version: "2"
 ruleset_id: gedanken-kitchen-rules
 ruleset_version: "1"

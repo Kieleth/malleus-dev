@@ -609,6 +609,7 @@ slots:
 
   reviewer_id:
     range: string
+    annotations: {adopts: true}
     description: >-
       The reviewing identity. A bare string until protocol-actor-registration
       lands, so separateness from the producing identity is recorded and not

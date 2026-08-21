@@ -4906,3 +4906,148 @@ class TestRecordedHashesAreVerifiedNotCompared:
         assert "len(ontology_hashes) != 1" in inspect.getsource(
             logic.GraphFactCompiler.compile
         )
+
+
+class TestAnOntologyChangeIsARecordedAct:
+    """A malleus migration never transforms a record. The ledger is
+    append-only, so a change can only transform how an already-written record
+    is read. A receipt is the record of one such change, and the chain of them
+    is how a ledger anchored under an earlier identity is still readable: not
+    by a hand-passed list of hashes anyone can widen, but by a path somebody
+    wrote down."""
+
+    D = staticmethod(lambda n: "sha256:" + str(n) * 64)
+    T = "2026-08-20T00:00:00+00:00"
+
+    def _receipt(self, **over):
+        from malleus.migration import MigrationReceipt, TOTAL
+        base = dict(ontology="probe", from_hash=self.D(1), to_hash=self.D(2),
+                    grade=TOTAL, reason="a name moved into the root", issued_at=self.T)
+        base.update(over)
+        return MigrationReceipt(**base)
+
+    def _pair(self):
+        first = self._receipt()
+        second = self._receipt(from_hash=self.D(2), to_hash=self.D(3),
+                               previous_receipt=first.digest)
+        return first, second
+
+    def test_a_chain_makes_every_earlier_identity_readable(self):
+        from malleus.migration import MigrationChain
+        chain = MigrationChain(self._pair())
+        assert chain.accepted_hashes(self.D(3)) == (self.D(3), self.D(2), self.D(1))
+
+    def test_an_empty_chain_accepts_only_the_present(self):
+        from malleus.migration import MigrationChain
+        assert MigrationChain(()).accepted_hashes(self.D(5)) == (self.D(5),)
+
+    def test_a_gap_is_refused(self):
+        """A chain with a hole cannot say what the records in the hole meant."""
+        from malleus.migration import MigrationChain, MigrationError
+        first = self._receipt()
+        stranded = self._receipt(from_hash=self.D(9), to_hash=self.D(3),
+                                 previous_receipt=first.digest)
+        with pytest.raises(MigrationError, match="never recorded"):
+            MigrationChain([first, stranded])
+
+    def test_a_broken_link_is_refused(self):
+        """The link is what makes the chain unskippable."""
+        from malleus.migration import MigrationChain, MigrationError
+        first = self._receipt()
+        unlinked = self._receipt(from_hash=self.D(2), to_hash=self.D(3),
+                                 previous_receipt=self.D(7))
+        with pytest.raises(MigrationError, match="does not name the receipt before it"):
+            MigrationChain([first, unlinked])
+
+    def test_a_cycle_is_refused(self):
+        from malleus.migration import MigrationChain, MigrationError
+        first, second = self._pair()
+        back = self._receipt(from_hash=self.D(3), to_hash=self.D(1),
+                             previous_receipt=second.digest)
+        with pytest.raises(MigrationError, match="already had"):
+            MigrationChain([first, second, back])
+
+    def test_one_chain_covers_one_ontology(self):
+        from malleus.migration import MigrationChain, MigrationError
+        first = self._receipt()
+        foreign = self._receipt(ontology="other", from_hash=self.D(2),
+                                to_hash=self.D(3), previous_receipt=first.digest)
+        with pytest.raises(MigrationError, match="covers one ontology"):
+            MigrationChain([first, foreign])
+
+    def test_a_first_receipt_may_not_name_a_predecessor(self):
+        from malleus.migration import MigrationChain, MigrationError
+        with pytest.raises(MigrationError, match="missing its earlier receipts"):
+            MigrationChain([self._receipt(previous_receipt=self.D(8))])
+
+    @pytest.mark.parametrize("over,fragment", [
+        (dict(grade="MAYBE"), "undeclared break"),
+        (dict(to_hash="sha256:" + "1" * 64), "changed no identity"),
+        (dict(reason="   "), "nonblank"),
+        (dict(from_hash="nope"), "sha256:<64 hex>"),
+        (dict(issued_at=""), "nonblank"),
+    ])
+    def test_a_malformed_receipt_is_refused(self, over, fragment):
+        from malleus.migration import MigrationError
+        with pytest.raises(MigrationError, match=fragment):
+            self._receipt(**over)
+
+    def test_a_hard_break_truncates_what_is_readable(self):
+        """You may break history. You may not break it silently. The refusal
+        still happens and now it happens for a recorded reason."""
+        from malleus.migration import MigrationChain, HARD_BREAK
+        first = self._receipt()
+        broken = self._receipt(from_hash=self.D(2), to_hash=self.D(3), grade=HARD_BREAK,
+                               reason="a required field was removed and old records "
+                                      "have no meaning under the new rules",
+                               previous_receipt=first.digest)
+        chain = MigrationChain([first, broken])
+        assert chain.accepted_hashes(self.D(3)) == (self.D(3),)
+        assert "no meaning under the new rules" in chain.explain(self.D(1), self.D(3))
+
+    def test_a_stranger_is_not_told_it_hit_a_break(self):
+        """An identity this chain never mentions is missing a receipt, not
+        excluded by one. Saying otherwise sends an operator hunting for a
+        decision nobody made."""
+        from malleus.migration import MigrationChain, HARD_BREAK
+        first = self._receipt()
+        broken = self._receipt(from_hash=self.D(2), to_hash=self.D(3), grade=HARD_BREAK,
+                               reason="removed", previous_receipt=first.digest)
+        explanation = MigrationChain([first, broken]).explain(self.D(8), self.D(3))
+        assert "no recorded change connects" in explanation
+
+    def test_a_chain_that_ends_elsewhere_is_refused(self, tmp_path):
+        """Only the head can be checked. Every earlier identity describes bytes
+        that no longer exist, which is why they are recorded, not recomputed."""
+        from malleus.migration import MigrationChain, MigrationError
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+        registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
+        with pytest.raises(MigrationError, match="describes a different ontology"):
+            MigrationChain([self._receipt(ontology="recon")]).verified_against(registry)
+
+    def test_a_chain_round_trips_through_its_document(self, tmp_path):
+        from malleus.migration import MigrationChain
+        chain = MigrationChain(self._pair())
+        path = chain.save(tmp_path / "c.json")
+        assert MigrationChain.load(path).receipts == chain.receipts
+
+    def test_an_undeclared_key_in_a_receipt_is_refused(self, tmp_path):
+        import json
+        from malleus.migration import MigrationChain, MigrationError
+        document = [self._receipt().as_dict() | {"approved_by": "someone"}]
+        (tmp_path / "c.json").write_text(json.dumps(document))
+        with pytest.raises(MigrationError, match="undeclared keys: approved_by"):
+            MigrationChain.load(tmp_path / "c.json")
+
+    def test_the_shipped_recon_chain_explains_the_promotion(self):
+        """The real one. `reviewer_id` was promoted into the root, which grew
+        recon's slot closure by a name it never used, so every record written
+        under the earlier identity reads exactly as before."""
+        from malleus.migration import TOTAL, migration_chain
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+        registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
+        chain = migration_chain(registry)
+        assert chain.receipts, "the shipped chain is empty; the promotion lost its record"
+        assert chain.head == f"sha256:{registry.content_hash()}"
+        assert all(receipt.grade == TOTAL for receipt in chain.receipts)
+        assert "reviewer_id" in chain.receipts[0].reason

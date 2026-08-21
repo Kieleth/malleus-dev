@@ -77,6 +77,7 @@ include = [
     "/src/malleus/status.py",
     "/src/malleus/source.py",
     "/src/malleus/valid_time.py",
+    "/src/malleus/migration.py",
     "/src/malleus/prolog_verifier.py",
     "/src/malleus/inquisition/__init__.py",
     "/src/malleus/inquisition/cli.py",
@@ -118,6 +119,7 @@ include = [
     "/ontology/domains/ocr.yaml",
     "/ontology/domains/cyp450.yaml",
     "/ontology/domains/recon.yaml",
+    "/ontology/domains/recon.migrations.json",
     "/prolog/cyp450_logic.yaml",
     "/prolog/cyp450_rules.pl",
     "/tests/test_ontology.py",
@@ -160,6 +162,7 @@ core-metadata-version = "2.4"
 "ontology/domains/ocr.yaml" = "share/malleus/ontology/domains/ocr.yaml"
 "ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"
 "ontology/domains/recon.yaml" = "share/malleus/ontology/domains/recon.yaml"
+"ontology/domains/recon.migrations.json" = "share/malleus/ontology/domains/recon.migrations.json"
 "prolog/cyp450_logic.yaml" = "share/malleus/prolog/cyp450_logic.yaml"
 "prolog/cyp450_rules.pl" = "share/malleus/prolog/cyp450_rules.pl"
 "docs/ADOPTION_GUIDE.md" = "share/malleus/docs/ADOPTION_GUIDE.md"

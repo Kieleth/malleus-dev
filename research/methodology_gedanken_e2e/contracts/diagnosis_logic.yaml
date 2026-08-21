@@ -1,7 +1,7 @@
 schema_version: "1"
 contract_id: gedanken-diagnosis-logic
 contract_version: "1"
-ontology_hash: sha256:f03519f2eb06d35af7524ed2844959fa5b3559987bddc5c91034b24abc80e903
+ontology_hash: sha256:8a07a8b01980d63053685aad18e14806b6961031da744a73b4239235862b03cf
 fact_contract_version: "2"
 ruleset_id: gedanken-diagnosis-rules
 ruleset_version: "1"

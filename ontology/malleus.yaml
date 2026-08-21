@@ -352,6 +352,13 @@ slots:
       Where something was obtained. A locator is a route back to a thing, never
       evidence that the thing at the end of it is authentic or unchanged.
 
+  reviewer_id:
+    range: string
+    description: >-
+      The identity that reviewed something. Recorded as declared; malleus does
+      not resolve it to a registered actor, so who a reviewer is, and whether
+      they are separate from the party under review, are claims and not checks.
+
   statement:
     range: string
     description: >-
