@@ -510,6 +510,7 @@ slots:
 
   locator:
     range: string
+    annotations: {adopts: true}
     description: Where the bytes were obtained. Not proof that they are authentic.
 
   source_representation_id:

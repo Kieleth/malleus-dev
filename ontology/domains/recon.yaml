@@ -789,9 +789,6 @@ slots:
   review_method:
     range: string
 
-  statement:
-    range: string
-
   claim_kind:
     range: string
 
@@ -811,9 +808,6 @@ slots:
     range: uri
 
   local_path:
-    range: string
-
-  locator:
     range: string
 
   evidence_description:

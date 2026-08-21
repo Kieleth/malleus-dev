@@ -16,7 +16,7 @@
     },
     "relevant_core_test_sources": {
       "tests/test_kg.py": "sha256:3c5546215f84d371ffffcfb9ee560e316722783b5e2a7705fd0d1e206d35bf63",
-      "tests/test_ontology.py": "sha256:44469f2aea13b5a2af92e97bf662653f9c338477a4a033ab5b0cbf7efe3b7cd4",
+      "tests/test_ontology.py": "sha256:5b9025161b3d8a04aba72cfc8a12e99b0612d173ff4856244381abef25bac2e9",
       "tests/test_staging.py": "sha256:f2584b8441eabb18ec70b932da027d26a549ccdf70ecfb027ca3dda265e47791"
     },
     "runner_and_tests": {

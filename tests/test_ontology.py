@@ -1726,21 +1726,24 @@ class TestPromotionIsADuplicateThatIsNotAnError:
             OntologyRegistry(tmp_path / "down.yaml")
 
     def test_promotion_of_a_real_shared_name_becomes_a_no_op(self, tmp_path):
-        """The case that motivated this, on the real schemas. `locator` is
-        declared by `assent`, `recon` and `ocr`. Before this, the root adopting
-        it refused all three."""
+        """The case that motivated this, on the real schemas.
+
+        `reviewer_id` is declared by `assent` and by `ocr` and is not yet in
+        the root, so it is the live example. `locator` and `statement` were
+        this test's subject until they were actually promoted, which is the
+        right reason for a test like this to need repointing."""
         import shutil
         from malleus.ontology import bundled_ontology_path
         source = bundled_ontology_path("malleus.yaml").parent
         shutil.copytree(source, tmp_path / "ontology")
         root = tmp_path / "ontology" / "malleus.yaml"
-        root.write_text(root.read_text() + "\n  locator:\n    range: string\n")
-        for name in ("assent.yaml", "domains/recon.yaml", "domains/ocr.yaml"):
+        root.write_text(root.read_text() + "\n  reviewer_id:\n    range: string\n")
+        for name in ("assent.yaml", "domains/ocr.yaml"):
             target = tmp_path / "ontology" / name
             with pytest.raises(OntologyError, match="conflicts with"):
                 OntologyRegistry(target)
             target.write_text(re.sub(
-                r"^(  locator:\n)", r"\1    annotations: {adopts: true}\n",
+                r"^(  reviewer_id:\n)", r"\1    annotations: {adopts: true}\n",
                 target.read_text(), count=1, flags=re.M,
             ))
             OntologyRegistry(target)

@@ -340,3 +340,20 @@ slots:
       A Signal is a dependent continuant — it cannot exist
       without a bearer. For trust: the agent-pair relationship.
       For health: the server entity.
+
+  # Promoted from the domains that each declared them independently, which is
+  # what Ontology Protocol rule 2 asks for once two projects need a concept.
+  # The descriptions are deliberately general: a domain that needs to say more
+  # keeps its own declaration and adopts this one.
+
+  locator:
+    range: string
+    description: >-
+      Where something was obtained. A locator is a route back to a thing, never
+      evidence that the thing at the end of it is authentic or unchanged.
+
+  statement:
+    range: string
+    description: >-
+      The content of an assertion as text. Untrusted data everywhere: it is
+      recorded, quoted and compared, and it never alters interpretation.

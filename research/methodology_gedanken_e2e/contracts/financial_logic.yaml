@@ -1,7 +1,7 @@
 schema_version: "1"
 contract_id: gedanken-financial-logic
 contract_version: "1"
-ontology_hash: sha256:5f69541011784376f1fff53c530adb47499dafac7a780fa3a81353e907372697
+ontology_hash: sha256:47865dcc54537964af1feb0ff4ef1dedd1728dd359d1427e78ae94956aefec63
 fact_contract_version: "2"
 ruleset_id: gedanken-financial-rules
 ruleset_version: "1"

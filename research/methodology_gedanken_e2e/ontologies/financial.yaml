@@ -151,6 +151,7 @@ slots:
       and freely settable; the protocol does not bind it to anything.
 
   statement:
+    annotations: {adopts: true}
     range: string
     description: What the stage says, in prose, for readability only.
 

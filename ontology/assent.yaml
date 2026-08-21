@@ -1467,8 +1467,6 @@ slots:
     range: string
   revises_claim_version_id:
     range: string
-  statement:
-    range: string
   domain_valid_from:
     range: ValidTime
     inlined: true
@@ -1517,8 +1515,6 @@ slots:
   source_media_type:
     range: string
   source_locator:
-    range: string
-  locator:
     range: string
   request_id:
     range: string
@@ -1837,6 +1833,7 @@ slots:
     range: string
   reviewer_id:
     range: string
+
   review_outcome:
     range: string
 
