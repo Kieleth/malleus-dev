@@ -205,6 +205,7 @@ testpaths = [
     "tests/test_inquisition.py",
     "tests/test_recon_ontology.py",
     "tests/test_recon.py",
+    "research/methodology_gedanken_e2e/tests",
 ]
 python_files = ["test_*.py"]
 
