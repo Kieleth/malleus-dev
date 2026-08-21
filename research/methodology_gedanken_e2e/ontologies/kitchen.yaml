@@ -1,0 +1,132 @@
+id: https://malleus.dev/schema/gedanken-kitchen
+name: gedanken_kitchen
+version: 0.1.0
+title: Gedanken Toy 1 — Mise en Place
+description: >-
+  The kitchen toy from research/domain_reasoning_controls_recon/GEDANKEN.md,
+  made executable. A recipe is a sequence of ordered steps over ingredients and
+  vessels. `step_index` is the load-bearing slot: it is an ordinary required
+  integer declared by this domain, and the MISE_EN_PLACE rule can only see
+  order because this domain chose to declare it.
+
+  Departure from the sketch, forced by the library. GEDANKEN types PrepStep,
+  CombineStep and CookStep as `is_a: Event`. `OntologyRegistry` refuses that at
+  load time: a concrete relation's `source_id` range must be an Entity subtype
+  (src/malleus/ontology.py:718-722). Every step here is therefore an Entity,
+  and the `m_record/3` kind argument reads `entity` for every node in the toy.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  kitchen: https://malleus.dev/schema/gedanken-kitchen/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  PrepKind:
+    description: What a preparation step does to an ingredient.
+    permissible_values:
+      WASH:
+      PEEL:
+      CHOP:
+      MEASURE:
+
+  KitchenRelationType:
+    description: Closed set of edges this domain asserts.
+    permissible_values:
+      USES:
+      INTO:
+      YIELDS:
+
+classes:
+  Ingredient:
+    is_a: Entity
+    description: Something consumed by the recipe.
+
+  Vessel:
+    is_a: Entity
+    description: Something the recipe combines into.
+
+  Dish:
+    is_a: Entity
+    description: What the recipe yields.
+
+  RecipeStep:
+    is_a: Entity
+    abstract: true
+    description: >-
+      One ordered step. Abstract so the three concrete kinds share one ordinal
+      and one relation endpoint range; never instantiated directly.
+    slots:
+      - step_index
+    slot_usage:
+      step_index:
+        required: true
+
+  PrepStep:
+    is_a: RecipeStep
+    description: Preparation of one ingredient before any combining.
+    slots:
+      - prep_kind
+    slot_usage:
+      prep_kind:
+        required: true
+
+  CombineStep:
+    is_a: RecipeStep
+    description: An ingredient going into a vessel.
+
+  CookStep:
+    is_a: RecipeStep
+    description: Heat applied to a vessel, yielding a dish.
+
+  UsesRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: KitchenRelationType
+        required: true
+        equals_string: USES
+      source_id:
+        range: RecipeStep
+      target_id:
+        range: Ingredient
+
+  IntoRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: KitchenRelationType
+        required: true
+        equals_string: INTO
+      source_id:
+        range: RecipeStep
+      target_id:
+        range: Vessel
+
+  YieldsRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: KitchenRelationType
+        required: true
+        equals_string: YIELDS
+      source_id:
+        range: CookStep
+      target_id:
+        range: Dish
+
+slots:
+  step_index:
+    range: integer
+    description: >-
+      Position of this step in the recipe. The domain's own word for order.
+      Nothing in the protocol knows this slot means order.
+
+  prep_kind:
+    range: PrepKind
+    description: What the preparation did.

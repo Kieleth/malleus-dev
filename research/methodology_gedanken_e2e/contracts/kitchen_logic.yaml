@@ -1,0 +1,11 @@
+schema_version: "1"
+contract_id: gedanken-kitchen-logic
+contract_version: "1"
+ontology_hash: sha256:2cbb60d9ae9122a79cefa4966a919ec483f288ef0723e6a6882dd3398cd188f6
+fact_contract_version: "2"
+ruleset_id: gedanken-kitchen-rules
+ruleset_version: "1"
+rules_file: kitchen_rules.pl
+rule_ids:
+  - MISE_EN_PLACE
+timeout_seconds: 5
