@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-001"
+    ],
+    "consequences": [
+      "Each consumer receives a distinct canonical bundle manifest.",
+      "Consumer-bundle identity remains distinct from semantic and persisted-wire identities."
+    ],
+    "constraints": [
+      "Exact fields and canonical byte grammar wait for OD-006 contract roles and OD-013 packaging topology."
+    ],
+    "decision_id": "OD-001",
+    "satisfies_workstreams": [
+      "CC-D15"
+    ],
+    "selected_option": "A",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:3dfd5200b1efee95b360baf5f3ecb19b5f8416a37b0a241e0ea4e6e0fe40f739",
+  "entry_id": "OVR-000002",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c655ac5d0bd1de9624355e0ee7de5139b10fac7e70f2c4f335295ee889a3145a",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-001-consumer-bundle-manifest",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-001",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D15",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 2,
+  "subject": {
+    "id": "OD-001",
+    "type": "DECISION"
+  },
+  "summary": "Approve one canonical consumer-bundle manifest per consumer.",
+  "why": "The operator selected Option A after reviewing how per-consumer identity binds exact sources, semantic contract, reader, authority, and compiler attestation without conflating those identities."
+}

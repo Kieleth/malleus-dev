@@ -1,0 +1,27 @@
+{
+  "assignment": {
+    "state": "UNASSIGNED"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "overseer",
+      "type": "OVERSEER"
+    },
+    "blockers": [
+      "CC-X03 must produce clean registered evidence.",
+      "CC-D11 must decide import identity, ordering, cycles, resolver behavior, and fallback.",
+      "CC-010 through CC-016 must establish the governed inputs and independent oracles."
+    ],
+    "class": "BLOCKED"
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Implement the controlled retained-source and recursive import boundary only after its policy and corpus dependencies are complete.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-R01"
+}

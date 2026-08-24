@@ -1,0 +1,1023 @@
+{
+  "$id": "https://malleus.dev/schema/contract-compiler-integration-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/integrationManifest"
+    },
+    {
+      "$ref": "#/$defs/workstreamCard"
+    },
+    {
+      "$ref": "#/$defs/workerLedgerHead"
+    },
+    {
+      "$ref": "#/$defs/workerLedgerEntry"
+    }
+  ],
+  "title": "Malleus contract compiler integration records",
+  "$defs": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "OPERATOR",
+            "OVERSEER",
+            "WORKER"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ],
+      "type": "object"
+    },
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_length": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "required": [
+        "path",
+        "byte_length",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "assignment": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "const": "UNASSIGNED"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "owner_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "state": {
+              "const": "ASSIGNED"
+            },
+            "task_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "state",
+            "owner_id",
+            "task_id"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "authorization": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "authorized_by": {
+              "$ref": "#/$defs/actor"
+            },
+            "class": {
+              "enum": [
+                "PLANNING_ONLY",
+                "EXPLORATION_ONLY"
+              ]
+            }
+          },
+          "required": [
+            "class",
+            "authorized_by"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "authorized_by": {
+              "$ref": "#/$defs/actor"
+            },
+            "blockers": {
+              "$ref": "#/$defs/strings"
+            },
+            "class": {
+              "const": "BLOCKED"
+            }
+          },
+          "required": [
+            "class",
+            "authorized_by",
+            "blockers"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "authorized_by": {
+              "$ref": "#/$defs/actor"
+            },
+            "class": {
+              "const": "FORMAL"
+            },
+            "dependency_bindings": {
+              "items": {
+                "$ref": "#/$defs/dependencyBinding"
+              },
+              "maxItems": 32,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "class",
+            "authorized_by",
+            "dependency_bindings"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "candidate": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "const": "NONE"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base_commit": {
+              "$ref": "#/$defs/commit"
+            },
+            "head_commit": {
+              "$ref": "#/$defs/commit"
+            },
+            "limitations": {
+              "$ref": "#/$defs/strings"
+            },
+            "observed_touched_paths": {
+              "items": {
+                "$ref": "#/$defs/path"
+              },
+              "maxItems": 128,
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "reason": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "state": {
+              "const": "QUARANTINED"
+            }
+          },
+          "required": [
+            "state",
+            "base_commit",
+            "head_commit",
+            "observed_touched_paths",
+            "reason",
+            "limitations"
+          ],
+          "type": "object"
+        },
+        {
+          "$ref": "#/$defs/integrableCandidate"
+        }
+      ]
+    },
+    "cardReference": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "const": "ABSENT"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "byte_length": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "sha256": {
+              "$ref": "#/$defs/digest"
+            },
+            "state": {
+              "const": "PRESENT"
+            }
+          },
+          "required": [
+            "state",
+            "path",
+            "byte_length",
+            "sha256"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "commit": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "dependencyBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "card_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "completion_entry_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "completion_entry_id": {
+          "pattern": "^OVR-[0-9]{6}$",
+          "type": "string"
+        },
+        "integrated_head": {
+          "$ref": "#/$defs/commit"
+        },
+        "workstream_id": {
+          "$ref": "#/$defs/workstreamId"
+        }
+      },
+      "required": [
+        "workstream_id",
+        "integrated_head",
+        "card_sha256",
+        "completion_entry_id",
+        "completion_entry_hash"
+      ],
+      "type": "object"
+    },
+    "digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "evidence": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/artifact"
+        },
+        {
+          "properties": {
+            "result": {
+              "enum": [
+                "PASS",
+                "FAIL"
+              ]
+            }
+          },
+          "required": [
+            "result"
+          ]
+        }
+      ]
+    },
+    "integrableCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "base_commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "dependency_bindings": {
+          "items": {
+            "$ref": "#/$defs/dependencyBinding"
+          },
+          "maxItems": 32,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array"
+        },
+        "head_commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "head_tree": {
+          "$ref": "#/$defs/commit"
+        },
+        "state": {
+          "enum": [
+            "ELIGIBLE",
+            "INTEGRATED"
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "base_commit",
+        "head_commit",
+        "head_tree",
+        "artifacts",
+        "evidence",
+        "dependency_bindings"
+      ],
+      "type": "object"
+    },
+    "integrationManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "additionalProperties": false,
+          "properties": {
+            "overseer_ledger": {
+              "$ref": "#/$defs/ledgerAnchor"
+            },
+            "snapshot": {
+              "$ref": "#/$defs/snapshot"
+            }
+          },
+          "required": [
+            "snapshot",
+            "overseer_ledger"
+          ],
+          "type": "object"
+        },
+        "canonicalization": {
+          "const": "malleus-canonical-json-v1"
+        },
+        "owner_separations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "left": {
+                "$ref": "#/$defs/workstreamId"
+              },
+              "right": {
+                "$ref": "#/$defs/workstreamId"
+              }
+            },
+            "required": [
+              "left",
+              "right"
+            ],
+            "type": "object"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "program_id": {
+          "const": "CC-PROGRAM-001"
+        },
+        "reserved_scopes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "owner_id": {
+                "const": "overseer"
+              },
+              "scope": {
+                "$ref": "#/$defs/scope"
+              }
+            },
+            "required": [
+              "owner_id",
+              "scope"
+            ],
+            "type": "object"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "revision": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "schema": {
+          "const": "malleus.contract-compiler.integration/v1"
+        },
+        "selections": {
+          "items": {
+            "$ref": "#/$defs/workstreamId"
+          },
+          "maxItems": 66,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "workstreams": {
+          "items": {
+            "$ref": "#/$defs/registryRow"
+          },
+          "maxItems": 66,
+          "minItems": 66,
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema",
+        "program_id",
+        "revision",
+        "canonicalization",
+        "authority",
+        "reserved_scopes",
+        "owner_separations",
+        "workstreams",
+        "selections"
+      ],
+      "type": "object"
+    },
+    "ledgerAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "entry_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "head_entry_id": {
+          "pattern": "^OVR-[0-9]{6}$",
+          "type": "string"
+        },
+        "head_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": [
+        "path",
+        "entry_count",
+        "head_entry_id",
+        "head_hash"
+      ],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "registryRow": {
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "$ref": "#/$defs/cardReference"
+        },
+        "depends_on": {
+          "items": {
+            "$ref": "#/$defs/workstreamId"
+          },
+          "maxItems": 32,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "workstream_id": {
+          "$ref": "#/$defs/workstreamId"
+        }
+      },
+      "required": [
+        "workstream_id",
+        "depends_on",
+        "card"
+      ],
+      "type": "object"
+    },
+    "scope": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "FILE",
+            "TREE"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": [
+        "kind",
+        "path"
+      ],
+      "type": "object"
+    },
+    "snapshot": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "state": {
+              "const": "UNSEALED"
+            }
+          },
+          "required": [
+            "state",
+            "reason"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "artifacts": {
+              "items": {
+                "$ref": "#/$defs/artifact"
+              },
+              "maxItems": 32,
+              "minItems": 1,
+              "type": "array"
+            },
+            "result_commit": {
+              "$ref": "#/$defs/commit"
+            },
+            "state": {
+              "const": "SEALED"
+            }
+          },
+          "required": [
+            "state",
+            "result_commit",
+            "artifacts"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "strings": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "type": "array"
+    },
+    "workerCorrectionData": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "supersedes_entry_id": {
+          "pattern": "^CC-[A-Z0-9]+-WRK-[0-9]{6}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "supersedes_entry_id",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "workerDecisionRequestData": {
+      "additionalProperties": false,
+      "properties": {
+        "blocking": {
+          "type": "boolean"
+        },
+        "options": {
+          "$ref": "#/$defs/strings"
+        },
+        "question": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "options",
+        "blocking"
+      ],
+      "type": "object"
+    },
+    "workerHandoffData": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_state": {
+          "enum": [
+            "QUARANTINED",
+            "ELIGIBLE"
+          ]
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array"
+        },
+        "limitations": {
+          "$ref": "#/$defs/strings"
+        }
+      },
+      "required": [
+        "candidate_state",
+        "evidence",
+        "limitations"
+      ],
+      "type": "object"
+    },
+    "workerObservationData": {
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "$ref": "#/$defs/strings"
+        },
+        "limitations": {
+          "$ref": "#/$defs/strings"
+        }
+      },
+      "required": [
+        "claims",
+        "limitations"
+      ],
+      "type": "object"
+    },
+    "workerTddData": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "maxItems": 32,
+          "type": "array"
+        },
+        "command": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "observed": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "RED",
+            "GREEN",
+            "SLICE",
+            "DISPROOF",
+            "REGRESSION",
+            "PACKAGE",
+            "ATTEST"
+          ]
+        },
+        "result": {
+          "enum": [
+            "EXPECTED_FAILURE",
+            "PASS",
+            "NOT_APPLICABLE"
+          ]
+        }
+      },
+      "required": [
+        "phase",
+        "command",
+        "result",
+        "observed",
+        "artifacts"
+      ],
+      "type": "object"
+    },
+    "workerLedgerEntry": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "entry_type": {
+                "const": "OBSERVATION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/workerObservationData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entry_type": {
+                "const": "TDD_RESULT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/workerTddData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entry_type": {
+                "const": "DECISION_REQUEST"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/workerDecisionRequestData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entry_type": {
+                "const": "HANDOFF"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/workerHandoffData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entry_type": {
+                "const": "CORRECTION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/workerCorrectionData"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "actor_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "data": {},
+        "entry_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "entry_id": {
+          "pattern": "^CC-[A-Z0-9]+-WRK-[0-9]{6}$",
+          "type": "string"
+        },
+        "entry_type": {
+          "enum": [
+            "OBSERVATION",
+            "TDD_RESULT",
+            "DECISION_REQUEST",
+            "HANDOFF",
+            "CORRECTION"
+          ]
+        },
+        "previous_entry_hash": {
+          "oneOf": [
+            {
+              "const": "GENESIS"
+            },
+            {
+              "$ref": "#/$defs/digest"
+            }
+          ]
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "pattern": "Z$",
+          "type": "string"
+        },
+        "schema": {
+          "const": "malleus.contract-compiler.worker-ledger-entry/v1"
+        },
+        "sequence": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "summary": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "workstream_id": {
+          "$ref": "#/$defs/workstreamId"
+        }
+      },
+      "required": [
+        "schema",
+        "workstream_id",
+        "sequence",
+        "entry_id",
+        "entry_type",
+        "recorded_at",
+        "actor_id",
+        "summary",
+        "data",
+        "previous_entry_hash",
+        "entry_hash"
+      ],
+      "type": "object"
+    },
+    "workerLedgerHead": {
+      "additionalProperties": false,
+      "properties": {
+        "canonicalization": {
+          "const": "malleus-canonical-json-v1"
+        },
+        "entry_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "head_entry_id": {
+          "pattern": "^CC-[A-Z0-9]+-WRK-[0-9]{6}$",
+          "type": "string"
+        },
+        "head_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "schema": {
+          "const": "malleus.contract-compiler.worker-ledger-head/v1"
+        },
+        "workstream_id": {
+          "$ref": "#/$defs/workstreamId"
+        }
+      },
+      "required": [
+        "schema",
+        "workstream_id",
+        "canonicalization",
+        "entry_count",
+        "head_entry_id",
+        "head_hash"
+      ],
+      "type": "object"
+    },
+    "workerLedgerPointer": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "const": "NOT_STARTED"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "entry_count": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "head_entry_id": {
+              "pattern": "^CC-[A-Z0-9]+-WRK-[0-9]{6}$",
+              "type": "string"
+            },
+            "head_hash": {
+              "$ref": "#/$defs/digest"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "state": {
+              "const": "RECORDED"
+            }
+          },
+          "required": [
+            "state",
+            "path",
+            "entry_count",
+            "head_entry_id",
+            "head_hash"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "workstreamCard": {
+      "additionalProperties": false,
+      "properties": {
+        "assignment": {
+          "$ref": "#/$defs/assignment"
+        },
+        "authorization": {
+          "$ref": "#/$defs/authorization"
+        },
+        "candidate": {
+          "$ref": "#/$defs/candidate"
+        },
+        "ledger": {
+          "$ref": "#/$defs/workerLedgerPointer"
+        },
+        "responsibility": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "schema": {
+          "const": "malleus.contract-compiler.workstream-card/v1"
+        },
+        "scopes": {
+          "items": {
+            "$ref": "#/$defs/scope"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
+        "workstream_id": {
+          "$ref": "#/$defs/workstreamId"
+        }
+      },
+      "required": [
+        "schema",
+        "workstream_id",
+        "responsibility",
+        "assignment",
+        "authorization",
+        "scopes",
+        "candidate",
+        "ledger"
+      ],
+      "type": "object"
+    },
+    "workstreamId": {
+      "pattern": "^CC-[A-Z0-9]+$",
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "actor": {
+    "id": "foundation-graph-validator",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-24T19:25:26Z",
+    "claims": [
+      "Canonical graph revision 11 contains the exact accepted compiler decisions.",
+      "The canonical TTL and all owned Markdown Turtle projections have exact RDF set parity.",
+      "The dependency graph is acyclic."
+    ],
+    "limitations": [
+      "This verifies design authority and projection integrity, not shipped implementation."
+    ]
+  },
+  "entry_hash": "sha256:6c0cfd93e19567d52efbbd4fdea6d176240a934ad2556899b89da4e85f155263",
+  "entry_id": "OVR-000004",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:af173bbf5a3d501d89948535eb28eb83ba759a386673fecc7b3df4f72f93893a",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "digest": "sha256:a984a01cd6b505fe0b0c6f7cde6b46aad2ae1d1781f0cbac47fd5584dda34d6a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D01.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/AD-001",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 4,
+  "subject": {
+    "id": "CC-D01-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify canonical promotion of the compiler directions.",
+  "why": "CC-D01 may complete only after the canonical graph, projections, selected decision tuples, status uniqueness, and dependency DAG pass mechanical validation."
+}

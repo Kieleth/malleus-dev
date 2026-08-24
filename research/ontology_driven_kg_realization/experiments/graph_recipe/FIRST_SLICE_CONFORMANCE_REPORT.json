@@ -10,7 +10,7 @@
     },
     "package_boundary_sources": {
       "docs/IMPLEMENTATION_STATUS.md": "sha256:f4b835bbd40d3d66268e5bb98a04ed5c9c8ffa56f1327667e5dab9ee14643054",
-      "pyproject.toml": "sha256:fedb54b42e89d691b0b37f9e19ea87f1058015c1be838a9edb17bdcb26e453a9",
+      "pyproject.toml": "sha256:73aab0552363cfd52ea0b1e5b591d56765208ecf5cf2b24ae97c5a3c03c9cf90",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
       "src/malleus/status.py": "sha256:27b32b7fb766671f60b8719ae66dbda28a335e8492339bfa7dbe6335ab9e4210"
     },

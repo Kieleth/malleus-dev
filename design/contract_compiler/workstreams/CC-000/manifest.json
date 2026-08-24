@@ -1,0 +1,98 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "task:contract-compiler-overseer"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Validate the complete program registry, exact work ownership, dependency readiness, candidate history, evidence, and integration selection.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": ".github/workflows/release.yml"
+    },
+    {
+      "kind": "FILE",
+      "path": ".github/workflows/tests.yml"
+    },
+    {
+      "kind": "FILE",
+      "path": ".gitignore"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+    },
+    {
+      "kind": "TREE",
+      "path": "design/contract_compiler"
+    },
+    {
+      "kind": "FILE",
+      "path": "handover/2026-08-24-contract-compiler-overseer.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "pyproject.toml"
+    },
+    {
+      "kind": "FILE",
+      "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/__init__.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_integration.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_ledger.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_integration.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_ledger.py"
+    }
+  ],
+  "workstream_id": "CC-000"
+}

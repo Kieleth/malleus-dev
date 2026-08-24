@@ -7,9 +7,10 @@ Design revision: 7
 Decision authority: author
 
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
-`OKG-D012`, LinkML is the replaceable first-party contract frontend for v0
+`OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
+contract compiler `AD-001`, `AD-003` through `AD-005`, and `OD-001`
 
-Decision date: 2026-08-17
+Decision dates: 2026-08-17 and 2026-08-24
 
 Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
 This is an ancestry base only, not the tested implementation snapshot. The
@@ -17,10 +18,10 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 10,
-`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
+revision 11,
+`sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`
 
-Evidence cutoff: 2026-08-17
+Evidence cutoff: 2026-08-24
 
 Private implementation-audit snapshot:
 `sha256:9b62ed651e0b571a3301da559494d55fd9fe35f7790016a64cb163f43214f47a`
@@ -1219,6 +1220,22 @@ backend, broad workload quality, or public capability. Those remain in
     replace LinkML only through the same normative artifact boundary and
     conformance suite.
 
+The author accepted the contract compiler directions on 2026-08-24:
+
+1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
+   break before 1.0, but implementation promotion remains gated by conformance.
+2. `AD-002` is already represented by `OKG-D012`; no duplicate decision record
+   is created.
+3. `AD-003` keeps stage protocols experimental and places compatibility claims
+   on named, conformant whole-pipeline combinations.
+4. `AD-004` rejects implicit duplicate-symbol precedence. Composition fails
+   closed unless a versioned symbol policy authorizes it.
+5. `AD-005` separates independent upstream units and binds their integration
+   to exact commits, while intrinsic dependencies remain sequential or stacked.
+6. `OD-001` selects one canonical consumer-bundle manifest per consumer. Its
+   exact schema and canonical grammar remain open pending `OD-006` and
+   `OD-013`.
+
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
 accepted design, and LinkML is selected without becoming a privileged protocol
@@ -1233,46 +1250,113 @@ GraphRecipe branch resumes at `GE-030` without changing that main sequence.
 
 ## 14. Mechanical validation of this design pass
 
-Performed on 2026-08-17:
+The accepted contract compiler directions are projected through one dedicated
+block:
 
-1. The 27 Turtle blocks across the foundation, pillar, GraphRecipe profile,
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix mfg: <https://malleus.dev/foundation-graph/> .
+@prefix cc: <https://malleus.dev/contract-compiler/> .
+
+mfg:ExperimentalStageProtocolWholePipelineConformanceBoundary
+    rdf:type mfg:Boundary ;
+    mfg:governedBy mfg:UnixModularProtocolDoctrine ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FailClosedDuplicateSymbolComposition
+    rdf:type mfg:Invariant ;
+    mfg:governedBy mfg:SymbolIdentityPolicy ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:IndependentUpstreamUnitsExactCommitIntegrationTopology
+    rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:PerConsumerCanonicalBundleManifest
+    rdf:type mfg:Requirement ;
+    mfg:dependsOn mfg:ContractComposition ;
+    mfg:dependsOn mfg:EffectiveContractArtifact ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:AD-001 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-24" ;
+    mfg:selects mfg:EffectiveContract ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:AD-003 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-24" ;
+    mfg:selects mfg:ExperimentalStageProtocolWholePipelineConformanceBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:AD-004 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-24" ;
+    mfg:selects mfg:FailClosedDuplicateSymbolComposition ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:AD-005 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-24" ;
+    mfg:selects mfg:IndependentUpstreamUnitsExactCommitIntegrationTopology ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-001 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-24" ;
+    mfg:selects mfg:PerConsumerCanonicalBundleManifest ;
+    mfg:status mfg:AcceptedDesign .
+```
+
+Performed on 2026-08-24:
+
+1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,103 RDF triples.
+   1,140 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,103 triples. Both directed set differences
+   the same 1,140 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 93 nodes and 92 edges, with no directed
+3. The canonical `dependsOn` graph has 94 nodes and 94 edges, with no directed
    dependency cycle.
-4. All 214 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 223 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
 5. `OKG-D007` through `OKG-D012` each have exactly `DecisionRecord`,
    `decidedBy Author`, `decisionDate "2026-08-17"`, and
    `status AcceptedDesign`.
-6. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
+6. Contract compiler `AD-001`, `AD-003` through `AD-005`, and `OD-001` each
+   have exactly `DecisionRecord`, `decidedBy Author`, `decisionDate
+   "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
+   remains represented only by `OKG-D012`.
+7. `EffectiveContract` and the four newly selected contract compiler objects
+   have exactly `AcceptedDesign` status. The consumer-bundle requirement has
+   exactly the two declared dependencies.
+8. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
    coverage obligations, an explicit universal-completeness exclusion, and
    addressable counterevidence and revision semantics.
-7. The three partially evidenced completeness obligations have exactly
+9. The three partially evidenced completeness obligations have exactly
    `Partial` status. The other three remain exactly `Candidate`.
-8. The first-slice fixture and offline core CI gate have exactly `Implemented`
+10. The first-slice fixture and offline core CI gate have exactly `Implemented`
    status; the wider TDD program and experimental learning have exactly
    `Partial` status. `GE-030` through `GE-100`, Lutra, second-backend
    conformance, public promotion, generated-schema parity, and execution-
    environment closure remain open.
-9. The active report identity supersedes three retained identities. Each
+11. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-10. The canonical body contains 1,103 unique, lexically sorted N-Triples. Its
+12. The canonical body contains 1,140 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`, and every
-   owned Markdown graph reference names revision 10 and that digest.
-11. All 24 relative Markdown links in the five owned
+   `eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`, and every
+   owned Markdown graph reference names revision 11 and that digest.
+13. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
-12. None of the five owned Markdown documents or the canonical Turtle artifact
+14. None of the five owned Markdown documents or the canonical Turtle artifact
    contains an absolute home-directory or local-file URI locator.
-13. Trailing-whitespace checks over the seven identity files and the privacy
+15. Trailing-whitespace checks over the seven identity files and the privacy
     regression test report no error.
 
-The GraphRecipe, relevant-core, and full configured commands were rerun before
-the report and graph identities were frozen.
+The graph projection, invariant, link, privacy, and whitespace checks were
+rerun before revision 11 was frozen. Existing GraphRecipe implementation
+evidence was not reissued by this design-only promotion.

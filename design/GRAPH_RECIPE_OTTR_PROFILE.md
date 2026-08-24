@@ -20,8 +20,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 10,
-`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
+revision 11,
+`sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`
 
 Evidence:
 [`OTTR_SUFFICIENCY_AUDIT.md`](../research/ontology_driven_kg_realization/OTTR_SUFFICIENCY_AUDIT.md)

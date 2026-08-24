@@ -1,0 +1,931 @@
+{
+  "authority": {
+    "overseer_ledger": {
+      "entry_count": 9,
+      "head_entry_id": "OVR-000009",
+      "head_hash": "sha256:a3da9acdbd82280975249e4677179b898e243fb606b87fa83b053d5bf2608a07",
+      "path": "design/contract_compiler/overseer"
+    },
+    "snapshot": {
+      "reason": "The result commit is created only after the RED, GREEN, slice, disproof, and regression evidence is complete.",
+      "state": "UNSEALED"
+    }
+  },
+  "canonicalization": "malleus-canonical-json-v1",
+  "owner_separations": [
+    {
+      "left": "CC-011",
+      "right": "CC-012"
+    },
+    {
+      "left": "CC-013",
+      "right": "CC-014"
+    },
+    {
+      "left": "CC-015",
+      "right": "CC-016"
+    },
+    {
+      "left": "CC-019",
+      "right": "CC-020"
+    }
+  ],
+  "program_id": "CC-PROGRAM-001",
+  "reserved_scopes": [
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": ".github/workflows/release.yml"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": ".github/workflows/tests.yml"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/conformance.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/decisions.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/integration.json"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/integration.schema.json"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "TREE",
+        "path": "design/contract_compiler/overseer"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/program.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "design/contract_compiler/upstream.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "handover/2026-08-24-contract-compiler-overseer.md"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "pyproject.toml"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "scripts/contract_compiler_integration.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "scripts/contract_compiler_ledger.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    }
+  ],
+  "revision": 1,
+  "schema": "malleus.contract-compiler.integration/v1",
+  "selections": [],
+  "workstreams": [
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-X00"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-002"
+      ],
+      "workstream_id": "CC-X01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-X02"
+    },
+    {
+      "card": {
+        "byte_length": 2053,
+        "path": "workstreams/CC-X03/manifest.json",
+        "sha256": "sha256:9b4d81c1e6327d0ddd9f30b56474bfc32366f8012a2b2f619bece24045be9584",
+        "state": "PRESENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-X03"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-X04"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-D01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-X02"
+      ],
+      "workstream_id": "CC-D02"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-X01"
+      ],
+      "workstream_id": "CC-D03"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-X04"
+      ],
+      "workstream_id": "CC-D04"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D01",
+        "CC-D02",
+        "CC-D03"
+      ],
+      "workstream_id": "CC-D05"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D05"
+      ],
+      "workstream_id": "CC-D06"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D06"
+      ],
+      "workstream_id": "CC-D07"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D02",
+        "CC-D03",
+        "CC-D05"
+      ],
+      "workstream_id": "CC-D08"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D01",
+        "CC-D05"
+      ],
+      "workstream_id": "CC-D09"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D07"
+      ],
+      "workstream_id": "CC-D10"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-X03"
+      ],
+      "workstream_id": "CC-D11"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-X00"
+      ],
+      "workstream_id": "CC-D12"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D01"
+      ],
+      "workstream_id": "CC-D13"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-D14"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-D15"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D06",
+        "CC-D13",
+        "CC-D15"
+      ],
+      "workstream_id": "CC-D16"
+    },
+    {
+      "card": {
+        "byte_length": 2238,
+        "path": "workstreams/CC-000/manifest.json",
+        "sha256": "sha256:8cda9828bdadc2b91cbe4deb32df2901075418dbeb6b2fd786abf3d210e2d45f",
+        "state": "PRESENT"
+      },
+      "depends_on": [],
+      "workstream_id": "CC-000"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-000"
+      ],
+      "workstream_id": "CC-001"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-000",
+        "CC-D12"
+      ],
+      "workstream_id": "CC-002"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-000",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D07",
+        "CC-D08",
+        "CC-D10",
+        "CC-D11"
+      ],
+      "workstream_id": "CC-010"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D14",
+        "CC-018"
+      ],
+      "workstream_id": "CC-011"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-011"
+      ],
+      "workstream_id": "CC-012"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-X01",
+        "CC-X02",
+        "CC-018"
+      ],
+      "workstream_id": "CC-013"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D08",
+        "CC-013"
+      ],
+      "workstream_id": "CC-014"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D05",
+        "CC-D08",
+        "CC-018"
+      ],
+      "workstream_id": "CC-015"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-015"
+      ],
+      "workstream_id": "CC-016"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-018"
+      ],
+      "workstream_id": "CC-017"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08"
+      ],
+      "workstream_id": "CC-018"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-011",
+        "CC-018"
+      ],
+      "workstream_id": "CC-019"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D07",
+        "CC-D10",
+        "CC-019"
+      ],
+      "workstream_id": "CC-020"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-011",
+        "CC-D14"
+      ],
+      "workstream_id": "CC-PUB01"
+    },
+    {
+      "card": {
+        "byte_length": 794,
+        "path": "workstreams/CC-R01/manifest.json",
+        "sha256": "sha256:4c043652f47f121ad792115eabde30971bbbe881372515f35790153721fc22d8",
+        "state": "PRESENT"
+      },
+      "depends_on": [
+        "CC-000",
+        "CC-X03",
+        "CC-D11",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016"
+      ],
+      "workstream_id": "CC-R01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-002",
+        "CC-R01",
+        "CC-D03",
+        "CC-D08",
+        "CC-D11",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016"
+      ],
+      "workstream_id": "CC-R02"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R02",
+        "CC-D02",
+        "CC-D05",
+        "CC-D06",
+        "CC-D11",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016"
+      ],
+      "workstream_id": "CC-R03"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R03",
+        "CC-D03",
+        "CC-D08",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016"
+      ],
+      "workstream_id": "CC-R04"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R04",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016",
+        "CC-017",
+        "CC-018"
+      ],
+      "workstream_id": "CC-R05"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R05",
+        "CC-D07",
+        "CC-D10",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016",
+        "CC-019",
+        "CC-020"
+      ],
+      "workstream_id": "CC-R06"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R06",
+        "CC-010",
+        "CC-012",
+        "CC-014",
+        "CC-016"
+      ],
+      "workstream_id": "CC-R07"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R01",
+        "CC-R02",
+        "CC-R03",
+        "CC-R04",
+        "CC-R05",
+        "CC-R06",
+        "CC-R07"
+      ],
+      "workstream_id": "CC-R08"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R08",
+        "CC-D09"
+      ],
+      "workstream_id": "CC-P01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P01",
+        "CC-D13"
+      ],
+      "workstream_id": "CC-PKG01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-PKG01",
+        "CC-D04"
+      ],
+      "workstream_id": "CC-W01"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-W01",
+        "CC-X04"
+      ],
+      "workstream_id": "CC-W02"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P01",
+        "CC-W02"
+      ],
+      "workstream_id": "CC-P10"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P10"
+      ],
+      "workstream_id": "CC-P11"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P10"
+      ],
+      "workstream_id": "CC-P12"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P11",
+        "CC-P12"
+      ],
+      "workstream_id": "CC-P13"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P10",
+        "CC-P11",
+        "CC-P12"
+      ],
+      "workstream_id": "CC-P19"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P19"
+      ],
+      "workstream_id": "CC-P20"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P12",
+        "CC-P19",
+        "CC-P20"
+      ],
+      "workstream_id": "CC-P21"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P21"
+      ],
+      "workstream_id": "CC-P22"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P10",
+        "CC-W02",
+        "CC-P42"
+      ],
+      "workstream_id": "CC-P30"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P10",
+        "CC-W02"
+      ],
+      "workstream_id": "CC-P31"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P01",
+        "CC-PKG01"
+      ],
+      "workstream_id": "CC-P40"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P01",
+        "CC-PKG01"
+      ],
+      "workstream_id": "CC-P41"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-W02"
+      ],
+      "workstream_id": "CC-P42"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-D15",
+        "CC-D16",
+        "CC-P22",
+        "CC-P30",
+        "CC-P31",
+        "CC-P40",
+        "CC-P41",
+        "CC-P42"
+      ],
+      "workstream_id": "CC-P45"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P13",
+        "CC-P22",
+        "CC-P30",
+        "CC-P31",
+        "CC-P40",
+        "CC-P41",
+        "CC-P42"
+      ],
+      "workstream_id": "CC-PKG02"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P45",
+        "CC-PKG02"
+      ],
+      "workstream_id": "CC-P50"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P50"
+      ],
+      "workstream_id": "CC-P51"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-P45",
+        "CC-P51",
+        "CC-PUB01"
+      ],
+      "workstream_id": "CC-P52"
+    }
+  ]
+}

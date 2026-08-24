@@ -1,0 +1,72 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/AD-001",
+      "https://malleus.dev/ontology-kg-realization/OKG-D012",
+      "https://malleus.dev/contract-compiler/AD-003",
+      "https://malleus.dev/contract-compiler/AD-004",
+      "https://malleus.dev/contract-compiler/AD-005"
+    ],
+    "consequences": [
+      "The program governs execution order and acceptance gates but does not claim shipped capability.",
+      "AD-001 through AD-005 are accepted, with AD-002 mapped to existing canonical decision OKG-D012."
+    ],
+    "constraints": [
+      "Implementation remains gated by the declared workstream DAG and cumulative acceptance matrix."
+    ],
+    "decision_id": "CC-PROGRAM-001",
+    "satisfies_workstreams": [],
+    "selected_option": "APPROVED",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:c655ac5d0bd1de9624355e0ee7de5139b10fac7e70f2c4f335295ee889a3145a",
+  "entry_id": "OVR-000001",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/AD-001",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/ontology-kg-realization/OKG-D012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/AD-003",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/AD-004",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/AD-005",
+      "type": "CANONICAL_URI"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 1,
+  "subject": {
+    "id": "contract-compiler",
+    "type": "PROGRAM"
+  },
+  "summary": "Approve the contract compiler execution program.",
+  "why": "The operator approved the corrected dependency program after independent adversarial and architecture review."
+}

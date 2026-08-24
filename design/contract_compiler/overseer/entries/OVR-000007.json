@@ -1,0 +1,189 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PROGRAM-001",
+      "OD-001",
+      "CC-D01",
+      "CC-D15",
+      "CC-X03",
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:820c81b8ac1163dfb553540cfcf437e1f23ac31184055895703f5b472e764e50",
+        "before_digest": "sha256:1bf95dcd0010c6a3eaf76e4f3419789820d67be778bd2c946ef0af5ea6878144",
+        "change": "MODIFIED",
+        "path": ".gitignore"
+      },
+      {
+        "after_digest": "sha256:c397caed4244bc7f4d9d489f77fbf261ead38bc53d0c8557b4a54cb44ac3e4c2",
+        "before_digest": "sha256:674d87482cb945a8eccbfe49f9a22fa77c3630ad6e6dfd8acbb048ca210a91b7",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:64876c99c68706e38e7d96fd2d082ba442877bad63d2d9533f7ad19af8147169",
+        "before_digest": "sha256:153711eaef859cd6754a347f124103baaa2ee32132c5f4c278cfbc0b343947b0",
+        "change": "MODIFIED",
+        "path": ".github/workflows/release.yml"
+      },
+      {
+        "after_digest": "sha256:ca336390508cbbd3704a0d0ab207d0db2b41381578b3d27fe8e437a12ace51bb",
+        "before_digest": "sha256:fedb54b42e89d691b0b37f9e19ea87f1058015c1be838a9edb17bdcb26e453a9",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:47178d94400e604c329750174571552cd8ffad378c867475dbeb47fbdf5881d8",
+        "before_digest": "sha256:52920c9535bce1c0644cf52d5d0488465e8661d1df4510c20bb12776515315d0",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      },
+      {
+        "after_digest": "sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085",
+        "before_digest": "sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:2045c95932a113cb10f0e41e163cc879c298505589abf5336561f8f6649a410e",
+        "before_digest": "sha256:c1ad92390a12c2039c6da854ffd899a0c8db5eb8c3e80f8954abd35ffcad6366",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:4c7c0996d809856fca034fff2c1dc520c75e25dead0431455bf8ad141953a517",
+        "before_digest": "sha256:f39fd7dd3a781a8534f7ceb9a286a24099df5354af506eb4ddcbfec1f3dee90e",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:b1e578c0c4f173b500c222b4abbe415087a72b03320f8f9c0daa06766c8d8455",
+        "before_digest": "sha256:7e0c3cc05e788b6d4d49ac83964f56590b7d1850ac4d998ee6608f64fff886ca",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:c9f0ddff18f1cf4e470f7ab0c3ed80a11e4ed71b537265d205fac9cac2236930",
+        "before_digest": "sha256:6a0d1e438c1fed132250f6796e7f7cfd6b1f958b384f1c769f3417ca86b31056",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:8d94a4b5dbd56e9e38558cf8ce128e2c4ca14cf4e48d4377458ef2f9ba6a16db",
+        "before_digest": "sha256:4ba5ef45b2a2e7d292d27927e7c09fe99b15860f732742556b159b8e5cc61dcd",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:4ce7c719947a59cd31b66dce13eb8fbe0c4f08de51a0daba51d2f85029407494",
+        "before_digest": "sha256:8767351fcbdcd8a2a16394151c2b23a9c0afa192e5380c4f5cba08e5830ffabb",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:ad7ba5a3357e6e7ce9fa4dd7b665fd577e5f7580284a7ca3b650dc9d65e137bd",
+        "before_digest": "sha256:edf747589a41838f077756294d9fb187d713c4933dbc431e4245a8bb573d41a5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:2e033fb4eca0930bb5fae98156978efd6b02d9c580f3d2e47459405e55aac9ef",
+        "before_digest": "sha256:9d87e393a9f640835afb337e2fef6c2278e5fb4dfc3bcd52beceb6ccf0020523",
+        "change": "REPLACED",
+        "path": "handover/2026-08-24-contract-compiler-overseer.md"
+      },
+      {
+        "after_digest": "sha256:e2eae18a85d937a8759c8a910d9a4c2d17c9af6540c38fbfd54614334aa69f9a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/README.md"
+      },
+      {
+        "after_digest": "sha256:034cadaad32401e98e5ee5131461ae7f2e335f1a6a7d8289634219974cd25c07",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/ledger.schema.json"
+      },
+      {
+        "after_digest": "sha256:a984a01cd6b505fe0b0c6f7cde6b46aad2ae1d1781f0cbac47fd5584dda34d6a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D01.json"
+      },
+      {
+        "after_digest": "sha256:24637df4fab64bd182f17c4d7688961aaaaa0e7dddd73096a9942f49835899e9",
+        "change": "CREATED",
+        "path": "scripts/__init__.py"
+      },
+      {
+        "after_digest": "sha256:4815d3d60493b160cbc155a2091a9a34173189560c02faac11943cd74f9109d2",
+        "change": "CREATED",
+        "path": "scripts/contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:c4a11c8bf2b23ded6295b8b38c328aae74f1995c8ec20754f25be9467dfd1590",
+        "change": "CREATED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b1c8fb184bc11a4df2059026196372da4cc1ab0da21769de527769f55f1c6ceb",
+  "entry_id": "OVR-000007",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:03f1217fa6220fa8d7565d76a38e79ca51a03485281d59962ef12bf214d05ce6",
+  "recorded_at": "2026-08-24T19:44:17Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/README.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/ledger.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:a984a01cd6b505fe0b0c6f7cde6b46aad2ae1d1781f0cbac47fd5584dda34d6a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D01.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-001",
+      "type": "DECISION"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D15",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 7,
+  "subject": {
+    "id": "contract-compiler-governance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Replace the prose ledger with validated immutable blocks and synchronize canonical authority.",
+  "why": "The prior handover mixed history, current state, decisions, and evidence in one growing prose file. This revision separates immutable events, bounded projection, canonical design, and retained verification evidence."
+}

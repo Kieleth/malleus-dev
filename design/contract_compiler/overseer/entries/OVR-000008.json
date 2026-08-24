@@ -1,0 +1,38 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Implement the validated workstream registry, exact scope gate, candidate-history checks, and integration seal."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-000"
+  },
+  "entry_hash": "sha256:05579ff8b367f66c8f3bf5c7df53f6112458e3ad39fb19e63d1d74c0bf344c84",
+  "entry_id": "OVR-000008",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b1c8fb184bc11a4df2059026196372da4cc1ab0da21769de527769f55f1c6ceb",
+  "recorded_at": "2026-08-24T20:10:00Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 8,
+  "subject": {
+    "id": "CC-000",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Start the validated integration gate.",
+  "why": "The operator approved the full 66-workstream registry, exact FILE and TREE scopes, quarantined X03 evidence, and a two-commit result and seal protocol."
+}

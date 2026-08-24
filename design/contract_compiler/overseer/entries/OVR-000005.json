@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "AD-001 and AD-003 through AD-005 are canonical DecisionRecords.",
+      "AD-002 maps to existing OKG-D012.",
+      "Revision 11 has exact Turtle projection parity and an acyclic dependency graph."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000004"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D01"
+  },
+  "entry_hash": "sha256:1fc95a260356e61a96d5f439bf80ff0c5832068dd54ae5979a241d14dfac2cd9",
+  "entry_id": "OVR-000005",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6c0cfd93e19567d52efbbd4fdea6d176240a934ad2556899b89da4e85f155263",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000004",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 5,
+  "subject": {
+    "id": "CC-D01",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete canonical promotion of the accepted compiler directions.",
+  "why": "The retained verification report and OVR-000004 satisfy the canonical graph, digest, projection, and DAG evidence required by CC-D01."
+}

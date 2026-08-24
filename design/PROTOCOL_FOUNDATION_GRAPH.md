@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 10,
-`sha256:7160727da14ba34a568578d5f57056a4cf48b350ccb2101e0f2dee5c2dedd3e1`
+revision 11,
+`sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -26,6 +26,10 @@ The first package should be the **contract kernel**.
 The missing root object is not another version field. It is a backend-neutral,
 content-addressed statement of the semantics that Malleus actually enforces.
 This note calls that object an `EffectiveContract`:
+
+`AD-001` accepts `EffectiveContract` as the public runtime root. That design
+status does not claim a shipped API. Runtime promotion still requires the
+declared conformance, wire-transition, packaging, and consumer gates.
 
 ```text
 EffectiveContract
@@ -422,7 +426,7 @@ mfg:EffectiveContract rdf:type rdfs:Class ;
     mfg:composedOf mfg:ValidatedContractFactSet ;
     mfg:interpretedUnder mfg:NormativeAdmissionProfile ;
     mfg:identifiedBy mfg:EffectiveContractHash ;
-    mfg:status mfg:Candidate .
+    mfg:status mfg:AcceptedDesign .
 
 mfg:AdmissionImplementation rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;

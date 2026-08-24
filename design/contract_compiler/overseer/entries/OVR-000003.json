@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "bootstrap": true,
+    "blockers": [],
+    "deliverables": [
+      "Operator selected OD-001 Option A."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000002"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D15"
+  },
+  "entry_hash": "sha256:af173bbf5a3d501d89948535eb28eb83ba759a386673fecc7b3df4f72f93893a",
+  "entry_id": "OVR-000003",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3dfd5200b1efee95b360baf5f3ecb19b5f8416a37b0a241e0ea4e6e0fe40f739",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000002",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-001",
+      "type": "DECISION"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D15",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 3,
+  "subject": {
+    "id": "CC-D15",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the consumer-bundle direction gate.",
+  "why": "CC-D15 requires an explicit operator choice, and OVR-000002 records that choice."
+}

@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Formal GREEN implementation waits for CC-000 and CC-D11."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Exploratory retained-byte and recursive-import RED evidence remains isolated from formal integration."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "PAUSED",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-X03"
+  },
+  "entry_hash": "sha256:03f1217fa6220fa8d7565d76a38e79ca51a03485281d59962ef12bf214d05ce6",
+  "entry_id": "OVR-000006",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1fc95a260356e61a96d5f439bf80ff0c5832068dd54ae5979a241d14dfac2cd9",
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "references": [
+    {
+      "relation": "COORDINATES",
+      "target": "01a034ff-cec3-77d1-8d5f-f10ef9129c9a",
+      "type": "TASK"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 6,
+  "subject": {
+    "id": "CC-X03",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Pause the exploratory source-boundary task at RED evidence.",
+  "why": "Post-draft review found that formal source-boundary implementation depends on governance and import-policy gates that the exploratory task must not bypass."
+}

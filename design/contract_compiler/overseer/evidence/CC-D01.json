@@ -1,0 +1,73 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 198759,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:2045c95932a113cb10f0e41e163cc879c298505589abf5336561f8f6649a410e"
+    },
+    {
+      "byte_length": 60024,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:4c7c0996d809856fca034fff2c1dc520c75e25dead0431455bf8ad141953a517"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:b1e578c0c4f173b500c222b4abbe415087a72b03320f8f9c0daa06766c8d8455"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:c9f0ddff18f1cf4e470f7ab0c3ed80a11e4ed71b537265d205fac9cac2236930"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:8d94a4b5dbd56e9e38558cf8ce128e2c4ca14cf4e48d4377458ef2f9ba6a16db"
+    }
+  ],
+  "base_commit": "c410f11229e7c33a4fab9ebdfc9e2e109f18cbf7",
+  "checks": [
+    {
+      "check_id": "canonical-digest",
+      "method": "SHA-256 over the complete canonical TTL bytes, including the nine-line header and final newline.",
+      "observed": "sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085",
+      "result": "PASS"
+    },
+    {
+      "check_id": "projection-parity",
+      "method": "Parse the concatenated 28 Markdown Turtle fences and compare their RDF triple set with the canonical TTL.",
+      "observed": "1,140 triples; zero canonical-only triples; zero projection-only triples.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "decision-and-status-invariants",
+      "method": "Check the five exact contract-compiler decision records, the retained OKG-D012 mapping, and one status per subject.",
+      "observed": "Five exact new decision records; 223 status subjects; one distinct status each.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "dependency-dag",
+      "method": "Build the dependsOn graph and refuse any directed cycle.",
+      "observed": "94 nodes; 94 edges; no cycle.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "projection-hygiene",
+      "method": "Resolve relative links and scan canonical and projected text for absolute home paths, file URIs, and whitespace errors.",
+      "observed": "24 relative links resolved; privacy and whitespace checks passed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report identifies the validated working-tree snapshot by source digests. CC-000 will bind its containing Git commit in the integration manifest."
+  ],
+  "recorded_at": "2026-08-24T19:25:26Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D01"
+}

@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -41,6 +43,19 @@ jobs:
       - name: Run tests
         # Bare pytest so CI and a local run collect the identical testpaths set.
         run: pytest -v
+
+      - name: Validate contract compiler overseer ledger
+        run: |
+          python -m ruff check scripts/contract_compiler_ledger.py tests/test_contract_compiler_ledger.py
+          python -m pytest -q tests/test_contract_compiler_ledger.py
+          python scripts/contract_compiler_ledger.py check
+          python scripts/contract_compiler_ledger.py verify-evidence design/contract_compiler/overseer/evidence/CC-D01.json
+
+      - name: Validate contract compiler integration gate
+        run: |
+          python -m ruff check scripts/contract_compiler_integration.py tests/test_contract_compiler_integration.py
+          python -m pytest -q tests/test_contract_compiler_integration.py
+          python scripts/contract_compiler_integration.py check
 
       - name: Run GraphRecipe conformance slice
         run: |

@@ -52,6 +52,11 @@ Thumbs.db
 /experiments/
 /paper/
 /scripts/
+!/scripts/
+/scripts/*
+!/scripts/__init__.py
+!/scripts/contract_compiler_integration.py
+!/scripts/contract_compiler_ledger.py
 /malleus-moving/
 
 # Private research and reviewer synthesis. These retain workspace coordinates,
