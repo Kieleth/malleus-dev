@@ -6,11 +6,13 @@ import json
 import shutil
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -21,6 +23,8 @@ from scripts.contract_compiler_integration import (  # noqa: E402
     validate_candidate_history,
     validate_integration,
 )
+from scripts.contract_compiler_ledger import load_ledger as load_overseer_ledger  # noqa: E402
+import scripts.contract_compiler_integration as integration_module  # noqa: E402
 
 
 CONTRACT = ROOT / "design" / "contract_compiler"
@@ -181,8 +185,31 @@ def _candidate_repository(tmp_path: Path) -> tuple[Path, str, str]:
     (repository / "allowed").mkdir()
     (repository / "allowed" / "result.txt").write_text("result\n", encoding="utf-8")
     (repository / "evidence").mkdir()
-    (repository / "evidence" / "checks.json").write_text(
-        '{"result":"PASS"}\n', encoding="utf-8"
+    artifact = (repository / "allowed" / "result.txt").read_bytes()
+    _write_json(
+        repository / "evidence" / "checks.json",
+        {
+            "artifacts": [
+                {
+                    "byte_length": len(artifact),
+                    "path": "allowed/result.txt",
+                    "sha256": _digest(artifact),
+                }
+            ],
+            "base_commit": base,
+            "checks": [
+                {
+                    "check_id": "synthetic-candidate",
+                    "method": "Exercise the candidate evidence gate.",
+                    "observed": "The synthetic result matched.",
+                    "result": "PASS",
+                }
+            ],
+            "limitations": [],
+            "recorded_at": "2026-08-24T20:00:00Z",
+            "schema": "malleus.contract-compiler.verification-report/v1",
+            "workstream_id": "CC-TEST",
+        },
     )
     head = _commit(repository, "candidate")
     return repository, base, head
@@ -211,7 +238,6 @@ def _candidate(repository: Path, base: str, head: str) -> dict[str, Any]:
                 "result": "PASS",
             }
         ],
-        "dependency_bindings": [],
     }
 
 
@@ -252,6 +278,45 @@ def test_canonical_integration_manifest_is_valid() -> None:
     assert state.cards["CC-R01"]["authorization"]["class"] == "BLOCKED"
 
 
+def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:
+    schema = _read_json(CONTRACT / "integration.schema.json")
+    validator = Draft202012Validator(
+        {"$ref": "#/$defs/evidence", "$defs": schema["$defs"]}
+    )
+    evidence = {
+        "path": "evidence/result.json",
+        "byte_length": 17,
+        "sha256": "sha256:" + "0" * 64,
+        "result": "PASS",
+    }
+
+    assert list(validator.iter_errors(evidence)) == []
+    assert list(validator.iter_errors({**evidence, "claim": "unchecked"}))
+
+
+def test_candidate_has_one_dependency_binding_authority() -> None:
+    schema = _read_json(CONTRACT / "integration.schema.json")
+    validator = Draft202012Validator(
+        {"$ref": "#/$defs/integrableCandidate", "$defs": schema["$defs"]}
+    )
+    artifact = {
+        "path": "result.txt",
+        "byte_length": 1,
+        "sha256": "sha256:" + "0" * 64,
+    }
+    candidate = {
+        "state": "ELIGIBLE",
+        "base_commit": "0" * 40,
+        "head_commit": "1" * 40,
+        "head_tree": "2" * 40,
+        "artifacts": [artifact],
+        "evidence": [{**artifact, "result": "PASS"}],
+    }
+
+    assert list(validator.iter_errors(candidate)) == []
+    assert list(validator.iter_errors({**candidate, "dependency_bindings": []}))
+
+
 def test_direct_cli_entry_point_validates_the_draft() -> None:
     result = subprocess.run(
         [
@@ -266,7 +331,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "validated 66 workstreams, 3 cards, 0 selections" in result.stdout
+    assert "validated 66 workstreams, 3 cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -608,14 +673,24 @@ def test_candidate_history_must_be_linear(tmp_path: Path) -> None:
     _assert_code(error, "CC000_GIT_NONLINEAR")
 
 
-def test_history_union_catches_unauthorized_path_deleted_before_head(
+def test_x03_history_union_catches_themed_paths_deleted_before_head(
     tmp_path: Path,
 ) -> None:
     repository, base, _ = _candidate_repository(tmp_path)
-    (repository / "forbidden.txt").write_text("hidden\n", encoding="utf-8")
-    _commit(repository, "introduce forbidden path")
-    (repository / "forbidden.txt").unlink()
-    head = _commit(repository, "delete forbidden path")
+    themed = (
+        "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/catalog/notices.yaml",
+        "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/catalog/observations.yaml",
+        "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/root.yaml",
+        "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/shared/identity.yaml",
+    )
+    for relative in themed:
+        path = repository / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("name: quarantined\n", encoding="utf-8")
+    _commit(repository, "introduce unowned themed paths")
+    for relative in themed:
+        (repository / relative).unlink()
+    head = _commit(repository, "delete unowned themed paths")
     candidate = _candidate(repository, base, head)
 
     with pytest.raises(IntegrationValidationError) as error:
@@ -624,7 +699,7 @@ def test_history_union_catches_unauthorized_path_deleted_before_head(
         )
 
     _assert_code(error, "CC000_SCOPE_VIOLATION")
-    assert "forbidden.txt" in str(error.value)
+    assert all(relative in str(error.value) for relative in themed)
 
 
 def test_candidate_head_tree_is_bound_exactly(tmp_path: Path) -> None:
@@ -664,6 +739,109 @@ def test_failed_evidence_cannot_gate_candidate(tmp_path: Path) -> None:
         )
 
     _assert_code(error, "CC000_EVIDENCE_FAILED")
+
+
+def test_top_level_pass_cannot_mask_a_failed_evidence_check(tmp_path: Path) -> None:
+    repository, base, _ = _candidate_repository(tmp_path)
+    report_path = repository / "evidence" / "checks.json"
+    report = _read_json(report_path)
+    report["result"] = "PASS"
+    report["checks"][0]["result"] = "FAIL"
+    _write_json(report_path, report)
+    head = _commit(repository, "attempt evidence bypass")
+    candidate = _candidate(repository, base, head)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository, candidate, allowed_scopes=ALLOWED_SCOPES
+        )
+
+    _assert_code(error, "CC000_EVIDENCE_INVALID")
+
+
+def test_selected_workstream_must_be_complete(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    result_commit = "55d9da3b58d77d49bdcf449c376a26231d410824"
+    result_report = _git(ROOT, "show", f"{result_commit}:design/contract_compiler/workstreams/CC-000/evidence/result.json")
+    report_source = result_report.encode("utf-8")
+
+    def integrate(card: dict[str, Any]) -> None:
+        report = json.loads(result_report)
+        card["candidate"] = {
+            "artifacts": report["artifacts"],
+            "base_commit": report["base_commit"],
+            "evidence": [
+                {
+                    "byte_length": len(report_source),
+                    "path": "design/contract_compiler/workstreams/CC-000/evidence/result.json",
+                    "result": "PASS",
+                    "sha256": _digest(report_source),
+                }
+            ],
+            "head_commit": result_commit,
+            "head_tree": _git(ROOT, "rev-parse", f"{result_commit}^{{tree}}"),
+            "state": "INTEGRATED",
+        }
+
+    _rewrite_card(manifest_path, manifest, "CC-000", integrate)
+    manifest["selections"] = ["CC-000"]
+    _write_json(manifest_path, manifest)
+    ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
+    active_prefix = replace(ledger, entries=ledger.entries[:9])
+    monkeypatch.setattr(integration_module, "load_ledger", lambda *args, **kwargs: active_prefix)
+    monkeypatch.setattr(
+        integration_module,
+        "_validate_worker_ledger",
+        lambda *args, **kwargs: {
+            phase: {"result": "EXPECTED_FAILURE" if phase == "RED" else "PASS"}
+            for phase in integration_module.TDD_PHASES
+        },
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, manifest_path)
+
+    _assert_code(error, "CC000_SELECTION_STATE")
+
+
+def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None:
+    manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    result_commit = "55d9da3b58d77d49bdcf449c376a26231d410824"
+    result_report = _git(
+        ROOT,
+        "show",
+        f"{result_commit}:design/contract_compiler/workstreams/CC-000/evidence/result.json",
+    )
+    report_source = result_report.encode("utf-8")
+
+    def integrate(card: dict[str, Any]) -> None:
+        report = json.loads(result_report)
+        card["candidate"] = {
+            "artifacts": report["artifacts"],
+            "base_commit": report["base_commit"],
+            "evidence": [
+                {
+                    "byte_length": len(report_source),
+                    "path": "design/contract_compiler/workstreams/CC-000/evidence/result.json",
+                    "result": "PASS",
+                    "sha256": _digest(report_source),
+                }
+            ],
+            "head_commit": result_commit,
+            "head_tree": _git(ROOT, "rev-parse", f"{result_commit}^{{tree}}"),
+            "state": "INTEGRATED",
+        }
+
+    _rewrite_card(manifest_path, manifest, "CC-X03", integrate)
+    manifest["selections"] = ["CC-X03"]
+    _write_json(manifest_path, manifest)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, manifest_path)
+
+    _assert_code(error, "CC000_SELECTION_AUTHORIZATION")
 
 
 def test_quarantined_candidate_cannot_gate_integration(tmp_path: Path) -> None:

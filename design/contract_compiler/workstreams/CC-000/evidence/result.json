@@ -1,19 +1,19 @@
 {
   "artifacts": [
     {
-      "byte_length": 22750,
+      "byte_length": 22697,
       "path": "design/contract_compiler/integration.schema.json",
-      "sha256": "sha256:3fad962a781445624b77a59368d4078203c2c5e1b82aca9809245f514f98f7b2"
+      "sha256": "sha256:080c626220835d20b411ddd81cbc4705d8d90eaf4e4d26212dfd86fbfbda496e"
     },
     {
-      "byte_length": 30952,
+      "byte_length": 32921,
       "path": "scripts/contract_compiler_integration.py",
-      "sha256": "sha256:136091a81c66fe29f50a583ff9853232c820171ab61f3eb918cfa17315ba9692"
+      "sha256": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968"
     },
     {
-      "byte_length": 21919,
+      "byte_length": 28837,
       "path": "tests/test_contract_compiler_integration.py",
-      "sha256": "sha256:274283a6a3a298f7ff278d00cbea2ec3de40bb8db7c9d773417eade6f9b79e3b"
+      "sha256": "sha256:22f3c282058714a3b835e862934089fbaaf8490e9373248306050c64c52d6cde"
     },
     {
       "byte_length": 28588,
@@ -36,7 +36,13 @@
     {
       "check_id": "cc000-focused-tdd",
       "method": "Run the CC-000 integration tests, including synthetic Git histories and one mutation per declared refusal class.",
-      "observed": "31 tests passed.",
+      "observed": "37 tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-overseer-ledger-regression",
+      "method": "Validate the overseer ledger and run its focused adversarial suite.",
+      "observed": "The ledger check passed and 30 tests passed.",
       "result": "PASS"
     },
     {
@@ -53,10 +59,10 @@
     }
   ],
   "limitations": [
-    "This result report binds the pre-seal implementation bytes. The full repository regression and Git tracked-file guard run after the result commit exists.",
+    "The result-stage full suite reached 1,112 passed and 2 skipped; its only failure was the release step correctly refusing the still-unsealed integration manifest. The full suite and Git tracked-file guard run again after sealing.",
     "The local Git commit and ledger head are identifiers, not external human authentication or branch protection."
   ],
-  "recorded_at": "2026-08-24T20:40:00Z",
+  "recorded_at": "2026-08-24T21:44:00Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-000"
 }

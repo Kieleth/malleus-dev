@@ -343,7 +343,7 @@ def _touched_paths(repository: Path, commits: Sequence[str]) -> tuple[str, ...]:
     return tuple(sorted(touched))
 
 
-def _evidence_passes(source: bytes, context: str) -> None:
+def _passing_evidence_report(source: bytes, context: str) -> dict[str, Any]:
     try:
         report = json.loads(
             source.decode("utf-8"),
@@ -356,17 +356,33 @@ def _evidence_passes(source: bytes, context: str) -> None:
         _fail("CC000_EVIDENCE_INVALID", f"{context}: invalid JSON evidence: {error}")
     if not isinstance(report, dict):
         _fail("CC000_EVIDENCE_INVALID", f"{context}: evidence root must be an object")
-    if "result" in report:
-        passed = report["result"] == "PASS"
-    elif "checks" in report and isinstance(report["checks"], list):
-        passed = bool(report["checks"]) and all(
-            isinstance(check, dict) and check.get("result") == "PASS"
-            for check in report["checks"]
+    ledger_schema = _read_json(
+        Path(__file__).resolve().parents[1]
+        / "design"
+        / "contract_compiler"
+        / "overseer"
+        / "ledger.schema.json"
+    )
+    validator = Draft202012Validator(
+        {
+            "$ref": "#/$defs/verificationReport",
+            "$defs": ledger_schema["$defs"],
+        },
+        format_checker=FormatChecker(),
+    )
+    errors = sorted(
+        validator.iter_errors(report), key=lambda error: list(error.absolute_path)
+    )
+    if errors:
+        first = errors[0]
+        location = ".".join(str(part) for part in first.absolute_path) or "root"
+        _fail(
+            "CC000_EVIDENCE_INVALID",
+            f"{context}: schema violation at {location}: {first.message}",
         )
-    else:
-        passed = False
-    if not passed:
+    if any(check["result"] != "PASS" for check in report["checks"]):
         _fail("CC000_EVIDENCE_FAILED", f"{context}: evidence is not all PASS")
+    return report
 
 
 def validate_candidate_history(
@@ -374,6 +390,7 @@ def validate_candidate_history(
     candidate: Mapping[str, Any],
     *,
     allowed_scopes: Sequence[Mapping[str, str]],
+    workstream_id: str | None = None,
 ) -> tuple[str, ...]:
     """Validate exact commits and every path touched, including later deletions."""
     repository = repository.resolve()
@@ -415,6 +432,7 @@ def validate_candidate_history(
             "CC000_SCOPE_VIOLATION",
             "candidate history touched unauthorized paths: " + ", ".join(outside),
         )
+    candidate_artifacts: dict[str, Mapping[str, Any]] = {}
     for kind in ("artifacts", "evidence"):
         records = candidate.get(kind)
         if not isinstance(records, list) or not records:
@@ -423,10 +441,27 @@ def validate_candidate_history(
             path = _safe_path(record["path"], f"candidate {kind}")
             source = _git_bytes(repository, head, path, f"candidate {kind}")
             _verify_artifact_bytes(record, source, f"candidate {kind} {path}")
-            if kind == "evidence":
-                if record.get("result") != "PASS":
-                    _fail("CC000_EVIDENCE_FAILED", f"{path}: gate result is not PASS")
-                _evidence_passes(source, path)
+            if kind == "artifacts":
+                if path in candidate_artifacts:
+                    _fail("CC000_CANDIDATE", f"duplicate candidate artifact {path}")
+                candidate_artifacts[path] = record
+                continue
+            if record.get("result") != "PASS":
+                _fail("CC000_EVIDENCE_FAILED", f"{path}: gate result is not PASS")
+            report = _passing_evidence_report(source, path)
+            if report["base_commit"] != base:
+                _fail("CC000_EVIDENCE_INVALID", f"{path}: base_commit is stale")
+            if workstream_id is not None and report["workstream_id"] != workstream_id:
+                _fail("CC000_EVIDENCE_INVALID", f"{path}: workstream_id is stale")
+            report_artifacts = {item["path"]: item for item in report["artifacts"]}
+            if (
+                len(report_artifacts) != len(report["artifacts"])
+                or report_artifacts != candidate_artifacts
+            ):
+                _fail(
+                    "CC000_EVIDENCE_INVALID",
+                    f"{path}: report artifacts do not equal candidate artifacts",
+                )
     return touched
 
 
@@ -739,12 +774,23 @@ def validate_integration(
         if workstream_id not in cards:
             _fail("CC000_SELECTION", f"{workstream_id} has no registered card")
         card = cards[workstream_id]
+        if card["authorization"]["class"] != "FORMAL":
+            _fail(
+                "CC000_SELECTION_AUTHORIZATION",
+                f"{workstream_id}: only FORMAL work may be selected",
+            )
+        if states.get(workstream_id) != "COMPLETE":
+            _fail(
+                "CC000_SELECTION_STATE",
+                f"{workstream_id}: only a COMPLETE workstream may be selected",
+            )
         if card["candidate"]["state"] != "INTEGRATED":
             _fail("CC000_CANDIDATE_STATE", f"{workstream_id} is not INTEGRATED")
         validate_candidate_history(
             repository,
             card["candidate"],
             allowed_scopes=tuple(card["scopes"]),
+            workstream_id=workstream_id,
         )
         phases = phase_results[workstream_id]
         missing = [phase for phase in TDD_PHASES if phase not in phases]

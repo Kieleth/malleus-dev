@@ -1,0 +1,57 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:080c626220835d20b411ddd81cbc4705d8d90eaf4e4d26212dfd86fbfbda496e",
+        "before_digest": "sha256:3fad962a781445624b77a59368d4078203c2c5e1b82aca9809245f514f98f7b2",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968",
+        "before_digest": "sha256:136091a81c66fe29f50a583ff9853232c820171ab61f3eb918cfa17315ba9692",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:22f3c282058714a3b835e862934089fbaaf8490e9373248306050c64c52d6cde",
+        "before_digest": "sha256:274283a6a3a298f7ff278d00cbea2ec3de40bb8db7c9d773417eade6f9b79e3b",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:10b46e458ca41aa2336268f29c01b5c473150246a32685fcf694c66ac439249f",
+  "entry_id": "OVR-000010",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a3da9acdbd82280975249e4677179b898e243fb606b87fa83b053d5bf2608a07",
+  "recorded_at": "2026-08-24T21:43:23Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 10,
+  "subject": {
+    "id": "contract-compiler-integrated-evidence-schema",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close the first integrated-candidate gate failures.",
+  "why": "The first seal attempt proved that the composed evidence schema rejected its own required result field. Adversarial review then proved that a top-level PASS could mask failed checks and that ACTIVE work could be selected. This revision makes evidence exact, requires typed all-PASS reports, requires COMPLETE selection state, and adds hard regression tests."
+}
