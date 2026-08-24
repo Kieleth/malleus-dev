@@ -1,0 +1,19 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/test_contract_compiler_integration.py",
+    "observed": "All declared manifest, dependency, ownership, evidence, and synthetic Git-history mutations were refused with stable diagnostic codes.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:a3d3f74f63f4759d27116748f846e392da7c79f43f75051ee4e8d212b4b621a5",
+  "entry_id": "CC-000-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:67dddfc55882264ebdcf836827315fba2db6677ea9d3f5da1408455c8fbca6d1",
+  "recorded_at": "2026-08-24T21:04:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the CC-000 counterexample matrix.",
+  "workstream_id": "CC-000"
+}

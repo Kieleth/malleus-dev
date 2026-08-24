@@ -1,0 +1,19 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q",
+    "observed": "The sealed, unselected R3 snapshot passed 1,115 tests with 2 skips in 51.42 seconds.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:67ae5a2484b414f4e0c57bce18cd75cfcb01287b10651dfb29d963332e85a0b2",
+  "entry_id": "CC-000-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a3d3f74f63f4759d27116748f846e392da7c79f43f75051ee4e8d212b4b621a5",
+  "recorded_at": "2026-08-24T21:57:55Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Pass the preselection repository regression on R3.",
+  "workstream_id": "CC-000"
+}

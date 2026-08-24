@@ -1,0 +1,19 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/test_inquisition.py::TestPackagingTargetsAreTracked::test_declared_targets_exist_and_are_tracked",
+    "observed": "The tracked-target guard passed after final result commit 09265cb.",
+    "phase": "PACKAGE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:62750bc4b8cd1eb4ecf072185d2c5b05b76927451fc23f98295ebc583f9de11f",
+  "entry_id": "CC-000-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:67ae5a2484b414f4e0c57bce18cd75cfcb01287b10651dfb29d963332e85a0b2",
+  "recorded_at": "2026-08-24T21:58:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Pass the tracked-target packaging boundary.",
+  "workstream_id": "CC-000"
+}

@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 17923,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:61aa340327302fb98e908a1f39570a2051cb7df02b4ce30273aab7a8a4df05ad"
+    },
+    {
+      "byte_length": 4096,
+      "path": "design/contract_compiler/workstreams/CC-000/manifest.json",
+      "sha256": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9"
+    },
+    {
+      "byte_length": 3269,
+      "path": "design/contract_compiler/overseer/evidence/CC-000-completion.json",
+      "sha256": "sha256:6bc304fa212c7558c5038e63db58853001529bbee8b7adc7d2c39267d82ac2d0"
+    }
+  ],
+  "base_commit": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+  "checks": [
+    {
+      "check_id": "cc000-selected-integration",
+      "method": "Run the sealed integration validator after CC-000 reaches COMPLETE and becomes the sole selected result.",
+      "observed": "The validator accepted 66 workstreams, 3 cards, and 1 selection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-completion-chain",
+      "method": "Validate the completion evidence, VERIFIED_FACT, and ACTIVE-to-COMPLETE workstream transition before selection.",
+      "observed": "OVR-000015 verified the completion report and OVR-000016 completed CC-000 with no blockers.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The integration seal controls repository coordination; it does not implement ontology compilation, consumer-bundle identity, or runtime behavior.",
+    "The local Git commit and ledger head are identifiers, not external human authentication or branch protection."
+  ],
+  "recorded_at": "2026-08-24T22:02:21Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-000"
+}

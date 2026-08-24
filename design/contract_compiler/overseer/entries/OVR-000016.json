@@ -1,0 +1,48 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Register all 66 approved workstreams and their exact dependency sets.",
+      "Enforce exact ownership, scope, candidate-history, evidence, and dependency-readiness checks.",
+      "Quarantine the local-only X03 history and keep R01 blocked on its formal dependencies.",
+      "Bind the final result commit, worker TDD ledger, and CI/release enforcement."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000015"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-000"
+  },
+  "entry_hash": "sha256:d37f9eb77f572ee648f640171d9481800aaa6bc33f6f6553f21cd177188099b3",
+  "entry_id": "OVR-000016",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:25781a89649903047643d24f3723555af456a63545164fc05ae9cf765620077e",
+  "recorded_at": "2026-08-24T22:00:32Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000015",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 16,
+  "subject": {
+    "id": "CC-000",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the contract-compiler integration gate.",
+  "why": "OVR-000015 binds the exact final candidate, TDD ledger, tests, package guard, static checks, and preselection seal needed to close CC-000 without treating selection as its own proof."
+}

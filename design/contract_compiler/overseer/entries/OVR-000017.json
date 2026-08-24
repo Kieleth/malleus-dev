@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:61aa340327302fb98e908a1f39570a2051cb7df02b4ce30273aab7a8a4df05ad",
+        "change": "CREATED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:6bc304fa212c7558c5038e63db58853001529bbee8b7adc7d2c39267d82ac2d0",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-000-completion.json"
+      },
+      {
+        "after_digest": "sha256:c49fce85fcb343a6ec9fa551eb0ea5ce8426fbc21904239d61b707ca01e23645",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-000.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:aaa6584db3b7728230a3c631c14aba032b58349df1fd620fb44c05d422730dd9",
+  "entry_id": "OVR-000017",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d37f9eb77f572ee648f640171d9481800aaa6bc33f6f6553f21cd177188099b3",
+  "recorded_at": "2026-08-24T22:02:30Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 17,
+  "subject": {
+    "id": "cc000-selected-integration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the final selected CC-000 integration state.",
+  "why": "The final manifest is written only after the mechanically evidenced completion transition, so selection cannot manufacture its own completion authority."
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "artifacts": [],
+    "command": "python -m ruff check <CC-000 paths>; python scripts/contract_compiler_ledger.py check; python scripts/contract_compiler_ledger.py verify-evidence <result>; python scripts/contract_compiler_integration.py check",
+    "observed": "Scoped Ruff, the 13-block overseer ledger, the six-artifact R3 result report, and the sealed unselected 66-workstream integration snapshot all validated.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:5d2a1ef7bf2833d90dda146406562b48eba3ac8ec59bd688f14cb44a8232aa54",
+  "entry_id": "CC-000-WRK-000008",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:62750bc4b8cd1eb4ecf072185d2c5b05b76927451fc23f98295ebc583f9de11f",
+  "recorded_at": "2026-08-24T21:58:15Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 8,
+  "summary": "Attest the sealed R3 preselection state.",
+  "workstream_id": "CC-000"
+}

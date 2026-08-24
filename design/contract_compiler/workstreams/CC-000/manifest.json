@@ -13,10 +13,57 @@
     "dependency_bindings": []
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 22697,
+        "path": "design/contract_compiler/integration.schema.json",
+        "sha256": "sha256:080c626220835d20b411ddd81cbc4705d8d90eaf4e4d26212dfd86fbfbda496e"
+      },
+      {
+        "byte_length": 32921,
+        "path": "scripts/contract_compiler_integration.py",
+        "sha256": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968"
+      },
+      {
+        "byte_length": 28919,
+        "path": "tests/test_contract_compiler_integration.py",
+        "sha256": "sha256:945b109ea132eefb47f8ca2ec2a1c25bd594b86d495a67416afb9ec963c6862e"
+      },
+      {
+        "byte_length": 28588,
+        "path": "design/contract_compiler/program.md",
+        "sha256": "sha256:95ffd5c98d5826a27a604eed4711f96bc68b77579b545362c8290913d2fb2984"
+      },
+      {
+        "byte_length": 2901,
+        "path": ".github/workflows/tests.yml",
+        "sha256": "sha256:960cce453de1481ec6847c70d685be613bdf0d8a9c213813cc8a4eb1b4038c2a"
+      },
+      {
+        "byte_length": 5474,
+        "path": ".github/workflows/release.yml",
+        "sha256": "sha256:4c46a79afd082a30e2d392c3370d51655a00c1c92253679a120189ddfedb4392"
+      }
+    ],
+    "base_commit": "c410f11229e7c33a4fab9ebdfc9e2e109f18cbf7",
+    "evidence": [
+      {
+        "byte_length": 2689,
+        "path": "design/contract_compiler/workstreams/CC-000/evidence/result.json",
+        "result": "PASS",
+        "sha256": "sha256:5baa0fcbdf69ef48795189a00a25e48fd8f77a465729d76945859d1d7745ebcc"
+      }
+    ],
+    "head_commit": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+    "head_tree": "aaff44cb60820d6960bbc195e23cfe58fb7c0a66",
+    "state": "INTEGRATED"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 8,
+    "head_entry_id": "CC-000-WRK-000008",
+    "head_hash": "sha256:5d2a1ef7bf2833d90dda146406562b48eba3ac8ec59bd688f14cb44a8232aa54",
+    "path": "workstreams/CC-000/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Validate the complete program registry, exact work ownership, dependency readiness, candidate history, evidence, and integration selection.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

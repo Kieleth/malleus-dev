@@ -1,0 +1,21 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "claims": [
+      "The initial CC-000 RED suite failed during collection because the integration validator did not exist.",
+      "The X03 final diff hides four themed paths touched by an earlier commit, so net-diff scope checking is insufficient."
+    ],
+    "limitations": [
+      "CC-000 governs repository coordination only; it implements no ontology compiler or runtime consumer-bundle behavior."
+    ]
+  },
+  "entry_hash": "sha256:29e15f3e29f58f17d745fcd0a9ee823ebb75db089fb5bee5ca17446b8ec8affd",
+  "entry_id": "CC-000-WRK-000001",
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-24T21:00:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the RED boundary and the history-union finding.",
+  "workstream_id": "CC-000"
+}

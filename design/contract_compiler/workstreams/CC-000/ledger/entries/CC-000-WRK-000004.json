@@ -1,0 +1,19 @@
+{
+  "actor_id": "overseer",
+  "data": {
+    "artifacts": [],
+    "command": "python scripts/contract_compiler_integration.py check-draft",
+    "observed": "Validated 66 workstreams, 3 cards, and 0 pre-seal selections.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:67dddfc55882264ebdcf836827315fba2db6677ea9d3f5da1408455c8fbca6d1",
+  "entry_id": "CC-000-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:330985c6492d7cfcaf9d5a31a56623eedbc91e3dadc723b32edbb114bcacc2e2",
+  "recorded_at": "2026-08-24T21:03:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass the canonical CC-000, quarantined X03, and blocked R01 slice.",
+  "workstream_id": "CC-000"
+}

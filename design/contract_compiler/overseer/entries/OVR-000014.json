@@ -1,0 +1,90 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9",
+        "before_digest": "sha256:8cda9828bdadc2b91cbe4deb32df2901075418dbeb6b2fd786abf3d210e2d45f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-000/manifest.json"
+      },
+      {
+        "after_digest": "sha256:2da8f100b86e9cb2f30b7d58bf6b3007e3b9f65d77a53e68bca34babd5fe7eb3",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/head.json"
+      },
+      {
+        "after_digest": "sha256:5537a7cd070e4601ffcc853819a1d5fc60c687d6d8fc6c1ccdf1553d1df54093",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000001.json"
+      },
+      {
+        "after_digest": "sha256:b09e77475f3ecc1ec109bb7830d6fffd85b3e3666895c19ac747425d6d0576e8",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000002.json"
+      },
+      {
+        "after_digest": "sha256:fea213ed80bdc3a293bd173edeec050e0088948fa0447f11dbf13249c15aa529",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000003.json"
+      },
+      {
+        "after_digest": "sha256:8daa31e0d151e339639d54a21537ff7059761571e8b135ea331d44db072fc3cf",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000004.json"
+      },
+      {
+        "after_digest": "sha256:d2a522249084b91badf1c3729afbc3aa76f6a606388a611222a74193dcad9144",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000005.json"
+      },
+      {
+        "after_digest": "sha256:d393272ab9aa8119941e265b1c9084ef3adbb57103c8979e40c801adb8883dd9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000006.json"
+      },
+      {
+        "after_digest": "sha256:2784e6402ffe7e366d4654fa444ffd87d788b261e8467d92f5c0d96fcfc3c0f1",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000007.json"
+      },
+      {
+        "after_digest": "sha256:044c61eda51f1cd5f335efb4a9c520acbff01c958b119d8a2c2c99c4e0d8118a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-000/ledger/entries/CC-000-WRK-000008.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:f49727ab3d9106f114c1184af58912fdb8aa7b643cb7a655e8d23a21f2459fce",
+  "entry_id": "OVR-000014",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:74d54aeb451d44826dda608efd5ac5e952fe35d2a1342951c9a409ff514b8601",
+  "recorded_at": "2026-08-24T21:59:47Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-000/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 14,
+  "subject": {
+    "id": "cc000-workstream-result",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the final CC-000 candidate and worker TDD ledger.",
+  "why": "Completion review needs exact final-result coordinates and an append-only record of the RED, GREEN, slice, disproof, regression, packaging, and preselection attestation phases."
+}

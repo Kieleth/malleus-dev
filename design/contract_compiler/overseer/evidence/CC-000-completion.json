@@ -1,0 +1,80 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 4096,
+      "path": "design/contract_compiler/workstreams/CC-000/manifest.json",
+      "sha256": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-000/ledger/head.json",
+      "sha256": "sha256:2da8f100b86e9cb2f30b7d58bf6b3007e3b9f65d77a53e68bca34babd5fe7eb3"
+    },
+    {
+      "byte_length": 2689,
+      "path": "design/contract_compiler/workstreams/CC-000/evidence/result.json",
+      "sha256": "sha256:5baa0fcbdf69ef48795189a00a25e48fd8f77a465729d76945859d1d7745ebcc"
+    },
+    {
+      "byte_length": 22697,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:080c626220835d20b411ddd81cbc4705d8d90eaf4e4d26212dfd86fbfbda496e"
+    },
+    {
+      "byte_length": 32921,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968"
+    },
+    {
+      "byte_length": 28919,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:945b109ea132eefb47f8ca2ec2a1c25bd594b86d495a67416afb9ec963c6862e"
+    }
+  ],
+  "base_commit": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+  "checks": [
+    {
+      "check_id": "cc000-candidate-history",
+      "method": "Validate the exact c410f11..09265cb commit chain, tree, touched-path union, artifacts, and typed evidence report.",
+      "observed": "The candidate validated across 45 touched paths, all inside the CC-000 scope.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-full-regression",
+      "method": "Run the complete configured Python test suite against the sealed R3 snapshot.",
+      "observed": "1,115 tests passed and 2 tests skipped.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-package-boundary",
+      "method": "Run the tracked-target packaging guard after result commit 09265cb exists.",
+      "observed": "The tracked-target guard passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-graphrecipe-regression",
+      "method": "Run the GraphRecipe conformance slice.",
+      "observed": "40 tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-static-analysis",
+      "method": "Run Ruff over both contract-compiler validators and their focused tests.",
+      "observed": "All scoped checks passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-preselection-gates",
+      "method": "Validate the overseer ledger, result evidence, worker TDD ledger, sealed authority snapshot, and complete 66-workstream registry before selection.",
+      "observed": "The 14-block overseer ledger and sealed 66-workstream, 3-card, 0-selection checkpoint passed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report authorizes the CC-000 completion transition; it does not claim the post-completion selection check, which is recorded separately.",
+    "The local Git commit and ledger head are identifiers, not external human authentication or branch protection."
+  ],
+  "recorded_at": "2026-08-24T22:00:30Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-000"
+}

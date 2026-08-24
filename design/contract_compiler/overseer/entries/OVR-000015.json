@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "cc000-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-24T22:00:31Z",
+    "claims": [
+      "The final candidate is a linear c410f11..09265cb history whose 45 touched paths remain inside the CC-000 scope.",
+      "The sealed preselection snapshot passed 1,115 repository tests with 2 skips, the tracked-target guard, 40 GraphRecipe tests, and scoped Ruff.",
+      "The worker ledger contains every required TDD phase and its last three entries were recorded after the final result commit existed."
+    ],
+    "limitations": [
+      "This fact authorizes completion; the post-completion selection check is recorded separately.",
+      "The local Git commit and ledger head are identifiers, not external human authentication or branch protection."
+    ]
+  },
+  "entry_hash": "sha256:25781a89649903047643d24f3723555af456a63545164fc05ae9cf765620077e",
+  "entry_id": "OVR-000015",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f49727ab3d9106f114c1184af58912fdb8aa7b643cb7a655e8d23a21f2459fce",
+  "recorded_at": "2026-08-24T22:00:31Z",
+  "references": [
+    {
+      "digest": "sha256:6bc304fa212c7558c5038e63db58853001529bbee8b7adc7d2c39267d82ac2d0",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 15,
+  "subject": {
+    "id": "CC-000-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final CC-000 completion gate.",
+  "why": "CC-000 may complete only after its exact candidate history, artifacts, typed evidence, TDD phases, regression, packaging, and governance checks pass mechanically."
+}

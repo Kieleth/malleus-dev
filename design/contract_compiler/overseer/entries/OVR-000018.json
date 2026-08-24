@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "cc000-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-24T22:02:31Z",
+    "claims": [
+      "CC-000 reached COMPLETE before it became an integration selection.",
+      "The final manifest validates all 66 workstreams, 3 cards, and exactly 1 selected result.",
+      "CC-X03 remains quarantined and CC-R01 remains blocked."
+    ],
+    "limitations": [
+      "This verifies repository coordination, not ontology compiler or runtime behavior."
+    ]
+  },
+  "entry_hash": "sha256:baa27ce6a529bac4bbf9e134a17861003eef3b97ba5c19b36ee77eac70efeb4a",
+  "entry_id": "OVR-000018",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:aaa6584db3b7728230a3c631c14aba032b58349df1fd620fb44c05d422730dd9",
+  "recorded_at": "2026-08-24T22:02:31Z",
+  "references": [
+    {
+      "digest": "sha256:c49fce85fcb343a6ec9fa551eb0ea5ce8426fbc21904239d61b707ca01e23645",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 18,
+  "subject": {
+    "id": "CC-000-selection-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final selected CC-000 state.",
+  "why": "The selected integration state needs retained evidence separate from the evidence that authorized the preceding completion transition."
+}
