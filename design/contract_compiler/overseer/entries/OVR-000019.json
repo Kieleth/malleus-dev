@@ -1,0 +1,41 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Configure Sphinx with MyST, autodoc, autosummary, doctest, and strict warnings.",
+      "Render validated integration and workstream manifests at build time without creating a second authority.",
+      "Enforce HTML, doctest, link, worktree-immutability, import-boundary, CI, and release documentation gates.",
+      "Keep compiler API promotion, themed vocabulary, and public themed examples outside CC-001."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-001"
+  },
+  "entry_hash": "sha256:7e0ea1906b5c6bbd1cc94cf9392d2ce9c6373cbc9a6bb4ea9ff3f622c6eab68c",
+  "entry_id": "OVR-000019",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:baa27ce6a529bac4bbf9e134a17861003eef3b97ba5c19b36ee77eac70efeb4a",
+  "recorded_at": "2026-08-24T23:27:00Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 19,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Authorize the CC-001 documentation plumbing workstream.",
+  "why": "The operator explicitly authorized CC-001 after CC-000 completed. The delegated Sol worker may implement only the registered documentation slice; the overseer retains shared-file integration, evidence review, completion, and selection authority."
+}

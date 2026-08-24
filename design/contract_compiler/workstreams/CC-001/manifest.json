@@ -1,0 +1,62 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc001_docs"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9",
+        "completion_entry_hash": "sha256:d37f9eb77f572ee648f640171d9481800aaa6bc33f6f6553f21cd177188099b3",
+        "completion_entry_id": "OVR-000016",
+        "integrated_head": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+        "workstream_id": "CC-000"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Build and enforce documentation plumbing with Sphinx, MyST, autodoc, doctest, strict links, and build-time projections of validated manifests, without promoting compiler APIs or themed vocabulary.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "docs/conf.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/index.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/_ext/contract_manifest.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/contract_compiler/index.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/contract_compiler/manifests.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/reference/index.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_docs.py"
+    }
+  ],
+  "workstream_id": "CC-001"
+}

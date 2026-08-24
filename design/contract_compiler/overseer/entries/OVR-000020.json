@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:75eccecafb40a85a343e994ef891fb254ba4f3b63c8adfff5d49e21dfa7e533d",
+        "before_digest": "sha256:61aa340327302fb98e908a1f39570a2051cb7df02b4ce30273aab7a8a4df05ad",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:158b03de1c251b974ddadd5ebfc65caf90ab5ebf079b5e26c906d15ab5cde734",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-001/manifest.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:00ce8261d45d5a0567a280b6943ae71e92085ffab834a98d16e3d5144a04635e",
+  "entry_id": "OVR-000020",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7e0ea1906b5c6bbd1cc94cf9392d2ce9c6373cbc9a6bb4ea9ff3f622c6eab68c",
+  "recorded_at": "2026-08-24T23:27:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-001/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 20,
+  "subject": {
+    "id": "cc001-authorization",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-001 implementation boundary.",
+  "why": "The card binds CC-001 to the completed CC-000 result and grants only the seven implementation paths needed for the documentation slice. Shared packaging, workflow, card, ledger, and selection files remain reserved to overseer integration."
+}

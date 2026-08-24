@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:47ede24151e0c0cbd2656fdc972effc12d1fd5409fb1ded54ad2f18992eaf8f7",
+        "before_digest": "sha256:945b109ea132eefb47f8ca2ec2a1c25bd594b86d495a67416afb9ec963c6862e",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ada6e5e42c80db58af03baf61168479753427ccfee47a6bd72362fd4831a76ad",
+  "entry_id": "OVR-000021",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:00ce8261d45d5a0567a280b6943ae71e92085ffab834a98d16e3d5144a04635e",
+  "recorded_at": "2026-08-24T23:30:40Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 21,
+  "subject": {
+    "id": "cc001-registration-regression",
+    "type": "DOCUMENT"
+  },
+  "summary": "Make CC-000 registration tests stable across later workstreams.",
+  "why": "Registering the first post-CC-000 formal card exposed two fixture assumptions: a hard-coded card count and a selected-state test polluted by unrelated formal cards. The revised tests derive the count and isolate the target, preserving the guardrail for every later registration."
+}

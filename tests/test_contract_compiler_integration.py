@@ -318,6 +318,10 @@ def test_candidate_has_one_dependency_binding_authority() -> None:
 
 
 def test_direct_cli_entry_point_validates_the_draft() -> None:
+    manifest = _read_json(CONTRACT / "integration.json")
+    present_cards = sum(
+        row["card"]["state"] == "PRESENT" for row in manifest["workstreams"]
+    )
     result = subprocess.run(
         [
             sys.executable,
@@ -331,7 +335,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert "validated 66 workstreams, 3 cards," in result.stdout
+    assert f"validated 66 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -763,6 +767,9 @@ def test_selected_workstream_must_be_complete(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    for row in manifest["workstreams"]:
+        if row["workstream_id"] != "CC-000":
+            row["card"] = {"state": "ABSENT"}
     result_commit = "55d9da3b58d77d49bdcf449c376a26231d410824"
     result_report = _git(ROOT, "show", f"{result_commit}:design/contract_compiler/workstreams/CC-000/evidence/result.json")
     report_source = result_report.encode("utf-8")
