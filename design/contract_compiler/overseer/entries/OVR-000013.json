@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5baa0fcbdf69ef48795189a00a25e48fd8f77a465729d76945859d1d7745ebcc",
+        "before_digest": "sha256:b285eed39cc432f6e2e8503ca35b0cda015467d9127814b866a4f0e4d2f8dc14",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-000/evidence/result.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:74d54aeb451d44826dda608efd5ac5e952fe35d2a1342951c9a409ff514b8601",
+  "entry_id": "OVR-000013",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:15fa113e570a6bb8f4f7274ddcf460e5b8032eb1e7852c84096faf6c45ded97e",
+  "recorded_at": "2026-08-24T21:56:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-000/evidence/result.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 13,
+  "subject": {
+    "id": "cc000-final-result-report",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the checkpoint-independent CC-000 result evidence.",
+  "why": "The final result report must bind the regression test that derives its active ledger prefix from the manifest rather than from a stale literal."
+}

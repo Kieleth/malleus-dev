@@ -789,7 +789,8 @@ def test_selected_workstream_must_be_complete(
     manifest["selections"] = ["CC-000"]
     _write_json(manifest_path, manifest)
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
-    active_prefix = replace(ledger, entries=ledger.entries[:9])
+    checkpoint = manifest["authority"]["overseer_ledger"]["entry_count"]
+    active_prefix = replace(ledger, entries=ledger.entries[:checkpoint])
     monkeypatch.setattr(integration_module, "load_ledger", lambda *args, **kwargs: active_prefix)
     monkeypatch.setattr(
         integration_module,

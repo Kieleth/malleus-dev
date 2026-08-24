@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:945b109ea132eefb47f8ca2ec2a1c25bd594b86d495a67416afb9ec963c6862e",
+        "before_digest": "sha256:22f3c282058714a3b835e862934089fbaaf8490e9373248306050c64c52d6cde",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:15fa113e570a6bb8f4f7274ddcf460e5b8032eb1e7852c84096faf6c45ded97e",
+  "entry_id": "OVR-000012",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8743cc0f8d25c5d4aa446c376bb69169041b8c065666810146062ce2463dd34a",
+  "recorded_at": "2026-08-24T21:54:53Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 12,
+  "subject": {
+    "id": "cc000-reviewed-prefix-regression",
+    "type": "DOCUMENT"
+  },
+  "summary": "Derive the refusal test from the declared ledger checkpoint.",
+  "why": "The selection-state regression test hardcoded the initial nine-block checkpoint and failed for the wrong reason when the reviewed authority prefix advanced. The test now reads the manifest checkpoint, preserving the intended ACTIVE-versus-COMPLETE refusal across revisions."
+}

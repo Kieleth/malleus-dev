@@ -11,9 +11,9 @@
       "sha256": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968"
     },
     {
-      "byte_length": 28837,
+      "byte_length": 28919,
       "path": "tests/test_contract_compiler_integration.py",
-      "sha256": "sha256:22f3c282058714a3b835e862934089fbaaf8490e9373248306050c64c52d6cde"
+      "sha256": "sha256:945b109ea132eefb47f8ca2ec2a1c25bd594b86d495a67416afb9ec963c6862e"
     },
     {
       "byte_length": 28588,
@@ -59,10 +59,10 @@
     }
   ],
   "limitations": [
-    "The result-stage full suite reached 1,112 passed and 2 skipped; its only failure was the release step correctly refusing the still-unsealed integration manifest. The full suite and Git tracked-file guard run again after sealing.",
+    "The sealed R2 snapshot passed 1,115 tests with 2 skips. R3 changes only the reviewed-prefix regression test, which passed with the complete 67-test governance slice; the full suite and Git tracked-file guard run again after final sealing.",
     "The local Git commit and ledger head are identifiers, not external human authentication or branch protection."
   ],
-  "recorded_at": "2026-08-24T21:44:00Z",
+  "recorded_at": "2026-08-24T21:56:00Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-000"
 }
