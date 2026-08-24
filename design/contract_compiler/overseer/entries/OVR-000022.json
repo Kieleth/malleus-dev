@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:418c3cab13a07feb44047c1a95771375a2815ad611c76ff162363971a541a5fc",
+        "before_digest": "sha256:75eccecafb40a85a343e994ef891fb254ba4f3b63c8adfff5d49e21dfa7e533d",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:bd19f3af44cf9b6a2606d034dcaeb9340fd03325638299a8588bc9042c0d259f",
+        "before_digest": "sha256:158b03de1c251b974ddadd5ebfc65caf90ab5ebf079b5e26c906d15ab5cde734",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-001/manifest.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:03efda0be1d0313fac3b54f569fd444107c00cdd40d1a074ace84bc1ad2a12e9",
+  "entry_id": "OVR-000022",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ada6e5e42c80db58af03baf61168479753427ccfee47a6bd72362fd4831a76ad",
+  "recorded_at": "2026-08-24T23:37:03Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-001/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 22,
+  "subject": {
+    "id": "cc001-worker-attribution",
+    "type": "DOCUMENT"
+  },
+  "summary": "Attribute CC-001 implementation and evidence to its delegated worker.",
+  "why": "The initial card used the overseer identity because shared CI and packaging files are reserved. The actual candidate excludes those shared files, so preserving that identity would falsely attribute worker actions to the overseer. The card now names the delegated Sol worker and reserves one external conformance-evidence file before worker-ledger evidence exists."
+}

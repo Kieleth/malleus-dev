@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:071b555f6a9d68d837a55b15f45db018c99f13a47412fcaac91ecbba5eab3cd1",
+        "before_digest": "sha256:4c46a79afd082a30e2d392c3370d51655a00c1c92253679a120189ddfedb4392",
+        "change": "MODIFIED",
+        "path": ".github/workflows/release.yml"
+      },
+      {
+        "after_digest": "sha256:7d870ac90a4e9c9da668fb3984c6c094c2ae7371fbc6b02dc744189db59d3dbc",
+        "before_digest": "sha256:960cce453de1481ec6847c70d685be613bdf0d8a9c213813cc8a4eb1b4038c2a",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:807c1e81200bf1df1fc29ef9518fbab77b0711486ffee24a500b3b60ebeda76e",
+        "before_digest": "sha256:73aab0552363cfd52ea0b1e5b591d56765208ecf5cf2b24ae97c5a3c03c9cf90",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:45b077d5b372d336a5d9c4b94fcf673d0811b89ef2f1cab374c112d7754664f6",
+        "change": "CREATED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:984a6a159f83cf21624f2d91dec08ca4b020d2f4eb1ac82d18fed13ffbb7884e",
+  "entry_id": "OVR-000023",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:03efda0be1d0313fac3b54f569fd444107c00cdd40d1a074ace84bc1ad2a12e9",
+  "recorded_at": "2026-08-24T23:52:07Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 23,
+  "subject": {
+    "id": "cc001-red-toolchain",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the CC-001 RED contract and reproducible docs toolchain.",
+  "why": "The final RED run has eight failures mapped exactly to absent GREEN files and fourteen passing guardrails. Shared wiring pins Sphinx 8.1.3 and MyST 4.0.1, runs strict builders once per workflow, and checks worktree purity. This checkpoint deliberately leaves documentation behavior unimplemented."
+}

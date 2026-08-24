@@ -1,6 +1,6 @@
 {
   "assignment": {
-    "owner_id": "overseer",
+    "owner_id": "worker:cc001-docs-sol-medium",
     "state": "ASSIGNED",
     "task_id": "/root/cc001_docs"
   },
@@ -29,6 +29,10 @@
   "responsibility": "Build and enforce documentation plumbing with Sphinx, MyST, autodoc, doctest, strict links, and build-time projections of validated manifests, without promoting compiler APIs or themed vocabulary.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-001.json"
+    },
     {
       "kind": "FILE",
       "path": "docs/conf.py"
