@@ -48,6 +48,18 @@ DOCS_COMMANDS = (
 INFRASTRUCTURE_DOCTEST = '>>> {"manifest": "validated"}["manifest"]'
 PYTHON_ALIASES = {"py", "python", "python3"}
 RST_EXECUTABLE = re.compile(r"^\.\. (code|code-block|doctest|jupyter-execute)::(?:\s+(\S+))?\s*$")
+SPHINX_TEST_DIRECTIVES = ("testcode", "testsetup", "testcleanup")
+SPHINX_AUTODOC_DIRECTIVES = (
+    "autoattribute",
+    "autoclass",
+    "autodata",
+    "autodecorator",
+    "autoexception",
+    "autofunction",
+    "automethod",
+    "automodule",
+    "autoproperty",
+)
 PUBLIC_GUIDES = {
     "ADOPTION_GUIDE.md",
     "ARCHITECTURE.md",
@@ -322,6 +334,11 @@ def test_sphinx_configuration_is_strict_and_has_required_extensions() -> None:
     assert conf.source_suffix[".md"] == "markdown"
     assert conf.root_doc == "index"
     assert conf.autosummary_generate is False
+    assert conf.autosummary_mock_imports == []
+    assert conf.doctest_global_setup == ""
+    assert conf.doctest_global_cleanup == ""
+    assert conf.doctest_path == []
+    assert conf.doctest_test_doctest_blocks is False
     assert conf.nitpicky is True
     assert conf.suppress_warnings == []
     assert conf.nitpick_ignore == []
@@ -335,6 +352,8 @@ def test_sphinx_configuration_is_strict_and_has_required_extensions() -> None:
     assert conf.linkcheck_anchors is True
     assert conf.linkcheck_allow_unauthorized is False
     assert conf.exclude_patterns == []
+    conf_tree = ast.parse((DOCS / "conf.py").read_text(encoding="utf-8"))
+    assert _forbidden_example_operations(conf_tree) == []
     selected_guides = {path for path in conf.include_patterns if "/" not in path}
     assert selected_guides == PUBLIC_GUIDES | {"index.md"}
     assert "COST_AWARE_MODEL_ARCHITECTURE_RECON.md" not in conf.include_patterns
@@ -553,6 +572,177 @@ def test_supported_executable_markup_cannot_bypass_ast_guard(source: str) -> Non
     for location, block in blocks:
         forbidden = _forbidden_example_operations(ast.parse(block, filename=location))
         assert "forbidden import linkml" in forbidden
+
+
+@pytest.mark.parametrize("directive", SPHINX_TEST_DIRECTIVES)
+@pytest.mark.parametrize("markup", ["rst", "myst"])
+def test_sphinx_doctest_python_directives_cannot_bypass_ast_guard(
+    directive: str,
+    markup: str,
+) -> None:
+    if markup == "rst":
+        source = f".. {directive}:: *\n\n   import linkml\n"
+    else:
+        source = f"```{{{directive}}} *\nimport linkml\n```\n"
+
+    blocks = _python_blocks_from(source, location=f"{markup}-{directive}")
+    assert blocks
+    for location, block in blocks:
+        forbidden = _forbidden_example_operations(ast.parse(block, filename=location))
+        assert "forbidden import linkml" in forbidden
+
+
+@pytest.mark.parametrize("directive", SPHINX_AUTODOC_DIRECTIVES)
+@pytest.mark.parametrize("markup", ["rst", "myst"])
+def test_autodoc_targets_cannot_bypass_ast_guard(
+    directive: str,
+    markup: str,
+) -> None:
+    if markup == "rst":
+        source = f".. {directive}:: linkml_runtime.forbidden\n"
+    else:
+        source = f"```{{{directive}}} linkml_runtime.forbidden\n```\n"
+
+    location = f"{markup}-{directive}"
+    with pytest.raises(
+        AssertionError,
+        match=rf"{location}.*forbidden target.*linkml_runtime\.forbidden",
+    ):
+        _python_blocks_from(source, location=location)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        ".. autosummary::\n\n   linkml_runtime.forbidden\n",
+        "```{autosummary}\nlinkml_runtime.forbidden\n```\n",
+    ],
+)
+def test_autosummary_targets_cannot_bypass_ast_guard(source: str) -> None:
+    with pytest.raises(
+        AssertionError,
+        match=r"autosummary-target.*forbidden target.*linkml_runtime\.forbidden",
+    ):
+        _python_blocks_from(source, location="autosummary-target")
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        ".. automodule:: malleus\n\n.. autosummary::\n\n   malleus.OntologyRegistry\n",
+        "```{automodule} malleus\n```\n\n```{autosummary}\n"
+        "malleus.OntologyRegistry\n```\n",
+    ],
+)
+def test_public_root_autodoc_and_autosummary_targets_remain_allowed(source: str) -> None:
+    blocks = _python_blocks_from(source, location="public-root-target")
+    assert len(blocks) == 2
+    for location, block in blocks:
+        forbidden = _forbidden_example_operations(ast.parse(block, filename=location))
+        assert forbidden == []
+
+
+@pytest.mark.parametrize("directive", ("doctest", *SPHINX_TEST_DIRECTIVES))
+def test_sphinx_executable_directives_nested_in_eval_rst_are_checked(
+    directive: str,
+) -> None:
+    body = "   >>> import linkml" if directive == "doctest" else "   import linkml"
+    source = f"```{{eval-rst}}\n.. {directive}:: *\n\n{body}\n```\n"
+    blocks = _python_blocks_from(source, location=f"nested-{directive}")
+    assert blocks
+    for location, block in blocks:
+        forbidden = _forbidden_example_operations(ast.parse(block, filename=location))
+        assert "forbidden import linkml" in forbidden
+
+
+@pytest.mark.parametrize(
+    ("source", "target"),
+    [
+        (".. automodule::\n", "missing"),
+        (".. automodule:: pathlib\n", "pathlib"),
+        (".. autoclass:: ~malleus.OntologyRegistry\n", "~malleus.OntologyRegistry"),
+        (".. autoclass:: malleus.Registry\n", "malleus.Registry"),
+        (".. automodule:: tests\n", "tests"),
+        (".. autosummary::\n\n   OntologyRegistry\n", "OntologyRegistry"),
+        (".. autosummary::\n\n   malleus.OntologyRegistry extra\n", "unsupported"),
+    ],
+)
+def test_autodoc_and_autosummary_refuse_targets_outside_exact_allowlist(
+    source: str,
+    target: str,
+) -> None:
+    with pytest.raises(
+        AssertionError,
+        match=r"exact-target-guard.*(?:missing|unknown|unsupported|forbidden) target",
+    ):
+        _python_blocks_from(source, location="exact-target-guard")
+
+
+def test_autosummary_normalizes_only_a_leading_tilde() -> None:
+    allowed = _python_blocks_from(
+        ".. autosummary::\n\n   ~malleus.OntologyRegistry\n",
+        location="tilde-allowed",
+    )
+    assert len(allowed) == 1
+    assert _forbidden_example_operations(ast.parse(allowed[0][1])) == []
+
+    with pytest.raises(
+        AssertionError,
+        match=r"tilde-forbidden.*forbidden target.*~linkml\.SchemaView",
+    ):
+        _python_blocks_from(
+            ".. autosummary::\n\n   ~linkml.SchemaView\n",
+            location="tilde-forbidden",
+        )
+
+
+def test_from_malleus_import_allows_only_the_public_root_object() -> None:
+    allowed = ast.parse("from malleus import OntologyRegistry")
+    assert _forbidden_example_operations(allowed) == []
+
+    forbidden = ast.parse("from malleus import ContractCompiler, OntologyRegistry")
+    assert _forbidden_example_operations(forbidden) == [
+        "private Malleus import ContractCompiler"
+    ]
+
+
+@pytest.mark.parametrize(
+    ("builder", "extensions", "index", "target"),
+    [
+        (
+            "doctest",
+            ("sphinx.ext.doctest",),
+            "Executable bypass\n=================\n\n.. testcode::\n\n   import linkml\n",
+            "linkml",
+        ),
+        (
+            "html",
+            ("sphinx.ext.autodoc",),
+            "Import bypass\n=============\n\n.. automodule:: linkml\n",
+            "linkml",
+        ),
+    ],
+)
+def test_real_builders_execute_import_forms_that_the_guard_refuses(
+    tmp_path: Path,
+    builder: str,
+    extensions: tuple[str, ...],
+    index: str,
+    target: str,
+) -> None:
+    source = _isolated_docs(tmp_path, extensions=extensions, index=index)
+    result = _build(builder, tmp_path / "output", source=source)
+    assert result.returncode == 0, result.stdout + result.stderr
+    with pytest.raises(
+        AssertionError,
+        match=rf"real-{builder}.*(?:forbidden target|forbidden import).*{target}",
+    ):
+        blocks = _python_blocks_from(index, location=f"real-{builder}")
+        for location, block in blocks:
+            forbidden = _forbidden_example_operations(
+                ast.parse(block, filename=location)
+            )
+            assert forbidden == [], f"{location}: {forbidden}"
 
 
 def test_unrecognized_executable_markup_is_refused() -> None:
