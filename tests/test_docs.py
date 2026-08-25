@@ -60,6 +60,15 @@ SPHINX_AUTODOC_DIRECTIVES = (
     "automodule",
     "autoproperty",
 )
+PUBLIC_GUIDE_ROOT_IMPORTS = (
+    "KnowledgeGraph",
+    "LogicContract",
+    "OntologyRegistry",
+    "PrologVerifier",
+    "ProposedOperation",
+    "bundled_ontology_path",
+    "stage_subgraph",
+)
 PUBLIC_GUIDES = {
     "ADOPTION_GUIDE.md",
     "ARCHITECTURE.md",
@@ -338,7 +347,7 @@ def test_sphinx_configuration_is_strict_and_has_required_extensions() -> None:
     assert conf.doctest_global_setup == ""
     assert conf.doctest_global_cleanup == ""
     assert conf.doctest_path == []
-    assert conf.doctest_test_doctest_blocks is False
+    assert conf.doctest_test_doctest_blocks == ""
     assert conf.nitpicky is True
     assert conf.suppress_warnings == []
     assert conf.nitpick_ignore == []
@@ -756,13 +765,12 @@ def test_autosummary_normalizes_only_a_leading_tilde() -> None:
         )
 
 
-def test_from_malleus_import_allows_only_the_public_root_object() -> None:
-    allowed = ast.parse("from malleus import OntologyRegistry")
+def test_from_malleus_import_allows_only_the_current_guide_root_objects() -> None:
+    allowed_names = ", ".join(PUBLIC_GUIDE_ROOT_IMPORTS)
+    allowed = ast.parse(f"from malleus import {allowed_names}")
     assert _forbidden_example_operations(allowed) == []
 
-    forbidden = ast.parse(
-        "from malleus import ContractCompiler, OntologyRegistry, ontology"
-    )
+    forbidden = ast.parse("from malleus import ContractCompiler, ontology")
     assert _forbidden_example_operations(forbidden) == [
         "private Malleus import ContractCompiler",
         "private Malleus import ontology",
