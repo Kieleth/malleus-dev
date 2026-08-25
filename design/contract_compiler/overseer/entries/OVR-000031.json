@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "as_of": "2026-08-25T01:34:06Z",
+    "basis": [
+      "The documentation policy guard must interpret MyST and RST with their pinned parsers; regular expressions are limited to test-fixture matching and diagnostic assertions.",
+      "The operator selected Option 1: direct development pins docutils==0.21.2 and markdown-it-py==3.0.0.",
+      "Independent prototypes showed that the inert RST adapter uses Docutils 0.21.2 parser-state seams and the MyST token adapter uses markdown-it-py 3.0.0."
+    ],
+    "limitations": [
+      "These are development-only inspection dependencies.",
+      "This does not change Malleus runtime dependencies or select a CC-002 compiler environment.",
+      "This does not authorize regular-expression-based structural parsing or semantic policy."
+    ]
+  },
+  "entry_hash": "sha256:d46270f0edc927e9757311f63eff834493c067e2688e43bcf83c3c217000c523",
+  "entry_id": "OVR-000031",
+  "entry_type": "OBSERVATION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7c100965a75f11c19a06e2ba846c5eaf1f073db861ca9f11820552be801c4794",
+  "recorded_at": "2026-08-25T01:34:06Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "pyproject.toml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 31,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Select the reproducible parser-inspection boundary for CC-001.",
+  "why": "The policy guard must observe the same document grammar as the strict builders without importing targets or executing examples. Exact direct development pins make the private parser seams intentional and reviewable rather than allowing a transitive dependency update to change the guard silently."
+}

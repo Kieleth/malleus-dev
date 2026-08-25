@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:a8f92e34b1d70bf2edc03b16d6955cc1a5e88c3fb2244219de25ee81f1840505",
+        "before_digest": "sha256:807c1e81200bf1df1fc29ef9518fbab77b0711486ffee24a500b3b60ebeda76e",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:cef3b9ab279ce3f624566d9c63abaf4ec375d1df04422747bbe9c67aa2293d45",
+        "before_digest": "sha256:02e98580344e71176256859e73ac1cae878388ff11ae99864a57c81a25bb753c",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:47648f0b51321f8ac489ecee81d3e80b281a549607c9587eef09e9f32462bb94",
+  "entry_id": "OVR-000032",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d46270f0edc927e9757311f63eff834493c067e2688e43bcf83c3c217000c523",
+  "recorded_at": "2026-08-25T01:34:07Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "e9be16b4e7875d1a328f9254af5bc6823edcee90",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "pyproject.toml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 32,
+  "subject": {
+    "id": "cc001-parser-dependency-prerequisite",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the direct parser pins and GraphRecipe snapshot rebind.",
+  "why": "The selected development pins make the parser-native documentation guard reproducible. The GraphRecipe report changed only its pyproject.toml source digest, retained every other claim and byte length, and passed all 40 conformance tests. This prerequisite creates no Malleus runtime or CC-002 environment claim."
+}
