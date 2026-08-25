@@ -1,0 +1,75 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 15754,
+      "path": "conformance/contract_compiler/v0/compiler_baseline_candidates.json",
+      "sha256": "sha256:735df1e8c34790ddebcc7e4b27c0461e3905411838373e1248284fe88bee4824"
+    },
+    {
+      "byte_length": 32153,
+      "path": "scripts/contract_compiler_baseline_inventory.py",
+      "sha256": "sha256:932c97a3bf8364d7105ab8ffb253dd71ac710b882b4f5c1432bbc79612e25474"
+    },
+    {
+      "byte_length": 20673,
+      "path": "tests/test_contract_compiler_baseline_inventory.py",
+      "sha256": "sha256:ed6ab2593b958bc2e7f095cccc28ca1ad9f2fcc8c8f7b01491ec2a49cf106e58"
+    }
+  ],
+  "base_commit": "8b3b65a01546407bff616fe06fd202399f849763",
+  "checks": [
+    {
+      "check_id": "ccx00-red",
+      "method": "Run the frozen CC-X00 test module before creating the validator or inventory.",
+      "observed": "Collection stopped with the expected ModuleNotFoundError for scripts.contract_compiler_baseline_inventory: 1 collection error, exit status 2.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-green",
+      "method": "Run the final focused CC-X00 inventory and evidence contract tests from the declared development environment.",
+      "observed": "All 30 focused tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-slice",
+      "method": "Run the offline canonical inventory check and compare its normalized identity with the audited identity sealed in the validator.",
+      "observed": "The check accepted exactly 2 compiler candidates and 1 exact Python tuple with identity sha256:71319ecb9827143ab41961b329ca1e838a4487772d3e55664f24c1e2eab8a85c.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-disproof",
+      "method": "Mutate syntax, schema, immutable coordinates, typed subject references, identities, tuple precision, candidate order, artifact provision, feasibility inputs, and network paths.",
+      "observed": "Duplicate keys, nonfinite values, unknown and governance fields, mutable and short coordinates, resealed cross-subject references, missing identities, artifact conflation, malformed nested types, unsupported feasibility, noncanonical bytes, and attempted network access failed closed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-regression",
+      "method": "Run the complete configured Python test suite from the repository-local declared development environment.",
+      "observed": "1,227 tests passed and 2 tests skipped with 0 failures or errors in 335.26 seconds.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-package",
+      "method": "Build the project wheel and sdist with declared tooling, inspect both member lists, and reject any CC-X00 scoped path in either payload.",
+      "observed": "The 311,513-byte wheel sha256:4afd173bdcf225eef16c123c55bd95c4cbeb26443034b6d46c34e5fb321d9a76 and 429,369-byte sdist sha256:fe7a0ebba79f68be349ddf151893eb6a8bef551ab8c984ffe1d9f1acfb12005c contained none of the four scoped paths.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-attest",
+      "method": "Run scoped Ruff, GraphRecipe lint and tests, ledger check, integration check-draft, and verification-report artifact checks.",
+      "observed": "Ruff passed; all 40 GraphRecipe tests passed; the 44-entry ledger and 66-workstream, 5-card, 2-selection draft integration state validated; all 3 evidence artifacts matched their recorded bytes.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X00 inventories candidates only. OD-012 remains open, and this report carries no selection or production-artifact authority.",
+    "The CPython 3.12.10 Linux x86_64 cp312 tuple is an exact research probe tuple, not a normative runtime choice.",
+    "The release candidate is PROBE_READY from observed published artifacts, but no transitive lock, wheelhouse, or offline installation was generated.",
+    "The source-commit candidate is PROBE_BLOCKED because its commit archive hash and byte length and both source-built wheel identities remain unobserved.",
+    "CC-002 owns any selected transitive lock and retained wheelhouse; CC-X00 retains no production compiler artifacts.",
+    "Primary-source facts were observed on the recorded audit date. The validator is offline and does not refetch them."
+  ],
+  "recorded_at": "2026-08-25T05:12:13Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X00"
+}

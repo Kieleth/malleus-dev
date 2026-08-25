@@ -1,0 +1,409 @@
+{
+  "audit_date": "2026-08-24",
+  "authority": {
+    "decision_authority": "NONE",
+    "production_artifact_authority": "NONE"
+  },
+  "candidates": [
+    {
+      "candidate_id": "linkml-release-v1.11.1-a7ed3e4c",
+      "distributions": [
+        {
+          "advertised_python_minors": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ],
+          "artifacts": [
+            {
+              "artifact_id": "pypi:linkml:1.11.1:wheel",
+              "artifact_target": "py3-none-any",
+              "byte_length": 483751,
+              "evidence_source_id": "pypi-linkml-1.11.1-metadata",
+              "filename": "linkml-1.11.1-py3-none-any.whl",
+              "kind": "WHEEL",
+              "provenance_url": "https://pypi.org/integrity/linkml/1.11.1/linkml-1.11.1-py3-none-any.whl/provenance",
+              "provision": "PUBLISHED",
+              "sha256": "d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed",
+              "url": "https://files.pythonhosted.org/packages/1f/fb/3068f649cc436be915f51b2f5ac0656c83dc9bcc6d4f8940633e295042c0/linkml-1.11.1-py3-none-any.whl"
+            },
+            {
+              "artifact_id": "pypi:linkml:1.11.1:sdist",
+              "artifact_target": "source",
+              "byte_length": 374853,
+              "evidence_source_id": "pypi-linkml-1.11.1-metadata",
+              "filename": "linkml-1.11.1.tar.gz",
+              "kind": "SDIST",
+              "provenance_url": "https://pypi.org/integrity/linkml/1.11.1/linkml-1.11.1.tar.gz/provenance",
+              "provision": "PUBLISHED",
+              "sha256": "2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524",
+              "url": "https://files.pythonhosted.org/packages/b4/26/38e7340959cd4a87bfe5403cfcf5311d9fe2ff4382fa00e96008a1342760/linkml-1.11.1.tar.gz"
+            }
+          ],
+          "dependency_constraints": [
+            {
+              "name": "linkml-runtime",
+              "specifier": ">=1.10.0,<2.0.0"
+            }
+          ],
+          "name": "linkml",
+          "provenance": {
+            "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+            "evidence_source_id": "pypi-linkml-1.11.1-provenance",
+            "repository": "https://github.com/linkml/linkml",
+            "state": "PYPI_ATTESTED",
+            "tag": "v1.11.1"
+          },
+          "requires_python": ">=3.10",
+          "source_path": "packages/linkml",
+          "version": "1.11.1"
+        },
+        {
+          "advertised_python_minors": [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13"
+          ],
+          "artifacts": [
+            {
+              "artifact_id": "pypi:linkml-runtime:1.11.1:wheel",
+              "artifact_target": "py3-none-any",
+              "byte_length": 654566,
+              "evidence_source_id": "pypi-linkml-runtime-1.11.1-metadata",
+              "filename": "linkml_runtime-1.11.1-py3-none-any.whl",
+              "kind": "WHEEL",
+              "provenance_url": "https://pypi.org/integrity/linkml-runtime/1.11.1/linkml_runtime-1.11.1-py3-none-any.whl/provenance",
+              "provision": "PUBLISHED",
+              "sha256": "b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da",
+              "url": "https://files.pythonhosted.org/packages/63/1d/600b0dd24aa61f03d35293a2e9a4695add1e94c03d8701436fb52d5daf4f/linkml_runtime-1.11.1-py3-none-any.whl"
+            },
+            {
+              "artifact_id": "pypi:linkml-runtime:1.11.1:sdist",
+              "artifact_target": "source",
+              "byte_length": 556549,
+              "evidence_source_id": "pypi-linkml-runtime-1.11.1-metadata",
+              "filename": "linkml_runtime-1.11.1.tar.gz",
+              "kind": "SDIST",
+              "provenance_url": "https://pypi.org/integrity/linkml-runtime/1.11.1/linkml_runtime-1.11.1.tar.gz/provenance",
+              "provision": "PUBLISHED",
+              "sha256": "e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754",
+              "url": "https://files.pythonhosted.org/packages/d0/7c/36332b49226f37d05d0dbfa4fb1c8017963d62ae722102c9c11c1f530696/linkml_runtime-1.11.1.tar.gz"
+            }
+          ],
+          "dependency_constraints": [],
+          "name": "linkml-runtime",
+          "provenance": {
+            "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+            "evidence_source_id": "pypi-linkml-runtime-1.11.1-provenance",
+            "repository": "https://github.com/linkml/linkml",
+            "state": "PYPI_ATTESTED",
+            "tag": "v1.11.1"
+          },
+          "requires_python": ">=3.10",
+          "source_path": "packages/linkml_runtime",
+          "version": "1.11.1"
+        }
+      ],
+      "kind": "RELEASE",
+      "limitations": [
+        "The two published PyPI sdists are recorded as observed release source identities; no exact-commit GitHub archive bytes were retrieved or retained in CC-X00.",
+        "PROBE_READY covers transitive lock resolution for published artifacts only; CC-002 owns any retained source and wheelhouse."
+      ],
+      "lock_feasibility": {
+        "missing_inputs": [],
+        "present_inputs": [
+          {
+            "id": "github-linkml-a7ed3e4c-commit",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "github-linkml-v1.11.1-release",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "pypi-linkml-1.11.1-metadata",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "pypi-linkml-1.11.1-provenance",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "pypi-linkml-runtime-1.11.1-metadata",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "pypi-linkml-runtime-1.11.1-provenance",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "pypi:linkml-runtime:1.11.1:sdist",
+            "kind": "PUBLISHED_ARTIFACT"
+          },
+          {
+            "id": "pypi:linkml-runtime:1.11.1:wheel",
+            "kind": "PUBLISHED_ARTIFACT"
+          },
+          {
+            "id": "pypi:linkml:1.11.1:sdist",
+            "kind": "PUBLISHED_ARTIFACT"
+          },
+          {
+            "id": "pypi:linkml:1.11.1:wheel",
+            "kind": "PUBLISHED_ARTIFACT"
+          },
+          {
+            "id": "cpython-3.12.10-linux-x86_64-cp312",
+            "kind": "PYTHON_CANDIDATE"
+          }
+        ],
+        "remaining_probe": "Resolve a complete hash-pinned transitive lock for the exact tuple, assemble an offline wheelhouse, and verify installation without index access.",
+        "state": "PROBE_READY"
+      },
+      "python_candidate_ids": [
+        "cpython-3.12.10-linux-x86_64-cp312"
+      ],
+      "source": {
+        "archive": {
+          "artifact_ids": [
+            "pypi:linkml-runtime:1.11.1:sdist",
+            "pypi:linkml:1.11.1:sdist"
+          ],
+          "identity_state": "OBSERVED_PUBLISHED_SDISTS"
+        },
+        "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+        "coordinate_url": "https://github.com/linkml/linkml/commit/a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+        "evidence_source_ids": [
+          "github-linkml-a7ed3e4c-commit",
+          "github-linkml-v1.11.1-release"
+        ],
+        "repository": "https://github.com/linkml/linkml",
+        "tag": "v1.11.1"
+      }
+    },
+    {
+      "candidate_id": "linkml-source-38737179",
+      "distributions": [
+        {
+          "name": "linkml",
+          "source_path": "packages/linkml",
+          "wheel_target": {
+            "artifact_id": "build:38737179acd92a7ee644357096583c77c01aed72:linkml:wheel",
+            "identity_state": "REQUIRED_FROM_BUILD",
+            "kind": "WHEEL",
+            "limitation": "CC-X00 did not build this distribution, so no output filename, wheel tags, digest, or byte length is asserted.",
+            "provision": "SOURCE_BUILD_TARGET",
+            "required_identity_fields": [
+              "byte_length",
+              "filename",
+              "sha256",
+              "wheel_tags"
+            ],
+            "target_python_candidate_ids": [
+              "cpython-3.12.10-linux-x86_64-cp312"
+            ]
+          }
+        },
+        {
+          "name": "linkml-runtime",
+          "source_path": "packages/linkml_runtime",
+          "wheel_target": {
+            "artifact_id": "build:38737179acd92a7ee644357096583c77c01aed72:linkml-runtime:wheel",
+            "identity_state": "REQUIRED_FROM_BUILD",
+            "kind": "WHEEL",
+            "limitation": "CC-X00 did not build this distribution, so no output filename, wheel tags, digest, or byte length is asserted.",
+            "provision": "SOURCE_BUILD_TARGET",
+            "required_identity_fields": [
+              "byte_length",
+              "filename",
+              "sha256",
+              "wheel_tags"
+            ],
+            "target_python_candidate_ids": [
+              "cpython-3.12.10-linux-x86_64-cp312"
+            ]
+          }
+        }
+      ],
+      "kind": "SOURCE_COMMIT",
+      "limitations": [
+        "The commit fixes source history, but the generated archive bytes and both distribution wheel outputs remain unobserved.",
+        "Dynamic distribution versions and wheel tags must be observed from a reproducible build before this candidate can advance beyond PROBE_BLOCKED."
+      ],
+      "lock_feasibility": {
+        "missing_inputs": [
+          {
+            "id": "archive:38737179acd92a7ee644357096583c77c01aed72",
+            "kind": "SOURCE_ARCHIVE_IDENTITY"
+          },
+          {
+            "id": "build:38737179acd92a7ee644357096583c77c01aed72:linkml-runtime:wheel",
+            "kind": "SOURCE_BUILD_IDENTITY"
+          },
+          {
+            "id": "build:38737179acd92a7ee644357096583c77c01aed72:linkml:wheel",
+            "kind": "SOURCE_BUILD_IDENTITY"
+          }
+        ],
+        "present_inputs": [
+          {
+            "id": "github-linkml-38737179-commit",
+            "kind": "EVIDENCE_SOURCE"
+          },
+          {
+            "id": "cpython-3.12.10-linux-x86_64-cp312",
+            "kind": "PYTHON_CANDIDATE"
+          },
+          {
+            "id": "38737179acd92a7ee644357096583c77c01aed72",
+            "kind": "SOURCE_COMMIT"
+          },
+          {
+            "id": "packages/linkml",
+            "kind": "SOURCE_PATH"
+          },
+          {
+            "id": "packages/linkml_runtime",
+            "kind": "SOURCE_PATH"
+          }
+        ],
+        "remaining_probe": "Retain and hash the exact-commit archive, build and identify both wheels, then resolve a complete hash-pinned transitive lock and test offline installation.",
+        "state": "PROBE_BLOCKED"
+      },
+      "python_candidate_ids": [
+        "cpython-3.12.10-linux-x86_64-cp312"
+      ],
+      "source": {
+        "archive": {
+          "archive_id": "archive:38737179acd92a7ee644357096583c77c01aed72",
+          "evidence_source_id": "github-linkml-38737179-commit",
+          "identity_state": "REQUIRED_UNOBSERVED",
+          "limitation": "The locator fixes the commit, but CC-X00 did not retrieve the archive bytes.",
+          "locator": "https://github.com/linkml/linkml/archive/38737179acd92a7ee644357096583c77c01aed72.tar.gz",
+          "required_identity_fields": [
+            "byte_length",
+            "sha256"
+          ]
+        },
+        "commit": "38737179acd92a7ee644357096583c77c01aed72",
+        "coordinate_url": "https://github.com/linkml/linkml/commit/38737179acd92a7ee644357096583c77c01aed72",
+        "evidence_source_ids": [
+          "github-linkml-38737179-commit"
+        ],
+        "repository": "https://github.com/linkml/linkml"
+      }
+    }
+  ],
+  "decision_id": "OD-012",
+  "limitations": [
+    "CC-X00 is a research inventory; OD-012 remains open.",
+    "CC-X00 generated no transitive lock, wheelhouse, retained source bundle, or compiler artifact; those outputs belong to CC-002 after OD-012.",
+    "The source-commit GitHub archive SHA-256 digest and byte length remain required observations because its bytes were not retrieved.",
+    "The source-commit distribution versions and wheel outputs remain build observations; no filenames, wheel tags, digests, or byte lengths are asserted.",
+    "One exact CPython tuple is recorded to make probes reproducible; it is not a normative Python choice."
+  ],
+  "python_candidates": [
+    {
+      "abi": "cp312",
+      "architecture": "x86_64",
+      "artifact_target": "py3-none-any",
+      "basis_source_id": "python-3.12.10-release",
+      "candidate_id": "cpython-3.12.10-linux-x86_64-cp312",
+      "implementation": "CPython",
+      "limitation": "Research tuple only; OD-012 has not fixed a Python tuple.",
+      "operating_system": "Linux",
+      "version": "3.12.10"
+    }
+  ],
+  "repository": {
+    "distributions": [
+      {
+        "name": "linkml",
+        "source_path": "packages/linkml"
+      },
+      {
+        "name": "linkml-runtime",
+        "source_path": "packages/linkml_runtime"
+      }
+    ],
+    "layout": "MONOREPO",
+    "url": "https://github.com/linkml/linkml"
+  },
+  "schema": "malleus.contract-compiler.baseline-candidates/v1",
+  "scope": "RESEARCH_INVENTORY",
+  "sources": [
+    {
+      "commit": "38737179acd92a7ee644357096583c77c01aed72",
+      "kind": "GITHUB_COMMIT",
+      "publisher": "GitHub",
+      "repository": "https://github.com/linkml/linkml",
+      "source_id": "github-linkml-38737179-commit",
+      "url": "https://github.com/linkml/linkml/commit/38737179acd92a7ee644357096583c77c01aed72"
+    },
+    {
+      "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+      "kind": "GITHUB_COMMIT",
+      "publisher": "GitHub",
+      "repository": "https://github.com/linkml/linkml",
+      "source_id": "github-linkml-a7ed3e4c-commit",
+      "url": "https://github.com/linkml/linkml/commit/a7ed3e4cbb19731f072d0d90b6d52f7d822569ee"
+    },
+    {
+      "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+      "kind": "GITHUB_RELEASE",
+      "publisher": "GitHub",
+      "repository": "https://github.com/linkml/linkml",
+      "source_id": "github-linkml-v1.11.1-release",
+      "tag": "v1.11.1",
+      "url": "https://github.com/linkml/linkml/releases/tag/v1.11.1"
+    },
+    {
+      "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+      "kind": "PYPI_PROVENANCE",
+      "project": "linkml-runtime",
+      "publisher": "PyPI",
+      "repository": "https://github.com/linkml/linkml",
+      "source_id": "pypi-linkml-runtime-1.11.1-provenance",
+      "tag": "v1.11.1",
+      "url": "https://pypi.org/project/linkml-runtime/1.11.1/",
+      "version": "1.11.1"
+    },
+    {
+      "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+      "kind": "PYPI_PROVENANCE",
+      "project": "linkml",
+      "publisher": "PyPI",
+      "repository": "https://github.com/linkml/linkml",
+      "source_id": "pypi-linkml-1.11.1-provenance",
+      "tag": "v1.11.1",
+      "url": "https://pypi.org/project/linkml/1.11.1/",
+      "version": "1.11.1"
+    },
+    {
+      "kind": "PYPI_RELEASE",
+      "project": "linkml-runtime",
+      "publisher": "PyPI",
+      "source_id": "pypi-linkml-runtime-1.11.1-metadata",
+      "url": "https://pypi.org/pypi/linkml-runtime/1.11.1/json",
+      "version": "1.11.1"
+    },
+    {
+      "kind": "PYPI_RELEASE",
+      "project": "linkml",
+      "publisher": "PyPI",
+      "source_id": "pypi-linkml-1.11.1-metadata",
+      "url": "https://pypi.org/pypi/linkml/1.11.1/json",
+      "version": "1.11.1"
+    },
+    {
+      "implementation": "CPython",
+      "kind": "PYTHON_RELEASE",
+      "publisher": "Python Software Foundation",
+      "source_id": "python-3.12.10-release",
+      "url": "https://www.python.org/downloads/release/python-31210/",
+      "version": "3.12.10"
+    }
+  ]
+}
