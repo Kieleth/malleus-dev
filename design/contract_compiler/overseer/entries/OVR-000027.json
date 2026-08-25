@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "as_of": "2026-08-25T00:16:53Z",
+    "basis": [
+      "Pinned Sphinx 8.1.3 strict linkcheck rejected both CATB host variants for TLS hostname mismatch.",
+      "Isolated strict probes accepted the InformIT publisher page, Open Library record, and Wikipedia article without redirects.",
+      "The operator selected Option 1, the InformIT publisher page."
+    ],
+    "limitations": [
+      "The selection authorizes only the one URL replacement in docs/PRINCIPLES.md.",
+      "It does not authorize link suppression, TLS weakening, citation prose changes, or broader edits to the guide."
+    ]
+  },
+  "entry_hash": "sha256:b929b7df340d91a9b64c5af4b98810c2f2bdf36582a1cf31d3700938f7c9b8cd",
+  "entry_id": "OVR-000027",
+  "entry_type": "OBSERVATION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8c3fc4a1816293ce6dbaf368dc47256c1b117595fc6ef84f0eb919e5e9cb38d6",
+  "recorded_at": "2026-08-25T00:16:53Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "docs/PRINCIPLES.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 27,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Select the publisher-backed replacement for the broken CATB citation.",
+  "why": "The public guide needs a strict-TLS-compatible citation target. The publisher page preserves a first-party book reference without weakening the documentation gate or relying on a secondary source."
+}
