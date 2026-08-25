@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-001"
+    ],
+    "replacement_required": false,
+    "supersedes_entry_id": "OVR-000033"
+  },
+  "entry_hash": "sha256:c04661a2b3be379ba7bc720ebeeee3ab71fea9a6bd515d38554a131e0427354e",
+  "entry_id": "OVR-000035",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0a55cfae0419ef459a7d6e9229f5bf84f277d30327935535a896821a6c7ce536",
+  "recorded_at": "2026-08-25T03:07:23Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000033",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 35,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the blanket CC-001 eval-rst refusal.",
+  "why": "The pinned native MyST wrappers completed without warnings but emitted autodoc-generated RST as literal text and created no Python-domain inventory. A blanket eval-rst refusal therefore prevents the already-approved autodoc and autosummary contract. The replacement observation narrows the exception to one byte-exact governed island rather than reopening RST support."
+}

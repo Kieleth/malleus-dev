@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ebd8c1594b43380402f2179dd1563ccd8a4613cf47b80b44cf7bbcb5b30b6a41",
+        "before_digest": "sha256:3d21e0a9dba37dac1bffd9b8131a07b46a0a6021e91eaec3dba88b78618a5b17",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:eb66de132286b29553bff370d60c57b97b0dd27c4e98911520f888c551b8a1da",
+  "entry_id": "OVR-000037",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3ac1477f945e5a41c4b76dae75178ab7598a6fec157baed617b67453e149127e",
+  "recorded_at": "2026-08-25T03:07:25Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "753a728dd941316cebf38a3e674ed29a2b689441",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 37,
+  "subject": {
+    "id": "cc001-governed-reference-island",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the governed API-reference island RED contract.",
+  "why": "The frozen tests prove exact path and whole-file admission, mutation refusal, complete Python-domain and module inventories, signature and autosummary semantics, HTML anchors, and the native MyST failure mode. Independent review reproduced 108 passes and exactly four intentional pre-GREEN failures."
+}

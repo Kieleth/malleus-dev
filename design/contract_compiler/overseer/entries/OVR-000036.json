@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "as_of": "2026-08-25T03:07:24Z",
+    "basis": [
+      "Pinned Sphinx 8.1.3 and MyST 4.0.1 render native automodule, autoclass, and autosummary wrappers as literal generated RST with an empty Python-domain inventory.",
+      "The prior byte-exact eval-rst reference renders the exact approved Python objects, module, signature, autosummary link, and HTML anchors.",
+      "The operator approved one governed eval-rst island at docs/reference/index.md, admitted only when its absolute path and complete file bytes match the frozen source."
+    ],
+    "limitations": [
+      "Every other eval-rst use and every authored .rst file remains refused.",
+      "Any target, option, byte, path, nesting, or additional island change requires a new reviewed checkpoint.",
+      "The exception does not authorize a general RST parser or broaden the public API beyond malleus and malleus.OntologyRegistry."
+    ]
+  },
+  "entry_hash": "sha256:3ac1477f945e5a41c4b76dae75178ab7598a6fec157baed617b67453e149127e",
+  "entry_id": "OVR-000036",
+  "entry_type": "OBSERVATION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c04661a2b3be379ba7bc720ebeeee3ab71fea9a6bd515d38554a131e0427354e",
+  "recorded_at": "2026-08-25T03:07:24Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "docs/reference/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 36,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Select one byte-exact API-reference RST island.",
+  "why": "The exact island preserves real Sphinx autodoc and autosummary semantics without maintaining a general RST scanner. Mechanical tests bind the full domain inventory and rendered structure, while path and whole-file identity make the exception fail closed."
+}
