@@ -562,6 +562,7 @@ def test_public_python_examples_are_ast_checked() -> None:
         "```python\nimport linkml\n```\n",
         "```{code-block} python\nimport linkml\n```\n",
         "```{doctest}\n>>> import linkml\n```\n",
+        "```{doctest} *\n>>> import linkml\n```\n",
         ".. code-block:: python\n\n   import linkml\n",
         ".. doctest::\n\n   >>> import linkml\n",
     ],
@@ -604,24 +605,36 @@ def test_autodoc_targets_cannot_bypass_ast_guard(
         source = f"```{{{directive}}} linkml_runtime.forbidden\n```\n"
 
     location = f"{markup}-{directive}"
+    target = "linkml_runtime.forbidden"
     with pytest.raises(
         AssertionError,
-        match=rf"{location}.*forbidden target.*linkml_runtime\.forbidden",
+        match=re.escape(
+            f"{location}: forbidden target {target!r} normalized {target!r}"
+        ),
     ):
         _python_blocks_from(source, location=location)
 
 
 @pytest.mark.parametrize(
-    "source",
+    ("source", "target"),
     [
-        ".. autosummary::\n\n   linkml_runtime.forbidden\n",
-        "```{autosummary}\nlinkml_runtime.forbidden\n```\n",
+        (".. autosummary::\n\n   linkml_runtime.forbidden\n", "linkml_runtime.forbidden"),
+        ("```{autosummary}\nlinkml_runtime.forbidden\n```\n", "linkml_runtime.forbidden"),
+        (
+            ".. autosummary::\n   :nosignatures:\n\n   linkml_runtime.forbidden\n",
+            "linkml_runtime.forbidden",
+        ),
     ],
 )
-def test_autosummary_targets_cannot_bypass_ast_guard(source: str) -> None:
+def test_autosummary_targets_cannot_bypass_ast_guard(
+    source: str,
+    target: str,
+) -> None:
     with pytest.raises(
         AssertionError,
-        match=r"autosummary-target.*forbidden target.*linkml_runtime\.forbidden",
+        match=re.escape(
+            f"autosummary-target: forbidden target {target!r} normalized {target!r}"
+        ),
     ):
         _python_blocks_from(source, location="autosummary-target")
 
@@ -656,24 +669,68 @@ def test_sphinx_executable_directives_nested_in_eval_rst_are_checked(
 
 
 @pytest.mark.parametrize(
-    ("source", "target"),
+    "body",
     [
-        (".. automodule::\n", "missing"),
-        (".. automodule:: pathlib\n", "pathlib"),
-        (".. autoclass:: ~malleus.OntologyRegistry\n", "~malleus.OntologyRegistry"),
-        (".. autoclass:: malleus.Registry\n", "malleus.Registry"),
-        (".. automodule:: tests\n", "tests"),
-        (".. autosummary::\n\n   OntologyRegistry\n", "OntologyRegistry"),
-        (".. autosummary::\n\n   malleus.OntologyRegistry extra\n", "unsupported"),
+        ".. automodule:: linkml_runtime\n",
+        ".. autosummary::\n\n   linkml_runtime.forbidden\n",
+    ],
+)
+def test_import_targets_nested_in_eval_rst_are_checked(body: str) -> None:
+    target = "linkml_runtime" if "automodule" in body else "linkml_runtime.forbidden"
+    source = f"```{{eval-rst}}\n{body}```\n"
+    with pytest.raises(
+        AssertionError,
+        match=re.escape(
+            f"nested-import-target: forbidden target {target!r} normalized {target!r}"
+        ),
+    ):
+        _python_blocks_from(source, location="nested-import-target")
+
+
+@pytest.mark.parametrize(
+    ("source", "category", "target", "normalized"),
+    [
+        (".. automodule::\n", "missing", "", ""),
+        (".. automodule:: pathlib\n", "unknown", "pathlib", "pathlib"),
+        (
+            ".. autoclass:: ~malleus.OntologyRegistry\n",
+            "unsupported",
+            "~malleus.OntologyRegistry",
+            "~malleus.OntologyRegistry",
+        ),
+        (
+            ".. autoclass:: malleus.Registry\n",
+            "forbidden",
+            "malleus.Registry",
+            "malleus.Registry",
+        ),
+        (".. automodule:: tests\n", "forbidden", "tests", "tests"),
+        (
+            ".. autosummary::\n\n   OntologyRegistry\n",
+            "unsupported",
+            "OntologyRegistry",
+            "OntologyRegistry",
+        ),
+        (
+            ".. autosummary::\n\n   malleus.OntologyRegistry extra\n",
+            "unsupported",
+            "malleus.OntologyRegistry extra",
+            "malleus.OntologyRegistry extra",
+        ),
     ],
 )
 def test_autodoc_and_autosummary_refuse_targets_outside_exact_allowlist(
     source: str,
+    category: str,
     target: str,
+    normalized: str,
 ) -> None:
     with pytest.raises(
         AssertionError,
-        match=r"exact-target-guard.*(?:missing|unknown|unsupported|forbidden) target",
+        match=re.escape(
+            f"exact-target-guard: {category} target {target!r} "
+            f"normalized {normalized!r}"
+        ),
     ):
         _python_blocks_from(source, location="exact-target-guard")
 
@@ -688,7 +745,10 @@ def test_autosummary_normalizes_only_a_leading_tilde() -> None:
 
     with pytest.raises(
         AssertionError,
-        match=r"tilde-forbidden.*forbidden target.*~linkml\.SchemaView",
+        match=re.escape(
+            "tilde-forbidden: forbidden target '~linkml.SchemaView' "
+            "normalized 'linkml.SchemaView'"
+        ),
     ):
         _python_blocks_from(
             ".. autosummary::\n\n   ~linkml.SchemaView\n",
@@ -700,9 +760,12 @@ def test_from_malleus_import_allows_only_the_public_root_object() -> None:
     allowed = ast.parse("from malleus import OntologyRegistry")
     assert _forbidden_example_operations(allowed) == []
 
-    forbidden = ast.parse("from malleus import ContractCompiler, OntologyRegistry")
+    forbidden = ast.parse(
+        "from malleus import ContractCompiler, OntologyRegistry, ontology"
+    )
     assert _forbidden_example_operations(forbidden) == [
-        "private Malleus import ContractCompiler"
+        "private Malleus import ContractCompiler",
+        "private Malleus import ontology",
     ]
 
 
@@ -733,9 +796,15 @@ def test_real_builders_execute_import_forms_that_the_guard_refuses(
     source = _isolated_docs(tmp_path, extensions=extensions, index=index)
     result = _build(builder, tmp_path / "output", source=source)
     assert result.returncode == 0, result.stdout + result.stderr
+    if builder == "html":
+        refusal = re.escape(
+            "real-html: forbidden target 'linkml' normalized 'linkml'"
+        )
+    else:
+        refusal = rf"real-{builder}.*forbidden import {target}"
     with pytest.raises(
         AssertionError,
-        match=rf"real-{builder}.*(?:forbidden target|forbidden import).*{target}",
+        match=refusal,
     ):
         blocks = _python_blocks_from(index, location=f"real-{builder}")
         for location, block in blocks:
