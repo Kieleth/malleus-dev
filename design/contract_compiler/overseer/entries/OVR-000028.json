@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:02e98580344e71176256859e73ac1cae878388ff11ae99864a57c81a25bb753c",
+        "before_digest": "sha256:5c77c545e7724a3c4f8ec7c1d0886c0dee92337043b100477b65b7e928950e13",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:8a65605b408e315b25c651c538d31fa6cfb4620747d8efc672667cab436ab984",
+  "entry_id": "OVR-000028",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b929b7df340d91a9b64c5af4b98810c2f2bdf36582a1cf31d3700938f7c9b8cd",
+  "recorded_at": "2026-08-25T00:22:19Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 28,
+  "subject": {
+    "id": "cc001-graphrecipe-snapshot-rebind",
+    "type": "DOCUMENT"
+  },
+  "summary": "Rebind the GraphRecipe snapshot to the declared CC-001 toolchain.",
+  "why": "CC-001 added declared Sphinx dependencies to pyproject.toml, so GraphRecipe's repository-snapshot guard correctly refused its older package-boundary digest. The prescribed rebind changed only that one source digest, preserved the report length, and passed all forty GraphRecipe tests. No corpus, receipt, fixture, implementation, or GraphRecipe behavior claim changed."
+}
