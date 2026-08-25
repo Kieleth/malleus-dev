@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "cc001-selection-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T03:48:10Z",
+    "claims": [
+      "CC-001 reached COMPLETE at OVR-000040 before it became an integration selection.",
+      "The sealed integration validator accepted 66 workstreams, 4 cards, and exactly 2 selections ordered CC-000 then CC-001.",
+      "The integrated candidate, final artifact bundle, worker TDD chain, and dependency binding remained exact under selection."
+    ],
+    "limitations": [
+      "This verifies repository documentation integration, not compiler API promotion, themed vocabulary, or runtime consumer behavior.",
+      "The local Git and ledger coordinates are integrity identifiers, not external authentication."
+    ]
+  },
+  "entry_hash": "sha256:52ba2acd72216264cac730fabcd7d4bd329b0ce3863cb45bca4b609013255ff5",
+  "entry_id": "OVR-000042",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:948252be4643a74b11ea87a9c49f8113b1c43080e61315dbb3adb58dfd38b883",
+  "recorded_at": "2026-08-25T03:48:10Z",
+  "references": [
+    {
+      "digest": "sha256:b8b8ec95320e4e37033b5a6fac5752456bfe186e7d812383afcaa84662790d11",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-001.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000040",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8763438c2bf16a407fcebd61ebe1b449a7988f89",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 42,
+  "subject": {
+    "id": "CC-001-selection-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final selected CC-001 state.",
+  "why": "The selected integration state needs retained evidence separate from the evidence that authorized the preceding completion transition."
+}

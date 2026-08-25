@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18112,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:55632a2d56344070516094a876bb83bf9dbeb5445a7e6b1bd827db0ca28c08af"
+    },
+    {
+      "byte_length": 4158,
+      "path": "design/contract_compiler/workstreams/CC-001/manifest.json",
+      "sha256": "sha256:cb930d1c614b0e233f07c02dc4919c6cc23c5ce8710f7a3f11eedf97212dc7b3"
+    },
+    {
+      "byte_length": 3111,
+      "path": "design/contract_compiler/overseer/evidence/CC-001-completion.json",
+      "sha256": "sha256:3d12a8916b0a4c227e268a68e163b3d762187f7a6877d03a7610a5beed306aac"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-001/ledger/head.json",
+      "sha256": "sha256:7fdbf91dac7ae9d9608f4027d38bb7cd3c2a5dca1e75f0fd50b9ae29fc270b7d"
+    }
+  ],
+  "base_commit": "8763438c2bf16a407fcebd61ebe1b449a7988f89",
+  "checks": [
+    {
+      "check_id": "cc001-selected-integration",
+      "method": "Run the sealed integration validator after CC-001 reached COMPLETE, changed from ELIGIBLE to INTEGRATED, and was appended after CC-000 in selections.",
+      "observed": "The validator accepted 66 workstreams, 4 cards, and exactly 2 selections in dependency order: CC-000 then CC-001.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-completion-before-selection",
+      "method": "Validate the independent completion report, mechanical verification fact, and ACTIVE-to-COMPLETE transition before reading the selection state.",
+      "observed": "OVR-000039 verified the stable completion report and OVR-000040 completed CC-001 before the integration manifest selected it.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-selection-gates",
+      "method": "Revalidate the integrated candidate history, exact eight-artifact bundle, worker ledger, all seven TDD phases, and exact CC-000 dependency binding.",
+      "observed": "The candidate, artifacts, PASS evidence, worker chain, phase dispositions, and dependency coordinate all remained exact under selection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-selection-order",
+      "method": "Check that the integration authority anchor stops at the prior completion transition and that selection evidence is recorded only afterward.",
+      "observed": "The selected manifest anchors OVR-000040. It contains no digest or hash from the later selection revision or verification blocks.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Selection integrates the validated documentation result only; compiler API promotion and themed vocabulary remain outside CC-001.",
+    "The ff07f7a..dc2dae3 candidate range certifies the final two-file worker delta. Earlier final artifacts remain bound by exact bytes and their overseer checkpoint lineage.",
+    "Git commits and the local ledger head are integrity identifiers, not external human authentication or branch protection."
+  ],
+  "recorded_at": "2026-08-25T03:48:08Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-001"
+}
