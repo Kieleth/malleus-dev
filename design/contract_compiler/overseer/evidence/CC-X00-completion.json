@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-X00/ledger/head.json",
+      "sha256": "sha256:f7374bdd0f218009f784a004a01b2db0608bca8f58ae5e267f78d82b6f13bdd5"
+    },
+    {
+      "byte_length": 4440,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X00.json",
+      "sha256": "sha256:94cdb58236e9ef6e6cbda34082025ec21a2d395c3b241f53d1b612d9d029646c"
+    }
+  ],
+  "base_commit": "cafcb48dd0c253014c441a36a3b8226a1c84e721",
+  "checks": [
+    {
+      "check_id": "ccx00-candidate-history",
+      "method": "Validate the exact 8b3b65a..cafcb48 linear candidate, head tree, four-path scope, three-artifact bundle, and typed evidence.",
+      "observed": "The candidate validator accepted the one-commit range, tree a352c7f8581d7d81cad890590dd4ee97a0308262, and exactly the four authorized inventory, validator, test, and evidence paths.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-final-bundle",
+      "method": "Verify the candidate report schema, all-PASS disposition, base coordinate, and exact equality between its three artifacts and the card artifact bundle.",
+      "observed": "The typed worker report bound 3 exact artifacts and 7 passing checks; every current byte length and SHA-256 digest matched.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-worker-tdd",
+      "method": "Validate the worker-owned hash chain and require one active result for every CC-000 TDD phase.",
+      "observed": "Seven chained TDD_RESULT blocks recorded RED expected failure and passing GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST results.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-dependency-binding",
+      "method": "Check that the no-dependency CC-X00 registry row, formal authorization, and candidate bindings are all empty and exact.",
+      "observed": "CC-X00 has no declared dependencies. Its formal authorization binding set is empty, and the candidate carries no dependency records.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-unselected-integration",
+      "method": "Validate the sealed integration draft after registering the eligible card and worker ledger while leaving selections unchanged.",
+      "observed": "The validator accepted 66 workstreams, 5 cards, and 2 selections. CC-X00 remained eligible and unselected pending this completion transition.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-no-decision-authority",
+      "method": "Validate the canonical inventory authority boundary and feasibility states.",
+      "observed": "Decision and production-artifact authority are NONE. The release is PROBE_READY, the source commit is PROBE_BLOCKED, and OD-012 remains open.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report authorizes the CC-X00 completion transition; integration selection is a separate checkpoint and compiler-baseline selection belongs to CC-D12.",
+    "PROBE_READY records inputs for a future lock probe, not a completed lock. PROBE_BLOCKED records missing retained source and built-wheel identities.",
+    "CC-X00 retains no transitive lock, wheelhouse, source bundle, built compiler wheel, or production compiler environment."
+  ],
+  "recorded_at": "2026-08-25T05:25:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X00"
+}

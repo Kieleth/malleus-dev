@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/test_contract_compiler_baseline_inventory.py; independently run resealed semantic mutations and malformed-type sweeps",
+    "observed": "The contract rejected duplicate and nonfinite JSON, unknown or governance fields, moving coordinates, provenance swaps, artifact conflation, unresolved or wrong-kind references, malformed types, noncanonical bytes, and network attempts. Independent audit rejected 21 of 21 resealed semantic mutations and leaked no raw exception.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:1715d36c8b01ef973c16e107398fd9c63aa43634145a1a71261fc041b69aa9bf",
+  "entry_id": "CC-X00-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0bfa0e4306d7a724ef9cdd56cda0740256773c07023a1f6091b2194546bfe71d",
+  "recorded_at": "2026-08-25T05:23:50Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass the omission, provenance, feasibility, and authority disproof matrix.",
+  "workstream_id": "CC-X00"
+}

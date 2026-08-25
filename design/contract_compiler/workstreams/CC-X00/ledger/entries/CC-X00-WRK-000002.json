@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/test_contract_compiler_baseline_inventory.py",
+    "observed": "All 30 focused inventory, semantic-reference, canonicalization, offline, package-boundary, and evidence tests passed.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8e0217876e068a0671b558ac0ca180ffdf00740671e295dddcfa831b6e0581bf",
+  "entry_id": "CC-X00-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b8b6891de4891fd80f97ea3826ed5532ea31028bb76fadd9784fca65456eeff3",
+  "recorded_at": "2026-08-25T05:23:48Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the strict offline baseline inventory contract.",
+  "workstream_id": "CC-X00"
+}

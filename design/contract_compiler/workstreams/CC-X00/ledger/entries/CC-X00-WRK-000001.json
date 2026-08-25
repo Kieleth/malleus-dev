@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/test_contract_compiler_baseline_inventory.py before validator creation; later rerun the three seal-bypass regression cases before semantic guards",
+    "observed": "The initial run stopped at collection with ModuleNotFoundError for scripts.contract_compiler_baseline_inventory and exit status 2. The strengthened RED then produced exactly 3 failures showing resealed bad references and a malformed nested type could bypass or escape the first validator.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:b8b6891de4891fd80f97ea3826ed5532ea31028bb76fadd9784fca65456eeff3",
+  "entry_id": "CC-X00-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-25T05:23:47Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Preserve the missing-validator and semantic-bypass RED results.",
+  "workstream_id": "CC-X00"
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "python scripts/contract_compiler_baseline_inventory.py check",
+    "observed": "The offline validator accepted exactly 2 compiler candidates and 1 exact CPython research tuple with normalized identity sha256:71319ecb9827143ab41961b329ca1e838a4487772d3e55664f24c1e2eab8a85c.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:0bfa0e4306d7a724ef9cdd56cda0740256773c07023a1f6091b2194546bfe71d",
+  "entry_id": "CC-X00-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8e0217876e068a0671b558ac0ca180ffdf00740671e295dddcfa831b6e0581bf",
+  "recorded_at": "2026-08-25T05:23:49Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Validate the two-candidate decision-evidence slice.",
+  "workstream_id": "CC-X00"
+}

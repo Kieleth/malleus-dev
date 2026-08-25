@@ -13,10 +13,42 @@
     "dependency_bindings": []
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 15754,
+        "path": "conformance/contract_compiler/v0/compiler_baseline_candidates.json",
+        "sha256": "sha256:735df1e8c34790ddebcc7e4b27c0461e3905411838373e1248284fe88bee4824"
+      },
+      {
+        "byte_length": 32153,
+        "path": "scripts/contract_compiler_baseline_inventory.py",
+        "sha256": "sha256:932c97a3bf8364d7105ab8ffb253dd71ac710b882b4f5c1432bbc79612e25474"
+      },
+      {
+        "byte_length": 20673,
+        "path": "tests/test_contract_compiler_baseline_inventory.py",
+        "sha256": "sha256:ed6ab2593b958bc2e7f095cccc28ca1ad9f2fcc8c8f7b01491ec2a49cf106e58"
+      }
+    ],
+    "base_commit": "8b3b65a01546407bff616fe06fd202399f849763",
+    "evidence": [
+      {
+        "byte_length": 4440,
+        "path": "conformance/contract_compiler/v0/evidence/CC-X00.json",
+        "result": "PASS",
+        "sha256": "sha256:94cdb58236e9ef6e6cbda34082025ec21a2d395c3b241f53d1b612d9d029646c"
+      }
+    ],
+    "head_commit": "cafcb48dd0c253014c441a36a3b8226a1c84e721",
+    "head_tree": "a352c7f8581d7d81cad890590dd4ee97a0308262",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 7,
+    "head_entry_id": "CC-X00-WRK-000007",
+    "head_hash": "sha256:c029c326c44786f6309f50d38918a18304b7a61e4d199bc7c77082dd53346398",
+    "path": "workstreams/CC-X00/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Research, without ranking or selecting, reproducible LinkML compiler baseline candidates for OD-012. Record the official stable release and the audited exact source commit, exact CPython candidate tuples, both LinkML distributions, immutable source coordinates and archive identities, published or build-target wheel identities, and evidence-backed lock-feasibility assessments. Reject omissions and moving coordinates. Do not choose OD-012, retain production compiler artifacts, change dependencies, packaging, or CI, implement compiler behavior, or edit normative decisions.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

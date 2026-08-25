@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "python scripts/contract_compiler_ledger.py check; python scripts/contract_compiler_integration.py check-draft; python scripts/contract_compiler_ledger.py verify-evidence conformance/contract_compiler/v0/evidence/CC-X00.json",
+    "observed": "The 44-entry overseer ledger, 66-workstream and 5-card draft integration with 2 selections, and worker evidence with 3 artifacts and 7 passing checks validated. Candidate history was one linear four-path commit.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c029c326c44786f6309f50d38918a18304b7a61e4d199bc7c77082dd53346398",
+  "entry_id": "CC-X00-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8e867686c771b50d25aed486959e2b40c9ac262d522603531e3e51da815e5c7c",
+  "recorded_at": "2026-08-25T05:23:53Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the audited CC-X00 research candidate.",
+  "workstream_id": "CC-X00"
+}

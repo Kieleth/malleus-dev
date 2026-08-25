@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "ccx00-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T05:25:02Z",
+    "claims": [
+      "The exact 8b3b65a..cafcb48 candidate is linear, tree-bound, and limited to the four authorized CC-X00 paths.",
+      "The typed worker report binds three exact artifacts, seven passing checks, and a seven-phase worker ledger with the required dispositions.",
+      "The inventory has no decision or production-artifact authority: release is PROBE_READY, source commit is PROBE_BLOCKED, and OD-012 remains open."
+    ],
+    "limitations": [
+      "This fact authorizes CC-X00 completion only. Workstream integration selection is separate, and compiler-baseline selection belongs to CC-D12.",
+      "No transitive lock, wheelhouse, retained source bundle, built compiler wheel, or production compiler environment exists."
+    ]
+  },
+  "entry_hash": "sha256:eb1c363c8d8807ef0e38a1bcff62a9f46f22f69495330fb2197f35e2b55f2ccf",
+  "entry_id": "OVR-000046",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bc62d648d5f8374590df1afeca6c906ab0a08bf658aa90ae2ebaa601d0f9cdbb",
+  "recorded_at": "2026-08-25T05:25:02Z",
+  "references": [
+    {
+      "digest": "sha256:0878406329024d1e3447d1ac26fec67bd1186fc73dbac410bde0d2616c928580",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X00-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "cafcb48dd0c253014c441a36a3b8226a1c84e721",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 46,
+  "subject": {
+    "id": "CC-X00-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final CC-X00 completion gate.",
+  "why": "CC-X00 may complete only after its candidate history, artifact identities, worker phases, feasibility classification, authority boundary, and regression evidence pass independently of the whole-inventory seal."
+}

@@ -1,0 +1,46 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Publish a strict machine-readable inventory of release and exact-source compiler baseline candidates.",
+      "Record exact Python candidates, both LinkML distributions, source and wheel identities, and evidence-backed lock feasibility without selecting a baseline."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000046"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-X00"
+  },
+  "entry_hash": "sha256:5dcf60c20f22f2777548edf28ca83cfb4648333faef1712c4fe8f3830236c84b",
+  "entry_id": "OVR-000047",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:eb1c363c8d8807ef0e38a1bcff62a9f46f22f69495330fb2197f35e2b55f2ccf",
+  "recorded_at": "2026-08-25T05:25:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000046",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 47,
+  "subject": {
+    "id": "CC-X00",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the CC-X00 compiler baseline inventory.",
+  "why": "OVR-000046 binds the exact eligible candidate, three-artifact bundle, seven TDD phases, no-dependency authorization, and no-selection authority boundary required to close CC-X00 before integration selection."
+}

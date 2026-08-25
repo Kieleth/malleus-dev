@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "Build the project wheel and sdist with declared tooling, inspect both archive member lists, and reject any of the four CC-X00 scoped paths.",
+    "observed": "The 311,513-byte wheel sha256:4afd173bdcf225eef16c123c55bd95c4cbeb26443034b6d46c34e5fb321d9a76 and 429,369-byte sdist sha256:fe7a0ebba79f68be349ddf151893eb6a8bef551ab8c984ffe1d9f1acfb12005c contained none of the four CC-X00 paths.",
+    "phase": "PACKAGE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8e867686c771b50d25aed486959e2b40c9ac262d522603531e3e51da815e5c7c",
+  "entry_id": "CC-X00-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:70557af96017a7dcaf64443db779bdcaee56a977b5003dd805c0e37c0c8fbc23",
+  "recorded_at": "2026-08-25T05:23:52Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Prove the research inventory stays outside release packages.",
+  "workstream_id": "CC-X00"
+}

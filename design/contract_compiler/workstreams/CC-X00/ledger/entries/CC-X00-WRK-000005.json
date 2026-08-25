@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccx00-baseline-research-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q; .venv/bin/python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py; .venv/bin/python -m ruff check scripts/contract_compiler_baseline_inventory.py tests/test_contract_compiler_baseline_inventory.py",
+    "observed": "The full configured suite passed 1,227 tests with 2 skips and no failures. GraphRecipe passed 40 tests. Scoped Ruff passed.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:70557af96017a7dcaf64443db779bdcaee56a977b5003dd805c0e37c0c8fbc23",
+  "entry_id": "CC-X00-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:1715d36c8b01ef973c16e107398fd9c63aa43634145a1a71261fc041b69aa9bf",
+  "recorded_at": "2026-08-25T05:23:51Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass repository, GraphRecipe, and static regression gates.",
+  "workstream_id": "CC-X00"
+}
