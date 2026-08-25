@@ -26,7 +26,7 @@
   "ledger": {
     "state": "NOT_STARTED"
   },
-  "responsibility": "Build and enforce documentation plumbing with Sphinx, MyST, autodoc, doctest, strict links, and build-time projections of validated manifests, without promoting compiler APIs or themed vocabulary.",
+  "responsibility": "Build and enforce documentation plumbing with Sphinx, MyST, autodoc, doctest, strict links, and build-time projections of validated manifests. Render exactly the twelve Markdown guides already packaged as public documentation, excluding the unshipped cost-architecture research note. Keep the build repository-only for CI and release validation, with no sdist, published-site, or rendered-artifact claim. Do not promote compiler APIs or themed vocabulary.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
     {

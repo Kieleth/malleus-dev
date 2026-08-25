@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:43f600aa674cf04f4b3066d6753e4581decf4e389f3f29461fb9b4ab95c1516a",
+        "before_digest": "sha256:bd19f3af44cf9b6a2606d034dcaeb9340fd03325638299a8588bc9042c0d259f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-001/manifest.json"
+      },
+      {
+        "after_digest": "sha256:6a2b90651817fe768104ee67e917f3f99f61fd3cd45913a53828ea5a111fb782",
+        "before_digest": "sha256:418c3cab13a07feb44047c1a95771375a2815ad611c76ff162363971a541a5fc",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:05c6c7a5a163f582533b22c18d6a6ccce8d5fe169c61957f5df6648d06648eaf",
+  "entry_id": "OVR-000024",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:984a6a159f83cf21624f2d91dec08ca4b020d2f4eb1ac82d18fed13ffbb7884e",
+  "recorded_at": "2026-08-25T00:01:39Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-001/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 24,
+  "subject": {
+    "id": "cc001-render-publication-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the CC-001 public-document and publication boundary.",
+  "why": "The operator selected the twelve Markdown guides already packaged as public documentation and excluded the unshipped cost-architecture research note. CC-001 proves repository builds in test and release CI only; it does not make the Sphinx source sdist-buildable, publish HTML, or promote a rendered artifact."
+}
