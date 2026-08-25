@@ -6,3 +6,6 @@ command = "/absolute/path/to/python3"
 args = ["/absolute/path/to/malleus-dev/scripts/contract_compiler_environment.py", "serve"]
 cwd = "/absolute/path/to/malleus-dev"
 enabled = false
+
+[mcp_servers.cc002.env]
+DOCKER_HOST = "unix:///absolute/path/to/.colima/default/docker.sock"

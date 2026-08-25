@@ -15,6 +15,7 @@ import os
 import shutil
 import socket
 import socketserver
+import stat
 import subprocess
 import sys
 import tempfile
@@ -55,6 +56,7 @@ ALLOWED_HTTPS_HOSTS = frozenset({"files.pythonhosted.org"})
 ACQUISITION_HTTPS_HOSTS = frozenset({"pypi.org", "files.pythonhosted.org"})
 
 DOCKER = "docker"
+DOCKER_TRANSPORT = "LOCAL_UNIX_SOCKET"
 OCI_PLATFORM = "linux/amd64"
 OCI_INDEX_DIGEST = (
     "sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db"
@@ -1352,6 +1354,67 @@ def verify_command(
     ]
 
 
+def validated_docker_host() -> str:
+    """Return the exact safe local Unix Docker endpoint supplied by Codex."""
+    endpoint = os.environ.get("DOCKER_HOST")
+    prefix = "unix://"
+    if endpoint is None or endpoint == "":
+        _fail(
+            "CC002_DOCKER_HOST",
+            "DOCKER_HOST is required; set it in the machine "
+            "[mcp_servers.cc002.env] table, follow .codex/README.md, and restart Codex",
+        )
+    if not isinstance(endpoint, str) or not endpoint.startswith(prefix):
+        _fail("CC002_DOCKER_HOST", "DOCKER_HOST must be a canonical local Unix URI")
+    path_text = endpoint[len(prefix) :]
+    if (
+        not path_text.startswith("/")
+        or path_text.startswith("//")
+        or any(character in endpoint for character in ("?", "#", "%", "\\"))
+        or not all(character.isprintable() for character in endpoint)
+    ):
+        _fail("CC002_DOCKER_HOST", "DOCKER_HOST must be a canonical local Unix URI")
+    components = path_text.split("/")
+    if (
+        components[0] != ""
+        or not components[1:]
+        or any(component in {"", ".", ".."} for component in components[1:])
+        or PurePosixPath(path_text).as_posix() != path_text
+    ):
+        _fail("CC002_DOCKER_HOST", "DOCKER_HOST path is not canonical")
+    socket_path = Path(path_text)
+    if not socket_path.is_absolute() or endpoint != prefix + socket_path.as_posix():
+        _fail("CC002_DOCKER_HOST", "DOCKER_HOST path is not canonical")
+
+    current_uid = os.getuid()
+    candidates = [*reversed(socket_path.parents), socket_path]
+    for candidate in candidates:
+        try:
+            metadata = os.lstat(candidate)
+        except OSError as error:
+            _fail(
+                "CC002_DOCKER_HOST",
+                f"DOCKER_HOST component is missing or unreadable: {candidate}: {error}",
+            )
+        if stat.S_ISLNK(metadata.st_mode):
+            _fail("CC002_DOCKER_HOST", f"DOCKER_HOST component is a symlink: {candidate}")
+        if candidate != socket_path:
+            if not stat.S_ISDIR(metadata.st_mode):
+                _fail("CC002_DOCKER_HOST", f"DOCKER_HOST parent is not a directory: {candidate}")
+            if metadata.st_uid not in {0, current_uid}:
+                _fail("CC002_DOCKER_HOST", f"DOCKER_HOST parent has an unsafe owner: {candidate}")
+            if stat.S_IMODE(metadata.st_mode) & 0o022:
+                _fail("CC002_DOCKER_HOST", f"DOCKER_HOST parent is group/world writable: {candidate}")
+            continue
+        if not stat.S_ISSOCK(metadata.st_mode):
+            _fail("CC002_DOCKER_HOST", f"DOCKER_HOST target is not a socket: {candidate}")
+        if metadata.st_uid != current_uid:
+            _fail("CC002_DOCKER_HOST", f"DOCKER_HOST socket has an unsafe owner: {candidate}")
+        if stat.S_IMODE(metadata.st_mode) != 0o600:
+            _fail("CC002_DOCKER_HOST", f"DOCKER_HOST socket mode must be exactly 0600: {candidate}")
+    return endpoint
+
+
 def run_fixed(
     arguments: Sequence[str],
     operation_root: Path,
@@ -1369,13 +1432,21 @@ def run_fixed(
     operation_root = operation_root.resolve()
     if operation_root.is_symlink() or not operation_root.is_dir():
         _fail("CC002_HOME", f"operation root must be a regular directory: {operation_root}")
-    executable = _resolved_docker() if docker_executable is None else docker_executable
+    docker_host = validated_docker_host()
+    resolved_executable = _resolved_docker()
+    if docker_executable is not None and docker_executable != resolved_executable:
+        _fail("CC002_DOCKER", "resolved Docker executable changed before subprocess")
+    executable = resolved_executable
     if not isinstance(executable, str) or not Path(executable).is_absolute():
         _fail("CC002_DOCKER", "resolved Docker executable must be an absolute path")
     with tempfile.TemporaryDirectory(
         prefix=".cc002-home-", dir=operation_root
     ) as home_name:
-        environment = {"HOME": home_name, **SUBPROCESS_ENV_BASE}
+        environment = {
+            "DOCKER_HOST": docker_host,
+            "HOME": home_name,
+            **SUBPROCESS_ENV_BASE,
+        }
         return subprocess.run(
             list(arguments),
             cwd=REPOSITORY,
@@ -1942,8 +2013,7 @@ def _manifest_from_staging(
     lock: bytes,
     wheel_records: list[dict[str, Any]],
     *,
-    docker_executable: str,
-    docker_version: str,
+    docker_client_version: str,
 ) -> dict[str, Any]:
     roots = [_artifact_record(staging / "roots" / item.filename) for item in SELECTED_ARTIFACTS]
     smoke = _artifact_record(SMOKE_INPUT)
@@ -1952,8 +2022,8 @@ def _manifest_from_staging(
         "schema": "malleus.cc002.compiler-environment/v1",
         "docker": {
             "command": DOCKER,
-            "resolved_executable": docker_executable,
-            "version": docker_version,
+            "client_version": docker_client_version,
+            "transport": DOCKER_TRANSPORT,
         },
         "release": RELEASE,
         "python": PYTHON_TUPLE,
@@ -2097,14 +2167,14 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         _fail("CC002_MANIFEST", "Docker execution identity must be an object")
     _exact_keys(
         docker,
-        {"command", "resolved_executable", "version"},
+        {"command", "client_version", "transport"},
         "Docker identity",
     )
-    if docker["command"] != DOCKER:
+    if docker["command"] != DOCKER or docker["transport"] != DOCKER_TRANSPORT:
         _fail("CC002_MANIFEST", "Docker command identity mismatch")
     if not all(
         isinstance(docker[key], str) and docker[key]
-        for key in ("command", "resolved_executable", "version")
+        for key in ("command", "client_version", "transport")
     ):
         _fail("CC002_MANIFEST", "Docker execution identity fields must be nonempty strings")
     if manifest["release"] != RELEASE or manifest["python"] != PYTHON_TUPLE:
@@ -2320,8 +2390,7 @@ def acquire_environment() -> dict[str, Any]:
             staging,
             lock,
             wheel_records,
-            docker_executable=docker_executable,
-            docker_version=docker_version,
+            docker_client_version=docker_version,
         )
         _write_atomic(
             staging / "manifest.json",
@@ -2412,9 +2481,7 @@ def verify_environment() -> dict[str, Any]:
                     docker_executable=docker_executable,
                 )
             )
-            if docker_executable != manifest["docker"]["resolved_executable"]:
-                _fail("CC002_DOCKER", "resolved Docker executable changed after acquisition")
-            if docker_version != manifest["docker"]["version"]:
+            if docker_version != manifest["docker"]["client_version"]:
                 _fail(
                     "CC002_DOCKER_VERSION",
                     "Docker client version changed after acquisition",

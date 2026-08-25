@@ -7,6 +7,7 @@ import io
 import json
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import tomllib
@@ -142,6 +143,9 @@ def test_machine_registration_example_uses_absolute_disabled_transport():
     assert server["args"][1:] == ["serve"]
     assert Path(server["cwd"]).is_absolute()
     assert Path(server["args"][0]).parent.parent == Path(server["cwd"])
+    assert server["env"] == {
+        "DOCKER_HOST": "unix:///absolute/path/to/.colima/default/docker.sock"
+    }
     assert {
         "required",
         "enabled_tools",
@@ -149,6 +153,13 @@ def test_machine_registration_example_uses_absolute_disabled_transport():
         "tool_timeout_sec",
         "tools",
     }.isdisjoint(server)
+
+
+def test_project_registration_retains_no_machine_docker_transport():
+    source = CONFIG.read_text(encoding="utf-8")
+    server = tomllib.loads(source)["mcp_servers"]["cc002"]
+    assert "env" not in server
+    assert "DOCKER_HOST" not in source
 
 
 def test_mcp_dependent_skill_has_fail_closed_resolvable_preflight():
@@ -1169,6 +1180,183 @@ def test_resolver_child_pythonpath_contains_only_the_selected_pip_root(tmp_path)
     assert "/adapter" not in child_environment["PYTHONPATH"]
 
 
+def _synthetic_colima_socket(monkeypatch, endpoint, *, mutation=None):
+    path = Path(endpoint.removeprefix("unix://"))
+    current_uid = 501
+    states = {}
+    current = Path(path.anchor)
+    states[current] = types.SimpleNamespace(st_mode=stat.S_IFDIR | 0o755, st_uid=0)
+    for component in path.parts[1:-1]:
+        current /= component
+        states[current] = types.SimpleNamespace(
+            st_mode=stat.S_IFDIR | 0o700,
+            st_uid=current_uid,
+        )
+    states[path] = types.SimpleNamespace(
+        st_mode=stat.S_IFSOCK | 0o600,
+        st_uid=current_uid,
+    )
+    if mutation is not None:
+        mutation(states, path, current_uid)
+    observed = []
+
+    def fake_lstat(candidate):
+        candidate = Path(candidate)
+        observed.append(candidate)
+        return states[candidate]
+
+    monkeypatch.setattr(environment.os, "getuid", lambda: current_uid)
+    monkeypatch.setattr(environment.os, "lstat", fake_lstat)
+    return path, observed
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "docker.sock",
+        "tcp://127.0.0.1:2375",
+        "ssh://host/run/docker.sock",
+        "unix://relative/docker.sock",
+        "unix://authority/absolute/docker.sock",
+        "unix:////absolute/docker.sock",
+        "unix:///absolute//docker.sock",
+        "unix:///absolute/./docker.sock",
+        "unix:///absolute/../docker.sock",
+        "unix:///absolute/docker.sock/",
+        "unix:///absolute/%64ocker.sock",
+        "unix:///absolute/docker.sock?query",
+        "unix:///absolute/docker.sock#fragment",
+        "unix:///absolute\\docker.sock",
+        "unix:///absolute/\x00docker.sock",
+    ],
+)
+def test_docker_host_refuses_noncanonical_or_nonlocal_endpoints(
+    monkeypatch, endpoint
+):
+    if "\x00" in endpoint:
+        monkeypatch.setattr(environment.os, "environ", {"DOCKER_HOST": endpoint})
+    else:
+        monkeypatch.setenv("DOCKER_HOST", endpoint)
+    monkeypatch.setattr(
+        environment.os,
+        "lstat",
+        lambda _path: pytest.fail("invalid URI reached the filesystem"),
+    )
+    with pytest.raises(environment.CC002Error, match="DOCKER_HOST|Unix|canonical"):
+        environment.validated_docker_host()
+
+
+@pytest.mark.parametrize("endpoint", [None, ""])
+def test_docker_host_is_required_with_actionable_machine_setup(monkeypatch, endpoint):
+    if endpoint is None:
+        monkeypatch.delenv("DOCKER_HOST", raising=False)
+    else:
+        monkeypatch.setenv("DOCKER_HOST", endpoint)
+    with pytest.raises(environment.CC002Error) as caught:
+        environment.validated_docker_host()
+    message = str(caught.value)
+    for token in (
+        "DOCKER_HOST",
+        "[mcp_servers.cc002.env]",
+        ".codex/README.md",
+        "restart",
+    ):
+        assert token in message
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "unix:///Users/alice/.colima/default/docker.sock",
+        "unix:///opt/colima/docker.sock",
+    ],
+)
+def test_docker_host_accepts_exact_safe_local_unix_socket(
+    monkeypatch, endpoint
+):
+    path, observed = _synthetic_colima_socket(monkeypatch, endpoint)
+    monkeypatch.setenv("DOCKER_HOST", endpoint)
+    assert environment.validated_docker_host() == endpoint
+    assert observed[0] == Path(path.anchor)
+    assert observed[-1] == path
+    assert observed == list(path.parents)[::-1] + [path]
+
+
+@pytest.mark.parametrize(
+    ("mutation", "reason"),
+    [
+        (
+            lambda states, path, _uid: setattr(
+                states[path.parent], "st_mode", stat.S_IFLNK | 0o700
+            ),
+            "symlink",
+        ),
+        (
+            lambda states, path, _uid: setattr(
+                states[path.parent], "st_mode", stat.S_IFREG | 0o600
+            ),
+            "directory",
+        ),
+        (
+            lambda states, path, _uid: setattr(states[path.parent], "st_uid", 777),
+            "owner",
+        ),
+        (
+            lambda states, path, _uid: setattr(
+                states[path.parent], "st_mode", stat.S_IFDIR | 0o720
+            ),
+            "writable",
+        ),
+        (
+            lambda states, path, _uid: setattr(
+                states[path], "st_mode", stat.S_IFLNK | 0o600
+            ),
+            "symlink",
+        ),
+        (
+            lambda states, path, _uid: setattr(
+                states[path], "st_mode", stat.S_IFREG | 0o600
+            ),
+            "socket",
+        ),
+        (
+            lambda states, path, _uid: setattr(states[path], "st_uid", 0),
+            "owner",
+        ),
+        (
+            lambda states, path, _uid: setattr(
+                states[path], "st_mode", stat.S_IFSOCK | 0o660
+            ),
+            "0600",
+        ),
+    ],
+)
+def test_docker_host_refuses_unsafe_ancestor_or_socket(
+    monkeypatch, mutation, reason
+):
+    endpoint = "unix:///Users/alice/.colima/default/docker.sock"
+    _synthetic_colima_socket(monkeypatch, endpoint, mutation=mutation)
+    monkeypatch.setenv("DOCKER_HOST", endpoint)
+    with pytest.raises(environment.CC002Error, match=reason):
+        environment.validated_docker_host()
+
+
+def test_docker_host_refuses_missing_component_as_typed_error(monkeypatch):
+    endpoint = "unix:///Users/alice/.colima/default/docker.sock"
+    _path, _observed = _synthetic_colima_socket(monkeypatch, endpoint)
+    original = environment.os.lstat
+
+    def missing(candidate):
+        if Path(candidate).name == ".colima":
+            raise FileNotFoundError(candidate)
+        return original(candidate)
+
+    monkeypatch.setattr(environment.os, "lstat", missing)
+    monkeypatch.setenv("DOCKER_HOST", endpoint)
+    with pytest.raises(environment.CC002Error, match="DOCKER_HOST|missing"):
+        environment.validated_docker_host()
+
+
 def test_subprocess_runner_is_fixed_shell_false_cwd_and_sanitized_env(
     tmp_path, monkeypatch
 ):
@@ -1182,8 +1370,24 @@ def test_subprocess_runner_is_fixed_shell_false_cwd_and_sanitized_env(
         return subprocess.CompletedProcess(argv, 0, stdout=b"{}", stderr=b"")
 
     monkeypatch.setattr(environment.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        environment,
+        "validated_docker_host",
+        lambda: "unix:///validated/colima/docker.sock",
+    )
     monkeypatch.setenv("HOME", "/hostile/home")
     monkeypatch.setenv("PATH", "/hostile/bin")
+    for name in (
+        "DOCKER_CONTEXT",
+        "DOCKER_TLS_VERIFY",
+        "DOCKER_CERT_PATH",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "NO_PROXY",
+        "SSH_AUTH_SOCK",
+    ):
+        monkeypatch.setenv(name, "/hostile/ambient")
     environment.run_fixed([environment.DOCKER, "version"], tmp_path)
     assert observed["argv"] == ["docker", "version"]
     assert observed["cwd"] == environment.REPOSITORY
@@ -1195,13 +1399,65 @@ def test_subprocess_runner_is_fixed_shell_false_cwd_and_sanitized_env(
     )
     assert observed["env"]["HOME"] != "/hostile/home"
     assert observed["env"]["PATH"] == environment.SANITIZED_PATH
+    assert observed["env"]["DOCKER_HOST"] == "unix:///validated/colima/docker.sock"
     assert set(observed["env"]) == {
+        "DOCKER_HOST",
         "HOME",
         "LANG",
         "LC_ALL",
         "PATH",
         "PYTHONIOENCODING",
     }
+
+
+def test_docker_transport_is_revalidated_and_executable_reresolved_before_each_run(
+    tmp_path, monkeypatch
+):
+    checks = []
+    runs = []
+
+    def validate():
+        checks.append("transport")
+        return "unix:///validated/colima/docker.sock"
+
+    monkeypatch.setattr(environment, "validated_docker_host", validate)
+    monkeypatch.setattr(environment, "_resolved_docker", lambda: "/safe/bin/docker")
+    monkeypatch.setattr(
+        environment.subprocess,
+        "run",
+        lambda argv, **kwargs: runs.append((argv, kwargs))
+        or subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b""),
+    )
+    for _ in range(2):
+        environment.run_fixed(
+            [environment.DOCKER, "version"],
+            tmp_path,
+            docker_executable="/safe/bin/docker",
+        )
+    assert checks == ["transport", "transport"]
+    assert len(runs) == 2
+
+
+def test_docker_subprocess_refuses_stale_resolved_executable(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(
+        environment,
+        "validated_docker_host",
+        lambda: "unix:///validated/colima/docker.sock",
+    )
+    monkeypatch.setattr(environment, "_resolved_docker", lambda: "/new/bin/docker")
+    monkeypatch.setattr(
+        environment.subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("stale executable was invoked"),
+    )
+    with pytest.raises(environment.CC002Error, match="changed|resolved"):
+        environment.run_fixed(
+            [environment.DOCKER, "version"],
+            tmp_path,
+            docker_executable="/old/bin/docker",
+        )
 
 
 def test_subprocess_failure_includes_stdout_only_reason(monkeypatch, tmp_path):
@@ -1437,7 +1693,11 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
     ]
     manifest, _source = environment._validated_environment(destination)
     assert manifest["resolution_report"]["filename"] == "resolution-report.json"
-    assert "host_user" not in manifest["docker"]
+    assert manifest["docker"] == {
+        "command": "docker",
+        "client_version": "28.3.3",
+        "transport": "LOCAL_UNIX_SOCKET",
+    }
     assert (destination / "resolution-report.json").is_file()
     calls_before = list(calls)
     assert environment.acquire_environment() == result
@@ -1483,8 +1743,55 @@ def test_runtime_ownership_can_change_without_changing_the_bundle_identity(
     assert {key: value for key, value in completed.items() if key != "verification"} == {
         key: value for key, value in pending.items() if key != "verification"
     }
-    assert "host_user" not in completed["docker"]
+    assert completed["docker"] == {
+        "command": "docker",
+        "client_version": "28.3.3",
+        "transport": "LOCAL_UNIX_SOCKET",
+    }
     assert "offline container verification" in calls
+
+
+def test_machine_docker_endpoint_and_resolved_executable_are_not_retained(
+    tmp_path, monkeypatch
+):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    endpoint_a = "unix:///Users/alice/.colima/default/docker.sock"
+    endpoint_b = "unix:///opt/colima/docker.sock"
+    monkeypatch.setenv("DOCKER_HOST", endpoint_a)
+    acquired = environment.acquire_environment()
+    pending_a = (destination / "manifest.json").read_bytes()
+    manifest = json.loads(pending_a)
+    assert manifest["docker"] == {
+        "command": "docker",
+        "client_version": "28.3.3",
+        "transport": "LOCAL_UNIX_SOCKET",
+    }
+    monkeypatch.setenv("DOCKER_HOST", endpoint_b)
+    assert environment.acquire_environment() == acquired
+    assert (destination / "manifest.json").read_bytes() == pending_a
+    verified = environment.verify_environment()
+    retained_sources = [
+        *(path.read_bytes() for path in destination.rglob("*.json")),
+        environment.canonical_json(acquired).encode(),
+        environment.canonical_json(verified).encode(),
+    ]
+    for source in retained_sources:
+        for forbidden in (
+            endpoint_a,
+            endpoint_b,
+            "/fixture/bin/docker",
+            "resolved_executable",
+        ):
+            assert forbidden.encode() not in source
+
+
+def test_docker_version_command_measures_client_version_key():
+    assert environment.docker_version_command() == [
+        "docker",
+        "version",
+        "--format",
+        "{{json .Client.Version}}",
+    ]
 
 
 def test_idempotent_acquire_and_complete_verify_do_not_consult_host_ownership(

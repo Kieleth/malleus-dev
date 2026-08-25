@@ -3,7 +3,8 @@
 Repository-backed STDIO MCP servers use two Codex configuration layers:
 
 - `~/.codex/config.toml` owns machine-specific transport: absolute `command`,
-  absolute script arguments, absolute `cwd`, and `enabled = false`.
+  absolute script arguments, absolute `cwd`, the local Docker endpoint, and
+  `enabled = false`.
 - This repository's `.codex/config.toml` owns activation and project policy:
   `enabled`, `required`, tool allowlists, timeouts, and approval rules.
 
@@ -18,6 +19,16 @@ Before opening or resuming a Codex task in this checkout, merge
 [`cc002.user.example.toml`](cc002.user.example.toml) into
 `~/.codex/config.toml` and replace all placeholder paths with absolute local
 paths.
+
+For Colima, set `env.DOCKER_HOST` to its absolute Unix socket URI, normally
+`unix:///Users/<user>/.colima/default/docker.sock`. The adapter accepts only a
+canonical `unix:///absolute/path` with no symlink component. Every parent must
+be owned by root or the current user and must not be group/world writable. The
+socket itself must be owned by the current user with mode `0600`. TCP, SSH,
+relative paths, and implicit endpoints are refused. Ambient Docker contexts,
+TLS settings, proxies, SSH state, `HOME`, and `PATH` are not accepted or
+forwarded into Docker subprocesses. The endpoint is checked again before every
+Docker subprocess and is never retained in CC-002 evidence.
 
 The project table is intentionally not standalone-valid. Without the
 machine-level transport, Codex rejects `mcp_servers.cc002` before a task can
@@ -43,7 +54,8 @@ The first result must show `enabled: false`. The second must show
 `enabled: true`, `cc002_acquire` and `cc002_verify_offline`, and absolute
 values for `command`, the adapter script argument, and `cwd`. Restart Codex
 after registration changes so new and resumed tasks initialize from the
-resolved configuration.
+resolved configuration. The repository result must also show the exact
+machine-level `env.DOCKER_HOST`; the project configuration must not contain it.
 
 ## Mandatory rule for new MCP servers and dependent skills
 
@@ -51,7 +63,8 @@ Any change that adds a repository-backed MCP server, or a skill that requires
 one, must include all of the following in the same change:
 
 1. A user-config example with an absolute executable, absolute repository
-   script path, absolute repository working directory, and `enabled = false`.
+   script path, absolute repository working directory, any required
+   machine-local environment, and `enabled = false`.
 2. Project configuration containing activation and policy only. Never commit
    `cwd = "."`, a relative repository script, or a local absolute path there.
 3. A launch test whose caller starts in `/` and completes the actual STDIO
