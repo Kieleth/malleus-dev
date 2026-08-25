@@ -48,6 +48,20 @@ DOCS_COMMANDS = (
 INFRASTRUCTURE_DOCTEST = '>>> {"manifest": "validated"}["manifest"]'
 PYTHON_ALIASES = {"py", "python", "python3"}
 RST_EXECUTABLE = re.compile(r"^\.\. (code|code-block|doctest|jupyter-execute)::(?:\s+(\S+))?\s*$")
+PUBLIC_GUIDES = {
+    "ADOPTION_GUIDE.md",
+    "ARCHITECTURE.md",
+    "ASSENT_PLAN.md",
+    "ASSENT_PROTOCOL.md",
+    "DELIMITATIONS.md",
+    "EFFECT_PROTOCOL.md",
+    "IMPLEMENTATION_STATUS.md",
+    "KNOWLEDGE_GRAPH_PROTOCOL.md",
+    "ONTOLOGY_PROTOCOL.md",
+    "PRINCIPLES.md",
+    "RECIPES.md",
+    "RECON_CONTRACT.md",
+}
 
 
 def _load_module(path: Path) -> ModuleType:
@@ -321,6 +335,9 @@ def test_sphinx_configuration_is_strict_and_has_required_extensions() -> None:
     assert conf.linkcheck_anchors is True
     assert conf.linkcheck_allow_unauthorized is False
     assert conf.exclude_patterns == []
+    selected_guides = {path for path in conf.include_patterns if "/" not in path}
+    assert selected_guides == PUBLIC_GUIDES | {"index.md"}
+    assert "COST_AWARE_MODEL_ARCHITECTURE_RECON.md" not in conf.include_patterns
 
 
 def test_autosummary_cannot_generate_authored_stubs() -> None:
