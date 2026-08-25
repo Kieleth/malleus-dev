@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "ccd12-closure-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T15:25:12Z",
+    "claims": [
+      "OD-012 selects LinkML v1.11.1 at commit a7ed3e4cbb19731f072d0d90b6d52f7d822569ee, both exact published root wheels, and exactly the two published sdists.",
+      "The reproducibility tuple is CPython 3.12.10, Linux x86_64, cp312 and is explicitly not a runtime or CI support policy.",
+      "The selected pip 25.0.1 and slim Bookworm profiles bind exact artifact and OCI identities and require complete hash-pinned closure, retained wheelhouse, platform verification, and offline install in CC-002.",
+      "Canonical graph revision 12 has exact projection parity, sorted unique N-Triples, one status per status subject, and an acyclic dependency graph.",
+      "The zero-scope CC-D12 card binds the exact integrated CC-X00 completion; integration anchors at OVR-000050 and keeps selections exactly CC-000, CC-001, and CC-X00.",
+      "Research inventory, accepted baseline, runtime support, CC-002 materialization, and future fork revision remain mechanically distinct."
+    ],
+    "limitations": [
+      "No compiler-environment bytes, transitive lock, wheelhouse, OCI cache, or offline-install result exists yet.",
+      "The selected release baseline does not publish Malleus and does not authorize a future fork replacement.",
+      "No OCI child media type is claimed."
+    ]
+  },
+  "entry_hash": "sha256:98bc55bfc8394c4663647f0d7b1f41ea7a3bee7c4947b36e57aa8120396fa503",
+  "entry_id": "OVR-000052",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:748e5f1dee0e5b21cf5dd69a0789789cf451ca9a256a3b094754d999e55bc3bd",
+  "recorded_at": "2026-08-25T15:25:12Z",
+  "references": [
+    {
+      "digest": "sha256:de3496393866fcbb013172e4fd4aba3cfad2cad06075a514990e4ba75c09b678",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000050",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000051",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 52,
+  "subject": {
+    "id": "CC-D12-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the selected OD-012 baseline and CC-D12 closure.",
+  "why": "CC-D12 can complete only after exact coordinates, retention and acceptance policies, canonical promotion, dependency binding, and the ownership split with CC-002 pass retained mechanical verification."
+}

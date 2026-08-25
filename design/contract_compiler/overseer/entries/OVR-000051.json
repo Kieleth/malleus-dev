@@ -1,0 +1,131 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-012",
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:0bd833a513d0df6ed4201359328b0b52028c9539e5d216484dafd23e17d74a0e",
+        "before_digest": "sha256:95ffd5c98d5826a27a604eed4711f96bc68b77579b545362c8290913d2fb2984",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:5ca683b9c59b4928e138cd26c41c66657277056c69ffc2cb0a7cbff89a7c0cf3",
+        "before_digest": "sha256:ad7ba5a3357e6e7ce9fa4dd7b665fd577e5f7580284a7ca3b650dc9d65e137bd",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973",
+        "before_digest": "sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:8d6cd9f98f60368ca05ec089be1eb91fe7dbd6b561212a516a2d20987e9ff7aa",
+        "before_digest": "sha256:2045c95932a113cb10f0e41e163cc879c298505589abf5336561f8f6649a410e",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:91535447abcb9a61f1ee978fee972d7383d2823038a2523709577875dddec0b1",
+        "before_digest": "sha256:4c7c0996d809856fca034fff2c1dc520c75e25dead0431455bf8ad141953a517",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:8afa40ba6f77feed4f5f90df5b678430caf33789aa40d8c62faa17d83edb962a",
+        "before_digest": "sha256:b1e578c0c4f173b500c222b4abbe415087a72b03320f8f9c0daa06766c8d8455",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:03cb57e6166fcd4ebc39f2b915b9dd58b6b2e796d7b6ac232eec3aa7a9ad6c83",
+        "before_digest": "sha256:c9f0ddff18f1cf4e470f7ab0c3ed80a11e4ed71b537265d205fac9cac2236930",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:bae57f91bc149ff7e79ba924fb53dbbb8d7d9567f7a8fc451e197d632ac50d19",
+        "before_digest": "sha256:8d94a4b5dbd56e9e38558cf8ce128e2c4ca14cf4e48d4377458ef2f9ba6a16db",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D12/manifest.json"
+      },
+      {
+        "after_digest": "sha256:fc801915a01003a1a5a5b2e72165bb7fda1ef2b32d0089a1c630f7ca27dad776",
+        "before_digest": "sha256:10870a63aa86be876998886b3d9be6de53d1fbcd239895089d9ec092e7eec850",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:de3496393866fcbb013172e4fd4aba3cfad2cad06075a514990e4ba75c09b678",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D12.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:748e5f1dee0e5b21cf5dd69a0789789cf451ca9a256a3b094754d999e55bc3bd",
+  "entry_id": "OVR-000051",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2a4513bf83adca872ac41ad066c7df26aa2bcb24a1c4f8fca9359342c8f4e595",
+  "recorded_at": "2026-08-25T15:25:11Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D12/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:de3496393866fcbb013172e4fd4aba3cfad2cad06075a514990e4ba75c09b678",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 51,
+  "subject": {
+    "id": "ccd12-decision-closure",
+    "type": "DOCUMENT"
+  },
+  "summary": "Promote and register the selected OD-012 compiler baseline.",
+  "why": "The accepted operator choice must be canonical design authority, a fixed-point-safe zero-scope decision card, and an integration registration before CC-D12 can complete or CC-002 can be authorized. The revised ownership text prevents CC-D12 from requiring artifacts that only CC-002 can materialize."
+}

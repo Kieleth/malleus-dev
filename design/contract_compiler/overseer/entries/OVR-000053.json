@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Select the exact LinkML v1.11.1 release baseline, published wheel and source-retention identities, and provenance commit.",
+      "Select the CPython, pip, OCI, hash-pinned closure, retained-wheelhouse, and offline-install acceptance profile without changing runtime support policy.",
+      "Assign materialization and attestation to CC-002 and require a separate governed revision for any future fork baseline.",
+      "Promote OD-012 into canonical graph revision 12 with exact projection parity and bind the formal zero-scope decision card to CC-X00."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000050",
+      "OVR-000052"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D12"
+  },
+  "entry_hash": "sha256:40e6109248cb7b488449e6b074a2f7686bcabae405debfebbee490b8773f63c4",
+  "entry_id": "OVR-000053",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:98bc55bfc8394c4663647f0d7b1f41ea7a3bee7c4947b36e57aa8120396fa503",
+  "recorded_at": "2026-08-25T15:25:13Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000050",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000052",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 53,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the exact compiler-baseline decision gate.",
+  "why": "OVR-000050 supplies operator authority and OVR-000052 verifies exact identities, canonical promotion, dependency binding, fixed-point integration, and the boundary between baseline selection and CC-002 materialization."
+}

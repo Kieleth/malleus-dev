@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-012"
+    ],
+    "consequences": [
+      "CC-002 may materialize and attest the selected compiler environment without reopening baseline selection.",
+      "The reproducibility tuple does not narrow the Malleus runtime or CI support matrix.",
+      "The selected published LinkML wheels are selected for retention as released and are not claimed rebuilt.",
+      "A future LinkML fork or source commit requires a separate governed baseline revision and explicit switch."
+    ],
+    "constraints": [
+      "Use LinkML v1.11.1 at commit a7ed3e4cbb19731f072d0d90b6d52f7d822569ee; select linkml wheel sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed and linkml-runtime wheel sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da for retention.",
+      "Select only linkml sdist sha256:2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524 and linkml-runtime sdist sha256:e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754 for source retention.",
+      "Use CPython 3.12.10 on Linux x86_64 with cp312 as the reproducibility tuple only.",
+      "Use pip 25.0.1 wheel sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f with a complete hash-pinned requirements manifest, retained wheelhouse, and offline installation proof.",
+      "Use python:3.12.10-slim-bookworm index sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db as provenance and linux/amd64 child sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 as runtime pin; do not assert a child media type.",
+      "CC-D12 selects coordinates and acceptance policy; CC-002 materializes and attests bytes, closure, wheelhouse, platform, and offline install."
+    ],
+    "decision_id": "OD-012",
+    "satisfies_workstreams": [
+      "CC-D12"
+    ],
+    "selected_option": "Release-first LinkML v1.11.1 baseline with the exact CPython, pip, retained-artifact, OCI, and offline-install profile",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:2a4513bf83adca872ac41ad066c7df26aa2bcb24a1c4f8fca9359342c8f4e595",
+  "entry_id": "OVR-000050",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ad20ce2f1aad068a7288cfa300cb2ab64cbb336893b8eaf04d9b840ca67f7b94",
+  "recorded_at": "2026-08-25T15:25:10Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000049",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 50,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Select the exact release-first LinkML compiler baseline.",
+  "why": "The completed CC-X00 inventory supplied immutable release and source candidates. The operator chose the published LinkML v1.11.1 release first, the CPython 3.12.10 Linux x86_64 cp312 reproducibility tuple, the smallest retained-source set, and a pip plus slim Bookworm offline profile. The ownership correction keeps selection in CC-D12 and assigns byte materialization and attestation to CC-002."
+}

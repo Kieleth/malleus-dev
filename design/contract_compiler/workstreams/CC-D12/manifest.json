@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:988d01efb74fcb8e2c70a18497782090fd0a87cf9be46cb21ad9d5106e757f04",
+        "completion_entry_hash": "sha256:5dcf60c20f22f2777548edf28ca83cfb4648333faef1712c4fe8f3830236c84b",
+        "completion_entry_id": "OVR-000047",
+        "integrated_head": "cafcb48dd0c253014c441a36a3b8226a1c84e721",
+        "workstream_id": "CC-X00"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-012 by recording the operator-selected LinkML v1.11.1 release baseline, exact published wheel and retained-sdist identities, provenance commit, CPython reproducibility tuple, pip resolver artifact, immutable OCI index and linux/amd64 child identities, offline-lock acceptance policy, CC-002 materialization boundary, and future-fork revision boundary. This decision workstream owns no implementation files, materializes no bytes, creates no worker candidate, and makes no runtime-support or Malleus-release claim.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D12"
+}

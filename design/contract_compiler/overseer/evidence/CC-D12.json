@@ -1,0 +1,167 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 15754,
+      "path": "conformance/contract_compiler/v0/compiler_baseline_candidates.json",
+      "sha256": "sha256:735df1e8c34790ddebcc7e4b27c0461e3905411838373e1248284fe88bee4824"
+    },
+    {
+      "byte_length": 28887,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:0bd833a513d0df6ed4201359328b0b52028c9539e5d216484dafd23e17d74a0e"
+    },
+    {
+      "byte_length": 15720,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:5ca683b9c59b4928e138cd26c41c66657277056c69ffc2cb0a7cbff89a7c0cf3"
+    },
+    {
+      "byte_length": 213207,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:8d6cd9f98f60368ca05ec089be1eb91fe7dbd6b561212a516a2d20987e9ff7aa"
+    },
+    {
+      "byte_length": 66285,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:91535447abcb9a61f1ee978fee972d7383d2823038a2523709577875dddec0b1"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:8afa40ba6f77feed4f5f90df5b678430caf33789aa40d8c62faa17d83edb962a"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:03cb57e6166fcd4ebc39f2b915b9dd58b6b2e796d7b6ac232eec3aa7a9ad6c83"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:bae57f91bc149ff7e79ba924fb53dbbb8d7d9567f7a8fc451e197d632ac50d19"
+    },
+    {
+      "byte_length": 2847,
+      "path": "design/contract_compiler/workstreams/CC-X00/manifest.json",
+      "sha256": "sha256:988d01efb74fcb8e2c70a18497782090fd0a87cf9be46cb21ad9d5106e757f04"
+    },
+    {
+      "byte_length": 1376,
+      "path": "design/contract_compiler/workstreams/CC-D12/manifest.json",
+      "sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7"
+    },
+    {
+      "byte_length": 18476,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:fc801915a01003a1a5a5b2e72165bb7fda1ef2b32d0089a1c630f7ca27dad776"
+    },
+    {
+      "byte_length": 3595,
+      "path": "design/contract_compiler/overseer/entries/OVR-000050.json",
+      "sha256": "sha256:dbb07940b7e0e531d0e397cabbda9d63b33822f1de146bd5a9afcfed7ea0c341"
+    }
+  ],
+  "base_commit": "c8d9316033b0e1bc8e6ab9e8ddaaa8a353f1cc7a",
+  "checks": [
+    {
+      "check_id": "od012-release-and-root-wheels",
+      "method": "Match the accepted decision, canonical graph, and CC-X00 inventory against the release coordinate, provenance commit, and both published wheel identities.",
+      "observed": "LinkML v1.11.1, commit a7ed3e4cbb19731f072d0d90b6d52f7d822569ee, linkml wheel d1bbb97a...990ed, and linkml-runtime wheel b22c77d8...6b3da are exact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-retained-source-set",
+      "method": "Compare the selected retained-source membership with the two published release sdists in the research inventory.",
+      "observed": "The selected set consists of exactly linkml sdist 2f6774e1...c8524 and linkml-runtime sdist e71300b5...20754; no monorepo archive or source-build output is selected.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-reproducibility-not-support",
+      "method": "Inspect the decision, card, graph boundary, and evidence limitations for the meaning of the Python tuple.",
+      "observed": "CPython 3.12.10, Linux x86_64, cp312 is the reproducibility tuple only and does not alter the runtime or CI support matrix.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-resolver-and-offline-profile",
+      "method": "Verify the exact resolver artifact and the selected closure and offline-install acceptance requirements.",
+      "observed": "pip 25.0.1 wheel c46efd13...8f7f is selected; CC-002 must produce a complete hash-pinned requirements closure, retained wheelhouse, and clean no-index offline installation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-pip-source-observation",
+      "method": "Inspect https://github.com/python/cpython/blob/v3.12.10/Lib/ensurepip/__init__.py and https://pypi.org/project/pip/25.0.1/ .",
+      "observed": "Observed 2026-08-25: CPython 3.12.10 ensurepip names pip 25.0.1 and PyPI identifies the selected pip wheel and hash. No HTTP response bytes are claimed retained.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-platform-profile",
+      "method": "Verify the selected official image tag observation and immutable OCI identities without inferring an unobserved child media type.",
+      "observed": "python:3.12.10-slim-bookworm resolved to index fd95fa22...88db and linux/amd64 child 97983fa8...50b4; the child is the runtime pin, the index is provenance, and no child media type is asserted.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-oci-source-observation",
+      "method": "Inspect the Docker Hub child page at https://hub.docker.com/layers/library/python/3.12.10-slim-bookworm/images/sha256-97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 and Official Images registration at https://github.com/docker-library/official-images/blob/1a6fdd630d55870bc3695528a4664b9051cd3ec1/library/python .",
+      "observed": "Observed 2026-08-25: the official tag registration and exact linux/amd64 child locator support the selected OCI coordinates. No HTTP response bytes are claimed retained.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-ownership-split",
+      "method": "Compare corrected CC-D12 and CC-002 wording and inspect the zero-scope decision card.",
+      "observed": "CC-D12 selects coordinates, identities, retention, and acceptance policy. CC-002 materializes and attests bytes, transitive closure, wheelhouse, OCI platform, and offline install.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-research-authority-boundary",
+      "method": "Compare the selected decision with the integrated CC-X00 inventory authority fields and card.",
+      "observed": "CC-X00 remains research evidence with no decision or production-artifact authority; OVR-000050 is the operator authority selecting one catalogued release baseline.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-future-fork-boundary",
+      "method": "Inspect the decision, graph, and card for replacement semantics.",
+      "observed": "A fork or source-commit baseline requires a separate governed revision with exact source and built-artifact identities and cannot silently replace LinkML v1.11.1.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-canonical-graph",
+      "method": "Parse the canonical TTL, verify sorted unique N-Triples, exact OD-012 tuples, status uniqueness, and the dependsOn DAG.",
+      "observed": "Revision 12 has 1,208 sorted unique triples, 238 status subjects with one status each, and an acyclic 99-node, 98-edge dependency graph; canonical digest is 3bf95b58...c973.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "od012-projection-parity",
+      "method": "Parse all 28 Turtle fences across the five owned Markdown projections and compare the RDF set with the canonical TTL.",
+      "observed": "1,208 triples; zero canonical-only triples; zero projection-only triples. Every owned graph reference names revision 12 and digest 3bf95b58...c973.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-dependency-binding",
+      "method": "Validate the formal zero-scope CC-D12 card against the exact integrated CC-X00 card and completion entry.",
+      "observed": "Binding uses CC-X00 card 988d01ef...7f04, candidate head cafcb48dd0c253014c441a36a3b8226a1c84e721, and OVR-000047 hash 5dcf60c2...6c84b.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-integration-fixed-point",
+      "method": "Validate registration, dependency DAG, authority checkpoint, and selection preservation in the integration manifest.",
+      "observed": "The manifest registers the CC-D12 card, anchors at OVR-000050, retains all 66 workstreams, and keeps selections exactly CC-000, CC-001, and CC-X00.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This closes the compiler-baseline decision. It does not create a retained source bundle, wheelhouse, transitive lock, OCI cache, or runnable compiler environment.",
+    "Published LinkML root wheels are selected for retention and are not claimed rebuilt from the retained sdists.",
+    "The CPython tuple is a reproducibility coordinate, not a Malleus support-policy change.",
+    "The OCI child media type is not asserted.",
+    "Official pip, CPython, Docker Hub, and Official Images source locators were observed on 2026-08-25; their HTTP response bytes are not claimed retained.",
+    "A future fork remains unselected and requires a separate governed baseline revision."
+  ],
+  "recorded_at": "2026-08-25T15:25:10Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D12"
+}

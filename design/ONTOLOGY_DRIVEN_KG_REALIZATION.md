@@ -8,9 +8,9 @@ Decision authority: author
 
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
-contract compiler `AD-001`, `AD-003` through `AD-005`, and `OD-001`
+contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001`, and `OD-012`
 
-Decision dates: 2026-08-17 and 2026-08-24
+Decision dates: 2026-08-17, 2026-08-24, and 2026-08-25
 
 Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
 This is an ancestry base only, not the tested implementation snapshot. The
@@ -18,10 +18,10 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 11,
-`sha256:eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`
+revision 12,
+`sha256:3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973`
 
-Evidence cutoff: 2026-08-24
+Evidence cutoff: 2026-08-25
 
 Private implementation-audit snapshot:
 `sha256:9b62ed651e0b571a3301da559494d55fd9fe35f7790016a64cb163f43214f47a`
@@ -1220,7 +1220,8 @@ backend, broad workload quality, or public capability. Those remain in
     replace LinkML only through the same normative artifact boundary and
     conformance suite.
 
-The author accepted the contract compiler directions on 2026-08-24:
+The author accepted the contract compiler directions on 2026-08-24 and the
+exact compiler baseline on 2026-08-25:
 
 1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
    break before 1.0, but implementation promotion remains gated by conformance.
@@ -1235,6 +1236,10 @@ The author accepted the contract compiler directions on 2026-08-24:
 6. `OD-001` selects one canonical consumer-bundle manifest per consumer. Its
    exact schema and canonical grammar remain open pending `OD-006` and
    `OD-013`.
+7. `OD-012` selects the published LinkML 1.11.1 release, exact wheel and sdist
+   identities, the CPython 3.12.10 Linux x86_64 `cp312` reproducibility tuple,
+   pip 25.0.1, and the exact slim Bookworm OCI identities. CC-002 materializes
+   and attests those bytes; a future fork requires a new governed revision.
 
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
@@ -1307,19 +1312,125 @@ cc:OD-001 rdf:type mfg:DecisionRecord ;
     mfg:decisionDate "2026-08-24" ;
     mfg:selects mfg:PerConsumerCanonicalBundleManifest ;
     mfg:status mfg:AcceptedDesign .
+
+cc:OD-012 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-25" ;
+    mfg:selects mfg:LinkMLV1_11_1ReleaseCompilerBaseline ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV1_11_1ReleaseCompilerBaseline rdf:type mfg:DesignObject ;
+    mfg:binds mfg:LinkMLV1_11_1ReleaseCoordinate ;
+    mfg:binds mfg:LinkMLV1_11_1ProvenanceCommit-a7ed3e4cbb19731f072d0d90b6d52f7d822569ee ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedWheelRetentionSet ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedSdistRetentionSet ;
+    mfg:binds mfg:CPython3_12_10LinuxX86_64Cp312ReproducibilityTuple ;
+    mfg:binds mfg:Pip25_0_1HashPinnedRequirementsWheelhouseOfflineInstallProfile ;
+    mfg:binds mfg:OfficialPython3_12_10SlimBookwormLinuxAmd64PlatformProfile ;
+    mfg:binds mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundary ;
+    mfg:binds mfg:FutureForkSeparateGovernedBaselineRevisionBoundary ;
+    mfg:binds mfg:PublishedReleaseWheelsRetainedNotRebuiltBoundary ;
+    mfg:binds mfg:ReproducibilityTupleNotRuntimeSupportPolicyBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV1_11_1ReleaseCoordinate rdf:type mfg:DesignObject ;
+    mfg:binds mfg:LinkMLV1_11_1ProvenanceCommit-a7ed3e4cbb19731f072d0d90b6d52f7d822569ee ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV1_11_1ProvenanceCommit-a7ed3e4cbb19731f072d0d90b6d52f7d822569ee
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:LinkMLV1_11_1PublishedWheelRetentionSet rdf:type mfg:DesignObject ;
+    mfg:binds <https://malleus.dev/foundation-graph/linkml-1.11.1-py3-none-any.whl-sha256-d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed> ;
+    mfg:binds <https://malleus.dev/foundation-graph/linkml_runtime-1.11.1-py3-none-any.whl-sha256-b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da> ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/foundation-graph/linkml-1.11.1-py3-none-any.whl-sha256-d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed>
+    rdf:type mfg:ArtifactIdentity .
+
+<https://malleus.dev/foundation-graph/linkml_runtime-1.11.1-py3-none-any.whl-sha256-b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da>
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:LinkMLV1_11_1PublishedSdistRetentionSet rdf:type mfg:DesignObject ;
+    mfg:binds <https://malleus.dev/foundation-graph/linkml-1.11.1.tar.gz-sha256-2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524> ;
+    mfg:binds <https://malleus.dev/foundation-graph/linkml_runtime-1.11.1.tar.gz-sha256-e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754> ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/foundation-graph/linkml-1.11.1.tar.gz-sha256-2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524>
+    rdf:type mfg:ArtifactIdentity .
+
+<https://malleus.dev/foundation-graph/linkml_runtime-1.11.1.tar.gz-sha256-e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754>
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:CPython3_12_10LinuxX86_64Cp312ReproducibilityTuple
+    rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:Pip25_0_1HashPinnedRequirementsWheelhouseOfflineInstallProfile
+    rdf:type mfg:SupportProfile ;
+    mfg:binds <https://malleus.dev/foundation-graph/pip-25.0.1-py3-none-any.whl-sha256-c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f> ;
+    mfg:dependsOn mfg:CC002Pip25_0_1ResolverAndTransitiveClosureAttestation ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/foundation-graph/pip-25.0.1-py3-none-any.whl-sha256-c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f>
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:OfficialPython3_12_10SlimBookwormLinuxAmd64PlatformProfile
+    rdf:type mfg:SupportProfile ;
+    mfg:binds mfg:Python3_12_10SlimBookwormTagLookup2026_08_25 ;
+    mfg:binds mfg:Python3_12_10SlimBookwormLinuxAmd64Child-sha256-97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 ;
+    mfg:binds mfg:OCIChildDigestRuntimePinAndIndexProvenanceBoundary ;
+    mfg:dependsOn mfg:CC002OCIIndexAndLinuxAmd64ChildDigestAttestation ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:Python3_12_10SlimBookwormTagLookup2026_08_25 rdf:type mfg:DesignObject ;
+    mfg:binds mfg:Python3_12_10SlimBookwormOCIIndex-sha256-fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db ;
+    mfg:binds mfg:Python3_12_10SlimBookwormLinuxAmd64Child-sha256-97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 .
+
+mfg:Python3_12_10SlimBookwormOCIIndex-sha256-fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:Python3_12_10SlimBookwormLinuxAmd64Child-sha256-97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:OCIChildDigestRuntimePinAndIndexProvenanceBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:CC002Pip25_0_1ResolverAndTransitiveClosureAttestation
+    rdf:type mfg:TestObligation ;
+    mfg:status mfg:Candidate .
+
+mfg:CC002OCIIndexAndLinuxAmd64ChildDigestAttestation
+    rdf:type mfg:TestObligation ;
+    mfg:status mfg:Candidate .
+
+mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundary
+    rdf:type mfg:Boundary ;
+    mfg:dependsOn mfg:CC002Pip25_0_1ResolverAndTransitiveClosureAttestation ;
+    mfg:dependsOn mfg:CC002OCIIndexAndLinuxAmd64ChildDigestAttestation ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:PublishedReleaseWheelsRetainedNotRebuiltBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ReproducibilityTupleNotRuntimeSupportPolicyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FutureForkSeparateGovernedBaselineRevisionBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
 ```
 
-Performed on 2026-08-24:
+Performed on 2026-08-25:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,140 RDF triples.
+   1,208 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,140 triples. Both directed set differences
+   the same 1,208 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 94 nodes and 94 edges, with no directed
+3. The canonical `dependsOn` graph has 99 nodes and 98 edges, with no directed
    dependency cycle.
-4. All 223 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 238 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1329,10 +1440,11 @@ Performed on 2026-08-24:
 6. Contract compiler `AD-001`, `AD-003` through `AD-005`, and `OD-001` each
    have exactly `DecisionRecord`, `decidedBy Author`, `decisionDate
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
-   remains represented only by `OKG-D012`.
-7. `EffectiveContract` and the four newly selected contract compiler objects
-   have exactly `AcceptedDesign` status. The consumer-bundle requirement has
-   exactly the two declared dependencies.
+   remains represented only by `OKG-D012`. `OD-012` has the same invariants
+   with `decisionDate "2026-08-25"` and selects exactly the release baseline.
+7. The `OD-012` baseline binds the exact release provenance, two published
+   wheels, two retained sdists, reproducibility tuple, pip lock profile, OCI
+   platform profile, CC-002 materialization boundary, and future-fork boundary.
 8. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
    coverage obligations, an explicit universal-completeness exclusion, and
    addressable counterevidence and revision semantics.
@@ -1346,10 +1458,10 @@ Performed on 2026-08-24:
 11. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-12. The canonical body contains 1,140 unique, lexically sorted N-Triples. Its
+12. The canonical body contains 1,208 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `eec61f99a5f78f8690b93635813193a4f94b3c8ebdb3284589ca42cd656bc085`, and every
-   owned Markdown graph reference names revision 11 and that digest.
+   `3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973`, and every
+   owned Markdown graph reference names revision 12 and that digest.
 13. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 14. None of the five owned Markdown documents or the canonical Turtle artifact
@@ -1358,5 +1470,5 @@ Performed on 2026-08-24:
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 11 was frozen. Existing GraphRecipe implementation
+rerun before revision 12 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

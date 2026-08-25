@@ -180,7 +180,66 @@ Canonical decision record:
 [`OVR-000002`](overseer/entries/OVR-000002.json). `CC-D15` is complete;
 `CC-D16` remains gated by OD-006 and OD-013.
 
-## Accepted directions in canonical graph revision 11
+## OD-012: exact compiler baseline
+
+Decision state: ACCEPTED, release-first baseline, 2026-08-25
+
+The selected research baseline is the published LinkML `v1.11.1` release at
+provenance commit `a7ed3e4cbb19731f072d0d90b6d52f7d822569ee`. This selects
+compiler inputs for Malleus development. It does not publish a Malleus release.
+
+The two published wheels are selected for retention as released, not rebuilt:
+
+| Distribution artifact | SHA-256 |
+|---|---|
+| `linkml-1.11.1-py3-none-any.whl` | `d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed` |
+| `linkml_runtime-1.11.1-py3-none-any.whl` | `b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da` |
+
+The selected source-retention set consists of only the two matching published
+sdists:
+
+| Source artifact | SHA-256 |
+|---|---|
+| `linkml-1.11.1.tar.gz` | `2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524` |
+| `linkml_runtime-1.11.1.tar.gz` | `e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754` |
+
+The reproducibility tuple is CPython 3.12.10, Linux x86_64, and `cp312`.
+It identifies one environment that must reproduce the compiler. It does not
+shrink Malleus's runtime or CI support matrix.
+
+The selected KISS lock profile uses pip 25.0.1 and its published
+`pip-25.0.1-py3-none-any.whl`, SHA-256
+`c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f`.
+The final requirements manifest must pin every distribution and artifact hash,
+the retained wheelhouse must contain the complete closure, and a clean install
+must succeed with indexes and network denied. CPython 3.12.10 bundles pip
+25.0.1 through `ensurepip`; CC-002 must still retain and verify the selected pip
+wheel rather than trusting ambient bootstrap state.
+
+The selected platform is the official `python:3.12.10-slim-bookworm` image for
+`linux/amd64`. The tag lookup resolved to OCI index digest
+`sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db`
+and selected child digest
+`sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4`.
+The child digest is the runtime pin. The index digest is retained as provenance.
+No child media type is asserted.
+
+CC-D12 selects those coordinates, identities, retained-source membership, and
+acceptance policies. CC-002 owns acquisition and byte retention, the complete
+transitive resolution, the wheelhouse, platform verification, and the offline
+installation proof. This split removes the former cycle in which CC-D12
+required material that only CC-002 was assigned to create.
+
+A later LinkML fork or source commit cannot silently replace this baseline. It
+requires a separate governed baseline revision, exact source and built-artifact
+identities, and the same acceptance suite before an explicit switch.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-012`. Overseer record:
+[`OVR-000050`](overseer/entries/OVR-000050.json). `CC-D12` is complete;
+CC-002 materialization remains pending.
+
+## Accepted directions in canonical graph revision 12
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -286,7 +345,6 @@ dependent workstream starts.
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |
 | OD-010 | Endpoint and generic class-reference semantics | Graph admission profile and operation traces |
 | OD-011 | Module-instance identity, resolver precedence, import-order meaning, cycle behavior, and bundled fallback | Recursive source boundary and binder ordering |
-| OD-012 | Exact compiler baseline: release or source commit, Python, both distribution wheels, lock, and retained source | Divergence measurement and parser adapter |
 | OD-013 | One distribution with compiler extra, two distributions, or external locked compiler environment | Packaging and installation tests |
 | OD-014 | Themed fixture name, vocabulary, authorship/license manifest, and public-clearance gate | Normative corpus membership and publication |
 
