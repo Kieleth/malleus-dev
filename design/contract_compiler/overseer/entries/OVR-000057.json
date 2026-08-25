@@ -1,0 +1,96 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PROGRAM-001",
+      "CC-D01",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:f110022aa8ba0ee9c3b897c0c49c8947fdd206950635efb429bf398327a1e758",
+        "before_digest": "sha256:7d870ac90a4e9c9da668fb3984c6c094c2ae7371fbc6b02dc744189db59d3dbc",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:a576df1f3e493907a041a4d07e0366238ab96d58f61b748656948c1cd21bef4a",
+        "before_digest": "sha256:071b555f6a9d68d837a55b15f45db018c99f13a47412fcaac91ecbba5eab3cd1",
+        "change": "MODIFIED",
+        "path": ".github/workflows/release.yml"
+      },
+      {
+        "after_digest": "sha256:4bc9473a02702601adc7c02180a06ff6a773b43dbb3af2a52982bb1148ac6081",
+        "before_digest": "sha256:64a1e1df81351e8f8dab6ad1a1466500745049946e51977e58b4c80b7b5962b3",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:e4b6e55710cc2138d379fccf44bc36d79fadcd423be2adec2d09db190258f5cd",
+        "before_digest": "sha256:6f36804f0fa4c46add38fb0bc859c43c24b3c49761457c81d3f2e63070c9ba24",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:533ee1d67e9a9399b364fe3cf6f1103445b8903ae422c83252e80e9419e64dcb",
+        "before_digest": "sha256:23b868589c9afb1990cef8585c86bfcea19c0a211a245bc3cc7c32e84da24712",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:434154da4760107f2924d25760554f54a8c1148fb69c616080ae18e9ff7bb400",
+  "entry_id": "OVR-000057",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:77cf2c4bfe830b9b3c5dcf4409974f70b7eb86e6ff4dbde2bd0ad7e1731490e3",
+  "recorded_at": "2026-08-25T19:57:24Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": ".github/workflows/tests.yml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": ".github/workflows/release.yml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 57,
+  "subject": {
+    "id": "contract-compiler-steady-state-evidence-gate",
+    "type": "DOCUMENT"
+  },
+  "summary": "Repair steady-state evidence checks and bind CC-002 checkpoint lineage.",
+  "why": "CC-D01 evidence is an immutable historical report, while verify-evidence compares its artifact records with the current mutable source snapshot before sealing. Repeating that pre-seal command in steady-state CI and release became invalid when a later governed document revision changed the protocol graph. The workflows retain ledger tests and ledger check, which validate the append-only history and latest document revisions. A structural regression test prevents either workflow from revalidating retained overseer evidence. This prerequisite does not revise CC-D01 evidence. It also resolves the CC-002 card's incompatible range wording: an intervening overseer prerequisite may be the final materialization base, while final artifacts and evidence must bind the three already-committed governed worker checkpoints explicitly."
+}

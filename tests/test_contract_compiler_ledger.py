@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shlex
 import shutil
+import subprocess
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -23,6 +26,35 @@ from scripts.contract_compiler_ledger import (  # noqa: E402
 
 
 OVERSEER = ROOT / "design" / "contract_compiler" / "overseer"
+STEADY_STATE_WORKFLOWS = (
+    ROOT / ".github" / "workflows" / "tests.yml",
+    ROOT / ".github" / "workflows" / "release.yml",
+)
+CC002_CARD = (
+    ROOT
+    / "design"
+    / "contract_compiler"
+    / "workstreams"
+    / "CC-002"
+    / "manifest.json"
+)
+INTEGRATION = ROOT / "design" / "contract_compiler" / "integration.json"
+CC002_CHECKPOINT_LINEAGE = (
+    "a7a65ccfdd7afd7d42a40509631fcdfef49f135e",
+    "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4",
+    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98",
+)
+CC002_LINEAGE_CONTRACT = (
+    "Treat a7a65ccfdd7afd7d42a40509631fcdfef49f135e, "
+    "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, and "
+    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98 as governed CC-002 worker "
+    "checkpoints. If an intervening overseer prerequisite becomes the final "
+    "materialization base, the final candidate range may begin at that "
+    "prerequisite commit. The final candidate must not claim that range "
+    "contains the earlier checkpoints; it must include the seven checkpoint "
+    "paths as exact artifacts at the candidate head and record the three "
+    "checkpoint commits and this range limitation in CC-002 evidence."
+)
 
 
 def _copy_ledger(tmp_path: Path) -> Path:
@@ -138,6 +170,157 @@ def _append_replacement_workstream(root: Path, source_id: str) -> str:
     path.write_text(canonical_json(source, indent=2) + "\n", encoding="utf-8")
     _reseal(root)
     return entry_id
+
+
+def _workflow_run_blocks(path: Path) -> list[str]:
+    workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return [
+        step["run"]
+        for job in workflow["jobs"].values()
+        for step in job["steps"]
+        if isinstance(step.get("run"), str)
+    ]
+
+
+def _workflow_commands(run_blocks: list[str]) -> list[list[str]]:
+    return [
+        shlex.split(line)
+        for run_block in run_blocks
+        for line in run_block.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
+def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -> None:
+    for workflow in STEADY_STATE_WORKFLOWS:
+        run_blocks = _workflow_run_blocks(workflow)
+        assert all("verify-evidence" not in run_block for run_block in run_blocks)
+        commands = _workflow_commands(run_blocks)
+        assert [
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_contract_compiler_ledger.py",
+        ] in commands
+        assert ["python", "scripts/contract_compiler_ledger.py", "check"] in commands
+
+
+def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
+    card_source = CC002_CARD.read_bytes()
+    card = json.loads(card_source)
+    responsibility = card["responsibility"]
+    assert CC002_LINEAGE_CONTRACT in responsibility
+    assert "do not omit those paths from later candidate history" not in responsibility
+    for checkpoint in CC002_CHECKPOINT_LINEAGE:
+        assert responsibility.count(checkpoint) == 1
+
+    resolved = [
+        subprocess.run(
+            ["git", "rev-parse", f"{checkpoint}^{{commit}}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        for checkpoint in CC002_CHECKPOINT_LINEAGE
+    ]
+    assert resolved == list(CC002_CHECKPOINT_LINEAGE)
+    for earlier, later in zip(resolved, resolved[1:], strict=False):
+        ancestry = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", earlier, later],
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+        )
+        assert ancestry.returncode == 0, ancestry.stderr.decode(errors="replace")
+
+    evidence_path = "conformance/contract_compiler/v0/evidence/CC-002.json"
+    checkpoint_scopes = {
+        scope["path"]
+        for scope in card["scopes"]
+        if scope["kind"] == "FILE" and scope["path"] != evidence_path
+    }
+    assert len(checkpoint_scopes) == 7
+    changed_paths = {
+        path
+        for checkpoint in resolved
+        for path in subprocess.run(
+            ["git", "diff-tree", "--no-commit-id", "--name-only", "-r", checkpoint],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.splitlines()
+    }
+    assert changed_paths == checkpoint_scopes
+
+    candidate = card["candidate"]
+    if candidate["state"] in {"ELIGIBLE", "INTEGRATED"}:
+        artifacts = {record["path"]: record for record in candidate["artifacts"]}
+        assert checkpoint_scopes <= artifacts.keys()
+        for path in checkpoint_scopes:
+            source = subprocess.run(
+                ["git", "show", f"{candidate['head_commit']}:{path}"],
+                cwd=ROOT,
+                capture_output=True,
+                check=True,
+            ).stdout
+            assert artifacts[path] == {
+                "byte_length": len(source),
+                "path": path,
+                "sha256": "sha256:" + hashlib.sha256(source).hexdigest(),
+            }
+
+        evidence_reference = next(
+            record for record in candidate["evidence"] if record["path"] == evidence_path
+        )
+        evidence_source = subprocess.run(
+            ["git", "show", f"{candidate['head_commit']}:{evidence_path}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout
+        assert evidence_reference == {
+            "byte_length": len(evidence_source),
+            "path": evidence_path,
+            "result": "PASS",
+            "sha256": "sha256:" + hashlib.sha256(evidence_source).hexdigest(),
+        }
+        evidence = json.loads(evidence_source)
+        lineage_limitation = next(
+            limitation
+            for limitation in evidence["limitations"]
+            if "candidate range" in limitation.casefold()
+        )
+        assert all(
+            checkpoint in lineage_limitation for checkpoint in CC002_CHECKPOINT_LINEAGE
+        )
+        assert any(
+            check["result"] == "PASS"
+            and all(
+                checkpoint in canonical_json(check)
+                for checkpoint in CC002_CHECKPOINT_LINEAGE
+            )
+            for check in evidence["checks"]
+        )
+
+    integration = json.loads(INTEGRATION.read_text(encoding="utf-8"))
+    assert integration["authority"]["overseer_ledger"] == {
+        "entry_count": 56,
+        "head_entry_id": "OVR-000056",
+        "head_hash": "sha256:77cf2c4bfe830b9b3c5dcf4409974f70b7eb86e6ff4dbde2bd0ad7e1731490e3",
+        "path": "design/contract_compiler/overseer",
+    }
+    row = next(
+        item for item in integration["workstreams"] if item["workstream_id"] == "CC-002"
+    )
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-002/manifest.json",
+        "sha256": "sha256:" + hashlib.sha256(card_source).hexdigest(),
+        "state": "PRESENT",
+    }
 
 
 def test_overseer_ledger_and_projection_are_current() -> None:
