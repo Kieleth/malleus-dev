@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "ccx00-selection-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T05:39:02Z",
+    "claims": [
+      "CC-X00 reached COMPLETE at OVR-000047 before it became an integration selection.",
+      "The sealed integration validator accepted 66 workstreams, 5 cards, and exactly 3 selections ordered CC-000, CC-001, and CC-X00.",
+      "The integrated candidate, three-artifact bundle, PASS evidence, seven worker phases, empty dependency set, and no-authority inventory boundary remained exact under selection."
+    ],
+    "limitations": [
+      "This selects the completed CC-X00 research result, not the LinkML release or source candidate. OD-012 remains open for the operator.",
+      "No transitive lock, wheelhouse, retained source, built compiler wheel, or production compiler environment exists."
+    ]
+  },
+  "entry_hash": "sha256:ad20ce2f1aad068a7288cfa300cb2ab64cbb336893b8eaf04d9b840ca67f7b94",
+  "entry_id": "OVR-000049",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3d5f443642a55f70dd77225b47882faec1ef9513189cd44d5f27cb0e4fa7c35b",
+  "recorded_at": "2026-08-25T05:39:02Z",
+  "references": [
+    {
+      "digest": "sha256:79460f1a5c9031dbd532748856f19033e4dff072c6873433d2c821d24cc41700",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X00.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000047",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f88f87afd9120abb5d7aa7d7e19ac03c55204f6d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 49,
+  "subject": {
+    "id": "CC-X00-selection-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final selected CC-X00 state.",
+  "why": "The selected integration state needs retained evidence that completion preceded selection and that selecting the research result did not decide OD-012."
+}

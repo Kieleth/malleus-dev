@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X00"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:988d01efb74fcb8e2c70a18497782090fd0a87cf9be46cb21ad9d5106e757f04",
+        "before_digest": "sha256:87e0a8b1c6aec40f03d480ffdb99f874f1d3ddaf735e148321f55745d6fccae8",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X00/manifest.json"
+      },
+      {
+        "after_digest": "sha256:10870a63aa86be876998886b3d9be6de53d1fbcd239895089d9ec092e7eec850",
+        "before_digest": "sha256:47c857b69274561556b370db77e03f917467b1cdad4f1da00b59b288edc7d9db",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:79460f1a5c9031dbd532748856f19033e4dff072c6873433d2c821d24cc41700",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X00.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:3d5f443642a55f70dd77225b47882faec1ef9513189cd44d5f27cb0e4fa7c35b",
+  "entry_id": "OVR-000048",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5dcf60c20f22f2777548edf28ca83cfb4648333faef1712c4fe8f3830236c84b",
+  "recorded_at": "2026-08-25T05:39:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X00/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:79460f1a5c9031dbd532748856f19033e4dff072c6873433d2c821d24cc41700",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X00.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 48,
+  "subject": {
+    "id": "ccx00-selected-integration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the selected CC-X00 research result.",
+  "why": "The integration manifest may select the completed CC-X00 inventory only after OVR-000047. This selection integrates decision evidence and carries no authority to choose either compiler candidate."
+}

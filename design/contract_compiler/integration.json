@@ -1,9 +1,9 @@
 {
   "authority": {
     "overseer_ledger": {
-      "entry_count": 44,
-      "head_entry_id": "OVR-000044",
-      "head_hash": "sha256:49e7098e7683f41a23d59704c44fbddf9ba469a78894c39bb27e5f64708c1eea",
+      "entry_count": 47,
+      "head_entry_id": "OVR-000047",
+      "head_hash": "sha256:5dcf60c20f22f2777548edf28ca83cfb4648333faef1712c4fe8f3830236c84b",
       "path": "design/contract_compiler/overseer"
     },
     "snapshot": {
@@ -216,14 +216,15 @@
   "schema": "malleus.contract-compiler.integration/v1",
   "selections": [
     "CC-000",
-    "CC-001"
+    "CC-001",
+    "CC-X00"
   ],
   "workstreams": [
     {
       "card": {
-        "byte_length": 2845,
+        "byte_length": 2847,
         "path": "workstreams/CC-X00/manifest.json",
-        "sha256": "sha256:87e0a8b1c6aec40f03d480ffdb99f874f1d3ddaf735e148321f55745d6fccae8",
+        "sha256": "sha256:988d01efb74fcb8e2c70a18497782090fd0a87cf9be46cb21ad9d5106e757f04",
         "state": "PRESENT"
       },
       "depends_on": [],

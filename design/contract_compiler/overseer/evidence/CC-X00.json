@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18301,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:10870a63aa86be876998886b3d9be6de53d1fbcd239895089d9ec092e7eec850"
+    },
+    {
+      "byte_length": 2847,
+      "path": "design/contract_compiler/workstreams/CC-X00/manifest.json",
+      "sha256": "sha256:988d01efb74fcb8e2c70a18497782090fd0a87cf9be46cb21ad9d5106e757f04"
+    },
+    {
+      "byte_length": 3394,
+      "path": "design/contract_compiler/overseer/evidence/CC-X00-completion.json",
+      "sha256": "sha256:0878406329024d1e3447d1ac26fec67bd1186fc73dbac410bde0d2616c928580"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-X00/ledger/head.json",
+      "sha256": "sha256:f7374bdd0f218009f784a004a01b2db0608bca8f58ae5e267f78d82b6f13bdd5"
+    }
+  ],
+  "base_commit": "f88f87afd9120abb5d7aa7d7e19ac03c55204f6d",
+  "checks": [
+    {
+      "check_id": "ccx00-selected-integration",
+      "method": "Validate the sealed integration manifest after selecting the completed CC-X00 workstream result.",
+      "observed": "The validator accepted 66 workstreams, 5 cards, and exactly 3 selections ordered CC-000, CC-001, and CC-X00.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-completion-before-selection",
+      "method": "Verify that OVR-000046 established completion evidence and OVR-000047 transitioned CC-X00 to COMPLETE before this selection checkpoint.",
+      "observed": "The selected integration anchor stops at OVR-000047, after the exact completion evidence chain and before the selection document revision.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-selected-candidate",
+      "method": "Revalidate candidate history, artifact and evidence equality, worker phases, and the empty dependency set under the selected gate.",
+      "observed": "The integrated candidate remained one linear four-path commit with three exact artifacts, PASS worker evidence, all seven TDD dispositions, and no dependencies.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx00-no-baseline-selection",
+      "method": "Validate the inventory authority fields and absence of ranking or selection data after workstream integration.",
+      "observed": "Decision and production-artifact authority remain NONE. OD-012 is open; neither the release nor source candidate is selected or ranked.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Selecting CC-X00 integrates the completed research inventory, not a compiler baseline. OD-012 remains open for the operator in CC-D12.",
+    "The release candidate remains PROBE_READY and the source candidate remains PROBE_BLOCKED.",
+    "No transitive lock, wheelhouse, retained source, built compiler wheel, or production compiler environment exists."
+  ],
+  "recorded_at": "2026-08-25T05:39:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X00"
+}
