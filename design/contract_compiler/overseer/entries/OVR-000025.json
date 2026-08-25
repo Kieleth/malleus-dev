@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:183d745217bae6a5587b9e86c00248842269d916789ce3657b900d0d802ac964",
+        "before_digest": "sha256:45b077d5b372d336a5d9c4b94fcf673d0811b89ef2f1cab374c112d7754664f6",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:9cb8af6a46fe36d212d15953e71cc4dd9112e5f852eb5a3ef5b3975bad83b304",
+  "entry_id": "OVR-000025",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:05c6c7a5a163f582533b22c18d6a6ccce8d5fe169c61957f5df6648d06648eaf",
+  "recorded_at": "2026-08-25T00:07:39Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "d673ff03422dec8b5488f68286d349b65fb8d525",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 25,
+  "subject": {
+    "id": "cc001-real-builder-guardrails",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the CC-001 public-guide selection guardrail.",
+  "why": "The delegated worker added a hard assertion for the operator-selected twelve-guide public set and explicit exclusion of the unshipped cost-architecture note. Real Sphinx validation correctly refused the changed test bytes until this append-only revision recorded them; no production documentation behavior is claimed by this checkpoint."
+}
