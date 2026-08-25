@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:6f36804f0fa4c46add38fb0bc859c43c24b3c49761457c81d3f2e63070c9ba24",
+        "before_digest": "sha256:5cda5c55a19f30711f5ee6a6bbe1b02a5cf2b0460ec605a04349bb2cf68a83ae",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:23b868589c9afb1990cef8585c86bfcea19c0a211a245bc3cc7c32e84da24712",
+        "before_digest": "sha256:1f4716ec46d9d84339f19bde6bff2f940568fc1462a9f1078ecdd7859bf4b8f5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:77cf2c4bfe830b9b3c5dcf4409974f70b7eb86e6ff4dbde2bd0ad7e1731490e3",
+  "entry_id": "OVR-000056",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e4b1e099024b75c099bc261b5a379e0c07d56d2b8b9108fb49983b15d30edf16",
+  "recorded_at": "2026-08-25T19:30:48Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 56,
+  "subject": {
+    "id": "cc002-colima-transport-authorization",
+    "type": "DOCUMENT"
+  },
+  "summary": "Authorize the exact CC-002 Colima transport and restart-repair ownership.",
+  "why": "CC-002 needs a machine-level Unix DOCKER_HOST to reach this host's Colima socket after the sanitized Docker environment removed ambient context. The card permits only canonical, filesystem-validated startup transport, keeps the endpoint and resolved executable outside retained evidence, and freezes the planned retained manifest identity to the exact keys command, client_version, and transport with command docker and transport LOCAL_UNIX_SOCKET. Four exact FILE scopes make the seven-path restart repair honest worker-owned candidate history. Integration remains fixed-point-safe at OVR-000055, immediately before this byte-binding revision."
+}
