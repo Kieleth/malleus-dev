@@ -13,6 +13,7 @@ import importlib.util
 import inspect
 import os
 from pathlib import Path
+import pickle
 import subprocess
 import sys
 from types import ModuleType
@@ -107,6 +108,23 @@ PUBLIC_DOC_SOURCES = PUBLIC_GUIDES | {
     "index.md",
     "reference/index.md",
 }
+APPROVED_REFERENCE_PATH = DOCS / "reference" / "index.md"
+APPROVED_REFERENCE_SOURCE = (
+    "# Current package-root reference\n"
+    "\n"
+    "This page exercises Sphinx autodoc and autosummary against the existing public\n"
+    "package root. It does not promote contract-compiler stages.\n"
+    "\n"
+    "```{eval-rst}\n"
+    ".. autosummary::\n"
+    "\n"
+    "   malleus.OntologyRegistry\n"
+    "\n"
+    ".. automodule:: malleus\n"
+    "\n"
+    ".. autoclass:: malleus.OntologyRegistry\n"
+    "```\n"
+).encode()
 
 
 def _load_module(path: Path) -> ModuleType:
@@ -129,6 +147,32 @@ def _public_doc_paths(root: Path = DOCS) -> list[Path]:
     missing = [path for path in paths if not path.is_file()]
     assert missing == [], f"required public documentation sources are missing: {missing}"
     return paths
+
+
+def _approved_eval_rst_island(path: Path) -> bool:
+    if path != APPROVED_REFERENCE_PATH:
+        return False
+    if path.read_bytes() != APPROVED_REFERENCE_SOURCE:
+        raise AssertionError(
+            f"{path.relative_to(ROOT)}: approved eval-rst source bytes changed"
+        )
+    return True
+
+
+def _public_source_captures(path: Path) -> list[dict[str, object]]:
+    if _approved_eval_rst_island(path):
+        return []
+    location = str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+    return _captures_from_myst(
+        path.read_text(encoding="utf-8"),
+        location=location,
+    )
+
+
+def _public_source_python_blocks(path: Path) -> list[tuple[str, str]]:
+    if _approved_eval_rst_island(path):
+        return []
+    return _python_blocks(path)
 
 
 def _git_status() -> bytes:
@@ -725,22 +769,92 @@ def test_strict_html_build_is_source_pure(tmp_path: Path) -> None:
 def test_autodoc_and_autosummary_render_the_existing_package_root(
     tmp_path: Path,
 ) -> None:
-    reference = (DOCS / "reference" / "index.md").read_text(encoding="utf-8")
-    assert "```{automodule} malleus" in reference
-    assert "```{autosummary}" in reference
-    assert "```{autoclass} malleus.OntologyRegistry" in reference
-    assert "malleus.OntologyRegistry" in reference
+    assert _approved_eval_rst_island(APPROVED_REFERENCE_PATH)
 
     output = tmp_path / "html"
     _assert_build("html", output)
-    rendered = "\n".join(
-        path.read_text(encoding="utf-8") for path in sorted(output.rglob("*.html"))
+    environment = pickle.loads(
+        (output / ".doctrees" / "environment.pickle").read_bytes()
     )
-    assert "OntologyRegistry" in rendered
-    assert (
-        "Malleus: root ontology + ontology-typed knowledge graph with distributed "
-        "convergence."
-    ) in rendered
+    objects = environment.domaindata["py"]["objects"]
+    assert set(objects) == {
+        "malleus",
+        "malleus.OntologyRegistry",
+        "malleus.ontology.OntologyRegistry",
+    }
+    assert objects["malleus"].objtype == "module"
+    assert objects["malleus"].node_id == "module-malleus"
+    assert objects["malleus"].aliased is False
+    assert objects["malleus.OntologyRegistry"].objtype == "class"
+    assert objects["malleus.OntologyRegistry"].node_id == "malleus.OntologyRegistry"
+    assert objects["malleus.OntologyRegistry"].aliased is False
+    assert objects["malleus.ontology.OntologyRegistry"].aliased is True
+    modules = environment.domaindata["py"]["modules"]
+    assert set(modules) == {"malleus"}
+    assert modules["malleus"].docname == "reference/index"
+    assert modules["malleus"].node_id == "module-malleus"
+
+    doctree = pickle.loads(
+        (output / ".doctrees" / "reference" / "index.doctree").read_bytes()
+    )
+    descriptions = [
+        node
+        for node in doctree.findall()
+        if type(node).__name__ == "desc" and node.get("domain") == "py"
+    ]
+    signatures = [
+        node
+        for node in doctree.findall()
+        if type(node).__name__ == "desc_signature"
+    ]
+    assert [(node.get("objtype"), node.get("classes")) for node in descriptions] == [
+        ("class", ["py", "class"])
+    ]
+    assert [node.get("ids") for node in signatures] == [
+        ["malleus.OntologyRegistry"]
+    ]
+
+    rendered = (output / "reference" / "index.html").read_text(encoding="utf-8")
+    assert 'id="module-malleus"' in rendered
+    assert '<table class="autosummary longtable docutils align-default">' in rendered
+    assert 'href="#malleus.OntologyRegistry"' in rendered
+    assert 'class="py class"' in rendered
+    assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered
+    assert ':py:obj:' not in rendered
+    assert ".. py:" not in rendered
+    assert (output / "py-modindex.html").is_file()
+
+
+def test_native_myst_autodoc_fences_render_literal_rst_not_domain_objects(
+    tmp_path: Path,
+) -> None:
+    index = (
+        "# Broken native reference\n\n"
+        "```{autosummary}\nmalleus.OntologyRegistry\n```\n\n"
+        "```{automodule} malleus\n```\n\n"
+        "```{autoclass} malleus.OntologyRegistry\n```\n"
+    )
+    source = _isolated_docs(
+        tmp_path,
+        extensions=("myst_parser", "sphinx.ext.autodoc", "sphinx.ext.autosummary"),
+        index=index,
+    )
+    output = tmp_path / "html"
+    result = _build("html", output, source=source)
+    assert result.returncode == 0, result.stdout + result.stderr
+    rendered = (output / "index.html").read_text(encoding="utf-8")
+    assert ":py:obj:" in rendered
+    assert ".. py:module::" in rendered
+    assert ".. py:class::" in rendered
+    environment = pickle.loads(
+        (output / ".doctrees" / "environment.pickle").read_bytes()
+    )
+    assert environment.domaindata["py"]["objects"] == {}
+    assert environment.domaindata["py"]["modules"] == {}
+    assert 'class="py class"' not in rendered
+    assert 'id="module-malleus"' not in rendered
+    assert 'id="malleus.OntologyRegistry"' not in rendered
+    assert not (output / "py-modindex.html").exists()
 
 
 def test_doctest_builder_executes_an_infrastructure_only_example(
@@ -873,25 +987,69 @@ def test_public_python_examples_are_ast_checked() -> None:
     autosummaries = [
         (path, capture)
         for path in public_paths
-        for capture in _captures_from_myst(
-            path.read_text(encoding="utf-8"),
-            location=str(path.relative_to(ROOT)),
-        )
+        for capture in _public_source_captures(path)
         if capture["directive"] == "autosummary"
     ]
-    assert autosummaries
     for path, capture in autosummaries:
         assert "toctree" not in capture["options"], path
     blocks = [
         block
         for path in public_paths
-        for block in _python_blocks(path)
+        for block in _public_source_python_blocks(path)
     ]
     assert blocks, "documentation has no executable Python or doctest blocks"
     for location, source in blocks:
         tree = ast.parse(source, filename=location)
         forbidden = _forbidden_example_operations(tree)
         assert forbidden == [], f"{location}: {forbidden}"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda source: source.replace(b"package root", b"package-root", 1),
+        lambda source: source.replace(b"OntologyRegistry", b"KnowledgeGraph", 1),
+        lambda source: source.replace(
+            b".. automodule:: malleus\n",
+            b".. automodule:: malleus\n   :members:\n",
+        ),
+        lambda source: source.replace(
+            b"```{eval-rst}", b"````{note}\n```{eval-rst}"
+        ).replace(b"```\n", b"```\n````\n", 1),
+        lambda source: source + b"\n```{eval-rst}\n.. automodule:: malleus\n```\n",
+    ],
+)
+def test_approved_eval_rst_island_refuses_every_byte_change(
+    monkeypatch: pytest.MonkeyPatch,
+    mutation,
+) -> None:
+    changed = mutation(APPROVED_REFERENCE_SOURCE)
+    original_read_bytes = Path.read_bytes
+
+    def changed_reference(path: Path) -> bytes:
+        if path == APPROVED_REFERENCE_PATH:
+            return changed
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", changed_reference)
+    with pytest.raises(AssertionError, match="approved eval-rst source bytes changed"):
+        _public_source_captures(APPROVED_REFERENCE_PATH)
+
+
+def test_eval_rst_permission_cannot_be_spoofed_by_path_or_location(
+    tmp_path: Path,
+) -> None:
+    copied = tmp_path / "reference" / "index.md"
+    copied.parent.mkdir(parents=True)
+    copied.write_bytes(APPROVED_REFERENCE_SOURCE)
+    with pytest.raises(AssertionError, match="unsupported MyST directive 'eval-rst'"):
+        _public_source_captures(copied)
+    with pytest.raises(AssertionError, match="unsupported MyST directive 'eval-rst'"):
+        _public_source_python_blocks(copied)
+    assert _refusal_from(
+        APPROVED_REFERENCE_SOURCE.decode(),
+        location="docs/reference/index.md",
+    ) == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
 
 
 def test_public_scan_excludes_unpublished_markdown_but_rst_stays_refused(
