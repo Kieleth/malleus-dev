@@ -460,6 +460,9 @@ def test_zero_argument_tool_call_accepts_omitted_arguments():
     [
         {"confirm": True},
         {"url": "https://example.invalid"},
+        {"token": "caller-controlled"},
+        {"host": "registry-1.docker.io"},
+        {"digest": "sha256:" + "0" * 64},
         {"command": ["sh"]},
         {"path": "/tmp/output"},
     ],
@@ -671,6 +674,29 @@ class FakeOpener:
     def open(self, request, *, timeout):
         self.requests.append((request, timeout))
         return self.response
+
+
+class SequenceOpener:
+    def __init__(self, *responses: FakeResponse) -> None:
+        self.responses = list(responses)
+        self.requests = []
+
+    def open(self, request, *, timeout):
+        self.requests.append((request, timeout))
+        return self.responses.pop(0)
+
+
+class DuplicateHeaders:
+    def __init__(self, name: str, *values: str) -> None:
+        self.name = name
+        self.values = list(values)
+
+    def get_all(self, name: str):
+        return self.values if name.lower() == self.name.lower() else None
+
+    def get(self, name: str):
+        values = self.get_all(name)
+        return values[0] if values else None
 
 
 def _synthetic_artifact(source: bytes, url: str = "https://files.pythonhosted.org/a.whl"):
@@ -903,16 +929,336 @@ def test_oci_index_parser_refuses_digest_mismatch_duplicate_platform_and_wrong_c
         )
 
 
+def test_fixed_oci_requests_use_exact_separate_hosts_urls_headers_and_sequence():
+    token = "fixture-bearer-token"
+    raw_index = b"raw index"
+    opener = SequenceOpener(
+        FakeResponse(
+            json.dumps({"token": token}).encode(), environment.OCI_AUTH_URL
+        ),
+        FakeResponse(raw_index, environment.OCI_INDEX_URL),
+    )
+    assert environment._fetch_selected_oci_index(opener) == raw_index
+    assert environment.OCI_AUTH_HTTPS_HOSTS == frozenset({"auth.docker.io"})
+    assert environment.OCI_REGISTRY_HTTPS_HOSTS == frozenset(
+        {"registry-1.docker.io"}
+    )
+    assert [request.full_url for request, _timeout in opener.requests] == [
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://registry-1.docker.io/v2/library/python/manifests/sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db",
+    ]
+    assert all(
+        request.get_method() == "GET"
+        and timeout == environment.NETWORK_TIMEOUT_SECONDS
+        for request, timeout in opener.requests
+    )
+    auth_headers = {
+        name.lower(): value for name, value in opener.requests[0][0].header_items()
+    }
+    index_headers = {
+        name.lower(): value for name, value in opener.requests[1][0].header_items()
+    }
+    assert auth_headers == {
+        "accept": "application/json",
+        "accept-encoding": "identity",
+        "user-agent": "malleus-cc002/1",
+    }
+    assert index_headers == {
+        "accept": (
+            "application/vnd.oci.image.index.v1+json, "
+            "application/vnd.docker.distribution.manifest.list.v2+json"
+        ),
+        "accept-encoding": "identity",
+        "authorization": f"Bearer {token}",
+        "user-agent": "malleus-cc002/1",
+    }
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://auth.docker.io.invalid/token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://user@auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://auth.docker.io:443/token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://auth.docker.io//token?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://auth.docker.io/%74oken?service=registry.docker.io&scope=repository:library/python:pull",
+        "https://auth.docker.io/token?scope=repository:library/python:pull&service=registry.docker.io",
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository%3Alibrary/python%3Apull",
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull&extra=1",
+        "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull#fragment",
+        "https://[auth.docker.io/token?service=registry.docker.io&scope=repository:library/python:pull",
+    ],
+)
+def test_fixed_oci_auth_endpoint_refuses_canonicalization_drift(url):
+    with pytest.raises(environment.CC002Error, match="OCI endpoint"):
+        environment._validate_fixed_oci_endpoint(
+            url,
+            environment.OCI_AUTH_HTTPS_HOSTS,
+            "/token",
+            "service=registry.docker.io&scope=repository:library/python:pull",
+        )
+
+
+@pytest.mark.parametrize(
+    "redirect",
+    [
+        "https://auth.docker.io/other",
+        "https://registry-1.docker.io/token",
+    ],
+)
+def test_fixed_oci_reader_refuses_same_host_and_cross_host_redirects(redirect):
+    request = environment.urllib.request.Request(environment.OCI_AUTH_URL)
+    opener = FakeOpener(FakeResponse(b"{}", redirect))
+    with pytest.raises(environment.CC002Error, match="redirect"):
+        environment._read_fixed_https(
+            opener,
+            request,
+            environment.OCI_AUTH_URL,
+            environment.OCI_AUTH_RESPONSE_LIMIT,
+            "Docker Hub authentication",
+        )
+
+
+def test_fixed_oci_reader_accepts_missing_length_only_within_bound():
+    response = FakeResponse(b"bounded", environment.OCI_AUTH_URL)
+    response.headers = {}
+    request = environment.urllib.request.Request(environment.OCI_AUTH_URL)
+    assert environment._read_fixed_https(
+        FakeOpener(response),
+        request,
+        environment.OCI_AUTH_URL,
+        len(b"bounded"),
+        "Docker Hub authentication",
+    ) == b"bounded"
+
+
+@pytest.mark.parametrize(
+    ("headers", "source", "limit", "message"),
+    [
+        ({"Content-Length": "bad"}, b"x", 10, "Content-Length"),
+        ({"Content-Length": "-1"}, b"x", 10, "Content-Length"),
+        ({"Content-Length": "11"}, b"x", 10, "byte limit"),
+        ({"Content-Length": "1" * 5000}, b"x", 10, "byte limit"),
+        ({"Content-Length": "2"}, b"x", 10, "mismatch"),
+        ({"Content-Encoding": "gzip", "Content-Length": "1"}, b"x", 10, "encoded"),
+        ({}, b"x" * 11, 10, "byte limit"),
+    ],
+)
+def test_fixed_oci_reader_refuses_invalid_encoding_or_length(
+    headers, source, limit, message
+):
+    response = FakeResponse(source, environment.OCI_AUTH_URL)
+    response.headers = headers
+    request = environment.urllib.request.Request(environment.OCI_AUTH_URL)
+    with pytest.raises(environment.CC002Error, match=message):
+        environment._read_fixed_https(
+            FakeOpener(response),
+            request,
+            environment.OCI_AUTH_URL,
+            limit,
+            "Docker Hub authentication",
+        )
+
+
+def test_fixed_oci_reader_refuses_duplicate_lengths_status_and_interruption():
+    request = environment.urllib.request.Request(environment.OCI_AUTH_URL)
+    duplicate = FakeResponse(b"x", environment.OCI_AUTH_URL)
+    duplicate.headers = DuplicateHeaders("Content-Length", "1", "1")
+    with pytest.raises(environment.CC002Error, match="Content-Length"):
+        environment._read_fixed_https(
+            FakeOpener(duplicate),
+            request,
+            environment.OCI_AUTH_URL,
+            10,
+            "Docker Hub authentication",
+        )
+    status = FakeResponse(b"x", environment.OCI_AUTH_URL, status=401)
+    with pytest.raises(environment.CC002Error, match="HTTP status"):
+        environment._read_fixed_https(
+            FakeOpener(status),
+            request,
+            environment.OCI_AUTH_URL,
+            10,
+            "Docker Hub authentication",
+        )
+    interrupted = FakeResponse(b"xy", environment.OCI_AUTH_URL, fail_after=1)
+    with pytest.raises(environment.CC002Error, match="fixed HTTPS request failed"):
+        environment._read_fixed_https(
+            FakeOpener(interrupted),
+            request,
+            environment.OCI_AUTH_URL,
+            10,
+            "Docker Hub authentication",
+        )
+
+
+def test_fixed_oci_reader_refuses_changed_request_without_opening_or_leaking_errors():
+    class DeniedOpener:
+        def open(self, *_args, **_kwargs):
+            raise AssertionError("changed request reached network")
+
+    changed = environment.urllib.request.Request(
+        "https://auth.docker.io/other"
+    )
+    with pytest.raises(environment.CC002Error, match="request identity"):
+        environment._read_fixed_https(
+            DeniedOpener(),
+            changed,
+            environment.OCI_AUTH_URL,
+            10,
+            "Docker Hub authentication",
+        )
+
+    sentinel = "registry-secret-sentinel"
+
+    class FailingOpener:
+        def open(self, *_args, **_kwargs):
+            raise environment.urllib.error.URLError(sentinel)
+
+    fixed = environment.urllib.request.Request(environment.OCI_AUTH_URL)
+    with pytest.raises(environment.CC002Error) as caught:
+        environment._read_fixed_https(
+            FailingOpener(),
+            fixed,
+            environment.OCI_AUTH_URL,
+            10,
+            "Docker Hub authentication",
+        )
+    assert sentinel not in str(caught.value)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        b"{",
+        b'{"token":"one","token":"two"}',
+        b"{}",
+        b'{"token":"one","access_token":"two"}',
+        b'{"token":""}',
+        b'{"token":"contains space"}',
+        b'{"token":"line\\nbreak"}',
+        '{"token":"caf\u00e9"}'.encode(),
+        b'{"token":"middle=padding"}',
+        b'{"token":"colon:punctuation"}',
+        b'{"token":"quote\\\"punctuation"}',
+        b'{"token":"backslash\\\\punctuation"}',
+        b'{"token":1}',
+        b'{"token":"valid","unknown":"field"}',
+        b'{"token":"valid","expires_in":true}',
+        b'{"token":"valid","expires_in":0}',
+        b'{"token":"valid","expires_in":"300"}',
+        b'{"token":"valid","issued_at":""}',
+        b'{"token":"valid","issued_at":1}',
+        b'{"token":"valid","issued_at":"line\\nbreak"}',
+        json.dumps(
+            {"token": "valid", "issued_at": "x" * (environment.OCI_ISSUED_AT_LIMIT + 1)}
+        ).encode(),
+        json.dumps(
+            {"token": "x" * (environment.OCI_AUTH_RESPONSE_LIMIT + 1)}
+        ).encode(),
+    ],
+)
+def test_docker_hub_token_parser_refuses_invalid_or_unbounded_values(source):
+    with pytest.raises(environment.CC002Error, match="token response is invalid"):
+        environment._parse_docker_hub_token(source)
+
+
+def test_docker_hub_token_parser_accepts_equal_standard_token_fields():
+    source = json.dumps(
+        {
+            "token": "Exact-._~+/09==",
+            "access_token": "Exact-._~+/09==",
+            "expires_in": 300,
+            "issued_at": "2026-08-25T00:00:00Z",
+        }
+    ).encode()
+    assert environment._parse_docker_hub_token(source) == "Exact-._~+/09=="
+
+
+def test_registry_secret_never_appears_in_direct_or_mcp_errors():
+    sentinel = "registry-secret-sentinel"
+    source = json.dumps({"token": f"{sentinel} with-space"}).encode()
+    with pytest.raises(environment.CC002Error) as caught:
+        environment._parse_docker_hub_token(source)
+    assert sentinel not in str(caught.value)
+
+    class InvalidRegistryServices(FakeServices):
+        def acquire(self):
+            return environment._parse_docker_hub_token(source)
+
+    response = environment.handle_message(
+        _call("cc002_acquire"), InvalidRegistryServices()
+    )
+    assert sentinel not in environment.canonical_json(response)
+
+
+def test_token_parser_sanitizes_unexpected_parser_errors(monkeypatch):
+    sentinel = "registry-secret-sentinel"
+
+    def fail(*_args, **_kwargs):
+        raise RuntimeError(sentinel)
+
+    monkeypatch.setattr(environment, "strict_json", fail)
+    with pytest.raises(environment.CC002Error) as caught:
+        environment._parse_docker_hub_token(b"bounded")
+    assert sentinel not in str(caught.value)
+    assert "token response is invalid" in str(caught.value)
+
+
+def test_registry_index_opener_exception_cannot_echo_bearer_header():
+    sentinel = "registry-secret-sentinel"
+
+    class HeaderEchoOpener:
+        def __init__(self):
+            self.calls = 0
+
+        def open(self, request, *, timeout):
+            assert timeout == environment.NETWORK_TIMEOUT_SECONDS
+            self.calls += 1
+            if self.calls == 1:
+                return FakeResponse(
+                    json.dumps({"token": sentinel}).encode(),
+                    environment.OCI_AUTH_URL,
+                )
+            raise RuntimeError(repr(request.header_items()))
+
+    opener = HeaderEchoOpener()
+    with pytest.raises(environment.CC002Error) as caught:
+        environment._fetch_selected_oci_index(opener)
+    assert opener.calls == 2
+    assert sentinel not in str(caught.value)
+    assert "fixed HTTPS request failed" in str(caught.value)
+
+
+def test_acquisition_oci_index_cannot_depend_on_user_home_docker_plugins():
+    forbidden = [
+        "docker",
+        "buildx",
+        "imagetools",
+        "inspect",
+        f"docker.io/library/python@{environment.OCI_INDEX_DIGEST}",
+        "--raw",
+    ]
+    assert not hasattr(environment, "oci_index_command"), (
+        "OCI index acquisition still depends on Docker user-home plugin discovery: "
+        f"{forbidden!r}"
+    )
+    source = (ROOT / "scripts" / "contract_compiler_environment.py").read_text(
+        encoding="utf-8"
+    )
+    assert "buildx" not in source
+    assert "imagetools" not in source
+
+
 def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
     roots = tmp_path / "roots"
     wheelhouse = tmp_path / "wheelhouse"
     roots.mkdir()
     wheelhouse.mkdir()
-    inspect = environment.oci_index_command()
     pull = environment.image_pull_command()
     resolve = environment.resolve_command(roots, wheelhouse)
     verify = environment.verify_command(tmp_path / "bundle", tmp_path / "work")
-    assert inspect[-2:] == [environment.OCI_INDEX_REFERENCE, "--raw"]
     assert pull[-3:] == ["--platform", "linux/amd64", environment.OCI_CHILD_REFERENCE]
     assert "--platform" in resolve and "linux/amd64" in resolve
     assert "--network" in resolve and "bridge" in resolve
@@ -1386,8 +1732,10 @@ def test_subprocess_runner_is_fixed_shell_false_cwd_and_sanitized_env(
         "ALL_PROXY",
         "NO_PROXY",
         "SSH_AUTH_SOCK",
+        "DOCKER_AUTH_CONFIG",
+        "REGISTRY_AUTH_TOKEN",
     ):
-        monkeypatch.setenv(name, "/hostile/ambient")
+        monkeypatch.setenv(name, "registry-secret-sentinel")
     environment.run_fixed([environment.DOCKER, "version"], tmp_path)
     assert observed["argv"] == ["docker", "version"]
     assert observed["cwd"] == environment.REPOSITORY
@@ -1408,6 +1756,8 @@ def test_subprocess_runner_is_fixed_shell_false_cwd_and_sanitized_env(
         "PATH",
         "PYTHONIOENCODING",
     }
+    assert "registry-secret-sentinel" not in observed["argv"]
+    assert "registry-secret-sentinel" not in observed["env"].values()
 
 
 def test_docker_transport_is_revalidated_and_executable_reresolved_before_each_run(
@@ -1557,7 +1907,7 @@ def _pip_report(records, *, environment_values=None, installs=None):
     }
 
 
-def _fake_cc002_edges(tmp_path, monkeypatch):
+def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
     source_dir = tmp_path / "published"
     source_dir.mkdir()
     artifacts = []
@@ -1593,16 +1943,30 @@ def _fake_cc002_edges(tmp_path, monkeypatch):
         )
         sources[url] = source
 
+    class ExternalCalls(list):
+        def __init__(self):
+            super().__init__()
+            self.docker_arguments = []
+            self.network_requests = []
+
+    calls = ExternalCalls()
+    sources[environment.OCI_AUTH_URL] = json.dumps(
+        {"token": "registry-secret-sentinel"}
+    ).encode()
+    sources[environment.OCI_INDEX_URL] = b"fixture-index"
+
     class RoutingOpener:
         def open(self, request, *, timeout):
             assert timeout == environment.NETWORK_TIMEOUT_SECONDS
+            calls.network_requests.append(request)
+            if request.full_url == registry_failure_url:
+                raise RuntimeError(repr(request.header_items()))
             source = sources[request.full_url]
             return FakeResponse(source, request.full_url)
 
     destination = tmp_path / "compiler_environment"
     smoke = tmp_path / "malleus.yaml"
     smoke.write_text("name: malleus\nversion: 0.4.0\n", encoding="utf-8")
-    calls = []
 
     def mount_path(arguments, suffix):
         value = next(item for item in arguments if item.endswith(suffix))
@@ -1611,14 +1975,13 @@ def _fake_cc002_edges(tmp_path, monkeypatch):
     def fake_run(arguments, context, operation_root, *, docker_executable=None):
         del operation_root
         assert docker_executable == "/fixture/bin/docker"
+        calls.docker_arguments.append(list(arguments))
         if arguments[:2] == ["docker", "run"]:
             assert arguments.count("--user") == 1
             assert arguments[arguments.index("--user") + 1] == environment._docker_user_argument()
         calls.append(context)
         if arguments == environment.docker_version_command():
             return b'"28.3.3"\n'
-        if arguments == environment.oci_index_command():
-            return b"fixture-index"
         if arguments == environment.image_pull_command():
             return b""
         if arguments == environment.image_inspect_command():
@@ -1676,6 +2039,26 @@ def _fake_cc002_edges(tmp_path, monkeypatch):
     return destination, calls
 
 
+@pytest.mark.parametrize(
+    "failure_url", [environment.OCI_AUTH_URL, environment.OCI_INDEX_URL]
+)
+def test_registry_failure_after_root_downloads_leaves_no_publication_or_staging(
+    tmp_path, monkeypatch, failure_url
+):
+    destination, calls = _fake_cc002_edges(
+        tmp_path, monkeypatch, registry_failure_url=failure_url
+    )
+    with pytest.raises(environment.CC002Error) as caught:
+        environment.acquire_environment()
+    assert "registry-secret-sentinel" not in str(caught.value)
+    assert not destination.exists()
+    assert list(tmp_path.glob(".cc002-environment-*")) == []
+    assert [request.full_url for request in calls.network_requests[:5]] == [
+        artifact.url for artifact in environment.SELECTED_ARTIFACTS
+    ]
+    assert calls.network_requests[-1].full_url == failure_url
+
+
 def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
     tmp_path, monkeypatch
 ):
@@ -1684,7 +2067,6 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
     assert result["artifact_count"] == 5
     assert calls == [
         "Docker version",
-        "OCI index inspection",
         "parse OCI index",
         "OCI child pull",
         "local image inspection",
@@ -1699,9 +2081,20 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
         "transport": "LOCAL_UNIX_SOCKET",
     }
     assert (destination / "resolution-report.json").is_file()
+    assert all(
+        "buildx" not in arguments and "imagetools" not in arguments
+        for arguments in calls.docker_arguments
+    )
+    assert all(
+        "registry-secret-sentinel" not in argument
+        for arguments in calls.docker_arguments
+        for argument in arguments
+    )
     calls_before = list(calls)
+    requests_before = list(calls.network_requests)
     assert environment.acquire_environment() == result
     assert calls == calls_before
+    assert calls.network_requests == requests_before
 
 
 def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeypatch):
@@ -1711,6 +2104,7 @@ def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeyp
         candidate_evidence.read_bytes() if candidate_evidence.exists() else None
     )
     environment.acquire_environment()
+    requests_before = list(calls.network_requests)
     result = environment.verify_environment()
     assert result["state"] == "VERIFIED_OFFLINE"
     assert (destination / "verification.json").is_file()
@@ -1719,6 +2113,7 @@ def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeyp
     calls_before = list(calls)
     assert environment.verify_environment() == result
     assert calls == calls_before
+    assert calls.network_requests == requests_before
     evidence_after = (
         candidate_evidence.read_bytes() if candidate_evidence.exists() else None
     )
@@ -1781,6 +2176,9 @@ def test_machine_docker_endpoint_and_resolved_executable_are_not_retained(
             endpoint_b,
             "/fixture/bin/docker",
             "resolved_executable",
+            "registry-secret-sentinel",
+            "Authorization",
+            "Bearer ",
         ):
             assert forbidden.encode() not in source
 

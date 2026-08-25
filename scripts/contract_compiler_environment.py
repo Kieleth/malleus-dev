@@ -64,8 +64,21 @@ OCI_INDEX_DIGEST = (
 OCI_CHILD_DIGEST = (
     "sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4"
 )
-OCI_INDEX_REFERENCE = f"docker.io/library/python@{OCI_INDEX_DIGEST}"
 OCI_CHILD_REFERENCE = f"docker.io/library/python@{OCI_CHILD_DIGEST}"
+OCI_AUTH_URL = (
+    "https://auth.docker.io/token?service=registry.docker.io&"
+    "scope=repository:library/python:pull"
+)
+OCI_INDEX_PATH = f"/v2/library/python/manifests/{OCI_INDEX_DIGEST}"
+OCI_INDEX_URL = f"https://registry-1.docker.io{OCI_INDEX_PATH}"
+OCI_AUTH_HTTPS_HOSTS = frozenset({"auth.docker.io"})
+OCI_REGISTRY_HTTPS_HOSTS = frozenset({"registry-1.docker.io"})
+OCI_AUTH_RESPONSE_LIMIT = 64 * 1024
+OCI_INDEX_RESPONSE_LIMIT = 1024 * 1024
+OCI_ISSUED_AT_LIMIT = 128
+OCI_TOKEN68_BASE = frozenset(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~+/"
+)
 
 PYTHON_TUPLE = {
     "implementation": "CPython",
@@ -672,6 +685,193 @@ def _default_opener():
     return urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
 
 
+def _validate_fixed_oci_endpoint(
+    url: str,
+    hosts: frozenset[str],
+    path: str,
+    query: str,
+) -> None:
+    try:
+        parsed = urllib.parse.urlsplit(url)
+    except ValueError:
+        _fail("CC002_OCI_URL", "fixed OCI endpoint is invalid")
+    if len(hosts) != 1:
+        _fail("CC002_OCI_URL", "fixed OCI host boundary is invalid")
+    expected_host = next(iter(hosts))
+    expected_url = urllib.parse.urlunsplit(("https", expected_host, path, query, ""))
+    if (
+        url != expected_url
+        or parsed.scheme != "https"
+        or parsed.hostname not in hosts
+        or parsed.netloc != expected_host
+        or parsed.path != path
+        or parsed.query != query
+        or parsed.fragment
+    ):
+        _fail("CC002_OCI_URL", "fixed OCI endpoint is invalid")
+
+
+def _single_http_header(headers: Any, name: str, context: str) -> str | None:
+    get_all = getattr(headers, "get_all", None)
+    if callable(get_all):
+        values = get_all(name) or []
+    else:
+        value = headers.get(name)
+        values = [] if value is None else [value]
+    if len(values) > 1 or any(not isinstance(value, str) for value in values):
+        _fail("CC002_OCI_HTTP", f"{context}: invalid {name} header")
+    return values[0] if values else None
+
+
+def _read_fixed_https(
+    opener: Any,
+    request: urllib.request.Request,
+    expected_url: str,
+    byte_limit: int,
+    context: str,
+) -> bytes:
+    if request.full_url != expected_url or request.get_method() != "GET":
+        _fail("CC002_OCI_URL", f"{context}: fixed request identity changed")
+    try:
+        with opener.open(request, timeout=NETWORK_TIMEOUT_SECONDS) as response:
+            if response.status != 200:
+                _fail("CC002_OCI_HTTP", f"{context}: unexpected HTTP status")
+            if response.geturl() != expected_url:
+                _fail("CC002_OCI_URL", f"{context}: redirect is forbidden")
+            encoding = _single_http_header(response.headers, "Content-Encoding", context)
+            if encoding not in {None, "identity"}:
+                _fail("CC002_OCI_HTTP", f"{context}: encoded response is forbidden")
+            length_header = _single_http_header(
+                response.headers, "Content-Length", context
+            )
+            declared_length = None
+            if length_header is not None:
+                if not length_header or any(
+                    character < "0" or character > "9" for character in length_header
+                ):
+                    _fail("CC002_OCI_SIZE", f"{context}: invalid Content-Length")
+                if len(length_header) > len(str(byte_limit)):
+                    _fail("CC002_OCI_SIZE", f"{context}: response exceeds byte limit")
+                declared_length = int(length_header)
+                if declared_length > byte_limit:
+                    _fail("CC002_OCI_SIZE", f"{context}: response exceeds byte limit")
+            source = bytearray()
+            while True:
+                chunk = response.read(
+                    min(DOWNLOAD_CHUNK_SIZE, byte_limit + 1 - len(source))
+                )
+                if not chunk:
+                    break
+                if not isinstance(chunk, bytes):
+                    _fail("CC002_OCI_HTTP", f"{context}: response body is not bytes")
+                source.extend(chunk)
+                if len(source) > byte_limit:
+                    _fail("CC002_OCI_SIZE", f"{context}: response exceeds byte limit")
+            if declared_length is not None and declared_length != len(source):
+                _fail("CC002_OCI_SIZE", f"{context}: Content-Length mismatch")
+            return bytes(source)
+    except CC002Error:
+        raise
+    except Exception:
+        _fail("CC002_OCI_HTTP", f"{context}: fixed HTTPS request failed")
+
+
+def _parse_docker_hub_token(source: bytes) -> str:
+    try:
+        value = strict_json(source, "Docker Hub token response")
+    except Exception:
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    allowed = {"token", "access_token", "expires_in", "issued_at"}
+    if not isinstance(value, dict) or not set(value).issubset(allowed):
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    tokens = [value[name] for name in ("token", "access_token") if name in value]
+    if (
+        not tokens
+        or any(not isinstance(token, str) for token in tokens)
+        or len(tokens) == 2
+        and tokens[0] != tokens[1]
+    ):
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    token = tokens[0]
+    unpadded = token.rstrip("=")
+    if (
+        not token
+        or len(token) > OCI_AUTH_RESPONSE_LIMIT
+        or not unpadded
+        or any(character not in OCI_TOKEN68_BASE for character in unpadded)
+    ):
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    expires_in = value.get("expires_in")
+    if "expires_in" in value and (
+        not isinstance(expires_in, int)
+        or isinstance(expires_in, bool)
+        or expires_in <= 0
+    ):
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    issued_at = value.get("issued_at")
+    if "issued_at" in value and (
+        not isinstance(issued_at, str)
+        or not issued_at
+        or len(issued_at) > OCI_ISSUED_AT_LIMIT
+        or any(character < " " or character > "~" for character in issued_at)
+    ):
+        _fail("CC002_OCI_AUTH", "Docker Hub token response is invalid")
+    return token
+
+
+def _fetch_selected_oci_index(opener: Any) -> bytes:
+    _validate_fixed_oci_endpoint(
+        OCI_AUTH_URL,
+        OCI_AUTH_HTTPS_HOSTS,
+        "/token",
+        "service=registry.docker.io&scope=repository:library/python:pull",
+    )
+    auth_request = urllib.request.Request(
+        OCI_AUTH_URL,
+        headers={
+            "Accept": "application/json",
+            "Accept-Encoding": "identity",
+            "User-Agent": "malleus-cc002/1",
+        },
+        method="GET",
+    )
+    token = _parse_docker_hub_token(
+        _read_fixed_https(
+            opener,
+            auth_request,
+            OCI_AUTH_URL,
+            OCI_AUTH_RESPONSE_LIMIT,
+            "Docker Hub authentication",
+        )
+    )
+    _validate_fixed_oci_endpoint(
+        OCI_INDEX_URL,
+        OCI_REGISTRY_HTTPS_HOSTS,
+        OCI_INDEX_PATH,
+        "",
+    )
+    index_request = urllib.request.Request(
+        OCI_INDEX_URL,
+        headers={
+            "Accept": (
+                "application/vnd.oci.image.index.v1+json, "
+                "application/vnd.docker.distribution.manifest.list.v2+json"
+            ),
+            "Accept-Encoding": "identity",
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "malleus-cc002/1",
+        },
+        method="GET",
+    )
+    return _read_fixed_https(
+        opener,
+        index_request,
+        OCI_INDEX_URL,
+        OCI_INDEX_RESPONSE_LIMIT,
+        "OCI index retrieval",
+    )
+
+
 def safe_target(root: Path, relative_name: str) -> Path:
     """Resolve a fixed relative artifact name without traversal or symlink parents."""
     relative = PurePosixPath(relative_name)
@@ -818,10 +1018,6 @@ def parse_oci_index(
     if matches[0] != OCI_CHILD_DIGEST:
         _fail("CC002_OCI_CHILD", "OCI linux/amd64 child digest mismatch")
     return matches[0]
-
-
-def oci_index_command() -> list[str]:
-    return [DOCKER, "buildx", "imagetools", "inspect", OCI_INDEX_REFERENCE, "--raw"]
 
 
 def image_pull_command() -> list[str]:
@@ -2335,12 +2531,7 @@ def acquire_environment() -> dict[str, Any]:
                 docker_executable=docker_executable,
             )
         )
-        raw_index = _run_checked(
-            oci_index_command(),
-            "OCI index inspection",
-            staging,
-            docker_executable=docker_executable,
-        )
+        raw_index = _fetch_selected_oci_index(opener)
         parse_oci_index(raw_index)
         _run_checked(
             image_pull_command(),
