@@ -1,0 +1,2485 @@
+#!/usr/bin/env python3
+"""Bounded MCP acquisition and offline-verification adapter for CC-002.
+
+The server accepts no locations or commands from the MCP caller.  Every remote
+artifact, digest, platform, output path, subprocess argument, and smoke input is
+fixed by the accepted OD-012 baseline and this CC-002 implementation.
+"""
+
+from __future__ import annotations
+
+import email.policy
+import hashlib
+import json
+import os
+import shutil
+import socket
+import socketserver
+import subprocess
+import sys
+import tempfile
+import threading
+import urllib.error
+import urllib.parse
+import urllib.request
+import zipfile
+from dataclasses import dataclass
+from email.parser import BytesParser
+from pathlib import Path, PurePosixPath
+from typing import Any, Callable, Mapping, Sequence, TextIO
+
+
+REPOSITORY = Path(__file__).resolve().parents[1]
+ADAPTER_PATH = Path(__file__).resolve()
+OUTPUT_TRUSTED_ROOT = REPOSITORY
+DESTINATION = (
+    REPOSITORY / "conformance" / "contract_compiler" / "v0" / "compiler_environment"
+)
+INTERNAL_VERIFICATION = DESTINATION / "verification.json"
+DESTINATION_LABEL = "conformance/contract_compiler/v0/compiler_environment"
+SMOKE_INPUT = REPOSITORY / "ontology" / "malleus.yaml"
+
+SUPPORTED_PROTOCOL_VERSIONS = (
+    "2025-06-18",
+    "2025-03-26",
+    "2024-11-05",
+    "2024-10-07",
+)
+SERVER_NAME = "malleus-cc002"
+SERVER_VERSION = "1"
+
+NETWORK_TIMEOUT_SECONDS = 120
+DOWNLOAD_CHUNK_SIZE = 1024 * 1024
+SUBPROCESS_DIAGNOSTIC_LIMIT = 4096
+ALLOWED_HTTPS_HOSTS = frozenset({"files.pythonhosted.org"})
+ACQUISITION_HTTPS_HOSTS = frozenset({"pypi.org", "files.pythonhosted.org"})
+
+DOCKER = "docker"
+OCI_PLATFORM = "linux/amd64"
+OCI_INDEX_DIGEST = (
+    "sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db"
+)
+OCI_CHILD_DIGEST = (
+    "sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4"
+)
+OCI_INDEX_REFERENCE = f"docker.io/library/python@{OCI_INDEX_DIGEST}"
+OCI_CHILD_REFERENCE = f"docker.io/library/python@{OCI_CHILD_DIGEST}"
+
+PYTHON_TUPLE = {
+    "implementation": "CPython",
+    "version": "3.12.10",
+    "operating_system": "Linux",
+    "architecture": "x86_64",
+    "abi": "cp312",
+}
+RELEASE = {
+    "tag": "v1.11.1",
+    "commit": "a7ed3e4cbb19731f072d0d90b6d52f7d822569ee",
+}
+
+SANITIZED_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+SUBPROCESS_ENV_BASE = {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PATH": SANITIZED_PATH,
+    "PYTHONIOENCODING": "utf-8",
+}
+
+
+class CC002Error(RuntimeError):
+    """Fail-closed CC-002 operational refusal."""
+
+
+@dataclass(frozen=True)
+class SelectedArtifact:
+    """One immutable published artifact selected by OD-012 or CC-002 acquisition."""
+
+    filename: str
+    kind: str
+    url: str
+    byte_length: int
+    sha256: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "filename": self.filename,
+            "kind": self.kind,
+            "url": self.url,
+            "byte_length": self.byte_length,
+            "sha256": self.sha256,
+        }
+
+
+SELECTED_ARTIFACTS = (
+    SelectedArtifact(
+        filename="linkml-1.11.1-py3-none-any.whl",
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/packages/1f/fb/3068f649cc436be915f51b2f5ac0656c83dc9bcc6d4f8940633e295042c0/linkml-1.11.1-py3-none-any.whl",
+        byte_length=483751,
+        sha256="d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed",
+    ),
+    SelectedArtifact(
+        filename="linkml_runtime-1.11.1-py3-none-any.whl",
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/packages/63/1d/600b0dd24aa61f03d35293a2e9a4695add1e94c03d8701436fb52d5daf4f/linkml_runtime-1.11.1-py3-none-any.whl",
+        byte_length=654566,
+        sha256="b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da",
+    ),
+    SelectedArtifact(
+        filename="linkml-1.11.1.tar.gz",
+        kind="SDIST",
+        url="https://files.pythonhosted.org/packages/b4/26/38e7340959cd4a87bfe5403cfcf5311d9fe2ff4382fa00e96008a1342760/linkml-1.11.1.tar.gz",
+        byte_length=374853,
+        sha256="2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524",
+    ),
+    SelectedArtifact(
+        filename="linkml_runtime-1.11.1.tar.gz",
+        kind="SDIST",
+        url="https://files.pythonhosted.org/packages/d0/7c/36332b49226f37d05d0dbfa4fb1c8017963d62ae722102c9c11c1f530696/linkml_runtime-1.11.1.tar.gz",
+        byte_length=556549,
+        sha256="e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754",
+    ),
+    SelectedArtifact(
+        filename="pip-25.0.1-py3-none-any.whl",
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/packages/c9/bc/b7db44f5f39f9d0494071bddae6880eb645970366d0a200022a1a93d57f5/pip-25.0.1-py3-none-any.whl",
+        byte_length=1841526,
+        sha256="c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f",
+    ),
+)
+ROOT_WHEEL_FILENAMES = (
+    "linkml-1.11.1-py3-none-any.whl",
+    "linkml_runtime-1.11.1-py3-none-any.whl",
+)
+PIP_WHEEL_FILENAME = "pip-25.0.1-py3-none-any.whl"
+PIP_IMPORT_ORIGIN = f"/roots/{PIP_WHEEL_FILENAME}/pip/__init__.py"
+PROXY_REQUEST_LIMIT = 8192
+RESOLVER_PIP_ARGUMENTS = (
+    "--isolated",
+    "--proxy",
+    "{proxy}",
+    "download",
+    "--no-cache-dir",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--dest",
+    "/wheelhouse",
+    "--only-binary=:all:",
+    f"/roots/{ROOT_WHEEL_FILENAMES[0]}",
+    f"/roots/{ROOT_WHEEL_FILENAMES[1]}",
+)
+RESOLVER_PROGRAM = (
+    "from contract_compiler_environment import _resolver_main; "
+    "raise SystemExit(_resolver_main())"
+)
+RESOLVER_PIP_PROGRAM = (
+    "import runpy; namespace = "
+    "runpy.run_path('/adapter/contract_compiler_environment.py'); "
+    "raise SystemExit(namespace['_pinned_pip_main']())"
+)
+
+
+def _fail(code: str, message: str) -> None:
+    raise CC002Error(f"[{code}] {message}")
+
+
+def require_repository_cwd() -> None:
+    """Refuse execution outside the trusted project selected by MCP ``cwd``."""
+    if Path.cwd().resolve() != REPOSITORY:
+        _fail(
+            "CC002_CWD",
+            f"working directory must be the active repository: {REPOSITORY}",
+        )
+
+
+def canonical_json(value: Any) -> str:
+    """Return compact deterministic JSON without a transport newline."""
+    try:
+        return json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    except (TypeError, ValueError, UnicodeError) as error:
+        _fail("CC002_JSON", f"value is not canonical JSON: {error}")
+
+
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            _fail("CC002_JSON_DUPLICATE", f"duplicate JSON key '{key}'")
+        result[key] = value
+    return result
+
+
+def _nonfinite(value: str) -> None:
+    _fail("CC002_JSON_NONFINITE", f"nonfinite JSON number '{value}' is forbidden")
+
+
+def strict_json(source: str | bytes, context: str) -> Any:
+    """Decode JSON with duplicate-key and nonfinite-number refusal."""
+    try:
+        if isinstance(source, bytes):
+            source = source.decode("utf-8")
+        return json.loads(
+            source,
+            object_pairs_hook=_unique_object,
+            parse_constant=_nonfinite,
+        )
+    except CC002Error:
+        raise
+    except (UnicodeError, json.JSONDecodeError) as error:
+        _fail("CC002_JSON", f"{context}: invalid JSON: {error}")
+
+
+def _exact_keys(value: Any, expected: set[str], context: str) -> None:
+    if not isinstance(value, Mapping):
+        _fail("CC002_OBJECT", f"{context} must be an object")
+    actual = set(value)
+    missing = sorted(expected - actual)
+    unknown = sorted(actual - expected)
+    if missing:
+        _fail("CC002_REQUIRED", f"{context}: missing fields {missing}")
+    if unknown:
+        _fail("CC002_UNKNOWN", f"{context}: unknown fields {unknown}")
+
+
+def _digest(source: bytes) -> str:
+    return "sha256:" + hashlib.sha256(source).hexdigest()
+
+
+def _artifact_record(path: Path) -> dict[str, Any]:
+    if path.is_symlink():
+        _fail("CC002_SYMLINK", f"symlink artifact is forbidden: {path}")
+    if not path.is_file():
+        _fail("CC002_FILE", f"required regular file is missing: {path}")
+    source = path.read_bytes()
+    return {
+        "filename": path.name,
+        "byte_length": len(source),
+        "sha256": _digest(source),
+    }
+
+
+def _output_schema(required: Sequence[str], properties: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": properties,
+        "required": list(required),
+        "additionalProperties": False,
+    }
+
+
+_DIGEST_SCHEMA = {"type": "string", "minLength": 71, "maxLength": 71}
+_ACQUIRE_PROPERTIES = {
+    "schema": {"const": "malleus.cc002.acquire-result/v1"},
+    "state": {"const": "MATERIALIZED"},
+    "destination": {"const": DESTINATION_LABEL},
+    "artifact_count": {"type": "integer", "minimum": 5, "maximum": 5},
+    "wheel_count": {"type": "integer", "minimum": 1},
+    "lock_sha256": _DIGEST_SCHEMA,
+    "wheelhouse_sha256": _DIGEST_SCHEMA,
+    "oci_index_digest": {"const": OCI_INDEX_DIGEST},
+    "oci_child_digest": {"const": OCI_CHILD_DIGEST},
+}
+_VERIFY_PROPERTIES = {
+    "schema": {"const": "malleus.cc002.verify-result/v1"},
+    "state": {"const": "VERIFIED_OFFLINE"},
+    "destination": {"const": DESTINATION_LABEL},
+    "environment_manifest_sha256": _DIGEST_SCHEMA,
+    "verification_sha256": _DIGEST_SCHEMA,
+    "generator_output_sha256": _DIGEST_SCHEMA,
+    "installed_distribution_count": {"type": "integer", "minimum": 1},
+    "lock_sha256": _DIGEST_SCHEMA,
+    "wheelhouse_sha256": _DIGEST_SCHEMA,
+    "oci_index_digest": {"const": OCI_INDEX_DIGEST},
+    "oci_child_digest": {"const": OCI_CHILD_DIGEST},
+}
+_EMPTY_INPUT = {"type": "object", "properties": {}, "additionalProperties": False}
+
+TOOLS = (
+    {
+        "name": "cc002_acquire",
+        "title": "Acquire sealed CC-002 compiler environment",
+        "description": (
+            "Acquire the fixed OD-012 artifacts, resolve the exact cp312 wheel "
+            "closure, and atomically publish the retained environment."
+        ),
+        "inputSchema": _EMPTY_INPUT,
+        "outputSchema": _output_schema(tuple(_ACQUIRE_PROPERTIES), _ACQUIRE_PROPERTIES),
+        "annotations": {
+            "readOnlyHint": False,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": True,
+        },
+    },
+    {
+        "name": "cc002_verify_offline",
+        "title": "Verify sealed CC-002 environment offline",
+        "description": (
+            "Verify retained bytes and prove a fresh network-denied install plus "
+            "the generic malleus.yaml JSON Schema generator smoke."
+        ),
+        "inputSchema": _EMPTY_INPUT,
+        "outputSchema": _output_schema(tuple(_VERIFY_PROPERTIES), _VERIFY_PROPERTIES),
+        "annotations": {
+            "readOnlyHint": False,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": False,
+        },
+    },
+)
+
+
+def _validate_digest(value: Any, context: str) -> str:
+    if not isinstance(value, str) or not value.startswith("sha256:"):
+        _fail("CC002_DIGEST", f"{context} must start with 'sha256:'")
+    hexadecimal = value.removeprefix("sha256:")
+    if len(hexadecimal) != 64 or any(
+        character not in "0123456789abcdef" for character in hexadecimal
+    ):
+        _fail("CC002_DIGEST", f"{context} must contain 64 lowercase hexadecimal digits")
+    return value
+
+
+def acquire_result(
+    *,
+    artifact_count: int,
+    lock_sha256: str,
+    wheel_count: int,
+    wheelhouse_sha256: str,
+) -> dict[str, Any]:
+    _validate_digest(lock_sha256, "lock_sha256")
+    _validate_digest(wheelhouse_sha256, "wheelhouse_sha256")
+    if (
+        not isinstance(artifact_count, int)
+        or isinstance(artifact_count, bool)
+        or artifact_count != 5
+    ):
+        _fail("CC002_RESULT", "artifact_count must be exactly five")
+    if not isinstance(wheel_count, int) or isinstance(wheel_count, bool) or wheel_count < 1:
+        _fail("CC002_RESULT", "wheel_count must be a positive integer")
+    return {
+        "schema": "malleus.cc002.acquire-result/v1",
+        "state": "MATERIALIZED",
+        "destination": DESTINATION_LABEL,
+        "artifact_count": artifact_count,
+        "wheel_count": wheel_count,
+        "lock_sha256": lock_sha256,
+        "wheelhouse_sha256": wheelhouse_sha256,
+        "oci_index_digest": OCI_INDEX_DIGEST,
+        "oci_child_digest": OCI_CHILD_DIGEST,
+    }
+
+
+def verify_result(
+    *,
+    environment_manifest_sha256: str,
+    verification_sha256: str,
+    generator_output_sha256: str,
+    installed_distribution_count: int,
+    lock_sha256: str,
+    wheelhouse_sha256: str,
+) -> dict[str, Any]:
+    for name, value in (
+        ("environment_manifest_sha256", environment_manifest_sha256),
+        ("verification_sha256", verification_sha256),
+        ("generator_output_sha256", generator_output_sha256),
+        ("lock_sha256", lock_sha256),
+        ("wheelhouse_sha256", wheelhouse_sha256),
+    ):
+        _validate_digest(value, name)
+    if (
+        not isinstance(installed_distribution_count, int)
+        or isinstance(installed_distribution_count, bool)
+        or installed_distribution_count < 1
+    ):
+        _fail("CC002_RESULT", "installed_distribution_count must be positive")
+    return {
+        "schema": "malleus.cc002.verify-result/v1",
+        "state": "VERIFIED_OFFLINE",
+        "destination": DESTINATION_LABEL,
+        "environment_manifest_sha256": environment_manifest_sha256,
+        "verification_sha256": verification_sha256,
+        "generator_output_sha256": generator_output_sha256,
+        "installed_distribution_count": installed_distribution_count,
+        "lock_sha256": lock_sha256,
+        "wheelhouse_sha256": wheelhouse_sha256,
+        "oci_index_digest": OCI_INDEX_DIGEST,
+        "oci_child_digest": OCI_CHILD_DIGEST,
+    }
+
+
+@dataclass(frozen=True)
+class ToolServices:
+    acquire: Callable[[], dict[str, Any]]
+    verify: Callable[[], dict[str, Any]]
+
+
+DEFAULT_SERVICES = ToolServices(
+    acquire=lambda: acquire_environment(),
+    verify=lambda: verify_environment(),
+)
+
+
+def _response(request_id: int | str, result: Any) -> dict[str, Any]:
+    return {"jsonrpc": "2.0", "id": request_id, "result": result}
+
+
+def _error(request_id: int | str | None, code: int, message: str) -> dict[str, Any]:
+    return {
+        "jsonrpc": "2.0",
+        "id": request_id,
+        "error": {"code": code, "message": message},
+    }
+
+
+def _valid_id(value: Any) -> bool:
+    return (isinstance(value, (int, str)) and not isinstance(value, bool))
+
+
+def _validate_params(params: Any, context: str) -> dict[str, Any]:
+    if not isinstance(params, dict):
+        _fail("CC002_PARAMS", f"{context}: params must be an object")
+    return params
+
+
+def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        _fail("CC002_RESULT", f"{name} result must be an object")
+    properties = _ACQUIRE_PROPERTIES if name == "cc002_acquire" else _VERIFY_PROPERTIES
+    if set(value) != set(properties):
+        missing = sorted(set(properties) - set(value))
+        unknown = sorted(set(value) - set(properties))
+        _fail(
+            "CC002_RESULT",
+            f"{name} result fields mismatch; missing={missing}, unknown={unknown}",
+        )
+    expected_schema = (
+        "malleus.cc002.acquire-result/v1"
+        if name == "cc002_acquire"
+        else "malleus.cc002.verify-result/v1"
+    )
+    expected_state = "MATERIALIZED" if name == "cc002_acquire" else "VERIFIED_OFFLINE"
+    if value["schema"] != expected_schema or value["state"] != expected_state:
+        _fail("CC002_RESULT", f"{name} result schema or state is invalid")
+    if value["destination"] != DESTINATION_LABEL:
+        _fail("CC002_RESULT", f"{name} result destination is invalid")
+    if value["oci_index_digest"] != OCI_INDEX_DIGEST:
+        _fail("CC002_RESULT", f"{name} result OCI index identity is invalid")
+    if value["oci_child_digest"] != OCI_CHILD_DIGEST:
+        _fail("CC002_RESULT", f"{name} result OCI child identity is invalid")
+    for field in value:
+        if field.endswith("sha256"):
+            _validate_digest(value[field], field)
+    count_fields = (
+        ("artifact_count", "wheel_count")
+        if name == "cc002_acquire"
+        else ("installed_distribution_count",)
+    )
+    for field in count_fields:
+        if (
+            not isinstance(value[field], int)
+            or isinstance(value[field], bool)
+            or value[field] < 1
+        ):
+            _fail("CC002_RESULT", f"{field} must be a positive integer")
+    if name == "cc002_acquire" and value["artifact_count"] != 5:
+        _fail("CC002_RESULT", "artifact_count must be exactly five")
+    return value
+
+
+def _tool_result(name: str, value: dict[str, Any]) -> dict[str, Any]:
+    value = _validate_tool_output(name, value)
+    return {
+        "content": [{"type": "text", "text": canonical_json(value)}],
+        "structuredContent": value,
+        "isError": False,
+    }
+
+
+def handle_message(message: Any, services: Any = DEFAULT_SERVICES) -> dict[str, Any] | None:
+    """Handle one already-decoded JSON-RPC message."""
+    notification_candidate = isinstance(message, dict) and "id" not in message
+    if not isinstance(message, dict):
+        return _error(None, -32600, "Invalid Request")
+    allowed = {"jsonrpc", "id", "method", "params"}
+    if set(message) - allowed:
+        if notification_candidate:
+            return None
+        return _error(message.get("id") if _valid_id(message.get("id")) else None, -32600, "Invalid Request")
+    if message.get("jsonrpc") != "2.0" or not isinstance(message.get("method"), str):
+        if notification_candidate:
+            return None
+        return _error(None, -32600, "Invalid Request")
+    notification = "id" not in message
+    if not notification and not _valid_id(message["id"]):
+        return _error(None, -32600, "Invalid Request")
+    request_id = None if notification else message["id"]
+    method = message["method"]
+    params = message.get("params", {})
+    try:
+        params = _validate_params(params, method)
+        if method == "notifications/initialized":
+            if not notification or params:
+                _fail("CC002_PARAMS", "notifications/initialized requires empty params")
+            return None
+        if notification:
+            return None
+        if method == "initialize":
+            _exact_keys(params, {"protocolVersion", "capabilities", "clientInfo"}, method)
+            version = params["protocolVersion"]
+            if not isinstance(version, str):
+                _fail("CC002_PROTOCOL", "protocolVersion must be a string")
+            negotiated_version = (
+                version
+                if version in SUPPORTED_PROTOCOL_VERSIONS
+                else SUPPORTED_PROTOCOL_VERSIONS[0]
+            )
+            if not isinstance(params["capabilities"], dict):
+                _fail("CC002_PROTOCOL", "capabilities must be an object")
+            client = params["clientInfo"]
+            if not isinstance(client, dict):
+                _fail("CC002_PROTOCOL", "clientInfo must be an object")
+            if not {"name", "version"}.issubset(client) or set(client) - {
+                "name",
+                "version",
+                "title",
+            }:
+                _fail("CC002_PROTOCOL", "clientInfo fields are invalid")
+            if not all(
+                isinstance(client[field], str) and client[field]
+                for field in {"name", "version"}
+            ):
+                _fail("CC002_PROTOCOL", "clientInfo name and version must be nonempty strings")
+            if "title" in client and (
+                not isinstance(client["title"], str) or not client["title"]
+            ):
+                _fail("CC002_PROTOCOL", "clientInfo title must be a nonempty string")
+            return _response(
+                request_id,
+                {
+                    "protocolVersion": negotiated_version,
+                    "capabilities": {"tools": {"listChanged": False}},
+                    "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION},
+                },
+            )
+        if method == "ping":
+            if set(params) - {"_meta"}:
+                _fail("CC002_PARAMS", "ping accepts only the MCP _meta extension")
+            if "_meta" in params and not isinstance(params["_meta"], dict):
+                _fail("CC002_PARAMS", "ping _meta must be an object")
+            return _response(request_id, {})
+        if method == "tools/list":
+            if params:
+                _fail("CC002_PARAMS", "tools/list requires empty params")
+            return _response(request_id, {"tools": list(TOOLS)})
+        if method == "tools/call":
+            if "name" not in params or set(params) - {"name", "arguments"}:
+                _fail("CC002_PARAMS", "tools/call requires name and optional arguments")
+            name = params["name"]
+            arguments = params["arguments"] if "arguments" in params else {}
+            if not isinstance(name, str) or name not in {
+                "cc002_acquire",
+                "cc002_verify_offline",
+            }:
+                _fail("CC002_TOOL", f"unknown tool: {name!r}")
+            if not isinstance(arguments, dict) or arguments:
+                _fail("CC002_ARGUMENTS", f"{name} requires exactly an empty object")
+            try:
+                value = services.acquire() if name == "cc002_acquire" else services.verify()
+            except CC002Error as error:
+                return _response(
+                    request_id,
+                    {"content": [{"type": "text", "text": str(error)}], "isError": True},
+                )
+            except Exception:
+                return _response(
+                    request_id,
+                    {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "[CC002_INTERNAL] tool execution failed",
+                            }
+                        ],
+                        "isError": True,
+                    },
+                )
+            try:
+                result = _tool_result(name, value)
+            except CC002Error as error:
+                result = {
+                    "content": [{"type": "text", "text": str(error)}],
+                    "isError": True,
+                }
+            return _response(request_id, result)
+        return _error(request_id, -32601, "Method not found")
+    except CC002Error as error:
+        if notification:
+            return None
+        return _error(request_id, -32602, str(error))
+
+
+def process_line(source: str, services: Any = DEFAULT_SERVICES) -> dict[str, Any] | None:
+    try:
+        message = strict_json(source, "MCP input")
+    except CC002Error:
+        return _error(None, -32700, "Parse error")
+    return handle_message(message, services)
+
+
+def serve(
+    stdin: TextIO = sys.stdin,
+    stdout: TextIO = sys.stdout,
+    stderr: TextIO = sys.stderr,
+    services: Any = DEFAULT_SERVICES,
+) -> None:
+    """Serve newline-delimited MCP JSON-RPC without non-protocol stdout."""
+    del stderr
+    for line in stdin:
+        response = process_line(line, services)
+        if response is not None:
+            stdout.write(canonical_json(response) + "\n")
+            stdout.flush()
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        del req, fp, code, msg, headers, newurl
+        return None
+
+
+def _default_opener():
+    return urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+
+
+def safe_target(root: Path, relative_name: str) -> Path:
+    """Resolve a fixed relative artifact name without traversal or symlink parents."""
+    relative = PurePosixPath(relative_name)
+    if (
+        relative.is_absolute()
+        or not relative.parts
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        _fail("CC002_PATH", f"invalid relative filename: {relative_name!r}")
+    root = root.resolve()
+    current = root
+    for part in relative.parts[:-1]:
+        current = current / part
+        if current.is_symlink():
+            _fail("CC002_SYMLINK", f"symlink parent is forbidden: {current}")
+    target = root.joinpath(*relative.parts)
+    if target.is_symlink():
+        _fail("CC002_SYMLINK", f"symlink target is forbidden: {target}")
+    try:
+        target.relative_to(root)
+    except ValueError:
+        _fail("CC002_PATH", f"path escapes fixed root: {target}")
+    return target
+
+
+def _validate_download_url(url: str) -> None:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https":
+        _fail("CC002_URL", f"artifact URL must use https: {url}")
+    if parsed.hostname not in ALLOWED_HTTPS_HOSTS:
+        _fail("CC002_URL", f"artifact URL host is not allowed: {parsed.hostname!r}")
+    if parsed.username is not None or parsed.password is not None or parsed.port is not None:
+        _fail("CC002_URL", "artifact URL authority is not allowed")
+    if parsed.query or parsed.fragment:
+        _fail("CC002_URL", "artifact URL query and fragment are forbidden")
+
+
+def _existing_matches(path: Path, artifact: SelectedArtifact) -> bool:
+    if path.is_symlink() or not path.is_file():
+        return False
+    stat = path.stat()
+    if stat.st_size != artifact.byte_length:
+        return False
+    return hashlib.sha256(path.read_bytes()).hexdigest() == artifact.sha256
+
+
+def download_artifact(artifact: SelectedArtifact, target: Path, opener: Any = None) -> None:
+    """Download one immutable artifact to an atomic same-directory target."""
+    _validate_download_url(artifact.url)
+    if target.name != artifact.filename:
+        _fail("CC002_PATH", f"target filename must be {artifact.filename!r}")
+    if target.exists() or target.is_symlink():
+        if _existing_matches(target, artifact):
+            return
+        _fail("CC002_CONFLICT", f"conflicting existing artifact: {target}")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target = safe_target(target.parent, target.name)
+    partial = safe_target(target.parent, target.name + ".part")
+    if partial.exists() or partial.is_symlink():
+        _fail("CC002_PARTIAL", f"stale partial artifact is forbidden: {partial}")
+    opener = _default_opener() if opener is None else opener
+    request = urllib.request.Request(
+        artifact.url,
+        headers={"Accept-Encoding": "identity", "User-Agent": "malleus-cc002/1"},
+        method="GET",
+    )
+    try:
+        with opener.open(request, timeout=NETWORK_TIMEOUT_SECONDS) as response:
+            if response.status != 200:
+                _fail("CC002_HTTP", f"unexpected HTTP status {response.status}")
+            if response.geturl() != artifact.url:
+                _fail("CC002_REDIRECT", "artifact redirect is forbidden")
+            header = response.headers.get("Content-Length")
+            if header is None:
+                _fail("CC002_LENGTH", "required Content-Length is missing")
+            try:
+                declared_length = int(header)
+            except ValueError:
+                _fail("CC002_LENGTH", f"invalid Content-Length: {header!r}")
+            if declared_length != artifact.byte_length:
+                _fail(
+                    "CC002_LENGTH",
+                    f"Content-Length {declared_length} != {artifact.byte_length}",
+                )
+            digest = hashlib.sha256()
+            length = 0
+            with partial.open("xb") as stream:
+                while True:
+                    chunk = response.read(DOWNLOAD_CHUNK_SIZE)
+                    if not chunk:
+                        break
+                    stream.write(chunk)
+                    digest.update(chunk)
+                    length += len(chunk)
+                    if length > artifact.byte_length:
+                        _fail(
+                            "CC002_LENGTH",
+                            f"artifact byte length exceeds {artifact.byte_length}",
+                        )
+                stream.flush()
+                os.fsync(stream.fileno())
+            if length != artifact.byte_length:
+                _fail("CC002_LENGTH", f"artifact byte length {length} != {artifact.byte_length}")
+            if digest.hexdigest() != artifact.sha256:
+                _fail("CC002_DIGEST", "artifact SHA-256 does not match selected identity")
+            os.replace(partial, target)
+    except CC002Error:
+        if partial.exists() and not partial.is_symlink():
+            partial.unlink()
+        raise
+    except (OSError, urllib.error.URLError) as error:
+        if partial.exists() and not partial.is_symlink():
+            partial.unlink()
+        _fail("CC002_DOWNLOAD", f"artifact download interrupted: {error}")
+
+
+def parse_oci_index(
+    source: bytes,
+    *,
+    expected_index_digest: str = OCI_INDEX_DIGEST,
+) -> str:
+    if _digest(source) != expected_index_digest:
+        _fail("CC002_OCI_INDEX", "OCI index digest mismatch")
+    value = strict_json(source, "OCI index")
+    if not isinstance(value, dict):
+        _fail("CC002_OCI_INDEX", "OCI index must be an object")
+    manifests = value.get("manifests")
+    if not isinstance(manifests, list):
+        _fail("CC002_OCI_INDEX", "OCI index manifests are required")
+    matches = []
+    for manifest in manifests:
+        if not isinstance(manifest, dict):
+            _fail("CC002_OCI_INDEX", "OCI manifest descriptor must be an object")
+        platform = manifest.get("platform")
+        if not isinstance(platform, dict):
+            continue
+        if platform.get("os") == "linux" and platform.get("architecture") == "amd64":
+            digest = manifest.get("digest")
+            if not isinstance(digest, str):
+                _fail("CC002_OCI_INDEX", "linux/amd64 descriptor digest is required")
+            matches.append(digest)
+    if len(matches) != 1:
+        _fail("CC002_OCI_PLATFORM", "OCI index must contain exactly one linux/amd64 child")
+    if matches[0] != OCI_CHILD_DIGEST:
+        _fail("CC002_OCI_CHILD", "OCI linux/amd64 child digest mismatch")
+    return matches[0]
+
+
+def oci_index_command() -> list[str]:
+    return [DOCKER, "buildx", "imagetools", "inspect", OCI_INDEX_REFERENCE, "--raw"]
+
+
+def image_pull_command() -> list[str]:
+    return [DOCKER, "pull", "--platform", OCI_PLATFORM, OCI_CHILD_REFERENCE]
+
+
+def image_inspect_command() -> list[str]:
+    return [DOCKER, "image", "inspect", OCI_CHILD_REFERENCE, "--format", "{{json .}}"]
+
+
+def docker_version_command() -> list[str]:
+    return [DOCKER, "version", "--format", "{{json .Client.Version}}"]
+
+
+def _validated_host_ownership(value: Any) -> dict[str, int]:
+    if not isinstance(value, dict):
+        _fail("CC002_HOST_USER", "host ownership tuple must be an object")
+    _exact_keys(value, {"uid", "gid"}, "host ownership tuple")
+    if any(
+        not isinstance(value[field], int)
+        or isinstance(value[field], bool)
+        or value[field] <= 0
+        for field in ("uid", "gid")
+    ):
+        _fail("CC002_HOST_USER", "host UID:GID must be nonroot positive integers")
+    return {"uid": value["uid"], "gid": value["gid"]}
+
+
+def host_ownership() -> dict[str, int]:
+    """Return the runtime host ownership tuple used for bind-mount writes."""
+    return _validated_host_ownership({"uid": os.getuid(), "gid": os.getgid()})
+
+
+def _docker_user_argument(value: Mapping[str, Any] | None = None) -> str:
+    ownership = host_ownership() if value is None else _validated_host_ownership(value)
+    return f"{ownership['uid']}:{ownership['gid']}"
+
+
+def _resolver_pip_arguments(proxy_url: str) -> list[str]:
+    if not isinstance(proxy_url, str):
+        _fail("CC002_PROXY", "resolver proxy URL must be a string")
+    try:
+        parsed = urllib.parse.urlsplit(proxy_url)
+        port = parsed.port
+    except ValueError as error:
+        _fail("CC002_PROXY", f"resolver proxy URL is invalid: {error}")
+    if (
+        parsed.scheme != "http"
+        or parsed.hostname != "127.0.0.1"
+        or port is None
+        or not 1 <= port <= 65535
+        or parsed.netloc != f"127.0.0.1:{port}"
+        or parsed.path
+        or parsed.query
+        or parsed.fragment
+        or parsed.username is not None
+        or parsed.password is not None
+    ):
+        _fail("CC002_PROXY", "resolver proxy must be an exact loopback HTTP authority")
+    return [argument.format(proxy=proxy_url) for argument in RESOLVER_PIP_ARGUMENTS]
+
+
+def _validated_resolver_pip_arguments(arguments: Any) -> list[str]:
+    if (
+        not isinstance(arguments, Sequence)
+        or isinstance(arguments, (str, bytes))
+        or not all(isinstance(argument, str) for argument in arguments)
+    ):
+        _fail("CC002_PIP_ARGUMENTS", "pinned pip arguments must be a string array")
+    proxy_index = RESOLVER_PIP_ARGUMENTS.index("{proxy}")
+    if len(arguments) != len(RESOLVER_PIP_ARGUMENTS):
+        _fail("CC002_PIP_ARGUMENTS", "pinned pip argument count changed")
+    expected = _resolver_pip_arguments(arguments[proxy_index])
+    if list(arguments) != expected:
+        _fail("CC002_PIP_ARGUMENTS", "pinned pip arguments changed")
+    return expected
+
+
+def _install_direct_dependency_guard(
+    install_requirement: type, installation_error: type[Exception]
+) -> type[Exception]:
+    original_init = install_requirement.__init__
+
+    class DirectDependencyReferenceError(installation_error):
+        pass
+
+    def guarded_direct_dependency_init(
+        self: Any, req: Any, comes_from: Any, *args: Any, **kwargs: Any
+    ) -> None:
+        if comes_from is not None and req is not None and req.url:
+            raise DirectDependencyReferenceError(
+                f"direct dependency references are forbidden: {req}"
+            )
+        original_init(self, req, comes_from, *args, **kwargs)
+
+    install_requirement.__init__ = guarded_direct_dependency_init
+    return DirectDependencyReferenceError
+
+
+def _self_test_direct_dependency_guard(
+    direct_reference_error: type[Exception],
+) -> None:
+    from pip._internal.req.constructors import (
+        install_req_from_line,
+        install_req_from_req_string,
+    )
+
+    parent = install_req_from_line(
+        f"/roots/{ROOT_WHEEL_FILENAMES[0]}", comes_from=None
+    )
+    direct_references = (
+        "Beta @ https://example.invalid/beta.whl",
+        "Beta @ git+file:///definitely-missing@abc",
+        "Beta @ file:///definitely-missing.tar.gz",
+    )
+    for requirement in direct_references:
+        try:
+            install_req_from_req_string(requirement, comes_from=parent)
+        except direct_reference_error:
+            continue
+        _fail(
+            "CC002_PIP_GUARD",
+            f"pinned pip direct-reference self-test did not refuse {requirement!r}",
+        )
+    ordinary = install_req_from_req_string("Beta>=3", comes_from=parent)
+    if ordinary.req is None or ordinary.req.url:
+        _fail("CC002_PIP_GUARD", "ordinary dependency self-test is invalid")
+
+
+def _pinned_pip_main(arguments: Sequence[str] | None = None) -> int:
+    fixed_arguments = _validated_resolver_pip_arguments(
+        sys.argv[1:] if arguments is None else arguments
+    )
+    import pip
+
+    try:
+        version = pip.__version__
+        origin = pip.__file__
+    except AttributeError:
+        _fail("CC002_PIP_IDENTITY", "pinned pip version and origin are required")
+    if version != "25.0.1":
+        _fail("CC002_PIP_IDENTITY", f"pinned pip must be 25.0.1, observed {version!r}")
+    if not isinstance(origin, str) or os.path.normpath(origin) != PIP_IMPORT_ORIGIN:
+        _fail(
+            "CC002_PIP_IDENTITY",
+            f"pinned pip must load from the retained root wheel: {origin!r}",
+        )
+    from pip._internal.exceptions import InstallationError
+    from pip._internal.req.req_install import InstallRequirement
+
+    direct_reference_error = _install_direct_dependency_guard(
+        InstallRequirement, InstallationError
+    )
+    _self_test_direct_dependency_guard(direct_reference_error)
+    from pip._internal.cli.main import main
+
+    return main(fixed_arguments)
+
+
+def parse_connect_request(source: bytes) -> tuple[str, int]:
+    """Validate one bounded HTTP CONNECT request against the fixed host allowlist."""
+    if not source or len(source) > PROXY_REQUEST_LIMIT:
+        _fail("CC002_PROXY_SIZE", "CONNECT request is empty or exceeds the byte limit")
+    if not source.endswith(b"\r\n\r\n") or source.count(b"\r\n\r\n") != 1:
+        _fail("CC002_PROXY_REQUEST", "CONNECT request headers are incomplete")
+    try:
+        lines = source[:-4].decode("ascii").split("\r\n")
+    except UnicodeDecodeError:
+        _fail("CC002_PROXY_REQUEST", "CONNECT request must be ASCII")
+    if not lines or any(not line for line in lines):
+        _fail("CC002_PROXY_REQUEST", "CONNECT request contains an empty header line")
+    request_line = lines[0].split(" ")
+    if len(request_line) != 3 or request_line[0] != "CONNECT":
+        _fail("CC002_PROXY_METHOD", "only the CONNECT method is permitted")
+    authority, protocol = request_line[1:]
+    if protocol != "HTTP/1.1":
+        _fail("CC002_PROXY_PROTOCOL", "CONNECT requires HTTP/1.1")
+    if (
+        authority.count(":") != 1
+        or any(character in authority for character in "@/?#\\")
+    ):
+        _fail("CC002_PROXY_AUTHORITY", "CONNECT authority must be host:port")
+    host, port_source = authority.split(":")
+    if host not in ACQUISITION_HTTPS_HOSTS or port_source != "443":
+        _fail("CC002_PROXY_HOST", "CONNECT destination is outside the acquisition allowlist")
+    headers: dict[str, str] = {}
+    for line in lines[1:]:
+        if ":" not in line:
+            _fail("CC002_PROXY_HEADER", "CONNECT header is malformed")
+        name, value = line.split(":", 1)
+        normalized = name.casefold()
+        if (
+            not name
+            or not all(character.isalnum() or character == "-" for character in name)
+            or normalized in headers
+        ):
+            _fail("CC002_PROXY_HEADER", "CONNECT header name is invalid or duplicated")
+        headers[normalized] = value.strip()
+    if headers.get("host") != authority:
+        _fail("CC002_PROXY_HOST", "CONNECT Host header must equal its authority")
+    return host, 443
+
+
+def _relay_socket(source: socket.socket, destination: socket.socket) -> None:
+    try:
+        while True:
+            block = source.recv(64 * 1024)
+            if not block:
+                break
+            destination.sendall(block)
+    except OSError:
+        pass
+    finally:
+        try:
+            destination.shutdown(socket.SHUT_WR)
+        except OSError:
+            pass
+
+
+class _ConnectProxyHandler(socketserver.BaseRequestHandler):
+    def handle(self) -> None:
+        request = bytearray()
+        try:
+            while b"\r\n\r\n" not in request:
+                block = self.request.recv(min(4096, PROXY_REQUEST_LIMIT + 1 - len(request)))
+                if not block:
+                    break
+                request.extend(block)
+                if len(request) > PROXY_REQUEST_LIMIT:
+                    break
+            host, port = parse_connect_request(bytes(request))
+        except CC002Error:
+            self.request.sendall(b"HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n")
+            return
+        try:
+            upstream = socket.create_connection((host, port), timeout=NETWORK_TIMEOUT_SECONDS)
+        except OSError:
+            self.request.sendall(b"HTTP/1.1 502 Bad Gateway\r\nConnection: close\r\n\r\n")
+            return
+        with upstream:
+            self.request.sendall(b"HTTP/1.1 200 Connection Established\r\n\r\n")
+            outbound = threading.Thread(
+                target=_relay_socket,
+                args=(self.request, upstream),
+                daemon=True,
+            )
+            outbound.start()
+            _relay_socket(upstream, self.request)
+            outbound.join()
+
+
+class _ConnectProxy(socketserver.ThreadingTCPServer):
+    allow_reuse_address = False
+    daemon_threads = True
+
+
+def _resolver_child_environment(home: Path) -> dict[str, str]:
+    if not home.is_absolute():
+        _fail("CC002_HOME", "resolver child HOME must be an absolute controlled path")
+    return {
+        "ALL_PROXY": "",
+        "HOME": str(home),
+        "HTTP_PROXY": "",
+        "HTTPS_PROXY": "",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "NO_PROXY": "",
+        "PATH": "/usr/local/bin:/usr/bin:/bin",
+        "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+        "PIP_NO_INPUT": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": f"/roots/{PIP_WHEEL_FILENAME}",
+    }
+
+
+def _resolver_main() -> int:
+    """Run pinned pip behind the in-container fixed CONNECT allowlist."""
+    home = Path("/tmp/cc002-home")
+    home.mkdir(mode=0o700, exist_ok=True)
+    environment = _resolver_child_environment(home)
+    with _ConnectProxy(("127.0.0.1", 0), _ConnectProxyHandler) as proxy:
+        host, port = proxy.server_address
+        proxy_url = f"http://{host}:{port}"
+        arguments = [
+            "python",
+            "-c",
+            RESOLVER_PIP_PROGRAM,
+            *_resolver_pip_arguments(proxy_url),
+        ]
+        worker = threading.Thread(target=proxy.serve_forever, daemon=True)
+        worker.start()
+        try:
+            result = subprocess.run(
+                arguments,
+                cwd="/wheelhouse",
+                env=environment,
+                shell=False,
+                check=False,
+            )
+        finally:
+            proxy.shutdown()
+            worker.join()
+    return result.returncode
+
+
+def resolve_command(
+    roots: Path,
+    wheelhouse: Path,
+    *,
+    host_user: Mapping[str, Any] | None = None,
+) -> list[str]:
+    return [
+        DOCKER,
+        "run",
+        "--rm",
+        "--pull=never",
+        "--platform",
+        OCI_PLATFORM,
+        "--network",
+        "bridge",
+        "--read-only",
+        "--user",
+        _docker_user_argument(host_user),
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,nodev",
+        "--env",
+        "HTTP_PROXY=",
+        "--env",
+        "HTTPS_PROXY=",
+        "--env",
+        "ALL_PROXY=",
+        "--env",
+        "NO_PROXY=",
+        "--env",
+        "HOME=/tmp/cc002-home",
+        "--env",
+        "PYTHONPATH=/adapter",
+        "-v",
+        f"{roots.resolve()}:/roots:ro",
+        "-v",
+        f"{wheelhouse.resolve()}:/wheelhouse:rw",
+        "-v",
+        f"{ADAPTER_PATH.resolve()}:/adapter/contract_compiler_environment.py:ro",
+        OCI_CHILD_REFERENCE,
+        "python",
+        "-c",
+        RESOLVER_PROGRAM,
+    ]
+
+
+VERIFIER_PROGRAM = """\
+import json
+import pathlib
+import platform
+import subprocess
+import sys
+import sysconfig
+import venv
+
+work = pathlib.Path('/work')
+python_facts = {
+    'implementation': platform.python_implementation(),
+    'version': platform.python_version(),
+    'operating_system': platform.system(),
+    'architecture': platform.machine(),
+    'abi': f'cp{sys.version_info.major}{sys.version_info.minor}',
+}
+expected_python = {
+    'implementation': 'CPython',
+    'version': '3.12.10',
+    'operating_system': 'Linux',
+    'architecture': 'x86_64',
+    'abi': 'cp312',
+}
+if sys.implementation.name != 'cpython' or python_facts != expected_python:
+    raise RuntimeError(f'unexpected Python tuple: {python_facts!r}')
+soabi = sysconfig.get_config_var('SOABI')
+if not isinstance(soabi, str) or not soabi.startswith('cpython-312-'):
+    raise RuntimeError(f'unexpected SOABI: {soabi!r}')
+venv_path = work / 'venv'
+venv.EnvBuilder(with_pip=False, clear=True, symlinks=False).create(venv_path)
+python = str(venv_path / 'bin' / 'python')
+base_env = {
+    'HOME': '/work/home',
+    'LANG': 'C.UTF-8',
+    'LC_ALL': 'C.UTF-8',
+    'PATH': '/usr/local/bin:/usr/bin:/bin',
+    'PIP_DISABLE_PIP_VERSION_CHECK': '1',
+    'PIP_NO_INPUT': '1',
+    'PYTHONDONTWRITEBYTECODE': '1',
+    'PYTHONIOENCODING': 'utf-8',
+}
+bootstrap_env = dict(base_env)
+bootstrap_env['PYTHONPATH'] = '/wheelhouse/pip-25.0.1-py3-none-any.whl'
+install = [
+    python, '-m', 'pip', 'install', '--no-index', '--find-links=/wheelhouse',
+    '--require-hashes', '-r', '/bundle/requirements.lock',
+]
+subprocess.run(install, cwd='/work', env=bootstrap_env, shell=False, check=True)
+subprocess.run(
+    [python, '-m', 'pip', 'check'],
+    cwd='/work', env=base_env, shell=False, check=True,
+)
+subprocess.run(
+    [python, '-c', 'import linkml; import linkml_runtime'],
+    cwd='/work', env=base_env, shell=False, check=True,
+    capture_output=True, text=True,
+)
+generator_path = work / 'malleus.schema.json'
+with generator_path.open('wb') as output:
+    subprocess.run(
+        [python, '-m', 'linkml.generators.jsonschemagen',
+         '/input/malleus.yaml'],
+        cwd='/work', env=base_env, shell=False, check=True, stdout=output,
+    )
+with generator_path.open(encoding='utf-8') as stream:
+    generated = json.load(stream)
+if not isinstance(generated, dict) or '$defs' not in generated:
+    raise RuntimeError('generator output lacks required $defs object')
+listed = subprocess.run(
+    [python, '-m', 'pip', 'list', '--format=json'],
+    cwd='/work', env=base_env, shell=False, check=True,
+    capture_output=True, text=True,
+)
+distributions = json.loads(listed.stdout)
+result = {
+    'schema': 'malleus.cc002.container-verification/v1',
+    'installed_distributions': distributions,
+    'generator_output': '/work/malleus.schema.json',
+    'python': python_facts,
+}
+(work / 'result.json').write_text(
+    json.dumps(result, sort_keys=True, separators=(',', ':'), allow_nan=False) + '\\n',
+    encoding='utf-8',
+)
+"""
+
+
+LOCK_REPORT_PROGRAM = """\
+import subprocess
+
+environment = {
+    'HOME': '/work/home',
+    'LANG': 'C.UTF-8',
+    'LC_ALL': 'C.UTF-8',
+    'PATH': '/usr/local/bin:/usr/bin:/bin',
+    'PIP_DISABLE_PIP_VERSION_CHECK': '1',
+    'PIP_NO_INPUT': '1',
+    'PYTHONDONTWRITEBYTECODE': '1',
+    'PYTHONIOENCODING': 'utf-8',
+    'PYTHONPATH': '/wheelhouse/pip-25.0.1-py3-none-any.whl',
+}
+subprocess.run(
+    [
+        'python', '-m', 'pip', 'install', '--dry-run', '--ignore-installed',
+        '--no-index', '--find-links=/wheelhouse',
+        '/wheelhouse/linkml-1.11.1-py3-none-any.whl',
+        '/wheelhouse/linkml_runtime-1.11.1-py3-none-any.whl',
+        '--report', '/work/pip-report.json',
+    ],
+    cwd='/work', env=environment, shell=False, check=True,
+)
+"""
+
+
+def lock_report_command(
+    bundle: Path,
+    work: Path,
+    *,
+    host_user: Mapping[str, Any] | None = None,
+) -> list[str]:
+    return [
+        DOCKER,
+        "run",
+        "--rm",
+        "--pull=never",
+        "--platform",
+        OCI_PLATFORM,
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        _docker_user_argument(host_user),
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,nodev",
+        "-v",
+        f"{(bundle / 'wheelhouse').resolve()}:/wheelhouse:ro",
+        "-v",
+        f"{work.resolve()}:/work:rw",
+        OCI_CHILD_REFERENCE,
+        "python",
+        "-c",
+        LOCK_REPORT_PROGRAM,
+    ]
+
+
+def verify_command(
+    bundle: Path,
+    work: Path,
+    *,
+    host_user: Mapping[str, Any] | None = None,
+) -> list[str]:
+    return [
+        DOCKER,
+        "run",
+        "--rm",
+        "--pull=never",
+        "--platform",
+        OCI_PLATFORM,
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        _docker_user_argument(host_user),
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,nodev",
+        "-v",
+        f"{(bundle / 'wheelhouse').resolve()}:/wheelhouse:ro",
+        "-v",
+        f"{(bundle / 'requirements.lock').resolve()}:/bundle/requirements.lock:ro",
+        "-v",
+        f"{SMOKE_INPUT.resolve()}:/input/malleus.yaml:ro",
+        "-v",
+        f"{work.resolve()}:/work:rw",
+        OCI_CHILD_REFERENCE,
+        "python",
+        "-c",
+        VERIFIER_PROGRAM,
+    ]
+
+
+def run_fixed(
+    arguments: Sequence[str],
+    operation_root: Path,
+    *,
+    docker_executable: str | None = None,
+) -> subprocess.CompletedProcess[bytes]:
+    if not arguments or arguments[0] != DOCKER or not all(isinstance(item, str) for item in arguments):
+        _fail("CC002_COMMAND", "only fixed Docker argument vectors are permitted")
+    if len(arguments) > 1 and arguments[1] == "run":
+        if arguments.count("--user") != 1:
+            _fail("CC002_HOST_USER", "every Docker run requires one host ownership tuple")
+        user_index = arguments.index("--user")
+        if user_index + 1 >= len(arguments) or arguments[user_index + 1] != _docker_user_argument():
+            _fail("CC002_HOST_USER", "Docker run host ownership tuple changed")
+    operation_root = operation_root.resolve()
+    if operation_root.is_symlink() or not operation_root.is_dir():
+        _fail("CC002_HOME", f"operation root must be a regular directory: {operation_root}")
+    executable = _resolved_docker() if docker_executable is None else docker_executable
+    if not isinstance(executable, str) or not Path(executable).is_absolute():
+        _fail("CC002_DOCKER", "resolved Docker executable must be an absolute path")
+    with tempfile.TemporaryDirectory(
+        prefix=".cc002-home-", dir=operation_root
+    ) as home_name:
+        environment = {"HOME": home_name, **SUBPROCESS_ENV_BASE}
+        return subprocess.run(
+            list(arguments),
+            cwd=REPOSITORY,
+            env=environment,
+            shell=False,
+            check=False,
+            capture_output=True,
+            executable=executable,
+        )
+
+
+def _run_checked(
+    arguments: Sequence[str],
+    context: str,
+    operation_root: Path,
+    *,
+    docker_executable: str,
+) -> bytes:
+    result = run_fixed(
+        arguments, operation_root, docker_executable=docker_executable
+    )
+    if result.returncode != 0:
+        diagnostic = _subprocess_diagnostic(result.stderr, result.stdout)
+        _fail(
+            "CC002_SUBPROCESS",
+            f"{context} failed with {result.returncode}: {diagnostic}",
+        )
+    return result.stdout
+
+
+def _subprocess_diagnostic(stderr: bytes, stdout: bytes) -> str:
+    sections = []
+    for label, source in (("stderr", stderr), ("stdout", stdout)):
+        decoded = source.decode("utf-8", errors="replace").strip()
+        if not decoded:
+            continue
+        decoded = decoded.replace(
+            "Traceback (most recent call last):", "[stack trace marker omitted]"
+        )
+        safe = "".join(
+            character
+            if character in "\n\t" or character.isprintable()
+            else "\N{REPLACEMENT CHARACTER}"
+            for character in decoded
+        )
+        sections.append(f"{label}: {safe}")
+    diagnostic = "\n".join(sections) or "<no diagnostic output>"
+    marker = "\n[truncated]"
+    if len(diagnostic) > SUBPROCESS_DIAGNOSTIC_LIMIT:
+        diagnostic = diagnostic[: SUBPROCESS_DIAGNOSTIC_LIMIT - len(marker)] + marker
+    return diagnostic
+
+
+def _verify_local_image(source: bytes) -> None:
+    value = strict_json(source, "Docker image inspect")
+    if not isinstance(value, dict):
+        _fail("CC002_IMAGE", "Docker image inspection must be an object")
+    if value.get("Architecture") != "amd64" or value.get("Os") != "linux":
+        _fail("CC002_IMAGE", "local image platform is not linux/amd64")
+    digests = value.get("RepoDigests")
+    if not isinstance(digests, list) or not all(isinstance(item, str) for item in digests):
+        _fail("CC002_IMAGE", "local image RepoDigests are required")
+    if not any(item.partition("@")[2] == OCI_CHILD_DIGEST for item in digests):
+        _fail("CC002_IMAGE", "local image does not bind the selected child digest")
+
+
+def _docker_version(source: bytes) -> str:
+    value = strict_json(source, "Docker client version")
+    if not isinstance(value, str) or not value.strip():
+        _fail("CC002_DOCKER_VERSION", "Docker client version must be a nonempty string")
+    return value
+
+
+def _resolved_docker() -> str:
+    executable = shutil.which(DOCKER, path=SANITIZED_PATH)
+    if executable is None:
+        _fail("CC002_DOCKER", f"docker is not executable on sanitized PATH {SANITIZED_PATH}")
+    path = Path(executable)
+    if not path.is_absolute() or not path.is_file() or not os.access(path, os.X_OK):
+        _fail("CC002_DOCKER", f"resolved Docker executable is unsafe: {executable}")
+    return str(path.resolve())
+
+
+def _canonical_name(name: str) -> str:
+    if not name or not all(character.isalnum() or character in "-_." for character in name):
+        _fail("CC002_WHEEL_NAME", f"invalid distribution name: {name!r}")
+    output: list[str] = []
+    separator = False
+    for character in name.casefold():
+        if character in "-_.":
+            if not separator:
+                output.append("-")
+            separator = True
+        else:
+            output.append(character)
+            separator = False
+    result = "".join(output).strip("-")
+    if not result:
+        _fail("CC002_WHEEL_NAME", f"invalid distribution name: {name!r}")
+    return result
+
+
+def _wheel_metadata(path: Path) -> tuple[str, str]:
+    if path.is_symlink() or not path.is_file():
+        _fail("CC002_WHEEL", f"wheel must be a regular file: {path}")
+    try:
+        with zipfile.ZipFile(path) as archive:
+            metadata_names = []
+            for info in archive.infolist():
+                member = PurePosixPath(info.filename)
+                if member.is_absolute() or any(part in {"", ".", ".."} for part in member.parts):
+                    _fail("CC002_WHEEL", f"unsafe wheel member: {info.filename}")
+                mode = (info.external_attr >> 16) & 0o170000
+                if mode == 0o120000:
+                    _fail("CC002_WHEEL", f"symlink wheel member: {info.filename}")
+                if len(member.parts) == 2 and member.parts[0].endswith(".dist-info") and member.parts[1] == "METADATA":
+                    metadata_names.append(info.filename)
+            if len(metadata_names) != 1:
+                _fail("CC002_WHEEL", f"wheel must contain exactly one METADATA: {path.name}")
+            metadata = BytesParser(policy=email.policy.default).parsebytes(
+                archive.read(metadata_names[0])
+            )
+    except CC002Error:
+        raise
+    except (OSError, zipfile.BadZipFile, KeyError) as error:
+        _fail("CC002_WHEEL", f"invalid wheel {path.name}: {error}")
+    name = metadata.get("Name")
+    version = metadata.get("Version")
+    if not isinstance(name, str) or not name.strip():
+        _fail("CC002_WHEEL", f"wheel Name is required: {path.name}")
+    if not isinstance(version, str) or not version.strip():
+        _fail("CC002_WHEEL", f"wheel Version is required: {path.name}")
+    parts = path.name.removesuffix(".whl").split("-")
+    if len(parts) < 5:
+        _fail("CC002_WHEEL", f"malformed wheel filename: {path.name}")
+    if _canonical_name(parts[0]) != _canonical_name(name) or parts[1] != version:
+        _fail("CC002_WHEEL", f"wheel filename and METADATA disagree: {path.name}")
+    return name, version
+
+
+def build_lock(wheelhouse: Path) -> tuple[str, list[dict[str, Any]]]:
+    """Build a deterministic one-wheel-per-distribution hash lock."""
+    if wheelhouse.is_symlink() or not wheelhouse.is_dir():
+        _fail("CC002_WHEELHOUSE", f"wheelhouse must be a regular directory: {wheelhouse}")
+    paths = sorted(wheelhouse.iterdir(), key=lambda path: path.name)
+    if not paths:
+        _fail("CC002_WHEELHOUSE", "wheelhouse is empty")
+    if any(path.suffix != ".whl" for path in paths):
+        _fail("CC002_WHEELHOUSE", "wheelhouse contains a non-wheel entry")
+    by_name: dict[str, tuple[str, dict[str, Any]]] = {}
+    for path in paths:
+        name, version = _wheel_metadata(path)
+        normalized = _canonical_name(name)
+        if normalized in by_name:
+            _fail("CC002_WHEELHOUSE", f"duplicate distribution in wheelhouse: {name}")
+        record = _artifact_record(path)
+        record.update({"distribution": name, "version": version})
+        by_name[normalized] = (version, record)
+    lines = []
+    records = []
+    for normalized, (version, record) in by_name.items():
+        lines.append(f"{normalized}=={version} --hash={record['sha256']}")
+        records.append(record)
+    lines.sort(key=str.casefold)
+    records.sort(key=lambda item: item["filename"])
+    return "\n".join(lines) + "\n", records
+
+
+_PIP_REPORT_ENVIRONMENT = {
+    "implementation_name": "cpython",
+    "implementation_version": "3.12.10",
+    "python_full_version": "3.12.10",
+    "python_version": "3.12",
+    "platform_machine": "x86_64",
+    "platform_system": "Linux",
+}
+
+
+def validate_resolution_report(
+    report: Any, wheel_records: Sequence[Mapping[str, Any]]
+) -> list[Mapping[str, Any]]:
+    """Cross-check pip 25.0.1's selected-tuple resolution against retained wheels."""
+    wheel_records = _validated_wheel_records(wheel_records)
+    if not isinstance(report, dict):
+        _fail("CC002_PIP_REPORT", "pip report must be an object")
+    _exact_keys(
+        report,
+        {"version", "pip_version", "install", "environment"},
+        "pip report",
+    )
+    if report["version"] != "1" or report["pip_version"] != "25.0.1":
+        _fail("CC002_PIP_REPORT", "pip report version or pip identity mismatch")
+    environment = report["environment"]
+    if not isinstance(environment, dict):
+        _fail("CC002_PIP_REPORT", "pip report environment must be an object")
+    for key, expected in _PIP_REPORT_ENVIRONMENT.items():
+        if environment.get(key) != expected:
+            _fail("CC002_PYTHON_TUPLE", f"pip report {key} != {expected!r}")
+    records_by_identity: dict[tuple[str, str, str], Mapping[str, Any]] = {}
+    for record in wheel_records:
+        distribution = record["distribution"]
+        version = record["version"]
+        digest = record["sha256"]
+        identity = (_canonical_name(distribution), version, digest.removeprefix("sha256:"))
+        if identity in records_by_identity:
+            _fail("CC002_PIP_REPORT", f"duplicate wheel identity: {identity[0]}")
+        if not (identity[0] == "pip" and version == "25.0.1"):
+            records_by_identity[identity] = record
+    installs = report["install"]
+    if not isinstance(installs, list):
+        _fail("CC002_PIP_REPORT", "pip report install must be an array")
+    observed: dict[tuple[str, str, str], str] = {}
+    for install in installs:
+        if not isinstance(install, dict):
+            _fail("CC002_PIP_REPORT", "pip install record must be an object")
+        download = install.get("download_info")
+        metadata = install.get("metadata")
+        if not isinstance(download, dict) or not isinstance(metadata, dict):
+            _fail("CC002_PIP_REPORT", "pip install download_info and metadata are required")
+        name = metadata.get("name")
+        version = metadata.get("version")
+        if not isinstance(name, str) or not isinstance(version, str) or not name or not version:
+            _fail("CC002_PIP_REPORT", "pip install name and version are required")
+        url = download.get("url")
+        if not isinstance(url, str):
+            _fail("CC002_PIP_REPORT", "pip install URL is required")
+        parsed = urllib.parse.urlsplit(url)
+        path = PurePosixPath(urllib.parse.unquote(parsed.path))
+        if (
+            parsed.scheme != "file"
+            or parsed.netloc
+            or parsed.query
+            or parsed.fragment
+            or path.parent != PurePosixPath("/wheelhouse")
+        ):
+            _fail("CC002_PIP_REPORT", f"pip selected nonlocal wheel URL: {url}")
+        archive = download.get("archive_info")
+        if not isinstance(archive, dict):
+            _fail("CC002_PIP_REPORT", "pip archive_info is required")
+        hashes = archive.get("hashes")
+        if not isinstance(hashes, dict) or set(hashes) != {"sha256"}:
+            _fail("CC002_PIP_REPORT", "pip report must contain exactly one SHA-256")
+        hexadecimal = hashes["sha256"]
+        _validate_digest("sha256:" + str(hexadecimal), "pip report wheel")
+        identity = (_canonical_name(name), version, str(hexadecimal))
+        expected = records_by_identity.get(identity)
+        if expected is None or expected["filename"] != path.name:
+            _fail("CC002_PIP_REPORT", f"pip selected an unretained wheel: {path.name}")
+        if identity in observed:
+            _fail("CC002_PIP_REPORT", f"pip selected duplicate distribution: {name}")
+        observed[identity] = path.name
+    if set(observed) != set(records_by_identity):
+        missing = sorted(set(records_by_identity) - set(observed))
+        extra = sorted(set(observed) - set(records_by_identity))
+        _fail("CC002_PIP_REPORT", f"pip closure mismatch; missing={missing}, extra={extra}")
+    return list(wheel_records)
+
+
+def _validate_installed_closure(
+    distributions: Any, wheel_records: Sequence[Mapping[str, Any]]
+) -> list[dict[str, str]]:
+    wheel_records = _validated_wheel_records(wheel_records)
+    if not isinstance(distributions, list) or not distributions:
+        _fail("CC002_VERIFY", "installed distribution closure is empty")
+    observed: set[tuple[str, str]] = set()
+    for distribution in distributions:
+        if not isinstance(distribution, dict):
+            _fail("CC002_VERIFY", "installed distribution must be an object")
+        _exact_keys(distribution, {"name", "version"}, "installed distribution")
+        if not all(
+            isinstance(distribution[key], str) and distribution[key]
+            for key in distribution
+        ):
+            _fail("CC002_VERIFY", "installed name and version must be nonempty strings")
+        identity = (_canonical_name(distribution["name"]), distribution["version"])
+        if identity in observed:
+            _fail("CC002_VERIFY", f"duplicate installed distribution: {identity[0]}")
+        observed.add(identity)
+    expected = set()
+    for record in wheel_records:
+        name = record["distribution"]
+        version = record["version"]
+        expected.add((_canonical_name(name), version))
+    if observed != expected:
+        _fail(
+            "CC002_VERIFY",
+            f"installed closure mismatch; expected={sorted(expected)}, observed={sorted(observed)}",
+        )
+    return distributions
+
+
+def _validate_internal_verification(
+    value: Any,
+    manifest: Mapping[str, Any],
+    wheel_records: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        _fail("CC002_VERIFY", "internal verification must be an object")
+    _exact_keys(
+        value,
+        {
+            "schema",
+            "workstream_id",
+            "acquisition_manifest_sha256",
+            "lock_sha256",
+            "wheelhouse_sha256",
+            "resolution_report_sha256",
+            "docker",
+            "oci_index_digest",
+            "oci_child_digest",
+            "platform",
+            "network",
+            "wheelhouse_mount",
+            "python",
+            "smoke_input",
+            "generator_output_sha256",
+            "installed_distributions",
+        },
+        "internal verification",
+    )
+    if value["schema"] != "malleus.cc002.internal-verification/v1":
+        _fail("CC002_VERIFY", "unknown internal verification schema")
+    if value["workstream_id"] != "CC-002":
+        _fail("CC002_VERIFY", "internal verification workstream mismatch")
+    for field in (
+        "acquisition_manifest_sha256",
+        "lock_sha256",
+        "wheelhouse_sha256",
+        "resolution_report_sha256",
+        "generator_output_sha256",
+    ):
+        _validate_digest(value[field], field)
+    fixed = {
+        "lock_sha256": manifest["lock"]["sha256"],
+        "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
+        "resolution_report_sha256": manifest["resolution_report"]["sha256"],
+        "docker": manifest["docker"],
+        "oci_index_digest": OCI_INDEX_DIGEST,
+        "oci_child_digest": OCI_CHILD_DIGEST,
+        "platform": OCI_PLATFORM,
+        "network": "DENIED",
+        "wheelhouse_mount": "READ_ONLY",
+        "python": PYTHON_TUPLE,
+        "smoke_input": manifest["smoke_input"],
+    }
+    for field, expected in fixed.items():
+        if value[field] != expected:
+            _fail("CC002_VERIFY", f"internal verification {field} mismatch")
+    _validate_installed_closure(value["installed_distributions"], wheel_records)
+    return value
+
+
+def verify_artifact_directory(directory: Path, manifest: Mapping[str, Any]) -> None:
+    if directory.is_symlink() or not directory.is_dir():
+        _fail("CC002_DIRECTORY", f"artifact directory is missing or unsafe: {directory}")
+    _exact_keys(manifest, {"artifacts"}, "artifact manifest")
+    records = manifest["artifacts"]
+    if not isinstance(records, list):
+        _fail("CC002_MANIFEST", "artifact records must be an array")
+    expected: dict[str, dict[str, Any]] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            _fail("CC002_MANIFEST", "artifact record must be an object")
+        _exact_keys(record, {"filename", "byte_length", "sha256"}, "artifact record")
+        filename = record["filename"]
+        if not isinstance(filename, str) or filename in expected:
+            _fail("CC002_MANIFEST", f"invalid or duplicate artifact filename: {filename!r}")
+        expected[filename] = record
+    actual_names = {path.name for path in directory.iterdir()}
+    missing = sorted(set(expected) - actual_names)
+    unexpected = sorted(actual_names - set(expected))
+    if missing:
+        _fail("CC002_MISSING", f"missing artifacts: {missing}")
+    if unexpected:
+        _fail("CC002_UNEXPECTED", f"unexpected artifacts: {unexpected}")
+    for filename, record in expected.items():
+        path = safe_target(directory, filename)
+        actual = _artifact_record(path)
+        if actual["byte_length"] != record["byte_length"]:
+            _fail("CC002_LENGTH", f"{filename}: byte length mismatch")
+        if actual["sha256"] != record["sha256"]:
+            _fail("CC002_DIGEST", f"{filename}: SHA-256 mismatch")
+
+
+def _tree_identity(root: Path) -> str:
+    if root.is_symlink() or not root.is_dir():
+        _fail("CC002_DIRECTORY", f"unsafe directory: {root}")
+    records = []
+    for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
+        if path.is_symlink():
+            _fail("CC002_SYMLINK", f"symlink in environment: {path}")
+        if path.is_file():
+            record = _artifact_record(path)
+            record["filename"] = path.relative_to(root).as_posix()
+            records.append(record)
+        elif not path.is_dir():
+            _fail("CC002_FILE", f"unsupported filesystem entry: {path}")
+    return _digest(canonical_json(records).encode("utf-8"))
+
+
+def _require_safe_ancestors(target: Path, trusted_root: Path) -> None:
+    trusted = Path(os.path.abspath(trusted_root))
+    lexical_target = Path(os.path.abspath(target))
+    if trusted.is_symlink() or not trusted.is_dir():
+        _fail("CC002_TRUSTED_ROOT", f"trusted root is missing or unsafe: {trusted}")
+    try:
+        relative = lexical_target.relative_to(trusted)
+    except ValueError:
+        _fail("CC002_TRUSTED_ROOT", f"output is outside the trusted root: {target}")
+    if not relative.parts:
+        _fail("CC002_TRUSTED_ROOT", "output cannot replace the trusted root")
+    current = trusted
+    for part in relative.parts[:-1]:
+        current = current / part
+        if current.is_symlink():
+            _fail("CC002_SYMLINK", f"symlink output ancestor is forbidden: {current}")
+        if current.exists() and not current.is_dir():
+            _fail("CC002_PATH", f"output ancestor is not a directory: {current}")
+    try:
+        lexical_target.parent.resolve().relative_to(trusted.resolve())
+    except ValueError:
+        _fail("CC002_TRUSTED_ROOT", f"output parent escapes the trusted root: {target}")
+
+
+def publish_directory(staging: Path, destination: Path, trusted_root: Path) -> bool:
+    """Publish a complete directory once, accepting only byte-identical reruns."""
+    staging_identity = _tree_identity(staging)
+    if destination.is_symlink():
+        _fail("CC002_CONFLICT", "conflicting existing environment")
+    _require_safe_ancestors(destination, trusted_root)
+    if destination.exists() or destination.is_symlink():
+        if destination.is_symlink() or not destination.is_dir():
+            _fail("CC002_CONFLICT", "conflicting existing environment")
+        if _tree_identity(destination) == staging_identity:
+            return False
+        _fail("CC002_CONFLICT", "conflicting existing environment")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    _require_safe_ancestors(destination, trusted_root)
+    os.replace(staging, destination)
+    return True
+
+
+def _write_atomic(path: Path, source: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_symlink():
+        _fail("CC002_SYMLINK", f"refusing symlink output: {path}")
+    if path.exists():
+        if path.is_file() and path.read_bytes() == source:
+            return
+        _fail("CC002_CONFLICT", f"conflicting existing output: {path}")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(source)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists() and not temporary.is_symlink():
+            temporary.unlink()
+
+
+def _replace_atomic(
+    path: Path, expected: bytes, replacement: bytes, trusted_root: Path
+) -> None:
+    _require_safe_ancestors(path, trusted_root)
+    if path.is_symlink() or not path.is_file():
+        _fail("CC002_CONFLICT", f"concurrent or unsafe output replacement: {path}")
+    current = path.read_bytes()
+    if current == replacement:
+        return
+    if current != expected:
+        _fail("CC002_CONFLICT", f"concurrent or unsafe output replacement: {path}")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(replacement)
+            stream.flush()
+            os.fsync(stream.fileno())
+        current = path.read_bytes()
+        if current == replacement:
+            return
+        if current != expected:
+            _fail("CC002_CONFLICT", f"output changed during replacement: {path}")
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists() and not temporary.is_symlink():
+            temporary.unlink()
+
+
+def _load_json_file(path: Path, context: str) -> tuple[dict[str, Any], bytes]:
+    if path.is_symlink() or not path.is_file():
+        _fail("CC002_FILE", f"required {context} is missing: {path}")
+    source = path.read_bytes()
+    value = strict_json(source, context)
+    if not isinstance(value, dict):
+        _fail("CC002_JSON", f"{context} root must be an object")
+    return value, source
+
+
+def _validated_wheel_record(value: Any) -> dict[str, Any]:
+    _exact_keys(
+        value,
+        {"filename", "byte_length", "sha256", "distribution", "version"},
+        "wheel record",
+    )
+    filename = value["filename"]
+    byte_length = value["byte_length"]
+    digest = value["sha256"]
+    distribution = value["distribution"]
+    version = value["version"]
+    if (
+        not isinstance(filename, str)
+        or not filename
+        or not filename.endswith(".whl")
+        or "/" in filename
+        or "\\" in filename
+    ):
+        _fail("CC002_WHEEL_RECORD", "wheel record filename must be a local wheel name")
+    if (
+        not isinstance(byte_length, int)
+        or isinstance(byte_length, bool)
+        or byte_length <= 0
+    ):
+        _fail("CC002_WHEEL_RECORD", "wheel record byte_length must be a positive integer")
+    _validate_digest(digest, f"wheel record {filename} sha256")
+    if not isinstance(distribution, str) or not distribution:
+        _fail("CC002_WHEEL_RECORD", "wheel record distribution must be a nonempty string")
+    if not isinstance(version, str) or not version:
+        _fail("CC002_WHEEL_RECORD", "wheel record version must be a nonempty string")
+    return {
+        "filename": filename,
+        "byte_length": byte_length,
+        "sha256": digest,
+        "distribution": distribution,
+        "version": version,
+    }
+
+
+def _validated_wheel_records(records: Any) -> list[dict[str, Any]]:
+    if not isinstance(records, list):
+        _fail("CC002_WHEEL_RECORD", "wheel records must be an array")
+    return [_validated_wheel_record(record) for record in records]
+
+
+def _wheelhouse_identity(records: Any) -> str:
+    validated = _validated_wheel_records(records)
+    return _digest(canonical_json(validated).encode("utf-8"))
+
+
+def _content_record(record: Any) -> dict[str, Any]:
+    record = _validated_wheel_record(record)
+    return {
+        "filename": record["filename"],
+        "byte_length": record["byte_length"],
+        "sha256": record["sha256"],
+    }
+
+
+def _manifest_from_staging(
+    staging: Path,
+    lock: bytes,
+    wheel_records: list[dict[str, Any]],
+    *,
+    docker_executable: str,
+    docker_version: str,
+) -> dict[str, Any]:
+    roots = [_artifact_record(staging / "roots" / item.filename) for item in SELECTED_ARTIFACTS]
+    smoke = _artifact_record(SMOKE_INPUT)
+    smoke["filename"] = "ontology/malleus.yaml"
+    return {
+        "schema": "malleus.cc002.compiler-environment/v1",
+        "docker": {
+            "command": DOCKER,
+            "resolved_executable": docker_executable,
+            "version": docker_version,
+        },
+        "release": RELEASE,
+        "python": PYTHON_TUPLE,
+        "image": {
+            "tag": "python:3.12.10-slim-bookworm",
+            "platform": OCI_PLATFORM,
+            "index_digest": OCI_INDEX_DIGEST,
+            "child_digest": OCI_CHILD_DIGEST,
+        },
+        "roots": {"artifacts": roots},
+        "wheelhouse": {
+            "artifacts": wheel_records,
+            "sha256": _wheelhouse_identity(wheel_records),
+        },
+        "lock": {
+            "filename": "requirements.lock",
+            "byte_length": len(lock),
+            "sha256": _digest(lock),
+        },
+        "resolution_report": _artifact_record(staging / "resolution-report.json"),
+        "verification": {"state": "PENDING"},
+        "smoke_input": smoke,
+    }
+
+
+def _remove_recoverable_manifest_temps(path: Path) -> None:
+    prefixes = (".manifest.json.", ".verification.json.")
+    for member in path.iterdir():
+        if not any(member.name.startswith(prefix) for prefix in prefixes):
+            continue
+        if member.is_symlink() or not member.is_file():
+            _fail("CC002_SYMLINK", f"unsafe crash residue: {member}")
+        member.unlink()
+
+
+def _require_exact_bundle_members(path: Path, *, has_verification: bool) -> None:
+    expected = {
+        "manifest.json",
+        "requirements.lock",
+        "resolution-report.json",
+        "roots",
+        "wheelhouse",
+    }
+    if has_verification:
+        expected.add("verification.json")
+    actual = {member.name for member in path.iterdir()}
+    unexpected = sorted(actual - expected)
+    missing = sorted(expected - actual)
+    if missing or unexpected:
+        _fail(
+            "CC002_TOP_LEVEL",
+            f"bundle top-level membership mismatch; missing={missing}, unexpected={unexpected}",
+        )
+
+
+def _pending_manifest_source(manifest: Mapping[str, Any]) -> bytes:
+    pending = dict(manifest)
+    pending["verification"] = {"state": "PENDING"}
+    return (canonical_json(pending) + "\n").encode("utf-8")
+
+
+def _bind_selected_wheels(
+    path: Path,
+    records: Sequence[Mapping[str, Any]],
+    root_records: Sequence[Mapping[str, Any]],
+) -> None:
+    wheel_records = {record["filename"]: record for record in records}
+    retained_roots = {record["filename"]: record for record in root_records}
+    expected_metadata = {
+        ROOT_WHEEL_FILENAMES[0]: ("linkml", "1.11.1"),
+        ROOT_WHEEL_FILENAMES[1]: ("linkml-runtime", "1.11.1"),
+        PIP_WHEEL_FILENAME: ("pip", "25.0.1"),
+    }
+    selected_wheels = {
+        artifact.filename: artifact
+        for artifact in SELECTED_ARTIFACTS
+        if artifact.kind == "WHEEL"
+    }
+    if set(selected_wheels) != set(expected_metadata):
+        _fail("CC002_SELECTED_WHEEL", "selected wheel root membership is invalid")
+    for filename, artifact in selected_wheels.items():
+        record = wheel_records.get(filename)
+        root_record = retained_roots.get(filename)
+        expected_content = {
+            "filename": filename,
+            "byte_length": artifact.byte_length,
+            "sha256": "sha256:" + artifact.sha256,
+        }
+        if record is None or root_record != expected_content:
+            _fail(
+                "CC002_SELECTED_WHEEL",
+                f"selected wheel is missing from its retained root: {filename}",
+            )
+        if _content_record(record) != expected_content:
+            _fail(
+                "CC002_SELECTED_WHEEL",
+                f"selected wheelhouse copy differs from retained root: {filename}",
+            )
+        distribution, version = expected_metadata[filename]
+        if record.get("distribution") != distribution or record.get("version") != version:
+            _fail(
+                "CC002_SELECTED_WHEEL",
+                f"selected wheel metadata is invalid: {filename}",
+            )
+        if (path / "roots" / filename).read_bytes() != (
+            path / "wheelhouse" / filename
+        ).read_bytes():
+            _fail(
+                "CC002_SELECTED_WHEEL",
+                f"selected wheel bytes differ from retained root: {filename}",
+            )
+
+
+def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], bytes]:
+    path = DESTINATION if path is None else path
+    if path.is_symlink() or not path.is_dir():
+        _fail("CC002_DIRECTORY", f"environment must be a regular directory: {path}")
+    _remove_recoverable_manifest_temps(path)
+    manifest, source = _load_json_file(path / "manifest.json", "environment manifest")
+    _exact_keys(
+        manifest,
+        {
+            "schema",
+            "docker",
+            "release",
+            "python",
+            "image",
+            "roots",
+            "wheelhouse",
+            "lock",
+            "resolution_report",
+            "verification",
+            "smoke_input",
+        },
+        "environment manifest",
+    )
+    if manifest["schema"] != "malleus.cc002.compiler-environment/v1":
+        _fail("CC002_MANIFEST", "unknown environment schema")
+    docker = manifest["docker"]
+    if not isinstance(docker, dict):
+        _fail("CC002_MANIFEST", "Docker execution identity must be an object")
+    _exact_keys(
+        docker,
+        {"command", "resolved_executable", "version"},
+        "Docker identity",
+    )
+    if docker["command"] != DOCKER:
+        _fail("CC002_MANIFEST", "Docker command identity mismatch")
+    if not all(
+        isinstance(docker[key], str) and docker[key]
+        for key in ("command", "resolved_executable", "version")
+    ):
+        _fail("CC002_MANIFEST", "Docker execution identity fields must be nonempty strings")
+    if manifest["release"] != RELEASE or manifest["python"] != PYTHON_TUPLE:
+        _fail("CC002_MANIFEST", "environment baseline does not match OD-012")
+    if manifest["image"] != {
+        "tag": "python:3.12.10-slim-bookworm",
+        "platform": OCI_PLATFORM,
+        "index_digest": OCI_INDEX_DIGEST,
+        "child_digest": OCI_CHILD_DIGEST,
+    }:
+        _fail("CC002_MANIFEST", "environment image does not match OD-012")
+    verify_artifact_directory(path / "roots", manifest["roots"])
+    wheelhouse = manifest["wheelhouse"]
+    if not isinstance(wheelhouse, dict):
+        _fail("CC002_MANIFEST", "wheelhouse manifest must be an object")
+    _exact_keys(wheelhouse, {"artifacts", "sha256"}, "wheelhouse manifest")
+    records = wheelhouse["artifacts"]
+    records = _validated_wheel_records(records)
+    verify_artifact_directory(
+        path / "wheelhouse", {"artifacts": [_content_record(record) for record in records]}
+    )
+    if wheelhouse["sha256"] != _wheelhouse_identity(wheelhouse["artifacts"]):
+        _fail("CC002_MANIFEST", "wheelhouse identity mismatch")
+    rebuilt_lock, rebuilt_records = build_lock(path / "wheelhouse")
+    if rebuilt_records != records:
+        _fail("CC002_MANIFEST", "wheelhouse metadata does not match retained wheel bytes")
+    lock = manifest["lock"]
+    if not isinstance(lock, dict):
+        _fail("CC002_MANIFEST", "lock manifest must be an object")
+    _exact_keys(lock, {"filename", "byte_length", "sha256"}, "lock manifest")
+    if lock["filename"] != "requirements.lock":
+        _fail("CC002_MANIFEST", "lock filename mismatch")
+    lock_record = _artifact_record(path / "requirements.lock")
+    if lock_record != lock:
+        _fail("CC002_MANIFEST", "lock byte identity mismatch")
+    if (path / "requirements.lock").read_text(encoding="utf-8") != rebuilt_lock:
+        _fail("CC002_MANIFEST", "requirements lock does not match retained wheel bytes")
+    resolution_record = manifest["resolution_report"]
+    if not isinstance(resolution_record, dict):
+        _fail("CC002_MANIFEST", "resolution report identity must be an object")
+    _exact_keys(
+        resolution_record,
+        {"filename", "byte_length", "sha256"},
+        "resolution report identity",
+    )
+    if resolution_record["filename"] != "resolution-report.json":
+        _fail("CC002_MANIFEST", "resolution report filename mismatch")
+    if _artifact_record(path / "resolution-report.json") != resolution_record:
+        _fail("CC002_MANIFEST", "resolution report byte identity mismatch")
+    resolution, _resolution_source = _load_json_file(
+        path / "resolution-report.json", "pip resolution report"
+    )
+    validate_resolution_report(resolution, rebuilt_records)
+    expected_roots = {artifact.filename: artifact for artifact in SELECTED_ARTIFACTS}
+    for record in manifest["roots"]["artifacts"]:
+        selected = expected_roots.get(record["filename"])
+        if selected is None:
+            _fail("CC002_MANIFEST", "root retention membership mismatch")
+        if record["byte_length"] != selected.byte_length or record["sha256"] != "sha256:" + selected.sha256:
+            _fail("CC002_MANIFEST", f"selected root identity mismatch: {selected.filename}")
+    if len(manifest["roots"]["artifacts"]) != len(SELECTED_ARTIFACTS):
+        _fail("CC002_MANIFEST", "root retention count mismatch")
+    if len(manifest["roots"]["artifacts"]) != 5:
+        _fail("CC002_MANIFEST", "root retention set must contain exactly five artifacts")
+    _bind_selected_wheels(
+        path, rebuilt_records, manifest["roots"]["artifacts"]
+    )
+    verification = manifest["verification"]
+    if not isinstance(verification, dict):
+        _fail("CC002_MANIFEST", "verification state must be an object")
+    if verification == {"state": "PENDING"}:
+        verification_path = path / "verification.json"
+        if verification_path.is_symlink():
+            _fail("CC002_SYMLINK", "internal verification cannot be a symlink")
+        if verification_path.exists():
+            internal, _internal_source = _load_json_file(
+                verification_path, "recoverable internal offline verification"
+            )
+            _validate_internal_verification(internal, manifest, rebuilt_records)
+            if internal["acquisition_manifest_sha256"] != _digest(
+                _pending_manifest_source(manifest)
+            ):
+                _fail(
+                    "CC002_VERIFY",
+                    "recoverable verification lineage does not bind the pending manifest",
+                )
+    else:
+        _exact_keys(
+            verification,
+            {"state", "filename", "byte_length", "sha256"},
+            "verification identity",
+        )
+        if verification["state"] != "COMPLETE" or verification["filename"] != "verification.json":
+            _fail("CC002_MANIFEST", "completed verification identity is invalid")
+        if _artifact_record(path / "verification.json") != {
+            key: verification[key] for key in ("filename", "byte_length", "sha256")
+        }:
+            _fail("CC002_MANIFEST", "verification byte identity mismatch")
+        internal, _internal_source = _load_json_file(
+            path / "verification.json", "internal offline verification"
+        )
+        _validate_internal_verification(internal, manifest, rebuilt_records)
+        if internal["acquisition_manifest_sha256"] != _digest(
+            _pending_manifest_source(manifest)
+        ):
+            _fail(
+                "CC002_VERIFY",
+                "completed verification lineage does not bind the pending manifest",
+            )
+    _require_exact_bundle_members(
+        path, has_verification=(path / "verification.json").exists()
+    )
+    smoke = _artifact_record(SMOKE_INPUT)
+    smoke["filename"] = "ontology/malleus.yaml"
+    if manifest["smoke_input"] != smoke:
+        _fail("CC002_MANIFEST", "generic smoke input changed")
+    return manifest, source
+
+
+def _copy_selected_wheels(roots: Path, wheelhouse: Path) -> None:
+    wheelhouse.mkdir()
+    for filename in (*ROOT_WHEEL_FILENAMES, PIP_WHEEL_FILENAME):
+        source = safe_target(roots, filename)
+        target = safe_target(wheelhouse, filename)
+        shutil.copyfile(source, target, follow_symlinks=False)
+
+
+def acquire_environment() -> dict[str, Any]:
+    """Materialize the fixed compiler environment, or attest an identical rerun."""
+    require_repository_cwd()
+    _require_safe_ancestors(DESTINATION, OUTPUT_TRUSTED_ROOT)
+    if DESTINATION.is_symlink():
+        _fail("CC002_SYMLINK", f"environment destination is a symlink: {DESTINATION}")
+    if DESTINATION.exists():
+        manifest, _source = _validated_environment()
+        return acquire_result(
+            artifact_count=len(manifest["roots"]["artifacts"]),
+            lock_sha256=manifest["lock"]["sha256"],
+            wheel_count=len(manifest["wheelhouse"]["artifacts"]),
+            wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
+        )
+    DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(
+        prefix=".cc002-environment-", dir=DESTINATION.parent
+    ) as temporary_name:
+        staging = Path(temporary_name)
+        roots = staging / "roots"
+        roots.mkdir()
+        opener = _default_opener()
+        for artifact in SELECTED_ARTIFACTS:
+            download_artifact(artifact, safe_target(roots, artifact.filename), opener)
+        docker_executable = _resolved_docker()
+        docker_version = _docker_version(
+            _run_checked(
+                docker_version_command(),
+                "Docker version",
+                staging,
+                docker_executable=docker_executable,
+            )
+        )
+        raw_index = _run_checked(
+            oci_index_command(),
+            "OCI index inspection",
+            staging,
+            docker_executable=docker_executable,
+        )
+        parse_oci_index(raw_index)
+        _run_checked(
+            image_pull_command(),
+            "OCI child pull",
+            staging,
+            docker_executable=docker_executable,
+        )
+        _verify_local_image(
+            _run_checked(
+                image_inspect_command(),
+                "local image inspection",
+                staging,
+                docker_executable=docker_executable,
+            )
+        )
+        ownership = host_ownership()
+        wheelhouse = staging / "wheelhouse"
+        _copy_selected_wheels(roots, wheelhouse)
+        _run_checked(
+            resolve_command(roots, wheelhouse, host_user=ownership),
+            "transitive wheel resolution",
+            staging,
+            docker_executable=docker_executable,
+        )
+        lock_text, wheel_records = build_lock(wheelhouse)
+        lock = lock_text.encode("utf-8")
+        _write_atomic(staging / "requirements.lock", lock)
+        with tempfile.TemporaryDirectory(
+            prefix=".cc002-resolution-", dir=DESTINATION.parent
+        ) as report_name:
+            report_work = Path(report_name)
+            _run_checked(
+                lock_report_command(staging, report_work, host_user=ownership),
+                "offline root resolution report",
+                report_work,
+                docker_executable=docker_executable,
+            )
+            report, _report_source = _load_json_file(
+                report_work / "pip-report.json", "pip resolution report"
+            )
+            validate_resolution_report(report, wheel_records)
+            _write_atomic(
+                staging / "resolution-report.json",
+                (canonical_json(report) + "\n").encode("utf-8"),
+            )
+        manifest = _manifest_from_staging(
+            staging,
+            lock,
+            wheel_records,
+            docker_executable=docker_executable,
+            docker_version=docker_version,
+        )
+        _write_atomic(
+            staging / "manifest.json",
+            (canonical_json(manifest) + "\n").encode("utf-8"),
+        )
+        publish_directory(staging, DESTINATION, OUTPUT_TRUSTED_ROOT)
+    manifest, _source = _validated_environment()
+    return acquire_result(
+        artifact_count=len(manifest["roots"]["artifacts"]),
+        lock_sha256=manifest["lock"]["sha256"],
+        wheel_count=len(manifest["wheelhouse"]["artifacts"]),
+        wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
+    )
+
+
+def _validate_container_result(
+    work: Path, wheel_records: Sequence[Mapping[str, Any]]
+) -> tuple[list[dict[str, str]], str]:
+    result, _source = _load_json_file(work / "result.json", "container verification result")
+    _exact_keys(
+        result,
+        {"schema", "installed_distributions", "generator_output", "python"},
+        "container verification result",
+    )
+    if result["schema"] != "malleus.cc002.container-verification/v1":
+        _fail("CC002_VERIFY", "unknown container verification schema")
+    if result["generator_output"] != "/work/malleus.schema.json":
+        _fail("CC002_VERIFY", "unexpected generator output path")
+    if result["python"] != PYTHON_TUPLE:
+        _fail("CC002_PYTHON_TUPLE", "offline verifier Python tuple mismatch")
+    distributions = _validate_installed_closure(
+        result["installed_distributions"], wheel_records
+    )
+    generator_source = (work / "malleus.schema.json").read_bytes()
+    generated = strict_json(generator_source, "generated JSON Schema")
+    if not isinstance(generated, dict) or not isinstance(generated.get("$defs"), dict):
+        _fail("CC002_VERIFY", "generated JSON Schema lacks $defs")
+    return distributions, _digest(generator_source)
+
+
+def _completed_verification_result(
+    manifest: Mapping[str, Any],
+    manifest_source: bytes,
+    internal: Mapping[str, Any],
+    internal_source: bytes,
+) -> dict[str, Any]:
+    return verify_result(
+        environment_manifest_sha256=_digest(manifest_source),
+        verification_sha256=_digest(internal_source),
+        generator_output_sha256=internal["generator_output_sha256"],
+        installed_distribution_count=len(internal["installed_distributions"]),
+        lock_sha256=manifest["lock"]["sha256"],
+        wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
+    )
+
+
+def verify_environment() -> dict[str, Any]:
+    """Prove the retained environment installs and generates with network denied."""
+    require_repository_cwd()
+    _require_safe_ancestors(DESTINATION, OUTPUT_TRUSTED_ROOT)
+    manifest, manifest_source = _validated_environment()
+    verification_path = DESTINATION / "verification.json"
+    if INTERNAL_VERIFICATION != verification_path:
+        _fail("CC002_PATH", "internal verification path is not the fixed destination")
+    if manifest["verification"].get("state") == "COMPLETE":
+        internal, internal_source = _load_json_file(
+            verification_path, "internal offline verification"
+        )
+        return _completed_verification_result(
+            manifest, manifest_source, internal, internal_source
+        )
+    if verification_path.exists():
+        internal, internal_source = _load_json_file(
+            verification_path, "recoverable internal offline verification"
+        )
+    else:
+        ownership = host_ownership()
+        with tempfile.TemporaryDirectory(
+            prefix=".cc002-verification-", dir=DESTINATION.parent
+        ) as temporary_name:
+            work = Path(temporary_name)
+            docker_executable = _resolved_docker()
+            docker_version = _docker_version(
+                _run_checked(
+                    docker_version_command(),
+                    "Docker version",
+                    work,
+                    docker_executable=docker_executable,
+                )
+            )
+            if docker_executable != manifest["docker"]["resolved_executable"]:
+                _fail("CC002_DOCKER", "resolved Docker executable changed after acquisition")
+            if docker_version != manifest["docker"]["version"]:
+                _fail(
+                    "CC002_DOCKER_VERSION",
+                    "Docker client version changed after acquisition",
+                )
+            _verify_local_image(
+                _run_checked(
+                    image_inspect_command(),
+                    "local image inspection",
+                    work,
+                    docker_executable=docker_executable,
+                )
+            )
+            _run_checked(
+                verify_command(DESTINATION, work, host_user=ownership),
+                "offline container verification",
+                work,
+                docker_executable=docker_executable,
+            )
+            distributions, generator_digest = _validate_container_result(
+                work, manifest["wheelhouse"]["artifacts"]
+            )
+        internal = {
+            "schema": "malleus.cc002.internal-verification/v1",
+            "workstream_id": "CC-002",
+            "acquisition_manifest_sha256": _digest(manifest_source),
+            "lock_sha256": manifest["lock"]["sha256"],
+            "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
+            "resolution_report_sha256": manifest["resolution_report"]["sha256"],
+            "docker": manifest["docker"],
+            "oci_index_digest": OCI_INDEX_DIGEST,
+            "oci_child_digest": OCI_CHILD_DIGEST,
+            "platform": OCI_PLATFORM,
+            "network": "DENIED",
+            "wheelhouse_mount": "READ_ONLY",
+            "python": PYTHON_TUPLE,
+            "smoke_input": manifest["smoke_input"],
+            "generator_output_sha256": generator_digest,
+            "installed_distributions": distributions,
+        }
+        _validate_internal_verification(
+            internal, manifest, manifest["wheelhouse"]["artifacts"]
+        )
+        internal_source = (canonical_json(internal) + "\n").encode("utf-8")
+        _write_atomic(verification_path, internal_source)
+    completed = dict(manifest)
+    record = _artifact_record(verification_path)
+    completed["verification"] = {"state": "COMPLETE", **record}
+    completed_source = (canonical_json(completed) + "\n").encode("utf-8")
+    _replace_atomic(
+        DESTINATION / "manifest.json",
+        manifest_source,
+        completed_source,
+        OUTPUT_TRUSTED_ROOT,
+    )
+    completed, completed_source = _validated_environment()
+    internal, internal_source = _load_json_file(
+        verification_path, "internal offline verification"
+    )
+    return _completed_verification_result(
+        completed, completed_source, internal, internal_source
+    )
+
+
+def main(arguments: Sequence[str] | None = None) -> int:
+    arguments = sys.argv[1:] if arguments is None else list(arguments)
+    if arguments != ["serve"]:
+        sys.stderr.write("usage: contract_compiler_environment.py serve\n")
+        return 2
+    try:
+        require_repository_cwd()
+        serve()
+    except CC002Error as error:
+        sys.stderr.write(str(error) + "\n")
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
