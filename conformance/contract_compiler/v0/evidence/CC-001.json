@@ -1,76 +1,50 @@
 {
   "artifacts": [
-    {
-      "byte_length": 19412,
-      "path": "tests/test_docs.py",
-      "sha256": "sha256:183d745217bae6a5587b9e86c00248842269d916789ce3657b900d0d802ac964"
-    },
-    {
-      "byte_length": 1401,
-      "path": "docs/conf.py",
-      "sha256": "sha256:4681c379d5c84487da99c2abffb33f342c17bf5d50e6498a5628ece29fb3a871"
-    },
-    {
-      "byte_length": 617,
-      "path": "docs/index.md",
-      "sha256": "sha256:01ede1cb2f7a1156e5c33d00d1f80f894d286abbe1a740524333254955d95c9e"
-    },
-    {
-      "byte_length": 13030,
-      "path": "docs/PRINCIPLES.md",
-      "sha256": "sha256:d669163d3d4f3d0e533a57737a10d04ca134ffb7abf0c37d0d71dd24a88da024"
-    },
-    {
-      "byte_length": 2737,
-      "path": "docs/_ext/contract_manifest.py",
-      "sha256": "sha256:a6362083c6f777a9e83739199d9b4df76007583b1e5c3117b68a1bf873a91b87"
-    },
-    {
-      "byte_length": 274,
-      "path": "docs/contract_compiler/index.md",
-      "sha256": "sha256:0b20bcf2e6d6ad94fb8ed6f894a74248904c5267a91717f3d6f981594d29c332"
-    },
-    {
-      "byte_length": 179,
-      "path": "docs/contract_compiler/manifests.md",
-      "sha256": "sha256:8b02da73bada544e1aebb240616338e617c2d8a27accd699395bf3516dd8b0d3"
-    },
-    {
-      "byte_length": 304,
-      "path": "docs/reference/index.md",
-      "sha256": "sha256:d84581576651340f10f3b63bfec49795297a49bc40b9b89cf6b667458cd57e20"
-    }
+    {"byte_length": 57046, "path": "tests/test_docs.py", "sha256": "sha256:ebd8c1594b43380402f2179dd1563ccd8a4613cf47b80b44cf7bbcb5b30b6a41"},
+    {"byte_length": 1698, "path": "docs/conf.py", "sha256": "sha256:8d1ce17cac0c6346a74a5ee04ff06c3951451a8832ec78177e90539747b42471"},
+    {"byte_length": 617, "path": "docs/index.md", "sha256": "sha256:01ede1cb2f7a1156e5c33d00d1f80f894d286abbe1a740524333254955d95c9e"},
+    {"byte_length": 13030, "path": "docs/PRINCIPLES.md", "sha256": "sha256:d669163d3d4f3d0e533a57737a10d04ca134ffb7abf0c37d0d71dd24a88da024"},
+    {"byte_length": 2737, "path": "docs/_ext/contract_manifest.py", "sha256": "sha256:a6362083c6f777a9e83739199d9b4df76007583b1e5c3117b68a1bf873a91b87"},
+    {"byte_length": 274, "path": "docs/contract_compiler/index.md", "sha256": "sha256:0b20bcf2e6d6ad94fb8ed6f894a74248904c5267a91717f3d6f981594d29c332"},
+    {"byte_length": 179, "path": "docs/contract_compiler/manifests.md", "sha256": "sha256:8b02da73bada544e1aebb240616338e617c2d8a27accd699395bf3516dd8b0d3"},
+    {"byte_length": 304, "path": "docs/reference/index.md", "sha256": "sha256:d84581576651340f10f3b63bfec49795297a49bc40b9b89cf6b667458cd57e20"}
   ],
-  "base_commit": "1e84eee725111355dfd0db6f438829f7f9fa326b",
+  "base_commit": "ff07f7acd3d7ebef969b3926ceb0c00a44e5f2dc",
   "checks": [
     {
       "check_id": "cc001-red",
-      "method": "Run the frozen CC-001 documentation contract before GREEN files exist under the deterministic test environment.",
-      "observed": "The sealed RED checkpoint produced 8 failed and 14 passed tests; every failure required an absent GREEN documentation artifact or behavior.",
+      "method": "Run the frozen CC-001 documentation contract on exact sealed candidate base ff07f7acd3d7ebef969b3926ceb0c00a44e5f2dc before the final configuration GREEN.",
+      "observed": "The candidate-base RED produced 1 failed and 111 passed tests. The sole failure was the absent myst_enable_extensions strict configuration declaration.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-green",
-      "method": "Run tests/test_docs.py against the final documentation implementation.",
-      "observed": "22 tests passed in 4.23 seconds.",
+      "method": "Run tests/test_docs.py against the final strict configuration and governed API-reference island.",
+      "observed": "112 documentation contract tests passed in 11.79 seconds.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-slice",
-      "method": "Build the exact twelve authorized guides, validated contract-compiler projection, infrastructure doctest, and existing package-root API reference.",
-      "observed": "Strict HTML read and rendered 16 authored sources, including exactly 12 existing guides, 2 contract-compiler pages, the root page, and the root API page.",
+      "method": "Build the exact 16-source publication set: twelve authorized guides, two contract-compiler pages, the root page, and the package-root reference.",
+      "observed": "Strict HTML read and rendered all 16 exact sources. The governed reference island remained byte-identical to its approved 304-byte source.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-disproof",
-      "method": "Exercise isolated broken doctest, internal link, autodoc symbol, executable-block aliases, forbidden imports, invalid sealed state, and hostile render values.",
-      "observed": "All negative seams failed closed and the 22-test documentation contract passed without repository writes or generated autosummary stubs.",
+      "method": "Exercise invalid manifests, broken doctest/link/autodoc seams, forbidden imports and dynamic calls, MyST parser bypasses, eval-rst island mutations and path spoofing, and the rejected native-MyST autodoc rendering path.",
+      "observed": "All negative seams failed closed. The native MyST fence fixture reproduced literal generated RST with no Python-domain objects, while every unauthorized eval-rst source, byte, path, target, option, nesting, and extra island was refused.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-semantic-reference",
+      "method": "Inspect the Sphinx Python-domain inventory, doctree, rendered reference HTML, autosummary link, and module index after the strict HTML build.",
+      "observed": "The complete Python object inventory contained exactly malleus, malleus.OntologyRegistry, and its canonical alias; the module inventory contained exactly malleus; class description/signature nodes, canonical anchors, autosummary table/link, and py-modindex were present with no literal generated RST.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-html",
       "method": "Run Sphinx 8.1.3 HTML with -W --keep-going -n and deterministic environment variables into a temporary directory.",
-      "observed": "The strict HTML build succeeded with no warnings.",
+      "observed": "The strict HTML build succeeded with no warnings and generated the Python module index.",
       "result": "PASS"
     },
     {
@@ -81,32 +55,32 @@
     },
     {
       "check_id": "cc001-linkcheck",
-      "method": "Run the live Sphinx linkcheck builder with -W --keep-going -n and no ignored links, redirects, documents, anchors, or request headers.",
-      "observed": "The strict link check succeeded; the selected InformIT citation resolved directly and the existing DOI redirect remained authorized by Sphinx behavior, not configuration.",
+      "method": "Run the live Sphinx linkcheck builder with -W --keep-going -n and empty ignore, exclusion, redirect, anchor, and request-header configuration.",
+      "observed": "The strict live link check succeeded. Four links resolved directly and the existing DOI returned its expected redirect without a configured exception.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-static",
-      "method": "Run Ruff over documentation Python, the frozen tests, Malleus source, and the GraphRecipe experiment.",
+      "method": "Run Ruff over documentation Python, frozen tests, Malleus source, and the GraphRecipe experiment.",
       "observed": "All scoped Ruff checks passed.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-attest",
-      "method": "Validate the overseer ledger, integration state, focused ledger and integration tests, and the typed verification report.",
-      "observed": "The 28-entry ledger, 66-workstream and 4-card integration state, 1 selection, and 67 focused governance tests passed.",
+      "method": "Validate the overseer ledger, integration state, focused ledger and integration tests, and this typed verification report.",
+      "observed": "The 37-entry ledger, 66-workstream and 4-card integration state, 1 selection, and 67 focused governance tests passed.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-graphrecipe",
-      "method": "Run the GraphRecipe conformance slice after the sealed prerequisite rebind changed only its pyproject.toml digest binding.",
-      "observed": "40 tests passed.",
+      "method": "Run the GraphRecipe conformance slice from the declared development environment.",
+      "observed": "40 tests passed in 0.77 seconds.",
       "result": "PASS"
     },
     {
       "check_id": "cc001-regression",
-      "method": "Run the complete configured Python test suite from the declared development dependency environment.",
-      "observed": "1,137 tests passed and 2 tests skipped in 58.62 seconds.",
+      "method": "Run the complete configured Python test suite from the declared development environment.",
+      "observed": "1,227 tests passed and 2 tests skipped with 0 failures or errors; JUnit recorded 76.217 seconds.",
       "result": "PASS"
     },
     {
@@ -119,9 +93,11 @@
   "limitations": [
     "CC-001 validates documentation in repository CI and release CI only; it makes no sdist-buildable documentation, published-site, or rendered-artifact claim.",
     "Compiler public examples and all themed vocabulary remain deferred to CC-D09 and CC-D14.",
-    "The manifest page is a non-authoritative projection of sealed integration state; validated manifests remain authoritative."
+    "The manifest page is a non-authoritative projection of sealed integration state; validated manifests remain authoritative.",
+    "The static public-example policy governs repository-controlled documentation and is not a Python sandbox against reflection or deliberate obfuscation.",
+    "One eval-rst island is authorized only at docs/reference/index.md with its exact approved source bytes because native MyST autodoc fences render literal generated RST under the pinned toolchain."
   ],
-  "recorded_at": "2026-08-25T00:25:23Z",
+  "recorded_at": "2026-08-25T03:12:09Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-001"
 }
