@@ -1,0 +1,8 @@
+# Merge this table into ~/.codex/config.toml, replacing every /absolute/path
+# value with a path on the local machine. Keep it disabled at user scope; the
+# trusted project .codex/config.toml enables it and supplies project policy.
+[mcp_servers.cc002]
+command = "/absolute/path/to/python3"
+args = ["/absolute/path/to/malleus-dev/scripts/contract_compiler_environment.py", "serve"]
+cwd = "/absolute/path/to/malleus-dev"
+enabled = false

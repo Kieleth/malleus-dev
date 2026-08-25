@@ -449,6 +449,11 @@ def _validate_params(params: Any, context: str) -> dict[str, Any]:
     return params
 
 
+def _validate_request_meta(params: Mapping[str, Any], context: str) -> None:
+    if "_meta" in params and not isinstance(params["_meta"], dict):
+        _fail("CC002_PARAMS", f"{context} _meta must be an object")
+
+
 def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
     if not isinstance(value, dict):
         _fail("CC002_RESULT", f"{name} result must be an object")
@@ -572,16 +577,22 @@ def handle_message(message: Any, services: Any = DEFAULT_SERVICES) -> dict[str, 
         if method == "ping":
             if set(params) - {"_meta"}:
                 _fail("CC002_PARAMS", "ping accepts only the MCP _meta extension")
-            if "_meta" in params and not isinstance(params["_meta"], dict):
-                _fail("CC002_PARAMS", "ping _meta must be an object")
+            _validate_request_meta(params, method)
             return _response(request_id, {})
         if method == "tools/list":
-            if params:
-                _fail("CC002_PARAMS", "tools/list requires empty params")
+            if set(params) - {"_meta", "cursor"}:
+                _fail(
+                    "CC002_PARAMS",
+                    "tools/list accepts only cursor and the MCP _meta extension",
+                )
+            _validate_request_meta(params, method)
+            if "cursor" in params:
+                _fail("CC002_CURSOR", "tools/list cursor is invalid")
             return _response(request_id, {"tools": list(TOOLS)})
         if method == "tools/call":
-            if "name" not in params or set(params) - {"name", "arguments"}:
+            if "name" not in params or set(params) - {"name", "arguments", "_meta"}:
                 _fail("CC002_PARAMS", "tools/call requires name and optional arguments")
+            _validate_request_meta(params, method)
             name = params["name"]
             arguments = params["arguments"] if "arguments" in params else {}
             if not isinstance(name, str) or name not in {

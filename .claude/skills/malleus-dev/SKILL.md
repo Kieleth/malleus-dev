@@ -14,6 +14,18 @@ claims and `docs/PRINCIPLES.md` before architectural changes. For any new
 boundary, adapter, plugin, artifact, or public API, also read the complete
 [`references/UNIX_DESIGN_DOCTRINE.md`](references/UNIX_DESIGN_DOCTRINE.md).
 
+## MCP preflight
+
+Skills do not install or register MCP servers. Before CC-002 work, confirm that
+server `cc002` and tools `cc002_acquire` and `cc002_verify_offline` are loaded
+in the current task. If any are absent, stop and point to
+[`../../../.codex/README.md`](../../../.codex/README.md). Do not replace a
+missing MCP tool with shell, package-manager, direct-network, or legacy access.
+
+Any change that adds an MCP dependency to a shipped skill must add its exact
+server and tool IDs, setup pointer, missing-tool refusal, and regression test
+in the same change.
+
 ## Before you build: bind the slice
 
 Record these four items before writing code:

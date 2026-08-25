@@ -24,6 +24,9 @@ import scripts.contract_compiler_environment as environment  # noqa: E402
 
 
 CONFIG = ROOT / ".codex" / "config.toml"
+MACHINE_CONFIG_EXAMPLE = ROOT / ".codex" / "cc002.user.example.toml"
+MCP_SETUP = ROOT / ".codex" / "README.md"
+MAINTAINER_SKILL = ROOT / ".claude" / "skills" / "malleus-dev" / "SKILL.md"
 
 
 class FakeServices:
@@ -117,13 +120,10 @@ def _manifest_for(directory: Path) -> dict[str, Any]:
     return {"artifacts": artifacts}
 
 
-def test_project_mcp_registration_is_exact_and_prompt_gated():
+def test_project_mcp_registration_contains_activation_and_policy_only():
     config = tomllib.loads(CONFIG.read_text(encoding="utf-8"))
     server = config["mcp_servers"]["cc002"]
     assert server == {
-        "command": "python3",
-        "args": ["scripts/contract_compiler_environment.py", "serve"],
-        "cwd": ".",
         "enabled": True,
         "required": True,
         "enabled_tools": ["cc002_acquire", "cc002_verify_offline"],
@@ -133,18 +133,74 @@ def test_project_mcp_registration_is_exact_and_prompt_gated():
     }
 
 
-def test_project_registration_is_checkout_portable(tmp_path):
-    source = CONFIG.read_text(encoding="utf-8")
-    relocated = tmp_path / ".codex" / "config.toml"
-    relocated.parent.mkdir()
-    relocated.write_text(source, encoding="utf-8")
-    parsed = tomllib.loads(relocated.read_text(encoding="utf-8"))
-    server = parsed["mcp_servers"]["cc002"]
-    assert server["command"] == "python3"
-    assert server["args"] == ["scripts/contract_compiler_environment.py", "serve"]
-    assert server["cwd"] == "."
-    assert str(ROOT) not in source
-    assert sys.executable not in source
+def test_machine_registration_example_uses_absolute_disabled_transport():
+    config = tomllib.loads(MACHINE_CONFIG_EXAMPLE.read_text(encoding="utf-8"))
+    server = config["mcp_servers"]["cc002"]
+    assert server["enabled"] is False
+    assert Path(server["command"]).is_absolute()
+    assert Path(server["args"][0]).is_absolute()
+    assert server["args"][1:] == ["serve"]
+    assert Path(server["cwd"]).is_absolute()
+    assert Path(server["args"][0]).parent.parent == Path(server["cwd"])
+    assert {
+        "required",
+        "enabled_tools",
+        "startup_timeout_sec",
+        "tool_timeout_sec",
+        "tools",
+    }.isdisjoint(server)
+
+
+def test_mcp_dependent_skill_has_fail_closed_resolvable_preflight():
+    setup = MCP_SETUP.read_text(encoding="utf-8")
+    skill = MAINTAINER_SKILL.read_text(encoding="utf-8")
+    preflight = skill.split("## MCP preflight\n", 1)[1].split("\n## ", 1)[0]
+    setup_link = "../../../.codex/README.md"
+    assert "server `cc002`" in preflight
+    for tool in ("cc002_acquire", "cc002_verify_offline"):
+        assert tool in setup
+        assert tool in preflight
+    assert f"]({setup_link})" in preflight
+    assert (MAINTAINER_SKILL.parent / setup_link).resolve() == MCP_SETUP.resolve()
+    assert "If any are absent, stop" in preflight
+    for forbidden_fallback in ("shell", "package-manager", "direct-network", "legacy"):
+        assert forbidden_fallback in preflight
+    assert "Any change that adds an MCP dependency" in preflight
+    assert "regression test" in preflight
+    assert "--strict-config" in setup
+    assert "metadata-bearing `tools/list`" in setup
+    assert "MCP request `_meta`" in setup
+
+
+def test_absolute_desktop_launcher_completes_codex_discovery_from_root(monkeypatch):
+    monkeypatch.chdir("/")
+    initialized = {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized",
+        "params": {},
+    }
+    listed = _request(
+        "tools/list",
+        {"_meta": {"progressToken": 0}},
+        request_id=2,
+    )
+    completed = subprocess.run(
+        [sys.executable, str(environment.ADAPTER_PATH), "serve"],
+        cwd=ROOT,
+        input="\n".join(map(json.dumps, (_initialize(), initialized, listed))) + "\n",
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=10,
+    )
+    assert completed.stderr == ""
+    responses = [json.loads(line) for line in completed.stdout.splitlines()]
+    assert responses[0]["result"]["serverInfo"]["name"] == "malleus-cc002"
+    assert responses[0]["result"]["protocolVersion"] == "2025-06-18"
+    assert [tool["name"] for tool in responses[1]["result"]["tools"]] == [
+        "cc002_acquire",
+        "cc002_verify_offline",
+    ]
 
 
 def test_server_entrypoint_refuses_arguments_and_wrong_repository_cwd(
@@ -231,6 +287,41 @@ def test_ping_accepts_mcp_metadata_extension():
         _request("ping", {"_meta": {"progressToken": "p1"}}), FakeServices()
     )
     assert response == {"jsonrpc": "2.0", "id": 1, "result": {}}
+
+
+def test_tool_requests_accept_codex_progress_metadata():
+    services = FakeServices()
+    meta = {"_meta": {"progressToken": 0}}
+    listed = environment.handle_message(_request("tools/list", meta), services)
+    called = environment.handle_message(
+        _request(
+            "tools/call",
+            {"name": "cc002_verify_offline", "arguments": {}, **meta},
+        ),
+        services,
+    )
+    assert len(listed["result"]["tools"]) == 2
+    assert called["result"]["isError"] is False
+    assert services.calls == ["verify"]
+
+
+@pytest.mark.parametrize("method", ["ping", "tools/list", "tools/call"])
+def test_tool_request_metadata_must_be_an_object(method):
+    params = {"_meta": 0}
+    if method == "tools/call":
+        params.update(name="cc002_verify_offline", arguments={})
+    response = environment.handle_message(_request(method, params), FakeServices())
+    assert _error_code(response) == -32602
+    assert "_meta must be an object" in response["error"]["message"]
+
+
+@pytest.mark.parametrize("cursor", [None, "not-issued"])
+def test_tools_list_refuses_unissued_cursor(cursor):
+    response = environment.handle_message(
+        _request("tools/list", {"cursor": cursor}), FakeServices()
+    )
+    assert _error_code(response) == -32602
+    assert "CC002_CURSOR" in response["error"]["message"]
 
 
 def test_tool_contracts_are_exact_zero_argument_closed_schemas():

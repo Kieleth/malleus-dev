@@ -301,6 +301,7 @@ For the layer-by-layer walkthrough (vocabulary, typed graph, ground truth loadin
 Adoption guides:
 - [docs/PRINCIPLES.md](docs/PRINCIPLES.md): what malleus claims and what it does not, the six principles the rites defend, and the future work that is reserved rather than asserted
 - [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md): start here. How to adopt malleus from any project and keep it alive, written for a human and their coding assistant together
+- [.codex/README.md](.codex/README.md): mandatory machine registration, launch tests, and fail-closed rules for repository-backed Codex MCP servers and MCP-dependent skills
 - [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md): the current machine-checked capability boundary
 - [docs/ONTOLOGY_PROTOCOL.md](docs/ONTOLOGY_PROTOCOL.md): how to add malleus to an existing project
 - [docs/KNOWLEDGE_GRAPH_PROTOCOL.md](docs/KNOWLEDGE_GRAPH_PROTOCOL.md): how the ontology shapes the KG

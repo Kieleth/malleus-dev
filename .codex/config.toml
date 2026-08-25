@@ -1,7 +1,7 @@
+# Project activation and policy only. The absolute machine transport belongs in
+# ~/.codex/config.toml. See .codex/README.md before changing this server or
+# adding an MCP-dependent skill.
 [mcp_servers.cc002]
-command = "python3"
-args = ["scripts/contract_compiler_environment.py", "serve"]
-cwd = "."
 enabled = true
 required = true
 enabled_tools = ["cc002_acquire", "cc002_verify_offline"]
