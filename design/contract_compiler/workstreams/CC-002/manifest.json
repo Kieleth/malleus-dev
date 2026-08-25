@@ -1,0 +1,61 @@
+{
+  "assignment": {
+    "owner_id": "worker:cc002-environment",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc002_environment"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9",
+        "completion_entry_hash": "sha256:d37f9eb77f572ee648f640171d9481800aaa6bc33f6f6553f21cd177188099b3",
+        "completion_entry_id": "OVR-000016",
+        "integrated_head": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+        "workstream_id": "CC-000"
+      },
+      {
+        "card_sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7",
+        "completion_entry_hash": "sha256:40e6109248cb7b488449e6b074a2f7686bcabae405debfebbee490b8773f63c4",
+        "completion_entry_id": "OVR-000053",
+        "integrated_head": "493ed2bd152a92bcf26a2a0d5380df4dbc8f0f52",
+        "workstream_id": "CC-D12"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Build a stdlib STDIO MCP mode in scripts/contract_compiler_environment.py and register it in project .codex/config.toml under server id cc002 with enabled=true, required=true, enabled_tools exactly [cc002_acquire, cc002_verify_offline], and [mcp_servers.cc002.tools.cc002_acquire] approval_mode=\"prompt\". Expose exactly cc002_acquire and cc002_verify_offline with no confirm argument. Accept no caller-controlled URL, command, or output path; bind the OD-012 identities, allowed hosts, destination, repository working directory, sanitized subprocess environment, and shell=False in code. Permit acquisition and every external registry or package interaction only inside those MCP tool calls. Declare cc002_acquire with readOnlyHint=false, destructiveHint=false, idempotentHint=true, and openWorldHint=true; declare cc002_verify_offline with readOnlyHint=false, destructiveHint=false, idempotentHint=true, and openWorldHint=false because it creates ephemeral containers and evidence. Require zero-argument closed input schemas and fixed outputs for both tools. Keep .gitignore unchanged and force-add the exact ignored scripts/contract_compiler_environment.py; once committed it remains tracked. Stop after the adapter checkpoint until Codex has restarted and the task resumes with the registered tools loaded. Then materialize and mechanically verify the exact release environment selected by OD-012: retain the two published LinkML 1.11.1 wheels and two sdists, retain the pip 25.0.1 wheel, resolve a complete hash-pinned transitive wheelhouse and requirements lock, bind the selected OCI index and exact linux/amd64 child identities, prove a clean network-denied offline install and installed closure, and run the generic ontology/malleus.yaml JSON Schema generator smoke. Treat Docker daemon availability, linux/amd64 execution or emulation, and external reachability as unproven execution facts. Do not implement compiler semantics, alter pyproject.toml, CI, or package topology, change source or ontology files, invent themed fixtures or semantic oracles, rebuild the selected published roots, or choose policy.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": ".codex/config.toml"
+    },
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_compiler/v0/compiler_environment"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-002.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_environment.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_environment.py"
+    }
+  ],
+  "workstream_id": "CC-002"
+}

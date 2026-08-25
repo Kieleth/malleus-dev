@@ -200,6 +200,7 @@ pythonpath = ["src"]
 testpaths = [
     "tests/test_contract_compiler_ledger.py",
     "tests/test_contract_compiler_integration.py",
+    "tests/test_contract_compiler_environment.py",
     "tests/test_docs.py",
     "tests/test_ocr.py",
     "tests/test_ontology.py",

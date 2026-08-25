@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5cda5c55a19f30711f5ee6a6bbe1b02a5cf2b0460ec605a04349bb2cf68a83ae",
+        "before_digest": "sha256:fc801915a01003a1a5a5b2e72165bb7fda1ef2b32d0089a1c630f7ca27dad776",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:1f4716ec46d9d84339f19bde6bff2f940568fc1462a9f1078ecdd7859bf4b8f5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:0be9e0261cd6e1c09adb95f6f2e2a34b50da6b95b3bd3c5633de2ef6c3c54eb0",
+        "before_digest": "sha256:a8f92e34b1d70bf2edc03b16d6955cc1a5e88c3fb2244219de25ee81f1840505",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:09300e030bf8252626bf4c98ba5163af4075bb2efd3dc106c3204653b898c2c7",
+        "before_digest": "sha256:cef3b9ab279ce3f624566d9c63abaf4ec375d1df04422747bbe9c67aa2293d45",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:e4b1e099024b75c099bc261b5a379e0c07d56d2b8b9108fb49983b15d30edf16",
+  "entry_id": "OVR-000055",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4f6d356c27df7d9d30c40cd063facf50a524c0f058dd837b6fe23564a0811fe1",
+  "recorded_at": "2026-08-25T15:46:33Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "pyproject.toml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 55,
+  "subject": {
+    "id": "cc002-environment-authorization",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-002 MCP, materialization, and verification contract.",
+  "why": "The card binds the worker to the completed CC-000 and CC-D12 results and grants only project MCP configuration, the compiler-environment tree, one evidence file, one implementation script, and one test file. As overseer prerequisites, pyproject.toml adds that exact test file to the default pytest gate and the GraphRecipe report changes only its bound pyproject.toml digest. The adapter checkpoint must integrate before the mandatory Codex restart and resumed materialization phase. Integration remains anchored to the authorization entry and keeps the selected-result set unchanged."
+}

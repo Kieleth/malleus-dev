@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Environment materialization cannot start until the MCP adapter and project registration checkpoint is integrated, Codex is restarted, and the task resumes with both tools loaded.",
+      "Docker daemon availability, linux/amd64 execution or emulation, and external reachability remain unproven execution facts for the resumed materialization phase."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Build a stdlib STDIO MCP mode in scripts/contract_compiler_environment.py and register server id cc002 in project .codex/config.toml with enabled=true, required=true, enabled_tools exactly [cc002_acquire, cc002_verify_offline], and [mcp_servers.cc002.tools.cc002_acquire] approval_mode=\"prompt\"; expose no confirm argument.",
+      "Hard-code the selected OD-012 identities, allowed hosts, destination, fixed repository working directory, sanitized subprocess environment, and shell=False; accept no caller-controlled URL, command, or output path.",
+      "Keep acquisition and every external registry or package interaction inside the two MCP tool calls; declare cc002_acquire readOnlyHint=false, destructiveHint=false, idempotentHint=true, openWorldHint=true and cc002_verify_offline readOnlyHint=false, destructiveHint=false, idempotentHint=true, openWorldHint=false because verification creates ephemeral containers and evidence.",
+      "Give both tools zero-argument closed input schemas and fixed outputs.",
+      "Keep .gitignore unchanged and force-add the exact ignored scripts/contract_compiler_environment.py so the committed implementation remains tracked.",
+      "Stop after the MCP adapter checkpoint; materialization requires integration, a Codex restart, and an explicitly resumed task with both registered tools loaded.",
+      "Retain the two selected LinkML 1.11.1 wheels, the two selected published sdists, and the selected pip 25.0.1 wheel with exact byte identities.",
+      "Resolve and retain a complete hash-pinned transitive wheelhouse and requirements lock for the selected CPython 3.12.10 Linux x86_64 cp312 tuple.",
+      "Bind and verify the selected OCI index and exact linux/amd64 child identities, then prove a clean network-denied offline install and its installed closure.",
+      "Run the generic ontology/malleus.yaml JSON Schema generator smoke without implementing compiler semantics or introducing themed fixtures or semantic oracles.",
+      "Treat Docker daemon availability, linux/amd64 execution or emulation, and external reachability as execution facts not yet proven.",
+      "Keep pyproject.toml, CI, package topology, source, ontologies, selected published roots, and policy outside the worker boundary."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:4f6d356c27df7d9d30c40cd063facf50a524c0f058dd837b6fe23564a0811fe1",
+  "entry_id": "OVR-000054",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:40e6109248cb7b488449e6b074a2f7686bcabae405debfebbee490b8773f63c4",
+  "recorded_at": "2026-08-25T15:46:32Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000053",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000016",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 54,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Authorize the exact CC-002 compiler-environment materialization boundary.",
+  "why": "The operator selected OD-012 and authorized the KISS MCP path. CC-002 may build its bounded adapter and project registration within five exclusive scopes. It may not begin acquisition or materialization until that checkpoint is integrated, Codex is restarted, and the task resumes with the two tools loaded; compiler semantics, shared packaging and CI, source and ontology changes, themed examples, rebuilding roots, and policy remain unauthorized."
+}
