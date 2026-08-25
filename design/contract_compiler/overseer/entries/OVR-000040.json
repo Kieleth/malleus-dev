@@ -1,0 +1,48 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Configure Sphinx with MyST, autodoc, autosummary, doctest, and strict warnings.",
+      "Render validated integration and workstream manifests at build time without creating a second authority.",
+      "Enforce HTML, doctest, link, worktree-immutability, import-boundary, CI, and release documentation gates.",
+      "Keep compiler API promotion, themed vocabulary, and public themed examples outside CC-001."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000039"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-001"
+  },
+  "entry_hash": "sha256:2167e3b2bfa814bd7f5321c04a78ffb83289d89fa29413d45de29db320fc9a57",
+  "entry_id": "OVR-000040",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8c39fb2f503d4de66cb984598c35fb2d89508cd7cab691fe11d42dfaf5684616",
+  "recorded_at": "2026-08-25T03:41:56Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000039",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 40,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the CC-001 documentation plumbing workstream.",
+  "why": "OVR-000039 binds the exact eligible candidate, final documentation bundle, seven TDD phases, dependency coordinate, semantic reference output, and regression evidence needed to close CC-001 before selection."
+}

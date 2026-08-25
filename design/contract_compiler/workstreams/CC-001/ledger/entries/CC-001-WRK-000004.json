@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc001-docs-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_docs.py",
+    "observed": "Invalid manifests, broken builders, forbidden imports and execution, MyST grammar mutations, and unauthorized eval-rst variants were refused. The native MyST autodoc alternative was shown to emit literal RST and no Python-domain objects.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:7f784dbb13167dd86e8935586f92e86deb656b29b4a16d4ae828996f822d372a",
+  "entry_id": "CC-001-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8e126ddcae5a5a2c70e1a823d4383459416d1963b33cae8fecbfe7a9c67c2c29",
+  "recorded_at": "2026-08-25T03:30:07Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass the documentation refusal and counterexample matrix.",
+  "workstream_id": "CC-001"
+}

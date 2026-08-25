@@ -796,8 +796,23 @@ def test_selected_workstream_must_be_complete(
     manifest["selections"] = ["CC-000"]
     _write_json(manifest_path, manifest)
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
-    checkpoint = manifest["authority"]["overseer_ledger"]["entry_count"]
-    active_prefix = replace(ledger, entries=ledger.entries[:checkpoint])
+    active_index = next(
+        index
+        for index, entry in enumerate(ledger.entries)
+        if entry["entry_type"] == "WORKSTREAM_STATE"
+        and entry["data"]["workstream_id"] == "CC-000"
+        and entry["data"]["new_state"] == "ACTIVE"
+    )
+    active_entry = ledger.entries[active_index]
+    manifest["authority"]["overseer_ledger"].update(
+        {
+            "entry_count": active_index + 1,
+            "head_entry_id": active_entry["entry_id"],
+            "head_hash": active_entry["entry_hash"],
+        }
+    )
+    _write_json(manifest_path, manifest)
+    active_prefix = replace(ledger, entries=ledger.entries[: active_index + 1])
     monkeypatch.setattr(integration_module, "load_ledger", lambda *args, **kwargs: active_prefix)
     monkeypatch.setattr(
         integration_module,

@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "cc001-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T03:41:55Z",
+    "claims": [
+      "The exact ff07f7a..dc2dae3 candidate is linear, tree-bound, and limited to the two authorized final-candidate paths.",
+      "The typed final report binds eight exact artifacts, thirteen passing checks, the sealed-base RED, strict semantic builders, and the 1,227-test regression.",
+      "The worker ledger contains all seven required TDD phases with valid dispositions and exact CC-000 dependency binding."
+    ],
+    "limitations": [
+      "This fact authorizes completion; selection is recorded separately.",
+      "The candidate commit range proves only the final two-file delta. Earlier governed artifacts are bound by exact bytes and their checkpoint lineage."
+    ]
+  },
+  "entry_hash": "sha256:8c39fb2f503d4de66cb984598c35fb2d89508cd7cab691fe11d42dfaf5684616",
+  "entry_id": "OVR-000039",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d36fb0820dc24211498a6456b24baed713530de724b0b1782c5d0a2056988ca4",
+  "recorded_at": "2026-08-25T03:41:55Z",
+  "references": [
+    {
+      "digest": "sha256:3d12a8916b0a4c227e268a68e163b3d762187f7a6877d03a7610a5beed306aac",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-001-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "dc2dae3f446f5e715941066f4005ad727b149ee7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 39,
+  "subject": {
+    "id": "CC-001-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the final CC-001 completion gate.",
+  "why": "CC-001 may complete only after its exact candidate, artifact bundle, worker TDD phases, dependency binding, semantic documentation slice, and regression evidence all pass mechanically."
+}

@@ -21,10 +21,67 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 57046,
+        "path": "tests/test_docs.py",
+        "sha256": "sha256:ebd8c1594b43380402f2179dd1563ccd8a4613cf47b80b44cf7bbcb5b30b6a41"
+      },
+      {
+        "byte_length": 1698,
+        "path": "docs/conf.py",
+        "sha256": "sha256:8d1ce17cac0c6346a74a5ee04ff06c3951451a8832ec78177e90539747b42471"
+      },
+      {
+        "byte_length": 617,
+        "path": "docs/index.md",
+        "sha256": "sha256:01ede1cb2f7a1156e5c33d00d1f80f894d286abbe1a740524333254955d95c9e"
+      },
+      {
+        "byte_length": 13030,
+        "path": "docs/PRINCIPLES.md",
+        "sha256": "sha256:d669163d3d4f3d0e533a57737a10d04ca134ffb7abf0c37d0d71dd24a88da024"
+      },
+      {
+        "byte_length": 2737,
+        "path": "docs/_ext/contract_manifest.py",
+        "sha256": "sha256:a6362083c6f777a9e83739199d9b4df76007583b1e5c3117b68a1bf873a91b87"
+      },
+      {
+        "byte_length": 274,
+        "path": "docs/contract_compiler/index.md",
+        "sha256": "sha256:0b20bcf2e6d6ad94fb8ed6f894a74248904c5267a91717f3d6f981594d29c332"
+      },
+      {
+        "byte_length": 179,
+        "path": "docs/contract_compiler/manifests.md",
+        "sha256": "sha256:8b02da73bada544e1aebb240616338e617c2d8a27accd699395bf3516dd8b0d3"
+      },
+      {
+        "byte_length": 304,
+        "path": "docs/reference/index.md",
+        "sha256": "sha256:d84581576651340f10f3b63bfec49795297a49bc40b9b89cf6b667458cd57e20"
+      }
+    ],
+    "base_commit": "ff07f7acd3d7ebef969b3926ceb0c00a44e5f2dc",
+    "evidence": [
+      {
+        "byte_length": 6846,
+        "path": "conformance/contract_compiler/v0/evidence/CC-001.json",
+        "result": "PASS",
+        "sha256": "sha256:f434f0030261a49d8a9f57776d3df72e1d8d53e42e3d155a63f346d59597630a"
+      }
+    ],
+    "head_commit": "dc2dae3f446f5e715941066f4005ad727b149ee7",
+    "head_tree": "d43b2d9e9e02ef3b3ae6f50ebcc8fb41a32edf33",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 7,
+    "head_entry_id": "CC-001-WRK-000007",
+    "head_hash": "sha256:b4ea38816fbab438033e09c5d8fa978aa9d16d516c4d73a99a0c482ed00cfb71",
+    "path": "workstreams/CC-001/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Build and enforce documentation plumbing with Sphinx, MyST, autodoc, doctest, strict links, and build-time projections of validated manifests. Render exactly the twelve Markdown guides already packaged as public documentation, excluding the unshipped cost-architecture research note. Keep the build repository-only for CI and release validation, with no sdist, published-site, or rendered-artifact claim. Do not promote compiler APIs or themed vocabulary.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

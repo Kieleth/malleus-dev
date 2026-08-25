@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc001-docs-sol-medium",
+  "data": {
+    "artifacts": [],
+    "command": "Review the operator-selected repository-only documentation boundary against the CC-001 card and overseer record.",
+    "observed": "NOT_APPLICABLE. CC-001 validates repository documentation in CI and release CI. It claims no sdist-buildable docs, published site, or retained rendered artifact.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:a4842b876ee04a58e9436488f4313f541eb3fd9e734ed2b6e5e2845566d2725f",
+  "entry_id": "CC-001-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:01b32168aac00c863c4e128b91c1d17cc179307d2ae8a4f13e30200d8566455f",
+  "recorded_at": "2026-08-25T03:30:09Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only packaging boundary.",
+  "workstream_id": "CC-001"
+}

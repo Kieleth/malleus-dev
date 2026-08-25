@@ -1,0 +1,55 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-001/ledger/head.json",
+      "sha256": "sha256:7fdbf91dac7ae9d9608f4027d38bb7cd3c2a5dca1e75f0fd50b9ae29fc270b7d"
+    },
+    {
+      "byte_length": 6846,
+      "path": "conformance/contract_compiler/v0/evidence/CC-001.json",
+      "sha256": "sha256:f434f0030261a49d8a9f57776d3df72e1d8d53e42e3d155a63f346d59597630a"
+    }
+  ],
+  "base_commit": "dc2dae3f446f5e715941066f4005ad727b149ee7",
+  "checks": [
+    {
+      "check_id": "cc001-candidate-history",
+      "method": "Validate the exact ff07f7a..dc2dae3 linear candidate, head tree, authorized two-path delta, final artifact identities, and typed evidence.",
+      "observed": "The candidate validator accepted the one-commit range, tree d43b2d9e9e02ef3b3ae6f50ebcc8fb41a32edf33, and exactly docs/conf.py plus the CC-001 evidence report as touched paths.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-final-bundle",
+      "method": "Verify the candidate report schema, all-PASS disposition, base coordinate, and exact equality between its eight artifacts and the card artifact bundle.",
+      "observed": "The typed report bound 8 exact artifacts and 13 passing checks; every current byte length and SHA-256 digest matched.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-worker-tdd",
+      "method": "Validate the worker-owned hash chain and require one active result for every CC-000 TDD phase.",
+      "observed": "Seven chained TDD_RESULT blocks recorded RED expected failure, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE not applicable, and ATTEST with the required dispositions.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-dependency-binding",
+      "method": "Check the CC-001 formal authorization against the selected and completed CC-000 dependency coordinate.",
+      "observed": "The binding matched CC-000 head 09265cb, final card digest, and completion entry OVR-000016 with its exact entry hash.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc001-unselected-integration",
+      "method": "Validate the sealed integration draft after registering the eligible card and worker ledger while leaving selection unchanged.",
+      "observed": "The validator accepted 66 workstreams, 4 cards, and 1 selection. CC-001 remained eligible and unselected pending this completion transition.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report authorizes the CC-001 completion transition; selection is a separate checkpoint.",
+    "The ff07f7a..dc2dae3 candidate range certifies only the final two-file delta. Seven final artifacts predate ff07f7a and are verified here by exact bytes, not attributed to that commit range.",
+    "The broader CC-001 checkpoint lineage includes overseer-owned shared files outside the worker card, so this report does not misrepresent the full development era as one worker-scoped candidate history."
+  ],
+  "recorded_at": "2026-08-25T03:41:53Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-001"
+}
