@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7e1dd21bb8213df5dd02aedbe2cd6de5e2d34f1174c688bd7b45f04c77e6b243",
+        "before_digest": "sha256:29e28ed4a9808ac9aa4b958a7839b5747ce7fa5db03859298b74a78bb756f547",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:7c100965a75f11c19a06e2ba846c5eaf1f073db861ca9f11820552be801c4794",
+  "entry_id": "OVR-000030",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0a8a3a1dccc96a3e801277229fcdaf6b23549600b15841a982aeb6492ad74ffa",
+  "recorded_at": "2026-08-25T00:48:59Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "95505745cfabc50e2bab60e01415a20288339c65",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 30,
+  "subject": {
+    "id": "cc001-sphinx-import-boundary-correction",
+    "type": "DOCUMENT"
+  },
+  "summary": "Correct the Sphinx execution and public-example RED boundary.",
+  "why": "Pinned Sphinx 8.1.3 requires an empty string, not boolean false, to disable implicit doctest blocks without a fatal type warning. The operator-selected twelve guides also already use seven shipped package-root symbols. This corrected RED freezes those seven exact example imports while keeping autodoc and autosummary limited to malleus and malleus.OntologyRegistry; future exports do not self-authorize."
+}
