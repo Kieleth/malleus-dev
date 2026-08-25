@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e1daf90d0da75ea636647a23402b7e7873563cad6b146a2219901ab6e16bda42",
+        "before_digest": "sha256:43f600aa674cf04f4b3066d6753e4581decf4e389f3f29461fb9b4ab95c1516a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-001/manifest.json"
+      },
+      {
+        "after_digest": "sha256:1063d5105307bcc0e79bc0356ffa29dd80e67a88ec4d0745b5c18e9d9ee6c803",
+        "before_digest": "sha256:6a2b90651817fe768104ee67e917f3f99f61fd3cd45913a53828ea5a111fb782",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:8c3fc4a1816293ce6dbaf368dc47256c1b117595fc6ef84f0eb919e5e9cb38d6",
+  "entry_id": "OVR-000026",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9cb8af6a46fe36d212d15953e71cc4dd9112e5f852eb5a3ef5b3975bad83b304",
+  "recorded_at": "2026-08-25T00:11:35Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-001/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "docs/PRINCIPLES.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 26,
+  "subject": {
+    "id": "cc001-link-repair-scope",
+    "type": "DOCUMENT"
+  },
+  "summary": "Authorize the exact public-guide link repair exposed by CC-001.",
+  "why": "Strict networked link checking found that the existing www.catb.org URL in PRINCIPLES.md fails TLS hostname validation. The maintained Art of Unix Programming page is available at the non-www host under the author's historic ~esr path. This revision adds only that guide to the delegated scope; suppressions, TLS weakening, and broad guide edits remain unauthorized."
+}

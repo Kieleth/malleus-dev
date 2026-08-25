@@ -43,6 +43,10 @@
     },
     {
       "kind": "FILE",
+      "path": "docs/PRINCIPLES.md"
+    },
+    {
+      "kind": "FILE",
       "path": "docs/_ext/contract_manifest.py"
     },
     {
