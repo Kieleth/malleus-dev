@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:29e28ed4a9808ac9aa4b958a7839b5747ce7fa5db03859298b74a78bb756f547",
+        "before_digest": "sha256:183d745217bae6a5587b9e86c00248842269d916789ce3657b900d0d802ac964",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:0a8a3a1dccc96a3e801277229fcdaf6b23549600b15841a982aeb6492ad74ffa",
+  "entry_id": "OVR-000029",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8a65605b408e315b25c651c538d31fa6cfb4620747d8efc672667cab436ab984",
+  "recorded_at": "2026-08-25T00:42:16Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "e6cf6c2117c2dc6511e612cdefb34ac0253137a7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 29,
+  "subject": {
+    "id": "cc001-sphinx-native-import-red",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the adversarial Sphinx-native import RED contract.",
+  "why": "Independent review proved that Sphinx could execute testcode, testsetup, and testcleanup or import through autodoc and autosummary while the prior guard inspected none of those forms. This frozen RED adds the installed directive class, grouped and nested eval-rst forms, autosummary option handling, an importable root-package bypass, the exact package-root target allowlist, configuration execution seams, and real-builder proofs. It intentionally fails until the delegated GREEN repair lands."
+}
