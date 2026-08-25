@@ -149,7 +149,7 @@ kernel and frontend-neutrality experiment must establish those boundaries
 before promotion.
 
 The broader software doctrine adapts Eric S. Raymond's
-[*The Art of Unix Programming*](https://www.catb.org/esr/writings/taoup/html/):
+[*The Art of Unix Programming*](https://www.informit.com/store/art-of-unix-programming-9780131429017):
 small modules, clean composition, policy-mechanism separation, inspectable
 state, knowledge represented as data, deterministic generation, fail-loud
 repair, and explicit extension. Malleus qualifies the tradition in one crucial
