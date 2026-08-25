@@ -1,0 +1,42 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccx00-baseline-research-sol-medium",
+    "state": "ASSIGNED",
+    "task_id": "/root/ccx00_baseline_worker"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Research, without ranking or selecting, reproducible LinkML compiler baseline candidates for OD-012. Record the official stable release and the audited exact source commit, exact CPython candidate tuples, both LinkML distributions, immutable source coordinates and archive identities, published or build-target wheel identities, and evidence-backed lock-feasibility assessments. Reject omissions and moving coordinates. Do not choose OD-012, retain production compiler artifacts, change dependencies, packaging, or CI, implement compiler behavior, or edit normative decisions.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/compiler_baseline_candidates.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-X00.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_baseline_inventory.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_baseline_inventory.py"
+    }
+  ],
+  "workstream_id": "CC-X00"
+}

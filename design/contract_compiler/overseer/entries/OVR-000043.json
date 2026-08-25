@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Publish a strict machine-readable inventory of release and exact-source compiler baseline candidates.",
+      "Record exact Python candidates, both LinkML distributions, source and wheel identities, and evidence-backed lock feasibility without selecting a baseline."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-X00"
+  },
+  "entry_hash": "sha256:5a907fc439555711f2990d90f4c8488c8f0530f26ffa5a16bdae3d380c650b8a",
+  "entry_id": "OVR-000043",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:52ba2acd72216264cac730fabcd7d4bd329b0ce3863cb45bca4b609013255ff5",
+  "recorded_at": "2026-08-25T04:06:40Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 43,
+  "subject": {
+    "id": "CC-X00",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Start the compiler baseline candidate inventory.",
+  "why": "The operator authorized CC-X00 research. OD-012 needs exact release and source candidates with reproducibility facts before the operator can select a compiler baseline."
+}

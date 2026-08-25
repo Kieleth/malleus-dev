@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X00"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2a7300c3e436626684e69c2de6cf7d2582c34ca35f9f2e2389a5e76dbb450cb8",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-X00/manifest.json"
+      },
+      {
+        "after_digest": "sha256:401818b51ae99979f8f4e0af326d17b80b8eee75820838aef7467dcd161dadb5",
+        "before_digest": "sha256:55632a2d56344070516094a876bb83bf9dbeb5445a7e6b1bd827db0ca28c08af",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:49e7098e7683f41a23d59704c44fbddf9ba469a78894c39bb27e5f64708c1eea",
+  "entry_id": "OVR-000044",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5a907fc439555711f2990d90f4c8488c8f0530f26ffa5a16bdae3d380c650b8a",
+  "recorded_at": "2026-08-25T04:07:26Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X00/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X00",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 44,
+  "subject": {
+    "id": "ccx00-baseline-research-authorization",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the bounded CC-X00 research contract.",
+  "why": "Exact FILE scopes and a no-selection responsibility let the delegated worker gather decision evidence without changing dependencies, compiler behavior, or OD-012 authority."
+}
