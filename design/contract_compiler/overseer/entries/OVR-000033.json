@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "as_of": "2026-08-25T02:26:13Z",
+    "basis": [
+      "Every authored documentation source selected for CC-001 is MyST Markdown; the repository has no authored RST source file.",
+      "The sole embedded RST use is the reference page's eval-rst fence around directives that MyST supports natively.",
+      "The operator selected Option 1: authored documentation is MyST-only, RST sources and eval-rst are refused, and document structure is interpreted by the pinned MyST parser."
+    ],
+    "limitations": [
+      "The decision governs the CC-001 authored documentation corpus, not every input format Sphinx can process.",
+      "Excluded research Markdown remains outside the selected public-documentation consumer, while the repository-wide RST refusal still applies.",
+      "Regular expressions may support test fixtures or diagnostic assertions but may not parse document structure or enforce semantic policy."
+    ]
+  },
+  "entry_hash": "sha256:f1b3565f6a3bd06b9acc1b6387ee8ad7d7bc3dd2ca4ed2ff1d2fef3f85f87d1d",
+  "entry_id": "OVR-000033",
+  "entry_type": "OBSERVATION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:47648f0b51321f8ac489ecee81d3e80b281a549607c9587eef09e9f32462bb94",
+  "recorded_at": "2026-08-25T02:26:13Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "docs/reference/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 33,
+  "subject": {
+    "id": "CC-001",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Select MyST-only authored documentation for CC-001.",
+  "why": "Supporting an unused RST source grammar required private Docutils state machinery and process-isolation controls. Refusing that grammar removes the accidental mechanism while preserving every selected public page through native MyST directives."
+}

@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:3d21e0a9dba37dac1bffd9b8131a07b46a0a6021e91eaec3dba88b78618a5b17",
+        "before_digest": "sha256:7e1dd21bb8213df5dd02aedbe2cd6de5e2d34f1174c688bd7b45f04c77e6b243",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:0a55cfae0419ef459a7d6e9229f5bf84f277d30327935535a896821a6c7ce536",
+  "entry_id": "OVR-000034",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f1b3565f6a3bd06b9acc1b6387ee8ad7d7bc3dd2ca4ed2ff1d2fef3f85f87d1d",
+  "recorded_at": "2026-08-25T02:26:14Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "6a9f2805c197cca97273917c22efe4b8486d92cc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 34,
+  "subject": {
+    "id": "cc001-myst-only-red",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the MyST-only documentation policy RED contract.",
+  "why": "The frozen tests replace the discarded regex and Docutils structural scanners with pinned MyST tokens, native directive parsing, Python AST checks, exact publication scope, and hard refusals for RST and eval-rst. Independent review reproduced 100 passes and exactly five intentional RED failures before the native reference and final configuration land."
+}
