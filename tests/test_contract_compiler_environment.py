@@ -233,15 +233,15 @@ _PREFIXCOMMONS_WHEEL = (
 _PREFIXCOMMONS_LICENSE = b"BSD 3-Clause License\nfixture notice\n"
 _PREFIXCOMMONS_PAYLOADS = {
     "prefixcommons/__init__.py": b"from .curie_util import expand_uri, contract_uri\n",
-    "prefixcommons/biocontext.py": b"BIOCONTEXT = {}\n",
+    "prefixcommons/curie_transformer.py": b"class CurieTransformer: pass\n",
     "prefixcommons/curie_util.py": b"def expand_uri(value): return value\n",
-    "prefixcommons/io_util.py": b"def read_json(path): return path\n",
-    "prefixcommons/obo_context.jsonld": b'{"GO":"http://purl.obolibrary.org/obo/GO_"}\n',
-    "prefixcommons/prefixcommons.py": b"class PrefixContext: pass\n",
-    "prefixcommons/resources/__init__.py": b"",
-    "prefixcommons/resources/biocontext.jsonld": b"{}\n",
-    "prefixcommons/resources/merged.jsonld": b"{}\n",
-    "prefixcommons/resources/prefixes.csv": b"prefix,base\nGO,http://purl.obolibrary.org/obo/GO_\n",
+    "prefixcommons/registry/go_context.jsonld": b"{}\n",
+    "prefixcommons/registry/go_obo_context.jsonld": b"{}\n",
+    "prefixcommons/registry/idot_context.jsonld": b"{}\n",
+    "prefixcommons/registry/monarch_context.jsonld": b"{}\n",
+    "prefixcommons/registry/obo_context.jsonld": b'{"GO":"http://purl.obolibrary.org/obo/GO_"}\n',
+    "prefixcommons/registry/semweb_context.jsonld": b"{}\n",
+    "prefixcommons/version.py": b'__version__ = "0.1.12"\n',
 }
 
 
@@ -277,6 +277,7 @@ def _prefixcommons_upstream_wheel(
     metadata: bytes = _PREFIXCOMMONS_METADATA,
     wheel: bytes = _PREFIXCOMMONS_WHEEL,
     license_source: bytes | None = _PREFIXCOMMONS_LICENSE,
+    compression: int = zipfile.ZIP_STORED,
 ) -> bytes:
     dist_info = "prefixcommons-0.1.12.dist-info"
     sources = {
@@ -287,7 +288,7 @@ def _prefixcommons_upstream_wheel(
     if license_source is not None:
         sources[f"{dist_info}/LICENSE"] = license_source
     if raw_name is not None:
-        sources[raw_name] = sources.pop("prefixcommons/resources/prefixes.csv")
+        sources[raw_name] = sources.pop("prefixcommons/registry/go_context.jsonld")
     record_name = f"{dist_info}/RECORD"
     record = _record_source(sources, record_name)
     if record_mutation == "hash":
@@ -300,11 +301,14 @@ def _prefixcommons_upstream_wheel(
     elif record_mutation == "duplicate":
         record = record.partition(b"\n")[0] + b"\n" + record
     sources[record_name] = record
-    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_STORED) as archive:
+    with zipfile.ZipFile(path, "w", compression=compression) as archive:
         for name, source in sources.items():
             info = zipfile.ZipInfo(name, (2020, 1, 2, 3, 4, 6))
+            info.compress_type = compression
             info.create_system = 3
-            info.external_attr = member_mode << 16
+            info.external_attr = (
+                0o644 if name.startswith(dist_info + "/") else member_mode
+            ) << 16
             archive.writestr(info, source)
         if duplicate_member:
             name = "prefixcommons/__init__.py"
@@ -315,6 +319,23 @@ def _prefixcommons_upstream_wheel(
                 warnings.simplefilter("ignore", UserWarning)
                 archive.writestr(info, sources[name])
     return path.read_bytes()
+
+
+def _corrupt_first_compressed_member(path: Path, compression: int) -> None:
+    source = bytearray(path.read_bytes())
+    with zipfile.ZipFile(path) as archive:
+        member = archive.infolist()[0]
+    assert member.compress_type == compression
+    name_length, extra_length = struct.unpack_from(
+        "<HH", source, member.header_offset + 26
+    )
+    data_offset = member.header_offset + 30 + name_length + extra_length
+    if compression == zipfile.ZIP_DEFLATED:
+        source[data_offset] = 0xFF
+    else:
+        assert compression == zipfile.ZIP_LZMA
+        source[data_offset + 4] = 0xFF
+    path.write_bytes(source)
 
 
 def _select_prefixcommons_fixture(
@@ -328,12 +349,47 @@ def _select_prefixcommons_fixture(
         members = archive.infolist()
         expanded = sum(member.file_size for member in members)
         dist_info = "prefixcommons-0.1.12.dist-info"
+        upstream_sources = {
+            member.filename: archive.read(member) for member in members
+        }
         metadata = archive.read(f"{dist_info}/METADATA")
         wheel = archive.read(f"{dist_info}/WHEEL")
         try:
             license_source = archive.read(f"{dist_info}/LICENSE")
         except KeyError:
             license_source = b""
+    derived_dist = "prefixcommons-0.1.12+malleus.1.dist-info"
+    derived_sources = {}
+    for name, payload in upstream_sources.items():
+        if name == f"{dist_info}/RECORD":
+            continue
+        target = (
+            derived_dist + name[len(dist_info) :]
+            if name.startswith(dist_info + "/")
+            else name
+        )
+        if name == f"{dist_info}/METADATA":
+            payload = payload.replace(
+                b"Version: 0.1.12\n",
+                b"Version: 0.1.12+malleus.1\n",
+                1,
+            ).replace(
+                b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n",
+                b"",
+                1,
+            )
+        elif name == f"{dist_info}/WHEEL":
+            payload = payload.replace(
+                b"Generator: poetry 1.0.7\n",
+                b"Generator: malleus-cc002 (wheel-derivation-v1)\n",
+                1,
+            )
+        derived_sources[target] = payload
+    derived_record = f"{derived_dist}/RECORD"
+    derived_sources[derived_record] = _record_source(
+        derived_sources,
+        derived_record,
+    )
     selected = environment.SelectedArtifact(
         filename=path.name,
         kind="WHEEL",
@@ -345,6 +401,9 @@ def _select_prefixcommons_fixture(
     facts = {
         "PREFIXCOMMONS_MEMBER_COUNT": len(members),
         "PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH": expanded,
+        "PREFIXCOMMONS_DERIVED_UNCOMPRESSED_BYTE_LENGTH": sum(
+            len(payload) for payload in derived_sources.values()
+        ),
         "PREFIXCOMMONS_PACKAGE_MEMBER_COUNT": len(_PREFIXCOMMONS_PAYLOADS),
         "PREFIXCOMMONS_METADATA_BYTE_LENGTH": len(metadata),
         "PREFIXCOMMONS_METADATA_SHA256": hashlib.sha256(metadata).hexdigest(),
@@ -355,6 +414,22 @@ def _select_prefixcommons_fixture(
     }
     for name, value in facts.items():
         monkeypatch.setattr(environment, name, value, raising=False)
+
+
+def _selected_derivation_observation() -> dict[str, Any]:
+    return {
+        "python": environment.PYTHON_TUPLE,
+        "implementation_name": "cpython",
+        "soabi": "cpython-312-x86_64-linux-gnu",
+        "effective_uid": 501,
+        "environment": {
+            "source_date_epoch": environment.SOURCE_DATE_EPOCH,
+            "tz": "UTC",
+            "python_hash_seed": "0",
+        },
+        "adapter_sha256": "sha256:"
+        + hashlib.sha256(environment.ADAPTER_PATH.read_bytes()).hexdigest(),
+    }
 
 
 def _run_derivation_program(monkeypatch, derivative_inputs: Path, output: Path) -> None:
@@ -378,6 +453,11 @@ def _run_derivation_program(monkeypatch, derivative_inputs: Path, output: Path) 
             output,
             raising=False,
         )
+        child.setattr(
+            environment,
+            "_observe_derivation_child",
+            _selected_derivation_observation,
+        )
         child.setattr(environment, "_derivation_main", observed_main)
         child.setitem(sys.modules, "contract_compiler_environment", environment)
         namespace = {"__name__": "__main__"}
@@ -394,6 +474,17 @@ def _rewrite_derived_wheel(path: Path, mutation: str, monkeypatch) -> None:
     with zipfile.ZipFile(path) as archive:
         sources = {info.filename: archive.read(info) for info in archive.infolist()}
     record_name = "prefixcommons-0.1.12+malleus.1.dist-info/RECORD"
+    if mutation in {"payload-byte", "inflated-payload"}:
+        payload_name = "prefixcommons/curie_util.py"
+        sources[payload_name] += (
+            b"# coherent runtime-only divergence\n"
+            if mutation == "payload-byte"
+            else b"x" * (1024 * 1024)
+        )
+        without_record = {
+            name: source for name, source in sources.items() if name != record_name
+        }
+        sources[record_name] = _record_source(without_record, record_name)
     rows = list(
         csv.reader(
             io.StringIO(sources[record_name].decode("utf-8"), newline=""),
@@ -497,14 +588,25 @@ def _rewrite_derived_wheel(path: Path, mutation: str, monkeypatch) -> None:
                 else:
                     archive.writestr(info, sources[name])
             archive.comment = b"changed" if mutation == "archive-comment" else b""
-    if mutation == "flag-bits":
+    if mutation in {"flag-bits", "unsupported-version-needed", "volume"}:
         source = bytearray(rewritten.read_bytes())
-        local = source.index(b"PK\x03\x04") + 6
-        central = source.index(b"PK\x01\x02") + 8
-        struct.pack_into("<H", source, local, struct.unpack_from("<H", source, local)[0] | 0x20)
-        struct.pack_into(
-            "<H", source, central, struct.unpack_from("<H", source, central)[0] | 0x20
-        )
+        central_header = source.index(b"PK\x01\x02")
+        if mutation == "flag-bits":
+            local = source.index(b"PK\x03\x04") + 6
+            central = central_header + 8
+            struct.pack_into(
+                "<H", source, local, struct.unpack_from("<H", source, local)[0] | 0x20
+            )
+            struct.pack_into(
+                "<H",
+                source,
+                central,
+                struct.unpack_from("<H", source, central)[0] | 0x20,
+            )
+        elif mutation == "volume":
+            struct.pack_into("<H", source, central_header + 34, 1)
+        else:
+            struct.pack_into("<H", source, central_header + 6, 255)
         rewritten.write_bytes(source)
     rewritten.replace(path)
 
@@ -1045,7 +1147,7 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
 
 
 def test_public_result_contract_is_v3_only():
-    assert environment.SERVER_VERSION == "3"
+    assert environment.SERVER_VERSION == "2"
     acquire = environment.acquire_result(
         artifact_count=8,
         built_artifact_count=2,
@@ -1334,6 +1436,7 @@ def test_governed_prefixcommons_derivative_input_coordinate_is_exact():
     assert {
         "member_count": environment.PREFIXCOMMONS_MEMBER_COUNT,
         "expanded_bytes": environment.PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH,
+        "derived_expanded_bytes": environment.PREFIXCOMMONS_DERIVED_UNCOMPRESSED_BYTE_LENGTH,
         "package_members": environment.PREFIXCOMMONS_PACKAGE_MEMBER_COUNT,
         "metadata_bytes": environment.PREFIXCOMMONS_METADATA_BYTE_LENGTH,
         "metadata_sha256": environment.PREFIXCOMMONS_METADATA_SHA256,
@@ -1344,6 +1447,7 @@ def test_governed_prefixcommons_derivative_input_coordinate_is_exact():
     } == {
         "member_count": 14,
         "expanded_bytes": 109044,
+        "derived_expanded_bytes": 109064,
         "package_members": 10,
         "metadata_bytes": 1960,
         "metadata_sha256": "4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303",
@@ -1982,6 +2086,8 @@ def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
     wheelhouse = tmp_path / "wheelhouse"
     roots.mkdir()
     wheelhouse.mkdir()
+    (tmp_path / "derivative-inputs").mkdir()
+    (tmp_path / "derive").mkdir()
     pull = environment.image_pull_command()
     resolve = environment.resolve_command(roots, wheelhouse, built=tmp_path / "built")
     derive = environment.derivation_command(
@@ -2081,6 +2187,8 @@ def test_resolution_refuses_writable_wheelhouse_overlap_with_adapter(
 
 def test_every_container_run_uses_the_exact_nonroot_host_ownership_tuple(tmp_path):
     expected = f"{os.getuid()}:{os.getgid()}"
+    (tmp_path / "derivative-inputs").mkdir()
+    (tmp_path / "derive").mkdir()
     commands = (
         environment.resolve_command(tmp_path / "roots", tmp_path / "wheelhouse", built=tmp_path / "built"),
         environment.derivation_command(
@@ -3164,6 +3272,36 @@ def test_bundle_binds_built_antlr_bytes_to_runtime_wheelhouse(tmp_path, monkeypa
         environment._bind_built_wheel(destination, wheelhouse_records, built_record)
 
 
+def test_bundle_rejects_coherent_runtime_only_prefixcommons_divergence(
+    tmp_path, monkeypatch
+):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    runtime = destination / "wheelhouse" / environment.PREFIXCOMMONS_DERIVED_FILENAME
+    _rewrite_derived_wheel(runtime, "payload-byte", monkeypatch)
+    lock, records = environment.build_lock(destination / "wheelhouse")
+    (destination / "requirements.lock").write_text(lock, encoding="utf-8")
+    report = _pip_report(
+        [record for record in records if record["distribution"] != "pip"]
+    )
+    (destination / "resolution-report.json").write_text(
+        environment.canonical_json(report) + "\n",
+        encoding="utf-8",
+    )
+    manifest = json.loads((destination / "manifest.json").read_text())
+    manifest["wheelhouse"] = {
+        "artifacts": records,
+        "sha256": environment._wheelhouse_identity(records),
+    }
+    manifest["lock"] = environment._artifact_record(destination / "requirements.lock")
+    manifest["resolution_report"] = environment._artifact_record(
+        destination / "resolution-report.json"
+    )
+    _write_bundle_manifest(destination, manifest)
+    with pytest.raises(environment.CC002Error, match="DERIVATION"):
+        environment._validated_environment(destination)
+
+
 def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
     tmp_path, monkeypatch
 ):
@@ -3843,7 +3981,13 @@ def test_source_has_no_regex_or_unbounded_execution_mechanism():
     assert "os.system" not in source
     assert "shell=True" not in source
     assert "Popen(" not in source
-    assert "input(" not in source
+    tree = ast.parse(source)
+    assert not any(
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "input"
+        for node in ast.walk(tree)
+    )
     assert "argparse" not in source
     assert "requests" not in source
     assert 'DOCKER = "/' not in source
@@ -3970,10 +4114,16 @@ def test_prefixcommons_derivation_changes_only_allowlisted_bytes_and_archive_fie
     upstream_dist = "prefixcommons-0.1.12.dist-info"
     derived_dist = "prefixcommons-0.1.12+malleus.1.dist-info"
     with zipfile.ZipFile(upstream) as source_archive:
+        upstream_infos = source_archive.infolist()
         upstream_sources = {
             info.filename: source_archive.read(info)
-            for info in source_archive.infolist()
+            for info in upstream_infos
         }
+    assert all(
+        info.external_attr >> 16 == 0o644
+        for info in upstream_infos
+        if ".dist-info/" in info.filename
+    )
     with zipfile.ZipFile(derived) as archive:
         infos = archive.infolist()
         names = [info.filename for info in infos]
@@ -4145,6 +4295,7 @@ def test_prefixcommons_derivation_rejects_tamper_before_external_edges(
         "record-self-hash",
         "record-self-size",
         "record-fields",
+        "unsupported-version-needed",
         "zip64-header",
         "zip64-directory",
     ),
@@ -4158,8 +4309,61 @@ def test_derived_prefixcommons_validator_rejects_every_archive_grammar_drift(
     _select_prefixcommons_fixture(monkeypatch, upstream)
     environment.derive_prefixcommons_wheel(upstream, derived)
     _rewrite_derived_wheel(derived, mutation, monkeypatch)
-    with pytest.raises(environment.CC002Error, match="RECORD|ARCHIVE|DERIVED"):
+    expected_code = (
+        r"^\[CC002_DERIVED_ARCHIVE\]"
+        if mutation == "unsupported-version-needed"
+        else "RECORD|ARCHIVE|DERIVED"
+    )
+    with pytest.raises(environment.CC002Error, match=expected_code):
         environment.validate_derived_prefixcommons_wheel(derived)
+
+
+@pytest.mark.parametrize(
+    "compression",
+    (zipfile.ZIP_DEFLATED, zipfile.ZIP_LZMA),
+    ids=("corrupt-deflate", "corrupt-lzma"),
+)
+def test_prefixcommons_decoder_errors_use_governed_archive_error(
+    tmp_path, monkeypatch, compression
+):
+    facts = tmp_path / "valid-prefixcommons.whl"
+    upstream = tmp_path / "prefixcommons-0.1.12-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(facts)
+    _prefixcommons_upstream_wheel(upstream, compression=compression)
+    _corrupt_first_compressed_member(upstream, compression)
+    _select_prefixcommons_fixture(monkeypatch, upstream, facts_path=facts)
+
+    with pytest.raises(
+        environment.CC002Error,
+        match=r"^\[CC002_PREFIXCOMMONS_ARCHIVE\]",
+    ):
+        environment.validate_prefixcommons_input(upstream)
+
+
+def test_derived_prefixcommons_expansion_is_rejected_before_member_reads(
+    tmp_path, monkeypatch
+):
+    upstream = tmp_path / "prefixcommons-0.1.12-py3-none-any.whl"
+    derived = tmp_path / "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+    environment.derive_prefixcommons_wheel(upstream, derived)
+    _rewrite_derived_wheel(derived, "inflated-payload", monkeypatch)
+    reads = []
+
+    def forbidden_read(*_args, **_kwargs):
+        reads.append("member")
+        raise AssertionError("member payload read before expansion validation")
+
+    def forbidden_whole_file_read(*_args, **_kwargs):
+        reads.append("archive")
+        raise AssertionError("whole archive read before expansion validation")
+
+    monkeypatch.setattr(zipfile.ZipFile, "read", forbidden_read)
+    monkeypatch.setattr(Path, "read_bytes", forbidden_whole_file_read)
+    with pytest.raises(environment.CC002Error, match="ARCHIVE|expansion"):
+        environment.validate_derived_prefixcommons_wheel(derived)
+    assert reads == []
 
 
 def test_prefixcommons_derivation_is_zip_only_without_import_extract_or_execution(
@@ -4215,6 +4419,11 @@ def test_prefixcommons_derivation_is_zip_only_without_import_extract_or_executio
                 "DERIVATION_OUTPUT_ROOT",
                 child_output,
                 raising=False,
+            )
+            guard.setattr(
+                environment,
+                "_observe_derivation_child",
+                _selected_derivation_observation,
             )
             environment.validate_prefixcommons_input(upstream)
             environment.derive_prefixcommons_wheel(upstream, derived)
@@ -4404,6 +4613,38 @@ def test_derivation_command_refuses_overlapping_mount_sources(
     derivative_inputs.mkdir(parents=True, exist_ok=True)
     output.mkdir(parents=True, exist_ok=True)
     with pytest.raises(environment.CC002Error, match="MOUNTS|overlap|distinct"):
+        environment.derivation_command(
+            derivative_inputs,
+            output,
+            host_user={"uid": 501, "gid": 20},
+        )
+
+
+@pytest.mark.parametrize(
+    "relationship", ("same", "output-contains", "adapter-contains")
+)
+def test_derivation_command_refuses_writable_output_overlap_with_adapter(
+    tmp_path, monkeypatch, relationship
+):
+    derivative_inputs = tmp_path / "derivative-inputs"
+    derivative_inputs.mkdir()
+    adapter_root = tmp_path / "adapter"
+    adapter_root.mkdir()
+    adapter = adapter_root / "contract_compiler_environment.py"
+    adapter.write_text("fixture\n", encoding="utf-8")
+    output = tmp_path / "output"
+    output.mkdir()
+    if relationship == "same":
+        monkeypatch.setattr(environment, "ADAPTER_PATH", output)
+    elif relationship == "output-contains":
+        output = adapter_root
+        monkeypatch.setattr(environment, "ADAPTER_PATH", adapter)
+    else:
+        nested_output = adapter_root / "output"
+        nested_output.mkdir()
+        output = nested_output
+        monkeypatch.setattr(environment, "ADAPTER_PATH", adapter_root)
+    with pytest.raises(environment.CC002Error, match="MOUNTS|overlap"):
         environment.derivation_command(
             derivative_inputs,
             output,

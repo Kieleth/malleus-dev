@@ -14,13 +14,17 @@ import csv
 import hashlib
 import io
 import json
+import lzma
 import os
+import platform
 import shutil
 import socket
 import socketserver
 import stat
+import struct
 import subprocess
 import sys
+import sysconfig
 import tarfile
 import tempfile
 import threading
@@ -28,6 +32,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+import zlib
 from dataclasses import dataclass
 from email.parser import BytesParser
 from pathlib import Path, PurePosixPath
@@ -192,6 +197,81 @@ BUILD_ARTIFACTS = (
         sha256="29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3",
     ),
 )
+PREFIXCOMMONS_INPUT_FILENAME = "prefixcommons-0.1.12-py3-none-any.whl"
+PREFIXCOMMONS_DERIVED_FILENAME = "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+PREFIXCOMMONS_MEMBER_COUNT = 14
+PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH = 109044
+PREFIXCOMMONS_DERIVED_UNCOMPRESSED_BYTE_LENGTH = 109064
+PREFIXCOMMONS_PACKAGE_MEMBER_COUNT = 10
+PREFIXCOMMONS_METADATA_BYTE_LENGTH = 1960
+PREFIXCOMMONS_METADATA_SHA256 = (
+    "4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303"
+)
+PREFIXCOMMONS_WHEEL_BYTE_LENGTH = 83
+PREFIXCOMMONS_WHEEL_SHA256 = (
+    "cb778389a15548d4cf6e0cdf367d27627e6d127d5c5fa5ab75eb43950338c56c"
+)
+PREFIXCOMMONS_LICENSE_BYTE_LENGTH = 1500
+PREFIXCOMMONS_LICENSE_SHA256 = (
+    "3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4"
+)
+PREFIXCOMMONS_PACKAGE_MEMBERS = frozenset(
+    {
+        "prefixcommons/__init__.py",
+        "prefixcommons/curie_transformer.py",
+        "prefixcommons/curie_util.py",
+        "prefixcommons/registry/go_context.jsonld",
+        "prefixcommons/registry/go_obo_context.jsonld",
+        "prefixcommons/registry/idot_context.jsonld",
+        "prefixcommons/registry/monarch_context.jsonld",
+        "prefixcommons/registry/obo_context.jsonld",
+        "prefixcommons/registry/semweb_context.jsonld",
+        "prefixcommons/version.py",
+    }
+)
+DERIVATIVE_INPUTS = (
+    SelectedArtifact(
+        filename=PREFIXCOMMONS_INPUT_FILENAME,
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/packages/31/e8/715b09df3dab02b07809d812042dc47a46236b5603d9d3a2572dbd1d8a97/prefixcommons-0.1.12-py3-none-any.whl",
+        byte_length=29482,
+        sha256="16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b",
+    ),
+)
+DERIVATION_INPUT_ROOT = Path("/derivative-inputs")
+DERIVATION_OUTPUT_ROOT = Path("/output")
+EXPECTED_DERIVATION_CHILD_FACTS = {
+    "python": PYTHON_TUPLE,
+    "image": {
+        "platform": OCI_PLATFORM,
+        "child_digest": OCI_CHILD_DIGEST,
+    },
+    "tool": {
+        "implementation": "python-stdlib",
+        "generator": "malleus-cc002 (wheel-derivation-v1)",
+        "adapter_sha256": "sha256:"
+        + hashlib.sha256(ADAPTER_PATH.read_bytes()).hexdigest(),
+    },
+    "environment": {
+        "source_date_epoch": int(SOURCE_DATE_EPOCH),
+        "tz": "UTC",
+        "python_hash_seed": "0",
+        "umask": "022",
+    },
+    "isolation": {
+        "network": "NONE",
+        "read_only_root": True,
+        "nonroot": True,
+    },
+}
+RETAINED_DERIVATION_RUN = json.loads(
+    json.dumps(EXPECTED_DERIVATION_CHILD_FACTS, sort_keys=True)
+)
+DERIVATION_PROGRAM = """\
+from contract_compiler_environment import _derivation_main
+
+raise SystemExit(_derivation_main())
+"""
 PIP_IMPORT_ORIGIN = f"/roots/{PIP_WHEEL_FILENAME}/pip/__init__.py"
 PROXY_REQUEST_LIMIT = 8192
 RESOLVER_PIP_ARGUMENTS = (
@@ -208,6 +288,7 @@ RESOLVER_PIP_ARGUMENTS = (
     "--find-links=/built",
     f"/roots/{ROOT_WHEEL_FILENAMES[0]}",
     f"/roots/{ROOT_WHEEL_FILENAMES[1]}",
+    f"/built/{PREFIXCOMMONS_DERIVED_FILENAME}",
 )
 RESOLVER_PROGRAM = (
     "from contract_compiler_environment import _resolver_main; "
@@ -316,12 +397,13 @@ def _output_schema(required: Sequence[str], properties: dict[str, Any]) -> dict[
 
 _DIGEST_SCHEMA = {"type": "string", "minLength": 71, "maxLength": 71}
 _ACQUIRE_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.acquire-result/v2"},
+    "schema": {"const": "malleus.cc002.acquire-result/v3"},
     "state": {"const": "MATERIALIZED"},
     "destination": {"const": DESTINATION_LABEL},
-    "artifact_count": {"type": "integer", "minimum": 7, "maximum": 7},
-    "built_artifact_count": {"type": "integer", "minimum": 1, "maximum": 1},
+    "artifact_count": {"type": "integer", "minimum": 8, "maximum": 8},
+    "built_artifact_count": {"type": "integer", "minimum": 2, "maximum": 2},
     "source_build_record_sha256": _DIGEST_SCHEMA,
+    "derivation_record_sha256": _DIGEST_SCHEMA,
     "wheel_count": {"type": "integer", "minimum": 1},
     "lock_sha256": _DIGEST_SCHEMA,
     "wheelhouse_sha256": _DIGEST_SCHEMA,
@@ -329,7 +411,7 @@ _ACQUIRE_PROPERTIES = {
     "oci_child_digest": {"const": OCI_CHILD_DIGEST},
 }
 _VERIFY_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.verify-result/v2"},
+    "schema": {"const": "malleus.cc002.verify-result/v3"},
     "state": {"const": "VERIFIED_OFFLINE"},
     "destination": {"const": DESTINATION_LABEL},
     "environment_manifest_sha256": _DIGEST_SCHEMA,
@@ -339,6 +421,7 @@ _VERIFY_PROPERTIES = {
     "lock_sha256": _DIGEST_SCHEMA,
     "wheelhouse_sha256": _DIGEST_SCHEMA,
     "source_build_record_sha256": _DIGEST_SCHEMA,
+    "derivation_record_sha256": _DIGEST_SCHEMA,
     "oci_index_digest": {"const": OCI_INDEX_DIGEST},
     "oci_child_digest": {"const": OCI_CHILD_DIGEST},
 }
@@ -396,6 +479,7 @@ def acquire_result(
     artifact_count: int,
     built_artifact_count: int,
     source_build_record_sha256: str,
+    derivation_record_sha256: str,
     lock_sha256: str,
     wheel_count: int,
     wheelhouse_sha256: str,
@@ -403,23 +487,29 @@ def acquire_result(
     _validate_digest(lock_sha256, "lock_sha256")
     _validate_digest(wheelhouse_sha256, "wheelhouse_sha256")
     _validate_digest(source_build_record_sha256, "source_build_record_sha256")
+    _validate_digest(derivation_record_sha256, "derivation_record_sha256")
     if (
         not isinstance(artifact_count, int)
         or isinstance(artifact_count, bool)
-        or artifact_count != 7
+        or artifact_count != 8
     ):
-        _fail("CC002_RESULT", "artifact_count must be exactly seven")
-    if not isinstance(wheel_count, int) or isinstance(wheel_count, bool) or wheel_count < 1:
+        _fail("CC002_RESULT", "artifact_count must be exactly eight")
+    if (
+        not isinstance(wheel_count, int)
+        or isinstance(wheel_count, bool)
+        or wheel_count < 1
+    ):
         _fail("CC002_RESULT", "wheel_count must be a positive integer")
-    if built_artifact_count != 1 or isinstance(built_artifact_count, bool):
-        _fail("CC002_RESULT", "built_artifact_count must be exactly one")
+    if built_artifact_count != 2 or isinstance(built_artifact_count, bool):
+        _fail("CC002_RESULT", "built_artifact_count must be exactly two")
     return {
-        "schema": "malleus.cc002.acquire-result/v2",
+        "schema": "malleus.cc002.acquire-result/v3",
         "state": "MATERIALIZED",
         "destination": DESTINATION_LABEL,
         "artifact_count": artifact_count,
         "built_artifact_count": built_artifact_count,
         "source_build_record_sha256": source_build_record_sha256,
+        "derivation_record_sha256": derivation_record_sha256,
         "wheel_count": wheel_count,
         "lock_sha256": lock_sha256,
         "wheelhouse_sha256": wheelhouse_sha256,
@@ -437,6 +527,7 @@ def verify_result(
     lock_sha256: str,
     wheelhouse_sha256: str,
     source_build_record_sha256: str,
+    derivation_record_sha256: str,
 ) -> dict[str, Any]:
     for name, value in (
         ("environment_manifest_sha256", environment_manifest_sha256),
@@ -445,6 +536,7 @@ def verify_result(
         ("lock_sha256", lock_sha256),
         ("wheelhouse_sha256", wheelhouse_sha256),
         ("source_build_record_sha256", source_build_record_sha256),
+        ("derivation_record_sha256", derivation_record_sha256),
     ):
         _validate_digest(value, name)
     if (
@@ -454,7 +546,7 @@ def verify_result(
     ):
         _fail("CC002_RESULT", "installed_distribution_count must be positive")
     return {
-        "schema": "malleus.cc002.verify-result/v2",
+        "schema": "malleus.cc002.verify-result/v3",
         "state": "VERIFIED_OFFLINE",
         "destination": DESTINATION_LABEL,
         "environment_manifest_sha256": environment_manifest_sha256,
@@ -464,6 +556,7 @@ def verify_result(
         "lock_sha256": lock_sha256,
         "wheelhouse_sha256": wheelhouse_sha256,
         "source_build_record_sha256": source_build_record_sha256,
+        "derivation_record_sha256": derivation_record_sha256,
         "oci_index_digest": OCI_INDEX_DIGEST,
         "oci_child_digest": OCI_CHILD_DIGEST,
     }
@@ -520,9 +613,9 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             f"{name} result fields mismatch; missing={missing}, unknown={unknown}",
         )
     expected_schema = (
-        "malleus.cc002.acquire-result/v2"
+        "malleus.cc002.acquire-result/v3"
         if name == "cc002_acquire"
-        else "malleus.cc002.verify-result/v2"
+        else "malleus.cc002.verify-result/v3"
     )
     expected_state = "MATERIALIZED" if name == "cc002_acquire" else "VERIFIED_OFFLINE"
     if value["schema"] != expected_schema or value["state"] != expected_state:
@@ -548,10 +641,10 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             or value[field] < 1
         ):
             _fail("CC002_RESULT", f"{field} must be a positive integer")
-    if name == "cc002_acquire" and value["artifact_count"] != 7:
-        _fail("CC002_RESULT", "artifact_count must be exactly seven")
-    if name == "cc002_acquire" and value["built_artifact_count"] != 1:
-        _fail("CC002_RESULT", "built_artifact_count must be exactly one")
+    if name == "cc002_acquire" and value["artifact_count"] != 8:
+        _fail("CC002_RESULT", "artifact_count must be exactly eight")
+    if name == "cc002_acquire" and value["built_artifact_count"] != 2:
+        _fail("CC002_RESULT", "built_artifact_count must be exactly two")
     return value
 
 
@@ -1660,7 +1753,25 @@ subprocess.run(
     cwd='/work', env=base_env, shell=False, check=True,
 )
 subprocess.run(
-    [python, '-c', 'import antlr4; import linkml; import linkml_runtime'],
+    [python, '-c', '''\
+import antlr4
+import linkml
+import linkml_runtime
+from linkml_runtime.utils.namespaces import Namespaces
+from prefixcommons import contract_uri, expand_uri
+
+expanded = expand_uri('GO:0008150', strict=True)
+if expanded != 'http://purl.obolibrary.org/obo/GO_0008150':
+    raise RuntimeError(f'unexpected prefixcommons expansion: {expanded!r}')
+contracted = contract_uri(expanded, strict=True)
+if contracted != ['GO:0008150']:
+    raise RuntimeError(f'unexpected prefixcommons contraction: {contracted!r}')
+namespaces = Namespaces()
+namespaces['ex'] = 'https://example.org/'
+curie = namespaces.curie_for('https://example.org/item')
+if curie != 'ex:item':
+    raise RuntimeError(f'unexpected Namespaces CURIE: {curie!r}')
+'''],
     cwd='/work', env=base_env, shell=False, check=True,
     capture_output=True, text=True,
 )
@@ -1714,6 +1825,7 @@ subprocess.run(
         '--no-index', '--find-links=/wheelhouse',
         '/wheelhouse/linkml-1.11.1-py3-none-any.whl',
         '/wheelhouse/linkml_runtime-1.11.1-py3-none-any.whl',
+        '/wheelhouse/prefixcommons-0.1.12+malleus.1-py3-none-any.whl',
         '--report', '/work/pip-report.json',
     ],
     cwd='/work', env=environment, shell=False, check=True,
@@ -2019,6 +2131,748 @@ def _validate_archive_member_name(
     return PurePosixPath(*segments)
 
 
+def _zip_extra_contains_zip64(source: bytes) -> bool:
+    offset = 0
+    while offset < len(source):
+        if offset + 4 > len(source):
+            return True
+        header = int.from_bytes(source[offset : offset + 2], "little")
+        size = int.from_bytes(source[offset + 2 : offset + 4], "little")
+        offset += 4
+        if offset + size > len(source):
+            return True
+        if header == 1:
+            return True
+        offset += size
+    return False
+
+
+_ZIP_END = struct.Struct("<4s4H2LH")
+_ZIP_CENTRAL = struct.Struct("<4s4B4HL2L5H2L")
+_ZIP_LOCAL = struct.Struct("<4s2B4HL2L2H")
+
+
+def _validate_prefixcommons_zip_layout(
+    path: Path,
+    members: Sequence[zipfile.ZipInfo],
+    error_code: str,
+    *,
+    exact_derived: bool,
+) -> None:
+    if len(members) > zipfile.ZIP_FILECOUNT_LIMIT or any(
+        member.file_size > zipfile.ZIP64_LIMIT
+        or member.compress_size > zipfile.ZIP64_LIMIT
+        for member in members
+    ):
+        _fail(error_code, "archive capacity would require ZIP64")
+    source = path.read_bytes()
+    if len(source) < _ZIP_END.size:
+        _fail(error_code, "truncated ZIP end record")
+    try:
+        end = _ZIP_END.unpack_from(source, len(source) - _ZIP_END.size)
+    except struct.error as error:
+        _fail(error_code, f"invalid ZIP end record: {error}")
+    (
+        signature,
+        disk_number,
+        central_disk,
+        disk_entries,
+        total_entries,
+        central_size,
+        central_offset,
+        comment_length,
+    ) = end
+    if signature != b"PK\x05\x06" or comment_length != 0:
+        _fail(error_code, "ZIP end record or archive comment changed")
+    if (
+        disk_number != 0
+        or central_disk != 0
+        or disk_entries != total_entries
+        or total_entries != len(members)
+    ):
+        _fail(error_code, "multi-disk or inconsistent ZIP directory is forbidden")
+    if (
+        total_entries == 0xFFFF
+        or central_size == 0xFFFFFFFF
+        or central_offset == 0xFFFFFFFF
+        or central_offset + central_size != len(source) - _ZIP_END.size
+    ):
+        _fail(error_code, "ZIP64 or non-canonical ZIP directory is forbidden")
+
+    offset = central_offset
+    local_end = 0
+    raw_names: list[str] = []
+    for member in members:
+        if offset + _ZIP_CENTRAL.size > central_offset + central_size:
+            _fail(error_code, "truncated central-directory entry")
+        try:
+            central = _ZIP_CENTRAL.unpack_from(source, offset)
+        except struct.error as error:
+            _fail(error_code, f"invalid central-directory entry: {error}")
+        if central[0] != b"PK\x01\x02":
+            _fail(error_code, "central-directory signature changed")
+        name_length, extra_length, member_comment_length = central[12:15]
+        variable_start = offset + _ZIP_CENTRAL.size
+        variable_end = (
+            variable_start + name_length + extra_length + member_comment_length
+        )
+        if variable_end > central_offset + central_size:
+            _fail(error_code, "truncated central-directory member")
+        name_source = source[variable_start : variable_start + name_length]
+        central_extra = source[
+            variable_start + name_length : variable_start + name_length + extra_length
+        ]
+        central_comment = source[
+            variable_start + name_length + extra_length : variable_end
+        ]
+        try:
+            name = name_source.decode("ascii")
+        except UnicodeError as error:
+            _fail(error_code, f"non-ASCII wheel member name: {error}")
+        raw_names.append(name)
+        local_offset = central[18]
+        if (
+            central[10] == 0xFFFFFFFF
+            or central[11] == 0xFFFFFFFF
+            or local_offset == 0xFFFFFFFF
+            or central[15] == 0xFFFF
+            or _zip_extra_contains_zip64(central_extra)
+        ):
+            _fail(error_code, f"ZIP64 member is forbidden: {name}")
+        if local_offset + _ZIP_LOCAL.size > central_offset:
+            _fail(error_code, f"invalid local-header offset: {name}")
+        try:
+            local = _ZIP_LOCAL.unpack_from(source, local_offset)
+        except struct.error as error:
+            _fail(error_code, f"invalid local header: {error}")
+        if local[0] != b"PK\x03\x04":
+            _fail(error_code, f"local-header signature changed: {name}")
+        local_name_length, local_extra_length = local[10:12]
+        local_variable = local_offset + _ZIP_LOCAL.size
+        local_data = local_variable + local_name_length + local_extra_length
+        local_name_source = source[local_variable : local_variable + local_name_length]
+        local_extra = source[local_variable + local_name_length : local_data]
+        if (
+            local_data + central[10] > central_offset
+            or local_name_source != name_source
+            or local[1:5] != central[3:7]
+            or local[5:10] != central[7:12]
+            or _zip_extra_contains_zip64(local_extra)
+        ):
+            _fail(error_code, f"local and central ZIP headers disagree: {name}")
+        if member.header_offset != local_offset or member.filename != name:
+            _fail(error_code, f"decoded ZIP member disagrees with raw headers: {name}")
+        if (
+            member.CRC != central[9]
+            or member.compress_size != central[10]
+            or member.file_size != central[11]
+            or member.extract_version != central[3]
+            or member.reserved != central[4]
+            or member.flag_bits != central[5]
+            or member.compress_type != central[6]
+            or member.create_version != central[1]
+            or member.create_system != central[2]
+            or member.volume != central[15]
+            or member.internal_attr != central[16]
+            or member.external_attr != central[17]
+            or member.extra != central_extra
+            or member.comment != central_comment
+        ):
+            _fail(
+                error_code, f"decoded ZIP metadata disagrees with raw headers: {name}"
+            )
+        if exact_derived and (
+            central[1:9] != (20, 3, 20, 0, 0, 0, 0, 33)
+            or central[15:18] != (0, 0, 0o100644 << 16)
+            or central_extra != b""
+            or central_comment != b""
+            or local[1:7] != (20, 0, 0, 0, 0, 33)
+            or local_extra != b""
+            or local_offset != local_end
+        ):
+            _fail(error_code, f"derived raw ZIP metadata changed: {name}")
+        local_end = local_data + central[10]
+        offset = variable_end
+    if offset != central_offset + central_size or local_end != central_offset:
+        _fail(error_code, "ZIP offsets are not exact consequences of member bytes")
+    if raw_names != [member.filename for member in members]:
+        _fail(error_code, "raw central-directory order changed")
+
+
+def _canonical_wheel_record(sources: Mapping[str, bytes], record_name: str) -> bytes:
+    rows = []
+    for name in sorted((*sources, record_name)):
+        if name == record_name:
+            rows.append((name, "", ""))
+            continue
+        digest = base64.urlsafe_b64encode(
+            hashlib.sha256(sources[name]).digest()
+        ).rstrip(b"=")
+        rows.append(
+            (
+                name,
+                "sha256=" + digest.decode("ascii"),
+                str(len(sources[name])),
+            )
+        )
+    output = io.StringIO(newline="")
+    writer = csv.writer(
+        output,
+        delimiter=",",
+        quotechar='"',
+        doublequote=True,
+        escapechar=None,
+        lineterminator="\n",
+        quoting=csv.QUOTE_MINIMAL,
+    )
+    writer.writerows(rows)
+    return output.getvalue().encode("utf-8")
+
+
+def _prefixcommons_archive_sources(
+    path: Path,
+    *,
+    dist_info: str,
+    error_code: str,
+    exact_derived: bool = False,
+) -> tuple[list[zipfile.ZipInfo], dict[str, bytes]]:
+    if path.is_symlink() or not path.is_file():
+        _fail(error_code, f"wheel must be a regular file: {path}")
+    try:
+        try:
+            archive_context = zipfile.ZipFile(path)
+        except NotImplementedError as error:
+            _fail(error_code, f"unsupported prefixcommons wheel archive: {error}")
+        with archive_context as archive:
+            members = archive.infolist()
+            if archive.comment:
+                _fail(error_code, "archive comment is forbidden")
+            names = [member.filename for member in members]
+            if len(names) != len(set(names)):
+                _fail(error_code, "duplicate archive member name")
+            topology: dict[str, bool] = {}
+            for member in members:
+                mode = member.external_attr >> 16
+                _validate_archive_member_name(
+                    member.filename,
+                    topology,
+                    error_code,
+                    is_directory=False,
+                )
+                if (
+                    member.filename.endswith("/")
+                    or stat.S_IFMT(mode) not in (0, stat.S_IFREG)
+                    or bool(member.flag_bits & 0x1)
+                ):
+                    _fail(error_code, f"non-regular wheel member: {member.filename}")
+                if exact_derived and mode != stat.S_IFREG | 0o644:
+                    _fail(error_code, f"derived wheel mode changed: {member.filename}")
+            expected_names = set(PREFIXCOMMONS_PACKAGE_MEMBERS) | {
+                f"{dist_info}/METADATA",
+                f"{dist_info}/WHEEL",
+                f"{dist_info}/LICENSE",
+                f"{dist_info}/RECORD",
+            }
+            expected_expansion = (
+                PREFIXCOMMONS_DERIVED_UNCOMPRESSED_BYTE_LENGTH
+                if exact_derived
+                else PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH
+            )
+            if set(names) != expected_names:
+                _fail(error_code, "prefixcommons member inventory changed")
+            if (
+                len(members) != PREFIXCOMMONS_MEMBER_COUNT
+                or len(PREFIXCOMMONS_PACKAGE_MEMBERS)
+                != PREFIXCOMMONS_PACKAGE_MEMBER_COUNT
+                or sum(member.file_size for member in members) != expected_expansion
+            ):
+                _fail(error_code, "prefixcommons member count or expansion changed")
+            if exact_derived:
+                expected_archive_size = (
+                    expected_expansion
+                    + _ZIP_END.size
+                    + sum(
+                        _ZIP_LOCAL.size
+                        + _ZIP_CENTRAL.size
+                        + 2 * len(name.encode("ascii"))
+                        for name in names
+                    )
+                )
+                if path.stat().st_size != expected_archive_size:
+                    _fail(
+                        error_code,
+                        "derived archive size is not an exact consequence of members",
+                    )
+            _validate_prefixcommons_zip_layout(
+                path,
+                members,
+                error_code,
+                exact_derived=exact_derived,
+            )
+            try:
+                sources = {
+                    member.filename: archive.read(member) for member in members
+                }
+            except (NotImplementedError, zlib.error, lzma.LZMAError) as error:
+                _fail(error_code, f"unreadable prefixcommons wheel member: {error}")
+            if not exact_derived:
+                _validate_record_rows(
+                    archive,
+                    members,
+                    f"{dist_info}/RECORD",
+                    error_code + "_RECORD",
+                )
+    except CC002Error:
+        raise
+    except (OSError, KeyError, UnicodeError, zipfile.BadZipFile) as error:
+        _fail(error_code, f"invalid prefixcommons wheel archive: {error}")
+    record_name = f"{dist_info}/RECORD"
+    without_record = {
+        name: source for name, source in sources.items() if name != record_name
+    }
+    if exact_derived and sources[record_name] != _canonical_wheel_record(
+        without_record, record_name
+    ):
+        _fail(error_code + "_RECORD", "prefixcommons RECORD changed")
+    return members, sources
+
+
+def validate_prefixcommons_input(path: Path) -> dict[str, Any]:
+    artifact = DERIVATIVE_INPUTS[0]
+    expected_identity = {
+        "filename": artifact.filename,
+        "byte_length": artifact.byte_length,
+        "sha256": "sha256:" + artifact.sha256,
+    }
+    if (
+        path.is_symlink()
+        or not path.is_file()
+        or path.stat().st_size != artifact.byte_length
+        or _artifact_record(path) != expected_identity
+    ):
+        _fail("CC002_PREFIXCOMMONS_INPUT", "upstream wheel identity mismatch")
+    dist_info = "prefixcommons-0.1.12.dist-info"
+    _members, sources = _prefixcommons_archive_sources(
+        path,
+        dist_info=dist_info,
+        error_code="CC002_PREFIXCOMMONS_ARCHIVE",
+    )
+    metadata = sources[f"{dist_info}/METADATA"]
+    wheel = sources[f"{dist_info}/WHEEL"]
+    license_source = sources[f"{dist_info}/LICENSE"]
+    facts = (
+        (metadata, PREFIXCOMMONS_METADATA_BYTE_LENGTH, PREFIXCOMMONS_METADATA_SHA256),
+        (wheel, PREFIXCOMMONS_WHEEL_BYTE_LENGTH, PREFIXCOMMONS_WHEEL_SHA256),
+        (
+            license_source,
+            PREFIXCOMMONS_LICENSE_BYTE_LENGTH,
+            PREFIXCOMMONS_LICENSE_SHA256,
+        ),
+    )
+    if any(
+        len(source) != expected_length
+        or hashlib.sha256(source).hexdigest() != expected_digest
+        for source, expected_length, expected_digest in facts
+    ):
+        _fail(
+            "CC002_PREFIXCOMMONS_INPUT", "upstream metadata or license identity changed"
+        )
+    requirement = b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n"
+    if (
+        metadata.count(b"Name: prefixcommons\n") != 1
+        or metadata.count(b"Version: 0.1.12\n") != 1
+        or metadata.count(requirement) != 1
+        or wheel
+        != b"Wheel-Version: 1.0\nGenerator: poetry 1.0.7\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
+        or not license_source.startswith(b"BSD 3-Clause License")
+    ):
+        _fail("CC002_PREFIXCOMMONS_INPUT", "upstream semantic targets changed")
+    return expected_identity
+
+
+def _transformed_prefixcommons_sources(path: Path) -> dict[str, bytes]:
+    upstream_dist = "prefixcommons-0.1.12.dist-info"
+    derived_dist = "prefixcommons-0.1.12+malleus.1.dist-info"
+    _members, upstream = _prefixcommons_archive_sources(
+        path,
+        dist_info=upstream_dist,
+        error_code="CC002_PREFIXCOMMONS_ARCHIVE",
+    )
+    requirement = b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n"
+    sources: dict[str, bytes] = {}
+    for name, source in upstream.items():
+        if name == f"{upstream_dist}/RECORD":
+            continue
+        target_name = (
+            derived_dist + name[len(upstream_dist) :]
+            if name.startswith(upstream_dist + "/")
+            else name
+        )
+        if name == f"{upstream_dist}/METADATA":
+            source = source.replace(
+                b"Version: 0.1.12\n",
+                b"Version: 0.1.12+malleus.1\n",
+                1,
+            ).replace(requirement, b"", 1)
+        elif name == f"{upstream_dist}/WHEEL":
+            source = source.replace(
+                b"Generator: poetry 1.0.7\n",
+                b"Generator: malleus-cc002 (wheel-derivation-v1)\n",
+                1,
+            )
+        sources[target_name] = source
+    record_name = f"{derived_dist}/RECORD"
+    sources[record_name] = _canonical_wheel_record(sources, record_name)
+    return sources
+
+
+def _fixed_zip_info(name: str) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+    info.compress_type = zipfile.ZIP_STORED
+    info.create_system = 3
+    info.create_version = 20
+    info.extract_version = 20
+    info.reserved = 0
+    info.flag_bits = 0
+    info.volume = 0
+    info.internal_attr = 0
+    info.external_attr = 0o100644 << 16
+    info.extra = b""
+    info.comment = b""
+    return info
+
+
+def derive_prefixcommons_wheel(input_path: Path, output_path: Path) -> dict[str, Any]:
+    validate_prefixcommons_input(input_path)
+    if input_path.resolve() == output_path.resolve():
+        _fail("CC002_DERIVATION", "input and output wheel paths must be distinct")
+    if output_path.is_symlink() or output_path.exists():
+        _fail("CC002_DERIVATION", "derived wheel output must initially be absent")
+    if output_path.name != PREFIXCOMMONS_DERIVED_FILENAME:
+        _fail("CC002_DERIVATION", "derived wheel filename changed")
+    sources = _transformed_prefixcommons_sources(input_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with zipfile.ZipFile(
+            output_path,
+            "x",
+            compression=zipfile.ZIP_STORED,
+            allowZip64=False,
+        ) as archive:
+            archive.comment = b""
+            for name in sorted(sources):
+                archive.writestr(_fixed_zip_info(name), sources[name])
+        return _validate_prefixcommons_derivation(input_path, output_path)
+    except zipfile.LargeZipFile as error:
+        if output_path.exists() and not output_path.is_symlink():
+            output_path.unlink()
+        _fail("CC002_DERIVATION", f"ZIP64 output is forbidden: {error}")
+    except Exception:
+        if output_path.exists() and not output_path.is_symlink():
+            output_path.unlink()
+        raise
+
+
+def validate_derived_prefixcommons_wheel(path: Path) -> dict[str, Any]:
+    if path.name != PREFIXCOMMONS_DERIVED_FILENAME:
+        _fail("CC002_DERIVED_ARCHIVE", "derived wheel filename changed")
+    dist_info = "prefixcommons-0.1.12+malleus.1.dist-info"
+    members, sources = _prefixcommons_archive_sources(
+        path,
+        dist_info=dist_info,
+        error_code="CC002_DERIVED_ARCHIVE",
+        exact_derived=True,
+    )
+    names = [member.filename for member in members]
+    if names != sorted(names) or any(
+        name.encode("ascii").decode("ascii") != name for name in names
+    ):
+        _fail("CC002_DERIVED_ARCHIVE", "derived member order or spelling changed")
+    for member in members:
+        source = sources[member.filename]
+        if (
+            member.date_time != (1980, 1, 1, 0, 0, 0)
+            or member.compress_type != zipfile.ZIP_STORED
+            or member.create_system != 3
+            or member.create_version != 20
+            or member.extract_version != 20
+            or member.reserved != 0
+            or member.flag_bits != 0
+            or member.volume != 0
+            or member.internal_attr != 0
+            or member.external_attr != 0o100644 << 16
+            or member.extra != b""
+            or member.comment != b""
+            or member.compress_size != len(source)
+            or member.file_size != len(source)
+            or member.CRC != zlib.crc32(source)
+        ):
+            _fail(
+                "CC002_DERIVED_ARCHIVE",
+                f"derived ZIP metadata changed: {member.filename}",
+            )
+    metadata = sources[f"{dist_info}/METADATA"]
+    wheel = sources[f"{dist_info}/WHEEL"]
+    license_source = sources[f"{dist_info}/LICENSE"]
+    removed = b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n"
+    if (
+        metadata.count(b"Name: prefixcommons\n") != 1
+        or metadata.count(b"Version: 0.1.12+malleus.1\n") != 1
+        or b"Version: 0.1.12\n" in metadata
+        or removed in metadata
+        or wheel
+        != b"Wheel-Version: 1.0\nGenerator: malleus-cc002 (wheel-derivation-v1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
+        or len(license_source) != PREFIXCOMMONS_LICENSE_BYTE_LENGTH
+        or hashlib.sha256(license_source).hexdigest() != PREFIXCOMMONS_LICENSE_SHA256
+        or not license_source.startswith(b"BSD 3-Clause License")
+    ):
+        _fail("CC002_DERIVED_ARCHIVE", "derived metadata or license changed")
+    record = _artifact_record(path)
+    record.update({"distribution": "prefixcommons", "version": "0.1.12+malleus.1"})
+    return record
+
+
+def _validate_prefixcommons_derivation(
+    upstream_path: Path,
+    derived_path: Path,
+) -> dict[str, Any]:
+    try:
+        validate_prefixcommons_input(upstream_path)
+        record = validate_derived_prefixcommons_wheel(derived_path)
+    except CC002Error as error:
+        _fail(
+            "CC002_DERIVATION_IDENTITY",
+            f"prefixcommons derivation validation failed: {error}",
+        )
+    expected = _transformed_prefixcommons_sources(upstream_path)
+    derived_dist = "prefixcommons-0.1.12+malleus.1.dist-info"
+    _members, observed = _prefixcommons_archive_sources(
+        derived_path,
+        dist_info=derived_dist,
+        error_code="CC002_DERIVED_ARCHIVE",
+        exact_derived=True,
+    )
+    if observed != expected:
+        _fail(
+            "CC002_DERIVATION_IDENTITY",
+            "derived wheel bytes exceed the governed metadata-only transformation",
+        )
+    return record
+
+
+def _observe_derivation_child() -> dict[str, Any]:
+    return {
+        "python": {
+            "implementation": platform.python_implementation(),
+            "version": platform.python_version(),
+            "operating_system": platform.system(),
+            "architecture": platform.machine(),
+            "abi": f"cp{sys.version_info.major}{sys.version_info.minor}",
+        },
+        "implementation_name": sys.implementation.name,
+        "soabi": sysconfig.get_config_var("SOABI"),
+        "effective_uid": os.geteuid(),
+        "environment": {
+            "source_date_epoch": os.environ.get("SOURCE_DATE_EPOCH"),
+            "tz": os.environ.get("TZ"),
+            "python_hash_seed": os.environ.get("PYTHONHASHSEED"),
+        },
+        "adapter_sha256": _digest(ADAPTER_PATH.read_bytes()),
+    }
+
+
+def _derivation_main() -> int:
+    os.umask(0o022)
+    observed = _observe_derivation_child()
+    _exact_keys(
+        observed,
+        {
+            "python",
+            "implementation_name",
+            "soabi",
+            "effective_uid",
+            "environment",
+            "adapter_sha256",
+        },
+        "prefixcommons derivation observations",
+    )
+    if (
+        observed["python"] != PYTHON_TUPLE
+        or observed["implementation_name"] != "cpython"
+        or not isinstance(observed["soabi"], str)
+        or not observed["soabi"].startswith("cpython-312-")
+        or not isinstance(observed["effective_uid"], int)
+        or isinstance(observed["effective_uid"], bool)
+        or observed["effective_uid"] <= 0
+        or observed["environment"]
+        != {
+            "source_date_epoch": SOURCE_DATE_EPOCH,
+            "tz": "UTC",
+            "python_hash_seed": "0",
+        }
+        or observed["adapter_sha256"]
+        != EXPECTED_DERIVATION_CHILD_FACTS["tool"]["adapter_sha256"]
+    ):
+        _fail(
+            "CC002_DERIVATION_FACTS",
+            f"selected derivation child observations changed: {observed!r}",
+        )
+    input_root = DERIVATION_INPUT_ROOT
+    output_root = DERIVATION_OUTPUT_ROOT
+    if (
+        input_root.is_symlink()
+        or output_root.is_symlink()
+        or not input_root.is_dir()
+        or not output_root.is_dir()
+        or input_root.resolve() == output_root.resolve()
+    ):
+        _fail("CC002_DERIVATION", "derivation mount roots must be distinct directories")
+    input_members = {member.name: member for member in input_root.iterdir()}
+    if set(input_members) != {PREFIXCOMMONS_INPUT_FILENAME}:
+        _fail("CC002_DERIVATION", "derivative input directory membership changed")
+    if any(output_root.iterdir()):
+        _fail("CC002_DERIVATION", "derivation output directory must initially be empty")
+    upstream = input_members[PREFIXCOMMONS_INPUT_FILENAME]
+    derived = output_root / PREFIXCOMMONS_DERIVED_FILENAME
+    facts_path = output_root / ".cc002-derivation-facts.json"
+    try:
+        derive_prefixcommons_wheel(upstream, derived)
+        facts = json.loads(canonical_json(EXPECTED_DERIVATION_CHILD_FACTS))
+        facts["output"] = _artifact_record(derived)
+        with facts_path.open("x", encoding="utf-8", newline="\n") as stream:
+            stream.write(canonical_json(facts) + "\n")
+    except Exception:
+        for path in (facts_path, derived):
+            if path.exists() and not path.is_symlink():
+                path.unlink()
+        raise
+    return 0
+
+
+def validate_derivation_outputs(first: Path, second: Path) -> dict[str, Any]:
+    if (
+        first.is_symlink()
+        or second.is_symlink()
+        or not first.is_dir()
+        or not second.is_dir()
+        or first.resolve() == second.resolve()
+    ):
+        _fail(
+            "CC002_DERIVATION_OUTPUT",
+            "independent derivation output directories must be distinct",
+        )
+    wheels: list[Path] = []
+    facts_values: list[dict[str, Any]] = []
+    records: list[dict[str, Any]] = []
+    expected_names = {
+        PREFIXCOMMONS_DERIVED_FILENAME,
+        ".cc002-derivation-facts.json",
+    }
+    for output in (first, second):
+        members = {member.name: member for member in output.iterdir()}
+        if set(members) != expected_names:
+            _fail(
+                "CC002_DERIVATION_OUTPUT",
+                "each derivation must produce one wheel and one child-facts record",
+            )
+        wheel = members[PREFIXCOMMONS_DERIVED_FILENAME]
+        facts_path = members[".cc002-derivation-facts.json"]
+        try:
+            record = validate_derived_prefixcommons_wheel(wheel)
+        except CC002Error as error:
+            _fail(
+                "CC002_DERIVATION_OUTPUT",
+                f"derived wheel validation failed: {error}",
+            )
+        output_identity = _artifact_record(wheel)
+        facts, _source = _load_json_file(
+            facts_path,
+            "prefixcommons derivation child facts",
+        )
+        if facts != {**EXPECTED_DERIVATION_CHILD_FACTS, "output": output_identity}:
+            _fail("CC002_DERIVATION_FACTS", "derivation child facts changed")
+        wheels.append(wheel)
+        facts_values.append(facts)
+        records.append(record)
+    if facts_values[0] != facts_values[1]:
+        _fail("CC002_DERIVATION_FACTS", "independent derivation facts differ")
+    if records[0] != records[1] or wheels[0].read_bytes() != wheels[1].read_bytes():
+        _fail(
+            "CC002_DERIVATION_REPRODUCIBILITY",
+            "independent prefixcommons derivations are not byte-identical",
+        )
+    return records[0]
+
+
+def derivation_command(
+    derivative_inputs: Path,
+    output: Path,
+    *,
+    host_user: Mapping[str, Any] | None = None,
+) -> list[str]:
+    if (
+        derivative_inputs.is_symlink()
+        or output.is_symlink()
+        or not derivative_inputs.is_dir()
+        or not output.is_dir()
+    ):
+        _fail("CC002_DERIVATION_MOUNTS", "derivation mount sources must be directories")
+    inputs_resolved = derivative_inputs.resolve()
+    output_resolved = output.resolve()
+    adapter_resolved = ADAPTER_PATH.resolve()
+    if _resolved_paths_overlap(
+        inputs_resolved, output_resolved
+    ) or _resolved_paths_overlap(output_resolved, adapter_resolved):
+        _fail("CC002_DERIVATION_MOUNTS", "derivation mount sources must not overlap")
+    return [
+        DOCKER,
+        "run",
+        "--rm",
+        "--pull=never",
+        "--platform",
+        OCI_PLATFORM,
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        _docker_user_argument(host_user),
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,nodev",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--env",
+        f"SOURCE_DATE_EPOCH={SOURCE_DATE_EPOCH}",
+        "--env",
+        "TZ=UTC",
+        "--env",
+        "PYTHONHASHSEED=0",
+        "--env",
+        "HOME=/tmp/home",
+        "--env",
+        "PYTHONPATH=/adapter",
+        "--env",
+        "HTTP_PROXY=",
+        "--env",
+        "HTTPS_PROXY=",
+        "--env",
+        "ALL_PROXY=",
+        "--env",
+        "NO_PROXY=",
+        "-v",
+        f"{inputs_resolved}:/derivative-inputs:ro",
+        "-v",
+        f"{output_resolved}:/output:rw",
+        "-v",
+        f"{adapter_resolved}:/adapter/contract_compiler_environment.py:ro",
+        OCI_CHILD_REFERENCE,
+        "python",
+        "-c",
+        DERIVATION_PROGRAM,
+    ]
+
+
 def validate_antlr_sdist(path: Path) -> dict[str, Any]:
     """Refuse unsafe or semantically wrong ANTLR source archives before execution."""
     artifact = BUILD_ARTIFACTS[0]
@@ -2311,11 +3165,33 @@ _PIP_REPORT_ENVIRONMENT = {
 }
 
 
+def _validate_runtime_distribution_policy(
+    wheel_records: Sequence[Mapping[str, Any]],
+) -> None:
+    forbidden = {"pytest", "pytest-logging", "py"}
+    for record in wheel_records:
+        name = _canonical_name(record["distribution"])
+        if name in forbidden:
+            _fail(
+                "CC002_FORBIDDEN_RUNTIME",
+                f"test-only distribution is forbidden from runtime closure: {name}",
+            )
+        if name == "prefixcommons" and (
+            record["version"] != "0.1.12+malleus.1"
+            or record["filename"] != PREFIXCOMMONS_DERIVED_FILENAME
+        ):
+            _fail(
+                "CC002_PREFIXCOMMONS_RUNTIME",
+                "runtime prefixcommons must be the exact governed derived wheel",
+            )
+
+
 def validate_resolution_report(
     report: Any, wheel_records: Sequence[Mapping[str, Any]]
 ) -> list[Mapping[str, Any]]:
     """Cross-check pip 25.0.1's selected-tuple resolution against retained wheels."""
     wheel_records = _validated_wheel_records(wheel_records)
+    _validate_runtime_distribution_policy(wheel_records)
     if not isinstance(report, dict):
         _fail("CC002_PIP_REPORT", "pip report must be an object")
     _exact_keys(
@@ -2395,6 +3271,7 @@ def _validate_installed_closure(
     distributions: Any, wheel_records: Sequence[Mapping[str, Any]]
 ) -> list[dict[str, str]]:
     wheel_records = _validated_wheel_records(wheel_records)
+    _validate_runtime_distribution_policy(wheel_records)
     if not isinstance(distributions, list) or not distributions:
         _fail("CC002_VERIFY", "installed distribution closure is empty")
     observed: set[tuple[str, str]] = set()
@@ -2441,6 +3318,7 @@ def _validate_internal_verification(
             "wheelhouse_sha256",
             "resolution_report_sha256",
             "source_build_record_sha256",
+            "derivation_record_sha256",
             "docker",
             "oci_index_digest",
             "oci_child_digest",
@@ -2454,7 +3332,7 @@ def _validate_internal_verification(
         },
         "internal verification",
     )
-    if value["schema"] != "malleus.cc002.internal-verification/v2":
+    if value["schema"] != "malleus.cc002.internal-verification/v3":
         _fail("CC002_VERIFY", "unknown internal verification schema")
     if value["workstream_id"] != "CC-002":
         _fail("CC002_VERIFY", "internal verification workstream mismatch")
@@ -2464,6 +3342,7 @@ def _validate_internal_verification(
         "wheelhouse_sha256",
         "resolution_report_sha256",
         "source_build_record_sha256",
+        "derivation_record_sha256",
         "generator_output_sha256",
     ):
         _validate_digest(value[field], field)
@@ -2472,6 +3351,7 @@ def _validate_internal_verification(
         "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
         "resolution_report_sha256": manifest["resolution_report"]["sha256"],
         "source_build_record_sha256": manifest["build_record"]["sha256"],
+        "derivation_record_sha256": manifest["derivation_record"]["sha256"],
         "docker": manifest["docker"],
         "oci_index_digest": OCI_INDEX_DIGEST,
         "oci_child_digest": OCI_CHILD_DIGEST,
@@ -2704,12 +3584,28 @@ def _manifest_from_staging(
     *,
     docker_client_version: str,
 ) -> dict[str, Any]:
-    roots = [_artifact_record(staging / "roots" / item.filename) for item in SELECTED_ARTIFACTS]
-    build_inputs = [_artifact_record(staging / "build-inputs" / item.filename) for item in BUILD_ARTIFACTS]
+    roots = [
+        _artifact_record(staging / "roots" / item.filename)
+        for item in SELECTED_ARTIFACTS
+    ]
+    build_inputs = [
+        _artifact_record(staging / "build-inputs" / item.filename)
+        for item in BUILD_ARTIFACTS
+    ]
+    derivative_inputs = [
+        _artifact_record(staging / "derivative-inputs" / item.filename)
+        for item in DERIVATIVE_INPUTS
+    ]
+    built = [
+        _artifact_record(
+            staging / "built" / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+        ),
+        _artifact_record(staging / "built" / PREFIXCOMMONS_DERIVED_FILENAME),
+    ]
     smoke = _artifact_record(SMOKE_INPUT)
     smoke["filename"] = "ontology/malleus.yaml"
     return {
-        "schema": "malleus.cc002.compiler-environment/v2",
+        "schema": "malleus.cc002.compiler-environment/v3",
         "docker": {
             "command": DOCKER,
             "client_version": docker_client_version,
@@ -2725,8 +3621,10 @@ def _manifest_from_staging(
         },
         "roots": {"artifacts": roots},
         "build_inputs": {"artifacts": build_inputs},
-        "built": {"artifacts": [_artifact_record(staging / "built" / "antlr4_python3_runtime-4.9.3-py3-none-any.whl")]},
+        "derivative_inputs": {"artifacts": derivative_inputs},
+        "built": {"artifacts": built},
         "build_record": _artifact_record(staging / "build-record.json"),
+        "derivation_record": _artifact_record(staging / "derivation-record.json"),
         "wheelhouse": {
             "artifacts": wheel_records,
             "sha256": _wheelhouse_identity(wheel_records),
@@ -2759,8 +3657,10 @@ def _require_exact_bundle_members(path: Path, *, has_verification: bool) -> None
         "resolution-report.json",
         "roots",
         "build-inputs",
+        "derivative-inputs",
         "built",
         "build-record.json",
+        "derivation-record.json",
         "wheelhouse",
     }
     if has_verification:
@@ -2856,6 +3756,86 @@ def _bind_built_wheel(
         _fail("CC002_BUILT_BINDING", "built and runtime ANTLR wheel bytes differ")
 
 
+def _validate_derivation_record(
+    path: Path,
+    manifest: Mapping[str, Any],
+    retained_output: Mapping[str, Any],
+) -> dict[str, Any]:
+    identity = manifest["derivation_record"]
+    if _artifact_record(path / "derivation-record.json") != identity:
+        _fail("CC002_DERIVATION_RECORD", "derivation record byte identity mismatch")
+    value, _source = _load_json_file(
+        path / "derivation-record.json",
+        "prefixcommons derivation record",
+    )
+    try:
+        _exact_keys(
+            value,
+            {
+                "schema",
+                "input",
+                "runs",
+                "outputs",
+                "byte_equal",
+                "retained_output",
+                "license",
+                "tool",
+            },
+            "prefixcommons derivation record",
+        )
+    except CC002Error as error:
+        _fail("CC002_DERIVATION_RECORD", str(error))
+    output = _content_record(retained_output)
+    expected_run = {**RETAINED_DERIVATION_RUN, "output": output}
+    expected_license = {
+        "upstream_member": "prefixcommons-0.1.12.dist-info/LICENSE",
+        "derived_member": "prefixcommons-0.1.12+malleus.1.dist-info/LICENSE",
+        "byte_length": PREFIXCOMMONS_LICENSE_BYTE_LENGTH,
+        "sha256": "sha256:" + PREFIXCOMMONS_LICENSE_SHA256,
+    }
+    if (
+        value["schema"] != "malleus.cc002.wheel-derivation/v1"
+        or value["input"] != manifest["derivative_inputs"]["artifacts"][0]
+        or value["runs"] != [expected_run, expected_run]
+        or value["outputs"] != [output, output]
+        or value["byte_equal"] is not True
+        or value["retained_output"] != output
+        or value["license"] != expected_license
+        or value["tool"] != EXPECTED_DERIVATION_CHILD_FACTS["tool"]
+    ):
+        _fail(
+            "CC002_DERIVATION_RECORD",
+            "derivation record does not bind the governed transformation",
+        )
+    return value
+
+
+def _bind_derived_prefixcommons(
+    path: Path,
+    records: Sequence[Mapping[str, Any]],
+    built_record: Mapping[str, Any],
+    upstream_path: Path,
+) -> None:
+    matching = [
+        record
+        for record in records
+        if record.get("filename") == PREFIXCOMMONS_DERIVED_FILENAME
+    ]
+    if len(matching) != 1 or _content_record(matching[0]) != built_record:
+        _fail(
+            "CC002_DERIVATION_BINDING",
+            "derived prefixcommons wheel is not exactly bound into wheelhouse",
+        )
+    built_path = path / "built" / PREFIXCOMMONS_DERIVED_FILENAME
+    runtime_path = path / "wheelhouse" / PREFIXCOMMONS_DERIVED_FILENAME
+    if built_path.read_bytes() != runtime_path.read_bytes():
+        _fail(
+            "CC002_DERIVATION_BINDING",
+            "built and runtime prefixcommons wheel bytes differ",
+        )
+    _validate_prefixcommons_derivation(upstream_path, runtime_path)
+
+
 def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], bytes]:
     path = DESTINATION if path is None else path
     if path.is_symlink() or not path.is_dir():
@@ -2872,8 +3852,10 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
             "image",
             "roots",
             "build_inputs",
+            "derivative_inputs",
             "built",
             "build_record",
+            "derivation_record",
             "wheelhouse",
             "lock",
             "resolution_report",
@@ -2882,7 +3864,7 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         },
         "environment manifest",
     )
-    if manifest["schema"] != "malleus.cc002.compiler-environment/v2":
+    if manifest["schema"] != "malleus.cc002.compiler-environment/v3":
         _fail("CC002_MANIFEST", "unknown environment schema")
     docker = manifest["docker"]
     if not isinstance(docker, dict):
@@ -2910,6 +3892,10 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         _fail("CC002_MANIFEST", "environment image does not match OD-012")
     verify_artifact_directory(path / "roots", manifest["roots"])
     verify_artifact_directory(path / "build-inputs", manifest["build_inputs"])
+    verify_artifact_directory(
+        path / "derivative-inputs",
+        manifest["derivative_inputs"],
+    )
     verify_artifact_directory(path / "built", manifest["built"])
     expected_build_inputs = {
         item.filename: {
@@ -2921,12 +3907,34 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
     }
     if {item["filename"]: item for item in manifest["build_inputs"]["artifacts"]} != expected_build_inputs:
         _fail("CC002_BUILD_INPUT", "retained build inputs do not match authorization")
+    derivative_records = manifest["derivative_inputs"]["artifacts"]
+    if len(derivative_records) != 1:
+        _fail(
+            "CC002_PREFIXCOMMONS_INPUT",
+            "retained derivative input set must contain exactly one wheel",
+        )
+    upstream_path = path / "derivative-inputs" / PREFIXCOMMONS_INPUT_FILENAME
+    upstream_record = validate_prefixcommons_input(upstream_path)
+    if derivative_records[0] != upstream_record:
+        _fail(
+            "CC002_PREFIXCOMMONS_INPUT",
+            "retained derivative input identity mismatch",
+        )
     built_records = manifest["built"]["artifacts"]
-    if len(built_records) != 1:
-        _fail("CC002_BUILT_WHEEL", "retained built set must contain exactly one wheel")
-    built_record = validate_built_antlr_wheel(path / "built" / built_records[0]["filename"])
-    if _content_record(built_record) != built_records[0]:
+    built_by_name = {record["filename"]: record for record in built_records}
+    antlr_filename = "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    if set(built_by_name) != {antlr_filename, PREFIXCOMMONS_DERIVED_FILENAME}:
+        _fail("CC002_BUILT_WHEEL", "retained built set must contain two exact wheels")
+    built_record = validate_built_antlr_wheel(path / "built" / antlr_filename)
+    if _content_record(built_record) != built_by_name[antlr_filename]:
         _fail("CC002_BUILT_WHEEL", "retained built wheel identity mismatch")
+    derived_record = _validate_prefixcommons_derivation(
+        upstream_path,
+        path / "built" / PREFIXCOMMONS_DERIVED_FILENAME,
+    )
+    if _content_record(derived_record) != built_by_name[PREFIXCOMMONS_DERIVED_FILENAME]:
+        _fail("CC002_DERIVATION_IDENTITY", "retained derived wheel identity mismatch")
+    _validate_derivation_record(path, manifest, derived_record)
     build_record_identity = manifest["build_record"]
     if _artifact_record(path / "build-record.json") != build_record_identity:
         _fail("CC002_BUILD_RECORD", "build record byte identity mismatch")
@@ -3003,11 +4011,17 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
     if len(manifest["roots"]["artifacts"]) != len(SELECTED_ARTIFACTS):
         _fail("CC002_MANIFEST", "root retention count mismatch")
     if len(manifest["roots"]["artifacts"]) != 5:
-        _fail("CC002_MANIFEST", "root retention set must contain exactly five artifacts")
-    _bind_selected_wheels(
-        path, rebuilt_records, manifest["roots"]["artifacts"]
+        _fail(
+            "CC002_MANIFEST", "root retention set must contain exactly five artifacts"
+        )
+    _bind_selected_wheels(path, rebuilt_records, manifest["roots"]["artifacts"])
+    _bind_built_wheel(path, rebuilt_records, built_by_name[antlr_filename])
+    _bind_derived_prefixcommons(
+        path,
+        rebuilt_records,
+        built_by_name[PREFIXCOMMONS_DERIVED_FILENAME],
+        upstream_path,
     )
-    _bind_built_wheel(path, rebuilt_records, built_records[0])
     verification = manifest["verification"]
     if not isinstance(verification, dict):
         _fail("CC002_MANIFEST", "verification state must be an object")
@@ -3077,9 +4091,14 @@ def acquire_environment() -> dict[str, Any]:
     if DESTINATION.exists():
         manifest, _source = _validated_environment()
         return acquire_result(
-            artifact_count=len(manifest["roots"]["artifacts"]) + len(manifest["build_inputs"]["artifacts"]),
+            artifact_count=(
+                len(manifest["roots"]["artifacts"])
+                + len(manifest["build_inputs"]["artifacts"])
+                + len(manifest["derivative_inputs"]["artifacts"])
+            ),
             built_artifact_count=len(manifest["built"]["artifacts"]),
             source_build_record_sha256=manifest["build_record"]["sha256"],
+            derivation_record_sha256=manifest["derivation_record"]["sha256"],
             lock_sha256=manifest["lock"]["sha256"],
             wheel_count=len(manifest["wheelhouse"]["artifacts"]),
             wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
@@ -3093,13 +4112,25 @@ def acquire_environment() -> dict[str, Any]:
         roots.mkdir()
         build_inputs = staging / "build-inputs"
         build_inputs.mkdir()
+        derivative_inputs = staging / "derivative-inputs"
+        derivative_inputs.mkdir()
         opener = _default_opener()
         for artifact in SELECTED_ARTIFACTS:
             download_artifact(artifact, safe_target(roots, artifact.filename), opener)
         for artifact in BUILD_ARTIFACTS:
-            download_artifact(artifact, safe_target(build_inputs, artifact.filename), opener)
+            download_artifact(
+                artifact, safe_target(build_inputs, artifact.filename), opener
+            )
+        for artifact in DERIVATIVE_INPUTS:
+            download_artifact(
+                artifact,
+                safe_target(derivative_inputs, artifact.filename),
+                opener,
+            )
         sdist_facts = validate_antlr_sdist(build_inputs / ANTLR_SDIST_FILENAME)
         validate_setuptools_wheel(build_inputs / SETUPTOOLS_WHEEL_FILENAME)
+        upstream_path = derivative_inputs / PREFIXCOMMONS_INPUT_FILENAME
+        upstream_record = validate_prefixcommons_input(upstream_path)
         docker_executable = _resolved_docker()
         docker_version = _docker_version(
             _run_checked(
@@ -3147,10 +4178,47 @@ def acquire_environment() -> dict[str, Any]:
         built_path = built / built_wheel_record["filename"]
         shutil.copyfile(build_outputs[0] / built_wheel_record["filename"], built_path, follow_symlinks=False)
         if validate_built_antlr_wheel(built_path) != built_wheel_record:
-            _fail("CC002_BUILD_TOCTOU", "retained built wheel changed during publication")
+            _fail(
+                "CC002_BUILD_TOCTOU", "retained built wheel changed during publication"
+            )
+        derivation_outputs = []
+        for ordinal in (1, 2):
+            output = staging / f".derive-{ordinal}"
+            output.mkdir()
+            _run_checked(
+                derivation_command(
+                    derivative_inputs,
+                    output,
+                    host_user=ownership,
+                ),
+                f"network-denied prefixcommons derivation {ordinal}",
+                staging,
+                docker_executable=docker_executable,
+            )
+            derivation_outputs.append(output)
+        derived_wheel_record = validate_derivation_outputs(*derivation_outputs)
+        derived_content = _content_record(derived_wheel_record)
+        derived_path = built / PREFIXCOMMONS_DERIVED_FILENAME
+        shutil.copyfile(
+            derivation_outputs[0] / PREFIXCOMMONS_DERIVED_FILENAME,
+            derived_path,
+            follow_symlinks=False,
+        )
+        if (
+            _validate_prefixcommons_derivation(upstream_path, derived_path)
+            != derived_wheel_record
+        ):
+            _fail(
+                "CC002_DERIVATION_TOCTOU",
+                "retained derived wheel changed during publication",
+            )
         for output in build_outputs:
             shutil.rmtree(output)
-        build_input_records = [_artifact_record(build_inputs / item.filename) for item in BUILD_ARTIFACTS]
+        for output in derivation_outputs:
+            shutil.rmtree(output)
+        build_input_records = [
+            _artifact_record(build_inputs / item.filename) for item in BUILD_ARTIFACTS
+        ]
         output_content = _content_record(built_wheel_record)
         build_record = {
             "schema": "malleus.cc002.source-build/v1",
@@ -3170,10 +4238,40 @@ def acquire_environment() -> dict[str, Any]:
             "byte_equal": True,
             "retained_output": output_content,
         }
-        _write_atomic(staging / "build-record.json", (canonical_json(build_record) + "\n").encode("utf-8"))
+        _write_atomic(
+            staging / "build-record.json",
+            (canonical_json(build_record) + "\n").encode("utf-8"),
+        )
+        derivation_record = {
+            "schema": "malleus.cc002.wheel-derivation/v1",
+            "input": upstream_record,
+            "runs": [
+                {**RETAINED_DERIVATION_RUN, "output": derived_content},
+                {**RETAINED_DERIVATION_RUN, "output": derived_content},
+            ],
+            "outputs": [derived_content, derived_content],
+            "byte_equal": True,
+            "retained_output": derived_content,
+            "license": {
+                "upstream_member": "prefixcommons-0.1.12.dist-info/LICENSE",
+                "derived_member": "prefixcommons-0.1.12+malleus.1.dist-info/LICENSE",
+                "byte_length": PREFIXCOMMONS_LICENSE_BYTE_LENGTH,
+                "sha256": "sha256:" + PREFIXCOMMONS_LICENSE_SHA256,
+            },
+            "tool": EXPECTED_DERIVATION_CHILD_FACTS["tool"],
+        }
+        _write_atomic(
+            staging / "derivation-record.json",
+            (canonical_json(derivation_record) + "\n").encode("utf-8"),
+        )
         wheelhouse = staging / "wheelhouse"
         _copy_selected_wheels(roots, wheelhouse)
         shutil.copyfile(built_path, wheelhouse / built_path.name, follow_symlinks=False)
+        shutil.copyfile(
+            derived_path,
+            wheelhouse / derived_path.name,
+            follow_symlinks=False,
+        )
         _run_checked(
             resolve_command(roots, wheelhouse, built=built, host_user=ownership),
             "transitive wheel resolution",
@@ -3215,9 +4313,14 @@ def acquire_environment() -> dict[str, Any]:
         publish_directory(staging, DESTINATION, OUTPUT_TRUSTED_ROOT)
     manifest, _source = _validated_environment()
     return acquire_result(
-        artifact_count=len(manifest["roots"]["artifacts"]) + len(manifest["build_inputs"]["artifacts"]),
+        artifact_count=(
+            len(manifest["roots"]["artifacts"])
+            + len(manifest["build_inputs"]["artifacts"])
+            + len(manifest["derivative_inputs"]["artifacts"])
+        ),
         built_artifact_count=len(manifest["built"]["artifacts"]),
         source_build_record_sha256=manifest["build_record"]["sha256"],
+        derivation_record_sha256=manifest["derivation_record"]["sha256"],
         lock_sha256=manifest["lock"]["sha256"],
         wheel_count=len(manifest["wheelhouse"]["artifacts"]),
         wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
@@ -3263,6 +4366,7 @@ def _completed_verification_result(
         lock_sha256=manifest["lock"]["sha256"],
         wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
         source_build_record_sha256=manifest["build_record"]["sha256"],
+        derivation_record_sha256=manifest["derivation_record"]["sha256"],
     )
 
 
@@ -3323,13 +4427,14 @@ def verify_environment() -> dict[str, Any]:
                 work, manifest["wheelhouse"]["artifacts"]
             )
         internal = {
-            "schema": "malleus.cc002.internal-verification/v2",
+            "schema": "malleus.cc002.internal-verification/v3",
             "workstream_id": "CC-002",
             "acquisition_manifest_sha256": _digest(manifest_source),
             "lock_sha256": manifest["lock"]["sha256"],
             "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
             "resolution_report_sha256": manifest["resolution_report"]["sha256"],
             "source_build_record_sha256": manifest["build_record"]["sha256"],
+            "derivation_record_sha256": manifest["derivation_record"]["sha256"],
             "docker": manifest["docker"],
             "oci_index_digest": OCI_INDEX_DIGEST,
             "oci_child_digest": OCI_CHILD_DIGEST,
