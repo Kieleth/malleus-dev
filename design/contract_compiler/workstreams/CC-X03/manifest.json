@@ -12,7 +12,30 @@
     "class": "EXPLORATION_ONLY"
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 5224,
+        "path": "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py",
+        "sha256": "sha256:0b905dc49c883ca56b1a9e2492d6b12ba36b6879edf64c18524aa6e5673183de"
+      },
+      {
+        "byte_length": 6010,
+        "path": "conformance/contract_kernel/v0/source_boundary/EXPLORATORY_LEDGER.md",
+        "sha256": "sha256:0393d7c2e0edc963c34730635dda0a2b1d5da1a2223895d5857db7a51272be17"
+      }
+    ],
+    "base_commit": "17c4c21ee02a80fd2b963f47ba0ff3e37fcfd270",
+    "evidence": [
+      {
+        "byte_length": 5607,
+        "path": "conformance/contract_compiler/v0/evidence/CC-X03.json",
+        "result": "PASS",
+        "sha256": "sha256:1d6891a9a915373318f53235c7edb4b79d9ae818bb0c39d4784feb9326b877fb"
+      }
+    ],
+    "head_commit": "f2a69ada9c52a10cc9e9b75030a1bda0094baa73",
+    "head_tree": "2cbdc7fae0bde752cb188f5a253f6f1d95be32d4",
+    "state": "ELIGIBLE"
   },
   "ledger": {
     "state": "NOT_STARTED"

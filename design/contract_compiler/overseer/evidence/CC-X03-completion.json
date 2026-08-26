@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 5607,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X03.json",
+      "sha256": "sha256:1d6891a9a915373318f53235c7edb4b79d9ae818bb0c39d4784feb9326b877fb"
+    }
+  ],
+  "base_commit": "f2a69ada9c52a10cc9e9b75030a1bda0094baa73",
+  "checks": [
+    {
+      "check_id": "ccx03-candidate-history",
+      "method": "Validate the exact 17c4c21..f2a69ad linear candidate, bound tree, three authorized scopes, two artifacts, and passing worker evidence.",
+      "observed": "The validator accepted RED commit 4788fdebfa8ad7c46ec7d6b47ab0ab4079a99a8f followed by evidence commit f2a69ada9c52a10cc9e9b75030a1bda0094baa73, tree 2cbdc7fae0bde752cb188f5a253f6f1d95be32d4, and exactly three touched paths within the registered exploratory scopes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-executed-gates",
+      "method": "Run collection, focused RED and controls, standard and governance suites, evidence verification, candidate history, ledger, integration, scoped Ruff, and diff gates.",
+      "observed": "Collection found all eight nodes and exited 0. Seven controls passed; the one deliberate future-seam node failed at test level with ModuleNotFoundError for boundary. The standard suite passed 1655 tests with 2 skipped; 74 governance tests passed; evidence verified two artifacts and ten checks; history, ledger, integration, Ruff, and diff checks passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-exploratory-boundary",
+      "method": "Inspect the generic microfixtures, retained observations, candidate paths, and claims for the EXPLORATION_ONLY RED boundary.",
+      "observed": "The retained evidence records exact loader input, duplicate-key refusal, local and URL I/O reachability, nested-diamond closure, missing import, cycle behavior, source call paths, and execution context without defining a resolver, choosing import policy, or adding production, ontology, themed, dependency, Docker, migration, network, or release behavior.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-independent-review",
+      "method": "Require independent exact-candidate review before completion and preserve the unselected exploratory boundary.",
+      "observed": "Independent review approved f2a69ada9c52a10cc9e9b75030a1bda0094baa73 with no P0, P1, P2, or P3 findings. Authorization remains EXPLORATION_ONLY, the candidate remains unselected, its worker ledger remains NOT_STARTED, and every other card, the four selections, and the sealed snapshot remain unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X03 defines no boundary module, authorizes no GREEN implementation, and does not close CC-D11 or any import-policy choice.",
+    "Observed closure order, exceptions, URL, and I/O paths are recorded behavior, not selected locator, resolver, ordering, cycle, fallback, diagnostic, or semantic policy.",
+    "The URL opener was intercepted before network access, and no network behavior is claimed.",
+    "CC-X03 completion is not integration selection or release authority."
+  ],
+  "recorded_at": "2026-08-26T21:58:07Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X03"
+}

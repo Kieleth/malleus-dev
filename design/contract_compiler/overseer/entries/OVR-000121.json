@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccx03-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T21:58:09Z",
+    "claims": [
+      "The exact 17c4c21ee02a80fd2b963f47ba0ff3e37fcfd270..f2a69ada9c52a10cc9e9b75030a1bda0094baa73 candidate is linear, tree-bound, confined to three authorized scopes, and binds two artifacts plus passing worker evidence.",
+      "Collection found all eight nodes and exited 0; seven controls passed; exactly one deliberate future-seam test failed at test level with ModuleNotFoundError for boundary; the standard suite passed 1655 tests with 2 skipped; 74 governance tests passed; evidence, history, ledger, integration, Ruff, and diff checks succeeded.",
+      "The retained generic observations cover loader input, duplicate-key refusal, local and intercepted URL I/O reachability, nested-diamond closure, missing import, cycle behavior, source call paths, and execution context without defining or implementing a boundary mechanism or selecting import policy.",
+      "Independent review found no P0, P1, P2, or P3 issue. Authorization remains EXPLORATION_ONLY; the candidate is eligible and unselected; its worker ledger remains NOT_STARTED; every other card, the four selections, and the sealed snapshot remain unchanged."
+    ],
+    "limitations": [
+      "This fact defines no boundary module, authorizes no GREEN implementation, and does not close CC-D11 or any import-policy choice.",
+      "This fact promotes no observed closure, exception, URL, I/O path, resolver, ordering, cycle, fallback, diagnostic, or semantic behavior to policy.",
+      "The URL opener was intercepted before network access, and no network behavior is claimed.",
+      "This fact authorizes completion, not selection or release."
+    ]
+  },
+  "entry_hash": "sha256:3ccf0b959281fdffeaf5a432c13b001d38556eac9a210d0726698cbc11d0dafc",
+  "entry_id": "OVR-000121",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:be2ee52398a007f9b36a38e11c92b06772539356876fa9b3ce846c5547c8ca23",
+  "recorded_at": "2026-08-26T21:58:09Z",
+  "references": [
+    {
+      "digest": "sha256:e03589b8fc87143965f5f62716f5ee8a340242f7fe0ad84efc0ce86d543c7faa",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X03-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f2a69ada9c52a10cc9e9b75030a1bda0094baa73",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000120",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 121,
+  "subject": {
+    "id": "CC-X03-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded CC-X03 exploratory RED completion gate.",
+  "why": "CC-X03 may complete only after the exact RED-only candidate, retained generic observations, passing gates, independent review, and unselected EXPLORATION_ONLY boundary all pass mechanically."
+}

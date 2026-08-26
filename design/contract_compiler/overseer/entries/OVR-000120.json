@@ -1,0 +1,99 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X03"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:88874b215d5dc2a6255d90d04968cd5f05d0ec180a1f22bfbe0c1630fd3aa331",
+        "before_digest": "sha256:87e2f849b182db14679dbeae916fdfcc7bcc414b2d31280b188708542e3d3772",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:902f42644b713970760eae6b5193ebe781a5e2736d43b51e927f090a9978e098",
+        "before_digest": "sha256:f0b2eca8bcd90f37fdab1202e53ee8b673d313cdc5690e10944c457a60150fae",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:1d6891a9a915373318f53235c7edb4b79d9ae818bb0c39d4784feb9326b877fb",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X03.json"
+      },
+      {
+        "after_digest": "sha256:e03589b8fc87143965f5f62716f5ee8a340242f7fe0ad84efc0ce86d543c7faa",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X03-completion.json"
+      },
+      {
+        "after_digest": "sha256:d3a2659d253c95916cda8eee7240caaf4c279c7a5280b7c715f2a0e00af71a3d",
+        "before_digest": "sha256:9a02d760e3ad1554d3345c6513785c0a0ba015271578e6cea56a6825d06c4c4f",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:5e2ed5c6de646a308a3a4b2c7547217614b4c79bdcafe68b28471b9229e841c4",
+        "before_digest": "sha256:60b9f183fa92b060d2539b1c07cedb1957da7c443c7f7601a94bccccaa7d6b74",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:be2ee52398a007f9b36a38e11c92b06772539356876fa9b3ce846c5547c8ca23",
+  "entry_id": "OVR-000120",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:022b7abdfe98d3c4d038aae208f1ed91dbe65cc89375e46c2b46f41d03f7a285",
+  "recorded_at": "2026-08-26T21:58:08Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:e03589b8fc87143965f5f62716f5ee8a340242f7fe0ad84efc0ce86d543c7faa",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X03-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000119",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 120,
+  "subject": {
+    "id": "ccx03-completion-checkpoint",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the eligible CC-X03 exploratory RED candidate and completion evidence.",
+  "why": "The exact linear candidate binds the three authorized scopes, two retained artifacts, passing worker evidence, and independent completion report. The narrow test revision preserves correction ordering and typed replacement coverage through the COMPLETE transition while asserting the exact eligible candidate and canonical state. This revision advances integration authority only to the prior OVR-000119 state while keeping authorization EXPLORATION_ONLY, CC-X03 unselected, its worker ledger NOT_STARTED, every other card unchanged, and the four selections and sealed snapshot intact."
+}
