@@ -1,0 +1,57 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 6909,
+      "path": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "sha256": "sha256:d900e5091fb3192dea86cf8ecbb6461197252be69386eec0fc9be7ecc6dba8fc"
+    }
+  ],
+  "base_commit": "2360d6dcfabee4a91876d0573bd2a4eb82054f46",
+  "checks": [
+    {
+      "check_id": "cc002-r2-checkpoint-lineage",
+      "method": "Resolve the three exact commits and inspect their parents and changed paths.",
+      "observed": "292a16a8eb20cc1937c275f2f2d2b2b86358d322 integrated OD-012 R2 governance on parent 6325bd962ecfd00bd4ca62b1d9febd07e3737357; 43e7cd7fcd72e68f0c82b56a26bd06d4fd5e8bac and 2360d6dcfabee4a91876d0573bd2a4eb82054f46 then changed only the CC-002 adapter and its tests.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-v2-process-loaded",
+      "method": "Run cc002_acquire after restarting Codex and observe whether execution enters the v2-only deterministic source-build path.",
+      "observed": "The restarted MCP process executed the deterministic ANTLR source-build path introduced by 43e7cd7fcd72e68f0c82b56a26bd06d4fd5e8bac and guarded by 2360d6dcfabee4a91876d0573bd2a4eb82054f46; the stale v1 adapter was no longer serving the tool.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-antlr-build-reached",
+      "method": "Inspect the real v2 acquisition result before its runtime dependency resolver failed.",
+      "observed": "The acquisition reached the governed ANTLR 4.9.3 deterministic build path and then advanced to the wheel-only runtime resolver. This proves execution progress for that failed attempt only; no built artifact is claimed retained by this report.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-prefixcommons-blocker",
+      "method": "Inspect the exact dependency and resolver failure reported by the real v2 acquisition.",
+      "observed": "The resolver selected prefixcommons==0.1.12, which requires pytest-logging>=2015.11.4,<2016.0.0, and reported no distribution satisfying that requirement under the configured wheel-only runtime policy.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-failed-publication-cleanup",
+      "method": "Inspect the governed destination and bounded staging namespace after the failed acquisition returned.",
+      "observed": "conformance/contract_compiler/v0/compiler_environment is absent and no conformance/contract_compiler/v0/.cc002-* staging path remains. The failed attempt published no partial environment.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-policy-boundary-preserved",
+      "method": "Compare the newly exposed dependency with OD-012 R2 and inspect the repository for an environment or policy revision.",
+      "observed": "OD-012 R2 authorizes an exact source build only for ANTLR 4.9.3. No source-build policy, package coordinate, backend, or acceptance gate was selected for prefixcommons or pytest-logging, and no compiler environment exists.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report records one failed real acquisition attempt. It does not claim a complete runtime closure, retained compiler environment, offline installation, generic generator smoke, or CC-002 completion.",
+    "The temporary ANTLR build output from the failed attempt was cleaned with the staging tree and is not retained evidence of a final reproducible wheel.",
+    "The observed resolver edge does not choose whether to build another source distribution, change the selected LinkML baseline, or reject the dependency. Any such choice requires separate operator authority.",
+    "The MCP result was observed in the restarted task, but a raw terminal or registry-response transcript is not retained as an artifact in this report."
+  ],
+  "recorded_at": "2026-08-26T01:30:53Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-002"
+}

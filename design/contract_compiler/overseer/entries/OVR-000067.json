@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002",
+      "OD-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c3e7126416c52f788812536074e7291cc4d1546eb7ceb76fba54a2ec88ed1ee0",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-002-progress-01.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6dab7841e70b64639a5bb4e1a8862e5fc6a9a085879db3eb5304025694457413",
+  "entry_id": "OVR-000067",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4f737a57d70eda5011ef6b3d278e8b27deb17078e4ceda250739003bebd5b04e",
+  "recorded_at": "2026-08-26T01:30:54Z",
+  "references": [
+    {
+      "digest": "sha256:c3e7126416c52f788812536074e7291cc4d1546eb7ceb76fba54a2ec88ed1ee0",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-01.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 67,
+  "subject": {
+    "id": "cc002-progress-01",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the immutable report for the first real CC-002 acquisition under OD-012 R2.",
+  "why": "The first real v2 attempt produced material program evidence even though it failed closed. Registering the report bytes before their verification preserves chronology, keeps the failure and cleanup queryable, and does not revise accepted dependency policy, the canonical graph, the CC-002 card, or integration."
+}

@@ -1,0 +1,85 @@
+{
+  "actor": {
+    "id": "cc002-progress-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T01:30:55Z",
+    "claims": [
+      "Commit 292a16a8eb20cc1937c275f2f2d2b2b86358d322 integrated the OD-012 R2 governance correction on 6325bd962ecfd00bd4ca62b1d9febd07e3737357.",
+      "Commits 43e7cd7fcd72e68f0c82b56a26bd06d4fd5e8bac and 2360d6dcfabee4a91876d0573bd2a4eb82054f46 implemented and guarded the deterministic ANTLR build by changing only the CC-002 adapter and tests.",
+      "After Codex restarted, cc002_acquire executed the v2-only deterministic ANTLR source-build path and advanced to the wheel-only runtime resolver.",
+      "The resolver selected prefixcommons==0.1.12, whose pytest-logging>=2015.11.4,<2016.0.0 dependency had no satisfying distribution under the configured wheel-only runtime policy.",
+      "The failed attempt left compiler_environment absent and removed every bounded .cc002-* staging path, so no partial environment was published.",
+      "OD-012 R2 contains no authority to source-build prefixcommons or pytest-logging; no new dependency policy or coordinate has been selected."
+    ],
+    "limitations": [
+      "This verifies fail-closed progress and the new dependency blocker, not a retained ANTLR wheel or a complete compiler environment.",
+      "Complete runtime resolution, offline installation, the generic generator smoke, and CC-002 completion remain unproven.",
+      "CC-002 remains ACTIVE only because OVR-000065 is the existing authorized integration state; ACTIVE does not mean this blocker is resolved or materialization may exceed OD-012 R2.",
+      "The raw MCP transcript and registry responses are not retained artifacts; the immutable report records the exact observed result and current cleanup state."
+    ]
+  },
+  "entry_hash": "sha256:b18e53320db94154417172aeca9ff465447dca761fb263897192f13b606702f3",
+  "entry_id": "OVR-000068",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6dab7841e70b64639a5bb4e1a8862e5fc6a9a085879db3eb5304025694457413",
+  "recorded_at": "2026-08-26T01:30:55Z",
+  "references": [
+    {
+      "digest": "sha256:c3e7126416c52f788812536074e7291cc4d1546eb7ceb76fba54a2ec88ed1ee0",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-01.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "292a16a8eb20cc1937c275f2f2d2b2b86358d322",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "43e7cd7fcd72e68f0c82b56a26bd06d4fd5e8bac",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2360d6dcfabee4a91876d0573bd2a4eb82054f46",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000065",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000066",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000067",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 68,
+  "subject": {
+    "id": "CC-002-progress-01",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the real v2 CC-002 attempt and its newly exposed wheel-only dependency blocker.",
+  "why": "The real acquisition proved that the restarted adapter reaches the governed deterministic ANTLR build and then fails closed at a later transitive dependency. Recording the exact commit lineage, observed resolver edge, cleanup result, and unchosen policy boundary makes progress and the next dependency decision queryable without rewriting OD-012 R2 or claiming materialization."
+}
