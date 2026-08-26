@@ -9,7 +9,10 @@ fixed by the accepted OD-012 baseline and this CC-002 implementation.
 from __future__ import annotations
 
 import email.policy
+import base64
+import csv
 import hashlib
+import io
 import json
 import os
 import shutil
@@ -18,6 +21,7 @@ import socketserver
 import stat
 import subprocess
 import sys
+import tarfile
 import tempfile
 import threading
 import urllib.error
@@ -47,7 +51,7 @@ SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-10-07",
 )
 SERVER_NAME = "malleus-cc002"
-SERVER_VERSION = "1"
+SERVER_VERSION = "2"
 
 NETWORK_TIMEOUT_SECONDS = 120
 DOWNLOAD_CHUNK_SIZE = 1024 * 1024
@@ -167,6 +171,27 @@ ROOT_WHEEL_FILENAMES = (
     "linkml_runtime-1.11.1-py3-none-any.whl",
 )
 PIP_WHEEL_FILENAME = "pip-25.0.1-py3-none-any.whl"
+ANTLR_SDIST_FILENAME = "antlr4-python3-runtime-4.9.3.tar.gz"
+SETUPTOOLS_WHEEL_FILENAME = "setuptools-83.0.0-py3-none-any.whl"
+SOURCE_DATE_EPOCH = "315532800"
+ANTLR_SDIST_MEMBER_COUNT = 78
+ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH = 477312
+BUILD_ARTIFACTS = (
+    SelectedArtifact(
+        filename=ANTLR_SDIST_FILENAME,
+        kind="SDIST",
+        url="https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz",
+        byte_length=117034,
+        sha256="f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b",
+    ),
+    SelectedArtifact(
+        filename=SETUPTOOLS_WHEEL_FILENAME,
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl",
+        byte_length=1008090,
+        sha256="29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3",
+    ),
+)
 PIP_IMPORT_ORIGIN = f"/roots/{PIP_WHEEL_FILENAME}/pip/__init__.py"
 PROXY_REQUEST_LIMIT = 8192
 RESOLVER_PIP_ARGUMENTS = (
@@ -180,6 +205,7 @@ RESOLVER_PIP_ARGUMENTS = (
     "--dest",
     "/wheelhouse",
     "--only-binary=:all:",
+    "--find-links=/built",
     f"/roots/{ROOT_WHEEL_FILENAMES[0]}",
     f"/roots/{ROOT_WHEEL_FILENAMES[1]}",
 )
@@ -290,10 +316,12 @@ def _output_schema(required: Sequence[str], properties: dict[str, Any]) -> dict[
 
 _DIGEST_SCHEMA = {"type": "string", "minLength": 71, "maxLength": 71}
 _ACQUIRE_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.acquire-result/v1"},
+    "schema": {"const": "malleus.cc002.acquire-result/v2"},
     "state": {"const": "MATERIALIZED"},
     "destination": {"const": DESTINATION_LABEL},
-    "artifact_count": {"type": "integer", "minimum": 5, "maximum": 5},
+    "artifact_count": {"type": "integer", "minimum": 7, "maximum": 7},
+    "built_artifact_count": {"type": "integer", "minimum": 1, "maximum": 1},
+    "source_build_record_sha256": _DIGEST_SCHEMA,
     "wheel_count": {"type": "integer", "minimum": 1},
     "lock_sha256": _DIGEST_SCHEMA,
     "wheelhouse_sha256": _DIGEST_SCHEMA,
@@ -301,7 +329,7 @@ _ACQUIRE_PROPERTIES = {
     "oci_child_digest": {"const": OCI_CHILD_DIGEST},
 }
 _VERIFY_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.verify-result/v1"},
+    "schema": {"const": "malleus.cc002.verify-result/v2"},
     "state": {"const": "VERIFIED_OFFLINE"},
     "destination": {"const": DESTINATION_LABEL},
     "environment_manifest_sha256": _DIGEST_SCHEMA,
@@ -310,6 +338,7 @@ _VERIFY_PROPERTIES = {
     "installed_distribution_count": {"type": "integer", "minimum": 1},
     "lock_sha256": _DIGEST_SCHEMA,
     "wheelhouse_sha256": _DIGEST_SCHEMA,
+    "source_build_record_sha256": _DIGEST_SCHEMA,
     "oci_index_digest": {"const": OCI_INDEX_DIGEST},
     "oci_child_digest": {"const": OCI_CHILD_DIGEST},
 }
@@ -365,25 +394,32 @@ def _validate_digest(value: Any, context: str) -> str:
 def acquire_result(
     *,
     artifact_count: int,
+    built_artifact_count: int,
+    source_build_record_sha256: str,
     lock_sha256: str,
     wheel_count: int,
     wheelhouse_sha256: str,
 ) -> dict[str, Any]:
     _validate_digest(lock_sha256, "lock_sha256")
     _validate_digest(wheelhouse_sha256, "wheelhouse_sha256")
+    _validate_digest(source_build_record_sha256, "source_build_record_sha256")
     if (
         not isinstance(artifact_count, int)
         or isinstance(artifact_count, bool)
-        or artifact_count != 5
+        or artifact_count != 7
     ):
-        _fail("CC002_RESULT", "artifact_count must be exactly five")
+        _fail("CC002_RESULT", "artifact_count must be exactly seven")
     if not isinstance(wheel_count, int) or isinstance(wheel_count, bool) or wheel_count < 1:
         _fail("CC002_RESULT", "wheel_count must be a positive integer")
+    if built_artifact_count != 1 or isinstance(built_artifact_count, bool):
+        _fail("CC002_RESULT", "built_artifact_count must be exactly one")
     return {
-        "schema": "malleus.cc002.acquire-result/v1",
+        "schema": "malleus.cc002.acquire-result/v2",
         "state": "MATERIALIZED",
         "destination": DESTINATION_LABEL,
         "artifact_count": artifact_count,
+        "built_artifact_count": built_artifact_count,
+        "source_build_record_sha256": source_build_record_sha256,
         "wheel_count": wheel_count,
         "lock_sha256": lock_sha256,
         "wheelhouse_sha256": wheelhouse_sha256,
@@ -400,6 +436,7 @@ def verify_result(
     installed_distribution_count: int,
     lock_sha256: str,
     wheelhouse_sha256: str,
+    source_build_record_sha256: str,
 ) -> dict[str, Any]:
     for name, value in (
         ("environment_manifest_sha256", environment_manifest_sha256),
@@ -407,6 +444,7 @@ def verify_result(
         ("generator_output_sha256", generator_output_sha256),
         ("lock_sha256", lock_sha256),
         ("wheelhouse_sha256", wheelhouse_sha256),
+        ("source_build_record_sha256", source_build_record_sha256),
     ):
         _validate_digest(value, name)
     if (
@@ -416,7 +454,7 @@ def verify_result(
     ):
         _fail("CC002_RESULT", "installed_distribution_count must be positive")
     return {
-        "schema": "malleus.cc002.verify-result/v1",
+        "schema": "malleus.cc002.verify-result/v2",
         "state": "VERIFIED_OFFLINE",
         "destination": DESTINATION_LABEL,
         "environment_manifest_sha256": environment_manifest_sha256,
@@ -425,6 +463,7 @@ def verify_result(
         "installed_distribution_count": installed_distribution_count,
         "lock_sha256": lock_sha256,
         "wheelhouse_sha256": wheelhouse_sha256,
+        "source_build_record_sha256": source_build_record_sha256,
         "oci_index_digest": OCI_INDEX_DIGEST,
         "oci_child_digest": OCI_CHILD_DIGEST,
     }
@@ -481,9 +520,9 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             f"{name} result fields mismatch; missing={missing}, unknown={unknown}",
         )
     expected_schema = (
-        "malleus.cc002.acquire-result/v1"
+        "malleus.cc002.acquire-result/v2"
         if name == "cc002_acquire"
-        else "malleus.cc002.verify-result/v1"
+        else "malleus.cc002.verify-result/v2"
     )
     expected_state = "MATERIALIZED" if name == "cc002_acquire" else "VERIFIED_OFFLINE"
     if value["schema"] != expected_schema or value["state"] != expected_state:
@@ -498,7 +537,7 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
         if field.endswith("sha256"):
             _validate_digest(value[field], field)
     count_fields = (
-        ("artifact_count", "wheel_count")
+        ("artifact_count", "built_artifact_count", "wheel_count")
         if name == "cc002_acquire"
         else ("installed_distribution_count",)
     )
@@ -509,8 +548,10 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             or value[field] < 1
         ):
             _fail("CC002_RESULT", f"{field} must be a positive integer")
-    if name == "cc002_acquire" and value["artifact_count"] != 5:
-        _fail("CC002_RESULT", "artifact_count must be exactly five")
+    if name == "cc002_acquire" and value["artifact_count"] != 7:
+        _fail("CC002_RESULT", "artifact_count must be exactly seven")
+    if name == "cc002_acquire" and value["built_artifact_count"] != 1:
+        _fail("CC002_RESULT", "built_artifact_count must be exactly one")
     return value
 
 
@@ -1056,6 +1097,12 @@ def _docker_user_argument(value: Mapping[str, Any] | None = None) -> str:
     return f"{ownership['uid']}:{ownership['gid']}"
 
 
+def _resolved_paths_overlap(first: Path, second: Path) -> bool:
+    first = first.resolve()
+    second = second.resolve()
+    return first == second or first in second.parents or second in first.parents
+
+
 def _resolver_pip_arguments(proxy_url: str) -> list[str]:
     if not isinstance(proxy_url, str):
         _fail("CC002_PROXY", "resolver proxy URL must be a string")
@@ -1328,8 +1375,15 @@ def resolve_command(
     roots: Path,
     wheelhouse: Path,
     *,
+    built: Path,
     host_user: Mapping[str, Any] | None = None,
 ) -> list[str]:
+    built_resolved = built.resolve()
+    wheelhouse_resolved = wheelhouse.resolve()
+    if built_resolved == wheelhouse_resolved:
+        _fail("CC002_RESOLVER_MOUNTS", "built and wheelhouse paths must be distinct")
+    if _resolved_paths_overlap(built_resolved, wheelhouse_resolved):
+        _fail("CC002_RESOLVER_MOUNTS", "built and wheelhouse paths must not overlap")
     return [
         DOCKER,
         "run",
@@ -1344,6 +1398,10 @@ def resolve_command(
         _docker_user_argument(host_user),
         "--tmpfs",
         "/tmp:rw,noexec,nosuid,nodev",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
         "--env",
         "HTTP_PROXY=",
         "--env",
@@ -1359,13 +1417,182 @@ def resolve_command(
         "-v",
         f"{roots.resolve()}:/roots:ro",
         "-v",
-        f"{wheelhouse.resolve()}:/wheelhouse:rw",
+        f"{built_resolved}:/built:ro",
+        "-v",
+        f"{wheelhouse_resolved}:/wheelhouse:rw",
         "-v",
         f"{ADAPTER_PATH.resolve()}:/adapter/contract_compiler_environment.py:ro",
         OCI_CHILD_REFERENCE,
         "python",
         "-c",
         RESOLVER_PROGRAM,
+    ]
+
+
+BUILD_PROGRAM = """\
+import importlib.metadata
+import json
+import os
+import pathlib
+import platform
+import subprocess
+import sys
+import sysconfig
+import tarfile
+
+facts = {
+    'implementation': platform.python_implementation(),
+    'version': platform.python_version(),
+    'operating_system': platform.system(),
+    'architecture': platform.machine(),
+    'abi': f'cp{sys.version_info.major}{sys.version_info.minor}',
+}
+os.umask(0o022)
+expected = {'implementation': 'CPython', 'version': '3.12.10',
+            'operating_system': 'Linux', 'architecture': 'x86_64', 'abi': 'cp312'}
+if facts != expected or sys.implementation.name != 'cpython':
+    raise RuntimeError(f'unexpected Python tuple: {facts!r}')
+if not str(sysconfig.get_config_var('SOABI')).startswith('cpython-312-'):
+    raise RuntimeError('unexpected SOABI')
+source = pathlib.Path('/tmp/source')
+source.mkdir(mode=0o700)
+home = pathlib.Path('/tmp/home')
+home.mkdir(mode=0o700)
+with tarfile.open('/inputs/antlr4-python3-runtime-4.9.3.tar.gz', 'r:gz') as archive:
+    archive.extractall(source, filter='data')
+project = source / 'antlr4-python3-runtime-4.9.3'
+target = pathlib.Path('/tmp/cc002-backend')
+if target.exists() or target.is_symlink():
+    raise RuntimeError('backend target must initially be absent')
+pip_wheel = '/pip/pip-25.0.1-py3-none-any.whl'
+expected_pip_origin = '/pip/pip-25.0.1-py3-none-any.whl/pip/__init__.py'
+sys.path.insert(0, pip_wheel)
+import pip
+if pip.__version__ != '25.0.1' or pip.__file__ != expected_pip_origin:
+    raise RuntimeError(f'unexpected pip identity: {pip.__version__!r} {pip.__file__!r}')
+environment = {
+    'ALL_PROXY': '', 'HOME': '/tmp/home', 'HTTP_PROXY': '', 'HTTPS_PROXY': '',
+    'LANG': 'C.UTF-8', 'LC_ALL': 'C.UTF-8', 'NO_PROXY': '',
+    'PATH': '/usr/local/bin:/usr/bin:/bin', 'PIP_DISABLE_PIP_VERSION_CHECK': '1',
+    'PIP_NO_INPUT': '1', 'PYTHONDONTWRITEBYTECODE': '1',
+    'PYTHONHASHSEED': '0', 'PYTHONIOENCODING': 'utf-8',
+    'PYTHONNOUSERSITE': '1', 'PYTHONSAFEPATH': '1',
+    'SOURCE_DATE_EPOCH': '315532800', 'TZ': 'UTC',
+    'PYTHONPATH': pip_wheel,
+}
+subprocess.run([
+    'python', '-P', '-S', '-m', 'pip', 'install', '--isolated', '--no-index', '--no-deps',
+    '--no-cache-dir', '--no-compile', '--target=/tmp/cc002-backend',
+    '/inputs/setuptools-83.0.0-py3-none-any.whl'],
+    cwd='/tmp', env=environment, shell=False, check=True)
+if not target.is_dir() or not any(target.iterdir()):
+    raise RuntimeError('backend target was not populated')
+if any(item.is_symlink() for item in target.rglob('*')):
+    raise RuntimeError('backend target contains a symlink')
+distributions = sorted(
+    (item.metadata['Name'], item.version)
+    for item in importlib.metadata.distributions(path=[str(target)]))
+if distributions != [('setuptools', '83.0.0')]:
+    raise RuntimeError(f'unexpected build distributions: {distributions!r}')
+dist_infos = list(target.glob('setuptools-83.0.0.dist-info'))
+if len(dist_infos) != 1:
+    raise RuntimeError(f'unexpected setuptools dist-info set: {dist_infos!r}')
+sys.path.insert(1, str(target))
+import setuptools
+import setuptools.build_meta
+if setuptools.__version__ != '83.0.0' or not pathlib.Path(setuptools.__file__).is_relative_to(target):
+    raise RuntimeError(f'unexpected setuptools identity: {setuptools.__version__!r} {setuptools.__file__!r}')
+if not hasattr(setuptools.build_meta, '__legacy__'):
+    raise RuntimeError('setuptools legacy PEP 517 backend is missing')
+if not pathlib.Path(setuptools.build_meta.__file__).is_relative_to(target):
+    raise RuntimeError(f'unexpected build_meta origin: {setuptools.build_meta.__file__!r}')
+build_environment = dict(environment)
+build_environment['PYTHONPATH'] = '/pip/pip-25.0.1-py3-none-any.whl:/tmp/cc002-backend'
+subprocess.run([
+    'python', '-P', '-S', '-m', 'pip', 'wheel', '--isolated', '--no-index', '--no-deps',
+    '--no-cache-dir', '--no-build-isolation', '--use-pep517',
+    '--wheel-dir', '/output', str(project)],
+    cwd='/tmp', env=build_environment, shell=False, check=True)
+facts = {
+    'schema': 'malleus.cc002.source-build-child/v1',
+    'python': facts,
+    'preflight_pip': {'version': pip.__version__, 'origin': pip.__file__},
+    'preflight_backend_distributions': [{'name': name, 'version': version} for name, version in distributions],
+    'preflight_setuptools': {'version': setuptools.__version__, 'origin_root': str(target)},
+    'source_date_epoch': int(build_environment['SOURCE_DATE_EPOCH']),
+    'configuration': {'backend_interface': 'setuptools.build_meta:__legacy__',
+                      'no_build_isolation': True},
+    'tz': 'UTC',
+    'python_hash_seed': '0',
+    'umask': '022',
+}
+pathlib.Path('/output/.cc002-build-facts.json').write_text(
+    json.dumps(facts, sort_keys=True, separators=(',', ':'), allow_nan=False) + '\\n',
+    encoding='utf-8')
+"""
+
+EXPECTED_BUILD_CHILD_FACTS = {
+    "schema": "malleus.cc002.source-build-child/v1",
+    "python": PYTHON_TUPLE,
+    "preflight_pip": {"version": "25.0.1", "origin": "/pip/pip-25.0.1-py3-none-any.whl/pip/__init__.py"},
+    "preflight_backend_distributions": [{"name": "setuptools", "version": "83.0.0"}],
+    "preflight_setuptools": {"version": "83.0.0", "origin_root": "/tmp/cc002-backend"},
+    "source_date_epoch": 315532800,
+    "configuration": {"backend_interface": "setuptools.build_meta:__legacy__", "no_build_isolation": True},
+    "tz": "UTC",
+    "python_hash_seed": "0",
+    "umask": "022",
+}
+
+RETAINED_BUILD_RUN = {
+    "schema": "malleus.cc002.source-build-run/v1",
+    "python": PYTHON_TUPLE,
+    "preflight_pip": {"version": "25.0.1", "origin": PIP_WHEEL_FILENAME},
+    "preflight_backend_distributions": [{"name": "setuptools", "version": "83.0.0"}],
+    "preflight_setuptools": {"version": "83.0.0", "origin": SETUPTOOLS_WHEEL_FILENAME},
+    "source_date_epoch": 315532800,
+    "configuration": {"backend_interface": "setuptools.build_meta:__legacy__", "no_build_isolation": True},
+    "tz": "UTC",
+    "python_hash_seed": "0",
+    "umask": "022",
+}
+
+
+def retained_build_run(value: Any) -> dict[str, Any]:
+    if value != EXPECTED_BUILD_CHILD_FACTS:
+        _fail("CC002_BUILD_FACTS", "cannot retain unvalidated source-build child facts")
+    return json.loads(canonical_json(RETAINED_BUILD_RUN))
+
+
+def build_command(
+    build_inputs: Path,
+    roots: Path,
+    output: Path,
+    *,
+    host_user: Mapping[str, Any] | None = None,
+) -> list[str]:
+    build_inputs_resolved = build_inputs.resolve()
+    roots_resolved = roots.resolve()
+    output_resolved = output.resolve()
+    mount_sources = (build_inputs_resolved, roots_resolved, output_resolved)
+    if any(
+        _resolved_paths_overlap(mount_sources[left], mount_sources[right])
+        for left in range(len(mount_sources))
+        for right in range(left + 1, len(mount_sources))
+    ):
+        _fail("CC002_BUILD_MOUNTS", "source-build mount paths must not overlap")
+    return [
+        DOCKER, "run", "--rm", "--pull=never", "--platform", OCI_PLATFORM,
+        "--network", "none", "--read-only", "--user", _docker_user_argument(host_user),
+        "--tmpfs", "/tmp:rw,noexec,nosuid,nodev", "--cap-drop", "ALL",
+        "--security-opt", "no-new-privileges",
+        "--env", f"SOURCE_DATE_EPOCH={SOURCE_DATE_EPOCH}", "--env", "TZ=UTC",
+        "--env", "PYTHONHASHSEED=0", "--env", "HOME=/tmp/home",
+        "--env", "HTTP_PROXY=", "--env", "HTTPS_PROXY=", "--env", "ALL_PROXY=",
+        "--env", "NO_PROXY=", "-v", f"{build_inputs_resolved}:/inputs:ro",
+        "-v", f"{(roots_resolved / PIP_WHEEL_FILENAME).resolve()}:/pip/{PIP_WHEEL_FILENAME}:ro",
+        "-v", f"{output_resolved}:/output:rw", OCI_CHILD_REFERENCE,
+        "python", "-c", BUILD_PROGRAM,
     ]
 
 
@@ -1423,7 +1650,7 @@ subprocess.run(
     cwd='/work', env=base_env, shell=False, check=True,
 )
 subprocess.run(
-    [python, '-c', 'import linkml; import linkml_runtime'],
+    [python, '-c', 'import antlr4; import linkml; import linkml_runtime'],
     cwd='/work', env=base_env, shell=False, check=True,
     capture_output=True, text=True,
 )
@@ -1745,19 +1972,270 @@ def _canonical_name(name: str) -> str:
     return result
 
 
+def _validate_archive_member_name(
+    raw_name: Any,
+    topology: dict[str, bool],
+    error_code: str,
+    *,
+    is_directory: bool,
+) -> PurePosixPath:
+    """Validate one raw POSIX archive name without parser normalization."""
+    if not isinstance(raw_name, str) or not raw_name:
+        _fail(error_code, "archive member name must be a nonempty string")
+    segments = raw_name.split("/")
+    if is_directory and segments[-1] == "":
+        segments = segments[:-1]
+    segmented = "/".join(segments)
+    canonical_spellings = {segmented}
+    if is_directory:
+        canonical_spellings.add(segmented + "/")
+    if (
+        any(not segment or segment in (".", "..") for segment in segments)
+        or "\\" in raw_name
+        or any(ord(character) < 32 or ord(character) == 127 for character in raw_name)
+        or raw_name not in canonical_spellings
+    ):
+        _fail(error_code, f"unsafe noncanonical archive member: {raw_name!r}")
+    normalized = PurePosixPath(*segments).as_posix()
+    if normalized != segmented or normalized in topology:
+        _fail(error_code, f"archive member normalization collision: {raw_name!r}")
+    parts = normalized.split("/")
+    ancestors = ("/".join(parts[:index]) for index in range(1, len(parts)))
+    if any(ancestor in topology and not topology[ancestor] for ancestor in ancestors):
+        _fail(error_code, f"non-directory archive member is an ancestor: {raw_name!r}")
+    if not is_directory and any(name.startswith(normalized + "/") for name in topology):
+        _fail(error_code, f"archive member conflicts with an existing descendant: {raw_name!r}")
+    topology[normalized] = is_directory
+    return PurePosixPath(*segments)
+
+
+def validate_antlr_sdist(path: Path) -> dict[str, Any]:
+    """Refuse unsafe or semantically wrong ANTLR source archives before execution."""
+    artifact = BUILD_ARTIFACTS[0]
+    if _artifact_record(path) != {
+        "filename": artifact.filename,
+        "byte_length": artifact.byte_length,
+        "sha256": "sha256:" + artifact.sha256,
+    }:
+        _fail("CC002_BUILD_INPUT", "ANTLR sdist identity mismatch")
+    try:
+        with tarfile.open(path, "r:gz") as archive:
+            members = archive.getmembers()
+            names: set[str] = set()
+            regular_files: set[str] = set()
+            normalized_names: dict[str, bool] = {}
+            top_levels: set[str] = set()
+            total = 0
+            pkg_info = None
+            for member in members:
+                pure = _validate_archive_member_name(
+                    member.name,
+                    normalized_names,
+                    "CC002_SDIST_SAFETY",
+                    is_directory=member.isdir(),
+                )
+                if (
+                    not (member.isfile() or member.isdir())
+                ):
+                    _fail("CC002_SDIST_SAFETY", f"unsafe sdist member: {member.name!r}")
+                names.add(member.name)
+                top_levels.add(pure.parts[0])
+                if member.isfile():
+                    total += member.size
+                    regular_files.add(member.name)
+                if pure.name == "PKG-INFO" and len(pure.parts) == 2 and member.isfile():
+                    extracted = archive.extractfile(member)
+                    pkg_info = extracted.read() if extracted is not None else None
+            expected_root = "antlr4-python3-runtime-4.9.3"
+            if top_levels != {expected_root}:
+                _fail("CC002_SDIST_LAYOUT", "ANTLR sdist must have one exact top-level directory")
+            if f"{expected_root}/setup.py" not in regular_files or f"{expected_root}/pyproject.toml" in names:
+                _fail("CC002_SDIST_LAYOUT", "ANTLR sdist legacy build layout changed")
+            if pkg_info is None:
+                _fail("CC002_SDIST_METADATA", "ANTLR sdist PKG-INFO is missing")
+    except (tarfile.TarError, OSError) as error:
+        _fail("CC002_SDIST", f"invalid ANTLR sdist: {error}")
+    metadata = BytesParser(policy=email.policy.default).parsebytes(pkg_info)
+    if metadata.get_all("Name") != ["antlr4-python3-runtime"] or metadata.get_all("Version") != ["4.9.3"]:
+        _fail("CC002_SDIST_METADATA", "ANTLR sdist name/version mismatch")
+    if len(members) != ANTLR_SDIST_MEMBER_COUNT or total != ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH:
+        _fail("CC002_SDIST_LIMIT", "ANTLR sdist member count or expansion changed")
+    return {"member_count": len(members), "uncompressed_byte_length": total}
+
+
+def validate_setuptools_wheel(path: Path) -> None:
+    artifact = BUILD_ARTIFACTS[1]
+    if _artifact_record(path) != {
+        "filename": artifact.filename,
+        "byte_length": artifact.byte_length,
+        "sha256": "sha256:" + artifact.sha256,
+    }:
+        _fail("CC002_BUILD_INPUT", "setuptools wheel identity mismatch")
+    try:
+        name, version = _wheel_metadata(path)
+    except CC002Error as error:
+        _fail("CC002_BUILD_INPUT", f"setuptools wheel structure is invalid: {error}")
+    if _canonical_name(name) != "setuptools" or version != "83.0.0":
+        _fail("CC002_BUILD_INPUT", "setuptools wheel metadata mismatch")
+    _validate_setuptools_archive(path)
+
+
+def _safe_wheel_members(
+    archive: zipfile.ZipFile,
+    error_code: str,
+    *,
+    enforce_build_limits: bool,
+) -> list[zipfile.ZipInfo]:
+    members = archive.infolist()
+    names: set[str] = set()
+    normalized_names: dict[str, bool] = {}
+    expanded = 0
+    for member in members:
+        mode = member.external_attr >> 16
+        file_type = stat.S_IFMT(mode)
+        name_is_directory = member.filename.endswith("/")
+        if file_type and name_is_directory != stat.S_ISDIR(mode):
+            _fail(error_code, f"wheel member name/type mismatch: {member.filename!r}")
+        _validate_archive_member_name(
+            member.filename,
+            normalized_names,
+            error_code,
+            is_directory=name_is_directory or stat.S_ISDIR(mode),
+        )
+        if (
+            bool(member.flag_bits & 0x1)
+            or stat.S_ISLNK(mode)
+            or (file_type and not (stat.S_ISREG(mode) or stat.S_ISDIR(mode)))
+        ):
+            _fail(error_code, f"unsafe wheel member: {member.filename!r}")
+        names.add(member.filename)
+        expanded += member.file_size
+        if enforce_build_limits and (
+            len(members) > 1000 or expanded > 16 * 1024 * 1024
+        ):
+            _fail(error_code, "wheel member count or expansion exceeds its bound")
+    return members
+
+
+def _validate_record_rows(
+    archive: zipfile.ZipFile, members: Sequence[zipfile.ZipInfo], record_name: str, context: str
+) -> None:
+    names = {member.filename for member in members}
+    try:
+        rows = list(csv.reader(io.StringIO(archive.read(record_name).decode("utf-8"))))
+    except (KeyError, UnicodeError, csv.Error) as error:
+        _fail(context, f"wheel RECORD is invalid: {error}")
+    if len(rows) != len(members) or any(len(row) != 3 for row in rows):
+        _fail(context, "wheel RECORD is incomplete")
+    records = {row[0]: row[1:] for row in rows}
+    if set(records) != names or records.get(record_name) != ["", ""]:
+        _fail(context, "wheel RECORD membership mismatch")
+    for name in names - {record_name}:
+        digest, length = records[name]
+        source = archive.read(name)
+        encoded = base64.urlsafe_b64encode(hashlib.sha256(source).digest()).rstrip(b"=").decode("ascii")
+        if digest != "sha256=" + encoded or length != str(len(source)):
+            _fail(context, f"wheel RECORD mismatch: {name}")
+
+
+def _validate_setuptools_archive(path: Path) -> None:
+    try:
+        with zipfile.ZipFile(path) as archive:
+            members = _safe_wheel_members(
+                archive, "CC002_BUILD_INPUT", enforce_build_limits=True
+            )
+            names = {member.filename for member in members}
+            dist_info = "setuptools-83.0.0.dist-info"
+            if {PurePosixPath(name).parts[0] for name in names if PurePosixPath(name).parts[0].endswith(".dist-info")} != {dist_info}:
+                _fail("CC002_BUILD_INPUT", "setuptools dist-info membership mismatch")
+            metadata_name = f"{dist_info}/METADATA"
+            wheel_name = f"{dist_info}/WHEEL"
+            record_name = f"{dist_info}/RECORD"
+            if not {metadata_name, wheel_name, record_name}.issubset(names):
+                _fail("CC002_BUILD_INPUT", "setuptools wheel metadata is incomplete")
+            metadata = BytesParser(policy=email.policy.default).parsebytes(archive.read(metadata_name))
+            wheel = BytesParser(policy=email.policy.default).parsebytes(archive.read(wheel_name))
+            if metadata.get_all("Name") != ["setuptools"] or metadata.get_all("Version") != ["83.0.0"]:
+                _fail("CC002_BUILD_INPUT", "setuptools metadata headers changed")
+            if wheel.get_all("Root-Is-Purelib") != ["true"] or wheel.get_all("Tag") != ["py3-none-any"]:
+                _fail("CC002_BUILD_INPUT", "setuptools wheel tag changed")
+            _validate_record_rows(archive, members, record_name, "CC002_BUILD_INPUT")
+    except (OSError, zipfile.BadZipFile) as error:
+        _fail("CC002_BUILD_INPUT", f"setuptools wheel archive is invalid: {error}")
+
+
+def validate_built_antlr_wheel(path: Path) -> dict[str, Any]:
+    """Validate the deterministic wheel contract and return its closed record."""
+    expected_filename = "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    if path.is_symlink() or not path.is_file() or path.name != expected_filename:
+        _fail("CC002_BUILT_WHEEL", "build must produce the exact pure wheel filename")
+    try:
+        with zipfile.ZipFile(path) as archive:
+            members = _safe_wheel_members(
+                archive, "CC002_BUILT_WHEEL_SAFETY", enforce_build_limits=True
+            )
+            names = {member.filename for member in members}
+            dist_info = "antlr4_python3_runtime-4.9.3.dist-info"
+            dist_infos = {PurePosixPath(name).parts[0] for name in names if PurePosixPath(name).parts[0].endswith(".dist-info")}
+            if dist_infos != {dist_info}:
+                _fail("CC002_BUILT_WHEEL_METADATA", "built wheel dist-info membership mismatch")
+            required = {f"{dist_info}/METADATA", f"{dist_info}/WHEEL", f"{dist_info}/RECORD"}
+            if not required.issubset(names):
+                _fail("CC002_BUILT_WHEEL", "built wheel metadata files are incomplete")
+            metadata = BytesParser(policy=email.policy.default).parsebytes(archive.read(f"{dist_info}/METADATA"))
+            wheel = BytesParser(policy=email.policy.default).parsebytes(archive.read(f"{dist_info}/WHEEL"))
+            if metadata.get_all("Name") != ["antlr4-python3-runtime"] or metadata.get_all("Version") != ["4.9.3"]:
+                _fail("CC002_BUILT_WHEEL_METADATA", "built wheel name/version mismatch")
+            if wheel.get_all("Wheel-Version") != ["1.0"] or wheel.get_all("Root-Is-Purelib") != ["true"]:
+                _fail("CC002_BUILT_WHEEL_METADATA", "built wheel is not pure Wheel-Version 1.0")
+            if wheel.get_all("Tag") != ["py3-none-any"] or wheel.get_all("Generator") != ["setuptools (83.0.0)"]:
+                _fail("CC002_BUILT_WHEEL_METADATA", "built wheel tag or generator mismatch")
+            record_name = f"{dist_info}/RECORD"
+            _validate_record_rows(archive, members, record_name, "CC002_BUILT_WHEEL_RECORD")
+    except (zipfile.BadZipFile, UnicodeError, csv.Error, OSError) as error:
+        _fail("CC002_BUILT_WHEEL", f"invalid built wheel: {error}")
+    record = _artifact_record(path)
+    record.update({"distribution": "antlr4-python3-runtime", "version": "4.9.3"})
+    return record
+
+
+def validate_build_outputs(first: Path, second: Path) -> dict[str, Any]:
+    if first.is_symlink() or second.is_symlink() or not first.is_dir() or not second.is_dir():
+        _fail("CC002_BUILD_OUTPUT", "build outputs must be regular directories")
+    if first.resolve() == second.resolve():
+        _fail("CC002_BUILD_OUTPUT", "independent build output directories must be distinct")
+    paths = []
+    observed_facts = []
+    for output in (first, second):
+        members = {member.name: member for member in output.iterdir()}
+        fact_path = members.pop(".cc002-build-facts.json", None)
+        wheels = [member for member in members.values() if member.name.endswith(".whl")]
+        if fact_path is None or len(members) != 1 or len(wheels) != 1:
+            _fail("CC002_BUILD_OUTPUT", "each build must produce one wheel and one child-facts record")
+        paths.append(wheels[0])
+        facts, _source = _load_json_file(fact_path, "source build child facts")
+        if facts != EXPECTED_BUILD_CHILD_FACTS:
+            _fail("CC002_BUILD_FACTS", "source build child facts changed")
+        observed_facts.append(facts)
+    records = [validate_built_antlr_wheel(path) for path in paths]
+    if observed_facts[0] != observed_facts[1]:
+        _fail("CC002_BUILD_FACTS", "independent source-build child facts differ")
+    if records[0] != records[1] or paths[0].read_bytes() != paths[1].read_bytes():
+        _fail("CC002_BUILD_REPRODUCIBILITY", "independent ANTLR builds are not byte-identical")
+    return records[0]
+
+
 def _wheel_metadata(path: Path) -> tuple[str, str]:
     if path.is_symlink() or not path.is_file():
         _fail("CC002_WHEEL", f"wheel must be a regular file: {path}")
     try:
         with zipfile.ZipFile(path) as archive:
+            infos = _safe_wheel_members(
+                archive, "CC002_WHEEL", enforce_build_limits=False
+            )
             metadata_names = []
-            for info in archive.infolist():
+            for info in infos:
                 member = PurePosixPath(info.filename)
-                if member.is_absolute() or any(part in {"", ".", ".."} for part in member.parts):
-                    _fail("CC002_WHEEL", f"unsafe wheel member: {info.filename}")
-                mode = (info.external_attr >> 16) & 0o170000
-                if mode == 0o120000:
-                    _fail("CC002_WHEEL", f"symlink wheel member: {info.filename}")
                 if len(member.parts) == 2 and member.parts[0].endswith(".dist-info") and member.parts[1] == "METADATA":
                     metadata_names.append(info.filename)
             if len(metadata_names) != 1:
@@ -1769,12 +2247,14 @@ def _wheel_metadata(path: Path) -> tuple[str, str]:
         raise
     except (OSError, zipfile.BadZipFile, KeyError) as error:
         _fail("CC002_WHEEL", f"invalid wheel {path.name}: {error}")
-    name = metadata.get("Name")
-    version = metadata.get("Version")
-    if not isinstance(name, str) or not name.strip():
+    names = metadata.get_all("Name")
+    versions = metadata.get_all("Version")
+    if not isinstance(names, list) or len(names) != 1 or not isinstance(names[0], str) or not names[0].strip():
         _fail("CC002_WHEEL", f"wheel Name is required: {path.name}")
-    if not isinstance(version, str) or not version.strip():
+    if not isinstance(versions, list) or len(versions) != 1 or not isinstance(versions[0], str) or not versions[0].strip():
         _fail("CC002_WHEEL", f"wheel Version is required: {path.name}")
+    name = names[0]
+    version = versions[0]
     parts = path.name.removesuffix(".whl").split("-")
     if len(parts) < 5:
         _fail("CC002_WHEEL", f"malformed wheel filename: {path.name}")
@@ -1950,6 +2430,7 @@ def _validate_internal_verification(
             "lock_sha256",
             "wheelhouse_sha256",
             "resolution_report_sha256",
+            "source_build_record_sha256",
             "docker",
             "oci_index_digest",
             "oci_child_digest",
@@ -1963,7 +2444,7 @@ def _validate_internal_verification(
         },
         "internal verification",
     )
-    if value["schema"] != "malleus.cc002.internal-verification/v1":
+    if value["schema"] != "malleus.cc002.internal-verification/v2":
         _fail("CC002_VERIFY", "unknown internal verification schema")
     if value["workstream_id"] != "CC-002":
         _fail("CC002_VERIFY", "internal verification workstream mismatch")
@@ -1972,6 +2453,7 @@ def _validate_internal_verification(
         "lock_sha256",
         "wheelhouse_sha256",
         "resolution_report_sha256",
+        "source_build_record_sha256",
         "generator_output_sha256",
     ):
         _validate_digest(value[field], field)
@@ -1979,6 +2461,7 @@ def _validate_internal_verification(
         "lock_sha256": manifest["lock"]["sha256"],
         "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
         "resolution_report_sha256": manifest["resolution_report"]["sha256"],
+        "source_build_record_sha256": manifest["build_record"]["sha256"],
         "docker": manifest["docker"],
         "oci_index_digest": OCI_INDEX_DIGEST,
         "oci_child_digest": OCI_CHILD_DIGEST,
@@ -2212,10 +2695,11 @@ def _manifest_from_staging(
     docker_client_version: str,
 ) -> dict[str, Any]:
     roots = [_artifact_record(staging / "roots" / item.filename) for item in SELECTED_ARTIFACTS]
+    build_inputs = [_artifact_record(staging / "build-inputs" / item.filename) for item in BUILD_ARTIFACTS]
     smoke = _artifact_record(SMOKE_INPUT)
     smoke["filename"] = "ontology/malleus.yaml"
     return {
-        "schema": "malleus.cc002.compiler-environment/v1",
+        "schema": "malleus.cc002.compiler-environment/v2",
         "docker": {
             "command": DOCKER,
             "client_version": docker_client_version,
@@ -2230,6 +2714,9 @@ def _manifest_from_staging(
             "child_digest": OCI_CHILD_DIGEST,
         },
         "roots": {"artifacts": roots},
+        "build_inputs": {"artifacts": build_inputs},
+        "built": {"artifacts": [_artifact_record(staging / "built" / "antlr4_python3_runtime-4.9.3-py3-none-any.whl")]},
+        "build_record": _artifact_record(staging / "build-record.json"),
         "wheelhouse": {
             "artifacts": wheel_records,
             "sha256": _wheelhouse_identity(wheel_records),
@@ -2261,6 +2748,9 @@ def _require_exact_bundle_members(path: Path, *, has_verification: bool) -> None
         "requirements.lock",
         "resolution-report.json",
         "roots",
+        "build-inputs",
+        "built",
+        "build-record.json",
         "wheelhouse",
     }
     if has_verification:
@@ -2333,6 +2823,29 @@ def _bind_selected_wheels(
             )
 
 
+def _bind_built_wheel(
+    path: Path,
+    records: Sequence[Mapping[str, Any]],
+    built_record: Mapping[str, Any],
+) -> None:
+    _exact_keys(built_record, {"filename", "byte_length", "sha256"}, "built wheel record")
+    built_record = dict(built_record)
+    _validate_digest(built_record["sha256"], "built wheel sha256")
+    matching = [record for record in records if record.get("filename") == built_record["filename"]]
+    if len(matching) != 1 or _content_record(matching[0]) != built_record:
+        _fail("CC002_BUILT_BINDING", "built ANTLR wheel is not exactly bound into wheelhouse")
+    built_path = path / "built" / built_record["filename"]
+    runtime_path = path / "wheelhouse" / built_record["filename"]
+    if (
+        built_path.is_symlink()
+        or runtime_path.is_symlink()
+        or not built_path.is_file()
+        or not runtime_path.is_file()
+        or built_path.read_bytes() != runtime_path.read_bytes()
+    ):
+        _fail("CC002_BUILT_BINDING", "built and runtime ANTLR wheel bytes differ")
+
+
 def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], bytes]:
     path = DESTINATION if path is None else path
     if path.is_symlink() or not path.is_dir():
@@ -2348,6 +2861,9 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
             "python",
             "image",
             "roots",
+            "build_inputs",
+            "built",
+            "build_record",
             "wheelhouse",
             "lock",
             "resolution_report",
@@ -2356,7 +2872,7 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         },
         "environment manifest",
     )
-    if manifest["schema"] != "malleus.cc002.compiler-environment/v1":
+    if manifest["schema"] != "malleus.cc002.compiler-environment/v2":
         _fail("CC002_MANIFEST", "unknown environment schema")
     docker = manifest["docker"]
     if not isinstance(docker, dict):
@@ -2383,6 +2899,49 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
     }:
         _fail("CC002_MANIFEST", "environment image does not match OD-012")
     verify_artifact_directory(path / "roots", manifest["roots"])
+    verify_artifact_directory(path / "build-inputs", manifest["build_inputs"])
+    verify_artifact_directory(path / "built", manifest["built"])
+    expected_build_inputs = {
+        item.filename: {
+            "filename": item.filename,
+            "byte_length": item.byte_length,
+            "sha256": "sha256:" + item.sha256,
+        }
+        for item in BUILD_ARTIFACTS
+    }
+    if {item["filename"]: item for item in manifest["build_inputs"]["artifacts"]} != expected_build_inputs:
+        _fail("CC002_BUILD_INPUT", "retained build inputs do not match authorization")
+    built_records = manifest["built"]["artifacts"]
+    if len(built_records) != 1:
+        _fail("CC002_BUILT_WHEEL", "retained built set must contain exactly one wheel")
+    built_record = validate_built_antlr_wheel(path / "built" / built_records[0]["filename"])
+    if _content_record(built_record) != built_records[0]:
+        _fail("CC002_BUILT_WHEEL", "retained built wheel identity mismatch")
+    build_record_identity = manifest["build_record"]
+    if _artifact_record(path / "build-record.json") != build_record_identity:
+        _fail("CC002_BUILD_RECORD", "build record byte identity mismatch")
+    build_record, _build_record_source = _load_json_file(path / "build-record.json", "source build record")
+    _exact_keys(build_record, {"schema", "source_date_epoch", "python", "image", "frontend", "backend", "backend_interface", "post_build", "isolation", "environment", "inputs", "sdist", "runs", "builds", "byte_equal", "retained_output"}, "source build record")
+    expected_output = _content_record(built_record)
+    if (
+        build_record["schema"] != "malleus.cc002.source-build/v1"
+        or build_record["source_date_epoch"] != 315532800
+        or build_record["python"] != PYTHON_TUPLE
+        or build_record["image"] != {"platform": OCI_PLATFORM, "child_digest": OCI_CHILD_DIGEST}
+        or build_record["frontend"] != {"distribution": "pip", "version": "25.0.1", "origin": PIP_WHEEL_FILENAME}
+        or build_record["backend"] != {"distribution": "setuptools", "version": "83.0.0", "origin": SETUPTOOLS_WHEEL_FILENAME}
+        or build_record["backend_interface"] != "setuptools.build_meta:__legacy__"
+        or build_record["post_build"] != {"wheel_generator": "setuptools (83.0.0)"}
+        or build_record["isolation"] != {"build_count": 2, "network": "NONE", "read_only_root": True, "nonroot": True}
+        or build_record["environment"] != {"source_date_epoch": 315532800, "tz": "UTC", "python_hash_seed": "0", "umask": "022", "no_build_isolation": True}
+        or build_record["inputs"] != manifest["build_inputs"]["artifacts"]
+        or build_record["sdist"] != {"member_count": ANTLR_SDIST_MEMBER_COUNT, "uncompressed_byte_length": ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH}
+        or build_record["runs"] != [RETAINED_BUILD_RUN, RETAINED_BUILD_RUN]
+        or build_record["builds"] != [expected_output, expected_output]
+        or build_record["byte_equal"] is not True
+        or build_record["retained_output"] != expected_output
+    ):
+        _fail("CC002_BUILD_RECORD", "source build record does not bind the governed build")
     wheelhouse = manifest["wheelhouse"]
     if not isinstance(wheelhouse, dict):
         _fail("CC002_MANIFEST", "wheelhouse manifest must be an object")
@@ -2438,6 +2997,7 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
     _bind_selected_wheels(
         path, rebuilt_records, manifest["roots"]["artifacts"]
     )
+    _bind_built_wheel(path, rebuilt_records, built_records[0])
     verification = manifest["verification"]
     if not isinstance(verification, dict):
         _fail("CC002_MANIFEST", "verification state must be an object")
@@ -2507,7 +3067,9 @@ def acquire_environment() -> dict[str, Any]:
     if DESTINATION.exists():
         manifest, _source = _validated_environment()
         return acquire_result(
-            artifact_count=len(manifest["roots"]["artifacts"]),
+            artifact_count=len(manifest["roots"]["artifacts"]) + len(manifest["build_inputs"]["artifacts"]),
+            built_artifact_count=len(manifest["built"]["artifacts"]),
+            source_build_record_sha256=manifest["build_record"]["sha256"],
             lock_sha256=manifest["lock"]["sha256"],
             wheel_count=len(manifest["wheelhouse"]["artifacts"]),
             wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
@@ -2519,9 +3081,15 @@ def acquire_environment() -> dict[str, Any]:
         staging = Path(temporary_name)
         roots = staging / "roots"
         roots.mkdir()
+        build_inputs = staging / "build-inputs"
+        build_inputs.mkdir()
         opener = _default_opener()
         for artifact in SELECTED_ARTIFACTS:
             download_artifact(artifact, safe_target(roots, artifact.filename), opener)
+        for artifact in BUILD_ARTIFACTS:
+            download_artifact(artifact, safe_target(build_inputs, artifact.filename), opener)
+        sdist_facts = validate_antlr_sdist(build_inputs / ANTLR_SDIST_FILENAME)
+        validate_setuptools_wheel(build_inputs / SETUPTOOLS_WHEEL_FILENAME)
         docker_executable = _resolved_docker()
         docker_version = _docker_version(
             _run_checked(
@@ -2548,10 +3116,56 @@ def acquire_environment() -> dict[str, Any]:
             )
         )
         ownership = host_ownership()
+        build_outputs = []
+        for ordinal in (1, 2):
+            output = staging / f".build-{ordinal}"
+            output.mkdir()
+            _run_checked(
+                build_command(build_inputs, roots, output, host_user=ownership),
+                f"network-denied ANTLR source build {ordinal}",
+                staging,
+                docker_executable=docker_executable,
+            )
+            build_outputs.append(output)
+        built_wheel_record = validate_build_outputs(*build_outputs)
+        child_facts = [
+            retained_build_run(_load_json_file(output / ".cc002-build-facts.json", "source build child facts")[0])
+            for output in build_outputs
+        ]
+        built = staging / "built"
+        built.mkdir()
+        built_path = built / built_wheel_record["filename"]
+        shutil.copyfile(build_outputs[0] / built_wheel_record["filename"], built_path, follow_symlinks=False)
+        if validate_built_antlr_wheel(built_path) != built_wheel_record:
+            _fail("CC002_BUILD_TOCTOU", "retained built wheel changed during publication")
+        for output in build_outputs:
+            shutil.rmtree(output)
+        build_input_records = [_artifact_record(build_inputs / item.filename) for item in BUILD_ARTIFACTS]
+        output_content = _content_record(built_wheel_record)
+        build_record = {
+            "schema": "malleus.cc002.source-build/v1",
+            "source_date_epoch": int(SOURCE_DATE_EPOCH),
+            "python": PYTHON_TUPLE,
+            "image": {"platform": OCI_PLATFORM, "child_digest": OCI_CHILD_DIGEST},
+            "frontend": {"distribution": "pip", "version": "25.0.1", "origin": PIP_WHEEL_FILENAME},
+            "backend": {"distribution": "setuptools", "version": "83.0.0", "origin": SETUPTOOLS_WHEEL_FILENAME},
+            "backend_interface": "setuptools.build_meta:__legacy__",
+            "post_build": {"wheel_generator": "setuptools (83.0.0)"},
+            "isolation": {"build_count": 2, "network": "NONE", "read_only_root": True, "nonroot": True},
+            "environment": {"source_date_epoch": 315532800, "tz": "UTC", "python_hash_seed": "0", "umask": "022", "no_build_isolation": True},
+            "inputs": build_input_records,
+            "sdist": sdist_facts,
+            "runs": child_facts,
+            "builds": [output_content, output_content],
+            "byte_equal": True,
+            "retained_output": output_content,
+        }
+        _write_atomic(staging / "build-record.json", (canonical_json(build_record) + "\n").encode("utf-8"))
         wheelhouse = staging / "wheelhouse"
         _copy_selected_wheels(roots, wheelhouse)
+        shutil.copyfile(built_path, wheelhouse / built_path.name, follow_symlinks=False)
         _run_checked(
-            resolve_command(roots, wheelhouse, host_user=ownership),
+            resolve_command(roots, wheelhouse, built=built, host_user=ownership),
             "transitive wheel resolution",
             staging,
             docker_executable=docker_executable,
@@ -2587,10 +3201,13 @@ def acquire_environment() -> dict[str, Any]:
             staging / "manifest.json",
             (canonical_json(manifest) + "\n").encode("utf-8"),
         )
+        manifest, _source = _validated_environment(staging)
         publish_directory(staging, DESTINATION, OUTPUT_TRUSTED_ROOT)
     manifest, _source = _validated_environment()
     return acquire_result(
-        artifact_count=len(manifest["roots"]["artifacts"]),
+        artifact_count=len(manifest["roots"]["artifacts"]) + len(manifest["build_inputs"]["artifacts"]),
+        built_artifact_count=len(manifest["built"]["artifacts"]),
+        source_build_record_sha256=manifest["build_record"]["sha256"],
         lock_sha256=manifest["lock"]["sha256"],
         wheel_count=len(manifest["wheelhouse"]["artifacts"]),
         wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
@@ -2635,6 +3252,7 @@ def _completed_verification_result(
         installed_distribution_count=len(internal["installed_distributions"]),
         lock_sha256=manifest["lock"]["sha256"],
         wheelhouse_sha256=manifest["wheelhouse"]["sha256"],
+        source_build_record_sha256=manifest["build_record"]["sha256"],
     )
 
 
@@ -2695,12 +3313,13 @@ def verify_environment() -> dict[str, Any]:
                 work, manifest["wheelhouse"]["artifacts"]
             )
         internal = {
-            "schema": "malleus.cc002.internal-verification/v1",
+            "schema": "malleus.cc002.internal-verification/v2",
             "workstream_id": "CC-002",
             "acquisition_manifest_sha256": _digest(manifest_source),
             "lock_sha256": manifest["lock"]["sha256"],
             "wheelhouse_sha256": manifest["wheelhouse"]["sha256"],
             "resolution_report_sha256": manifest["resolution_report"]["sha256"],
+            "source_build_record_sha256": manifest["build_record"]["sha256"],
             "docker": manifest["docker"],
             "oci_index_digest": OCI_INDEX_DIGEST,
             "oci_child_digest": OCI_CHILD_DIGEST,

@@ -10,6 +10,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import tarfile
 import tomllib
 import types
 import zipfile
@@ -37,7 +38,9 @@ class FakeServices:
     def acquire(self) -> dict[str, Any]:
         self.calls.append("acquire")
         return environment.acquire_result(
-            artifact_count=5,
+            artifact_count=7,
+            built_artifact_count=1,
+            source_build_record_sha256="sha256:" + "6" * 64,
             lock_sha256="sha256:" + "1" * 64,
             wheel_count=23,
             wheelhouse_sha256="sha256:" + "2" * 64,
@@ -52,6 +55,7 @@ class FakeServices:
             installed_distribution_count=23,
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
+            source_build_record_sha256="sha256:" + "6" * 64,
         )
 
 
@@ -93,18 +97,131 @@ def _error_code(response: dict[str, Any]) -> int:
     return response["error"]["code"]
 
 
-def _wheel(path: Path, name: str, version: str, requires: tuple[str, ...] = ()) -> None:
+def _wheel(
+    path: Path,
+    name: str,
+    version: str,
+    requires: tuple[str, ...] = (),
+    *,
+    extra_names: tuple[str, ...] = (),
+    metadata_extra: tuple[str, ...] = (),
+) -> None:
     metadata = [
         "Metadata-Version: 2.4",
         f"Name: {name}",
         f"Version: {version}",
         *(f"Requires-Dist: {requirement}" for requirement in requires),
+        *metadata_extra,
         "",
         "",
     ]
     dist = name.replace("-", "_")
+    dist_info = f"{dist}-{version}.dist-info"
+    sources = {
+        f"{dist_info}/METADATA": "\n".join(metadata).encode(),
+        f"{dist_info}/WHEEL": b"Wheel-Version: 1.0\nGenerator: fixture\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
+    }
+    sources.update({filename: b"fixture" for filename in extra_names})
+    import base64
+    rows = []
+    for filename, source in sources.items():
+        digest = base64.urlsafe_b64encode(hashlib.sha256(source).digest()).rstrip(b"=").decode()
+        rows.append(f"{filename},sha256={digest},{len(source)}")
+    record_name = f"{dist_info}/RECORD"
+    rows.append(f"{record_name},,")
+    sources[record_name] = ("\n".join(rows) + "\n").encode()
     with zipfile.ZipFile(path, "w") as archive:
-        archive.writestr(f"{dist}-{version}.dist-info/METADATA", "\n".join(metadata))
+        for filename, source in sources.items():
+            archive.writestr(filename, source)
+
+
+def _antlr_sdist(
+    path: Path,
+    *,
+    unsafe: tarfile.TarInfo | None = None,
+    pkg_info_extra: bytes = b"",
+    setup_directory: bool = False,
+) -> bytes:
+    root = "antlr4-python3-runtime-4.9.3"
+    with tarfile.open(path, "w:gz") as archive:
+        for name, source in (
+            (f"{root}/PKG-INFO", b"Metadata-Version: 2.1\nName: antlr4-python3-runtime\nVersion: 4.9.3\n" + pkg_info_extra + b"\n"),
+            (f"{root}/setup.py", b"from setuptools import setup\nsetup()\n"),
+        ):
+            member = tarfile.TarInfo(name)
+            if setup_directory and name.endswith("/setup.py"):
+                member.name += "/"
+                member.type = tarfile.DIRTYPE
+                source = b""
+            member.size = len(source)
+            archive.addfile(member, io.BytesIO(source))
+        if unsafe is not None:
+            archive.addfile(unsafe, io.BytesIO(b"x") if unsafe.size else None)
+    return path.read_bytes()
+
+
+def _built_antlr_wheel(
+    path: Path,
+    *,
+    generator: str = "setuptools (83.0.0)",
+    timestamp=(1980, 1, 1, 0, 0, 0),
+    extra_names: tuple[str, ...] = (),
+    record_mutation: str | None = None,
+) -> bytes:
+    dist = "antlr4_python3_runtime-4.9.3.dist-info"
+    sources = {
+        "antlr4/__init__.py": b"",
+        f"{dist}/METADATA": b"Metadata-Version: 2.4\nName: antlr4-python3-runtime\nVersion: 4.9.3\n\n",
+        f"{dist}/WHEEL": f"Wheel-Version: 1.0\nGenerator: {generator}\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n".encode(),
+    }
+    sources.update({name: b"fixture" for name in extra_names})
+    record_name = f"{dist}/RECORD"
+    rows = []
+    import base64
+    for name, source in sources.items():
+        digest = base64.urlsafe_b64encode(hashlib.sha256(source).digest()).rstrip(b"=").decode()
+        rows.append(f"{name},sha256={digest},{len(source)}")
+    rows.append(f"{record_name},,")
+    if record_mutation == "duplicate":
+        rows.append(rows[0])
+    elif record_mutation == "missing":
+        rows.pop(0)
+    elif record_mutation == "hash":
+        parts = rows[0].split(",")
+        parts[1] = "sha256=" + "A" * 43
+        rows[0] = ",".join(parts)
+    elif record_mutation == "size":
+        parts = rows[0].split(",")
+        parts[2] = str(int(parts[2]) + 1)
+        rows[0] = ",".join(parts)
+    sources[record_name] = ("\n".join(rows) + "\n").encode()
+    with zipfile.ZipFile(path, "w") as archive:
+        for name, source in sources.items():
+            info = zipfile.ZipInfo(name, timestamp)
+            info.external_attr = (stat.S_IFREG | 0o644) << 16
+            archive.writestr(info, source)
+    return path.read_bytes()
+
+
+def _build_facts() -> dict[str, Any]:
+    return {
+        "schema": "malleus.cc002.source-build-child/v1",
+        "python": environment.PYTHON_TUPLE,
+        "preflight_pip": {"version": "25.0.1", "origin": "/pip/pip-25.0.1-py3-none-any.whl/pip/__init__.py"},
+        "preflight_backend_distributions": [{"name": "setuptools", "version": "83.0.0"}],
+        "preflight_setuptools": {"version": "83.0.0", "origin_root": "/tmp/cc002-backend"},
+        "source_date_epoch": 315532800,
+        "configuration": {"backend_interface": "setuptools.build_meta:__legacy__", "no_build_isolation": True},
+        "tz": "UTC",
+        "python_hash_seed": "0",
+        "umask": "022",
+    }
+
+
+def _write_build_facts(directory: Path) -> None:
+    (directory / ".cc002-build-facts.json").write_text(
+        json.dumps(_build_facts()), encoding="utf-8"
+    )
 
 
 def _manifest_for(directory: Path) -> dict[str, Any]:
@@ -258,7 +375,7 @@ def test_initialize_supports_only_declared_protocol_versions(version):
         "result": {
             "protocolVersion": version,
             "capabilities": {"tools": {"listChanged": False}},
-            "serverInfo": {"name": "malleus-cc002", "version": "1"},
+                "serverInfo": {"name": "malleus-cc002", "version": "2"},
         },
     }
 
@@ -372,13 +489,13 @@ def test_tool_output_schemas_are_exact_and_closed():
     assert acquire["additionalProperties"] is False
     assert set(acquire["required"]) == set(acquire["properties"])
     assert acquire["properties"]["schema"] == {
-        "const": "malleus.cc002.acquire-result/v1"
+        "const": "malleus.cc002.acquire-result/v2"
     }
     assert acquire["properties"]["state"] == {"const": "MATERIALIZED"}
     assert verify["additionalProperties"] is False
     assert set(verify["required"]) == set(verify["properties"])
     assert verify["properties"]["schema"] == {
-        "const": "malleus.cc002.verify-result/v1"
+        "const": "malleus.cc002.verify-result/v2"
     }
     assert verify["properties"]["state"] == {"const": "VERIFIED_OFFLINE"}
     for schema in (acquire, verify):
@@ -389,22 +506,28 @@ def test_tool_output_schemas_are_exact_and_closed():
 
 def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_output():
     with pytest.raises(environment.CC002Error, match="lowercase hexadecimal"):
-        environment.acquire_result(
-            artifact_count=5,
+            environment.acquire_result(
+                artifact_count=5,
+                built_artifact_count=1,
+                source_build_record_sha256="sha256:" + "6" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "G" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
         )
     with pytest.raises(environment.CC002Error, match="artifact_count"):
-        environment.acquire_result(
-            artifact_count=True,
+            environment.acquire_result(
+                artifact_count=True,
+                built_artifact_count=1,
+                source_build_record_sha256="sha256:" + "6" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
         )
-    with pytest.raises(environment.CC002Error, match="exactly five"):
+    with pytest.raises(environment.CC002Error, match="exactly seven"):
         environment.acquire_result(
             artifact_count=6,
+            built_artifact_count=1,
+            source_build_record_sha256="sha256:" + "6" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
@@ -419,14 +542,61 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
     assert "CC002_RESULT" in response["result"]["content"][0]["text"]
 
 
+def test_public_result_contract_is_v2_only():
+    assert environment.SERVER_VERSION == "2"
+    acquire = environment.acquire_result(
+        artifact_count=7,
+        built_artifact_count=1,
+        source_build_record_sha256="sha256:" + "6" * 64,
+        wheel_count=1,
+        lock_sha256="sha256:" + "1" * 64,
+        wheelhouse_sha256="sha256:" + "2" * 64,
+    )
+    assert acquire["schema"] == "malleus.cc002.acquire-result/v2"
+    assert environment._ACQUIRE_PROPERTIES["schema"] == {"const": "malleus.cc002.acquire-result/v2"}
+    assert environment._VERIFY_PROPERTIES["schema"] == {"const": "malleus.cc002.verify-result/v2"}
+    invalid = dict(acquire, schema="malleus.cc002.acquire-result/v1")
+    with pytest.raises(environment.CC002Error, match="schema"):
+        environment._validate_tool_output("cc002_acquire", invalid)
+    verify = FakeServices().verify()
+    with pytest.raises(environment.CC002Error, match="schema"):
+        environment._validate_tool_output(
+            "cc002_verify_offline",
+            dict(verify, schema="malleus.cc002.verify-result/v1"),
+        )
+
+
+def test_environment_and_internal_verification_v1_are_rejected(tmp_path, monkeypatch):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    manifest = json.loads((destination / "manifest.json").read_text())
+    manifest["schema"] = "malleus.cc002.compiler-environment/v1"
+    _write_bundle_manifest(destination, manifest)
+    with pytest.raises(environment.CC002Error, match="schema"):
+        environment._validated_environment(destination)
+
+    manifest["schema"] = "malleus.cc002.compiler-environment/v2"
+    _write_bundle_manifest(destination, manifest)
+    environment.verify_environment()
+    internal_path = destination / "verification.json"
+    internal = json.loads(internal_path.read_text())
+    internal["schema"] = "malleus.cc002.internal-verification/v1"
+    internal_path.write_text(environment.canonical_json(internal) + "\n", encoding="utf-8")
+    completed = json.loads((destination / "manifest.json").read_text())
+    completed["verification"] = {"state": "COMPLETE", **environment._artifact_record(internal_path)}
+    _write_bundle_manifest(destination, completed)
+    with pytest.raises(environment.CC002Error, match="internal verification schema"):
+        environment._validated_environment(destination)
+
+
 @pytest.mark.parametrize(
     ("name", "expected_call", "schema"),
     [
-        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v1"),
+        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v2"),
         (
             "cc002_verify_offline",
             "verify",
-            "malleus.cc002.verify-result/v1",
+            "malleus.cc002.verify-result/v2",
         ),
     ],
 )
@@ -1257,7 +1427,7 @@ def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
     roots.mkdir()
     wheelhouse.mkdir()
     pull = environment.image_pull_command()
-    resolve = environment.resolve_command(roots, wheelhouse)
+    resolve = environment.resolve_command(roots, wheelhouse, built=tmp_path / "built")
     verify = environment.verify_command(tmp_path / "bundle", tmp_path / "work")
     assert pull[-3:] == ["--platform", "linux/amd64", environment.OCI_CHILD_REFERENCE]
     assert "--platform" in resolve and "linux/amd64" in resolve
@@ -1274,6 +1444,21 @@ def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
     assert "linkml.generators.jsonschemagen" in environment.VERIFIER_PROGRAM
     assert "/input/malleus.yaml" in environment.VERIFIER_PROGRAM
     assert "cwd='/work'" in environment.VERIFIER_PROGRAM
+
+
+def test_resolution_requires_distinct_explicit_built_and_wheelhouse_paths(tmp_path):
+    roots = tmp_path / "roots"
+    built = tmp_path / "built"
+    wheelhouse = tmp_path / "wheelhouse"
+    for directory in (roots, built, wheelhouse):
+        directory.mkdir()
+    with pytest.raises(TypeError):
+        environment.resolve_command(roots, wheelhouse)
+    with pytest.raises(environment.CC002Error, match="distinct"):
+        environment.resolve_command(roots, wheelhouse, built=wheelhouse)
+    for overlapping in (wheelhouse / "built", wheelhouse.parent):
+        with pytest.raises(environment.CC002Error, match="overlap"):
+            environment.resolve_command(roots, wheelhouse, built=overlapping)
     assert "/repo" not in environment.VERIFIER_PROGRAM
     assert "--no-index" in environment.VERIFIER_PROGRAM
     assert "--require-hashes" in environment.VERIFIER_PROGRAM
@@ -1282,7 +1467,7 @@ def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
 def test_every_container_run_uses_the_exact_nonroot_host_ownership_tuple(tmp_path):
     expected = f"{os.getuid()}:{os.getgid()}"
     commands = (
-        environment.resolve_command(tmp_path / "roots", tmp_path / "wheelhouse"),
+        environment.resolve_command(tmp_path / "roots", tmp_path / "wheelhouse", built=tmp_path / "built"),
         environment.lock_report_command(tmp_path / "bundle", tmp_path / "report"),
         environment.verify_command(tmp_path / "bundle", tmp_path / "verify"),
     )
@@ -1305,7 +1490,7 @@ def test_resolution_command_uses_selected_pip_fixed_index_and_no_proxy(tmp_path)
     wheelhouse = tmp_path / "wheelhouse"
     roots.mkdir()
     wheelhouse.mkdir()
-    command = environment.resolve_command(roots, wheelhouse)
+    command = environment.resolve_command(roots, wheelhouse, built=tmp_path / "built")
     assert command[:9] == [
         "docker",
         "run",
@@ -1907,7 +2092,7 @@ def _pip_report(records, *, environment_values=None, installs=None):
     }
 
 
-def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
+def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None, failure_context=None):
     source_dir = tmp_path / "published"
     source_dir.mkdir()
     artifacts = []
@@ -1935,6 +2120,24 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
         artifacts.append(
             environment.SelectedArtifact(
                 filename=filename,
+                kind=kind,
+                url=url,
+                byte_length=len(source),
+                sha256=hashlib.sha256(source).hexdigest(),
+            )
+        )
+        sources[url] = source
+    build_artifacts = []
+    antlr_path = source_dir / environment.ANTLR_SDIST_FILENAME
+    _antlr_sdist(antlr_path)
+    setuptools_path = source_dir / environment.SETUPTOOLS_WHEEL_FILENAME
+    _wheel(setuptools_path, "setuptools", "83.0.0")
+    for path, kind in ((antlr_path, "SDIST"), (setuptools_path, "WHEEL")):
+        source = path.read_bytes()
+        url = f"https://files.pythonhosted.org/fixture/{path.name}"
+        build_artifacts.append(
+            environment.SelectedArtifact(
+                filename=path.name,
                 kind=kind,
                 url=url,
                 byte_length=len(source),
@@ -1980,6 +2183,8 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
             assert arguments.count("--user") == 1
             assert arguments[arguments.index("--user") + 1] == environment._docker_user_argument()
         calls.append(context)
+        if context == failure_context:
+            raise environment.CC002Error("[CC002_SUBPROCESS] injected fixture failure")
         if arguments == environment.docker_version_command():
             return b'"28.3.3"\n'
         if arguments == environment.image_pull_command():
@@ -2023,6 +2228,11 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
                 encoding="utf-8",
             )
             return b""
+        if arguments[-1] == environment.BUILD_PROGRAM:
+            output = mount_path(arguments, ":/output:rw")
+            _built_antlr_wheel(output / "antlr4_python3_runtime-4.9.3-py3-none-any.whl")
+            _write_build_facts(output)
+            return b""
         if "transitive wheel resolution" == context:
             return b""
         raise AssertionError(f"unexpected external edge: {context}: {arguments}")
@@ -2032,6 +2242,13 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None):
     monkeypatch.setattr(environment, "INTERNAL_VERIFICATION", destination / "verification.json")
     monkeypatch.setattr(environment, "SMOKE_INPUT", smoke)
     monkeypatch.setattr(environment, "SELECTED_ARTIFACTS", tuple(artifacts))
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", tuple(build_artifacts))
+    monkeypatch.setattr(environment, "ANTLR_SDIST_MEMBER_COUNT", 2)
+    monkeypatch.setattr(
+        environment,
+        "ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH",
+        sum(member.size for member in tarfile.open(antlr_path, "r:gz").getmembers()),
+    )
     monkeypatch.setattr(environment, "_default_opener", lambda: RoutingOpener())
     monkeypatch.setattr(environment, "_resolved_docker", lambda: "/fixture/bin/docker")
     monkeypatch.setattr(environment, "parse_oci_index", lambda source: calls.append("parse OCI index") or environment.OCI_CHILD_DIGEST)
@@ -2059,17 +2276,68 @@ def test_registry_failure_after_root_downloads_leaves_no_publication_or_staging(
     assert calls.network_requests[-1].full_url == failure_url
 
 
+@pytest.mark.parametrize(
+    "context",
+    ["network-denied ANTLR source build 1", "network-denied ANTLR source build 2", "transitive wheel resolution"],
+)
+def test_source_build_failures_leave_no_publication_or_staging(tmp_path, monkeypatch, context):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch, failure_context=context)
+    with pytest.raises(environment.CC002Error, match="injected fixture failure"):
+        environment.acquire_environment()
+    assert not destination.exists()
+    assert list(tmp_path.glob(".cc002-*")) == []
+
+
+def test_full_bundle_validation_failure_cannot_publish_invalid_destination(
+    tmp_path, monkeypatch
+):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+
+    def injected_failure(_path=None):
+        raise environment.CC002Error("[CC002_INJECTED] full bundle validation failed")
+
+    monkeypatch.setattr(environment, "_validated_environment", injected_failure)
+    with pytest.raises(environment.CC002Error, match="full bundle validation failed"):
+        environment.acquire_environment()
+    assert not destination.exists()
+    assert list(tmp_path.glob(".cc002-*")) == []
+
+
+def test_acquire_revalidates_public_destination_after_atomic_publish(
+    tmp_path, monkeypatch
+):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    original = environment._validated_environment
+    validated_paths = []
+
+    def observe(path=None):
+        target = environment.DESTINATION if path is None else path
+        validated_paths.append(target)
+        if target == destination:
+            raise environment.CC002Error("[CC002_INJECTED] public validation failed")
+        return original(path)
+
+    monkeypatch.setattr(environment, "_validated_environment", observe)
+    with pytest.raises(environment.CC002Error, match="public validation failed"):
+        environment.acquire_environment()
+    assert validated_paths[0].name.startswith(".cc002-environment-")
+    assert validated_paths[0] != destination
+    assert validated_paths[1] == destination
+
+
 def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
     tmp_path, monkeypatch
 ):
     destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
     result = environment.acquire_environment()
-    assert result["artifact_count"] == 5
+    assert result["artifact_count"] == 7
     assert calls == [
         "Docker version",
         "parse OCI index",
         "OCI child pull",
         "local image inspection",
+        "network-denied ANTLR source build 1",
+        "network-denied ANTLR source build 2",
         "transitive wheel resolution",
         "offline root resolution report",
     ]
@@ -2110,6 +2378,9 @@ def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeyp
     assert (destination / "verification.json").is_file()
     manifest, _source = environment._validated_environment(destination)
     assert manifest["verification"]["filename"] == "verification.json"
+    internal = json.loads((destination / "verification.json").read_text())
+    assert internal["schema"] == "malleus.cc002.internal-verification/v2"
+    assert internal["source_build_record_sha256"] == manifest["build_record"]["sha256"]
     calls_before = list(calls)
     assert environment.verify_environment() == result
     assert calls == calls_before
@@ -2235,6 +2506,45 @@ def test_bundle_rejects_wheelhouse_pip_that_differs_from_selected_root(
     _write_bundle_manifest(destination, manifest)
     with pytest.raises(environment.CC002Error, match="selected pip|retained root"):
         environment._validated_environment(destination)
+
+
+def test_bundle_binds_built_antlr_bytes_to_runtime_wheelhouse(tmp_path, monkeypatch):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    manifest = json.loads((destination / "manifest.json").read_text())
+    built_record = manifest["built"]["artifacts"][0]
+    wheelhouse_records = manifest["wheelhouse"]["artifacts"]
+    environment._bind_built_wheel(destination, wheelhouse_records, built_record)
+    runtime = destination / "wheelhouse" / built_record["filename"]
+    runtime.write_bytes(runtime.read_bytes() + b"tampered")
+    with pytest.raises(environment.CC002Error, match="BUILT_BINDING"):
+        environment._bind_built_wheel(destination, wheelhouse_records, built_record)
+
+
+def test_runtime_wheelhouse_excludes_source_and_backend_inputs(tmp_path, monkeypatch):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    names = {path.name for path in (destination / "wheelhouse").iterdir()}
+    assert environment.ANTLR_SDIST_FILENAME not in names
+    assert environment.SETUPTOOLS_WHEEL_FILENAME not in names
+    assert "antlr4_python3_runtime-4.9.3-py3-none-any.whl" in names
+
+
+def test_retained_build_record_contains_no_ephemeral_or_host_paths(tmp_path, monkeypatch):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    source = (destination / "build-record.json").read_text()
+    for forbidden in ("/tmp", "/pip", str(ROOT), str(tmp_path), "docker.sock", "uid", "gid"):
+        assert forbidden not in source
+    record = json.loads(source)
+    assert record["post_build"] == {"wheel_generator": "setuptools (83.0.0)"}
+    assert set(record["runs"][0]) >= {
+        "preflight_pip",
+        "preflight_backend_distributions",
+        "preflight_setuptools",
+        "configuration",
+    }
+    assert {"pip", "setuptools", "backend_distributions"}.isdisjoint(record["runs"][0])
 
 
 @pytest.mark.parametrize(
@@ -2468,6 +2778,7 @@ def test_verifier_program_measures_exact_python_tuple_and_abi():
     assert "SOABI" in program
     assert "3.12.10" in program
     assert "cp312" in program
+    assert "import antlr4" in program
 
 
 def test_lock_report_command_is_exact_selected_container_offline_proof(tmp_path):
@@ -2509,6 +2820,33 @@ def test_lock_builder_refuses_tampered_wheel_metadata(tmp_path):
     with zipfile.ZipFile(path, "w") as archive:
         archive.writestr("alpha-1.0.dist-info/METADATA", "Name: Alpha\n")
     with pytest.raises(environment.CC002Error, match="Version"):
+        environment.build_lock(wheelhouse)
+
+
+@pytest.mark.parametrize(
+    ("raw_name", "metadata_extra"),
+    (
+        ("alpha/./module.py", ()),
+        ("alpha//module.py", ()),
+        ("..\\escape.py", ()),
+        ("alpha/evil\x1fname.py", ()),
+        (None, ("Name: conflicting",)),
+        (None, ("Version: 9.9.9",)),
+    ),
+)
+def test_runtime_wheel_lock_refuses_noncanonical_members_and_duplicate_headers(
+    tmp_path, raw_name, metadata_extra
+):
+    wheelhouse = tmp_path / "wheelhouse"
+    wheelhouse.mkdir()
+    _wheel(
+        wheelhouse / "alpha-1.0-py3-none-any.whl",
+        "alpha",
+        "1.0",
+        extra_names=() if raw_name is None else (raw_name,),
+        metadata_extra=metadata_extra,
+    )
+    with pytest.raises(environment.CC002Error, match="WHEEL"):
         environment.build_lock(wheelhouse)
 
 
@@ -2577,4 +2915,449 @@ def test_source_has_no_regex_or_unbounded_execution_mechanism():
     assert 'DOCKER = "/' not in source
     assert "Path.home()" not in source
     assert str(Path.home()) not in source
-    assert "import re" not in source
+
+
+def test_antlr_sdist_validation_refuses_unsafe_archive_member(tmp_path, monkeypatch):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    unsafe = tarfile.TarInfo("../escape")
+    unsafe.size = 1
+    source = _antlr_sdist(path, unsafe=unsafe)
+    selected = environment.SelectedArtifact(
+        filename=path.name,
+        kind="SDIST",
+        url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source),
+        sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    monkeypatch.setattr(environment, "ANTLR_SDIST_MEMBER_COUNT", 2)
+    monkeypatch.setattr(environment, "ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH", 107)
+    with pytest.raises(environment.CC002Error, match="SDIST_SAFETY"):
+        environment.validate_antlr_sdist(path)
+
+
+@pytest.mark.parametrize("member_type", (tarfile.SYMTYPE, tarfile.LNKTYPE, tarfile.FIFOTYPE))
+def test_antlr_sdist_refuses_link_and_fifo_members(tmp_path, monkeypatch, member_type):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    unsafe = tarfile.TarInfo("antlr4-python3-runtime-4.9.3/unsafe")
+    unsafe.type = member_type
+    unsafe.linkname = "target"
+    source = _antlr_sdist(path, unsafe=unsafe)
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="SDIST", url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    with pytest.raises(environment.CC002Error, match="SDIST_SAFETY"):
+        environment.validate_antlr_sdist(path)
+
+
+def test_antlr_sdist_validation_refuses_backslash_member(tmp_path, monkeypatch):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    unsafe = tarfile.TarInfo("antlr4-python3-runtime-4.9.3/evil\\path")
+    unsafe.size = 1
+    source = _antlr_sdist(path, unsafe=unsafe)
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="SDIST", url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    with pytest.raises(environment.CC002Error, match="SDIST_SAFETY"):
+        environment.validate_antlr_sdist(path)
+
+
+def test_setuptools_build_input_is_structurally_validated(tmp_path, monkeypatch):
+    path = tmp_path / environment.SETUPTOOLS_WHEEL_FILENAME
+    _wheel(path, "different-backend", "83.0.0")
+    source = path.read_bytes()
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="WHEEL", url="https://files.pythonhosted.org/fixture/setuptools.whl",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (environment.BUILD_ARTIFACTS[0], selected))
+    with pytest.raises(environment.CC002Error, match="BUILD_INPUT"):
+        environment.validate_setuptools_wheel(path)
+
+
+def test_governed_source_build_artifact_coordinates_are_exact():
+    assert environment.SOURCE_DATE_EPOCH == "315532800"
+    assert environment.ANTLR_SDIST_MEMBER_COUNT == 78
+    assert environment.ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH == 477312
+    assert [artifact.as_dict() for artifact in environment.BUILD_ARTIFACTS] == [
+        {
+            "filename": "antlr4-python3-runtime-4.9.3.tar.gz",
+            "kind": "SDIST",
+            "url": "https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz",
+            "byte_length": 117034,
+            "sha256": "f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b",
+        },
+        {
+            "filename": "setuptools-83.0.0-py3-none-any.whl",
+            "kind": "WHEEL",
+            "url": "https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl",
+            "byte_length": 1008090,
+            "sha256": "29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3",
+        },
+    ]
+
+
+def test_antlr_sdist_validation_binds_layout_metadata_and_measured_limits(tmp_path, monkeypatch):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    source = _antlr_sdist(path)
+    selected = environment.SelectedArtifact(
+        filename=path.name,
+        kind="SDIST",
+        url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source),
+        sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    monkeypatch.setattr(environment, "ANTLR_SDIST_MEMBER_COUNT", 2)
+    with tarfile.open(path, "r:gz") as archive:
+        total = sum(member.size for member in archive.getmembers())
+    monkeypatch.setattr(environment, "ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH", total)
+    facts = environment.validate_antlr_sdist(path)
+    assert facts["member_count"] == 2
+    assert facts["uncompressed_byte_length"] > 0
+
+
+@pytest.mark.parametrize("field", ("count", "expanded"))
+def test_antlr_sdist_refuses_member_count_and_expansion_changes(tmp_path, monkeypatch, field):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    source = _antlr_sdist(path)
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="SDIST", url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    with tarfile.open(path, "r:gz") as archive:
+        members = archive.getmembers()
+    monkeypatch.setattr(environment, "ANTLR_SDIST_MEMBER_COUNT", len(members) + (field == "count"))
+    monkeypatch.setattr(
+        environment,
+        "ANTLR_SDIST_UNCOMPRESSED_BYTE_LENGTH",
+        sum(member.size for member in members) + (field == "expanded"),
+    )
+    with pytest.raises(environment.CC002Error, match="SDIST_LIMIT"):
+        environment.validate_antlr_sdist(path)
+
+
+@pytest.mark.parametrize(
+    ("extra", "setup_directory"),
+    ((b"Name: conflicting\n", False), (b"Version: 9.9.9\n", False), (b"", True)),
+)
+def test_antlr_sdist_rejects_duplicate_metadata_or_nonfile_setup(
+    tmp_path, monkeypatch, extra, setup_directory
+):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    source = _antlr_sdist(path, pkg_info_extra=extra, setup_directory=setup_directory)
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="SDIST", url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    with pytest.raises(environment.CC002Error, match="SDIST_METADATA|SDIST_LAYOUT"):
+        environment.validate_antlr_sdist(path)
+
+
+@pytest.mark.parametrize(
+    ("generator", "error"),
+    [
+        ("setuptools (82.0.0)", "METADATA"),
+    ],
+)
+def test_built_antlr_wheel_refuses_wrong_generator(tmp_path, generator, error):
+    path = tmp_path / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(path, generator=generator)
+    with pytest.raises(environment.CC002Error, match=error):
+        environment.validate_built_antlr_wheel(path)
+
+
+@pytest.mark.parametrize(
+    "raw_name",
+    (
+        "..\\escape.py",
+        "antlr4/evil\x1fname.py",
+        "antlr4/./fixture.py",
+        "antlr4//fixture.py",
+    ),
+)
+def test_built_wheel_refuses_noncanonical_raw_member_names(tmp_path, raw_name):
+    path = tmp_path / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(path, extra_names=(raw_name,))
+    with pytest.raises(environment.CC002Error, match="BUILT_WHEEL_SAFETY"):
+        environment.validate_built_antlr_wheel(path)
+
+
+def test_built_wheel_keeps_distinct_linux_unicode_member_spellings(tmp_path):
+    path = tmp_path / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(path, extra_names=("antlr4/café.py", "antlr4/cafe\u0301.py"))
+    assert environment.validate_built_antlr_wheel(path)["version"] == "4.9.3"
+
+
+@pytest.mark.parametrize("mutation", ("duplicate", "missing", "hash", "size"))
+def test_built_wheel_refuses_record_corruption(tmp_path, mutation):
+    path = tmp_path / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(path, record_mutation=mutation)
+    with pytest.raises(environment.CC002Error, match="BUILT_WHEEL_RECORD"):
+        environment.validate_built_antlr_wheel(path)
+
+
+@pytest.mark.parametrize("kind", ("symlink", "special", "encrypted", "count", "expanded"))
+def test_wheel_member_safety_refuses_types_flags_and_bounds(kind):
+    count = 1001 if kind == "count" else 1
+    members = []
+    for index in range(count):
+        info = zipfile.ZipInfo(f"member-{index}")
+        info.external_attr = (stat.S_IFREG | 0o644) << 16
+        if kind == "symlink":
+            info.external_attr = (stat.S_IFLNK | 0o777) << 16
+        elif kind == "special":
+            info.external_attr = (stat.S_IFIFO | 0o644) << 16
+        elif kind == "encrypted":
+            info.flag_bits = 1
+        elif kind == "expanded":
+            info.file_size = 16 * 1024 * 1024 + 1
+        members.append(info)
+
+    class Archive:
+        def infolist(self):
+            return members
+
+    with pytest.raises(environment.CC002Error, match="CC002_TEST_WHEEL"):
+        environment._safe_wheel_members(
+            Archive(), "CC002_TEST_WHEEL", enforce_build_limits=True
+        )
+
+
+def test_wheel_member_safety_accepts_directory_entry_and_rejects_file_trailing_slash():
+    directory = zipfile.ZipInfo("package/")
+    directory.external_attr = (stat.S_IFDIR | 0o755) << 16
+
+    class DirectoryArchive:
+        def infolist(self):
+            return [directory]
+
+    assert environment._safe_wheel_members(
+        DirectoryArchive(), "CC002_TEST_WHEEL", enforce_build_limits=True
+    ) == [directory]
+
+    with pytest.raises(environment.CC002Error, match="CC002_TEST_WHEEL"):
+        environment._validate_archive_member_name(
+            "package/", {}, "CC002_TEST_WHEEL", is_directory=False
+        )
+
+
+@pytest.mark.parametrize(
+    ("name", "mode"),
+    (("package/", stat.S_IFREG | 0o644), ("package", stat.S_IFDIR | 0o755)),
+)
+def test_wheel_member_safety_rejects_name_mode_type_confusion(name, mode):
+    member = zipfile.ZipInfo(name)
+    member.external_attr = mode << 16
+
+    class Archive:
+        def infolist(self):
+            return [member]
+
+    with pytest.raises(environment.CC002Error, match="CC002_TEST_WHEEL"):
+        environment._safe_wheel_members(
+            Archive(), "CC002_TEST_WHEEL", enforce_build_limits=True
+        )
+
+
+@pytest.mark.parametrize("file_first", (False, True))
+def test_archive_topology_refuses_file_ancestor_in_both_orders(file_first):
+    entries = [("antlr4", False), ("antlr4/__init__.py", False)]
+    if not file_first:
+        entries.reverse()
+    topology = {}
+    environment._validate_archive_member_name(
+        entries[0][0], topology, "CC002_TEST_WHEEL", is_directory=entries[0][1]
+    )
+    with pytest.raises(environment.CC002Error, match="CC002_TEST_WHEEL"):
+        environment._validate_archive_member_name(
+            entries[1][0], topology, "CC002_TEST_WHEEL", is_directory=entries[1][1]
+        )
+
+
+def test_archive_topology_allows_declared_directory_ancestor():
+    topology = {}
+    environment._validate_archive_member_name(
+        "antlr4/", topology, "CC002_TEST_WHEEL", is_directory=True
+    )
+    environment._validate_archive_member_name(
+        "antlr4/__init__.py", topology, "CC002_TEST_WHEEL", is_directory=False
+    )
+
+
+def test_generic_runtime_wheel_safety_does_not_invent_build_resource_caps():
+    members = [zipfile.ZipInfo(f"member-{index}") for index in range(1001)]
+
+    class Archive:
+        def infolist(self):
+            return members
+
+    assert environment._safe_wheel_members(
+        Archive(), "CC002_WHEEL", enforce_build_limits=False
+    ) == members
+
+
+def test_wheel_safety_preserves_caller_error_taxonomy():
+    unsafe = zipfile.ZipInfo("..\\escape")
+
+    class Archive:
+        def infolist(self):
+            return [unsafe]
+
+    with pytest.raises(environment.CC002Error, match=r"\[CC002_BUILD_INPUT\]"):
+        environment._safe_wheel_members(
+            Archive(), "CC002_BUILD_INPUT", enforce_build_limits=True
+        )
+
+
+@pytest.mark.parametrize(
+    "raw_name",
+    ("..\\escape.py", "antlr4-python3-runtime-4.9.3/evil\x1fname.py", "antlr4-python3-runtime-4.9.3/./x", "antlr4-python3-runtime-4.9.3//x"),
+)
+def test_antlr_sdist_refuses_noncanonical_raw_member_names(tmp_path, monkeypatch, raw_name):
+    path = tmp_path / environment.ANTLR_SDIST_FILENAME
+    unsafe = tarfile.TarInfo(raw_name)
+    unsafe.size = 1
+    source = _antlr_sdist(path, unsafe=unsafe)
+    selected = environment.SelectedArtifact(
+        filename=path.name, kind="SDIST", url="https://files.pythonhosted.org/fixture/source.tar.gz",
+        byte_length=len(source), sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "BUILD_ARTIFACTS", (selected, environment.BUILD_ARTIFACTS[1]))
+    with pytest.raises(environment.CC002Error, match="SDIST_SAFETY"):
+        environment.validate_antlr_sdist(path)
+
+
+def test_single_built_wheel_accepts_source_mtime_while_two_runs_require_equal_bytes(tmp_path):
+    first = tmp_path / "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(first, timestamp=(2021, 1, 1, 0, 0, 0))
+    assert environment.validate_built_antlr_wheel(first)["version"] == "4.9.3"
+
+
+def test_two_builds_require_exactly_one_valid_byte_identical_wheel(tmp_path):
+    first = tmp_path / "first"
+    second = tmp_path / "second"
+    first.mkdir()
+    second.mkdir()
+    name = "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(first / name)
+    _built_antlr_wheel(second / name)
+    _write_build_facts(first)
+    _write_build_facts(second)
+    record = environment.validate_build_outputs(first, second)
+    assert record["distribution"] == "antlr4-python3-runtime"
+    (second / name).write_bytes((second / name).read_bytes() + b"changed")
+    with pytest.raises(environment.CC002Error, match="REPRODUCIBILITY|BUILT_WHEEL"):
+        environment.validate_build_outputs(first, second)
+
+
+@pytest.mark.parametrize("alias", (False, True))
+def test_two_builds_require_distinct_resolved_output_directories(tmp_path, alias):
+    output = tmp_path / "build"
+    output.mkdir()
+    name = "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(output / name)
+    _write_build_facts(output)
+    second = output / ".." / "build" if alias else output
+    with pytest.raises(environment.CC002Error, match="distinct"):
+        environment.validate_build_outputs(output, second)
+
+
+def test_build_outputs_require_equal_observed_child_facts(tmp_path):
+    first = tmp_path / "first"
+    second = tmp_path / "second"
+    first.mkdir()
+    second.mkdir()
+    name = "antlr4_python3_runtime-4.9.3-py3-none-any.whl"
+    _built_antlr_wheel(first / name)
+    _built_antlr_wheel(second / name)
+    facts = _build_facts()
+    for output in (first, second):
+        (output / ".cc002-build-facts.json").write_text(json.dumps(facts), encoding="utf-8")
+    record = environment.validate_build_outputs(first, second)
+    assert record["distribution"] == "antlr4-python3-runtime"
+    facts["python"] = {**environment.PYTHON_TUPLE, "version": "3.12.11"}
+    (second / ".cc002-build-facts.json").write_text(json.dumps(facts), encoding="utf-8")
+    with pytest.raises(environment.CC002Error, match="BUILD_FACTS"):
+        environment.validate_build_outputs(first, second)
+
+
+def test_source_build_command_is_two_run_network_none_hardened_and_fixed(tmp_path, monkeypatch):
+    inputs = tmp_path / "inputs"
+    roots = tmp_path / "roots"
+    output = tmp_path / "output"
+    for directory in (inputs, roots, output):
+        directory.mkdir()
+    (roots / environment.PIP_WHEEL_FILENAME).write_bytes(b"pip")
+    command = environment.build_command(inputs, roots, output, host_user={"uid": 501, "gid": 20})
+    assert command[:2] == ["docker", "run"]
+    assert command[command.index("--network") + 1] == "none"
+    assert command[command.index("--user") + 1] == "501:20"
+    assert "--read-only" in command
+    assert command[command.index("--cap-drop") + 1] == "ALL"
+    assert command[command.index("--security-opt") + 1] == "no-new-privileges"
+    assert f"SOURCE_DATE_EPOCH={environment.SOURCE_DATE_EPOCH}" in command
+    assert "/tmp:rw,noexec,nosuid,nodev" in command
+    assert "--no-build-isolation" in environment.BUILD_PROGRAM
+    assert "--use-pep517" in environment.BUILD_PROGRAM
+    assert "setuptools-83.0.0-py3-none-any.whl" in environment.BUILD_PROGRAM
+    assert "venv" not in environment.BUILD_PROGRAM
+
+
+@pytest.mark.parametrize(
+    "case",
+    ("output-equal-input", "output-under-input", "input-under-output", "input-under-roots", "roots-under-input"),
+)
+def test_source_build_command_refuses_overlapping_mount_sources(tmp_path, case):
+    inputs = tmp_path / "inputs"
+    roots = tmp_path / "roots"
+    output = tmp_path / "output"
+    if case == "output-equal-input":
+        output = inputs
+    elif case == "output-under-input":
+        output = inputs / "output"
+    elif case == "input-under-output":
+        inputs = output / "inputs"
+    elif case == "input-under-roots":
+        inputs = roots / "inputs"
+    elif case == "roots-under-input":
+        roots = inputs / "roots"
+    with pytest.raises(environment.CC002Error, match="overlap"):
+        environment.build_command(
+            inputs, roots, output, host_user={"uid": 501, "gid": 20}
+        )
+
+
+def test_source_build_program_proves_exact_frontend_and_backend_target():
+    program = environment.BUILD_PROGRAM
+    assert "pip.__version__" in program
+    assert "pip.__file__" in program
+    assert "/pip/pip-25.0.1-py3-none-any.whl/pip/__init__.py" in program
+    assert "setuptools.__version__" in program
+    assert "setuptools.__file__" in program
+    assert "setuptools.build_meta" in program
+    assert "__legacy__" in program
+    assert "--target=/tmp/cc002-backend" in program
+    assert "target.iterdir()" in program
+    assert "is_symlink()" in program
+    assert "distributions(path=[str(target)])" in program
+    assert "[('setuptools', '83.0.0')]" in program
+    assert "'/pip/pip-25.0.1-py3-none-any.whl:/tmp/cc002-backend'" in program
+    assert "os.umask(0o022)" in program
+    assert "'umask': '022'" in program
+    assert "'backend_interface': 'setuptools.build_meta:__legacy__'" in program
+    assert "'no_build_isolation': True" in program
+    assert "'tz': 'UTC'" in program
+    assert "'python_hash_seed': '0'" in program
+    assert "'PYTHONNOUSERSITE': '1'" in program
+    assert "home.mkdir(mode=0o700)" in program
+    assert "'PYTHONSAFEPATH': '1'" in program
+    assert "'python', '-P', '-S', '-m', 'pip', 'wheel'" in program
+    assert "cwd='/tmp'" in program
+    assert "cwd=str(project)" not in program
