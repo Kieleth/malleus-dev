@@ -13,10 +13,10 @@
     {
       "byte_length": 14244,
       "path": "tests/test_contract_compiler_duplicate_scan.py",
-      "sha256": "sha256:6cedbdcfcc48b088f3db90a9637bf5cef09a045f6327bce9e4b09144d6e504e4"
+      "sha256": "sha256:e5b1a3005b6e0d377e522265f9180c1aac6a74038c885bcd1e64708876f43283"
     }
   ],
-  "base_commit": "61f488ded1870fbfbf2fbdecc901baf9c1c503dd",
+  "base_commit": "b7e450afdfce2556b92669d56d2b481e88353481",
   "checks": [
     {
       "check_id": "ccx02-red",

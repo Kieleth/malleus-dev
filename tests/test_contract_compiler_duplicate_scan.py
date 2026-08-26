@@ -420,7 +420,7 @@ def test_evidence_binds_only_the_measurement_and_implementation_bytes():
     }
     assert evidence["schema"] == "malleus.contract-compiler.verification-report/v1"
     assert evidence["workstream_id"] == "CC-X02"
-    assert evidence["base_commit"] == "61f488ded1870fbfbf2fbdecc901baf9c1c503dd"
+    assert evidence["base_commit"] == "b7e450afdfce2556b92669d56d2b481e88353481"
     assert [item["path"] for item in evidence["artifacts"]] == [
         "conformance/contract_compiler/v0/bundled_declaration_scan.json",
         "scripts/contract_compiler_duplicate_scan.py",
