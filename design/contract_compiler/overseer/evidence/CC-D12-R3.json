@@ -1,0 +1,208 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 22834,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:02a277119ddff151b43a8ef73803d43cb06d34970704d9edf2dde2aa0d427796"
+    },
+    {
+      "byte_length": 29401,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:b0479b7fdf90226afe92f5f8bfdfe1236c80184d7df2e81aa73b6129f8cac73f"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:c6d9d3f3fc8eb0a17472227efe280c2876115ca5589caa447d39911d48272609"
+    },
+    {
+      "byte_length": 240519,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c"
+    },
+    {
+      "byte_length": 75862,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:760e38cd62927a3fc945c456c54f3b09b5f5b6ea87cdda7a36bdcd67b3556e44"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:18ab01217c3185d9ddf7e01efed7a7ff67c7dc5b83a9fa9a63c05e29c63d2fd1"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:e8732ce2f7baa2a2f0407b2a2072ad91f3092916d6a4a3edee690d1f0becf2e7"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:e5b77cf2dd3cb41830d9ad7214a10b8a50a6baf7ca3008c90ab6ef25ae1b93a2"
+    },
+    {
+      "byte_length": 45989,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:a64a796fbbe6abfe9038841ee50b864fe36351335cbb0dc935c2037d1e7ca7c5"
+    },
+    {
+      "byte_length": 1485,
+      "path": "design/contract_compiler/overseer/entries/OVR-000069.json",
+      "sha256": "sha256:3f1f72dbb437fbbf2e1aad2dfaeec213884228f169330361e513c6af700ad910"
+    },
+    {
+      "byte_length": 1303,
+      "path": "design/contract_compiler/overseer/entries/OVR-000070.json",
+      "sha256": "sha256:011f1ccef652b5299b23aa4588edd66dacc2802a0ed2fb0370669a6b5c1747ce"
+    },
+    {
+      "byte_length": 1323,
+      "path": "design/contract_compiler/overseer/entries/OVR-000071.json",
+      "sha256": "sha256:62c93ddd39554c47af605923c4ab7f428ed87f5694c4600d834fbe70f31396e3"
+    },
+    {
+      "byte_length": 8898,
+      "path": "design/contract_compiler/overseer/entries/OVR-000072.json",
+      "sha256": "sha256:095ceccda8ddc22a29cb3481da41bce52a9f53ea2a61b61c361db0a7ebcef0bb"
+    },
+    {
+      "byte_length": 1376,
+      "path": "design/contract_compiler/workstreams/CC-D12/manifest.json",
+      "sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7"
+    },
+    {
+      "byte_length": 9229,
+      "path": "design/contract_compiler/overseer/evidence/CC-D12.json",
+      "sha256": "sha256:de3496393866fcbb013172e4fd4aba3cfad2cad06075a514990e4ba75c09b678"
+    },
+    {
+      "byte_length": 11219,
+      "path": "design/contract_compiler/overseer/evidence/CC-D12-R2.json",
+      "sha256": "sha256:cd4f95683c091df06395f00d177910478b610a782ac2d20bdaa57124a1d2047d"
+    },
+    {
+      "byte_length": 3909,
+      "path": "design/contract_compiler/overseer/evidence/CC-002-progress-01.json",
+      "sha256": "sha256:c3e7126416c52f788812536074e7291cc4d1546eb7ceb76fba54a2ec88ed1ee0"
+    },
+    {
+      "byte_length": 5758,
+      "path": "design/contract_compiler/overseer/entries/OVR-000061.json",
+      "sha256": "sha256:f36a00c181637ae233b93c6520770d0c4c513871fcc68e1cd4141595b75ef792"
+    },
+    {
+      "byte_length": 2464,
+      "path": "design/contract_compiler/overseer/entries/OVR-000064.json",
+      "sha256": "sha256:af9c27b2d372306679b6a6a3e303172b2723d9966ba9e5a360b79b6aa607dd59"
+    },
+    {
+      "byte_length": 3835,
+      "path": "design/contract_compiler/overseer/entries/OVR-000065.json",
+      "sha256": "sha256:06748a564422fc11ebc5e8ef747588601879e58495833581c0ff9f75fc6c2d2a"
+    }
+  ],
+  "base_commit": "a3d2d644fa92ae6d59bff0cc5a422557d35afe85",
+  "checks": [
+    {
+      "check_id": "ccd12-r3-blocker-route",
+      "method": "Inspect the immutable first-real-attempt report, exact wheel metadata, and operator replacement decision.",
+      "observed": "The resolver selected prefixcommons 0.1.12 and failed at its source-only pytest-logging requirement. R3 keeps LinkML 1.11.1 and selects a distinct deterministic local-version wheel derivation instead of importing test infrastructure into runtime.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-upstream-coordinate",
+      "method": "Match the selected files.pythonhosted.org locator, byte length, digest, archive inventory, and license identity.",
+      "observed": "The exact upstream wheel is 29482 bytes with sha256 16dbc0a1...7f8b, 14 members, 109044 expanded bytes, ten package code/data members, and a 1500-byte LICENSE with sha256 3a9b5b0d...7b4.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-local-version",
+      "method": "Inspect the selected derived distribution identity and non-impersonation boundary.",
+      "observed": "The derived version is exactly 0.1.12+malleus.1. A transformed artifact carrying upstream version 0.1.12 is forbidden.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-payload-license-boundary",
+      "method": "Inspect the exact transform allowlist and retained payload identities.",
+      "observed": "All package code, resource, and license payload bytes must remain exact. The pinned 1500-byte BSD 3-Clause License notice remains inside both wheel archives and is bound by the derivation record; no standalone license file is required. Only the necessary METADATA requirement/version, dist-info paths, generator identity, RECORD, and deterministic ZIP metadata may change.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-metadata-boundary",
+      "method": "Compare the raw requirement target and WHEEL policy with the selected transformation contract.",
+      "observed": "The 1960-byte METADATA sha256 is 4c6cf90d...303 and only its exact Version and pytest-logging targets change. The 83-byte WHEEL sha256 is cb778389...56c and only poetry 1.0.7 changes to malleus-cc002 (wheel-derivation-v1).",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-double-transform",
+      "method": "Inspect the deterministic execution and acceptance profile.",
+      "observed": "Two fresh selected-OCI children, network denied, and the unchanged R2 environment must produce byte-identical wheels. The stdlib-only ZIP-member transform uses lexical member order, ZIP_STORED, 1980-01-01 00:00:00, Unix identity, mode 0644, empty comments/extras, and a final-payload RECORD with empty self cells; it never imports, extracts, or executes prefixcommons and rejects invalid RECORDs or unsafe members.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-retention-evidence",
+      "method": "Inspect separation of derivative, build, and runtime areas plus v3 evidence fields.",
+      "observed": "The upstream wheel stays only at derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl; the derived wheel stays under built/ with derivation-record.json. The four named v3 schemas bind eight retained inputs, two produced artifacts, wheel-derivation/v1, and derivation_record_sha256 while container-verification/v1, source-build/v1, and build-record.json remain unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-resolver-runtime",
+      "method": "Inspect direct-root resolution and runtime-closure rejection rules.",
+      "observed": "/built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl is the exact direct resolver root; substitution fails closed; the official prefixcommons wheel and pytest, pytest-logging, and py are absent from the runtime wheelhouse and installed closure.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-offline-smokes",
+      "method": "Inspect the accepted clean network-denied offline verification suite.",
+      "observed": "The suite requires pip check; strict prefixcommons expansion of GO:0008150 to http://purl.obolibrary.org/obo/GO_0008150 and contraction back to [GO:0008150]; linkml_runtime.utils.namespaces.Namespaces binding ex to https://example.org/ and compacting https://example.org/item to ex:item; and the existing generic ontology/malleus.yaml JSON Schema generator smoke.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-ownership-stops",
+      "method": "Inspect maintenance ownership, replacement policy, and every named stop condition.",
+      "observed": "Malleus owns derived packaging maintenance/security. Payload drift, license loss, unequal transforms, substitution, forbidden test packages, and plugin-dependent smokes stop; clean upstream replacement needs a new decision.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-correction-authority",
+      "method": "Validate actor, subject, target, replacement requirement, and chronology for OVR-000069 through OVR-000072.",
+      "observed": "The operator corrects and replaces OD-012 R2. The overseer separately corrects the prior CC-D12 and CC-002 projected states. All three corrections require later active same-subject replacements.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-canonical-graph",
+      "method": "Parse all 28 Markdown Turtle fences and compare their RDF set with sorted canonical N-Triples revision 14.",
+      "observed": "Both projections contain the same 1338 triples with empty directed differences; canonical sha256 is 4bea632c...369c and OD-012 selects only the R3 baseline object.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-graph-invariants",
+      "method": "Check one status per status subject and topologically traverse every dependsOn edge.",
+      "observed": "All 266 status subjects have one distinct status. The 103-node, 105-edge dependsOn graph is acyclic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-historical-immutability",
+      "method": "Compare all prior correction, decision, state, binding, progress, and R2 report bytes with commit a3d2d644fa92ae6d59bff0cc5a422557d35afe85.",
+      "observed": "OVR-000058 through OVR-000068, CC-D12-R2.json, and CC-002-progress-01.json remain byte-identical. Original CC-D12 card and evidence also remain identical to the earlier governance base.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-zero-production-change",
+      "method": "Inspect the R3 correction diff and all CC-002 publication paths.",
+      "observed": "This correction changes governance documents, graph projections, ledger tests, and new append-only governance records only. It creates no adapter change, acquired byte, derived wheel, compiler environment, or staging artifact.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies R3 governance bytes and hard policy tests. It does not claim the upstream prefixcommons bytes are retained by CC-002, a derived wheel exists, double-transform equality, a v3 environment, offline installation, or smoke success.",
+    "The first real R2 attempt proved the blocker and atomic cleanup, not final R3 materialization.",
+    "The original CC-D12 card, CC-D12.json, R2 report, progress report, and OVR-000058 through OVR-000068 remain immutable historical records.",
+    "The historical CC-002 dependency binding integrated_head does not contain R3. The final candidate must use and record the actual commit that integrates this correction.",
+    "Canonical graph revision 14 is design authority only and makes no shipped-capability claim.",
+    "Malleus acceptance of maintenance responsibility is policy authority, not a claim that future upstream security review is complete."
+  ],
+  "recorded_at": "2026-08-26T02:00:04Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D12"
+}

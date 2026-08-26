@@ -1,0 +1,172 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 24383,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:43f961ea4de367074f683509ef9213a526453921ebce8f17293ee03d330290f9"
+    },
+    {
+      "byte_length": 50174,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:e11a367bef04a45f1732a5cff7afaddf95778d12057f54bf36d3b4cd31bb5357"
+    },
+    {
+      "byte_length": 240519,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c"
+    },
+    {
+      "byte_length": 75862,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:760e38cd62927a3fc945c456c54f3b09b5f5b6ea87cdda7a36bdcd67b3556e44"
+    },
+    {
+      "byte_length": 11970,
+      "path": "design/contract_compiler/overseer/evidence/CC-D12-R3.json",
+      "sha256": "sha256:1f4e71eb7c0f3dac0be5bf6bd8e633dfc6975979e5756796631cf014320c3bd9"
+    },
+    {
+      "byte_length": 1485,
+      "path": "design/contract_compiler/overseer/entries/OVR-000069.json",
+      "sha256": "sha256:3f1f72dbb437fbbf2e1aad2dfaeec213884228f169330361e513c6af700ad910"
+    },
+    {
+      "byte_length": 1303,
+      "path": "design/contract_compiler/overseer/entries/OVR-000070.json",
+      "sha256": "sha256:011f1ccef652b5299b23aa4588edd66dacc2802a0ed2fb0370669a6b5c1747ce"
+    },
+    {
+      "byte_length": 1323,
+      "path": "design/contract_compiler/overseer/entries/OVR-000071.json",
+      "sha256": "sha256:62c93ddd39554c47af605923c4ab7f428ed87f5694c4600d834fbe70f31396e3"
+    },
+    {
+      "byte_length": 8898,
+      "path": "design/contract_compiler/overseer/entries/OVR-000072.json",
+      "sha256": "sha256:095ceccda8ddc22a29cb3481da41bce52a9f53ea2a61b61c361db0a7ebcef0bb"
+    },
+    {
+      "byte_length": 5203,
+      "path": "design/contract_compiler/overseer/entries/OVR-000073.json",
+      "sha256": "sha256:b5867998fafe3dc2649b251819145f032d456d7b54c07ee807de57c67e4694eb"
+    },
+    {
+      "byte_length": 5185,
+      "path": "design/contract_compiler/overseer/entries/OVR-000074.json",
+      "sha256": "sha256:30de0203fee9a3c6ae25a0ede22b573e70c19f73b1bdd6601f88cab6a74cbc8f"
+    },
+    {
+      "byte_length": 3121,
+      "path": "design/contract_compiler/overseer/entries/OVR-000075.json",
+      "sha256": "sha256:64b4d744cfe491df70dfa3c4d18d9944654a620eeb05ac888475cd2ab3a07da2"
+    },
+    {
+      "byte_length": 5436,
+      "path": "design/contract_compiler/overseer/entries/OVR-000076.json",
+      "sha256": "sha256:fbac3bceeee378bd2f5fe5c9633fabedfc636170c2d212a9ce717ae09d4fdf41"
+    },
+    {
+      "byte_length": 2328,
+      "path": "design/contract_compiler/overseer/entries/OVR-000077.json",
+      "sha256": "sha256:b57a83e46bb2e015a62715a02c251a763ec1c3ed4aace4394f9e85b320ab0cef"
+    },
+    {
+      "byte_length": 1378,
+      "path": "design/contract_compiler/overseer/entries/OVR-000078.json",
+      "sha256": "sha256:e524937023dd8bed143982697f24ea6e520774620e555c000ca8dc8a90741a36"
+    },
+    {
+      "byte_length": 1261,
+      "path": "design/contract_compiler/overseer/entries/OVR-000079.json",
+      "sha256": "sha256:0c8bb27bf714ef1250cbaf875433cba3afe310136834fbf4dbcc494419352e1e"
+    },
+    {
+      "byte_length": 1330,
+      "path": "design/contract_compiler/overseer/entries/OVR-000080.json",
+      "sha256": "sha256:a4aae0d30619ff431303d30e4c09e4ce47ed4f92237e88177afc6182e1153f42"
+    },
+    {
+      "byte_length": 4953,
+      "path": "design/contract_compiler/overseer/entries/OVR-000081.json",
+      "sha256": "sha256:902b1f6b070f8d392af7c75f35b2e21028de8419aedf214943a614142a121c4d"
+    }
+  ],
+  "base_commit": "a3d2d644fa92ae6d59bff0cc5a422557d35afe85",
+  "checks": [
+    {
+      "check_id": "ccd12-r3-archive-prior-immutability",
+      "method": "Hash OVR-000069 through OVR-000077 and CC-D12-R3.json before appending the refinement.",
+      "observed": "All ten historical R3 files retain their exact pre-refinement byte identities; the refinement begins at OVR-000078.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-archive-replacement-authority",
+      "method": "Inspect correction and replacement chronology for OD-012, CC-D12, and CC-002.",
+      "observed": "OVR-000078 through OVR-000080 correct OVR-000072, OVR-000075, and OVR-000076 with replacement_required=true. OVR-000081 supplies the operator replacement and incorporates OVR-000072 unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-archive-member-order",
+      "method": "Inspect the selected final-name and ordering grammar.",
+      "observed": "Archive members and RECORD rows use ascending Unicode code-point order of final POSIX member names, including RECORD and its row; every final ZIP filename is ASCII.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-record-csv-grammar",
+      "method": "Inspect every selected RECORD encoding and CSV field.",
+      "observed": "RECORD is UTF-8 without BOM, exactly three comma-delimited fields, ASCII double-quote quotechar, doublequote true, QUOTE_MINIMAL, no escapechar, LF terminator, and terminal LF.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-record-integrity-grammar",
+      "method": "Inspect non-self and self RECORD rows.",
+      "observed": "Each non-RECORD row binds URL-safe Base64 raw SHA-256 without '=' padding and decimal payload length. RECORD's own hash and size cells are empty.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-zipinfo-grammar",
+      "method": "Inspect every selected ZipInfo and archive field.",
+      "observed": "The policy fixes filename, date_time, ZIP_STORED, create_system, create_version, extract_version, reserved, flag_bits, volume, internal_attr, external_attr, member extra/comment, and archive comment exactly.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-zip64-consequences",
+      "method": "Inspect ZIP64 rejection and consequence-only fields.",
+      "observed": "ZIP64 is disabled and every requiring case is rejected. CRC32, compressed and uncompressed sizes, and header offsets follow only from exact payload and order.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-explicit-default-rejection",
+      "method": "Inspect implementation obligations for writing and post-write validation.",
+      "observed": "The implementation must set every selected RECORD, ZipInfo, and archive field, reopen the wheel, and validate every selected field and byte without relying on CPython defaults.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-official-factual-roots",
+      "method": "Compare the decision wording with https://packaging.python.org/en/latest/specifications/recording-installed-packages/ and https://docs.python.org/3.12/library/zipfile.html.",
+      "observed": "The PyPA source defines compatible RECORD semantics and Python 3.12 documents ZipInfo/ZIP attributes. The additional exact values are explicitly identified as Malleus choices, not source mandates.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-rdf-date-cutoff",
+      "method": "Parse canonical RDF and inspect the exact canonical header.",
+      "observed": "OD-012 has exactly decisionDate 2026-08-25 while the canonical graph header has exactly Evidence cutoff: 2026-08-26.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r3-archive-zero-production-change",
+      "method": "Inspect refinement paths and retained publication boundaries.",
+      "observed": "The refinement changes governance prose, hard governance tests, card policy, and append-only governance records only. It creates no production transform, derived wheel, or compiler environment.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies exact governance bytes and policy assertions. It does not claim that CC-002 has implemented the transform or produced a derived wheel.",
+    "The official sources establish factual RECORD and zipfile semantics. The complete deterministic archive grammar is selected by Malleus.",
+    "OVR-000069 through OVR-000077 and CC-D12-R3.json remain immutable historical authority and evidence.",
+    "CC-002 remains candidate NONE with worker ledger NOT_STARTED until genuine R3 implementation evidence exists."
+  ],
+  "recorded_at": "2026-08-26T02:01:04Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D12"
+}

@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Materialization must use the actual commit that integrates this archive-grammar refinement as its candidate base; that commit does not exist while these changes are uncommitted.",
+      "Exact prefixcommons acquisition, explicit field setting, post-write validation, deterministic double transform, v3 evidence, runtime resolution, offline acceptance, retained environment, and final thirteen-artifact candidate remain unproven execution facts."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Preserve every OVR-000072 R3 implementation requirement and the existing bounded MCP transport, nine scopes, seven checkpoint FILE artifacts, candidate NONE, and worker ledger NOT_STARTED.",
+      "Implement ascending Unicode code-point member and RECORD-row ordering over final ASCII POSIX names, including RECORD and its row.",
+      "Write the exact UTF-8, CSV, digest, length, self-row, line-terminator, and terminal-LF RECORD grammar.",
+      "Set every selected ZipInfo and archive field, disable ZIP64, reject requiring cases, and treat CRC32, sizes, and offsets as consequences only.",
+      "Reopen each derived wheel and validate every selected field and byte; never use CPython defaults as policy.",
+      "Run the transform twice in fresh selected-OCI network-denied children and require byte-identical output under every prior R3 stop condition.",
+      "Retain the exact thirteen-artifact completion contract with build-record.json and derivation-record.json as distinct artifacts.",
+      "Do not add a scope, implement compiler semantics, alter packaging or CI, or choose dependency policy."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000081",
+      "OVR-000082",
+      "OVR-000083"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:987d041866e550ba73a840dcfc2f70a202a26e1d73d71c464ffaa63a2590fdd6",
+  "entry_id": "OVR-000085",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:089705dd93e3f892ae03a93896b44171f333e0d2cea0110c763d7f19a5f7795a",
+  "recorded_at": "2026-08-26T02:01:08Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000081",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000082",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000083",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000084",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000016",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 85,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reauthorize CC-002 under the fully explicit OD-012 R3 byte grammar.",
+  "why": "The refined authority removes all remaining csv, zipfile, ZIP64, ordering, and default-driven choices while preserving the complete OVR-000072 contract. CC-002 may now implement and attest only that exact profile after the governance base exists."
+}

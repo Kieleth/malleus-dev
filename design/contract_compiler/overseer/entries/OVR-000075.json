@@ -1,0 +1,69 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Replace OD-012 R2 with the release-first LinkML 1.11.1 R3 baseline while preserving every R2 coordinate and acceptance gate.",
+      "Select the exact prefixcommons 0.1.12 upstream wheel, archive inventory, METADATA, WHEEL, and license identities as derivative input.",
+      "Select distinct derived version 0.1.12+malleus.1, the exact metadata-only allowlist, and package, resource, and license byte-identity boundary.",
+      "Select two fresh network-denied stdlib-only ZIP-member transforms, whole-wheel and RECORD validation, unsafe-member rejection, byte equality, the exact deterministic ZIP grammar, four explicit v3 schemas, unchanged container/source-build v1 schemas, derivation evidence, and thirteen-artifact completion contract.",
+      "Require /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl as the direct resolver root, keep its BSD 3-Clause notice inside both wheel artifacts with no standalone license, exclude the upstream wheel and pytest, pytest-logging, and py from runtime, and run the exact offline acceptance suite.",
+      "Assign derived packaging maintenance and security review to Malleus and require a new governed decision for clean upstream replacement.",
+      "Promote R3 into canonical graph revision 14 with exact 28-fence projection parity, status uniqueness, and acyclic dependsOn graph.",
+      "Preserve every prior ledger entry, report, and the zero-scope CC-D12 card byte-for-byte."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000072",
+      "OVR-000073",
+      "OVR-000074"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D12"
+  },
+  "entry_hash": "sha256:1f4ca0d5d5cbdd22f128daf483ef4c2d62a8ae601a6b26d3842d26bdcf768ae8",
+  "entry_id": "OVR-000075",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d40ede0f9b51ed8e3ef94e7726a2123a3bd46bb246578087b38c0a8138be2943",
+  "recorded_at": "2026-08-26T02:00:07Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000072",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000073",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000074",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 75,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D12 under exact OD-012 R3 derivation authority.",
+  "why": "OVR-000072 supplies the exact operator replacement, OVR-000073 registers its document, graph, test, and immutable report bytes, and OVR-000074 mechanically verifies the full policy and append-only boundary. CC-D12 therefore closes without creating or claiming any compiler-environment byte."
+}

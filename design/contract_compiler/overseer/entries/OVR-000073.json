@@ -1,0 +1,131 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-012",
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b0479b7fdf90226afe92f5f8bfdfe1236c80184d7df2e81aa73b6129f8cac73f",
+        "before_digest": "sha256:9b9fe0073e75a3bf879d04d8bc1dcbd962b97a9666a33953a2caa935c89d35f0",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:02a277119ddff151b43a8ef73803d43cb06d34970704d9edf2dde2aa0d427796",
+        "before_digest": "sha256:fa2b54323f0bd325568904d40d9331dad58c6175fd968d9575660939cd4adce5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c",
+        "before_digest": "sha256:e6e5efaeb2688a0307116db6cc0d96a169401ff5d36f8834775c52e3b5907e8e",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:c6d9d3f3fc8eb0a17472227efe280c2876115ca5589caa447d39911d48272609",
+        "before_digest": "sha256:50004f1de575ad0f69e697c8707540c320f813bccadf4d96349dae5dbe418e79",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:760e38cd62927a3fc945c456c54f3b09b5f5b6ea87cdda7a36bdcd67b3556e44",
+        "before_digest": "sha256:fb4d9076f47147f05b8416463e668238816ffd02f274e53f7d5ec7893940b3c0",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:18ab01217c3185d9ddf7e01efed7a7ff67c7dc5b83a9fa9a63c05e29c63d2fd1",
+        "before_digest": "sha256:269adf1e37fdbc4f6316c56e1a6b17fab1803590f246ef9380e6f939cdeb0144",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:e8732ce2f7baa2a2f0407b2a2072ad91f3092916d6a4a3edee690d1f0becf2e7",
+        "before_digest": "sha256:0c00186115eb92a35761818aaa1c234c22ab75acd553ceccf6b4a520335e51b4",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:e5b77cf2dd3cb41830d9ad7214a10b8a50a6baf7ca3008c90ab6ef25ae1b93a2",
+        "before_digest": "sha256:bc0e26ef4fe19736916b1e3707415de0cb06b26085939527db12a2991e8d5c91",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:a64a796fbbe6abfe9038841ee50b864fe36351335cbb0dc935c2037d1e7ca7c5",
+        "before_digest": "sha256:6b7fd86e4bc957cf126116fcbbd3649e5c1e6ebecf30833a9225f00796d8ab65",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:1f4e71eb7c0f3dac0be5bf6bd8e633dfc6975979e5756796631cf014320c3bd9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D12-R3.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:4260be12850ac81899b221c1ab301823c5ecf246d3f8830fc1adccdda2fe80c2",
+  "entry_id": "OVR-000073",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:865825ac765bde191fb6a62c67d6cf320eb49be8eaecfc51b6f56d8f41dbb264",
+  "recorded_at": "2026-08-26T02:00:05Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:1f4e71eb7c0f3dac0be5bf6bd8e633dfc6975979e5756796631cf014320c3bd9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12-R3.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000072",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 73,
+  "subject": {
+    "id": "ccd12-r3-governance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Promote the exact OD-012 R3 wheel-derivation policy into graph revision 14.",
+  "why": "The operator replacement needs current prose and semantic projections, a hard governance guard, and immutable evidence before workstream states can be restored. Revision 14 creates a distinct R3 object that supersedes R2, preserves all R2 coordinates, and binds the derivative-input, payload/license identity, non-impersonation, double-transform, v3 evidence, runtime exclusion, ownership, and future-replacement boundaries."
+}

@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "OD-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000061"
+  },
+  "entry_hash": "sha256:90a51c4762e3f2bff8a27d755990bccc070c4919fbb60b5900f0a4ba38f3636b",
+  "entry_id": "OVR-000069",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b18e53320db94154417172aeca9ff465447dca761fb263897192f13b606702f3",
+  "recorded_at": "2026-08-26T02:00:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000061",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 69,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Correct OD-012 after the real resolver exposed a test-only runtime edge.",
+  "why": "The first real R2 acquisition selected prefixcommons 0.1.12, whose published wheel declares pytest-logging>=2015.11.4,<2016.0.0 as a runtime requirement even though PyPI supplies no wheel and the plugin depends on obsolete test infrastructure. R2 authorizes neither a packaging derivation nor test packages in the compiler runtime. Historical R2 authority remains immutable; a replacement decision must select an exact non-impersonating derived version, transformation boundary, ownership, and acceptance gate."
+}

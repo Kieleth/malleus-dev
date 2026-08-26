@@ -1,0 +1,94 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-012"
+    ],
+    "consequences": [
+      "CC-002 may resume only after this R3 correction is integrated and its actual commit is known.",
+      "Malleus owns maintenance and security review of the derived prefixcommons packaging artifact; CC-D12 selects exact inputs, transformation boundaries, ownership, and acceptance policy, while CC-002 acquires, transforms, resolves, materializes, and attests bytes without choosing policy.",
+      "A future clean upstream prefixcommons replacement, LinkML fork, version change, transform change, or relaxation of an identity gate requires a new governed decision.",
+      "The reproducibility tuple and controlled build and transform profiles do not narrow the Malleus runtime or CI support matrix.",
+      "The final runtime closure remains wheel-only and excludes pytest, pytest-logging, and py."
+    ],
+    "constraints": [
+      "Use LinkML v1.11.1 at commit a7ed3e4cbb19731f072d0d90b6d52f7d822569ee; retain linkml wheel sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed, linkml-runtime wheel sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da, linkml sdist sha256:2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524, and runtime sdist sha256:e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754 as released and not rebuilt.",
+      "Retain antlr4-python3-runtime-4.9.3.tar.gz, 117034 bytes, sha256:f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b, from https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz as a build input.",
+      "Retain setuptools-83.0.0-py3-none-any.whl, 1008090 bytes, sha256:29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3, from https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl as the build backend input.",
+      "Use CPython 3.12.10 Linux x86_64 cp312, pip 25.0.1 wheel sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f, python:3.12.10-slim-bookworm index sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db, and linux/amd64 child sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4.",
+      "Build ANTLR twice in two fresh selected-OCI children with network denied, no build isolation, pip 25.0.1, setuptools.build_meta:__legacy__, SOURCE_DATE_EPOCH=315532800, TZ=UTC, PYTHONHASHSEED=0, and umask 022; require byte-identical output, wheel-only hash-pinned runtime resolution, and clean offline installation.",
+      "Pin prefixcommons-0.1.12-py3-none-any.whl, 29482 bytes, sha256:16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b, from https://files.pythonhosted.org/packages/31/e8/715b09df3dab02b07809d812042dc47a46236b5603d9d3a2572dbd1d8a97/prefixcommons-0.1.12-py3-none-any.whl; require 14 members, 109044 expanded bytes, ten package code or data members, and a 1500-byte BSD 3-Clause License with sha256:3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4.",
+      "Derive exactly prefixcommons 0.1.12+malleus.1 as prefixcommons-0.1.12+malleus.1-py3-none-any.whl; never impersonate upstream 0.1.12. Remove only raw Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0), semantic pytest-logging>=2015.11.4,<2016.0.0.",
+      "Preserve every package code, resource, and license payload byte exactly. Change only necessary METADATA version and requirement, derived dist-info paths, WHEEL generator, RECORD, and deterministic ZIP metadata. Require upstream METADATA 1960 bytes, sha256:4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303, exact raw Version: 0.1.12 and Requires-Dist targets, and otherwise identical body and field order.",
+      "Require upstream WHEEL to be 83 bytes with sha256:cb778389a15548d4cf6e0cdf367d27627e6d127d5c5fa5ab75eb43950338c56c; replace only Generator: poetry 1.0.7 with Generator: malleus-cc002 (wheel-derivation-v1), preserving Wheel-Version, Root-Is-Purelib, Tag, line order, and body.",
+      "Run a stdlib-only deterministic transform twice in fresh selected-OCI children with network denied, SOURCE_DATE_EPOCH=315532800, TZ=UTC, PYTHONHASHSEED=0, and umask 022; write members in lexical name order with ZIP_STORED, timestamp exactly 1980-01-01 00:00:00, Unix create-system identity, regular-file mode 0644, and empty archive/member comments and extra fields; require byte-identical results. RECORD is generated from the final member payloads and names; its own hash/size cells stay empty.",
+      "The derivation reads ZIP members only and never imports, extracts, or executes prefixcommons. Validate the exact input RECORD and exact whole-wheel identity, then reject duplicate/unsafe member names or non-regular member types before transformation.",
+      "Retain upstream only at derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl. Retain the derived wheel under built/ and derivation-record.json using malleus.cc002.wheel-derivation/v1 to bind both transforms and tool provenance. Keep the exact 1500-byte BSD 3-Clause License byte-identical inside both wheels and bind it in the record; no separate extracted license file. Keep ANTLR build-record.json and malleus.cc002.source-build/v1 unchanged.",
+      "Set schemas to malleus.cc002.acquire-result/v3, malleus.cc002.verify-result/v3, malleus.cc002.compiler-environment/v3, and malleus.cc002.internal-verification/v3. Retain malleus.cc002.container-verification/v1 and malleus.cc002.source-build/v1 unchanged; add only malleus.cc002.wheel-derivation/v1 and derivation_record_sha256, with eight retained inputs and two produced artifacts.",
+      "Pass exactly /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl as the direct resolver input and root; reject substitution; require the official prefixcommons wheel absent from the runtime wheelhouse and pytest, pytest-logging, and py absent from resolved and installed runtime closure.",
+      "In the clean network-denied offline installation run pip check; require prefixcommons to expand GO:0008150 to http://purl.obolibrary.org/obo/GO_0008150 and contract it back to exactly [GO:0008150] in strict mode; require linkml_runtime.utils.namespaces.Namespaces to bind ex to https://example.org/ and return ex:item for https://example.org/item; and run the existing generic ontology/malleus.yaml JSON Schema generator smoke.",
+      "Stop on any non-allowlisted payload change, license loss, unequal transform, resolver substitution, forbidden test package, or smoke that requires the removed plugin."
+    ],
+    "decision_id": "OD-012",
+    "satisfies_workstreams": [
+      "CC-D12"
+    ],
+    "selected_option": "Release-first LinkML v1.11.1 baseline R3 with a deterministic non-impersonating prefixcommons 0.1.12+malleus.1 wheel derivation",
+    "state": "ACCEPTED",
+    "supersedes_entry_id": "OVR-000061"
+  },
+  "entry_hash": "sha256:865825ac765bde191fb6a62c67d6cf320eb49be8eaecfc51b6f56d8f41dbb264",
+  "entry_id": "OVR-000072",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:429ebc973ea5e9592c7f7a8b0964ce1b5bd6fa67d72826d8a81379a5c155a873",
+  "recorded_at": "2026-08-26T02:00:03Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000068",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000069",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000070",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000071",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 72,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Replace OD-012 R2 with the exact prefixcommons wheel-derivation profile.",
+  "why": "The real R2 resolver proved that the selected upstream prefixcommons wheel makes an obsolete source-only pytest plugin part of the runtime closure. The operator selected the reviewed route that keeps LinkML 1.11.1 and every R2 coordinate, derives a distinct locally versioned prefixcommons wheel by an exact deterministic metadata-only transform, preserves package and license payloads, excludes test infrastructure, and gives Malleus explicit maintenance ownership."
+}

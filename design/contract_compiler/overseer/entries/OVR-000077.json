@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:a48e92b97db2008f36825cba1c753cdfbbdc6a73148d5187011b6ba58ac788e1",
+        "before_digest": "sha256:d900e5091fb3192dea86cf8ecbb6461197252be69386eec0fc9be7ecc6dba8fc",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:618e386d96b6616655298b817d2a1dc46055936b7f0193a7ab38a27f8b2b427b",
+        "before_digest": "sha256:f54c3871d90b8f5ff0b95c4be2fb198638b3e41fa096a10e856aa8dbeb4c6c9f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:82b05dd38e9a46d314291c4fa356143224588dd08afbb50e5e17338d2499d77e",
+  "entry_id": "OVR-000077",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9825b6258246e50ac56e290835edeec5a98cf31747c467a0eef136ec6c1d67b8",
+  "recorded_at": "2026-08-26T02:00:09Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000075",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000076",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 77,
+  "subject": {
+    "id": "cc002-ccd12-r3-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind CC-002 and integration to the exact CC-D12 R3 completion.",
+  "why": "The revised card binds OVR-000075, keeps candidate NONE and worker ledger NOT_STARTED, preserves all nine scopes and seven checkpoint FILE artifacts, and states the exact R3 implementation, genuine TDD, linear-history, and thirteen-artifact completion contract. Integration anchors at OVR-000076 so the active replacement states are authoritative without creating a self-hash cycle."
+}

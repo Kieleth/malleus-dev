@@ -1,0 +1,80 @@
+{
+  "actor": {
+    "id": "ccd12-r3-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T02:00:06Z",
+    "claims": [
+      "The real R2 resolver selected prefixcommons 0.1.12 and failed closed on its pytest-logging>=2015.11.4,<2016.0.0 runtime metadata edge without publishing a partial environment.",
+      "OD-012 R3 preserves every R2 LinkML, Python, pip, OCI, ANTLR, setuptools, backend, deterministic-build, and wheel-only coordinate and gate.",
+      "The selected upstream prefixcommons wheel is 29482 bytes with sha256 16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b and the exact files.pythonhosted.org locator recorded by OVR-000072.",
+      "The upstream archive has 14 members and 109044 expanded bytes; its ten package code/data members and 1500-byte BSD 3-Clause License sha256 3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4 are protected payloads. That notice remains inside both wheels and is bound by the derivation record, with no standalone license file.",
+      "The derived version and filename are exactly 0.1.12+malleus.1 and prefixcommons-0.1.12+malleus.1-py3-none-any.whl; package, resource, and license payloads are byte-identical; only the exact metadata allowlist may change.",
+      "The 1960-byte METADATA and 83-byte WHEEL input digests and exact Version, Requires-Dist, generator, Wheel-Version, Root-Is-Purelib, Tag, line-order, and body boundaries are governed.",
+      "Two fresh selected-OCI children must run the stdlib-only, ZIP-member-only, network-denied transform under the unchanged R2 environment and produce byte-identical wheels. It validates whole-wheel identity and RECORD, rejects unsafe members, and fixes lexical order, ZIP_STORED, timestamp, Unix identity, mode, comments, extras, and final-payload RECORD generation.",
+      "The upstream wheel remains only at derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl; /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl is the exact direct resolver root; the upstream wheel is excluded from runtime; and pytest, pytest-logging, and py are forbidden in runtime.",
+      "The four explicit v3 schemas bind eight retained inputs, two produced artifacts, derivation_record_sha256, derivation-record.json, and wheel-derivation/v1 while container-verification/v1, source-build/v1, and build-record.json remain unchanged.",
+      "Offline acceptance requires pip check, exact strict GO:0008150 expansion/contraction, exact linkml_runtime.utils.namespaces.Namespaces binding/compaction, and the existing generic generator smoke.",
+      "Canonical revision 14 has 1338 sorted unique triples, exact 28-fence parity, one status per 266 status subjects, and an acyclic 103-node, 105-edge dependsOn graph.",
+      "OVR-000058 through OVR-000068 and all prior reports remain immutable; this governance correction changes no production adapter or compiler-environment byte."
+    ],
+    "limitations": [
+      "This verifies governance bytes and selected policy, not later CC-002 acquisition, transformation, materialization, or offline verification.",
+      "Malleus maintenance ownership creates a continuing review duty; it is not a claim that future upstream risks are already known.",
+      "The final CC-002 candidate must bind the actual commit that integrates R3 and pass the full candidate-history and thirteen-artifact completion contract."
+    ]
+  },
+  "entry_hash": "sha256:d40ede0f9b51ed8e3ef94e7726a2123a3bd46bb246578087b38c0a8138be2943",
+  "entry_id": "OVR-000074",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4260be12850ac81899b221c1ab301823c5ecf246d3f8830fc1adccdda2fe80c2",
+  "recorded_at": "2026-08-26T02:00:06Z",
+  "references": [
+    {
+      "digest": "sha256:1f4e71eb7c0f3dac0be5bf6bd8e633dfc6975979e5756796631cf014320c3bd9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12-R3.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000068",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000072",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000073",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 74,
+  "subject": {
+    "id": "CC-D12-R3-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify OD-012 R3 derivation authority and canonical graph projection.",
+  "why": "CC-D12 may be re-completed only after the exact upstream inventory, non-impersonating derived identity, payload and license boundary, double-transform profile, runtime exclusion, ownership, stop conditions, graph invariants, historical immutability, and zero-production-change boundary pass retained mechanical verification."
+}

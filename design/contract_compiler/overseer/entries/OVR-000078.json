@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "OD-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000072"
+  },
+  "entry_hash": "sha256:5aab1f0169fef97bb40f40890859bff90899032304c14234fd1914a8dac7632d",
+  "entry_id": "OVR-000078",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:82b05dd38e9a46d314291c4fa356143224588dd08afbb50e5e17338d2499d77e",
+  "recorded_at": "2026-08-26T02:01:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000072",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 78,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Correct OD-012 R3 to freeze every archive and RECORD byte choice.",
+  "why": "OVR-000072 fixed the high-level archive profile but did not select the complete RECORD CSV grammar, final-name ordering, every ZipInfo field, ZIP64 rejection, or explicit post-write validation boundary. Those omissions leave implementation latitude through CPython defaults. Historical R3 authority remains immutable; a replacement must incorporate it unchanged and add the complete deterministic byte grammar."
+}

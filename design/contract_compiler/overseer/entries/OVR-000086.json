@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ad641ac854aac331c67c57309ecb878b73b60bf5c28013c68f3b41556b423f01",
+        "before_digest": "sha256:a48e92b97db2008f36825cba1c753cdfbbdc6a73148d5187011b6ba58ac788e1",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:962eecf0f5a103cbf3fb449a87ea25242031fa6c4f5012808007f9e0be6041ac",
+        "before_digest": "sha256:618e386d96b6616655298b817d2a1dc46055936b7f0193a7ab38a27f8b2b427b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:43746febb497826b3a38f2bf1b202103f069b77557d5ab4296230ac700367f43",
+  "entry_id": "OVR-000086",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:987d041866e550ba73a840dcfc2f70a202a26e1d73d71c464ffaa63a2590fdd6",
+  "recorded_at": "2026-08-26T02:01:09Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000084",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000085",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 86,
+  "subject": {
+    "id": "cc002-ccd12-r3-archive-grammar-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind CC-002 and integration to the refined CC-D12 R3 completion.",
+  "why": "The revised card binds OVR-000084 and every exact archive-byte obligation while retaining candidate NONE, worker ledger NOT_STARTED, nine scopes, seven checkpoint FILE artifacts, and the thirteen-artifact completion contract. Integration anchors at OVR-000085 to avoid a self-hash cycle."
+}

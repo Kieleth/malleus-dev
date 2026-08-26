@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-D12"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000075"
+  },
+  "entry_hash": "sha256:bb1e7bd31242c1f84fad6292fbe7ef44bd624ae4c431ea3d79f5132b81aba24c",
+  "entry_id": "OVR-000079",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5aab1f0169fef97bb40f40890859bff90899032304c14234fd1914a8dac7632d",
+  "recorded_at": "2026-08-26T02:01:01Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000075",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 79,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct CC-D12 completion until the exact archive grammar is governed.",
+  "why": "OVR-000075 completed CC-D12 against OVR-000072 before the remaining archive and RECORD fields were frozen. The historical completion remains immutable. A replacement completion must follow the operator's exact grammar refinement, hard policy tests, and retained supplemental evidence."
+}

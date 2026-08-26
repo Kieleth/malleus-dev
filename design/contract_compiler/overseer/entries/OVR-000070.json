@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-D12"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000064"
+  },
+  "entry_hash": "sha256:719fb1a8ca04f067df73430d43631d316e729db682e15b232895bf36f1c38f46",
+  "entry_id": "OVR-000070",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:90a51c4762e3f2bff8a27d755990bccc070c4919fbb60b5900f0a4ba38f3636b",
+  "recorded_at": "2026-08-26T02:00:01Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000064",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 70,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct CC-D12 completion after OD-012 R2 proved incomplete.",
+  "why": "OVR-000064 completed CC-D12 under R2 before the real resolver exposed prefixcommons as a retained derivative input with an unacceptable test-only runtime edge. The historical completion remains immutable, but a replacement completion must follow the exact R3 derivation policy, semantic graph revision, and retained verification report."
+}

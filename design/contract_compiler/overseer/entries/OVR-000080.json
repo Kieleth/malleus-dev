@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-002"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000076"
+  },
+  "entry_hash": "sha256:4ebe98f1b7a0f0a100310d8a243993b18f3a2fbf3697d22d3a0ecdf6fc7427fc",
+  "entry_id": "OVR-000080",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bb1e7bd31242c1f84fad6292fbe7ef44bd624ae4c431ea3d79f5132b81aba24c",
+  "recorded_at": "2026-08-26T02:01:02Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000076",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 80,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct CC-002 authorization until exact derived-wheel bytes are governed.",
+  "why": "OVR-000076 authorized implementation against a deterministic profile that still left RECORD encoding, ZipInfo fields, ZIP64 behavior, and default rejection partly implicit. The historical authorization remains immutable. CC-002 may resume only after a replacement decision, proof, completion, and card binding make every selected byte rule explicit."
+}

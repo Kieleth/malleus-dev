@@ -182,7 +182,7 @@ Canonical decision record:
 
 ## OD-012: exact compiler baseline
 
-Decision state: ACCEPTED, release-first baseline R2, 2026-08-25
+Decision state: ACCEPTED, release-first baseline R3, 2026-08-25
 
 The selected research baseline is the published LinkML `v1.11.1` release at
 provenance commit `a7ed3e4cbb19731f072d0d90b6d52f7d822569ee`. This selects
@@ -206,8 +206,8 @@ sdists:
 That set is the LinkML root-source retention set. It is not the complete set of
 transitive build inputs. Resolution against the selected tuple established that
 LinkML 1.11.1 requires `antlr4-python3-runtime>=4.9.0,<4.10`, while the official
-4.9.3 release supplies no compatible wheel. The accepted R2 correction therefore
-adds this separate, exact transitive build-input set:
+4.9.3 release supplies no compatible wheel. R3 preserves the R2 separate,
+exact transitive build-input set:
 
 | Build input | Bytes | SHA-256 |
 |---|---:|---|
@@ -226,6 +226,118 @@ The final runtime closure remains wheel-only. The ANTLR sdist and setuptools
 wheel remain provenance and build inputs, outside the runtime wheelhouse unless
 setuptools is independently required by the resolved runtime closure. The two
 published LinkML root wheels remain retained as released and are not rebuilt.
+
+The first real R2 acquisition then exposed a second upstream packaging defect.
+LinkML Runtime requires `prefixcommons>=0.1.12`. The exact selected
+`prefixcommons` wheel contains the raw metadata header
+`Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)`. Its semantic
+requirement is `pytest-logging>=2015.11.4,<2016.0.0`, for which PyPI supplies
+no wheel. Installing that test plugin and its old undeclared `py` compatibility
+surface would put test infrastructure into the compiler runtime. R3 instead
+selects a governed packaging derivation with this exact upstream input:
+
+| Derivative input | Bytes | SHA-256 |
+|---|---:|---|
+| `prefixcommons-0.1.12-py3-none-any.whl` | 29482 | `16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b` |
+
+The official locator is
+`https://files.pythonhosted.org/packages/31/e8/715b09df3dab02b07809d812042dc47a46236b5603d9d3a2572dbd1d8a97/prefixcommons-0.1.12-py3-none-any.whl`.
+CC-002 retains this wheel in `derivative-inputs/`, separate from the existing
+ANTLR `build-inputs/` and the runtime wheelhouse. The upstream archive has
+exactly 14 members and 109044 expanded bytes. Ten are package code or data
+members. Its `LICENSE` is 1500 bytes with SHA-256
+`3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4`
+and begins exactly `BSD 3-Clause License`.
+
+The derived distribution version is exactly `0.1.12+malleus.1`, and its filename
+is exactly `prefixcommons-0.1.12+malleus.1-py3-none-any.whl`. The transform
+removes only the exact `pytest-logging` requirement. It preserves every package
+code, resource, and license payload byte exactly. It updates only the necessary
+`METADATA` version and requirement, derived `.dist-info` paths, the `WHEEL`
+generator identity, `RECORD`, and deterministic ZIP metadata. The `METADATA`
+input is 1960 bytes with SHA-256
+`4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303`;
+the raw targets are exactly `Version: 0.1.12\n` and the named `Requires-Dist`
+line. Its body and field order otherwise remain exact. The `WHEEL` input is 83
+bytes with SHA-256
+`cb778389a15548d4cf6e0cdf367d27627e6d127d5c5fa5ab75eb43950338c56c`.
+Its raw ordered body is `Wheel-Version: 1.0\n`, `Generator: poetry 1.0.7\n`,
+`Root-Is-Purelib: true\n`, and `Tag: py3-none-any\n`. Replace only the Generator
+line with exactly `Generator: malleus-cc002 (wheel-derivation-v1)\n`.
+
+The derived archive and `RECORD` row order are ascending Unicode code-point
+order of final POSIX member names, including the `RECORD` member and its row.
+Every final ZIP filename is ASCII. `RECORD` is UTF-8 without a BOM and uses
+exactly three fields, comma delimiter, ASCII double-quote quote character,
+`doublequote=true`, `QUOTE_MINIMAL`, no escape character, LF line terminator,
+and a terminal LF. For every member except `RECORD`, its row contains
+`sha256=<URL-safe Base64 of the raw SHA-256 digest without = padding>` and the
+decimal payload byte length. The `RECORD` row's own hash and size fields are
+empty.
+
+Every `ZipInfo` has the ASCII final filename, `date_time` exactly
+`1980-01-01 00:00:00`, `compress_type=ZIP_STORED`, `create_system=3`,
+`create_version=20`, `extract_version=20`, `reserved=0`, `flag_bits=0`,
+`volume=0`, `internal_attr=0`, `external_attr=(0o100644 << 16)`, and empty
+`extra` and `comment`. The archive comment is empty. ZIP64 is disabled, and any
+input or output requiring it is rejected. CRC32, compressed and uncompressed
+sizes, and local-header offsets are consequences of the exact payloads and
+member order, not free inputs. The implementation sets every selected
+`RECORD`, `ZipInfo`, and archive field explicitly, then reopens the written
+wheel and validates every selected field and byte. It never relies on CPython
+defaults. The archive must not impersonate upstream version `0.1.12`.
+
+The [PyPA recording-installed-projects specification](https://packaging.python.org/en/latest/specifications/recording-installed-packages/)
+is the factual root for `RECORD` semantics. The
+[Python 3.12 `zipfile` documentation](https://docs.python.org/3.12/library/zipfile.html)
+is the factual root for the named archive attributes. PyPA permits compatible
+choices, and Python exposes defaults and ZIP64 support. The complete grammar
+above is a Malleus choice; those sources do not mandate every selected value.
+
+The derivation reads ZIP members only. It never imports, extracts, or executes
+`prefixcommons`. Before transformation it verifies the whole-wheel identity,
+validates the exact input `RECORD`, and rejects duplicate or unsafe member names
+and non-regular member types.
+
+CC-002 performs the stdlib-only transform twice in two fresh children of the
+selected OCI runtime, with network denied and the same R2
+`SOURCE_DATE_EPOCH`, `TZ`, `PYTHONHASHSEED`, and umask. The two derived wheel
+byte streams must be identical. It retains the upstream wheel only at
+`derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl`. The derived wheel is
+retained under `built/`, and
+`/built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl` is the exact direct
+resolver root. `derivation-record.json`, using schema
+`malleus.cc002.wheel-derivation/v1`, binds both transform results and
+adapter/tool provenance. The 1500-byte `BSD 3-Clause License` notice remains a
+byte-identical member of both wheel artifacts and is bound by that record; no
+separate extracted license file is required. The official `prefixcommons`
+wheel must be absent from the runtime wheelhouse.
+
+The public acquisition result becomes `malleus.cc002.acquire-result/v3`, the
+public verification result becomes `malleus.cc002.verify-result/v3`, the
+environment manifest becomes `malleus.cc002.compiler-environment/v3`, and the
+internal verification report becomes
+`malleus.cc002.internal-verification/v3`. V3 binds eight retained inputs, two
+produced artifacts, and `derivation_record_sha256`. The existing
+`malleus.cc002.container-verification/v1` and
+`malleus.cc002.source-build/v1` contracts remain unchanged, and only
+`malleus.cc002.wheel-derivation/v1` is added. `build-record.json` remains the
+ANTLR record and `derivation-record.json` is the new wheel-derivation record.
+
+Offline verification must run `pip check`. With strict contraction enabled,
+`prefixcommons` must expand `GO:0008150` to
+`http://purl.obolibrary.org/obo/GO_0008150` and contract it back to exactly
+[`GO:0008150`]. `linkml_runtime.utils.namespaces.Namespaces` must bind `ex` to
+`https://example.org/` and return `ex:item` for
+`https://example.org/item`. The existing generic generator smoke also remains
+mandatory. `pytest`, `pytest-logging`, and `py` must all be absent from the
+installed runtime closure.
+
+Malleus owns maintenance and security review of the derived packaging artifact.
+A future clean upstream replacement requires a new governed decision. CC-002
+must stop on a non-allowlisted payload change, license loss, unequal transforms,
+resolver substitution, presence of a forbidden test package, or any smoke that
+requires the removed plugin.
 
 The reproducibility tuple is CPython 3.12.10, Linux x86_64, and `cp312`.
 It identifies one environment that must reproduce the compiler. It does not
@@ -248,24 +360,25 @@ and selected child digest
 The child digest is the runtime pin. The index digest is retained as provenance.
 No child media type is asserted.
 
-CC-D12 selects those coordinates, identities, the separate root-source and
-transitive-build-input memberships, and acceptance policies. CC-002 owns
-acquisition and byte retention, the deterministic double build, complete
-transitive resolution, runtime wheelhouse, platform verification, and offline
-installation proof. This split removes the former cycle in which CC-D12
-required material that only CC-002 was assigned to create.
+CC-D12 selects those coordinates, identities, separate root-source,
+transitive-build-input and derivative-input memberships, transformation
+allowlist, ownership, and acceptance policies. CC-002 owns acquisition and byte
+retention, deterministic double build and double transform, complete transitive
+resolution, runtime wheelhouse, platform verification, and offline installation
+proof. This split keeps policy decisions out of materialization code.
 
-A later LinkML fork or source commit cannot silently replace this baseline. It
-requires a separate governed baseline revision, exact source and built-artifact
-identities, and the same acceptance suite before an explicit switch.
+A later LinkML fork, source commit, clean upstream `prefixcommons` release, or
+derived-wheel change cannot silently replace this baseline. It requires a
+separate governed baseline revision, exact source and artifact identities, and
+the same acceptance suite before an explicit switch.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-012`. Overseer record:
-[`OVR-000061`](overseer/entries/OVR-000061.json), replacing corrected historical
-record [`OVR-000050`](overseer/entries/OVR-000050.json). `CC-D12` is complete;
-CC-002 materialization remains pending.
+[`OVR-000072`](overseer/entries/OVR-000072.json), replacing corrected R2 record
+[`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
+materialization remains pending.
 
-## Accepted directions in canonical graph revision 13
+## Accepted directions in canonical graph revision 14
 
 | ID | Accepted direction | Important limit |
 |---|---|---|

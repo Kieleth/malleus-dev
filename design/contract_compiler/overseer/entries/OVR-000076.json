@@ -1,0 +1,80 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Materialization must use the actual commit that integrates this R3 governance correction as its candidate base; that commit does not exist while these changes are uncommitted.",
+      "Exact prefixcommons derivative-input acquisition, payload/license validation, deterministic double transform, v3 evidence, complete runtime resolution, offline acceptance suite, retained environment, and final thirteen-artifact candidate remain unproven execution facts."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Preserve and re-attest every selected R2 input, deterministic ANTLR source-build/v1 result, runtime identity, and generic generator smoke.",
+      "Acquire the exact prefixcommons 0.1.12 wheel only at derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl and validate its URL, size, digest, 14-member/109044-byte inventory, ten package payloads, METADATA, WHEEL, RECORD, and BSD 3-Clause license identity.",
+      "Derive only version 0.1.12+malleus.1 and preserve every package, resource, and license payload byte exactly under the selected metadata allowlist.",
+      "Read ZIP members only and never import, extract, or execute prefixcommons; validate whole-wheel identity and input RECORD; reject duplicate or unsafe names and non-regular types; run the lexical-order ZIP_STORED transform twice in fresh selected-OCI network-denied children with timestamp 1980-01-01 00:00:00, Unix create-system identity, mode 0644, empty comments and extra fields, final-payload RECORD generation, and the unchanged R2 deterministic environment; require byte-identical results.",
+      "Retain prefixcommons-0.1.12+malleus.1-py3-none-any.whl under built/ and derivation-record.json under the malleus.cc002.wheel-derivation/v1 schema with adapter/tool provenance. Keep the 1500-byte BSD 3-Clause License notice byte-identical inside both wheel artifacts and bind it in the record; do not create a standalone license file. Leave ANTLR build-inputs, build-record.json, and malleus.cc002.source-build/v1 unchanged.",
+      "Advance exactly malleus.cc002.acquire-result/v3, malleus.cc002.verify-result/v3, malleus.cc002.compiler-environment/v3, and malleus.cc002.internal-verification/v3 with eight retained inputs, two produced artifacts, and derivation_record_sha256; retain malleus.cc002.container-verification/v1 and malleus.cc002.source-build/v1 unchanged.",
+      "Pass exactly /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl as the direct resolver root; reject substitution; exclude the official prefixcommons wheel and pytest, pytest-logging, and py from runtime.",
+      "Prove clean network-denied offline installation and pip check; require strict prefixcommons expansion of GO:0008150 to http://purl.obolibrary.org/obo/GO_0008150 and contraction back to exactly [GO:0008150]; require linkml_runtime.utils.namespaces.Namespaces to bind ex to https://example.org/ and return ex:item for https://example.org/item; retain the existing generic generator smoke.",
+      "Fail closed on every non-allowlisted payload change, license loss, unequal transform, resolver substitution, forbidden test package, or smoke requiring the removed plugin.",
+      "Keep candidate NONE and worker ledger NOT_STARTED until genuine R3 TDD and evidence exist; final eligibility requires a validated linear history, eight-entry worker ledger, and exactly thirteen candidate artifacts.",
+      "Preserve the existing bounded MCP transport, nine authorized scopes, and seven checkpoint FILE artifacts; do not add a scope, implement compiler semantics, alter packaging or CI, or choose dependency policy."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000072",
+      "OVR-000073",
+      "OVR-000074"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:9825b6258246e50ac56e290835edeec5a98cf31747c467a0eef136ec6c1d67b8",
+  "entry_id": "OVR-000076",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1f4ca0d5d5cbdd22f128daf483ef4c2d62a8ae601a6b26d3842d26bdcf768ae8",
+  "recorded_at": "2026-08-26T02:00:08Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000072",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000073",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000074",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000075",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000016",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 76,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reauthorize CC-002 under the exact OD-012 R3 derivation profile.",
+  "why": "R3 keeps the integrated R2 implementation boundary but adds only the exact governed prefixcommons derivation needed to produce a clean wheel-only closure. CC-002 may implement and attest that fixed profile after the governance base exists. It may not select a different upstream wheel, local version, payload allowlist, transform, runtime dependency, evidence schema, or candidate base."
+}

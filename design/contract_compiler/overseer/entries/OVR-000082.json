@@ -1,0 +1,79 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-012",
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:43f961ea4de367074f683509ef9213a526453921ebce8f17293ee03d330290f9",
+        "before_digest": "sha256:02a277119ddff151b43a8ef73803d43cb06d34970704d9edf2dde2aa0d427796",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:e11a367bef04a45f1732a5cff7afaddf95778d12057f54bf36d3b4cd31bb5357",
+        "before_digest": "sha256:a64a796fbbe6abfe9038841ee50b864fe36351335cbb0dc935c2037d1e7ca7c5",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:c277a571e65984b95e0c3ab2bee50fd2980695cbc776d98dfc9b8d77068dee5c",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D12-R3-ARCHIVE-GRAMMAR.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:01d79c9e5f51ba83bf37c2ddd949bd9dc1f0824766a8619d6a32a5e749d9ec87",
+  "entry_id": "OVR-000082",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:22184e928177517177ad5bbd7b6084f927a1933e48c911e4cae107f88a5075f5",
+  "recorded_at": "2026-08-26T02:01:05Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:c277a571e65984b95e0c3ab2bee50fd2980695cbc776d98dfc9b8d77068dee5c",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12-R3-ARCHIVE-GRAMMAR.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000081",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 82,
+  "subject": {
+    "id": "ccd12-r3-archive-grammar-governance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact archive grammar, hard guard, and supplemental evidence.",
+  "why": "The operator refinement requires exact prose, a test that rejects every omitted or defaulted field, and immutable evidence that preserves OVR-000069 through OVR-000077 before CC-D12 can be completed again."
+}
