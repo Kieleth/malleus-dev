@@ -1,0 +1,71 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X01"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5c07e741ad091b6340670dfa673f6fef521116a9b990ff8e1bf3b31b5b7ffbf6",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-X01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f36ee68a4b7abd4cdc0ff8320eae944801a9c146cdde2201a6956b807db04feb",
+        "before_digest": "sha256:52531db9842b6dff51b2a5c133b1bd904ced2728608ce10a34563e85d841000a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:3ca1468d305cd206443b46db8b62abffc10f4a3602c36bccc2bdfb96acc2bedc",
+        "before_digest": "sha256:ce38cc236555bb3a4e62885e2b9e66e75da9e4b6e574e64d3ccbedb15d72ecbb",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:a1d02b205d12c011779b148e9b74271139459770c1fa00ae69b485a7344788a3",
+  "entry_id": "OVR-000105",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:20ae2af4cb96afe35e1b0b1dca8e9fc918dfe57bcc59b2ebb3cfa2ee75b42c5b",
+  "recorded_at": "2026-08-26T19:30:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000104",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 105,
+  "subject": {
+    "id": "ccx01-formal-activation",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the formal CC-X01 activation documents.",
+  "why": "The exact five-scope card and integration registration make the bounded CC-X01 authorization mechanically visible. The test revision preserves the historical OVR-000102 and OVR-000103 selection assertions while allowing later append-only entries. No candidate, worker ledger, selection, sealed snapshot, dependency, or release state changes."
+}

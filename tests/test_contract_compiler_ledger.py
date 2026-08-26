@@ -49,6 +49,7 @@ CC002_CHECKPOINT_LINEAGE = (
     "a48c754ae6a7aa904c3317d3cdde06de6db8ff98",
     GOVERNANCE_BASE_COMMIT,
 )
+CC002_SELECTION_COMMIT = "fc23888e012b0771289b5006ccd9a74945db2220"
 CC002_LINEAGE_CONTRACT = (
     "Bind the four governed historical worker checkpoints as final-byte evidence "
     "only: a7a65ccfdd7afd7d42a40509631fcdfef49f135e, "
@@ -444,7 +445,20 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
     assert cc002_state["entry_id"] == "OVR-000101"
     assert cc002_state["data"]["new_state"] == "COMPLETE"
     assert card["ledger"]["state"] == "RECORDED"
-    assert integration["authority"]["overseer_ledger"] == {
+    selected_integration = json.loads(
+        subprocess.run(
+            [
+                "git",
+                "show",
+                f"{CC002_SELECTION_COMMIT}:design/contract_compiler/integration.json",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    )
+    assert selected_integration["authority"]["overseer_ledger"] == {
         "entry_count": 101,
         "head_entry_id": "OVR-000101",
         "head_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
@@ -506,10 +520,28 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
         ).stdout.strip()
         == completion_tree
     )
-    selection_report = verify_evidence_snapshot(
-        OVERSEER / "evidence" / "CC-002.json",
-        ROOT,
-    )
+    selection_report_path = OVERSEER / "evidence" / "CC-002.json"
+    selection_report_source = subprocess.run(
+        [
+            "git",
+            "show",
+            f"{CC002_SELECTION_COMMIT}:design/contract_compiler/overseer/evidence/CC-002.json",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+    ).stdout
+    assert selection_report_path.read_bytes() == selection_report_source
+    selection_report = json.loads(selection_report_source)
+    for artifact in selection_report["artifacts"]:
+        source = subprocess.run(
+            ["git", "show", f"{CC002_SELECTION_COMMIT}:{artifact['path']}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == "sha256:" + hashlib.sha256(source).hexdigest()
     assert selection_report["base_commit"] == completion_commit
     selection_claims = canonical_json(selection_report)
     assert completion_commit in selection_claims
@@ -528,9 +560,14 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
     )
     assert completion_committed_at < selection_recorded_at
 
-    selection_revision, selection_fact = ledger.entries[-2:]
+    selection_revision = next(
+        entry for entry in ledger.entries if entry["entry_id"] == "OVR-000102"
+    )
     assert selection_revision["entry_id"] == "OVR-000102"
     assert selection_revision["entry_type"] == "DOCUMENT_REVISION"
+    selection_fact = next(
+        entry for entry in ledger.entries if entry["entry_id"] == "OVR-000103"
+    )
     assert selection_fact["entry_id"] == "OVR-000103"
     assert selection_fact["entry_type"] == "VERIFIED_FACT"
     selection_revision_at = datetime.fromisoformat(
@@ -540,8 +577,19 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
         selection_fact["recorded_at"].removesuffix("Z") + "+00:00"
     )
     assert selection_recorded_at < selection_revision_at < selection_fact_at
+    selection_entries = [
+        entry
+        for entry in ledger.entries
+        if selection_revision["sequence"]
+        <= entry["sequence"]
+        <= selection_fact["sequence"]
+    ]
+    assert [entry["entry_id"] for entry in selection_entries] == [
+        "OVR-000102",
+        "OVR-000103",
+    ]
     assert all(
-        entry["entry_type"] != "WORKSTREAM_STATE" for entry in ledger.entries[101:]
+        entry["entry_type"] != "WORKSTREAM_STATE" for entry in selection_entries
     )
     assert {
         "relation": "EVIDENCES",

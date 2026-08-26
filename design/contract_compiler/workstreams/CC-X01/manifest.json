@@ -1,0 +1,54 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccx01-tdd",
+    "state": "ASSIGNED",
+    "task_id": "/root/ccx01_tdd_worker"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "overseer",
+      "type": "OVERSEER"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
+        "completion_entry_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
+        "completion_entry_id": "OVR-000101",
+        "integrated_head": "c521785c03a3a02bb666879eb525573b81e4491f",
+        "workstream_id": "CC-002"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Measure, without classifying or selecting, the lossless observed divergence between the retained LinkML 1.11.1 baseline and the current OntologyRegistry across nine single-module cases. Record each engine independently, preserve exact source bytes and ABSENT, NULL, and VALUE states, and retain deterministic replay evidence. Exclude semantic winners, oracle edits, imports, duplicate or adoption policy, themed vocabulary, runtime admission, artifact grammar, production behavior, dependency changes, and release work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/cases.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-X01.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_divergence.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_divergence.py"
+    }
+  ],
+  "workstream_id": "CC-X01"
+}
