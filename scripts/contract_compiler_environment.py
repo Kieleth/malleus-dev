@@ -2039,9 +2039,12 @@ def _subprocess_diagnostic(stderr: bytes, stdout: bytes) -> str:
         )
         sections.append(f"{label}: {safe}")
     diagnostic = "\n".join(sections) or "<no diagnostic output>"
-    marker = "\n[truncated]"
+    marker = "\n[truncated]\n"
     if len(diagnostic) > SUBPROCESS_DIAGNOSTIC_LIMIT:
-        diagnostic = diagnostic[: SUBPROCESS_DIAGNOSTIC_LIMIT - len(marker)] + marker
+        retained = SUBPROCESS_DIAGNOSTIC_LIMIT - len(marker)
+        head = (retained + 1) // 2
+        tail = retained - head
+        diagnostic = diagnostic[:head] + marker + diagnostic[-tail:]
     return diagnostic
 
 

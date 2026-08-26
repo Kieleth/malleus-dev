@@ -2760,6 +2760,60 @@ def test_subprocess_failure_diagnostic_is_bounded_and_safe(monkeypatch, tmp_path
     assert len(message) <= environment.SUBPROCESS_DIAGNOSTIC_LIMIT + 256
 
 
+def test_subprocess_diagnostic_preserves_bounded_head_and_conflict_tail():
+    conflict = (
+        "ERROR: ResolutionImpossible: synthetic-root requires the unavailable "
+        "synthetic-addon wheel"
+    )
+    stderr = b"Traceback (most recent call last):\nresolver-start\x00\n"
+    stdout = b"resolution-start\n" + b"A" * 20_000 + b"\n" + conflict.encode()
+    unbounded = (
+        "stderr: [stack trace marker omitted]\n"
+        "resolver-start\N{REPLACEMENT CHARACTER}\n"
+        "stdout: resolution-start\n"
+        + "A" * 20_000
+        + "\n"
+        + conflict
+    )
+    marker = "\n[truncated]\n"
+
+    diagnostic = environment._subprocess_diagnostic(stderr, stdout)
+
+    assert diagnostic == environment._subprocess_diagnostic(stderr, stdout)
+    assert len(unbounded[:2042]) == 2042
+    assert len(unbounded[-2041:]) == 2041
+    assert diagnostic == unbounded[:2042] + marker + unbounded[-2041:]
+    assert len(diagnostic) == environment.SUBPROCESS_DIAGNOSTIC_LIMIT
+    assert "stdout: resolution-start" in diagnostic
+    assert conflict in diagnostic
+    assert diagnostic.count(marker) == 1
+    assert "Traceback" not in diagnostic
+    assert "\x00" not in diagnostic
+
+
+def test_subprocess_diagnostic_exact_limit_and_limit_plus_one_boundaries():
+    prefix = "stdout: "
+    marker = "\n[truncated]\n"
+    exact_payload = "A" * (environment.SUBPROCESS_DIAGNOSTIC_LIMIT - len(prefix))
+    exact_unbounded = prefix + exact_payload
+
+    exact = environment._subprocess_diagnostic(b"", exact_payload.encode())
+
+    assert len(exact_unbounded) == environment.SUBPROCESS_DIAGNOSTIC_LIMIT
+    assert exact == exact_unbounded
+    assert marker not in exact
+
+    overflow_unbounded = exact_unbounded + "Z"
+    overflow = environment._subprocess_diagnostic(
+        b"", (exact_payload + "Z").encode()
+    )
+
+    assert len(overflow_unbounded) == environment.SUBPROCESS_DIAGNOSTIC_LIMIT + 1
+    assert overflow == overflow_unbounded[:2042] + marker + overflow_unbounded[-2041:]
+    assert len(overflow) == environment.SUBPROCESS_DIAGNOSTIC_LIMIT
+    assert overflow.count(marker) == 1
+
+
 def test_lock_builder_is_complete_deterministic_and_hash_pinned(tmp_path):
     wheelhouse = tmp_path / "wheelhouse"
     wheelhouse.mkdir()
