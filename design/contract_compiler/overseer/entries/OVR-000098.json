@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-012",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:326a0cff6c61a196c0c327ed6bd422483e95262985888c0f76cc3c91d93c9ed0",
+        "before_digest": "sha256:e11a367bef04a45f1732a5cff7afaddf95778d12057f54bf36d3b4cd31bb5357",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:775aba2ff228708070ba2756685c4673208011030c8f156b1ea8d62d94b9a438",
+  "entry_id": "OVR-000098",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b8b034356af1c722f78d55922d68db2abce06fe831a0f166d811a124f8c21396",
+  "recorded_at": "2026-08-26T17:21:34Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000097",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 98,
+  "subject": {
+    "id": "cc002-provisional-decision-test-guard",
+    "type": "DOCUMENT"
+  },
+  "summary": "Rebind the OD-012 ledger guard to the provisional CFGraph decision.",
+  "why": "OVR-000097 replaces the latest OD-012 projection with a bounded internal exception. The ledger test now checks that active exception, its exact wheel identity, release boundary, and deferred hardening outcomes while retaining the historical R3 assertions. This revision updates only the mechanical guard for that decision."
+}

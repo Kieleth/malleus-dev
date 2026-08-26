@@ -1,0 +1,65 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [],
+    "consequences": [
+      "CC-002 may use this exception to unblock internal project and paper work.",
+      "Later replace the embedded wheel with a deterministic double-build from exact source in the selected container.",
+      "Later bind authoritative license and NOTICE bytes, review their obligations, and complete release-grade supply-chain, security, and vulnerability attestation.",
+      "Retire this exception before any public or external release."
+    ],
+    "constraints": [
+      "Embed exactly one CFGraph-0.2.1-py3-none-any.whl, 2256 bytes, sha256:28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13.",
+      "Require inspected metadata Name: CFGraph, Version: 0.2.1, Requires-Dist: rdflib>=0.4.2, and Generator: setuptools 83.0.0.",
+      "Use the wheel only for internal, non-release CC-002 work; exact bytes and selected semantics fail closed.",
+      "Require wheel-only offline closure and a behavior smoke before accepting the environment.",
+      "Make no reproducible-build, license-sufficiency, security, vulnerability, distribution, or public-release claim under this exception."
+    ],
+    "decision_id": "OD-012",
+    "satisfies_workstreams": [
+      "CC-002"
+    ],
+    "selected_option": "Internal provisional CC-002 use of one exact embedded CFGraph 0.2.1 wheel",
+    "state": "ACCEPTED",
+    "supersedes_entry_id": "OVR-000081"
+  },
+  "entry_hash": "sha256:b8b034356af1c722f78d55922d68db2abce06fe831a0f166d811a124f8c21396",
+  "entry_id": "OVR-000097",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5350159ae17dec4f4b78dc3d9173d1b411451da7eca68102a35b662aba2f89b3",
+  "recorded_at": "2026-08-26T17:17:37Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000081",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000093",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000095",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 97,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Accept a bounded internal CFGraph wheel exception and defer release hardening.",
+  "why": "The operator explicitly chose a good-enough internal path because release-grade CFGraph source, license, and attestation work was blocking the wider project and paper. Exact wheel bytes, metadata, offline closure, and behavior remain mechanical gates. Deterministic source rebuilds, authoritative license review, and release-grade supply-chain and security work move to a queryable roadmap and remain mandatory before public release."
+}

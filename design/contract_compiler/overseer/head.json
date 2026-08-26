@@ -1,9 +1,9 @@
 {
   "canonicalization": "malleus-canonical-json-v1",
-  "entry_count": 96,
+  "entry_count": 98,
   "hash_grammar": "malleus.contract-compiler.ledger-hash/v1",
-  "head_entry_id": "OVR-000096",
-  "head_hash": "sha256:5350159ae17dec4f4b78dc3d9173d1b411451da7eca68102a35b662aba2f89b3",
+  "head_entry_id": "OVR-000098",
+  "head_hash": "sha256:775aba2ff228708070ba2756685c4673208011030c8f156b1ea8d62d94b9a438",
   "ledger": "overseer",
   "schema": "malleus.contract-compiler.ledger-head/v1"
 }

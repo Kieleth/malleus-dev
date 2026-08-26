@@ -452,12 +452,63 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         if entry["entry_type"] == "DECISION"
         and entry["data"]["decision_id"] == "OD-012"
     )
-    assert decision["entry_id"] == "OVR-000081"
-    assert decision["data"]["supersedes_entry_id"] == "OVR-000072"
+    assert decision["entry_id"] == "OVR-000097"
+    assert decision["actor"] == {"id": "operator", "type": "OPERATOR"}
+    assert decision["data"]["supersedes_entry_id"] == "OVR-000081"
+    assert decision["data"]["selected_option"] == (
+        "Internal provisional CC-002 use of one exact embedded CFGraph 0.2.1 wheel"
+    )
+    assert decision["data"]["canonical_record_uris"] == []
+    assert decision["data"]["satisfies_workstreams"] == ["CC-002"]
+    assert {
+        (reference["relation"], reference["type"], reference["target"])
+        for reference in decision["references"]
+    } >= {
+        ("EVIDENCES", "ENTRY", "OVR-000081"),
+        ("EVIDENCES", "ENTRY", "OVR-000093"),
+        ("EVIDENCES", "ENTRY", "OVR-000095"),
+        ("SATISFIES", "WORKSTREAM", "CC-002"),
+    }
+
+    exception_policy = canonical_json(decision["data"]).casefold()
+    for required in (
+        "cfgraph-0.2.1-py3-none-any.whl",
+        "2256 bytes",
+        "sha256:28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13",
+        "name: cfgraph",
+        "version: 0.2.1",
+        "requires-dist: rdflib>=0.4.2",
+        "generator: setuptools 83.0.0",
+        "internal, non-release",
+        "exact bytes and selected semantics fail closed",
+        "wheel-only offline closure",
+        "behavior smoke",
+        "no reproducible-build",
+        "license-sufficiency",
+        "security",
+        "vulnerability",
+        "distribution",
+        "public-release claim",
+    ):
+        assert required in exception_policy
+    for deferred in (
+        "deterministic double-build from exact source in the selected container",
+        "authoritative license and notice bytes",
+        "release-grade supply-chain, security, and vulnerability attestation",
+        "retire this exception before any public or external release",
+    ):
+        assert deferred in exception_policy
+
+    r3_refinement = next(
+        entry for entry in state.entries if entry["entry_id"] == "OVR-000081"
+    )
+    assert r3_refinement["data"]["supersedes_entry_id"] == "OVR-000072"
     base_decision = next(
         entry for entry in state.entries if entry["entry_id"] == "OVR-000072"
     )
-    policy = canonical_json([base_decision["data"], decision["data"]]).casefold()
+    policy = canonical_json(
+        [base_decision["data"], r3_refinement["data"]]
+    ).casefold()
     for required in (
         "antlr4-python3-runtime-4.9.3.tar.gz",
         "117034",
@@ -546,7 +597,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
     ):
         assert required in policy
 
-    refinement_policy = canonical_json(decision["data"]).casefold()
+    refinement_policy = canonical_json(r3_refinement["data"]).casefold()
     for required in (
         "ovr-000072 unchanged",
         "ascending unicode code point",
