@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -87,10 +88,23 @@ def test_cases_are_nine_small_single_module_measurements():
     }
     assert [case["case_id"] for case in document["cases"]] == EXPECTED_CASE_IDS
     for case in document["cases"]:
-        assert set(case) == {"case_id", "target_class", "source", "probes"}
+        assert set(case) == {
+            "case_id",
+            "target_class",
+            "logical_locator",
+            "source_text",
+            "source_byte_length",
+            "source_sha256",
+            "probes",
+        }
         assert case["target_class"] in {"Thing", "Child"}
-        assert isinstance(case["source"], dict)
-        assert "imports" not in case["source"]
+        assert case["logical_locator"] == f"cc-x01/{case['case_id']}.json"
+        source_bytes = case["source_text"].encode("utf-8")
+        assert case["source_byte_length"] == len(source_bytes)
+        assert case["source_sha256"] == "sha256:" + hashlib.sha256(source_bytes).hexdigest()
+        source = json.loads(case["source_text"])
+        assert isinstance(source, dict)
+        assert "imports" not in source
         assert case["probes"]
 
 
@@ -102,11 +116,13 @@ def test_case_corpus_keeps_explicit_false_null_and_absence_distinct():
     default_range = next(
         case for case in document["cases"] if case["case_id"] == "default_range"
     )
+    explicit_false_source = json.loads(explicit_false["source_text"])
+    default_range_source = json.loads(default_range["source_text"])
 
-    assert explicit_false["source"]["classes"]["Thing"]["slot_usage"]["value"][
+    assert explicit_false_source["classes"]["Thing"]["slot_usage"]["value"][
         "multivalued"
     ] is False
-    assert "range" not in default_range["source"]["slots"]["value"]
+    assert "range" not in default_range_source["slots"]["value"]
 
 
 def test_wrong_or_extra_baseline_is_rejected():
