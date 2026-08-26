@@ -204,6 +204,25 @@ def test_observation_values_use_explicit_absent_null_value_states():
     assert states == {"ABSENT", "NULL", "VALUE"}
 
 
+def test_construction_failures_retain_exact_type_message_and_arguments():
+    document = _read(OBSERVATIONS)
+    failures = []
+    for case in document["observations"]:
+        for engine in case["engines"]:
+            value = engine["construction"]["value"]
+            if isinstance(value, dict):
+                failures.append((case["case_id"], engine["engine_id"], value))
+
+    assert [(case_id, engine_id) for case_id, engine_id, _ in failures] == [
+        ("conflicting_mixins_ab", "ontology_registry"),
+        ("conflicting_mixins_ba", "ontology_registry"),
+    ]
+    for _, _, failure in failures:
+        assert set(failure) == {"arguments", "error_type", "message"}
+        assert failure["error_type"] == "OntologyError"
+        assert failure["arguments"] == [failure["message"]]
+
+
 def test_replay_is_byte_identical_and_matches_retained_observations():
     first = runner.render_observations(runner.load_cases(CASES))
     second = runner.render_observations(runner.load_cases(CASES))
@@ -212,7 +231,7 @@ def test_replay_is_byte_identical_and_matches_retained_observations():
 
 def test_check_detects_any_retained_observation_mutation(tmp_path):
     changed = _read(OBSERVATIONS)
-    changed["observations"][0]["engines"][0]["construction"] = {
+    changed["observations"][0]["engines"][0]["probes"][1]["result"]["value"]["range"] = {
         "state": "VALUE",
         "value": "MUTATED",
     }
@@ -239,14 +258,26 @@ def test_cli_checks_retained_bytes_without_rewriting_them():
 
 def test_evidence_binds_the_measurements_without_claiming_a_decision():
     evidence = _read(EVIDENCE)
+    assert set(evidence) == {
+        "schema",
+        "workstream_id",
+        "recorded_at",
+        "base_commit",
+        "artifacts",
+        "checks",
+        "limitations",
+    }
     assert evidence["schema"] == "malleus.contract-compiler.verification-report/v1"
     assert evidence["workstream_id"] == "CC-X01"
-    assert evidence["result"] == "PASS"
-    assert evidence["case_count"] == 9
-    assert evidence["engine_ids"] == EXPECTED_ENGINES
-    assert evidence["baseline"] == {
-        "linkml": "1.11.1",
-        "linkml-runtime": "1.11.1",
-    }
+    assert len(evidence["base_commit"]) == 40
+    assert [item["path"] for item in evidence["artifacts"]] == [
+        "conformance/contract_compiler/v0/linkml_legacy_divergence/cases.json",
+        "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json",
+        "scripts/contract_compiler_divergence.py",
+        "tests/test_contract_compiler_divergence.py",
+    ]
+    assert evidence["checks"]
+    assert all(check["result"] == "PASS" for check in evidence["checks"])
+    assert evidence["limitations"]
     for mapping in _walk(evidence):
         assert not FORBIDDEN_DECISION_KEYS & set(mapping)

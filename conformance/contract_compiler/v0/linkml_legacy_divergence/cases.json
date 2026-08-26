@@ -1,0 +1,223 @@
+{
+  "baseline": {
+    "linkml": "1.11.1",
+    "linkml-runtime": "1.11.1"
+  },
+  "cases": [
+    {
+      "case_id": "simple_parity",
+      "logical_locator": "cc-x01/simple_parity.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Thing"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Thing.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 166,
+      "source_sha256": "sha256:88b64ac3d7bff49d8a04d7b9b428aa1fddb57311ffdece661c5b01e1ef64efbe",
+      "source_text": "{\"classes\":{\"Thing\":{\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/simple-parity\",\"name\":\"simple_parity\",\"slots\":{\"value\":{\"range\":\"string\",\"required\":true}}}\n",
+      "target_class": "Thing"
+    },
+    {
+      "case_id": "parent_mixin_precedence",
+      "logical_locator": "cc-x01/parent_mixin_precedence.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Child"
+        },
+        {
+          "fields": ["range", "required", "multivalued"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Child.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 378,
+      "source_sha256": "sha256:058dba6e97e138ccdf75f0ae928f289b261f6cd21f89f6f0f9ceb464032f0d37",
+      "source_text": "{\"classes\":{\"Child\":{\"is_a\":\"Parent\",\"mixins\":[\"MixinA\"]},\"MixinA\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"multivalued\":true,\"range\":\"float\"}},\"slots\":[\"value\"]},\"Parent\":{\"slot_usage\":{\"value\":{\"range\":\"integer\",\"required\":true}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/parent-mixin-precedence\",\"name\":\"parent_mixin_precedence\",\"slots\":{\"value\":{\"range\":\"string\"}}}\n",
+      "target_class": "Child"
+    },
+    {
+      "case_id": "repeated_mixin",
+      "logical_locator": "cc-x01/repeated_mixin.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Child"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Child.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 246,
+      "source_sha256": "sha256:0d39ee50aa8f475c1abdacbba395520014a5d95341734ee96b069598df6a3b1b",
+      "source_text": "{\"classes\":{\"Child\":{\"mixins\":[\"MixinA\",\"MixinA\"]},\"MixinA\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"required\":true}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/repeated-mixin\",\"name\":\"repeated_mixin\",\"slots\":{\"value\":{\"range\":\"string\"}}}\n",
+      "target_class": "Child"
+    },
+    {
+      "case_id": "conflicting_mixins_ab",
+      "logical_locator": "cc-x01/conflicting_mixins_ab.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Child"
+        },
+        {
+          "fields": ["range"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Child.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 345,
+      "source_sha256": "sha256:360a04667c2358ee9ea5a59ede7208fb1b8ddb5a97a3b5800cd24e4ae0fc71fc",
+      "source_text": "{\"classes\":{\"Child\":{\"mixins\":[\"MixinA\",\"MixinB\"]},\"MixinA\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"range\":\"integer\"}},\"slots\":[\"value\"]},\"MixinB\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"range\":\"float\"}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/conflicting-mixins-ab\",\"name\":\"conflicting_mixins_ab\",\"slots\":{\"value\":{\"range\":\"string\"}}}\n",
+      "target_class": "Child"
+    },
+    {
+      "case_id": "conflicting_mixins_ba",
+      "logical_locator": "cc-x01/conflicting_mixins_ba.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Child"
+        },
+        {
+          "fields": ["range"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Child.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 345,
+      "source_sha256": "sha256:f5abfc71242cd22e14ed8a83073c908c569690ce0cb50811d1d39ef72c4b81aa",
+      "source_text": "{\"classes\":{\"Child\":{\"mixins\":[\"MixinB\",\"MixinA\"]},\"MixinA\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"range\":\"integer\"}},\"slots\":[\"value\"]},\"MixinB\":{\"mixin\":true,\"slot_usage\":{\"value\":{\"range\":\"float\"}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/conflicting-mixins-ba\",\"name\":\"conflicting_mixins_ba\",\"slots\":{\"value\":{\"range\":\"string\"}}}\n",
+      "target_class": "Child"
+    },
+    {
+      "case_id": "numeric_bounds",
+      "logical_locator": "cc-x01/numeric_bounds.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Child"
+        },
+        {
+          "fields": ["range", "minimum_value", "maximum_value"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Child.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 341,
+      "source_sha256": "sha256:310927cfee843803cced8933ada89d678f3cef385c7a9393f8b882e6c6e0921b",
+      "source_text": "{\"classes\":{\"Child\":{\"is_a\":\"Parent\",\"slot_usage\":{\"value\":{\"maximum_value\":95,\"minimum_value\":5}}},\"Parent\":{\"slot_usage\":{\"value\":{\"maximum_value\":90,\"minimum_value\":10}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/numeric-bounds\",\"name\":\"numeric_bounds\",\"slots\":{\"value\":{\"maximum_value\":100,\"minimum_value\":0,\"range\":\"float\"}}}\n",
+      "target_class": "Child"
+    },
+    {
+      "case_id": "explicit_false",
+      "logical_locator": "cc-x01/explicit_false.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Thing"
+        },
+        {
+          "fields": ["range", "required", "multivalued", "identifier", "inlined"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Thing.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 317,
+      "source_sha256": "sha256:b6067d9ed6d57d5c2d59324990ed151975c66f826d4596bb7fb6d8dca0bc7a8c",
+      "source_text": "{\"classes\":{\"Thing\":{\"slot_usage\":{\"value\":{\"identifier\":false,\"inlined\":false,\"multivalued\":false,\"required\":false}},\"slots\":[\"value\"]}},\"id\":\"https://example.org/cc-x01/explicit-false\",\"name\":\"explicit_false\",\"slots\":{\"value\":{\"identifier\":true,\"inlined\":true,\"multivalued\":true,\"range\":\"string\",\"required\":true}}}\n",
+      "target_class": "Thing"
+    },
+    {
+      "case_id": "default_range",
+      "logical_locator": "cc-x01/default_range.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Thing"
+        },
+        {
+          "fields": ["range"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Thing.value",
+          "slot": "value"
+        }
+      ],
+      "source_byte_length": 160,
+      "source_sha256": "sha256:114309aa47a174861e091d6ce4454f46a21982b9cdc01cb295d8bf26e4318866",
+      "source_text": "{\"classes\":{\"Thing\":{\"slots\":[\"value\"]}},\"default_range\":\"integer\",\"id\":\"https://example.org/cc-x01/default-range\",\"name\":\"default_range\",\"slots\":{\"value\":{}}}\n",
+      "target_class": "Thing"
+    },
+    {
+      "case_id": "attribute_slot_usage",
+      "logical_locator": "cc-x01/attribute_slot_usage.json",
+      "probes": [
+        {
+          "fields": ["parent", "mixins", "slots"],
+          "kind": "class",
+          "probe_id": "class:Thing"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "attribute",
+          "probe_id": "attribute:Thing.value",
+          "slot": "value"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "global_slot",
+          "probe_id": "global_slot:global_value",
+          "slot": "global_value"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "slot_usage",
+          "probe_id": "slot_usage:Thing.global_value",
+          "slot": "global_value"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Thing.value",
+          "slot": "value"
+        },
+        {
+          "fields": ["range", "required"],
+          "kind": "effective_slot",
+          "probe_id": "effective_slot:Thing.global_value",
+          "slot": "global_value"
+        }
+      ],
+      "source_byte_length": 301,
+      "source_sha256": "sha256:3bb785cb41ca321076fc9e345f72e98e66fd456864904b2b74170fbb78e90bbd",
+      "source_text": "{\"classes\":{\"Thing\":{\"attributes\":{\"value\":{\"range\":\"integer\",\"required\":true}},\"slot_usage\":{\"global_value\":{\"range\":\"float\",\"required\":true}},\"slots\":[\"global_value\"]}},\"id\":\"https://example.org/cc-x01/attribute-slot-usage\",\"name\":\"attribute_slot_usage\",\"slots\":{\"global_value\":{\"range\":\"string\"}}}\n",
+      "target_class": "Thing"
+    }
+  ],
+  "schema": "malleus.contract-compiler.divergence-cases/v1",
+  "workstream_id": "CC-X01"
+}

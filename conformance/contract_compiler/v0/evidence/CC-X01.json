@@ -1,0 +1,84 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 9671,
+      "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/cases.json",
+      "sha256": "sha256:3a580e6e3ea95bda4d32ff855f91c269b6fa05ea87d2001bcdd0ea56b9e5b1d8"
+    },
+    {
+      "byte_length": 11130,
+      "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json",
+      "sha256": "sha256:02e681d662fdefff72ab5f23ca56345c5daede7540b66862838e9199ae5b09d3"
+    },
+    {
+      "byte_length": 29317,
+      "path": "scripts/contract_compiler_divergence.py",
+      "sha256": "sha256:60dd2d76a57f9716228c326370b07ebe54b3bf94d7a964ee42ba658e72ea5e79"
+    },
+    {
+      "byte_length": 9585,
+      "path": "tests/test_contract_compiler_divergence.py",
+      "sha256": "sha256:a187b7755dc7a0c2905b396314ce520aa206abe373178f9f95275e5c332f123f"
+    }
+  ],
+  "base_commit": "50c54b921e28724c88fa4b6e6bca1a94356d2839",
+  "checks": [
+    {
+      "check_id": "ccx01-red",
+      "method": "Run the CC-X01 test contract before creating the measurement runner.",
+      "observed": "Pytest stopped during collection with FileNotFoundError for scripts/contract_compiler_divergence.py, one collection error, and exit status 2.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-lossless-input",
+      "method": "Validate every logical locator, exact UTF-8 source text, byte length, SHA-256 digest, target class, and named probe before invoking either engine.",
+      "observed": "Exactly nine ordered single-module cases passed. Both engines received each case's retained source_text unchanged; all source byte lengths and SHA-256 digests matched.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-baseline",
+      "method": "Load LinkML and linkml-runtime only from the exact retained CC-002 wheel bytes and verify distribution versions plus module origins in an isolated child process.",
+      "observed": "linkml 1.11.1 sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed and linkml-runtime 1.11.1 sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da loaded from the retained wheelhouse; wrong coordinates, metadata, bytes, versions, and origins fail closed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-observations",
+      "method": "Capture construction and named probe results independently for LinkML SchemaView and current OntologyRegistry, using explicit ABSENT, NULL, and VALUE states.",
+      "observed": "Both engine records were retained for all nine cases. The corpus contains all three presence states, and construction failures retain exact exception type, message, and arguments. No policy field is present.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-replay",
+      "method": "Replay both engines twice, require byte-identical canonical output, compare it with observations.json, and mutate a retained observation.",
+      "observed": "Both fresh replays were byte-identical to the 11,130-byte retained observation artifact; the mutated artifact was rejected.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-focused",
+      "method": "Run tests/test_contract_compiler_divergence.py and the runner's offline check command.",
+      "observed": "All 11 focused tests passed and the check reported that fresh observations match retained bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-regression",
+      "method": "Run the affected OntologyRegistry regression module tests/test_ontology.py.",
+      "observed": "The complete affected regression module passed with no failures or errors.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-static",
+      "method": "Run Ruff over the CC-X01 runner and test module.",
+      "observed": "All scoped Ruff checks passed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X01 is a measurement corpus only. It does not select semantics, change an oracle, authorize production code, or close OD-003.",
+    "The cases are isolated single modules. Import resolution, duplicate adoption, expressions, graph admission, artifact grammar, themed vocabulary, packaging, and release behavior remain outside this slice.",
+    "The LinkML child loads the exact retained universal wheels under the calling Python interpreter. This report does not claim replay of the complete selected Linux OCI and CPython tuple or every retained transitive dependency.",
+    "OntologyRegistry is bound by the exact implementation digest recorded in observations.json. Any implementation change requires a fresh measurement rather than silent reuse of these bytes."
+  ],
+  "recorded_at": "2026-08-26T19:33:28Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X01"
+}
