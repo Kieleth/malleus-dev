@@ -1,0 +1,86 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 5224,
+      "path": "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py",
+      "sha256": "sha256:0b905dc49c883ca56b1a9e2492d6b12ba36b6879edf64c18524aa6e5673183de"
+    },
+    {
+      "byte_length": 6010,
+      "path": "conformance/contract_kernel/v0/source_boundary/EXPLORATORY_LEDGER.md",
+      "sha256": "sha256:0393d7c2e0edc963c34730635dda0a2b1d5da1a2223895d5857db7a51272be17"
+    }
+  ],
+  "base_commit": "17c4c21ee02a80fd2b963f47ba0ff3e37fcfd270",
+  "checks": [
+    {
+      "check_id": "ccx03-red",
+      "method": "Commit and run the generic source-boundary contract without implementing its test-local future seam.",
+      "observed": "RED commit 4788fdebfa8ad7c46ec7d6b47ab0ab4079a99a8f collected eight tests, then produced exactly one failed node, test_future_boundary_seam_is_not_implemented, with ModuleNotFoundError: No module named 'boundary'; seven controls passed; exit status 1.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-controls",
+      "method": "Exclude only the deliberate future-seam node and execute every LinkML characterization control.",
+      "observed": "The control run exited 0 with 7 passed and 1 deselected. Collection separately exited 0 with all eight nodes present, proving the missing seam is test-level rather than a module collection failure.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-loader",
+      "method": "Observe the value entering YAMLLoader._read_source through YAMLLoader.loads, then exercise one duplicate key.",
+      "observed": "The exact multi-line str object reached _read_source unchanged. The duplicate name produced built-in ValueError with args ('Duplicate key: \"name\"',) and message Duplicate key: \"name\".",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-io",
+      "method": "Exercise unmodified SchemaView.imports_closure and load_import with temporary local files and an intercepted invalid URL.",
+      "observed": "The local case reached builtins.open twice and returned ['child', 'root']. The URL case reached hbreader.urlopen once and was intercepted before network I/O with RuntimeError args ('intercepted URL read',).",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-closure",
+      "method": "Run imports_closure over in-memory nested-diamond, missing-import, and two-module-cycle microfixtures.",
+      "observed": "Raw results were ['common', 'left', 'right', 'root']; built-in FileNotFoundError with errno 2 and leading args (2, 'No such file or directory'); and ['first', 'second'], respectively.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-source-inspection",
+      "method": "Inspect installed LinkML Runtime and hbreader sources for the exact loader and import I/O call paths used by the controls.",
+      "observed": "The ledger records YAMLLoader.loads through Loader._read_source and DupCheckYamlLoader, plus SchemaView.imports_closure through load_import, load_schema_wrap, YAMLLoader, hbread, hbopen, and builtins.open or hbreader.urlopen.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-context",
+      "method": "Record the available interpreter and directly exercised dependency versions without selecting a release tuple.",
+      "observed": "CPython 3.12.9 on Darwin arm64 executed linkml 1.11.1, linkml-runtime 1.11.1, PyYAML 6.0.3, pytest 9.1.1, hbreader 0.9.1, and jsonasobj2 1.0.4.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-standard-suite",
+      "method": "Run configured standard pytest, whose explicit testpaths exclude the exploratory conformance module.",
+      "observed": "The normal repository suite passed with 1655 passed and 2 skipped in 109.60s.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-governance",
+      "method": "Run the overseer ledger and integration checks plus both focused governance test modules.",
+      "observed": "The ledger validated 119 entries at OVR-000119; integration validated 66 workstreams, 10 cards, and 4 selections; the focused governance tests passed 74 tests in 23.95s.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx03-candidate",
+      "method": "Validate the final candidate's exact base, head, tree, linear history, three-path union, artifact bytes, and passing report after the enclosing evidence commit exists.",
+      "observed": "The candidate range contains the test RED commit followed by the observation commit, touches only the three registered paths, and passes validate_candidate_history, evidence verification, scoped Ruff, and diff checks.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X03 is RED-only characterization. It does not define or implement boundary, authorize GREEN, or close the CC-D11 import-policy decision.",
+    "The closure lists, exceptions, request URL, and I/O calls are raw behavior of the recorded LinkML Runtime environment. They are not a locator grammar, suffix rule, resolver precedence, import-order meaning, cycle policy, fallback, stable diagnostic, module identity, or semantic winner.",
+    "The in-memory closure controls replace only load_import. Local and URL reachability controls use unmodified SchemaView.load_import, and the URL opener is intercepted before any network fetch.",
+    "The candidate adds no production, ontology, themed vocabulary, dependency, Docker, release, migration, network, semantic merge, or import-policy change."
+  ],
+  "recorded_at": "2026-08-26T21:50:39Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X03"
+}
