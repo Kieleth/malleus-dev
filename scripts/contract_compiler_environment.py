@@ -1378,12 +1378,22 @@ def resolve_command(
     built: Path,
     host_user: Mapping[str, Any] | None = None,
 ) -> list[str]:
+    roots_resolved = roots.resolve()
     built_resolved = built.resolve()
     wheelhouse_resolved = wheelhouse.resolve()
-    if built_resolved == wheelhouse_resolved:
-        _fail("CC002_RESOLVER_MOUNTS", "built and wheelhouse paths must be distinct")
-    if _resolved_paths_overlap(built_resolved, wheelhouse_resolved):
-        _fail("CC002_RESOLVER_MOUNTS", "built and wheelhouse paths must not overlap")
+    adapter_resolved = ADAPTER_PATH.resolve()
+    mount_sources = (
+        roots_resolved,
+        built_resolved,
+        wheelhouse_resolved,
+        adapter_resolved,
+    )
+    if any(
+        _resolved_paths_overlap(mount_sources[left], mount_sources[right])
+        for left in range(len(mount_sources))
+        for right in range(left + 1, len(mount_sources))
+    ):
+        _fail("CC002_RESOLVER_MOUNTS", "resolver mount paths must not overlap")
     return [
         DOCKER,
         "run",
@@ -1415,13 +1425,13 @@ def resolve_command(
         "--env",
         "PYTHONPATH=/adapter",
         "-v",
-        f"{roots.resolve()}:/roots:ro",
+        f"{roots_resolved}:/roots:ro",
         "-v",
         f"{built_resolved}:/built:ro",
         "-v",
         f"{wheelhouse_resolved}:/wheelhouse:rw",
         "-v",
-        f"{ADAPTER_PATH.resolve()}:/adapter/contract_compiler_environment.py:ro",
+        f"{adapter_resolved}:/adapter/contract_compiler_environment.py:ro",
         OCI_CHILD_REFERENCE,
         "python",
         "-c",

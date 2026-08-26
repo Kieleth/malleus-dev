@@ -1454,14 +1454,66 @@ def test_resolution_requires_distinct_explicit_built_and_wheelhouse_paths(tmp_pa
         directory.mkdir()
     with pytest.raises(TypeError):
         environment.resolve_command(roots, wheelhouse)
-    with pytest.raises(environment.CC002Error, match="distinct"):
+    with pytest.raises(environment.CC002Error, match="CC002_RESOLVER_MOUNTS"):
         environment.resolve_command(roots, wheelhouse, built=wheelhouse)
     for overlapping in (wheelhouse / "built", wheelhouse.parent):
-        with pytest.raises(environment.CC002Error, match="overlap"):
+        with pytest.raises(environment.CC002Error, match="CC002_RESOLVER_MOUNTS"):
             environment.resolve_command(roots, wheelhouse, built=overlapping)
     assert "/repo" not in environment.VERIFIER_PROGRAM
     assert "--no-index" in environment.VERIFIER_PROGRAM
     assert "--require-hashes" in environment.VERIFIER_PROGRAM
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+        "roots-equal-wheelhouse",
+        "roots-under-wheelhouse",
+        "wheelhouse-under-roots",
+        "roots-equal-built",
+        "roots-under-built",
+        "built-under-roots",
+    ),
+)
+def test_resolution_refuses_roots_overlap_with_other_mount_sources(tmp_path, case):
+    roots = tmp_path / "roots"
+    built = tmp_path / "built"
+    wheelhouse = tmp_path / "wheelhouse"
+    if case == "roots-equal-wheelhouse":
+        roots = wheelhouse
+    elif case == "roots-under-wheelhouse":
+        roots = wheelhouse / "roots"
+    elif case == "wheelhouse-under-roots":
+        wheelhouse = roots / "wheelhouse"
+    elif case == "roots-equal-built":
+        roots = built
+    elif case == "roots-under-built":
+        roots = built / "roots"
+    elif case == "built-under-roots":
+        built = roots / "built"
+    with pytest.raises(
+        environment.CC002Error, match=r"\[CC002_RESOLVER_MOUNTS\]"
+    ):
+        environment.resolve_command(roots, wheelhouse, built=built)
+
+
+@pytest.mark.parametrize(
+    "wheelhouse",
+    (
+        environment.ADAPTER_PATH,
+        environment.ADAPTER_PATH.parent,
+        environment.ADAPTER_PATH.parent.parent,
+    ),
+)
+def test_resolution_refuses_writable_wheelhouse_overlap_with_adapter(
+    tmp_path, wheelhouse
+):
+    with pytest.raises(
+        environment.CC002Error, match=r"\[CC002_RESOLVER_MOUNTS\]"
+    ):
+        environment.resolve_command(
+            tmp_path / "roots", wheelhouse, built=tmp_path / "built"
+        )
 
 
 def test_every_container_run_uses_the_exact_nonroot_host_ownership_tuple(tmp_path):
