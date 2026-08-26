@@ -181,8 +181,24 @@ def test_corpus_addresses_exactly_five_logical_subjects_and_old_wire_grammar():
     assert manifest["schema_version"] == "2"
     assert len(manifest["writes"]) == 1
     operation = manifest["writes"][0]["operation"]
-    assert operation["kind"] == "ENTITY"
+    assert operation["op_type"] == "CREATE_ENTITY"
     assert operation["record_type"] == "ProtocolActor"
+
+
+def test_wire_grammar_rejects_broken_protocol_hash_chain(tmp_path):
+    copied = tmp_path / "historic_wire"
+    shutil.copytree(CORPUS, copied)
+    events = runner.read_jsonl(copied / "protocol-ledger.jsonl")
+    events[1]["previous_event_hash"] = "sha256:" + "0" * 64
+    (copied / "protocol-ledger.jsonl").write_bytes(
+        b"".join(runner.canonical_json(event) for event in events)
+    )
+
+    with pytest.raises(
+        runner.HistoricWireError,
+        match="protocol ledger envelope is invalid",
+    ):
+        runner._validate_wire_grammar(copied)
 
 
 def test_current_reader_observations_are_raw_and_cover_every_subject():
@@ -196,7 +212,7 @@ def test_current_reader_observations_are_raw_and_cover_every_subject():
         "reader",
         "observations",
     }
-    assert document["reader"]["commit"] == "7178bd0a86ead814ed3ae6525eea8b4e7d9f6417"
+    assert document["reader"]["commit"] == "7178bd06e83cb5850afea5af6747e53c03730eec"
     assert document["reader"]["tree"] == "e218f60b6cf2abbe11372965b7feed31b0677183"
     assert [item["subject_id"] for item in document["observations"]] == SUBJECTS
     for mapping in _walk(document):
@@ -229,12 +245,12 @@ def test_current_knowledge_graph_reader_refuses_snapshot_with_exact_error():
     assert result["error"] == {
         "error_type": "ValueError",
         "message": (
-            "Record export has unknown families: nodes, ontology_hash; expected exactly "
-            "entities, events, relations, signals"
+            "Cannot rehydrate graph from records: Unknown record family: 'nodes'; "
+            "Unknown record family: 'ontology_hash'"
         ),
         "arguments": [
-            "Record export has unknown families: nodes, ontology_hash; expected exactly "
-            "entities, events, relations, signals"
+            "Cannot rehydrate graph from records: Unknown record family: 'nodes'; "
+            "Unknown record family: 'ontology_hash'"
         ],
     }
 
@@ -256,13 +272,51 @@ def test_protocol_envelope_refusal_keeps_intrinsic_artifact_results_separate():
     }
     for subject_id in ("graph-base-artifact", "candidate-subgraph-artifact"):
         item = observations[subject_id]
-        assert item["end_to_end"] == {
-            "outcome": "NOT_REACHED",
-            "blocked_by": "protocol-envelope-event-1",
-            "error": expected_error,
-        }
+        assert item["end_to_end"]["outcome"] == "NOT_REACHED"
+        assert item["end_to_end"]["reader"] == "malleus.assent.ProtocolLedger.replay"
+        assert item["end_to_end"]["blocked_by"] == "protocol-envelope-event-1"
+        assert item["end_to_end"]["error"] == expected_error
         assert item["intrinsic"]["outcome"] == "PASS"
         assert item["intrinsic"]["facts"]
+
+
+def test_intrinsic_checks_reject_resealed_cross_artifact_mismatches():
+    events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
+    registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    snapshot = _read(CORPUS / "graph-snapshot.json")
+    graph_base = deepcopy(events[1]["payload"]["artifact"])
+    candidate = deepcopy(events[2]["payload"]["artifact"])
+
+    graph_base["base_record_count"] = 99
+    graph_base["content_hash"] = runner.record_hash("GraphBaseArtifact", graph_base)
+    assert runner._graph_base_intrinsic(registry, graph_base, snapshot)["outcome"] == "FAIL"
+
+    candidate["graph_base_id"] = "artifact:missing"
+    digest_fields = {
+        name: candidate[name]
+        for name in (
+            "candidate_schema_version",
+            "graph_base_id",
+            "graph_base_hash",
+            "graph_ontology_hash",
+            "base_acceptance_head",
+            "base_materialization_head",
+            "base_state_digest",
+            "candidate_manifest",
+            "candidate_manifest_hash",
+            "candidate_write_count",
+            "candidate_digest",
+            "candidate_state_digest",
+        )
+    }
+    candidate["artifact_hash"] = runner.candidate_artifact_digest(
+        artifact_id=candidate["id"],
+        artifact_version=candidate["artifact_version"],
+        **digest_fields,
+    )
+    candidate["content_hash"] = runner.record_hash("CandidateSubgraphArtifact", candidate)
+    original_base = events[1]["payload"]["artifact"]
+    assert runner._candidate_intrinsic(registry, candidate, original_base)["outcome"] == "FAIL"
 
 
 def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():
@@ -280,6 +334,13 @@ def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():
     assert runner.canonical_json(first) == runner.canonical_json(second)
     assert runner.canonical_json(first) == OBSERVATIONS.read_bytes()
     assert after == before
+
+
+def test_reader_origin_substitution_fails_before_observation(monkeypatch, tmp_path):
+    module = sys.modules["malleus.kg"]
+    monkeypatch.setattr(module, "__file__", str(tmp_path / "substitute" / "kg.py"))
+    with pytest.raises(runner.HistoricWireError, match="module origin differs"):
+        runner.render_observations(MANIFEST)
 
 
 def test_bad_checksum_and_undeclared_input_fail_loud(tmp_path):

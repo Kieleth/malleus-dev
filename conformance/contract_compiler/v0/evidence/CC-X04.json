@@ -1,0 +1,125 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 282,
+      "path": "conformance/contract_compiler/v0/historic_wire/project.json",
+      "sha256": "sha256:0808d77254479bfedc7b67790182644db22f71c29b90bd61f0356bb232deeb21"
+    },
+    {
+      "byte_length": 802,
+      "path": "conformance/contract_compiler/v0/historic_wire/recon-ledger.jsonl",
+      "sha256": "sha256:c3720e2031a51d9f27b22ef0cd4b19438858fa062423d97382b66e3e38ab264e"
+    },
+    {
+      "byte_length": 118,
+      "path": "conformance/contract_compiler/v0/historic_wire/graph-snapshot.json",
+      "sha256": "sha256:8b33574f3ce5fbd67450d414c5e10a4272e1f8abd647104ddd07f7c794b592a6"
+    },
+    {
+      "byte_length": 4073,
+      "path": "conformance/contract_compiler/v0/historic_wire/protocol-ledger.jsonl",
+      "sha256": "sha256:821565b78c3d3c8c744e03781eed8129a7e37a5033aaa97aa01e556d34b5469f"
+    },
+    {
+      "byte_length": 3272,
+      "path": "conformance/contract_compiler/v0/historic_wire/corpus.json",
+      "sha256": "sha256:57fdcf335e5dcdd06c0e99e732cb75e929fa4211e39fa82d41b11f2551900a35"
+    },
+    {
+      "byte_length": 5062,
+      "path": "conformance/contract_compiler/v0/historic_wire/observations.json",
+      "sha256": "sha256:fe99886a588ecc76d329f0f32504b3d173f3ae3d655d776085ade75a1a7809e4"
+    },
+    {
+      "byte_length": 30078,
+      "path": "scripts/contract_compiler_historic_wire.py",
+      "sha256": "sha256:5ad8a375a19ef9466f25c5999255881025a1519638ce152c036a4154a1cae188"
+    },
+    {
+      "byte_length": 13391,
+      "path": "tests/test_contract_compiler_historic_wire.py",
+      "sha256": "sha256:b190f1c5509d2cde02bd8c17c330d58a79fc3d92c07fb66884bd7bdd09d52ed6"
+    }
+  ],
+  "base_commit": "8190dc3a4f22f376c7a0921169d15fed3de289f8",
+  "checks": [
+    {
+      "check_id": "ccx04-red",
+      "method": "Commit the focused contract before adding the corpus, runner, observations, or evidence.",
+      "observed": "RED commit b7e450afdfce2556b92669d56d2b481e88353481 failed during collection because scripts/contract_compiler_historic_wire.py was absent, with one collection error and exit status 2.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-producer-provenance",
+      "method": "Run the existing persisted-wire writer paths from the two detached release checkouts, then compare every emitted byte before retaining one physical copy.",
+      "observed": "v0.11.0 annotated tag object 8ed921e4454f9898a0de2239c4de512d797b25fc peels to commit 58741cc7285f9c2c3023d49b8ae3036699449d44. v0.13.3 annotated tag object 91633c0e37762f3325daef6e99ba0a9947b82657 peels to commit b5a72a6d741c066d1441fbe2d5b5d8319670c05f. The two executions produced byte-identical project.json, recon-ledger.jsonl, graph-snapshot.json, and protocol-ledger.jsonl files at the four retained lengths and SHA-256 digests.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-corpus",
+      "method": "Validate exact file membership, release coordinates, byte lengths, SHA-256 digests, JSON shapes, and complete JSONL event hash chains.",
+      "observed": "Exactly four physical inputs and five logical subjects are retained. The protocol ledger is exactly external snapshot anchor, GraphBaseArtifact, and CandidateSubgraphArtifact, whose manifest contains one ProtocolActor CREATE_ENTITY write. Broken hash links, bad checksums, and undeclared files fail loudly.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-reader-binding",
+      "method": "Bind observation execution to the measured Git source and verify every imported reader module resolves to its declared repository path and digest before reading the corpus.",
+      "observed": "The reader snapshot is commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, with exact source hashes for recon.store, kg, assent, accepted, ledger, ontology, and migration. Module-origin substitution is refused before observation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-current-observations",
+      "method": "Execute the existing current readers without rewriting an input and retain raw outcomes, exact exception type, arguments, message, call path, and narrow facts.",
+      "observed": "Recon project and RECON_RECORD are ACCEPTED through the existing migration receipt. The empty knowledge-graph snapshot is REFUSED with ValueError for unknown nodes and ontology_hash record families. Protocol replay is REFUSED at event 1 for ontology_hash mismatch, so both embedded artifact end-to-end results are NOT_REACHED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-intrinsic-artifacts",
+      "method": "Validate each embedded artifact independently with the current ontology and digest functions, including its cross-artifact and snapshot bindings.",
+      "observed": "GraphBaseArtifact and CandidateSubgraphArtifact each pass intrinsic validation. Resealed changes to the base record count or candidate graph-base binding fail, which keeps intrinsic PASS from masking a broken relation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-determinism",
+      "method": "Render observations twice, compare canonical bytes to the retained observation, and compare every physical input before and after execution.",
+      "observed": "Both renders are byte-identical to observations.json and all four input files remain byte-identical.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-contract-corrections",
+      "method": "Correct RED assertions only where tagged bytes or current execution supplied direct contrary evidence, without changing any reader behavior.",
+      "observed": "The candidate operation field is op_type, the measured reader commit is 7178bd06e83cb5850afea5af6747e53c03730eec, the knowledge-graph exception names nodes and ontology_hash, and protocol NOT_REACHED observations name ProtocolLedger.replay. These are measured specification corrections, not compatibility decisions.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-focused",
+      "method": "Run the focused tests, retained-observation check, scoped Ruff, diff check, governance validators, and evidence-byte verification.",
+      "observed": "All 13 focused tests passed. Retained observations matched fresh current-reader results. Scoped Ruff, diff check, contract-compiler ledger and integration checks, and evidence-byte validation passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-affected",
+      "method": "Run the existing tests for every current-reader module exercised by the observation runner.",
+      "observed": "The recon, knowledge-graph, protocol, accepted-artifact, and ontology suites passed: 565 passed and 2 skipped.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-package",
+      "method": "Inspect the authorized surface for package or runtime product changes.",
+      "observed": "NOT_APPLICABLE. CC-X04 adds conformance data, one measurement runner, tests, and verification evidence only.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X04 is measurement only. It does not select desired future behavior, close OD-004, create a decision matrix, or authorize a migration, bridge, epoch, or new reader.",
+    "One physical copy is retained because independently executed v0.11.0 and v0.13.3 writer paths produced identical bytes. No historical Python environment or dependency set was reconstructed.",
+    "Recon acceptance uses the existing receipt mechanism. CC-X04 creates no migration and makes no claim that receipt-based acceptance is the future policy.",
+    "The knowledge-graph and protocol refusals are raw current-reader results, not selected compatibility outcomes.",
+    "The two protocol artifacts pass only intrinsic validation. Their end-to-end replay was not reached because the enclosing protocol ledger failed at event 1.",
+    "Observations are bound to reader commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, and the retained implementation-source digests. A reader source change requires a fresh measurement.",
+    "CC-X04 changes no production, ontology, dependency, Docker, release, or packaging surface and makes no claim about those surfaces."
+  ],
+  "recorded_at": "2026-08-26T20:44:31Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X04"
+}

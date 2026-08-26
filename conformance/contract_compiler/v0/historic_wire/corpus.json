@@ -1,0 +1,130 @@
+{
+  "schema": "malleus.contract-compiler.historic-wire-corpus/v1",
+  "workstream_id": "CC-X04",
+  "releases": [
+    {
+      "release": "v0.11.0",
+      "tag_object": "8ed921e4454f9898a0de2239c4de512d797b25fc",
+      "commit": "58741cc7285f9c2c3023d49b8ae3036699449d44"
+    },
+    {
+      "release": "v0.13.3",
+      "tag_object": "91633c0e37762f3325daef6e99ba0a9947b82657",
+      "commit": "b5a72a6d741c066d1441fbe2d5b5d8319670c05f"
+    }
+  ],
+  "inputs": [
+    {
+      "input_id": "recon-project",
+      "path": "project.json",
+      "byte_length": 282,
+      "sha256": "sha256:0808d77254479bfedc7b67790182644db22f71c29b90bd61f0356bb232deeb21",
+      "producer_releases": [
+        "v0.11.0",
+        "v0.13.3"
+      ],
+      "grammar": {
+        "format": "JSON",
+        "kind": "RECON_PROJECT",
+        "schema_version": "1"
+      }
+    },
+    {
+      "input_id": "recon-ledger",
+      "path": "recon-ledger.jsonl",
+      "byte_length": 802,
+      "sha256": "sha256:c3720e2031a51d9f27b22ef0cd4b19438858fa062423d97382b66e3e38ab264e",
+      "producer_releases": [
+        "v0.11.0",
+        "v0.13.3"
+      ],
+      "grammar": {
+        "event_count": 1,
+        "event_type": "RECON_RECORD",
+        "format": "HASH_LINKED_JSONL",
+        "schema_version": "1"
+      }
+    },
+    {
+      "input_id": "graph-snapshot",
+      "path": "graph-snapshot.json",
+      "byte_length": 118,
+      "sha256": "sha256:8b33574f3ce5fbd67450d414c5e10a4272e1f8abd647104ddd07f7c794b592a6",
+      "producer_releases": [
+        "v0.11.0",
+        "v0.13.3"
+      ],
+      "grammar": {
+        "fields": [
+          "nodes",
+          "ontology_hash",
+          "relations"
+        ],
+        "format": "JSON",
+        "kind": "KNOWLEDGE_GRAPH_SNAPSHOT"
+      }
+    },
+    {
+      "input_id": "protocol-ledger",
+      "path": "protocol-ledger.jsonl",
+      "byte_length": 4073,
+      "sha256": "sha256:821565b78c3d3c8c744e03781eed8129a7e37a5033aaa97aa01e556d34b5469f",
+      "producer_releases": [
+        "v0.11.0",
+        "v0.13.3"
+      ],
+      "grammar": {
+        "event_count": 3,
+        "event_types": [
+          "EXTERNAL_SNAPSHOT_ANCHORED",
+          "ARTIFACT_RECORDED",
+          "ARTIFACT_RECORDED"
+        ],
+        "format": "HASH_LINKED_JSONL",
+        "schema_version": "1"
+      }
+    }
+  ],
+  "subjects": [
+    {
+      "subject_id": "recon-project",
+      "input_id": "recon-project",
+      "locator": {
+        "document": "project.json"
+      }
+    },
+    {
+      "subject_id": "recon-record",
+      "input_id": "recon-ledger",
+      "locator": {
+        "event_type": "RECON_RECORD",
+        "sequence": 1
+      }
+    },
+    {
+      "subject_id": "empty-knowledge-graph",
+      "input_id": "graph-snapshot",
+      "locator": {
+        "document": "graph-snapshot.json"
+      }
+    },
+    {
+      "subject_id": "graph-base-artifact",
+      "input_id": "protocol-ledger",
+      "locator": {
+        "event_type": "ARTIFACT_RECORDED",
+        "record_type": "GraphBaseArtifact",
+        "sequence": 2
+      }
+    },
+    {
+      "subject_id": "candidate-subgraph-artifact",
+      "input_id": "protocol-ledger",
+      "locator": {
+        "event_type": "ARTIFACT_RECORDED",
+        "record_type": "CandidateSubgraphArtifact",
+        "sequence": 3
+      }
+    }
+  ]
+}
