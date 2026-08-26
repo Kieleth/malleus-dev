@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:4678e0d882242730f0e36abfc6842ae1317bdfc2cc56e114dd1ca73de588d6b9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-002-progress-02.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:793217bf98652fe6efaf4163c0de257569d676bd2e6f77ca88f0c1ccd6153cb2",
+  "entry_id": "OVR-000087",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:43746febb497826b3a38f2bf1b202103f069b77557d5ab4296230ac700367f43",
+  "recorded_at": "2026-08-26T05:42:32Z",
+  "references": [
+    {
+      "digest": "sha256:4678e0d882242730f0e36abfc6842ae1317bdfc2cc56e114dd1ca73de588d6b9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-02.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "541a0b000a2946876831ee1e1650af7e7de6efea",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 87,
+  "subject": {
+    "id": "cc002-progress-02",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the immutable report for the first real CC-002 acquisition under OD-012 R3.",
+  "why": "The real v3 attempt reached every governed root and then failed closed during transitive wheel resolution. Registering the report before verification preserves the exact observed progress, diagnostic truncation, unknown dependency edge, cleanup result, and implementation lineage without revising OD-012, the CC-002 card, integration, or accepted dependency policy."
+}

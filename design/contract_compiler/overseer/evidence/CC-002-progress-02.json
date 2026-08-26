@@ -1,0 +1,70 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 10774,
+      "path": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "sha256": "sha256:ad641ac854aac331c67c57309ecb878b73b60bf5c28013c68f3b41556b423f01"
+    }
+  ],
+  "base_commit": "541a0b000a2946876831ee1e1650af7e7de6efea",
+  "checks": [
+    {
+      "check_id": "cc002-r3-implementation-lineage",
+      "method": "Resolve the governance, RED, and GREEN commits and inspect their parent chain and changed paths.",
+      "observed": "d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72 governs OD-012 R3; aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb is its tests-only child; 541a0b000a2946876831ee1e1650af7e7de6efea is the implementation child of aa989146.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-v3-tool-loaded",
+      "method": "Inspect the restarted MCP tool contract and the result shape exposed to the real acquisition attempt.",
+      "observed": "The restarted tool exposed malleus.cc002.acquire-result/v3 with artifact_count, built_artifact_count, and derivation_record_sha256.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-acquisition-progress",
+      "method": "Observe the real cc002_acquire attempt through its failure after about 80 seconds.",
+      "observed": "The attempt processed the LinkML and linkml-runtime roots, the deterministic ANTLR built root, and /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl before entering pip 25.0.1 transitive wheel resolution.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-resolution-failure",
+      "method": "Inspect the governed error returned by the real MCP acquisition and retain only facts present in that result.",
+      "observed": "The result began '[CC002_SUBPROCESS] transitive wheel resolution failed with 1'. Stderr said LinkML versions had conflicting dependencies. Stdout listed many candidates and ended '[truncated]' before pip's conflict explanation. ResolutionImpossible was reached, but the exact conflicting edge is unknown.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-subprocess-diagnostic-prefix-truncation",
+      "method": "Inspect _subprocess_diagnostic in the implementation artifact and compare it with the returned error shape.",
+      "observed": "SUBPROCESS_DIAGNOSTIC_LIMIT is 4096 and _subprocess_diagnostic retains the first diagnostic characters before appending '[truncated]'. The real result therefore omitted pip's later conflict explanation and did not expose the exact dependency edge.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-failed-publication-cleanup",
+      "method": "Inspect the governed destination and bounded staging namespace after the failed acquisition returned.",
+      "observed": "conformance/contract_compiler/v0/compiler_environment is absent and no conformance/contract_compiler/v0/.cc002-* staging path remains. The failed v3 attempt published no partial environment.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-preflight-tests",
+      "method": "Retain the exact test results completed against the GREEN implementation before the real acquisition.",
+      "observed": "The environment suite passed 394 tests, the focused governance suites passed 104 tests, and the full repository suite passed 1628 tests with 2 skips.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-policy-boundary-preserved",
+      "method": "Compare the observed failure with OD-012 R3 and inspect the repository for a published compiler environment or a new dependency decision.",
+      "observed": "The attempt exposed a diagnostic observability defect and a later unresolved dependency closure. It did not identify the exact conflicting edge, publish an environment, reopen OD-012, or select any dependency change.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report records one failed real v3 acquisition attempt. It does not claim a complete runtime closure, retained compiler environment, offline verification, final candidate, or CC-002 completion.",
+    "The exact dependency edge behind ResolutionImpossible is unknown because the retained diagnostic ended before pip's conflict explanation. No package or version is inferred from the generic LinkML conflict text.",
+    "The successful processing observed before the resolver failure proves progress for this attempt only. Staged and built outputs were removed with the failed staging tree and are not retained completion artifacts.",
+    "The raw MCP transcript is not retained as an artifact. This report binds the current CC-002 manifest and records the observed result, cleanup state, implementation lineage, and test results.",
+    "This report does not repair _subprocess_diagnostic, authorize a dependency change, or revise OD-012 R3. Those are separate implementation and dependency-planning steps."
+  ],
+  "recorded_at": "2026-08-26T05:42:31Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-002"
+}

@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c951992b7f287becfc738cbf681d988b7493ed31d86bee9975292152e21d42d9",
+        "before_digest": "sha256:962eecf0f5a103cbf3fb449a87ea25242031fa6c4f5012808007f9e0be6041ac",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:074bf2f0ad28b9a4ba2aac08ec8e7090f7e3e2f7f6410b935a255b6cc3773829",
+  "entry_id": "OVR-000091",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ab71c538ac03b742a9cedfab584affdd79cd8db23dbd9551a1d575a42f73a8da",
+  "recorded_at": "2026-08-26T05:58:36Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000088",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000089",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000090",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 91,
+  "subject": {
+    "id": "cc002-progress-state-integration-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Refresh the integration authority anchor for the corrected active CC-002 state.",
+  "why": "The integration guard requires its CC-002 authority anchor to bind the latest active WORKSTREAM_STATE. This revision changes only the overseer entry count, entry ID, and hash from OVR-000085 to OVR-000090. It leaves every workstream, card, scope, selection, dependency, and candidate field unchanged."
+}

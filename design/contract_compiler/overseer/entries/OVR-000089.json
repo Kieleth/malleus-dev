@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-002"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000085"
+  },
+  "entry_hash": "sha256:8ab8cc37fe06cf2cb959257bc909ddda61275958f22ed972c1f79b0a85b0e6fe",
+  "entry_id": "OVR-000089",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:73a253b1ea47081334f88dd3fc8e1315195126234c326406d4f8e37a680ccea8",
+  "recorded_at": "2026-08-26T05:55:14Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000085",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000088",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 89,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct stale CC-002 projected blockers after the first real R3 acquisition.",
+  "why": "OVR-000085 correctly authorized CC-002 but projected pre-integration blockers that are now false. OVR-000088 verifies the integrated governance, RED, and GREEN lineage, the first real R3 acquisition, its later transitive-resolution failure, the bounded diagnostic's lost tail, and atomic cleanup. The historical state remains immutable and requires an exact replacement."
+}

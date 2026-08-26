@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "The first real R3 acquisition failed at transitive resolution; the exact dependency edge is unknown because the bounded diagnostic truncated pip's tail; no partial environment survived; diagnostic repair and a restarted rerun are next; no dependency correction is selected."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Retain d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72, aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb, and 541a0b000a2946876831ee1e1650af7e7de6efea as the governed OD-012 R3, RED, and GREEN implementation lineage.",
+      "Preserve the exact OD-012 R3 coordinates, deterministic derivation, v3 schemas, runtime exclusions, acceptance gates, thirteen-artifact completion contract, nine scopes, and seven checkpoint FILE artifacts without selecting dependency policy.",
+      "Repair only the bounded subprocess diagnostic so a deterministic sanitized head and tail survive truncation; do not alter resolver inputs, package coordinates, dependency policy, or runtime acceptance.",
+      "Restart the MCP process and rerun cc002_acquire to retain pip's final conflict explanation and identify the exact transitive dependency edge mechanically.",
+      "If transitive resolution still fails, record the exact edge before dependency planning; do not infer or select a dependency correction from the truncated first result.",
+      "Require successful runtime resolution, atomic retained publication, offline verification, genuine worker evidence, and the exact final candidate contract before CC-002 completion."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000088"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:ab71c538ac03b742a9cedfab584affdd79cd8db23dbd9551a1d575a42f73a8da",
+  "entry_id": "OVR-000090",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8ab8cc37fe06cf2cb959257bc909ddda61275958f22ed972c1f79b0a85b0e6fe",
+  "recorded_at": "2026-08-26T05:55:15Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000085",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000088",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000089",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "541a0b000a2946876831ee1e1650af7e7de6efea",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 90,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Keep CC-002 active against the observed R3 transitive-resolution blocker.",
+  "why": "The governed R3 implementation exists and the first real attempt proved deterministic root processing and atomic cleanup, so OVR-000085's pre-integration blockers are obsolete. The attempt did not complete the runtime closure, and prefix truncation concealed the exact pip edge. CC-002 therefore remains ACTIVE only to repair diagnostic observability, restart, rerun, and record the exact edge before any separate dependency decision."
+}

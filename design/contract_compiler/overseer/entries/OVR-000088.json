@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "cc002-progress-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T05:42:33Z",
+    "claims": [
+      "Commit d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72 governs OD-012 R3, aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb supplies its RED tests, and 541a0b000a2946876831ee1e1650af7e7de6efea supplies the GREEN implementation.",
+      "After restart, the MCP tool exposed malleus.cc002.acquire-result/v3 with artifact_count, built_artifact_count, and derivation_record_sha256.",
+      "The about-80-second cc002_acquire attempt processed the LinkML and linkml-runtime roots, deterministic ANTLR built root, and /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl before transitive wheel resolution failed.",
+      "The governed error began '[CC002_SUBPROCESS] transitive wheel resolution failed with 1'; pip 25.0.1 reached ResolutionImpossible, but the retained text does not identify the exact conflicting dependency edge.",
+      "The diagnostic contains only generic LinkML conflict text and a candidate list ending '[truncated]' because _subprocess_diagnostic retains the first 4096 characters rather than pip's later conflict explanation.",
+      "The failed attempt left compiler_environment absent and removed every bounded .cc002-* staging path, so no partial environment was published.",
+      "Before the real attempt, 394 environment tests, 104 focused governance tests, and 1628 full-repository tests passed with 2 skips.",
+      "This failure exposes a diagnostic observability defect and an unresolved later dependency closure. It does not reopen OD-012 R3 or select a dependency change; CC-002 remains ACTIVE under OVR-000085."
+    ],
+    "limitations": [
+      "This verifies failed-closed v3 execution progress, diagnostic loss, and cleanup, not a retained root, complete runtime closure, offline verification, final candidate, or CC-002 completion.",
+      "The exact dependency conflict remains unknown. No dependency edge, package, version, or remediation may be inferred from the generic LinkML conflict text.",
+      "The successful root processing was observed before staging cleanup and is not retained evidence of final reproducible artifacts.",
+      "The raw MCP transcript is not retained. The immutable report records the observed result and binds the previously governed CC-002 manifest bytes.",
+      "No diagnostic implementation change or dependency-policy decision is made by this verified fact."
+    ]
+  },
+  "entry_hash": "sha256:73a253b1ea47081334f88dd3fc8e1315195126234c326406d4f8e37a680ccea8",
+  "entry_id": "OVR-000088",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:793217bf98652fe6efaf4163c0de257569d676bd2e6f77ca88f0c1ccd6153cb2",
+  "recorded_at": "2026-08-26T05:42:33Z",
+  "references": [
+    {
+      "digest": "sha256:4678e0d882242730f0e36abfc6842ae1317bdfc2cc56e114dd1ca73de588d6b9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-02.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "aa989146bdaef29a6ac2d6ae2c31ec26ca32d2eb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "541a0b000a2946876831ee1e1650af7e7de6efea",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000081",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000085",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000087",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 88,
+  "subject": {
+    "id": "CC-002-progress-02",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the real v3 CC-002 attempt, diagnostic truncation, and unresolved dependency closure.",
+  "why": "The real acquisition proves that the R3 implementation loads, processes every governed root, and fails atomically at a later resolver step. Recording exactly what the returned diagnostic proves, what its prefix truncation conceals, and which choices remain unmade keeps progress and dependency planning queryable without inferring a conflict edge or altering OD-012."
+}
