@@ -1,0 +1,78 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d25059a925f16dd33f2b00e1f81cd15c696d7da2dbbea86f804d72f70027791f",
+        "before_digest": "sha256:61fbaf3f4c4405304bebfd1a21668e594a2f7c589c02f86fc7d6aeb98fc5c259",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:98ec815aa3696eaa552cf4d2719a0e9e76b45a2f3eefe599e42063b62d522fd1",
+        "before_digest": "sha256:f8360570acb799c62456b83adddea9bcdc9178eb9f458f21bb49d26b0478df34",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:5ecfbab9dfa44d8c69cd1f0288484482230fa888957607fab096d5f3e4dec2bd",
+        "before_digest": "sha256:5ef31fb9a66e885a8588d2d159cdda16826c60e79af49096803fae2138900810",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X02.json"
+      },
+      {
+        "after_digest": "sha256:5cf57f343c3ac82d6e4b21af96d7b146138f3d5bfd26ad3413af22cf0d940562",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X02-completion.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:237608d2b0374f4166dbd33a2c94db33010808eabf27ea5f50c2e1f3725ab18e",
+  "entry_id": "OVR-000112",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:883c65df1854f6de11feade175bec266d902a60b49b05071feabe4d50df4ec5c",
+  "recorded_at": "2026-08-26T20:35:38Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:5cf57f343c3ac82d6e4b21af96d7b146138f3d5bfd26ad3413af22cf0d940562",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X02-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000111",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 112,
+  "subject": {
+    "id": "ccx02-completion-checkpoint",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the eligible CC-X02 candidate and completion evidence.",
+  "why": "The repaired cycle-free candidate binds the exact four authorized paths, three measured artifacts, passing worker evidence, and independent completion report. This revision advances the integration authority only to the prior OVR-000111 state while leaving CC-X02 unselected, its worker ledger NOT_STARTED, CC-X04 unchanged, and the four selections and sealed snapshot intact."
+}

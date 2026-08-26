@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Retain the exact six-module declaration inventory and four same-kind duplicate groups with raw definitions and source identities.",
+      "Bind the eligible three-artifact candidate and passing evidence while keeping the worker ledger NOT_STARTED.",
+      "Defer import resolution, merge and adoption policy, classification, selection, production behavior, and release authority."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000113"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-X02"
+  },
+  "entry_hash": "sha256:27fd91db050e2eb877a88d370b08ba8a3139935de0bd704a6569f79d5992a593",
+  "entry_id": "OVR-000114",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d2e03acd4c9dbcea6ddb52330567fd9961a5c60c3e735d790bd0d06f61845b56",
+  "recorded_at": "2026-08-26T20:35:40Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000113",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 114,
+  "subject": {
+    "id": "CC-X02",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded CC-X02 duplicate-declaration measurement.",
+  "why": "OVR-000113 verifies the exact repaired candidate, measured outputs, focused and governance gates, independent review, and unselected integration boundary. CC-X02 is complete as raw evidence for CC-D02 without deciding OD-002 or authorizing selection, production, runtime, migration, release, or dependency behavior."
+}

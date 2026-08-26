@@ -13,7 +13,35 @@
     "dependency_bindings": []
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 276746,
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+        "sha256": "sha256:c85b1e36272f1291bce72c9cd437fb183468de63f947c9728b51a8b8a778de91"
+      },
+      {
+        "byte_length": 13421,
+        "path": "scripts/contract_compiler_duplicate_scan.py",
+        "sha256": "sha256:546a5cd14326014c7eafae96002f050f990662c422c32a5494a5ce66648099be"
+      },
+      {
+        "byte_length": 14244,
+        "path": "tests/test_contract_compiler_duplicate_scan.py",
+        "sha256": "sha256:e5b1a3005b6e0d377e522265f9180c1aac6a74038c885bcd1e64708876f43283"
+      }
+    ],
+    "base_commit": "b7e450afdfce2556b92669d56d2b481e88353481",
+    "evidence": [
+      {
+        "byte_length": 4312,
+        "path": "conformance/contract_compiler/v0/evidence/CC-X02.json",
+        "result": "PASS",
+        "sha256": "sha256:5ecfbab9dfa44d8c69cd1f0288484482230fa888957607fab096d5f3e4dec2bd"
+      }
+    ],
+    "head_commit": "f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba",
+    "head_tree": "1b4539019f5280f3d46104bd050863bf124b5053",
+    "state": "ELIGIBLE"
   },
   "ledger": {
     "state": "NOT_STARTED"

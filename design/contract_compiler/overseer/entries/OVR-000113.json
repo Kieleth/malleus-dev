@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccx02-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T20:35:39Z",
+    "claims": [
+      "The exact b7e450afdfce2556b92669d56d2b481e88353481..f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba candidate is linear, tree-bound, confined to four authorized scopes, and binds three artifacts plus passing worker evidence.",
+      "All 11 focused tests, retained scan replay, scoped Ruff, evidence verification, 74 governance tests, ledger and integration checks, and diff checks succeeded.",
+      "Six bundled ontology modules yield 523 declarations and four same-kind duplicate slot groups with nine occurrences while raw definitions and adopts presence states remain distinct and unclassified.",
+      "Independent review found no P0, P1, P2, or P3 issue. The candidate is eligible and unselected, its worker ledger remains NOT_STARTED, CC-X04 remains unchanged, and the four selections and sealed snapshot remain unchanged."
+    ],
+    "limitations": [
+      "This fact resolves no imports, merges no declarations, selects no winner, authorizes no adoption, and does not close OD-002.",
+      "This fact authorizes no production, ontology, dependency, Docker, runtime, migration, or release behavior.",
+      "The measurement is bound to the six ontology YAML files currently declared as wheel shared data.",
+      "This fact authorizes completion, not selection or release."
+    ]
+  },
+  "entry_hash": "sha256:d2e03acd4c9dbcea6ddb52330567fd9961a5c60c3e735d790bd0d06f61845b56",
+  "entry_id": "OVR-000113",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:237608d2b0374f4166dbd33a2c94db33010808eabf27ea5f50c2e1f3725ab18e",
+  "recorded_at": "2026-08-26T20:35:39Z",
+  "references": [
+    {
+      "digest": "sha256:5cf57f343c3ac82d6e4b21af96d7b146138f3d5bfd26ad3413af22cf0d940562",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X02-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000112",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 113,
+  "subject": {
+    "id": "CC-X02-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded CC-X02 completion gate.",
+  "why": "CC-X02 may complete only after the repaired exact candidate, retained raw measurements, passing gates, independent review, and unselected integration boundary all pass mechanically."
+}

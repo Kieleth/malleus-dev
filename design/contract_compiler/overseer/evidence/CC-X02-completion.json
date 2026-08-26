@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 4312,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X02.json",
+      "sha256": "sha256:5ecfbab9dfa44d8c69cd1f0288484482230fa888957607fab096d5f3e4dec2bd"
+    }
+  ],
+  "base_commit": "f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba",
+  "checks": [
+    {
+      "check_id": "ccx02-candidate-history",
+      "method": "Validate the exact b7e450a..f3a19ec linear candidate, bound tree, four authorized scopes, three artifacts, and passing worker evidence.",
+      "observed": "The validator accepted two candidate commits, tree 1b4539019f5280f3d46104bd050863bf124b5053, and exactly four touched paths. RED commit 0d056e7ce56c173a6a1c16e8e20947d0c1f27b67 precedes base b7e450afdfce2556b92669d56d2b481e88353481 and remains explicit prior evidence. The repaired evidence base excludes the intervening CC-X04 RED commit from the CC-X02 candidate range.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-executed-gates",
+      "method": "Run the focused tests, retained scan check, scoped Ruff, worker evidence verification, governance tests, ledger and integration validators, and diff check.",
+      "observed": "All 11 focused tests and 74 governance tests passed; the retained scan matched fresh canonical bytes; Ruff and diff checks passed; worker evidence verified three artifacts and eight checks; ledger and integration validation passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-measurement-boundary",
+      "method": "Inspect the retained scan, candidate paths, worker evidence, and implementation imports for the authorized raw-measurement boundary.",
+      "observed": "Six bundled modules contain 523 declarations and four repeated slot groups with nine occurrences. Raw definitions and ABSENT, NULL, and VALUE adopts states remain distinct. The scanner resolves no imports, uses neither LinkML nor OntologyRegistry, contains no policy fields, and changes no production or ontology file.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-independent-review",
+      "method": "Require an independent exact-candidate review before completion and preserve the unselected integration boundary.",
+      "observed": "Independent review approved f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba with no P0, P1, P2, or P3 findings. The candidate remains unselected, its worker ledger remains NOT_STARTED, and the four prior selections and sealed snapshot remain unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X02 resolves no imports, merges no declarations, selects no winner, authorizes no adoption, and does not close OD-002.",
+    "The measurement covers only the six ontology YAML files currently declared as wheel shared data; changed packaging or source bytes require a new scan.",
+    "CC-X02 changes no production, ontology, dependency, Docker, runtime, or release behavior.",
+    "CC-X02 completion is not integration selection or release authority."
+  ],
+  "recorded_at": "2026-08-26T20:35:37Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X02"
+}
