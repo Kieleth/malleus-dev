@@ -873,13 +873,17 @@ class ProtocolLedger:
             request["target_record_id"],
             "ProtocolRecord",
         )
-        if projection.objects[target["id"]]["record_type"] in {
-            "ReviewRequest",
-            "ReviewReport",
-            "ReviewFinding",
-            "ReviewDisposition",
-            "HumanReviewRequest",
-        }:
+        target_type = projection.objects[target["id"]]["record_type"]
+        if any(
+            self.registry.is_subtype_of(target_type, review_type)
+            for review_type in (
+                "ReviewRequest",
+                "ReviewReport",
+                "ReviewFinding",
+                "ReviewDisposition",
+                "HumanReviewRequest",
+            )
+        ):
             raise ProtocolError(
                 f"event {event['event_id']}: review records cannot be review targets"
             )

@@ -83,6 +83,8 @@ classes:
       - test_parameter
   ForgedLogicalAssessment:
     is_a: Assessment
+  DomainHumanReviewRequest:
+    is_a: HumanReviewRequest
 slots:
   test_parameter:
     range: string
@@ -4951,6 +4953,37 @@ class TestLeanReviewProtocol:
             )
         assert ledger.path.read_bytes() == before
 
+    def test_human_review_request_subtype_cannot_be_a_review_target(self, ledger):
+        anchor(ledger)
+        legacy = self._record_legacy_human_review_request(
+            ledger,
+            record_type="DomainHumanReviewRequest",
+        )
+        timestamp = time_at(9)
+        nested = make_record(
+            "ReviewRequest",
+            event_id="event:review-request:derived-legacy-target",
+            generated_at=timestamp,
+            actor_id="actor:requester",
+            role="reviewer",
+            source_record_ids=[legacy["id"]],
+            id="review-request:derived-legacy-target",
+            target_record_id=legacy["id"],
+            target_record_hash=legacy["content_hash"],
+            intended_recipient_id="actor:reviewer",
+            review_question="Derived legacy review records are not reviewable.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="review records cannot be review targets"):
+            ledger.append_event(
+                event_id="event:review-request:derived-legacy-target",
+                event_type=EventType.REVIEW_REQUESTED,
+                transaction_time=timestamp,
+                actor_id="actor:requester",
+                payload={"request": nested},
+            )
+        assert ledger.path.read_bytes() == before
+
     def test_invalidate_only_adds_the_disposition_fact(self, ledger):
         anchor(ledger)
         target = add_source_artifact(ledger)
@@ -4992,14 +5025,18 @@ class TestLeanReviewProtocol:
             assert getattr(after, name) == getattr(before, name), name
 
     @staticmethod
-    def _record_legacy_human_review_request(ledger):
+    def _record_legacy_human_review_request(
+        ledger,
+        *,
+        record_type="HumanReviewRequest",
+    ):
         artifacts = setup_artifacts(ledger)
         proposal, _, _ = record_proposal(ledger)
         assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
         event_id = "event:epistemic:1"
         timestamp = time_at(8)
         request = make_record(
-            "HumanReviewRequest",
+            record_type,
             event_id=event_id,
             generated_at=timestamp,
             actor_id="actor:reviewer",
@@ -5024,7 +5061,7 @@ class TestLeanReviewProtocol:
             proposal,
             assessment,
             artifacts,
-            requests=[("HumanReviewRequest", request)],
+            requests=[(record_type, request)],
         )
         return request
 
