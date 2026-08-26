@@ -435,8 +435,25 @@ def load_corpus(path: Path = MANIFEST_PATH) -> dict[str, Any]:
 
 
 def _reader() -> dict[str, Any]:
+    recon_store = importlib.import_module("malleus.recon.store")
+    try:
+        runtime_sources = {
+            "ontology/assent.yaml": Path(ASSENT_SCHEMA).resolve(),
+            "ontology/domains/recon.yaml": Path(
+                recon_store.bundled_ontology_path("domains", "recon.yaml")
+            ).resolve(),
+        }
+    except (OSError, TypeError, ValueError) as error:
+        raise HistoricWireError(
+            f"Cannot resolve current reader runtime ontology paths: {error}"
+        ) from error
     for item in READER["implementations"]:
         expected_path = (ROOT / item["path"]).resolve()
+        actual_path = runtime_sources.get(item["path"], expected_path)
+        if actual_path != expected_path:
+            raise HistoricWireError(
+                f"Current reader runtime ontology path differs at {item['path']}"
+            )
         module_name = READER_MODULES.get(item["path"])
         if module_name is not None:
             module = importlib.import_module(module_name)
@@ -448,7 +465,7 @@ def _reader() -> dict[str, Any]:
                 raise HistoricWireError(
                     f"Current reader module origin differs for {module_name}"
                 )
-        actual = _digest_file(expected_path)
+        actual = _digest_file(actual_path)
         if actual != item["sha256"]:
             raise HistoricWireError(
                 f"Current reader source differs at {item['path']}; record a fresh measurement"
