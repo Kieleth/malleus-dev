@@ -1,0 +1,38 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Measure exact duplicate declarations across the six bundled ontology modules before import resolution, preserving raw definitions, source identities, and adopts presence states without policy or classification."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-X02"
+  },
+  "entry_hash": "sha256:9747d27eedca99793132f6a1c5116de63177c006f3584362f00cd255bbe7a491",
+  "entry_id": "OVR-000109",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9907f81061f1a76f3b513f0b280067baa10cd01be582bb845ce9037768c99f42",
+  "recorded_at": "2026-08-26T20:13:00Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 109,
+  "subject": {
+    "id": "CC-X02",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-X02 bundled declaration measurement.",
+  "why": "CC-X02 has no DAG dependencies and can produce the raw duplicate-declaration evidence required by CC-D02 without choosing explicit-adoption policy or changing ontology, production, dependency, Docker, or release behavior."
+}

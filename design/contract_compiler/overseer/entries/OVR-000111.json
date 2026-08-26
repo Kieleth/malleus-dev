@@ -1,0 +1,81 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X02",
+      "CC-X04"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:61fbaf3f4c4405304bebfd1a21668e594a2f7c589c02f86fc7d6aeb98fc5c259",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-X02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:feb8c3905257677db08a1ce5c8a944f6836e8b0c7751142291116f83ed41e0b4",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-X04/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f8360570acb799c62456b83adddea9bcdc9178eb9f458f21bb49d26b0478df34",
+        "before_digest": "sha256:813ea25a1fa641bb3b998867b9dca24ddb043ecc070ae040b5eecf6c3b18cef8",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:883c65df1854f6de11feade175bec266d902a60b49b05071feabe4d50df4ec5c",
+  "entry_id": "OVR-000111",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:aaa78b73d82de52090e40857a23914a95a38cb8c7dec20a81984377251327593",
+  "recorded_at": "2026-08-26T20:13:02Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X04/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000109",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000110",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 111,
+  "subject": {
+    "id": "ccx02-ccx04-formal-activation",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the formal CC-X02 and CC-X04 activation documents.",
+  "why": "The exact bounded cards and integration registration make both independent measurement authorizations mechanically visible. The integration authority anchors the final activation entry OVR-000110. Both candidates remain NONE, both worker ledgers remain NOT_STARTED, and the four selections and sealed snapshot remain unchanged."
+}

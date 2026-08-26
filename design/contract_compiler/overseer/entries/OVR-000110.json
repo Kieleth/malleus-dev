@@ -1,0 +1,38 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Freeze the exact four-file historic wire corpus, bind both producing releases, and record five current-reader outcomes without migration policy or implementation."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-X04"
+  },
+  "entry_hash": "sha256:aaa78b73d82de52090e40857a23914a95a38cb8c7dec20a81984377251327593",
+  "entry_id": "OVR-000110",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9747d27eedca99793132f6a1c5116de63177c006f3584362f00cd255bbe7a491",
+  "recorded_at": "2026-08-26T20:13:01Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 110,
+  "subject": {
+    "id": "CC-X04",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-X04 historic wire measurement.",
+  "why": "CC-X04 has no DAG dependencies and can freeze the shared v0.11.0 and v0.13.3 wire bytes and observe current readers before CC-D04 chooses any compatibility or migration outcome. It authorizes no new reader, bridge, policy, production, ontology, dependency, Docker, or release change."
+}

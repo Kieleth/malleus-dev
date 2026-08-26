@@ -1,0 +1,42 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccx02-tdd",
+    "state": "ASSIGNED",
+    "task_id": "/root/ccx02_tdd_worker"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "overseer",
+      "type": "OVERSEER"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Measure exact schema-level declaration duplicates across the six bundled ontology modules before import resolution. Preserve raw definitions, source identities, literal imports, declaration counts, and annotations.adopts ABSENT, NULL, and VALUE states deterministically. Exclude merge policy, equivalence, classification, winner selection, ontology or production changes, LinkML or OntologyRegistry execution, dependency changes, Docker, and release work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_duplicate_scan.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_duplicate_scan.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-X02.json"
+    }
+  ],
+  "workstream_id": "CC-X02"
+}

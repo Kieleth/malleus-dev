@@ -1,0 +1,42 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccx04-tdd",
+    "state": "ASSIGNED",
+    "task_id": "/root/ccx04_tdd_worker"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "overseer",
+      "type": "OVERSEER"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Freeze the exact four-file historic wire corpus written identically by v0.11.0 and v0.13.3, address its five logical subjects, and record current-reader outcomes plus intrinsic artifact checks. Exclude migrations, bridges, new readers, policy, classification, production or ontology changes, historical environment reconstruction, dependency changes, Docker, and release work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_compiler/v0/historic_wire"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-X04.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "scripts/contract_compiler_historic_wire.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_historic_wire.py"
+    }
+  ],
+  "workstream_id": "CC-X04"
+}
