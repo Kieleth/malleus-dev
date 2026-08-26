@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
+        "before_digest": "sha256:3418cb665f086dd0cbf0fc6121ac4ce341f4b2f9731063c7d7db77485d64801b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:52531db9842b6dff51b2a5c133b1bd904ced2728608ce10a34563e85d841000a",
+        "before_digest": "sha256:98bdfb36400ad8c2ec89d43f7022f178532254c1354c7ac9f2e031370db051dd",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:ce38cc236555bb3a4e62885e2b9e66e75da9e4b6e574e64d3ccbedb15d72ecbb",
+        "before_digest": "sha256:effcd824a043f4eab625faad53c96b210683c42d26496cef9dea880bbca1cd62",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:4b5ef25ff6696b8227c2da498edd6e8b02ffddbb5242f3d195527022dd6146c3",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-002.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ce161b3d7af7df1062840f82d4188c097dd999977209109895ce9591a96abeaa",
+  "entry_id": "OVR-000102",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
+  "recorded_at": "2026-08-26T18:31:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:4b5ef25ff6696b8227c2da498edd6e8b02ffddbb5242f3d195527022dd6146c3",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000101",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 102,
+  "subject": {
+    "id": "cc002-selected-integration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the selected internal CC-002 integration state.",
+  "why": "Selection follows the exact OVR-000101 completion state and commit 1ae83e49ef1ae2432400978ffd77cde525719cbe. It integrates the proven internal compiler environment without changing dependencies, candidate coordinates, artifact or evidence identities, worker history, or the OVR-000097 non-release boundary."
+}

@@ -1,0 +1,66 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18666,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:52531db9842b6dff51b2a5c133b1bd904ced2728608ce10a34563e85d841000a"
+    },
+    {
+      "byte_length": 6775,
+      "path": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "sha256": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a"
+    },
+    {
+      "byte_length": 3685,
+      "path": "design/contract_compiler/overseer/evidence/CC-002-completion.json",
+      "sha256": "sha256:2c2c54d2fb221062c36674f30d0f1010405ceb1ce46bf519f51cef5aa1b3255b"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-002/ledger/head.json",
+      "sha256": "sha256:f70ef50ae9bb4c10e3c8cf576711f9e32f6926835755fb0a2a8fa0d13005cfb5"
+    }
+  ],
+  "base_commit": "1ae83e49ef1ae2432400978ffd77cde525719cbe",
+  "checks": [
+    {
+      "check_id": "cc002-selected-integration",
+      "method": "Run the sealed integration validator after CC-002 reached COMPLETE, changed from ELIGIBLE to INTEGRATED, and was appended to selections.",
+      "observed": "The validator accepted 66 workstreams, 7 cards, and exactly 4 selections ordered CC-000, CC-001, CC-X00, and CC-002.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-completion-before-selection",
+      "method": "Validate the independent completion report, mechanical fact, and ACTIVE-to-COMPLETE transition before reading the selection state.",
+      "observed": "OVR-000100 verified completion and OVR-000101 completed CC-002 before selection. The integration authority anchor stops exactly at OVR-000101 and sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-completion-coordinate",
+      "method": "Resolve the exact Git commit and tree that contain the completed internal CC-002 governance checkpoint.",
+      "observed": "Commit 1ae83e49ef1ae2432400978ffd77cde525719cbe resolves to tree 3128b1d5155a0a71d7311f5c5b3968811c0bba4c and contains the OVR-000101 completed state.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-selection-order-and-bindings",
+      "method": "Revalidate the selected candidate, exact worker ledger, dependency set, dependency bindings, and selection order.",
+      "observed": "CC-002 remains bound to CC-000 at OVR-000016 and CC-D12 at OVR-000084. The selected CC-000 result precedes CC-002; completed decision workstream CC-D12 remains a dependency binding and is not falsely added as a selected result.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-provisional-release-boundary",
+      "method": "Compare the integrated card and completion evidence with the operator exception at OVR-000097.",
+      "observed": "Selection preserves the exact CFGraph 0.2.1 bytes for internal, non-release work only and retains every deferred source, license, supply-chain, security, and vulnerability hardening obligation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Selection integrates CC-002 for internal compiler and paper work only. It does not authorize public or external release.",
+    "The embedded CFGraph wheel remains a provisional exception. Public or external release requires the deferred source double-build, authoritative license and NOTICE byte review, release-grade supply-chain, security, and vulnerability attestation, and retirement of the exception.",
+    "The environment is proven only for the exact retained linux/amd64 CPython 3.12.10 cp312 tuple and dependency identities.",
+    "Commit 1ae83e49ef1ae2432400978ffd77cde525719cbe, tree 3128b1d5155a0a71d7311f5c5b3968811c0bba4c, and the local ledger hashes are integrity identifiers, not external authentication or branch protection."
+  ],
+  "recorded_at": "2026-08-26T18:31:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-002"
+}

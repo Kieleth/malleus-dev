@@ -249,7 +249,7 @@ def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -
         assert ["python", "scripts/contract_compiler_ledger.py", "check"] in commands
 
 
-def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
+def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
     card_source = CC002_CARD.read_bytes()
     card = json.loads(card_source)
     responsibility = card["responsibility"]
@@ -299,7 +299,7 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
     assert changed_paths == checkpoint_scopes
 
     candidate = card["candidate"]
-    assert candidate["state"] == "ELIGIBLE"
+    assert candidate["state"] == "INTEGRATED"
     completion = json.loads(
         (OVERSEER / "evidence" / "CC-002-completion.json").read_text(
             encoding="utf-8"
@@ -445,21 +445,109 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
     assert cc002_state["data"]["new_state"] == "COMPLETE"
     assert card["ledger"]["state"] == "RECORDED"
     assert integration["authority"]["overseer_ledger"] == {
-        "entry_count": 95,
-        "head_entry_id": "OVR-000095",
-        "head_hash": "sha256:5e02b0a0480f4d694f2b9ab39c5ad54d90975e71dcec702930a070b189ba1205",
+        "entry_count": 101,
+        "head_entry_id": "OVR-000101",
+        "head_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
         "path": "design/contract_compiler/overseer",
     }
-    assert "CC-002" not in integration["selections"]
+    assert integration["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     row = next(
         item for item in integration["workstreams"] if item["workstream_id"] == "CC-002"
     )
+    assert row["depends_on"] == ["CC-000", "CC-D12"]
+    selection_positions = {
+        workstream_id: position
+        for position, workstream_id in enumerate(integration["selections"])
+    }
+    assert selection_positions["CC-000"] < selection_positions["CC-002"]
+    assert "CC-D12" not in selection_positions
     assert row["card"] == {
         "byte_length": len(card_source),
         "path": "workstreams/CC-002/manifest.json",
         "sha256": "sha256:" + hashlib.sha256(card_source).hexdigest(),
         "state": "PRESENT",
     }
+    assert card["authorization"]["dependency_bindings"] == [
+        {
+            "card_sha256": "sha256:4943b94cad90eeecac92944bd1bdca80618658b75744aec267bcbe13678f93b9",
+            "completion_entry_hash": "sha256:d37f9eb77f572ee648f640171d9481800aaa6bc33f6f6553f21cd177188099b3",
+            "completion_entry_id": "OVR-000016",
+            "integrated_head": "09265cb4af2cec5ea8e1d3b063dce811952fcfe6",
+            "workstream_id": "CC-000",
+        },
+        {
+            "card_sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7",
+            "completion_entry_hash": "sha256:089705dd93e3f892ae03a93896b44171f333e0d2cea0110c763d7f19a5f7795a",
+            "completion_entry_id": "OVR-000084",
+            "integrated_head": "493ed2bd152a92bcf26a2a0d5380df4dbc8f0f52",
+            "workstream_id": "CC-D12",
+        },
+    ]
+
+    completion_commit = "1ae83e49ef1ae2432400978ffd77cde525719cbe"
+    completion_tree = "3128b1d5155a0a71d7311f5c5b3968811c0bba4c"
+    assert (
+        subprocess.run(
+            ["git", "rev-parse", f"{completion_commit}^{{commit}}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        == completion_commit
+    )
+    assert (
+        subprocess.run(
+            ["git", "rev-parse", f"{completion_commit}^{{tree}}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        == completion_tree
+    )
+    selection_report = verify_evidence_snapshot(
+        OVERSEER / "evidence" / "CC-002.json",
+        ROOT,
+    )
+    assert selection_report["base_commit"] == completion_commit
+    selection_claims = canonical_json(selection_report)
+    assert completion_commit in selection_claims
+    assert completion_tree in selection_claims
+    completion_committed_at = datetime.fromisoformat(
+        subprocess.run(
+            ["git", "show", "-s", "--format=%cI", completion_commit],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    )
+    selection_recorded_at = datetime.fromisoformat(
+        selection_report["recorded_at"].removesuffix("Z") + "+00:00"
+    )
+    assert completion_committed_at < selection_recorded_at
+
+    selection_revision, selection_fact = ledger.entries[-2:]
+    assert selection_revision["entry_id"] == "OVR-000102"
+    assert selection_revision["entry_type"] == "DOCUMENT_REVISION"
+    assert selection_fact["entry_id"] == "OVR-000103"
+    assert selection_fact["entry_type"] == "VERIFIED_FACT"
+    selection_revision_at = datetime.fromisoformat(
+        selection_revision["recorded_at"].removesuffix("Z") + "+00:00"
+    )
+    selection_fact_at = datetime.fromisoformat(
+        selection_fact["recorded_at"].removesuffix("Z") + "+00:00"
+    )
+    assert selection_recorded_at < selection_revision_at < selection_fact_at
+    assert all(
+        entry["entry_type"] != "WORKSTREAM_STATE" for entry in ledger.entries[101:]
+    )
+    assert {
+        "relation": "EVIDENCES",
+        "target": completion_commit,
+        "type": "COMMIT",
+    } in selection_fact["references"]
 
 
 def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:

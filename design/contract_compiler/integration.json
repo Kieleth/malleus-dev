@@ -1,9 +1,9 @@
 {
   "authority": {
     "overseer_ledger": {
-      "entry_count": 95,
-      "head_entry_id": "OVR-000095",
-      "head_hash": "sha256:5e02b0a0480f4d694f2b9ab39c5ad54d90975e71dcec702930a070b189ba1205",
+      "entry_count": 101,
+      "head_entry_id": "OVR-000101",
+      "head_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
       "path": "design/contract_compiler/overseer"
     },
     "snapshot": {
@@ -217,7 +217,8 @@
   "selections": [
     "CC-000",
     "CC-001",
-    "CC-X00"
+    "CC-X00",
+    "CC-002"
   ],
   "workstreams": [
     {
@@ -435,9 +436,9 @@
     },
     {
       "card": {
-        "byte_length": 6773,
+        "byte_length": 6775,
         "path": "workstreams/CC-002/manifest.json",
-        "sha256": "sha256:3418cb665f086dd0cbf0fc6121ac4ce341f4b2f9731063c7d7db77485d64801b",
+        "sha256": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
         "state": "PRESENT"
       },
       "depends_on": [

@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "cc002-selection-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T18:31:02Z",
+    "claims": [
+      "CC-002 reached COMPLETE at OVR-000101 before it became an integration selection.",
+      "The sealed integration validator accepted 66 workstreams, 7 cards, and exactly 4 selections ordered CC-000, CC-001, CC-X00, and CC-002.",
+      "Completion commit 1ae83e49ef1ae2432400978ffd77cde525719cbe resolves to tree 3128b1d5155a0a71d7311f5c5b3968811c0bba4c.",
+      "The candidate coordinates, thirteen-artifact bundle, evidence identity, eight-entry worker ledger, seven TDD phases, and exact CC-000 and CC-D12 dependency bindings remained unchanged under selection.",
+      "The exact CFGraph wheel remains authorized only for internal, non-release work under OVR-000097."
+    ],
+    "limitations": [
+      "This verifies internal integration, not public or external release readiness.",
+      "The deferred source, license, supply-chain, security, and vulnerability hardening remains mandatory before the provisional CFGraph exception can be retired.",
+      "The environment claim remains limited to the retained linux/amd64 CPython 3.12.10 cp312 tuple and exact dependency identities.",
+      "Git and ledger coordinates are local integrity identifiers, not external authentication or branch protection."
+    ]
+  },
+  "entry_hash": "sha256:a05b79bac0ac29869c2f278a37b861340a43d01445737233200e82b5dcd92087",
+  "entry_id": "OVR-000103",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ce161b3d7af7df1062840f82d4188c097dd999977209109895ce9591a96abeaa",
+  "recorded_at": "2026-08-26T18:31:02Z",
+  "references": [
+    {
+      "digest": "sha256:4b5ef25ff6696b8227c2da498edd6e8b02ffddbb5242f3d195527022dd6146c3",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000101",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000102",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1ae83e49ef1ae2432400978ffd77cde525719cbe",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 103,
+  "subject": {
+    "id": "CC-002-selection-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the selected internal CC-002 state.",
+  "why": "The selected integration state needs retained evidence separate from the evidence that authorized the preceding completion transition, while preserving the provisional release boundary."
+}

@@ -51,7 +51,7 @@
     ],
     "head_commit": "c521785c03a3a02bb666879eb525573b81e4491f",
     "head_tree": "325b31633d4c02a5d3d6fa33b83988f65d63ac2a",
-    "state": "ELIGIBLE"
+    "state": "INTEGRATED"
   },
   "ledger": {
     "entry_count": 8,
