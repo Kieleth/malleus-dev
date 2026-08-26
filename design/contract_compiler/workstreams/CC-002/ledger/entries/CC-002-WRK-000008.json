@@ -1,0 +1,85 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 413,
+        "path": ".codex/config.toml",
+        "sha256": "sha256:71fe6861c51bd133eb67ded8da039ae9345547f183a5633675be8dc414d263e4"
+      },
+      {
+        "byte_length": 8385,
+        "path": ".claude/skills/malleus-dev/SKILL.md",
+        "sha256": "sha256:ab7378e6db032ecda2630bac2dce7738518390fd000f9889d4dfcbd6f68b03f6"
+      },
+      {
+        "byte_length": 4296,
+        "path": ".codex/README.md",
+        "sha256": "sha256:6c5b47c00c08cffb57da943e11c19bce1c0184621540ea9a95382d5436d474a4"
+      },
+      {
+        "byte_length": 529,
+        "path": ".codex/cc002.user.example.toml",
+        "sha256": "sha256:1768dfb73b2056706523901ee955d663b842a7915a2fe97dde990e897f303c20"
+      },
+      {
+        "byte_length": 22163,
+        "path": "README.md",
+        "sha256": "sha256:05977e617ce8de1ffdc5d4af6b38f52c13cf33805e903dcf14739cc45c7363d2"
+      },
+      {
+        "byte_length": 191451,
+        "path": "scripts/contract_compiler_environment.py",
+        "sha256": "sha256:b6c6e5607385394d34c1af07e1ba97940b90d0f61df38ee23eb5070b6c6700fb"
+      },
+      {
+        "byte_length": 209014,
+        "path": "tests/test_contract_compiler_environment.py",
+        "sha256": "sha256:7bbad1cfe341dcbad06cd6b574abceffaff0b6d114606956f28ce4b9e64c4935"
+      },
+      {
+        "byte_length": 20510,
+        "path": "conformance/contract_compiler/v0/compiler_environment/manifest.json",
+        "sha256": "sha256:7b844887307cb3f2fe81c30732032fec43aa8a409cf9b6e57652a6cbbe66d8e7"
+      },
+      {
+        "byte_length": 8040,
+        "path": "conformance/contract_compiler/v0/compiler_environment/requirements.lock",
+        "sha256": "sha256:ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b"
+      },
+      {
+        "byte_length": 699045,
+        "path": "conformance/contract_compiler/v0/compiler_environment/resolution-report.json",
+        "sha256": "sha256:6e7e45e714e89f60b28b991db7094c4a94f8e0e613f9517c8c4283b02c81014f"
+      },
+      {
+        "byte_length": 2945,
+        "path": "conformance/contract_compiler/v0/compiler_environment/build-record.json",
+        "sha256": "sha256:21f17fc79020e4996170064de34710d5366643498efd1cf0804eb22b776986dd"
+      },
+      {
+        "byte_length": 2733,
+        "path": "conformance/contract_compiler/v0/compiler_environment/derivation-record.json",
+        "sha256": "sha256:ed94aa90a16f3381d99ccc680fccda5dfda713de4e0ba212350047835247cb57"
+      },
+      {
+        "byte_length": 4788,
+        "path": "conformance/contract_compiler/v0/compiler_environment/verification.json",
+        "sha256": "sha256:17a99c498bab3406530d0e12c6e6154c880e905af7433d5e459142e7caab801f"
+      }
+    ],
+    "command": "env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_contract_compiler_environment.py; env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_contract_compiler_ledger.py tests/test_contract_compiler_integration.py; env PYTHONPATH=src:. .venv/bin/python scripts/contract_compiler_ledger.py verify-evidence conformance/contract_compiler/v0/evidence/CC-002.json",
+    "observed": "The final pre-completion audit passed 406 adapter tests and 74 governance tests. The typed CC-002 report validated 13 exact artifacts and 12 passing checks, including the four historical checkpoints, RED commits 24f6a32, a2d6d99, and c2fc15b, GREEN commit 12b68cd, and real v4 acquire, replay, and offline verification.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:66a3f43fe1362cbe9d39d5ab69c9140a45ac87d9fec8f7064f5251fb74314684",
+  "entry_id": "CC-002-WRK-000008",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:ca3ea9cf79a707b8d90e535fc19ab2868415129b27cf52f24ed9e1516f63e120",
+  "recorded_at": "2026-08-26T17:59:28Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 8,
+  "summary": "Attest the exact thirteen-artifact provisional CC-002 candidate.",
+  "workstream_id": "CC-002"
+}

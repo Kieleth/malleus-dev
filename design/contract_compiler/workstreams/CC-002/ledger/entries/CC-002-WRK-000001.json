@@ -1,0 +1,23 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "claims": [
+      "The governed historical worker checkpoints are a7a65ccfdd7afd7d42a40509631fcdfef49f135e, 4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, a48c754ae6a7aa904c3317d3cdde06de6db8ff98, and 6325bd962ecfd00bd4ca62b1d9febd07e3737357; their seven final paths are retained by exact bytes.",
+      "The linear completion candidate is 6a72547f407154c928090581657c48ed3555ea9c..c521785c03a3a02bb666879eb525573b81e4491f with tree 325b31633d4c02a5d3d6fa33b83988f65d63ac2a.",
+      "Real restarted MCP acquisition, acquisition replay, and offline verification produced and retained the v4 environment for nine governed inputs and two produced artifacts."
+    ],
+    "limitations": [
+      "The candidate range does not contain the four historical checkpoint commits; it binds their seven final paths without attributing those earlier commits to this range.",
+      "The embedded CFGraph 0.2.1 wheel is approved only for internal, non-release use under OVR-000097; release hardening remains deferred and mandatory before public or external release."
+    ]
+  },
+  "entry_hash": "sha256:0595dae4ff267655b1718d80806e86784a7cb99d5eea0501000ca98bc9f45038",
+  "entry_id": "CC-002-WRK-000001",
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-26T17:59:21Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Bind the historical checkpoints, exact candidate range, and provisional boundary.",
+  "workstream_id": "CC-002"
+}

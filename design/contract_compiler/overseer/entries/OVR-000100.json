@@ -1,0 +1,34 @@
+{
+  "actor": {"id": "cc002-completion-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-26T18:00:02Z",
+    "claims": [
+      "The exact 6a72547..c521785 candidate is linear, tree-bound, confined to the nine existing CC-002 scopes, and binds thirteen exact artifacts plus passing typed evidence.",
+      "The worker ledger contains one observation and all seven required TDD phases with RED expected failure, PASS for GREEN, SLICE, DISPROOF, REGRESSION, and ATTEST, and PACKAGE not applicable.",
+      "Real restarted v4 acquisition, identical acquisition replay, and network-denied offline verification passed for the exact retained linux/amd64 CPython 3.12.10 environment.",
+      "The provisional CFGraph wheel is exact and behavior-tested, and its use remains internal and non-release under OVR-000097."
+    ],
+    "limitations": [
+      "This fact authorizes completion, not selection or release.",
+      "The four historical checkpoints are bound by final bytes and are not falsely attributed to the later candidate range.",
+      "Release hardening and retirement of the CFGraph exception remain mandatory before public or external release."
+    ]
+  },
+  "entry_hash": "sha256:afd8ee287798d9f6c94a4d8e4b9f6b14c134ce2fdf61e17c8075036a60e762f4",
+  "entry_id": "OVR-000100",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:eced63ada3cc92a1886d12c22b17615010daeca10e5d3f623af887b8a2d9ec88",
+  "recorded_at": "2026-08-26T18:00:02Z",
+  "references": [
+    {"digest": "sha256:2c2c54d2fb221062c36674f30d0f1010405ceb1ce46bf519f51cef5aa1b3255b", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-002-completion.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "c521785c03a3a02bb666879eb525573b81e4491f", "type": "COMMIT"},
+    {"relation": "EVIDENCES", "target": "OVR-000099", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-002", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 100,
+  "subject": {"id": "CC-002-completion-verification", "type": "EVIDENCE"},
+  "summary": "Verify the final provisional CC-002 completion gate.",
+  "why": "CC-002 may complete only after candidate history, exact artifacts, worker TDD phases, real acquisition replay, offline smokes, dependency bindings, and the non-release exception boundary all pass mechanically."
+}

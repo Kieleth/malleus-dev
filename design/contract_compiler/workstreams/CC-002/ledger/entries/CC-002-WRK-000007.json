@@ -1,0 +1,25 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 20510,
+        "path": "conformance/contract_compiler/v0/compiler_environment/manifest.json",
+        "sha256": "sha256:7b844887307cb3f2fe81c30732032fec43aa8a409cf9b6e57652a6cbbe66d8e7"
+      }
+    ],
+    "command": "Inspect the retained compiler_environment v4 bundle and the thirteen-artifact candidate report against the internal non-release packaging boundary.",
+    "observed": "NOT_APPLICABLE. The repository retains the exact nine governed inputs, two produced artifacts, lock, reports, and verification evidence needed for internal compiler and paper work. It creates no Malleus wheel, sdist, public compiler, external distribution, or release-hardening claim.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:ca3ea9cf79a707b8d90e535fc19ab2868415129b27cf52f24ed9e1516f63e120",
+  "entry_id": "CC-002-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a1d42de7f8bd968db231ca73edde8f5a3c7b777baa3c5bc399a335ecc467df62",
+  "recorded_at": "2026-08-26T17:59:27Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Record the internal retained-environment packaging boundary.",
+  "workstream_id": "CC-002"
+}

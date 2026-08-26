@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/test_contract_compiler_environment.py::test_provisional_cfgraph_root_is_exact_embedded_wheel_bytes tests/test_contract_compiler_environment.py::test_embedded_cfgraph_is_root_and_wheelhouse_input_before_external_edge tests/test_contract_compiler_environment.py::test_tool_output_schemas_are_exact_and_closed tests/test_contract_compiler_environment.py::test_public_result_contract_is_v4_only tests/test_contract_compiler_environment.py::test_v4_bundle_retains_provisional_root_and_closed_derivation_provenance tests/test_contract_compiler_environment.py::test_resolver_and_offline_report_use_each_exact_direct_root_once tests/test_contract_compiler_environment.py::test_runtime_policy_rejects_every_alternate_cfgraph tests/test_contract_compiler_environment.py::test_verifier_program_measures_exact_python_tuple_and_abi tests/test_contract_compiler_environment.py::test_offline_verifier_executes_every_governed_smoke_before_attesting tests/test_contract_compiler_environment.py::test_offline_verifier_refuses_any_failed_or_fabricated_smoke",
+    "observed": "Commit 24f6a321c4f7f116d96e8fc71fe2c09a4a74cb78 produced the expected 12 failures with 5 passing controls before production changed. Test-only commits a2d6d997612a9c5525b483ecae4665924e718d25 and c2fc15ba9eee38655b23e53361471aefb8dea800 then tightened exact-byte rejection and reproduced the real CFGraph collection behavior defect.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:029b04929b33e30fd5bd73a89184c9df93c55c82198cfda5d46ca5ae4c1e9af3",
+  "entry_id": "CC-002-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0595dae4ff267655b1718d80806e86784a7cb99d5eea0501000ca98bc9f45038",
+  "recorded_at": "2026-08-26T17:59:22Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Preserve the provisional CFGraph v4 RED contract and exact failure count.",
+  "workstream_id": "CC-002"
+}

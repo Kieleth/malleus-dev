@@ -1,0 +1,34 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Retain the exact v4 compiler environment with nine governed inputs, two produced artifacts, and the selected linux/amd64 CPython 3.12.10 tuple.",
+      "Preserve genuine RED, production GREEN, real MCP acquisition replay, network-denied offline verification, and all governed smokes.",
+      "Bind the thirteen-artifact eligible candidate and eight-entry worker ledger without expanding the nine scopes or changing dependency bindings.",
+      "Permit the exact CFGraph 0.2.1 wheel only for internal, non-release work under OVR-000097.",
+      "Keep release hardening and retirement of the provisional exception mandatory before public or external release."
+    ],
+    "evidence_entry_ids": ["OVR-000097", "OVR-000100"],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
+  "entry_id": "OVR-000101",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:afd8ee287798d9f6c94a4d8e4b9f6b14c134ce2fdf61e17c8075036a60e762f4",
+  "recorded_at": "2026-08-26T18:00:03Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000097", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000100", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-002", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 101,
+  "subject": {"id": "CC-002", "type": "WORKSTREAM"},
+  "summary": "Complete the provisional internal CC-002 compiler environment workstream.",
+  "why": "OVR-000097 supplies the operator-approved internal exception, and OVR-000100 verifies the exact candidate, TDD ledger, real v4 materialization, replay, offline behavior, and deferred release boundary. CC-002 is complete for internal compiler and paper work without selecting it or claiming public-release readiness."
+}

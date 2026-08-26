@@ -1,0 +1,25 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 191451,
+        "path": "scripts/contract_compiler_environment.py",
+        "sha256": "sha256:b6c6e5607385394d34c1af07e1ba97940b90d0f61df38ee23eb5070b6c6700fb"
+      }
+    ],
+    "command": "env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_contract_compiler_environment.py",
+    "observed": "Production-only commit 12b68cdbdf0ec2ca071c412a6d115a5f5f74a2d7 implemented the minimum v4 provisional CFGraph path. All 406 adapter contract tests passed.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:6b496331b7d817660a341ba5a780c9ce84ac5ba57c057c86f00651c9ce954d15",
+  "entry_id": "CC-002-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:029b04929b33e30fd5bd73a89184c9df93c55c82198cfda5d46ca5ae4c1e9af3",
+  "recorded_at": "2026-08-26T17:59:23Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the minimum provisional CFGraph v4 implementation.",
+  "workstream_id": "CC-002"
+}

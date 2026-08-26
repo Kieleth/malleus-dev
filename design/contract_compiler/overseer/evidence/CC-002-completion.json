@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-002/ledger/head.json",
+      "sha256": "sha256:f70ef50ae9bb4c10e3c8cf576711f9e32f6926835755fb0a2a8fa0d13005cfb5"
+    },
+    {
+      "byte_length": 10606,
+      "path": "conformance/contract_compiler/v0/evidence/CC-002.json",
+      "sha256": "sha256:d1a867010f764ac4ef2dc50aac1930e6aeafc6202f598f3630d15c6e94fcf129"
+    }
+  ],
+  "base_commit": "c521785c03a3a02bb666879eb525573b81e4491f",
+  "checks": [
+    {
+      "check_id": "cc002-candidate-history",
+      "method": "Validate the exact 6a72547..c521785 linear candidate, bound tree, nine authorized scopes, thirteen artifacts, and passing typed evidence.",
+      "observed": "The candidate validator accepted head c521785c03a3a02bb666879eb525573b81e4491f, tree 325b31633d4c02a5d3d6fa33b83988f65d63ac2a, and every touched path under the existing CC-002 scopes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-worker-tdd",
+      "method": "Validate the eight-entry worker-owned hash chain and all seven required TDD phases.",
+      "observed": "The ledger records one observation, RED expected failure, PASS for GREEN, SLICE, DISPROOF, REGRESSION, and ATTEST, and PACKAGE not applicable under actor worker:cc002-environment.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-real-v4",
+      "method": "Inspect the retained real acquisition, acquisition replay, and offline verification records.",
+      "observed": "Both acquisition calls returned the same v4 identities, and offline verification passed for nine governed inputs, two produced artifacts, 82 installed distributions, pip check, and every smoke with network denied.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-tdd-and-regression",
+      "method": "Bind the RED and GREEN commits and the final focused test results.",
+      "observed": "RED commits 24f6a32, a2d6d99, and c2fc15b precede production GREEN 12b68cd. The final pre-completion runs passed 406 adapter tests and 74 governance tests.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-provisional-boundary",
+      "method": "Match the retained CFGraph bytes and claims against operator decision OVR-000097.",
+      "observed": "The exact 2256-byte CFGraph 0.2.1 wheel and its behavior pass for internal work only. No reproducible-build, license-sufficiency, security, vulnerability, distribution, or public-release claim is made.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-unselected-integration",
+      "method": "Validate the integration draft after registering the eligible card and worker ledger without changing selection authority.",
+      "observed": "The CC-002 card is eligible, its digest is current, OVR-000095 remains the integration authority anchor, and CC-002 is not in selections.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report authorizes the CC-002 completion transition; selection remains a separate checkpoint.",
+    "The candidate range excludes the four historical worker checkpoints. Their seven final paths are bound by exact bytes in the candidate report, not attributed to this range.",
+    "The embedded CFGraph wheel remains an internal, non-release exception. Public or external release requires the deferred source, license, supply-chain, security, and vulnerability work and retirement of the exception.",
+    "The environment is proven only for the exact retained linux/amd64 CPython 3.12.10 cp312 tuple and dependency identities."
+  ],
+  "recorded_at": "2026-08-26T18:00:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-002"
+}

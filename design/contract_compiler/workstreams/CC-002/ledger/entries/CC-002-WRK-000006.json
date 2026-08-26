@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [],
+    "command": "env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_contract_compiler_ledger.py tests/test_contract_compiler_integration.py",
+    "observed": "All 74 focused overseer-ledger and integration tests passed against the sealed v4 candidate report before the completion checkpoint was added.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:a1d42de7f8bd968db231ca73edde8f5a3c7b777baa3c5bc399a335ecc467df62",
+  "entry_id": "CC-002-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:1aedbe3925c65014adb698c2eff0b5a483ead8a07466199f0044ec95c62eb1c2",
+  "recorded_at": "2026-08-26T17:59:26Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Pass the focused governance regression suite.",
+  "workstream_id": "CC-002"
+}

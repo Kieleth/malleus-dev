@@ -1,0 +1,25 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 209014,
+        "path": "tests/test_contract_compiler_environment.py",
+        "sha256": "sha256:7bbad1cfe341dcbad06cd6b574abceffaff0b6d114606956f28ce4b9e64c4935"
+      }
+    ],
+    "command": "env PYTHONPATH=src:. .venv/bin/python -m pytest -q tests/test_contract_compiler_environment.py",
+    "observed": "All 406 adapter tests passed, including rejection of alternate CFGraph coordinates or bytes, duplicate roots, v3 public results, unsafe archives, resolver substitution, failed or fabricated smokes, ambient transport, and non-atomic publication paths.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:1aedbe3925c65014adb698c2eff0b5a483ead8a07466199f0044ec95c62eb1c2",
+  "entry_id": "CC-002-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0761bd820c8af57954c3505654d7d85eb62d607dabccae1db27a8e2bc95d546c",
+  "recorded_at": "2026-08-26T17:59:25Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the fail-closed adapter and provisional-artifact disproof matrix.",
+  "workstream_id": "CC-002"
+}

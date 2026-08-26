@@ -1,0 +1,50 @@
+{
+  "actor_id": "worker:cc002-environment",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 20510,
+        "path": "conformance/contract_compiler/v0/compiler_environment/manifest.json",
+        "sha256": "sha256:7b844887307cb3f2fe81c30732032fec43aa8a409cf9b6e57652a6cbbe66d8e7"
+      },
+      {
+        "byte_length": 8040,
+        "path": "conformance/contract_compiler/v0/compiler_environment/requirements.lock",
+        "sha256": "sha256:ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b"
+      },
+      {
+        "byte_length": 699045,
+        "path": "conformance/contract_compiler/v0/compiler_environment/resolution-report.json",
+        "sha256": "sha256:6e7e45e714e89f60b28b991db7094c4a94f8e0e613f9517c8c4283b02c81014f"
+      },
+      {
+        "byte_length": 2945,
+        "path": "conformance/contract_compiler/v0/compiler_environment/build-record.json",
+        "sha256": "sha256:21f17fc79020e4996170064de34710d5366643498efd1cf0804eb22b776986dd"
+      },
+      {
+        "byte_length": 2733,
+        "path": "conformance/contract_compiler/v0/compiler_environment/derivation-record.json",
+        "sha256": "sha256:ed94aa90a16f3381d99ccc680fccda5dfda713de4e0ba212350047835247cb57"
+      },
+      {
+        "byte_length": 4788,
+        "path": "conformance/contract_compiler/v0/compiler_environment/verification.json",
+        "sha256": "sha256:17a99c498bab3406530d0e12c6e6154c880e905af7433d5e459142e7caab801f"
+      }
+    ],
+    "command": "cc002_acquire(); cc002_acquire(); cc002_verify_offline()",
+    "observed": "The restarted real MCP server returned malleus.cc002.acquire-result/v4 MATERIALIZED twice with identical identities, then malleus.cc002.verify-result/v4 VERIFIED_OFFLINE. The retained environment has nine governed inputs, two produced artifacts, 82 wheels and installed distributions, a read-only wheelhouse, network denied, and every governed smoke passing.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:0761bd820c8af57954c3505654d7d85eb62d607dabccae1db27a8e2bc95d546c",
+  "entry_id": "CC-002-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:6b496331b7d817660a341ba5a780c9ce84ac5ba57c057c86f00651c9ce954d15",
+  "recorded_at": "2026-08-26T17:59:24Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass real acquisition, idempotent replay, and offline verification.",
+  "workstream_id": "CC-002"
+}

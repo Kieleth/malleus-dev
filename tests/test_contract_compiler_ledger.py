@@ -50,16 +50,11 @@ CC002_CHECKPOINT_LINEAGE = (
     GOVERNANCE_BASE_COMMIT,
 )
 CC002_LINEAGE_CONTRACT = (
-    "Treat a7a65ccfdd7afd7d42a40509631fcdfef49f135e, "
-    "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, and "
-    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98, plus "
-    "6325bd962ecfd00bd4ca62b1d9febd07e3737357 as governed CC-002 worker "
-    "checkpoints. The final materialization candidate must use the commit that "
-    "integrates the CC-D12-R3 correction as its base and record that then-known "
-    "commit in CC-002 evidence. The final candidate must not claim that its "
-    "range contains the earlier checkpoints; it must include the seven "
-    "checkpoint paths as exact artifacts at the candidate head and record the "
-    "four checkpoint commits and this range limitation in CC-002 evidence."
+    "Bind the four governed historical worker checkpoints as final-byte evidence "
+    "only: a7a65ccfdd7afd7d42a40509631fcdfef49f135e, "
+    "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, "
+    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98, and "
+    "6325bd962ecfd00bd4ca62b1d9febd07e3737357."
 )
 FOUNDATION_PROJECTIONS = (
     ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.md",
@@ -304,72 +299,133 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
     assert changed_paths == checkpoint_scopes
 
     candidate = card["candidate"]
-    if candidate["state"] in {"ELIGIBLE", "INTEGRATED"}:
-        validate_candidate_history(
-            ROOT,
-            candidate,
-            allowed_scopes=tuple(card["scopes"]),
-            workstream_id="CC-002",
+    assert candidate["state"] == "ELIGIBLE"
+    completion = json.loads(
+        (OVERSEER / "evidence" / "CC-002-completion.json").read_text(
+            encoding="utf-8"
         )
-        artifacts = {record["path"]: record for record in candidate["artifacts"]}
-        retained_identity_paths = {
-            "conformance/contract_compiler/v0/compiler_environment/manifest.json",
-            "conformance/contract_compiler/v0/compiler_environment/requirements.lock",
-            "conformance/contract_compiler/v0/compiler_environment/resolution-report.json",
-            "conformance/contract_compiler/v0/compiler_environment/build-record.json",
-            "conformance/contract_compiler/v0/compiler_environment/derivation-record.json",
-            "conformance/contract_compiler/v0/compiler_environment/verification.json",
-        }
-        assert len(artifacts) == 13
-        assert retained_identity_paths <= artifacts.keys()
-        assert checkpoint_scopes <= artifacts.keys()
-        for path in checkpoint_scopes:
-            source = subprocess.run(
-                ["git", "show", f"{candidate['head_commit']}:{path}"],
-                cwd=ROOT,
-                capture_output=True,
-                check=True,
-            ).stdout
-            assert artifacts[path] == {
-                "byte_length": len(source),
-                "path": path,
-                "sha256": "sha256:" + hashlib.sha256(source).hexdigest(),
-            }
-
-        evidence_reference = next(
-            record
-            for record in candidate["evidence"]
-            if record["path"] == evidence_path
+    )
+    assert completion["base_commit"] == candidate["head_commit"]
+    worker_entries = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((CC002_CARD.parent / "ledger" / "entries").glob("*.json"))
+    ]
+    candidate_committed_at = datetime.fromisoformat(
+        subprocess.run(
+            ["git", "show", "-s", "--format=%cI", candidate["head_commit"]],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    )
+    worker_recorded_at = [
+        datetime.fromisoformat(
+            entry["recorded_at"].removesuffix("Z") + "+00:00"
         )
-        evidence_source = subprocess.run(
-            ["git", "show", f"{candidate['head_commit']}:{evidence_path}"],
+        for entry in worker_entries
+    ]
+    completion_recorded_at = datetime.fromisoformat(
+        completion["recorded_at"].removesuffix("Z") + "+00:00"
+    )
+    completion_revision = json.loads(
+        (OVERSEER / "entries" / "OVR-000099.json").read_text(encoding="utf-8")
+    )
+    completion_fact = json.loads(
+        (OVERSEER / "entries" / "OVR-000100.json").read_text(encoding="utf-8")
+    )
+    revision_recorded_at = datetime.fromisoformat(
+        completion_revision["recorded_at"].removesuffix("Z") + "+00:00"
+    )
+    assert candidate_committed_at < worker_recorded_at[0]
+    assert worker_recorded_at == sorted(worker_recorded_at)
+    assert worker_recorded_at[-1] < completion_recorded_at
+    assert completion_recorded_at < revision_recorded_at
+    assert {
+        entry["data"]["phase"]: entry["data"]["result"]
+        for entry in worker_entries
+        if entry["entry_type"] == "TDD_RESULT"
+    } == {
+        "RED": "EXPECTED_FAILURE",
+        "GREEN": "PASS",
+        "SLICE": "PASS",
+        "DISPROOF": "PASS",
+        "REGRESSION": "PASS",
+        "PACKAGE": "NOT_APPLICABLE",
+        "ATTEST": "PASS",
+    }
+    worker_tdd_check = next(
+        check
+        for check in completion["checks"]
+        if check["check_id"] == "cc002-worker-tdd"
+    )
+    assert "PACKAGE not applicable" in worker_tdd_check["observed"]
+    assert any(
+        "PACKAGE not applicable" in claim for claim in completion_fact["data"]["claims"]
+    )
+    validate_candidate_history(
+        ROOT,
+        candidate,
+        allowed_scopes=tuple(card["scopes"]),
+        workstream_id="CC-002",
+    )
+    artifacts = {record["path"]: record for record in candidate["artifacts"]}
+    retained_identity_paths = {
+        "conformance/contract_compiler/v0/compiler_environment/manifest.json",
+        "conformance/contract_compiler/v0/compiler_environment/requirements.lock",
+        "conformance/contract_compiler/v0/compiler_environment/resolution-report.json",
+        "conformance/contract_compiler/v0/compiler_environment/build-record.json",
+        "conformance/contract_compiler/v0/compiler_environment/derivation-record.json",
+        "conformance/contract_compiler/v0/compiler_environment/verification.json",
+    }
+    assert len(artifacts) == 13
+    assert retained_identity_paths <= artifacts.keys()
+    assert checkpoint_scopes <= artifacts.keys()
+    for path in checkpoint_scopes:
+        source = subprocess.run(
+            ["git", "show", f"{candidate['head_commit']}:{path}"],
             cwd=ROOT,
             capture_output=True,
             check=True,
         ).stdout
-        assert evidence_reference == {
-            "byte_length": len(evidence_source),
-            "path": evidence_path,
-            "result": "PASS",
-            "sha256": "sha256:" + hashlib.sha256(evidence_source).hexdigest(),
+        assert artifacts[path] == {
+            "byte_length": len(source),
+            "path": path,
+            "sha256": "sha256:" + hashlib.sha256(source).hexdigest(),
         }
-        evidence = json.loads(evidence_source)
-        lineage_limitation = next(
-            limitation
-            for limitation in evidence["limitations"]
-            if "candidate range" in limitation.casefold()
+
+    evidence_reference = next(
+        record for record in candidate["evidence"] if record["path"] == evidence_path
+    )
+    evidence_source = subprocess.run(
+        ["git", "show", f"{candidate['head_commit']}:{evidence_path}"],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+    ).stdout
+    assert evidence_reference == {
+        "byte_length": len(evidence_source),
+        "path": evidence_path,
+        "result": "PASS",
+        "sha256": "sha256:" + hashlib.sha256(evidence_source).hexdigest(),
+    }
+    evidence = json.loads(evidence_source)
+    lineage_limitation = next(
+        limitation
+        for limitation in evidence["limitations"]
+        if "candidate range" in limitation.casefold()
+    )
+    assert all(
+        checkpoint in lineage_limitation for checkpoint in CC002_CHECKPOINT_LINEAGE
+    )
+    assert any(
+        check["result"] == "PASS"
+        and all(
+            checkpoint in canonical_json(check)
+            for checkpoint in CC002_CHECKPOINT_LINEAGE
         )
-        assert all(
-            checkpoint in lineage_limitation for checkpoint in CC002_CHECKPOINT_LINEAGE
-        )
-        assert any(
-            check["result"] == "PASS"
-            and all(
-                checkpoint in canonical_json(check)
-                for checkpoint in CC002_CHECKPOINT_LINEAGE
-            )
-            for check in evidence["checks"]
-        )
+        for check in evidence["checks"]
+    )
 
     ledger = load_ledger(OVERSEER)
     superseded = {
@@ -385,12 +441,16 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
         and entry["data"]["workstream_id"] == "CC-002"
     )
     integration = json.loads(INTEGRATION.read_text(encoding="utf-8"))
+    assert cc002_state["entry_id"] == "OVR-000101"
+    assert cc002_state["data"]["new_state"] == "COMPLETE"
+    assert card["ledger"]["state"] == "RECORDED"
     assert integration["authority"]["overseer_ledger"] == {
-        "entry_count": cc002_state["sequence"],
-        "head_entry_id": cc002_state["entry_id"],
-        "head_hash": cc002_state["entry_hash"],
+        "entry_count": 95,
+        "head_entry_id": "OVR-000095",
+        "head_hash": "sha256:5e02b0a0480f4d694f2b9ab39c5ad54d90975e71dcec702930a070b189ba1205",
         "path": "design/contract_compiler/overseer",
     }
+    assert "CC-002" not in integration["selections"]
     row = next(
         item for item in integration["workstreams"] if item["workstream_id"] == "CC-002"
     )
@@ -653,7 +713,8 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
     assert ccd12["entry_id"] != "OVR-000053"
     assert ccd12["data"]["new_state"] == "COMPLETE"
     assert cc002["entry_id"] != "OVR-000054"
-    assert cc002["data"]["new_state"] == "ACTIVE"
+    assert cc002["entry_id"] == "OVR-000101"
+    assert cc002["data"]["new_state"] == "COMPLETE"
 
     card = json.loads(CC002_CARD.read_text(encoding="utf-8"))
     binding = next(
@@ -664,28 +725,29 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
     assert binding["completion_entry_id"] == ccd12["entry_id"]
     assert binding["completion_entry_hash"] == ccd12["entry_hash"]
     responsibility = card["responsibility"].casefold()
-    assert "docker daemon access" in responsibility
-    assert "require final re-attestation" in responsibility
-    assert "docker daemon availability" not in responsibility
-    assert "external reachability as unproven" not in responsibility
-    assert "0.1.12+malleus.1" in responsibility
-    assert "/built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl" in responsibility
-    assert "malleus.cc002.wheel-derivation/v1" in responsibility
-    assert "malleus.cc002.acquire-result/v3" in responsibility
-    assert "malleus.cc002.verify-result/v3" in responsibility
-    assert "malleus.cc002.compiler-environment/v3" in responsibility
-    assert "malleus.cc002.internal-verification/v3" in responsibility
-    assert "malleus.cc002.container-verification/v1" in responsibility
-    assert "malleus.cc002.source-build/v1" in responsibility
-    assert "build-record.json" in responsibility
-    assert "derivation-record.json" in responsibility
-    assert "no standalone or separately extracted license file" in responsibility
-    assert "pytest, pytest-logging, and py" in responsibility
-    assert "ascending unicode code-point order" in responsibility
-    assert "quote_minimal" in responsibility
-    assert "create_system=3" in responsibility
-    assert "zip64" in responsibility
-    assert "must not rely on cpython defaults" in responsibility
+    for required in (
+        "malleus.cc002.acquire-result/v4",
+        "malleus.cc002.verify-result/v4",
+        "malleus.cc002.compiler-environment/v4",
+        "malleus.cc002.internal-verification/v4",
+        "nine governed inputs",
+        "two produced artifacts",
+        "406 adapter tests",
+        "74 governance tests",
+        "internal, non-release",
+        "cfgraph-0.2.1-py3-none-any.whl",
+        "sha256:28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13",
+        "retire the exception before public or external release",
+    ):
+        assert required in responsibility
+    for obsolete in (
+        "malleus.cc002.acquire-result/v3",
+        "malleus.cc002.verify-result/v3",
+        "formal cfgraph gate",
+        "keep candidate state none",
+        "ledger state not_started",
+    ):
+        assert obsolete not in responsibility
 
     for relative in HISTORICAL_CCD12_PATHS:
         historical = subprocess.run(

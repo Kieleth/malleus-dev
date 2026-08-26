@@ -5,10 +5,7 @@
     "task_id": "/root/cc002_environment"
   },
   "authorization": {
-    "authorized_by": {
-      "id": "operator",
-      "type": "OPERATOR"
-    },
+    "authorized_by": {"id": "operator", "type": "OPERATOR"},
     "class": "FORMAL",
     "dependency_bindings": [
       {
@@ -28,50 +25,53 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {"byte_length": 413, "path": ".codex/config.toml", "sha256": "sha256:71fe6861c51bd133eb67ded8da039ae9345547f183a5633675be8dc414d263e4"},
+      {"byte_length": 8385, "path": ".claude/skills/malleus-dev/SKILL.md", "sha256": "sha256:ab7378e6db032ecda2630bac2dce7738518390fd000f9889d4dfcbd6f68b03f6"},
+      {"byte_length": 4296, "path": ".codex/README.md", "sha256": "sha256:6c5b47c00c08cffb57da943e11c19bce1c0184621540ea9a95382d5436d474a4"},
+      {"byte_length": 529, "path": ".codex/cc002.user.example.toml", "sha256": "sha256:1768dfb73b2056706523901ee955d663b842a7915a2fe97dde990e897f303c20"},
+      {"byte_length": 22163, "path": "README.md", "sha256": "sha256:05977e617ce8de1ffdc5d4af6b38f52c13cf33805e903dcf14739cc45c7363d2"},
+      {"byte_length": 191451, "path": "scripts/contract_compiler_environment.py", "sha256": "sha256:b6c6e5607385394d34c1af07e1ba97940b90d0f61df38ee23eb5070b6c6700fb"},
+      {"byte_length": 209014, "path": "tests/test_contract_compiler_environment.py", "sha256": "sha256:7bbad1cfe341dcbad06cd6b574abceffaff0b6d114606956f28ce4b9e64c4935"},
+      {"byte_length": 20510, "path": "conformance/contract_compiler/v0/compiler_environment/manifest.json", "sha256": "sha256:7b844887307cb3f2fe81c30732032fec43aa8a409cf9b6e57652a6cbbe66d8e7"},
+      {"byte_length": 8040, "path": "conformance/contract_compiler/v0/compiler_environment/requirements.lock", "sha256": "sha256:ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b"},
+      {"byte_length": 699045, "path": "conformance/contract_compiler/v0/compiler_environment/resolution-report.json", "sha256": "sha256:6e7e45e714e89f60b28b991db7094c4a94f8e0e613f9517c8c4283b02c81014f"},
+      {"byte_length": 2945, "path": "conformance/contract_compiler/v0/compiler_environment/build-record.json", "sha256": "sha256:21f17fc79020e4996170064de34710d5366643498efd1cf0804eb22b776986dd"},
+      {"byte_length": 2733, "path": "conformance/contract_compiler/v0/compiler_environment/derivation-record.json", "sha256": "sha256:ed94aa90a16f3381d99ccc680fccda5dfda713de4e0ba212350047835247cb57"},
+      {"byte_length": 4788, "path": "conformance/contract_compiler/v0/compiler_environment/verification.json", "sha256": "sha256:17a99c498bab3406530d0e12c6e6154c880e905af7433d5e459142e7caab801f"}
+    ],
+    "base_commit": "6a72547f407154c928090581657c48ed3555ea9c",
+    "evidence": [
+      {
+        "byte_length": 10606,
+        "path": "conformance/contract_compiler/v0/evidence/CC-002.json",
+        "result": "PASS",
+        "sha256": "sha256:d1a867010f764ac4ef2dc50aac1930e6aeafc6202f598f3630d15c6e94fcf129"
+      }
+    ],
+    "head_commit": "c521785c03a3a02bb666879eb525573b81e4491f",
+    "head_tree": "325b31633d4c02a5d3d6fa33b83988f65d63ac2a",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 8,
+    "head_entry_id": "CC-002-WRK-000008",
+    "head_hash": "sha256:66a3f43fe1362cbe9d39d5ab69c9140a45ac87d9fec8f7064f5251fb74314684",
+    "path": "workstreams/CC-002/ledger",
+    "state": "RECORDED"
   },
-  "responsibility": "Build and preserve the bounded stdlib STDIO MCP mode in scripts/contract_compiler_environment.py and its project .codex/config.toml registration under server id cc002 with enabled=true, required=true, enabled_tools exactly [cc002_acquire, cc002_verify_offline], and [mcp_servers.cc002.tools.cc002_acquire] approval_mode=\"prompt\". Expose exactly cc002_acquire and cc002_verify_offline with no confirm argument. Treat a7a65ccfdd7afd7d42a40509631fcdfef49f135e, 4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, and a48c754ae6a7aa904c3317d3cdde06de6db8ff98, plus 6325bd962ecfd00bd4ca62b1d9febd07e3737357 as governed CC-002 worker checkpoints. The final materialization candidate must use the commit that integrates the CC-D12-R3 correction as its base and record that then-known commit in CC-002 evidence. The final candidate must not claim that its range contains the earlier checkpoints; it must include the seven checkpoint paths as exact artifacts at the candidate head and record the four checkpoint commits and this range limitation in CC-002 evidence. Accept no caller-controlled URL, command, output path, or Docker transport; bind the OD-012 identities, allowed hosts, destination, repository working directory, sanitized subprocess environment, and shell=False in code. Machine-level MCP registration may supply exactly DOCKER_HOST as startup transport and no other ambient Docker transport variable. Read it only from the production process environment, never from tool arguments. Require canonical unix:///absolute/path form with no authority, query, fragment, encoded separator, or dot segment. Before every Docker subprocess, inspect each endpoint component without following symlinks, reject symlink components, require parent directories owned by root or the current user with no group or world write, and require a current-user-owned Unix socket with exact mode 0600 and no unsafe permission bits. Forward only the validated DOCKER_HOST alongside the existing sanitized Docker environment. Treat the endpoint path and resolved executable as operational state and exclude both from retained manifests and evidence. Delete the stored absolute Docker executable identity; re-resolve the portable docker command safely for each operation and retain exactly {\"command\":\"docker\",\"client_version\":<observed .Client.Version>,\"transport\":\"LOCAL_UNIX_SOCKET\"}. Permit acquisition and every external registry or package interaction only inside those MCP tool calls. Declare cc002_acquire with readOnlyHint=false, destructiveHint=false, idempotentHint=true, and openWorldHint=true; declare cc002_verify_offline with readOnlyHint=false, destructiveHint=false, idempotentHint=true, and openWorldHint=false because it creates ephemeral containers and evidence. Require zero-argument closed input schemas and fixed outputs for both tools. Keep .gitignore unchanged and the already tracked exact scripts/contract_compiler_environment.py. Preserve exactly the existing nine scopes and seven checkpoint FILE artifacts; add no scope. Then materialize and mechanically verify corrected OD-012 R3. Preserve every R2 LinkML 1.11.1 root, CPython 3.12.10 cp312, pip 25.0.1, OCI, ANTLR 4.9.3, setuptools 83.0.0, setuptools.build_meta:__legacy__, SOURCE_DATE_EPOCH=315532800, TZ=UTC, PYTHONHASHSEED=0, umask 022, network-denied double-build, byte-equality, wheel-only closure, and offline identity gate exactly; leave malleus.cc002.source-build/v1 and ANTLR build-inputs/ unchanged. Acquire prefixcommons-0.1.12-py3-none-any.whl only from https://files.pythonhosted.org/packages/31/e8/715b09df3dab02b07809d812042dc47a46236b5603d9d3a2572dbd1d8a97/prefixcommons-0.1.12-py3-none-any.whl, require 29482 bytes and sha256 16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b, and retain it only at derivative-inputs/prefixcommons-0.1.12-py3-none-any.whl. Require 14 members, 109044 expanded bytes, ten package code/data members, METADATA 1960 bytes sha256 4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303, WHEEL 83 bytes sha256 cb778389a15548d4cf6e0cdf367d27627e6d127d5c5fa5ab75eb43950338c56c, and LICENSE 1500 bytes sha256 3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4 beginning exactly BSD 3-Clause License. Derive only prefixcommons 0.1.12+malleus.1 as prefixcommons-0.1.12+malleus.1-py3-none-any.whl. Remove exactly Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0); update only necessary METADATA version and requirement, derived dist-info paths, Generator, RECORD, and fixed ZIP metadata. Preserve every package, resource, and license payload byte, the remaining METADATA body/order, and every other WHEEL field/order/body. Replace only Generator: poetry 1.0.7 with Generator: malleus-cc002 (wheel-derivation-v1). Use a stdlib-only exact parser and transformer with no production regular expression. Read ZIP members only and never import, extract, or execute prefixcommons. Validate the exact whole-wheel identity and input RECORD; reject duplicate or unsafe member names and non-regular member types before transformation. Order archive members and RECORD rows by ascending Unicode code-point order of final POSIX member names, including the RECORD member and its row; require every final ZIP filename ASCII. Encode RECORD as UTF-8 without BOM with exactly three fields, delimiter comma, quotechar ASCII double quote, doublequote true, QUOTE_MINIMAL, no escapechar, LF line terminator, and a terminal LF. For every non-RECORD member, write sha256=<URL-safe Base64 of raw SHA-256 without '=' padding> and decimal byte length; keep the RECORD row's own hash and size fields empty. Set every ZipInfo to date_time 1980-01-01 00:00:00, compress_type=ZIP_STORED, create_system=3, create_version=20, extract_version=20, reserved=0, flag_bits=0, volume=0, internal_attr=0, external_attr=(0o100644 << 16), and empty extra/comment; set the archive comment empty. Disable ZIP64 and reject every case requiring it. Treat CRC32, compressed and uncompressed sizes, and local-header offsets only as consequences of exact payload and member order. Explicitly set every selected field, reopen the wheel, and validate every field and byte; must not rely on CPython defaults. Transform twice in fresh selected-OCI children with network denied and the unchanged R2 deterministic environment; require byte-identical outputs. Retain the derived wheel under built/ and derivation-record.json with schema malleus.cc002.wheel-derivation/v1 binding both results and adapter/tool provenance. Keep the exact 1500-byte BSD 3-Clause License notice as a byte-identical member inside both wheel artifacts and bind it in the derivation record; require no standalone or separately extracted license file. Keep ANTLR build-record.json and malleus.cc002.source-build/v1 unchanged. Advance exactly malleus.cc002.acquire-result/v3, malleus.cc002.verify-result/v3, malleus.cc002.compiler-environment/v3, and malleus.cc002.internal-verification/v3 with eight retained inputs, two produced artifacts, and derivation_record_sha256; retain malleus.cc002.container-verification/v1 and malleus.cc002.source-build/v1 unchanged; add only malleus.cc002.wheel-derivation/v1. Pass exactly /built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl as the direct resolver root, reject substitution, omit the official prefixcommons wheel from runtime, and require pytest, pytest-logging, and py absent from both resolved and installed closure. Prove clean network-denied offline installation and pip check; require prefixcommons to expand GO:0008150 to http://purl.obolibrary.org/obo/GO_0008150 and contract it back to exactly [GO:0008150] in strict mode; require linkml_runtime.utils.namespaces.Namespaces to bind ex to https://example.org/ and return ex:item for https://example.org/item; retain the existing generic generator smoke. Stop on non-allowlisted payload change, license loss, unequal transform, resolver substitution, forbidden test package, or any smoke requiring the removed plugin. Keep candidate state NONE and ledger state NOT_STARTED until genuine R3 work exists. Final eligibility requires validate_candidate_history, an honest eight-entry worker ledger, and exactly thirteen candidate artifacts: the seven checkpoint FILE artifacts plus compiler_environment/manifest.json, requirements.lock, resolution-report.json, build-record.json, derivation-record.json, and verification.json. Docker daemon access, external reachability, selected OCI identity checks, linux/amd64 execution, and prior ANTLR progress require final re-attestation. Do not implement compiler semantics, alter pyproject.toml, CI, package topology, source or ontology files, invent themed fixtures or semantic oracles, rebuild selected published roots, or choose policy.",
+  "responsibility": "Preserve the completed bounded stdlib STDIO MCP adapter, its exact cc002_acquire and cc002_verify_offline tools, project registration, and atomically retained compiler environment. Preserve the existing nine scopes and both dependency bindings without expanding compiler semantics, source or ontology ownership, CI, packaging topology, or release authority. Bind the four governed historical worker checkpoints as final-byte evidence only: a7a65ccfdd7afd7d42a40509631fcdfef49f135e, 4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, a48c754ae6a7aa904c3317d3cdde06de6db8ff98, and 6325bd962ecfd00bd4ca62b1d9febd07e3737357. Bind candidate 6a72547f407154c928090581657c48ed3555ea9c..c521785c03a3a02bb666879eb525573b81e4491f and tree 325b31633d4c02a5d3d6fa33b83988f65d63ac2a to exactly thirteen artifacts. Preserve RED commits 24f6a321c4f7f116d96e8fc71fe2c09a4a74cb78, a2d6d997612a9c5525b483ecae4665924e718d25, and c2fc15ba9eee38655b23e53361471aefb8dea800, GREEN commit 12b68cdbdf0ec2ca071c412a6d115a5f5f74a2d7, 406 adapter tests, and 74 governance tests. Retain exactly malleus.cc002.acquire-result/v4, malleus.cc002.verify-result/v4, malleus.cc002.compiler-environment/v4, and malleus.cc002.internal-verification/v4 with nine governed inputs, two produced artifacts, linux/amd64 CPython 3.12.10 cp312, the selected OCI, wheel-only closure, network-denied double build and derivation equality, clean offline installation, pip check, and every governed smoke. Permit only cfgraph-0.2.1-py3-none-any.whl at 2256 bytes and sha256:28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13 under the internal, non-release OVR-000097 exception. Make no reproducible-build, license-sufficiency, security, vulnerability, distribution, or public-release claim for that wheel. Retire the exception before public or external release after the deferred source double-build, authoritative license and NOTICE byte review, and release-grade supply-chain, security, and vulnerability attestation are complete.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
-    {
-      "kind": "FILE",
-      "path": ".codex/config.toml"
-    },
-    {
-      "kind": "FILE",
-      "path": ".claude/skills/malleus-dev/SKILL.md"
-    },
-    {
-      "kind": "FILE",
-      "path": ".codex/README.md"
-    },
-    {
-      "kind": "FILE",
-      "path": ".codex/cc002.user.example.toml"
-    },
-    {
-      "kind": "FILE",
-      "path": "README.md"
-    },
-    {
-      "kind": "TREE",
-      "path": "conformance/contract_compiler/v0/compiler_environment"
-    },
-    {
-      "kind": "FILE",
-      "path": "conformance/contract_compiler/v0/evidence/CC-002.json"
-    },
-    {
-      "kind": "FILE",
-      "path": "scripts/contract_compiler_environment.py"
-    },
-    {
-      "kind": "FILE",
-      "path": "tests/test_contract_compiler_environment.py"
-    }
+    {"kind": "FILE", "path": ".codex/config.toml"},
+    {"kind": "FILE", "path": ".claude/skills/malleus-dev/SKILL.md"},
+    {"kind": "FILE", "path": ".codex/README.md"},
+    {"kind": "FILE", "path": ".codex/cc002.user.example.toml"},
+    {"kind": "FILE", "path": "README.md"},
+    {"kind": "TREE", "path": "conformance/contract_compiler/v0/compiler_environment"},
+    {"kind": "FILE", "path": "conformance/contract_compiler/v0/evidence/CC-002.json"},
+    {"kind": "FILE", "path": "scripts/contract_compiler_environment.py"},
+    {"kind": "FILE", "path": "tests/test_contract_compiler_environment.py"}
   ],
   "workstream_id": "CC-002"
 }
