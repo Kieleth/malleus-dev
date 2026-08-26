@@ -271,10 +271,40 @@ def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
 
 def test_canonical_integration_manifest_is_valid() -> None:
     state = validate_integration(ROOT)
+    x03 = state.cards["CC-X03"]
+    ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
+    workstream_states, _ = integration_module._workstream_states(ledger)
 
     assert len(state.workstreams) == 66
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
-    assert state.cards["CC-X03"]["candidate"]["state"] == "QUARANTINED"
+    assert x03["assignment"] == {
+        "owner_id": "worker:ccx03-red",
+        "state": "ASSIGNED",
+        "task_id": "/root/ccx03_red_worker",
+    }
+    assert x03["authorization"] == {
+        "authorized_by": {"id": "overseer", "type": "OVERSEER"},
+        "class": "EXPLORATION_ONLY",
+    }
+    assert x03["candidate"] == {"state": "NONE"}
+    assert x03["ledger"] == {"state": "NOT_STARTED"}
+    assert x03["scopes"] == [
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/source_boundary/EXPLORATORY_LEDGER.md",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-X03.json",
+        },
+    ]
+    assert state.workstreams["CC-X03"] == ()
+    assert workstream_states["CC-X03"] == "ACTIVE"
+    assert "CC-X03" not in state.selections
     assert state.cards["CC-R01"]["authorization"]["class"] == "BLOCKED"
 
 

@@ -1,0 +1,48 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Reauthor and execute the generic source-boundary RED within the exact registered three-file scope, bind formal evidence, and stop before GREEN implementation or an import-policy choice."
+    ],
+    "evidence_entry_ids": [],
+    "new_state": "ACTIVE",
+    "previous_state": "PAUSED",
+    "workstream_id": "CC-X03"
+  },
+  "entry_hash": "sha256:14fbd81a4d921f13ae7aa17002cfe217ee1f9b960a9184a1b48805f1c2c1a03f",
+  "entry_id": "OVR-000118",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:437ee03357766cfcfd1bbbcf48ff4deca63791370788af2debb26af56e1d9622",
+  "recorded_at": "2026-08-26T21:32:21Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000006",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000016",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 118,
+  "subject": {
+    "id": "CC-X03",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reactivate CC-X03 as a bounded formal RED workstream.",
+  "why": "CC-000 has registered the workstream and exact evidence boundary, so the earlier exploratory bytes can be reauthored on current main as formal generic RED evidence. CC-D11 and import-policy authority remain outside this slice; CC-X03 may not add GREEN, production behavior, themed vocabulary, dependencies, Docker, selection, or release work."
+}

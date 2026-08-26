@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X03"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:87e2f849b182db14679dbeae916fdfcc7bcc414b2d31280b188708542e3d3772",
+        "before_digest": "sha256:9b4d81c1e6327d0ddd9f30b56474bfc32366f8012a2b2f619bece24045be9584",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f0b2eca8bcd90f37fdab1202e53ee8b673d313cdc5690e10944c457a60150fae",
+        "before_digest": "sha256:5a3dd80d53dcf5c9d5504fe2a60e0462740578d10c4136db9a068d4222704f3f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:9a02d760e3ad1554d3345c6513785c0a0ba015271578e6cea56a6825d06c4c4f",
+        "before_digest": "sha256:3ca1468d305cd206443b46db8b62abffc10f4a3602c36bccc2bdfb96acc2bedc",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:60b9f183fa92b060d2539b1c07cedb1957da7c443c7f7601a94bccccaa7d6b74",
+        "before_digest": "sha256:577129c3af940e5093fdd103f2ab495c3871d50905e5088b1df5620281fd3123",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:022b7abdfe98d3c4d038aae208f1ed91dbe65cc89375e46c2b46f41d03f7a285",
+  "entry_id": "OVR-000119",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:14fbd81a4d921f13ae7aa17002cfe217ee1f9b960a9184a1b48805f1c2c1a03f",
+  "recorded_at": "2026-08-26T21:32:22Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000118",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 119,
+  "subject": {
+    "id": "ccx03-exploratory-red-reactivation",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the governed CC-X03 exploratory RED reactivation documents.",
+  "why": "The exact three-scope card and integration registration make the reactivated exploratory RED boundary mechanically visible. The narrow test revision preserves correction ordering and typed replacement coverage while asserting the new canonical assignment and state. Authorization remains EXPLORATION_ONLY, candidate NONE, and worker ledger NOT_STARTED. No candidate, selection, sealed snapshot, dependency, import-policy, production, themed-vocabulary, Docker, or release state changes."
+}

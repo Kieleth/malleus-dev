@@ -1450,22 +1450,22 @@ def test_correction_of_correction_restores_the_original_projection(
 
     state = load_ledger(copied, repository=ROOT)
 
-    assert "| `CC-X03` | `PAUSED` |" in render_status(state)
+    assert "| `CC-X03` | `ACTIVE` |" in render_status(state)
 
 
 def test_active_typed_replacement_projects_normally(tmp_path: Path) -> None:
     copied = _copy_ledger(tmp_path)
     _append_correction(
         copied,
-        target_id="OVR-000006",
+        target_id="OVR-000118",
         actor_type="OVERSEER",
         replacement_required=True,
     )
-    _append_replacement_workstream(copied, "OVR-000006")
+    _append_replacement_workstream(copied, "OVR-000118")
 
     state = load_ledger(copied, repository=ROOT)
 
-    assert "| `CC-X03` | `PAUSED` |" in render_status(state)
+    assert "| `CC-X03` | `ACTIVE` |" in render_status(state)
 
 
 def test_evidence_reference_must_target_immutable_evidence_area(tmp_path: Path) -> None:

@@ -1,8 +1,8 @@
 {
   "assignment": {
-    "owner_id": "worker:source-boundary-exploration",
+    "owner_id": "worker:ccx03-red",
     "state": "ASSIGNED",
-    "task_id": "01a034ff-cec3-77d1-8d5f-f10ef9129c9a"
+    "task_id": "/root/ccx03_red_worker"
   },
   "authorization": {
     "authorized_by": {
@@ -12,37 +12,25 @@
     "class": "EXPLORATION_ONLY"
   },
   "candidate": {
-    "base_commit": "c410f11229e7c33a4fab9ebdfc9e2e109f18cbf7",
-    "head_commit": "d32b9c6458a2ec66f591e85299a80f0c3952c6fb",
-    "limitations": [
-      "The head is detached and local-only, so a clean CI clone cannot resolve it.",
-      "Only collection failure on a missing boundary module executed; the behavioral assertions did not run.",
-      "A future useful X03 result must reauthor the generic evidence on a clean registered history."
-    ],
-    "observed_touched_paths": [
-      "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/catalog/notices.yaml",
-      "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/catalog/observations.yaml",
-      "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/root.yaml",
-      "conformance/contract_kernel/v0/quiet_bell_archive/sources/v1.0.0/shared/identity.yaml",
-      "conformance/contract_kernel/v0/source_boundary/EXPLORATORY_LEDGER.md",
-      "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py"
-    ],
-    "reason": "The final diff is generic, but an intermediate commit introduced unapproved themed vocabulary outside the exploration scope.",
-    "state": "QUARANTINED"
+    "state": "NONE"
   },
   "ledger": {
     "state": "NOT_STARTED"
   },
-  "responsibility": "Retain generic RED observations about the LinkML source boundary without choosing import policy or adding production behavior.",
+  "responsibility": "Reauthor the generic LinkML source-boundary RED as formal reproducible evidence within the registered three-file scope. Preserve exact collection and behavioral findings without selecting import policy, adding GREEN or production behavior, or reusing themed vocabulary.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py"
+    },
     {
       "kind": "FILE",
       "path": "conformance/contract_kernel/v0/source_boundary/EXPLORATORY_LEDGER.md"
     },
     {
       "kind": "FILE",
-      "path": "conformance/contract_kernel/v0/source_boundary/test_source_boundary.py"
+      "path": "conformance/contract_compiler/v0/evidence/CC-X03.json"
     }
   ],
   "workstream_id": "CC-X03"
