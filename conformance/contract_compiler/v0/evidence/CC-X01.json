@@ -6,19 +6,19 @@
       "sha256": "sha256:3a580e6e3ea95bda4d32ff855f91c269b6fa05ea87d2001bcdd0ea56b9e5b1d8"
     },
     {
-      "byte_length": 11130,
+      "byte_length": 11326,
       "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json",
-      "sha256": "sha256:02e681d662fdefff72ab5f23ca56345c5daede7540b66862838e9199ae5b09d3"
+      "sha256": "sha256:cf8ae922d0a1b2efb83d7f99df374254882f9626608d3b96ae425f02737f8af9"
     },
     {
-      "byte_length": 29317,
+      "byte_length": 32855,
       "path": "scripts/contract_compiler_divergence.py",
-      "sha256": "sha256:60dd2d76a57f9716228c326370b07ebe54b3bf94d7a964ee42ba658e72ea5e79"
+      "sha256": "sha256:a04ab8469d2efa6b3a105147d50159c1b066cdc0b557afcf79fb98e8de1d8f2a"
     },
     {
-      "byte_length": 9585,
+      "byte_length": 11498,
       "path": "tests/test_contract_compiler_divergence.py",
-      "sha256": "sha256:a187b7755dc7a0c2905b396314ce520aa206abe373178f9f95275e5c332f123f"
+      "sha256": "sha256:227dcd768810f5fd2f612e89ae9de46ee5b07954bb8d4840f2ff282d2836013e"
     }
   ],
   "base_commit": "50c54b921e28724c88fa4b6e6bca1a94356d2839",
@@ -26,7 +26,7 @@
     {
       "check_id": "ccx01-red",
       "method": "Run the CC-X01 test contract before creating the measurement runner.",
-      "observed": "Pytest stopped during collection with FileNotFoundError for scripts/contract_compiler_divergence.py, one collection error, and exit status 2.",
+      "observed": "RED commits c0d38b598ea0624f2d653586a7f4202f0425a4cf and d3d889aa638781d4d9de451aba6d9f730a0e04a1 preserve the absent-runner failure and lossless-source requirement. Initial collection stopped with FileNotFoundError and exit status 2.",
       "result": "PASS"
     },
     {
@@ -37,8 +37,20 @@
     },
     {
       "check_id": "ccx01-baseline",
-      "method": "Load LinkML and linkml-runtime only from the exact retained CC-002 wheel bytes and verify distribution versions plus module origins in an isolated child process.",
-      "observed": "linkml 1.11.1 sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed and linkml-runtime 1.11.1 sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da loaded from the retained wheelhouse; wrong coordinates, metadata, bytes, versions, and origins fail closed.",
+      "method": "Load LinkML and linkml-runtime only from exact retained CC-002 wheel bytes in a child started with Python isolated mode, passing wheel paths explicitly rather than inheriting PYTHONPATH.",
+      "observed": "linkml 1.11.1 sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed and linkml-runtime 1.11.1 sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da loaded from their exact wheel origins. Wrong coordinates, bytes, versions, and origins fail closed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-execution-context",
+      "method": "Record the actual direct-wheel execution host and ambient PyYAML distribution used by the LinkML loader.",
+      "observed": "The retained context is CPython 3.12.9 on Darwin arm64 with ambient PyYAML 6.0.2. It is explicit measurement context, not the CC-002 selected Linux environment.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-legacy-origin",
+      "method": "Require the loaded OntologyRegistry module origin to equal the exact source file whose SHA-256 is recorded, then replay under a hostile PYTHONPATH.",
+      "observed": "The bound src/malleus/ontology.py origin and sha256:665ce9e3ff881f541d00a29cd1ce6c7a0f6b9a96570eb3e48a72fcb141332fd8 matched. A fake malleus package on PYTHONPATH could not replace it.",
       "result": "PASS"
     },
     {
@@ -50,13 +62,13 @@
     {
       "check_id": "ccx01-replay",
       "method": "Replay both engines twice, require byte-identical canonical output, compare it with observations.json, and mutate a retained observation.",
-      "observed": "Both fresh replays were byte-identical to the 11,130-byte retained observation artifact; the mutated artifact was rejected.",
+      "observed": "Both fresh replays were byte-identical to the 11,326-byte retained observation artifact; changed values, deleted requested fields, and malformed engine entries were rejected.",
       "result": "PASS"
     },
     {
       "check_id": "ccx01-focused",
       "method": "Run tests/test_contract_compiler_divergence.py and the runner's offline check command.",
-      "observed": "All 11 focused tests passed and the check reported that fresh observations match retained bytes.",
+      "observed": "All 15 focused tests passed and the check reported that fresh observations match retained bytes.",
       "result": "PASS"
     },
     {
@@ -75,7 +87,7 @@
   "limitations": [
     "CC-X01 is a measurement corpus only. It does not select semantics, change an oracle, authorize production code, or close OD-003.",
     "The cases are isolated single modules. Import resolution, duplicate adoption, expressions, graph admission, artifact grammar, themed vocabulary, packaging, and release behavior remain outside this slice.",
-    "The LinkML child loads the exact retained universal wheels under the calling Python interpreter. This report does not claim replay of the complete selected Linux OCI and CPython tuple or every retained transitive dependency.",
+    "Only the direct linkml and linkml-runtime wheel bytes are pinned. The calling interpreter, platform, and ambient PyYAML identity are recorded; other transitive dependencies remain ambient and unpinned. Cross-host byte determinism and replay of the CC-002 Linux OCI and CPython tuple are not claimed.",
     "OntologyRegistry is bound by the exact implementation digest recorded in observations.json. Any implementation change requires a fresh measurement rather than silent reuse of these bytes."
   ],
   "recorded_at": "2026-08-26T19:33:28Z",

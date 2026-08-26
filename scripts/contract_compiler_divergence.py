@@ -10,6 +10,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import platform
 import subprocess
 import sys
 import tempfile
@@ -162,6 +163,18 @@ def _require_nonempty_text(value: Any, subject: str) -> str:
     except UnicodeEncodeError as error:
         raise DivergenceError(f"{subject} must be UTF-8 encodable") from error
     return value
+
+
+def _ordered_ids(value: Any, key: str, subject: str) -> list[Any]:
+    if not isinstance(value, list):
+        raise DivergenceError(f"{subject} must be a list")
+    result = []
+    for index, item in enumerate(value):
+        item = _require_mapping(item, f"{subject} {index}")
+        if key not in item:
+            raise DivergenceError(f"{subject} {index} requires {key}")
+        result.append(item[key])
+    return result
 
 
 def _walk_mappings(value: Any):
@@ -451,15 +464,17 @@ def _legacy_probe(registry: Any, target: str, probe: Mapping[str, Any]) -> dict[
         return _failed_probe(probe_id, error)
 
 
-def _legacy_case(case: Mapping[str, Any], directory: Path) -> dict[str, Any]:
-    from malleus.ontology import OntologyRegistry
-
+def _legacy_case(
+    case: Mapping[str, Any],
+    directory: Path,
+    registry_class: Any,
+) -> dict[str, Any]:
     locator = case["logical_locator"]
     path = directory / Path(locator).name
     path.write_bytes(case["source_text"].encode("utf-8"))
     replacements = ((str(path), locator), (str(directory), "<CASE_DIR>"))
     try:
-        registry = OntologyRegistry(path)
+        registry = registry_class(path)
     except Exception as error:
         return {
             "engine_id": "ontology_registry",
@@ -471,6 +486,21 @@ def _legacy_case(case: Mapping[str, Any], directory: Path) -> dict[str, Any]:
         "construction": _state("CONSTRUCTED"),
         "probes": [_legacy_probe(registry, case["target_class"], probe) for probe in case["probes"]],
     }
+
+
+def _bound_ontology_registry() -> Any:
+    source_root = str((ROOT / "src").resolve())
+    if not sys.path or sys.path[0] != source_root:
+        sys.path.insert(0, source_root)
+    from malleus import ontology
+
+    origin = Path(ontology.__file__).resolve()
+    if origin != ONTOLOGY_IMPLEMENTATION.resolve():
+        raise DivergenceError(
+            f"OntologyRegistry loaded from '{origin}', not exact bound source "
+            f"'{ONTOLOGY_IMPLEMENTATION.resolve()}'"
+        )
+    return ontology.OntologyRegistry
 
 
 def _module_origin(module_name: str) -> str:
@@ -487,53 +517,63 @@ def _require_origin(module_name: str, wheel: Path) -> None:
         raise DivergenceError(f"exact baseline module {module_name!r} did not load from {wheel.name}")
 
 
-def _verify_linkml_process() -> None:
+def _verify_linkml_process(linkml_wheel: Path, runtime_wheel: Path) -> None:
     from importlib.metadata import version
 
-    linkml_wheel = Path(os.environ["MALLEUS_CCX01_LINKML_WHEEL"])
-    runtime_wheel = Path(os.environ["MALLEUS_CCX01_RUNTIME_WHEEL"])
     if version("linkml") != "1.11.1" or version("linkml-runtime") != "1.11.1":
         raise DivergenceError("baseline process did not load LinkML/linkml-runtime 1.11.1")
     _require_origin("linkml.generators", linkml_wheel)
     _require_origin("linkml_runtime", runtime_wheel)
 
 
-def _linkml_subprocess(cases: list[dict[str, Any]], wheels: tuple[BaselineWheel, ...]) -> list[dict[str, Any]]:
+def _linkml_subprocess(
+    cases: list[dict[str, Any]],
+    wheels: tuple[BaselineWheel, ...],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     by_distribution = {wheel.distribution: wheel for wheel in wheels}
     linkml_wheel = by_distribution["linkml"]
     runtime_wheel = by_distribution["linkml-runtime"]
-    environment = os.environ.copy()
-    prior_path = environment["PYTHONPATH"] if "PYTHONPATH" in environment else ""
-    python_paths = [str(linkml_wheel.path), str(runtime_wheel.path)]
-    if prior_path:
-        python_paths.append(prior_path)
-    environment["PYTHONPATH"] = os.pathsep.join(python_paths)
-    environment["MALLEUS_CCX01_LINKML_WHEEL"] = str(linkml_wheel.path)
-    environment["MALLEUS_CCX01_RUNTIME_WHEEL"] = str(runtime_wheel.path)
     completed = subprocess.run(
-        [sys.executable, str(Path(__file__).resolve()), "_linkml"],
+        [
+            sys.executable,
+            "-I",
+            str(Path(__file__).resolve()),
+            "_linkml",
+            str(linkml_wheel.path),
+            str(runtime_wheel.path),
+        ],
         input=canonical_json({"cases": cases}),
         capture_output=True,
         check=False,
-        env=environment,
     )
     if completed.returncode != 0:
         detail = completed.stderr.decode("utf-8", errors="replace").strip()
         raise DivergenceError(f"exact LinkML baseline process failed: {detail}")
     result = _decode_json(completed.stdout.decode("utf-8"), "LinkML baseline output")
-    if not isinstance(result, list) or len(result) != len(cases):
+    result = _require_mapping(result, "LinkML baseline output")
+    _require_exact_keys(
+        result,
+        {"execution_context", "observations"},
+        "LinkML baseline output",
+    )
+    observations = result["observations"]
+    if not isinstance(observations, list) or len(observations) != len(cases):
         raise DivergenceError("LinkML baseline output has the wrong case count")
-    return result
+    context = _require_mapping(result["execution_context"], "LinkML execution context")
+    return observations, dict(context)
 
 
 def _measure(cases_document: dict[str, Any]) -> dict[str, Any]:
     manifest = _read_json(ENVIRONMENT_MANIFEST)
     wheels = retained_baseline(manifest)
     cases = cases_document["cases"]
-    linkml_observations = _linkml_subprocess(cases, wheels)
+    linkml_observations, execution_context = _linkml_subprocess(cases, wheels)
+    registry_class = _bound_ontology_registry()
     with tempfile.TemporaryDirectory(prefix="malleus-cc-x01-") as temporary:
         directory = Path(temporary)
-        legacy_observations = [_legacy_case(case, directory) for case in cases]
+        legacy_observations = [
+            _legacy_case(case, directory, registry_class) for case in cases
+        ]
 
     observations = []
     for index, case in enumerate(cases):
@@ -548,6 +588,7 @@ def _measure(cases_document: dict[str, Any]) -> dict[str, Any]:
         "workstream_id": "CC-X01",
         "cases_sha256": _digest_bytes(canonical_json(cases_document)),
         "environment_manifest_sha256": _digest_file(ENVIRONMENT_MANIFEST),
+        "execution_context": execution_context,
         "baseline": dict(BASELINE),
         "engines": [
             {
@@ -592,6 +633,7 @@ def validate_observations(document: Any) -> None:
             "environment_manifest_sha256",
             "baseline",
             "engines",
+            "execution_context",
             "observations",
         },
         "CC-X01 observations",
@@ -605,8 +647,24 @@ def validate_observations(document: Any) -> None:
         raise DivergenceError("CC-X01 observations bind the wrong cases")
     if root["environment_manifest_sha256"] != _digest_file(ENVIRONMENT_MANIFEST):
         raise DivergenceError("CC-X01 observations bind the wrong CC-002 environment manifest")
+    context = _require_mapping(root["execution_context"], "CC-X01 execution context")
+    _require_exact_keys(context, {"platform", "python", "pyyaml"}, "CC-X01 execution context")
+    _require_exact_keys(
+        _require_mapping(context["python"], "CC-X01 Python context"),
+        {"implementation", "version"},
+        "CC-X01 Python context",
+    )
+    _require_exact_keys(
+        _require_mapping(context["platform"], "CC-X01 platform context"),
+        {"architecture", "operating_system"},
+        "CC-X01 platform context",
+    )
+    pyyaml = _require_mapping(context["pyyaml"], "CC-X01 PyYAML context")
+    _require_exact_keys(pyyaml, {"distribution", "version"}, "CC-X01 PyYAML context")
+    if pyyaml["distribution"] != "PyYAML":
+        raise DivergenceError("CC-X01 PyYAML distribution identity differs")
     engines = root["engines"]
-    if not isinstance(engines, list) or [item["engine_id"] for item in engines] != ENGINE_IDS:
+    if _ordered_ids(engines, "engine_id", "CC-X01 engines") != ENGINE_IDS:
         raise DivergenceError(f"CC-X01 engines must be exactly {ENGINE_IDS}")
     _require_exact_keys(engines[0], {"engine_id", "interface", "wheels"}, "LinkML engine")
     if engines[0]["interface"] != "linkml_runtime.utils.schemaview.SchemaView":
@@ -627,12 +685,16 @@ def validate_observations(document: Any) -> None:
     if engines[1]["implementation_sha256"] != _digest_file(ONTOLOGY_IMPLEMENTATION):
         raise DivergenceError("CC-X01 OntologyRegistry implementation bytes differ")
     observations = root["observations"]
-    if not isinstance(observations, list) or [item["case_id"] for item in observations] != CASE_IDS:
+    if _ordered_ids(observations, "case_id", "CC-X01 observations") != CASE_IDS:
         raise DivergenceError(f"CC-X01 observations must contain exactly {CASE_IDS}")
     for case_index, case in enumerate(observations):
         _require_exact_keys(case, {"case_id", "engines"}, f"observation {case['case_id']}")
         case_engines = case["engines"]
-        if not isinstance(case_engines, list) or [item["engine_id"] for item in case_engines] != ENGINE_IDS:
+        if _ordered_ids(
+            case_engines,
+            "engine_id",
+            f"observation {case['case_id']} engines",
+        ) != ENGINE_IDS:
             raise DivergenceError(f"observation {case['case_id']} engines differ")
         for engine in case_engines:
             subject = f"observation {case['case_id']} engine {engine['engine_id']}"
@@ -663,6 +725,23 @@ def validate_observations(document: Any) -> None:
             for probe in engine["probes"]:
                 _require_exact_keys(probe, {"probe_id", "result"}, subject + " probe")
                 _validate_state(probe["result"], subject + f" probe {probe['probe_id']}")
+            for expected_probe, actual_probe in zip(
+                cases["cases"][case_index]["probes"],
+                engine["probes"],
+            ):
+                result = actual_probe["result"]
+                if result["state"] != "VALUE":
+                    continue
+                value = _require_mapping(
+                    result["value"], subject + f" probe {actual_probe['probe_id']} value"
+                )
+                if set(value) == {"arguments", "error_type", "message"}:
+                    continue
+                _require_exact_keys(
+                    value,
+                    set(expected_probe["fields"]),
+                    subject + f" probe {actual_probe['probe_id']} fields",
+                )
     for index, state in enumerate(
         mapping for mapping in _walk_mappings(observations) if "state" in mapping
     ):
@@ -695,22 +774,44 @@ def check_observations(
         raise DivergenceError("fresh CC-X01 observations do not match retained bytes")
 
 
-def _child_main() -> int:
-    _verify_linkml_process()
+def _child_main(linkml_wheel: Path, runtime_wheel: Path) -> int:
+    sys.path[:0] = [str(linkml_wheel), str(runtime_wheel)]
+    _verify_linkml_process(linkml_wheel, runtime_wheel)
     payload = _decode_json(sys.stdin.buffer.read().decode("utf-8"), "CC-X01 child input")
     payload = _require_mapping(payload, "CC-X01 child input")
     _require_exact_keys(payload, {"cases"}, "CC-X01 child input")
     cases = payload["cases"]
     if not isinstance(cases, list):
         raise DivergenceError("CC-X01 child cases must be a list")
-    sys.stdout.buffer.write(canonical_json([_linkml_case(case) for case in cases]))
+    from importlib.metadata import version
+
+    result = {
+        "execution_context": {
+            "platform": {
+                "architecture": platform.machine(),
+                "operating_system": platform.system(),
+            },
+            "python": {
+                "implementation": platform.python_implementation(),
+                "version": platform.python_version(),
+            },
+            "pyyaml": {
+                "distribution": "PyYAML",
+                "version": version("PyYAML"),
+            },
+        },
+        "observations": [_linkml_case(case) for case in cases],
+    }
+    sys.stdout.buffer.write(canonical_json(result))
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if arguments == ["_linkml"]:
-        return _child_main()
+    if arguments and arguments[0] == "_linkml":
+        if len(arguments) != 3:
+            raise DivergenceError("LinkML child requires exactly two retained wheel paths")
+        return _child_main(Path(arguments[1]), Path(arguments[2]))
     parser = argparse.ArgumentParser(description=__doc__)
     action = parser.add_mutually_exclusive_group()
     action.add_argument("--check", action="store_true", help="compare a fresh replay with retained bytes")

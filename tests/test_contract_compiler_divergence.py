@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 import hashlib
+from importlib.metadata import version
 import importlib.util
 import json
+import os
 from pathlib import Path
+import platform
 import subprocess
 import sys
 
@@ -171,6 +174,7 @@ def test_observations_have_exact_independent_engine_structure_and_no_policy():
         "workstream_id",
         "cases_sha256",
         "environment_manifest_sha256",
+        "execution_context",
         "baseline",
         "engines",
         "observations",
@@ -189,6 +193,24 @@ def test_observations_have_exact_independent_engine_structure_and_no_policy():
 
     for mapping in _walk(document):
         assert not FORBIDDEN_DECISION_KEYS & set(mapping)
+
+
+def test_observations_bind_the_actual_direct_wheel_execution_context():
+    context = _read(OBSERVATIONS)["execution_context"]
+    assert context == {
+        "platform": {
+            "architecture": platform.machine(),
+            "operating_system": platform.system(),
+        },
+        "python": {
+            "implementation": platform.python_implementation(),
+            "version": platform.python_version(),
+        },
+        "pyyaml": {
+            "distribution": "PyYAML",
+            "version": version("PyYAML"),
+        },
+    }
 
 
 def test_observation_values_use_explicit_absent_null_value_states():
@@ -242,6 +264,23 @@ def test_check_detects_any_retained_observation_mutation(tmp_path):
         runner.check_observations(CASES, changed_path)
 
 
+def test_validation_rejects_a_deleted_declared_probe_field():
+    changed = _read(OBSERVATIONS)
+    fields = changed["observations"][0]["engines"][0]["probes"][1]["result"]["value"]
+    del fields["range"]
+
+    with pytest.raises(runner.DivergenceError):
+        runner.validate_observations(changed)
+
+
+def test_validation_types_malformed_engine_entries():
+    changed = _read(OBSERVATIONS)
+    changed["observations"][0]["engines"][0] = None
+
+    with pytest.raises(runner.DivergenceError):
+        runner.validate_observations(changed)
+
+
 def test_cli_checks_retained_bytes_without_rewriting_them():
     before = OBSERVATIONS.read_bytes()
     completed = subprocess.run(
@@ -254,6 +293,29 @@ def test_cli_checks_retained_bytes_without_rewriting_them():
     assert completed.returncode == 0, completed.stderr
     assert completed.stdout == "CC-X01 observations match retained bytes\n"
     assert OBSERVATIONS.read_bytes() == before
+
+
+def test_cli_cannot_import_ontology_registry_from_hostile_pythonpath(tmp_path):
+    package = tmp_path / "malleus"
+    package.mkdir()
+    (package / "__init__.py").write_text("", encoding="utf-8")
+    (package / "ontology.py").write_text(
+        "raise RuntimeError('HOSTILE ONTOLOGY IMPORT')\n",
+        encoding="utf-8",
+    )
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(tmp_path)
+
+    completed = subprocess.run(
+        [sys.executable, str(SCRIPT), "--check"],
+        cwd=ROOT,
+        env=environment,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert "HOSTILE ONTOLOGY IMPORT" not in completed.stderr
 
 
 def test_evidence_binds_the_measurements_without_claiming_a_decision():
