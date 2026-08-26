@@ -26,19 +26,19 @@
       "sha256": "sha256:57fdcf335e5dcdd06c0e99e732cb75e929fa4211e39fa82d41b11f2551900a35"
     },
     {
-      "byte_length": 5062,
+      "byte_length": 5848,
       "path": "conformance/contract_compiler/v0/historic_wire/observations.json",
-      "sha256": "sha256:fe99886a588ecc76d329f0f32504b3d173f3ae3d655d776085ade75a1a7809e4"
+      "sha256": "sha256:33040720a53a36696508c13f3bc8706b3516647ecd880801b6e4d6567eef9157"
     },
     {
-      "byte_length": 30078,
+      "byte_length": 36277,
       "path": "scripts/contract_compiler_historic_wire.py",
-      "sha256": "sha256:5ad8a375a19ef9466f25c5999255881025a1519638ce152c036a4154a1cae188"
+      "sha256": "sha256:c014fa5f8c51cfaeabefe4157bf6a0c4b35657023536022c289b7814bfad59df"
     },
     {
-      "byte_length": 13391,
+      "byte_length": 18088,
       "path": "tests/test_contract_compiler_historic_wire.py",
-      "sha256": "sha256:b190f1c5509d2cde02bd8c17c330d58a79fc3d92c07fb66884bd7bdd09d52ed6"
+      "sha256": "sha256:9cba0517c24090854bdcab6ac80c4c3c9a3613aafc6399ca0c53b629cb2d1c20"
     }
   ],
   "base_commit": "8190dc3a4f22f376c7a0921169d15fed3de289f8",
@@ -47,6 +47,12 @@
       "check_id": "ccx04-red",
       "method": "Commit the focused contract before adding the corpus, runner, observations, or evidence.",
       "observed": "RED commit b7e450afdfce2556b92669d56d2b481e88353481 failed during collection because scripts/contract_compiler_historic_wire.py was absent, with one collection error and exit status 2.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-intrinsic-repair-red",
+      "method": "Commit adversarial regressions before repairing the audited intrinsic-validation and provenance gaps.",
+      "observed": "Repair RED commit 937571cab5f7ee4cb1ce4b4a1259613b49a43d92 produced exactly seven relevant failures, twelve passes, and one deselected stale-evidence check: one ghost metadata case, two staged-digest cases, two projection-head cases, and one declared-source digest-substitution case for each ontology YAML.",
       "result": "PASS"
     },
     {
@@ -63,8 +69,8 @@
     },
     {
       "check_id": "ccx04-reader-binding",
-      "method": "Bind observation execution to the measured Git source and verify every imported reader module resolves to its declared repository path and digest before reading the corpus.",
-      "observed": "The reader snapshot is commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, with exact source hashes for recon.store, kg, assent, accepted, ledger, ontology, and migration. Module-origin substitution is refused before observation.",
+      "method": "Bind observation execution to the measured Git source, verify every imported reader module resolves to its declared repository path, and verify all Python and ontology source bytes before reading the corpus.",
+      "observed": "The reader snapshot is commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, with exact source hashes for eight Python implementations plus ontology/assent.yaml and ontology/domains/recon.yaml. Module-origin substitution and byte substitution of staging.py or either ontology source are refused before observation.",
       "result": "PASS"
     },
     {
@@ -75,8 +81,8 @@
     },
     {
       "check_id": "ccx04-intrinsic-artifacts",
-      "method": "Validate each embedded artifact independently with the current ontology and digest functions, including its cross-artifact and snapshot bindings.",
-      "observed": "GraphBaseArtifact and CandidateSubgraphArtifact each pass intrinsic validation. Resealed changes to the base record count or candidate graph-base binding fail, which keeps intrinsic PASS from masking a broken relation.",
+      "method": "Validate each embedded artifact independently with current validation and digest functions, exact frozen snapshot bindings, projection-head derivation, and a fresh candidate stage under the frozen graph ontology identity.",
+      "observed": "GraphBaseArtifact metadata IDs exactly equal the frozen node-plus-relation IDs and all three counts agree. CandidateSubgraphArtifact heads derive from the anchor and graph base. Its manifest passes current temporal and structural validation, and the staged ontology, base state, candidate digest, and candidate state equal the artifact. Resealed ghost metadata, wrong staged digests, wrong heads, and wrong graph-base bindings all fail.",
       "result": "PASS"
     },
     {
@@ -94,13 +100,13 @@
     {
       "check_id": "ccx04-focused",
       "method": "Run the focused tests, retained-observation check, scoped Ruff, diff check, governance validators, and evidence-byte verification.",
-      "observed": "All 13 focused tests passed. Retained observations matched fresh current-reader results. Scoped Ruff, diff check, contract-compiler ledger and integration checks, and evidence-byte validation passed.",
+      "observed": "All 22 focused tests passed. Retained observations matched fresh current-reader results. Scoped Ruff, diff check, contract-compiler ledger and integration checks, and evidence-byte validation passed.",
       "result": "PASS"
     },
     {
       "check_id": "ccx04-affected",
       "method": "Run the existing tests for every current-reader module exercised by the observation runner.",
-      "observed": "The recon, knowledge-graph, protocol, accepted-artifact, and ontology suites passed: 565 passed and 2 skipped.",
+      "observed": "The recon, knowledge-graph, protocol, accepted-artifact, staging, and ontology suites passed: 629 passed and 2 skipped.",
       "result": "PASS"
     },
     {
@@ -116,10 +122,11 @@
     "Recon acceptance uses the existing receipt mechanism. CC-X04 creates no migration and makes no claim that receipt-based acceptance is the future policy.",
     "The knowledge-graph and protocol refusals are raw current-reader results, not selected compatibility outcomes.",
     "The two protocol artifacts pass only intrinsic validation. Their end-to-end replay was not reached because the enclosing protocol ledger failed at event 1.",
-    "Observations are bound to reader commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, and the retained implementation-source digests. A reader source change requires a fresh measurement.",
+    "Candidate staging applies current structural and temporal validation while fixing graph identity to the frozen snapshot ontology hash. It does not claim that the current ontology registry accepts that historical hash as one of its own identities.",
+    "Observations are bound to reader commit 7178bd06e83cb5850afea5af6747e53c03730eec, tree e218f60b6cf2abbe11372965b7feed31b0677183, eight Python-source digests, and two ontology-source digests. A bound source change requires a fresh measurement.",
     "CC-X04 changes no production, ontology, dependency, Docker, release, or packaging surface and makes no claim about those surfaces."
   ],
-  "recorded_at": "2026-08-26T20:44:31Z",
+  "recorded_at": "2026-08-26T21:07:01Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-X04"
 }

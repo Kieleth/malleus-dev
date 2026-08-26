@@ -15,16 +15,20 @@ import tempfile
 from typing import Any, Mapping
 
 from malleus.accepted import (
+    AcceptedGraphError,
+    base_record_metadata,
     candidate_artifact_digest,
     graph_base_artifact_digest,
     parse_candidate_manifest,
     parse_graph_base_metadata,
+    validate_temporal_writes,
 )
 from malleus.assent import ProtocolLedger
 from malleus.kg import KnowledgeGraph
 from malleus.ledger import JsonlLedger, LedgerError, content_digest, record_hash
 from malleus.ontology import OntologyRegistry
 from malleus.recon import ReconProject
+from malleus.staging import StagingError, stage_subgraph
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -168,6 +172,18 @@ READER = {
             "path": "src/malleus/migration.py",
             "sha256": "sha256:10964c5328fc4c92a1a3a5fa29f5e62e1a12ed4aebf5a122f60d586866467f4c",
         },
+        {
+            "path": "src/malleus/staging.py",
+            "sha256": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609",
+        },
+        {
+            "path": "ontology/assent.yaml",
+            "sha256": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd",
+        },
+        {
+            "path": "ontology/domains/recon.yaml",
+            "sha256": "sha256:624c1c73facd6b500e1786e0329c8b49e5065fc27a503c8fef2280181caf1f13",
+        },
     ],
 }
 READER_MODULES = {
@@ -178,6 +194,7 @@ READER_MODULES = {
     "src/malleus/ledger.py": "malleus.ledger",
     "src/malleus/ontology.py": "malleus.ontology",
     "src/malleus/migration.py": "malleus.migration",
+    "src/malleus/staging.py": "malleus.staging",
 }
 FORBIDDEN_POLICY_KEYS = {
     "classification",
@@ -420,12 +437,17 @@ def load_corpus(path: Path = MANIFEST_PATH) -> dict[str, Any]:
 def _reader() -> dict[str, Any]:
     for item in READER["implementations"]:
         expected_path = (ROOT / item["path"]).resolve()
-        module = importlib.import_module(READER_MODULES[item["path"]])
-        origin_value = getattr(module, "__file__", None)
-        if not isinstance(origin_value, str) or Path(origin_value).resolve() != expected_path:
-            raise HistoricWireError(
-                f"Current reader module origin differs for {READER_MODULES[item['path']]}"
-            )
+        module_name = READER_MODULES.get(item["path"])
+        if module_name is not None:
+            module = importlib.import_module(module_name)
+            origin_value = getattr(module, "__file__", None)
+            if (
+                not isinstance(origin_value, str)
+                or Path(origin_value).resolve() != expected_path
+            ):
+                raise HistoricWireError(
+                    f"Current reader module origin differs for {module_name}"
+                )
         actual = _digest_file(expected_path)
         if actual != item["sha256"]:
             raise HistoricWireError(
@@ -522,6 +544,56 @@ def _graph_observation(corpus: Mapping[str, Any], directory: Path) -> dict[str, 
     }
 
 
+def _snapshot_record_ids(snapshot: Mapping[str, Any]) -> list[str]:
+    record_ids = []
+    for family, id_field in (("nodes", "id"), ("relations", "key")):
+        records = snapshot.get(family)
+        if not isinstance(records, list):
+            raise HistoricWireError(f"graph snapshot {family} must be a list")
+        for index, record in enumerate(records):
+            if not isinstance(record, Mapping):
+                raise HistoricWireError(
+                    f"graph snapshot {family}[{index}] must be an object"
+                )
+            record_id = record.get(id_field)
+            if not isinstance(record_id, str) or not record_id.strip():
+                raise HistoricWireError(
+                    f"graph snapshot {family}[{index}].{id_field} must be nonblank"
+                )
+            record_ids.append(record_id)
+    if len(record_ids) != len(set(record_ids)):
+        raise HistoricWireError("graph snapshot record IDs must be unique")
+    return sorted(record_ids)
+
+
+class _FrozenOntologyIdentity:
+    """Run current validation while retaining the frozen graph identity."""
+
+    def __init__(self, validator: OntologyRegistry, ontology_hash: str):
+        if not isinstance(ontology_hash, str) or not ontology_hash.startswith("sha256:"):
+            raise HistoricWireError("frozen graph ontology identity is not a SHA-256 digest")
+        self._validator = validator
+        self._content_hash = ontology_hash.removeprefix("sha256:")
+
+    def content_hash(self) -> str:
+        return self._content_hash
+
+    def __deepcopy__(self, memo: dict[int, Any]) -> "_FrozenOntologyIdentity":
+        return self
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(object.__getattribute__(self, "_validator"), name)
+
+
+def _frozen_graph(
+    registry: OntologyRegistry,
+    snapshot: Mapping[str, Any],
+) -> KnowledgeGraph:
+    if _snapshot_record_ids(snapshot):
+        raise HistoricWireError("the frozen CC-X04 graph base is no longer empty")
+    return KnowledgeGraph(_FrozenOntologyIdentity(registry, snapshot["ontology_hash"]))
+
+
 def _graph_base_intrinsic(
     registry: OntologyRegistry,
     artifact: dict[str, Any],
@@ -534,26 +606,40 @@ def _graph_base_intrinsic(
         base_state_digest=artifact["base_state_digest"],
         base_record_metadata=artifact["base_record_metadata"],
     )
-    base_record_count = len(parse_graph_base_metadata(artifact["base_record_metadata"]))
+    metadata_record_ids = [
+        item["record_id"]
+        for item in parse_graph_base_metadata(artifact["base_record_metadata"])
+    ]
+    snapshot_record_ids = _snapshot_record_ids(snapshot)
+    base_record_count = len(metadata_record_ids)
     content_hash_matches = (
         record_hash("GraphBaseArtifact", artifact) == artifact["content_hash"]
     )
     ontology_instance_errors = registry.validate_instance("GraphBaseArtifact", artifact)
     semantic_hash_matches = semantic_hash == artifact["artifact_hash"]
-    record_count_matches = artifact["base_record_count"] == base_record_count
+    metadata_matches_snapshot = metadata_record_ids == snapshot_record_ids
+    record_count_matches = (
+        artifact["base_record_count"]
+        == base_record_count
+        == len(snapshot_record_ids)
+    )
     snapshot_ontology_matches = artifact["graph_ontology_hash"] == snapshot["ontology_hash"]
     snapshot_state_matches = artifact["base_state_digest"] == content_digest(snapshot)
     facts = {
         "base_record_count": base_record_count,
         "content_hash_matches": content_hash_matches,
+        "metadata_matches_snapshot": metadata_matches_snapshot,
+        "metadata_record_ids": metadata_record_ids,
         "ontology_instance_errors": ontology_instance_errors,
         "record_count_matches": record_count_matches,
         "semantic_hash_matches": semantic_hash_matches,
         "snapshot_ontology_matches": snapshot_ontology_matches,
+        "snapshot_record_ids": snapshot_record_ids,
         "snapshot_state_matches": snapshot_state_matches,
     }
     passed = (
         content_hash_matches
+        and metadata_matches_snapshot
         and not ontology_instance_errors
         and record_count_matches
         and semantic_hash_matches
@@ -575,6 +661,8 @@ def _candidate_intrinsic(
     registry: OntologyRegistry,
     artifact: dict[str, Any],
     graph_base: Mapping[str, Any],
+    anchor: Mapping[str, Any],
+    snapshot: Mapping[str, Any],
 ) -> dict[str, Any]:
     names = (
         "candidate_schema_version",
@@ -611,25 +699,78 @@ def _candidate_intrinsic(
     ontology_matches = artifact["graph_ontology_hash"] == graph_base["graph_ontology_hash"]
     source_matches = artifact["source_record_ids"] == [graph_base["id"]]
     write_count_matches = artifact["candidate_write_count"] == manifest_write_count
+    acceptance_head_matches = artifact["base_acceptance_head"] == content_digest(
+        {"opaque_external_snapshot": anchor["payload"]["snapshot_hash"]}
+    )
+    materialization_head_matches = artifact["base_materialization_head"] == content_digest(
+        {"graph_base_artifact_hash": graph_base["content_hash"]}
+    )
+    validation_error = None
+    try:
+        frozen_graph = _frozen_graph(registry, snapshot)
+        metadata = base_record_metadata(
+            frozen_graph,
+            graph_base["base_record_metadata"],
+            graph_base_id=graph_base["id"],
+        )
+        manifest = parse_candidate_manifest(artifact["candidate_manifest"])
+        validate_temporal_writes(metadata, manifest)
+        staged = stage_subgraph(
+            frozen_graph,
+            [item.operation for item in manifest],
+        )
+    except (AcceptedGraphError, HistoricWireError, StagingError, TypeError) as error:
+        validation_error = f"{type(error).__name__}: {error}"
+        staged_valid = False
+        staged_ontology_matches = False
+        staged_base_state_matches = False
+        staged_candidate_digest_matches = False
+        staged_candidate_state_matches = False
+    else:
+        staged_valid = staged.valid
+        staged_ontology_matches = artifact["graph_ontology_hash"] == staged.ontology_hash
+        staged_base_state_matches = artifact["base_state_digest"] == staged.base_state_digest
+        staged_candidate_digest_matches = (
+            artifact["candidate_digest"] == staged.candidate_digest
+        )
+        staged_candidate_state_matches = (
+            artifact["candidate_state_digest"] == staged.candidate_state_digest
+        )
     facts = {
+        "acceptance_head_matches": acceptance_head_matches,
         "base_record_matches": base_record_matches,
         "base_state_matches": base_state_matches,
         "content_hash_matches": content_hash_matches,
         "manifest_write_count": manifest_write_count,
+        "materialization_head_matches": materialization_head_matches,
         "ontology_matches": ontology_matches,
         "ontology_instance_errors": ontology_instance_errors,
         "semantic_hash_matches": semantic_hash_matches,
         "source_matches": source_matches,
+        "staged_base_state_matches": staged_base_state_matches,
+        "staged_candidate_digest_matches": staged_candidate_digest_matches,
+        "staged_candidate_state_matches": staged_candidate_state_matches,
+        "staged_ontology_matches": staged_ontology_matches,
+        "staged_valid": staged_valid,
         "write_count_matches": write_count_matches,
     }
+    if validation_error is not None:
+        facts["validation_error"] = validation_error
     passed = (
-        base_record_matches
+        acceptance_head_matches
+        and base_record_matches
         and base_state_matches
         and content_hash_matches
+        and materialization_head_matches
         and ontology_matches
         and not ontology_instance_errors
         and semantic_hash_matches
         and source_matches
+        and staged_base_state_matches
+        and staged_candidate_digest_matches
+        and staged_candidate_state_matches
+        and staged_ontology_matches
+        and staged_valid
         and write_count_matches
     )
     return {
@@ -638,6 +779,9 @@ def _candidate_intrinsic(
             "malleus.ontology.OntologyRegistry.validate_instance",
             "malleus.ledger.record_hash",
             "malleus.accepted.candidate_artifact_digest",
+            "malleus.accepted.parse_candidate_manifest",
+            "malleus.accepted.validate_temporal_writes",
+            "malleus.staging.stage_subgraph",
         ],
         "facts": facts,
     }
@@ -678,7 +822,13 @@ def _protocol_observations(
             "subject_id": "candidate-subgraph-artifact",
             "input": _input_ref(corpus, "protocol-ledger"),
             "end_to_end": deepcopy(blocked),
-            "intrinsic": _candidate_intrinsic(registry, candidate, graph_base),
+            "intrinsic": _candidate_intrinsic(
+                registry,
+                candidate,
+                graph_base,
+                events[0],
+                snapshot,
+            ),
         },
     )
 

@@ -344,7 +344,16 @@ def test_intrinsic_checks_reject_resealed_cross_artifact_mismatches():
     )
     candidate["content_hash"] = runner.record_hash("CandidateSubgraphArtifact", candidate)
     original_base = events[1]["payload"]["artifact"]
-    assert runner._candidate_intrinsic(registry, candidate, original_base)["outcome"] == "FAIL"
+    assert (
+        runner._candidate_intrinsic(
+            registry,
+            candidate,
+            original_base,
+            events[0],
+            snapshot,
+        )["outcome"]
+        == "FAIL"
+    )
 
 
 def test_graph_base_intrinsic_rejects_resealed_ghost_metadata():
@@ -387,12 +396,22 @@ def test_graph_base_intrinsic_rejects_resealed_ghost_metadata():
 def test_candidate_intrinsic_rejects_resealed_wrong_staged_digest(field):
     events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
     registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    snapshot = _read(CORPUS / "graph-snapshot.json")
     graph_base = events[1]["payload"]["artifact"]
     candidate = deepcopy(events[2]["payload"]["artifact"])
     candidate[field] = "sha256:" + "0" * 64
     _reseal_candidate(candidate)
 
-    assert runner._candidate_intrinsic(registry, candidate, graph_base)["outcome"] == "FAIL"
+    assert (
+        runner._candidate_intrinsic(
+            registry,
+            candidate,
+            graph_base,
+            events[0],
+            snapshot,
+        )["outcome"]
+        == "FAIL"
+    )
 
 
 @pytest.mark.parametrize(
@@ -402,28 +421,41 @@ def test_candidate_intrinsic_rejects_resealed_wrong_staged_digest(field):
 def test_candidate_intrinsic_rejects_resealed_wrong_projection_head(field):
     events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
     registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    snapshot = _read(CORPUS / "graph-snapshot.json")
     graph_base = events[1]["payload"]["artifact"]
     candidate = deepcopy(events[2]["payload"]["artifact"])
     candidate[field] = "sha256:" + "0" * 64
     _reseal_candidate(candidate)
 
-    assert runner._candidate_intrinsic(registry, candidate, graph_base)["outcome"] == "FAIL"
+    assert (
+        runner._candidate_intrinsic(
+            registry,
+            candidate,
+            graph_base,
+            events[0],
+            snapshot,
+        )["outcome"]
+        == "FAIL"
+    )
 
 
 @pytest.mark.parametrize(
     "path",
-    ["ontology/assent.yaml", "ontology/domains/recon.yaml"],
+    [
+        "src/malleus/staging.py",
+        "ontology/assent.yaml",
+        "ontology/domains/recon.yaml",
+    ],
 )
-def test_reader_provenance_refuses_ontology_byte_substitution(monkeypatch, path):
-    original_digest_file = runner._digest_file
+def test_reader_provenance_refuses_source_byte_substitution(monkeypatch, path):
+    original_read_bytes = Path.read_bytes
     target = (ROOT / path).resolve()
 
-    def substituted_digest_file(source):
-        if source.resolve() == target:
-            return "sha256:" + "0" * 64
-        return original_digest_file(source)
+    def substituted_read_bytes(source):
+        data = original_read_bytes(source)
+        return data + b"\n# substituted\n" if source.resolve() == target else data
 
-    monkeypatch.setattr(runner, "_digest_file", substituted_digest_file)
+    monkeypatch.setattr(Path, "read_bytes", substituted_read_bytes)
     with pytest.raises(runner.HistoricWireError, match="Current reader source differs"):
         runner._reader()
 
@@ -445,8 +477,13 @@ def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():
     assert after == before
 
 
-def test_reader_origin_substitution_fails_before_observation(monkeypatch, tmp_path):
-    module = sys.modules["malleus.kg"]
+@pytest.mark.parametrize("module_name", ["malleus.kg", "malleus.staging"])
+def test_reader_origin_substitution_fails_before_observation(
+    monkeypatch,
+    tmp_path,
+    module_name,
+):
+    module = sys.modules[module_name]
     monkeypatch.setattr(module, "__file__", str(tmp_path / "substitute" / "kg.py"))
     with pytest.raises(runner.HistoricWireError, match="module origin differs"):
         runner.render_observations(MANIFEST)
