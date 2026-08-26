@@ -690,28 +690,34 @@ def _execute_verifier_program(
     class FakeCFGraph:
         def __init__(self):
             self._links = []
-            self._lists = {}
 
         def add(self, triple):
             self._links.append(triple)
 
-        def objects(self, subject, predicate):
-            calls["cfgraph_list"] += 1
-            heads = [
+        def _raw_object(self, subject, predicate):
+            values = [
                 obj
                 for current_subject, current_predicate, obj in self._links
                 if current_subject == subject and current_predicate == predicate
             ]
-            assert len(heads) == 1
-            values = self._lists[heads[0]]
-            return values[:1] if fault == "cfgraph-list" else values
+            assert len(values) == 1
+            return values[0]
+
+        def objects(self, subject, predicate):
+            calls["cfgraph_list"] += 1
+            current = self._raw_object(subject, predicate)
+            flattened = []
+            seen = set()
+            while current != FakeRDF.nil:
+                assert isinstance(current, FakeBNode)
+                assert current not in seen
+                seen.add(current)
+                flattened.append(self._raw_object(current, FakeRDF.first))
+                current = self._raw_object(current, FakeRDF.rest)
+            return flattened[:1] if fault == "cfgraph-list" else flattened
 
     FakeCFGraph.__module__ = "CFGraph"
     FakeCFGraph.__name__ = "CFGraph"
-
-    class FakeCollection:
-        def __init__(self, graph, head, values):
-            graph._lists[head] = list(values)
 
     shex_evaluator_module = types.ModuleType("pyshex.shex_evaluator")
     shex_evaluator_module.CFGraph = FakeCFGraph
@@ -721,9 +727,6 @@ def _execute_verifier_program(
     rdflib_module.BNode = FakeBNode
     rdflib_module.RDF = FakeRDF
     rdflib_module.URIRef = FakeURIRef
-    rdflib_collection_module = types.ModuleType("rdflib.collection")
-    rdflib_collection_module.Collection = FakeCollection
-    rdflib_module.collection = rdflib_collection_module
 
     class FakeEnvBuilder:
         def __init__(self, **options):
@@ -799,7 +802,6 @@ def _execute_verifier_program(
             shex_evaluator_module,
         )
         verifier.setitem(sys.modules, "rdflib", rdflib_module)
-        verifier.setitem(sys.modules, "rdflib.collection", rdflib_collection_module)
         verifier.setitem(sys.modules, "linkml_runtime", runtime_module)
         verifier.setitem(sys.modules, "linkml_runtime.utils", utils_module)
         verifier.setitem(
@@ -1524,6 +1526,38 @@ def test_provisional_cfgraph_root_is_exact_embedded_wheel_bytes():
         )
         for artifact in artifacts
     )
+
+
+def test_exact_embedded_cfgraph_flattens_explicit_two_node_rdf_chain():
+    import rdflib
+    from rdflib import BNode, RDF, URIRef
+
+    assert rdflib.__version__ == "7.6.0"
+    with zipfile.ZipFile(io.BytesIO(environment.CFGRAPH_WHEEL_BYTES)) as archive:
+        source = archive.read("CFGraph/__init__.py")
+    module = types.ModuleType("CFGraph")
+    builtins.exec(
+        compile(source, "<embedded-CFGraph>/CFGraph/__init__.py", "exec"),
+        module.__dict__,
+    )
+
+    graph = module.CFGraph()
+    subject = URIRef("urn:malleus:subject")
+    predicate = URIRef("urn:malleus:items")
+    head = BNode()
+    tail = BNode()
+    first = URIRef("urn:malleus:first")
+    second = URIRef("urn:malleus:second")
+    for triple in (
+        (subject, predicate, head),
+        (head, RDF.first, first),
+        (head, RDF.rest, tail),
+        (tail, RDF.first, second),
+        (tail, RDF.rest, RDF.nil),
+    ):
+        graph.add(triple)
+
+    assert list(graph.objects(subject, predicate)) == [first, second]
 
 
 def test_governed_prefixcommons_derivative_input_coordinate_is_exact():
@@ -3951,11 +3985,17 @@ def test_verifier_program_measures_exact_python_tuple_and_abi():
     assert "from CFGraph import CFGraph" not in program
     assert "CFGraph.__module__" in program
     assert "CFGraph.__name__" in program
-    assert "from rdflib.collection import Collection" in program
-    list_behavior = program.index("Collection(")
+    assert "rdflib.collection" not in program
+    assert "Collection(" not in program
+    assert program.count("graph.add(") == 5
+    assert program.count("RDF.first") == 2
+    assert program.count("RDF.rest") == 2
+    assert program.count("RDF.nil") == 1
+    list_behavior = program.index("RDF.first")
     assert program.index("CFGraph()") < list_behavior
     assert program.index("CFGraph.__module__") < list_behavior
     assert program.index("CFGraph.__name__") < list_behavior
+    assert program.index("RDF.nil") < program.index("flattened =")
 
 
 def test_lock_report_command_is_exact_selected_container_offline_proof(tmp_path):
