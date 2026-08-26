@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X04"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5df53f2aa9fa74699cd0d966a7c643b0bf57fcfa256e7528bbb802a4cc6404a5",
+        "before_digest": "sha256:feb8c3905257677db08a1ce5c8a944f6836e8b0c7751142291116f83ed41e0b4",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X04/manifest.json"
+      },
+      {
+        "after_digest": "sha256:5a3dd80d53dcf5c9d5504fe2a60e0462740578d10c4136db9a068d4222704f3f",
+        "before_digest": "sha256:98ec815aa3696eaa552cf4d2719a0e9e76b45a2f3eefe599e42063b62d522fd1",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:4872845b6d88e2121cc9cc7e11ccd04ce6fa2b743b3d77607876eeca4a4b518c",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-X04.json"
+      },
+      {
+        "after_digest": "sha256:19cbb375ac5160cb2d4a2b29176dbecc3c94691accd4480b1031179e08a37dd2",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X04-completion.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1e01cacc2c6946f17889c06d9c3f1898674d9c84db915891d313dbf2aa27a6a5",
+  "entry_id": "OVR-000115",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:27fd91db050e2eb877a88d370b08ba8a3139935de0bd704a6569f79d5992a593",
+  "recorded_at": "2026-08-26T21:20:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X04/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:19cbb375ac5160cb2d4a2b29176dbecc3c94691accd4480b1031179e08a37dd2",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X04-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000111",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 115,
+  "subject": {
+    "id": "ccx04-completion-checkpoint",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the eligible CC-X04 candidate and completion evidence.",
+  "why": "The exact linear candidate binds the four authorized scopes, eight artifacts, passing worker evidence, and independent completion report. This revision advances integration authority only to the prior OVR-000114 state while leaving CC-X04 unselected, its worker ledger NOT_STARTED, CC-X02 unchanged, and the four selections and sealed snapshot intact."
+}

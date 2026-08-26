@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 10340,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X04.json",
+      "sha256": "sha256:4872845b6d88e2121cc9cc7e11ccd04ce6fa2b743b3d77607876eeca4a4b518c"
+    }
+  ],
+  "base_commit": "cc6ccd7ffea220d1988731a1637e1f6ebfbe4cf0",
+  "checks": [
+    {
+      "check_id": "ccx04-candidate-history",
+      "method": "Validate the exact 8190dc3..cc6ccd7 linear candidate, bound tree, four authorized scopes, eight artifacts, and passing worker evidence.",
+      "observed": "The validator accepted five candidate commits, tree 5379e739de3e16e4fdfb792838e28b196fae5868, and exactly nine touched paths within the historic-wire tree and three exact FILE scopes. Formal RED b7e450afdfce2556b92669d56d2b481e88353481 remains explicit prior evidence; repair REDs 937571cab5f7ee4cb1ce4b4a1259613b49a43d92 and e9aa2b6e05ded37a0c6130503a2a41317244cbaa remain inside the candidate history.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-executed-gates",
+      "method": "Run focused, affected, full, governance, replay, scoped Ruff, evidence, ledger, integration, and diff gates.",
+      "observed": "All 25 focused tests passed; affected readers passed 629 tests with 2 skipped; the full suite passed 1655 tests with 2 skipped; 74 governance tests passed; retained replay, scoped Ruff, diff checks, worker evidence verification, and ledger and integration validation passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-measurement-boundary",
+      "method": "Inspect corpus identities, producer coordinates, current-reader bindings, observation outcomes, candidate paths, and worker claims for the authorized measurement-only boundary.",
+      "observed": "Four physical inputs written byte-identically by v0.11.0 and v0.13.3 expose five logical subjects. Current-reader acceptance, refusal, and not-reached outcomes are retained with exact source and runtime ontology-path bindings. Intrinsic artifact checks are separate from end-to-end replay. No production, ontology, migration, dependency, Docker, release, or packaging file changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-independent-review",
+      "method": "Require an independent exact-candidate review before completion and preserve the unselected integration boundary.",
+      "observed": "Independent final review approved cc6ccd7ffea220d1988731a1637e1f6ebfbe4cf0 with no P0, P1, P2, or P3 findings. The candidate remains unselected, its worker ledger remains NOT_STARTED, CC-X02 remains complete and unchanged, and the four prior selections and sealed snapshot remain unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X04 selects no future compatibility outcome, creates no migration or reader, and does not close OD-004.",
+    "The two tagged releases produced identical retained bytes, but no historic Python environment or dependency set was reconstructed.",
+    "The two embedded protocol artifacts pass intrinsic validation only; enclosing-ledger replay stops before reaching them.",
+    "CC-X04 completion is not integration selection or release authority."
+  ],
+  "recorded_at": "2026-08-26T21:20:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X04"
+}

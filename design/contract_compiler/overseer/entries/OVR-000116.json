@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccx04-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T21:20:02Z",
+    "claims": [
+      "The exact 8190dc3a4f22f376c7a0921169d15fed3de289f8..cc6ccd7ffea220d1988731a1637e1f6ebfbe4cf0 candidate is linear, tree-bound, confined to four authorized scopes, and binds eight artifacts plus passing worker evidence.",
+      "All 25 focused tests, 629 affected tests with 2 skipped, 1655 full-suite tests with 2 skipped, 74 governance tests, retained replay, scoped Ruff, evidence verification, ledger and integration checks, and diff checks succeeded.",
+      "Four physical inputs written byte-identically by v0.11.0 and v0.13.3 expose five logical subjects whose current-reader outcomes and intrinsic artifact checks remain separate, exact, source-bound, and unclassified.",
+      "Independent final review found no P0, P1, P2, or P3 issue. The candidate is eligible and unselected, its worker ledger remains NOT_STARTED, CC-X02 remains unchanged, and the four selections and sealed snapshot remain unchanged."
+    ],
+    "limitations": [
+      "This fact selects no future compatibility outcome, creates no migration or reader, and does not close OD-004.",
+      "This fact authorizes no production, ontology, dependency, Docker, runtime, packaging, or release behavior.",
+      "The two embedded protocol artifacts pass intrinsic validation only; enclosing-ledger replay does not reach them.",
+      "This fact authorizes completion, not selection or release."
+    ]
+  },
+  "entry_hash": "sha256:df365f6888285b008bed2d8cee2046d3ffc9a9c3a8aa85009278dc9c45e94338",
+  "entry_id": "OVR-000116",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1e01cacc2c6946f17889c06d9c3f1898674d9c84db915891d313dbf2aa27a6a5",
+  "recorded_at": "2026-08-26T21:20:02Z",
+  "references": [
+    {
+      "digest": "sha256:19cbb375ac5160cb2d4a2b29176dbecc3c94691accd4480b1031179e08a37dd2",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X04-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "cc6ccd7ffea220d1988731a1637e1f6ebfbe4cf0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000115",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 116,
+  "subject": {
+    "id": "CC-X04-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded CC-X04 completion gate.",
+  "why": "CC-X04 may complete only after the exact candidate, retained historic bytes and raw current-reader outcomes, adversarial repairs, passing gates, independent review, and unselected integration boundary all pass mechanically."
+}

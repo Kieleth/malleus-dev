@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Retain the exact four-file historic wire corpus, both producing release coordinates, and five source-bound current-reader observations.",
+      "Bind the eligible eight-artifact candidate and passing evidence while keeping the worker ledger NOT_STARTED.",
+      "Defer compatibility outcomes, migration or reader implementation, classification, selection, production behavior, and release authority."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000116"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-X04"
+  },
+  "entry_hash": "sha256:437ee03357766cfcfd1bbbcf48ff4deca63791370788af2debb26af56e1d9622",
+  "entry_id": "OVR-000117",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:df365f6888285b008bed2d8cee2046d3ffc9a9c3a8aa85009278dc9c45e94338",
+  "recorded_at": "2026-08-26T21:20:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000116",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 117,
+  "subject": {
+    "id": "CC-X04",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded CC-X04 historic wire measurement.",
+  "why": "OVR-000116 verifies the exact candidate, immutable historic inputs, current-reader observations, intrinsic validations, repair history, passing gates, independent review, and unselected integration boundary. CC-X04 is complete as raw evidence for CC-D04 without deciding OD-004 or authorizing migration, selection, production, runtime, release, packaging, or dependency behavior."
+}

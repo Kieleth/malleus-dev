@@ -13,7 +13,60 @@
     "dependency_bindings": []
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 282,
+        "path": "conformance/contract_compiler/v0/historic_wire/project.json",
+        "sha256": "sha256:0808d77254479bfedc7b67790182644db22f71c29b90bd61f0356bb232deeb21"
+      },
+      {
+        "byte_length": 802,
+        "path": "conformance/contract_compiler/v0/historic_wire/recon-ledger.jsonl",
+        "sha256": "sha256:c3720e2031a51d9f27b22ef0cd4b19438858fa062423d97382b66e3e38ab264e"
+      },
+      {
+        "byte_length": 118,
+        "path": "conformance/contract_compiler/v0/historic_wire/graph-snapshot.json",
+        "sha256": "sha256:8b33574f3ce5fbd67450d414c5e10a4272e1f8abd647104ddd07f7c794b592a6"
+      },
+      {
+        "byte_length": 4073,
+        "path": "conformance/contract_compiler/v0/historic_wire/protocol-ledger.jsonl",
+        "sha256": "sha256:821565b78c3d3c8c744e03781eed8129a7e37a5033aaa97aa01e556d34b5469f"
+      },
+      {
+        "byte_length": 3272,
+        "path": "conformance/contract_compiler/v0/historic_wire/corpus.json",
+        "sha256": "sha256:57fdcf335e5dcdd06c0e99e732cb75e929fa4211e39fa82d41b11f2551900a35"
+      },
+      {
+        "byte_length": 5848,
+        "path": "conformance/contract_compiler/v0/historic_wire/observations.json",
+        "sha256": "sha256:33040720a53a36696508c13f3bc8706b3516647ecd880801b6e4d6567eef9157"
+      },
+      {
+        "byte_length": 37033,
+        "path": "scripts/contract_compiler_historic_wire.py",
+        "sha256": "sha256:e6bb56464e93d302a65f3d6a3f35f74799acf2aca7e0c0dc7aaf4177e73a439a"
+      },
+      {
+        "byte_length": 19207,
+        "path": "tests/test_contract_compiler_historic_wire.py",
+        "sha256": "sha256:e090660aaf88859d51f9b5184ed3dd524cb5684fd9dc8574709cb5b94605530f"
+      }
+    ],
+    "base_commit": "8190dc3a4f22f376c7a0921169d15fed3de289f8",
+    "evidence": [
+      {
+        "byte_length": 10340,
+        "path": "conformance/contract_compiler/v0/evidence/CC-X04.json",
+        "result": "PASS",
+        "sha256": "sha256:4872845b6d88e2121cc9cc7e11ccd04ce6fa2b743b3d77607876eeca4a4b518c"
+      }
+    ],
+    "head_commit": "cc6ccd7ffea220d1988731a1637e1f6ebfbe4cf0",
+    "head_tree": "5379e739de3e16e4fdfb792838e28b196fae5868",
+    "state": "ELIGIBLE"
   },
   "ledger": {
     "state": "NOT_STARTED"
