@@ -707,6 +707,7 @@ def _execute_verifier_program(
             return values[:1] if fault == "cfgraph-list" else values
 
     FakeCFGraph.__module__ = "CFGraph"
+    FakeCFGraph.__name__ = "CFGraph"
 
     class FakeCollection:
         def __init__(self, graph, head, values):
@@ -3168,16 +3169,25 @@ def test_embedded_cfgraph_is_root_and_wheelhouse_input_before_external_edge(
     opener_factory = environment._default_opener
     observations = []
 
-    def checked_opener():
-        staging = next(tmp_path.glob(".cc002-environment-*"))
-        root = staging / "roots" / environment.CFGRAPH_WHEEL_FILENAME
-        runtime = staging / "wheelhouse" / environment.CFGRAPH_WHEEL_FILENAME
-        assert root.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
-        assert runtime.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
-        observations.append((root, runtime))
-        return opener_factory()
+    class CheckedOpener:
+        def __init__(self, delegate):
+            self.delegate = delegate
 
-    monkeypatch.setattr(environment, "_default_opener", checked_opener)
+        def open(self, request, *, timeout):
+            if not observations:
+                staging = next(tmp_path.glob(".cc002-environment-*"))
+                root = staging / "roots" / environment.CFGRAPH_WHEEL_FILENAME
+                runtime = staging / "wheelhouse" / environment.CFGRAPH_WHEEL_FILENAME
+                assert root.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+                assert runtime.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+                observations.append((root, runtime))
+            return self.delegate.open(request, timeout=timeout)
+
+    monkeypatch.setattr(
+        environment,
+        "_default_opener",
+        lambda: CheckedOpener(opener_factory()),
+    )
     environment.acquire_environment()
     assert len(observations) == 1
 
@@ -4004,12 +4014,13 @@ def test_resolver_and_offline_report_use_each_exact_direct_root_once():
         ("0.2.0", "cfgraph-0.2.0-py3-none-any.whl"),
         ("0.2.2", "cfgraph-0.2.2-py3-none-any.whl"),
         ("0.2.1", "cfgraph-0.2.1-1-py3-none-any.whl"),
+        ("0.2.1", "cfgraph-0.2.1-py3-none-any.whl"),
     ),
 )
 def test_runtime_policy_rejects_every_alternate_cfgraph(version, filename):
     record = {
         "filename": filename,
-        "byte_length": 1,
+        "byte_length": len(environment.CFGRAPH_WHEEL_BYTES),
         "sha256": "sha256:" + "1" * 64,
         "distribution": "CFGraph",
         "version": version,
