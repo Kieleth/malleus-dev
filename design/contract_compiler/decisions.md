@@ -182,7 +182,7 @@ Canonical decision record:
 
 ## OD-012: exact compiler baseline
 
-Decision state: ACCEPTED, release-first baseline, 2026-08-25
+Decision state: ACCEPTED, release-first baseline R2, 2026-08-25
 
 The selected research baseline is the published LinkML `v1.11.1` release at
 provenance commit `a7ed3e4cbb19731f072d0d90b6d52f7d822569ee`. This selects
@@ -202,6 +202,30 @@ sdists:
 |---|---|
 | `linkml-1.11.1.tar.gz` | `2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524` |
 | `linkml_runtime-1.11.1.tar.gz` | `e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754` |
+
+That set is the LinkML root-source retention set. It is not the complete set of
+transitive build inputs. Resolution against the selected tuple established that
+LinkML 1.11.1 requires `antlr4-python3-runtime>=4.9.0,<4.10`, while the official
+4.9.3 release supplies no compatible wheel. The accepted R2 correction therefore
+adds this separate, exact transitive build-input set:
+
+| Build input | Bytes | SHA-256 |
+|---|---:|---|
+| `antlr4-python3-runtime-4.9.3.tar.gz` | 117034 | `f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b` |
+| `setuptools-83.0.0-py3-none-any.whl` | 1008090 | `29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3` |
+
+CC-002 must validate both inputs before use. It must build
+`antlr4_python3_runtime-4.9.3-py3-none-any.whl` twice in two fresh children of
+the selected OCI runtime, with network denied, umask `022`, `TZ=UTC`,
+`PYTHONHASHSEED=0`, `SOURCE_DATE_EPOCH=315532800`, pip 25.0.1, no build
+isolation, and backend `setuptools.build_meta:__legacy__` supplied by exactly
+setuptools 83.0.0. Both wheel byte streams must be identical. CC-002 retains one
+verified output wheel and a build record that binds both build results.
+
+The final runtime closure remains wheel-only. The ANTLR sdist and setuptools
+wheel remain provenance and build inputs, outside the runtime wheelhouse unless
+setuptools is independently required by the resolved runtime closure. The two
+published LinkML root wheels remain retained as released and are not rebuilt.
 
 The reproducibility tuple is CPython 3.12.10, Linux x86_64, and `cp312`.
 It identifies one environment that must reproduce the compiler. It does not
@@ -224,9 +248,10 @@ and selected child digest
 The child digest is the runtime pin. The index digest is retained as provenance.
 No child media type is asserted.
 
-CC-D12 selects those coordinates, identities, retained-source membership, and
-acceptance policies. CC-002 owns acquisition and byte retention, the complete
-transitive resolution, the wheelhouse, platform verification, and the offline
+CC-D12 selects those coordinates, identities, the separate root-source and
+transitive-build-input memberships, and acceptance policies. CC-002 owns
+acquisition and byte retention, the deterministic double build, complete
+transitive resolution, runtime wheelhouse, platform verification, and offline
 installation proof. This split removes the former cycle in which CC-D12
 required material that only CC-002 was assigned to create.
 
@@ -236,10 +261,11 @@ identities, and the same acceptance suite before an explicit switch.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-012`. Overseer record:
-[`OVR-000050`](overseer/entries/OVR-000050.json). `CC-D12` is complete;
+[`OVR-000061`](overseer/entries/OVR-000061.json), replacing corrected historical
+record [`OVR-000050`](overseer/entries/OVR-000050.json). `CC-D12` is complete;
 CC-002 materialization remains pending.
 
-## Accepted directions in canonical graph revision 12
+## Accepted directions in canonical graph revision 13
 
 | ID | Accepted direction | Important limit |
 |---|---|---|

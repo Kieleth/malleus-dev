@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-D12"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000053"
+  },
+  "entry_hash": "sha256:f9ee331dfcac55e432c4db4995ca6914e35ea65391b7b799de50fca4669a6dfc",
+  "entry_id": "OVR-000059",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b8cb6f320ad85199e100bcc86069b808b6e6c0427a4652aa6939bccd8c6a3247",
+  "recorded_at": "2026-08-25T20:10:01Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000053",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 59,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the premature CC-D12 completion state.",
+  "why": "OVR-000053 completed CC-D12 before the source-only ANTLR dependency and its required build policy were governed. The original state remains historical, but it cannot remain the active completion authority. A replacement completion must follow the corrected decision, canonical revision, and retained verification report."
+}

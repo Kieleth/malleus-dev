@@ -11,6 +11,10 @@ from pathlib import Path
 
 import pytest
 import yaml
+from markdown_it import MarkdownIt
+from rdflib import Graph, URIRef
+from rdflib.exceptions import ParserError
+from rdflib.plugins.parsers.notation3 import BadSyntax
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -39,23 +43,39 @@ CC002_CARD = (
     / "manifest.json"
 )
 INTEGRATION = ROOT / "design" / "contract_compiler" / "integration.json"
+GOVERNANCE_BASE_COMMIT = "6325bd962ecfd00bd4ca62b1d9febd07e3737357"
 CC002_CHECKPOINT_LINEAGE = (
     "a7a65ccfdd7afd7d42a40509631fcdfef49f135e",
     "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4",
     "a48c754ae6a7aa904c3317d3cdde06de6db8ff98",
+    GOVERNANCE_BASE_COMMIT,
 )
 CC002_LINEAGE_CONTRACT = (
     "Treat a7a65ccfdd7afd7d42a40509631fcdfef49f135e, "
     "4cbf79c287b7fdc3c21beda3869bd45b3835d8f4, and "
-    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98 as governed CC-002 worker "
-    "checkpoints. If an intervening overseer prerequisite becomes the final "
-    "materialization base, the final candidate range may begin at that "
-    "prerequisite commit. The final candidate must not claim that range "
-    "contains the earlier checkpoints; it must include the seven checkpoint "
-    "paths as exact artifacts at the candidate head and record the three "
-    "checkpoint commits and this range limitation in CC-002 evidence."
+    "a48c754ae6a7aa904c3317d3cdde06de6db8ff98, plus "
+    "6325bd962ecfd00bd4ca62b1d9febd07e3737357 as governed CC-002 worker "
+    "checkpoints. The final materialization candidate must use the commit that "
+    "integrates the CC-D12-R2 correction as its base and record that then-known "
+    "commit in CC-002 evidence. The final candidate must not claim that its "
+    "range contains the earlier checkpoints; it must include the seven "
+    "checkpoint paths as exact artifacts at the candidate head and record the "
+    "four checkpoint commits and this range limitation in CC-002 evidence."
 )
-
+FOUNDATION_PROJECTIONS = (
+    ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.md",
+    ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+    ROOT / "design" / "GRAPH_RECIPE_OTTR_PROFILE.md",
+    ROOT / "design" / "GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+    ROOT / "design" / "GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+)
+HISTORICAL_CCD12_PATHS = (
+    "design/contract_compiler/overseer/entries/OVR-000050.json",
+    "design/contract_compiler/overseer/entries/OVR-000053.json",
+    "design/contract_compiler/overseer/entries/OVR-000054.json",
+    "design/contract_compiler/overseer/evidence/CC-D12.json",
+    "design/contract_compiler/workstreams/CC-D12/manifest.json",
+)
 
 def _copy_ledger(tmp_path: Path) -> Path:
     copied = tmp_path / "overseer"
@@ -305,11 +325,24 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
             for check in evidence["checks"]
         )
 
+    ledger = load_ledger(OVERSEER)
+    superseded = {
+        entry["data"]["supersedes_entry_id"]
+        for entry in ledger.entries
+        if entry["entry_type"] == "CORRECTION"
+    }
+    cc002_state = next(
+        entry
+        for entry in reversed(ledger.entries)
+        if entry["entry_id"] not in superseded
+        and entry["entry_type"] == "WORKSTREAM_STATE"
+        and entry["data"]["workstream_id"] == "CC-002"
+    )
     integration = json.loads(INTEGRATION.read_text(encoding="utf-8"))
     assert integration["authority"]["overseer_ledger"] == {
-        "entry_count": 56,
-        "head_entry_id": "OVR-000056",
-        "head_hash": "sha256:77cf2c4bfe830b9b3c5dcf4409974f70b7eb86e6ff4dbde2bd0ad7e1731490e3",
+        "entry_count": cc002_state["sequence"],
+        "head_entry_id": cc002_state["entry_id"],
+        "head_hash": cc002_state["entry_hash"],
         "path": "design/contract_compiler/overseer",
     }
     row = next(
@@ -321,6 +354,298 @@ def test_cc002_final_candidate_binds_governed_checkpoint_lineage() -> None:
         "sha256": "sha256:" + hashlib.sha256(card_source).hexdigest(),
         "state": "PRESENT",
     }
+
+
+def test_ccd12_r2_exact_source_build_authority_is_active() -> None:
+    state = load_ledger(OVERSEER)
+    active_corrections = [
+        entry for entry in state.entries if entry["entry_type"] == "CORRECTION"
+    ]
+    superseded = {
+        entry["data"]["supersedes_entry_id"] for entry in active_corrections
+    }
+    assert {"OVR-000050", "OVR-000053", "OVR-000054"} <= superseded
+    for target in ("OVR-000050", "OVR-000053", "OVR-000054"):
+        correction = next(
+            entry
+            for entry in active_corrections
+            if entry["data"]["supersedes_entry_id"] == target
+        )
+        assert correction["data"]["replacement_required"] is True
+    decision_correction = next(
+        entry
+        for entry in active_corrections
+        if entry["data"]["supersedes_entry_id"] == "OVR-000050"
+    )
+    assert decision_correction["actor"] == {"id": "operator", "type": "OPERATOR"}
+
+    active_entries = [
+        entry for entry in state.entries if entry["entry_id"] not in superseded
+    ]
+    decision = next(
+        entry
+        for entry in reversed(active_entries)
+        if entry["entry_type"] == "DECISION"
+        and entry["data"]["decision_id"] == "OD-012"
+    )
+    policy = canonical_json(decision["data"]).casefold()
+    for required in (
+        "antlr4-python3-runtime-4.9.3.tar.gz",
+        "117034",
+        "f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b",
+        "https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz",
+        "setuptools-83.0.0-py3-none-any.whl",
+        "1008090",
+        "29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3",
+        "https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl",
+        "source_date_epoch=315532800",
+        "setuptools.build_meta:__legacy__",
+        "two fresh",
+        "byte-identical",
+        "network denied",
+        "wheel-only",
+        "not rebuilt",
+    ):
+        assert required in policy
+
+    workstream_states = {
+        entry["data"]["workstream_id"]: entry
+        for entry in active_entries
+        if entry["entry_type"] == "WORKSTREAM_STATE"
+    }
+    ccd12 = workstream_states["CC-D12"]
+    cc002 = workstream_states["CC-002"]
+    assert ccd12["entry_id"] != "OVR-000053"
+    assert ccd12["data"]["new_state"] == "COMPLETE"
+    assert cc002["entry_id"] != "OVR-000054"
+    assert cc002["data"]["new_state"] == "ACTIVE"
+
+    card = json.loads(CC002_CARD.read_text(encoding="utf-8"))
+    binding = next(
+        item
+        for item in card["authorization"]["dependency_bindings"]
+        if item["workstream_id"] == "CC-D12"
+    )
+    assert binding["completion_entry_id"] == ccd12["entry_id"]
+    assert binding["completion_entry_hash"] == ccd12["entry_hash"]
+    responsibility = card["responsibility"].casefold()
+    assert "proved for that failed resolver attempt" in responsibility
+    assert "require the final candidate to re-attest" in responsibility
+    assert "docker daemon availability" not in responsibility
+    assert "external reachability as unproven" not in responsibility
+
+    for relative in HISTORICAL_CCD12_PATHS:
+        historical = subprocess.run(
+            ["git", "show", f"{GOVERNANCE_BASE_COMMIT}:{relative}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout
+        assert (ROOT / relative).read_bytes() == historical
+
+
+def test_ccd12_r2_graph_is_generated_from_all_turtle_projections() -> None:
+    blocks = [
+        token.content
+        for path in FOUNDATION_PROJECTIONS
+        for token in MarkdownIt("commonmark").parse(path.read_text(encoding="utf-8"))
+        if token.type == "fence" and token.info.strip() == "turtle"
+    ]
+    assert len(blocks) == 28
+    canonical_path = ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.ttl"
+    source = canonical_path.read_bytes()
+    body = [
+        line
+        for line in source.decode("utf-8").splitlines()
+        if line and not line.startswith("#")
+    ]
+    projected = Graph().parse(data="\n".join(blocks), format="turtle")
+    canonical = Graph().parse(data=source, format="nt")
+    assert set(projected) == set(canonical)
+    assert len(canonical) == 1257
+
+    digest = hashlib.sha256(source).hexdigest()
+    assert source.decode("utf-8").splitlines()[:9] == [
+        "# Canonical Malleus protocol foundation design graph.",
+        "#",
+        "# Design graph revision: 13",
+        "# Evidence cutoff: 2026-08-25",
+        "# Authority: candidate and accepted design states recorded by author decisions.",
+        "# Shipped capability remains controlled by src/malleus/status.py and tests.",
+        "#",
+        "# The Markdown tuple blocks are explanatory projections of this graph.",
+        "# Semantic changes create new object revisions and supersedes edges.",
+    ]
+    marker = (
+        "Canonical design graph: "
+        "[`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),"
+    )
+    for path in FOUNDATION_PROJECTIONS:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        index = lines.index(marker)
+        assert lines[index : index + 3] == [
+            marker,
+            "revision 13,",
+            f"`sha256:{digest}`",
+        ]
+    assert body == sorted(set(body))
+
+    cc = "https://malleus.dev/contract-compiler/"
+    mfg = "https://malleus.dev/foundation-graph/"
+    selects = URIRef(f"{mfg}selects")
+    assert set(canonical.objects(URIRef(f"{cc}OD-012"), selects)) == {
+        URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaselineR2")
+    }
+    r2 = URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaselineR2")
+    assert (
+        r2,
+        URIRef(f"{mfg}supersedes"),
+        URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaseline"),
+    ) in canonical
+    for selected in (
+        "Antlr4Python3Runtime4_9_3DeterministicWheelBuildProfile",
+        "RootSourceRetentionSeparateFromTransitiveBuildInputBoundary",
+        "TwoFreshBuildsByteIdenticalBoundary",
+        "FinalRuntimeClosureRemainsWheelOnlyBoundary",
+    ):
+        assert (r2, URIRef(f"{mfg}binds"), URIRef(f"{mfg}{selected}")) in canonical
+
+    status = URIRef(f"{mfg}status")
+    statuses: dict[object, set[object]] = {}
+    for subject, _, object_ in canonical.triples((None, status, None)):
+        statuses.setdefault(subject, set()).add(object_)
+    assert len(statuses) == 248
+    assert all(len(values) == 1 for values in statuses.values())
+
+    depends_on = URIRef(f"{mfg}dependsOn")
+    edges = {
+        (subject, object_)
+        for subject, _, object_ in canonical.triples((None, depends_on, None))
+    }
+    nodes = {node for edge in edges for node in edge}
+    assert len(nodes) == 101
+    assert len(edges) == 101
+    successors = {node: set() for node in nodes}
+    indegree = {node: 0 for node in nodes}
+    for dependent, prerequisite in edges:
+        successors[prerequisite].add(dependent)
+        indegree[dependent] += 1
+    ready = [node for node, count in indegree.items() if count == 0]
+    visited = 0
+    while ready:
+        node = ready.pop()
+        visited += 1
+        for successor in successors[node]:
+            indegree[successor] -= 1
+            if indegree[successor] == 0:
+                ready.append(successor)
+    assert visited == len(nodes)
+
+
+def test_rdf_guard_dependency_is_an_exact_direct_dev_pin() -> None:
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # pragma: no cover - Python 3.10
+        import tomli as tomllib
+
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    rdf_dependencies = [
+        dependency
+        for dependency in project["project"]["optional-dependencies"]["dev"]
+        if dependency.casefold().startswith("rdflib")
+    ]
+    assert rdf_dependencies == ["rdflib==7.6.0"]
+
+
+def test_rdf_guard_rejects_invalid_iri_and_literal_escape() -> None:
+    with pytest.raises(ParserError):
+        Graph().parse(
+            data="<https://example/s> <https://example/p> <bad iri> .",
+            format="nt",
+        )
+    with pytest.raises(BadSyntax):
+        Graph().parse(
+            data='@prefix ex: <https://example/> . ex:s ex:p "\\q" .',
+            format="turtle",
+        )
+
+
+def test_verified_facts_do_not_claim_future_artifact_bytes() -> None:
+    state = load_ledger(OVERSEER)
+    superseded: set[str] = set()
+    for entry in state.entries:
+        if entry["entry_id"] not in superseded and entry["entry_type"] == "CORRECTION":
+            superseded.add(entry["data"]["supersedes_entry_id"])
+    active = [entry for entry in state.entries if entry["entry_id"] not in superseded]
+    test_path = Path(__file__).relative_to(ROOT).as_posix()
+    chronology_boundary = min(
+        entry["sequence"]
+        for entry in active
+        if entry["entry_type"] == "DOCUMENT_REVISION"
+        and any(
+            document["path"] == test_path and document["change"] == "MODIFIED"
+            for document in entry["data"]["documents"]
+        )
+        and any(
+            document["change"] == "CREATED"
+            and any(
+                reference["type"] == "EVIDENCE"
+                and reference["target"] == document["path"]
+                for reference in entry["references"]
+            )
+            for document in entry["data"]["documents"]
+        )
+    )
+
+    provenance: dict[str, list[tuple[int, str]]] = {}
+    entry_root = OVERSEER.relative_to(ROOT) / "entries"
+    for entry in active:
+        entry_path = entry_root / f"{entry['entry_id']}.json"
+        entry_source = (ROOT / entry_path).read_bytes()
+        provenance.setdefault(entry_path.as_posix(), []).append(
+            (entry["sequence"], "sha256:" + hashlib.sha256(entry_source).hexdigest())
+        )
+        if entry["entry_type"] == "DOCUMENT_REVISION":
+            for document in entry["data"]["documents"]:
+                provenance.setdefault(document["path"], []).append(
+                    (entry["sequence"], document["after_digest"])
+                )
+
+    facts = [
+        entry
+        for entry in active
+        if entry["entry_type"] == "VERIFIED_FACT"
+        and entry["sequence"] > chronology_boundary
+    ]
+    assert facts
+    for fact in facts:
+        evidence = [
+            reference
+            for reference in fact["references"]
+            if reference["type"] == "EVIDENCE"
+        ]
+        assert evidence
+        for reference in evidence:
+            prior_report = [
+                sequence
+                for sequence, digest in provenance.get(reference["target"], [])
+                if sequence < fact["sequence"] and digest == reference["digest"]
+            ]
+            assert prior_report, (
+                f"{fact['entry_id']} claims evidence bytes before their active "
+                f"document revision: {reference['target']}"
+            )
+            report = json.loads((ROOT / reference["target"]).read_text(encoding="utf-8"))
+            for artifact in report["artifacts"]:
+                prior_artifact = [
+                    sequence
+                    for sequence, digest in provenance.get(artifact["path"], [])
+                    if sequence < fact["sequence"] and digest == artifact["sha256"]
+                ]
+                assert prior_artifact, (
+                    f"{fact['entry_id']} claims artifact bytes before their active "
+                    f"create/revision entry: {artifact['path']}"
+                )
 
 
 def test_overseer_ledger_and_projection_are_current() -> None:

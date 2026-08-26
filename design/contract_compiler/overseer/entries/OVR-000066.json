@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-D12",
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d900e5091fb3192dea86cf8ecbb6461197252be69386eec0fc9be7ecc6dba8fc",
+        "before_digest": "sha256:533ee1d67e9a9399b364fe3cf6f1103445b8903ae422c83252e80e9419e64dcb",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f54c3871d90b8f5ff0b95c4be2fb198638b3e41fa096a10e856aa8dbeb4c6c9f",
+        "before_digest": "sha256:e4b6e55710cc2138d379fccf44bc36d79fadcd423be2adec2d09db190258f5cd",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:4f737a57d70eda5011ef6b3d278e8b27deb17078e4ceda250739003bebd5b04e",
+  "entry_id": "OVR-000066",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ccb9fb1a4df3c2f883912b157351ca165289ba8bfaca9ea33d508072dffd3c46",
+  "recorded_at": "2026-08-25T20:10:09Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000064",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000065",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 66,
+  "subject": {
+    "id": "cc002-ccd12-r2-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind CC-002 and integration to the corrected CC-D12 completion.",
+  "why": "The CC-002 card now binds OVR-000064, states the exact source-build authority, preserves candidate state NONE and the historical integrated_head, and records the four existing checkpoints plus the later actual-base obligation. Integration anchors the reviewed prefix at OVR-000065 so both replacement workstream states are authoritative without creating a self-hash cycle. The earlier OVR-000062 revision already binds the direct RDF dependency, GraphRecipe rebind, hard tests, and evidence before their verification."
+}

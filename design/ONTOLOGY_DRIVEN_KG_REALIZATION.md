@@ -18,8 +18,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 12,
-`sha256:3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973`
+revision 13,
+`sha256:e6e5efaeb2688a0307116db6cc0d96a169401ff5d36f8834775c52e3b5907e8e`
 
 Evidence cutoff: 2026-08-25
 
@@ -1316,7 +1316,27 @@ cc:OD-001 rdf:type mfg:DecisionRecord ;
 cc:OD-012 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
     mfg:decisionDate "2026-08-25" ;
-    mfg:selects mfg:LinkMLV1_11_1ReleaseCompilerBaseline ;
+    mfg:selects mfg:LinkMLV1_11_1ReleaseCompilerBaselineR2 ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV1_11_1ReleaseCompilerBaselineR2 rdf:type mfg:DesignObject ;
+    mfg:supersedes mfg:LinkMLV1_11_1ReleaseCompilerBaseline ;
+    mfg:binds mfg:LinkMLV1_11_1ReleaseCoordinate ;
+    mfg:binds mfg:LinkMLV1_11_1ProvenanceCommit-a7ed3e4cbb19731f072d0d90b6d52f7d822569ee ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedWheelRetentionSet ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedSdistRetentionSet ;
+    mfg:binds mfg:CPython3_12_10LinuxX86_64Cp312ReproducibilityTuple ;
+    mfg:binds mfg:Pip25_0_1HashPinnedRequirementsWheelhouseOfflineInstallProfile ;
+    mfg:binds mfg:OfficialPython3_12_10SlimBookwormLinuxAmd64PlatformProfile ;
+    mfg:binds mfg:Antlr4Python3Runtime4_9_3DeterministicWheelBuildProfile ;
+    mfg:binds mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundaryR2 ;
+    mfg:binds mfg:FinalRuntimeClosureRemainsWheelOnlyBoundary ;
+    mfg:binds mfg:RootSourceRetentionSeparateFromTransitiveBuildInputBoundary ;
+    mfg:binds mfg:NetworkDeniedSourceBuildBoundary ;
+    mfg:binds mfg:TwoFreshBuildsByteIdenticalBoundary ;
+    mfg:binds mfg:FutureForkSeparateGovernedBaselineRevisionBoundary ;
+    mfg:binds mfg:PublishedReleaseWheelsRetainedNotRebuiltBoundary ;
+    mfg:binds mfg:ReproducibilityTupleNotRuntimeSupportPolicyBoundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:LinkMLV1_11_1ReleaseCompilerBaseline rdf:type mfg:DesignObject ;
@@ -1410,6 +1430,53 @@ mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundary
     mfg:dependsOn mfg:CC002OCIIndexAndLinuxAmd64ChildDigestAttestation ;
     mfg:status mfg:AcceptedDesign .
 
+mfg:Antlr4Python3Runtime4_9_3DeterministicWheelBuildProfile
+    rdf:type mfg:SupportProfile ;
+    mfg:binds <https://malleus.dev/foundation-graph/antlr4-python3-runtime-4.9.3.tar.gz-bytes-117034-sha256-f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b> ;
+    mfg:binds <https://malleus.dev/foundation-graph/setuptools-83.0.0-py3-none-any.whl-bytes-1008090-sha256-29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3> ;
+    mfg:binds mfg:SetuptoolsBuildMetaLegacyBackend ;
+    mfg:binds mfg:SourceDateEpoch315532800 ;
+    mfg:binds mfg:NetworkDeniedSourceBuildBoundary ;
+    mfg:binds mfg:TwoFreshBuildsByteIdenticalBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/foundation-graph/antlr4-python3-runtime-4.9.3.tar.gz-bytes-117034-sha256-f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b>
+    rdf:type mfg:ArtifactIdentity .
+
+<https://malleus.dev/foundation-graph/setuptools-83.0.0-py3-none-any.whl-bytes-1008090-sha256-29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3>
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:SetuptoolsBuildMetaLegacyBackend rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SourceDateEpoch315532800 rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:CC002Antlr4Python3Runtime4_9_3DoubleBuildAttestation
+    rdf:type mfg:TestObligation ;
+    mfg:status mfg:Candidate .
+
+mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundaryR2
+    rdf:type mfg:Boundary ;
+    mfg:supersedes mfg:CC002CompilerEnvironmentMaterializationAndAttestationBoundary ;
+    mfg:dependsOn mfg:CC002Pip25_0_1ResolverAndTransitiveClosureAttestation ;
+    mfg:dependsOn mfg:CC002OCIIndexAndLinuxAmd64ChildDigestAttestation ;
+    mfg:dependsOn mfg:CC002Antlr4Python3Runtime4_9_3DoubleBuildAttestation ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FinalRuntimeClosureRemainsWheelOnlyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:RootSourceRetentionSeparateFromTransitiveBuildInputBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NetworkDeniedSourceBuildBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:TwoFreshBuildsByteIdenticalBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
 mfg:PublishedReleaseWheelsRetainedNotRebuiltBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
@@ -1424,13 +1491,13 @@ Performed on 2026-08-25:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,208 RDF triples.
+   1,257 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,208 triples. Both directed set differences
+   the same 1,257 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 99 nodes and 98 edges, with no directed
+3. The canonical `dependsOn` graph has 101 nodes and 101 edges, with no directed
    dependency cycle.
-4. All 238 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 248 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1441,10 +1508,12 @@ Performed on 2026-08-25:
    have exactly `DecisionRecord`, `decidedBy Author`, `decisionDate
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
    remains represented only by `OKG-D012`. `OD-012` has the same invariants
-   with `decisionDate "2026-08-25"` and selects exactly the release baseline.
-7. The `OD-012` baseline binds the exact release provenance, two published
-   wheels, two retained sdists, reproducibility tuple, pip lock profile, OCI
-   platform profile, CC-002 materialization boundary, and future-fork boundary.
+   with `decisionDate "2026-08-25"` and selects exactly the R2 release baseline.
+7. The `OD-012` R2 baseline binds the exact release provenance, two published
+   root wheels, two retained root sdists, the ANTLR sdist and setuptools build
+   inputs, deterministic double-build profile, reproducibility tuple, pip lock
+   profile, OCI platform profile, CC-002 materialization boundary, wheel-only
+   runtime closure, and future-fork boundary.
 8. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
    coverage obligations, an explicit universal-completeness exclusion, and
    addressable counterevidence and revision semantics.
@@ -1458,10 +1527,10 @@ Performed on 2026-08-25:
 11. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-12. The canonical body contains 1,208 unique, lexically sorted N-Triples. Its
+12. The canonical body contains 1,257 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `3bf95b58b81ba39c3e21fdc495f3ae56748acdd79aa4bf94b4cc3fa7b868c973`, and every
-   owned Markdown graph reference names revision 12 and that digest.
+   `e6e5efaeb2688a0307116db6cc0d96a169401ff5d36f8834775c52e3b5907e8e`, and every
+   owned Markdown graph reference names revision 13 and that digest.
 13. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 14. None of the five owned Markdown documents or the canonical Turtle artifact
@@ -1470,5 +1539,5 @@ Performed on 2026-08-25:
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 12 was frozen. Existing GraphRecipe implementation
+rerun before revision 13 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

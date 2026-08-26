@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "OD-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000050"
+  },
+  "entry_hash": "sha256:b8cb6f320ad85199e100bcc86069b808b6e6c0427a4652aa6939bccd8c6a3247",
+  "entry_id": "OVR-000058",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:434154da4760107f2924d25760554f54a8c1148fb69c616080ae18e9ff7bb400",
+  "recorded_at": "2026-08-25T20:10:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000050",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 58,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Correct OD-012 after the selected resolver exposed a source-only dependency.",
+  "why": "The selected LinkML 1.11.1 requirement antlr4-python3-runtime>=4.9.0,<4.10 cannot be satisfied by a published compatible wheel. OVR-000050 did not authorize a source-build profile, so CC-002 cannot produce the required complete wheel-only closure without an operator correction. Historical evidence remains immutable; a replacement decision must state the exact retained build inputs and deterministic acceptance gate."
+}

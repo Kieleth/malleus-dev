@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-002"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000054"
+  },
+  "entry_hash": "sha256:cca81537486373eadcf52cc62fc694cb9786d9e078bf6bcc657156ae89d6fbcc",
+  "entry_id": "OVR-000060",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f9ee331dfcac55e432c4db4995ca6914e35ea65391b7b799de50fca4669a6dfc",
+  "recorded_at": "2026-08-25T20:10:02Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000054",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 60,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the CC-002 authorization that lacked a source-build gate.",
+  "why": "OVR-000054 authorized materialization under the original OD-012 profile, which could not resolve a complete wheelhouse for the selected tuple. The workstream remains implementation-owned, but its active authority must include the exact retained build inputs, isolated network-denied double build, byte-identity test, and wheel-only final closure."
+}

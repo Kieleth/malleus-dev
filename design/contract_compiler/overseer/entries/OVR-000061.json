@@ -1,0 +1,88 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-012"
+    ],
+    "consequences": [
+      "CC-002 may resume materialization only under this corrected profile after the governance correction is integrated and its actual commit is known.",
+      "The final runtime requirements closure and retained runtime wheelhouse remain wheel-only.",
+      "The ANTLR sdist and setuptools wheel are retained build inputs, separate from the two LinkML root sdists and from the runtime wheelhouse.",
+      "The selected published LinkML wheels are retained as released and are not rebuilt.",
+      "The reproducibility tuple and controlled source build do not narrow the Malleus runtime or CI support matrix.",
+      "A future LinkML fork, version change, backend change, epoch change, or relaxation of the double-build gate requires another governed revision."
+    ],
+    "constraints": [
+      "Use LinkML v1.11.1 at commit a7ed3e4cbb19731f072d0d90b6d52f7d822569ee; retain the published linkml wheel sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed and linkml-runtime wheel sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da as released and not rebuilt.",
+      "Keep exactly linkml-1.11.1.tar.gz sha256:2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524 and linkml_runtime-1.11.1.tar.gz sha256:e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754 as the LinkML root-source retention set.",
+      "Retain antlr4-python3-runtime-4.9.3.tar.gz, 117034 bytes, sha256:f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b, from https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz as a separate transitive build input.",
+      "Retain setuptools-83.0.0-py3-none-any.whl, 1008090 bytes, sha256:29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3, from https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl as the exact build-backend input.",
+      "Use CPython 3.12.10 on Linux x86_64 with cp312 as the reproducibility tuple only.",
+      "Use pip 25.0.1 wheel sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f for resolution and the controlled build frontend.",
+      "Build antlr4_python3_runtime-4.9.3-py3-none-any.whl twice in two fresh children of the selected OCI runtime with network denied and no build isolation.",
+      "Set SOURCE_DATE_EPOCH=315532800, TZ=UTC, PYTHONHASHSEED=0, and umask 022 for both builds.",
+      "Use backend setuptools.build_meta:__legacy__ supplied only by setuptools 83.0.0 for both builds.",
+      "Require the two built wheel byte streams to be byte-identical; retain one wheel and a build record binding both results.",
+      "Resolve a complete hash-pinned runtime requirements manifest and retain a complete wheel-only runtime wheelhouse; do not seed setuptools into runtime unless it is independently runtime-required.",
+      "Use python:3.12.10-slim-bookworm index sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db as provenance and linux/amd64 child sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 as runtime pin.",
+      "Prove a clean network-denied offline installation from the retained runtime wheelhouse and record the installed closure.",
+      "CC-D12 selects exact coordinates and acceptance policy; CC-002 acquires, validates, builds, materializes, and attests bytes without choosing policy."
+    ],
+    "decision_id": "OD-012",
+    "satisfies_workstreams": [
+      "CC-D12"
+    ],
+    "selected_option": "Release-first LinkML v1.11.1 baseline R2 with an exact deterministic ANTLR 4.9.3 wheel-build profile and wheel-only runtime closure",
+    "state": "ACCEPTED",
+    "supersedes_entry_id": "OVR-000050"
+  },
+  "entry_hash": "sha256:68b56da94c90b17f33f70e28b2c6eb94a9723a42bbba9fcbaf9760fa30f454ab",
+  "entry_id": "OVR-000061",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cca81537486373eadcf52cc62fc694cb9786d9e078bf6bcc657156ae89d6fbcc",
+  "recorded_at": "2026-08-25T20:10:03Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000058",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000059",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000060",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 61,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Replace OD-012 with the exact deterministic ANTLR wheel-build profile.",
+  "why": "The selected LinkML release and reproducibility tuple remain valid, but their dependency closure contains antlr4-python3-runtime>=4.9.0,<4.10 and no compatible published wheel. The operator approved the narrow correction: retain the exact 4.9.3 sdist and setuptools 83.0.0 wheel, build twice under the selected OCI tuple with deterministic inputs and network denied, require byte identity, and keep the final runtime closure wheel-only. This supplies policy authority without implementing or claiming the build."
+}

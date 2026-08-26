@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Replace OD-012 with the exact release-first LinkML 1.11.1 R2 baseline while preserving the selected release, Python, pip, and OCI coordinates.",
+      "Select the exact ANTLR 4.9.3 sdist, setuptools 83.0.0 wheel, legacy setuptools backend, SOURCE_DATE_EPOCH 315532800, and deterministic two-build acceptance profile.",
+      "Separate LinkML root-source retention, transitive build inputs, and the wheel-only final runtime closure.",
+      "Promote the corrected semantics into canonical graph revision 13 with exact 28-fence projection parity, status uniqueness, and an acyclic dependsOn graph.",
+      "Preserve OVR-000050, OVR-000053, OVR-000054, the original CC-D12 evidence, and the zero-scope CC-D12 card byte-for-byte."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000061",
+      "OVR-000062",
+      "OVR-000063"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D12"
+  },
+  "entry_hash": "sha256:b07b7305a39640fad1812191cc7f9651a98078d123f3aabae76695552ed51095",
+  "entry_id": "OVR-000064",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:28e3f8939b7bf6a4fc25685a8eb526493715cfbd66bfbbbda7444cd945d9e012",
+  "recorded_at": "2026-08-25T20:10:07Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000061",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000062",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000063",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-012",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 64,
+  "subject": {
+    "id": "CC-D12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D12 under the corrected OD-012 R2 authority.",
+  "why": "OVR-000061 supplies the operator's exact replacement policy, OVR-000062 records the canonical document revision and immutable report, and OVR-000063 verifies the source-build profile, graph invariants, historical immutability, and zero-production-change boundary. CC-D12 can therefore close without materializing any compiler-environment byte."
+}

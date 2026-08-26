@@ -1,0 +1,78 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Materialization must use the actual commit that integrates this governance correction as its candidate base; that commit does not exist while these changes are uncommitted.",
+      "Exact new ANTLR and setuptools acquisition and validation, deterministic double-build output, complete wheel-only closure, retained environment, offline installation, and the generic smoke remain unproven execution facts."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Retain the selected published LinkML 1.11.1 root wheels and root sdists without rebuilding the published root wheels.",
+      "Acquire and validate the exact ANTLR 4.9.3 sdist and setuptools 83.0.0 wheel as a separate transitive build-input set.",
+      "Build the ANTLR wheel twice in two fresh selected-OCI children with network denied, no build isolation, SOURCE_DATE_EPOCH 315532800, TZ UTC, PYTHONHASHSEED 0, umask 022, pip 25.0.1, and setuptools.build_meta:__legacy__.",
+      "Require byte-identical build outputs, retain one ANTLR wheel plus a record binding both builds, and fail closed on any difference.",
+      "Resolve and retain a complete hash-pinned wheel-only runtime closure and requirements lock; exclude setuptools unless independently runtime-required.",
+      "Bind and verify the selected OCI index and exact linux/amd64 child identities, then prove a clean network-denied offline install and its installed closure.",
+      "Run the generic ontology/malleus.yaml JSON Schema generator smoke without implementing compiler semantics or introducing themed fixtures or semantic oracles.",
+      "Preserve the existing bounded MCP transport and acquisition authority; accept no caller-selected URL, command, output path, Docker transport, build backend, epoch, or dependency policy.",
+      "Bind the final candidate and retained evidence to the four governed checkpoints plus the actual commit that integrates this correction, without claiming one contiguous candidate range contains the earlier checkpoints."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000061",
+      "OVR-000062",
+      "OVR-000063"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:ccb9fb1a4df3c2f883912b157351ca165289ba8bfaca9ea33d508072dffd3c46",
+  "entry_id": "OVR-000065",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b07b7305a39640fad1812191cc7f9651a98078d123f3aabae76695552ed51095",
+  "recorded_at": "2026-08-25T20:10:08Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000061",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000062",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000063",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000064",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000016",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 65,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reauthorize CC-002 under the corrected deterministic source-build profile.",
+  "why": "The corrected OD-012 decision and re-completed CC-D12 gate preserve the selected release baseline while adding only the missing exact build inputs and deterministic ANTLR wheel proof. CC-002 remains responsible for bounded acquisition, materialization, and attestation. It may not choose a different version, backend, epoch, source policy, runtime closure policy, or candidate base."
+}

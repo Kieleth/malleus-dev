@@ -1,0 +1,195 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 17369,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:fa2b54323f0bd325568904d40d9331dad58c6175fd968d9575660939cd4adce5"
+    },
+    {
+      "byte_length": 29108,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:9b9fe0073e75a3bf879d04d8bc1dcbd962b97a9666a33953a2caa935c89d35f0"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:50004f1de575ad0f69e697c8707540c320f813bccadf4d96349dae5dbe418e79"
+    },
+    {
+      "byte_length": 223526,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:e6e5efaeb2688a0307116db6cc0d96a169401ff5d36f8834775c52e3b5907e8e"
+    },
+    {
+      "byte_length": 69998,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:fb4d9076f47147f05b8416463e668238816ffd02f274e53f7d5ec7893940b3c0"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:269adf1e37fdbc4f6316c56e1a6b17fab1803590f246ef9380e6f939cdeb0144"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:0c00186115eb92a35761818aaa1c234c22ab75acd553ceccf6b4a520335e51b4"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:bc0e26ef4fe19736916b1e3707415de0cb06b26085939527db12a2991e8d5c91"
+    },
+    {
+      "byte_length": 9038,
+      "path": "pyproject.toml",
+      "sha256": "sha256:3a50a176434f5abd2db61cbb7039cf62c83f25ac3bb36a04cc60c071c86ba91c"
+    },
+    {
+      "byte_length": 24654,
+      "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "sha256": "sha256:6717ea5717903c9f99e78d8fd80ce78e589eca3c2dcd270d9b3cafead53b7e52"
+    },
+    {
+      "byte_length": 39801,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:6b7fd86e4bc957cf126116fcbbd3649e5c1e6ebecf30833a9225f00796d8ab65"
+    },
+    {
+      "byte_length": 1397,
+      "path": "design/contract_compiler/overseer/entries/OVR-000058.json",
+      "sha256": "sha256:d21488f27ba8041aa3ace9e99ebd18209e513fe717300f7020c7557321f14001"
+    },
+    {
+      "byte_length": 1273,
+      "path": "design/contract_compiler/overseer/entries/OVR-000059.json",
+      "sha256": "sha256:a6325610e24c1f865a97c6ee212dc4ee27c2c9d1220390941a915198e6bc8915"
+    },
+    {
+      "byte_length": 1318,
+      "path": "design/contract_compiler/overseer/entries/OVR-000060.json",
+      "sha256": "sha256:8f59d29fcb08e1c02d85c3dce646c902d83b56c1b674e2521680ff0aea820379"
+    },
+    {
+      "byte_length": 5758,
+      "path": "design/contract_compiler/overseer/entries/OVR-000061.json",
+      "sha256": "sha256:f36a00c181637ae233b93c6520770d0c4c513871fcc68e1cd4141595b75ef792"
+    },
+    {
+      "byte_length": 1376,
+      "path": "design/contract_compiler/workstreams/CC-D12/manifest.json",
+      "sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7"
+    },
+    {
+      "byte_length": 9229,
+      "path": "design/contract_compiler/overseer/evidence/CC-D12.json",
+      "sha256": "sha256:de3496393866fcbb013172e4fd4aba3cfad2cad06075a514990e4ba75c09b678"
+    }
+  ],
+  "base_commit": "6325bd962ecfd00bd4ca62b1d9febd07e3737357",
+  "checks": [
+    {
+      "check_id": "ccd12-r2-resolver-failure",
+      "method": "Inspect the exact CC-002 resolver result before any compiler_environment or staging publication.",
+      "observed": "pip 25.0.1 found only antlr4-python3-runtime 4.11.0 through 4.13.2 and failed LinkML's >=4.9.0,<4.10 requirement; both selected roots were processed, compiler_environment stayed absent, and no .cc002-* staging path remained.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-prior-runtime-proof",
+      "method": "Inspect the fixed acquisition ordering and the observed failure position inside the real resolver container.",
+      "observed": "Before the resolver failed, CC-002 downloaded the selected roots, ran docker version, fetched and validated the selected OCI index, pulled and inspected its exact linux/amd64 child, and launched that child. Docker, external reachability, and linux/amd64 execution are proved for that attempt and require final re-attestation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-exact-build-inputs",
+      "method": "Match official release metadata and operator approval to the replacement decision.",
+      "observed": "ANTLR 4.9.3 sdist is 117034 bytes with sha256 f224469b...77881b; setuptools 83.0.0 wheel is 1008090 bytes with sha256 29b23c36...abb3; both exact identities are selected.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-operator-inputs",
+      "method": "Verify that the two values requiring operator choice are explicit in OVR-000061.",
+      "observed": "The operator approved SOURCE_DATE_EPOCH=315532800 and setuptools 83.0.0; OVR-000061 binds both and backend setuptools.build_meta:__legacy__.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-exact-locators",
+      "method": "Compare both selected build inputs with the official files.pythonhosted.org release locators.",
+      "observed": "ANTLR is bound to https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz and setuptools to https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl .",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-retention-separation",
+      "method": "Compare the R2 decision and graph with the original root-retention set.",
+      "observed": "The two LinkML sdists remain exactly the root-source set. The ANTLR sdist and setuptools wheel form a separate transitive build-input set and do not silently enlarge the runtime wheelhouse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-deterministic-double-build",
+      "method": "Inspect the accepted build gate for independently fresh environments and exact deterministic inputs.",
+      "observed": "Two fresh selected-OCI children, network denied, no build isolation, pip 25.0.1, setuptools 83.0.0, SOURCE_DATE_EPOCH 315532800, TZ UTC, PYTHONHASHSEED 0, and umask 022 must produce byte-identical wheels.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-runtime-closure",
+      "method": "Inspect the corrected decision for the final installation boundary.",
+      "observed": "The final hash-pinned requirements closure and retained runtime wheelhouse remain wheel-only; setuptools is excluded unless independently runtime-required; published LinkML roots are not rebuilt.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-correction-authority",
+      "method": "Validate subject, actor, and replacement requirements for OVR-000058 through OVR-000061.",
+      "observed": "The operator corrects OVR-000050 and replaces OD-012; the overseer separately corrects the CC-D12 and CC-002 projected states; every correction requires a later same-subject replacement.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-canonical-graph",
+      "method": "Generate canonical N-Triples from all 28 Markdown Turtle fences and compare RDF sets.",
+      "observed": "Revision 13 contains 1257 sorted unique triples; canonical-only and projection-only differences are zero; sha256 is e6e5efae...7e8e.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-graph-invariants",
+      "method": "Check one status per status subject and run a complete topological traversal of dependsOn.",
+      "observed": "All 248 status subjects have one distinct status. The 101-node, 101-edge dependsOn graph is acyclic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-semantic-revision",
+      "method": "Inspect OD-012 selection and supersession in canonical revision 13.",
+      "observed": "OD-012 selects only LinkMLV1_11_1ReleaseCompilerBaselineR2; R2 supersedes the prior baseline and binds the exact source-build, double-build, source-separation, and wheel-only boundaries.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-rdf-parser-guard",
+      "method": "Require the exact direct rdflib 7.6.0 development pin, parse every projection and the canonical graph with rdflib, and run adversarial invalid-syntax cases.",
+      "observed": "The 28 Turtle fences and canonical N-Triples parse to the same 1257-triple RDF set. The N-Triples parser rejects an IRI containing a space and the Turtle parser rejects an invalid literal escape. GraphRecipe passed all 40 tests after its pyproject.toml binding was mechanically rebound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-historical-immutability",
+      "method": "Compare OVR-000050, OVR-000053, OVR-000054, CC-D12.json, and the CC-D12 card with commit 6325bd962ecfd00bd4ca62b1d9febd07e3737357.",
+      "observed": "All five historical files remain byte-identical. The replacement authority is append-only and the original verification report remains a historical statement about revision 12.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd12-r2-zero-production-change",
+      "method": "Inspect the correction scope and publication paths.",
+      "observed": "No compiler adapter, environment tree, acquired package byte, built wheel, runtime lock, or .cc002-* staging artifact is created by this governance correction.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report authorizes and verifies governance bytes. It does not claim retained new build inputs, their source validation, a built ANTLR wheel, a complete lock, a retained wheelhouse, offline installation, or the generic smoke.",
+    "Docker, external reachability, selected OCI identity checks, and linux/amd64 resolver execution were proved for the failed attempt only. The final candidate must re-attest them.",
+    "The original CC-D12 card and CC-D12.json report remain immutable historical records. Current authority comes from the correction and replacement entries plus this R2 report.",
+    "The historical CC-002 dependency binding integrated_head remains 493ed2bd152a92bcf26a2a0d5380df4dbc8f0f52 because no commit containing this correction exists yet. It does not claim to contain R2.",
+    "The later CC-002 materialization candidate must use the actual commit that integrates this correction as its base and record that then-known commit in retained evidence.",
+    "rdflib 7.6.0 is a direct development dependency for the standards-based graph guard. It is not part of the CC-002 retained runtime wheelhouse unless independently required there.",
+    "Canonical graph revision 13 is design authority only and makes no shipped-capability claim.",
+    "Official package metadata was observed on 2026-08-25; HTTP response bytes are not claimed retained."
+  ],
+  "recorded_at": "2026-08-25T20:10:04Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D12"
+}

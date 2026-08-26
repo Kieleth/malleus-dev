@@ -282,7 +282,7 @@ decisions remain open.
 | CC-D09 | Close OD-009 promotion boundary | CC-D01, CC-D05 | Named evidence gate and namespace policy accepted |
 | CC-D10 | Close OD-010 endpoint and generic class-reference semantics | CC-D07 | Contextual graph cases have accepted outcomes |
 | CC-D11 | Close OD-011 import identity, order, cycle, resolver, and fallback policy | CC-X03 | Import observations, examples, counterexamples, and exact policy accepted |
-| CC-D12 | Close OD-012 exact compiler baseline | CC-X00 | Release coordinate and provenance, Python reproducibility tuple, published wheel and sdist identities, resolver and platform identities, retention set, offline-lock acceptance policy, and future-fork boundary selected without materializing bytes |
+| CC-D12 | Close OD-012 exact compiler baseline | CC-X00 | Release coordinate and provenance, Python reproducibility tuple, published root wheel and root-sdist identities, exact transitive sdist and build-backend inputs, deterministic double-build profile, resolver and platform identities, wheel-only runtime closure, offline-lock acceptance policy, and future-fork boundary selected without materializing bytes |
 | CC-D13 | Close OD-013 packaging topology | CC-D01 | Core and compiler installation and verification responsibilities accepted |
 | CC-D14 | Close OD-014 themed fixture and publication boundary | none | Working name, vocabulary boundary, authorship/license record, and public gate accepted |
 | CC-D15 | Close OD-001 consumer-bundle direction | none | Operator approves one bundle per consumer or explicitly defers it |
@@ -299,7 +299,7 @@ outcomes.
 |---|---|---|---|
 | CC-000 | Validated workstream and integration manifests, ledger schema, DAG and ownership checks | `design/contract_compiler/integration.schema.json`, `integration.json`, `workstreams/`, validation tests | none |
 | CC-001 | Sphinx with MyST, autodoc, doctest, strict links, rendered manifests | Docs configuration and docs CI | CC-000 |
-| CC-002 | Reproducible selected compiler environment | Materialized selected published wheels and sdists, exact resolver artifact, complete hash-pinned transitive closure, retained wheelhouse, immutable OCI identities, platform verification, and clean offline-install attestation | CC-000, CC-D12 |
+| CC-002 | Reproducible selected compiler environment | Materialized selected published root wheels and sdists, exact resolver artifact, exact ANTLR sdist and setuptools build input, two byte-identical network-denied ANTLR wheel builds, complete hash-pinned wheel-only runtime closure, retained wheelhouse, immutable OCI identities, platform verification, and clean offline-install attestation | CC-000, CC-D12 |
 | CC-010 | Three-corpus protocol and independent oracle process | `conformance/contract_kernel/v0` manifests and checks | CC-000, CC-D02, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D11 |
 | CC-011 | Themed vertical source corpus | Themed source files only | CC-010, CC-D14, CC-018 |
 | CC-012 | Independently authored themed expected compilation artifacts | Themed source descriptors, import graph, declarations, bindings, elaboration, facts, and artifact oracle only | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011 |

@@ -1,0 +1,72 @@
+{
+  "actor": {
+    "id": "ccd12-r2-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-25T20:10:06Z",
+    "claims": [
+      "The selected LinkML 1.11.1 requirement antlr4-python3-runtime>=4.9.0,<4.10 has no compatible published wheel in the observed resolver result.",
+      "The real failure occurred after root downloads, docker version, exact OCI index and linux/amd64 child validation, image pull and inspection, and selected-child resolver launch; those attempt-specific facts require final re-attestation.",
+      "OD-012 R2 binds the exact ANTLR 4.9.3 sdist, setuptools 83.0.0 wheel, setuptools.build_meta:__legacy__ backend, and SOURCE_DATE_EPOCH=315532800.",
+      "The accepted gate requires two fresh network-denied builds under the selected OCI tuple, byte-identical output, and one retained built wheel plus a two-build record.",
+      "The LinkML root-source set, transitive build-input set, and wheel-only final runtime closure are distinct.",
+      "Canonical graph revision 13 has 1257 sorted unique triples, exact 28-fence parity, one status per 248 status subjects, and an acyclic 101-node, 101-edge dependsOn graph.",
+      "The permanent RDF parity gate directly pins rdflib 7.6.0 and rejects adversarial invalid N-Triples IRI and Turtle literal-escape syntax.",
+      "OVR-000050, OVR-000053, OVR-000054, CC-D12.json, and the CC-D12 card remain byte-identical to commit 6325bd962ecfd00bd4ca62b1d9febd07e3737357.",
+      "No production adapter, acquired byte, build output, compiler environment, or staging artifact is claimed by this correction."
+    ],
+    "limitations": [
+      "This fact verifies the corrected governance profile, not its later materialization.",
+      "The historical CC-002 integrated_head does not contain R2; the later candidate must bind the actual commit that integrates this correction.",
+      "Package metadata locators were observed, but their HTTP response bytes are not retained."
+    ]
+  },
+  "entry_hash": "sha256:28e3f8939b7bf6a4fc25685a8eb526493715cfbd66bfbbbda7444cd945d9e012",
+  "entry_id": "OVR-000063",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e7ee7f65d379ca98223cbfd6259858cab801a09cdf338d2da14b83f159036f0f",
+  "recorded_at": "2026-08-25T20:10:06Z",
+  "references": [
+    {
+      "digest": "sha256:cd4f95683c091df06395f00d177910478b610a782ac2d20bdaa57124a1d2047d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D12-R2.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000061",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000062",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D12",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 63,
+  "subject": {
+    "id": "CC-D12-R2-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the corrected OD-012 source-build authority and graph projection.",
+  "why": "CC-D12 may be re-completed only after the replacement decision, canonical projection, immutable correction report, exact historical-byte comparison, and no-production-change boundary pass mechanical verification."
+}
