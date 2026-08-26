@@ -8,9 +8,9 @@ fixed by the accepted OD-012 baseline and this CC-002 implementation.
 
 from __future__ import annotations
 
-import email.policy
 import base64
 import csv
+import email.policy
 import hashlib
 import io
 import json
@@ -175,6 +175,16 @@ ROOT_WHEEL_FILENAMES = (
     "linkml-1.11.1-py3-none-any.whl",
     "linkml_runtime-1.11.1-py3-none-any.whl",
 )
+CFGRAPH_WHEEL_FILENAME = "cfgraph-0.2.1-py3-none-any.whl"
+CFGRAPH_WHEEL_BYTE_LENGTH = 2256
+CFGRAPH_WHEEL_SHA256 = (
+    "28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13"
+)
+CFGRAPH_WHEEL_BYTES = base64.b64decode(
+    b"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",
+    validate=True,
+)
+EMBEDDED_ROOT_ARTIFACTS = {CFGRAPH_WHEEL_FILENAME: CFGRAPH_WHEEL_BYTES}
 PIP_WHEEL_FILENAME = "pip-25.0.1-py3-none-any.whl"
 ANTLR_SDIST_FILENAME = "antlr4-python3-runtime-4.9.3.tar.gz"
 SETUPTOOLS_WHEEL_FILENAME = "setuptools-83.0.0-py3-none-any.whl"
@@ -289,6 +299,7 @@ RESOLVER_PIP_ARGUMENTS = (
     f"/roots/{ROOT_WHEEL_FILENAMES[0]}",
     f"/roots/{ROOT_WHEEL_FILENAMES[1]}",
     f"/built/{PREFIXCOMMONS_DERIVED_FILENAME}",
+    f"/roots/{CFGRAPH_WHEEL_FILENAME}",
 )
 RESOLVER_PROGRAM = (
     "from contract_compiler_environment import _resolver_main; "
@@ -397,10 +408,10 @@ def _output_schema(required: Sequence[str], properties: dict[str, Any]) -> dict[
 
 _DIGEST_SCHEMA = {"type": "string", "minLength": 71, "maxLength": 71}
 _ACQUIRE_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.acquire-result/v3"},
+    "schema": {"const": "malleus.cc002.acquire-result/v4"},
     "state": {"const": "MATERIALIZED"},
     "destination": {"const": DESTINATION_LABEL},
-    "artifact_count": {"type": "integer", "minimum": 8, "maximum": 8},
+    "artifact_count": {"type": "integer", "minimum": 9, "maximum": 9},
     "built_artifact_count": {"type": "integer", "minimum": 2, "maximum": 2},
     "source_build_record_sha256": _DIGEST_SCHEMA,
     "derivation_record_sha256": _DIGEST_SCHEMA,
@@ -411,7 +422,7 @@ _ACQUIRE_PROPERTIES = {
     "oci_child_digest": {"const": OCI_CHILD_DIGEST},
 }
 _VERIFY_PROPERTIES = {
-    "schema": {"const": "malleus.cc002.verify-result/v3"},
+    "schema": {"const": "malleus.cc002.verify-result/v4"},
     "state": {"const": "VERIFIED_OFFLINE"},
     "destination": {"const": DESTINATION_LABEL},
     "environment_manifest_sha256": _DIGEST_SCHEMA,
@@ -491,9 +502,9 @@ def acquire_result(
     if (
         not isinstance(artifact_count, int)
         or isinstance(artifact_count, bool)
-        or artifact_count != 8
+        or artifact_count != 9
     ):
-        _fail("CC002_RESULT", "artifact_count must be exactly eight")
+        _fail("CC002_RESULT", "artifact_count must be exactly nine")
     if (
         not isinstance(wheel_count, int)
         or isinstance(wheel_count, bool)
@@ -503,7 +514,7 @@ def acquire_result(
     if built_artifact_count != 2 or isinstance(built_artifact_count, bool):
         _fail("CC002_RESULT", "built_artifact_count must be exactly two")
     return {
-        "schema": "malleus.cc002.acquire-result/v3",
+        "schema": "malleus.cc002.acquire-result/v4",
         "state": "MATERIALIZED",
         "destination": DESTINATION_LABEL,
         "artifact_count": artifact_count,
@@ -546,7 +557,7 @@ def verify_result(
     ):
         _fail("CC002_RESULT", "installed_distribution_count must be positive")
     return {
-        "schema": "malleus.cc002.verify-result/v3",
+        "schema": "malleus.cc002.verify-result/v4",
         "state": "VERIFIED_OFFLINE",
         "destination": DESTINATION_LABEL,
         "environment_manifest_sha256": environment_manifest_sha256,
@@ -613,9 +624,9 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             f"{name} result fields mismatch; missing={missing}, unknown={unknown}",
         )
     expected_schema = (
-        "malleus.cc002.acquire-result/v3"
+        "malleus.cc002.acquire-result/v4"
         if name == "cc002_acquire"
-        else "malleus.cc002.verify-result/v3"
+        else "malleus.cc002.verify-result/v4"
     )
     expected_state = "MATERIALIZED" if name == "cc002_acquire" else "VERIFIED_OFFLINE"
     if value["schema"] != expected_schema or value["state"] != expected_state:
@@ -641,8 +652,8 @@ def _validate_tool_output(name: str, value: Any) -> dict[str, Any]:
             or value[field] < 1
         ):
             _fail("CC002_RESULT", f"{field} must be a positive integer")
-    if name == "cc002_acquire" and value["artifact_count"] != 8:
-        _fail("CC002_RESULT", "artifact_count must be exactly eight")
+    if name == "cc002_acquire" and value["artifact_count"] != 9:
+        _fail("CC002_RESULT", "artifact_count must be exactly nine")
     if name == "cc002_acquire" and value["built_artifact_count"] != 2:
         _fail("CC002_RESULT", "built_artifact_count must be exactly two")
     return value
@@ -1759,6 +1770,35 @@ import linkml
 import linkml_runtime
 from linkml_runtime.utils.namespaces import Namespaces
 from prefixcommons import contract_uri, expand_uri
+from pyshex.shex_evaluator import CFGraph
+from rdflib import BNode, RDF, URIRef
+
+if CFGraph.__module__ != 'CFGraph' or CFGraph.__name__ != 'CFGraph':
+    raise RuntimeError(
+        f'unexpected PyShEx CFGraph seam: {CFGraph.__module__}.{CFGraph.__name__}'
+    )
+graph = CFGraph()
+subject = URIRef('urn:malleus:subject')
+predicate = URIRef('urn:malleus:items')
+head = BNode()
+tail = BNode()
+first = URIRef('urn:malleus:first')
+second = URIRef('urn:malleus:second')
+graph.add((subject, predicate, head))
+graph.add((head, RDF.first, first))
+graph.add((head, RDF.rest, tail))
+graph.add((tail, RDF.first, second))
+graph.add((tail, RDF.rest, RDF.nil))
+flattened = sorted(
+    (str(subject), str(predicate), str(item))
+    for item in graph.objects(subject, predicate)
+)
+expected_flattened = [
+    ('urn:malleus:subject', 'urn:malleus:items', 'urn:malleus:first'),
+    ('urn:malleus:subject', 'urn:malleus:items', 'urn:malleus:second'),
+]
+if flattened != expected_flattened:
+    raise RuntimeError(f'unexpected CFGraph collection flattening: {flattened!r}')
 
 expanded = expand_uri('GO:0008150', strict=True)
 if expanded != 'http://purl.obolibrary.org/obo/GO_0008150':
@@ -1826,6 +1866,7 @@ subprocess.run(
         '/wheelhouse/linkml-1.11.1-py3-none-any.whl',
         '/wheelhouse/linkml_runtime-1.11.1-py3-none-any.whl',
         '/wheelhouse/prefixcommons-0.1.12+malleus.1-py3-none-any.whl',
+        '/wheelhouse/cfgraph-0.2.1-py3-none-any.whl',
         '--report', '/work/pip-report.json',
     ],
     cwd='/work', env=environment, shell=False, check=True,
@@ -3005,6 +3046,86 @@ def _validate_record_rows(
             _fail(context, f"wheel RECORD mismatch: {name}")
 
 
+def validate_embedded_cfgraph_wheel(path: Path) -> dict[str, Any]:
+    """Validate the exact provisional CFGraph root and return its wheel record."""
+    expected_content = {
+        "filename": CFGRAPH_WHEEL_FILENAME,
+        "byte_length": CFGRAPH_WHEEL_BYTE_LENGTH,
+        "sha256": "sha256:" + CFGRAPH_WHEEL_SHA256,
+    }
+    if _artifact_record(path) != expected_content:
+        _fail("CC002_CFGRAPH_IDENTITY", "embedded CFGraph wheel identity mismatch")
+    dist_info = "cfgraph-0.2.1.dist-info"
+    expected_names = [
+        "CFGraph/__init__.py",
+        f"{dist_info}/METADATA",
+        f"{dist_info}/WHEEL",
+        f"{dist_info}/top_level.txt",
+        f"{dist_info}/RECORD",
+    ]
+    try:
+        with zipfile.ZipFile(path) as archive:
+            members = _safe_wheel_members(
+                archive,
+                "CC002_CFGRAPH_SAFETY",
+                enforce_build_limits=True,
+            )
+            names = [member.filename for member in members]
+            if archive.comment or names != expected_names or any(
+                member.is_dir() for member in members
+            ):
+                _fail(
+                    "CC002_CFGRAPH_SAFETY",
+                    "embedded CFGraph wheel member inventory changed",
+                )
+            license_prefixes = ("license", "licence", "copying", "notice")
+            if any(
+                PurePosixPath(name).name.casefold().startswith(license_prefixes)
+                for name in names
+            ):
+                _fail(
+                    "CC002_CFGRAPH_LICENSE",
+                    "embedded CFGraph wheel unexpectedly contains license-like bytes",
+                )
+            metadata = BytesParser(policy=email.policy.default).parsebytes(
+                archive.read(f"{dist_info}/METADATA")
+            )
+            wheel = BytesParser(policy=email.policy.default).parsebytes(
+                archive.read(f"{dist_info}/WHEEL")
+            )
+            if (
+                metadata.get_all("Name") != ["CFGraph"]
+                or metadata.get_all("Version") != ["0.2.1"]
+                or metadata.get_all("Requires-Dist") != ["rdflib>=0.4.2"]
+                or metadata.get_all("License") != ["Apache 2.0"]
+            ):
+                _fail(
+                    "CC002_CFGRAPH_METADATA",
+                    "embedded CFGraph package metadata changed",
+                )
+            if (
+                wheel.get_all("Wheel-Version") != ["1.0"]
+                or wheel.get_all("Generator") != ["setuptools (83.0.0)"]
+                or wheel.get_all("Root-Is-Purelib") != ["true"]
+                or wheel.get_all("Tag") != ["py3-none-any"]
+            ):
+                _fail(
+                    "CC002_CFGRAPH_METADATA",
+                    "embedded CFGraph wheel metadata changed",
+                )
+            _validate_record_rows(
+                archive,
+                members,
+                f"{dist_info}/RECORD",
+                "CC002_CFGRAPH_RECORD",
+            )
+    except CC002Error:
+        raise
+    except (OSError, KeyError, UnicodeError, zipfile.BadZipFile) as error:
+        _fail("CC002_CFGRAPH_WHEEL", f"invalid embedded CFGraph wheel: {error}")
+    return {**expected_content, "distribution": "CFGraph", "version": "0.2.1"}
+
+
 def _validate_setuptools_archive(path: Path) -> None:
     try:
         with zipfile.ZipFile(path) as archive:
@@ -3179,6 +3300,24 @@ def _validate_runtime_distribution_policy(
                 "CC002_FORBIDDEN_RUNTIME",
                 f"test-only distribution is forbidden from runtime closure: {name}",
             )
+        filename = record["filename"]
+        digest = record["sha256"]
+        is_cfgraph = (
+            name == "cfgraph"
+            or filename.casefold().startswith(("cfgraph-", "cf_graph-"))
+            or digest == "sha256:" + CFGRAPH_WHEEL_SHA256
+        )
+        if is_cfgraph and (
+            record["distribution"] != "CFGraph"
+            or record["version"] != "0.2.1"
+            or filename != CFGRAPH_WHEEL_FILENAME
+            or record["byte_length"] != CFGRAPH_WHEEL_BYTE_LENGTH
+            or digest != "sha256:" + CFGRAPH_WHEEL_SHA256
+        ):
+            _fail(
+                "CC002_CFGRAPH_RUNTIME",
+                "runtime CFGraph must be the exact embedded provisional wheel",
+            )
         if name == "prefixcommons" and (
             record["version"] != "0.1.12+malleus.1"
             or record["filename"] != PREFIXCOMMONS_DERIVED_FILENAME
@@ -3335,7 +3474,7 @@ def _validate_internal_verification(
         },
         "internal verification",
     )
-    if value["schema"] != "malleus.cc002.internal-verification/v3":
+    if value["schema"] != "malleus.cc002.internal-verification/v4":
         _fail("CC002_VERIFY", "unknown internal verification schema")
     if value["workstream_id"] != "CC-002":
         _fail("CC002_VERIFY", "internal verification workstream mismatch")
@@ -3591,6 +3730,10 @@ def _manifest_from_staging(
         _artifact_record(staging / "roots" / item.filename)
         for item in SELECTED_ARTIFACTS
     ]
+    roots.extend(
+        _artifact_record(staging / "roots" / filename)
+        for filename in EMBEDDED_ROOT_ARTIFACTS
+    )
     build_inputs = [
         _artifact_record(staging / "build-inputs" / item.filename)
         for item in BUILD_ARTIFACTS
@@ -3608,7 +3751,7 @@ def _manifest_from_staging(
     smoke = _artifact_record(SMOKE_INPUT)
     smoke["filename"] = "ontology/malleus.yaml"
     return {
-        "schema": "malleus.cc002.compiler-environment/v3",
+        "schema": "malleus.cc002.compiler-environment/v4",
         "docker": {
             "command": DOCKER,
             "client_version": docker_client_version,
@@ -3695,22 +3838,30 @@ def _bind_selected_wheels(
         ROOT_WHEEL_FILENAMES[0]: ("linkml", "1.11.1"),
         ROOT_WHEEL_FILENAMES[1]: ("linkml-runtime", "1.11.1"),
         PIP_WHEEL_FILENAME: ("pip", "25.0.1"),
+        CFGRAPH_WHEEL_FILENAME: ("CFGraph", "0.2.1"),
     }
-    selected_wheels = {
-        artifact.filename: artifact
-        for artifact in SELECTED_ARTIFACTS
-        if artifact.kind == "WHEEL"
-    }
-    if set(selected_wheels) != set(expected_metadata):
-        _fail("CC002_SELECTED_WHEEL", "selected wheel root membership is invalid")
-    for filename, artifact in selected_wheels.items():
-        record = wheel_records.get(filename)
-        root_record = retained_roots.get(filename)
-        expected_content = {
-            "filename": filename,
+    root_wheels = {
+        artifact.filename: {
+            "filename": artifact.filename,
             "byte_length": artifact.byte_length,
             "sha256": "sha256:" + artifact.sha256,
         }
+        for artifact in SELECTED_ARTIFACTS
+        if artifact.kind == "WHEEL"
+    }
+    root_wheels[CFGRAPH_WHEEL_FILENAME] = {
+        "filename": CFGRAPH_WHEEL_FILENAME,
+        "byte_length": CFGRAPH_WHEEL_BYTE_LENGTH,
+        "sha256": "sha256:" + CFGRAPH_WHEEL_SHA256,
+    }
+    if set(root_wheels) != set(expected_metadata):
+        _fail("CC002_SELECTED_WHEEL", "selected wheel root membership is invalid")
+    embedded_record = validate_embedded_cfgraph_wheel(
+        path / "roots" / CFGRAPH_WHEEL_FILENAME
+    )
+    for filename, expected_content in root_wheels.items():
+        record = wheel_records.get(filename)
+        root_record = retained_roots.get(filename)
         if record is None or root_record != expected_content:
             _fail(
                 "CC002_SELECTED_WHEEL",
@@ -3726,6 +3877,11 @@ def _bind_selected_wheels(
             _fail(
                 "CC002_SELECTED_WHEEL",
                 f"selected wheel metadata is invalid: {filename}",
+            )
+        if filename == CFGRAPH_WHEEL_FILENAME and record != embedded_record:
+            _fail(
+                "CC002_CFGRAPH_BINDING",
+                "embedded CFGraph wheel record differs from runtime wheel",
             )
         if (path / "roots" / filename).read_bytes() != (
             path / "wheelhouse" / filename
@@ -3867,7 +4023,7 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         },
         "environment manifest",
     )
-    if manifest["schema"] != "malleus.cc002.compiler-environment/v3":
+    if manifest["schema"] != "malleus.cc002.compiler-environment/v4":
         _fail("CC002_MANIFEST", "unknown environment schema")
     docker = manifest["docker"]
     if not isinstance(docker, dict):
@@ -4004,18 +4160,33 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
         path / "resolution-report.json", "pip resolution report"
     )
     validate_resolution_report(resolution, rebuilt_records)
-    expected_roots = {artifact.filename: artifact for artifact in SELECTED_ARTIFACTS}
+    expected_roots = {
+        artifact.filename: {
+            "filename": artifact.filename,
+            "byte_length": artifact.byte_length,
+            "sha256": "sha256:" + artifact.sha256,
+        }
+        for artifact in SELECTED_ARTIFACTS
+    }
+    expected_roots[CFGRAPH_WHEEL_FILENAME] = {
+        "filename": CFGRAPH_WHEEL_FILENAME,
+        "byte_length": CFGRAPH_WHEEL_BYTE_LENGTH,
+        "sha256": "sha256:" + CFGRAPH_WHEEL_SHA256,
+    }
     for record in manifest["roots"]["artifacts"]:
         selected = expected_roots.get(record["filename"])
         if selected is None:
             _fail("CC002_MANIFEST", "root retention membership mismatch")
-        if record["byte_length"] != selected.byte_length or record["sha256"] != "sha256:" + selected.sha256:
-            _fail("CC002_MANIFEST", f"selected root identity mismatch: {selected.filename}")
-    if len(manifest["roots"]["artifacts"]) != len(SELECTED_ARTIFACTS):
+        if record != selected:
+            _fail(
+                "CC002_MANIFEST",
+                f"selected root identity mismatch: {record['filename']}",
+            )
+    if len(manifest["roots"]["artifacts"]) != len(expected_roots):
         _fail("CC002_MANIFEST", "root retention count mismatch")
-    if len(manifest["roots"]["artifacts"]) != 5:
+    if len(manifest["roots"]["artifacts"]) != 6:
         _fail(
-            "CC002_MANIFEST", "root retention set must contain exactly five artifacts"
+            "CC002_MANIFEST", "root retention set must contain exactly six artifacts"
         )
     _bind_selected_wheels(path, rebuilt_records, manifest["roots"]["artifacts"])
     _bind_built_wheel(path, rebuilt_records, built_by_name[antlr_filename])
@@ -4077,8 +4248,29 @@ def _validated_environment(path: Path | None = None) -> tuple[dict[str, Any], by
     return manifest, source
 
 
+def _materialize_embedded_roots(roots: Path, wheelhouse: Path) -> None:
+    if EMBEDDED_ROOT_ARTIFACTS != {
+        CFGRAPH_WHEEL_FILENAME: CFGRAPH_WHEEL_BYTES
+    }:
+        _fail("CC002_CFGRAPH_EMBED", "embedded root inventory changed")
+    root = safe_target(roots, CFGRAPH_WHEEL_FILENAME)
+    _write_atomic(root, CFGRAPH_WHEEL_BYTES)
+    record = validate_embedded_cfgraph_wheel(root)
+    runtime = safe_target(wheelhouse, CFGRAPH_WHEEL_FILENAME)
+    _write_atomic(runtime, root.read_bytes())
+    if (
+        _artifact_record(runtime) != _content_record(record)
+        or runtime.read_bytes() != root.read_bytes()
+    ):
+        _fail(
+            "CC002_CFGRAPH_COPY",
+            "embedded CFGraph root and runtime wheel bytes differ",
+        )
+
+
 def _copy_selected_wheels(roots: Path, wheelhouse: Path) -> None:
-    wheelhouse.mkdir()
+    if wheelhouse.is_symlink() or not wheelhouse.is_dir():
+        _fail("CC002_WHEELHOUSE", "runtime wheelhouse is missing or unsafe")
     for filename in (*ROOT_WHEEL_FILENAMES, PIP_WHEEL_FILENAME):
         source = safe_target(roots, filename)
         target = safe_target(wheelhouse, filename)
@@ -4113,6 +4305,9 @@ def acquire_environment() -> dict[str, Any]:
         staging = Path(temporary_name)
         roots = staging / "roots"
         roots.mkdir()
+        wheelhouse = staging / "wheelhouse"
+        wheelhouse.mkdir()
+        _materialize_embedded_roots(roots, wheelhouse)
         build_inputs = staging / "build-inputs"
         build_inputs.mkdir()
         derivative_inputs = staging / "derivative-inputs"
@@ -4267,7 +4462,6 @@ def acquire_environment() -> dict[str, Any]:
             staging / "derivation-record.json",
             (canonical_json(derivation_record) + "\n").encode("utf-8"),
         )
-        wheelhouse = staging / "wheelhouse"
         _copy_selected_wheels(roots, wheelhouse)
         shutil.copyfile(built_path, wheelhouse / built_path.name, follow_symlinks=False)
         shutil.copyfile(
@@ -4430,7 +4624,7 @@ def verify_environment() -> dict[str, Any]:
                 work, manifest["wheelhouse"]["artifacts"]
             )
         internal = {
-            "schema": "malleus.cc002.internal-verification/v3",
+            "schema": "malleus.cc002.internal-verification/v4",
             "workstream_id": "CC-002",
             "acquisition_manifest_sha256": _digest(manifest_source),
             "lock_sha256": manifest["lock"]["sha256"],
