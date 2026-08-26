@@ -11,14 +11,14 @@
       "sha256": "sha256:cf8ae922d0a1b2efb83d7f99df374254882f9626608d3b96ae425f02737f8af9"
     },
     {
-      "byte_length": 32855,
+      "byte_length": 33487,
       "path": "scripts/contract_compiler_divergence.py",
-      "sha256": "sha256:a04ab8469d2efa6b3a105147d50159c1b066cdc0b557afcf79fb98e8de1d8f2a"
+      "sha256": "sha256:d416080eb607ab6e23cead4945c8489a28ce27ef813d2e97d14c73e55cd63a67"
     },
     {
-      "byte_length": 11498,
+      "byte_length": 12847,
       "path": "tests/test_contract_compiler_divergence.py",
-      "sha256": "sha256:227dcd768810f5fd2f612e89ae9de46ee5b07954bb8d4840f2ff282d2836013e"
+      "sha256": "sha256:60db9da543d6e8495c8e459a9fa67c4a00dad2e6668bf3ae792e684dda72fc69"
     }
   ],
   "base_commit": "50c54b921e28724c88fa4b6e6bca1a94356d2839",
@@ -62,13 +62,13 @@
     {
       "check_id": "ccx01-replay",
       "method": "Replay both engines twice, require byte-identical canonical output, compare it with observations.json, and mutate a retained observation.",
-      "observed": "Both fresh replays were byte-identical to the 11,326-byte retained observation artifact; changed values, deleted requested fields, and malformed engine entries were rejected.",
+      "observed": "Same-host fresh renders were byte-identical. Semantic replay ignored only execution_context: a simulated Linux context passed, while changed values, raw untyped fields, deleted requested fields, and malformed engine entries were rejected.",
       "result": "PASS"
     },
     {
       "check_id": "ccx01-focused",
       "method": "Run tests/test_contract_compiler_divergence.py and the runner's offline check command.",
-      "observed": "All 15 focused tests passed and the check reported that fresh observations match retained bytes.",
+      "observed": "All 16 focused tests passed and the check reported that fresh semantic observations match retained observations.",
       "result": "PASS"
     },
     {
@@ -88,6 +88,7 @@
     "CC-X01 is a measurement corpus only. It does not select semantics, change an oracle, authorize production code, or close OD-003.",
     "The cases are isolated single modules. Import resolution, duplicate adoption, expressions, graph admission, artifact grammar, themed vocabulary, packaging, and release behavior remain outside this slice.",
     "Only the direct linkml and linkml-runtime wheel bytes are pinned. The calling interpreter, platform, and ambient PyYAML identity are recorded; other transitive dependencies remain ambient and unpinned. Cross-host byte determinism and replay of the CC-002 Linux OCI and CPython tuple are not claimed.",
+    "Replay equality excludes only execution_context, because it is expected to vary across hosts. The retained historical context remains bound by the observations artifact SHA-256 in this report; every semantic engine and probe value must still match exactly.",
     "OntologyRegistry is bound by the exact implementation digest recorded in observations.json. Any implementation change requires a fresh measurement rather than silent reuse of these bytes."
   ],
   "recorded_at": "2026-08-26T19:33:28Z",

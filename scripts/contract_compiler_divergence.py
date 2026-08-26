@@ -742,6 +742,11 @@ def validate_observations(document: Any) -> None:
                     set(expected_probe["fields"]),
                     subject + f" probe {actual_probe['probe_id']} fields",
                 )
+                for field in expected_probe["fields"]:
+                    _validate_state(
+                        value[field],
+                        subject + f" probe {actual_probe['probe_id']} field {field}",
+                    )
     for index, state in enumerate(
         mapping for mapping in _walk_mappings(observations) if "state" in mapping
     ):
@@ -756,6 +761,11 @@ def render_observations(cases_document: dict[str, Any]) -> bytes:
     return canonical_json(result)
 
 
+def semantic_observations(document: Mapping[str, Any]) -> dict[str, Any]:
+    """The replay surface, excluding host metadata retained as evidence."""
+    return {key: value for key, value in document.items() if key != "execution_context"}
+
+
 def check_observations(
     cases_path: Path = CASES_PATH,
     observations_path: Path = OBSERVATIONS_PATH,
@@ -763,15 +773,18 @@ def check_observations(
     cases = load_cases(cases_path)
     expected = _read_json(observations_path)
     validate_observations(expected)
-    actual = render_observations(cases)
+    actual = _decode_json(
+        render_observations(cases).decode("utf-8"),
+        "fresh CC-X01 observations",
+    )
     try:
         retained = observations_path.read_bytes()
     except OSError as error:
         raise DivergenceError(f"Cannot read retained observations '{observations_path}': {error}") from error
     if retained != canonical_json(expected):
         raise DivergenceError("retained observations are not canonical JSON")
-    if actual != retained:
-        raise DivergenceError("fresh CC-X01 observations do not match retained bytes")
+    if semantic_observations(actual) != semantic_observations(expected):
+        raise DivergenceError("fresh CC-X01 semantic observations do not match retained bytes")
 
 
 def _child_main(linkml_wheel: Path, runtime_wheel: Path) -> int:
@@ -821,7 +834,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.buffer.write(render_observations(load_cases()))
         return 0
     check_observations()
-    print("CC-X01 observations match retained bytes")
+    print("CC-X01 semantic observations match retained observations")
     return 0
 
 

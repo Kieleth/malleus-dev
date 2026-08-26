@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 import hashlib
-from importlib.metadata import version
 import importlib.util
 import json
 import os
 from pathlib import Path
-import platform
 import subprocess
 import sys
 
@@ -195,22 +193,41 @@ def test_observations_have_exact_independent_engine_structure_and_no_policy():
         assert not FORBIDDEN_DECISION_KEYS & set(mapping)
 
 
-def test_observations_bind_the_actual_direct_wheel_execution_context():
+def test_historical_context_is_explicit_but_foreign_context_does_not_hide_semantic_change(
+    tmp_path,
+):
     context = _read(OBSERVATIONS)["execution_context"]
     assert context == {
         "platform": {
-            "architecture": platform.machine(),
-            "operating_system": platform.system(),
+            "architecture": "arm64",
+            "operating_system": "Darwin",
         },
         "python": {
-            "implementation": platform.python_implementation(),
-            "version": platform.python_version(),
+            "implementation": "CPython",
+            "version": "3.12.9",
         },
         "pyyaml": {
             "distribution": "PyYAML",
-            "version": version("PyYAML"),
+            "version": "6.0.2",
         },
     }
+
+    foreign = _read(OBSERVATIONS)
+    foreign["execution_context"] = {
+        "platform": {"architecture": "x86_64", "operating_system": "Linux"},
+        "python": {"implementation": "CPython", "version": "3.12.10"},
+        "pyyaml": {"distribution": "PyYAML", "version": "6.0.3"},
+    }
+    foreign_path = tmp_path / "foreign-context.json"
+    foreign_path.write_bytes(runner.canonical_json(foreign))
+    runner.check_observations(CASES, foreign_path)
+
+    foreign["observations"][0]["engines"][0]["probes"][1]["result"]["value"][
+        "range"
+    ]["value"] = "integer"
+    foreign_path.write_bytes(runner.canonical_json(foreign))
+    with pytest.raises(runner.DivergenceError, match="semantic observations"):
+        runner.check_observations(CASES, foreign_path)
 
 
 def test_observation_values_use_explicit_absent_null_value_states():
@@ -248,7 +265,10 @@ def test_construction_failures_retain_exact_type_message_and_arguments():
 def test_replay_is_byte_identical_and_matches_retained_observations():
     first = runner.render_observations(runner.load_cases(CASES))
     second = runner.render_observations(runner.load_cases(CASES))
-    assert first == second == OBSERVATIONS.read_bytes()
+    assert first == second
+    assert runner.semantic_observations(json.loads(first)) == runner.semantic_observations(
+        _read(OBSERVATIONS)
+    )
 
 
 def test_check_detects_any_retained_observation_mutation(tmp_path):
@@ -273,6 +293,16 @@ def test_validation_rejects_a_deleted_declared_probe_field():
         runner.validate_observations(changed)
 
 
+def test_validation_rejects_a_raw_probe_field_without_presence_state():
+    changed = _read(OBSERVATIONS)
+    changed["observations"][0]["engines"][0]["probes"][1]["result"]["value"][
+        "range"
+    ] = "string"
+
+    with pytest.raises(runner.DivergenceError):
+        runner.validate_observations(changed)
+
+
 def test_validation_types_malformed_engine_entries():
     changed = _read(OBSERVATIONS)
     changed["observations"][0]["engines"][0] = None
@@ -291,7 +321,7 @@ def test_cli_checks_retained_bytes_without_rewriting_them():
         text=True,
     )
     assert completed.returncode == 0, completed.stderr
-    assert completed.stdout == "CC-X01 observations match retained bytes\n"
+    assert completed.stdout == "CC-X01 semantic observations match retained observations\n"
     assert OBSERVATIONS.read_bytes() == before
 
 
@@ -341,5 +371,9 @@ def test_evidence_binds_the_measurements_without_claiming_a_decision():
     assert evidence["checks"]
     assert all(check["result"] == "PASS" for check in evidence["checks"])
     assert evidence["limitations"]
+    for artifact in evidence["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == "sha256:" + hashlib.sha256(source).hexdigest()
     for mapping in _walk(evidence):
         assert not FORBIDDEN_DECISION_KEYS & set(mapping)
