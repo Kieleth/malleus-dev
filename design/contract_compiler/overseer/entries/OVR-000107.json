@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccx01-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T19:51:02Z",
+    "claims": [
+      "The exact 50c54b9..f9a09e2 candidate is linear, tree-bound, confined to five authorized scopes, and binds four artifacts plus passing worker evidence; both RED commits remain explicit prior evidence outside the candidate range.",
+      "All 16 focused tests, semantic replay, scoped Ruff, worker evidence verification, and the 163-pass/2-skip OntologyRegistry regression run succeeded.",
+      "Nine cases retain independent LinkML and OntologyRegistry outputs without classification, winner selection, oracle editing, or production changes.",
+      "The candidate is eligible and unselected, its worker ledger remains NOT_STARTED, the integration authority anchor stops at OVR-000105, and the four prior selections and sealed snapshot remain unchanged."
+    ],
+    "limitations": [
+      "This fact selects no semantic winner, classifies no observation, and does not close OD-003.",
+      "This fact authorizes no production or import behavior.",
+      "This fact makes no full CC-002 Linux replay or cross-host byte-identity claim.",
+      "This fact authorizes completion, not selection or release."
+    ]
+  },
+  "entry_hash": "sha256:cbf5d9b58798a8472ee6859f5157514d4ea97962d2eafec8ad3792710d02d265",
+  "entry_id": "OVR-000107",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1f082473c045e9ba5138d2735cc45189b58722d0e2ceaa613e217ea6383c4670",
+  "recorded_at": "2026-08-26T19:51:02Z",
+  "references": [
+    {
+      "digest": "sha256:8e798e222ce2813ac11a5a69da631f91cbe4b2e810a00079ad7ba4dfeb4e0792",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X01-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f9a09e24502fe8185fd06925e2a0bb92d8cc4e06",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000106",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 107,
+  "subject": {
+    "id": "CC-X01-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded CC-X01 completion gate.",
+  "why": "CC-X01 may complete only after the exact candidate history, artifacts, evidence, independent observations, focused gates, regression tests, and unselected integration boundary all pass mechanically."
+}

@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 6191,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X01.json",
+      "sha256": "sha256:b2310af8d72ef9ba9e1aa0c715b0436d750b198902fdca2e4fe3ab5f6a56c1c3"
+    }
+  ],
+  "base_commit": "f9a09e24502fe8185fd06925e2a0bb92d8cc4e06",
+  "checks": [
+    {
+      "check_id": "ccx01-candidate-history",
+      "method": "Validate the exact 50c54b9..f9a09e2 linear candidate, bound tree, five authorized scopes, four artifacts, and passing worker evidence.",
+      "observed": "The validator accepted three candidate commits, tree 207b8b7ae8c0a293ebf77b17166487ca6849705e, and exactly five touched paths. RED commits c0d38b598ea0624f2d653586a7f4202f0425a4cf and d3d889aa638781d4d9de451aba6d9f730a0e04a1 precede activation base 50c54b921e28724c88fa4b6e6bca1a94356d2839 and remain explicit prior evidence rather than hidden candidate work.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-executed-gates",
+      "method": "Run the focused tests, semantic replay check, scoped Ruff check, worker evidence verification, and affected OntologyRegistry regression module.",
+      "observed": "All 16 focused tests passed; fresh semantic observations matched retained observations; Ruff passed; worker evidence verified four artifacts and ten checks; tests/test_ontology.py passed 163 tests with 2 skipped.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-measurement-boundary",
+      "method": "Inspect the retained case and observation schemas, engine records, candidate paths, and worker claims for the authorized measurement-only boundary.",
+      "observed": "Nine cases retain separate LinkML and OntologyRegistry records with exact ABSENT, NULL, and VALUE observations. The corpus contains no classification or semantic winner, changes no oracle, and the candidate touches no production file.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-unselected-integration",
+      "method": "Validate the overseer ledger and sealed integration manifest after registering the eligible candidate without a worker ledger or selection.",
+      "observed": "The card remains ledger NOT_STARTED, the integration authority anchor stops at OVR-000105, all four prior selections and the sealed snapshot are unchanged, and both validators pass.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X01 selects no semantic winner, classifies no observation, and does not close OD-003.",
+    "CC-X01 changes no production or import behavior.",
+    "CC-X01 does not replay the full CC-002 Linux environment or claim cross-host byte identity.",
+    "CC-X01 completion is not integration selection or release authority."
+  ],
+  "recorded_at": "2026-08-26T19:51:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X01"
+}

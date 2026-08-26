@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Retain the exact nine-case, two-engine lossless divergence corpus and deterministic semantic replay evidence.",
+      "Bind the eligible four-artifact candidate and passing worker evidence while keeping the worker ledger NOT_STARTED.",
+      "Defer semantic classification, production and import behavior, cross-host claims, selection, and release authority."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000107"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-X01"
+  },
+  "entry_hash": "sha256:9907f81061f1a76f3b513f0b280067baa10cd01be582bb845ce9037768c99f42",
+  "entry_id": "OVR-000108",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cbf5d9b58798a8472ee6859f5157514d4ea97962d2eafec8ad3792710d02d265",
+  "recorded_at": "2026-08-26T19:51:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000107",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-X01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 108,
+  "subject": {
+    "id": "CC-X01",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded CC-X01 divergence measurement workstream.",
+  "why": "OVR-000107 verifies the exact candidate, measured outputs, replay, focused and regression gates, and unselected integration boundary. CC-X01 is complete as a measurement corpus without deciding OD-003 or authorizing production, import, selection, release, or cross-host claims."
+}

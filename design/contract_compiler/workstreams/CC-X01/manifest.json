@@ -21,7 +21,40 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 9671,
+        "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/cases.json",
+        "sha256": "sha256:3a580e6e3ea95bda4d32ff855f91c269b6fa05ea87d2001bcdd0ea56b9e5b1d8"
+      },
+      {
+        "byte_length": 11326,
+        "path": "conformance/contract_compiler/v0/linkml_legacy_divergence/observations.json",
+        "sha256": "sha256:cf8ae922d0a1b2efb83d7f99df374254882f9626608d3b96ae425f02737f8af9"
+      },
+      {
+        "byte_length": 33487,
+        "path": "scripts/contract_compiler_divergence.py",
+        "sha256": "sha256:d416080eb607ab6e23cead4945c8489a28ce27ef813d2e97d14c73e55cd63a67"
+      },
+      {
+        "byte_length": 12847,
+        "path": "tests/test_contract_compiler_divergence.py",
+        "sha256": "sha256:60db9da543d6e8495c8e459a9fa67c4a00dad2e6668bf3ae792e684dda72fc69"
+      }
+    ],
+    "base_commit": "50c54b921e28724c88fa4b6e6bca1a94356d2839",
+    "evidence": [
+      {
+        "byte_length": 6191,
+        "path": "conformance/contract_compiler/v0/evidence/CC-X01.json",
+        "result": "PASS",
+        "sha256": "sha256:b2310af8d72ef9ba9e1aa0c715b0436d750b198902fdca2e4fe3ab5f6a56c1c3"
+      }
+    ],
+    "head_commit": "f9a09e24502fe8185fd06925e2a0bb92d8cc4e06",
+    "head_tree": "207b8b7ae8c0a293ebf77b17166487ca6849705e",
+    "state": "ELIGIBLE"
   },
   "ledger": {
     "state": "NOT_STARTED"
