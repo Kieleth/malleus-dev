@@ -1,0 +1,64 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 10774,
+      "path": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "sha256": "sha256:ad641ac854aac331c67c57309ecb878b73b60bf5c28013c68f3b41556b423f01"
+    }
+  ],
+  "base_commit": "58913ee583ef329ca3abdf5003577740c019cf10",
+  "checks": [
+    {
+      "check_id": "cc002-r3-diagnostic-repair-lineage",
+      "method": "Resolve the second-attempt base commit, inspect its parent, and inspect its changed paths.",
+      "observed": "58913ee583ef329ca3abdf5003577740c019cf10 is the direct child of 605f811ff929b1e2389fd89b88e1e4d739944886 and changes only scripts/contract_compiler_environment.py and tests/test_contract_compiler_environment.py to retain a bounded sanitized diagnostic head and tail.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-second-acquisition-progress",
+      "method": "Observe the restarted real cc002_acquire attempt through its transitive-resolution failure.",
+      "observed": "The second attempt processed the LinkML and linkml-runtime roots, the deterministic ANTLR built root, and the derived prefixcommons 0.1.12+malleus.1 root before pip 25.0.1 evaluated the PyShEx candidates.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-pyshex-cfgraph-edge",
+      "method": "Read the candidate dependency lines retained at the diagnostic tail without inferring an unreported edge.",
+      "observed": "pip evaluated PyShEx 0.9.0, 0.8.1, 0.8.0, and 0.7.20. The returned conflict block states that each candidate depends on cfgraph>=0.2.1.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-terminal-conflict-text",
+      "method": "Preserve the returned terminal conflict block verbatim.",
+      "observed": "The conflict is caused by:\n    pyshex 0.9.0 depends on cfgraph>=0.2.1\n    pyshex 0.8.1 depends on cfgraph>=0.2.1\n    pyshex 0.8.0 depends on cfgraph>=0.2.1\n    pyshex 0.7.20 depends on cfgraph>=0.2.1\n\nTo fix this you could try to:\n1. loosen the range of package versions you've specified\n2. remove package versions to allow pip to attempt to solve the dependency conflict",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-diagnostic-head-tail",
+      "method": "Inspect the exact beginning, middle marker, and terminal error retained in the returned combined diagnostic.",
+      "observed": "Stderr began exactly 'ERROR: Cannot install linkml because these package versions have conflicting dependencies.' The combined diagnostic contained one '\n[truncated]\n' middle marker and later retained 'ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts'.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-second-failed-publication-cleanup",
+      "method": "Inspect the governed destination and bounded staging namespace after the second failed acquisition returned.",
+      "observed": "conformance/contract_compiler/v0/compiler_environment is absent and no conformance/contract_compiler/v0/.cc002-* staging path remains. The second failed R3 attempt published no partial environment.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc002-r3-cfgraph-policy-boundary",
+      "method": "Compare the now-known resolver edge with current OD-012 R3 authority and inspect for any selected dependency correction.",
+      "observed": "The returned result identifies cfgraph>=0.2.1 as the dependency required by every evaluated PyShEx candidate. No CFGraph artifact, source-build route, license acceptance, dependency closure, or correction has been selected.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report records the second failed real R3 acquisition. It does not claim a complete runtime closure, retained compiler environment, offline verification, final candidate, or CC-002 completion.",
+    "The returned pip suggestions to loosen or remove package versions are generic diagnostic text, not Malleus policy or authority to change a selected coordinate.",
+    "The report establishes only the PyShEx to cfgraph>=0.2.1 edge shown for the four evaluated candidates. It does not establish an acceptable CFGraph artifact, license, source-build method, runtime closure, or security posture.",
+    "The roots processed before failure were removed with the staging tree and are not retained completion artifacts.",
+    "A formal source-build, license, and dependency gate for CFGraph is required before code. No dependency correction is selected by this report."
+  ],
+  "recorded_at": "2026-08-26T14:40:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-002"
+}

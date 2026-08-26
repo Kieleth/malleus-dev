@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-002"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000090"
+  },
+  "entry_hash": "sha256:e8798905edb7f3d9af9125ac97ed7933f6c2e7b458044bf23c60b7dd74bee79c",
+  "entry_id": "OVR-000094",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f5fbe4fcd995285741dbe019dbfe5cb64d10ee744d14553ecb802326503e37b5",
+  "recorded_at": "2026-08-26T14:40:03Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000090",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000093",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 94,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the CC-002 state now that the exact transitive dependency edge is known.",
+  "why": "OVR-000090 correctly kept CC-002 active while the truncated first diagnostic concealed pip's terminal conflict. OVR-000093 verifies that the repaired second attempt identifies cfgraph>=0.2.1 as the common requirement of all four evaluated PyShEx candidates. The historical state remains immutable, but its unknown-edge blocker is false and requires an exact replacement."
+}

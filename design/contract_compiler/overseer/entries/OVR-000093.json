@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "cc002-progress-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T14:40:02Z",
+    "claims": [
+      "Commit 58913ee583ef329ca3abdf5003577740c019cf10 is the diagnostic-repair child of 605f811ff929b1e2389fd89b88e1e4d739944886 and changes only the CC-002 adapter and its tests.",
+      "The restarted second R3 acquisition processed LinkML, linkml-runtime, the deterministic ANTLR built root, and derived prefixcommons before pip 25.0.1 failed transitive resolution.",
+      "pip evaluated PyShEx 0.9.0, 0.8.1, 0.8.0, and 0.7.20, and the exact returned conflict block states that every candidate depends on cfgraph>=0.2.1.",
+      "The returned diagnostic preserved the exact leading LinkML conflict sentence, one middle '[truncated]' marker, the terminal candidate dependency block, and the final ResolutionImpossible help URL. The bounded head-tail repair therefore succeeded.",
+      "The failed attempt left compiler_environment absent and removed every bounded .cc002-* staging path, so no partial environment was published.",
+      "The now-known dependency edge does not select an acceptable CFGraph artifact, license, build path, closure, or correction. A formal source-build, license, and dependency gate is required before code."
+    ],
+    "limitations": [
+      "This verifies the second failed real R3 acquisition, exact resolver edge, diagnostic repair, and cleanup, not a retained environment, offline verification, candidate, or CC-002 completion.",
+      "Only the returned PyShEx to cfgraph>=0.2.1 edge is established. CFGraph release identity, source identity, licensing, build inputs, deterministic build feasibility, dependency closure, maintenance, and security posture remain unverified.",
+      "pip's generic suggestions to loosen or remove versions carry no operator authority and are not dependency policy.",
+      "No dependency correction or implementation step is selected by this verified fact."
+    ]
+  },
+  "entry_hash": "sha256:f5fbe4fcd995285741dbe019dbfe5cb64d10ee744d14553ecb802326503e37b5",
+  "entry_id": "OVR-000093",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:334027f27355355100c23be14b85b15cf15aca48423e93e2de2dea40783c4ac7",
+  "recorded_at": "2026-08-26T14:40:02Z",
+  "references": [
+    {
+      "digest": "sha256:3894369accdfdb6b6cece1455e910a0de836d3a9f443ca47fe5f00ac5b23bcf5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-03.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "58913ee583ef329ca3abdf5003577740c019cf10",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000090",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000091",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000092",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 93,
+  "subject": {
+    "id": "CC-002-progress-03",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the second real R3 acquisition and exact PyShEx to CFGraph dependency edge.",
+  "why": "The repaired diagnostic turns the prior unknown dependency blocker into a mechanically observed edge while preserving fail-closed cleanup. Recording the exact four candidates, common requirement, terminal text, and policy boundary makes the next research gate queryable without treating pip suggestions as authority or selecting a correction."
+}

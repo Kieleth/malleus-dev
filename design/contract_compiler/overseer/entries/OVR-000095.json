@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "The second real R3 acquisition identified that PyShEx 0.9.0, 0.8.1, 0.8.0, and 0.7.20 each require cfgraph>=0.2.1; a formal source-build, license, and dependency gate for CFGraph is required before code; no dependency correction is selected."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Retain 58913ee583ef329ca3abdf5003577740c019cf10 as the diagnostic-repair base whose restarted real acquisition exposed the exact PyShEx to cfgraph>=0.2.1 edge.",
+      "Preserve every accepted OD-012 R3 coordinate, deterministic derivation rule, v3 schema, runtime exclusion, acceptance gate, completion artifact, scope, and checkpoint without altering dependency policy.",
+      "Prepare a formal CFGraph gate that records exact candidate release and source identities, license bytes and obligations, build backend and inputs, deterministic build feasibility, CPython 3.12.10 Linux x86_64 compatibility, runtime dependencies, closure effects, ownership, security review, and fail-closed acceptance conditions.",
+      "Present the CFGraph gate for an explicit governed dependency decision before changing production or tests; do not treat pip's generic version suggestions as authority.",
+      "After a correction is selected and integrated, use genuine TDD and a restarted real acquisition to prove resolution, atomic publication, offline installation and smokes, retained evidence, and the exact final candidate contract."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000093"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-002"
+  },
+  "entry_hash": "sha256:5e02b0a0480f4d694f2b9ab39c5ad54d90975e71dcec702930a070b189ba1205",
+  "entry_id": "OVR-000095",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e8798905edb7f3d9af9125ac97ed7933f6c2e7b458044bf23c60b7dd74bee79c",
+  "recorded_at": "2026-08-26T14:40:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000090",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000093",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000094",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "58913ee583ef329ca3abdf5003577740c019cf10",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 95,
+  "subject": {
+    "id": "CC-002",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Keep CC-002 active at the formal CFGraph dependency gate before code.",
+  "why": "The diagnostic repair succeeded and the second acquisition converted the unknown resolver failure into the exact common cfgraph>=0.2.1 requirement while preserving atomic cleanup. That fact narrows the next work without choosing it. CC-002 remains ACTIVE only to complete a formal source-build, license, dependency, reproducibility, ownership, and security gate before any correction or code."
+}

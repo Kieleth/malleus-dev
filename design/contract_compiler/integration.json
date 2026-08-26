@@ -1,9 +1,9 @@
 {
   "authority": {
     "overseer_ledger": {
-      "entry_count": 90,
-      "head_entry_id": "OVR-000090",
-      "head_hash": "sha256:ab71c538ac03b742a9cedfab584affdd79cd8db23dbd9551a1d575a42f73a8da",
+      "entry_count": 95,
+      "head_entry_id": "OVR-000095",
+      "head_hash": "sha256:5e02b0a0480f4d694f2b9ab39c5ad54d90975e71dcec702930a070b189ba1205",
       "path": "design/contract_compiler/overseer"
     },
     "snapshot": {

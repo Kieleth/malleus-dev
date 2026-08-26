@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-002"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:3894369accdfdb6b6cece1455e910a0de836d3a9f443ca47fe5f00ac5b23bcf5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-002-progress-03.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:334027f27355355100c23be14b85b15cf15aca48423e93e2de2dea40783c4ac7",
+  "entry_id": "OVR-000092",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:074bf2f0ad28b9a4ba2aac08ec8e7090f7e3e2f7f6410b935a255b6cc3773829",
+  "recorded_at": "2026-08-26T14:40:01Z",
+  "references": [
+    {
+      "digest": "sha256:3894369accdfdb6b6cece1455e910a0de836d3a9f443ca47fe5f00ac5b23bcf5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-002-progress-03.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "58913ee583ef329ca3abdf5003577740c019cf10",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000090",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000091",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 92,
+  "subject": {
+    "id": "cc002-progress-03",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the immutable report for the second real CC-002 acquisition under OD-012 R3.",
+  "why": "The diagnostic repair at 58913ee retained the terminal pip conflict and made the exact PyShEx to cfgraph>=0.2.1 edge observable. Registering the report before verification preserves the returned text, successful head-tail repair, atomic cleanup, and still-unselected dependency correction without changing OD-012, the CC-002 card, graph, decisions, or code."
+}
