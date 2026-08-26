@@ -460,6 +460,37 @@ def test_reader_provenance_refuses_source_byte_substitution(monkeypatch, path):
         runner._reader()
 
 
+@pytest.mark.parametrize("byte_different", [False, True], ids=["identical", "commented"])
+def test_reader_provenance_refuses_redirected_assent_schema(
+    monkeypatch,
+    tmp_path,
+    byte_different,
+):
+    source = ROOT / "ontology" / "assent.yaml"
+    redirected = tmp_path / "assent.yaml"
+    data = source.read_bytes()
+    redirected.write_bytes(data + b"\n# semantically equivalent\n" if byte_different else data)
+    monkeypatch.setattr(runner, "ASSENT_SCHEMA", redirected)
+
+    with pytest.raises(runner.HistoricWireError, match="runtime ontology path differs"):
+        runner._reader()
+
+
+def test_reader_provenance_refuses_redirected_recon_schema(monkeypatch, tmp_path):
+    source = ROOT / "ontology" / "domains" / "recon.yaml"
+    redirected = tmp_path / "recon.yaml"
+    redirected.write_bytes(source.read_bytes())
+    recon_store = sys.modules["malleus.recon.store"]
+    monkeypatch.setattr(
+        recon_store,
+        "bundled_ontology_path",
+        lambda *parts: redirected,
+    )
+
+    with pytest.raises(runner.HistoricWireError, match="runtime ontology path differs"):
+        runner._reader()
+
+
 def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():
     before = {
         item["input_id"]: (CORPUS / item["path"]).read_bytes()
