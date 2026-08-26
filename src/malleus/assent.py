@@ -72,6 +72,9 @@ class EventType(str, Enum):
     ACTION_DISPATCHED = "ACTION_DISPATCHED"
     ACTION_EXECUTED = "ACTION_EXECUTED"
     OUTCOME_OBSERVED = "OUTCOME_OBSERVED"
+    REVIEW_REQUESTED = "REVIEW_REQUESTED"
+    REVIEW_RECORDED = "REVIEW_RECORDED"
+    REVIEW_DISPOSITIONED = "REVIEW_DISPOSITIONED"
 
 
 class ProposalState(str, Enum):
@@ -133,6 +136,9 @@ PAYLOAD_FIELDS = {
     EventType.ACTION_DISPATCHED: {"dispatch"},
     EventType.ACTION_EXECUTED: {"execution"},
     EventType.OUTCOME_OBSERVED: {"observation"},
+    EventType.REVIEW_REQUESTED: {"request"},
+    EventType.REVIEW_RECORDED: {"report", "findings"},
+    EventType.REVIEW_DISPOSITIONED: {"disposition"},
 }
 PRESENT_FIELDS = {
     "MonitorSpecificationArtifact": {
@@ -218,6 +224,13 @@ class ProtocolProjection:
     dispatch_ids: set[str] = field(default_factory=set)
     execution_ids: set[str] = field(default_factory=set)
     outcome_observation_ids: set[str] = field(default_factory=set)
+    review_request_ids: set[str] = field(default_factory=set)
+    review_report_ids: set[str] = field(default_factory=set)
+    review_finding_ids: set[str] = field(default_factory=set)
+    review_disposition_ids: set[str] = field(default_factory=set)
+    review_report_by_request: dict[str, str] = field(default_factory=dict)
+    review_findings_by_report: dict[str, list[str]] = field(default_factory=dict)
+    review_disposition_by_finding: dict[str, str] = field(default_factory=dict)
     dispatch_by_action: dict[str, str] = field(default_factory=dict)
     execution_by_dispatch: dict[str, str] = field(default_factory=dict)
     observation_by_execution_contract: dict[tuple[str, str], str] = field(
@@ -407,6 +420,9 @@ class ProtocolLedger:
             EventType.ACTION_DISPATCHED: self._dispatch,
             EventType.ACTION_EXECUTED: self._execution,
             EventType.OUTCOME_OBSERVED: self._outcome,
+            EventType.REVIEW_REQUESTED: self._review_request,
+            EventType.REVIEW_RECORDED: self._review_report,
+            EventType.REVIEW_DISPOSITIONED: self._review_disposition,
         }
         handlers[event_type](projection, event)
         projection.events.append(deepcopy(event))
@@ -844,6 +860,159 @@ class ProtocolLedger:
         )
         if artifact["artifact_hash"] != expected_hash:
             raise ProtocolError(f"event {event['event_id']}: logic contract semantic hash mismatch")
+
+    def _review_request(
+        self,
+        projection: ProtocolProjection,
+        event: dict[str, Any],
+    ) -> None:
+        self._require_anchor(projection, event)
+        request = self._record("ReviewRequest", event["payload"]["request"], event)
+        target = self._object(
+            projection.objects,
+            request["target_record_id"],
+            "ProtocolRecord",
+        )
+        if projection.objects[target["id"]]["record_type"] in {
+            "ReviewRequest",
+            "ReviewReport",
+            "ReviewFinding",
+            "ReviewDisposition",
+        }:
+            raise ProtocolError(
+                f"event {event['event_id']}: review records cannot be review targets"
+            )
+        if target["content_hash"] != request["target_record_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: review target hash mismatch")
+        if request["requested_by_actor_id"] != event["actor_id"]:
+            raise ProtocolError(
+                f"event {event['event_id']}: review requester actor mismatch"
+            )
+        _nonblank(
+            request,
+            ("requested_by_actor_id", "intended_recipient_id", "review_question"),
+            f"event {event['event_id']} review request",
+        )
+        self._require_sources(request, {target["id"]}, event)
+        self._validate_sources(request, projection.objects, event)
+        self._add_objects(
+            projection,
+            {request["id"]: _wrapped("ReviewRequest", request)},
+            event,
+        )
+        projection.review_request_ids.add(request["id"])
+
+    def _review_report(
+        self,
+        projection: ProtocolProjection,
+        event: dict[str, Any],
+    ) -> None:
+        self._require_anchor(projection, event)
+        payload = event["payload"]
+        report = self._record("ReviewReport", payload["report"], event)
+        request = self._object(projection.objects, report["request_id"], "ReviewRequest")
+        if request["content_hash"] != report["request_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: review request hash mismatch")
+        if request["id"] in projection.review_report_by_request:
+            raise ProtocolError(f"event {event['event_id']}: review request already has a report")
+        if report["reviewer_id"] != event["actor_id"]:
+            raise ProtocolError(f"event {event['event_id']}: review report actor mismatch")
+        if report["reviewer_id"] != request["intended_recipient_id"]:
+            raise ProtocolError(f"event {event['event_id']}: report reviewer was not requested")
+        _nonblank(
+            report,
+            ("reviewer_id", "review_outcome", "rationale"),
+            f"event {event['event_id']} review report",
+        )
+        if not isinstance(payload["findings"], list):
+            raise ProtocolError(f"event {event['event_id']}: findings must be a list")
+        findings = []
+        finding_ids = set()
+        for value in payload["findings"]:
+            finding = self._record("ReviewFinding", value, event)
+            if finding["id"] in projection.objects or finding["id"] in finding_ids:
+                raise ProtocolError(
+                    f"event {event['event_id']}: duplicate finding id '{finding['id']}'"
+                )
+            finding_ids.add(finding["id"])
+            if (
+                finding["report_id"] != report["id"]
+                or finding["report_hash"] != report["content_hash"]
+            ):
+                raise ProtocolError(f"event {event['event_id']}: finding report binding mismatch")
+            if finding["target_record_id"] != request["target_record_id"]:
+                raise ProtocolError(f"event {event['event_id']}: finding target mismatch")
+            if finding["target_record_hash"] != request["target_record_hash"]:
+                raise ProtocolError(f"event {event['event_id']}: finding target hash mismatch")
+            _nonblank(
+                finding,
+                ("finding_statement", "rationale"),
+                f"event {event['event_id']} review finding",
+            )
+            findings.append(finding)
+
+        _require_distinct_record_ids([report, *findings], event)
+        introduced = {
+            report["id"]: _wrapped("ReviewReport", report),
+            **{
+                finding["id"]: _wrapped("ReviewFinding", finding)
+                for finding in findings
+            },
+        }
+        combined = {**projection.objects, **introduced}
+        self._require_sources(report, {request["id"]}, event)
+        self._validate_sources(report, combined, event)
+        for finding in findings:
+            self._require_sources(
+                finding,
+                {report["id"], request["target_record_id"]},
+                event,
+            )
+            self._validate_sources(finding, combined, event)
+        self._add_objects(projection, introduced, event)
+        projection.review_report_ids.add(report["id"])
+        projection.review_report_by_request[request["id"]] = report["id"]
+        projection.review_findings_by_report[report["id"]] = [
+            finding["id"] for finding in findings
+        ]
+        projection.review_finding_ids.update(finding_ids)
+
+    def _review_disposition(
+        self,
+        projection: ProtocolProjection,
+        event: dict[str, Any],
+    ) -> None:
+        self._require_anchor(projection, event)
+        disposition = self._record(
+            "ReviewDisposition",
+            event["payload"]["disposition"],
+            event,
+        )
+        finding = self._object(
+            projection.objects,
+            disposition["finding_id"],
+            "ReviewFinding",
+        )
+        if finding["content_hash"] != disposition["finding_hash"]:
+            raise ProtocolError(f"event {event['event_id']}: review finding hash mismatch")
+        if finding["id"] in projection.review_disposition_by_finding:
+            raise ProtocolError(
+                f"event {event['event_id']}: review finding already has a disposition"
+            )
+        _nonblank(
+            disposition,
+            ("rationale",),
+            f"event {event['event_id']} review disposition",
+        )
+        self._require_sources(disposition, {finding["id"]}, event)
+        self._validate_sources(disposition, projection.objects, event)
+        self._add_objects(
+            projection,
+            {disposition["id"]: _wrapped("ReviewDisposition", disposition)},
+            event,
+        )
+        projection.review_disposition_ids.add(disposition["id"])
+        projection.review_disposition_by_finding[finding["id"]] = disposition["id"]
 
     def _proposal(self, projection: ProtocolProjection, event: dict[str, Any]) -> None:
         self._require_anchor(projection, event)
@@ -2832,7 +3001,10 @@ class ProtocolLedger:
             "Request",
             "EvidenceRequest",
             "HumanReviewRequest",
+            "ReviewRequest",
             "ReviewReport",
+            "ReviewFinding",
+            "ReviewDisposition",
             "ClaimRevision",
             "TransitionRecord",
             "ActionDispatch",
@@ -2883,7 +3055,10 @@ class ProtocolLedger:
             "Request": "ProtocolRecord",
             "EvidenceRequest": "Request",
             "HumanReviewRequest": "Request",
+            "ReviewRequest": "ProtocolRecord",
             "ReviewReport": "ProtocolRecord",
+            "ReviewFinding": "ProtocolRecord",
+            "ReviewDisposition": "ProtocolRecord",
             "ClaimRevision": "ProtocolRecord",
             "TransitionRecord": "ProtocolRecord",
             "ActionDispatch": "ProtocolRecord",
@@ -2917,6 +3092,13 @@ class ProtocolLedger:
             "ExecutionStatus": {"SUCCEEDED", "FAILED", "ABORTED"},
             "OutcomeResult": {"CONFIRMED", "CONTRADICTED", "INDETERMINATE"},
             "RequestState": {"OPEN", "FULFILLED", "CANCELLED"},
+            "ReviewDispositionValue": {
+                "ADOPT",
+                "DEFER",
+                "DISMISS",
+                "RETURN",
+                "INVALIDATE",
+            },
             "ValidTimePrecision": {item.value for item in ValidTimePrecision},
         }
         for name, expected in enum_values.items():

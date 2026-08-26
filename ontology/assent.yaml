@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.9.0
+version: 0.10.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -117,6 +117,14 @@ enums:
       OPEN:
       FULFILLED:
       CANCELLED:
+
+  ReviewDispositionValue:
+    permissible_values:
+      ADOPT:
+      DEFER:
+      DISMISS:
+      RETURN:
+      INVALIDATE:
 
   EvidencePolarity:
     permissible_values:
@@ -1262,19 +1270,85 @@ classes:
       reviewer_authority_requirement:
         required: true
 
+  ReviewRequest:
+    is_a: ProtocolRecord
+    slots:
+      - target_record_id
+      - target_record_hash
+      - requested_by_actor_id
+      - intended_recipient_id
+      - review_question
+      - issued_at
+    slot_usage:
+      target_record_id:
+        required: true
+      target_record_hash:
+        required: true
+      requested_by_actor_id:
+        required: true
+      intended_recipient_id:
+        required: true
+      review_question:
+        required: true
+      issued_at:
+        required: true
+
   ReviewReport:
     is_a: ProtocolRecord
     slots:
       - request_id
+      - request_hash
       - reviewer_id
       - review_outcome
       - rationale
     slot_usage:
       request_id:
         required: true
+      request_hash:
+        required: true
       reviewer_id:
         required: true
       review_outcome:
+        required: true
+      rationale:
+        required: true
+
+  ReviewFinding:
+    is_a: ProtocolRecord
+    slots:
+      - report_id
+      - report_hash
+      - target_record_id
+      - target_record_hash
+      - finding_statement
+      - rationale
+    slot_usage:
+      report_id:
+        required: true
+      report_hash:
+        required: true
+      target_record_id:
+        required: true
+      target_record_hash:
+        required: true
+      finding_statement:
+        required: true
+      rationale:
+        required: true
+
+  ReviewDisposition:
+    is_a: ProtocolRecord
+    slots:
+      - finding_id
+      - finding_hash
+      - review_disposition
+      - rationale
+    slot_usage:
+      finding_id:
+        required: true
+      finding_hash:
+        required: true
+      review_disposition:
         required: true
       rationale:
         required: true
@@ -1811,6 +1885,10 @@ slots:
     range: string
   target_proposal_id:
     range: string
+  target_record_id:
+    range: string
+  target_record_hash:
+    range: string
   request_contract_id:
     range: string
   request_contract_hash:
@@ -1837,6 +1915,20 @@ slots:
 
   review_outcome:
     range: string
+  request_hash:
+    range: string
+  report_id:
+    range: string
+  report_hash:
+    range: string
+  finding_statement:
+    range: string
+  finding_id:
+    range: string
+  finding_hash:
+    range: string
+  review_disposition:
+    range: ReviewDispositionValue
 
   replaced_claim_version_id:
     range: string

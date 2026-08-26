@@ -24,7 +24,20 @@ The main categories are proposals and first-order members; assessments and
 monitor failures; epistemic and authorization decisions; requests, reports,
 and revisions; transition, dispatch, execution, and outcome records; and
 versioned monitor, policy, rule, contract, and authority-grant artifacts.
-`ReviewReport` remains schema only, with no protocol event door.
+
+The lean review arm adds three event doors. `REVIEW_REQUESTED` binds one exact
+applied protocol record by ID and content hash. `REVIEW_RECORDED` atomically
+records one report plus zero or more immutable, individually queryable
+findings, and permits one report per request. `REVIEW_DISPOSITIONED` records
+`ADOPT`, `DEFER`, `DISMISS`, `RETURN`, or `INVALIDATE` for one exact finding;
+each finding accepts at most one immutable disposition. Re-review uses another
+independent immutable request, without adding cases, rounds, or a review
+lineage graph. Review records cannot themselves be review targets in this
+slice.
+
+This arm records review facts only. It does not authenticate actors, aggregate
+reviewers, resolve competing dispositions, create remediation, interpret
+domain readiness, model cases or rounds, or create a review work queue.
 
 Stage 6 makes two previously opaque artifacts concrete.
 `MonitorSpecificationArtifact` binds one assessment kind, implementation hash,
@@ -318,9 +331,11 @@ that a proposal was epistemically accepted or authorized.
 
 This implementation supports a narrow claim: Malleus has an executable,
 structurally enforced protocol ontology and replay-derived state machine that
-separate proposals, monitor failures, assessments, epistemic decisions, and
-action authorization. Exact proposed mutations can be bound to acceptance,
-materialized atomically, and reconstructed by transaction time and valid time.
+separate proposals, monitor failures, assessments, epistemic decisions, action
+authorization, and lean review recording. Exact proposed mutations can be
+bound to acceptance, materialized atomically, and reconstructed by transaction
+time and valid time. Exact review targets, reports, findings, and dispositions
+can be replayed without making review a readiness decision.
 
 It does not establish truth, source authenticity, quoted-span correctness,
 policy legitimacy, authority-monitor orchestration, general workflow

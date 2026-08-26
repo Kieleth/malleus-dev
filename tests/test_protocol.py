@@ -4442,7 +4442,7 @@ class TestLeanReviewProtocol:
     readiness stay outside this contract.
     """
 
-    def test_request_report_findings_and_disposition_history_replay(self, ledger):
+    def test_request_report_findings_and_dispositions_replay(self, ledger):
         anchor(ledger)
         target = add_source_artifact(ledger)
 
@@ -4519,25 +4519,14 @@ class TestLeanReviewProtocol:
             findings[0],
             disposition_id="review-disposition:1",
             value="ADOPT",
-            revision=1,
             minute=8,
         )
         deferred = self._record_disposition(
             ledger,
             findings[1],
-            disposition_id="review-disposition:2:1",
+            disposition_id="review-disposition:2",
             value="DEFER",
-            revision=1,
             minute=9,
-        )
-        dismissed = self._record_disposition(
-            ledger,
-            findings[1],
-            disposition_id="review-disposition:2:2",
-            value="DISMISS",
-            revision=2,
-            minute=10,
-            previous=deferred,
         )
 
         projection = ledger.replay()
@@ -4545,19 +4534,14 @@ class TestLeanReviewProtocol:
         assert projection.review_findings_by_report == {
             report["id"]: [finding["id"] for finding in findings]
         }
-        assert projection.current_review_disposition_by_finding == {
+        assert projection.review_disposition_by_finding == {
             findings[0]["id"]: adopted["id"],
-            findings[1]["id"]: dismissed["id"],
+            findings[1]["id"]: deferred["id"],
         }
-        assert projection.review_disposition_states == {
-            findings[0]["id"]: "ADOPT",
-            findings[1]["id"]: "DISMISS",
-        }
-        assert projection.review_disposition_history_by_finding == {
-            findings[0]["id"]: [adopted["id"]],
-            findings[1]["id"]: [deferred["id"], dismissed["id"]],
-        }
-        for record in [request, report, *findings, adopted, deferred, dismissed]:
+        assert not hasattr(projection, "current_review_disposition_by_finding")
+        assert not hasattr(projection, "review_disposition_states")
+        assert not hasattr(projection, "review_disposition_history_by_finding")
+        for record in [request, report, *findings, adopted, deferred]:
             assert projection.objects[record["id"]]["record"] == record
 
     def test_request_refuses_the_wrong_target_hash_atomically(self, ledger):
@@ -4635,26 +4619,305 @@ class TestLeanReviewProtocol:
             )
         assert ledger.path.read_bytes() == before
 
+    @pytest.mark.parametrize(
+        "request_hash,reviewer,event_actor,message",
+        [
+            (
+                "sha256:" + "0" * 64,
+                "actor:reviewer",
+                "actor:reviewer",
+                "review request hash mismatch",
+            ),
+            (
+                None,
+                "actor:other-reviewer",
+                "actor:other-reviewer",
+                "report reviewer was not requested",
+            ),
+        ],
+    )
+    def test_report_requires_exact_request_and_requested_reviewer(
+        self,
+        ledger,
+        request_hash,
+        reviewer,
+        event_actor,
+        message,
+    ):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        timestamp = time_at(7)
+        report = make_record(
+            "ReviewReport",
+            event_id="event:review-report:binding",
+            generated_at=timestamp,
+            actor_id=event_actor,
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id="review-report:binding",
+            request_id=request["id"],
+            request_hash=request_hash or request["content_hash"],
+            reviewer_id=reviewer,
+            review_outcome="COMPLETE",
+            rationale="Review completed.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match=message):
+            ledger.append_event(
+                event_id="event:review-report:binding",
+                event_type=EventType.REVIEW_RECORDED,
+                transaction_time=timestamp,
+                actor_id=event_actor,
+                payload={"report": report, "findings": []},
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_request_accepts_only_one_report(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        first = self._record_empty_report(ledger, request, minute=7, suffix="first")
+        timestamp = time_at(8)
+        second = make_record(
+            "ReviewReport",
+            event_id="event:review-report:second",
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id="review-report:second",
+            request_id=request["id"],
+            request_hash=request["content_hash"],
+            reviewer_id="actor:reviewer",
+            review_outcome="COMPLETE",
+            rationale="A second report is outside the request contract.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="review request already has a report"):
+            ledger.append_event(
+                event_id="event:review-report:second",
+                event_type=EventType.REVIEW_RECORDED,
+                transaction_time=timestamp,
+                actor_id="actor:reviewer",
+                payload={"report": second, "findings": []},
+            )
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().review_report_by_request == {request["id"]: first["id"]}
+
+    def test_independent_requests_allow_rereview_and_multiple_reviewers(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        first_request = self._record_request(
+            ledger,
+            target,
+            minute=6,
+            suffix="reviewer-a",
+            reviewer="actor:reviewer-a",
+        )
+        second_request = self._record_request(
+            ledger,
+            target,
+            minute=7,
+            suffix="reviewer-b",
+            reviewer="actor:reviewer-b",
+        )
+        first_report = self._record_empty_report(
+            ledger,
+            first_request,
+            minute=8,
+            suffix="reviewer-a",
+            reviewer="actor:reviewer-a",
+        )
+        second_report = self._record_empty_report(
+            ledger,
+            second_request,
+            minute=9,
+            suffix="reviewer-b",
+            reviewer="actor:reviewer-b",
+        )
+        projection = ledger.replay()
+        assert projection.review_report_by_request == {
+            first_request["id"]: first_report["id"],
+            second_request["id"]: second_report["id"],
+        }
+
+    def test_report_refuses_missing_request_hash_atomically(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        timestamp = time_at(7)
+        report = make_record(
+            "ReviewReport",
+            event_id="event:review-report:missing-request-hash",
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id="review-report:missing-request-hash",
+            request_id=request["id"],
+            reviewer_id="actor:reviewer",
+            review_outcome="COMPLETE",
+            rationale="The immutable request hash is missing.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(
+            ProtocolError,
+            match="Invalid ReviewReport: Required slot 'request_hash' missing",
+        ):
+            ledger.append_event(
+                event_id="event:review-report:missing-request-hash",
+                event_type=EventType.REVIEW_RECORDED,
+                transaction_time=timestamp,
+                actor_id="actor:reviewer",
+                payload={"report": report, "findings": []},
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_disposition_requires_the_exact_finding_hash(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        _, finding = self._record_one_finding(ledger, request, target)
+        timestamp = time_at(8)
+        disposition = make_record(
+            "ReviewDisposition",
+            event_id="event:review-disposition:wrong-finding",
+            generated_at=timestamp,
+            actor_id="actor:operator",
+            role="epistemic-controller",
+            source_record_ids=[finding["id"]],
+            id="review-disposition:wrong-finding",
+            finding_id=finding["id"],
+            finding_hash="sha256:" + "0" * 64,
+            review_disposition="ADOPT",
+            rationale="This disposition names the wrong finding version.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="review finding hash mismatch"):
+            ledger.append_event(
+                event_id="event:review-disposition:wrong-finding",
+                event_type=EventType.REVIEW_DISPOSITIONED,
+                transaction_time=timestamp,
+                actor_id="actor:operator",
+                payload={"disposition": disposition},
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_finding_accepts_only_one_immutable_disposition(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        _, finding = self._record_one_finding(ledger, request, target)
+        first = self._record_disposition(
+            ledger,
+            finding,
+            disposition_id="review-disposition:first",
+            value="DEFER",
+            minute=8,
+        )
+        timestamp = time_at(9)
+        second = make_record(
+            "ReviewDisposition",
+            event_id="event:review-disposition:second",
+            generated_at=timestamp,
+            actor_id="actor:operator",
+            role="epistemic-controller",
+            source_record_ids=[finding["id"]],
+            id="review-disposition:second",
+            finding_id=finding["id"],
+            finding_hash=finding["content_hash"],
+            review_disposition="DISMISS",
+            rationale="A second disposition is forbidden.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="review finding already has a disposition"):
+            ledger.append_event(
+                event_id="event:review-disposition:second",
+                event_type=EventType.REVIEW_DISPOSITIONED,
+                transaction_time=timestamp,
+                actor_id="actor:operator",
+                payload={"disposition": second},
+            )
+        assert ledger.path.read_bytes() == before
+        assert ledger.replay().review_disposition_by_finding == {
+            finding["id"]: first["id"]
+        }
+
+    def test_review_records_cannot_be_review_targets(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        report, finding = self._record_one_finding(ledger, request, target)
+        disposition = self._record_disposition(
+            ledger,
+            finding,
+            disposition_id="review-disposition:target",
+            value="INVALIDATE",
+            minute=8,
+        )
+        projection = ledger.replay()
+        for record in (request, report, finding, disposition):
+            assert projection.objects[record["id"]]["record"] == record
+        for minute, review_target in enumerate(
+            (request, report, finding, disposition),
+            start=9,
+        ):
+            timestamp = time_at(minute)
+            nested = make_record(
+                "ReviewRequest",
+                event_id=f"event:review-request:nested:{minute}",
+                generated_at=timestamp,
+                actor_id="actor:requester",
+                role="reviewer",
+                source_record_ids=[review_target["id"]],
+                id=f"review-request:nested:{minute}",
+                target_record_id=review_target["id"],
+                target_record_hash=review_target["content_hash"],
+                requested_by_actor_id="actor:requester",
+                intended_recipient_id="actor:reviewer",
+                review_question="Reviewing review records is outside this slice.",
+                issued_at=timestamp,
+            )
+            before = ledger.path.read_bytes()
+            with pytest.raises(ProtocolError, match="review records cannot be review targets"):
+                ledger.append_event(
+                    event_id=f"event:review-request:nested:{minute}",
+                    event_type=EventType.REVIEW_REQUESTED,
+                    transaction_time=timestamp,
+                    actor_id="actor:requester",
+                    payload={"request": nested},
+                )
+            assert ledger.path.read_bytes() == before
+
     @staticmethod
-    def _record_request(ledger, target):
-        timestamp = time_at(6)
+    def _record_request(
+        ledger,
+        target,
+        *,
+        minute=6,
+        suffix="helper",
+        reviewer="actor:reviewer",
+    ):
+        timestamp = time_at(minute)
+        event_id = f"event:review-request:{suffix}"
         request = make_record(
             "ReviewRequest",
-            event_id="event:review-request:helper",
+            event_id=event_id,
             generated_at=timestamp,
             actor_id="actor:requester",
             role="reviewer",
             source_record_ids=[target["id"]],
-            id="review-request:helper",
+            id=f"review-request:{suffix}",
             target_record_id=target["id"],
             target_record_hash=target["content_hash"],
             requested_by_actor_id="actor:requester",
-            intended_recipient_id="actor:reviewer",
+            intended_recipient_id=reviewer,
             review_question="Review this exact target.",
             issued_at=timestamp,
         )
         ledger.append_event(
-            event_id="event:review-request:helper",
+            event_id=event_id,
             event_type=EventType.REVIEW_REQUESTED,
             transaction_time=timestamp,
             actor_id="actor:requester",
@@ -4663,40 +4926,104 @@ class TestLeanReviewProtocol:
         return request
 
     @staticmethod
+    def _record_empty_report(
+        ledger,
+        request,
+        *,
+        minute,
+        suffix,
+        reviewer="actor:reviewer",
+    ):
+        event_id = f"event:review-report:{suffix}"
+        timestamp = time_at(minute)
+        report = make_record(
+            "ReviewReport",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id=reviewer,
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id=f"review-report:{suffix}",
+            request_id=request["id"],
+            request_hash=request["content_hash"],
+            reviewer_id=reviewer,
+            review_outcome="COMPLETE",
+            rationale="Review completed with no findings.",
+        )
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.REVIEW_RECORDED,
+            transaction_time=timestamp,
+            actor_id=reviewer,
+            payload={"report": report, "findings": []},
+        )
+        return report
+
+    @staticmethod
+    def _record_one_finding(ledger, request, target):
+        event_id = "event:review-report:one-finding"
+        timestamp = time_at(7)
+        report = make_record(
+            "ReviewReport",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id="review-report:one-finding",
+            request_id=request["id"],
+            request_hash=request["content_hash"],
+            reviewer_id="actor:reviewer",
+            review_outcome="COMPLETE",
+            rationale="Review completed.",
+        )
+        finding = make_record(
+            "ReviewFinding",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[report["id"], target["id"]],
+            id="review-finding:one",
+            report_id=report["id"],
+            report_hash=report["content_hash"],
+            target_record_id=target["id"],
+            target_record_hash=target["content_hash"],
+            finding_statement="The target requires another review.",
+            rationale="Observed directly in the target.",
+        )
+        ledger.append_event(
+            event_id=event_id,
+            event_type=EventType.REVIEW_RECORDED,
+            transaction_time=timestamp,
+            actor_id="actor:reviewer",
+            payload={"report": report, "findings": [finding]},
+        )
+        return report, finding
+
+    @staticmethod
     def _record_disposition(
         ledger,
         finding,
         *,
         disposition_id,
         value,
-        revision,
         minute,
-        previous=None,
     ):
         event_id = f"event:{disposition_id}"
         timestamp = time_at(minute)
-        sources = [finding["id"]]
-        fields = {}
-        if previous is not None:
-            sources.append(previous["id"])
-            fields = {
-                "revises_review_disposition_id": previous["id"],
-                "revises_review_disposition_hash": previous["content_hash"],
-            }
         disposition = make_record(
             "ReviewDisposition",
             event_id=event_id,
             generated_at=timestamp,
             actor_id="actor:operator",
             role="epistemic-controller",
-            source_record_ids=sources,
+            source_record_ids=[finding["id"]],
             id=disposition_id,
             finding_id=finding["id"],
             finding_hash=finding["content_hash"],
             review_disposition=value,
-            revision=revision,
             rationale="Operator disposition for this exact finding.",
-            **fields,
         )
         ledger.append_event(
             event_id=event_id,

@@ -531,6 +531,22 @@ def test_requests_and_revision_are_records_not_decision_values():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     assert registry.is_subtype_of("EvidenceRequest", "Request")
     assert registry.is_subtype_of("HumanReviewRequest", "Request")
+    assert registry.is_subtype_of("ReviewRequest", "ProtocolRecord")
+    assert registry.is_subtype_of("ReviewReport", "ProtocolRecord")
+    assert registry.is_subtype_of("ReviewFinding", "ProtocolRecord")
+    assert registry.is_subtype_of("ReviewDisposition", "ProtocolRecord")
+    assert registry.effective_slots("ReviewReport")["request_hash"].required
+    disposition_slots = registry.effective_slots("ReviewDisposition")
+    assert "revision" not in disposition_slots
+    assert "revises_review_disposition_id" not in disposition_slots
+    assert "revises_review_disposition_hash" not in disposition_slots
+    assert registry.get_enum_values("ReviewDispositionValue") == {
+        "ADOPT",
+        "DEFER",
+        "DISMISS",
+        "RETURN",
+        "INVALIDATE",
+    }
     assert registry.is_subtype_of("ClaimRevision", "ProtocolRecord")
     assert "SEEK_EVIDENCE" not in registry.get_enum_values("EpistemicVerdict")
     assert "SEEK_HUMAN" not in registry.get_enum_values("EpistemicVerdict")
