@@ -1,0 +1,79 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 276746,
+      "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+      "sha256": "sha256:c85b1e36272f1291bce72c9cd437fb183468de63f947c9728b51a8b8a778de91"
+    },
+    {
+      "byte_length": 13421,
+      "path": "scripts/contract_compiler_duplicate_scan.py",
+      "sha256": "sha256:546a5cd14326014c7eafae96002f050f990662c422c32a5494a5ce66648099be"
+    },
+    {
+      "byte_length": 14244,
+      "path": "tests/test_contract_compiler_duplicate_scan.py",
+      "sha256": "sha256:6cedbdcfcc48b088f3db90a9637bf5cef09a045f6327bce9e4b09144d6e504e4"
+    }
+  ],
+  "base_commit": "61f488ded1870fbfbf2fbdecc901baf9c1c503dd",
+  "checks": [
+    {
+      "check_id": "ccx02-red",
+      "method": "Run the focused contract before adding the scanner or retained artifacts.",
+      "observed": "RED commit 0d056e7ce56c173a6a1c16e8e20947d0c1f27b67 failed during collection because scripts/contract_compiler_duplicate_scan.py was absent, with exit status 2.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-inputs",
+      "method": "Discover ontology YAML sources only from wheel shared-data in pyproject.toml and bind every source byte length and SHA-256.",
+      "observed": "Exactly six packaged ontology YAML modules were read independently. Their literal id, name, version, imports, source lengths, and source digests are retained.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-declarations",
+      "method": "Enumerate types, enums, slots, and classes before import resolution and retain each raw JSON-compatible definition.",
+      "observed": "The retained scan contains exactly 523 declarations with complete module provenance and exact raw definitions.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-duplicates",
+      "method": "Group declarations only by exact kind and symbol and separately enumerate cross-kind repeats.",
+      "observed": "Four same-kind slot groups contain nine occurrences: confidence, evidence_ids, locator, and reviewer_id. No cross-kind repeat was observed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-adopts",
+      "method": "Retain annotations.adopts using explicit ABSENT, NULL, and VALUE states without boolean coercion.",
+      "observed": "Temporary fixtures distinguish absent, null, false, and true. The bundled scan has three VALUE true occurrences and preserves all other occurrences as ABSENT.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-refusal",
+      "method": "Exercise malformed input and retained-byte drift.",
+      "observed": "Duplicate YAML keys fail loudly. A changed raw observation, changed retained output, or changed source byte causes check mode to fail.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-isolation",
+      "method": "Inspect scanner imports and names with Python AST.",
+      "observed": "The scanner imports no LinkML, linkml-runtime, Malleus production module, or regular-expression engine and names neither SchemaView nor OntologyRegistry.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx02-focused",
+      "method": "Run the focused tests, offline check command, scoped Ruff, diff check, and verification-report byte validator.",
+      "observed": "All 11 focused tests passed. The retained scan matched fresh canonical bytes; scoped Ruff, diff check, and evidence-byte validation passed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-X02 is raw measurement only. It does not resolve imports, merge declarations, compare definitions, select a winner, authorize adoption, or close OD-002.",
+    "The observation covers only the six ontology YAML files currently declared as wheel shared data. Any pyproject or source-byte change requires a fresh retained scan.",
+    "YAML is decoded with the configured PyYAML SafeLoader plus duplicate-key refusal. Source hashes bind these observations; cross-version YAML parser equivalence is not claimed.",
+    "Literal imports are retained but never opened. Built-in LinkML declarations and declarations outside the six packaged modules are not part of this measurement."
+  ],
+  "recorded_at": "2026-08-26T20:24:07Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X02"
+}

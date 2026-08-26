@@ -162,6 +162,7 @@ def _walk(value):
 
 
 def _copy_inputs(tmp_path: Path) -> Path:
+    tmp_path.mkdir(parents=True, exist_ok=True)
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_bytes(PYPROJECT.read_bytes())
     for relative in MODULES:
@@ -292,13 +293,13 @@ types: {}
 enums: {}
 slots:
   absent: {}
-  null:
+  "null":
     annotations:
       adopts:
-  false:
+  "false":
     annotations:
       adopts: false
-  true:
+  "true":
     annotations:
       adopts: true
 classes: {}
