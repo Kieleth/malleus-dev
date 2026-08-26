@@ -100,6 +100,34 @@ def _sha256(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
 
+def _reseal_candidate(candidate: dict) -> None:
+    digest_fields = {
+        name: candidate[name]
+        for name in (
+            "candidate_schema_version",
+            "graph_base_id",
+            "graph_base_hash",
+            "graph_ontology_hash",
+            "base_acceptance_head",
+            "base_materialization_head",
+            "base_state_digest",
+            "candidate_manifest",
+            "candidate_manifest_hash",
+            "candidate_write_count",
+            "candidate_digest",
+            "candidate_state_digest",
+        )
+    }
+    candidate["artifact_hash"] = runner.candidate_artifact_digest(
+        artifact_id=candidate["id"],
+        artifact_version=candidate["artifact_version"],
+        **digest_fields,
+    )
+    candidate["content_hash"] = runner.record_hash(
+        "CandidateSubgraphArtifact", candidate
+    )
+
+
 def _walk(value):
     if isinstance(value, dict):
         yield value
@@ -317,6 +345,87 @@ def test_intrinsic_checks_reject_resealed_cross_artifact_mismatches():
     candidate["content_hash"] = runner.record_hash("CandidateSubgraphArtifact", candidate)
     original_base = events[1]["payload"]["artifact"]
     assert runner._candidate_intrinsic(registry, candidate, original_base)["outcome"] == "FAIL"
+
+
+def test_graph_base_intrinsic_rejects_resealed_ghost_metadata():
+    events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
+    registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    snapshot = _read(CORPUS / "graph-snapshot.json")
+    graph_base = deepcopy(events[1]["payload"]["artifact"])
+    graph_base["base_record_metadata"] = json.dumps(
+        {
+            "records": [
+                {
+                    "record_id": "ghost:record",
+                    "supersedes_record_id": None,
+                    "valid_from": {
+                        "exact_timestamp": "2026-08-17T00:00:00+00:00",
+                        "valid_time_precision": "EXACT_TIMESTAMP",
+                    },
+                    "valid_to": None,
+                }
+            ],
+            "schema_version": "2",
+        },
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    graph_base["base_record_count"] = 1
+    graph_base["artifact_hash"] = runner.graph_base_artifact_digest(
+        artifact_id=graph_base["id"],
+        artifact_version=graph_base["artifact_version"],
+        graph_ontology_hash=graph_base["graph_ontology_hash"],
+        base_state_digest=graph_base["base_state_digest"],
+        base_record_metadata=graph_base["base_record_metadata"],
+    )
+    graph_base["content_hash"] = runner.record_hash("GraphBaseArtifact", graph_base)
+
+    assert runner._graph_base_intrinsic(registry, graph_base, snapshot)["outcome"] == "FAIL"
+
+
+@pytest.mark.parametrize("field", ["candidate_digest", "candidate_state_digest"])
+def test_candidate_intrinsic_rejects_resealed_wrong_staged_digest(field):
+    events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
+    registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    graph_base = events[1]["payload"]["artifact"]
+    candidate = deepcopy(events[2]["payload"]["artifact"])
+    candidate[field] = "sha256:" + "0" * 64
+    _reseal_candidate(candidate)
+
+    assert runner._candidate_intrinsic(registry, candidate, graph_base)["outcome"] == "FAIL"
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["base_acceptance_head", "base_materialization_head"],
+)
+def test_candidate_intrinsic_rejects_resealed_wrong_projection_head(field):
+    events = runner.read_jsonl(CORPUS / "protocol-ledger.jsonl")
+    registry = runner.OntologyRegistry(runner.ASSENT_SCHEMA)
+    graph_base = events[1]["payload"]["artifact"]
+    candidate = deepcopy(events[2]["payload"]["artifact"])
+    candidate[field] = "sha256:" + "0" * 64
+    _reseal_candidate(candidate)
+
+    assert runner._candidate_intrinsic(registry, candidate, graph_base)["outcome"] == "FAIL"
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["ontology/assent.yaml", "ontology/domains/recon.yaml"],
+)
+def test_reader_provenance_refuses_ontology_byte_substitution(monkeypatch, path):
+    original_digest_file = runner._digest_file
+    target = (ROOT / path).resolve()
+
+    def substituted_digest_file(source):
+        if source.resolve() == target:
+            return "sha256:" + "0" * 64
+        return original_digest_file(source)
+
+    monkeypatch.setattr(runner, "_digest_file", substituted_digest_file)
+    with pytest.raises(runner.HistoricWireError, match="Current reader source differs"):
+        runner._reader()
 
 
 def test_fresh_observation_is_deterministic_and_does_not_rewrite_inputs():
