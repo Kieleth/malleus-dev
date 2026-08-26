@@ -2,18 +2,29 @@
 
 from __future__ import annotations
 
+import ast
+import base64
+import builtins
+import csv
 import hashlib
 import io
 import json
 import os
+import pathlib
+import platform
 import shutil
 import stat
+import struct
 import subprocess
 import sys
+import sysconfig
 import tarfile
 import tomllib
 import types
+import venv
+import warnings
 import zipfile
+import zlib
 from pathlib import Path
 from typing import Any
 
@@ -38,9 +49,10 @@ class FakeServices:
     def acquire(self) -> dict[str, Any]:
         self.calls.append("acquire")
         return environment.acquire_result(
-            artifact_count=7,
-            built_artifact_count=1,
+            artifact_count=8,
+            built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
             lock_sha256="sha256:" + "1" * 64,
             wheel_count=23,
             wheelhouse_sha256="sha256:" + "2" * 64,
@@ -56,6 +68,7 @@ class FakeServices:
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
             source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
         )
 
 
@@ -201,6 +214,444 @@ def _built_antlr_wheel(
             info.external_attr = (stat.S_IFREG | 0o644) << 16
             archive.writestr(info, source)
     return path.read_bytes()
+
+
+_PREFIXCOMMONS_METADATA = (
+    b"Metadata-Version: 2.1\n"
+    b"Name: prefixcommons\n"
+    b"Version: 0.1.12\n"
+    b"Requires-Dist: click\n"
+    b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n"
+    b"Summary: Hermetic prefixcommons fixture\n"
+)
+_PREFIXCOMMONS_WHEEL = (
+    b"Wheel-Version: 1.0\n"
+    b"Generator: poetry 1.0.7\n"
+    b"Root-Is-Purelib: true\n"
+    b"Tag: py3-none-any\n"
+)
+_PREFIXCOMMONS_LICENSE = b"BSD 3-Clause License\nfixture notice\n"
+_PREFIXCOMMONS_PAYLOADS = {
+    "prefixcommons/__init__.py": b"from .curie_util import expand_uri, contract_uri\n",
+    "prefixcommons/biocontext.py": b"BIOCONTEXT = {}\n",
+    "prefixcommons/curie_util.py": b"def expand_uri(value): return value\n",
+    "prefixcommons/io_util.py": b"def read_json(path): return path\n",
+    "prefixcommons/obo_context.jsonld": b'{"GO":"http://purl.obolibrary.org/obo/GO_"}\n',
+    "prefixcommons/prefixcommons.py": b"class PrefixContext: pass\n",
+    "prefixcommons/resources/__init__.py": b"",
+    "prefixcommons/resources/biocontext.jsonld": b"{}\n",
+    "prefixcommons/resources/merged.jsonld": b"{}\n",
+    "prefixcommons/resources/prefixes.csv": b"prefix,base\nGO,http://purl.obolibrary.org/obo/GO_\n",
+}
+
+
+def _record_source(sources: dict[str, bytes], record_name: str) -> bytes:
+    rows = []
+    for name in sorted((*sources, record_name)):
+        if name == record_name:
+            rows.append((name, "", ""))
+            continue
+        digest = base64.urlsafe_b64encode(hashlib.sha256(sources[name]).digest())
+        rows.append((name, "sha256=" + digest.rstrip(b"=").decode("ascii"), str(len(sources[name]))))
+    output = io.StringIO(newline="")
+    writer = csv.writer(
+        output,
+        delimiter=",",
+        quotechar='"',
+        doublequote=True,
+        escapechar=None,
+        lineterminator="\n",
+        quoting=csv.QUOTE_MINIMAL,
+    )
+    writer.writerows(rows)
+    return output.getvalue().encode("utf-8")
+
+
+def _prefixcommons_upstream_wheel(
+    path: Path,
+    *,
+    raw_name: str | None = None,
+    member_mode: int = stat.S_IFREG | 0o644,
+    duplicate_member: bool = False,
+    record_mutation: str | None = None,
+    metadata: bytes = _PREFIXCOMMONS_METADATA,
+    wheel: bytes = _PREFIXCOMMONS_WHEEL,
+    license_source: bytes | None = _PREFIXCOMMONS_LICENSE,
+) -> bytes:
+    dist_info = "prefixcommons-0.1.12.dist-info"
+    sources = {
+        **_PREFIXCOMMONS_PAYLOADS,
+        f"{dist_info}/METADATA": metadata,
+        f"{dist_info}/WHEEL": wheel,
+    }
+    if license_source is not None:
+        sources[f"{dist_info}/LICENSE"] = license_source
+    if raw_name is not None:
+        sources[raw_name] = sources.pop("prefixcommons/resources/prefixes.csv")
+    record_name = f"{dist_info}/RECORD"
+    record = _record_source(sources, record_name)
+    if record_mutation == "hash":
+        digest_index = record.index(b"sha256=") + len(b"sha256=")
+        changed = bytearray(record)
+        changed[digest_index] = ord("A") if changed[digest_index] != ord("A") else ord("B")
+        record = bytes(changed)
+    elif record_mutation == "missing":
+        record = record.partition(b"\n")[2]
+    elif record_mutation == "duplicate":
+        record = record.partition(b"\n")[0] + b"\n" + record
+    sources[record_name] = record
+    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_STORED) as archive:
+        for name, source in sources.items():
+            info = zipfile.ZipInfo(name, (2020, 1, 2, 3, 4, 6))
+            info.create_system = 3
+            info.external_attr = member_mode << 16
+            archive.writestr(info, source)
+        if duplicate_member:
+            name = "prefixcommons/__init__.py"
+            info = zipfile.ZipInfo(name, (2020, 1, 2, 3, 4, 6))
+            info.create_system = 3
+            info.external_attr = member_mode << 16
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", UserWarning)
+                archive.writestr(info, sources[name])
+    return path.read_bytes()
+
+
+def _select_prefixcommons_fixture(
+    monkeypatch,
+    path: Path,
+    *,
+    facts_path: Path | None = None,
+) -> None:
+    source = path.read_bytes()
+    with zipfile.ZipFile(path if facts_path is None else facts_path) as archive:
+        members = archive.infolist()
+        expanded = sum(member.file_size for member in members)
+        dist_info = "prefixcommons-0.1.12.dist-info"
+        metadata = archive.read(f"{dist_info}/METADATA")
+        wheel = archive.read(f"{dist_info}/WHEEL")
+        try:
+            license_source = archive.read(f"{dist_info}/LICENSE")
+        except KeyError:
+            license_source = b""
+    selected = environment.SelectedArtifact(
+        filename=path.name,
+        kind="WHEEL",
+        url="https://files.pythonhosted.org/fixture/" + path.name,
+        byte_length=len(source),
+        sha256=hashlib.sha256(source).hexdigest(),
+    )
+    monkeypatch.setattr(environment, "DERIVATIVE_INPUTS", (selected,), raising=False)
+    facts = {
+        "PREFIXCOMMONS_MEMBER_COUNT": len(members),
+        "PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH": expanded,
+        "PREFIXCOMMONS_PACKAGE_MEMBER_COUNT": len(_PREFIXCOMMONS_PAYLOADS),
+        "PREFIXCOMMONS_METADATA_BYTE_LENGTH": len(metadata),
+        "PREFIXCOMMONS_METADATA_SHA256": hashlib.sha256(metadata).hexdigest(),
+        "PREFIXCOMMONS_WHEEL_BYTE_LENGTH": len(wheel),
+        "PREFIXCOMMONS_WHEEL_SHA256": hashlib.sha256(wheel).hexdigest(),
+        "PREFIXCOMMONS_LICENSE_BYTE_LENGTH": len(license_source),
+        "PREFIXCOMMONS_LICENSE_SHA256": hashlib.sha256(license_source).hexdigest(),
+    }
+    for name, value in facts.items():
+        monkeypatch.setattr(environment, name, value, raising=False)
+
+
+def _run_derivation_program(monkeypatch, derivative_inputs: Path, output: Path) -> None:
+    calls = []
+    actual_main = environment._derivation_main
+
+    def observed_main():
+        calls.append(True)
+        return actual_main()
+
+    with monkeypatch.context() as child:
+        child.setattr(
+            environment,
+            "DERIVATION_INPUT_ROOT",
+            derivative_inputs,
+            raising=False,
+        )
+        child.setattr(
+            environment,
+            "DERIVATION_OUTPUT_ROOT",
+            output,
+            raising=False,
+        )
+        child.setattr(environment, "_derivation_main", observed_main)
+        child.setitem(sys.modules, "contract_compiler_environment", environment)
+        namespace = {"__name__": "__main__"}
+        with pytest.raises(SystemExit) as caught:
+            builtins.exec(
+                compile(environment.DERIVATION_PROGRAM, "<cc002-derivation>", "exec"),
+                namespace,
+            )
+    assert caught.value.code == 0
+    assert calls == [True]
+
+
+def _rewrite_derived_wheel(path: Path, mutation: str, monkeypatch) -> None:
+    with zipfile.ZipFile(path) as archive:
+        sources = {info.filename: archive.read(info) for info in archive.infolist()}
+    record_name = "prefixcommons-0.1.12+malleus.1.dist-info/RECORD"
+    rows = list(
+        csv.reader(
+            io.StringIO(sources[record_name].decode("utf-8"), newline=""),
+            delimiter=",",
+            quotechar='"',
+            doublequote=True,
+            escapechar=None,
+            quoting=csv.QUOTE_MINIMAL,
+            strict=True,
+        )
+    )
+    payload_row = next(row for row in rows if row[0] != record_name)
+    self_row = next(row for row in rows if row[0] == record_name)
+    if mutation == "record-order":
+        rows[0], rows[1] = rows[1], rows[0]
+    elif mutation == "record-digest":
+        payload_row[1] = "sha256=" + "A" * 43
+    elif mutation == "record-size":
+        payload_row[2] = str(int(payload_row[2]) + 1)
+    elif mutation == "record-self-hash":
+        self_row[1] = "sha256=" + "A" * 43
+    elif mutation == "record-self-size":
+        self_row[2] = "1"
+    elif mutation == "record-fields":
+        self_row.append("")
+    if mutation.startswith("record-") and mutation not in {
+        "record-bom",
+        "record-crlf",
+        "record-terminal",
+    }:
+        output = io.StringIO(newline="")
+        csv.writer(
+            output,
+            delimiter=",",
+            quotechar='"',
+            doublequote=True,
+            escapechar=None,
+            lineterminator="\n",
+            quoting=csv.QUOTE_MINIMAL,
+        ).writerows(rows)
+        sources[record_name] = output.getvalue().encode("utf-8")
+    elif mutation == "record-bom":
+        sources[record_name] = b"\xef\xbb\xbf" + sources[record_name]
+    elif mutation == "record-crlf":
+        sources[record_name] = sources[record_name].replace(b"\n", b"\r\n")
+    elif mutation == "record-terminal":
+        sources[record_name] = sources[record_name].removesuffix(b"\n")
+
+    names = sorted(sources)
+    if mutation == "member-order":
+        names.reverse()
+    rewritten = path.with_name("rewritten.whl")
+    with monkeypatch.context() as zip_context:
+        if mutation == "zip64-directory":
+            zip_context.setattr(zipfile, "ZIP_FILECOUNT_LIMIT", 1)
+        with zipfile.ZipFile(
+            rewritten,
+            "w",
+            compression=zipfile.ZIP_STORED,
+            allowZip64=True,
+        ) as archive:
+            for index, name in enumerate(names):
+                info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_STORED
+                info.create_system = 3
+                info.create_version = 20
+                info.extract_version = 20
+                info.reserved = 0
+                info.flag_bits = 0
+                info.volume = 0
+                info.internal_attr = 0
+                info.external_attr = 0o100644 << 16
+                info.extra = b""
+                info.comment = b""
+                if index == 0:
+                    if mutation == "timestamp":
+                        info.date_time = (1982, 1, 1, 0, 0, 0)
+                    elif mutation == "compression":
+                        info.compress_type = zipfile.ZIP_DEFLATED
+                    elif mutation == "create-system":
+                        info.create_system = 0
+                    elif mutation == "create-version":
+                        info.create_version = 21
+                    elif mutation == "extract-version":
+                        info.extract_version = 21
+                    elif mutation == "reserved":
+                        info.reserved = 1
+                    elif mutation == "volume":
+                        info.volume = 1
+                    elif mutation == "internal-attr":
+                        info.internal_attr = 1
+                    elif mutation == "external-attr":
+                        info.external_attr = 0o100600 << 16
+                    elif mutation == "member-extra":
+                        info.extra = b"\xfe\xca\x00\x00"
+                    elif mutation == "member-comment":
+                        info.comment = b"changed"
+                if mutation == "zip64-header" and index == 0:
+                    with archive.open(info, "w", force_zip64=True) as stream:
+                        stream.write(sources[name])
+                else:
+                    archive.writestr(info, sources[name])
+            archive.comment = b"changed" if mutation == "archive-comment" else b""
+    if mutation == "flag-bits":
+        source = bytearray(rewritten.read_bytes())
+        local = source.index(b"PK\x03\x04") + 6
+        central = source.index(b"PK\x01\x02") + 8
+        struct.pack_into("<H", source, local, struct.unpack_from("<H", source, local)[0] | 0x20)
+        struct.pack_into(
+            "<H", source, central, struct.unpack_from("<H", source, central)[0] | 0x20
+        )
+        rewritten.write_bytes(source)
+    rewritten.replace(path)
+
+
+def _execute_verifier_program(
+    tmp_path: Path,
+    monkeypatch,
+    *,
+    fault: str | None = None,
+) -> tuple[dict[str, int], dict[str, Any]]:
+    for name in ("malleus.schema.json", "result.json"):
+        (tmp_path / name).unlink(missing_ok=True)
+    calls = {
+        "pip_install": 0,
+        "pip_check": 0,
+        "prefix_expand": 0,
+        "prefix_contract": 0,
+        "namespaces": 0,
+        "generator": 0,
+        "pip_list": 0,
+    }
+    expected_uri = "http://purl.obolibrary.org/obo/GO_0008150"
+
+    prefixcommons = types.ModuleType("prefixcommons")
+
+    def expand_uri(value, *, strict=False):
+        calls["prefix_expand"] += 1
+        assert value == "GO:0008150"
+        assert strict is True
+        if fault == "prefix-expand":
+            return "https://example.invalid/wrong"
+        return expected_uri
+
+    def contract_uri(value, *, strict=False):
+        calls["prefix_contract"] += 1
+        assert value == expected_uri
+        assert strict is True
+        if fault == "prefix-contract":
+            return ["WRONG:0008150"]
+        return ["GO:0008150"]
+
+    prefixcommons.expand_uri = expand_uri
+    prefixcommons.contract_uri = contract_uri
+
+    namespaces_module = types.ModuleType("linkml_runtime.utils.namespaces")
+
+    class FakeNamespaces(dict):
+        def curie_for(self, value):
+            calls["namespaces"] += 1
+            assert value == "https://example.org/item"
+            assert self == {"ex": "https://example.org/"}
+            if fault == "namespaces":
+                return "wrong:item"
+            return "ex:item"
+
+    namespaces_module.Namespaces = FakeNamespaces
+    runtime_module = types.ModuleType("linkml_runtime")
+    runtime_module.__path__ = []
+    utils_module = types.ModuleType("linkml_runtime.utils")
+    utils_module.__path__ = []
+    utils_module.namespaces = namespaces_module
+    runtime_module.utils = utils_module
+    linkml_module = types.ModuleType("linkml")
+    linkml_module.__path__ = []
+    antlr_module = types.ModuleType("antlr4")
+
+    class FakeEnvBuilder:
+        def __init__(self, **options):
+            assert options == {
+                "with_pip": False,
+                "clear": True,
+                "symlinks": False,
+            }
+
+        def create(self, target):
+            (Path(target) / "bin").mkdir(parents=True)
+
+    def fake_run(arguments, **options):
+        command = list(arguments)
+        assert options["cwd"] == "/work"
+        assert options["shell"] is False
+        assert options["check"] is True
+        if command[1:4] == ["-m", "pip", "install"]:
+            calls["pip_install"] += 1
+            return types.SimpleNamespace(returncode=0)
+        if command[1:4] == ["-m", "pip", "check"]:
+            calls["pip_check"] += 1
+            if fault == "pip-check":
+                raise subprocess.CalledProcessError(1, command)
+            return types.SimpleNamespace(returncode=0)
+        if command[1:4] == ["-m", "pip", "list"]:
+            calls["pip_list"] += 1
+            distributions = [
+                {"name": "antlr4-python3-runtime", "version": "4.9.3"},
+                {"name": "linkml", "version": "1.11.1"},
+                {"name": "linkml-runtime", "version": "1.11.1"},
+                {"name": "prefixcommons", "version": "0.1.12+malleus.1"},
+            ]
+            return types.SimpleNamespace(
+                returncode=0,
+                stdout=json.dumps(distributions),
+            )
+        if command[1:3] == ["-m", "linkml.generators.jsonschemagen"]:
+            calls["generator"] += 1
+            generated = {"wrong": {}} if fault == "generator" else {"$defs": {}}
+            options["stdout"].write(json.dumps(generated).encode("utf-8"))
+            return types.SimpleNamespace(returncode=0)
+        if command[1] == "-c":
+            builtins.exec(compile(command[2], "<cc002-verifier-smoke>", "exec"), {})
+            return types.SimpleNamespace(returncode=0, stdout="")
+        raise AssertionError(f"unexpected verifier subprocess: {command!r}")
+
+    actual_path = pathlib.Path
+
+    def mapped_path(value):
+        return tmp_path if value == "/work" else actual_path(value)
+
+    with monkeypatch.context() as verifier:
+        verifier.setattr(pathlib, "Path", mapped_path)
+        verifier.setattr(platform, "python_implementation", lambda: "CPython")
+        verifier.setattr(platform, "python_version", lambda: "3.12.10")
+        verifier.setattr(platform, "system", lambda: "Linux")
+        verifier.setattr(platform, "machine", lambda: "x86_64")
+        verifier.setattr(sys, "version_info", types.SimpleNamespace(major=3, minor=12))
+        verifier.setattr(
+            sysconfig,
+            "get_config_var",
+            lambda name: "cpython-312-x86_64-linux-gnu" if name == "SOABI" else None,
+        )
+        verifier.setattr(venv, "EnvBuilder", FakeEnvBuilder)
+        verifier.setattr(subprocess, "run", fake_run)
+        verifier.setitem(sys.modules, "antlr4", antlr_module)
+        verifier.setitem(sys.modules, "linkml", linkml_module)
+        verifier.setitem(sys.modules, "linkml_runtime", runtime_module)
+        verifier.setitem(sys.modules, "linkml_runtime.utils", utils_module)
+        verifier.setitem(
+            sys.modules,
+            "linkml_runtime.utils.namespaces",
+            namespaces_module,
+        )
+        verifier.setitem(sys.modules, "prefixcommons", prefixcommons)
+        builtins.exec(
+            compile(environment.VERIFIER_PROGRAM, "<cc002-verifier>", "exec"),
+            {"__name__": "__main__"},
+        )
+    result = json.loads((tmp_path / "result.json").read_text(encoding="utf-8"))
+    return calls, result
 
 
 def _build_facts() -> dict[str, Any]:
@@ -489,15 +940,32 @@ def test_tool_output_schemas_are_exact_and_closed():
     assert acquire["additionalProperties"] is False
     assert set(acquire["required"]) == set(acquire["properties"])
     assert acquire["properties"]["schema"] == {
-        "const": "malleus.cc002.acquire-result/v2"
+        "const": "malleus.cc002.acquire-result/v3"
     }
     assert acquire["properties"]["state"] == {"const": "MATERIALIZED"}
+    assert acquire["properties"]["artifact_count"] == {
+        "type": "integer",
+        "minimum": 8,
+        "maximum": 8,
+    }
+    assert acquire["properties"]["built_artifact_count"] == {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 2,
+    }
+    expected_digest_schema = {"type": "string", "minLength": 71, "maxLength": 71}
+    assert acquire["properties"]["derivation_record_sha256"] == (
+        expected_digest_schema
+    )
     assert verify["additionalProperties"] is False
     assert set(verify["required"]) == set(verify["properties"])
     assert verify["properties"]["schema"] == {
-        "const": "malleus.cc002.verify-result/v2"
+        "const": "malleus.cc002.verify-result/v3"
     }
     assert verify["properties"]["state"] == {"const": "VERIFIED_OFFLINE"}
+    assert verify["properties"]["derivation_record_sha256"] == (
+        expected_digest_schema
+    )
     for schema in (acquire, verify):
         for name, value in schema["properties"].items():
             if name.endswith("sha256") or name.endswith("digest"):
@@ -506,31 +974,65 @@ def test_tool_output_schemas_are_exact_and_closed():
 
 def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_output():
     with pytest.raises(environment.CC002Error, match="lowercase hexadecimal"):
-            environment.acquire_result(
-                artifact_count=5,
-                built_artifact_count=1,
-                source_build_record_sha256="sha256:" + "6" * 64,
+        environment.acquire_result(
+            artifact_count=8,
+            built_artifact_count=2,
+            source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "G" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
         )
     with pytest.raises(environment.CC002Error, match="artifact_count"):
-            environment.acquire_result(
-                artifact_count=True,
-                built_artifact_count=1,
-                source_build_record_sha256="sha256:" + "6" * 64,
+        environment.acquire_result(
+            artifact_count=True,
+            built_artifact_count=2,
+            source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
         )
-    with pytest.raises(environment.CC002Error, match="exactly seven"):
+    with pytest.raises(environment.CC002Error, match="exactly eight"):
         environment.acquire_result(
-            artifact_count=6,
-            built_artifact_count=1,
+            artifact_count=7,
+            built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
             wheel_count=1,
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
+        )
+    with pytest.raises(environment.CC002Error, match="exactly two"):
+        environment.acquire_result(
+            artifact_count=8,
+            built_artifact_count=1,
+            source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "7" * 64,
+            wheel_count=1,
+            lock_sha256="sha256:" + "1" * 64,
+            wheelhouse_sha256="sha256:" + "2" * 64,
+        )
+    with pytest.raises(environment.CC002Error, match="derivation_record_sha256"):
+        environment.acquire_result(
+            artifact_count=8,
+            built_artifact_count=2,
+            source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "G" * 64,
+            wheel_count=1,
+            lock_sha256="sha256:" + "1" * 64,
+            wheelhouse_sha256="sha256:" + "2" * 64,
+        )
+    with pytest.raises(environment.CC002Error, match="derivation_record_sha256"):
+        environment.verify_result(
+            environment_manifest_sha256="sha256:" + "3" * 64,
+            verification_sha256="sha256:" + "4" * 64,
+            generator_output_sha256="sha256:" + "5" * 64,
+            installed_distribution_count=1,
+            lock_sha256="sha256:" + "1" * 64,
+            wheelhouse_sha256="sha256:" + "2" * 64,
+            source_build_record_sha256="sha256:" + "6" * 64,
+            derivation_record_sha256="sha256:" + "G" * 64,
         )
 
     class InvalidServices(FakeServices):
@@ -542,45 +1044,60 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
     assert "CC002_RESULT" in response["result"]["content"][0]["text"]
 
 
-def test_public_result_contract_is_v2_only():
-    assert environment.SERVER_VERSION == "2"
+def test_public_result_contract_is_v3_only():
+    assert environment.SERVER_VERSION == "3"
     acquire = environment.acquire_result(
-        artifact_count=7,
-        built_artifact_count=1,
+        artifact_count=8,
+        built_artifact_count=2,
         source_build_record_sha256="sha256:" + "6" * 64,
+        derivation_record_sha256="sha256:" + "7" * 64,
         wheel_count=1,
         lock_sha256="sha256:" + "1" * 64,
         wheelhouse_sha256="sha256:" + "2" * 64,
     )
-    assert acquire["schema"] == "malleus.cc002.acquire-result/v2"
-    assert environment._ACQUIRE_PROPERTIES["schema"] == {"const": "malleus.cc002.acquire-result/v2"}
-    assert environment._VERIFY_PROPERTIES["schema"] == {"const": "malleus.cc002.verify-result/v2"}
-    invalid = dict(acquire, schema="malleus.cc002.acquire-result/v1")
-    with pytest.raises(environment.CC002Error, match="schema"):
-        environment._validate_tool_output("cc002_acquire", invalid)
+    assert acquire["schema"] == "malleus.cc002.acquire-result/v3"
+    assert acquire["derivation_record_sha256"] == "sha256:" + "7" * 64
+    assert environment._ACQUIRE_PROPERTIES["schema"] == {
+        "const": "malleus.cc002.acquire-result/v3"
+    }
+    assert environment._VERIFY_PROPERTIES["schema"] == {
+        "const": "malleus.cc002.verify-result/v3"
+    }
     verify = FakeServices().verify()
-    with pytest.raises(environment.CC002Error, match="schema"):
-        environment._validate_tool_output(
-            "cc002_verify_offline",
-            dict(verify, schema="malleus.cc002.verify-result/v1"),
-        )
+    for legacy in ("v1", "v2"):
+        with pytest.raises(environment.CC002Error, match="schema"):
+            environment._validate_tool_output(
+                "cc002_acquire",
+                dict(acquire, schema=f"malleus.cc002.acquire-result/{legacy}"),
+            )
+        with pytest.raises(environment.CC002Error, match="schema"):
+            environment._validate_tool_output(
+                "cc002_verify_offline",
+                dict(verify, schema=f"malleus.cc002.verify-result/{legacy}"),
+            )
 
 
-def test_environment_and_internal_verification_v1_are_rejected(tmp_path, monkeypatch):
+@pytest.mark.parametrize("legacy", ("v1", "v2"))
+def test_environment_legacy_schemas_are_rejected(tmp_path, monkeypatch, legacy):
     destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
     environment.acquire_environment()
     manifest = json.loads((destination / "manifest.json").read_text())
-    manifest["schema"] = "malleus.cc002.compiler-environment/v1"
+    manifest["schema"] = f"malleus.cc002.compiler-environment/{legacy}"
     _write_bundle_manifest(destination, manifest)
     with pytest.raises(environment.CC002Error, match="schema"):
         environment._validated_environment(destination)
 
-    manifest["schema"] = "malleus.cc002.compiler-environment/v2"
-    _write_bundle_manifest(destination, manifest)
+
+@pytest.mark.parametrize("legacy", ("v1", "v2"))
+def test_internal_verification_legacy_schemas_are_rejected(
+    tmp_path, monkeypatch, legacy
+):
+    destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
     environment.verify_environment()
     internal_path = destination / "verification.json"
     internal = json.loads(internal_path.read_text())
-    internal["schema"] = "malleus.cc002.internal-verification/v1"
+    internal["schema"] = f"malleus.cc002.internal-verification/{legacy}"
     internal_path.write_text(environment.canonical_json(internal) + "\n", encoding="utf-8")
     completed = json.loads((destination / "manifest.json").read_text())
     completed["verification"] = {"state": "COMPLETE", **environment._artifact_record(internal_path)}
@@ -592,11 +1109,11 @@ def test_environment_and_internal_verification_v1_are_rejected(tmp_path, monkeyp
 @pytest.mark.parametrize(
     ("name", "expected_call", "schema"),
     [
-        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v2"),
+        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v3"),
         (
             "cc002_verify_offline",
             "verify",
-            "malleus.cc002.verify-result/v2",
+            "malleus.cc002.verify-result/v3",
         ),
     ],
 )
@@ -795,6 +1312,45 @@ def test_selected_artifacts_bind_exact_urls_hashes_and_lengths():
         "operating_system": "Linux",
         "architecture": "x86_64",
         "abi": "cp312",
+    }
+
+
+def test_governed_prefixcommons_derivative_input_coordinate_is_exact():
+    assert environment.PREFIXCOMMONS_INPUT_FILENAME == (
+        "prefixcommons-0.1.12-py3-none-any.whl"
+    )
+    assert environment.PREFIXCOMMONS_DERIVED_FILENAME == (
+        "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    )
+    assert [artifact.as_dict() for artifact in environment.DERIVATIVE_INPUTS] == [
+        {
+            "filename": "prefixcommons-0.1.12-py3-none-any.whl",
+            "kind": "WHEEL",
+            "url": "https://files.pythonhosted.org/packages/31/e8/715b09df3dab02b07809d812042dc47a46236b5603d9d3a2572dbd1d8a97/prefixcommons-0.1.12-py3-none-any.whl",
+            "byte_length": 29482,
+            "sha256": "16dbc0a1f775e003c724f19a694fcfa3174608f5c8b0e893d494cf8098ac7f8b",
+        }
+    ]
+    assert {
+        "member_count": environment.PREFIXCOMMONS_MEMBER_COUNT,
+        "expanded_bytes": environment.PREFIXCOMMONS_UNCOMPRESSED_BYTE_LENGTH,
+        "package_members": environment.PREFIXCOMMONS_PACKAGE_MEMBER_COUNT,
+        "metadata_bytes": environment.PREFIXCOMMONS_METADATA_BYTE_LENGTH,
+        "metadata_sha256": environment.PREFIXCOMMONS_METADATA_SHA256,
+        "wheel_bytes": environment.PREFIXCOMMONS_WHEEL_BYTE_LENGTH,
+        "wheel_sha256": environment.PREFIXCOMMONS_WHEEL_SHA256,
+        "license_bytes": environment.PREFIXCOMMONS_LICENSE_BYTE_LENGTH,
+        "license_sha256": environment.PREFIXCOMMONS_LICENSE_SHA256,
+    } == {
+        "member_count": 14,
+        "expanded_bytes": 109044,
+        "package_members": 10,
+        "metadata_bytes": 1960,
+        "metadata_sha256": "4c6cf90de54fa4ce46d1235551f75c021bacab34b8c9894fd50a8096441a5303",
+        "wheel_bytes": 83,
+        "wheel_sha256": "cb778389a15548d4cf6e0cdf367d27627e6d127d5c5fa5ab75eb43950338c56c",
+        "license_bytes": 1500,
+        "license_sha256": "3a9b5b0d46996cdfd82b65429e189904e4ab1908014ce408cbecde9f591f37b4",
     }
 
 
@@ -1428,12 +1984,19 @@ def test_docker_commands_pin_platform_digest_and_network_modes(tmp_path):
     wheelhouse.mkdir()
     pull = environment.image_pull_command()
     resolve = environment.resolve_command(roots, wheelhouse, built=tmp_path / "built")
+    derive = environment.derivation_command(
+        tmp_path / "derivative-inputs", tmp_path / "derive"
+    )
     verify = environment.verify_command(tmp_path / "bundle", tmp_path / "work")
     assert pull[-3:] == ["--platform", "linux/amd64", environment.OCI_CHILD_REFERENCE]
     assert "--platform" in resolve and "linux/amd64" in resolve
     assert "--network" in resolve and "bridge" in resolve
     assert "--pull=never" in resolve
     assert environment.OCI_CHILD_REFERENCE in resolve
+    assert "--network" in derive and "none" in derive
+    assert "--pull=never" in derive
+    assert "--read-only" in derive
+    assert environment.OCI_CHILD_REFERENCE in derive
     assert "--network" in verify and "none" in verify
     assert "--pull=never" in verify
     assert "--read-only" in verify
@@ -1520,6 +2083,9 @@ def test_every_container_run_uses_the_exact_nonroot_host_ownership_tuple(tmp_pat
     expected = f"{os.getuid()}:{os.getgid()}"
     commands = (
         environment.resolve_command(tmp_path / "roots", tmp_path / "wheelhouse", built=tmp_path / "built"),
+        environment.derivation_command(
+            tmp_path / "derivative-inputs", tmp_path / "derive"
+        ),
         environment.lock_report_command(tmp_path / "bundle", tmp_path / "report"),
         environment.verify_command(tmp_path / "bundle", tmp_path / "verify"),
     )
@@ -2197,6 +2763,10 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None, failure_
             )
         )
         sources[url] = source
+    prefixcommons_path = source_dir / "prefixcommons-0.1.12-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(prefixcommons_path)
+    _select_prefixcommons_fixture(monkeypatch, prefixcommons_path)
+    sources[environment.DERIVATIVE_INPUTS[0].url] = prefixcommons_path.read_bytes()
 
     class ExternalCalls(list):
         def __init__(self):
@@ -2285,6 +2855,11 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None, failure_
             _built_antlr_wheel(output / "antlr4_python3_runtime-4.9.3-py3-none-any.whl")
             _write_build_facts(output)
             return b""
+        if arguments[-1] == getattr(environment, "DERIVATION_PROGRAM", None):
+            derivative_inputs = mount_path(arguments, ":/derivative-inputs:ro")
+            output = mount_path(arguments, ":/output:rw")
+            _run_derivation_program(monkeypatch, derivative_inputs, output)
+            return b""
         if "transitive wheel resolution" == context:
             return b""
         raise AssertionError(f"unexpected external edge: {context}: {arguments}")
@@ -2330,7 +2905,13 @@ def test_registry_failure_after_root_downloads_leaves_no_publication_or_staging(
 
 @pytest.mark.parametrize(
     "context",
-    ["network-denied ANTLR source build 1", "network-denied ANTLR source build 2", "transitive wheel resolution"],
+    [
+        "network-denied ANTLR source build 1",
+        "network-denied ANTLR source build 2",
+        "network-denied prefixcommons derivation 1",
+        "network-denied prefixcommons derivation 2",
+        "transitive wheel resolution",
+    ],
 )
 def test_source_build_failures_leave_no_publication_or_staging(tmp_path, monkeypatch, context):
     destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch, failure_context=context)
@@ -2382,7 +2963,8 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
 ):
     destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
     result = environment.acquire_environment()
-    assert result["artifact_count"] == 7
+    assert result["artifact_count"] == 8
+    assert result["built_artifact_count"] == 2
     assert calls == [
         "Docker version",
         "parse OCI index",
@@ -2390,11 +2972,17 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
         "local image inspection",
         "network-denied ANTLR source build 1",
         "network-denied ANTLR source build 2",
+        "network-denied prefixcommons derivation 1",
+        "network-denied prefixcommons derivation 2",
         "transitive wheel resolution",
         "offline root resolution report",
     ]
     manifest, _source = environment._validated_environment(destination)
     assert manifest["resolution_report"]["filename"] == "resolution-report.json"
+    assert manifest["derivation_record"]["filename"] == "derivation-record.json"
+    assert result["derivation_record_sha256"] == manifest["derivation_record"][
+        "sha256"
+    ]
     assert manifest["docker"] == {
         "command": "docker",
         "client_version": "28.3.3",
@@ -2431,8 +3019,11 @@ def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeyp
     manifest, _source = environment._validated_environment(destination)
     assert manifest["verification"]["filename"] == "verification.json"
     internal = json.loads((destination / "verification.json").read_text())
-    assert internal["schema"] == "malleus.cc002.internal-verification/v2"
+    assert internal["schema"] == "malleus.cc002.internal-verification/v3"
     assert internal["source_build_record_sha256"] == manifest["build_record"]["sha256"]
+    assert internal["derivation_record_sha256"] == manifest[
+        "derivation_record"
+    ]["sha256"]
     calls_before = list(calls)
     assert environment.verify_environment() == result
     assert calls == calls_before
@@ -2573,6 +3164,172 @@ def test_bundle_binds_built_antlr_bytes_to_runtime_wheelhouse(tmp_path, monkeypa
         environment._bind_built_wheel(destination, wheelhouse_records, built_record)
 
 
+def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
+    tmp_path, monkeypatch
+):
+    destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    acquired = environment.acquire_environment()
+    manifest, pending_source = environment._validated_environment(destination)
+    upstream_name = "prefixcommons-0.1.12-py3-none-any.whl"
+    derived_name = "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+
+    assert manifest["schema"] == "malleus.cc002.compiler-environment/v3"
+    assert acquired["artifact_count"] == 8
+    assert acquired["built_artifact_count"] == 2
+    assert len(manifest["roots"]["artifacts"]) == 5
+    assert len(manifest["build_inputs"]["artifacts"]) == 2
+    assert [record["filename"] for record in manifest["derivative_inputs"]["artifacts"]] == [
+        upstream_name
+    ]
+    assert {record["filename"] for record in manifest["built"]["artifacts"]} == {
+        "antlr4_python3_runtime-4.9.3-py3-none-any.whl",
+        derived_name,
+    }
+    assert {path.name for path in destination.iterdir()} == {
+        "build-inputs",
+        "build-record.json",
+        "built",
+        "derivation-record.json",
+        "derivative-inputs",
+        "manifest.json",
+        "requirements.lock",
+        "resolution-report.json",
+        "roots",
+        "wheelhouse",
+    }
+    assert not (destination / upstream_name).exists()
+    assert not (destination / "roots" / upstream_name).exists()
+    assert not (destination / "built" / upstream_name).exists()
+    assert not (destination / "wheelhouse" / upstream_name).exists()
+    assert (destination / "derivative-inputs" / upstream_name).is_file()
+    assert (destination / "built" / derived_name).read_bytes() == (
+        destination / "wheelhouse" / derived_name
+    ).read_bytes()
+
+    build_record = json.loads((destination / "build-record.json").read_text())
+    derivation = json.loads((destination / "derivation-record.json").read_text())
+    assert build_record["schema"] == "malleus.cc002.source-build/v1"
+    assert set(derivation) == {
+        "schema",
+        "input",
+        "runs",
+        "outputs",
+        "byte_equal",
+        "retained_output",
+        "license",
+        "tool",
+    }
+    assert derivation["schema"] == "malleus.cc002.wheel-derivation/v1"
+    assert derivation["input"] == manifest["derivative_inputs"]["artifacts"][0]
+    retained_output = next(
+        record for record in manifest["built"]["artifacts"]
+        if record["filename"] == derived_name
+    )
+    assert derivation["outputs"] == [retained_output, retained_output]
+    assert derivation["retained_output"] == retained_output
+    assert derivation["byte_equal"] is True
+    assert derivation["runs"] == [
+        {**environment.RETAINED_DERIVATION_RUN, "output": retained_output},
+        {**environment.RETAINED_DERIVATION_RUN, "output": retained_output},
+    ]
+    assert derivation["license"] == {
+        "upstream_member": "prefixcommons-0.1.12.dist-info/LICENSE",
+        "derived_member": "prefixcommons-0.1.12+malleus.1.dist-info/LICENSE",
+        "byte_length": environment.PREFIXCOMMONS_LICENSE_BYTE_LENGTH,
+        "sha256": "sha256:" + environment.PREFIXCOMMONS_LICENSE_SHA256,
+    }
+    assert derivation["tool"] == {
+        "implementation": "python-stdlib",
+        "generator": "malleus-cc002 (wheel-derivation-v1)",
+        "adapter_sha256": "sha256:"
+        + hashlib.sha256(environment.ADAPTER_PATH.read_bytes()).hexdigest(),
+    }
+    assert manifest["derivation_record"] == environment._artifact_record(
+        destination / "derivation-record.json"
+    )
+    assert acquired["derivation_record_sha256"] == manifest[
+        "derivation_record"
+    ]["sha256"]
+
+    verified = environment.verify_environment()
+    completed, _completed_source = environment._validated_environment(destination)
+    internal = json.loads((destination / "verification.json").read_text())
+    assert pending_source != (destination / "manifest.json").read_bytes()
+    assert completed["verification"]["state"] == "COMPLETE"
+    assert verified["derivation_record_sha256"] == manifest[
+        "derivation_record"
+    ]["sha256"]
+    assert internal["derivation_record_sha256"] == manifest[
+        "derivation_record"
+    ]["sha256"]
+    assert calls.network_requests[-1].full_url == environment.OCI_INDEX_URL
+
+
+@pytest.mark.parametrize(
+    "target",
+    (
+        "input",
+        "output",
+        "record-extra",
+        "record-tool",
+        "record-digest",
+        "record-python",
+        "record-image",
+        "record-environment",
+        "record-isolation",
+        "record-output",
+    ),
+)
+def test_r3_bundle_rejects_derivation_tamper_before_external_edges(
+    tmp_path, monkeypatch, target
+):
+    destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    environment.acquire_environment()
+    calls_before = list(calls)
+    requests_before = list(calls.network_requests)
+    manifest = json.loads((destination / "manifest.json").read_text())
+    assert manifest["schema"] == "malleus.cc002.compiler-environment/v3"
+    assert "derivative_inputs" in manifest
+    assert "derivation_record" in manifest
+    if target == "input":
+        path = destination / "derivative-inputs" / environment.PREFIXCOMMONS_INPUT_FILENAME
+        path.write_bytes(path.read_bytes() + b"tamper")
+        manifest["derivative_inputs"]["artifacts"][0] = environment._artifact_record(path)
+    elif target == "output":
+        path = destination / "built" / environment.PREFIXCOMMONS_DERIVED_FILENAME
+        path.write_bytes(path.read_bytes() + b"tamper")
+        record = environment._artifact_record(path)
+        for index, current in enumerate(manifest["built"]["artifacts"]):
+            if current["filename"] == path.name:
+                manifest["built"]["artifacts"][index] = record
+    else:
+        path = destination / "derivation-record.json"
+        record = json.loads(path.read_text())
+        if target == "record-extra":
+            record["unexpected"] = True
+        elif target == "record-tool":
+            record["tool"]["implementation"] = "third-party"
+        elif target == "record-digest":
+            record["tool"]["adapter_sha256"] = "sha256:" + "0" * 64
+        elif target == "record-python":
+            record["runs"][0]["python"]["version"] = "3.12.11"
+        elif target == "record-image":
+            record["runs"][0]["image"]["child_digest"] = "sha256:" + "0" * 64
+        elif target == "record-environment":
+            record["runs"][0]["environment"]["tz"] = "LOCAL"
+        elif target == "record-isolation":
+            record["runs"][0]["isolation"]["network"] = "BRIDGE"
+        else:
+            record["runs"][0]["output"]["sha256"] = "sha256:" + "0" * 64
+        path.write_text(environment.canonical_json(record) + "\n", encoding="utf-8")
+        manifest["derivation_record"] = environment._artifact_record(path)
+    _write_bundle_manifest(destination, manifest)
+    with pytest.raises(environment.CC002Error, match="DERIVATION|PREFIXCOMMONS"):
+        environment._validated_environment(destination)
+    assert calls == calls_before
+    assert calls.network_requests == requests_before
+
+
 def test_runtime_wheelhouse_excludes_source_and_backend_inputs(tmp_path, monkeypatch):
     destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
     environment.acquire_environment()
@@ -2580,6 +3337,10 @@ def test_runtime_wheelhouse_excludes_source_and_backend_inputs(tmp_path, monkeyp
     assert environment.ANTLR_SDIST_FILENAME not in names
     assert environment.SETUPTOOLS_WHEEL_FILENAME not in names
     assert "antlr4_python3_runtime-4.9.3-py3-none-any.whl" in names
+    assert environment.PREFIXCOMMONS_INPUT_FILENAME not in names
+    assert environment.PREFIXCOMMONS_DERIVED_FILENAME in names
+    normalized = {name.split("-", 1)[0].replace("_", "-").casefold() for name in names}
+    assert {"pytest", "pytest-logging", "py"}.isdisjoint(normalized)
 
 
 def test_retained_build_record_contains_no_ephemeral_or_host_paths(tmp_path, monkeypatch):
@@ -2799,6 +3560,13 @@ def test_container_result_binds_exact_python_and_installed_closure(tmp_path):
             "distribution": "pip",
             "version": "25.0.1",
         },
+        {
+            "filename": "prefixcommons-0.1.12+malleus.1-py3-none-any.whl",
+            "byte_length": 1,
+            "sha256": "sha256:" + "4" * 64,
+            "distribution": "prefixcommons",
+            "version": "0.1.12+malleus.1",
+        },
     ]
     result = {
         "schema": "malleus.cc002.container-verification/v1",
@@ -2814,7 +3582,7 @@ def test_container_result_binds_exact_python_and_installed_closure(tmp_path):
         json.dumps({"$defs": {"X": {}}}), encoding="utf-8"
     )
     distributions, _digest = environment._validate_container_result(tmp_path, records)
-    assert len(distributions) == 3
+    assert len(distributions) == 4
     result["installed_distributions"].append({"name": "extra", "version": "1"})
     (tmp_path / "result.json").write_text(json.dumps(result), encoding="utf-8")
     with pytest.raises(environment.CC002Error, match="installed closure"):
@@ -2855,6 +3623,120 @@ def test_lock_report_command_is_exact_selected_container_offline_proof(tmp_path)
     assert "requirements.lock" not in program
     assert "/wheelhouse/linkml-1.11.1-py3-none-any.whl" in program
     assert "/wheelhouse/linkml_runtime-1.11.1-py3-none-any.whl" in program
+
+
+def test_resolver_uses_exact_derived_prefixcommons_root_and_no_upstream_substitute():
+    derived = "/built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    upstream = "prefixcommons-0.1.12-py3-none-any.whl"
+    expected_roots = (
+        "/roots/linkml-1.11.1-py3-none-any.whl",
+        "/roots/linkml_runtime-1.11.1-py3-none-any.whl",
+        derived,
+    )
+    fixed = tuple(environment.RESOLVER_PIP_ARGUMENTS)
+    resolved = tuple(
+        environment._resolver_pip_arguments("http://127.0.0.1:43123")
+    )
+    assert fixed[-3:] == expected_roots
+    assert resolved[-3:] == expected_roots
+    assert environment._validated_resolver_pip_arguments(resolved) == list(resolved)
+    for arguments in (fixed, resolved):
+        assert arguments.count(derived) == 1
+        assert all(upstream not in argument for argument in arguments)
+    retained = derived.replace("/built/", "/wheelhouse/")
+    assert environment.LOCK_REPORT_PROGRAM.count(retained) == 1
+    assert upstream not in environment.LOCK_REPORT_PROGRAM
+
+
+@pytest.mark.parametrize(
+    ("distribution", "version", "filename"),
+    (
+        ("prefixcommons", "0.1.12", "prefixcommons-0.1.12-py3-none-any.whl"),
+        ("prefixcommons", "0.1.11", "prefixcommons-0.1.11-py3-none-any.whl"),
+        ("prefixcommons", "0.1.13", "prefixcommons-0.1.13-py3-none-any.whl"),
+        (
+            "prefixcommons",
+            "0.1.12+malleus.2",
+            "prefixcommons-0.1.12+malleus.2-py3-none-any.whl",
+        ),
+        (
+            "prefixcommons",
+            "0.1.12+other",
+            "prefixcommons-0.1.12+other-py3-none-any.whl",
+        ),
+        ("pytest", "8.4.1", "pytest-8.4.1-py3-none-any.whl"),
+        (
+            "pytest-logging",
+            "2015.11.4",
+            "pytest_logging-2015.11.4-py3-none-any.whl",
+        ),
+        ("py", "1.11.0", "py-1.11.0-py2.py3-none-any.whl"),
+    ),
+)
+def test_resolved_and_installed_closures_reject_upstream_and_test_packages(
+    distribution, version, filename
+):
+    derived = {
+        "filename": "prefixcommons-0.1.12+malleus.1-py3-none-any.whl",
+        "byte_length": 1,
+        "sha256": "sha256:" + "1" * 64,
+        "distribution": "prefixcommons",
+        "version": "0.1.12+malleus.1",
+    }
+    candidate = {
+        "filename": filename,
+        "byte_length": 1,
+        "sha256": "sha256:" + "2" * 64,
+        "distribution": distribution,
+        "version": version,
+    }
+    records = [candidate] if distribution == "prefixcommons" else [derived, candidate]
+    report = _pip_report(records)
+    installed = [
+        {"name": record["distribution"], "version": record["version"]}
+        for record in records
+    ]
+    with pytest.raises(environment.CC002Error, match="PREFIXCOMMONS|FORBIDDEN|runtime"):
+        environment.validate_resolution_report(report, records)
+    with pytest.raises(environment.CC002Error, match="PREFIXCOMMONS|FORBIDDEN|runtime"):
+        environment._validate_installed_closure(installed, records)
+
+
+def test_offline_verifier_executes_every_governed_smoke_before_attesting(
+    tmp_path, monkeypatch
+):
+    calls, result = _execute_verifier_program(tmp_path, monkeypatch)
+    assert calls == {
+        "pip_install": 1,
+        "pip_check": 1,
+        "prefix_expand": 1,
+        "prefix_contract": 1,
+        "namespaces": 1,
+        "generator": 1,
+        "pip_list": 1,
+    }
+    assert result["schema"] == "malleus.cc002.container-verification/v1"
+    assert result["generator_output"] == "/work/malleus.schema.json"
+
+
+@pytest.mark.parametrize(
+    "fault",
+    (
+        "pip-check",
+        "prefix-expand",
+        "prefix-contract",
+        "namespaces",
+        "generator",
+    ),
+)
+def test_offline_verifier_refuses_any_failed_or_fabricated_smoke(
+    tmp_path, monkeypatch, fault
+):
+    with pytest.raises(
+        (AssertionError, RuntimeError, subprocess.CalledProcessError)
+    ):
+        _execute_verifier_program(tmp_path, monkeypatch, fault=fault)
+    assert not (tmp_path / "result.json").exists()
 
 
 def test_internal_verification_never_occupies_final_candidate_evidence_path():
@@ -2967,6 +3849,566 @@ def test_source_has_no_regex_or_unbounded_execution_mechanism():
     assert 'DOCKER = "/' not in source
     assert "Path.home()" not in source
     assert str(Path.home()) not in source
+
+
+def _module_scope_import_nodes(tree: ast.Module) -> list[ast.Import | ast.ImportFrom]:
+    imports = []
+    pending = list(reversed(tree.body))
+    pruned = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
+    while pending:
+        node = pending.pop()
+        if isinstance(node, pruned):
+            continue
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            imports.append(node)
+            continue
+        pending.extend(reversed(list(ast.iter_child_nodes(node))))
+    return imports
+
+
+def test_module_scope_import_scan_reaches_control_flow_and_prunes_callables():
+    fixture = ast.parse(
+        "try:\n"
+        "    import packaging\n"
+        "except ImportError:\n"
+        "    pass\n"
+        "class ImportTimeBody:\n"
+        "    import class_dependency\n"
+        "    def method(self):\n"
+        "        import method_dependency\n"
+        "def function():\n"
+        "    import function_dependency\n"
+    )
+    observed = {
+        alias.name
+        for node in _module_scope_import_nodes(fixture)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    assert observed == {"packaging", "class_dependency"}
+
+
+def test_adapter_import_boundary_is_stdlib_only():
+    tree = ast.parse(environment.ADAPTER_PATH.read_text(encoding="utf-8"))
+    function_types = (ast.FunctionDef, ast.AsyncFunctionDef)
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, function_types)
+    }
+    governed_roots = {
+        "validate_prefixcommons_input",
+        "derive_prefixcommons_wheel",
+        "validate_derived_prefixcommons_wheel",
+        "validate_derivation_outputs",
+        "_derivation_main",
+        "derivation_command",
+    }
+    missing = sorted(governed_roots - functions.keys())
+    assert missing == []
+
+    reachable = set()
+    pending = list(governed_roots)
+    while pending:
+        name = pending.pop()
+        if name in reachable:
+            continue
+        reachable.add(name)
+        for node in ast.walk(functions[name]):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id in functions
+                and node.func.id not in reachable
+            ):
+                pending.append(node.func.id)
+
+    imports = []
+    inspected = _module_scope_import_nodes(tree)
+    for name in sorted(reachable):
+        inspected.extend(
+            node
+            for node in ast.walk(functions[name])
+            if isinstance(node, (ast.Import, ast.ImportFrom))
+        )
+    for node in inspected:
+        if isinstance(node, ast.Import):
+            imports.extend(
+                (alias.name.partition(".")[0], node.lineno)
+                for alias in node.names
+            )
+            continue
+        root = (
+            node.module.partition(".")[0]
+            if node.level == 0 and node.module is not None
+            else ""
+        )
+        imports.append((root, node.lineno))
+    allowed = {*sys.stdlib_module_names, "__future__"}
+    disallowed = [
+        {"root": root, "line": line}
+        for root, line in imports
+        if root not in allowed
+    ]
+    assert disallowed == []
+
+
+def test_prefixcommons_derivation_changes_only_allowlisted_bytes_and_archive_fields(
+    tmp_path, monkeypatch
+):
+    upstream = tmp_path / "prefixcommons-0.1.12-py3-none-any.whl"
+    derived = tmp_path / "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+
+    environment.validate_prefixcommons_input(upstream)
+    environment.derive_prefixcommons_wheel(upstream, derived)
+    record = environment.validate_derived_prefixcommons_wheel(derived)
+    assert record["distribution"] == "prefixcommons"
+    assert record["version"] == "0.1.12+malleus.1"
+
+    upstream_dist = "prefixcommons-0.1.12.dist-info"
+    derived_dist = "prefixcommons-0.1.12+malleus.1.dist-info"
+    with zipfile.ZipFile(upstream) as source_archive:
+        upstream_sources = {
+            info.filename: source_archive.read(info)
+            for info in source_archive.infolist()
+        }
+    with zipfile.ZipFile(derived) as archive:
+        infos = archive.infolist()
+        names = [info.filename for info in infos]
+        sources = {info.filename: archive.read(info) for info in infos}
+        assert archive.comment == b""
+
+    assert names == sorted(names)
+    assert all(name.encode("ascii").decode("ascii") == name for name in names)
+    assert len(names) == 14
+    assert f"{upstream_dist}/METADATA" not in names
+    assert f"{derived_dist}/METADATA" in names
+    for name, payload in _PREFIXCOMMONS_PAYLOADS.items():
+        assert sources[name] == payload == upstream_sources[name]
+    assert sources[f"{derived_dist}/LICENSE"] == upstream_sources[
+        f"{upstream_dist}/LICENSE"
+    ]
+    assert sources[f"{derived_dist}/LICENSE"].startswith(b"BSD 3-Clause License")
+    assert sources[f"{derived_dist}/METADATA"] == _PREFIXCOMMONS_METADATA.replace(
+        b"Version: 0.1.12\n", b"Version: 0.1.12+malleus.1\n", 1
+    ).replace(
+        b"Requires-Dist: pytest-logging (>=2015.11.4,<2016.0.0)\n",
+        b"",
+        1,
+    )
+    assert sources[f"{derived_dist}/WHEEL"] == _PREFIXCOMMONS_WHEEL.replace(
+        b"Generator: poetry 1.0.7\n",
+        b"Generator: malleus-cc002 (wheel-derivation-v1)\n",
+        1,
+    )
+
+    record_name = f"{derived_dist}/RECORD"
+    without_record = {name: source for name, source in sources.items() if name != record_name}
+    record_source = sources[record_name]
+    assert not record_source.startswith(b"\xef\xbb\xbf")
+    assert record_source.endswith(b"\n")
+    assert record_source == _record_source(without_record, record_name)
+    rows = list(
+        csv.reader(
+            io.StringIO(record_source.decode("utf-8"), newline=""),
+            delimiter=",",
+            quotechar='"',
+            doublequote=True,
+            escapechar=None,
+            quoting=csv.QUOTE_MINIMAL,
+        )
+    )
+    assert [row[0] for row in rows] == names
+    assert all(len(row) == 3 for row in rows)
+    assert next(row for row in rows if row[0] == record_name) == [
+        record_name,
+        "",
+        "",
+    ]
+    for name, digest, length in (row for row in rows if row[0] != record_name):
+        expected = base64.urlsafe_b64encode(hashlib.sha256(sources[name]).digest())
+        assert digest == "sha256=" + expected.rstrip(b"=").decode("ascii")
+        assert "=" not in digest.removeprefix("sha256=")
+        assert length == str(len(sources[name]))
+
+    for info in infos:
+        assert info.date_time == (1980, 1, 1, 0, 0, 0)
+        assert info.compress_type == zipfile.ZIP_STORED
+        assert info.create_system == 3
+        assert info.create_version == 20
+        assert info.extract_version == 20
+        assert info.reserved == 0
+        assert info.flag_bits == 0
+        assert info.volume == 0
+        assert info.internal_attr == 0
+        assert info.external_attr == 0o100644 << 16
+        assert info.extra == b""
+        assert info.comment == b""
+        assert info.compress_size == info.file_size == len(sources[info.filename])
+        assert info.CRC == zlib.crc32(sources[info.filename])
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "whole-wheel",
+        "duplicate-name",
+        "unsafe-name",
+        "nonregular-member",
+        "record",
+        "metadata-target",
+        "wheel-target",
+        "license",
+        "zip64",
+    ),
+)
+def test_prefixcommons_derivation_rejects_tamper_before_external_edges(
+    tmp_path, monkeypatch, mutation
+):
+    upstream = tmp_path / "prefixcommons-0.1.12-py3-none-any.whl"
+    expected = tmp_path / "expected-prefixcommons-0.1.12-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(expected)
+    options: dict[str, Any] = {}
+    if mutation == "duplicate-name":
+        options["duplicate_member"] = True
+    elif mutation == "unsafe-name":
+        options["raw_name"] = "../prefixes.csv"
+    elif mutation == "nonregular-member":
+        options["member_mode"] = stat.S_IFLNK | 0o777
+    elif mutation == "record":
+        options["record_mutation"] = "hash"
+    elif mutation == "metadata-target":
+        options["metadata"] = _PREFIXCOMMONS_METADATA.replace(
+            b"Version: 0.1.12\n", b"Version: 9.9.9\n"
+        )
+    elif mutation == "wheel-target":
+        options["wheel"] = _PREFIXCOMMONS_WHEEL.replace(
+            b"Generator: poetry 1.0.7\n", b"Generator: unknown\n"
+        )
+    elif mutation == "license":
+        options["license_source"] = None
+    _prefixcommons_upstream_wheel(upstream, **options)
+    if mutation == "record":
+        record_name = "prefixcommons-0.1.12.dist-info/RECORD"
+        with zipfile.ZipFile(expected) as expected_archive:
+            expected_record = expected_archive.read(record_name)
+        with zipfile.ZipFile(upstream) as changed_archive:
+            changed_record = changed_archive.read(record_name)
+        assert changed_record != expected_record
+        assert len(changed_record) == len(expected_record)
+    _select_prefixcommons_fixture(monkeypatch, upstream, facts_path=expected)
+    if mutation == "whole-wheel":
+        upstream.write_bytes(upstream.read_bytes() + b"tamper")
+    if mutation == "zip64":
+        monkeypatch.setattr(environment.zipfile, "ZIP64_LIMIT", 1)
+
+    external_edges = []
+
+    def tripwire(*_args, **_kwargs):
+        external_edges.append(True)
+        raise AssertionError("external edge reached before local validation")
+
+    monkeypatch.setattr(environment, "_run_checked", tripwire)
+    monkeypatch.setattr(environment, "download_artifact", tripwire)
+    target = tmp_path / "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    with pytest.raises(environment.CC002Error, match="PREFIXCOMMONS|DERIVATION"):
+        environment.derive_prefixcommons_wheel(upstream, target)
+    assert external_edges == []
+    assert not target.exists()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "member-order",
+        "timestamp",
+        "compression",
+        "create-system",
+        "create-version",
+        "extract-version",
+        "reserved",
+        "flag-bits",
+        "volume",
+        "internal-attr",
+        "external-attr",
+        "member-extra",
+        "member-comment",
+        "archive-comment",
+        "record-order",
+        "record-bom",
+        "record-crlf",
+        "record-terminal",
+        "record-digest",
+        "record-size",
+        "record-self-hash",
+        "record-self-size",
+        "record-fields",
+        "zip64-header",
+        "zip64-directory",
+    ),
+)
+def test_derived_prefixcommons_validator_rejects_every_archive_grammar_drift(
+    tmp_path, monkeypatch, mutation
+):
+    upstream = tmp_path / "prefixcommons-0.1.12-py3-none-any.whl"
+    derived = tmp_path / "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+    environment.derive_prefixcommons_wheel(upstream, derived)
+    _rewrite_derived_wheel(derived, mutation, monkeypatch)
+    with pytest.raises(environment.CC002Error, match="RECORD|ARCHIVE|DERIVED"):
+        environment.validate_derived_prefixcommons_wheel(derived)
+
+
+def test_prefixcommons_derivation_is_zip_only_without_import_extract_or_execution(
+    tmp_path, monkeypatch
+):
+    derivative_inputs = tmp_path / "derivative-inputs"
+    derivative_inputs.mkdir()
+    upstream = derivative_inputs / "prefixcommons-0.1.12-py3-none-any.whl"
+    derived = tmp_path / "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    child_output = tmp_path / "child-output"
+    child_output.mkdir()
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+    forbidden_calls = []
+    original_import = builtins.__import__
+
+    def guarded_import(name, *args, **kwargs):
+        root_name = name.partition(".")[0]
+        if root_name not in sys.stdlib_module_names:
+            forbidden_calls.append(("import", name))
+            raise AssertionError(f"non-stdlib import reached: {name}")
+        return original_import(name, *args, **kwargs)
+
+    def tripwire(name):
+        def fail(*_args, **_kwargs):
+            forbidden_calls.append((name, None))
+            raise AssertionError(f"forbidden derivation path reached: {name}")
+
+        return fail
+
+    prior_umask = os.umask(0o077)
+    try:
+        with monkeypatch.context() as guard:
+            guard.setattr(builtins, "__import__", guarded_import)
+            guard.setattr(builtins, "exec", tripwire("exec"))
+            guard.setattr(builtins, "eval", tripwire("eval"))
+            guard.setattr(zipfile.ZipFile, "extract", tripwire("extract"))
+            guard.setattr(zipfile.ZipFile, "extractall", tripwire("extractall"))
+            guard.setattr(environment.subprocess, "run", tripwire("subprocess.run"))
+            guard.setattr(environment.subprocess, "Popen", tripwire("subprocess.Popen"))
+            guard.setattr(environment.os, "system", tripwire("os.system"))
+            guard.setattr(environment, "_run_checked", tripwire("_run_checked"))
+            guard.setattr(environment, "run_fixed", tripwire("run_fixed"))
+            guard.setattr(environment, "download_artifact", tripwire("download"))
+            guard.setattr(
+                environment,
+                "DERIVATION_INPUT_ROOT",
+                derivative_inputs,
+                raising=False,
+            )
+            guard.setattr(
+                environment,
+                "DERIVATION_OUTPUT_ROOT",
+                child_output,
+                raising=False,
+            )
+            environment.validate_prefixcommons_input(upstream)
+            environment.derive_prefixcommons_wheel(upstream, derived)
+            environment.validate_derived_prefixcommons_wheel(derived)
+            assert environment._derivation_main() == 0
+    finally:
+        os.umask(prior_umask)
+    assert forbidden_calls == []
+    assert (child_output / environment.PREFIXCOMMONS_DERIVED_FILENAME).is_file()
+
+
+def test_derivation_command_and_two_outputs_are_fresh_hardened_and_byte_equal(
+    tmp_path, monkeypatch
+):
+    derivative_inputs = tmp_path / "derivative-inputs"
+    derivative_inputs.mkdir()
+    upstream = derivative_inputs / "prefixcommons-0.1.12-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+    outputs = [tmp_path / "derive-1", tmp_path / "derive-2"]
+    for output in outputs:
+        output.mkdir()
+
+    commands = [
+        environment.derivation_command(
+            derivative_inputs,
+            output,
+            host_user={"uid": 501, "gid": 20},
+        )
+        for output in outputs
+    ]
+    for command, output in zip(commands, outputs, strict=True):
+        assert command[:2] == ["docker", "run"]
+        assert command[command.index("--network") + 1] == "none"
+        assert command[command.index("--user") + 1] == "501:20"
+        assert "--read-only" in command
+        assert command[command.index("--cap-drop") + 1] == "ALL"
+        assert command[command.index("--security-opt") + 1] == "no-new-privileges"
+        assert f"SOURCE_DATE_EPOCH={environment.SOURCE_DATE_EPOCH}" in command
+        assert "TZ=UTC" in command
+        assert "PYTHONHASHSEED=0" in command
+        assert f"{derivative_inputs.resolve()}:/derivative-inputs:ro" in command
+        assert f"{output.resolve()}:/output:rw" in command
+        assert environment.OCI_CHILD_REFERENCE in command
+        assert command[-3:] == ["python", "-c", environment.DERIVATION_PROGRAM]
+    assert commands[0] != commands[1]
+    expected_facts = {
+        "python": environment.PYTHON_TUPLE,
+        "image": {
+            "platform": environment.OCI_PLATFORM,
+            "child_digest": environment.OCI_CHILD_DIGEST,
+        },
+        "tool": {
+            "implementation": "python-stdlib",
+            "generator": "malleus-cc002 (wheel-derivation-v1)",
+            "adapter_sha256": "sha256:"
+            + hashlib.sha256(environment.ADAPTER_PATH.read_bytes()).hexdigest(),
+        },
+        "environment": {
+            "source_date_epoch": 315532800,
+            "tz": "UTC",
+            "python_hash_seed": "0",
+            "umask": "022",
+        },
+        "isolation": {
+            "network": "NONE",
+            "read_only_root": True,
+            "nonroot": True,
+        },
+    }
+    assert environment.EXPECTED_DERIVATION_CHILD_FACTS == expected_facts
+    assert environment.RETAINED_DERIVATION_RUN == expected_facts
+
+    observed_umasks = []
+    actual_umask = environment.os.umask
+
+    def measured_umask(value):
+        observed_umasks.append(value)
+        return actual_umask(value)
+
+    prior_umask = os.umask(0o077)
+    try:
+        monkeypatch.setattr(environment.os, "umask", measured_umask)
+        for output in outputs:
+            _run_derivation_program(monkeypatch, derivative_inputs, output)
+    finally:
+        actual_umask(prior_umask)
+    assert observed_umasks.count(0o022) == 2
+    for output in outputs:
+        output_path = output / environment.PREFIXCOMMONS_DERIVED_FILENAME
+        facts = json.loads((output / ".cc002-derivation-facts.json").read_text())
+        assert facts == {
+            **expected_facts,
+            "output": environment._artifact_record(output_path),
+        }
+    retained = environment.validate_derivation_outputs(*outputs)
+    assert retained["filename"] == (
+        "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    )
+    assert retained["version"] == "0.1.12+malleus.1"
+    second = outputs[1] / retained["filename"]
+    second.write_bytes(second.read_bytes() + b"changed")
+    with pytest.raises(environment.CC002Error, match="REPRODUCIBILITY|DERIVATION"):
+        environment.validate_derivation_outputs(*outputs)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "alias",
+        "missing",
+        "extra",
+        "bytes",
+        "facts-tool",
+        "facts-digest",
+        "facts-python",
+        "facts-image",
+        "facts-environment",
+        "facts-isolation",
+        "facts-output",
+    ),
+)
+def test_derivation_outputs_reject_alias_content_and_measured_provenance_drift(
+    tmp_path, monkeypatch, mutation
+):
+    derivative_inputs = tmp_path / "derivative-inputs"
+    derivative_inputs.mkdir()
+    upstream = derivative_inputs / "prefixcommons-0.1.12-py3-none-any.whl"
+    _prefixcommons_upstream_wheel(upstream)
+    _select_prefixcommons_fixture(monkeypatch, upstream)
+    outputs = [tmp_path / "derive-1", tmp_path / "derive-2"]
+    for output in outputs:
+        output.mkdir()
+        _run_derivation_program(monkeypatch, derivative_inputs, output)
+    if mutation == "alias":
+        alias = tmp_path / "derive-alias"
+        alias.symlink_to(outputs[0], target_is_directory=True)
+        outputs[1] = alias
+        assert outputs[0] != outputs[1]
+        assert outputs[0].resolve() == outputs[1].resolve()
+    elif mutation == "missing":
+        (outputs[1] / environment.PREFIXCOMMONS_DERIVED_FILENAME).unlink()
+    elif mutation == "extra":
+        (outputs[1] / "unexpected").write_bytes(b"unexpected")
+    elif mutation == "bytes":
+        path = outputs[1] / environment.PREFIXCOMMONS_DERIVED_FILENAME
+        path.write_bytes(path.read_bytes() + b"changed")
+    else:
+        facts_path = outputs[1] / ".cc002-derivation-facts.json"
+        facts = json.loads(facts_path.read_text())
+        if mutation == "facts-tool":
+            facts["tool"]["implementation"] = "third-party"
+        elif mutation == "facts-digest":
+            facts["tool"]["adapter_sha256"] = "sha256:" + "0" * 64
+        elif mutation == "facts-python":
+            facts["python"]["version"] = "3.12.11"
+        elif mutation == "facts-image":
+            facts["image"]["child_digest"] = "sha256:" + "0" * 64
+        elif mutation == "facts-environment":
+            facts["environment"]["tz"] = "LOCAL"
+        elif mutation == "facts-isolation":
+            facts["isolation"]["network"] = "BRIDGE"
+        else:
+            facts["output"]["sha256"] = "sha256:" + "0" * 64
+        facts_path.write_text(
+            environment.canonical_json(facts) + "\n", encoding="utf-8"
+        )
+    with pytest.raises(environment.CC002Error, match="DERIVATION|REPRODUCIBILITY"):
+        environment.validate_derivation_outputs(*outputs)
+
+
+@pytest.mark.parametrize(
+    "relationship",
+    ("same", "output-under-input", "input-under-output"),
+)
+def test_derivation_command_refuses_overlapping_mount_sources(
+    tmp_path, relationship
+):
+    derivative_inputs = tmp_path / "derivative-inputs"
+    output = tmp_path / "output"
+    if relationship == "same":
+        output = derivative_inputs
+    elif relationship == "output-under-input":
+        output = derivative_inputs / "output"
+    else:
+        derivative_inputs = output / "derivative-inputs"
+    derivative_inputs.mkdir(parents=True, exist_ok=True)
+    output.mkdir(parents=True, exist_ok=True)
+    with pytest.raises(environment.CC002Error, match="MOUNTS|overlap|distinct"):
+        environment.derivation_command(
+            derivative_inputs,
+            output,
+            host_user={"uid": 501, "gid": 20},
+        )
 
 
 def test_antlr_sdist_validation_refuses_unsafe_archive_member(tmp_path, monkeypatch):
