@@ -49,7 +49,7 @@ class FakeServices:
     def acquire(self) -> dict[str, Any]:
         self.calls.append("acquire")
         return environment.acquire_result(
-            artifact_count=8,
+            artifact_count=9,
             built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
             derivation_record_sha256="sha256:" + "7" * 64,
@@ -625,6 +625,7 @@ def _execute_verifier_program(
         "prefix_expand": 0,
         "prefix_contract": 0,
         "namespaces": 0,
+        "cfgraph_list": 0,
         "generator": 0,
         "pip_list": 0,
     }
@@ -672,6 +673,56 @@ def _execute_verifier_program(
     linkml_module = types.ModuleType("linkml")
     linkml_module.__path__ = []
     antlr_module = types.ModuleType("antlr4")
+    pyshex_module = types.ModuleType("pyshex")
+    pyshex_module.__path__ = []
+
+    class FakeURIRef(str):
+        pass
+
+    class FakeBNode:
+        pass
+
+    class FakeRDF:
+        first = FakeURIRef("rdf:first")
+        rest = FakeURIRef("rdf:rest")
+        nil = FakeURIRef("rdf:nil")
+
+    class FakeCFGraph:
+        def __init__(self):
+            self._links = []
+            self._lists = {}
+
+        def add(self, triple):
+            self._links.append(triple)
+
+        def objects(self, subject, predicate):
+            calls["cfgraph_list"] += 1
+            heads = [
+                obj
+                for current_subject, current_predicate, obj in self._links
+                if current_subject == subject and current_predicate == predicate
+            ]
+            assert len(heads) == 1
+            values = self._lists[heads[0]]
+            return values[:1] if fault == "cfgraph-list" else values
+
+    FakeCFGraph.__module__ = "CFGraph"
+
+    class FakeCollection:
+        def __init__(self, graph, head, values):
+            graph._lists[head] = list(values)
+
+    shex_evaluator_module = types.ModuleType("pyshex.shex_evaluator")
+    shex_evaluator_module.CFGraph = FakeCFGraph
+    pyshex_module.shex_evaluator = shex_evaluator_module
+    rdflib_module = types.ModuleType("rdflib")
+    rdflib_module.__path__ = []
+    rdflib_module.BNode = FakeBNode
+    rdflib_module.RDF = FakeRDF
+    rdflib_module.URIRef = FakeURIRef
+    rdflib_collection_module = types.ModuleType("rdflib.collection")
+    rdflib_collection_module.Collection = FakeCollection
+    rdflib_module.collection = rdflib_collection_module
 
     class FakeEnvBuilder:
         def __init__(self, **options):
@@ -740,6 +791,14 @@ def _execute_verifier_program(
         verifier.setattr(subprocess, "run", fake_run)
         verifier.setitem(sys.modules, "antlr4", antlr_module)
         verifier.setitem(sys.modules, "linkml", linkml_module)
+        verifier.setitem(sys.modules, "pyshex", pyshex_module)
+        verifier.setitem(
+            sys.modules,
+            "pyshex.shex_evaluator",
+            shex_evaluator_module,
+        )
+        verifier.setitem(sys.modules, "rdflib", rdflib_module)
+        verifier.setitem(sys.modules, "rdflib.collection", rdflib_collection_module)
         verifier.setitem(sys.modules, "linkml_runtime", runtime_module)
         verifier.setitem(sys.modules, "linkml_runtime.utils", utils_module)
         verifier.setitem(
@@ -1042,13 +1101,13 @@ def test_tool_output_schemas_are_exact_and_closed():
     assert acquire["additionalProperties"] is False
     assert set(acquire["required"]) == set(acquire["properties"])
     assert acquire["properties"]["schema"] == {
-        "const": "malleus.cc002.acquire-result/v3"
+        "const": "malleus.cc002.acquire-result/v4"
     }
     assert acquire["properties"]["state"] == {"const": "MATERIALIZED"}
     assert acquire["properties"]["artifact_count"] == {
         "type": "integer",
-        "minimum": 8,
-        "maximum": 8,
+        "minimum": 9,
+        "maximum": 9,
     }
     assert acquire["properties"]["built_artifact_count"] == {
         "type": "integer",
@@ -1062,7 +1121,7 @@ def test_tool_output_schemas_are_exact_and_closed():
     assert verify["additionalProperties"] is False
     assert set(verify["required"]) == set(verify["properties"])
     assert verify["properties"]["schema"] == {
-        "const": "malleus.cc002.verify-result/v3"
+        "const": "malleus.cc002.verify-result/v4"
     }
     assert verify["properties"]["state"] == {"const": "VERIFIED_OFFLINE"}
     assert verify["properties"]["derivation_record_sha256"] == (
@@ -1077,7 +1136,7 @@ def test_tool_output_schemas_are_exact_and_closed():
 def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_output():
     with pytest.raises(environment.CC002Error, match="lowercase hexadecimal"):
         environment.acquire_result(
-            artifact_count=8,
+            artifact_count=9,
             built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
             derivation_record_sha256="sha256:" + "7" * 64,
@@ -1095,9 +1154,9 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
             lock_sha256="sha256:" + "1" * 64,
             wheelhouse_sha256="sha256:" + "2" * 64,
         )
-    with pytest.raises(environment.CC002Error, match="exactly eight"):
+    with pytest.raises(environment.CC002Error, match="exactly nine"):
         environment.acquire_result(
-            artifact_count=7,
+            artifact_count=8,
             built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
             derivation_record_sha256="sha256:" + "7" * 64,
@@ -1107,7 +1166,7 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
         )
     with pytest.raises(environment.CC002Error, match="exactly two"):
         environment.acquire_result(
-            artifact_count=8,
+            artifact_count=9,
             built_artifact_count=1,
             source_build_record_sha256="sha256:" + "6" * 64,
             derivation_record_sha256="sha256:" + "7" * 64,
@@ -1117,7 +1176,7 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
         )
     with pytest.raises(environment.CC002Error, match="derivation_record_sha256"):
         environment.acquire_result(
-            artifact_count=8,
+            artifact_count=9,
             built_artifact_count=2,
             source_build_record_sha256="sha256:" + "6" * 64,
             derivation_record_sha256="sha256:" + "G" * 64,
@@ -1146,10 +1205,10 @@ def test_result_constructors_refuse_bad_digests_counts_and_unknown_service_outpu
     assert "CC002_RESULT" in response["result"]["content"][0]["text"]
 
 
-def test_public_result_contract_is_v3_only():
+def test_public_result_contract_is_v4_only():
     assert environment.SERVER_VERSION == "2"
     acquire = environment.acquire_result(
-        artifact_count=8,
+        artifact_count=9,
         built_artifact_count=2,
         source_build_record_sha256="sha256:" + "6" * 64,
         derivation_record_sha256="sha256:" + "7" * 64,
@@ -1157,16 +1216,16 @@ def test_public_result_contract_is_v3_only():
         lock_sha256="sha256:" + "1" * 64,
         wheelhouse_sha256="sha256:" + "2" * 64,
     )
-    assert acquire["schema"] == "malleus.cc002.acquire-result/v3"
+    assert acquire["schema"] == "malleus.cc002.acquire-result/v4"
     assert acquire["derivation_record_sha256"] == "sha256:" + "7" * 64
     assert environment._ACQUIRE_PROPERTIES["schema"] == {
-        "const": "malleus.cc002.acquire-result/v3"
+        "const": "malleus.cc002.acquire-result/v4"
     }
     assert environment._VERIFY_PROPERTIES["schema"] == {
-        "const": "malleus.cc002.verify-result/v3"
+        "const": "malleus.cc002.verify-result/v4"
     }
     verify = FakeServices().verify()
-    for legacy in ("v1", "v2"):
+    for legacy in ("v1", "v2", "v3"):
         with pytest.raises(environment.CC002Error, match="schema"):
             environment._validate_tool_output(
                 "cc002_acquire",
@@ -1179,7 +1238,7 @@ def test_public_result_contract_is_v3_only():
             )
 
 
-@pytest.mark.parametrize("legacy", ("v1", "v2"))
+@pytest.mark.parametrize("legacy", ("v1", "v2", "v3"))
 def test_environment_legacy_schemas_are_rejected(tmp_path, monkeypatch, legacy):
     destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
     environment.acquire_environment()
@@ -1190,7 +1249,7 @@ def test_environment_legacy_schemas_are_rejected(tmp_path, monkeypatch, legacy):
         environment._validated_environment(destination)
 
 
-@pytest.mark.parametrize("legacy", ("v1", "v2"))
+@pytest.mark.parametrize("legacy", ("v1", "v2", "v3"))
 def test_internal_verification_legacy_schemas_are_rejected(
     tmp_path, monkeypatch, legacy
 ):
@@ -1211,11 +1270,11 @@ def test_internal_verification_legacy_schemas_are_rejected(
 @pytest.mark.parametrize(
     ("name", "expected_call", "schema"),
     [
-        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v3"),
+        ("cc002_acquire", "acquire", "malleus.cc002.acquire-result/v4"),
         (
             "cc002_verify_offline",
             "verify",
-            "malleus.cc002.verify-result/v3",
+            "malleus.cc002.verify-result/v4",
         ),
     ],
 )
@@ -1415,6 +1474,55 @@ def test_selected_artifacts_bind_exact_urls_hashes_and_lengths():
         "architecture": "x86_64",
         "abi": "cp312",
     }
+
+
+def test_provisional_cfgraph_root_is_exact_embedded_wheel_bytes():
+    filename = "cfgraph-0.2.1-py3-none-any.whl"
+    source = environment.CFGRAPH_WHEEL_BYTES
+
+    assert environment.CFGRAPH_WHEEL_FILENAME == filename
+    assert environment.EMBEDDED_ROOT_ARTIFACTS == {filename: source}
+    assert isinstance(source, bytes)
+    assert len(source) == 2256
+    assert hashlib.sha256(source).hexdigest() == (
+        "28a5bc1292af3c7de137c500da2f9607d66ed27fe787f15ce33e5698fa828f13"
+    )
+    adapter_source = environment.ADAPTER_PATH.read_text(encoding="utf-8")
+    assert "CFGRAPH_WHEEL_BYTES = base64.b64decode(" in adapter_source
+
+    dist_info = "cfgraph-0.2.1.dist-info"
+    with zipfile.ZipFile(io.BytesIO(source)) as archive:
+        assert archive.namelist() == [
+            "CFGraph/__init__.py",
+            f"{dist_info}/METADATA",
+            f"{dist_info}/WHEEL",
+            f"{dist_info}/top_level.txt",
+            f"{dist_info}/RECORD",
+        ]
+        metadata = archive.read(f"{dist_info}/METADATA").decode("utf-8").splitlines()
+        wheel = archive.read(f"{dist_info}/WHEEL").decode("utf-8").splitlines()
+
+    assert [line for line in metadata if line.startswith("Name:")] == [
+        "Name: CFGraph"
+    ]
+    assert [line for line in metadata if line.startswith("Version:")] == [
+        "Version: 0.2.1"
+    ]
+    assert [line for line in metadata if line.startswith("Requires-Dist:")] == [
+        "Requires-Dist: rdflib>=0.4.2"
+    ]
+    assert [line for line in wheel if line.startswith("Generator:")] == [
+        "Generator: setuptools (83.0.0)"
+    ]
+    assert all(
+        "cfgraph" not in artifact.filename.casefold() or artifact.kind != "SDIST"
+        for artifacts in (
+            environment.SELECTED_ARTIFACTS,
+            environment.BUILD_ARTIFACTS,
+            environment.DERIVATIVE_INPUTS,
+        )
+        for artifact in artifacts
+    )
 
 
 def test_governed_prefixcommons_derivative_input_coordinate_is_exact():
@@ -3023,6 +3131,14 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None, failure_
             _run_derivation_program(monkeypatch, derivative_inputs, output)
             return b""
         if "transitive wheel resolution" == context:
+            wheelhouse = mount_path(arguments, ":/wheelhouse:rw")
+            cfgraph = wheelhouse / "cfgraph-0.2.1-py3-none-any.whl"
+            if cfgraph.exists():
+                _wheel(
+                    wheelhouse / "rdflib-7.1.4-py3-none-any.whl",
+                    "rdflib",
+                    "7.1.4",
+                )
             return b""
         raise AssertionError(f"unexpected external edge: {context}: {arguments}")
 
@@ -3043,6 +3159,27 @@ def _fake_cc002_edges(tmp_path, monkeypatch, registry_failure_url=None, failure_
     monkeypatch.setattr(environment, "parse_oci_index", lambda source: calls.append("parse OCI index") or environment.OCI_CHILD_DIGEST)
     monkeypatch.setattr(environment, "_run_checked", fake_run)
     return destination, calls
+
+
+def test_embedded_cfgraph_is_root_and_wheelhouse_input_before_external_edge(
+    tmp_path, monkeypatch
+):
+    _destination, _calls = _fake_cc002_edges(tmp_path, monkeypatch)
+    opener_factory = environment._default_opener
+    observations = []
+
+    def checked_opener():
+        staging = next(tmp_path.glob(".cc002-environment-*"))
+        root = staging / "roots" / environment.CFGRAPH_WHEEL_FILENAME
+        runtime = staging / "wheelhouse" / environment.CFGRAPH_WHEEL_FILENAME
+        assert root.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+        assert runtime.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+        observations.append((root, runtime))
+        return opener_factory()
+
+    monkeypatch.setattr(environment, "_default_opener", checked_opener)
+    environment.acquire_environment()
+    assert len(observations) == 1
 
 
 @pytest.mark.parametrize(
@@ -3125,7 +3262,7 @@ def test_acquire_orchestrates_report_manifest_round_trip_and_idempotence(
 ):
     destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
     result = environment.acquire_environment()
-    assert result["artifact_count"] == 8
+    assert result["artifact_count"] == 9
     assert result["built_artifact_count"] == 2
     assert calls == [
         "Docker version",
@@ -3181,7 +3318,7 @@ def test_verify_writes_internal_bound_record_and_is_idempotent(tmp_path, monkeyp
     manifest, _source = environment._validated_environment(destination)
     assert manifest["verification"]["filename"] == "verification.json"
     internal = json.loads((destination / "verification.json").read_text())
-    assert internal["schema"] == "malleus.cc002.internal-verification/v3"
+    assert internal["schema"] == "malleus.cc002.internal-verification/v4"
     assert internal["source_build_record_sha256"] == manifest["build_record"]["sha256"]
     assert internal["derivation_record_sha256"] == manifest[
         "derivation_record"
@@ -3356,7 +3493,7 @@ def test_bundle_rejects_coherent_runtime_only_prefixcommons_divergence(
         environment._validated_environment(destination)
 
 
-def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
+def test_v4_bundle_retains_provisional_root_and_closed_derivation_provenance(
     tmp_path, monkeypatch
 ):
     destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
@@ -3365,10 +3502,10 @@ def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
     upstream_name = "prefixcommons-0.1.12-py3-none-any.whl"
     derived_name = "prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
 
-    assert manifest["schema"] == "malleus.cc002.compiler-environment/v3"
-    assert acquired["artifact_count"] == 8
+    assert manifest["schema"] == "malleus.cc002.compiler-environment/v4"
+    assert acquired["artifact_count"] == 9
     assert acquired["built_artifact_count"] == 2
-    assert len(manifest["roots"]["artifacts"]) == 5
+    assert len(manifest["roots"]["artifacts"]) == 6
     assert len(manifest["build_inputs"]["artifacts"]) == 2
     assert [record["filename"] for record in manifest["derivative_inputs"]["artifacts"]] == [
         upstream_name
@@ -3397,6 +3534,15 @@ def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
     assert (destination / "built" / derived_name).read_bytes() == (
         destination / "wheelhouse" / derived_name
     ).read_bytes()
+    cfgraph_root = destination / "roots" / environment.CFGRAPH_WHEEL_FILENAME
+    cfgraph_runtime = destination / "wheelhouse" / environment.CFGRAPH_WHEEL_FILENAME
+    assert cfgraph_root.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+    assert cfgraph_runtime.read_bytes() == environment.CFGRAPH_WHEEL_BYTES
+    assert not (destination / "cfgraph-build-record.json").exists()
+    assert all(
+        "cfgraph" not in record["filename"].casefold()
+        for record in manifest["built"]["artifacts"]
+    )
 
     build_record = json.loads((destination / "build-record.json").read_text())
     derivation = json.loads((destination / "derivation-record.json").read_text())
@@ -3472,7 +3618,7 @@ def test_r3_bundle_retains_and_round_trips_closed_derivation_provenance(
         "record-output",
     ),
 )
-def test_r3_bundle_rejects_derivation_tamper_before_external_edges(
+def test_v4_bundle_rejects_derivation_tamper_before_external_edges(
     tmp_path, monkeypatch, target
 ):
     destination, calls = _fake_cc002_edges(tmp_path, monkeypatch)
@@ -3480,7 +3626,7 @@ def test_r3_bundle_rejects_derivation_tamper_before_external_edges(
     calls_before = list(calls)
     requests_before = list(calls.network_requests)
     manifest = json.loads((destination / "manifest.json").read_text())
-    assert manifest["schema"] == "malleus.cc002.compiler-environment/v3"
+    assert manifest["schema"] == "malleus.cc002.compiler-environment/v4"
     assert "derivative_inputs" in manifest
     assert "derivation_record" in manifest
     if target == "input":
@@ -3791,6 +3937,15 @@ def test_verifier_program_measures_exact_python_tuple_and_abi():
     assert "3.12.10" in program
     assert "cp312" in program
     assert "import antlr4" in program
+    assert "from pyshex.shex_evaluator import CFGraph" in program
+    assert "from CFGraph import CFGraph" not in program
+    assert "CFGraph.__module__" in program
+    assert "CFGraph.__name__" in program
+    assert "from rdflib.collection import Collection" in program
+    list_behavior = program.index("Collection(")
+    assert program.index("CFGraph()") < list_behavior
+    assert program.index("CFGraph.__module__") < list_behavior
+    assert program.index("CFGraph.__name__") < list_behavior
 
 
 def test_lock_report_command_is_exact_selected_container_offline_proof(tmp_path):
@@ -3817,27 +3972,51 @@ def test_lock_report_command_is_exact_selected_container_offline_proof(tmp_path)
     assert "/wheelhouse/linkml_runtime-1.11.1-py3-none-any.whl" in program
 
 
-def test_resolver_uses_exact_derived_prefixcommons_root_and_no_upstream_substitute():
+def test_resolver_and_offline_report_use_each_exact_direct_root_once():
     derived = "/built/prefixcommons-0.1.12+malleus.1-py3-none-any.whl"
+    cfgraph_root = "/roots/cfgraph-0.2.1-py3-none-any.whl"
     upstream = "prefixcommons-0.1.12-py3-none-any.whl"
     expected_roots = (
         "/roots/linkml-1.11.1-py3-none-any.whl",
         "/roots/linkml_runtime-1.11.1-py3-none-any.whl",
         derived,
+        cfgraph_root,
     )
     fixed = tuple(environment.RESOLVER_PIP_ARGUMENTS)
     resolved = tuple(
         environment._resolver_pip_arguments("http://127.0.0.1:43123")
     )
-    assert fixed[-3:] == expected_roots
-    assert resolved[-3:] == expected_roots
     assert environment._validated_resolver_pip_arguments(resolved) == list(resolved)
     for arguments in (fixed, resolved):
-        assert arguments.count(derived) == 1
+        assert all(arguments.count(root) == 1 for root in expected_roots)
         assert all(upstream not in argument for argument in arguments)
     retained = derived.replace("/built/", "/wheelhouse/")
     assert environment.LOCK_REPORT_PROGRAM.count(retained) == 1
+    assert environment.LOCK_REPORT_PROGRAM.count(
+        "/wheelhouse/cfgraph-0.2.1-py3-none-any.whl"
+    ) == 1
     assert upstream not in environment.LOCK_REPORT_PROGRAM
+
+
+@pytest.mark.parametrize(
+    ("version", "filename"),
+    (
+        ("0.2.0", "cfgraph-0.2.0-py3-none-any.whl"),
+        ("0.2.2", "cfgraph-0.2.2-py3-none-any.whl"),
+        ("0.2.1", "cfgraph-0.2.1-1-py3-none-any.whl"),
+    ),
+)
+def test_runtime_policy_rejects_every_alternate_cfgraph(version, filename):
+    record = {
+        "filename": filename,
+        "byte_length": 1,
+        "sha256": "sha256:" + "1" * 64,
+        "distribution": "CFGraph",
+        "version": version,
+    }
+    with pytest.raises(environment.CC002Error) as caught:
+        environment._validate_runtime_distribution_policy([record])
+    assert "CFGRAPH" in str(caught.value)
 
 
 @pytest.mark.parametrize(
@@ -3904,6 +4083,7 @@ def test_offline_verifier_executes_every_governed_smoke_before_attesting(
         "prefix_expand": 1,
         "prefix_contract": 1,
         "namespaces": 1,
+        "cfgraph_list": 1,
         "generator": 1,
         "pip_list": 1,
     }
@@ -3918,6 +4098,7 @@ def test_offline_verifier_executes_every_governed_smoke_before_attesting(
         "prefix-expand",
         "prefix-contract",
         "namespaces",
+        "cfgraph-list",
         "generator",
     ),
 )
