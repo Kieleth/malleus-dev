@@ -1275,22 +1275,16 @@ classes:
     slots:
       - target_record_id
       - target_record_hash
-      - requested_by_actor_id
       - intended_recipient_id
       - review_question
-      - issued_at
     slot_usage:
       target_record_id:
         required: true
       target_record_hash:
         required: true
-      requested_by_actor_id:
-        required: true
       intended_recipient_id:
         required: true
       review_question:
-        required: true
-      issued_at:
         required: true
 
   ReviewReport:
@@ -1298,15 +1292,12 @@ classes:
     slots:
       - request_id
       - request_hash
-      - reviewer_id
       - review_outcome
       - rationale
     slot_usage:
       request_id:
         required: true
       request_hash:
-        required: true
-      reviewer_id:
         required: true
       review_outcome:
         required: true

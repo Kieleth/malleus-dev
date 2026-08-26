@@ -35,6 +35,10 @@ independent immutable request, without adding cases, rounds, or a review
 lineage graph. Review records cannot themselves be review targets in this
 slice.
 
+Review actors and event times use the inherited `ProtocolRecord`
+`responsible_actor_id` and `generated_at` fields; the generic records do not
+duplicate that provenance.
+
 This arm records review facts only. It does not authenticate actors, aggregate
 reviewers, resolve competing dispositions, create remediation, interpret
 domain readiness, model cases or rounds, or create a review work queue.

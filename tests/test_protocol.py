@@ -4436,7 +4436,7 @@ class TestRequestAndRevisionArm:
 
 
 class TestLeanReviewProtocol:
-    """One exact target, one atomic report, immutable findings, explicit history.
+    """One exact target, one atomic report, one disposition per finding.
 
     Review orchestration, aggregation, remediation, authentication, and domain
     readiness stay outside this contract.
@@ -4457,10 +4457,8 @@ class TestLeanReviewProtocol:
             id="review-request:1",
             target_record_id=target["id"],
             target_record_hash=target["content_hash"],
-            requested_by_actor_id="actor:requester",
             intended_recipient_id="actor:reviewer",
             review_question="Does the exact target satisfy the stated contract?",
-            issued_at=request_time,
         )
         ledger.append_event(
             event_id="event:review-request:1",
@@ -4481,7 +4479,6 @@ class TestLeanReviewProtocol:
             id="review-report:1",
             request_id=request["id"],
             request_hash=request["content_hash"],
-            reviewer_id="actor:reviewer",
             review_outcome="COMPLETE",
             rationale="The exact target was reviewed against the request.",
         )
@@ -4558,10 +4555,8 @@ class TestLeanReviewProtocol:
             id="review-request:wrong-target",
             target_record_id=target["id"],
             target_record_hash="sha256:" + "0" * 64,
-            requested_by_actor_id="actor:requester",
             intended_recipient_id="actor:reviewer",
             review_question="Review this exact target.",
-            issued_at=timestamp,
         )
         before = ledger.path.read_bytes()
         with pytest.raises(ProtocolError, match="review target hash mismatch"):
@@ -4589,7 +4584,6 @@ class TestLeanReviewProtocol:
             id="review-report:invalid",
             request_id=request["id"],
             request_hash=request["content_hash"],
-            reviewer_id="actor:reviewer",
             review_outcome="COMPLETE",
             rationale="Review completed.",
         )
@@ -4619,18 +4613,63 @@ class TestLeanReviewProtocol:
             )
         assert ledger.path.read_bytes() == before
 
+    def test_wrong_finding_report_hash_leaves_neither_report_nor_findings(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        timestamp = time_at(7)
+        report = make_record(
+            "ReviewReport",
+            event_id="event:review-report:wrong-finding-report",
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[request["id"]],
+            id="review-report:wrong-finding-report",
+            request_id=request["id"],
+            request_hash=request["content_hash"],
+            review_outcome="COMPLETE",
+            rationale="Review completed.",
+        )
+        finding = make_record(
+            "ReviewFinding",
+            event_id="event:review-report:wrong-finding-report",
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[report["id"], target["id"]],
+            id="review-finding:wrong-report-hash",
+            report_id=report["id"],
+            report_hash="sha256:" + "0" * 64,
+            target_record_id=target["id"],
+            target_record_hash=target["content_hash"],
+            finding_statement="This finding names the wrong report version.",
+            rationale="Invalid test input.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="finding report binding mismatch"):
+            ledger.append_event(
+                event_id="event:review-report:wrong-finding-report",
+                event_type=EventType.REVIEW_RECORDED,
+                transaction_time=timestamp,
+                actor_id="actor:reviewer",
+                payload={"report": report, "findings": [finding]},
+            )
+        assert ledger.path.read_bytes() == before
+        projection = ledger.replay()
+        assert report["id"] not in projection.objects
+        assert finding["id"] not in projection.objects
+
     @pytest.mark.parametrize(
-        "request_hash,reviewer,event_actor,message",
+        "request_hash,event_actor,message",
         [
             (
                 "sha256:" + "0" * 64,
-                "actor:reviewer",
                 "actor:reviewer",
                 "review request hash mismatch",
             ),
             (
                 None,
-                "actor:other-reviewer",
                 "actor:other-reviewer",
                 "report reviewer was not requested",
             ),
@@ -4640,7 +4679,6 @@ class TestLeanReviewProtocol:
         self,
         ledger,
         request_hash,
-        reviewer,
         event_actor,
         message,
     ):
@@ -4658,7 +4696,6 @@ class TestLeanReviewProtocol:
             id="review-report:binding",
             request_id=request["id"],
             request_hash=request_hash or request["content_hash"],
-            reviewer_id=reviewer,
             review_outcome="COMPLETE",
             rationale="Review completed.",
         )
@@ -4689,7 +4726,6 @@ class TestLeanReviewProtocol:
             id="review-report:second",
             request_id=request["id"],
             request_hash=request["content_hash"],
-            reviewer_id="actor:reviewer",
             review_outcome="COMPLETE",
             rationale="A second report is outside the request contract.",
         )
@@ -4756,7 +4792,6 @@ class TestLeanReviewProtocol:
             source_record_ids=[request["id"]],
             id="review-report:missing-request-hash",
             request_id=request["id"],
-            reviewer_id="actor:reviewer",
             review_outcome="COMPLETE",
             rationale="The immutable request hash is missing.",
         )
@@ -4871,13 +4906,11 @@ class TestLeanReviewProtocol:
                 actor_id="actor:requester",
                 role="reviewer",
                 source_record_ids=[review_target["id"]],
-                id=f"review-request:nested:{minute}",
-                target_record_id=review_target["id"],
-                target_record_hash=review_target["content_hash"],
-                requested_by_actor_id="actor:requester",
-                intended_recipient_id="actor:reviewer",
-                review_question="Reviewing review records is outside this slice.",
-                issued_at=timestamp,
+            id=f"review-request:nested:{minute}",
+            target_record_id=review_target["id"],
+            target_record_hash=review_target["content_hash"],
+            intended_recipient_id="actor:reviewer",
+            review_question="Reviewing review records is outside this slice.",
             )
             before = ledger.path.read_bytes()
             with pytest.raises(ProtocolError, match="review records cannot be review targets"):
@@ -4889,6 +4922,111 @@ class TestLeanReviewProtocol:
                     payload={"request": nested},
                 )
             assert ledger.path.read_bytes() == before
+
+    def test_legacy_human_review_request_cannot_be_a_review_target(self, ledger):
+        anchor(ledger)
+        legacy = self._record_legacy_human_review_request(ledger)
+        timestamp = time_at(9)
+        nested = make_record(
+            "ReviewRequest",
+            event_id="event:review-request:legacy-target",
+            generated_at=timestamp,
+            actor_id="actor:requester",
+            role="reviewer",
+            source_record_ids=[legacy["id"]],
+            id="review-request:legacy-target",
+            target_record_id=legacy["id"],
+            target_record_hash=legacy["content_hash"],
+            intended_recipient_id="actor:reviewer",
+            review_question="Legacy review records are not reviewable.",
+        )
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError, match="review records cannot be review targets"):
+            ledger.append_event(
+                event_id="event:review-request:legacy-target",
+                event_type=EventType.REVIEW_REQUESTED,
+                transaction_time=timestamp,
+                actor_id="actor:requester",
+                payload={"request": nested},
+            )
+        assert ledger.path.read_bytes() == before
+
+    def test_invalidate_only_adds_the_disposition_fact(self, ledger):
+        anchor(ledger)
+        target = add_source_artifact(ledger)
+        request = self._record_request(ledger, target)
+        _, finding = self._record_one_finding(ledger, request, target)
+        before = ledger.replay()
+        disposition = self._record_disposition(
+            ledger,
+            finding,
+            disposition_id="review-disposition:invalidate",
+            value="INVALIDATE",
+            minute=8,
+        )
+        after = ledger.replay()
+        assert after.objects == {
+            **before.objects,
+            disposition["id"]: {
+                "record_type": "ReviewDisposition",
+                "record": disposition,
+            },
+        }
+        assert after.events[:-1] == before.events
+        assert after.review_disposition_ids == {
+            *before.review_disposition_ids,
+            disposition["id"],
+        }
+        assert after.review_disposition_by_finding == {
+            **before.review_disposition_by_finding,
+            finding["id"]: disposition["id"],
+        }
+        changed = {
+            "events",
+            "objects",
+            "review_disposition_ids",
+            "review_disposition_by_finding",
+            "head_hash",
+        }
+        for name in vars(before).keys() - changed:
+            assert getattr(after, name) == getattr(before, name), name
+
+    @staticmethod
+    def _record_legacy_human_review_request(ledger):
+        artifacts = setup_artifacts(ledger)
+        proposal, _, _ = record_proposal(ledger)
+        assessment = record_type_assessment(ledger, proposal, artifacts["monitor"])
+        event_id = "event:epistemic:1"
+        timestamp = time_at(8)
+        request = make_record(
+            "HumanReviewRequest",
+            event_id=event_id,
+            generated_at=timestamp,
+            actor_id="actor:reviewer",
+            role="reviewer",
+            source_record_ids=[proposal["id"]],
+            id="request:review:legacy",
+            triggering_decision_id="decision:epistemic:1",
+            target_proposal_id=proposal["id"],
+            request_contract_id="contract:review:legacy",
+            request_contract_hash="sha256:" + "7" * 64,
+            requested_by_actor_id="actor:reviewer",
+            intended_recipient_id=None,
+            intended_role="reviewer",
+            issued_at=timestamp,
+            expires_at=None,
+            request_state="OPEN",
+            review_question="Does the proposal require human review?",
+            reviewer_authority_requirement="reviewer",
+        )
+        decide_epistemically(
+            ledger,
+            proposal,
+            assessment,
+            artifacts,
+            requests=[("HumanReviewRequest", request)],
+        )
+        return request
 
     @staticmethod
     def _record_request(
@@ -4911,10 +5049,8 @@ class TestLeanReviewProtocol:
             id=f"review-request:{suffix}",
             target_record_id=target["id"],
             target_record_hash=target["content_hash"],
-            requested_by_actor_id="actor:requester",
             intended_recipient_id=reviewer,
             review_question="Review this exact target.",
-            issued_at=timestamp,
         )
         ledger.append_event(
             event_id=event_id,
@@ -4946,7 +5082,6 @@ class TestLeanReviewProtocol:
             id=f"review-report:{suffix}",
             request_id=request["id"],
             request_hash=request["content_hash"],
-            reviewer_id=reviewer,
             review_outcome="COMPLETE",
             rationale="Review completed with no findings.",
         )
@@ -4973,7 +5108,6 @@ class TestLeanReviewProtocol:
             id="review-report:one-finding",
             request_id=request["id"],
             request_hash=request["content_hash"],
-            reviewer_id="actor:reviewer",
             review_outcome="COMPLETE",
             rationale="Review completed.",
         )

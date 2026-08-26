@@ -878,19 +878,16 @@ class ProtocolLedger:
             "ReviewReport",
             "ReviewFinding",
             "ReviewDisposition",
+            "HumanReviewRequest",
         }:
             raise ProtocolError(
                 f"event {event['event_id']}: review records cannot be review targets"
             )
         if target["content_hash"] != request["target_record_hash"]:
             raise ProtocolError(f"event {event['event_id']}: review target hash mismatch")
-        if request["requested_by_actor_id"] != event["actor_id"]:
-            raise ProtocolError(
-                f"event {event['event_id']}: review requester actor mismatch"
-            )
         _nonblank(
             request,
-            ("requested_by_actor_id", "intended_recipient_id", "review_question"),
+            ("intended_recipient_id", "review_question"),
             f"event {event['event_id']} review request",
         )
         self._require_sources(request, {target["id"]}, event)
@@ -915,13 +912,11 @@ class ProtocolLedger:
             raise ProtocolError(f"event {event['event_id']}: review request hash mismatch")
         if request["id"] in projection.review_report_by_request:
             raise ProtocolError(f"event {event['event_id']}: review request already has a report")
-        if report["reviewer_id"] != event["actor_id"]:
-            raise ProtocolError(f"event {event['event_id']}: review report actor mismatch")
-        if report["reviewer_id"] != request["intended_recipient_id"]:
+        if report["responsible_actor_id"] != request["intended_recipient_id"]:
             raise ProtocolError(f"event {event['event_id']}: report reviewer was not requested")
         _nonblank(
             report,
-            ("reviewer_id", "review_outcome", "rationale"),
+            ("review_outcome", "rationale"),
             f"event {event['event_id']} review report",
         )
         if not isinstance(payload["findings"], list):
