@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-011"
+    ],
+    "consequences": [
+      "Strict Malleus resolution is default while explicitly named and versioned LinkML or custom resolver profiles may replace it.",
+      "Root and import provenance remain distinct; order is provenance only and every cycle refuses with lineage."
+    ],
+    "constraints": [
+      "Select exactly one resolver profile and configuration per compilation with no try-next fallback.",
+      "The resolver alone supplies bytes; adapter hidden I/O is forbidden and file or network capabilities default deny.",
+      "Within one compilation ModuleInstance identity is the exact retained resolved locator string with no universal normalization; resolver profile/configuration are separate provenance; only imports carry parent, ordinal, literal, child locator, and edge."
+    ],
+    "decision_id": "OD-011",
+    "satisfies_workstreams": [
+      "CC-D11"
+    ],
+    "selected_option": "Explicit single resolver profile with strict Malleus default",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:a4c203b106a2f23585cabdb78f4d767237c2ffeef2e0749d1913ff0493e650dd",
+  "entry_id": "OVR-000126",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7ed282d47150f9079eb2669746537e3dfeb851aa483692e91218e2f471adee11",
+  "recorded_at": "2026-08-26T22:11:03Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-011-resolver-and-import-policy",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-011",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000122",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 126,
+  "subject": {
+    "id": "OD-011",
+    "type": "DECISION"
+  },
+  "summary": "Accept one explicit resolver profile with strict Malleus defaults.",
+  "why": "CC-X03 demonstrates that the native LinkML loader performs implicit file and URL resolution, suffix expansion, closure ordering, and cycle traversal. Explicit resolver authority preserves configurability without hidden I/O or fallback surprises."
+}

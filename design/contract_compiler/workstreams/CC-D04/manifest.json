@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:5df53f2aa9fa74699cd0d966a7c643b0bf57fcfa256e7528bbb802a4cc6404a5",
+        "completion_entry_hash": "sha256:437ee03357766cfcfd1bbbcf48ff4deca63791370788af2debb26af56e1d9622",
+        "completion_entry_id": "OVR-000117",
+        "integrated_head": "4670264ed62416ffeccff0e8928e9679e1d6e97d",
+        "workstream_id": "CC-X04"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-004 with a new persisted-wire epoch and stable typed hard break for every frozen CC-X04 input. This zero-scope decision creates no reader, migration, translation, rewrite, fallback, receipt, candidate, or selection.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D04"
+}

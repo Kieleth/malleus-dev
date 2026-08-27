@@ -275,14 +275,20 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 863,
+        "path": "workstreams/CC-D01/manifest.json",
+        "sha256": "sha256:f10c3b8a7aeeefb1fb7f1e6fe4cee58468bb29fe5a3c243dfa7c05afb9297492",
+        "state": "PRESENT"
       },
       "depends_on": [],
       "workstream_id": "CC-D01"
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1087,
+        "path": "workstreams/CC-D02/manifest.json",
+        "sha256": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-X02"
@@ -291,7 +297,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1113,
+        "path": "workstreams/CC-D03/manifest.json",
+        "sha256": "sha256:396e78e8cfd77a43b01987a84ca34bf04bcbe2e38a6bc6118cf414cd50235b3b",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-X01"
@@ -300,7 +309,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1078,
+        "path": "workstreams/CC-D04/manifest.json",
+        "sha256": "sha256:6cea33d2f771547ceca22c623a225bf9f4395e7a008a9b097745f5f21895bee7",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-X04"
@@ -368,7 +380,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1201,
+        "path": "workstreams/CC-D11/manifest.json",
+        "sha256": "sha256:cc86c841ff11cb5b19d37278ee7555aa3ed486b784e24e0095fce4e801438561",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-X03"
@@ -389,7 +404,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1193,
+        "path": "workstreams/CC-D13/manifest.json",
+        "sha256": "sha256:100b4cac2a4711a7f4bbf93ae5dd6789a367752874f77a691e3f1c5340c65efd",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-D01"
@@ -398,7 +416,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 847,
+        "path": "workstreams/CC-D14/manifest.json",
+        "sha256": "sha256:4fece5d92b4e7480f8f19d56531e79f610dbdd91b785bbbb920b9467a710235c",
+        "state": "PRESENT"
       },
       "depends_on": [],
       "workstream_id": "CC-D14"

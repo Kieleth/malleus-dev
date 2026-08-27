@@ -1,0 +1,119 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 30324,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:481ae9a5588376a88ae7e235351157015babdf91b173788889788cf699cfa03c"
+    },
+    {
+      "byte_length": 31938,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:5aedb1a3612a4cc1818c4bc6369cf6bb79f6049f2440df2b4673156975946192"
+    },
+    {
+      "byte_length": 13494,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:13a44f4ca8313d2bf66997cf0e1b21df2b79352eec74b27f6e54f2ba2bf89c82"
+    },
+    {
+      "byte_length": 663,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:7a0a23019301cdf4d3c07784687adb6e0ceccaaeef019cc654cffc08b4a8f5d8"
+    },
+    {
+      "byte_length": 261138,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:337afa142868cb6bffc6bbaa0d7a94f23e9d5c3d1683086f5bd48812964ae38e"
+    },
+    {
+      "byte_length": 83656,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:ad1543f162dddbb6100455e4a6e84821022068efd507695d2fc23360202c1737"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:a679e5e2ed5e366cf946517c5ffaea1af962c7bfe023e1965c8ef271cfc111c6"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:554ef78ff54fa0c128861e9f46b6266dd0d8f28c8860bbbd754e6e32e46adafe"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:386ea81919513b8a28f533de28ec2079214d92326f5ada401bcb1cd146e4b75f"
+    },
+    {
+      "byte_length": 65492,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:a63d767f21b027e4159ff7e5bf7b92101dea5acbc03c35186b400719f9d10a4a"
+    },
+    {
+      "byte_length": 33239,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:08be5362d89baf6090c68c6e5c8bd0b5a3f6144806fe22d90a63780326415370"
+    },
+    {
+      "byte_length": 20414,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:63576a161cb51b57a108f3b756801a4d3037987f2f1ec53672c64afd18d0b2ad"
+    },
+    {
+      "byte_length": 1078,
+      "path": "design/contract_compiler/workstreams/CC-D04/manifest.json",
+      "sha256": "sha256:6cea33d2f771547ceca22c623a225bf9f4395e7a008a9b097745f5f21895bee7"
+    },
+    {
+      "byte_length": 10340,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X04.json",
+      "sha256": "sha256:4872845b6d88e2121cc9cc7e11ccd04ce6fa2b743b3d77607876eeca4a4b518c"
+    }
+  ],
+  "base_commit": "dd9f594510200409920fe83f9242ada687fb3cf3",
+  "checks": [
+    {
+      "check_id": "ccd04-dependency",
+      "method": "Match the CC-D04 dependency binding to the exact CC-X04 card, OVR-000117 completion, and integrated head.",
+      "observed": "The zero-scope card binds CC-X04 card 5df53f2a...04a5, OVR-000117 hash 437ee033...9622, and head 4670264e...e97d.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd04-epoch-diagnostic",
+      "method": "Inspect the selected persisted-wire grammar boundary and diagnostic ownership.",
+      "observed": "A new epoch is checked before semantic decode and returns a stable typed refusal; legacy ontology_hash is never reinterpreted, while CC-W01 and the later diagnostic profile own the exact public identifier.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd04-outcome-matrix",
+      "method": "Map every frozen CC-X04 logical subject to the selected new-reader result.",
+      "observed": "Recon project, Recon record, knowledge-graph snapshot, and protocol envelope all receive the typed hard break; the envelope refuses before replay and embedded graph-base and candidate artifacts are NOT_REACHED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd04-no-bridge",
+      "method": "Inspect forbidden transition mechanisms and historic-byte handling.",
+      "observed": "No fallback, receipt, migration, translation, replay bridge, or rewrite is selected. A separate historic reader may inspect frozen evidence but is never a fallback in the new reader.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd04-zero-scope",
+      "method": "Inspect the card and changed paths.",
+      "observed": "CC-D04 has empty scopes, candidate NONE, ledger NOT_STARTED, and no selection; no reader or historic input changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report selects the future hard-break result. It does not implement a new wire reader, diagnostic type, or exact public diagnostic identifier.",
+    "The selected new reader deliberately will not replay the two Recon inputs that the current reader accepts through its existing receipt."
+  ],
+  "recorded_at": "2026-08-26T22:10:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D04"
+}

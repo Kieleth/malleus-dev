@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:d25059a925f16dd33f2b00e1f81cd15c696d7da2dbbea86f804d72f70027791f",
+        "completion_entry_hash": "sha256:27fd91db050e2eb877a88d370b08ba8a3139935de0bd704a6569f79d5992a593",
+        "completion_entry_id": "OVR-000114",
+        "integrated_head": "8190dc3a4f22f376c7a0921169d15fed3de289f8",
+        "workstream_id": "CC-X02"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-002 with the exact slot-only explicit-adoption rule. This decision workstream owns no implementation or ontology files, creates no worker candidate, makes no selection, and does not rewrite the immutable CC-X02 observations.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D02"
+}

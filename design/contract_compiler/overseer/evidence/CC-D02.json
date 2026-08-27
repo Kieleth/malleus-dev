@@ -1,0 +1,113 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 30324,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:481ae9a5588376a88ae7e235351157015babdf91b173788889788cf699cfa03c"
+    },
+    {
+      "byte_length": 31938,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:5aedb1a3612a4cc1818c4bc6369cf6bb79f6049f2440df2b4673156975946192"
+    },
+    {
+      "byte_length": 13494,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:13a44f4ca8313d2bf66997cf0e1b21df2b79352eec74b27f6e54f2ba2bf89c82"
+    },
+    {
+      "byte_length": 663,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:7a0a23019301cdf4d3c07784687adb6e0ceccaaeef019cc654cffc08b4a8f5d8"
+    },
+    {
+      "byte_length": 261138,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322"
+    },
+    {
+      "byte_length": 79287,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:337afa142868cb6bffc6bbaa0d7a94f23e9d5c3d1683086f5bd48812964ae38e"
+    },
+    {
+      "byte_length": 83656,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:ad1543f162dddbb6100455e4a6e84821022068efd507695d2fc23360202c1737"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:a679e5e2ed5e366cf946517c5ffaea1af962c7bfe023e1965c8ef271cfc111c6"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:554ef78ff54fa0c128861e9f46b6266dd0d8f28c8860bbbd754e6e32e46adafe"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:386ea81919513b8a28f533de28ec2079214d92326f5ada401bcb1cd146e4b75f"
+    },
+    {
+      "byte_length": 65492,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:a63d767f21b027e4159ff7e5bf7b92101dea5acbc03c35186b400719f9d10a4a"
+    },
+    {
+      "byte_length": 33239,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:08be5362d89baf6090c68c6e5c8bd0b5a3f6144806fe22d90a63780326415370"
+    },
+    {
+      "byte_length": 20414,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:63576a161cb51b57a108f3b756801a4d3037987f2f1ec53672c64afd18d0b2ad"
+    },
+    {
+      "byte_length": 1087,
+      "path": "design/contract_compiler/workstreams/CC-D02/manifest.json",
+      "sha256": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7"
+    },
+    {
+      "byte_length": 4312,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X02.json",
+      "sha256": "sha256:5ecfbab9dfa44d8c69cd1f0288484482230fa888957607fab096d5f3e4dec2bd"
+    }
+  ],
+  "base_commit": "dd9f594510200409920fe83f9242ada687fb3cf3",
+  "checks": [
+    {
+      "check_id": "ccd02-dependency",
+      "method": "Match the CC-D02 dependency binding to the exact CC-X02 card, OVR-000114 completion, and integrated head.",
+      "observed": "The zero-scope card binds CC-X02 card d25059a9...791f, OVR-000114 hash 27fd91db...a593, and head 8190dc3a...9f8.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd02-policy",
+      "method": "Inspect the accepted source-structure comparison, refusal matrix, and AT-003 gate.",
+      "observed": "Only slots with literal Boolean adopts:true may reuse one authoritative imported ancestor; comparison removes only description, adopts, and an empty annotations map before exact typed, pre-default equality; every other marker, owner, kind, presence, type, collection, field, or value case refuses and order never wins. AT-003 mechanically names the adoption marker/equality refusal matrix.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd02-graph",
+      "method": "Parse all 28 Turtle projections and compare them with canonical graph revision 15.",
+      "observed": "The projections and sorted canonical graph contain the same 1446 triples; OD-002 selects exactly ExactSlotOnlyExplicitAdoptionProfile with decision date 2026-08-26.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd02-zero-scope",
+      "method": "Inspect the card, integration row, changed paths, candidate, selection, and worker-ledger states.",
+      "observed": "CC-D02 owns no file scope, candidate is NONE, ledger is NOT_STARTED, no selection was added, and no ontology or production file changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies accepted governance and immutable CC-X02 evidence. It does not implement adoption or claim that a compiler currently enforces it.",
+    "The four raw duplicate groups remain observations; closure-local binding must still determine whether a redeclaration has the required imported ancestor."
+  ],
+  "recorded_at": "2026-08-26T22:10:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D02"
+}

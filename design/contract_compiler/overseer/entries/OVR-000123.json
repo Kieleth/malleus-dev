@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-002"
+    ],
+    "consequences": [
+      "An adopting slot reuses one authoritative imported ancestor and never overrides it.",
+      "Every invalid marker, non-slot duplicate, independent-owner collision, structural difference, or equal unmarked redeclaration refuses compilation."
+    ],
+    "constraints": [
+      "Require literal Boolean annotations.adopts:true and exact typed source equality before defaults or normalization, removing only top-level description, annotations.adopts, and an annotations map left empty.",
+      "Import or source order never selects a winner."
+    ],
+    "decision_id": "OD-002",
+    "satisfies_workstreams": [
+      "CC-D02"
+    ],
+    "selected_option": "Exact slot-only explicit adoption",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:a4721a01b4dce51b776544864eead81dbde0ea626350b67a9e197074b2d344b2",
+  "entry_id": "OVR-000123",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1f297859e13e0723b0e835b1727217b47d04dba21ddd9cb383a8607f59159b36",
+  "recorded_at": "2026-08-26T22:11:00Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-002-explicit-adoption",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-002",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000114",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 123,
+  "subject": {
+    "id": "OD-002",
+    "type": "DECISION"
+  },
+  "summary": "Accept exact slot-only explicit adoption.",
+  "why": "CC-X02 proves the bundled duplicate and marker surface. The selected rule preserves intentional owner reuse while refusing implicit merge, normalization, coercion, multiple ownership, and order-dependent override."
+}

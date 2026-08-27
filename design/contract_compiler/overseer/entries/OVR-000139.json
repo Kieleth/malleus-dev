@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept the new persisted-wire epoch and stable typed hard break while deferring its exact public diagnostic identifier to CC-W01.",
+      "Classify all frozen top-level inputs as typed hard breaks and both embedded artifacts as NOT_REACHED.",
+      "Leave frozen bytes, readers, migration, fallback, candidate, selection, and worker-ledger behavior unchanged."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000125",
+      "OVR-000129",
+      "OVR-000130",
+      "OVR-000133"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D04"
+  },
+  "entry_hash": "sha256:fc357a7e293d511815f3a9dbe0eec28736eb3895f8fd01a02bf9d2118c4668ea",
+  "entry_id": "OVR-000139",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:95eb2b94409029554120beb0e1552a9dbd39151b0d7eb18c1c5469003af489e2",
+  "recorded_at": "2026-08-26T22:11:16Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000125",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000133",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D04",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-004",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 139,
+  "subject": {
+    "id": "CC-D04",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D04 under typed hard-break authority.",
+  "why": "The operator outcome matrix, immutable historic observations, graph authority, registered report, and passing zero-scope verification close the decision without implementing migration or a reader."
+}

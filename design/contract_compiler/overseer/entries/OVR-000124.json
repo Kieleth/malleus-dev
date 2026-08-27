@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-003"
+    ],
+    "consequences": [
+      "Pinned LinkML 1.11.1 supplies selected standard-field meaning while adapters remain replaceable behind one neutral output contract.",
+      "Every adapter passes generic neutral-result conformance; each source language owns a named and versioned source profile and corpus, and only a LinkML compatibility claim requires the LinkML corpus.",
+      "Applied defaults become explicit values with provenance and the runtime never infers frontend defaults."
+    ],
+    "constraints": [
+      "Classify simple parity and explicit false as EQUAL; parent/mixin precedence, numeric bounds, default range, and attribute slot usage as LINKML; and repeated plus both conflicting mixin orders as REFUSE.",
+      "V0 provides no legacy OntologyRegistry emulation; public adapter docstrings must surface through Sphinx."
+    ],
+    "decision_id": "OD-003",
+    "satisfies_workstreams": [
+      "CC-D03"
+    ],
+    "selected_option": "Pinned LinkML 1.11.1 replaceable default frontend adapter",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:41cb49e1ef43ab2de975f1a010c1e7b0f1e04145dc2384f7fe24fb096d9ac4d5",
+  "entry_id": "OVR-000124",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a4721a01b4dce51b776544864eead81dbde0ea626350b67a9e197074b2d344b2",
+  "recorded_at": "2026-08-26T22:11:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-003-semantic-source-when-linkml-and-legacy-behavior-differ",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-003",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000108",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 124,
+  "subject": {
+    "id": "OD-003",
+    "type": "DECISION"
+  },
+  "summary": "Accept pinned LinkML as the replaceable default frontend adapter.",
+  "why": "CC-X01 supplies nine immutable two-engine observations. Exact classification delegates supported LinkML meaning without preserving a second legacy interpretation layer or allowing ambiguous mixin order to decide semantics."
+}

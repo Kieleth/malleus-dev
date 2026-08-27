@@ -11,8 +11,9 @@ supersede the canonical protocol foundation graph.
 Decision state: ACCEPTED, Option A, 2026-08-24
 
 The operator accepted Option A after reviewing how the identity is used in
-practice. This section explains the accepted direction. The exact schema and
-canonical byte grammar remain open until OD-006 and OD-013 close.
+practice. This section explains the accepted direction. `OD-013` now supplies
+the one-distribution topology; the exact schema and canonical byte grammar
+remain open until `OD-006` closes.
 
 ### Canonical means one exact byte representation
 
@@ -92,7 +93,7 @@ wire contract.
 
 On the compiler side, the build verifier:
 
-1. reads the exact source bytes through the closed resolver;
+1. reads the exact source bytes through the explicitly selected resolver;
 2. checks their lengths and digests;
 3. checks the recorded parent-to-child import edges;
 4. recompiles the effective contract and verifies its semantic digest;
@@ -177,8 +178,9 @@ persisted-wire identities.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-001`. Overseer record:
-[`OVR-000002`](overseer/entries/OVR-000002.json). `CC-D15` is complete;
-`CC-D16` remains gated by OD-006 and OD-013.
+[`OVR-000002`](overseer/entries/OVR-000002.json). `CC-D15` and `CC-D13` are
+complete; `CC-D16` remains gated by `OD-006` and its downstream integration
+dependencies.
 
 ## OD-012: exact compiler baseline
 
@@ -378,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 14
+## Accepted directions in canonical graph revision 15
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -387,90 +389,196 @@ materialization remains pending.
 | AD-003 | Stage protocols remain experimental | Only named whole-pipeline combinations gain conformance claims |
 | AD-004 | Duplicate symbols fail closed absent explicit policy | Current schemas use explicit adoption, so policy must be selected |
 | AD-005 | Independent branches for independent upstream units plus one exact integration branch | Intrinsic specification and runtime dependencies remain sequential or explicitly stacked |
+| OD-002 | Slot-only, exact, explicit adoption | Only literal Boolean `annotations.adopts: true` can authorize an otherwise identical imported slot redeclaration |
+| OD-003 | Pinned LinkML 1.11.1 is the replaceable default first-party frontend adapter | Repeated and conflicting mixins are refused; runtime facts are explicit and frontend-neutral |
+| OD-004 | New persisted-wire epoch with a typed hard break | Exact public diagnostic identifier is deferred to CC-W01; no fallback, receipt, migration, translation, rewrite, or reinterpretation of legacy `ontology_hash` |
+| OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
+| OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
+| OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
 
 The operator also excluded migration feature development from the foundation
 block. That is an execution-scope instruction, not approval to reuse an old
 wire field with new meaning.
 
-## Immediate operator decisions
+## Accepted compiler decisions from 2026-08-26
 
-These choices block stable artifacts. No worker may infer them.
+These choices are design authority. They do not implement a compiler, resolver,
+wire reader, package split, fixture, or publication.
 
 ### OD-002: explicit adoption
 
-Current fact: `assent.yaml` explicitly adopts `reviewer_id`; `ocr.yaml`
-explicitly adopts `locator` and `reviewer_id`. Current `OntologyRegistry`
-accepts only an identical redeclaration marked `adopts: true`.
+Decision state: ACCEPTED, exact explicit adoption, 2026-08-26
 
-Option A keeps explicit identical adoption as the sole duplicate composition
-rule. Conflicts, missing adoption markers, and order-dependent overrides fail.
-This preserves the deliberate domain prose and current bundled structure.
+Explicit adoption applies only to slot declarations. An adopting slot must
+contain literal Boolean `annotations.adopts: true`. The imported ancestor
+declaration remains the authoritative owner. Source or import order never
+selects a winner.
 
-Option B removes all downstream redeclarations. Every duplicate fails, and
-domain-specific prose must move to a separate annotation mechanism or disappear.
+Before comparison, remove only the declaration's top-level `description`, the
+`annotations.adopts` member, and an `annotations` map left empty by that
+removal. Compare the remaining typed source structure exactly. Every other
+field, value type, collection, and presence state participates. The comparison
+happens before LinkML defaults, coercion, or normalization.
 
-Required proof for either option: compile every bundled closure and assert that
-each duplicate is either absent or authorized by the exact versioned policy.
+Compilation refuses every non-slot duplicate, multiple independent owners, an
+absent, null, false, or string `"true"` marker, any structural difference, and
+an equal redeclaration without the marker. Description is deliberately the only
+non-annotation field excluded from equality. The marker records intentional
+reuse; it does not merge or override declarations.
 
-Recommendation: Option A is the smallest policy consistent with the current
-promotions and fail-closed intent. It still needs normalized equality rules for
-absent versus explicit `false`, default ranges, and annotations.
+The four CC-X02 groups therefore remain raw evidence, not an automatic global
+merge. Only closure-local owner and import relationships determine whether an
+occurrence is an adoption candidate.
 
-Decision: OPEN
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-002`. `CC-D02` is complete.
 
 ### OD-003: semantic source when LinkML and legacy behavior differ
 
-Current fact: measured Recon classes agree for the exercised fields. They do
-not prove general parity. Known differences include conflicting mixins, parent
-and mixin precedence, numeric bound combination, explicit false values, and
-missing default ranges.
+Decision state: ACCEPTED, replaceable LinkML adapter, 2026-08-26
 
-Option A makes exact pinned LinkML semantics authoritative for standard LinkML
-fields. Malleus classifies unsupported or unsettled constructs and refuses them.
-Malleus retains only its own graph and governance semantics.
+Pinned LinkML 1.11.1 is the default first-party frontend adapter. An adapter is
+replaceable behind the same explicit neutral compilation-result contract. Each
+adapter identifies its implementation, version, support profile, and default
+profile. Every adapter must pass the generic neutral-result metamodel,
+canonicalization, artifact, and runtime conformance obligations. Each source
+language has its own named, versioned support profile and source corpus. The
+LinkML corpus is required only when an adapter claims LinkML compatibility.
 
-Option B preserves legacy `OntologyRegistry` behavior through adapter rules,
-even where LinkML differs. This reduces immediate semantic change but retains a
-second interpretation layer and weakens the reason to delegate compilation.
+Defaults are adapter inputs, like Python parameter defaults. Every default that
+affects the result is materialized as an explicit neutral value with provenance.
+The artifact-backed runtime never supplies a LinkML or adapter default. V0 does
+not emulate legacy `OntologyRegistry` behavior.
 
-Required proof for either option: the divergence corpus must classify every
-case as equal, intentionally changed, or unsupported. No unexplained difference
-may be normalized away.
+The immutable CC-X01 cases are classified exactly:
 
-Recommendation: Option A matches the stated goal of delegating LinkML meaning
-to LinkML. It should be adopted only with an exact compiler lock and explicit
-support-profile refusals.
+| Case | Classification | V0 result |
+|---|---|---|
+| `simple_parity` | `EQUAL` | Preserve the equal meaning |
+| `parent_mixin_precedence` | `LINKML` | Use pinned LinkML meaning |
+| `repeated_mixin` | `REFUSE` | Unsupported even where the effective value happens to agree |
+| `conflicting_mixins_ab` | `REFUSE` | No order-dependent winner |
+| `conflicting_mixins_ba` | `REFUSE` | No order-dependent winner |
+| `numeric_bounds` | `LINKML` | Use pinned LinkML meaning |
+| `explicit_false` | `EQUAL` | Preserve explicit false |
+| `default_range` | `LINKML` | Materialize the LinkML default explicitly with provenance |
+| `attribute_slot_usage` | `LINKML` | Use pinned LinkML meaning |
 
-Decision: OPEN
+Future public adapter code must document its supported declarations,
+refusals, defaults, neutral outputs, and provenance in docstrings. Sphinx
+surfaces those docstrings for developers; prose does not become a second
+adapter contract.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-003`. `CC-D03` is complete.
 
 ### OD-004: persisted-wire transition
 
-Current fact: existing ledgers, snapshots, graph bases, candidates, and logic
-facts bind the current ontology hash grammar. Internal Recon data includes
-historic records that current tests require to replay. Renaming a new semantic
-digest to `ontology_hash` inside ledger schema version 1 would silently change
-the protocol.
+Decision state: ACCEPTED, typed hard break, 2026-08-26
 
-Option A declares a new ledger schema or epoch and a typed hard break. Historic
-corpora remain frozen evidence and are read only by the historic reader or
-receive an explicit refusal from the new reader. This avoids migration feature
-work.
+The artifact-backed runtime uses a new persisted-wire epoch. It checks
+the epoch before semantic decoding and returns a stable typed refusal for every
+legacy input. `CC-W01` and the later diagnostic profile own the exact public
+diagnostic identifier. The reader never reinterprets a legacy `ontology_hash`
+as an effective-contract, consumer-bundle, or new wire identity.
 
-Option B implements a versioned, attested translation or replay bridge from the
-old identities to the new contract and bundle identities. This preserves
-current-reader replay but brings migration into the critical path.
+There is no fallback, migration receipt, translation, replay bridge, or rewrite
+in this transition. A historic reader may inspect old bytes as a separate tool;
+it is not a fallback path inside the new reader. The frozen bytes stay evidence
+and are never rewritten to make a test pass.
 
-Required proof for either option: frozen 0.11 and 0.13 projects, ledger events,
-snapshots, graph bases, and candidates must receive the exact documented result.
-Rewriting the historic fixtures is not proof.
+The selected CC-X04 outcome matrix is:
 
-Recommendation: Option A matches the instruction to move quickly without
-building migration now, but it deliberately gives up replay through the new
-reader. That consequence requires explicit approval.
+| Frozen logical subject | New reader result |
+|---|---|
+| Recon project | Typed persisted-wire epoch refusal |
+| Recon record | Typed persisted-wire epoch refusal |
+| Empty knowledge-graph snapshot | Typed persisted-wire epoch refusal |
+| Protocol envelope | Typed persisted-wire epoch refusal before event replay |
+| Embedded graph-base artifact | `NOT_REACHED` behind the envelope hard break |
+| Embedded candidate artifact | `NOT_REACHED` behind the envelope hard break |
 
-Decision: OPEN
+This deliberately gives up new-reader replay of the two inputs that the current
+Recon reader accepts through its receipt. A later migration need creates a new
+governed decision; it does not weaken this epoch boundary silently.
 
-## Decisions after OD-002 to OD-004
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-004`. `CC-D04` is complete.
+
+### OD-011: resolver and import policy
+
+Decision state: ACCEPTED, explicit replaceable resolver, 2026-08-26
+
+Exactly one named and versioned resolver profile is selected for one
+compilation. Strict Malleus resolution is the default. LinkML-compatible and
+custom resolution are allowed only when the caller explicitly selects their
+resolver identity and configuration. Failure never invokes a try-next resolver
+chain.
+
+The resolver remains the sole source of bytes. Frontend adapters perform no
+hidden file or network I/O. File and network capabilities are separate explicit
+resolver configuration and default to denied. A profile may apply its own
+locator rules, such as a LinkML suffix rule, but it retains the exact resolved
+locator string and, for imports, the separate authored literal.
+
+Within one compilation, `ModuleInstance` identity is the exact retained
+resolved locator string. There is no universal locator normalization. Resolver
+profile and configuration identity are separate compilation provenance. The
+root has one retained locator/source record. Only an import edge carries its
+parent module, authored ordinal, literal import, and child resolved locator.
+Every retained source also records exact bytes, byte length, digest, and media
+type.
+
+The same module locator with different bytes refuses compilation. Different
+locators with identical bytes remain distinct module observations, although an
+implementation may deduplicate their content blob. Authored order is retained
+as provenance only and never selects a semantic winner. Every directed import
+cycle refuses with its lineage.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-011`. `CC-D11` is complete.
+
+### OD-013: packaging topology
+
+Decision state: ACCEPTED, one distribution, 2026-08-26
+
+The selected target is one distribution. A normal future
+`pip install malleus` includes the compiler and LinkML. V0 introduces no
+`core` or `compiler` extra, second distribution, or external compiler package.
+A lean installation is deferred to a later governed revision if a real need
+earns the extra topology.
+
+Installed dependency presence and runtime semantics are different boundaries.
+The artifact-backed runtime path remains LinkML-free: it loads explicit neutral
+artifacts and must pass with LinkML imports mechanically blocked, even though
+the installed environment may contain LinkML. This decision does not claim that
+the current `malleus-dev` distribution already ships the new compiler or that a
+LinkML-absent supported installation exists.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-013`. `CC-D13` is complete.
+
+### OD-014: themed fixture and publication boundary
+
+Decision state: ACCEPTED, Quiet Bell Archive boundary, 2026-08-26
+
+`Quiet Bell Archive` is the accepted public working name. Its themed vocabulary
+is fixture-only. Core APIs, artifacts, diagnostics, and protocol records use
+neutral names.
+
+The operator attests exactly:
+`Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0`
+
+That attestation covers no visual asset. A future public asset must have an
+exact manifest entry binding path, bytes, digest, media type, author, license,
+and origin. `CC-PUB01` human review binds the exact manifest digest; any byte or
+manifest change invalidates the review. This decision creates no fixture,
+source file, asset, public page, or publication.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
+
+## Remaining decisions after revision 15
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
@@ -483,9 +591,6 @@ dependent workstream starts.
 | OD-008 | Exact fields that are enforcing, identity-only, annotation-only, or rejected | Support profile and metamorphic tests |
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |
 | OD-010 | Endpoint and generic class-reference semantics | Graph admission profile and operation traces |
-| OD-011 | Module-instance identity, resolver precedence, import-order meaning, cycle behavior, and bundled fallback | Recursive source boundary and binder ordering |
-| OD-013 | One distribution with compiler extra, two distributions, or external locked compiler environment | Packaging and installation tests |
-| OD-014 | Themed fixture name, vocabulary, authorship/license manifest, and public-clearance gate | Normative corpus membership and publication |
 
 Compatibility analysis, partial migration rules, automatic dependency repair,
 and external effect delivery remain outside the foundation block.

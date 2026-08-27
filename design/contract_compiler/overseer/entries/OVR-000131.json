@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "ccd02-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:08Z",
+    "claims": [
+      "CC-D02 binds exact CC-X02 completion authority and immutable evidence.",
+      "OD-002 selects slot-only literal-Boolean explicit adoption, one authoritative imported owner, exact typed pre-default equality under the three named removals, refusal of every other case, and no order winner; AT-003 mechanically names the refusal matrix.",
+      "Canonical revision 15 and all five Markdown projections have exact 1446-triple parity and the decision has one selected object dated 2026-08-26.",
+      "CC-D02 is zero-scope with candidate NONE, worker ledger NOT_STARTED, no selection, and no implementation or ontology change."
+    ],
+    "limitations": [
+      "This verifies governance, not an implemented binder."
+    ]
+  },
+  "entry_hash": "sha256:455022aca1769ba52c5147882b85f42e713e7e00790e84fa5d7fa50d90ed8e61",
+  "entry_id": "OVR-000131",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e0c93784aa64d8759732e536ae89f196a900b7578d8190814d1d4d4dae1213f9",
+  "recorded_at": "2026-08-26T22:11:08Z",
+  "references": [
+    {
+      "digest": "sha256:f6701459231240104809bbf7de8bc5a3d9440ccbbc9fcfca76e2f6dc1d92a044",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D02.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000114",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000123",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-002",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 131,
+  "subject": {
+    "id": "CC-D02-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify exact slot-only explicit-adoption authority.",
+  "why": "CC-D02 may complete only after its exact dependency, comparison grammar, refusal matrix, graph parity, card state, and zero-production-change boundary pass retained mechanical checks."
+}

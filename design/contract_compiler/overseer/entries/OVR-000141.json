@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept one future distribution whose normal installation includes compiler and LinkML.",
+      "Keep the artifact-backed runtime semantically LinkML-free and require tests with LinkML imports blocked.",
+      "Defer lean installation and make no current compiler, package, dependency, candidate, selection, or worker-ledger claim."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000127",
+      "OVR-000129",
+      "OVR-000130",
+      "OVR-000135"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D13"
+  },
+  "entry_hash": "sha256:03bf04d695d608238151e5e5dc1d2cfb4cf00f8c1416b840f0621e31f7aad5f9",
+  "entry_id": "OVR-000141",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b56c5993b918cae7c4784da47dee48edd77df8b8d694741eecb4a0a29b1341dd",
+  "recorded_at": "2026-08-26T22:11:18Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000127",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000135",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D13",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-013",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 141,
+  "subject": {
+    "id": "CC-D13",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D13 under one-distribution target authority.",
+  "why": "Historical CC-D01 authority, the operator topology, runtime import boundary, explicit current-state limitation, graph projection, and retained report satisfy the design-only completion contract."
+}

@@ -905,7 +905,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -923,13 +923,13 @@ def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1338
+    assert len(canonical) == 1446
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 14",
+        "# Design graph revision: 15",
         "# Evidence cutoff: 2026-08-26",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -946,7 +946,7 @@ def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 14,",
+            "revision 15,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -960,6 +960,109 @@ def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(URIRef(f"{cc}OD-012"), selects)) == {
         URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaselineR3")
+    }
+    accepted = {
+        "OD-002": "ExactSlotOnlyExplicitAdoptionProfile",
+        "OD-003": "LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile",
+        "OD-004": "TypedPersistedWireEpochHardBreakProfile",
+        "OD-011": "ExplicitSingleResolverProfileSelection",
+        "OD-013": "SingleDistributionCompilerIncludedPackagingTopology",
+        "OD-014": "QuietBellArchiveFixturePublicationBoundary",
+    }
+    for decision, selected in accepted.items():
+        subject = URIRef(f"{cc}{decision}")
+        assert set(canonical.objects(subject, decision_date)) == {
+            Literal("2026-08-26")
+        }
+        assert set(canonical.objects(subject, selects)) == {URIRef(f"{mfg}{selected}")}
+
+    binds = URIRef(f"{mfg}binds")
+    required_bindings = {
+        "ExactSlotOnlyExplicitAdoptionProfile": {
+            "SlotDeclarationsOnlyAdoptionBoundary",
+            "LiteralBooleanAdoptsTrueRequiredBoundary",
+            "ImportedAncestorOwnerAuthoritativeBoundary",
+            "ExactTypedSourceStructureBeforeDefaultsBoundary",
+            "RemoveOnlyDescriptionAdoptsAndEmptyAnnotationsComparisonBoundary",
+            "AdoptionDifferenceOrInvalidMarkerRefusalBoundary",
+            "SourceOrderNeverCompositionWinnerBoundary",
+        },
+        "LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile": {
+            "ReplaceableAdapterNeutralOutputContract",
+            "GenericNeutralResultConformanceBoundary",
+            "SourceLanguageSpecificNamedVersionedProfileAndCorpusBoundary",
+            "LinkMLCorpusOnlyForLinkMLCompatibilityClaimBoundary",
+            "NamedVersionedAdapterSupportAndDefaultProfileBoundary",
+            "AppliedDefaultsExplicitWithProvenanceBoundary",
+            "RuntimeNeverInfersFrontendDefaultsBoundary",
+            "NoLegacyOntologyRegistryEmulationV0Boundary",
+            "CCX01SimpleParityEqual",
+            "CCX01ParentMixinPrecedenceLinkML",
+            "CCX01RepeatedMixinRefused",
+            "CCX01ConflictingMixinsABRefused",
+            "CCX01ConflictingMixinsBARefused",
+            "CCX01NumericBoundsLinkML",
+            "CCX01ExplicitFalseEqual",
+            "CCX01DefaultRangeLinkMLExplicit",
+            "CCX01AttributeSlotUsageLinkML",
+        },
+        "TypedPersistedWireEpochHardBreakProfile": {
+            "PersistedWireEpochCheckedBeforeSemanticDecodeBoundary",
+            "ExactPublicDiagnosticIdentifierDeferredToCCW01Boundary",
+            "LegacyOntologyHashNeverReinterpretedBoundary",
+            "NoPersistedWireFallbackReceiptMigrationTranslationOrRewriteBoundary",
+            "ReconProjectTypedHardBreak",
+            "ReconRecordTypedHardBreak",
+            "KnowledgeGraphSnapshotTypedHardBreak",
+            "ProtocolEnvelopeTypedHardBreakBeforeReplay",
+            "EmbeddedGraphBaseAndCandidateNotReached",
+        },
+        "ExplicitSingleResolverProfileSelection": {
+            "StrictMalleusResolverDefaultBoundary",
+            "ExplicitNamedVersionedResolverAndConfigurationBoundary",
+            "ResolverSoleByteSourceAdapterNoHiddenIOBoundary",
+            "ResolverFileAndNetworkCapabilitiesDefaultDenyBoundary",
+            "ResolverNeverTryNextFallbackBoundary",
+            "ExactResolvedSourceAndImportEdgeProvenanceBoundary",
+            "ExactResolvedLocatorStringModuleInstanceIdentityBoundary",
+            "NoUniversalLocatorNormalizationBoundary",
+            "RootRetainedSourceSeparateFromImportEdgeBoundary",
+            "ImportEdgeCarriesParentOrdinalLiteralAndChildResolvedLocatorBoundary",
+            "ResolvedIdentityDifferentBytesRefusalBoundary",
+            "DifferentLocatorSameBytesDistinctObservationBoundary",
+            "ImportOrderProvenanceOnlyBoundary",
+            "AllImportCyclesRefusedWithLineageBoundary",
+        },
+        "SingleDistributionCompilerIncludedPackagingTopology": {
+            "NormalMalleusInstallIncludesCompilerAndLinkMLBoundary",
+            "NoCoreCompilerExtraOrSecondDistributionV0Boundary",
+            "LeanInstallDeferredGovernedRevisionBoundary",
+            "ArtifactBackedRuntimeLinkMLImportBlockedBoundary",
+            "TargetTopologyNotCurrentPackagingClaimBoundary",
+        },
+        "QuietBellArchiveFixturePublicationBoundary": {
+            "QuietBellVocabularyFixtureOnlyCoreNeutralBoundary",
+            "QuietBellAttestationExcludesVisualAssetsBoundary",
+            "FuturePublicAssetExactManifestBoundary",
+            "CCPUB01ReviewBindsExactManifestDigestBoundary",
+            "AssetOrManifestChangeInvalidatesPublicReviewBoundary",
+            "DecisionCreatesNoFixtureAssetOrPublicationBoundary",
+        },
+    }
+    for selected, expected in required_bindings.items():
+        assert {
+            str(value).removeprefix(mfg)
+            for value in canonical.objects(URIRef(f"{mfg}{selected}"), binds)
+        } == expected
+    quiet_bell = URIRef(f"{mfg}QuietBellArchiveFixturePublicationBoundary")
+    assert set(canonical.objects(quiet_bell, URIRef(f"{mfg}workingName"))) == {
+        Literal("Quiet Bell Archive")
+    }
+    assert set(canonical.objects(quiet_bell, URIRef(f"{mfg}attestationText"))) == {
+        Literal(
+            "Luis Guzman Lorenzo is the author and rights holder for the original "
+            "Quiet Bell text/data, licensed Apache-2.0"
+        )
     }
     r3 = URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaselineR3")
     assert (
@@ -979,13 +1082,13 @@ def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
         "RuntimeClosureExcludesPytestPytestLoggingAndPyBoundary",
         "MalleusDerivedPackagingMaintenanceAndSecurityOwnershipBoundary",
     ):
-        assert (r3, URIRef(f"{mfg}binds"), URIRef(f"{mfg}{selected}")) in canonical
+        assert (r3, binds, URIRef(f"{mfg}{selected}")) in canonical
 
     status = URIRef(f"{mfg}status")
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 266
+    assert len(statuses) == 281
     assert all(len(values) == 1 for values in statuses.values())
 
     depends_on = URIRef(f"{mfg}dependsOn")
@@ -1011,6 +1114,47 @@ def test_ccd12_r3_graph_is_generated_from_all_turtle_projections() -> None:
             if indegree[successor] == 0:
                 ready.append(successor)
     assert visited == len(nodes)
+
+
+def test_revision_15_conformance_rows_guard_closed_decisions() -> None:
+    rows = {
+        cells[0]: line.casefold()
+        for line in (
+            ROOT / "design" / "contract_compiler" / "conformance.md"
+        ).read_text(encoding="utf-8").splitlines()
+        if line.startswith("| AT-")
+        and (cells := [cell.strip() for cell in line.strip("|").split("|")])
+    }
+
+    for phrase in (
+        "resolver failure never tries another profile",
+        "same locator with different bytes",
+        "different locators with identical bytes",
+        "distinct module observations",
+        "directed cycle refuse with retained lineage",
+    ):
+        assert phrase in rows["AT-001"]
+    for phrase in (
+        "adoption marker/equality refusal matrix",
+        "literal boolean adoption marker",
+        "exact pre-default equality",
+        "every other matrix cell refuses",
+    ):
+        assert phrase in rows["AT-003"]
+    for phrase in ("every applied default", "materialized", "provenance"):
+        assert phrase in rows["AT-005"]
+
+    program = (
+        ROOT / "design" / "contract_compiler" / "program.md"
+    ).read_text(encoding="utf-8").casefold()
+    cc_r01 = next(line for line in program.splitlines() if line.startswith("| cc-r01 "))
+    for phrase in (
+        "no try-next profile",
+        "same-locator/different-bytes refusal",
+        "different-locator/same-bytes distinction",
+        "directed-cycle lineage refusal",
+    ):
+        assert phrase in cc_r01
 
 
 def test_rdf_guard_dependency_is_an_exact_direct_dev_pin() -> None:

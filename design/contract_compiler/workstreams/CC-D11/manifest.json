@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:88874b215d5dc2a6255d90d04968cd5f05d0ec180a1f22bfbe0c1630fd3aa331",
+        "completion_entry_hash": "sha256:1f297859e13e0723b0e835b1727217b47d04dba21ddd9cb383a8607f59159b36",
+        "completion_entry_id": "OVR-000122",
+        "integrated_head": "dd9f594510200409920fe83f9242ada687fb3cf3",
+        "workstream_id": "CC-X03"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-011 with one explicitly selected resolver profile, strict Malleus resolution by default, replaceable named resolver profiles, retained source and edge provenance, fail-closed identity, capability, fallback, order, and cycle rules. This zero-scope decision creates no resolver module, network access, source bytes, candidate, or selection.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D11"
+}

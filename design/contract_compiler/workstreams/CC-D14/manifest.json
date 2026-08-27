@@ -1,0 +1,25 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-014 by accepting Quiet Bell Archive as the public working name, keeping its themed vocabulary fixture-only, recording the operator's exact text/data authorship and Apache-2.0 attestation, excluding visual assets, and defining the future digest-bound CC-PUB01 review gate. This zero-scope decision creates no fixture, asset, publication, candidate, or selection.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D14"
+}

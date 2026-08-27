@@ -1,0 +1,71 @@
+{
+  "actor": {
+    "id": "ccd11-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:11Z",
+    "claims": [
+      "CC-D11 binds exact CC-X03 completion authority and generic loader, I/O, closure, exception, and cycle observations.",
+      "Each compilation selects exactly one named, versioned resolver/configuration; strict Malleus is default and no failure tries another profile.",
+      "The resolver alone supplies exact bytes, adapters perform no hidden I/O, file and network capabilities default deny, root provenance is separate, and only imports carry parent, authored ordinal, literal, child locator, and edge.",
+      "Within one compilation ModuleInstance identity is the exact retained resolved locator string with no universal normalization; resolver profile/configuration remain separate provenance; same locator with different bytes refuses, same bytes at different locators remain distinct, order is provenance only, and every cycle refuses with lineage; AT-001 and CC-R01 mechanically guard both identity countercases, no-try-next behavior, and the cycle result.",
+      "CC-D11 creates no resolver or GREEN implementation and leaves candidate NONE, worker ledger NOT_STARTED, and selections unchanged."
+    ],
+    "limitations": [
+      "The source-boundary implementation remains pending under the now-accepted policy."
+    ]
+  },
+  "entry_hash": "sha256:add90d70c37a73efeef37c420d73196aa0a68e5efe867545772b38ef4a870136",
+  "entry_id": "OVR-000134",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:07f03d9a4191dde8b5fb1a9a3ba7ac7baf23681ad443f85acc4f7cf8284af05c",
+  "recorded_at": "2026-08-26T22:11:11Z",
+  "references": [
+    {
+      "digest": "sha256:cb13e6bd165ec348f448d5318ff2685329d7e9d3878e7cd87177eb20a4ee07f5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D11.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000122",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000126",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-011",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 134,
+  "subject": {
+    "id": "CC-D11-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify explicit resolver authority and fail-closed source identity.",
+  "why": "CC-D11 may complete only after its exact exploratory dependency, selected resolver/capability boundary, complete provenance tuple, identity and order rules, cycle refusal, and zero-implementation boundary pass retained checks."
+}

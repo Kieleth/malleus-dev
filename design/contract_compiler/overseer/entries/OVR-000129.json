@@ -1,0 +1,183 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-002",
+      "OD-003",
+      "OD-004",
+      "OD-011",
+      "OD-013",
+      "OD-014",
+      "CC-D02",
+      "CC-D03",
+      "CC-D04",
+      "CC-D11",
+      "CC-D13",
+      "CC-D14"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:554ef78ff54fa0c128861e9f46b6266dd0d8f28c8860bbbd754e6e32e46adafe",
+        "before_digest": "sha256:e8732ce2f7baa2a2f0407b2a2072ad91f3092916d6a4a3edee690d1f0becf2e7",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:a679e5e2ed5e366cf946517c5ffaea1af962c7bfe023e1965c8ef271cfc111c6",
+        "before_digest": "sha256:18ab01217c3185d9ddf7e01efed7a7ff67c7dc5b83a9fa9a63c05e29c63d2fd1",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:386ea81919513b8a28f533de28ec2079214d92326f5ada401bcb1cd146e4b75f",
+        "before_digest": "sha256:e5b77cf2dd3cb41830d9ad7214a10b8a50a6baf7ca3008c90ab6ef25ae1b93a2",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:ad1543f162dddbb6100455e4a6e84821022068efd507695d2fc23360202c1737",
+        "before_digest": "sha256:760e38cd62927a3fc945c456c54f3b09b5f5b6ea87cdda7a36bdcd67b3556e44",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:337afa142868cb6bffc6bbaa0d7a94f23e9d5c3d1683086f5bd48812964ae38e",
+        "before_digest": "sha256:c6d9d3f3fc8eb0a17472227efe280c2876115ca5589caa447d39911d48272609",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322",
+        "before_digest": "sha256:4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:13a44f4ca8313d2bf66997cf0e1b21df2b79352eec74b27f6e54f2ba2bf89c82",
+        "before_digest": "sha256:b350186edecf32cc1d9d383b6dfd689c99c5d177efbabcb4fae6dfbc59873bff",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/conformance.md"
+      },
+      {
+        "after_digest": "sha256:481ae9a5588376a88ae7e235351157015babdf91b173788889788cf699cfa03c",
+        "before_digest": "sha256:43f961ea4de367074f683509ef9213a526453921ebce8f17293ee03d330290f9",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:63576a161cb51b57a108f3b756801a4d3037987f2f1ec53672c64afd18d0b2ad",
+        "before_digest": "sha256:902f42644b713970760eae6b5193ebe781a5e2736d43b51e927f090a9978e098",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:5aedb1a3612a4cc1818c4bc6369cf6bb79f6049f2440df2b4673156975946192",
+        "before_digest": "sha256:b0479b7fdf90226afe92f5f8bfdfe1236c80184d7df2e81aa73b6129f8cac73f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:7a0a23019301cdf4d3c07784687adb6e0ceccaaeef019cc654cffc08b4a8f5d8",
+        "before_digest": "sha256:0b20bcf2e6d6ad94fb8ed6f894a74248904c5267a91717f3d6f981594d29c332",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:08be5362d89baf6090c68c6e5c8bd0b5a3f6144806fe22d90a63780326415370",
+        "before_digest": "sha256:5e2ed5c6de646a308a3a4b2c7547217614b4c79bdcafe68b28471b9229e841c4",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:a63d767f21b027e4159ff7e5bf7b92101dea5acbc03c35186b400719f9d10a4a",
+        "before_digest": "sha256:d3a2659d253c95916cda8eee7240caaf4c279c7a5280b7c715f2a0e00af71a3d",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:69782eaaddf1b7e375873973e9cf2d861dee42ca1479cabfdb1e3fd90b9a1587",
+  "entry_id": "OVR-000129",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d21d1e81175c7ecad2da60649f8767c3ea9dc0591769533d7de34344195b3ad9",
+  "recorded_at": "2026-08-26T22:11:06Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/conformance.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 129,
+  "subject": {
+    "id": "contract-compiler-decision-batch-r15",
+    "type": "DOCUMENT"
+  },
+  "summary": "Promote six accepted policies into canonical graph revision 15.",
+  "why": "One coherent design-only revision keeps the workbook, program, conformance spine, Sphinx entry point, canonical graph, five projections, integration registry, and hard tests on the same accepted tuples without changing production or dependency materialization."
+}

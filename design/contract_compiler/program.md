@@ -45,13 +45,14 @@ from a deterministic, LinkML-free contract artifact. The public runtime root
 will eventually be an `EffectiveContract`, not an `OntologyRegistry`.
 
 The work begins as a research-local conformance slice. Production cutover waits
-for semantic decisions, independent expected facts, replay policy, packaging,
-and a core installation that cannot import LinkML.
+for the remaining semantic decisions, independent expected facts, the selected
+hard-break reader, packaging, and an artifact-backed runtime path that cannot
+import LinkML.
 
 The target boundary is:
 
 ```text
-retained sources + closed resolver + support profile
+retained sources + one explicitly selected resolver profile
   -> ContractFrontend
   -> ContractCompilationResult
        facts
@@ -71,15 +72,18 @@ retained sources + closed resolver + support profile
   -> KnowledgeGraph, Staging, Logic, Assent, Recon, OCR
 ```
 
-No public object after `ContractFrontend` may contain a LinkML class. A custom
-frontend is supported only when its full compilation result passes the same
-named conformance profile and corpus. Stage protocols alone do not imply that
-arbitrary implementations can be mixed safely.
+No public object after `ContractFrontend` may contain a LinkML class. Every
+frontend must pass the same generic neutral-result metamodel, canonicalization,
+artifact, and runtime conformance obligations. Each source language has its own
+named and versioned source support profile and source corpus. A custom frontend
+need not pass the LinkML-specific corpus unless it claims that LinkML profile.
+Stage protocols alone do not imply that arbitrary implementations can be mixed
+safely.
 
 ## Accepted direction
 
 The operator accepted these directions in the planning conversation. Revision
-11 of the canonical graph records them, with AD-002 mapped to the existing
+15 of the canonical graph records them, with AD-002 mapped to the existing
 `OKG-D012` decision. They remain design authority, not claims about shipped
 code.
 
@@ -91,14 +95,22 @@ code.
 | AD-004 | Fail closed on duplicate imported symbols unless a versioned Malleus policy explicitly authorizes the composition. Never inherit implicit last-wins behavior. |
 | AD-005 | Use independent upstream PR branches for independent units. Intrinsic specification-to-runtime dependencies use declared sequential or stacked bases. Maintain one exact-commit integration branch. |
 
-`OD-001` accepts one canonical consumer-bundle manifest per consumer. Its exact
-fields and byte grammar remain gated by `OD-006` and `OD-013`. Its practical
+`OD-001` accepts one canonical consumer-bundle manifest per consumer. `OD-013`
+now supplies the one-distribution topology; exact fields and byte grammar remain
+gated by `OD-006`. Its practical
 meaning is explained in
 [`decisions.md`](decisions.md#od-001-consumer-bundle-manifest).
 
+Revision 15 also accepts `OD-002`, `OD-003`, `OD-004`, `OD-011`, `OD-013`, and
+`OD-014`: exact slot-only adoption; pinned LinkML 1.11.1 as the replaceable
+default adapter; a typed persisted-wire hard break; one explicit resolver
+profile with strict Malleus defaults; one normal distribution including the
+compiler and LinkML; and the Quiet Bell Archive fixture/publication boundary.
+The exact rules and limitations are in [`decisions.md`](decisions.md).
+
 The operator excluded migration feature development from this foundation block.
-That scope instruction does not authorize a new meaning for the old persisted
-identity field. `OD-004` still selects a new wire epoch or a replay bridge.
+`OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
+bridge or a new meaning for the old persisted identity field in v0.
 
 ## Corrections from independent review
 
@@ -146,16 +158,19 @@ root request
   -> neutral contract facts
 ```
 
-The resolver is the only source of bytes. The LinkML adapter may use LinkML
-objects internally, but it receives bytes from the resolver and emits neutral
-values. Tests deny sockets and direct file reads around the frontend and prove
-that no hidden loader bypass exists.
+The resolver is the only source of bytes. One named, versioned resolver profile
+is selected explicitly; strict Malleus resolution is the default and no failure
+tries another profile. File and network capabilities are separate explicit
+configuration and default deny. The LinkML adapter may use LinkML objects
+internally, but it receives bytes from the resolver and emits neutral values.
+Tests deny sockets and direct file reads around the frontend and prove that no
+hidden loader bypass exists.
 
 Resolver and closure orchestration stay one workstream until this control loop
 is proven. Parser, binder, and elaborator seams may be exposed for observation
 and testing, but no compatibility claim is made for arbitrary combinations.
 
-The source boundary keeps four identities distinct:
+The source boundary keeps five identities distinct:
 
 ```text
 ImportRequest
@@ -165,26 +180,39 @@ ImportRequest
   base locator
 
 ResolvedSource
-  normalized locator
+  resolved locator
   exact bytes, length, digest, media type
-  resolver rule
+  resolver identity, profile version, configuration identity
 
 ModuleInstance
-  module instance ID
+  exact retained resolved locator string as module instance ID
   source blob ID
   lossless declared module
+
+RootResolution
+  requested root locator
+  retained resolved locator and source
+  resolver identity, profile version, configuration identity
 
 ResolvedImportEdge
   parent module instance
   parent import ordinal
   literal import
-  child module instance
-  resolver rule
+  child retained resolved locator
+  resolver identity, profile version, configuration identity
 ```
 
+Within one compilation, module-instance identity is the exact retained resolved
+locator string. There is no universal locator normalization. Resolver profile
+and configuration identity remain separate compilation provenance. A root has
+one retained source record and no invented import ordinal, literal, or edge.
+Only an authored import creates a `ResolvedImportEdge`.
+
 The same content at two locators may share a source blob identity while
-remaining two resolution observations. A diamond records both import edges even
-when parsing of the shared child is deduplicated.
+remaining two module observations. A diamond records both import edges even
+when parsing of the shared child is deduplicated. The same module locator with
+different bytes refuses. Authored order is provenance only, never a semantic
+winner. Every cycle refuses with its complete lineage.
 
 ## Identity layers
 
@@ -209,9 +237,10 @@ The research slice may define experimental neutral values for:
 
 | Boundary | Required content |
 |---|---|
-| Retained source | Exact bytes, length, digest, normalized locator, media type, resolver rule |
+| Root retained source | Requested root locator, exact retained resolved locator, bytes, length, digest, media type, resolver profile and configuration identity |
+| Imported retained source | Exact retained resolved locator, bytes, length, digest, media type, resolver profile and configuration identity |
 | Module instance | Module identity, source blob identity, lossless declarations, ordered imports |
-| Resolved edge | Parent module instance, authored ordinal, literal import, resolver rule, child module instance |
+| Resolved import edge | Parent module instance, authored ordinal, literal import, child retained resolved locator, resolver profile and configuration identity |
 | Declared module | Supported LinkML declarations before composition, including explicit presence and raw annotations |
 | Bound symbols | Qualified identities and explicit composition decisions |
 | Elaborated schema | Hierarchy, mixins, induced slots, normalized supported expressions |
@@ -322,7 +351,7 @@ independently reviewed expected-delta manifest explains every semantic change.
 
 | ID | Deliverable | Depends on | Mandatory AT slice |
 |---|---|---|---|
-| CC-R01 | Controlled retained-source and recursive import boundary | CC-000, CC-X03, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Nested import, diamond, missing import, network refusal, every import ordinal and edge, deterministic byte observations |
+| CC-R01 | Controlled retained-source and recursive import boundary | CC-000, CC-X03, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Nested import, diamond, missing import, network refusal, no try-next profile, every import ordinal and edge, same-locator/different-bytes refusal, different-locator/same-bytes distinction, directed-cycle lineage refusal, deterministic byte observations |
 | CC-R02 | LinkML parser adapter and support-profile classifier emitting lossless per-module declarations before any global merge | CC-002, CC-R01, CC-D03, CC-D08, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Duplicate key, unknown field, supported field, unsupported construct, explicit-presence and raw adoption evidence |
 | CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
 | CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
@@ -339,9 +368,9 @@ authorize production use.
 | ID | Deliverable | Depends on | Mandatory AT slice |
 |---|---|---|---|
 | CC-P01 | Artifact-backed runtime views under an experimental boundary | CC-R08, CC-D09 | No LinkML object crosses the runtime boundary |
-| CC-PKG01 | Selected compiler and core installation boundary | CC-P01, CC-D13 | Core import probe blocks LinkML; compiler environment is exact and reproducible |
-| CC-W01 | Persisted-wire reader and writer selected by OD-004 | CC-PKG01, CC-D04 | New grammar or attested bridge exists before any new semantic identity write |
-| CC-W02 | Frozen historic-wire proof | CC-W01, CC-X04 | Exact documented result for every frozen 0.11 and 0.13 input without rewriting |
+| CC-PKG01 | One-distribution compiler and runtime-path isolation boundary | CC-P01, CC-D13 | One normal installation includes compiler and LinkML; artifact-backed runtime probes block LinkML imports; compiler environment is exact and reproducible |
+| CC-W01 | New-epoch persisted-wire reader and writer | CC-PKG01, CC-D04 | Epoch is checked before semantic decode; stable typed refusal and its public diagnostic identifier are defined; no fallback or bridge is reachable |
+| CC-W02 | Frozen historic-wire hard-break proof | CC-W01, CC-X04 | Every frozen 0.11 and 0.13 top-level input receives the selected typed hard break without rewriting; embedded artifacts remain NOT_REACHED |
 | CC-P10 | KnowledgeGraph cutover | CC-P01, CC-W02 | Existing KG suite plus themed record and graph traces |
 | CC-P11 | Staging cutover | CC-P10 | Existing staging suite plus batch traces |
 | CC-P12 | Logic cutover | CC-P10 | Existing logic suite and fact identity checks |
@@ -350,11 +379,11 @@ authorize production use.
 | CC-P20 | Accepted projection cutover | CC-P19 | Existing projection and graph-base suites |
 | CC-P21 | Assent cutover | CC-P12, CC-P19, CC-P20 | Existing decision, replay, and authorization suites |
 | CC-P22 | Orchestration and Protocol cutover | CC-P21 | Existing orchestration and protocol suites |
-| CC-P30 | Recon cutover | CC-P10, CC-W02, CC-P42 | Recon consumer suite and frozen replay outcome |
+| CC-P30 | Recon cutover | CC-P10, CC-W02, CC-P42 | Recon consumer suite and frozen typed hard-break outcome |
 | CC-P31 | OCR cutover | CC-P10, CC-W02 | OCR profile and evidence-integrity suites |
 | CC-P40 | Inquisition compiler and provenance cutover | CC-P01, CC-PKG01 | Source-side checks use compiler boundary only |
 | CC-P41 | Status from packaged artifact metadata | CC-P01, CC-PKG01 | Core status imports without raw schema parsing or LinkML |
-| CC-P42 | Existing migration bridge or typed hard-break adapter disposition | CC-W02 | Only behavior selected by OD-004 is reachable |
+| CC-P42 | Historic-reader isolation and production hard-break disposition | CC-W02 | Only the new-epoch reader is reachable in production; any historic reader remains a separate tool and never a fallback |
 | CC-P45 | Known-client inventory, repair branches, and bundle candidates | CC-D15, CC-D16, CC-P22, CC-P30, CC-P31, CC-P40, CC-P41, CC-P42 | Each known client is ready or an operator-approved outage is recorded; bundles exist only if OD-001 was accepted |
 | CC-PKG02 | Wheel, sdist, corpus, entry-point, and docs audit | CC-P13, CC-P22, CC-P30, CC-P31, CC-P40, CC-P41, CC-P42 | Selected topology installs cleanly and all packaged artifacts reproduce |
 | CC-P50 | Promote `EffectiveContract` as public root | CC-P45, CC-PKG02 | Public API and release candidate pass all client and package probes |
@@ -459,8 +488,9 @@ The program is complete when all of the following are mechanically true:
 
 1. A clean compiler environment builds the three corpora into independently
    expected neutral facts under an exact support profile.
-2. A clean core environment without LinkML loads packaged artifacts and passes
-   all runtime traces.
+2. The artifact-backed runtime loads packaged artifacts and passes all runtime
+   traces with LinkML imports blocked. The normal selected installation may
+   still contain LinkML.
 3. Every internal consumer uses the artifact-backed views.
 4. The selected persisted-wire transition is proven against frozen historic
    data.

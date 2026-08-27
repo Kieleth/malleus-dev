@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:03283e23c2763129f6c74faf38203c73a4e62b6d1387670eb44516b8794fbf49",
+        "completion_entry_hash": "sha256:9907f81061f1a76f3b513f0b280067baa10cd01be582bb845ce9037768c99f42",
+        "completion_entry_id": "OVR-000108",
+        "integrated_head": "b7721dffdc16ec61878338ff8c55213d320fc5ed",
+        "workstream_id": "CC-X01"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-003 by selecting pinned LinkML 1.11.1 as the replaceable default first-party frontend adapter and classifying every immutable CC-X01 divergence case. This zero-scope decision creates no adapter, runtime, selection, or legacy-emulation implementation.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D03"
+}

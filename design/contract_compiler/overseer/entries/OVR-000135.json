@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "ccd13-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:12Z",
+    "claims": [
+      "The retrospective zero-scope CC-D01 card binds historical completion OVR-000005 and integrated commit 55d9da3b58d77d49bdcf449c376a26231d410824 without creating a new state entry.",
+      "CC-D13 selects one future distribution whose normal installation includes compiler and LinkML and introduces no extra, second package, or external compiler topology now.",
+      "The artifact-backed runtime remains semantically LinkML-free and must pass with LinkML imports blocked even when installed LinkML is present.",
+      "No current malleus-dev compiler or LinkML-absent installation claim, pyproject edit, dependency materialization, candidate, or selection exists."
+    ],
+    "limitations": [
+      "This is target topology only; a later implementation workstream must change and test packaging metadata."
+    ]
+  },
+  "entry_hash": "sha256:759fd4ec75b1fde662ac3341f3b7545842c267cb3f9d7613f4784d9805db5e66",
+  "entry_id": "OVR-000135",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:add90d70c37a73efeef37c420d73196aa0a68e5efe867545772b38ef4a870136",
+  "recorded_at": "2026-08-26T22:11:12Z",
+  "references": [
+    {
+      "digest": "sha256:deb2c225562eaa75a629ce533dca10eb750b7c0ad190835f2f83623013dfc9c5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D13.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000005",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000127",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-013",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D13",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 135,
+  "subject": {
+    "id": "CC-D13-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the one-distribution target and runtime import boundary.",
+  "why": "CC-D13 may complete only after historical CC-D01 authority, the selected KISS topology, semantic runtime isolation, deferred lean-install boundary, and absence of current packaging claims pass retained checks."
+}

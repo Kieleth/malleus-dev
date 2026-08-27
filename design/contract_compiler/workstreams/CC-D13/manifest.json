@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:f10c3b8a7aeeefb1fb7f1e6fe4cee58468bb29fe5a3c243dfa7c05afb9297492",
+        "completion_entry_hash": "sha256:1fc95a260356e61a96d5f439bf80ff0c5832068dd54ae5979a241d14dfac2cd9",
+        "completion_entry_id": "OVR-000005",
+        "integrated_head": "55d9da3b58d77d49bdcf449c376a26231d410824",
+        "workstream_id": "CC-D01"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-013 with one future Malleus distribution whose normal installation includes the compiler and LinkML while the artifact-backed runtime remains semantically LinkML-free and mechanically import-isolated. This zero-scope decision makes no current packaging claim, changes no dependency metadata, and creates no candidate or selection.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D13"
+}

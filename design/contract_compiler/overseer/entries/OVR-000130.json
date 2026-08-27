@@ -1,0 +1,171 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-D01",
+      "CC-D02",
+      "CC-D03",
+      "CC-D04",
+      "CC-D11",
+      "CC-D13",
+      "CC-D14"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:f10c3b8a7aeeefb1fb7f1e6fe4cee58468bb29fe5a3c243dfa7c05afb9297492",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:396e78e8cfd77a43b01987a84ca34bf04bcbe2e38a6bc6118cf414cd50235b3b",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:6cea33d2f771547ceca22c623a225bf9f4395e7a008a9b097745f5f21895bee7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D04/manifest.json"
+      },
+      {
+        "after_digest": "sha256:cc86c841ff11cb5b19d37278ee7555aa3ed486b784e24e0095fce4e801438561",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D11/manifest.json"
+      },
+      {
+        "after_digest": "sha256:100b4cac2a4711a7f4bbf93ae5dd6789a367752874f77a691e3f1c5340c65efd",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D13/manifest.json"
+      },
+      {
+        "after_digest": "sha256:4fece5d92b4e7480f8f19d56531e79f610dbdd91b785bbbb920b9467a710235c",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D14/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f6701459231240104809bbf7de8bc5a3d9440ccbbc9fcfca76e2f6dc1d92a044",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D02.json"
+      },
+      {
+        "after_digest": "sha256:801c312367d8c95e01e0b423e25889a4a9e82963918b298fafc8c0905c70b20c",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D03.json"
+      },
+      {
+        "after_digest": "sha256:a81df4c46594b125f457e38f1b1782c85ae01ac0c69787a5881f270c535256ec",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D04.json"
+      },
+      {
+        "after_digest": "sha256:cb13e6bd165ec348f448d5318ff2685329d7e9d3878e7cd87177eb20a4ee07f5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D11.json"
+      },
+      {
+        "after_digest": "sha256:deb2c225562eaa75a629ce533dca10eb750b7c0ad190835f2f83623013dfc9c5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D13.json"
+      },
+      {
+        "after_digest": "sha256:39c8b816adee40ad43947703d152cb2dfccba45aac9085fc8cd62e59ea54aa92",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D14.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:e0c93784aa64d8759732e536ae89f196a900b7578d8190814d1d4d4dae1213f9",
+  "entry_id": "OVR-000130",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:69782eaaddf1b7e375873973e9cf2d861dee42ca1479cabfdb1e3fd90b9a1587",
+  "recorded_at": "2026-08-26T22:11:07Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D04/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D11/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D13/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D14/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:f6701459231240104809bbf7de8bc5a3d9440ccbbc9fcfca76e2f6dc1d92a044",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D02.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:801c312367d8c95e01e0b423e25889a4a9e82963918b298fafc8c0905c70b20c",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D03.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:a81df4c46594b125f457e38f1b1782c85ae01ac0c69787a5881f270c535256ec",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D04.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:cb13e6bd165ec348f448d5318ff2685329d7e9d3878e7cd87177eb20a4ee07f5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D11.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:deb2c225562eaa75a629ce533dca10eb750b7c0ad190835f2f83623013dfc9c5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D13.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:39c8b816adee40ad43947703d152cb2dfccba45aac9085fc8cd62e59ea54aa92",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D14.json",
+      "type": "EVIDENCE"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 130,
+  "subject": {
+    "id": "contract-compiler-decision-cards-and-evidence-r15",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register seven zero-scope cards and six retained verification reports.",
+  "why": "Formal dependency validation needs exact card bytes, including the retrospective CC-D01 completion binding. Each accepted decision also needs a source-bound immutable report before mechanical verification and completion."
+}

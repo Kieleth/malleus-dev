@@ -332,6 +332,34 @@ def test_canonical_integration_manifest_is_valid() -> None:
     assert "CC-X03" not in state.selections
     assert state.cards["CC-R01"]["authorization"]["class"] == "BLOCKED"
 
+    decisions = {
+        "CC-D01": (),
+        "CC-D02": ("CC-X02",),
+        "CC-D03": ("CC-X01",),
+        "CC-D04": ("CC-X04",),
+        "CC-D11": ("CC-X03",),
+        "CC-D13": ("CC-D01",),
+        "CC-D14": (),
+    }
+    assert len(state.cards) == 17
+    for workstream_id, dependencies in decisions.items():
+        card = state.cards[workstream_id]
+        assert card["assignment"] == {
+            "owner_id": "overseer",
+            "state": "ASSIGNED",
+            "task_id": "/root",
+        }
+        assert card["authorization"]["class"] == "FORMAL"
+        assert tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        ) == dependencies
+        assert card["candidate"] == {"state": "NONE"}
+        assert card["ledger"] == {"state": "NOT_STARTED"}
+        assert card["scopes"] == []
+        assert workstream_states[workstream_id] == "COMPLETE"
+        assert workstream_id not in state.selections
+
 
 def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:
     schema = _read_json(CONTRACT / "integration.schema.json")
@@ -560,7 +588,8 @@ def test_formal_activation_lists_incomplete_dependencies(tmp_path: Path) -> None
         validate_integration(ROOT, path)
 
     _assert_code(error, "CC000_DEPENDENCY_INCOMPLETE")
-    assert "CC-D11" in str(error.value)
+    assert "CC-010" in str(error.value)
+    assert "CC-D11" not in str(error.value)
     assert "CC-016" in str(error.value)
 
 
@@ -913,6 +942,15 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         }
 
     _rewrite_card(manifest_path, manifest, "CC-X03", integrate)
+    x03_digest = _registry_row(manifest, "CC-X03")["card"]["sha256"]
+    _rewrite_card(
+        manifest_path,
+        manifest,
+        "CC-D11",
+        lambda card: card["authorization"]["dependency_bindings"][0].update(
+            card_sha256=x03_digest
+        ),
+    )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 

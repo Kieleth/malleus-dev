@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "ccd14-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:13Z",
+    "claims": [
+      "Quiet Bell Archive is the accepted public working name while all themed vocabulary remains fixture-only and core names remain neutral.",
+      "The exact attestation is `Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0`.",
+      "The attestation covers no visual asset; future assets require exact path, bytes, digest, media type, author, license, and origin.",
+      "CC-PUB01 review binds the exact manifest digest and any asset byte or manifest change invalidates it.",
+      "CC-D14 is zero-scope and creates no fixture, asset, public page, publication, candidate, or selection."
+    ],
+    "limitations": [
+      "Public human review remains a later CC-PUB01 obligation."
+    ]
+  },
+  "entry_hash": "sha256:a83ddcb8298487883ec1fd37361c1c7c856d794290b9815797a39d89a8138a8a",
+  "entry_id": "OVR-000136",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:759fd4ec75b1fde662ac3341f3b7545842c267cb3f9d7613f4784d9805db5e66",
+  "recorded_at": "2026-08-26T22:11:13Z",
+  "references": [
+    {
+      "digest": "sha256:39c8b816adee40ad43947703d152cb2dfccba45aac9085fc8cd62e59ea54aa92",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D14.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000128",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-014",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D14",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 136,
+  "subject": {
+    "id": "CC-D14-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the Quiet Bell Archive and digest-bound publication boundary.",
+  "why": "CC-D14 may complete only after the exact name, neutral-core rule, operator attestation, visual exclusion, future manifest fields, review invalidation, and zero-creation boundary pass retained checks."
+}

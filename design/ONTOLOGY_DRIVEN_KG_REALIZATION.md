@@ -8,9 +8,10 @@ Decision authority: author
 
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
-contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001`, and `OD-012`
+contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
+`OD-004`, and `OD-011` through `OD-014`
 
-Decision dates: 2026-08-17, 2026-08-24, and 2026-08-25
+Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, and 2026-08-26
 
 Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
 This is an ancestry base only, not the tested implementation snapshot. The
@@ -18,8 +19,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 14,
-`sha256:4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c`
+revision 15,
+`sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322`
 
 Evidence cutoff: 2026-08-26
 
@@ -1220,8 +1221,8 @@ backend, broad workload quality, or public capability. Those remain in
     replace LinkML only through the same normative artifact boundary and
     conformance suite.
 
-The author accepted the contract compiler directions on 2026-08-24 and the
-exact compiler baseline on 2026-08-25:
+The author accepted the contract compiler directions on 2026-08-24, the exact
+compiler baseline on 2026-08-25, and six blocking policies on 2026-08-26:
 
 1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
    break before 1.0, but implementation promotion remains gated by conformance.
@@ -1240,6 +1241,23 @@ exact compiler baseline on 2026-08-25:
    identities, the CPython 3.12.10 Linux x86_64 `cp312` reproducibility tuple,
    pip 25.0.1, and the exact slim Bookworm OCI identities. CC-002 materializes
    and attests those bytes; a future fork requires a new governed revision.
+8. `OD-002` selects slot-only exact explicit adoption with a literal Boolean
+   marker, authoritative imported owner, pre-normalization equality, and no
+   order winner.
+9. `OD-003` selects pinned LinkML 1.11.1 as the replaceable default adapter,
+   materializes defaults explicitly, refuses repeated and conflicting mixins,
+   and classifies all nine CC-X01 observations.
+10. `OD-004` selects a new persisted-wire epoch and stable typed hard break,
+    with no fallback, receipt, migration, translation, or rewrite.
+11. `OD-011` selects exactly one explicit resolver profile per compilation,
+    strict Malleus resolution by default, default-denied capabilities, retained
+    exact provenance, no fallback chain, and cycle refusal.
+12. `OD-013` selects one future distribution whose normal installation includes
+    the compiler and LinkML while the artifact-backed runtime remains unable to
+    import LinkML.
+13. `OD-014` accepts Quiet Bell Archive as the public working name, keeps its
+    vocabulary fixture-only, records the text/data authorship and Apache-2.0
+    attestation, excludes visual assets, and makes public review digest-bound.
 
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
@@ -1311,6 +1329,131 @@ cc:OD-001 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
     mfg:decisionDate "2026-08-24" ;
     mfg:selects mfg:PerConsumerCanonicalBundleManifest ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-002 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:ExactSlotOnlyExplicitAdoptionProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-003 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-004 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:TypedPersistedWireEpochHardBreakProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-011 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:ExplicitSingleResolverProfileSelection ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-013 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:SingleDistributionCompilerIncludedPackagingTopology ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-014 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:QuietBellArchiveFixturePublicationBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactSlotOnlyExplicitAdoptionProfile rdf:type mfg:SupportProfile ;
+    mfg:binds mfg:SlotDeclarationsOnlyAdoptionBoundary ;
+    mfg:binds mfg:LiteralBooleanAdoptsTrueRequiredBoundary ;
+    mfg:binds mfg:ImportedAncestorOwnerAuthoritativeBoundary ;
+    mfg:binds mfg:ExactTypedSourceStructureBeforeDefaultsBoundary ;
+    mfg:binds mfg:RemoveOnlyDescriptionAdoptsAndEmptyAnnotationsComparisonBoundary ;
+    mfg:binds mfg:AdoptionDifferenceOrInvalidMarkerRefusalBoundary ;
+    mfg:binds mfg:SourceOrderNeverCompositionWinnerBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:GenericNeutralResultConformanceBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SourceLanguageSpecificNamedVersionedProfileAndCorpusBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLCorpusOnlyForLinkMLCompatibilityClaimBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile
+    rdf:type mfg:SupportProfile ;
+    mfg:binds mfg:ReplaceableAdapterNeutralOutputContract ;
+    mfg:binds mfg:GenericNeutralResultConformanceBoundary ;
+    mfg:binds mfg:SourceLanguageSpecificNamedVersionedProfileAndCorpusBoundary ;
+    mfg:binds mfg:LinkMLCorpusOnlyForLinkMLCompatibilityClaimBoundary ;
+    mfg:binds mfg:NamedVersionedAdapterSupportAndDefaultProfileBoundary ;
+    mfg:binds mfg:AppliedDefaultsExplicitWithProvenanceBoundary ;
+    mfg:binds mfg:RuntimeNeverInfersFrontendDefaultsBoundary ;
+    mfg:binds mfg:NoLegacyOntologyRegistryEmulationV0Boundary ;
+    mfg:binds mfg:CCX01SimpleParityEqual ;
+    mfg:binds mfg:CCX01ParentMixinPrecedenceLinkML ;
+    mfg:binds mfg:CCX01RepeatedMixinRefused ;
+    mfg:binds mfg:CCX01ConflictingMixinsABRefused ;
+    mfg:binds mfg:CCX01ConflictingMixinsBARefused ;
+    mfg:binds mfg:CCX01NumericBoundsLinkML ;
+    mfg:binds mfg:CCX01ExplicitFalseEqual ;
+    mfg:binds mfg:CCX01DefaultRangeLinkMLExplicit ;
+    mfg:binds mfg:CCX01AttributeSlotUsageLinkML ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:TypedPersistedWireEpochHardBreakProfile rdf:type mfg:SupportProfile ;
+    mfg:binds mfg:PersistedWireEpochCheckedBeforeSemanticDecodeBoundary ;
+    mfg:binds mfg:ExactPublicDiagnosticIdentifierDeferredToCCW01Boundary ;
+    mfg:binds mfg:LegacyOntologyHashNeverReinterpretedBoundary ;
+    mfg:binds mfg:NoPersistedWireFallbackReceiptMigrationTranslationOrRewriteBoundary ;
+    mfg:binds mfg:ReconProjectTypedHardBreak ;
+    mfg:binds mfg:ReconRecordTypedHardBreak ;
+    mfg:binds mfg:KnowledgeGraphSnapshotTypedHardBreak ;
+    mfg:binds mfg:ProtocolEnvelopeTypedHardBreakBeforeReplay ;
+    mfg:binds mfg:EmbeddedGraphBaseAndCandidateNotReached ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExplicitSingleResolverProfileSelection rdf:type mfg:SupportProfile ;
+    mfg:binds mfg:StrictMalleusResolverDefaultBoundary ;
+    mfg:binds mfg:ExplicitNamedVersionedResolverAndConfigurationBoundary ;
+    mfg:binds mfg:ResolverSoleByteSourceAdapterNoHiddenIOBoundary ;
+    mfg:binds mfg:ResolverFileAndNetworkCapabilitiesDefaultDenyBoundary ;
+    mfg:binds mfg:ResolverNeverTryNextFallbackBoundary ;
+    mfg:binds mfg:ExactResolvedSourceAndImportEdgeProvenanceBoundary ;
+    mfg:binds mfg:ExactResolvedLocatorStringModuleInstanceIdentityBoundary ;
+    mfg:binds mfg:NoUniversalLocatorNormalizationBoundary ;
+    mfg:binds mfg:RootRetainedSourceSeparateFromImportEdgeBoundary ;
+    mfg:binds mfg:ImportEdgeCarriesParentOrdinalLiteralAndChildResolvedLocatorBoundary ;
+    mfg:binds mfg:ResolvedIdentityDifferentBytesRefusalBoundary ;
+    mfg:binds mfg:DifferentLocatorSameBytesDistinctObservationBoundary ;
+    mfg:binds mfg:ImportOrderProvenanceOnlyBoundary ;
+    mfg:binds mfg:AllImportCyclesRefusedWithLineageBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SingleDistributionCompilerIncludedPackagingTopology rdf:type mfg:DesignObject ;
+    mfg:binds mfg:NormalMalleusInstallIncludesCompilerAndLinkMLBoundary ;
+    mfg:binds mfg:NoCoreCompilerExtraOrSecondDistributionV0Boundary ;
+    mfg:binds mfg:LeanInstallDeferredGovernedRevisionBoundary ;
+    mfg:binds mfg:ArtifactBackedRuntimeLinkMLImportBlockedBoundary ;
+    mfg:binds mfg:TargetTopologyNotCurrentPackagingClaimBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:QuietBellArchiveFixturePublicationBoundary rdf:type mfg:Boundary ;
+    mfg:workingName "Quiet Bell Archive" ;
+    mfg:attestationText "Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0" ;
+    mfg:binds mfg:QuietBellVocabularyFixtureOnlyCoreNeutralBoundary ;
+    mfg:binds mfg:QuietBellAttestationExcludesVisualAssetsBoundary ;
+    mfg:binds mfg:FuturePublicAssetExactManifestBoundary ;
+    mfg:binds mfg:CCPUB01ReviewBindsExactManifestDigestBoundary ;
+    mfg:binds mfg:AssetOrManifestChangeInvalidatesPublicReviewBoundary ;
+    mfg:binds mfg:DecisionCreatesNoFixtureAssetOrPublicationBoundary ;
     mfg:status mfg:AcceptedDesign .
 
 cc:OD-012 rdf:type mfg:DecisionRecord ;
@@ -1602,13 +1745,13 @@ Performed on 2026-08-26:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,338 RDF triples.
+   1,446 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,338 triples. Both directed set differences
+   the same 1,446 triples. Both directed set differences
    were empty.
 3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
    dependency cycle.
-4. All 266 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 278 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1620,37 +1763,42 @@ Performed on 2026-08-26:
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
    remains represented only by `OKG-D012`. `OD-012` has the same invariants
    with `decisionDate "2026-08-25"` and selects exactly the R3 release baseline.
-7. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
+7. `OD-002` through `OD-004`, `OD-011`, `OD-013`, and `OD-014` have the same
+   decision invariants with `decisionDate "2026-08-26"` and select exactly the
+   six accepted policy objects. Those objects bind the exact adoption,
+   divergence classification, hard-break, resolver, packaging, and themed
+   publication boundaries recorded by the decision workbook.
+8. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
    ANTLR, and setuptools coordinates. It additionally binds the exact
    `prefixcommons` input and local-version derivation, package and BSD 3-Clause
    license payload identity, two byte-identical network-denied transforms, v3
    evidence boundary, direct derived-wheel resolver input, runtime test-package
    exclusions, Malleus maintenance ownership, and governed future-replacement
    boundary.
-8. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
+9. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
    coverage obligations, an explicit universal-completeness exclusion, and
    addressable counterevidence and revision semantics.
-9. The three partially evidenced completeness obligations have exactly
+10. The three partially evidenced completeness obligations have exactly
    `Partial` status. The other three remain exactly `Candidate`.
-10. The first-slice fixture and offline core CI gate have exactly `Implemented`
+11. The first-slice fixture and offline core CI gate have exactly `Implemented`
    status; the wider TDD program and experimental learning have exactly
    `Partial` status. `GE-030` through `GE-100`, Lutra, second-backend
    conformance, public promotion, generated-schema parity, and execution-
    environment closure remain open.
-11. The active report identity supersedes three retained identities. Each
+12. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-12. The canonical body contains 1,338 unique, lexically sorted N-Triples. Its
+13. The canonical body contains 1,446 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `4bea632c3f41f6d448156eb066b6a35c3adbb71bb675b289e3c0c73fc91a369c`, and every
-   owned Markdown graph reference names revision 14 and that digest.
-13. All 24 relative Markdown links in the five owned
+   `e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322`, and every
+   owned Markdown graph reference names revision 15 and that digest.
+14. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
-14. None of the five owned Markdown documents or the canonical Turtle artifact
+15. None of the five owned Markdown documents or the canonical Turtle artifact
    contains an absolute home-directory or local-file URI locator.
-15. Trailing-whitespace checks over the seven identity files and the privacy
+16. Trailing-whitespace checks over the seven identity files and the privacy
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 14 was frozen. Existing GraphRecipe implementation
+rerun before revision 15 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "ccd03-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:09Z",
+    "claims": [
+      "CC-D03 binds exact CC-X01 completion authority and immutable nine-case observations.",
+      "The nine cases are classified exactly as two EQUAL, four LINKML, and three REFUSE outcomes without altering the measurements.",
+      "Pinned LinkML 1.11.1 is the replaceable default adapter; all adapters share generic neutral-result conformance while each source language owns a named and versioned source profile and corpus; only a LinkML compatibility claim requires the LinkML corpus; applied defaults are explicit with provenance, AT-005 mechanically guards that provenance, runtime infers none, and v0 has no legacy emulation.",
+      "Future public adapter docstrings are the Sphinx source, while CC-D03 itself remains zero-scope with no implementation or selection."
+    ],
+    "limitations": [
+      "This verifies classification and design authority, not a shipped adapter or generated API page."
+    ]
+  },
+  "entry_hash": "sha256:a1b33dd4c807c579d2627db959dc52eb57681fa500689386589b1a33ef260e41",
+  "entry_id": "OVR-000132",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:455022aca1769ba52c5147882b85f42e713e7e00790e84fa5d7fa50d90ed8e61",
+  "recorded_at": "2026-08-26T22:11:09Z",
+  "references": [
+    {
+      "digest": "sha256:801c312367d8c95e01e0b423e25889a4a9e82963918b298fafc8c0905c70b20c",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D03.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000108",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000124",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-003",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 132,
+  "subject": {
+    "id": "CC-D03-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the replaceable LinkML adapter and nine classifications.",
+  "why": "CC-D03 may complete only after every divergence observation, default boundary, runtime boundary, documentation authority, graph tuple, and zero-scope claim is mechanically bound."
+}

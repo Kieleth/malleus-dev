@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "ccd04-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:11:10Z",
+    "claims": [
+      "CC-D04 binds exact CC-X04 completion authority and leaves every frozen historic byte unchanged.",
+      "The new epoch is checked before semantic decode and uses a stable typed refusal without reinterpreting ontology_hash; CC-W01 and the diagnostic profile own its exact public identifier.",
+      "All four top-level logical inputs hard-break; protocol replay does not start and both embedded artifacts are NOT_REACHED.",
+      "No fallback, receipt, migration, translation, replay bridge, rewrite, reader implementation, candidate, or selection is present."
+    ],
+    "limitations": [
+      "This verifies the selected future outcome and does not implement its reader, diagnostic type, or exact public identifier."
+    ]
+  },
+  "entry_hash": "sha256:07f03d9a4191dde8b5fb1a9a3ba7ac7baf23681ad443f85acc4f7cf8284af05c",
+  "entry_id": "OVR-000133",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a1b33dd4c807c579d2627db959dc52eb57681fa500689386589b1a33ef260e41",
+  "recorded_at": "2026-08-26T22:11:10Z",
+  "references": [
+    {
+      "digest": "sha256:a81df4c46594b125f457e38f1b1782c85ae01ac0c69787a5881f270c535256ec",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D04.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000117",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000125",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000129",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000130",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-004",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 133,
+  "subject": {
+    "id": "CC-D04-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the persisted-wire epoch hard-break matrix.",
+  "why": "CC-D04 may complete only after the exact frozen subjects, diagnostic, decode ordering, forbidden bridge mechanisms, immutable inputs, and design-only boundary pass retained verification."
+}

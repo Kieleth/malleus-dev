@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-004"
+    ],
+    "consequences": [
+      "Recon project, Recon record, knowledge-graph snapshot, and protocol envelope all receive a stable typed persisted-wire epoch refusal from the new reader.",
+      "The protocol envelope refuses before replay and embedded graph-base and candidate artifacts are NOT_REACHED."
+    ],
+    "constraints": [
+      "Check the new epoch before semantic decode, never reinterpret legacy ontology_hash, and defer the exact public diagnostic identifier to CC-W01 and the diagnostic profile.",
+      "Provide no fallback, receipt, migration, translation, replay bridge, or rewrite; a historic reader remains separate."
+    ],
+    "decision_id": "OD-004",
+    "satisfies_workstreams": [
+      "CC-D04"
+    ],
+    "selected_option": "New persisted-wire epoch with typed hard break",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:7ed282d47150f9079eb2669746537e3dfeb851aa483692e91218e2f471adee11",
+  "entry_id": "OVR-000125",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:41cb49e1ef43ab2de975f1a010c1e7b0f1e04145dc2384f7fe24fb096d9ac4d5",
+  "recorded_at": "2026-08-26T22:11:02Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-004-persisted-wire-transition",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-004",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000117",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D04",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 125,
+  "subject": {
+    "id": "OD-004",
+    "type": "DECISION"
+  },
+  "summary": "Accept a new persisted-wire epoch and typed hard break.",
+  "why": "CC-X04 freezes exact legacy bytes and raw current-reader results. The selected hard break preserves identity meaning and forward progress without making migration or compatibility machinery part of the foundation path."
+}

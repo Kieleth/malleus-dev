@@ -18,7 +18,7 @@ Current bundled Malleus ontologies form a fourth regression set. They remain
 authoritative for their consumer behavior, but they are not an independent
 oracle for the new fact grammar.
 
-## Themed vertical, working name Quiet Bell Archive
+## Themed vertical: Quiet Bell Archive
 
 The working case is an original records-office investigation into a seal discrepancy
 in the Ash Meridian survey folio. The setting is austere, readable, and suitable
@@ -26,9 +26,9 @@ for technical documentation. Quiet puns live in names such as `NinthQuire`,
 `Vella`, and `MargenQuill`. Core artifact types, diagnostics, and APIs remain
 neutral.
 
-`OD-014` has not approved the public name, vocabulary, or publication record.
-Until it closes, “Quiet Bell Archive” is a nonnormative working label and no
-checksummed corpus path or public page may depend on it.
+`OD-014` accepts `Quiet Bell Archive` as the public working name and keeps every
+themed term fixture-only. It creates no fixture or publication. Core artifact,
+API, diagnostic, and protocol names remain neutral.
 
 Baseline concepts:
 
@@ -63,9 +63,15 @@ metadata must not describe the fixture as tied to another franchise. It uses no
 third-party marks, faction or character names, quotations, lore, logos,
 heraldry, artwork, fonts, screenshots, or distinctive visual likenesses.
 
-Every public prose or visual asset records authorship, license, and digest.
-Automated text and metadata scans are guardrails, not legal clearance. Human
-review is required in `CC-PUB01` before public web publication.
+The operator attests exactly:
+`Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0`
+The attestation covers no visual asset.
+
+Every future public asset manifest entry binds its exact path, bytes, digest,
+media type, author, license, and origin. Automated text and metadata scans are
+guardrails, not legal clearance. Human review in `CC-PUB01` binds the exact
+manifest digest before public web publication. Any asset byte or manifest
+change invalidates that review.
 
 ## Version axes
 
@@ -89,7 +95,7 @@ Candidate source cases, finalized only after `OD-008` classifies fields:
 | `1.0.0` | Baseline | First vertical oracle |
 | `1.0.1` | Description, display-label, and other fields classified annotation-only, explicitly excluding adoption, retirement, governance, and identity-bearing annotations | Same validated facts and effective contract, different source attestation |
 | `1.1.0` | Additive optional field | Changed effective contract, baseline trace remains valid |
-| `2.0.0` | Reserved for a real breaking experiment | Not authored until OD-004 selects wire behavior |
+| `2.0.0` | Reserved for a real breaking experiment | Deferred until CC-W01 authors the new-epoch wire grammar and stable typed refusal profile |
 
 Historic versions are never overwritten. Every semantic change has an expected
 delta manifest that lists added, removed, and changed facts.
@@ -173,11 +179,11 @@ regression obligation.
 
 | AT | Stage | Themed slice | Countercases | Required result |
 |---|---|---|---|---|
-| AT-001 | Resolver and closure | Root, nested relative import, diamond | Missing import, network locator, cycle characterization | Exact retained bytes, lengths, digests, module instances, authored ordinals, every parent edge, deterministic order, no hidden I/O under process and operating-system containment |
+| AT-001 | Resolver and closure | Root, nested relative import, diamond | Missing import, network locator, resolver failure, directed import cycle, same locator with different bytes, different locators with identical bytes | Exact retained bytes, lengths, digests, module instances, authored ordinals, every parent edge, deterministic order, no hidden I/O under process and operating-system containment; resolver failure never tries another profile; the same locator with different bytes and every directed cycle refuse with retained lineage; different locators with identical bytes remain distinct module observations |
 | AT-002 | Parser and support profile | All baseline declarations | Duplicate key, unknown field, unsupported attribute | Exact declared module or stable typed refusal; every field classified |
-| AT-003 | Binder and composition | Root plus domain symbols | Collision, explicit adoption, ambiguity | Exact qualified symbols and versioned composition decision |
+| AT-003 | Binder and composition | Root plus domain symbols | Collision, adoption marker/equality refusal matrix, ambiguity | Literal Boolean adoption marker and exact pre-default equality accept only the authorized slot case; every other matrix cell refuses |
 | AT-004 | Hierarchy and mixins | Examiner subtype and Agent mixin | Unknown parent, repeated mixin, order conflict | Exact ancestor and mixin facts or stable refusal |
-| AT-005 | Slot induction | Baseline and additive source | Bounds, explicit false, missing range, attribute versus slot | Exact effective constraints under selected semantics |
+| AT-005 | Slot induction | Baseline and additive source | Bounds, explicit false, missing range, attribute versus slot | Exact effective constraints; every applied default is materialized with provenance |
 | AT-006 | Expressions | Locator exactly-one-of | Nested expression, unsupported combinator | Exact normalized expression or stable refusal |
 | AT-007 | Canonical facts | All implemented source versions | Key order, harmless spelling, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical canonical facts |
 | AT-008 | Effective contract | Baseline facts and admission profile | Wrong profile, wrong grammar | Exact domain-separated identities and refusal |
@@ -186,9 +192,9 @@ regression obligation.
 | AT-011 | Graph context | Baseline operation trace | Duplicate ID, relation before endpoint, missing bearer, abstract root | Exact decisions, state digests, and final records |
 | AT-012 | Staging | Ordered intra-batch dependency | Invalid member, stale candidate | Whole-batch refusal, no partial mutation, exact visibility |
 | AT-013a | Consumer cutover | Themed smoke through each cut-over view | Old import and fallback probes from the cut-over consumer | Existing domain suites pass and that consumer executes only the new path; comparison-only legacy code may still exist elsewhere |
-| AT-014 | Packaging | Core wheel, compiler environment, sdist | LinkML import blocked in core | Corpus discoverable, artifacts load, fresh compiler output matches packaged files |
+| AT-014 | Packaging | Normal distribution, compiler environment, sdist | LinkML import blocked on the artifact-backed runtime path | Corpus discoverable, artifacts load, fresh compiler output matches packaged files |
 | AT-015 | Docs and examples | Themed public trace | Private import and copied fixture probes | Doctests pass using only public APIs and literal fixture inclusion |
-| AT-016 | Historic wire | Frozen 0.11 and 0.13 corpus | Unknown identity and grammar | Exact replay bridge or typed hard-break result selected by OD-004 |
+| AT-016 | Historic wire | Frozen 0.11 and 0.13 corpus | Unknown identity and grammar | Stable typed epoch refusal for every top-level input before semantic decode; embedded artifacts remain NOT_REACHED |
 | AT-017 | Legacy deletion | All public modules and entry points | Repository-wide old import, parser, and fallback probes | Replaced mechanism is absent after CC-P51 |
 
 An implementation stage passes only when its assigned AT, all earlier ATs, its
@@ -215,24 +221,28 @@ The feature-isolation corpus must include at least:
 * deterministic diagnostic ordering;
 * invalid bytes and unknown artifact grammar.
 
-Before `OD-003`, each case stores separate pinned-LinkML and legacy observations
-with classification unresolved. After the operator closes `OD-003`, a different
-owner records parity, intentional LinkML adoption, Malleus policy, or unsupported
-refusal. There is no catch-all normalization category.
+The retained cases keep separate pinned-LinkML and legacy observations.
+`OD-003` classifies all nine without changing them: equal cases remain equal;
+parent/mixin precedence, numeric bounds, default range, and local attributes use
+pinned LinkML meaning; repeated and conflicting mixins refuse. There is no
+catch-all normalization category or legacy-emulation path.
 
 ## Regression and packaging gates
 
 Before production cutover:
 
 1. Build wheel and sdist and inspect their file manifests.
-2. Install the core wheel with LinkML imports blocked. Import every public module
-   and entry point, load each packaged contract, and replay the themed trace.
-3. Install the compiler environment from exact LinkML and runtime wheel hashes
-   plus a locked transitive environment. Recompile every corpus version.
+2. Install the normal distribution, block LinkML imports on the artifact-backed
+   runtime path, import every runtime public module and entry point, load each
+   packaged contract, and replay the themed trace.
+3. From the same distribution, verify the compiler environment against exact
+   LinkML and runtime wheel hashes plus the locked transitive environment.
+   Recompile every corpus version.
 4. Install the sdist outside the checkout and run the conformance suite.
 5. Compare fresh compiler output with every packaged built-in artifact.
-6. Build Sphinx with warnings fatal, execute doctests, verify links, and prove
-   that the docs build leaves the worktree unchanged.
+6. Build Sphinx with warnings fatal, execute doctests, verify links, surface the
+   public adapter contract from code docstrings, and prove that the docs build
+   leaves the worktree unchanged.
 7. Assert public examples import no private stage, LinkML type, or test helper.
 
 The themed vertical makes the architecture understandable. Feature cases and the neutral

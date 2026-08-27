@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-013"
+    ],
+    "consequences": [
+      "A normal future pip install malleus includes the compiler and LinkML.",
+      "A lean installation remains deferred to a later governed revision if a concrete need earns it."
+    ],
+    "constraints": [
+      "Introduce no core or compiler extra, second distribution, or external compiler package in v0.",
+      "The artifact-backed runtime remains semantically LinkML-free and must pass with LinkML imports blocked even when LinkML is installed; make no current packaging claim."
+    ],
+    "decision_id": "OD-013",
+    "satisfies_workstreams": [
+      "CC-D13"
+    ],
+    "selected_option": "One distribution with compiler and LinkML in the normal installation",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:1eb498a6fb3727d4fc31272a3ccd649797c9c3bc9beee11cc524920129b78bdd",
+  "entry_id": "OVR-000127",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a4c203b106a2f23585cabdb78f4d767237c2ffeef2e0749d1913ff0493e650dd",
+  "recorded_at": "2026-08-26T22:11:04Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-013-packaging-topology",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-013",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000005",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D13",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 127,
+  "subject": {
+    "id": "OD-013",
+    "type": "DECISION"
+  },
+  "summary": "Accept one future distribution including compiler and LinkML.",
+  "why": "The one-distribution topology is the smallest normal installation contract. Runtime neutrality is enforced at the artifact and import boundary rather than by delaying progress for an unused lean packaging topology."
+}

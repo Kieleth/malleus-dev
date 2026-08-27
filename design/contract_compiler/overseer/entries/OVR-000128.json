@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-014"
+    ],
+    "consequences": [
+      "Quiet Bell Archive is the accepted public working name and all themed terms remain fixture-only.",
+      "Future CC-PUB01 human review binds an exact asset manifest digest and any asset byte or manifest change invalidates it."
+    ],
+    "constraints": [
+      "Record this exact operator attestation without added punctuation: `Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0`",
+      "The attestation covers no visual asset; each future asset requires path, bytes, digest, media type, author, license, and origin; this decision creates no fixture or publication."
+    ],
+    "decision_id": "OD-014",
+    "satisfies_workstreams": [
+      "CC-D14"
+    ],
+    "selected_option": "Quiet Bell Archive fixture and digest-bound publication boundary",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:d21d1e81175c7ecad2da60649f8767c3ea9dc0591769533d7de34344195b3ad9",
+  "entry_id": "OVR-000128",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1eb498a6fb3727d4fc31272a3ccd649797c9c3bc9beee11cc524920129b78bdd",
+  "recorded_at": "2026-08-26T22:11:05Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-014-themed-fixture-and-publication-boundary",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/conformance.md#themed-vertical-quiet-bell-archive",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-014",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D14",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 128,
+  "subject": {
+    "id": "OD-014",
+    "type": "DECISION"
+  },
+  "summary": "Accept the Quiet Bell Archive fixture and publication boundary.",
+  "why": "The exact authorship and license attestation permits a themed text/data fixture while neutral core names, visual-asset exclusion, exact manifests, and digest-bound human review prevent the example from expanding authority implicitly."
+}

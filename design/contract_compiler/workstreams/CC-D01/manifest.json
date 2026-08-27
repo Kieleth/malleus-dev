@@ -1,0 +1,25 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": []
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Retrospectively register the already-complete zero-scope CC-D01 design-governance workstream so later formal decision cards can bind its exact completion authority. This card creates no candidate, selection, worker ledger, implementation, graph revision, or new completion claim; OVR-000005 and integrated commit 55d9da3b58d77d49bdcf449c376a26231d410824 remain the historical authority.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D01"
+}
