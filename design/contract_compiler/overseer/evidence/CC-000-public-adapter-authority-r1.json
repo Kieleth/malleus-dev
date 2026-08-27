@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 972,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:b0793ef1afc91b8140c9e229a003de6664dc6961f21aac9414d2d163eaa6fc47"
+    },
+    {
+      "byte_length": 66634,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:a3246b260c6e23c8e45ebc610c3c96599e2e3caa7bb54b3f87e6ac2c44fae697"
+    },
+    {
+      "byte_length": 30324,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:481ae9a5588376a88ae7e235351157015babdf91b173788889788cf699cfa03c"
+    },
+    {
+      "byte_length": 31938,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:5aedb1a3612a4cc1818c4bc6369cf6bb79f6049f2440df2b4673156975946192"
+    },
+    {
+      "byte_length": 20414,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:3e34c089b661376ca428badb53ceed1ca71c5c5907e70a49b79a0c549841de24"
+    },
+    {
+      "byte_length": 5707,
+      "path": "design/contract_compiler/overseer/evidence/CC-000-governance-audit-r1.json",
+      "sha256": "sha256:45c5101e99426c183f93381668e760773b7120e7a7b4396414076fd4dbab0995"
+    },
+    {
+      "byte_length": 2643,
+      "path": "design/contract_compiler/overseer/entries/OVR-000144.json",
+      "sha256": "sha256:099a4bcb8c1d49a2a4e28401caf9b2ff85b22cf2c02f1458049d0e91a371cdd7"
+    }
+  ],
+  "base_commit": "df699cec7f355c2012ab3018e10f015b34f8bbbe",
+  "checks": [
+    {
+      "check_id": "cc000-public-adapter-authority",
+      "method": "Read OD-009, the CC-R02 and promotion workstream boundaries, and the current integration state before comparing them with the contract compiler index.",
+      "observed": "CC-R02 may implement and characterize the selected LinkML adapter under research authority. Public exposure, production namespace placement, autodoc, and Sphinx-rendered public documentation remain governed by open CC-D09/OD-009.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-public-adapter-wording-guard",
+      "method": "Run the focused governance test that requires the CC-D09/OD-009 promotion gate and rejects wording that assigns public exposure to CC-R02.",
+      "observed": "The index names no current public adapter, preserves LinkML 1.11.1 as the selected v0 target, and makes any future public docstrings and Sphinx rendering conditional on the open promotion decision.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-public-adapter-correction-scope",
+      "method": "Bind the prior report and verified fact, inspect the changed paths, and compare every prior audit claim with this correction.",
+      "observed": "This report supersedes only the R02-public-exposure wording in check cc000-audit-docs-capability and the matching OVR-000144 claim. Every other claim in that report and entry remains unchanged and effective.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-D09/OD-009 remains open. This report selects no promotion boundary and creates no public adapter, namespace, autodoc page, or Sphinx-rendered public API documentation.",
+    "This append-only correction changes documentation and its mechanical wording guard only. It changes no compiler, card, integration, dependency binding, workstream state, or D05 scope.",
+    "CC-000-governance-audit-r1.json and OVR-000144 remain immutable. Only their R02-public-exposure wording is superseded; all unrelated claims remain effective."
+  ],
+  "recorded_at": "2026-08-27T02:30:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-000"
+}

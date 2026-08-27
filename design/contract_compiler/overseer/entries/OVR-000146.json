@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "cc000-public-authority-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T02:30:02Z",
+    "claims": [
+      "No public frontend adapter or adapter docstring currently exists; pinned LinkML 1.11.1 remains only the selected v0 target adapter.",
+      "CC-R02 may implement and characterize that adapter under research authority but does not authorize public exposure.",
+      "CC-D09/OD-009 remains open and governs promotion, public namespace placement, autodoc, and Sphinx-rendered public documentation.",
+      "The focused governance guard requires the open promotion gate and rejects wording that assigns public exposure to CC-R02.",
+      "Only the R02-public-exposure wording in CC-000-governance-audit-r1 and OVR-000144 is superseded; their remaining claims stay effective."
+    ],
+    "limitations": [
+      "This verification selects no OD-009 option, changes no workstream state, and starts no public adapter, compiler, dependency, or D05 work."
+    ]
+  },
+  "entry_hash": "sha256:d0a5eaa9718c75f638d42c2623a1bb61f1dee3d5ebb7e1af1eb2720e36c88683",
+  "entry_id": "OVR-000146",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0a12e6154e7e2f00a31648ad1290de8185859f217f01b617d5779825e00715d4",
+  "recorded_at": "2026-08-27T02:30:02Z",
+  "references": [
+    {
+      "digest": "sha256:f20b22f9601be1ea64d05639c85685c4bcfd5c283ce32a81fbf0362ae2701aab",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-public-adapter-authority-r1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000145",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000144",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D09",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 146,
+  "subject": {
+    "id": "CC-000-public-adapter-authority-r1",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the corrected public adapter promotion authority.",
+  "why": "The canonical program boundary, open OD-009 decision, current integration state, exact documentation bytes, and focused refusal guard prove that CC-R02 research work cannot bypass the separate public promotion decision."
+}

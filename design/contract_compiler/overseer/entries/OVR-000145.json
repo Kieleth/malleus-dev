@@ -1,0 +1,90 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R02",
+      "CC-D09"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b0793ef1afc91b8140c9e229a003de6664dc6961f21aac9414d2d163eaa6fc47",
+        "before_digest": "sha256:cac23a62ae8e609283c435e4d3da2572cc55c4e341733e17c7fd79558d96bcf1",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:a3246b260c6e23c8e45ebc610c3c96599e2e3caa7bb54b3f87e6ac2c44fae697",
+        "before_digest": "sha256:57a235d1b78655bdaf9553401fdf70950f0c5467d541c54a76efc3887d59c8e6",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:f20b22f9601be1ea64d05639c85685c4bcfd5c283ce32a81fbf0362ae2701aab",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-000-public-adapter-authority-r1.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:0a12e6154e7e2f00a31648ad1290de8185859f217f01b617d5779825e00715d4",
+  "entry_id": "OVR-000145",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5948ef0ad76faa003704553b01f624e8fdfa0eb8b55e71148da8ce3df8568b21",
+  "recorded_at": "2026-08-27T02:30:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:f20b22f9601be1ea64d05639c85685c4bcfd5c283ce32a81fbf0362ae2701aab",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-public-adapter-authority-r1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:45c5101e99426c183f93381668e760773b7120e7a7b4396414076fd4dbab0995",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-governance-audit-r1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000144",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D09",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 145,
+  "subject": {
+    "id": "contract-compiler-public-adapter-authority-r1",
+    "type": "DOCUMENT"
+  },
+  "summary": "Restore the open promotion gate for public adapter documentation.",
+  "why": "The prior audit correctly denied a current public adapter but assigned future public exposure to CC-R02. This revision supersedes only that R02-public-exposure wording. CC-R02 may implement and characterize the adapter under research authority; CC-D09/OD-009 still governs promotion, public namespace placement, autodoc, and Sphinx-rendered public documentation."
+}
