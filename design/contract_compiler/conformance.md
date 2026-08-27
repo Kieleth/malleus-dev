@@ -208,8 +208,55 @@ and contradictions pass or refuse together.
 
 Internal candidate digests bind the exact metamodel, canonicalization profile,
 symbol policy, and canonical fact or ordered-fact digest. Stable public fact IDs
-remain blocked on `OD-006` and `OD-008`. The direct-fact bytes are not the
+remain blocked on `OD-008`. The direct-fact bytes are not the
 persisted artifact envelope selected later by `CC-R07` and `CC-W01`.
+
+## OD-006 closed-composition conformance boundary
+
+A full composition has exactly three distinct fixed role slots with cardinality
+`1..1`: `ProtocolRecordContract`, `GovernedGraphContract`, and
+`GovernanceContract`. Each role-bound identity uses the fixed conceptual v0
+role-identity token, the exact fixed role tag, and one complete
+`EffectiveContract` identity. The composition identity uses its separate fixed
+conceptual v0 token and exactly the three named role-bound identities. These
+logical constructors do not define artifact, bundle, or persisted bytes.
+
+The positive delta matrix is exact:
+
+| Change | P | D | G | Composition | Accepted-temporal epoch |
+|---|---|---|---|---|---|
+| Presentation or provenance only | same | same | same | same | same |
+| Protocol semantics only | changed | same | same | changed | new |
+| Governed-domain semantics only | same | changed | same | changed | new |
+| Governance semantics only | same | same | changed | changed | new |
+
+On the accepted-temporal path, a new role value is legal only inside a newly
+constructed and bound composition and a new epoch. One physical artifact may
+package all three complete roles without collapsing them. A future consumer
+bundle references one composition; `CC-D16` retains its fields and bytes.
+
+A standalone structural graph is separate from that matrix. It binds one
+`GovernedGraphContract` and structural-state identity, has no protocol ledger,
+and is not an accepted-temporal composition. A domain semantic change there
+changes the governed-graph role and structural snapshot only; there is no
+ledger epoch. This exception never makes a full-composition role optional.
+
+The refusal corpus covers a missing, duplicate, extra, or unknown role; wrong
+role token, role tag, or composition token; protocol/domain swap; bare
+effective-contract hash; incomplete role closure; ambient borrowing; equal
+payload treated as cross-role identity; a valid replacement role used to
+continue an existing epoch without a new bound composition; mixed-composition
+roles; independently advanced or inferred-current role heads; protocol
+validation by the domain role or domain validation by the protocol role;
+accepted-temporal state bound only to the domain role; ledger continuation
+after a composition change; and a standalone structural graph carrying a
+protocol or governance role, composition, accepted-temporal marker, or ledger.
+Whole-composition validation refuses atomically.
+
+No conformance case may infer governance topology, endpoint or stateful
+admission behavior, source-field or expression classification, public
+promotion, stable public fact identifiers, consumer-bundle bytes, artifact
+bytes, persisted epoch bytes, compatibility, migration, or multi-head recovery.
 
 ## Acceptance-test matrix
 
@@ -225,7 +272,7 @@ regression obligation.
 | AT-005 | Slot induction | Baseline and additive source | Bounds, explicit false, missing range, attribute versus slot | Exact effective constraints; every applied default is materialized with provenance |
 | AT-006 | Expressions | Locator exactly-one-of | Nested expression, unsupported combinator | Exact normalized expression or stable refusal |
 | AT-007 | Canonical facts | Exact seed kinds and predicates, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null, array, nested object, noncanonical decimal, expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
-| AT-008 | Effective contract | Baseline facts and admission profile | Wrong profile, wrong grammar | Exact domain-separated identities and refusal |
+| AT-008 | Effective contract and closed composition | Complete P/D/G role closures, fixed conceptual v0 role tags and constructors, one composition, one accepted-temporal epoch, and standalone D-only structural graph | Missing, duplicate, extra, unknown, swapped, incomplete, ambient, equal-payload, unbound replacement, mixed-composition, independent-head, wrong-use, structural/full-path confusion, wrong fixed role tag, domain, version, or composition constructor | Exact domain-separated role and composition identities; delta matrix; new composition and epoch for any semantic role change; exact atomic refusal |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |
 | AT-011 | Graph context | Baseline operation trace | Duplicate ID, relation before endpoint, missing bearer, abstract root | Exact decisions, state digests, and final records |

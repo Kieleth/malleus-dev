@@ -254,6 +254,7 @@ def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
+    assert registry["CC-D06"] == ("CC-D05",)
     assert registry["CC-R01"] == (
         "CC-000",
         "CC-X03",
@@ -338,11 +339,12 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D03": ("CC-X01",),
         "CC-D04": ("CC-X04",),
         "CC-D05": ("CC-D01", "CC-D02", "CC-D03"),
+        "CC-D06": ("CC-D05",),
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 18
+    assert len(state.cards) == 19
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -370,6 +372,18 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "stable public fact ID",
     ):
         assert phrase in d05_responsibility
+    d06_responsibility = state.cards["CC-D06"]["responsibility"]
+    for phrase in (
+        "exactly three named 1..1 semantic roles",
+        "closed ContractComposition",
+        "fixed conceptual v0 role and composition identity constructors",
+        "one accepted-temporal composition per ledger epoch",
+        "governed-graph-only standalone structural case",
+        "zero-scope decision",
+        "no implementation",
+        "public identifier",
+    ):
+        assert phrase in d06_responsibility
 
 
 def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:

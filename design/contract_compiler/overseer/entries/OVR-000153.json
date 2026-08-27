@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-006"
+    ],
+    "consequences": [
+      "Protocol, governed-domain, and governance semantic changes remain independently visible while one full composition and one accepted-temporal epoch stay exact.",
+      "A standalone structural graph can evolve its governed-graph role and snapshot without acquiring protocol-ledger or full-composition semantics."
+    ],
+    "constraints": [
+      "A full v0 composition has exactly one ProtocolRecordContract, one GovernedGraphContract, and one GovernanceContract, with no fourth or optional role.",
+      "Each role-bound identity uses the fixed v0 constructor, exact fixed role tag, and one complete EffectiveContract identity; no role borrows ambient semantics.",
+      "The closed composition identity uses its distinct fixed v0 constructor and exactly the three role-bound identities.",
+      "Any accepted-temporal semantic role change requires a newly bound composition and a new ledger epoch; independent heads and recovery machinery are deferred.",
+      "Logical identity inputs do not select public identifiers, artifact or bundle bytes, persisted wire, governance topology, admission content, migration, package, or API."
+    ],
+    "decision_id": "OD-006",
+    "satisfies_workstreams": [
+      "CC-D06"
+    ],
+    "selected_option": "Three exact semantic roles in one closed composition and one v0 accepted-temporal epoch",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:69a21bf25659d946957007ff65274477fe5b03528badbda1b67c1286a3f53349",
+  "entry_id": "OVR-000153",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ba3aaa5d93663e6f653a4975770c7a42b7fc6a19eef0408696904fb68f0df289",
+  "recorded_at": "2026-08-27T03:40:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-006-closed-contract-roles-and-composition",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-006",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000150",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 153,
+  "subject": {
+    "id": "OD-006",
+    "type": "DECISION"
+  },
+  "summary": "Accept three exact roles in one closed contract composition.",
+  "why": "The closed three-role model preserves semantic modularity and queryable change boundaries without creating independent heads, multiple runtimes, or premature wire machinery. One exact composition remains the KISS epoch boundary for accepted-temporal protocol state."
+}

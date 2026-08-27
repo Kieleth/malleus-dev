@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
+        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+        "completion_entry_id": "OVR-000150",
+        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+        "workstream_id": "CC-D05"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-006 with exactly three named 1..1 semantic roles in one closed ContractComposition, fixed conceptual v0 role and composition identity constructors over complete EffectiveContract identities, one accepted-temporal composition per ledger epoch, one governed-graph-only standalone structural case, exact delta and refusal matrices, and deferred wire boundaries. This zero-scope decision creates no implementation, ontology YAML, public identifier, artifact, bundle, package, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D06"
+}

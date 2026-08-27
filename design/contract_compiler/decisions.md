@@ -12,8 +12,9 @@ Decision state: ACCEPTED, Option A, 2026-08-24
 
 The operator accepted Option A after reviewing how the identity is used in
 practice. This section explains the accepted direction. `OD-013` now supplies
-the one-distribution topology; the exact schema and canonical byte grammar
-remain open until `OD-006` closes.
+the one-distribution topology and `OD-006` supplies the closed three-role
+composition. The exact schema and canonical byte grammar remain with
+`CC-D16`.
 
 ### Canonical means one exact byte representation
 
@@ -165,9 +166,9 @@ Separate bundles solve both problems:
 This is why the consumer bundle is an attested execution packet around an
 effective contract, not a replacement name for the ontology hash.
 
-Option A approves one canonical consumer-bundle manifest per consumer, with
-exact fields decided only after OD-006 contract roles and OD-013 packaging
-topology close.
+Option A approves one canonical consumer-bundle manifest per consumer. The
+contract roles and packaging topology are now closed; `CC-D16` still decides
+the exact fields and bytes.
 
 Option B defers the consumer bundle and ships only semantic artifacts. That is
 smaller, but it does not mechanically bind a consumer to exact sources, reader,
@@ -179,8 +180,7 @@ persisted-wire identities.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-001`. Overseer record:
 [`OVR-000002`](overseer/entries/OVR-000002.json). `CC-D15` and `CC-D13` are
-complete; `CC-D16` remains gated by `OD-006` and its downstream integration
-dependencies.
+complete; `CC-D16` remains a separate exact-schema and byte-grammar workstream.
 
 ## OD-012: exact compiler baseline
 
@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 16
+## Accepted directions in canonical graph revision 17
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -392,7 +392,8 @@ materialization remains pending.
 | OD-002 | Slot-only, exact, explicit adoption | Only literal Boolean `annotations.adopts: true` can authorize an otherwise identical imported slot redeclaration |
 | OD-003 | Pinned LinkML 1.11.1 is the replaceable default first-party frontend adapter | Repeated and conflicting mixins are refused; runtime facts are explicit and frontend-neutral |
 | OD-004 | New persisted-wire epoch with a typed hard break | Exact public diagnostic identifier is deferred to CC-W01; no fallback, receipt, migration, translation, rewrite, or reinterpretation of legacy `ontology_hash` |
-| OD-005 | Ontology-powered atomic subject-predicate-object facts in canonical JSON | Internal candidate digests are not stable public fact IDs; expression vocabulary, source-field mapping, roles, admission, promotion, bundle bytes, and artifact envelope remain separately governed |
+| OD-005 | Ontology-powered atomic subject-predicate-object facts in canonical JSON | Internal candidate digests are not stable public fact IDs; expression vocabulary, source-field mapping, admission, promotion, bundle bytes, and artifact envelope remain separately governed |
+| OD-006 | Three exact semantic roles in one closed composition and one v0 accepted-temporal epoch | No independent role heads, wire grammar, artifact schema, migration, or stable public fact IDs |
 | OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
@@ -648,8 +649,8 @@ lowercase SHA-256 digest of the exact sorted canonical fact-array bytes. Both
 envelopes bind the exact content-addressed metamodel identity, candidate
 canonicalization-profile identity, and exact symbol-policy identity. These
 digests are computed, never supplied as a fourth fact member. They are internal
-candidate identities only. Stable public fact IDs remain blocked on `OD-006`
-and `OD-008` and require a later governed promotion.
+candidate identities only. Stable public fact IDs remain blocked on `OD-008`
+and require a later governed promotion.
 
 #### Whole-set validation and provenance
 
@@ -704,8 +705,8 @@ recursive self-validation or shipped self-hosting claim.
 and state-transition behavior. Turtle remains a readable design projection,
 never the normative runtime wire.
 
-`OD-006` still owns roles and composition; `OD-007` and `OD-010` admission and
-context; `OD-008` field and expression classification; `OD-009` public
+`OD-006` closes roles and composition; `OD-007` and `OD-010` still own
+admission and context; `OD-008` field and expression classification; `OD-009` public
 promotion; `CC-D16` consumer-bundle bytes; and `CC-R07` and `CC-W01` the
 artifact envelope and persisted epoch. Diagnostic codes, module layout, and
 public APIs also remain open. This decision creates no compiler, public
@@ -713,6 +714,149 @@ frontend, metamodel file, artifact, reader, package, or dependency.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-005`. `CC-D05` is complete.
+
+### OD-006: closed contract roles and composition
+
+Decision state: ACCEPTED, three roles in one closed composition, 2026-08-26
+
+Protocol records, governed domain data, and governance policy occupy three
+different semantic roles. They do not share one indivisible contract and they
+do not advance through independent heads in v0. The accepted full composition
+has exactly these fixed slots, each with cardinality `1..1`:
+
+| Fixed role | Complete contract governed by the role |
+|---|---|
+| `ProtocolRecordContract` | Protocol records, events, transitions, and ledger-facing protocol semantics |
+| `GovernedGraphContract` | Governed domain records, relations, fields, and structural graph semantics |
+| `GovernanceContract` | Authorization and governance-policy semantics |
+
+Each slot binds one complete `EffectiveContract` identity. A role contract is
+not a namespace label, overlay, patch, or partial view. Its effective contract
+contains its complete validated fact-set and normative admission-profile
+identities. Shared foundation declarations may occur independently in more
+than one complete closure. No role borrows a declaration, fact, profile,
+registry, ambient context, default, or fallback from another role.
+
+#### Logical identity inputs
+
+The role-bound identity is domain-separated by the fixed role. Its logical
+input tuple is:
+
+```text
+RoleBoundContractIdentity(
+  fixed logical token: malleus.contract-role-bound-identity/v0,
+  fixed_role_name,
+  exact_effective_contract_identity
+)
+```
+
+The `fixed_role_name` is exactly one of the three names above. It is part of
+identity, not presentation metadata. Two roles remain non-interchangeable even
+when their underlying effective-contract payloads or identities are equal.
+Substituting a valid effective-contract identity therefore creates a different
+role-bound identity; supplying only a bare effective-contract hash is
+insufficient.
+
+`ContractComposition` is closed. Its logical identity tuple is:
+
+```text
+ContractCompositionIdentity(
+  fixed logical token: malleus.contract-composition-identity/v0,
+  ProtocolRecordContract_role_identity,
+  GovernedGraphContract_role_identity,
+  GovernanceContract_role_identity
+)
+```
+
+The two versioned domain tokens are fixed by this decision and are not caller
+parameters. Their future lexical encoding inside an artifact, bundle, or
+persisted record remains with `CC-D16`, `CC-R07`, and `CC-W01`.
+
+The fixed names make these slots ordered by meaning, not by source or map
+iteration order. There is no fourth role, extension role, unknown-member
+preservation, inferred current role, or optional slot in the v0 full
+composition. These are candidate logical identity inputs, not a persisted
+record, consumer-bundle schema, artifact envelope, canonical byte grammar, or
+stable public identifier. `CC-D16`, `CC-R07`, and `CC-W01` retain those wire
+decisions. Stable public fact identities remain governed by open `OD-008`.
+
+One physical artifact may package all three complete role contracts. The split
+is semantic modularity, not three packages, installations, processes, ledgers,
+or compiler invocations.
+
+#### One accepted-temporal epoch
+
+The v0 accepted-temporal path binds one exact `ContractComposition` identity
+when its protocol ledger epoch begins. A change to any one role-bound identity
+changes the composition identity and starts a new epoch. The old epoch cannot
+continue under the new composition, and the new composition cannot be treated
+as compatible with the old epoch by fallback, inferred latest state, partial
+roll-forward, or a cross-bound role head.
+
+On the accepted-temporal path, a new role value is legal only through a newly
+constructed composition and a new epoch. It is not legal as an in-place
+replacement under an already-bound epoch.
+
+V0 has no independently advancing role heads, synchronization protocol,
+cross-head replay, mixed-epoch recovery, migration machinery, or compatibility
+relaxation. `CC-W01` later owns persisted epoch fields, exact bytes, and typed
+refusal details; it cannot weaken this identity boundary.
+
+The only narrower case is a standalone structural graph. It binds exactly one
+`GovernedGraphContract` role identity plus its structural-state identity. It
+has no protocol ledger, no accepted-temporal status, no protocol or governance
+role slot, and no `ContractComposition` identity. This does not make any slot
+optional in a full composition. An accepted-temporal graph bound only to the
+governed-graph role refuses, as does a standalone structural graph carrying a
+protocol ledger or full composition.
+
+#### Positive delta examples
+
+| Change | Protocol role | Governed-graph role | Governance role | Composition | Accepted-temporal epoch |
+|---|---|---|---|---|---|
+| Presentation or provenance only | same | same | same | same | same |
+| Protocol semantic edit | changed | same | same | changed | new |
+| Domain semantic edit | same | changed | same | changed | new |
+| Governance semantic edit | same | same | changed | changed | new |
+
+A domain-only edit therefore does not pretend that protocol or governance
+semantics changed. It still changes the full composition and starts a new
+accepted-temporal epoch. The corresponding standalone structural-graph case
+changes only its governed-graph role and structural snapshot; it has no ledger
+epoch. One artifact may package all three roles without collapsing their
+identities. A future consumer bundle may reference one exact composition, but
+`CC-D16` still owns the exact bundle fields and bytes.
+
+#### Refusal examples
+
+Composition refuses atomically when a role is missing, duplicated, unknown,
+or supplied more than once; when protocol and governed-graph slots are
+swapped; when a role tag, version, or identity domain is wrong; when an
+already-bound epoch is continued with a valid replacement role identity but no
+new composition is constructed and bound; when roles from different
+compositions are mixed without constructing a new composition; or when equal
+payload is treated as proof that two roles are interchangeable.
+
+It also refuses an incomplete role closure that relies on ambient declarations
+or another role, a protocol contract used to validate governed domain state, a
+governed-graph contract used to validate protocol records, an independently
+advanced or borrowed role head, continuation of a ledger after composition
+change, and any inferred latest or current composition. A structural-only
+graph refuses protocol or governance roles, a composition identity, or a
+protocol ledger. An accepted-temporal graph refuses a structural-only binding.
+Whole-composition validation refuses atomically; no subset is accepted.
+
+`OD-006` defines role and composition structure only. `OD-007` owns governance
+storage topology; `OD-010` owns endpoint, reference, context, and stateful
+admission semantics; `OD-008` owns source-field and expression classification
+and the remaining stable-public-fact-identity gate; `OD-009` owns promotion;
+`CC-D16` owns the consumer-bundle grammar; `CC-R07` owns the reloadable
+artifact envelope; and `CC-W01` owns persisted wire, migration, and exact epoch
+encoding. This decision creates no implementation, ontology YAML, package,
+artifact, bundle, public API, or migration mechanism.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-006`. `CC-D06` is complete.
 
 ### OD-011: resolver and import policy
 
@@ -787,14 +931,13 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 16
+## Remaining decisions after revision 17
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
 
 | ID | Question | Blocks |
 |---|---|---|
-| OD-006 | One combined contract versus explicit protocol, domain, and governance roles | Consumer composition and bundle fields |
 | OD-007 | Protected governance partition versus separate governance graph | Normative admission profile |
 | OD-008 | Exact fields that are enforcing, identity-only, annotation-only, or rejected | Support profile and metamorphic tests |
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |

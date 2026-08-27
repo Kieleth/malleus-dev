@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 16,
-`sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`
+revision 17,
+`sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`
 
 The 0.11.0 consolidation after that baseline adds precision-aware valid time,
 the accepted `OKG-D012` maintainer doctrine, explicit release guardrails, and

@@ -1,0 +1,63 @@
+{
+  "actor": {
+    "id": "ccd06-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T03:40:03Z",
+    "claims": [
+      "OD-006 selects exactly ProtocolRecordContract, GovernedGraphContract, and GovernanceContract at cardinality 1..1 in one closed composition.",
+      "Each role identity binds the shared fixed v0 constructor, its exact fixed role tag, and one complete EffectiveContract identity; the composition binds its distinct fixed constructor and exactly the three role hashes.",
+      "The exact delta matrix preserves all identities for presentation-only change and changes exactly one role plus composition and epoch for each accepted-temporal semantic role change.",
+      "The standalone structural case binds only the governed-graph role and structural snapshot, with no composition or ledger epoch; it does not weaken full-composition cardinality.",
+      "Canonical graph revision 17 and all five Markdown projections have exact 1563-triple parity, 314 single-status subjects, and an acyclic 103-node, 105-edge dependsOn graph.",
+      "CC-D06 is zero-scope with candidate NONE, worker ledger NOT_STARTED, no selection, and no implementation, ontology YAML, package, artifact, bundle, public identifier, or downstream decision change."
+    ],
+    "limitations": [
+      "This verifies governance, logical identity inputs, exact examples and refusals, and graph parity, not a compiler, validator, artifact, bundle, runtime reader, persisted epoch, migration, package, or API.",
+      "D07, D08, D09, D10, D16, R07, and W01 retain every deferred authority recorded by OD-006."
+    ]
+  },
+  "entry_hash": "sha256:1349805e0445f713b154b1b237e674aaf20128839526112e8d0a5662940c4f9c",
+  "entry_id": "OVR-000155",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:62f3807e06f828abf2ad2d9d0860b5d933180e139f89294245e7e6a43e3fa14d",
+  "recorded_at": "2026-08-27T03:40:03Z",
+  "references": [
+    {
+      "digest": "sha256:3cc09c2cdc0a5e4039f3870cf46b931e996c88e6db77e2db72d07d65c8b9d6cf",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000153",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000154",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-006",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 155,
+  "subject": {
+    "id": "CC-D06-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the closed three-role contract composition.",
+  "why": "The retained report binds exact governance artifacts and its checks cover dependency authority, closed role identities, composition and epoch behavior, structural-only exception, refusal classes, graph parity, and zero implementation scope."
+}

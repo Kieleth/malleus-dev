@@ -1,0 +1,183 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-006",
+      "CC-D06"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:9f0e131281ae20d908f8ab6f2025b89362aeec1e6a7b2789d6221081f77efc64",
+        "before_digest": "sha256:838409b6503ea0f845d0f0aa53327977a8eab271db027c7326121edb58a4618f",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:7077daa80ad3a239b946171a91553707d586831f6af2a5b708a4928b060199a6",
+        "before_digest": "sha256:ad4f8342ffe7382f69681d06ba99529f029ee45e36a06fa0a0f09103e3989169",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:007544525f96ada4d2370429235a764efaefdddb0302b5461402a476b09b35de",
+        "before_digest": "sha256:e6c97450890448f7f3dd3f1d8bde589945d1a2165facc98f5d603ac78f0986b2",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:4ab592c8ba1326478dc71aa5f7901965bbdab636b519e726bd6652a055cd34b1",
+        "before_digest": "sha256:1d656c6c9937a0cecaac13c05b74bdd04096a12d113bcea6352c0331ec591b30",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:bc01281f969e350395429566bca376716008840e417fa37b4d709a3b2f9ea908",
+        "before_digest": "sha256:d6ef329e4f5f5251193ac18b1a0602ab6bef84cbad5125d2a4cf159dd98617a8",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac",
+        "before_digest": "sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:b2285545b6f330d754ab84c68cae4ee0c85086cd3bac6654bcb0a59a88550b56",
+        "before_digest": "sha256:2cb781b4894641eff9d3e73a8430f670cc14218d65c8479e17c20fc8f7f2fb25",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/conformance.md"
+      },
+      {
+        "after_digest": "sha256:82f3483e3e153545a22fd5990b83d85d700de6abc88236ed645591b62e577926",
+        "before_digest": "sha256:aa95a572d01e288a91001b73d988b85558f3903850fe0f7d277df4ad849dcff2",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:06aabc1c8d2f77422f72cee29ffbd964fe0ae431d55cb519b2bb8c9085c24cd9",
+        "before_digest": "sha256:da7326313e67e4b1b447849ae9abc9690a65dc7d676165fb1bae2712916621ee",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:3cc09c2cdc0a5e4039f3870cf46b931e996c88e6db77e2db72d07d65c8b9d6cf",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D06.json"
+      },
+      {
+        "after_digest": "sha256:40e0b52cba344b1bcded93a25f0fda119a5cd8c5c6db6aa865b76bd778efc180",
+        "before_digest": "sha256:0cfbfd3aa16af08a7116832ca47289974aadeaa89831a828b89dc0898e8b52f9",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D06/manifest.json"
+      },
+      {
+        "after_digest": "sha256:1bda6746e016e996e901c92b822c4969f6afe5e618d6a2c87f2cdd715b064c72",
+        "before_digest": "sha256:c574ed89309f62d8da288f1aa83f53255cd63ff8b56d9a6f3ef4daa49e5b8db4",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:6c555af7f678c999944cd136fd2f801407c2b497824a8fbc18ff8d3f1cd3e0eb",
+        "before_digest": "sha256:4fdf2945bb86fc4ed036e37eb19df13b266fccd82454ccbdd43edcdaef4aed67",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:62f3807e06f828abf2ad2d9d0860b5d933180e139f89294245e7e6a43e3fa14d",
+  "entry_id": "OVR-000154",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:69a21bf25659d946957007ff65274477fe5b03528badbda1b67c1286a3f53349",
+  "recorded_at": "2026-08-27T03:40:02Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/conformance.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D06/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:3cc09c2cdc0a5e4039f3870cf46b931e996c88e6db77e2db72d07d65c8b9d6cf",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06.json",
+      "type": "EVIDENCE"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 154,
+  "subject": {
+    "id": "contract-compiler-od006-r17",
+    "type": "DOCUMENT"
+  },
+  "summary": "Promote OD-006 into canonical graph revision 17.",
+  "why": "One governance-only revision keeps the decision workbook, program, conformance spine, canonical graph, five projections, integration registry, zero-scope card, retained evidence, and hard drift tests on the same closed three-role composition and epoch boundary."
+}

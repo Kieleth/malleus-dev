@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept exactly three named 1..1 semantic roles, fixed conceptual v0 role identities over complete EffectiveContract identities, and one closed ContractComposition identity.",
+      "Bind the accepted-temporal single-composition epoch rule, standalone governed-graph-only structural case, exact delta and refusal matrices, canonical graph revision 17, zero-scope card, retained evidence, and hard drift tests.",
+      "Keep governance topology, field and expression classification, stable public fact IDs, promotion, endpoint and stateful admission semantics, bundle and artifact bytes, persisted wire, compatibility, migration, independent heads, packages, APIs, candidates, selections, and implementation outside CC-D06."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000153",
+      "OVR-000154",
+      "OVR-000155"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D06"
+  },
+  "entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
+  "entry_id": "OVR-000156",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1349805e0445f713b154b1b237e674aaf20128839526112e8d0a5662940c4f9c",
+  "recorded_at": "2026-08-27T03:40:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000153",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000154",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000155",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-006",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 156,
+  "subject": {
+    "id": "CC-D06",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D06 under the closed three-role composition.",
+  "why": "The operator decision, exact logical identity boundaries, complete examples and counterexamples, coherent graph and projections, dependency-bound zero-scope card, retained report, and mechanical guards satisfy every CC-D06 completion gate without starting implementation."
+}

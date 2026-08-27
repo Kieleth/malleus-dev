@@ -80,7 +80,9 @@ HISTORICAL_R3_PATHS = (
     "design/contract_compiler/overseer/evidence/CC-002-progress-01.json",
 )
 OD005_HEADING = "### OD-005: logical fact record and canonical bytes"
-OD005_NEXT_HEADING = "### OD-011: resolver and import policy"
+OD005_NEXT_HEADING = "### OD-006: closed contract roles and composition"
+OD006_HEADING = OD005_NEXT_HEADING
+OD006_NEXT_HEADING = "### OD-011: resolver and import policy"
 OD005_SEED_TABLE_HEADER = (
     "Subject kind",
     "Predicate",
@@ -137,6 +139,35 @@ OD005_SEED_ROWS = (
     ("`Scalar`", "`cf:typeof`", "`Scalar` or `SeedPrimitive`", "1"),
 )
 OD005_SEED_PRIMITIVES = ("String", "Integer", "Float", "Boolean", "DateTime")
+OD006_ROLE_TABLE = (
+    ("Fixed role", "Complete contract governed by the role"),
+    (
+        "`ProtocolRecordContract`",
+        "Protocol records, events, transitions, and ledger-facing protocol semantics",
+    ),
+    (
+        "`GovernedGraphContract`",
+        "Governed domain records, relations, fields, and structural graph semantics",
+    ),
+    (
+        "`GovernanceContract`",
+        "Authorization and governance-policy semantics",
+    ),
+)
+OD006_DELTA_TABLE = (
+    (
+        "Change",
+        "Protocol role",
+        "Governed-graph role",
+        "Governance role",
+        "Composition",
+        "Accepted-temporal epoch",
+    ),
+    ("Presentation or provenance only", "same", "same", "same", "same", "same"),
+    ("Protocol semantic edit", "changed", "same", "same", "changed", "new"),
+    ("Domain semantic edit", "same", "changed", "same", "changed", "new"),
+    ("Governance semantic edit", "same", "same", "changed", "changed", "new"),
+)
 IMMUTABLE_R3_REFINEMENT_INPUTS = {
     "design/contract_compiler/overseer/entries/OVR-000069.json": "3f1f72dbb437fbbf2e1aad2dfaeec213884228f169330361e513c6af700ad910",
     "design/contract_compiler/overseer/entries/OVR-000070.json": "011f1ccef652b5299b23aa4588edd66dacc2802a0ed2fb0370669a6b5c1747ce",
@@ -159,6 +190,41 @@ def _od005_section(decisions: str) -> str:
     assert OD005_NEXT_HEADING not in before
     assert OD005_HEADING not in after
     return section
+
+
+def _od006_section(decisions: str) -> str:
+    assert decisions.count(OD006_HEADING) == 1
+    assert decisions.count(OD006_NEXT_HEADING) == 1
+    before, section_and_after = decisions.split(OD006_HEADING, 1)
+    section, after = section_and_after.split(OD006_NEXT_HEADING, 1)
+    assert OD006_NEXT_HEADING not in before
+    assert OD006_HEADING not in after
+    return section
+
+
+def _markdown_tables(section: str) -> tuple[tuple[tuple[str, ...], ...], ...]:
+    tables: list[tuple[tuple[str, ...], ...]] = []
+    rows: list[tuple[str, ...]] | None = None
+    row: list[str] | None = None
+    for token in MarkdownIt("commonmark").enable("table").parse(section):
+        if token.type == "table_open":
+            assert rows is None
+            rows = []
+        elif token.type == "tr_open" and rows is not None:
+            assert row is None
+            row = []
+        elif token.type == "inline" and row is not None:
+            row.append(token.content)
+        elif token.type == "tr_close" and rows is not None:
+            assert row is not None
+            rows.append(tuple(row))
+            row = None
+        elif token.type == "table_close":
+            assert rows is not None and row is None
+            tables.append(tuple(rows))
+            rows = None
+    assert rows is None and row is None
+    return tuple(tables)
 
 
 def _od005_seed_table_rows(section: str) -> tuple[tuple[str, ...], ...]:
@@ -210,6 +276,23 @@ def _od005_seed_primitives(section: str) -> tuple[str, ...]:
 def _assert_od005_closed_seed(section: str) -> None:
     assert _od005_seed_table_rows(section) == OD005_SEED_ROWS
     assert _od005_seed_primitives(section) == OD005_SEED_PRIMITIVES
+
+
+def _assert_od006_closed_contract(section: str) -> None:
+    assert _markdown_tables(section) == (OD006_ROLE_TABLE, OD006_DELTA_TABLE)
+    prose = " ".join(section.split())
+    for exact in (
+        "exactly these fixed slots, each with cardinality `1..1`",
+        "fixed logical token: malleus.contract-role-bound-identity/v0",
+        "fixed logical token: malleus.contract-composition-identity/v0",
+        "The two versioned domain tokens are fixed by this decision and are not caller parameters.",
+        "There is no fourth role, extension role, unknown-member preservation, inferred current role, or optional slot in the v0 full composition.",
+        "A change to any one role-bound identity changes the composition identity and starts a new epoch.",
+        "V0 has no independently advancing role heads, synchronization protocol, cross-head replay, mixed-epoch recovery, migration machinery, or compatibility relaxation.",
+        "This does not make any slot optional in a full composition.",
+        "On the accepted-temporal path, a new role value is legal only through a newly constructed composition and a new epoch.",
+    ):
+        assert exact in prose
 
 
 def _copy_ledger(tmp_path: Path) -> Path:
@@ -1024,7 +1107,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -1042,13 +1125,13 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1510
+    assert len(canonical) == 1563
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 16",
+        "# Design graph revision: 17",
         "# Evidence cutoff: 2026-08-26",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -1065,7 +1148,7 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 16,",
+            "revision 17,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -1085,6 +1168,7 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
         "OD-003": "LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile",
         "OD-004": "TypedPersistedWireEpochHardBreakProfile",
         "OD-005": "AtomicOntologyPoweredCanonicalFactContract",
+        "OD-006": "ThreeRoleClosedContractCompositionProfile",
         "OD-011": "ExplicitSingleResolverProfileSelection",
         "OD-013": "SingleDistributionCompilerIncludedPackagingTopology",
         "OD-014": "QuietBellArchiveFixturePublicationBoundary",
@@ -1152,6 +1236,18 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
             "AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary",
             "NoGenericDefaultValueOrRuntimeDefaultBoundary",
         },
+        "ThreeRoleClosedContractCompositionProfile": {
+            "ExactThreeNamedRoleCardinalityBoundary",
+            "RoleBoundIdentityDomainSeparationBoundary",
+            "CompleteRoleClosureNoAmbientBorrowingBoundary",
+            "ClosedCompositionIdentityBoundary",
+            "OneAcceptedTemporalCompositionEpochV0Boundary",
+            "StandaloneStructuralGraphGovernedRoleOnlyBoundary",
+            "OneArtifactMayPackageThreeRolesBoundary",
+            "IndependentRoleHeadsAndRecoveryDeferredBoundary",
+            "ArtifactBundleAndWireGrammarDeferredBoundary",
+            "StablePublicFactIdentityStillOD008Boundary",
+        },
         "ExactNonExpressionSeedContractMetamodel": {
             "ExactClassSeedFactRule",
             "ExactSlotAndSlotUseSeedFactRule",
@@ -1197,6 +1293,46 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
             str(value).removeprefix(mfg)
             for value in canonical.objects(URIRef(f"{mfg}{selected}"), binds)
         } == expected
+
+    role_hash_bindings = {
+        "ProtocolRecordContractHash": {
+            "RoleBoundContractIdentityV0",
+            "ProtocolRecordContractRoleTag",
+            "EffectiveContractHash",
+        },
+        "GovernedGraphContractHash": {
+            "RoleBoundContractIdentityV0",
+            "GovernedGraphContractRoleTag",
+            "EffectiveContractHash",
+        },
+        "GovernanceContractHash": {
+            "RoleBoundContractIdentityV0",
+            "GovernanceContractRoleTag",
+            "EffectiveContractHash",
+        },
+        "ContractCompositionHash": {
+            "ContractCompositionIdentityV0",
+            "ProtocolRecordContractHash",
+            "GovernedGraphContractHash",
+            "GovernanceContractHash",
+        },
+    }
+    for identity, expected in role_hash_bindings.items():
+        assert {
+            str(value).removeprefix(mfg)
+            for value in canonical.objects(URIRef(f"{mfg}{identity}"), binds)
+        } == expected
+    accepted_status = URIRef(f"{mfg}AcceptedDesign")
+    status = URIRef(f"{mfg}status")
+    for subject in (
+        "ProtocolRecordContract",
+        "GovernedGraphContract",
+        "GovernanceContract",
+        "ContractComposition",
+    ):
+        assert set(canonical.objects(URIRef(f"{mfg}{subject}"), status)) == {
+            accepted_status
+        }
     quiet_bell = URIRef(f"{mfg}QuietBellArchiveFixturePublicationBoundary")
     assert set(canonical.objects(quiet_bell, URIRef(f"{mfg}workingName"))) == {
         Literal("Quiet Bell Archive")
@@ -1227,11 +1363,10 @@ def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
     ):
         assert (r3, binds, URIRef(f"{mfg}{selected}")) in canonical
 
-    status = URIRef(f"{mfg}status")
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 302
+    assert len(statuses) == 314
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -1280,7 +1415,8 @@ def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
     assert "There is no generic `defaultValue` fact" in prose
     assert "not a public or second first-party authoring language" in prose
     assert "never the normative runtime wire" in prose
-    assert "stable public fact ids remain blocked on `od-006`" in prose.casefold()
+    assert "stable public fact ids remain blocked on `od-008`" in prose.casefold()
+    assert "stable public fact ids remain blocked on `od-006`" not in prose.casefold()
     for rule in (
         "The parent-plus-`usesMixin` graph is acyclic.",
         "Every `usesMixin` target has `isMixin=true`",
@@ -1435,7 +1571,104 @@ def test_od005_closed_seed_guard_rejects_adversarial_drift() -> None:
             _assert_od005_closed_seed(mutation)
 
 
-def test_revision_16_conformance_rows_guard_closed_decisions() -> None:
+def test_od006_closed_three_role_composition_is_mechanical() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od006_section(decisions)
+    prose = " ".join(section.split())
+
+    _assert_od006_closed_contract(section)
+    for phrase in (
+        "Each slot binds one complete `EffectiveContract` identity.",
+        "not a namespace label, overlay, patch, or partial view",
+        "Two roles remain non-interchangeable even when their underlying effective-contract payloads or identities are equal.",
+        "One physical artifact may package all three complete role contracts.",
+        "semantic modularity, not three packages, installations, processes, ledgers, or compiler invocations",
+        "The only narrower case is a standalone structural graph.",
+        "An accepted-temporal graph bound only to the governed-graph role refuses",
+        "when an already-bound epoch is continued with a valid replacement role identity but no new composition is constructed and bound",
+        "Whole-composition validation refuses atomically",
+        "`OD-007` owns governance storage topology",
+        "`OD-010` owns endpoint, reference, context, and stateful admission semantics",
+        "Stable public fact identities remain governed by open `OD-008`.",
+        "This decision creates no implementation, ontology YAML, package, artifact, bundle, public API, or migration mechanism.",
+    ):
+        assert phrase in prose
+    for forbidden in (
+        "example.malleus.dev/archive",
+        "Quiet Bell",
+        "NinthQuire",
+        "Shelfmark",
+    ):
+        assert forbidden not in section
+
+    conformance = (
+        ROOT / "design" / "contract_compiler" / "conformance.md"
+    ).read_text(encoding="utf-8")
+    row = next(line.casefold() for line in conformance.splitlines() if line.startswith("| AT-008 "))
+    for phrase in (
+        "complete p/d/g role closures",
+        "fixed conceptual v0 role tags and constructors",
+        "standalone d-only structural graph",
+        "wrong fixed role tag, domain, version, or composition constructor",
+        "new composition and epoch for any semantic role change",
+        "exact atomic refusal",
+    ):
+        assert phrase in row
+    for forbidden in ("single-artifact", "wrong grammar"):
+        assert forbidden not in row
+
+    program = (
+        ROOT / "design" / "contract_compiler" / "program.md"
+    ).read_text(encoding="utf-8")
+    cc_d06 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D06 "))
+    for phrase in (
+        "exact three-role closure",
+        "fixed conceptual v0 identity constructors",
+        "structural-only exception",
+        "deferred wire boundaries",
+    ):
+        assert phrase in cc_d06
+
+
+def test_od006_closed_composition_guard_rejects_adversarial_drift() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od006_section(decisions)
+    role_row = (
+        "| `GovernanceContract` | Authorization and governance-policy semantics |"
+    )
+    assert section.count(role_row) == 1
+    mutations = (
+        section.replace(
+            role_row,
+            role_row + "\n| `ExtensionContract` | Unapproved fourth role |",
+            1,
+        ),
+        section.replace(role_row, "", 1),
+        section.replace(role_row, role_row + "\n" + role_row, 1),
+        section.replace("cardinality `1..1`", "cardinality `0..1`", 1),
+        section.replace(
+            "malleus.contract-role-bound-identity/v0",
+            "malleus.contract-role-bound-identity/v1",
+            1,
+        ),
+        section.replace(
+            "malleus.contract-composition-identity/v0",
+            "malleus.contract-composition-identity/v1",
+            1,
+        ),
+        section.replace("There is no fourth role", "A fourth role is allowed", 1),
+    )
+    assert all(mutation != section for mutation in mutations)
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_od006_closed_contract(mutation)
+
+
+def test_revision_17_conformance_rows_guard_closed_decisions() -> None:
     rows = {
         cells[0]: line.casefold()
         for line in (

@@ -1,0 +1,115 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 55703,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:82f3483e3e153545a22fd5990b83d85d700de6abc88236ed645591b62e577926"
+    },
+    {
+      "byte_length": 32474,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:40e0b52cba344b1bcded93a25f0fda119a5cd8c5c6db6aa865b76bd778efc180"
+    },
+    {
+      "byte_length": 19681,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:b2285545b6f330d754ab84c68cae4ee0c85086cd3bac6654bcb0a59a88550b56"
+    },
+    {
+      "byte_length": 282867,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac"
+    },
+    {
+      "byte_length": 85167,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:bc01281f969e350395429566bca376716008840e417fa37b4d709a3b2f9ea908"
+    },
+    {
+      "byte_length": 88113,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:4ab592c8ba1326478dc71aa5f7901965bbdab636b519e726bd6652a055cd34b1"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:7077daa80ad3a239b946171a91553707d586831f6af2a5b708a4928b060199a6"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:9f0e131281ae20d908f8ab6f2025b89362aeec1e6a7b2789d6221081f77efc64"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:007544525f96ada4d2370429235a764efaefdddb0302b5461402a476b09b35de"
+    },
+    {
+      "byte_length": 89095,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:6c555af7f678c999944cd136fd2f801407c2b497824a8fbc18ff8d3f1cd3e0eb"
+    },
+    {
+      "byte_length": 35958,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:1bda6746e016e996e901c92b822c4969f6afe5e618d6a2c87f2cdd715b064c72"
+    },
+    {
+      "byte_length": 20764,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:06aabc1c8d2f77422f72cee29ffbd964fe0ae431d55cb519b2bb8c9085c24cd9"
+    },
+    {
+      "byte_length": 1374,
+      "path": "design/contract_compiler/workstreams/CC-D06/manifest.json",
+      "sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb"
+    }
+  ],
+  "base_commit": "94ddf66b9c829d8453445a2d73cf4760c93167ce",
+  "checks": [
+    {
+      "check_id": "ccd06-dependency",
+      "method": "Match the CC-D06 dependency binding to the exact current CC-D05 card, completion entry, entry hash, and first authority head.",
+      "observed": "The zero-scope card binds CC-D05 card sha256 7daccbd3...f356, OVR-000150 hash 0752fbe8...0719, and first authority head 2dd78cba...fe8; the parent of that head does not contain the completion entry.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-role-closure",
+      "method": "Inspect and mechanically parse the exact role table, fixed conceptual constructors, role tags, complete EffectiveContract bindings, cardinalities, and ambient-borrowing refusal.",
+      "observed": "The accepted full composition has exactly ProtocolRecordContract, GovernedGraphContract, and GovernanceContract at cardinality 1..1. Each role hash binds RoleBoundContractIdentityV0, its exact role tag, and EffectiveContractHash. No fourth, optional, partial, inferred, or ambient role is allowed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-composition-epoch",
+      "method": "Inspect the closed composition identity, accepted-temporal epoch boundary, and standalone structural exception.",
+      "observed": "ContractCompositionHash binds ContractCompositionIdentityV0 plus exactly the three role hashes. Any accepted-temporal semantic role change requires a new composition and epoch; a standalone structural graph instead binds only the governed-graph role and structural snapshot, with no composition or ledger epoch.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-examples-refusals",
+      "method": "Parse the exact four-row delta matrix and inspect every required refusal class and deferred authority.",
+      "observed": "Presentation-only change preserves all identities; protocol-only, domain-only, and governance-only changes alter exactly their role plus composition and accepted-temporal epoch. Missing, duplicate, extra, unknown, swapped, incomplete, ambient, equal-payload, unbound replacement, mixed-composition, independent-head, wrong-use, and structural/full-path confusion refuse atomically.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-graph",
+      "method": "Parse all 28 Turtle projections and compare them to canonical graph revision 17, then inspect status uniqueness and dependency acyclicity.",
+      "observed": "Both graph forms contain the same 1563 triples with empty directed differences and sha256 4198a705...5ac. All 314 status subjects have one status; the 103-node, 105-edge dependsOn graph is acyclic; OD-006 selects exactly ThreeRoleClosedContractCompositionProfile.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-boundaries-zero-scope",
+      "method": "Inspect D07, D08, D09, D10, D16, R07, W01, implementation, ontology, package, artifact, selection, and worker-ledger boundaries.",
+      "observed": "Governance topology, field and expression classification, stable public fact IDs, promotion, endpoint/context/admission semantics, consumer-bundle bytes, reloadable artifact bytes, persisted epoch bytes, compatibility, migration, and multi-head recovery remain separate. CC-D06 has empty scopes, candidate NONE, ledger NOT_STARTED, no selection, and no production, ontology YAML, package, dependency, Docker, artifact, or public API change.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies accepted governance, logical identity inputs, exact examples and refusals, and canonical graph parity. It does not implement a compiler, role validator, composition builder, artifact, bundle, runtime reader, ledger epoch encoding, migration, package, or public API.",
+    "Governance topology, source-field and expression classification, stable public fact IDs, promotion, endpoint and stateful admission behavior, consumer-bundle grammar, artifact envelope, persisted wire, compatibility, migration, and multi-head evolution remain separately governed."
+  ],
+  "recorded_at": "2026-08-27T03:40:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D06"
+}

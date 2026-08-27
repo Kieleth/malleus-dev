@@ -9,7 +9,7 @@ Decision authority: author
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
 contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
-`OD-005`, and `OD-011` through `OD-014`
+`OD-006`, and `OD-011` through `OD-014`
 
 Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, and 2026-08-26
 
@@ -19,8 +19,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 16,
-`sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`
+revision 17,
+`sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`
 
 Evidence cutoff: 2026-08-26
 
@@ -1222,7 +1222,7 @@ backend, broad workload quality, or public capability. Those remain in
     conformance suite.
 
 The author accepted the contract compiler directions on 2026-08-24, the exact
-compiler baseline on 2026-08-25, and seven blocking policies on 2026-08-26:
+compiler baseline on 2026-08-25, and eight blocking policies on 2026-08-26:
 
 1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
    break before 1.0, but implementation promotion remains gated by conformance.
@@ -1234,9 +1234,10 @@ compiler baseline on 2026-08-25, and seven blocking policies on 2026-08-26:
    closed unless a versioned symbol policy authorizes it.
 5. `AD-005` separates independent upstream units and binds their integration
    to exact commits, while intrinsic dependencies remain sequential or stacked.
-6. `OD-001` selects one canonical consumer-bundle manifest per consumer. Its
-   exact schema and canonical grammar remain open pending `OD-006` and
-   `OD-013`.
+6. `OD-001` selects one canonical consumer-bundle manifest per consumer.
+   `OD-006` now supplies the closed three-role composition and `OD-013` the
+   one-distribution topology; `CC-D16` still owns exact bundle fields and
+   canonical bytes.
 7. `OD-012` selects the published LinkML 1.11.1 release, exact wheel and sdist
    identities, the CPython 3.12.10 Linux x86_64 `cp312` reproducibility tuple,
    pip 25.0.1, and the exact slim Bookworm OCI identities. CC-002 materializes
@@ -1261,6 +1262,11 @@ compiler baseline on 2026-08-25, and seven blocking policies on 2026-08-26:
 14. `OD-014` accepts Quiet Bell Archive as the public working name, keeps its
     vocabulary fixture-only, records the text/data authorship and Apache-2.0
     attestation, excludes visual assets, and makes public review digest-bound.
+15. `OD-006` selects exactly three semantic roles in one closed composition,
+    fixed conceptual v0 identity constructors, one accepted-temporal
+    composition per ledger epoch, and a governed-graph-only structural case.
+    Independent role heads, wire encodings, migration, and stable public fact
+    IDs remain deferred.
 
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
@@ -1356,6 +1362,12 @@ cc:OD-005 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
     mfg:decisionDate "2026-08-26" ;
     mfg:selects mfg:AtomicOntologyPoweredCanonicalFactContract ;
+    mfg:status mfg:AcceptedDesign .
+
+cc:OD-006 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:ThreeRoleClosedContractCompositionProfile ;
     mfg:status mfg:AcceptedDesign .
 
 cc:OD-011 rdf:type mfg:DecisionRecord ;
@@ -1837,13 +1849,13 @@ Performed on 2026-08-26:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,510 RDF triples.
+   1,563 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,510 triples. Both directed set differences
+   the same 1,563 triples. Both directed set differences
    were empty.
 3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
    dependency cycle.
-4. All 302 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 314 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1855,11 +1867,12 @@ Performed on 2026-08-26:
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
    remains represented only by `OKG-D012`. `OD-012` has the same invariants
    with `decisionDate "2026-08-25"` and selects exactly the R3 release baseline.
-7. `OD-002` through `OD-005`, `OD-011`, `OD-013`, and `OD-014` have the same
+7. `OD-002` through `OD-006`, `OD-011`, `OD-013`, and `OD-014` have the same
    decision invariants with `decisionDate "2026-08-26"` and select exactly the
-   seven accepted policy objects. Those objects bind the exact adoption,
-   divergence classification, hard-break, atomic-fact, resolver, packaging,
-   and themed publication boundaries recorded by the decision workbook.
+   eight accepted policy objects. Those objects bind the exact adoption,
+   divergence classification, hard-break, atomic-fact, closed-composition,
+   resolver, packaging, and themed publication boundaries recorded by the
+   decision workbook.
 8. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
    ANTLR, and setuptools coordinates. It additionally binds the exact
    `prefixcommons` input and local-version derivation, package and BSD 3-Clause
@@ -1880,10 +1893,10 @@ Performed on 2026-08-26:
 12. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-13. The canonical body contains 1,510 unique, lexically sorted N-Triples. Its
+13. The canonical body contains 1,563 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`, and every
-   owned Markdown graph reference names revision 16 and that digest.
+   `4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`, and every
+   owned Markdown graph reference names revision 17 and that digest.
 14. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 15. None of the five owned Markdown documents or the canonical Turtle artifact
@@ -1892,5 +1905,5 @@ Performed on 2026-08-26:
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 16 was frozen. Existing GraphRecipe implementation
+rerun before revision 17 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

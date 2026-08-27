@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 16,
-`sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`
+revision 17,
+`sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -714,8 +714,8 @@ uses the imported owner's qualified slot identifier.
 Fact and fact-set digests are computed from domain-separated candidate
 envelopes binding the exact metamodel, canonicalization profile, symbol policy,
 and canonical fact or ordered fact-array digest. They are internal candidate
-identities, not stable public fact IDs, which remain blocked on `OD-006` and
-`OD-008`. Only expression vocabulary remains deferred to `OD-008`; the exact
+identities, not stable public fact IDs, which remain blocked on `OD-008`. Only
+expression vocabulary remains deferred to `OD-008`; the exact
 seed cannot change silently. Provenance, descriptions, source spans, diagnostics, and compiler
 identity remain outside semantic fact-set identity. Equivalent explicit and
 implicit defaults yield the same fact with distinct retained provenance.
@@ -877,18 +877,29 @@ mfg:TypedViolationProtocol rdf:type mfg:Package ;
 
 Current Assent uses one resolved registry for both protocol records and the
 accepted domain graph. A domain-only ontology change therefore changes the
-same identity that gates protocol replay. Modular evolution needs distinct
-roles even if the first implementation composes them into one artifact:
+same identity that gates protocol replay. `OD-006` closes that accidental
+coupling with three explicit semantic roles in one closed composition. This is
+not three packages or ledgers. One physical artifact may package all three.
+
+The full accepted-temporal composition has exactly one
+`ProtocolRecordContract`, one `GovernedGraphContract`, and one
+`GovernanceContract`, with no fourth or optional role. Each role binds one
+complete `EffectiveContract` closure. Shared foundation declarations may be
+repeated in complete closures, but no role borrows facts, admission profiles,
+registries, context, or defaults from another role.
 
 ```turtle
 mfg:ProtocolRecordContract rdf:type mfg:EffectiveContract ;
-    mfg:status mfg:Candidate .
+    mfg:identifiedBy mfg:ProtocolRecordContractHash ;
+    mfg:status mfg:AcceptedDesign .
 
 mfg:GovernedGraphContract rdf:type mfg:EffectiveContract ;
-    mfg:status mfg:Candidate .
+    mfg:identifiedBy mfg:GovernedGraphContractHash ;
+    mfg:status mfg:AcceptedDesign .
 
 mfg:GovernanceContract rdf:type mfg:EffectiveContract ;
-    mfg:status mfg:Candidate .
+    mfg:identifiedBy mfg:GovernanceContractHash ;
+    mfg:status mfg:AcceptedDesign .
 
 mfg:ContractComposition rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;
@@ -896,25 +907,89 @@ mfg:ContractComposition rdf:type rdfs:Class ;
     mfg:binds mfg:GovernedGraphContract ;
     mfg:binds mfg:GovernanceContract ;
     mfg:identifiedBy mfg:ContractCompositionHash ;
-    mfg:status mfg:Open .
+    mfg:status mfg:AcceptedDesign .
 
+mfg:RoleBoundContractIdentityV0 rdf:type mfg:DesignObject .
+mfg:ProtocolRecordContractRoleTag rdf:type mfg:DesignObject .
+mfg:GovernedGraphContractRoleTag rdf:type mfg:DesignObject .
+mfg:GovernanceContractRoleTag rdf:type mfg:DesignObject .
+mfg:ContractCompositionIdentityV0 rdf:type mfg:DesignObject .
+
+mfg:ProtocolRecordContractHash mfg:binds mfg:RoleBoundContractIdentityV0 .
+mfg:ProtocolRecordContractHash mfg:binds mfg:ProtocolRecordContractRoleTag .
+mfg:ProtocolRecordContractHash mfg:binds mfg:EffectiveContractHash .
 mfg:GovernedGraphContract mfg:identifiedBy mfg:GovernedGraphContractHash .
+mfg:GovernedGraphContractHash mfg:binds mfg:RoleBoundContractIdentityV0 .
+mfg:GovernedGraphContractHash mfg:binds mfg:GovernedGraphContractRoleTag .
 mfg:GovernedGraphContractHash mfg:binds mfg:EffectiveContractHash .
+mfg:GovernanceContractHash mfg:binds mfg:RoleBoundContractIdentityV0 .
+mfg:GovernanceContractHash mfg:binds mfg:GovernanceContractRoleTag .
+mfg:GovernanceContractHash mfg:binds mfg:EffectiveContractHash .
+mfg:ContractCompositionHash mfg:binds mfg:ContractCompositionIdentityV0 .
 mfg:ContractCompositionHash mfg:binds mfg:ProtocolRecordContractHash .
 mfg:ContractCompositionHash mfg:binds mfg:GovernedGraphContractHash .
 mfg:ContractCompositionHash mfg:binds mfg:GovernanceContractHash .
+
+mfg:ThreeRoleClosedContractCompositionProfile rdf:type mfg:DesignObject ;
+    mfg:binds mfg:ExactThreeNamedRoleCardinalityBoundary ;
+    mfg:binds mfg:RoleBoundIdentityDomainSeparationBoundary ;
+    mfg:binds mfg:CompleteRoleClosureNoAmbientBorrowingBoundary ;
+    mfg:binds mfg:ClosedCompositionIdentityBoundary ;
+    mfg:binds mfg:OneAcceptedTemporalCompositionEpochV0Boundary ;
+    mfg:binds mfg:StandaloneStructuralGraphGovernedRoleOnlyBoundary ;
+    mfg:binds mfg:OneArtifactMayPackageThreeRolesBoundary ;
+    mfg:binds mfg:IndependentRoleHeadsAndRecoveryDeferredBoundary ;
+    mfg:binds mfg:ArtifactBundleAndWireGrammarDeferredBoundary ;
+    mfg:binds mfg:StablePublicFactIdentityStillOD008Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactThreeNamedRoleCardinalityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:RoleBoundIdentityDomainSeparationBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:CompleteRoleClosureNoAmbientBorrowingBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ClosedCompositionIdentityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:OneAcceptedTemporalCompositionEpochV0Boundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StandaloneStructuralGraphGovernedRoleOnlyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:OneArtifactMayPackageThreeRolesBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:IndependentRoleHeadsAndRecoveryDeferredBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ArtifactBundleAndWireGrammarDeferredBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StablePublicFactIdentityStillOD008Boundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
 ```
 
-The open decision is whether one ledger epoch continues to bind one composed
-contract hash, or whether protocol and governed-graph evolution receive
-separate but cross-bound heads. The current exact-hash invariant must not be
-weakened implicitly while making that split.
+Each role-bound identity logically binds the fixed
+`RoleBoundContractIdentityV0` constructor, its exact fixed role tag, and one
+exact `EffectiveContract` identity. The composition identity binds the fixed
+`ContractCompositionIdentityV0` constructor plus the three named role-bound
+identities. Neither constructor is caller-selectable. Exact lexical and
+canonical bytes remain with `CC-D16`, `CC-R07`, and `CC-W01`; stable public
+fact identities remain with `OD-008`.
 
-Contract evolution is blocked on this choice. The migration design below uses
-`GovernedGraphContract` for a structural-only graph and `ContractComposition`
-for an accepted temporal graph plus protocol ledger. It does not assume that a
-domain-only change must always replace the protocol-record contract in the
-future split topology.
+The v0 accepted-temporal path binds one exact composition identity for one
+ledger epoch. Any protocol, domain, or governance role change changes the
+composition and starts a new epoch. There are no independent role heads,
+cross-head replay, inferred-current role, partial roll-forward, or mismatch
+recovery. A standalone structural graph is the one narrower case: it binds
+only the governed-graph role and structural state, has no protocol ledger, and
+is not an accepted-temporal composition. That exception never weakens the
+three required slots of a full composition.
 
 ## 5. Contract and graph revision
 
@@ -1870,10 +1945,10 @@ artifact boundary. These author choices remain open:
    `OntologyRegistry` as the public root.
 2. **Logical vocabulary.** Accept the object boundaries in section 4 before
    selecting an exact JSON, YAML, or Turtle wire encoding.
-3. **Contract composition.** Keep one combined protocol and domain contract,
-   or define `ProtocolRecordContract`, `GovernedGraphContract`, and
-   `GovernanceContract` as separately evolving roles in one explicit
-   composition.
+3. **Contract composition.** `OD-006` is **accepted**. Use exactly
+   `ProtocolRecordContract`, `GovernedGraphContract`, and
+   `GovernanceContract` in one closed composition and one v0
+   accepted-temporal epoch. Independent role heads remain deferred.
 4. **Compatibility scope.** Start with concrete graph replay compatibility, or
    also define schema-theoretic writer-to-reader analysis in the first package.
 5. **Governance topology.** Protected partition in one accepted graph, or a

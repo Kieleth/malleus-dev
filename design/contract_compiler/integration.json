@@ -335,7 +335,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 1374,
+        "path": "workstreams/CC-D06/manifest.json",
+        "sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-D05"
