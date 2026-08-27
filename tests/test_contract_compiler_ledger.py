@@ -79,6 +79,64 @@ HISTORICAL_R3_PATHS = (
     "design/contract_compiler/overseer/evidence/CC-D12-R2.json",
     "design/contract_compiler/overseer/evidence/CC-002-progress-01.json",
 )
+OD005_HEADING = "### OD-005: logical fact record and canonical bytes"
+OD005_NEXT_HEADING = "### OD-011: resolver and import policy"
+OD005_SEED_TABLE_HEADER = (
+    "Subject kind",
+    "Predicate",
+    "Object type or target",
+    "Cardinality",
+)
+OD005_SEED_ROWS = (
+    ("`Class`", "`rdf:type`", "exactly `Class`", "1"),
+    ("`Class`", "`rdfs:subClassOf`", "`Class`", "0..1"),
+    ("`Class`", "`cf:isMixin`", "Boolean", "1"),
+    (
+        "`Class`",
+        "`cf:usesMixin`",
+        "distinct `Class` with `isMixin=true`",
+        "0..*",
+    ),
+    ("`Class`", "`cf:abstract`", "Boolean", "1"),
+    ("`Slot`", "`rdf:type`", "exactly `Slot`", "1"),
+    (
+        "`Slot`, `SlotUse`",
+        "`cf:valueRange`",
+        "`Class`, `Enum`, `Scalar`, or `SeedPrimitive`",
+        "1",
+    ),
+    ("`Slot`, `SlotUse`", "`cf:required`", "Boolean", "1"),
+    ("`Slot`, `SlotUse`", "`cf:multivalued`", "Boolean", "1"),
+    ("`Slot`, `SlotUse`", "`cf:identifier`", "Boolean", "1"),
+    ("`Slot`, `SlotUse`", "`cf:inlined`", "Boolean", "1"),
+    ("`Slot`, `SlotUse`", "`cf:equalsString`", "string", "0..1"),
+    (
+        "`Slot`, `SlotUse`",
+        "`cf:minimum`",
+        "canonical decimal lexical string",
+        "0..1",
+    ),
+    (
+        "`Slot`, `SlotUse`",
+        "`cf:maximum`",
+        "canonical decimal lexical string",
+        "0..1",
+    ),
+    (
+        "`Slot`, `SlotUse`",
+        "`cf:valuePresence`",
+        "string `PRESENT` or `ABSENT`",
+        "0..1",
+    ),
+    ("`SlotUse`", "`rdf:type`", "exactly `SlotUse`", "1"),
+    ("`SlotUse`", "`cf:onClass`", "`Class`", "1"),
+    ("`SlotUse`", "`cf:usesSlot`", "`Slot`", "1"),
+    ("`Enum`", "`rdf:type`", "exactly `Enum`", "1"),
+    ("`Enum`", "`cf:enumValue`", "distinct string", "0..*"),
+    ("`Scalar`", "`rdf:type`", "exactly `Scalar`", "1"),
+    ("`Scalar`", "`cf:typeof`", "`Scalar` or `SeedPrimitive`", "1"),
+)
+OD005_SEED_PRIMITIVES = ("String", "Integer", "Float", "Boolean", "DateTime")
 IMMUTABLE_R3_REFINEMENT_INPUTS = {
     "design/contract_compiler/overseer/entries/OVR-000069.json": "3f1f72dbb437fbbf2e1aad2dfaeec213884228f169330361e513c6af700ad910",
     "design/contract_compiler/overseer/entries/OVR-000070.json": "011f1ccef652b5299b23aa4588edd66dacc2802a0ed2fb0370669a6b5c1747ce",
@@ -91,6 +149,67 @@ IMMUTABLE_R3_REFINEMENT_INPUTS = {
     "design/contract_compiler/overseer/entries/OVR-000077.json": "b57a83e46bb2e015a62715a02c251a763ec1c3ed4aace4394f9e85b320ab0cef",
     "design/contract_compiler/overseer/evidence/CC-D12-R3.json": "1f4e71eb7c0f3dac0be5bf6bd8e633dfc6975979e5756796631cf014320c3bd9",
 }
+
+
+def _od005_section(decisions: str) -> str:
+    assert decisions.count(OD005_HEADING) == 1
+    assert decisions.count(OD005_NEXT_HEADING) == 1
+    before, section_and_after = decisions.split(OD005_HEADING, 1)
+    section, after = section_and_after.split(OD005_NEXT_HEADING, 1)
+    assert OD005_NEXT_HEADING not in before
+    assert OD005_HEADING not in after
+    return section
+
+
+def _od005_seed_table_rows(section: str) -> tuple[tuple[str, ...], ...]:
+    tokens = MarkdownIt("commonmark").enable("table").parse(section)
+    assert sum(token.type == "table_open" for token in tokens) == 1
+    rows: list[tuple[str, ...]] = []
+    row: list[str] | None = None
+    in_table = False
+    for token in tokens:
+        if token.type == "table_open":
+            in_table = True
+        elif token.type == "table_close":
+            in_table = False
+        elif in_table and token.type == "tr_open":
+            assert row is None
+            row = []
+        elif in_table and token.type == "inline":
+            assert row is not None
+            row.append(token.content)
+        elif in_table and token.type == "tr_close":
+            assert row is not None
+            rows.append(tuple(row))
+            row = None
+    assert not in_table and row is None
+    assert rows[0] == OD005_SEED_TABLE_HEADER
+    assert all(len(current) == len(OD005_SEED_TABLE_HEADER) for current in rows)
+    return tuple(rows[1:])
+
+
+def _od005_seed_primitives(section: str) -> tuple[str, ...]:
+    lead = "The five trusted `SeedPrimitive` target IRIs are exactly "
+    tail = " under the seed namespace."
+    paragraphs = tuple(" ".join(part.split()) for part in section.split("\n\n"))
+    declarations = tuple(part for part in paragraphs if part.startswith(lead))
+    assert len(declarations) == 1
+    declaration = declarations[0].split(tail, 1)
+    assert len(declaration) == 2
+    assert declaration[1] == (
+        " They are not XSD aliases and are not fact subjects requiring kind facts."
+    )
+    names_source = declaration[0].removeprefix(lead)
+    assert names_source == "`String`, `Integer`, `Float`, `Boolean`, and `DateTime`"
+    inline = MarkdownIt("commonmark").parseInline(names_source)[0]
+    return tuple(
+        child.content for child in inline.children or () if child.type == "code_inline"
+    )
+
+
+def _assert_od005_closed_seed(section: str) -> None:
+    assert _od005_seed_table_rows(section) == OD005_SEED_ROWS
+    assert _od005_seed_primitives(section) == OD005_SEED_PRIMITIVES
 
 
 def _copy_ledger(tmp_path: Path) -> Path:
@@ -1151,9 +1270,7 @@ def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
     decisions = (
         ROOT / "design" / "contract_compiler" / "decisions.md"
     ).read_text(encoding="utf-8")
-    section = decisions.split("### OD-005: logical fact record and canonical bytes", 1)[
-        1
-    ].split("### OD-011: resolver and import policy", 1)[0]
+    section = _od005_section(decisions)
     prose = " ".join(section.split())
 
     assert "JSON and any future JSON Schema define syntax only." in prose
@@ -1185,33 +1302,7 @@ def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
     ):
         assert forbidden not in section
 
-    expected_seed_rows = {
-        "| `Class` | `rdf:type` | exactly `Class` | 1 |",
-        "| `Class` | `rdfs:subClassOf` | `Class` | 0..1 |",
-        "| `Class` | `cf:isMixin` | Boolean | 1 |",
-        "| `Class` | `cf:usesMixin` | distinct `Class` with `isMixin=true` | 0..* |",
-        "| `Class` | `cf:abstract` | Boolean | 1 |",
-        "| `Slot` | `rdf:type` | exactly `Slot` | 1 |",
-        "| `Slot`, `SlotUse` | `cf:valueRange` | `Class`, `Enum`, `Scalar`, or `SeedPrimitive` | 1 |",
-        "| `Slot`, `SlotUse` | `cf:required` | Boolean | 1 |",
-        "| `Slot`, `SlotUse` | `cf:multivalued` | Boolean | 1 |",
-        "| `Slot`, `SlotUse` | `cf:identifier` | Boolean | 1 |",
-        "| `Slot`, `SlotUse` | `cf:inlined` | Boolean | 1 |",
-        "| `Slot`, `SlotUse` | `cf:equalsString` | string | 0..1 |",
-        "| `Slot`, `SlotUse` | `cf:minimum` | canonical decimal lexical string | 0..1 |",
-        "| `Slot`, `SlotUse` | `cf:maximum` | canonical decimal lexical string | 0..1 |",
-        "| `Slot`, `SlotUse` | `cf:valuePresence` | string `PRESENT` or `ABSENT` | 0..1 |",
-        "| `SlotUse` | `cf:onClass` | `Class` | 1 |",
-        "| `SlotUse` | `cf:usesSlot` | `Slot` | 1 |",
-        "| `SlotUse` | `rdf:type` | exactly `SlotUse` | 1 |",
-        "| `Enum` | `rdf:type` | exactly `Enum` | 1 |",
-        "| `Enum` | `cf:enumValue` | distinct string | 0..* |",
-        "| `Scalar` | `rdf:type` | exactly `Scalar` | 1 |",
-        "| `Scalar` | `cf:typeof` | `Scalar` or `SeedPrimitive` | 1 |",
-    }
-    assert expected_seed_rows <= set(section.splitlines())
-    for primitive in ("String", "Integer", "Float", "Boolean", "DateTime"):
-        assert f"`{primitive}`" in section
+    _assert_od005_closed_seed(section)
 
     json_blocks = [
         token.content.removesuffix("\n")
@@ -1315,6 +1406,33 @@ def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
         "example.malleus.dev/archive",
     ):
         assert forbidden not in evidence_source
+
+
+def test_od005_closed_seed_guard_rejects_adversarial_drift() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od005_section(decisions)
+    row = "| `Scalar` | `cf:typeof` | `Scalar` or `SeedPrimitive` | 1 |"
+    assert section.count(row) == 1
+    mutations = (
+        section.replace(
+            row,
+            row + "\n| `Scalar` | `cf:experimental` | string | 0..1 |",
+            1,
+        ),
+        section.replace(row, "", 1),
+        section.replace(row, row + "\n" + row, 1),
+        section.replace(
+            "and `DateTime` under the seed namespace",
+            "`DateTime`, and `Decimal` under the seed namespace",
+            1,
+        ),
+    )
+    assert all(mutation != section for mutation in mutations)
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_od005_closed_seed(mutation)
 
 
 def test_revision_16_conformance_rows_guard_closed_decisions() -> None:

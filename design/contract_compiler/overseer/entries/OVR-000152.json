@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "ccd05-closed-set-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T03:20:02Z",
+    "claims": [
+      "The OD-005 section contains exactly one seed table whose body equals the ordered 22 approved rows, with no extra, missing, or duplicate row.",
+      "The exact scoped SeedPrimitive declaration contains only String, Integer, Float, Boolean, and DateTime in order.",
+      "Adversarial extra-predicate, missing-row, duplicate-row, and sixth-primitive mutations all fail the same guards used on the accepted decision bytes.",
+      "The repair changes only mechanical tests and append-only audit governance; it does not revise OD-005 semantics or the COMPLETE CC-D05 state."
+    ],
+    "limitations": [
+      "This verifies closed-set governance guards, not a compiler, runtime validator, frontend, artifact, package, dependency, or public API.",
+      "All residual boundaries recorded by OD-005 and OVR-000150 remain unchanged."
+    ]
+  },
+  "entry_hash": "sha256:ba3aaa5d93663e6f653a4975770c7a42b7fc6a19eef0408696904fb68f0df289",
+  "entry_id": "OVR-000152",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:83f3f2b83006bb9ab2a99ffb09d507c37a04b3a94c06fe082a8228cb29b74a1e",
+  "recorded_at": "2026-08-27T03:20:02Z",
+  "references": [
+    {
+      "digest": "sha256:7c911bf7bd9e9f2bf07e47874a76764e19a25442df8c4b1891c5c154bf57bb54",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D05-closed-set-audit.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000151",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000150",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-005",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D05",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 152,
+  "subject": {
+    "id": "CC-D05-closed-set-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify exact closed-set guards for the OD-005 seed.",
+  "why": "Exact equality and adversarial mutation checks close the audit hole that allowed unapproved predicate rows or primitives to coexist with the approved values while the test still passed."
+}

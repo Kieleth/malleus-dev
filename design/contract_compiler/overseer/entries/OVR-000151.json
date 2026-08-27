@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-005",
+      "CC-D05"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7c911bf7bd9e9f2bf07e47874a76764e19a25442df8c4b1891c5c154bf57bb54",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D05-closed-set-audit.json"
+      },
+      {
+        "after_digest": "sha256:4fdf2945bb86fc4ed036e37eb19df13b266fccd82454ccbdd43edcdaef4aed67",
+        "before_digest": "sha256:41dfe688da2fa8119bacf989553146f444a4214b08a9ec192404077c37106116",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:83f3f2b83006bb9ab2a99ffb09d507c37a04b3a94c06fe082a8228cb29b74a1e",
+  "entry_id": "OVR-000151",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+  "recorded_at": "2026-08-27T03:20:01Z",
+  "references": [
+    {
+      "digest": "sha256:7c911bf7bd9e9f2bf07e47874a76764e19a25442df8c4b1891c5c154bf57bb54",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D05-closed-set-audit.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000150",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D05",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 151,
+  "subject": {
+    "id": "contract-compiler-od005-closed-set-audit",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close the OD-005 seed drift guard over exact sets.",
+  "why": "The original guard accepted the 22 approved table rows as a subset and found primitive names anywhere in OD-005. Scoped exact parsing now rejects extra, missing, or duplicate rows and any sixth primitive without changing the accepted decision."
+}

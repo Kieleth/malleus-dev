@@ -1,0 +1,47 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 48271,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:aa95a572d01e288a91001b73d988b85558f3903850fe0f7d277df4ad849dcff2"
+    },
+    {
+      "byte_length": 79255,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:4fdf2945bb86fc4ed036e37eb19df13b266fccd82454ccbdd43edcdaef4aed67"
+    },
+    {
+      "byte_length": 6661,
+      "path": "design/contract_compiler/overseer/evidence/CC-D05.json",
+      "sha256": "sha256:30aabf6b43de8b0e371eb9a9ce5fa6ac09102d2b0c7136cfe2fd7171284fa7c1"
+    }
+  ],
+  "base_commit": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+  "checks": [
+    {
+      "check_id": "ccd05-closed-table-scope",
+      "method": "Extract the single OD-005 section by its exact adjacent decision headings, then parse the section's single Markdown table by header, separator, cells, and row order.",
+      "observed": "The section contains exactly one table. Its header is the four approved columns and its body is exactly the ordered 22-row seed metamodel, with no extra, missing, or duplicate row.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-closed-table-mutations",
+      "method": "Run the same closed-set assertion against mutations that add an unknown predicate row, remove an approved row, and duplicate an approved row.",
+      "observed": "All three adversarial table mutations fail the guard. The accepted decision bytes pass exact tuple equality rather than subset membership.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-closed-primitives",
+      "method": "Parse the one exact SeedPrimitive declaration inside OD-005 and compare its ordered inline-code values to String, Integer, Float, Boolean, and DateTime, then inject a sixth primitive through the same guard.",
+      "observed": "The accepted declaration yields exactly the five approved primitives in order. A sixth Decimal primitive fails the guard.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This audit strengthens mechanical drift detection for the accepted OD-005 seed. It does not revise the decision, graph, metamodel semantics, CC-D05 completion state, implementation, or any deferred boundary.",
+    "The report verifies current repository bytes and focused adversarial guards. It is not a compiler, runtime validator, frontend, artifact, package, or public API claim."
+  ],
+  "recorded_at": "2026-08-27T03:20:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D05"
+}
