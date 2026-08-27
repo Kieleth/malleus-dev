@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "ccd06-wording-correction-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T03:55:02Z",
+    "claims": [
+      "The CC-D06 closed-contract audit observation phrase 'renamed constructor inputs' is superseded by the accurate phrase 'renamed constructor'.",
+      "The exact retained test independently covers constructor rename, extra input, missing input, reordered inputs, and both fixed-token changes.",
+      "Every other constructor, refusal, mutation, append-only, limitation, zero-scope, and completed-state claim remains effective without a byte change to the prior report or test."
+    ],
+    "limitations": [
+      "This is a wording correction only. It does not revise OD-006, its guards, semantics, graph, card, integration, evidence history, COMPLETE state, implementation, or deferred authorities."
+    ]
+  },
+  "entry_hash": "sha256:ddbe57d05e1d5d47edbee464b823844edbb1f77a330fb0cfb6c755fe49294357",
+  "entry_id": "OVR-000160",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fdc4fa287edaad57a3e9c04bd69839c9f47de96a193d345f7e1fb9f5a43591a9",
+  "recorded_at": "2026-08-27T03:55:02Z",
+  "references": [
+    {
+      "digest": "sha256:1922f81265c865da6e5ae229a3d97e75b0112b71617c053bf05d5070b5e13989",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-wording-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000159",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000158",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-006",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 160,
+  "subject": {
+    "id": "CC-D06-closed-contract-wording-correction",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact OD-006 audit wording correction.",
+  "why": "The replacement phrase accurately names the tested mutation while preserving the immutable prior report, exact guard bytes, all other verified claims, and the completed zero-scope decision."
+}

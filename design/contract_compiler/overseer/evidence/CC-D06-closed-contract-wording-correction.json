@@ -1,0 +1,36 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 3492,
+      "path": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-audit.json",
+      "sha256": "sha256:55f4092c91b15100c894075b0fb30f1089b442a1613da8c8e1ef31a5c9159090"
+    },
+    {
+      "byte_length": 94597,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:9394a9e028562383ce6b3405a239f73eed20dc4bdfa5475780d7425f6ac54a4a"
+    }
+  ],
+  "base_commit": "ea2f3cf3c0a30f9f8831f92ec83728978bdcd21e",
+  "checks": [
+    {
+      "check_id": "ccd06-wording-correction",
+      "method": "Compare the prior adversarial-mutation observation to the exact retained mutation code and classify the wording error without changing either artifact.",
+      "observed": "The prior phrase 'renamed constructor inputs' is superseded by 'renamed constructor'. The test separately mutates the constructor name, adds an input, removes an input, reorders inputs, and changes each fixed token.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-retained-claims",
+      "method": "Inspect every other prior report check and the exact test bytes after applying only the narrow wording correction.",
+      "observed": "All constructor, refusal, adversarial-mutation, append-only-boundary, limitation, and zero-scope claims remain effective. No guard, accepted semantic, test byte, prior evidence byte, or completed state changes.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report corrects one observation phrase only. It does not edit or replace the prior immutable report, revise OD-006, alter a test, or add a semantic claim.",
+    "All other claims and limitations in CC-D06-closed-contract-audit.json and OVR-000158 remain effective."
+  ],
+  "recorded_at": "2026-08-27T03:55:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D06"
+}

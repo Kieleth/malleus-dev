@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-006",
+      "CC-D06"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:1922f81265c865da6e5ae229a3d97e75b0112b71617c053bf05d5070b5e13989",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-wording-correction.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:fdc4fa287edaad57a3e9c04bd69839c9f47de96a193d345f7e1fb9f5a43591a9",
+  "entry_id": "OVR-000159",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bd97fe4148cc2f0faabb154fa06a748d815e9641e2bfb77ce1fba2b60fa004e6",
+  "recorded_at": "2026-08-27T03:55:01Z",
+  "references": [
+    {
+      "digest": "sha256:1922f81265c865da6e5ae229a3d97e75b0112b71617c053bf05d5070b5e13989",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-wording-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000158",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 159,
+  "subject": {
+    "id": "contract-compiler-od006-audit-wording-correction",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the narrow OD-006 audit wording correction.",
+  "why": "The prior immutable audit report described the constructor-name mutation as renamed constructor inputs. A separate report preserves those bytes while recording the exact replacement phrase, renamed constructor, with no semantic, test, or state change."
+}
