@@ -168,6 +168,67 @@ OD006_DELTA_TABLE = (
     ("Domain semantic edit", "same", "changed", "same", "changed", "new"),
     ("Governance semantic edit", "same", "same", "changed", "changed", "new"),
 )
+OD006_CONSTRUCTOR_FENCES = (
+    """RoleBoundContractIdentity(
+  fixed logical token: malleus.contract-role-bound-identity/v0,
+  fixed_role_name,
+  exact_effective_contract_identity
+)""",
+    """ContractCompositionIdentity(
+  fixed logical token: malleus.contract-composition-identity/v0,
+  ProtocolRecordContract_role_identity,
+  GovernedGraphContract_role_identity,
+  GovernanceContract_role_identity
+)""",
+)
+OD006_REFUSAL_PARAGRAPHS = (
+    (
+        "Composition refuses atomically when a role is missing, duplicated, "
+        "unknown, or supplied more than once; when protocol and governed-graph "
+        "slots are swapped; when a role tag, version, or identity domain is "
+        "wrong; when an already-bound epoch is continued with a valid replacement "
+        "role identity but no new composition is constructed and bound; when "
+        "roles from different compositions are mixed without constructing a new "
+        "composition; or when equal payload is treated as proof that two roles "
+        "are interchangeable."
+    ),
+    (
+        "It also refuses an incomplete role closure that relies on ambient "
+        "declarations or another role, a protocol contract used to validate "
+        "governed domain state, a governed-graph contract used to validate "
+        "protocol records, an independently advanced or borrowed role head, "
+        "continuation of a ledger after composition change, and any inferred "
+        "latest or current composition. A structural-only graph refuses protocol "
+        "or governance roles, a composition identity, or a protocol ledger. An "
+        "accepted-temporal graph refuses a structural-only binding. "
+        "Whole-composition validation refuses atomically; no subset is accepted."
+    ),
+)
+OD006_ORDERED_REFUSAL_CLAIMS = (
+    "a role is missing",
+    "duplicated",
+    "unknown",
+    "supplied more than once",
+    "protocol and governed-graph slots are swapped",
+    "a role tag, version, or identity domain is wrong",
+    (
+        "an already-bound epoch is continued with a valid replacement role "
+        "identity but no new composition is constructed and bound"
+    ),
+    "roles from different compositions are mixed without constructing a new composition",
+    "equal payload is treated as proof that two roles are interchangeable",
+    "an incomplete role closure that relies on ambient declarations or another role",
+    "a protocol contract used to validate governed domain state",
+    "a governed-graph contract used to validate protocol records",
+    "an independently advanced or borrowed role head",
+    "continuation of a ledger after composition change",
+    "any inferred latest or current composition",
+    (
+        "A structural-only graph refuses protocol or governance roles, a "
+        "composition identity, or a protocol ledger"
+    ),
+    "An accepted-temporal graph refuses a structural-only binding",
+)
 IMMUTABLE_R3_REFINEMENT_INPUTS = {
     "design/contract_compiler/overseer/entries/OVR-000069.json": "3f1f72dbb437fbbf2e1aad2dfaeec213884228f169330361e513c6af700ad910",
     "design/contract_compiler/overseer/entries/OVR-000070.json": "011f1ccef652b5299b23aa4588edd66dacc2802a0ed2fb0370669a6b5c1747ce",
@@ -227,6 +288,29 @@ def _markdown_tables(section: str) -> tuple[tuple[tuple[str, ...], ...], ...]:
     return tuple(tables)
 
 
+def _od006_constructor_fences(section: str) -> tuple[str, ...]:
+    return tuple(
+        token.content.removesuffix("\n")
+        for token in MarkdownIt("commonmark").parse(section)
+        if token.type == "fence" and token.info.strip() == "text"
+    )
+
+
+def _od006_refusal_paragraphs(section: str) -> tuple[str, ...]:
+    heading = "#### Refusal examples"
+    boundary = "`OD-006` defines role and composition structure only."
+    assert section.count(heading) == 1
+    assert section.count(boundary) == 1
+    before, refusal_and_after = section.split(heading, 1)
+    refusal, after = refusal_and_after.split(boundary, 1)
+    assert heading not in after and boundary not in before
+    return tuple(
+        " ".join(paragraph.split())
+        for paragraph in refusal.strip().split("\n\n")
+        if paragraph.strip()
+    )
+
+
 def _od005_seed_table_rows(section: str) -> tuple[tuple[str, ...], ...]:
     tokens = MarkdownIt("commonmark").enable("table").parse(section)
     assert sum(token.type == "table_open" for token in tokens) == 1
@@ -280,6 +364,15 @@ def _assert_od005_closed_seed(section: str) -> None:
 
 def _assert_od006_closed_contract(section: str) -> None:
     assert _markdown_tables(section) == (OD006_ROLE_TABLE, OD006_DELTA_TABLE)
+    assert _od006_constructor_fences(section) == OD006_CONSTRUCTOR_FENCES
+    refusal_paragraphs = _od006_refusal_paragraphs(section)
+    assert refusal_paragraphs == OD006_REFUSAL_PARAGRAPHS
+    refusal_text = " ".join(refusal_paragraphs)
+    refusal_positions = tuple(
+        refusal_text.index(claim) for claim in OD006_ORDERED_REFUSAL_CLAIMS
+    )
+    assert refusal_positions == tuple(sorted(refusal_positions))
+    assert len(set(refusal_positions)) == len(OD006_ORDERED_REFUSAL_CLAIMS)
     prose = " ".join(section.split())
     for exact in (
         "exactly these fixed slots, each with cardinality `1..1`",
@@ -1651,6 +1744,24 @@ def test_od006_closed_composition_guard_rejects_adversarial_drift() -> None:
         section.replace(role_row, role_row + "\n" + role_row, 1),
         section.replace("cardinality `1..1`", "cardinality `0..1`", 1),
         section.replace(
+            "  fixed_role_name,\n  exact_effective_contract_identity",
+            "  fixed_role_name,\n  unapproved_input,\n  exact_effective_contract_identity",
+            1,
+        ),
+        section.replace("  fixed_role_name,\n", "", 1),
+        section.replace(
+            "  ProtocolRecordContract_role_identity,\n"
+            "  GovernedGraphContract_role_identity,",
+            "  GovernedGraphContract_role_identity,\n"
+            "  ProtocolRecordContract_role_identity,",
+            1,
+        ),
+        section.replace(
+            "RoleBoundContractIdentity(",
+            "CallerSelectedRoleIdentity(",
+            1,
+        ),
+        section.replace(
             "malleus.contract-role-bound-identity/v0",
             "malleus.contract-role-bound-identity/v1",
             1,
@@ -1661,6 +1772,22 @@ def test_od006_closed_composition_guard_rejects_adversarial_drift() -> None:
             1,
         ),
         section.replace("There is no fourth role", "A fourth role is allowed", 1),
+        section.replace(
+            "when protocol and governed-graph slots are\nswapped; ",
+            "",
+            1,
+        ),
+        section.replace(
+            "when roles from different\ncompositions are mixed without constructing a new composition; ",
+            "",
+            1,
+        ),
+        section.replace(
+            "Whole-composition validation refuses atomically; no subset is accepted.",
+            "An unapproved refusal is accepted.\n\n"
+            "Whole-composition validation refuses atomically; no subset is accepted.",
+            1,
+        ),
     )
     assert all(mutation != section for mutation in mutations)
     for mutation in mutations:

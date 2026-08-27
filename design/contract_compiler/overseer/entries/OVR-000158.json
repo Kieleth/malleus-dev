@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "ccd06-closed-contract-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T03:50:02Z",
+    "claims": [
+      "The OD-006 section contains exactly two ordered text fences whose constructor names, fixed v0 tokens, inputs, and semantic input order equal the accepted contract.",
+      "The complete Refusal examples block equals the two accepted normalized paragraphs, and all seventeen grouped refusal claims occur in exact semantic order.",
+      "Fourteen adversarial mutations prove that extra, missing, reordered, renamed, relaxed, deleted, or newly invented constructor and refusal content fails the same guard used on accepted bytes.",
+      "The repair preserves the accepted OD-006 decision, original evidence, graph, card, integration, OVR-000153 through OVR-000156, COMPLETE state, zero-scope boundary, and every deferred authority."
+    ],
+    "limitations": [
+      "This verifies exact governance drift guards only. It does not revise OD-006 or implement a compiler, validator, artifact, bundle, runtime, migration, package, or API.",
+      "All limitations and deferred authorities recorded by OVR-000156 remain unchanged."
+    ]
+  },
+  "entry_hash": "sha256:bd97fe4148cc2f0faabb154fa06a748d815e9641e2bfb77ce1fba2b60fa004e6",
+  "entry_id": "OVR-000158",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cefd0efbf4e3d00826998c19f044ae5e03754dcedf5d601a12987ec85afbf504",
+  "recorded_at": "2026-08-27T03:50:02Z",
+  "references": [
+    {
+      "digest": "sha256:55f4092c91b15100c894075b0fb30f1089b442a1613da8c8e1ef31a5c9159090",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-audit.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000157",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000156",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-006",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 158,
+  "subject": {
+    "id": "CC-D06-closed-contract-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify exact OD-006 constructor and refusal guards.",
+  "why": "Exact structural equality plus mutation proofs close the audit gap that allowed unapproved constructor inputs or refusal drift to coexist with the accepted role and delta checks while preserving the completed decision unchanged."
+}

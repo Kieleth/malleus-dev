@@ -1,0 +1,53 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 55703,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:82f3483e3e153545a22fd5990b83d85d700de6abc88236ed645591b62e577926"
+    },
+    {
+      "byte_length": 94597,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:9394a9e028562383ce6b3405a239f73eed20dc4bdfa5475780d7425f6ac54a4a"
+    },
+    {
+      "byte_length": 6688,
+      "path": "design/contract_compiler/overseer/evidence/CC-D06.json",
+      "sha256": "sha256:3cc09c2cdc0a5e4039f3870cf46b931e996c88e6db77e2db72d07d65c8b9d6cf"
+    }
+  ],
+  "base_commit": "0c899eb1b312275298884cd19f28018273c92ebf",
+  "checks": [
+    {
+      "check_id": "ccd06-exact-constructors",
+      "method": "Parse every text fence in OD-006 and compare the ordered tuple to the two exact accepted conceptual constructor blocks.",
+      "observed": "OD-006 contains exactly RoleBoundContractIdentity with fixed v0 token, fixed_role_name, and exact_effective_contract_identity, followed by ContractCompositionIdentity with its fixed v0 token and ProtocolRecordContract, GovernedGraphContract, and GovernanceContract role identities in fixed semantic order.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-exact-refusals",
+      "method": "Extract the complete Refusal examples block as two canonical normalized paragraphs and compare exact bytes, paragraph order, and ordered refusal-claim positions.",
+      "observed": "The guard closes the approved missing, duplicate, unknown/fourth, duplicate-supplied, protocol/domain-swap, wrong tag/version/domain, existing-epoch replacement, mixed-composition, equal-payload, incomplete ambient closure, both cross-role misuse, advanced/borrowed head, ledger continuation, inferred current, structural-only contamination, and accepted-temporal structural-only refusal classes, with atomic whole-composition refusal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-adversarial-mutations",
+      "method": "Apply fourteen independent mutations to the accepted OD-006 section and run the same exact closed-contract guard on every mutation.",
+      "observed": "Extra, missing, and duplicate roles; relaxed cardinality; extra, missing, reordered, or renamed constructor inputs; wrong role or composition token; allowed fourth role; deleted swapped-role or mixed-composition refusal; and one added unapproved refusal all fail the guard.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd06-append-only-boundary",
+      "method": "Compare the repair scope and retained source digests to the integrated CC-D06 decision and original evidence.",
+      "observed": "The accepted decision and original CC-D06 evidence remain byte-identical. The repair changes only the mechanical test plus append-only audit evidence and ledger projections; it does not rewrite OD-006, OVR-000153 through OVR-000156, the graph, card, integration, production, or downstream state.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This verifies exact governance guard closure over already accepted OD-006 text. It does not revise the decision, add semantics, or implement a compiler, validator, artifact, bundle, runtime, migration, package, or API.",
+    "All deferred authorities and zero-scope limits recorded by OD-006 and OVR-000156 remain unchanged."
+  ],
+  "recorded_at": "2026-08-27T03:50:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D06"
+}

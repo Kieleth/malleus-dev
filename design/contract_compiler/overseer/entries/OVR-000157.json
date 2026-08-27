@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-006",
+      "CC-D06"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:55f4092c91b15100c894075b0fb30f1089b442a1613da8c8e1ef31a5c9159090",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-audit.json"
+      },
+      {
+        "after_digest": "sha256:9394a9e028562383ce6b3405a239f73eed20dc4bdfa5475780d7425f6ac54a4a",
+        "before_digest": "sha256:6c555af7f678c999944cd136fd2f801407c2b497824a8fbc18ff8d3f1cd3e0eb",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:cefd0efbf4e3d00826998c19f044ae5e03754dcedf5d601a12987ec85afbf504",
+  "entry_id": "OVR-000157",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
+  "recorded_at": "2026-08-27T03:50:01Z",
+  "references": [
+    {
+      "digest": "sha256:55f4092c91b15100c894075b0fb30f1089b442a1613da8c8e1ef31a5c9159090",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D06-closed-contract-audit.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000156",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D06",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 157,
+  "subject": {
+    "id": "contract-compiler-od006-closed-contract-audit",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close the OD-006 constructor and refusal drift guards.",
+  "why": "The original tests fixed the role and delta tables but accepted extra, missing, or reordered constructor inputs and did not close every approved refusal clause. Exact fence, paragraph, ordered-claim, and adversarial mutation guards now prevent that entire drift class without changing OD-006 semantics."
+}
