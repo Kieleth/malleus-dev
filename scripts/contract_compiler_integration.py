@@ -296,6 +296,71 @@ def _git_bytes(repository: Path, commit: str, path: str, context: str) -> bytes:
     return result.stdout
 
 
+def _matches_bound_completion_entry(
+    source: bytes,
+    completion_entry: Mapping[str, Any],
+) -> bool:
+    try:
+        entry = json.loads(
+            source.decode("utf-8"),
+            object_pairs_hook=_unique_object,
+            parse_constant=_reject_constant,
+        )
+    except (IntegrationValidationError, UnicodeError, json.JSONDecodeError):
+        return False
+    return isinstance(entry, dict) and entry == completion_entry
+
+
+def _validate_dependency_integrated_head(
+    repository: Path,
+    dependency: str,
+    dependency_card: Mapping[str, Any],
+    binding: Mapping[str, Any],
+    completion_entry: Mapping[str, Any],
+    ledger_path: str,
+) -> None:
+    integrated_head = binding["integrated_head"]
+    candidate = dependency_card["candidate"]
+    if candidate["state"] == "INTEGRATED":
+        if integrated_head != candidate["head_commit"]:
+            _fail(
+                "CC000_DEPENDENCY_INTEGRATED_HEAD",
+                f"{dependency}: integrated_head must equal the integrated "
+                "candidate head_commit",
+            )
+        return
+
+    entry_path = f"{ledger_path}/entries/{binding['completion_entry_id']}.json"
+    source = _git(repository, "show", f"{integrated_head}:{entry_path}", text=False)
+    if source.returncode or not _matches_bound_completion_entry(
+        source.stdout,
+        completion_entry,
+    ):
+        _fail(
+            "CC000_DEPENDENCY_INTEGRATED_HEAD",
+            f"{dependency}: integrated_head does not contain the exact bound "
+            "COMPLETE overseer entry",
+        )
+
+    parents = _git(repository, "show", "-s", "--format=%P", integrated_head)
+    if parents.returncode:
+        _fail(
+            "CC000_GIT_HISTORY",
+            f"cannot inspect integrated_head parents for {dependency}",
+        )
+    for parent in parents.stdout.split():
+        parent_source = _git(repository, "show", f"{parent}:{entry_path}", text=False)
+        if not parent_source.returncode and _matches_bound_completion_entry(
+            parent_source.stdout,
+            completion_entry,
+        ):
+            _fail(
+                "CC000_DEPENDENCY_INTEGRATED_HEAD",
+                f"{dependency}: integrated_head is not the first commit "
+                "containing the bound COMPLETE overseer entry",
+            )
+
+
 def _verify_artifact_bytes(
     artifact: Mapping[str, Any], source: bytes, context: str
 ) -> None:
@@ -750,6 +815,11 @@ def validate_integration(
         if set(bindings) != set(dependencies):
             _fail("CC000_DEPENDENCY_BINDING", f"{workstream_id}: binding set is stale")
         for dependency, binding in bindings.items():
+            _require_git_object(
+                repository,
+                binding["integrated_head"],
+                f"{workstream_id} dependency {dependency} integrated_head",
+            )
             entry = state_entries[dependency]
             if (
                 binding["completion_entry_id"] != entry["entry_id"]
@@ -757,6 +827,14 @@ def validate_integration(
                 or binding["card_sha256"] != card_digests.get(dependency)
             ):
                 _fail("CC000_DEPENDENCY_BINDING", f"{workstream_id}: {dependency} binding is stale")
+            _validate_dependency_integrated_head(
+                repository,
+                dependency,
+                cards[dependency],
+                binding,
+                entry,
+                anchor["path"],
+            )
 
     snapshot = manifest["authority"]["snapshot"]
     if require_sealed and snapshot["state"] != "SEALED":

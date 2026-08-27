@@ -493,7 +493,7 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
             "card_sha256": "sha256:46c8ee073c2d9537f512c579915ee49bc67c15d19c665c84df9d736deb9b3bd7",
             "completion_entry_hash": "sha256:089705dd93e3f892ae03a93896b44171f333e0d2cea0110c763d7f19a5f7795a",
             "completion_entry_id": "OVR-000084",
-            "integrated_head": "493ed2bd152a92bcf26a2a0d5380df4dbc8f0f52",
+            "integrated_head": "d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72",
             "workstream_id": "CC-D12",
         },
     ]
@@ -1090,6 +1090,13 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
         statuses.setdefault(subject, set()).add(object_)
     assert len(statuses) == 281
     assert all(len(values) == 1 for values in statuses.values())
+    realization = (
+        ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+    ).read_text(encoding="utf-8")
+    assert (
+        f"4. All {len(statuses)} subjects carrying `mfg:status` have exactly one "
+        "distinct status."
+    ) in realization
 
     depends_on = URIRef(f"{mfg}dependsOn")
     edges = {
@@ -1155,6 +1162,19 @@ def test_revision_15_conformance_rows_guard_closed_decisions() -> None:
         "directed-cycle lineage refusal",
     ):
         assert phrase in cc_r01
+
+
+def test_contract_compiler_docs_do_not_claim_a_current_public_adapter() -> None:
+    index = (ROOT / "docs" / "contract_compiler" / "index.md").read_text(
+        encoding="utf-8"
+    )
+    prose = " ".join(index.split())
+
+    assert "No public frontend adapter or adapter docstring exists yet." in prose
+    assert "Pinned LinkML 1.11.1 is the selected v0 target adapter." in prose
+    assert "When CC-R02 exposes a public adapter," in prose
+    assert "Each public frontend adapter documents" not in prose
+    assert "The default first-party adapter is" not in prose
 
 
 def test_rdf_guard_dependency_is_an_exact_direct_dev_pin() -> None:

@@ -1751,7 +1751,7 @@ Performed on 2026-08-26:
    were empty.
 3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
    dependency cycle.
-4. All 278 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 281 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.

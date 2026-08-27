@@ -12,7 +12,7 @@
     "class": "FORMAL",
     "dependency_bindings": [
       {
-        "card_sha256": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
+        "card_sha256": "sha256:ae597ff598607d1f7e3eea6d5a4c00e618d196957bb5ac526daa32e72c96f759",
         "completion_entry_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
         "completion_entry_id": "OVR-000101",
         "integrated_head": "c521785c03a3a02bb666879eb525573b81e4491f",

@@ -271,6 +271,7 @@
     },
     "dependencyBinding": {
       "additionalProperties": false,
+      "description": "Binds one completed dependency, its current registered card, and its integration authority. integrated_head must resolve to a commit. When the dependency card candidate is INTEGRATED, integrated_head equals candidate.head_commit. Otherwise integrated_head is the first commit whose tree contains a WORKSTREAM_STATE matching completion_entry_id, completion_entry_hash, workstream_id, and new_state COMPLETE, and no parent contains that same bound entry.",
       "properties": {
         "card_sha256": {
           "$ref": "#/$defs/digest"
@@ -283,7 +284,8 @@
           "type": "string"
         },
         "integrated_head": {
-          "$ref": "#/$defs/commit"
+          "$ref": "#/$defs/commit",
+          "description": "Exact dependency authority commit under the dependencyBinding rule; card_sha256 separately binds the current registered dependency card."
         },
         "workstream_id": {
           "$ref": "#/$defs/workstreamId"

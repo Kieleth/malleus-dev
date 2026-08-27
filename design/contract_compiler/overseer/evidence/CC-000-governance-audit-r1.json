@@ -1,0 +1,111 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 83656,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:962c7b3bface9d5a595a96eda99be6a1772a3841fee4fdc177fbd8d423fc42ca"
+    },
+    {
+      "byte_length": 720,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:cac23a62ae8e609283c435e4d3da2572cc55c4e341733e17c7fd79558d96bcf1"
+    },
+    {
+      "byte_length": 23339,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:80eb5b46642d530e3226d202b40fbe5e6a1355ca0cf7030745f8dbccd0e29e30"
+    },
+    {
+      "byte_length": 35658,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:ee019adb17f8657a8f36c985f670d937493398f1e6d52e2b9dd54ac287b59f6f"
+    },
+    {
+      "byte_length": 34935,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:4769f9633b55b83170ed2c928f882b037fd1858dd01bce9ef64b86daed1f70c3"
+    },
+    {
+      "byte_length": 66323,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:57a235d1b78655bdaf9553401fdf70950f0c5467d541c54a76efc3887d59c8e6"
+    },
+    {
+      "byte_length": 20414,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:3e34c089b661376ca428badb53ceed1ca71c5c5907e70a49b79a0c549841de24"
+    },
+    {
+      "byte_length": 6775,
+      "path": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "sha256": "sha256:ae597ff598607d1f7e3eea6d5a4c00e618d196957bb5ac526daa32e72c96f759"
+    },
+    {
+      "byte_length": 3273,
+      "path": "design/contract_compiler/workstreams/CC-X01/manifest.json",
+      "sha256": "sha256:4b8801e9f4764f2fe68779bb1ef433bca7cef99f6de66c73d9d6d4384678b2e6"
+    },
+    {
+      "byte_length": 1113,
+      "path": "design/contract_compiler/workstreams/CC-D03/manifest.json",
+      "sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146"
+    },
+    {
+      "byte_length": 261138,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322"
+    },
+    {
+      "byte_length": 2657,
+      "path": "design/contract_compiler/overseer/entries/OVR-000084.json",
+      "sha256": "sha256:6e8c618516c22fe6b92d0e40c8d34bf3a05c29f7f54e0c3475cae056cbc53bd3"
+    }
+  ],
+  "base_commit": "f81399117d166f8c3c70a060361fda5e668f0823",
+  "checks": [
+    {
+      "check_id": "cc000-audit-status-count",
+      "method": "Parse canonical graph revision 15, derive the distinct mfg:status subject count, and compare the rendered narrative through a hard test.",
+      "observed": "The canonical graph has 281 distinct status subjects, each with one status, and the narrative now states 281. The test derives the number instead of maintaining an independent prose count.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-audit-docs-capability",
+      "method": "Inspect the contract compiler index and run the future-capability wording guard.",
+      "observed": "The index says no public frontend adapter or adapter docstring exists yet, names pinned LinkML 1.11.1 only as the selected v0 target, and assigns future docstrings to CC-R02.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-audit-integrated-head",
+      "method": "Validate every current dependency binding against the named integrated_head rule and inspect the exact historic completion entry at each non-integrated dependency commit.",
+      "observed": "All ten current bindings pass. Integrated candidates bind candidate.head_commit. Other bindings use the first commit containing the exact current COMPLETE overseer entry. CC-002 now binds CC-D12 to d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72, whose parent lacks OVR-000084.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-audit-integrated-head-adversarial",
+      "method": "Run adversarial tests for an unresolved full commit ID, a wrong existing integrated-candidate head, and a later descendant already containing the completion entry in its parent.",
+      "observed": "All three malformed integrated_head classes fail closed with stable typed integration validation errors.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-audit-card-cascade",
+      "method": "Recompute the deterministic dependency-card digest cascade and validate the integration registry.",
+      "observed": "Only CC-002, CC-X01, and CC-D03 card bytes changed. Their current card digests propagate in dependency order and the integration registry binds each exact byte length and digest.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-audit-scope",
+      "method": "Inspect changed paths, workstream states, selections, production paths, and the readiness frontier.",
+      "observed": "The repair is governance-only, rewrites no prior ledger entry or report, changes no production or dependency materialization, keeps selections unchanged, and does not start CC-D05.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The integrated_head checks require the referenced Git objects and their parents to be available. Existing CI already checks out full history.",
+    "This report repairs governance metadata and guards only. It does not implement a compiler, resolver, frontend adapter, wire reader, package topology, or CC-D05 work.",
+    "Earlier evidence reports remain immutable statements about their then-current source bytes. This report and its append-only ledger entries establish the current repair authority."
+  ],
+  "recorded_at": "2026-08-26T22:20:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-000"
+}

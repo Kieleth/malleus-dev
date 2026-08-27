@@ -235,7 +235,7 @@
       "card": {
         "byte_length": 3273,
         "path": "workstreams/CC-X01/manifest.json",
-        "sha256": "sha256:03283e23c2763129f6c74faf38203c73a4e62b6d1387670eb44516b8794fbf49",
+        "sha256": "sha256:4b8801e9f4764f2fe68779bb1ef433bca7cef99f6de66c73d9d6d4384678b2e6",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -299,7 +299,7 @@
       "card": {
         "byte_length": 1113,
         "path": "workstreams/CC-D03/manifest.json",
-        "sha256": "sha256:396e78e8cfd77a43b01987a84ca34bf04bcbe2e38a6bc6118cf414cd50235b3b",
+        "sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -468,7 +468,7 @@
       "card": {
         "byte_length": 6775,
         "path": "workstreams/CC-002/manifest.json",
-        "sha256": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
+        "sha256": "sha256:ae597ff598607d1f7e3eea6d5a4c00e618d196957bb5ac526daa32e72c96f759",
         "state": "PRESENT"
       },
       "depends_on": [

@@ -593,6 +593,64 @@ def test_formal_activation_lists_incomplete_dependencies(tmp_path: Path) -> None
     assert "CC-016" in str(error.value)
 
 
+def test_dependency_integrated_head_commit_must_resolve(tmp_path: Path) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+
+    _rewrite_card(
+        path,
+        manifest,
+        "CC-D13",
+        lambda card: card["authorization"]["dependency_bindings"][0].update(
+            integrated_head="f" * 40
+        ),
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_GIT_OBJECT_MISSING")
+
+
+def test_integrated_dependency_binding_uses_candidate_head(tmp_path: Path) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+    wrong_existing_head = _git(ROOT, "rev-parse", "HEAD")
+
+    _rewrite_card(
+        path,
+        manifest,
+        "CC-X01",
+        lambda card: card["authorization"]["dependency_bindings"][0].update(
+            integrated_head=wrong_existing_head
+        ),
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_DEPENDENCY_INTEGRATED_HEAD")
+
+
+def test_nonintegrated_dependency_binding_uses_first_completion_commit(
+    tmp_path: Path,
+) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+    later_descendant = _git(ROOT, "rev-parse", "HEAD")
+
+    _rewrite_card(
+        path,
+        manifest,
+        "CC-D13",
+        lambda card: card["authorization"]["dependency_bindings"][0].update(
+            integrated_head=later_descendant
+        ),
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_DEPENDENCY_INTEGRATED_HEAD")
+
+
 def test_non_overseer_card_cannot_claim_reserved_scope(tmp_path: Path) -> None:
     path, manifest = _copy_manifest_bundle(tmp_path)
 
@@ -948,7 +1006,8 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         manifest,
         "CC-D11",
         lambda card: card["authorization"]["dependency_bindings"][0].update(
-            card_sha256=x03_digest
+            card_sha256=x03_digest,
+            integrated_head=result_commit,
         ),
     )
     manifest["selections"] = ["CC-X03"]

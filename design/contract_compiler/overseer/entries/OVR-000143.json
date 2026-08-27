@@ -1,0 +1,153 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-002",
+      "CC-X01",
+      "CC-D03"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:962c7b3bface9d5a595a96eda99be6a1772a3841fee4fdc177fbd8d423fc42ca",
+        "before_digest": "sha256:ad1543f162dddbb6100455e4a6e84821022068efd507695d2fc23360202c1737",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:cac23a62ae8e609283c435e4d3da2572cc55c4e341733e17c7fd79558d96bcf1",
+        "before_digest": "sha256:7a0a23019301cdf4d3c07784687adb6e0ceccaaeef019cc654cffc08b4a8f5d8",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:80eb5b46642d530e3226d202b40fbe5e6a1355ca0cf7030745f8dbccd0e29e30",
+        "before_digest": "sha256:080c626220835d20b411ddd81cbc4705d8d90eaf4e4d26212dfd86fbfbda496e",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:ee019adb17f8657a8f36c985f670d937493398f1e6d52e2b9dd54ac287b59f6f",
+        "before_digest": "sha256:693ddad3cde03340d98e43a118210ac4e67c34f96c97ee0e7ae8e3176647c968",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:4769f9633b55b83170ed2c928f882b037fd1858dd01bce9ef64b86daed1f70c3",
+        "before_digest": "sha256:08be5362d89baf6090c68c6e5c8bd0b5a3f6144806fe22d90a63780326415370",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:57a235d1b78655bdaf9553401fdf70950f0c5467d541c54a76efc3887d59c8e6",
+        "before_digest": "sha256:a63d767f21b027e4159ff7e5bf7b92101dea5acbc03c35186b400719f9d10a4a",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:3e34c089b661376ca428badb53ceed1ca71c5c5907e70a49b79a0c549841de24",
+        "before_digest": "sha256:63576a161cb51b57a108f3b756801a4d3037987f2f1ec53672c64afd18d0b2ad",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:ae597ff598607d1f7e3eea6d5a4c00e618d196957bb5ac526daa32e72c96f759",
+        "before_digest": "sha256:adc5e4ab46884aee1ffc009c0119a3e63a2d593eeabaf3d4eccaa15e0eec7e8a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-002/manifest.json"
+      },
+      {
+        "after_digest": "sha256:4b8801e9f4764f2fe68779bb1ef433bca7cef99f6de66c73d9d6d4384678b2e6",
+        "before_digest": "sha256:03283e23c2763129f6c74faf38203c73a4e62b6d1387670eb44516b8794fbf49",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-X01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
+        "before_digest": "sha256:396e78e8cfd77a43b01987a84ca34bf04bcbe2e38a6bc6118cf414cd50235b3b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-D03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:45c5101e99426c183f93381668e760773b7120e7a7b4396414076fd4dbab0995",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-000-governance-audit-r1.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:0293eaaf17c22ec52a77ba96da89882ea0279a389f94c5934e65e87e575c4d4a",
+  "entry_id": "OVR-000143",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:92bd75f8bd8030bb425b3d848923470d53b1a8b7bbb0ba875cf8f13c67b622f2",
+  "recorded_at": "2026-08-26T22:20:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-002/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-X01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:45c5101e99426c183f93381668e760773b7120e7a7b4396414076fd4dbab0995",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-governance-audit-r1.json",
+      "type": "EVIDENCE"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 143,
+  "subject": {
+    "id": "contract-compiler-governance-audit-r1",
+    "type": "DOCUMENT"
+  },
+  "summary": "Repair three post-decision governance audit findings.",
+  "why": "The status narrative, future adapter documentation boundary, and dependency integration authority now have exact mechanical guards. One incorrect CC-D12 completion pointer is corrected through the minimal three-card digest cascade without rewriting prior ledger evidence."
+}

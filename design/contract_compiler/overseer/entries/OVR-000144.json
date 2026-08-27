@@ -1,0 +1,66 @@
+{
+  "actor": {
+    "id": "cc000-audit-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-26T22:20:02Z",
+    "claims": [
+      "Canonical graph revision 15 has 281 distinct status subjects and the realization narrative is mechanically derived and guarded against drift.",
+      "The Sphinx index makes no current public adapter claim; pinned LinkML 1.11.1 is the selected v0 target and CC-R02 owns future public adapter docstrings.",
+      "Every dependency integrated_head resolves to a commit; integrated candidates bind candidate.head_commit and other dependencies bind the first commit containing the exact current COMPLETE overseer entry.",
+      "CC-002 now binds CC-D12 completion to d0eb42d42d5d4bd3f18d883eb26b2eb3806e2c72, and the CC-002 to CC-X01 to CC-D03 card digest cascade is exact.",
+      "The unresolved-commit, wrong integrated-candidate head, and later-descendant countercases refuse mechanically while the canonical integration passes."
+    ],
+    "limitations": [
+      "This append-only verification changes governance metadata and guards only; it starts no CC-D05 or production work."
+    ]
+  },
+  "entry_hash": "sha256:5948ef0ad76faa003704553b01f624e8fdfa0eb8b55e71148da8ce3df8568b21",
+  "entry_id": "OVR-000144",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0293eaaf17c22ec52a77ba96da89882ea0279a389f94c5934e65e87e575c4d4a",
+  "recorded_at": "2026-08-26T22:20:02Z",
+  "references": [
+    {
+      "digest": "sha256:45c5101e99426c183f93381668e760773b7120e7a7b4396414076fd4dbab0995",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-governance-audit-r1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000143",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-002",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 144,
+  "subject": {
+    "id": "CC-000-governance-audit-r1",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the post-decision governance audit repair.",
+  "why": "The exact changed bytes, Git history, card digest cascade, canonical integration, and adversarial guards jointly prove the repair without changing completed workstream state or prior evidence."
+}
