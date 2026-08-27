@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 15
+## Accepted directions in canonical graph revision 16
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -392,6 +392,7 @@ materialization remains pending.
 | OD-002 | Slot-only, exact, explicit adoption | Only literal Boolean `annotations.adopts: true` can authorize an otherwise identical imported slot redeclaration |
 | OD-003 | Pinned LinkML 1.11.1 is the replaceable default first-party frontend adapter | Repeated and conflicting mixins are refused; runtime facts are explicit and frontend-neutral |
 | OD-004 | New persisted-wire epoch with a typed hard break | Exact public diagnostic identifier is deferred to CC-W01; no fallback, receipt, migration, translation, rewrite, or reinterpretation of legacy `ontology_hash` |
+| OD-005 | Ontology-powered atomic subject-predicate-object facts in canonical JSON | Internal candidate digests are not stable public fact IDs; expression vocabulary, source-field mapping, roles, admission, promotion, bundle bytes, and artifact envelope remain separately governed |
 | OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
@@ -505,6 +506,214 @@ governed decision; it does not weaken this epoch boundary silently.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-004`. `CC-D04` is complete.
 
+### OD-005: logical fact record and canonical bytes
+
+Decision state: ACCEPTED, ontology-powered atomic facts, 2026-08-26
+
+The neutral compiler seam is a closed atomic fact record with exactly three
+members: `subject`, `predicate`, and `object`. The subject and predicate are
+full absolute identifiers. The predicate determines whether the object is an
+absolute identifier, Boolean, string, or canonical decimal lexical string.
+There is no supplied fact ID and no coercion. Unknown members, unknown
+predicates, bare or prefixed symbols, null, arrays, nested objects, and values
+of the wrong predicate-declared type refuse.
+
+The versioned `ContractMetamodel` is semantic authority. It defines legal
+subject kinds and predicates, predicate object types and target kinds,
+cardinalities, required structural relations, acyclicity where declared, and
+whole-set invariants. JSON and any future JSON Schema define syntax only. A
+syntactically valid JSON record forbidden by the exact metamodel refuses.
+
+#### Exact non-expression seed metamodel
+
+The seed namespace is `https://malleus.dev/contract-facts/`. It defines five
+subject kinds: `Class`, `Slot`, `SlotUse`, `Enum`, and `Scalar`. Kind uses
+`http://www.w3.org/1999/02/22-rdf-syntax-ns#type`; Class parent uses
+`http://www.w3.org/2000/01/rdf-schema#subClassOf`. Malleus-specific predicates
+use the seed namespace. The table abbreviates that namespace as `cf:` only for
+readability; wire facts always carry the full absolute IRI.
+
+Every fact subject has exactly one `rdf:type` kind fact. The following is the
+complete accepted non-expression predicate set and cardinality table:
+
+| Subject kind | Predicate | Object type or target | Cardinality |
+|---|---|---|---|
+| `Class` | `rdf:type` | exactly `Class` | 1 |
+| `Class` | `rdfs:subClassOf` | `Class` | 0..1 |
+| `Class` | `cf:isMixin` | Boolean | 1 |
+| `Class` | `cf:usesMixin` | distinct `Class` with `isMixin=true` | 0..* |
+| `Class` | `cf:abstract` | Boolean | 1 |
+| `Slot` | `rdf:type` | exactly `Slot` | 1 |
+| `Slot`, `SlotUse` | `cf:valueRange` | `Class`, `Enum`, `Scalar`, or `SeedPrimitive` | 1 |
+| `Slot`, `SlotUse` | `cf:required` | Boolean | 1 |
+| `Slot`, `SlotUse` | `cf:multivalued` | Boolean | 1 |
+| `Slot`, `SlotUse` | `cf:identifier` | Boolean | 1 |
+| `Slot`, `SlotUse` | `cf:inlined` | Boolean | 1 |
+| `Slot`, `SlotUse` | `cf:equalsString` | string | 0..1 |
+| `Slot`, `SlotUse` | `cf:minimum` | canonical decimal lexical string | 0..1 |
+| `Slot`, `SlotUse` | `cf:maximum` | canonical decimal lexical string | 0..1 |
+| `Slot`, `SlotUse` | `cf:valuePresence` | string `PRESENT` or `ABSENT` | 0..1 |
+| `SlotUse` | `rdf:type` | exactly `SlotUse` | 1 |
+| `SlotUse` | `cf:onClass` | `Class` | 1 |
+| `SlotUse` | `cf:usesSlot` | `Slot` | 1 |
+| `Enum` | `rdf:type` | exactly `Enum` | 1 |
+| `Enum` | `cf:enumValue` | distinct string | 0..* |
+| `Scalar` | `rdf:type` | exactly `Scalar` | 1 |
+| `Scalar` | `cf:typeof` | `Scalar` or `SeedPrimitive` | 1 |
+
+The five trusted `SeedPrimitive` target IRIs are exactly `String`, `Integer`,
+`Float`, `Boolean`, and `DateTime` under the seed namespace. They are not XSD
+aliases and are not fact subjects requiring kind facts.
+
+The parent-plus-`usesMixin` graph is acyclic. Every `usesMixin` target has
+`isMixin=true`; repeated authored mixins refuse before facts under `OD-003`.
+The Scalar `typeof` graph is acyclic and terminates in exactly one seed
+primitive. Every non-seed identifier target resolves in the same fact set.
+
+Bounds are legal only when `valueRange` resolves through a Scalar chain to
+`Integer` or `Float`, and `minimum` cannot exceed `maximum`. `equalsString` is
+legal only for a String-resolving or Enum range. `inlined=true` is legal only
+for a Class range. `valuePresence=ABSENT` conflicts with `required=true` and
+with `equalsString`.
+
+A `Slot` can be an authoritative module-global declaration or a deterministic
+qualified class-local declaration, so the accepted `attribute_slot_usage`
+case is representable. The kind-specific predicate sets above are closed.
+Metamodel validation proves internal structural completeness. Source-to-fact
+completeness is separately proven by support-profile conformance and
+independent oracles.
+
+#### Canonical fact bytes
+
+The candidate canonicalization profile emits one compact UTF-8 JSON array.
+There is no byte-order mark, insignificant whitespace, or terminal newline.
+Each record emits members in lexicographic order, `object`, `predicate`, then
+`subject`. Records sort lexicographically by their complete canonical record
+bytes. Input member and record order are nonsemantic.
+
+JSON strings use `\"` and `\\` for quotation mark and reverse solidus, the
+short escapes `\b`, `\t`, `\n`, `\f`, and `\r`, and lowercase `\u00xx` for
+the remaining U+0000 through U+001F code points. Solidus and all other valid
+Unicode scalar values remain unescaped and are encoded directly as UTF-8.
+Lone surrogates and invalid UTF-8 refuse. Identifier code points are compared
+exactly. No Unicode normalization, CURIE expansion, prefix map, base IRI, or
+ambient context changes them.
+
+Numeric predicates carry a canonical decimal lexical JSON string, never a raw
+JSON number. Zero is `"0"`, including negative zero. Every other value has an
+optional `-`, an integer part without leading zero, and, when nonintegral, a
+fixed-point fraction with at least one digit and no trailing zero. Plus signs,
+exponents, nonfinite values, and lossy rounding refuse. Thus source values `5`,
+`5.0`, and `5e0` all produce object `"5"`. Predicate type distinguishes that
+lexical value from an ordinary string or identifier. Boolean predicates use
+JSON `true` or `false`; string `"true"` refuses.
+
+The following is one complete metamodel-valid positive fact set in exact
+canonical bytes. It contains class inheritance and a mixin, module-global slots,
+a complete `SlotUse`, an enum value, a Scalar terminating in the String seed
+primitive, and a numeric bound normalized to `"5"`:
+
+```json
+[{"object":"5","predicate":"https://malleus.dev/contract-facts/minimum","subject":"https://example.malleus.dev/domain/count"},{"object":"OPEN","predicate":"https://malleus.dev/contract-facts/enumValue","subject":"https://example.malleus.dev/domain/State"},{"object":"PRESENT","predicate":"https://malleus.dev/contract-facts/valuePresence","subject":"https://example.malleus.dev/domain/value"},{"object":"PRESENT","predicate":"https://malleus.dev/contract-facts/valuePresence","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":"https://example.malleus.dev/domain/BaseRecord","predicate":"http://www.w3.org/2000/01/rdf-schema#subClassOf","subject":"https://example.malleus.dev/domain/Record"},{"object":"https://example.malleus.dev/domain/Record","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":"https://example.malleus.dev/domain/ValueMixin","predicate":"https://malleus.dev/contract-facts/usesMixin","subject":"https://example.malleus.dev/domain/Record"},{"object":"https://example.malleus.dev/domain/value","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/BaseRecord"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/Record"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/ValueMixin"},{"object":"https://malleus.dev/contract-facts/Enum","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/State"},{"object":"https://malleus.dev/contract-facts/Integer","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/domain/count"},{"object":"https://malleus.dev/contract-facts/Scalar","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/TextCode"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/count"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/domain/value"},{"object":"https://malleus.dev/contract-facts/SlotUse","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/typeof","subject":"https://example.malleus.dev/domain/TextCode"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/domain/value"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/domain/BaseRecord"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/domain/Record"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/domain/ValueMixin"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/domain/count"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/domain/value"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/domain/count"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/domain/value"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":false,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/domain/BaseRecord"},{"object":false,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/domain/Record"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/domain/count"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/domain/value"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/domain/count"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/domain/value"},{"object":true,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/domain/ValueMixin"},{"object":true,"predicate":"https://malleus.dev/contract-facts/required","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"}]
+```
+
+The array contains 38 facts and 6,244 bytes. Its SHA-256 is
+`31db4d651f7a90f86466141193d806a5af58f8e09afa20dba838224b9361ca74`.
+
+#### Structural and semantic identity
+
+Structural subjects use a named, versioned, domain-separated SHA-256 URN.
+`SlotUse` identity is the SHA-256 of these exact canonical envelope bytes:
+
+```json
+{"class":"https://example.malleus.dev/domain/Record","domain":"malleus.contract-structure.slot-use/v0","slot":"https://example.malleus.dev/domain/value"}
+```
+
+The resulting example subject is
+`urn:malleus:contract-structure:slot-use:v0:sha256:5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b`
+in the complete array. The
+identity binds only the qualified class, qualified slot, domain, and version,
+never mutable constraints. Each `SlotUse` has exactly one `onClass` and one
+`usesSlot`. Core v0 emits no redundant inverse `hasUse` fact. Explicitly
+adopted slots retain the imported owner's qualified slot identifier; no local
+copy fact is created.
+
+An internal candidate fact digest hashes the canonical JSON envelope with
+members `canonicalization_profile`, `domain`, `fact`, `metamodel`, and
+`symbol_policy`. Its domain is `malleus.contract-fact/candidate-v0`; `fact` is
+the canonical three-member record. An internal candidate fact-set digest hashes
+the corresponding envelope whose domain is
+`malleus.contract-fact-set/candidate-v0` and whose `facts_sha256` member is the
+lowercase SHA-256 digest of the exact sorted canonical fact-array bytes. Both
+envelopes bind the exact content-addressed metamodel identity, candidate
+canonicalization-profile identity, and exact symbol-policy identity. These
+digests are computed, never supplied as a fourth fact member. They are internal
+candidate identities only. Stable public fact IDs remain blocked on `OD-006`
+and `OD-008` and require a later governed promotion.
+
+#### Whole-set validation and provenance
+
+Validation is atomic over the whole fact set. It checks completeness,
+predicate cardinality, object and target kind, required structural relations,
+declared acyclicity, exact duplicate records, and contradictions. An exact
+duplicate subject-predicate-object record refuses. Two distinct values for a
+maximum-cardinality-one predicate refuse. A multivalued predicate accepts
+distinct values only.
+
+Multiple derivations may converge on one semantic fact. All derivation
+provenance remains separately retained. A source default is emitted as an
+explicit fact. Equivalent implicit and explicit defaults therefore yield the
+same fact and internal candidate digest while retaining different provenance.
+Descriptions, source spans, diagnostics, compiler identity, and provenance do
+not affect semantic fact-set identity. A description-only edit leaves the
+canonical facts unchanged.
+
+A LinkML adapter and an independently owned direct-fact conformance input for
+this example must produce the same 38 metamodel-valid facts and the same exact
+canonical bytes. The direct form remains bootstrap and conformance input, not
+a public or second first-party authoring language and not a bypass around
+`OD-009`.
+
+An omitted LinkML range that the accepted adapter default profile resolves to
+String and an explicit String range both emit the same ordinary `valueRange`
+fact shown above. Their derivation records remain distinct outside the fact
+set. There is no generic `defaultValue` fact and no instance-default semantics
+in this seed. Changing only a description changes retained source and
+annotation provenance, but neither the facts nor canonical fact-array bytes.
+
+Counterexamples refuse a bare symbol, string `"true"` for a Boolean predicate,
+a raw JSON number, unknown predicate or member, incomplete `SlotUse`, duplicate
+fact, conflicting single-valued facts, null, array, nested object, nonfinite or
+noncanonical decimal wire value, a predicate illegal for the subject kind, a
+fact that tries to declare a seed primitive as a normal subject, a cycle, a
+`usesMixin` target whose `isMixin` fact is false, a bound on a nonnumeric
+range, `minimum` greater than `maximum`, `equalsString` on a
+non-String/non-Enum range, `inlined=true` on a non-Class range,
+`valuePresence=ABSENT` with `required=true` or `equalsString`, and every
+unclassified expression. Record and member order canonicalize to the same
+bytes. An adapter that cannot preserve an exact supported numeric value refuses
+rather than rounding.
+
+Only expression vocabulary remains with `OD-008`, which also maps source fields
+to this exact seed and any separately governed expression extension. It cannot
+silently change the seed without a new metamodel version. No `ChoiceGroup` or
+other expression predicate is accepted here. Bootstrap
+trusts one exact versioned seed `ContractMetamodel` at the boundary; it makes no
+recursive self-validation or shipped self-hosting claim.
+`NormativeAdmissionProfile` separately owns missing, null, reference, context,
+and state-transition behavior. Turtle remains a readable design projection,
+never the normative runtime wire.
+
+`OD-006` still owns roles and composition; `OD-007` and `OD-010` admission and
+context; `OD-008` field and expression classification; `OD-009` public
+promotion; `CC-D16` consumer-bundle bytes; and `CC-R07` and `CC-W01` the
+artifact envelope and persisted epoch. Diagnostic codes, module layout, and
+public APIs also remain open. This decision creates no compiler, public
+frontend, metamodel file, artifact, reader, package, or dependency.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-005`. `CC-D05` is complete.
+
 ### OD-011: resolver and import policy
 
 Decision state: ACCEPTED, explicit replaceable resolver, 2026-08-26
@@ -578,14 +787,13 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 15
+## Remaining decisions after revision 16
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
 
 | ID | Question | Blocks |
 |---|---|---|
-| OD-005 | Exact logical fact vocabulary and wire encoding | Canonical facts and identifiers |
 | OD-006 | One combined contract versus explicit protocol, domain, and governance roles | Consumer composition and bundle fields |
 | OD-007 | Protected governance partition versus separate governance graph | Normative admission profile |
 | OD-008 | Exact fields that are enforcing, identity-only, annotation-only, or rejected | Support profile and metamorphic tests |

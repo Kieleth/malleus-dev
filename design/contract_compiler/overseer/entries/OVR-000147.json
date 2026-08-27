@@ -1,0 +1,74 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-005"
+    ],
+    "consequences": [
+      "LinkML and independently owned direct-fact conformance input converge on the same metamodel-valid semantic facts and bytes.",
+      "Applied adapter defaults emit ordinary facts with separate provenance; runtime supplies no hidden frontend default."
+    ],
+    "constraints": [
+      "The exact versioned ContractMetamodel is semantic authority; JSON and any future JSON Schema are syntax only.",
+      "Use closed three-member atomic facts, exact full identifiers, canonical sorted UTF-8 JSON, canonical decimal lexical strings, and atomic whole-set refusal.",
+      "Bind the exact non-expression seed kinds, RDF vocabulary reuse, Malleus predicates, five seed primitives, cardinalities, target rules, and structural invariants.",
+      "Compute internal candidate fact and fact-set digests without promoting stable public fact IDs.",
+      "OD-008 retains source-field mapping and separately governed expression extension; it cannot silently change the seed. Roles, admission, promotion, bundle bytes, artifact and persisted-wire envelopes, diagnostics, modules, and public APIs retain separate authority."
+    ],
+    "decision_id": "OD-005",
+    "satisfies_workstreams": [
+      "CC-D05"
+    ],
+    "selected_option": "Ontology-powered atomic facts with exact non-expression seed and canonical JSON",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:ec0d5bac9e81d26b49f241a024183a504fb11a4434ba4afa4792c11026cd7e38",
+  "entry_id": "OVR-000147",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d0a5eaa9718c75f638d42c2623a1bb61f1dee3d5ebb7e1af1eb2720e36c88683",
+  "recorded_at": "2026-08-27T03:10:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-005-logical-fact-record-and-canonical-bytes",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-005",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000005",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000137",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000138",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D05",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 147,
+  "subject": {
+    "id": "OD-005",
+    "type": "DECISION"
+  },
+  "summary": "Accept ontology-powered atomic facts and exact canonical bytes.",
+  "why": "Atomic facts keep adapters replaceable and intent queryable while the exact seed metamodel, closed byte grammar, and fail-closed whole-set rules prevent hidden semantics. The selected cut is sufficient for the compiler seam without taking later role, admission, expression, artifact, or public API decisions."
+}

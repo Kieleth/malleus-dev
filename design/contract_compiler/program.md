@@ -101,12 +101,13 @@ gated by `OD-006`. Its practical
 meaning is explained in
 [`decisions.md`](decisions.md#od-001-consumer-bundle-manifest).
 
-Revision 15 also accepts `OD-002`, `OD-003`, `OD-004`, `OD-011`, `OD-013`, and
+Revision 16 also accepts `OD-002` through `OD-005`, `OD-011`, `OD-013`, and
 `OD-014`: exact slot-only adoption; pinned LinkML 1.11.1 as the replaceable
-default adapter; a typed persisted-wire hard break; one explicit resolver
-profile with strict Malleus defaults; one normal distribution including the
-compiler and LinkML; and the Quiet Bell Archive fixture/publication boundary.
-The exact rules and limitations are in [`decisions.md`](decisions.md).
+default adapter; a typed persisted-wire hard break; ontology-powered atomic
+facts in canonical JSON; one explicit resolver profile with strict Malleus
+defaults; one normal distribution including the compiler and LinkML; and the
+Quiet Bell Archive fixture/publication boundary. The exact rules and
+limitations are in [`decisions.md`](decisions.md).
 
 The operator excluded migration feature development from this foundation block.
 `OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
@@ -304,7 +305,7 @@ decisions remain open.
 | CC-D02 | Close OD-002 explicit adoption policy | CC-X02 | Bundled closure scan and collision matrix agree with policy |
 | CC-D03 | Close OD-003 LinkML versus legacy behavior | CC-X01 | Every observed case is classified without changing the measurements |
 | CC-D04 | Close OD-004 persisted-wire transition | CC-X04 | Operator-selected outcome matrix for every frozen input, before implementation |
-| CC-D05 | Close OD-005 logical fact vocabulary and wire encoding | CC-D01, CC-D02, CC-D03 | Candidate metamodel, examples, counterexamples, and decision record accepted |
+| CC-D05 | Close OD-005 logical fact vocabulary and wire encoding | CC-D01, CC-D02, CC-D03 | Ontology authority, atomic fact and byte grammar, internal candidate identity envelopes, examples, counterexamples, and decision record accepted |
 | CC-D06 | Close OD-006 contract roles | CC-D05 | Composition examples and consumer-boundary counterexamples accepted |
 | CC-D07 | Close OD-007 governance topology | CC-D06 | Admission examples distinguish protected partition and separate graph |
 | CC-D08 | Close OD-008 field classification | CC-D02, CC-D03, CC-D05 | Every supported field and Malleus annotation has one versioned classification |
@@ -317,10 +318,10 @@ decisions remain open.
 | CC-D15 | Close OD-001 consumer-bundle direction | none | Operator approves one bundle per consumer or explicitly defers it |
 | CC-D16 | Close exact consumer-bundle schema and canonical grammar | CC-D06, CC-D13, CC-D15 | Accepted fields, examples, counterexamples, and grammar, or a typed not-applicable record when OD-001 is deferred |
 
-No stable fact identifier begins before CC-D05, CC-D06, and CC-D08. No
-admission profile begins before CC-D07 and CC-D10. No production implementation
-begins before CC-D09. Research characterization may proceed without deciding
-outcomes.
+CC-D05 permits computed internal candidate fact and fact-set digests only.
+Stable public fact identifiers still wait for CC-D06 and CC-D08. No admission
+profile begins before CC-D07 and CC-D10. No production implementation begins
+before CC-D09. Research characterization may proceed without deciding outcomes.
 
 ### Wave 0: authority, docs, and conformance infrastructure
 

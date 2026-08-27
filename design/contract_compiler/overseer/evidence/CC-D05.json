@@ -1,0 +1,115 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 48271,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:aa95a572d01e288a91001b73d988b85558f3903850fe0f7d277df4ad849dcff2"
+    },
+    {
+      "byte_length": 32124,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:0cfbfd3aa16af08a7116832ca47289974aadeaa89831a828b89dc0898e8b52f9"
+    },
+    {
+      "byte_length": 16473,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:2cb781b4894641eff9d3e73a8430f670cc14218d65c8479e17c20fc8f7f2fb25"
+    },
+    {
+      "byte_length": 273160,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a"
+    },
+    {
+      "byte_length": 81279,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:d6ef329e4f5f5251193ac18b1a0602ab6bef84cbad5125d2a4cf159dd98617a8"
+    },
+    {
+      "byte_length": 87474,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:1d656c6c9937a0cecaac13c05b74bdd04096a12d113bcea6352c0331ec591b30"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:ad4f8342ffe7382f69681d06ba99529f029ee45e36a06fa0a0f09103e3989169"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:838409b6503ea0f845d0f0aa53327977a8eab271db027c7326121edb58a4618f"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:e6c97450890448f7f3dd3f1d8bde589945d1a2165facc98f5d603ac78f0986b2"
+    },
+    {
+      "byte_length": 75642,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:41dfe688da2fa8119bacf989553146f444a4214b08a9ec192404077c37106116"
+    },
+    {
+      "byte_length": 35374,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:c574ed89309f62d8da288f1aa83f53255cd63ff8b56d9a6f3ef4daa49e5b8db4"
+    },
+    {
+      "byte_length": 20589,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:da7326313e67e4b1b447849ae9abc9690a65dc7d676165fb1bae2712916621ee"
+    },
+    {
+      "byte_length": 2019,
+      "path": "design/contract_compiler/workstreams/CC-D05/manifest.json",
+      "sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356"
+    }
+  ],
+  "base_commit": "f178617059698eb5f70bcae1c661f69454b478e2",
+  "checks": [
+    {
+      "check_id": "ccd05-dependencies",
+      "method": "Match all three CC-D05 dependency bindings to the exact current cards, completion entries, entry hashes, and first integrated heads.",
+      "observed": "The zero-scope card binds CC-D01 at OVR-000005 and 55d9da3b...10824, plus CC-D02 and CC-D03 at OVR-000137 and OVR-000138 and first head f8139911...f0823, with each current card and completion hash exact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-seed-metamodel",
+      "method": "Inspect the accepted non-expression seed kinds, exact predicates, object and target kinds, cardinalities, seed primitives, structural rules, and whole-set invariants.",
+      "observed": "The seed closes Class, Slot, SlotUse, Enum, and Scalar under rdf:type, Class parent under rdfs:subClassOf, sixteen Malleus-specific predicates, five exact Malleus seed primitives, closed kind-specific cardinalities, target resolution, cycle, range, bound, presence, and structural SlotUse rules. A usesMixin edge requires a target whose isMixin fact is true.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-canonical-bytes",
+      "method": "Parse and independently canonicalize the complete neutral positive fact array and SlotUse structural envelope.",
+      "observed": "The example is 38 unique three-member facts in sorted compact UTF-8 JSON, 6244 bytes without a terminal newline, sha256 31db4d65...1ca74. The class-plus-slot envelope derives SlotUse URN sha256 5fc2d89b...6452b, whose complete effective facts include rdf:type SlotUse, onClass, usesSlot, valueRange, required, multivalued, identifier, inlined, and valuePresence.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-graph",
+      "method": "Parse all 28 Turtle projections and compare them to canonical graph revision 16, then inspect status uniqueness and dependency acyclicity.",
+      "observed": "Both graph forms contain the same 1510 triples with empty directed differences and sha256 9ef32e1d...d7d8a. All 302 status subjects have one status; the 103-node, 105-edge dependsOn graph is acyclic; OD-005 selects exactly AtomicOntologyPoweredCanonicalFactContract.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-boundaries",
+      "method": "Inspect fact identity, provenance, frontend parity, bootstrap, expression, admission, artifact, bundle, promotion, and public-identity boundaries.",
+      "observed": "Fact and fact-set digests are computed internal candidates only; defaults emit ordinary facts with external provenance; direct facts remain independently owned bootstrap/conformance input; the seed metamodel is trusted without self-hosting; source-field mapping and expression vocabulary remain at OD-008, which cannot silently change this seed; D06, D07/D10, D09, D16, R07, and W01 retain their separate authorities.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd05-zero-scope",
+      "method": "Inspect the card, integration row, selections, changed paths, candidate, worker-ledger, production, ontology, package, and dependency states.",
+      "observed": "CC-D05 has empty scopes, candidate NONE, ledger NOT_STARTED, and no selection. The change is design governance and hard tests only; it adds no src file, ontology YAML, public frontend, artifact, package, dependency, diagnostic code, stable public fact ID, or downstream state change.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies accepted governance and exact design bytes. It does not implement a compiler, metamodel loader, fact validator, adapter, artifact, runtime reader, diagnostic, public API, or package change.",
+    "Source-field mapping and expression vocabulary at OD-008, roles and composition, admission and context, public promotion, consumer-bundle bytes, artifact and persisted-wire envelopes, and stable public fact identities remain separately governed. OD-008 cannot silently change the accepted seed."
+  ],
+  "recorded_at": "2026-08-27T03:10:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D05"
+}

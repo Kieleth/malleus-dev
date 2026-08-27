@@ -172,6 +172,45 @@ delta.
    change. Alpha-renaming may be tested for graph isomorphism later, but does
    not imply identical canonical bytes or digest.
 
+## OD-005 atomic-fact conformance boundary
+
+The versioned `ContractMetamodel`, not JSON or a JSON Schema, decides semantic
+validity. A conforming fact input has exactly `subject`, `predicate`, and
+`object`; uses full absolute identifiers and exact Unicode code points; and
+canonicalizes to one compact, sorted UTF-8 JSON array with no terminal newline.
+The predicate declares the object type. Numeric objects are canonical decimal
+lexical strings; Boolean objects are JSON booleans. There is no coercion,
+embedded fact ID, provenance member, prefix context, or fallback interpretation.
+
+The positive feature slice covers `rdf:type` kinds, `rdfs:subClassOf`, mixin
+classification and use, a module-global or deterministic class-local `Slot`, a
+reified `SlotUse` with exactly one `onClass` and `usesSlot` plus `valueRange`,
+`required`, `multivalued`, `identifier`, and `inlined` facts, enum values,
+Scalar `typeof`, explicit-default and
+implicit-default convergence with distinct provenance, `5`/`5.0`/`5e0`
+convergence to `"5"`, and exact parity between the LinkML-derived facts and an
+independently owned direct-fact input. Direct facts remain bootstrap and
+conformance input only. They gain no public authoring or production authority.
+
+The negative slice refuses a bare or prefixed symbol, string `"true"` for a
+Boolean predicate, raw JSON numbers, unknown predicates or members, null,
+arrays, nested objects, an incomplete `SlotUse`, duplicate records, conflicting
+single-valued facts, nonfinite values, exponent or noncanonical decimal wire
+forms, an illegal kind/predicate pair, seed primitive used as a fact subject,
+invalid mixin or cycle, invalid bound/range pair, reversed bounds,
+`equalsString` on the wrong range, `inlined=true` on the wrong range,
+`valuePresence=ABSENT` in conflict with `required=true` or `equalsString`, and
+every expression pending `OD-008`. It proves that input member and record order
+do not change canonical bytes and that a description-only edit does not change
+semantic facts. Whole-set validation is atomic: completeness, cardinality,
+object and target kind, required structure, declared acyclicity, duplicates,
+and contradictions pass or refuse together.
+
+Internal candidate digests bind the exact metamodel, canonicalization profile,
+symbol policy, and canonical fact or ordered-fact digest. Stable public fact IDs
+remain blocked on `OD-006` and `OD-008`. The direct-fact bytes are not the
+persisted artifact envelope selected later by `CC-R07` and `CC-W01`.
+
 ## Acceptance-test matrix
 
 Every row defines the assigned themed-vertical slice, focused countercases, and
@@ -185,7 +224,7 @@ regression obligation.
 | AT-004 | Hierarchy and mixins | Examiner subtype and Agent mixin | Unknown parent, repeated mixin, order conflict | Exact ancestor and mixin facts or stable refusal |
 | AT-005 | Slot induction | Baseline and additive source | Bounds, explicit false, missing range, attribute versus slot | Exact effective constraints; every applied default is materialized with provenance |
 | AT-006 | Expressions | Locator exactly-one-of | Nested expression, unsupported combinator | Exact normalized expression or stable refusal |
-| AT-007 | Canonical facts | All implemented source versions | Key order, harmless spelling, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical canonical facts |
+| AT-007 | Canonical facts | Exact seed kinds and predicates, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null, array, nested object, noncanonical decimal, expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
 | AT-008 | Effective contract | Baseline facts and admission profile | Wrong profile, wrong grammar | Exact domain-separated identities and refusal |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |

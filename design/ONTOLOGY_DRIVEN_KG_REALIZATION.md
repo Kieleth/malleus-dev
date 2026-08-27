@@ -9,7 +9,7 @@ Decision authority: author
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
 contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
-`OD-004`, and `OD-011` through `OD-014`
+`OD-005`, and `OD-011` through `OD-014`
 
 Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, and 2026-08-26
 
@@ -19,8 +19,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 15,
-`sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322`
+revision 16,
+`sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`
 
 Evidence cutoff: 2026-08-26
 
@@ -1222,7 +1222,7 @@ backend, broad workload quality, or public capability. Those remain in
     conformance suite.
 
 The author accepted the contract compiler directions on 2026-08-24, the exact
-compiler baseline on 2026-08-25, and six blocking policies on 2026-08-26:
+compiler baseline on 2026-08-25, and seven blocking policies on 2026-08-26:
 
 1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
    break before 1.0, but implementation promotion remains gated by conformance.
@@ -1249,13 +1249,16 @@ compiler baseline on 2026-08-25, and six blocking policies on 2026-08-26:
    and classifies all nine CC-X01 observations.
 10. `OD-004` selects a new persisted-wire epoch and stable typed hard break,
     with no fallback, receipt, migration, translation, or rewrite.
-11. `OD-011` selects exactly one explicit resolver profile per compilation,
+11. `OD-005` selects ontology-powered atomic subject-predicate-object facts,
+    exact canonical JSON bytes, whole-set validation, provenance separation,
+    and internal candidate digests without promoting public fact IDs.
+12. `OD-011` selects exactly one explicit resolver profile per compilation,
     strict Malleus resolution by default, default-denied capabilities, retained
     exact provenance, no fallback chain, and cycle refusal.
-12. `OD-013` selects one future distribution whose normal installation includes
+13. `OD-013` selects one future distribution whose normal installation includes
     the compiler and LinkML while the artifact-backed runtime remains unable to
     import LinkML.
-13. `OD-014` accepts Quiet Bell Archive as the public working name, keeps its
+14. `OD-014` accepts Quiet Bell Archive as the public working name, keeps its
     vocabulary fixture-only, records the text/data authorship and Apache-2.0
     attestation, excludes visual assets, and makes public review digest-bound.
 
@@ -1349,6 +1352,12 @@ cc:OD-004 rdf:type mfg:DecisionRecord ;
     mfg:selects mfg:TypedPersistedWireEpochHardBreakProfile ;
     mfg:status mfg:AcceptedDesign .
 
+cc:OD-005 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:AtomicOntologyPoweredCanonicalFactContract ;
+    mfg:status mfg:AcceptedDesign .
+
 cc:OD-011 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
     mfg:decisionDate "2026-08-26" ;
@@ -1406,6 +1415,89 @@ mfg:LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile
     mfg:binds mfg:CCX01ExplicitFalseEqual ;
     mfg:binds mfg:CCX01DefaultRangeLinkMLExplicit ;
     mfg:binds mfg:CCX01AttributeSlotUsageLinkML ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:AtomicOntologyPoweredCanonicalFactContract rdf:type mfg:Boundary ;
+    mfg:binds mfg:ExactNonExpressionSeedContractMetamodel ;
+    mfg:binds mfg:AtomicCanonicalJSONFactProfileV0 ;
+    mfg:binds mfg:AbsoluteIdentifierExactUnicodeSymbolPolicyV0 ;
+    mfg:binds mfg:ContractMetamodelSemanticAuthorityOverJSONBoundary ;
+    mfg:binds mfg:ClosedThreeMemberCanonicalJSONFactWireBoundary ;
+    mfg:binds mfg:CanonicalDecimalLexicalNumericObjectBoundary ;
+    mfg:binds mfg:InternalCandidateDigestNotPublicIdentityBoundary ;
+    mfg:binds mfg:StructuralIdentityAndExternalProvenanceBoundary ;
+    mfg:binds mfg:FrontendDirectFactConformanceOnlyParityBoundary ;
+    mfg:binds mfg:ExactSeedMetamodelBootstrapTrustBoundary ;
+    mfg:binds mfg:ExpressionVocabularyDeferredToOD008Boundary ;
+    mfg:binds mfg:AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary ;
+    mfg:binds mfg:NoGenericDefaultValueOrRuntimeDefaultBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactNonExpressionSeedContractMetamodel rdf:type mfg:ContractMetamodel ;
+    mfg:binds mfg:ExactClassSeedFactRule ;
+    mfg:binds mfg:ExactSlotAndSlotUseSeedFactRule ;
+    mfg:binds mfg:ExactEnumSeedFactRule ;
+    mfg:binds mfg:ExactScalarAndSeedPrimitiveFactRule ;
+    mfg:binds mfg:ExactWholeSetSeedFactInvariant ;
+    mfg:binds mfg:SourceToFactCompletenessSeparateConformanceBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:AtomicCanonicalJSONFactProfileV0 rdf:type mfg:FactCanonicalizationProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:AbsoluteIdentifierExactUnicodeSymbolPolicyV0
+    rdf:type mfg:SymbolIdentityPolicy ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactClassSeedFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactSlotAndSlotUseSeedFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactEnumSeedFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactScalarAndSeedPrimitiveFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactWholeSetSeedFactInvariant rdf:type mfg:Invariant ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SourceToFactCompletenessSeparateConformanceBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ContractMetamodelSemanticAuthorityOverJSONBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ClosedThreeMemberCanonicalJSONFactWireBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:CanonicalDecimalLexicalNumericObjectBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:InternalCandidateDigestNotPublicIdentityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StructuralIdentityAndExternalProvenanceBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FrontendDirectFactConformanceOnlyParityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactSeedMetamodelBootstrapTrustBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExpressionVocabularyDeferredToOD008Boundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NoGenericDefaultValueOrRuntimeDefaultBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:TypedPersistedWireEpochHardBreakProfile rdf:type mfg:SupportProfile ;
@@ -1745,13 +1837,13 @@ Performed on 2026-08-26:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,446 RDF triples.
+   1,510 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,446 triples. Both directed set differences
+   the same 1,510 triples. Both directed set differences
    were empty.
 3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
    dependency cycle.
-4. All 281 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 302 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1763,11 +1855,11 @@ Performed on 2026-08-26:
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
    remains represented only by `OKG-D012`. `OD-012` has the same invariants
    with `decisionDate "2026-08-25"` and selects exactly the R3 release baseline.
-7. `OD-002` through `OD-004`, `OD-011`, `OD-013`, and `OD-014` have the same
+7. `OD-002` through `OD-005`, `OD-011`, `OD-013`, and `OD-014` have the same
    decision invariants with `decisionDate "2026-08-26"` and select exactly the
-   six accepted policy objects. Those objects bind the exact adoption,
-   divergence classification, hard-break, resolver, packaging, and themed
-   publication boundaries recorded by the decision workbook.
+   seven accepted policy objects. Those objects bind the exact adoption,
+   divergence classification, hard-break, atomic-fact, resolver, packaging,
+   and themed publication boundaries recorded by the decision workbook.
 8. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
    ANTLR, and setuptools coordinates. It additionally binds the exact
    `prefixcommons` input and local-version derivation, package and BSD 3-Clause
@@ -1788,10 +1880,10 @@ Performed on 2026-08-26:
 12. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-13. The canonical body contains 1,446 unique, lexically sorted N-Triples. Its
+13. The canonical body contains 1,510 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322`, and every
-   owned Markdown graph reference names revision 15 and that digest.
+   `9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`, and every
+   owned Markdown graph reference names revision 16 and that digest.
 14. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 15. None of the five owned Markdown documents or the canonical Turtle artifact
@@ -1800,5 +1892,5 @@ Performed on 2026-08-26:
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 15 was frozen. Existing GraphRecipe implementation
+rerun before revision 16 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

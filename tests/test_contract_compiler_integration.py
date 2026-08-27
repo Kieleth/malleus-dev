@@ -337,11 +337,12 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D02": ("CC-X02",),
         "CC-D03": ("CC-X01",),
         "CC-D04": ("CC-X04",),
+        "CC-D05": ("CC-D01", "CC-D02", "CC-D03"),
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 17
+    assert len(state.cards) == 18
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -359,6 +360,16 @@ def test_canonical_integration_manifest_is_valid() -> None:
         assert card["scopes"] == []
         assert workstream_states[workstream_id] == "COMPLETE"
         assert workstream_id not in state.selections
+    d05_responsibility = state.cards["CC-D05"]["responsibility"]
+    for phrase in (
+        "exact ontology-powered non-expression seed metamodel",
+        "atomic subject-predicate-object fact record",
+        "internal candidate digest envelopes",
+        "zero-scope decision",
+        "no compiler",
+        "stable public fact ID",
+    ):
+        assert phrase in d05_responsibility
 
 
 def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:

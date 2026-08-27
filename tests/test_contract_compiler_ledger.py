@@ -905,7 +905,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_16_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -923,13 +923,13 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1446
+    assert len(canonical) == 1510
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 15",
+        "# Design graph revision: 16",
         "# Evidence cutoff: 2026-08-26",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -946,7 +946,7 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 15,",
+            "revision 16,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -965,6 +965,7 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
         "OD-002": "ExactSlotOnlyExplicitAdoptionProfile",
         "OD-003": "LinkML1_11_1ReplaceableDefaultFrontendAdapterProfile",
         "OD-004": "TypedPersistedWireEpochHardBreakProfile",
+        "OD-005": "AtomicOntologyPoweredCanonicalFactContract",
         "OD-011": "ExplicitSingleResolverProfileSelection",
         "OD-013": "SingleDistributionCompilerIncludedPackagingTopology",
         "OD-014": "QuietBellArchiveFixturePublicationBoundary",
@@ -1016,6 +1017,29 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
             "KnowledgeGraphSnapshotTypedHardBreak",
             "ProtocolEnvelopeTypedHardBreakBeforeReplay",
             "EmbeddedGraphBaseAndCandidateNotReached",
+        },
+        "AtomicOntologyPoweredCanonicalFactContract": {
+            "ExactNonExpressionSeedContractMetamodel",
+            "AtomicCanonicalJSONFactProfileV0",
+            "AbsoluteIdentifierExactUnicodeSymbolPolicyV0",
+            "ContractMetamodelSemanticAuthorityOverJSONBoundary",
+            "ClosedThreeMemberCanonicalJSONFactWireBoundary",
+            "CanonicalDecimalLexicalNumericObjectBoundary",
+            "InternalCandidateDigestNotPublicIdentityBoundary",
+            "StructuralIdentityAndExternalProvenanceBoundary",
+            "FrontendDirectFactConformanceOnlyParityBoundary",
+            "ExactSeedMetamodelBootstrapTrustBoundary",
+            "ExpressionVocabularyDeferredToOD008Boundary",
+            "AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary",
+            "NoGenericDefaultValueOrRuntimeDefaultBoundary",
+        },
+        "ExactNonExpressionSeedContractMetamodel": {
+            "ExactClassSeedFactRule",
+            "ExactSlotAndSlotUseSeedFactRule",
+            "ExactEnumSeedFactRule",
+            "ExactScalarAndSeedPrimitiveFactRule",
+            "ExactWholeSetSeedFactInvariant",
+            "SourceToFactCompletenessSeparateConformanceBoundary",
         },
         "ExplicitSingleResolverProfileSelection": {
             "StrictMalleusResolverDefaultBoundary",
@@ -1088,7 +1112,7 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 281
+    assert len(statuses) == 302
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -1123,7 +1147,177 @@ def test_revision_15_graph_is_generated_from_all_turtle_projections() -> None:
     assert visited == len(nodes)
 
 
-def test_revision_15_conformance_rows_guard_closed_decisions() -> None:
+def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = decisions.split("### OD-005: logical fact record and canonical bytes", 1)[
+        1
+    ].split("### OD-011: resolver and import policy", 1)[0]
+    prose = " ".join(section.split())
+
+    assert "JSON and any future JSON Schema define syntax only." in prose
+    assert "wire facts always carry the full absolute IRI" in prose
+    assert "Only expression vocabulary remains with `OD-008`" in prose
+    assert "final predicate inventory" not in prose
+    assert "There is no generic `defaultValue` fact" in prose
+    assert "not a public or second first-party authoring language" in prose
+    assert "never the normative runtime wire" in prose
+    assert "stable public fact ids remain blocked on `od-006`" in prose.casefold()
+    for rule in (
+        "The parent-plus-`usesMixin` graph is acyclic.",
+        "Every `usesMixin` target has `isMixin=true`",
+        "The Scalar `typeof` graph is acyclic and terminates in exactly one seed primitive.",
+        "Every non-seed identifier target resolves in the same fact set.",
+        "Bounds are legal only when `valueRange` resolves through a Scalar chain to `Integer` or `Float`",
+        "`valuePresence=ABSENT` conflicts with `required=true` and with `equalsString`.",
+        "deterministic qualified class-local declaration",
+        "Source-to-fact completeness is separately proven by support-profile conformance and independent oracles.",
+    ):
+        assert rule in prose
+    for forbidden in (
+        "example.malleus.dev/archive",
+        "ReviewState",
+        "Shelfmark",
+        "Quiet Bell",
+        "NinthQuire",
+        "http://www.w3.org/2001/XMLSchema",
+    ):
+        assert forbidden not in section
+
+    expected_seed_rows = {
+        "| `Class` | `rdf:type` | exactly `Class` | 1 |",
+        "| `Class` | `rdfs:subClassOf` | `Class` | 0..1 |",
+        "| `Class` | `cf:isMixin` | Boolean | 1 |",
+        "| `Class` | `cf:usesMixin` | distinct `Class` with `isMixin=true` | 0..* |",
+        "| `Class` | `cf:abstract` | Boolean | 1 |",
+        "| `Slot` | `rdf:type` | exactly `Slot` | 1 |",
+        "| `Slot`, `SlotUse` | `cf:valueRange` | `Class`, `Enum`, `Scalar`, or `SeedPrimitive` | 1 |",
+        "| `Slot`, `SlotUse` | `cf:required` | Boolean | 1 |",
+        "| `Slot`, `SlotUse` | `cf:multivalued` | Boolean | 1 |",
+        "| `Slot`, `SlotUse` | `cf:identifier` | Boolean | 1 |",
+        "| `Slot`, `SlotUse` | `cf:inlined` | Boolean | 1 |",
+        "| `Slot`, `SlotUse` | `cf:equalsString` | string | 0..1 |",
+        "| `Slot`, `SlotUse` | `cf:minimum` | canonical decimal lexical string | 0..1 |",
+        "| `Slot`, `SlotUse` | `cf:maximum` | canonical decimal lexical string | 0..1 |",
+        "| `Slot`, `SlotUse` | `cf:valuePresence` | string `PRESENT` or `ABSENT` | 0..1 |",
+        "| `SlotUse` | `cf:onClass` | `Class` | 1 |",
+        "| `SlotUse` | `cf:usesSlot` | `Slot` | 1 |",
+        "| `SlotUse` | `rdf:type` | exactly `SlotUse` | 1 |",
+        "| `Enum` | `rdf:type` | exactly `Enum` | 1 |",
+        "| `Enum` | `cf:enumValue` | distinct string | 0..* |",
+        "| `Scalar` | `rdf:type` | exactly `Scalar` | 1 |",
+        "| `Scalar` | `cf:typeof` | `Scalar` or `SeedPrimitive` | 1 |",
+    }
+    assert expected_seed_rows <= set(section.splitlines())
+    for primitive in ("String", "Integer", "Float", "Boolean", "DateTime"):
+        assert f"`{primitive}`" in section
+
+    json_blocks = [
+        token.content.removesuffix("\n")
+        for token in MarkdownIt("commonmark").parse(section)
+        if token.type == "fence" and token.info.strip() == "json"
+    ]
+    fact_source = next(block for block in json_blocks if block.startswith("["))
+    assert "\n" not in fact_source
+    facts = json.loads(fact_source)
+    assert len(facts) == 38
+    assert canonical_json(facts) == fact_source
+    records = [canonical_json(fact) for fact in facts]
+    assert records == sorted(records)
+    assert len(records) == len(set(records))
+    assert all(set(fact) == {"subject", "predicate", "object"} for fact in facts)
+    assert all(isinstance(fact["object"], (str, bool)) for fact in facts)
+    source_bytes = fact_source.encode("utf-8")
+    source_digest = hashlib.sha256(source_bytes).hexdigest()
+    assert len(source_bytes) == 6244
+    assert source_digest == (
+        "31db4d651f7a90f86466141193d806a5af58f8e09afa20dba838224b9361ca74"
+    )
+    assert (
+        f"The array contains {len(facts)} facts and {len(source_bytes):,} bytes. "
+        "Its SHA-256 is"
+    ) in section
+    assert f"`{source_digest}`" in section
+    assert f"produce the same {len(facts)} metamodel-valid facts" in section
+
+    envelope_source = next(
+        block
+        for block in json_blocks
+        if block.startswith('{"class":')
+        and "malleus.contract-structure.slot-use/v0" in block
+    )
+    envelope = json.loads(envelope_source)
+    assert canonical_json(envelope) == envelope_source
+    slot_use = (
+        "urn:malleus:contract-structure:slot-use:v0:sha256:"
+        + hashlib.sha256(envelope_source.encode("utf-8")).hexdigest()
+    )
+    assert slot_use == (
+        "urn:malleus:contract-structure:slot-use:v0:sha256:"
+        "5fc2d89b8614ce6fdc915e0e9fe735e22660e480afab71d26dc1329760b6452b"
+    )
+    slot_use_facts = {
+        fact["predicate"]: fact["object"]
+        for fact in facts
+        if fact["subject"] == slot_use
+    }
+    assert slot_use_facts == {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": (
+            "https://malleus.dev/contract-facts/SlotUse"
+        ),
+        "https://malleus.dev/contract-facts/identifier": False,
+        "https://malleus.dev/contract-facts/inlined": False,
+        "https://malleus.dev/contract-facts/multivalued": False,
+        "https://malleus.dev/contract-facts/onClass": (
+            "https://example.malleus.dev/domain/Record"
+        ),
+        "https://malleus.dev/contract-facts/required": True,
+        "https://malleus.dev/contract-facts/usesSlot": (
+            "https://example.malleus.dev/domain/value"
+        ),
+        "https://malleus.dev/contract-facts/valuePresence": "PRESENT",
+        "https://malleus.dev/contract-facts/valueRange": (
+            "https://malleus.dev/contract-facts/String"
+        ),
+    }
+    seed_primitives = {
+        f"https://malleus.dev/contract-facts/{name}"
+        for name in ("String", "Integer", "Float", "Boolean", "DateTime")
+    }
+    assert not seed_primitives & {fact["subject"] for fact in facts}
+    assert not any(
+        fact["predicate"] == "https://malleus.dev/contract-facts/defaultValue"
+        for fact in facts
+    )
+    evidence_source = (
+        ROOT
+        / "design"
+        / "contract_compiler"
+        / "overseer"
+        / "evidence"
+        / "CC-D05.json"
+    ).read_text(encoding="utf-8")
+    evidence = json.loads(evidence_source)
+    assert {check["check_id"] for check in evidence["checks"]} == {
+        "ccd05-dependencies",
+        "ccd05-seed-metamodel",
+        "ccd05-canonical-bytes",
+        "ccd05-graph",
+        "ccd05-boundaries",
+        "ccd05-zero-scope",
+    }
+    for forbidden in (
+        "Quiet Bell",
+        "NinthQuire",
+        "ReviewState",
+        "Shelfmark",
+        "example.malleus.dev/archive",
+    ):
+        assert forbidden not in evidence_source
+
+
+def test_revision_16_conformance_rows_guard_closed_decisions() -> None:
     rows = {
         cells[0]: line.casefold()
         for line in (
@@ -1150,6 +1344,15 @@ def test_revision_15_conformance_rows_guard_closed_decisions() -> None:
         assert phrase in rows["AT-003"]
     for phrase in ("every applied default", "materialized", "provenance"):
         assert phrase in rows["AT-005"]
+    for phrase in (
+        "exact seed kinds and predicates",
+        "complete reified slotuse",
+        "seed subject",
+        "invalid bound or range",
+        "identical metamodel-valid atomic facts",
+        "refuse atomically",
+    ):
+        assert phrase in rows["AT-007"]
 
     program = (
         ROOT / "design" / "contract_compiler" / "program.md"

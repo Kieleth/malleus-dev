@@ -1,0 +1,47 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:f10c3b8a7aeeefb1fb7f1e6fe4cee58468bb29fe5a3c243dfa7c05afb9297492",
+        "completion_entry_hash": "sha256:1fc95a260356e61a96d5f439bf80ff0c5832068dd54ae5979a241d14dfac2cd9",
+        "completion_entry_id": "OVR-000005",
+        "integrated_head": "55d9da3b58d77d49bdcf449c376a26231d410824",
+        "workstream_id": "CC-D01"
+      },
+      {
+        "card_sha256": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7",
+        "completion_entry_hash": "sha256:01550bd8c179637dfdfa0cdd648fb59704e830e1f3f9547264e9363df2a2f0b3",
+        "completion_entry_id": "OVR-000137",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D02"
+      },
+      {
+        "card_sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
+        "completion_entry_hash": "sha256:95eb2b94409029554120beb0e1552a9dbd39151b0d7eb18c1c5469003af489e2",
+        "completion_entry_id": "OVR-000138",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D03"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-005 with the exact ontology-powered non-expression seed metamodel, atomic subject-predicate-object fact record, canonical JSON byte grammar, internal candidate digest envelopes, whole-set invariants, neutral examples, counterexamples, and deferred boundaries. This zero-scope decision creates no compiler, ontology YAML, public frontend, stable public fact ID, artifact, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D05"
+}

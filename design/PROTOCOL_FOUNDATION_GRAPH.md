@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 15,
-`sha256:e31382559ccb8605021267fb308f7db75bdb36f4b08eda8ed80889d186ae4322`
+revision 16,
+`sha256:9ef32e1dcf7bbfea737f9b2beea3764d1fb369c2b0a485b1ea5384e8318d7d8a`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -681,17 +681,47 @@ mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:MaterializationHead .
 
 ### 4.3 Contract facts
 
-Facts require stable identities because diagnostics, changes, authority, and
-migrations must cite them. Class slot use is reified because a global slot and
-its class-specific use can enforce different constraints.
+`OD-005` accepts ontology-powered atomic facts. The versioned
+`ContractMetamodel` is semantic authority for legal subject kinds, predicates,
+object and target kinds, cardinalities, required structure, declared
+acyclicity, and whole-set invariants. JSON is transport and hash material only.
 
-The candidate identity rule is a reified `ContractFact` record with canonical
-subject, predicate, and object fields. Its ID is a domain-separated digest over
-the contract-metamodel identity, fact-canonicalization profile, symbol-identity
-policy, and canonical fact record. The Turtle shown here is a readable
-projection. Bare triple bytes alone are not the identity rule.
+Each closed fact record has exactly `subject`, `predicate`, and `object`.
+Canonical bytes are one compact UTF-8 JSON array, with record members and
+records sorted by the accepted candidate grammar and no terminal newline.
+Subjects and predicates are full absolute identifiers under exact Unicode code
+points. Predicate type determines whether the object is an identifier, Boolean,
+string, or canonical decimal lexical string. Unknown or mistyped meaning,
+coercion, prefixes, hidden context, duplicate facts, and contradictions refuse.
 
-The following is an example of logical meaning, not the selected wire format:
+The exact non-expression seed kinds are `Class`, `Slot`, `SlotUse`, `Enum`, and
+`Scalar`. Kind reuses `rdf:type`; Class parent reuses `rdfs:subClassOf`. The
+closed Malleus predicate set is `isMixin`, `usesMixin`, `abstract`,
+`valueRange`, `required`, `multivalued`, `identifier`, `inlined`,
+`equalsString`, `minimum`, `maximum`, `valuePresence`, `onClass`, `usesSlot`,
+`enumValue`, and `typeof`, with the kind-specific types and cardinalities in
+`OD-005`. The five trusted seed primitive IRIs are `String`, `Integer`,
+`Float`, `Boolean`, and `DateTime` in the contract-facts namespace. They are
+targets, not normal fact subjects.
+
+Class slot use remains reified because a global slot and its class-specific use
+can enforce different constraints. A `SlotUse` subject is a versioned,
+domain-separated SHA-256 URN derived only from its qualified class and qualified
+slot, never its mutable constraints. It has exactly one `onClass` and one
+`usesSlot`; the KISS core emits no redundant inverse fact. Explicit adoption
+uses the imported owner's qualified slot identifier.
+
+Fact and fact-set digests are computed from domain-separated candidate
+envelopes binding the exact metamodel, canonicalization profile, symbol policy,
+and canonical fact or ordered fact-array digest. They are internal candidate
+identities, not stable public fact IDs, which remain blocked on `OD-006` and
+`OD-008`. Only expression vocabulary remains deferred to `OD-008`; the exact
+seed cannot change silently. Provenance, descriptions, source spans, diagnostics, and compiler
+identity remain outside semantic fact-set identity. Equivalent explicit and
+implicit defaults yield the same fact with distinct retained provenance.
+
+The Turtle below remains a readable projection of logical meaning. It is not
+the normative runtime wire or persisted artifact envelope:
 
 ```turtle
 mfg:ContractClass rdf:type rdfs:Class ;

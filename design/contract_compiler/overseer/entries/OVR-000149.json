@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "ccd05-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T03:10:03Z",
+    "claims": [
+      "OD-005 selects the exact ontology-powered non-expression seed: five fact subject kinds, RDF type and subclass reuse, sixteen Malleus predicates, five Malleus seed primitives, exact cardinalities, target rules, and whole-set invariants.",
+      "The complete neutral positive example contains 38 unique three-member facts in 6244 canonical UTF-8 JSON bytes, sha256 31db4d65...1ca74; its complete SlotUse binds the structurally derived 5fc2d89b...6452b URN.",
+      "Canonical graph revision 16 and all five Markdown projections have exact 1510-triple parity, 302 single-status subjects, and an acyclic 103-node, 105-edge dependsOn graph.",
+      "Metamodel validity is separate from source-to-fact completeness; LinkML and direct-fact conformance input converge without promoting a second public frontend, and applied defaults emit ordinary facts with separate provenance.",
+      "CC-D05 is zero-scope with candidate NONE, worker ledger NOT_STARTED, no selection, no stable public fact ID, and no implementation, ontology YAML, package, dependency, artifact, or downstream decision change."
+    ],
+    "limitations": [
+      "This verifies governance and exact design bytes, not a shipped compiler, metamodel, validator, frontend, artifact, reader, diagnostic, or public API.",
+      "OD-008 retains source-field mapping and expression vocabulary and cannot silently change the seed; all other recorded residual authorities remain open."
+    ]
+  },
+  "entry_hash": "sha256:e6c4902865c5d163a00ea82a4a867f84b7c37e732f5d711594589043d644cff5",
+  "entry_id": "OVR-000149",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9d86c40ae6e6a246f883b8821aac840fe440664942ee559333d53c48af4621a7",
+  "recorded_at": "2026-08-27T03:10:03Z",
+  "references": [
+    {
+      "digest": "sha256:30aabf6b43de8b0e371eb9a9ce5fa6ac09102d2b0c7136cfe2fd7171284fa7c1",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D05.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000147",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000148",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-005",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D05",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 149,
+  "subject": {
+    "id": "CC-D05-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the OD-005 seed metamodel and canonical fact contract.",
+  "why": "The retained report binds the exact governance artifacts and its independent mechanical checks cover dependency authority, the complete seed, canonical example bytes, graph parity, deferred boundaries, and zero implementation scope."
+}
