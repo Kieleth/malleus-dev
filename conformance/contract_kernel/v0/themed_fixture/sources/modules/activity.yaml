@@ -1,0 +1,63 @@
+id: https://malleus.dev/conformance/quiet-bell/activity
+name: quiet_bell_activity
+version: 1.0.0
+title: Quiet Bell Archive Activity
+description: Citation, review, and discrepancy declarations for the Quiet Bell Archive fixture.
+default_range: string
+prefixes:
+  quiet: https://malleus.dev/conformance/quiet-bell/
+imports:
+  - foundation
+  - entities
+slots:
+  reviewed_relation:
+    range: CitesFolioRelation
+    required: true
+    description: Existing citation relation examined by a seal review.
+  reviewed_by:
+    range: ArchiveExaminer
+    required: true
+    description: Existing archive examiner responsible for the review.
+classes:
+  CitesFolioRelation:
+    is_a: Relation
+    class_uri: quiet:CitesFolioRelation
+    description: Citation from one inquiry dossier to one retained folio.
+    slot_usage:
+      relation_type:
+        range: ArchiveRelationKind
+        required: true
+        equals_string: CITES_FOLIO
+      source_id:
+        range: InquiryDossier
+      target_id:
+        range: EvidenceFolio
+  SealReviewEvent:
+    is_a: Event
+    class_uri: quiet:SealReviewEvent
+    description: Examination of the seal attached to one cited folio.
+    slots:
+      - reviewed_relation
+      - reviewed_by
+    slot_usage:
+      event_type:
+        range: ArchiveEventKind
+        required: true
+        equals_string: SEAL_REVIEW
+      reviewed_relation:
+        range: CitesFolioRelation
+        required: true
+      reviewed_by:
+        range: ArchiveExaminer
+        required: true
+  SealDiscrepancySignal:
+    is_a: Signal
+    class_uri: quiet:SealDiscrepancySignal
+    description: Derived signal that a cited folio carries an inconsistent seal.
+    slots:
+      - certainty
+    slot_usage:
+      signal_type:
+        range: ArchiveSignalKind
+        required: true
+        equals_string: SEAL_DISCREPANCY

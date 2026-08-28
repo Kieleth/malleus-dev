@@ -1,0 +1,28 @@
+id: https://malleus.dev/conformance/quiet-bell
+name: quiet_bell_archive
+version: 1.0.0
+title: Quiet Bell Archive
+description: Baseline archive inquiry into the seal discrepancy in the Ash Meridian survey folio.
+default_range: string
+prefixes:
+  quiet: https://malleus.dev/conformance/quiet-bell/
+imports:
+  - ../modules/entities
+  - ../modules/activity
+slots:
+  dossier_code:
+    range: string
+    required: true
+    description: Stable archive code assigned to the inquiry dossier.
+  assigned_examiner:
+    range: ArchiveExaminer
+    required: true
+    description: Existing examiner assigned to the inquiry dossier.
+classes:
+  InquiryDossier:
+    is_a: Entity
+    class_uri: quiet:InquiryDossier
+    description: Archive dossier collecting one investigation and its retained evidence.
+    slots:
+      - dossier_code
+      - assigned_examiner

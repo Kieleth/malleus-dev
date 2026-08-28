@@ -1,0 +1,36 @@
+id: https://malleus.dev/conformance/quiet-bell
+name: quiet_bell_archive
+version: 1.1.0
+title: Quiet Bell Archive with Marginal Notes
+description: Additive revision allowing an examiner note beside an otherwise unchanged inquiry dossier.
+default_range: string
+prefixes:
+  quiet: https://malleus.dev/conformance/quiet-bell/
+imports:
+  - ../modules/entities
+  - ../modules/activity
+slots:
+  dossier_code:
+    range: string
+    required: true
+    description: Stable archive code assigned to the inquiry dossier.
+  assigned_examiner:
+    range: ArchiveExaminer
+    required: true
+    description: Existing examiner assigned to the inquiry dossier.
+  marginal_note:
+    range: string
+    required: false
+    multivalued: false
+    identifier: false
+    inlined: false
+    description: Optional examiner note retained beside the dossier.
+classes:
+  InquiryDossier:
+    is_a: Entity
+    class_uri: quiet:InquiryDossier
+    description: Archive dossier collecting one investigation and its retained evidence.
+    slots:
+      - dossier_code
+      - assigned_examiner
+      - marginal_note

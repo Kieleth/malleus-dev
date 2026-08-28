@@ -1,0 +1,47 @@
+id: https://malleus.dev/conformance/quiet-bell/entities
+name: quiet_bell_entities
+version: 1.0.0
+title: Quiet Bell Archive Entities
+description: Examiner, locator, and folio declarations for the Quiet Bell Archive fixture.
+default_range: string
+prefixes:
+  quiet: https://malleus.dev/conformance/quiet-bell/
+imports:
+  - foundation
+classes:
+  ArchiveExaminer:
+    is_a: Entity
+    mixins:
+      - Agent
+    class_uri: quiet:ArchiveExaminer
+    description: Examiner responsible for inspecting a retained archive folio.
+    slot_usage:
+      agent_type:
+        required: true
+        equals_string: ARCHIVE_EXAMINER
+  EvidenceLocator:
+    description: Inlined locator carrying exactly one shelfmark or content digest.
+    slots:
+      - shelfmark
+      - content_digest
+    exactly_one_of:
+      - slot_conditions:
+          shelfmark:
+            required: true
+          content_digest:
+            value_presence: ABSENT
+      - slot_conditions:
+          content_digest:
+            required: true
+          shelfmark:
+            value_presence: ABSENT
+  EvidenceFolio:
+    is_a: Entity
+    class_uri: quiet:EvidenceFolio
+    description: Retained document examined during an archive inquiry.
+    attributes:
+      locator:
+        range: EvidenceLocator
+        required: true
+        inlined: true
+        description: The folio locator retained inside the folio record.

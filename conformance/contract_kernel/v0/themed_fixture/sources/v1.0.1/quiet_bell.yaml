@@ -1,0 +1,28 @@
+description: Presentation revision of the Ash Meridian folio inquiry, with unchanged enforcing declarations.
+title: The Quiet Bell Archive
+version: 1.0.1
+name: quiet_bell_archive_presentation
+id: https://malleus.dev/conformance/quiet-bell
+prefixes:
+  quiet: https://malleus.dev/conformance/quiet-bell/
+default_range: string
+imports:
+  - ../modules/activity
+  - ../modules/entities
+classes:
+  InquiryDossier:
+    description: Retained inquiry dossier for the disputed survey-folio seal.
+    class_uri: quiet:InquiryDossier
+    slots:
+      - assigned_examiner
+      - dossier_code
+    is_a: Entity
+slots:
+  assigned_examiner:
+    description: Existing examiner assigned to the retained inquiry dossier.
+    required: true
+    range: ArchiveExaminer
+  dossier_code:
+    description: Stable archive code assigned to the retained inquiry dossier.
+    required: true
+    range: string

@@ -1,0 +1,118 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 1821,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/activity.yaml",
+      "sha256": "sha256:66814b70e6756f8038afc9aa7b4344f07be509a08b952473cb410b1c59df9f54"
+    },
+    {
+      "byte_length": 1378,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/entities.yaml",
+      "sha256": "sha256:b9076cf744f59a1aefc5e2e5d347cb5e5f14481df5ba1e177ea19315a26c529f"
+    },
+    {
+      "byte_length": 1166,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/foundation.yaml",
+      "sha256": "sha256:2fe7824e048e474fb33be09239cd249b9303d307327d9e5ce2d9eca8cc535948"
+    },
+    {
+      "byte_length": 845,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.0/quiet_bell.yaml",
+      "sha256": "sha256:2b93cf1a25439d3d7dcc67556429d72e9783373b7283794a10f99137ed6c5a7a"
+    },
+    {
+      "byte_length": 880,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.1/quiet_bell.yaml",
+      "sha256": "sha256:5a7b56c07301426c21d4dc68356549450ac0a0f2fd40c92cb9cf6033aa469f80"
+    },
+    {
+      "byte_length": 1081,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.1.0/quiet_bell.yaml",
+      "sha256": "sha256:faeeb2e7013400a5930793f42058464e727715aa7658f35a6340b791e059c698"
+    },
+    {
+      "byte_length": 15184,
+      "path": "tests/contract_compiler/test_themed_source_corpus.py",
+      "sha256": "sha256:cdc501f9b2b161cc764cb6c4a44f795fb3796bd23b1f0dbfef16cca1e5a306cd"
+    }
+  ],
+  "base_commit": "388b610ef1d8bfb135db5f981d3acac6641e5d78",
+  "checks": [
+    {
+      "check_id": "cc011-red",
+      "method": "Run the complete fixed CC-011 source-owner test after repairing its malformed-YAML error normalization and before the reserved source tree exists.",
+      "observed": "The run produced exactly 5 failures and 8 passes. Membership saw an empty tree; the remaining four failures were FileNotFoundError for the first authorized source member, modules/activity.yaml. No compiler, oracle, or unrelated test failed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-loader-guard",
+      "method": "Exercise duplicate root and nested keys plus YAML directives, document markers, anchors, aliases, explicit tags, merge keys, and non-JSON-shaped implicit values through the source-owner loader.",
+      "observed": "An initial malformed directive escaped as PyYAML ScannerError. The loader now converts every scanner or parser YAMLError to its ValueError refusal contract, and all 7 retained malformed-source mutations pass alongside direct duplicate-key refusal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-green",
+      "method": "Run tests/contract_compiler/test_themed_source_corpus.py and scoped Ruff against the final minimum source corpus.",
+      "observed": "All 13 fixed source-owner tests passed in 0.07 seconds and scoped Ruff passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-source-slice",
+      "method": "Inspect exact source membership, raw YAML controls, the local import graph, and the seven accepted Quiet Bell declarations without invoking a compiler.",
+      "observed": "Exactly 6 UTF-8 LF YAML files form three version roots over foundation, entities, and activity modules. Each root imports entities and activity; both paths reach foundation, activity also imports entities, and foundation imports only linkml:types and malleus. The graph is closed for local members, nested, diamond-shaped, and acyclic. The source declares exactly ArchiveExaminer, InquiryDossier, EvidenceFolio, EvidenceLocator, CitesFolioRelation, SealReviewEvent, and SealDiscrepancySignal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-source-shapes",
+      "method": "Compare the parsed authored input with the accepted themed concepts and D08 source-shape boundary only, without deriving facts.",
+      "observed": "The corpus carries Entity inheritance, Agent mixin use, a String Scalar, null permissible-value bodies, global and local slots, authored false, numeric bounds, inlined EvidenceLocator data with one flat exactly-one group, dossier-to-folio Entity endpoint ranges, an Event-to-Relation reference, and a Signal whose inherited scalar bearer remains unremodeled. This is source evidence only and states no compiler outcome.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-version-deltas",
+      "method": "Erase only D08 presentation members and normalize only the accepted unordered root import and class-slot sequences, then compare v1.0.0 with v1.0.1 and remove the one declared v1.1.0 addition before comparison.",
+      "observed": "v1.0.1 has different raw bytes, presentation text, map order, import order, and class-slot order but the same authored semantic projection. v1.1.0 adds only optional String slot marginal_note with four explicit false values and one InquiryDossier use; removing that field restores the baseline projection. No compiled identity or fact equality is claimed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-requirements-boundary",
+      "method": "Bind the source contribution to the neutral CC-018 registry and scan every parsed source value for oracle and expected-output vocabulary.",
+      "observed": "The source vectors contribute only to linkml-profile-positive, linkml-profile-metamorphic, and closed-composition-delta. They contain no canonical facts, diagnostics, expected artifact, expected facts, expected outcome, operation trace, or oracle. Other shared obligations remain with independent input, oracle, compiler, and runtime owners.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-authorship-boundary",
+      "method": "Compare the exact CC-D14 attestation and visual-asset exclusion with the source-only membership and themed vocabulary.",
+      "observed": "The exact authority remains `Luis Guzman Lorenzo is the author and rights holder for the original Quiet Bell text/data, licensed Apache-2.0`. The six members are original Quiet Bell YAML text/data only. No image, font, logo, visual asset, public page, or publication manifest is created.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-affected",
+      "method": "Run the CC-011 source test, CC-018 semantic-requirements test, and CC-010 conformance-protocol test together.",
+      "observed": "All 43 affected tests passed in 0.38 seconds.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-regression",
+      "method": "Run the complete tests/contract_compiler directory after freezing the six source files and test.",
+      "observed": "All 65 current contract-compiler tests passed in 0.50 seconds, including concurrent non-overlapping feature and neutral input work visible in the shared tree.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-package",
+      "method": "Review the exact CC-011 scope against compiler, runtime, package, publication, and release boundaries.",
+      "observed": "PACKAGE NOT_APPLICABLE. CC-011 adds repository-local authored conformance input, its fixed test, and this report. It changes no compiler, resolver, runtime, public API, distribution, installed data, Docker image, public asset, or release claim.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-011 owns authored LinkML source bytes only. Independent direct facts, expected facts, artifacts, diagnostics, operation traces, decisions, outcomes, and every compiled-result claim remain outside this workstream.",
+    "A direct LinkML SchemaView check resolves the nested bare `malleus` import relative to the foundation module and reports FileNotFoundError. This is retained resolver evidence, not an alternate import-policy choice: CC-R01 must apply the selected explicit strict Malleus resolver and CC-011 makes no resolver-success claim.",
+    "The source contribution covers only three applicable CC-018 requirements. Atomic-fact parity and refusal, complete composition, and runtime behavior require independently owned corpora and later CC-R stages.",
+    "The new source files remain unlisted and unchecksummed until a later integration-owner transaction reviews all paired input and oracle members. CC-011 publishes no corpus membership.",
+    "The CC-D14 attestation covers original Quiet Bell text/data only. Future public publication and every visual asset remain subject to the separate digest-bound CC-PUB01 review gate."
+  ],
+  "recorded_at": "2026-08-28T21:16:28Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-011"
+}

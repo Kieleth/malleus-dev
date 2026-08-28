@@ -1,0 +1,40 @@
+id: https://malleus.dev/conformance/quiet-bell/foundation
+name: quiet_bell_foundation
+version: 1.0.0
+title: Quiet Bell Archive Foundation
+description: Shared value types and controlled terms for the Quiet Bell Archive fixture.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  quiet: https://malleus.dev/conformance/quiet-bell/
+imports:
+  - linkml:types
+  - malleus
+types:
+  ArchiveShelfmark:
+    typeof: string
+    uri: quiet:ArchiveShelfmark
+    description: Shelfmark retained exactly as written by the archive.
+enums:
+  ArchiveEventKind:
+    permissible_values:
+      SEAL_REVIEW:
+  ArchiveRelationKind:
+    permissible_values:
+      CITES_FOLIO:
+  ArchiveSignalKind:
+    permissible_values:
+      SEAL_DISCREPANCY:
+slots:
+  shelfmark:
+    range: ArchiveShelfmark
+    description: Physical shelfmark assigned to a retained folio.
+  content_digest:
+    range: string
+    description: Content digest used when a physical shelfmark is unavailable.
+  certainty:
+    range: float
+    minimum_value: 0
+    maximum_value: 1
+    description: Confidence assigned to a discrepancy on the closed zero-to-one scale.
