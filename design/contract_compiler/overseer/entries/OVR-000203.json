@@ -1,0 +1,132 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012",
+      "CC-014",
+      "CC-016"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e5ada0e9cff0824c59ae66dd1d78be68eb27dfe0746612f984801bbe36ad9d11",
+        "before_digest": "sha256:a7da712d45a34e2c50e373b53f2fb7271162a7a524e43709035a62c6dcfb5f39",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:766231ea19d68ee2cdace51c8bef02ddb05e71a944849bc8d2967b6b419eda08",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-012-activation.json"
+      },
+      {
+        "after_digest": "sha256:041f4a46e41a7deeb0ecdd918c1619e7e80920b260c799ffa6dd1454099a68de",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-014-activation.json"
+      },
+      {
+        "after_digest": "sha256:f8ec005c29881150175b1c4c5ab2fa14f7d6339cd08f8e0d65108661aac37f1e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-016-activation.json"
+      },
+      {
+        "after_digest": "sha256:99d5202a25652fe9785f99a893b5e8998dff6b9ce2aa8d11a8d3c8ae08b83e5e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-012/manifest.json"
+      },
+      {
+        "after_digest": "sha256:d3e6a3d59f96e2a8e5ac2602cf46952e4c82bc25a053a92a5697688983b084c7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-014/manifest.json"
+      },
+      {
+        "after_digest": "sha256:eee4228caf2867e3686be7a0d201a7468fb8726aabd298d61485e4703c3989e4",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-016/manifest.json"
+      },
+      {
+        "after_digest": "sha256:7b4f76c3fb4d6f38e13ce8b0f8347c1e1d081c0a3c5a4797d2bd2c7db1a0f545",
+        "before_digest": "sha256:f75d31f84ccc87f3fde620cf7065c100255ea7a905a09ca9378d386ad12810e9",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b6f104d996292579071654f696736c98c70cd0827a3200ee6f6b91d65ecad2ed",
+  "entry_id": "OVR-000203",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c056a7c1a73fc0047fd4cc7c5f58006b91bef83fa0269658c870763c99bf5f50",
+  "recorded_at": "2026-08-28T22:33:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:766231ea19d68ee2cdace51c8bef02ddb05e71a944849bc8d2967b6b419eda08",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:041f4a46e41a7deeb0ecdd918c1619e7e80920b260c799ffa6dd1454099a68de",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-014-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:f8ec005c29881150175b1c4c5ab2fa14f7d6339cd08f8e0d65108661aac37f1e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-016-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 203,
+  "subject": {
+    "id": "oracle-workstreams-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-012, CC-014, and CC-016 oracle boundaries.",
+  "why": "All direct dependencies are complete and exactly bound. Three distinct workers may now own only the CC-010-defined oracle prefixes, canonical reports, and fixed tests. Existing owner separation remains sufficient, and this joint registration creates no oracle content, corpus publication, candidate, worker ledger, selection, compiler, or CC-R implementation."
+}

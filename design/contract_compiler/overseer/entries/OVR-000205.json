@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Content production waits for operator approval of fixture-local private resolver, profile, configuration, media-type, and source-blob tokens; CC-R07 retains runtime artifact bytes and wire grammar."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Author only independently derived themed source descriptors, import graph, declarations, bindings, elaboration, facts, and logical artifact expectations under the exact CC-010 themed oracle prefix, with no runtime artifact bytes or wire grammar.",
+      "Use accepted decisions and completed CC-011 sources, and write expected values by hand rather than exporting them from LinkML, OntologyRegistry, or the implementation under test.",
+      "Keep source and trace inputs, compiler and runtime implementation, public API, package, Docker, release, corpus publication, selection, integration, and every CC-R stage outside CC-012."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000203",
+      "OVR-000204"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-012"
+  },
+  "entry_hash": "sha256:d11b2ab1f394c25b0e4390b8421171b22b52a87fe10df27c9fc6fe353bf8de8c",
+  "entry_id": "OVR-000205",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:71dd7988838d1c091e325ec2eb0e21c4bdb9690ffe01b1034a793671720bbd10",
+  "recorded_at": "2026-08-28T22:33:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000203",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000204",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 205,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-012 themed-oracle workstream.",
+  "why": "The exact dependency, oracle, scope, and owner-separation checks pass. This activation creates no expected values, candidate, selection, or worker ledger. The assigned worker may TDD only the three scoped outputs and must record genuine RED plus append-only worker evidence before eligibility."
+}

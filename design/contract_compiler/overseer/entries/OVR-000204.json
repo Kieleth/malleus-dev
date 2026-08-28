@@ -1,0 +1,78 @@
+{
+  "actor": {
+    "id": "oracle-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T22:33:01Z",
+    "claims": [
+      "CC-012, CC-014, and CC-016 each bind their direct dependencies in exact program order to current cards, COMPLETE entries and hashes, and first authority commits.",
+      "The three FORMAL cards assign three distinct oracle workers and own exactly the fixed CC-010 oracle prefixes, canonical worker reports, and fixed validation tests named by their cards.",
+      "Every oracle owner differs from its paired input owner and the CC-018 requirements owner. The unchanged canonical owner policy is sufficient.",
+      "All three cards keep candidate NONE, ledger NOT_STARTED, and selection absent. No oracle content, corpus publication, compiler, runtime, or CC-R work was created.",
+      "The fixed progress-safe activation test produced genuine RED on the three ABSENT registry rows and passes after exact registration except for states supplied by the following append-only transitions."
+    ],
+    "limitations": [
+      "This verifies activation readiness and boundary integrity only. It does not implement or complete any oracle workstream.",
+      "CC-014 content waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal corpus cases.",
+      "Oracle content waits for operator approval of the minimal private refusal and relations JSON shapes.",
+      "CC-012 content waits for operator approval of fixture-local private resolver, profile, configuration, media-type, and source-blob tokens. CC-R07 retains runtime artifact bytes and wire grammar.",
+      "Each assigned worker must derive expected values by hand from accepted decisions, record genuine implementation RED, and append worker TDD evidence before candidate eligibility.",
+      "Corpus membership and checksums remain a later integration-owner transaction after independently reviewed input and oracle candidates exist."
+    ]
+  },
+  "entry_hash": "sha256:71dd7988838d1c091e325ec2eb0e21c4bdb9690ffe01b1034a793671720bbd10",
+  "entry_id": "OVR-000204",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b6f104d996292579071654f696736c98c70cd0827a3200ee6f6b91d65ecad2ed",
+  "recorded_at": "2026-08-28T22:33:01Z",
+  "references": [
+    {
+      "digest": "sha256:766231ea19d68ee2cdace51c8bef02ddb05e71a944849bc8d2967b6b419eda08",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:041f4a46e41a7deeb0ecdd918c1619e7e80920b260c799ffa6dd1454099a68de",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-014-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:f8ec005c29881150175b1c4c5ab2fa14f7d6339cd08f8e0d65108661aac37f1e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-016-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000203",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 204,
+  "subject": {
+    "id": "oracle-workstreams-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact three oracle-workstream activation boundaries.",
+  "why": "Formal activation requires retained mechanical proof that the three oracle owners consume only accepted authority, have exact nonoverlapping scopes, remain distinct from input and requirements owners, and create no expected values or implementation before their own TDD work begins."
+}

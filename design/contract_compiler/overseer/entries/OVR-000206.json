@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Author only independently derived feature-case expected compilation and refusal values under the exact CC-010 feature oracle prefix.",
+      "Use accepted decisions and completed CC-013 inputs, and write expected values by hand rather than exporting them from LinkML, OntologyRegistry, or the implementation under test.",
+      "Keep input sources, semantic and production-policy decisions, compiler and runtime implementation, public API, package, Docker, release, corpus publication, selection, integration, and every CC-R stage outside CC-014."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000203",
+      "OVR-000204"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-014"
+  },
+  "entry_hash": "sha256:00459fc55aae97b9585502e48d089a34991ed8e39db102562876b536a095455d",
+  "entry_id": "OVR-000206",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d11b2ab1f394c25b0e4390b8421171b22b52a87fe10df27c9fc6fe353bf8de8c",
+  "recorded_at": "2026-08-28T22:33:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000203",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000204",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 206,
+  "subject": {
+    "id": "CC-014",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-014 feature-oracle workstream.",
+  "why": "The exact dependency, oracle, scope, and owner-separation checks pass. This activation creates no expected values, candidate, selection, or worker ledger. The assigned worker may TDD only the three scoped outputs and must record genuine RED plus append-only worker evidence before eligibility."
+}

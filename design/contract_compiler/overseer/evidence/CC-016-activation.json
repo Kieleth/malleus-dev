@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23643,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:e5ada0e9cff0824c59ae66dd1d78be68eb27dfe0746612f984801bbe36ad9d11"
+    },
+    {
+      "byte_length": 3437,
+      "path": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "sha256": "sha256:eee4228caf2867e3686be7a0d201a7468fb8726aabd298d61485e4703c3989e4"
+    },
+    {
+      "byte_length": 75632,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:7b4f76c3fb4d6f38e13ce8b0f8347c1e1d081c0a3c5a4797d2bd2c7db1a0f545"
+    }
+  ],
+  "base_commit": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
+  "checks": [
+    {
+      "check_id": "cc016-activation-red",
+      "method": "Run the fixed three-case oracle activation test before registering any oracle card.",
+      "observed": "The test produced exactly three expected failures. CC-016 failed because its registry row was ABSENT rather than PRESENT; no neutral oracle, worker report, or oracle test existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-dependency-readiness",
+      "method": "Bind direct dependencies in program order to current card digests, exact COMPLETE entries and hashes, and first authority commits.",
+      "observed": "CC-010, CC-D05, CC-D06, CC-D08, and CC-015 are COMPLETE and PRESENT, and all five exact bindings validate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-oracle-boundary",
+      "method": "Compare the card with both CC-010 neutral oracle prefixes and the accepted Wave 0 CC-016 deliverable.",
+      "observed": "CC-016 owns neutral_domain/oracle and neutral_domain/traces/oracle plus its canonical report and fixed test. Sources, operation inputs, compiler, runtime, corpus, and checksum work remain outside the card.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-owner-separation",
+      "method": "Validate the unchanged canonical owner policy and compare assigned identities for CC-015, CC-016, and CC-018.",
+      "observed": "The assigned neutral oracle owner differs from the neutral input owner and requirements owner. The three oracle owners are also distinct. No policy expansion is needed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-kiss-activation",
+      "method": "Inspect the card, registry row, selection list, worker ledger, changed paths, and absent oracle content trees.",
+      "observed": "Candidate remains NONE, ledger remains NOT_STARTED, selection is absent, and activation creates no oracle content or implementation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies only the CC-016 activation boundary. It does not implement or complete neutral compilation or operation-outcome oracles.",
+    "Oracle content production remains blocked on the minimal private refusal and relations JSON shapes. This activation selects no shape.",
+    "The assigned worker must derive oracle values by hand from accepted decisions and record genuine implementation RED plus append-only worker evidence before candidate eligibility.",
+    "Corpus membership, checksums, source or operation-input changes, compiler behavior, and every CC-R stage remain separate work."
+  ],
+  "recorded_at": "2026-08-28T22:32:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-016"
+}

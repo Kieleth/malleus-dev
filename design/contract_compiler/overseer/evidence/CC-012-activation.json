@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23643,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:e5ada0e9cff0824c59ae66dd1d78be68eb27dfe0746612f984801bbe36ad9d11"
+    },
+    {
+      "byte_length": 4124,
+      "path": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "sha256": "sha256:99d5202a25652fe9785f99a893b5e8998dff6b9ce2aa8d11a8d3c8ae08b83e5e"
+    },
+    {
+      "byte_length": 75632,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:7b4f76c3fb4d6f38e13ce8b0f8347c1e1d081c0a3c5a4797d2bd2c7db1a0f545"
+    }
+  ],
+  "base_commit": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
+  "checks": [
+    {
+      "check_id": "cc012-activation-red",
+      "method": "Run the fixed three-case oracle activation test before registering any oracle card.",
+      "observed": "The test produced exactly three expected failures. CC-012 failed because its registry row was ABSENT rather than PRESENT; no themed oracle, worker report, or oracle test existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-dependency-readiness",
+      "method": "Bind direct dependencies in program order to current card digests, exact COMPLETE entries and hashes, and first authority commits.",
+      "observed": "CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, and CC-011 are COMPLETE and PRESENT, and all seven exact bindings validate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-oracle-boundary",
+      "method": "Compare the card with the CC-010 themed oracle prefix and the accepted Wave 0 CC-012 deliverable.",
+      "observed": "CC-012 owns only themed_fixture/oracle plus its canonical report and fixed test. Source, direct-input, trace, compiler, runtime, corpus, and checksum work remain outside the card.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-owner-separation",
+      "method": "Validate the unchanged canonical owner policy and compare assigned identities for CC-011, CC-012, and CC-018.",
+      "observed": "The assigned themed oracle owner differs from the themed source owner and requirements owner. The three oracle owners are also distinct. No policy expansion is needed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-kiss-activation",
+      "method": "Inspect the card, registry row, selection list, worker ledger, changed paths, and absent oracle content tree.",
+      "observed": "Candidate remains NONE, ledger remains NOT_STARTED, selection is absent, and activation creates no oracle content or implementation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies only the CC-012 activation boundary. It does not implement or complete the themed compilation oracles.",
+    "Oracle content production remains blocked until the operator approves fixture-local private resolver, profile, configuration, media-type, and source-blob tokens. This activation selects none of them and makes no public token contract.",
+    "CC-R07 retains runtime artifact bytes and wire grammar. CC-012 may record only independently derived logical artifact expectations.",
+    "The assigned worker must derive oracle values by hand from accepted decisions and record genuine implementation RED plus append-only worker evidence before candidate eligibility.",
+    "Corpus membership, checksums, source changes, compiler behavior, and every CC-R stage remain separate work."
+  ],
+  "recorded_at": "2026-08-28T22:32:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

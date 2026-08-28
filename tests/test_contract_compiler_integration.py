@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 from dataclasses import replace
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -393,7 +394,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 27
+    assert len(state.cards) == 30
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -808,6 +809,293 @@ def test_input_workstream_activation_boundaries_are_exact(
         "CC-R work",
     ):
         assert required in responsibility
+
+
+@pytest.mark.parametrize(
+    (
+        "workstream_id",
+        "assignment",
+        "paired_input_id",
+        "scopes",
+        "required_phrases",
+    ),
+    (
+        (
+            "CC-012",
+            {
+                "owner_id": "worker:cc012-themed-oracles",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc012_themed_oracles",
+            },
+            "CC-011",
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/themed_fixture/oracle",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-012.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_themed_compilation_oracles.py",
+                },
+            ],
+            (
+                "Author only independently derived themed expected compilation artifacts",
+                "source descriptors",
+                "import graph",
+                "declarations",
+                "bindings",
+                "elaboration",
+                "facts",
+                "logical artifact expectations",
+                "Create no source or trace input, runtime artifact bytes or wire grammar",
+            ),
+        ),
+        (
+            "CC-014",
+            {
+                "owner_id": "worker:cc014-feature-oracles",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc014_feature_oracles",
+            },
+            "CC-013",
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/feature_cases/oracle",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-014.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_feature_case_oracles.py",
+                },
+            ],
+            (
+                "Author only independently derived feature-case expected values",
+                "CC-013 inputs",
+                "no input source",
+            ),
+        ),
+        (
+            "CC-016",
+            {
+                "owner_id": "worker:cc016-neutral-oracles",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc016_neutral_oracles",
+            },
+            "CC-015",
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/neutral_domain/oracle",
+                },
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/neutral_domain/traces/oracle",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-016.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_neutral_domain_oracles.py",
+                },
+            ],
+            (
+                "Author only independently derived neutral-domain expected values",
+                "source compilation",
+                "operation outcomes",
+                "no source or operation input",
+            ),
+        ),
+    ),
+)
+def test_oracle_workstream_activation_boundaries_are_exact(
+    workstream_id: str,
+    assignment: dict[str, str],
+    paired_input_id: str,
+    scopes: list[dict[str, str]],
+    required_phrases: tuple[str, ...],
+) -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, workstream_id)
+    assert row["card"]["state"] == "PRESENT"
+    path = CONTRACT / row["card"]["path"]
+    source = path.read_bytes()
+    assert row["card"]["byte_length"] == len(source)
+    assert row["card"]["sha256"] == _digest(source)
+    card = _read_json(path)
+    cards = {
+        current_id: _read_json(
+            _card_path(INTEGRATION, _registry_row(manifest, current_id))
+        )
+        for current_id in (
+            paired_input_id,
+            workstream_id,
+            "CC-018",
+        )
+    }
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
+
+    assert card["workstream_id"] == row["workstream_id"] == workstream_id
+    assert card["assignment"] == assignment
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == load_program_registry(PROGRAM)[workstream_id]
+    )
+    assert len(
+        {current["assignment"]["owner_id"] for current in cards.values()}
+    ) == len(cards)
+    assert card["scopes"] == scopes
+    assert (
+        workstream_states[workstream_id],
+        card["candidate"]["state"],
+        card["ledger"]["state"],
+    ) in {
+        ("ACTIVE", "NONE", "NOT_STARTED"),
+        ("COMPLETE", "ELIGIBLE", "RECORDED"),
+    }
+    assert workstream_id not in manifest["selections"]
+    responsibility = card["responsibility"]
+    for required in required_phrases + (
+        "by hand",
+        "LinkML",
+        "OntologyRegistry",
+        "implementation under test",
+        "compiler or runtime implementation",
+        "public API",
+        "package",
+        "Docker",
+        "release",
+        "corpus or checksum publication",
+        "CC-R work",
+    ):
+        assert required in responsibility
+
+
+@pytest.mark.parametrize("workstream_id", ("CC-012", "CC-014", "CC-016"))
+def test_oracle_activation_report_follows_its_base_commit(
+    workstream_id: str,
+) -> None:
+    report = _read_json(
+        CONTRACT / "overseer" / "evidence" / f"{workstream_id}-activation.json"
+    )
+    base_commit = report["base_commit"]
+    _git(ROOT, "cat-file", "-e", f"{base_commit}^{{commit}}")
+    base_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", base_commit)
+    )
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in _raw_overseer_state().entries[-5:]
+    )
+
+    assert report_time > base_time
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+
+
+def test_oracle_workstream_activation_transaction_is_exact() -> None:
+    workstream_ids = ("CC-012", "CC-014", "CC-016")
+    ledger = _raw_overseer_state()
+    transaction = ledger.entries[-5:]
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000203",
+        "OVR-000204",
+        "OVR-000205",
+        "OVR-000206",
+        "OVR-000207",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "oracle-workstreams-activation-boundary",
+        "oracle-workstreams-activation-verification",
+        *workstream_ids,
+    )
+    revision_paths = {
+        document["path"] for document in transaction[0]["data"]["documents"]
+    }
+    assert revision_paths == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-012-activation.json",
+        "design/contract_compiler/overseer/evidence/CC-014-activation.json",
+        "design/contract_compiler/overseer/evidence/CC-016-activation.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "design/contract_compiler/workstreams/CC-014/manifest.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    forbidden_paths = (
+        "conformance/contract_kernel/v0/corpus.json",
+        "conformance/contract_kernel/v0/checksums.json",
+        "conformance/contract_kernel/v0/themed_fixture/oracle",
+        "conformance/contract_kernel/v0/feature_cases/oracle",
+        "conformance/contract_kernel/v0/neutral_domain/oracle",
+        "conformance/contract_kernel/v0/neutral_domain/traces/oracle",
+        "conformance/contract_compiler/v0/evidence/CC-012.json",
+        "conformance/contract_compiler/v0/evidence/CC-014.json",
+        "conformance/contract_compiler/v0/evidence/CC-016.json",
+        "tests/contract_compiler/test_themed_compilation_oracles.py",
+        "tests/contract_compiler/test_feature_case_oracles.py",
+        "tests/contract_compiler/test_neutral_domain_oracles.py",
+    )
+    assert revision_paths.isdisjoint(forbidden_paths)
+
+    manifest = _read_json(INTEGRATION)
+    owner_ids = {
+        _read_json(_card_path(INTEGRATION, _registry_row(manifest, workstream_id)))[
+            "assignment"
+        ]["owner_id"]
+        for workstream_id in workstream_ids
+    }
+    assert len(owner_ids) == len(workstream_ids)
+    blockers = {
+        "CC-012": [
+            "Content production waits for operator approval of fixture-local private resolver, profile, configuration, media-type, and source-blob tokens; CC-R07 retains runtime artifact bytes and wire grammar."
+        ],
+        "CC-014": [
+            "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes."
+        ],
+        "CC-016": [
+            "Content production waits for operator approval of minimal private refusal and relations JSON shapes."
+        ],
+    }
+    for offset, workstream_id in enumerate(workstream_ids, start=2):
+        transition = transaction[offset]
+        assert transition["data"]["workstream_id"] == workstream_id
+        assert transition["data"]["previous_state"] == "PLANNED"
+        assert transition["data"]["new_state"] == "ACTIVE"
+        assert transition["data"]["bootstrap"] is True
+        assert transition["data"]["blockers"] == blockers[workstream_id]
+        assert transition["data"]["evidence_entry_ids"] == [
+            "OVR-000203",
+            "OVR-000204",
+        ]
 
 
 def test_cc018_completion_checkpoint_is_exact() -> None:
@@ -1712,6 +2000,28 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
 
     for workstream_id in ("CC-011", "CC-013", "CC-015"):
         _rewrite_card(manifest_path, manifest, workstream_id, rebind_active_input)
+
+    for workstream_id, paired_input_id in (
+        ("CC-012", "CC-011"),
+        ("CC-014", "CC-013"),
+        ("CC-016", "CC-015"),
+    ):
+        paired_input_digest = _registry_row(manifest, paired_input_id)["card"]["sha256"]
+
+        def rebind_active_oracle(card: dict[str, Any]) -> None:
+            bindings = {
+                binding["workstream_id"]: binding
+                for binding in card["authorization"]["dependency_bindings"]
+            }
+            bindings["CC-010"]["card_sha256"] = cc010_digest
+            bindings[paired_input_id]["card_sha256"] = paired_input_digest
+
+        _rewrite_card(
+            manifest_path,
+            manifest,
+            workstream_id,
+            rebind_active_oracle,
+        )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 

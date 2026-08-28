@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Content production waits for operator approval of minimal private refusal and relations JSON shapes."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Author only independently derived neutral source-compilation and operation-outcome values under both exact CC-010 neutral oracle prefixes.",
+      "Use accepted decisions and completed CC-015 inputs, and write expected values by hand rather than exporting them from LinkML, OntologyRegistry, or the implementation under test.",
+      "Keep sources and operation inputs, themed vocabulary, compiler and runtime implementation, public API, package, Docker, release, corpus publication, selection, integration, and every CC-R stage outside CC-016."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000203",
+      "OVR-000204"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-016"
+  },
+  "entry_hash": "sha256:68c118e51ecdf0eb92b789cfe8ba99903e0fc907484ddfb6811e34f6938a1f22",
+  "entry_id": "OVR-000207",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:00459fc55aae97b9585502e48d089a34991ed8e39db102562876b536a095455d",
+  "recorded_at": "2026-08-28T22:33:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000203",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000204",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 207,
+  "subject": {
+    "id": "CC-016",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-016 neutral-oracle workstream.",
+  "why": "The exact dependency, two-root oracle, scope, and owner-separation checks pass. This activation creates no expected values, candidate, selection, or worker ledger. The assigned worker may TDD only the four scoped outputs and must record genuine RED plus append-only worker evidence before eligibility."
+}

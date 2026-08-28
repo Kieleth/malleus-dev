@@ -585,7 +585,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 4124,
+        "path": "workstreams/CC-012/manifest.json",
+        "sha256": "sha256:99d5202a25652fe9785f99a893b5e8998dff6b9ce2aa8d11a8d3c8ae08b83e5e",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-010",
@@ -615,7 +618,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 3662,
+        "path": "workstreams/CC-014/manifest.json",
+        "sha256": "sha256:d3e6a3d59f96e2a8e5ac2602cf46952e4c82bc25a053a92a5697688983b084c7",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-010",
@@ -644,7 +650,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 3437,
+        "path": "workstreams/CC-016/manifest.json",
+        "sha256": "sha256:eee4228caf2867e3686be7a0d201a7468fb8726aabd298d61485e4703c3989e4",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-010",
