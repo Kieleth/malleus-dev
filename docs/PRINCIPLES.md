@@ -21,33 +21,42 @@ consequence of it or a limit on it.
 
 ## 1. Encoding is the step you cannot skip
 
-Between a source and a conclusion there has to be something typed.
+Between a source and a conclusion there has to be an identified, typed
+intermediate.
 
-You cannot check a sentence. You can check a tuple: a subject in a declared
-class, a predicate from a declared enum, an object in a declared range, and a
-citation. Every guarantee malleus offers operates on that typed intermediate.
+Malleus cannot mechanically gate untyped prose. OD-005 selects a subject,
+predicate, and object interpreted under a declared contract as the canonical
+contract-fact atom. The production compiler and runtime API do not exist yet,
+and a complete semantic change may require several records admitted atomically.
 Range checks, endpoint contracts, executable rules, atomic staging, assent,
-bitemporal replay: none of them can operate on prose.
+and bitemporal replay operate on typed records or atomic packages under that
+contract. Evidence-bearing records additionally bind their sources. Citations
+are not present on every protocol record.
 
-So a system that goes text to answer with no typed middle has nowhere to put a
-gate. It can be careful. It cannot be checked.
+So a system that goes from text to answer with no typed middle has nowhere to
+put a semantic commit gate. It can be careful. Malleus cannot check it.
 
-This is also the whole shape of the answer to a model that invents things. The
-gate does not go on the reasoning, which is free and should stay free. It goes
-on the commit. A model may think in sentences and must commit in tuples, and
-the tuple either satisfies the schema or comes back rejected with the
-constraint it violated.
+This is also the whole shape of the answer to Shelob inventing things. The gate
+does not go on the reasoning, which is free and should stay free. It goes on the
+commit. Shelob may reason in sentences and must commit through typed records or
+atomic packages. The package either satisfies the bound contract or comes back
+rejected with the constraint it violated.
 
 The limit, stated in the same breath: encoding a domain does not make the
-encoding correct. Whether the schema captures the world is a separate claim
-needing separate evidence, and no amount of validation supplies it.
+encoding correct. Davis, Shrobe, and Szolovits describe a knowledge
+representation as a selective surrogate and a set of ontological commitments.
+Gruber defines an ontology as an explicit specification of a conceptualization.
+The contract therefore selects what Malleus can attend to and infer. Whether
+that selection adequately represents the domain is a separate claim needing
+separate evidence, and no amount of structural validation supplies it.
 
 ## 2. A tuple should point at bytes
 
-Every asserted tuple should name its source, and the reference should be
-byte-exact: the quoted span verified as a verbatim substring of the named
-source at write time, and the source content-addressed so that a changed
-source should invalidate the citation rather than refresh a cache.
+Every evidence-bearing assertion should name its source, and the reference
+should be byte-exact: the quoted span verified as a verbatim substring of the
+named source at write time, with the source content-addressed. Changed bytes
+create a new source artifact. Whether the prior source becomes stale or is
+superseded requires a separate, explicit policy relation.
 
 That property is what turns "we preserved the original intent" from a claim
 about diligence into a statement anyone can recheck. It is also the property
@@ -160,7 +169,67 @@ repair input. Ambiguity and unsupported meaning reject before effects.
 The `malleus-dev` maintainer skill turns this principle into a stage-contract
 and replacement checklist.
 
-## 7. Scale is not a result
+## 7. The ledger is authority; governed read stores are projections
+
+The protocol ledger records the ordered history of what Malleus proposed,
+checked, decided, and applied. It is the authority for those protocol
+commitments. It is not factual truth about the domain.
+
+The complete projection contract Malleus is working toward requires identified
+inputs, initial state, projector, contract and interpretation profiles, side
+inputs, transaction prefix, and valid-time query. The proposed model is:
+
+```text
+accepted_history(t) =
+  fold(projector, initial_base, verified_protocol_prefix(t), side_inputs)
+
+view(t, v) =
+  resolve(accepted_history(t), interpretation_profile, valid_time=v)
+```
+
+This is the log-primary lineage articulated by Kreps and Kleppmann, combined
+with Malleus's semantic and epistemic boundaries. If a store has an independent
+write path, it is another authority and needs reconciliation. A future closure
+manifest should refuse a missing replay input and localize divergence rather
+than guess. Core does not yet provide that generic mechanism.
+
+The current core supplies the JSONL protocol authority and an in-memory
+NetworkX accepted projection. It does not yet ship generic SQLite, central
+store, portal, or arbitrary-backend projections. Chain validation detects
+changes that violate event identities or hash links. Clean removal of complete
+trailing records leaves a valid prefix. Direct `ProtocolLedger.replay()` and
+`AcceptedGraphProjector.current()` can compare the complete ledger with an
+authentic, independently retained expected head and event count. Historical
+`.as_of()` can bind its selected prefix and separately bind the containing
+ledger. A selected-prefix checkpoint alone remains valid after removal of a
+later tail and therefore does not authenticate that tail. Core retains no
+checkpoint itself, and the ledger is not externally witnessed or tamper-proof.
+
+Stronger integrity belongs behind a separate contract boundary. A witness can
+consume a committed protocol-ledger head and emit a signed or transparency-
+backed attestation without changing domain records, admission, assent,
+temporal projection, or graph semantics. Replacing the event-hash or signature
+grammar may require a new integrity profile or persisted-wire epoch, but it
+should not require a new semantic protocol. Cryptographic strengthening is
+therefore an extension behind the integrity boundary, not a change to the
+semantic fabric.
+
+## 8. Independent convergence is corroboration
+
+Malleus often reaches a mechanism empirically before the literature pass finds
+an earlier formulation or implementation. That is useful evidence. It shows
+that the same constraints led independent groups toward similar structures,
+supplies techniques and failure cases we can reuse, and reduces the chance that
+the mechanism is arbitrary.
+
+The relationship is cumulative. Malleus does not need to be first to an
+ingredient. The contribution belongs in the protocol that composes the
+ingredients, the boundaries that make them replaceable, and the empirical
+results produced by the complete system. Literature should therefore be used
+as inherited structure and design feedback, while novelty claims remain scoped
+to the composed protocol and measured findings.
+
+## 9. Scale is not a result
 
 A larger graph is not more knowledge, and more infrastructure is not more
 progress. The deliverable is the smallest observation that distinguishes the
@@ -170,32 +239,37 @@ claim. Everything past that is furniture.
 
 ## The genome analogy, and exactly where it stops
 
-The analogy is useful, and it shaped three decisions:
+The analogy is useful only when distributed across the architecture:
 
-- The ledger is the genome, non-coding regions included. Flavour text, examples,
-  and asides are kept rather than deleted, because which parts express is not
-  knowable in advance.
-- Tuples are the coding regions.
-- Extraction is transcription, instantiation is translation, and the same tuple
-  expresses differently per instance. A dimension of 600 in one context and 900
-  in another is the same encoded intent, resolved twice.
+- The ontology and effective contract are the alphabet, grammar, and allowed
+  commitments.
+- Typed records and atomic candidate subgraphs are encoded change units.
+- The ledger is the retained historical sequence.
+- Readers, projectors, rules, and runtime profiles are the expression
+  machinery. Persisting and binding their identities is a target closure
+  requirement, not current behavior.
+- The accepted temporal KG is one expressed view.
+
+Calling either the ontology or the ledger alone "the DNA" hides the other
+dependencies. The contract determines how records can mean; the ledger retains
+their order and protocol history; the projector materializes one graph view.
 
 It stops in two places, and both matter more than the resemblance.
 
-**DNA has no arbiter.** Biology corrects by proofreading and by selection across
-generations, and it tolerates enormous error rates because it has deep time. We
-have neither. The arbiter here is a designed component, its decisions must be
-readable, and the escalation queue only works if a person drains it. The
-metaphor must never be allowed to suggest that the system self-corrects. It does
-not. See principle 3.
+**DNA has no protocol arbiter.** Biology has proofreading, repair, and selection;
+none is an accountable Malleus decision procedure. The arbiter here is a
+designed component, its decisions must be readable, and the escalation queue
+only works if a person drains it. The metaphor must never suggest that the
+system self-corrects. It does not. See principle 3.
 
-**DNA has no provenance.** A genome carries no citation to anything. The
-property this project is aiming at is the opposite one: every tuple points at
-bytes in a source, byte-exact. That is a citation graph, and it is exactly what
-the genome analogy has nothing to say about. Malleus now binds evidence to a
-content-addressed source record, but it does not yet verify quoted spans. Keep
-that boundary central where the analogy is silent. See principle 2 and
-`citation-byte-verification` in `IMPLEMENTATION_STATUS.md`.
+**DNA does not carry evidentiary citations.** Biological material has lineage
+and provenance, but it does not cite the observation supporting a domain claim.
+Malleus aims for evidence-bearing assertions to point at byte-exact sources.
+That citation graph is exactly what the genome analogy does not explain.
+Malleus now binds evidence to a content-addressed source record, but it does not
+yet verify quoted spans. Keep that boundary central where the analogy is
+silent. See principle 2 and `citation-byte-verification` in
+`IMPLEMENTATION_STATUS.md`.
 
 Use the analogy to motivate questions. Never cite it as support for a claim.
 
@@ -204,14 +278,17 @@ Use the analogy to motivate questions. Never cite it as support for a claim.
 Stated plainly, because the honest version of this design is narrower than the
 enthusiastic one:
 
-- RDF supplies a graph encoding, not semantics.
+- RDF supplies a graph data model and formal entailment semantics. It does not
+  supply domain correspondence truth, closed-world admission, temporal
+  protocol, or epistemic acceptance.
 - OWL and RDFS already provide classes, inheritance, and logical entailment.
 - Rule systems and modular ontologies already support substantial composition.
 - Encoding a structure does not demonstrate that it captures the real world.
 - Growing a graph produces neither emergence, nor intelligence, nor
   understanding.
 
-`DELIMITATIONS.md` works through the prior art case by case.
+`DELIMITATIONS.md` works through the inherited literature and system boundaries
+case by case.
 
 ## Reserved future work
 

@@ -1,6 +1,6 @@
 ---
 name: malleus-recon
-description: Evidence-first literature and paper forensics with a typed knowledge graph. Use when the user asks for prior-art research, related-work analysis, closest-work comparison, paper or dataset lineage, novelty boundaries, recursive citation exploration, a literature knowledge graph, or union/intersection/difference matrices across technical claims. Use the shipped malleus-recon ledger and exports when persistent local research artifacts are wanted. Never use graph structure or scores as an automatic novelty, truth, plagiarism, or quality verdict.
+description: Evidence-first literature and paper forensics with a typed knowledge graph. Use for prior-art and related-work analysis, closest-work comparison, paper or dataset lineage, novelty boundaries, recursive citation exploration, literature knowledge graphs, set comparisons across technical claims, or source-grounded literature-to-design reinforcement. Use the shipped malleus-recon ledger and exports when persistent local research artifacts are wanted. Never use graph structure or scores as an automatic novelty, truth, plagiarism, quality, or adoption verdict.
 ---
 
 # Malleus Recon
@@ -150,6 +150,41 @@ the report and at least one exact per-work comparison before handing off.
 Rejected candidates stay in the ledger and leave current graph state
 unchanged. Fix the candidate or revise the ontology deliberately. Never edit
 the JSONL ledger by hand.
+
+## Literature-to-design handoff
+
+When the recon is meant to reinforce a protocol or implementation, follow the
+comparison with a source-grounded transfer handoff. This is a reviewer report,
+not a new Recon record type and not authorization to change core.
+
+For each candidate transfer, state:
+
+1. `SOURCE_MECHANISM`: Cite the applicable work, claim, and evidence records or
+   their precise locators, then state the source mechanism and what the
+   inspected evidence establishes. Cite a result record only when the source
+   establishes one. When no result was established, say so explicitly rather
+   than requiring or inventing a result record.
+2. `ASSUMPTIONS_AND_THREAT_MODEL`: State the source's assumptions and threat
+   model, including anything the inspected evidence does not establish.
+3. `REUSABLE_TECHNIQUE`: Name the bounded technique that could transfer.
+4. `FAILURE_BASELINE_OR_ORACLE`: Record any failure case, baseline, or
+   independent oracle the source supplies.
+5. `TARGET_BOUNDARY`: Name the existing Malleus role or boundary and current
+   consumer the transfer could serve. If neither exists, say so rather than
+   inventing an extension point.
+6. `EXCLUDED_TRANSFER`: State what must not transfer because its assumptions,
+   scope, or semantics differ.
+7. `SMALLEST_EMPIRICAL_TEST`: State the smallest empirical test that could
+   support or reject the transfer.
+
+Present each item as a proposed `ADOPT`, `COMPOSE`, `REFUSE`, or `DEFER`
+candidate with a short reason. `ADOPT` reuses the bounded mechanism at an
+existing boundary. `COMPOSE` combines it with existing mechanisms while
+preserving their contracts. `REFUSE` records a demonstrated mismatch. `DEFER`
+keeps a useful possibility outside the current slice until evidence, a role,
+or a consumer exists. The human chooses the disposition. A transfer remains
+proposed until that decision and does not become implemented merely because it
+appears in the handoff.
 
 ## Writing the conclusion
 

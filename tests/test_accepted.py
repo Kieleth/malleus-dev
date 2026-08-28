@@ -28,7 +28,7 @@ from malleus.control import (
     monitor_specification_digest,
 )
 from malleus.kg import KnowledgeGraph
-from malleus.ledger import canonical_json, event_hash, record_hash
+from malleus.ledger import LedgerError, canonical_json, event_hash, record_hash
 from malleus.logic import LogicCheckResult, logic_contract_digest
 from malleus.ontology import OntologyRegistry
 from malleus.staging import ProposedOperation, stage_subgraph
@@ -793,6 +793,25 @@ def node_write(node_id="node:one", *, valid_from=EXACT_0, valid_to=None, superse
         valid_to=valid_to,
         supersedes_record_id=supersedes,
     )
+
+
+@pytest.fixture
+def checkpointed_accepted_ledger(ledger):
+    _, artifacts, candidate, proposal, assessment = prepared(
+        ledger,
+        write=node_write(),
+    )
+    decide(ledger, artifacts, proposal, candidate, assessment, suffix="one", minute=8)
+    selected_prefix = ledger.replay()
+    append_artifact(
+        ledger,
+        "ProtocolArtifact",
+        "artifact:checkpoint-tail",
+        "RULE_SET",
+        9,
+        artifact_hash=ARTIFACT_BODY,
+    )
+    return ledger, selected_prefix, ledger.replay()
 
 
 def test_candidate_manifest_binds_order_payload_and_temporal_envelope():
@@ -1780,12 +1799,175 @@ def test_internal_graph_category_markers_are_reserved(registry, properties):
     assert "Reserved positional properties" in operation.rejection_reason
 
 
-def test_historical_projection_verifies_later_ledger_semantics(ledger):
+def test_current_projection_checkpoint_matches(checkpointed_accepted_ledger):
+    ledger, _, containing = checkpointed_accepted_ledger
+
+    view = AcceptedGraphProjector(ledger).current(
+        valid_as_of=VALID_0,
+        expected_protocol_head_hash=containing.head_hash,
+        expected_protocol_event_count=containing.event_count,
+    )
+
+    assert view.protocol_head_hash == containing.head_hash
+    assert view.event_count == containing.event_count
+
+
+@pytest.mark.parametrize("field", ["head", "count"])
+def test_current_projection_checkpoint_mismatch(checkpointed_accepted_ledger, field):
+    ledger, _, containing = checkpointed_accepted_ledger
+    bad_head = "sha256:" + "f" * 64
+    if field == "head":
+        expected = bad_head
+        kwargs = {"expected_protocol_head_hash": expected}
+        message = (
+            f"Protocol prefix head mismatch: expected {expected}, "
+            f"got {containing.head_hash}"
+        )
+    else:
+        expected = containing.event_count + 1
+        kwargs = {"expected_protocol_event_count": expected}
+        message = (
+            f"Protocol prefix event count mismatch: expected {expected}, "
+            f"got {containing.event_count}"
+        )
+
+    with pytest.raises(LedgerError, match=message):
+        AcceptedGraphProjector(ledger).current(valid_as_of=VALID_0, **kwargs)
+
+
+def test_historical_projection_checkpoints_match_and_retain_prefix_identity(
+    checkpointed_accepted_ledger,
+):
+    ledger, selected_prefix, containing = checkpointed_accepted_ledger
+
+    view = AcceptedGraphProjector(ledger).as_of(
+        transaction_as_of=at(8),
+        transaction_sequence=selected_prefix.event_count,
+        valid_as_of=VALID_0,
+        expected_protocol_head_hash=selected_prefix.head_hash,
+        expected_protocol_event_count=selected_prefix.event_count,
+        expected_containing_ledger_head_hash=containing.head_hash,
+        expected_containing_ledger_event_count=containing.event_count,
+    )
+
+    assert view.protocol_head_hash == selected_prefix.head_hash
+    assert view.event_count == selected_prefix.event_count
+
+
+@pytest.mark.parametrize("field", ["head", "count"])
+def test_historical_projection_selected_prefix_checkpoint_mismatch(
+    checkpointed_accepted_ledger,
+    field,
+):
+    ledger, selected_prefix, _ = checkpointed_accepted_ledger
+    bad_head = "sha256:" + "f" * 64
+    if field == "head":
+        expected = bad_head
+        kwargs = {"expected_protocol_head_hash": expected}
+        message = (
+            f"Protocol prefix head mismatch: expected {expected}, "
+            f"got {selected_prefix.head_hash}"
+        )
+    else:
+        expected = selected_prefix.event_count + 1
+        kwargs = {"expected_protocol_event_count": expected}
+        message = (
+            f"Protocol prefix event count mismatch: expected {expected}, "
+            f"got {selected_prefix.event_count}"
+        )
+
+    with pytest.raises(LedgerError, match=message):
+        AcceptedGraphProjector(ledger).as_of(
+            transaction_as_of=at(8),
+            transaction_sequence=selected_prefix.event_count,
+            valid_as_of=VALID_0,
+            **kwargs,
+        )
+
+
+@pytest.mark.parametrize("field", ["head", "count"])
+def test_historical_projection_containing_ledger_checkpoint_mismatch(
+    checkpointed_accepted_ledger,
+    field,
+):
+    ledger, selected_prefix, containing = checkpointed_accepted_ledger
+    bad_head = "sha256:" + "f" * 64
+    if field == "head":
+        expected = bad_head
+        kwargs = {"expected_containing_ledger_head_hash": expected}
+        message = f"Ledger head mismatch: expected {expected}, got {containing.head_hash}"
+    else:
+        expected = containing.event_count + 1
+        kwargs = {"expected_containing_ledger_event_count": expected}
+        message = (
+            f"Ledger event count mismatch: expected {expected}, "
+            f"got {containing.event_count}"
+        )
+
+    with pytest.raises(LedgerError, match=message):
+        AcceptedGraphProjector(ledger).as_of(
+            transaction_as_of=at(8),
+            transaction_sequence=selected_prefix.event_count,
+            valid_as_of=VALID_0,
+            expected_protocol_head_hash=selected_prefix.head_hash,
+            expected_protocol_event_count=selected_prefix.event_count,
+            **kwargs,
+        )
+
+
+def test_historical_projection_prefix_checkpoint_survives_later_tail_removal(
+    checkpointed_accepted_ledger,
+):
+    ledger, selected_prefix, containing = checkpointed_accepted_ledger
+    projector = AcceptedGraphProjector(ledger)
+    before = projector.as_of(
+        transaction_as_of=at(8),
+        transaction_sequence=selected_prefix.event_count,
+        valid_as_of=VALID_0,
+        expected_protocol_head_hash=selected_prefix.head_hash,
+        expected_protocol_event_count=selected_prefix.event_count,
+    )
+    lines = ledger.path.read_bytes().splitlines(keepends=True)
+    ledger.path.write_bytes(b"".join(lines[: selected_prefix.event_count]))
+
+    after = projector.as_of(
+        transaction_as_of=at(8),
+        transaction_sequence=selected_prefix.event_count,
+        valid_as_of=VALID_0,
+        expected_protocol_head_hash=selected_prefix.head_hash,
+        expected_protocol_event_count=selected_prefix.event_count,
+    )
+
+    assert after.protocol_head_hash == before.protocol_head_hash == selected_prefix.head_hash
+    assert after.event_count == before.event_count == selected_prefix.event_count
+    assert after.accepted_history_state_digest == before.accepted_history_state_digest
+    assert after.visible_graph_digest == before.visible_graph_digest
+    assert after.valid_time_resolution_digest == before.valid_time_resolution_digest
+    with pytest.raises(
+        LedgerError,
+        match=(
+            f"Ledger event count mismatch: expected {containing.event_count}, "
+            f"got {selected_prefix.event_count}"
+        ),
+    ):
+        projector.as_of(
+            transaction_as_of=at(8),
+            transaction_sequence=selected_prefix.event_count,
+            valid_as_of=VALID_0,
+            expected_protocol_head_hash=selected_prefix.head_hash,
+            expected_protocol_event_count=selected_prefix.event_count,
+            expected_containing_ledger_head_hash=containing.head_hash,
+            expected_containing_ledger_event_count=containing.event_count,
+        )
+
+
+def test_historical_projection_checkpoint_still_verifies_later_ledger_semantics(ledger):
     _, artifacts, candidate, proposal, assessment = prepared(
         ledger,
         write=node_write(),
     )
     decide(ledger, artifacts, proposal, candidate, assessment, suffix="one", minute=8)
+    selected_prefix = ledger.replay()
     append_artifact(
         ledger,
         "ProtocolArtifact",
@@ -1808,6 +1990,8 @@ def test_historical_projection_verifies_later_ledger_semantics(ledger):
             transaction_as_of="2026-08-12T08:08:00+00:00",
             transaction_sequence=9,
             valid_as_of=VALID_0,
+            expected_protocol_head_hash=selected_prefix.head_hash,
+            expected_protocol_event_count=selected_prefix.event_count,
         )
 
 

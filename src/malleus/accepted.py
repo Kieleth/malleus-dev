@@ -187,6 +187,24 @@ class _VisibleProjection:
     state: ValidTimeViewState
 
 
+def _verify_protocol_prefix_checkpoint(
+    *,
+    head_hash: str,
+    event_count: int,
+    expected_head_hash: str | None,
+    expected_event_count: int | None,
+) -> None:
+    if expected_event_count is not None and event_count != expected_event_count:
+        raise LedgerError(
+            "Protocol prefix event count mismatch: "
+            f"expected {expected_event_count}, got {event_count}"
+        )
+    if expected_head_hash is not None and head_hash != expected_head_hash:
+        raise LedgerError(
+            f"Protocol prefix head mismatch: expected {expected_head_hash}, got {head_hash}"
+        )
+
+
 class AcceptedGraphProjector:
     """Rebuild accepted graph views from a fully verified protocol ledger."""
 
@@ -197,9 +215,21 @@ class AcceptedGraphProjector:
             raise TypeError("ledger must be a ProtocolLedger")
         self._ledger = ledger
 
-    def current(self, *, valid_as_of: str) -> AcceptedGraphView:
+    def current(
+        self,
+        *,
+        valid_as_of: str,
+        expected_protocol_head_hash: str | None = None,
+        expected_protocol_event_count: int | None = None,
+    ) -> AcceptedGraphView:
         valid = _canonical_time(valid_as_of, "valid_as_of")
         projection = self._ledger.replay()
+        _verify_protocol_prefix_checkpoint(
+            head_hash=projection.head_hash,
+            event_count=projection.event_count,
+            expected_head_hash=expected_protocol_head_hash,
+            expected_event_count=expected_protocol_event_count,
+        )
         transaction_time = projection.events[-1]["transaction_time"]
         return self._view(projection, transaction_time, projection.event_count, valid)
 
@@ -209,6 +239,10 @@ class AcceptedGraphProjector:
         transaction_as_of: str,
         valid_as_of: str,
         transaction_sequence: int | None = None,
+        expected_protocol_head_hash: str | None = None,
+        expected_protocol_event_count: int | None = None,
+        expected_containing_ledger_head_hash: str | None = None,
+        expected_containing_ledger_event_count: int | None = None,
     ) -> AcceptedGraphView:
         transaction = _canonical_time(transaction_as_of, "transaction_as_of")
         valid = _canonical_time(valid_as_of, "valid_as_of")
@@ -218,7 +252,10 @@ class AcceptedGraphProjector:
             or transaction_sequence < 1
         ):
             raise AcceptedGraphError("transaction_sequence must be a positive integer")
-        events = self._ledger._read_events()
+        events = self._ledger._read_events(
+            expected_head_hash=expected_containing_ledger_head_hash,
+            expected_event_count=expected_containing_ledger_event_count,
+        )
         self._ledger._replay_events(events)
         cutoff = _time(transaction, "transaction_as_of")
         prefix = [
@@ -232,6 +269,12 @@ class AcceptedGraphProjector:
         ]
         if not prefix:
             raise AcceptedGraphError("transaction cutoff precedes the ledger anchor")
+        _verify_protocol_prefix_checkpoint(
+            head_hash=prefix[-1]["event_hash"],
+            event_count=len(prefix),
+            expected_head_hash=expected_protocol_head_hash,
+            expected_event_count=expected_protocol_event_count,
+        )
         projection = self._ledger._replay_events(prefix)
         return self._view(projection, transaction, prefix[-1]["sequence"], valid)
 

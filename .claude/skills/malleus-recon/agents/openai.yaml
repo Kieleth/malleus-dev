@@ -1,4 +1,4 @@
 interface:
   display_name: "Malleus Recon"
-  short_description: "Evidence-first literature and prior-art forensics"
-  default_prompt: "Use $malleus-recon to map this claim against the literature without overstating what the evidence establishes."
+  short_description: "Evidence-first literature and design transfer"
+  default_prompt: "Use $malleus-recon to map this claim against the literature and return source-grounded adopt, compose, refuse, or defer design candidates without overstating the evidence."

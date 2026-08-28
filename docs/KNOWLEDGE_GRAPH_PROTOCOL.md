@@ -1,35 +1,61 @@
 # Knowledge Graph Protocol
 
-How to build a Knowledge Graph that is defined by an ontology, not validated against one.
+How to build a governed Knowledge Graph under a bound ontology and admission
+contract.
 
 ---
 
-## Core principle: the ontology is the KG's DNA
+## Core principle: the ontology is the KG's constitutive grammar
 
-The ontology does not validate the Knowledge Graph. The ontology **defines** what the Knowledge Graph can be. The KG is an instantiation of the ontology. Without the ontology, the KG cannot exist.
+The current `KnowledgeGraph` binds an `OntologyRegistry`, and current protocol
+events bind that registry's ontology hash. The registry defines which records
+the governed graph can admit and how their structural vocabulary is
+interpreted. The ontology is not reality and the graph is not truth by
+construction. It expresses scoped ontological commitments. Without a bound
+registry, a current Malleus governed graph cannot be constructed.
+
+The accepted contract-compiler design introduces a frontend-neutral
+`EffectiveContract` composed from validated contract facts and interpreted
+under normative admission profiles. OD-006 defines a separate
+`ContractComposition` containing exactly one `ProtocolRecordContract`, one
+`GovernedGraphContract`, and one `GovernanceContract`; each role is an
+`EffectiveContract`. That composition is not bound by the current runtime or
+ledger. `EffectiveContract` is the accepted future runtime root; a reloadable
+`EffectiveContractArtifact` remains a Candidate and has no implemented public
+API.
 
 This is the TBox/ABox split from Description Logic:
+
 - **TBox** (terminological box): the schema. Defines concepts, relationships, and constraints. Stable, versioned, changes rarely.
 - **ABox** (assertional box): the instances. Contains the actual data. Dynamic, changes constantly.
 
-The TBox is not checked at query time. The ABox can only be written using the vocabulary the TBox defines. An assertion that references a concept not in the TBox cannot even be formulated.
+Within the current runtime, ABox writes use the vocabulary and constraints in
+the bound registry. In the accepted future design they use the exact effective
+contract composition and admission profiles. A semantic change to an
+accepted-temporal contract role requires a new composition and ledger epoch
+under OD-006. A nonsemantic source edit that preserves effective-contract
+identity does not. Current records retain their bytes, content identity, and
+recorded ontology hash. They do not retain a complete reader, interpretation-
+profile, or effective-contract identity.
 
-## Two architectures (pick A, never B)
+## Two architectures and Malleus's choice
 
 **Architecture A: Ontology defines KG (constitutive)**
 ```
-Ontology (YAML) --generates--> KG type system
-                                    |
-                                    v
-                          KG constructed FROM type system
-                          (constructor parameter)
-                                    |
-                                    v
-                          Every write checked as PRECONDITION
-                          Invalid writes rejected at point of call
+Ontology (YAML) --> OntologyRegistry
+                           |
+                           v
+                 KnowledgeGraph(registry)
+                           |
+                           v
+                 Every write checked as a precondition
+                 Nonconforming writes rejected at the call
 ```
 
-The ontology is a constructor parameter. The KG is born with its type system. Invalid data cannot enter. The type system is constitutive: it defines what CAN exist, and nothing else CAN.
+The registry is a constructor parameter. The KG is born with its type system.
+Writes nonconforming to the configured structural contract are rejected before
+this governed materialization changes. The type system is constitutive for the
+records Malleus admits in that contract epoch.
 
 **Architecture B: KG validates against ontology (descriptive)**
 ```
@@ -42,30 +68,38 @@ Ontology consulted as external reference
 Validation report (after the fact)
 ```
 
-The KG is independent. The ontology is an external document. Invalid data can temporarily exist. The type system is descriptive: it describes what SHOULD exist, but other things MAY.
+The KG is independent. The ontology is an external document. Non-conforming
+data may remain materialized while a validator reports it.
 
-**Architecture A is correct. Architecture B is a trap.** It creates a window where invalid data exists, forces post-hoc cleanup, and makes "does the KG conform to the ontology?" a question that should never need asking.
+Malleus selects Architecture A for its accepted governed graph. Architecture B
+is valid for diagnostics, migration analysis, and systems whose contract is to
+report rather than gate. It cannot provide Malleus's pre-materialization
+invariant by itself. Store-specific SHACL gates and other validating databases
+also implement variants of Architecture A; write gating is not a Malleus
+invention.
 
 ## Principles
 
 ### 1. The KG cannot be constructed without an ontology
 
-The ontology is not optional configuration. It is a required constructor parameter. No ontology, no KG. This is not a runtime check that warns; it is a structural impossibility.
+The registry loaded from the ontology is a required constructor parameter. No
+registry, no governed `KnowledgeGraph`.
 
-```
-// Right: ontology is required
-KG kg(ontology);
-
-// Wrong: ontology is loaded later
-KG kg;
-kg.loadOntology(ontology);
+```python
+registry = OntologyRegistry("path/to/domain.yaml")
+kg = KnowledgeGraph(registry)
 ```
 
 ### 2. Every write is validated as a precondition, not a post-hoc check
 
-When you create an entity, the type must exist in the ontology. When you create a relation, the relation type must exist, and the source/target entity types must match the domain/range constraints. When you set a property, the property must be declared for that entity type.
+When you create an entity, its type must exist in the registry. When you create
+a relation, the relation type must exist and the source and target entity types
+must match its endpoint constraints. Properties supplied during record creation
+must be declared for that record type and satisfy their constraints.
 
-This happens at the point of the call. Invalid writes are rejected immediately. No invalid data ever materializes in the graph.
+This happens at the point of the call. Writes nonconforming to the configured
+structural contract are rejected immediately and do not materialize in the
+governed graph. This establishes structural conformance, not factual validity.
 
 Relation predicates with different endpoint signatures use different LinkML classes. A concrete relation fixes `relation_type` with `equals_string` and narrows `source_id` and `target_id` to class ranges. A generic relation enum cannot express this contract and is not accepted as a substitute.
 
@@ -81,112 +115,113 @@ Some structural claims require several records at once. A relation may depend on
 
 This is a structural transaction boundary. It does not decide truth, epistemic acceptance, or action authorization. Stage 7b can record the exact writes in a `CandidateSubgraphArtifact` and couple an accepted protocol decision to a separate replay-derived graph projection. Direct structural materialization still has no protocol effect.
 
-### 3. The ontology is immutable after construction
+### 3. A constructed graph does not swap registries in place
 
-Once the KG is born with its ontology, the ontology cannot be changed in ways that invalidate existing data. It can only grow monotonically:
-- Add new entity types (including new subtypes of existing types)
-- Add new relation types
-- Add new optional properties to existing types
-- Add new enum values
+A current `KnowledgeGraph` keeps the `OntologyRegistry` it was constructed with;
+it does not bind or mutate a complete effective-contract identity. Ledger epochs
+belong to the accepted-temporal protocol design, not every standalone graph.
 
-It cannot:
-- Remove types, relations, or properties that may have instances
-- Make optional properties required (existing data may lack them)
-- Narrow a range (existing values may not conform)
+Additive changes may be compatible with old records, but compatibility is a
+property to compute, not assume. Removing a type, making a field required,
+narrowing a range, changing admission semantics, or changing an identifier can
+require reinterpretation or refusal.
 
-This is the same constraint Silk enforces via `ExtendOntology` (additive only).
+Current source beyond the released `0.13.3` package boundary contains a generic
+`MigrationReceipt`. It can record an asserted old and new ontology-hash
+transition, declared grade, reason, timestamp, chain link, and optional delta
+digest. It does not carry a transform, reader, record mapping, or query rewrite.
+`TOTAL` and `PARTIAL` are declared grades but currently make
+`accepted_hashes()` accept prior hashes identically. Current source therefore
+establishes neither total interpretation nor record-level indeterminacy.
+`HARD_BREAK` alone stops backward hash acceptance.
 
-### 4. The ontology generates the KG's type system, not just type definitions
+An ontology-identity change does not universally create a ledger epoch. A
+standalone structural `KnowledgeGraph` has no ledger epoch. In accepted design,
+a new composition and ledger epoch are required when the change affects an
+accepted-temporal semantic role. A source-only change preserving the effective-
+contract identity does not require one.
 
-The generation pipeline produces two outputs:
+Receipts do not rewrite retained records. Recon is their only current source
+consumer; core `ProtocolLedger` does not consume them. OD-004 selected a hard
+break for the new persisted wire with no receipt or replay bridge. A canonical
+cross-contract `MigrationPlan`, including interpretation and impact, remains
+Candidate work and may result in refusal.
 
-**Output 1: Type definitions** (for compile-time safety)
-- C++ structs, enums, to_string/from_string
-- Used by application code for type-safe construction
+### 4. Current admission uses one runtime registry
 
-**Output 2: Runtime ontology registry** (for KG construction)
-- A data structure containing: all valid type names, inheritance chains, relation types with domain/range, property schemas per type
-- Passed to the KG constructor
-- Used for write-time validation of string-based operations
+Current core constructs `OntologyRegistry` directly from LinkML-shaped YAML and
+resolves declared imports while loading that registry. It does not execute
+official LinkML semantics. `KnowledgeGraph` accepts exactly one registry. There
+is no repository generator that emits a runtime registry source file.
 
-Both outputs come from the same YAML source of truth. They are two views of the same ontology: one for the compiler, one for the runtime.
+Generated Python models, C++ types, schemas, or editor metadata may be useful
+projections of a retained contract source, but they are optional projections,
+not the accepted runtime contract boundary. Accepted future design pins LinkML
+1.11.1 as the first-party frontend, compiles sources into frontend-neutral
+contract facts, validates those facts, and builds the `EffectiveContract` used
+at runtime.
 
-### 5. String API and typed API coexist, both validated
+### 5. The shipped graph API uses runtime string identifiers
 
-The KG accepts both:
-- **Typed API**: `kg.createEntity(EntityType::HUMANOID)` — compile-time safe, impossible to pass an invalid type
-- **String API**: `kg.createEntity("Humanoid")` — for dynamic/data-driven use (file loading, Shelob commands, scripting), validated against the registry at runtime
+Current `KnowledgeGraph` exposes these write families:
 
-Both paths produce the same result. The string API exists for flexibility; the typed API exists for safety. Neither can create invalid data.
-
-### 6. The registry is the single source of truth at runtime
-
-Application code should never hardcode type names, relation types, or property names as string literals. Instead:
-- Use generated enums for compile-time references
-- Use the registry for runtime introspection ("what types exist?", "what relations can a Humanoid have?", "what properties does a Tree have?")
-
-The registry is queryable: you can enumerate types, check inheritance, discover valid relations for a given type pair. This enables tooling, editors, and AI systems to discover the ontology at runtime without parsing YAML.
-
-## Implementation pattern
-
-### Step 1: Define ontology (YAML)
-
-Per ONTOLOGY_PROTOCOL.md. Your schema imports malleus and defines domain types.
-
-### Step 2: Generate type definitions + runtime registry
-
-The generation script produces:
-- Type definition header (structs, enums) — already covered by gen-cpp-header / gen-pydantic
-- Runtime registry source file — a data structure encoding the full ontology for KG construction
-
-For C++, the registry is a generated .h/.cpp pair containing:
-```cpp
-namespace your_project::ontology {
-
-struct OntologyRegistry {
-    // All valid entity type names, with parent chain
-    // All valid relation types, with source/target type constraints
-    // All valid property names per entity type, with value type and constraints
-};
-
-// Generated function returning the registry singleton
-const OntologyRegistry& registry();
-
-}
-```
-
-For Python, the registry is a generated dict or Pydantic model (similar to Shelob's ONTOLOGY dict passed to Silk).
-
-### Step 3: Construct KG with registry
-
-The KG takes the registry as a constructor parameter:
-```cpp
-auto& reg = your_project::ontology::registry();
-KnowledgeGraph kg(reg);
-```
-
-Or in Python:
 ```python
-store = GraphStore(instance_id, ontology_json())
+create_entity(entity_type, entity_id, properties=None)
+create_relation(relation_type, relation_id, source_id, target_id, properties=None)
+create_signal(signal_type_class, signal_id, properties=None)
+create_event(event_type_class, event_id, properties=None)
 ```
 
-### Step 4: All writes go through the registry
+Every type identifier is a string checked through the bound registry. Required
+properties are supplied during creation. Core has no typed-enum overload and no
+`setProperty` method. An adopter may generate typed wrappers, but those wrappers
+must preserve the same runtime gate and refusal semantics.
 
-The KG's write methods check every operation against the registry before materializing:
-- `createEntity(type)` — type must exist (or be a subtype of a declared type)
-- `createRelation(source, type, target)` — relation type must exist, source/target entity types must match domain/range
-- `setProperty(entity, key, value)` — property must be declared for this entity type, value must match range
+### 6. The bound runtime contract governs admission semantics
 
-### Step 5: Extensions are additive only
+The current runtime uses `OntologyRegistry` for admission. The accepted
+contract-compiler design replaces that syntax-bound path with a
+frontend-neutral `EffectiveContract`; it is not implemented yet. A reloadable
+`EffectiveContractArtifact` representation remains Candidate work.
+Use the registry for runtime introspection rather than duplicating vocabulary
+and endpoint rules in application code. Generated typed wrappers may improve
+authoring safety, but they are not the current Malleus API or authority.
 
-If a game extends the base ontology (Eden extends Logosphere), it produces its own registry that is merged into the base:
-```cpp
-auto& base = logosphere::ontology::registry();
-auto& ext = eden::ontology::registry();
-KnowledgeGraph kg(base, ext);  // merged, extension adds to base
+## Current implementation pattern
+
+### Step 1: Define and load one ontology registry
+
+Per `ONTOLOGY_PROTOCOL.md`, define domain types in LinkML-shaped YAML, resolve
+imports explicitly, and construct one `OntologyRegistry` from the retained
+source.
+
+```python
+registry = OntologyRegistry("path/to/domain.yaml")
+kg = KnowledgeGraph(registry)
 ```
 
-The extension can add types, relations, properties. It cannot remove or contradict the base.
+### Step 2: Send all writes through the registry-bound graph
+
+Use `create_entity`, `create_relation`, `create_signal`, and `create_event`.
+Each method validates the type, required properties, and any relation or signal
+endpoint constraints before materializing the write.
+
+### Step 3: Stage dependent records atomically
+
+Use `stage_subgraph()` for an ordered multi-record candidate, then bind and
+apply that candidate through the protocol path when epistemic acceptance is
+required. Direct graph creation remains a structural operation only.
+
+### Step 4: Resolve imports now; compose effective contracts later
+
+Current `KnowledgeGraph` takes one `OntologyRegistry`. Base and extension YAML
+are combined through registry import resolution, not by passing multiple
+registries to the graph constructor.
+
+For the accepted-temporal protocol, an incompatible semantic change requires a
+new effective-contract composition and ledger epoch. Compatibility
+classification, impact analysis, and an executable `MigrationPlan` remain
+Candidate work, so a reader may have to refuse rather than cross the boundary.
 
 ## Reference implementations
 
@@ -197,11 +232,14 @@ The extension can add types, relations, properties. It cannot remove or contradi
 ## What this is NOT
 
 - It is not OWL reasoning. OWL's Open World Assumption infers rather than rejects. We use Closed World.
-- It is not SHACL post-hoc validation. SHACL validates existing data. We prevent invalid data from existing.
-- It is not a runtime query the KG makes to an external ontology service. The ontology is inside the KG, not beside it.
+- It is not merely a post-hoc validation report. SHACL can also be wired into
+  store-specific commit gates; those are real prior art for write gating.
+- It is not an unpinned runtime query to a mutable ontology service. Admission
+  uses the exact registry or effective contract bound at construction.
 
-Write gating itself is not unique to malleus: TypeDB, Stardog's ICV guard
-mode, GraphDB's on-commit SHACL, and TerminusDB all reject invalid commits.
+Write gating itself is not unique to Malleus: TypeDB, Stardog's ICV guard mode,
+GraphDB's on-commit SHACL, and TerminusDB all reject structurally nonconforming
+commits.
 The full formalism-by-formalism mapping, including what malleus can and cannot
 claim against each, is in DELIMITATIONS.md.
 

@@ -291,7 +291,18 @@ therefore change accepted knowledge, but it cannot authorize or execute an
 action.
 
 `AcceptedGraphProjector.current()` and `.as_of()` require an explicit,
-timezone-aware query instant. Exact intervals use
+timezone-aware query instant. Both methods accept optional caller-supplied
+checks for the selected protocol prefix through
+`expected_protocol_head_hash` and `expected_protocol_event_count`. For
+`current()`, that prefix is the complete ledger. For historical `.as_of()`, it
+is the cutoff prefix; the method can separately check the complete containing
+ledger through `expected_containing_ledger_head_hash` and
+`expected_containing_ledger_event_count`. `.as_of()` validates the containing
+ledger before selecting the prefix even when no containing checkpoint is
+supplied, but internal validation does not authenticate the tail against an
+independently retained identity. A selected-prefix checkpoint alone survives
+later-tail removal. These arguments persist no protocol data. Exact intervals
+use
 `valid_from <= query < valid_to`; a missing end is unbounded. A valid-time
 boundary is one of `EXACT_TIMESTAMP`, `CALENDAR_DAY`, `BOUNDED_INTERVAL`,
 `ORDER_ONLY`, or `UNRESOLVED_PRIOR_BOUNDARY`. Calendar days require an IANA
@@ -347,6 +358,9 @@ orchestration, domain-effect correctness, concurrent-writer safety, formal
 PROV-O interoperability, or an empirical metacognitive effect. The Stage 8c
 effect path does not select an exactly-once delivery profile; such a profile
 can extend its dispatch, receipt, and observation records.
+
+Core retains no checkpoint store, external witness or signature, trusted
+timestamp, or complete projection-closure manifest.
 
 Version 0.5.0 changes the `EPISTEMIC_DECIDED` event shape by requiring an
 explicit `application` field, which is `null` when no accepted graph application

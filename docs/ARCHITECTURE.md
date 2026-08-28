@@ -405,11 +405,12 @@ accepted graph and recompute all digests. A candidate-bound `ACCEPT` requires
 one application in the same event. Non-accepting verdicts require none. The
 graph is swapped only after the complete event validates.
 
-Four commitments remain distinct: `acceptance_head` for accepted protocol
-content, `materialization_head` for ordered graph applications, cumulative
-accepted graph state digest, and valid-time view digest. None stands for truth.
-Authorization remains a separate state machine and cannot cause accepted graph
-materialization or action execution.
+Six digest or head commitments remain distinct: `protocol_head_hash`,
+`acceptance_head`, `materialization_head`, `accepted_history_state_digest`,
+`visible_graph_digest`, and `valid_time_resolution_digest`. Event count,
+transaction time and sequence, and valid time are additional view coordinates.
+None stands for truth. Authorization remains a separate state machine and
+cannot cause accepted graph materialization or action execution.
 
 Every graph-base record and candidate write has an explicit half-open valid
 interval. Supersession creates a new record and closes the prior interval; it
@@ -417,6 +418,80 @@ never mutates the ledger history. `AcceptedGraphProjector` selects a verified
 transaction prefix and then a valid-time view. A later retroactive correction
 therefore changes past valid-time views only for transaction prefixes that
 include the correction.
+
+### Ledger authority and semantic projection
+
+This is a log-primary architecture in the lineage articulated by Kreps,
+Fowler, and Kleppmann. The ledger records ordered protocol commitments.
+NetworkX is a materialized read view rebuilt by a projector. Malleus adds
+ontology-bound records, isolated candidate subgraphs, epistemic decisions,
+and valid-time interpretation to that established pattern.
+`ProtocolLedger.replay()` verifies the complete ledger under the supplied
+registry, graph base, and optional expected head and event count.
+`AcceptedGraphProjector.current()` can compare its selected prefix, which is
+the complete containing ledger, with `expected_protocol_head_hash` and
+`expected_protocol_event_count`. `.as_of()` uses those arguments for the
+selected historical prefix and can separately compare the containing ledger
+with `expected_containing_ledger_head_hash` and
+`expected_containing_ledger_event_count`. It always validates the containing
+ledger it reads, but a selected-prefix checkpoint alone survives removal of a
+later tail and therefore does not authenticate that tail. These call-time
+checks reuse `AcceptedGraphView.protocol_head_hash` and `.event_count`; they add
+no view field or persisted protocol identity. Cross-version semantic replay
+identity remains a design target until reader, projector, interpretation, and
+runtime identities are persisted. This is independent convergence with an
+established architecture that Malleus inherits and extends through its
+semantic and epistemic protocol boundaries.
+
+The proposed complete projection contract is a function of more than ledger
+bytes:
+
+```text
+accepted_history(t) =
+  fold(projector, initial_base, verified_protocol_prefix(t), side_inputs)
+
+view(t, v) =
+  resolve(accepted_history(t), interpretation_profile, valid_time=v)
+```
+
+Three current runtime representations remain distinct: protocol event
+envelopes, typed protocol records, and graph operations. OD-005 additionally
+accepts exact frontend-neutral `{subject, predicate, object}` facts as the
+canonical semantic fact atom for the future contract compiler. The production
+compiler and artifact API do not exist, and the atom is not a persisted wire
+format or automatically a complete domain event. Multi-record semantic changes
+keep their candidate-subgraph atomicity.
+
+The ledger is logically append-only but physically replaced as a complete file
+after validation. A writer with filesystem authority can replace and rehash
+the full history. Removing complete trailing records also leaves a valid prefix
+whose internal chain verifies. An authentic, independently retained expected
+complete-ledger head supplied to direct replay, `current()`, or the
+containing-ledger check on `.as_of()` detects either a different complete
+rechain or clean suffix removal, barring a hash collision. An independently
+retained expected complete-ledger event count can also detect clean suffix
+removal. A historical selected-prefix checkpoint verifies only that prefix; it
+does not authenticate a later tail. Core does not provide its own checkpoint
+store, signature, external head witness, transparency log, trusted timestamp,
+or split-view detector. "Ordered and chain-validated, with optional
+caller-supplied prefix and containing-ledger checkpoints" is accurate;
+"externally anchored" and "tamper-proof" are not.
+
+That limitation does not require redesigning the semantic protocol. A separate
+integrity contract can consume a committed ledger head and emit a signature,
+signed checkpoint, transparency-log receipt, trusted timestamp, or other
+witness attestation. The ontology, admission rules, assent state machine,
+bitemporal projection, and KG dependencies can remain unchanged. Replacing the
+event-hash or signature grammar may require a new integrity profile or wire
+epoch, but it is a bounded protocol evolution rather than a new foundational
+fabric.
+
+Core Malleus currently materializes the accepted NetworkX view and reports
+protocol, acceptance, materialization, graph, temporal-resolution, and query
+identities. A proposed qualification rule for a future SQLite, portal, or other
+backend requires no independent governed write path, pinned complete inputs and
+projector identity, and convergence under full and incremental replay. Current
+core does not bind that complete closure or test generic backend convergence.
 
 ## Layer 3d: Policy-Selected Authorization Control
 

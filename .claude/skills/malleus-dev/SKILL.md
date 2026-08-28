@@ -39,6 +39,34 @@ Stop if any item is missing. A new abstraction found during implementation is
 not automatically part of the slice. Record it and ask the human when it would
 change the claim, boundary, or public contract.
 
+## Research-to-core promotion gate
+
+Relevant literature can constrain a design, supply a test, or suggest an
+implementation. It does not authorize core expansion. Before acting on a
+research finding:
+
+1. `EVIDENCE_BINDING`: Bind the finding to inspected evidence and state the
+   mechanism, assumptions, and threat model that support the proposed transfer.
+2. `ROLE_AND_CONSUMER`: Name the existing protocol role or boundary it serves
+   and its current concrete consumer. If neither exists, keep the finding
+   proposed and defer it rather than creating generic machinery.
+3. `USE_CLASSIFICATION`: Classify its intended use as a `DESIGN_CONSTRAINT`,
+   `BASELINE_OR_ORACLE`, `CONFORMANCE_FIXTURE`, `IMPLEMENTATION_CANDIDATE`, or
+   `EXPLICIT_EXCLUSION`. The classification describes use, not maturity.
+4. `MATURITY`: Preserve `PROPOSED`, `ACCEPTED`, and `IMPLEMENTED` as distinct
+   states. The human accepts or refuses the transfer. Implementation requires
+   the bounded slice, observations, and status evidence demanded elsewhere in
+   this skill.
+5. `PLACEMENT`: Apply the result at the narrowest surface. Constraints shape
+   contracts; baselines, oracles, and fixtures shape tests; implementation
+   candidates enter the normal build sequence; exclusions retain what was
+   rejected and why.
+6. `CORE_PROMOTION`: One current consumer can justify a research-local
+   implementation. Promotion to shared vocabulary or generic core waits for a
+   second independent consumer. Replaceability remains a separate empirical
+   claim and requires a deliberately different implementation to pass the same
+   conformance suite.
+
 ## Architectural law
 
 Build Malleus as small, replaceable stages connected by versioned artifact
@@ -62,6 +90,17 @@ contracts. Depend on protocol meaning, never on one implementation.
    hand-edit a generated artifact or promote a projection into authority.
 10. Add an extension point only with a concrete role, version rule, capability
     declaration, and rejection behavior. Avoid generic plugin machinery.
+11. `LITERATURE_INHERITANCE`: Treat independently convergent literature and
+    products as inherited foundations, empirical corroboration, and sources of
+    techniques and baselines. Do not organize the work around being first to
+    an ingredient. Locate contribution claims in the composed protocol,
+    component interactions, and measured results.
+12. `MODULAR_INTEGRITY`: Keep cryptographic witnessing behind a replaceable
+    integrity contract over the committed protocol-ledger head. Stronger
+    signatures, checkpoints, transparency receipts, or timestamps must not
+    couple into ontology, admission, assent, temporal projection, or KG
+    semantics. A changed event-hash or signature grammar may require a new
+    integrity profile or persisted-wire epoch, not a new semantic protocol.
 
 Unix modularity here is not dependency-injection theatre. A stage is
 replaceable only when a deliberately different implementation crosses the
@@ -71,6 +110,33 @@ refusal behavior, but not replaceability.
 For graph work, do not conflate the backend capability and schema profile,
 runtime storage adapter, admission gate, or canonical logical graph artifact.
 Specify and test each as a separate role.
+
+## Qualify a projection
+
+Before calling a materialized graph or other derived store a conforming Malleus
+projection, verify all of these:
+
+- `AUTHORITY`: It has no independent governed write path. If it does, define
+  explicit reconciliation and stop treating it as a mere projection.
+- `DERIVATION_CLOSURE`: Bind the accepted canonical graph-state identity; exact
+  initial-base identity and digest; verified selected-prefix identity and
+  checkpoint; effective contract and composition; reader identity; projector
+  implementation and projection profile; interpretation profile; declared
+  side inputs; transaction-time and valid-time coordinates; and output digest.
+  The graph-state identity identifies accepted semantic state. The output
+  digest identifies the derived projection result. Keep them distinct.
+- `REFUSAL`: Missing, stale, malformed, or unsupported closure input produces
+  a typed refusal before any derived state is returned or committed.
+- `REPLAY_CONVERGENCE`: Full replay and incremental replay converge on the same
+  canonical logical state under the declared profile.
+- `REBUILD_CONVERGENCE`: Deleting the derived store and rebuilding it from the
+  bound closure produces that same state.
+- `REPLACEABILITY`: A deliberately different conforming projector passes the
+  same fixtures without downstream changes before claiming projector
+  replaceability.
+
+A second projector demonstrates replacement at this boundary. It does not by
+itself justify a generic backend abstraction or another authority.
 
 ## Specify every stage
 
