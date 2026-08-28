@@ -187,6 +187,13 @@
       "owner_id": "overseer",
       "scope": {
         "kind": "FILE",
+        "path": "scripts/ci.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
         "path": "scripts/contract_compiler_integration.py"
       }
     },
@@ -201,6 +208,13 @@
       "owner_id": "overseer",
       "scope": {
         "kind": "FILE",
+        "path": "tests/contract_compiler/test_ci.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
         "path": "tests/test_contract_compiler_integration.py"
       }
     },
@@ -209,6 +223,13 @@
       "scope": {
         "kind": "FILE",
         "path": "tests/test_contract_compiler_ledger.py"
+      }
+    },
+    {
+      "owner_id": "overseer",
+      "scope": {
+        "kind": "FILE",
+        "path": "tests/test_inquisition.py"
       }
     }
   ],

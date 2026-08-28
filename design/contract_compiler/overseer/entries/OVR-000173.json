@@ -1,0 +1,189 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b529294b05fac8d637ba078053c99b5afb545e87acf3773f0370556c0bbf461c",
+        "before_digest": "sha256:a576df1f3e493907a041a4d07e0366238ab96d58f61b748656948c1cd21bef4a",
+        "change": "MODIFIED",
+        "path": ".github/workflows/release.yml"
+      },
+      {
+        "after_digest": "sha256:98c55c46ab4853d7beca3dc659dfeae607872d56a28365367432e04760e7e127",
+        "before_digest": "sha256:f110022aa8ba0ee9c3b897c0c49c8947fdd206950635efb429bf398327a1e758",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:f46313b54c62d27ac4978706f65801d8c228f2e47f9443b80b19a03358f58fcb",
+        "before_digest": "sha256:f838ef07ea4effd89eb519bd2da80fd15f977d89b0707ca0d91cece41b027aea",
+        "change": "MODIFIED",
+        "path": ".gitignore"
+      },
+      {
+        "after_digest": "sha256:77582a06a7085d573879c8614c314b270a670ca99643f23e6126ed6206a252d0",
+        "before_digest": "sha256:b61e6ec8039d33866297e998ba7a908cba8268c93035bba0ab7f7334d885d616",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:7b93696139772f05e50198909d03c41fd32d52c407e0b7cb0723d94d45d5dca1",
+        "change": "CREATED",
+        "path": "scripts/ci.py"
+      },
+      {
+        "after_digest": "sha256:cc98ba5319c698a347e8b576e394cf9d2716b972cbaf044051d66612fdfe026e",
+        "before_digest": "sha256:ee019adb17f8657a8f36c985f670d937493398f1e6d52e2b9dd54ac287b59f6f",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:98c7464add127fcf86188cfcaaa3d3166a5152767e8f8c26753a286116e42c0b",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/test_ci.py"
+      },
+      {
+        "after_digest": "sha256:5bee92f63e241c0215526f29004586c0cb1ad2786b4b7ef1e5350e4ae17c675f",
+        "before_digest": "sha256:047abb02b542b3cdbb59284ae2b0a3118395238ba20b38e82f3602e3d76b6c24",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:90ddfa67e162e7152771d42f3629782ef03dacb2c1b4b9bb2a872f6f562b82e5",
+        "before_digest": "sha256:c3c6e2bb8515143426be9171e56fbf693cbaea7e9f9853b66155829d76fb84ab",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:5df010fd544128e56aa8b5f4fc201fd75f12cefbf040ca6724bcf5a6ac02a512",
+        "before_digest": "sha256:37961f7860b2391edd3bb84411d38cb002de0df284c1a23457108ce2cd5e6515",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:280abd5f7c1a39c1ddc73e4b0330b49b8162c58191aaedeb985f133e1bdbc5bf",
+        "before_digest": "sha256:0e364bbc78d434cebf9ac18e1070ceb6024c1b64cefe269ff554d55c1c1a9f81",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:db875686136b9a627631962d348e9b4809f0f5ea3909bb6f77f948fee50dd11f",
+        "before_digest": "sha256:e0eec4634ab9ae009210a83f953b4e34987bb8f0a4035ca0695fefd1862a6ce1",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:4f5f084470ec1b1efc6d3e4213f8f1524023969eaae0c14dcd26b80f915a13c3",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-000-local-ci-r1.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:43c28fba65d08234b41686070c587c33df033bba8c2dcd5b78ac023cd4cebe34",
+  "entry_id": "OVR-000173",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7ed32de82a3ad544778ee5d593390f84efe8eed4a95b018d38b2b171c2fd2c6b",
+  "recorded_at": "2026-08-28T17:16:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": ".github/workflows/release.yml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": ".github/workflows/tests.yml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": ".gitignore",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_inquisition.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-local-ci-r1.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8c7c7895c6013db300e25c05072f48755b7e3059",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "35be5c6c333ff1fc0c15714aa5de41b62fdb2166",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b3fd501e80bbba304359b28f83db391d24514ae8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 173,
+  "subject": {
+    "id": "cc000-local-ci-scaffold",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the fixed local CI scaffold and strict research TDD gate.",
+  "why": "The three-commit implementation and correction history replaces repeated workflow command lists with one fixed local runner, makes future research tests enter a dedicated nonduplicated stage, strengthens exact TDD evidence ordering before any research integration state, and keeps document-drift tests valid across append-only revisions. This revision reserves only three new overseer files, preserves the historical authority anchor and sealed snapshot, starts no R stage, and changes no compiler semantics, runtime, release policy, hook installation, public API, or graph."
+}

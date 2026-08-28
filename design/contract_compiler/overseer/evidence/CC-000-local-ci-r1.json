@@ -1,0 +1,124 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 3948,
+      "path": ".github/workflows/release.yml",
+      "sha256": "sha256:b529294b05fac8d637ba078053c99b5afb545e87acf3773f0370556c0bbf461c"
+    },
+    {
+      "byte_length": 1365,
+      "path": ".github/workflows/tests.yml",
+      "sha256": "sha256:98c55c46ab4853d7beca3dc659dfeae607872d56a28365367432e04760e7e127"
+    },
+    {
+      "byte_length": 1756,
+      "path": ".gitignore",
+      "sha256": "sha256:f46313b54c62d27ac4978706f65801d8c228f2e47f9443b80b19a03358f58fcb"
+    },
+    {
+      "byte_length": 2937,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:77582a06a7085d573879c8614c314b270a670ca99643f23e6126ed6206a252d0"
+    },
+    {
+      "byte_length": 11251,
+      "path": "scripts/ci.py",
+      "sha256": "sha256:7b93696139772f05e50198909d03c41fd32d52c407e0b7cb0723d94d45d5dca1"
+    },
+    {
+      "byte_length": 38165,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:cc98ba5319c698a347e8b576e394cf9d2716b972cbaf044051d66612fdfe026e"
+    },
+    {
+      "byte_length": 5984,
+      "path": "tests/contract_compiler/test_ci.py",
+      "sha256": "sha256:98c7464add127fcf86188cfcaaa3d3166a5152767e8f8c26753a286116e42c0b"
+    },
+    {
+      "byte_length": 45697,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:5bee92f63e241c0215526f29004586c0cb1ad2786b4b7ef1e5350e4ae17c675f"
+    },
+    {
+      "byte_length": 245941,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:90ddfa67e162e7152771d42f3629782ef03dacb2c1b4b9bb2a872f6f562b82e5"
+    },
+    {
+      "byte_length": 71921,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:5df010fd544128e56aa8b5f4fc201fd75f12cefbf040ca6724bcf5a6ac02a512"
+    },
+    {
+      "byte_length": 76106,
+      "path": "tests/test_inquisition.py",
+      "sha256": "sha256:280abd5f7c1a39c1ddc73e4b0330b49b8162c58191aaedeb985f133e1bdbc5bf"
+    }
+  ],
+  "base_commit": "f8896dd67e96c82402dd6acd34be85fa8c836f1e",
+  "checks": [
+    {
+      "check_id": "cc000-local-ci-history-and-scope",
+      "method": "Inspect all three implementation commits, their trees, the final diff from the pre-scaffold base, and every retained artifact digest.",
+      "observed": "Commit 8c7c7895 adds the scaffold. Correction 35be5c6c restores pyproject.toml and separates compiler tests. Correction b3fd501e makes the latest-document drift guard locate the active revision. Final tree 89b055e7 changes exactly 11 paths and every final byte is bound. No graph, card, program, decision, canonical projection, ontology, runtime, dependency, or package manifest changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-fixed-plan-parity",
+      "method": "Inspect the repository-owned command plans and both GitHub workflows, then run the runner and workflow parity guards.",
+      "observed": "One fixed Python runner owns all, test, docs, and package plans. Pull-request and release workflows call those profiles rather than duplicate commands. No command is loaded from a card, manifest, ledger, user string, shell, or plugin registry. Future hooks must call the same runner; no hook installer exists.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-source-purity",
+      "method": "Exercise exact Git snapshots around successful and failed checks with clean and pre-existing-dirty repositories.",
+      "observed": "Local mode tolerates unchanged pre-existing tracked and untracked dirt. It refuses any added, removed, or byte-changed dirt caused during a run. The remote clean mode refuses initial dirt. Fixed Git argv is executed without a shell. Outputs use fresh temporary paths except explicitly retained artifacts, which require an empty external directory.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-research-tdd-gate",
+      "method": "Run exact phase-order, uniqueness, result-matrix, replacement, and integration-state adversarial tests for every CC-R candidate.",
+      "observed": "RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST must each have one active result in that order. RED alone may be EXPECTED_FAILURE; PACKAGE is PASS or NOT_APPLICABLE only. The complete gate is required before eligibility, integration, completion, or selection. Recorded commands remain evidence, never executed CI input.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-governance-red-green",
+      "method": "Run the five affected modules before rebind, after the first rebind, and after the generic latest-revision test correction.",
+      "observed": "Before rebind, 18 expected stale-digest failures and 422 passes named the changed governed bytes. The first rebind produced 439 passes and exposed one brittle test hardcoded to OVR-000009. Correction b3fd501e makes that guard locate the active latest revision and assert the intended latest-byte mismatch. The frozen rerun passes all 440 tests without weakening the validator.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-full-test",
+      "method": "Run the default local runner test plan, including configured pytest, the separate compiler-test directory, both governance validators, and GraphRecipe.",
+      "observed": "Configured full pytest passes 1,803 tests with 2 skips. The nonduplicated compiler-test stage passes 12 tests. Ledger and integration checks pass. GraphRecipe passes 40 tests. Changed-boundary Ruff passes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-docs",
+      "method": "Run the default local runner's strict Sphinx HTML, doctest, and linkcheck stages with deterministic environment and fresh output paths.",
+      "observed": "All three strict Sphinx builders pass with warnings treated as errors. The source-purity snapshot remains unchanged across their generated output, and the rendered compiler guide documents the fixed local command, research-test location, and future hook boundary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-package",
+      "method": "Run the default local runner's real distribution build, Twine metadata check, isolated wheel install, and declared console probes outside the repository.",
+      "observed": "The sdist and wheel build, Twine check, isolated installation, bundled-schema lookup, malleus-inquisitor invocation, malleus-recon help probe, and malleus-ocr help probe all pass. No editable working-tree import can mask a missing packaged file or broken entry point.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc000-local-ci-kiss-boundary",
+      "method": "Inspect final paths, ownership reservations, unchanged authority anchors, exact graph checks, and declared limitations.",
+      "observed": "Only scripts/ci.py, tests/contract_compiler/test_ci.py, and tests/test_inquisition.py gain overseer FILE reservations. The historical authority anchor and sealed snapshot stay unchanged. GraphRecipe's 40 tests pass with pyproject.toml restored, so no graph/report/card hash cascade occurs. No R stage is started or completed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This scaffold runs fixed trusted checks locally and in GitHub Actions. It does not install a local Git hook, configure a merge queue, or guarantee that a developer invoked the command before an unprotected local merge.",
+    "This report strengthens research TDD admission and records CI parity. It starts or completes no CC-R stage and changes no compiler semantics, production runtime, release decision, public namespace, API compatibility promise, ontology, package topology, or canonical graph.",
+    "The local runner assumes the repository's declared development environment is installed. Dependency acquisition and environment reproduction remain governed by existing configuration and prior compiler-environment work, not by ad hoc installation in this scaffold."
+  ],
+  "recorded_at": "2026-08-28T17:15:54Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-000"
+}

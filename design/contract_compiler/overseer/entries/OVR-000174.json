@@ -1,0 +1,69 @@
+{
+  "actor": {
+    "id": "cc000-local-ci-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T17:16:01Z",
+    "claims": [
+      "One repository-owned Python runner executes fixed trusted local and remote CI plans. It loads no command from cards, manifests, ledgers, user strings, shells, or plugin registries. Pull-request and release workflows delegate to its test, docs, and package profiles, while one local command runs the complete plan.",
+      "The runner permits unchanged pre-existing local dirt, refuses any change caused by a check, and provides a strict clean-repository mode for remote CI. It uses fresh output locations, runs package probes outside the repository, stops on the first failing stage, and reports actionable stage and purity failures.",
+      "Every future CC-R candidate requires one active RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST result in exact order before eligibility, integration, completion, or selection. RED alone permits EXPECTED_FAILURE; PACKAGE permits only PASS or NOT_APPLICABLE. Stored commands remain evidence and are never executed by CI.",
+      "The complete governed run passes changed-boundary Ruff, 1,803 configured tests with 2 skips, 12 separate compiler tests, both governance validators, 40 GraphRecipe tests, strict Sphinx HTML, doctest, and linkcheck, real sdist and wheel checks, isolated installation, and all three package probes.",
+      "The KISS correction restores pyproject.toml byte-for-byte and runs future compiler tests through one dedicated nonduplicated stage. The final correction makes the latest-document drift test follow active append-only revision history. GraphRecipe remains green without a canonical report, graph, card, decision, program, or integration-row cascade. Only three new exact FILE ownership reservations are added.",
+      "This verification starts or completes no CC-R stage. It changes no compiler semantics, production or runtime behavior, release decision, hook installer, merge protection, API compatibility, public namespace, ontology, dependency, package topology, canonical graph, candidate, selection, or worker ledger."
+    ],
+    "limitations": [
+      "The runner supplies a local and remote CI entry point, not proof that an unprotected local merge invoked it. Hook installation and merge-queue policy remain future work.",
+      "The scaffold depends on the repository's declared development environment. It does not add ad hoc dependency installation or redefine the governed compiler environment.",
+      "This is CC-000 infrastructure evidence only. Each R stage still needs separate authorization, RED and GREEN history, semantic evidence, integration, and attestation."
+    ]
+  },
+  "entry_hash": "sha256:13b1f24cf53474739dfaa5f6f050e8c23464753d179e02087bd0257782a68353",
+  "entry_id": "OVR-000174",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:43c28fba65d08234b41686070c587c33df033bba8c2dcd5b78ac023cd4cebe34",
+  "recorded_at": "2026-08-28T17:16:01Z",
+  "references": [
+    {
+      "digest": "sha256:4f5f084470ec1b1efc6d3e4213f8f1524023969eaae0c14dcd26b80f915a13c3",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-000-local-ci-r1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000173",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8c7c7895c6013db300e25c05072f48755b7e3059",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "35be5c6c333ff1fc0c15714aa5de41b62fdb2166",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b3fd501e80bbba304359b28f83db391d24514ae8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 174,
+  "subject": {
+    "id": "CC-000-local-ci-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify fixed local CI and strict research TDD enforcement.",
+  "why": "The retained evidence binds the exact implementation bytes, two-commit correction history, fixed command plans, workflow parity, source-purity guards, ordered research TDD admission, full tests, documentation, package probes, and unchanged GraphRecipe contract. These facts establish reusable CI scaffolding without claiming that any R workstream has begun or widening compiler, runtime, release, API, packaging, hook, or graph authority."
+}
