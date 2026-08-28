@@ -1,0 +1,32 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Author exactly six neutral greenhouse LinkML sources and six corpus-local COMPILE_SOURCE stimuli under the two CC-010 neutral input prefixes.",
+      "Isolate explicit-default, numeric-lexeme, presentation, order, and semantic-change source dimensions without recording expected outcomes.",
+      "Bind thirteen non-evidence artifacts, one canonical report, seven TDD phases, and the exact 515a568..6fbe13d eligible candidate.",
+      "Keep runtime admission inputs, independently owned CC-016 oracles, corpus listing and checksums, themed vocabulary, compiler and runtime implementation, public API, package, Docker, release, selection, integration, and CC-R work outside CC-015."
+    ],
+    "evidence_entry_ids": ["OVR-000199"],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-015"
+  },
+  "entry_hash": "sha256:c056a7c1a73fc0047fd4cc7c5f58006b91bef83fa0269658c870763c99bf5f50",
+  "entry_id": "OVR-000202",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:aa04bfa0601f9d6a949888a5c474dfbd8e095a702a64e6b7a951e6550eba96ef",
+  "recorded_at": "2026-08-28T22:06:04Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000199", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-015", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 202,
+  "subject": {"id": "CC-015", "type": "WORKSTREAM"},
+  "summary": "Complete the bounded CC-015 neutral-input workstream.",
+  "why": "OVR-000199 binds the exact eligible neutral-input candidate, repaired independent audit, seven worker TDD phases, strict scope, and passing input evidence needed to complete CC-015 without selecting it, publishing corpus membership, or claiming runtime admission or oracle results."
+}

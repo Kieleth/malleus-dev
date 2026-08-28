@@ -1,0 +1,71 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8646,
+      "path": "conformance/contract_compiler/v0/evidence/CC-011.json",
+      "sha256": "sha256:f0b7e91744fcd40b6787f82a6675daa0cdd5e7f39226c2b60d00bf19e62cf2e6"
+    },
+    {
+      "byte_length": 23118,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:a7da712d45a34e2c50e373b53f2fb7271162a7a524e43709035a62c6dcfb5f39"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-011/ledger/head.json",
+      "sha256": "sha256:46f6f109e5814c20c4f82a006b405896daba398e25cec9b21d83b81616cb1715"
+    },
+    {
+      "byte_length": 4808,
+      "path": "design/contract_compiler/workstreams/CC-011/manifest.json",
+      "sha256": "sha256:857273c4f02919869046ff6823337c05e5d11ac982b56cd1d68a532aaad0727c"
+    }
+  ],
+  "base_commit": "c0644e54b8b2ce3f74e6e63bebf842c8fae91cab",
+  "checks": [
+    {
+      "check_id": "cc011-candidate-history",
+      "method": "Validate the exact 388b610..c0644e5 one-commit candidate, bound tree, eight authorized touched paths, seven artifacts, and one canonical report.",
+      "observed": "The direct candidate validator accepted tree b318f4844d405126296d4892bfe34298dac5023e, all eight touched paths, every artifact byte, and the passing report.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-worker-tdd",
+      "method": "Validate the committed worker hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST gate.",
+      "observed": "Seven chained TDD_RESULT entries pass the strict phase gate. Head is CC-011-WRK-000007 at sha256:8533fb9c70fc6b15f99af64b3f9665d59a9e3d1760da38fdb9cf1decfca243f3.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-source-boundary",
+      "method": "Verify exact source membership, Quiet Bell authorship boundary, raw-source controls, version deltas, and absence of input traces, oracle values, and expected outputs.",
+      "observed": "The report binds six source files and one fixed test. It claims authored source evidence only, preserves the exact CC-D14 text/data attestation, and creates no oracle or compiled-result claim.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-dependencies",
+      "method": "Validate the exact CC-010, CC-D14, and CC-018 dependency bindings against current cards, completion entries, and first-authority coordinates.",
+      "observed": "All three formal dependencies remain COMPLETE, PRESENT, and exactly bound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-independent-audit",
+      "method": "Use the frozen ATTEST entry to verify the exact candidate after independent review and repair of its sole evidence-wording finding.",
+      "observed": "The audit found no P0-P2 issue and one P3 wording defect. The wording was repaired before c0644e5; exact bindings, 13 focused tests, and Ruff then revalidated.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-unselected-completion",
+      "method": "Complete only the bounded themed-source input work while leaving selection, corpus publication, independent oracle work, and every compiler stage unchanged.",
+      "observed": "The candidate remains ELIGIBLE and unselected. Corpus listing and checksums wait for paired review, and CC-012 retains independent oracle ownership.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-011 completes authored Quiet Bell LinkML source bytes only. It creates no direct input, operation trace, oracle, expected output, diagnostic, compiler, runtime, public API, package, Docker, release, or CC-R result.",
+    "The source members remain absent from corpus.json and checksums.json until a later integration-owner transaction reviews paired inputs and independently owned CC-012 oracles.",
+    "The candidate remains ELIGIBLE and unselected. No INTEGRATED state or publication authority is claimed."
+  ],
+  "recorded_at": "2026-08-28T22:05:55Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-011"
+}

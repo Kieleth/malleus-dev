@@ -1,0 +1,71 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 7680,
+      "path": "conformance/contract_compiler/v0/evidence/CC-015.json",
+      "sha256": "sha256:23a94fd39fa673049b4ef19051130caa5b5d61e63dadc2c0b30878d8f8e9841c"
+    },
+    {
+      "byte_length": 23118,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:a7da712d45a34e2c50e373b53f2fb7271162a7a524e43709035a62c6dcfb5f39"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-015/ledger/head.json",
+      "sha256": "sha256:15a966adcc4c5a2324a1db9d4db8788fb6390675e8fd54429234588d39cc7f57"
+    },
+    {
+      "byte_length": 6924,
+      "path": "design/contract_compiler/workstreams/CC-015/manifest.json",
+      "sha256": "sha256:645aac6eed097fbd36b130be5efe69eb90a592a3a838ad7d590c5c4fd01bb49f"
+    }
+  ],
+  "base_commit": "6fbe13dd2fdea3a557e393fe3238ebe7ff1946c1",
+  "checks": [
+    {
+      "check_id": "cc015-candidate-history",
+      "method": "Validate the exact 515a568..6fbe13d one-commit candidate, bound tree, fourteen authorized touched paths, thirteen artifacts, and one canonical report.",
+      "observed": "The direct candidate validator accepted tree 86330922d45dd4fae35d32c4a0835b631dc23787, all fourteen touched paths, every artifact byte, and the passing report.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc015-worker-tdd",
+      "method": "Validate the committed worker hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST gate.",
+      "observed": "Seven chained TDD_RESULT entries pass the strict phase gate. Head is CC-015-WRK-000007 at sha256:df82b8b72ee70f1f08f4718cfa535f7f9289c7b1d2bc56dc7d990575d7b4f0a4.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc015-input-boundary",
+      "method": "Verify exact neutral source and operation-input membership, isolated source deltas, bounded requirement references, and absence of result-bearing fields.",
+      "observed": "The report binds six greenhouse sources, six COMPILE_SOURCE stimuli, and one fixed test. The stimuli are corpus-local inputs only and carry no facts, oracle values, diagnostics, decisions, or outcomes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc015-dependencies",
+      "method": "Validate the exact CC-010, CC-D05, CC-D08, and CC-018 dependency bindings against current cards, completion entries, and first-authority coordinates.",
+      "observed": "All four formal dependencies remain COMPLETE, PRESENT, and exactly bound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc015-independent-audit",
+      "method": "Use the frozen ATTEST entry to verify the exact candidate after independent review and repair of its sole semantic finding.",
+      "observed": "The audit's one P1 finding was repaired before 6fbe13d. The corrected report binds thirteen artifacts and seven PASS checks with no oracle, compiler, or publication artifact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc015-unselected-completion",
+      "method": "Complete only the bounded neutral input work while leaving selection, corpus publication, independent oracle work, and every compiler stage unchanged.",
+      "observed": "The candidate remains ELIGIBLE and unselected. Corpus listing and checksums wait for paired review, and CC-016 retains independent oracle ownership.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-015 completes neutral LinkML sources and corpus-local COMPILE_SOURCE stimuli only. It creates no runtime admission input, oracle, expected output, compiler, runtime, public API, package, Docker, release, or CC-R result.",
+    "The input members remain absent from corpus.json and checksums.json until a later integration-owner transaction reviews paired inputs and independently owned CC-016 oracles.",
+    "The candidate remains ELIGIBLE and unselected. No INTEGRATED state is claimed."
+  ],
+  "recorded_at": "2026-08-28T22:05:57Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-015"
+}

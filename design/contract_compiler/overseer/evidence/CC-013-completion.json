@@ -1,0 +1,71 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 9589,
+      "path": "conformance/contract_compiler/v0/evidence/CC-013.json",
+      "sha256": "sha256:5b4a6ffcb481ada888b83519f80973c9d8ffe8bbf24a7d3a162234e56dcf6796"
+    },
+    {
+      "byte_length": 23118,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:a7da712d45a34e2c50e373b53f2fb7271162a7a524e43709035a62c6dcfb5f39"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-013/ledger/head.json",
+      "sha256": "sha256:69fa97156883468b14b51d2c499569a22abc2550fd9a6c6e7807ea5f8ee92f72"
+    },
+    {
+      "byte_length": 8078,
+      "path": "design/contract_compiler/workstreams/CC-013/manifest.json",
+      "sha256": "sha256:188afa0693fcf19a2e2216f987484da233d1b6d6189382b01785af707211628f"
+    }
+  ],
+  "base_commit": "515a5688aced52d949eec4632d04330e9317f78f",
+  "checks": [
+    {
+      "check_id": "cc013-candidate-history",
+      "method": "Validate the exact c0644e5..515a568 one-commit candidate, bound tree, twenty authorized touched paths, nineteen artifacts, and one canonical report.",
+      "observed": "The direct candidate validator accepted tree 858465a8fd662094f1f40a39a5625c0fe33bb7f6, all twenty touched paths, every artifact byte, and the passing report.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc013-worker-tdd",
+      "method": "Validate the committed worker hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST gate.",
+      "observed": "Seven chained TDD_RESULT entries pass the strict phase gate. Head is CC-013-WRK-000007 at sha256:9dfd665cf718ad1537fab5316e022f23b92a9a69b2a6102b91ad996abb800ab9.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc013-input-boundary",
+      "method": "Verify exact feature-input membership, retained research bytes, isolated source dimensions, neutral requirement references, and absence of classifications or expected results.",
+      "observed": "The report binds eighteen source stimuli and one fixed test across eleven cases. CC-X01 bytes are exact, CC-X02-derived bundles remain unclassified, and no oracle value or production policy is added.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc013-dependencies",
+      "method": "Validate the exact CC-010, CC-X01, CC-X02, and CC-018 dependency bindings against current cards, completion entries, and first-authority coordinates.",
+      "observed": "All four formal dependencies remain COMPLETE, PRESENT, and exactly bound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc013-independent-audit",
+      "method": "Use the frozen ATTEST entry to verify the exact candidate after independent review.",
+      "observed": "The final independent audit returned clean with no P0, P1, P2, or P3 finding; seven focused and sixty-four affected tests passed before the candidate was frozen.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc013-unselected-completion",
+      "method": "Complete only the bounded feature-input work while leaving selection, corpus publication, independent oracle work, and every compiler stage unchanged.",
+      "observed": "The candidate remains ELIGIBLE and unselected. Corpus listing and checksums wait for paired review, and CC-014 retains independent oracle ownership.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-013 completes feature-isolation source stimuli only. It creates no classification, production-policy claim, oracle, expected output, compiler, runtime, public API, package, Docker, release, or CC-R result.",
+    "The input members remain absent from corpus.json and checksums.json until a later integration-owner transaction reviews paired inputs and independently owned CC-014 oracles.",
+    "The candidate remains ELIGIBLE and unselected. No INTEGRATED state is claimed."
+  ],
+  "recorded_at": "2026-08-28T22:05:56Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-013"
+}

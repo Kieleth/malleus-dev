@@ -35,13 +35,16 @@ PROGRAM = CONTRACT / "program.md"
 
 
 def _canonical_json(value: Any) -> str:
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        sort_keys=True,
-        indent=2,
-        allow_nan=False,
-    ) + "\n"
+    return (
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            indent=2,
+            allow_nan=False,
+        )
+        + "\n"
+    )
 
 
 def _digest(source: bytes) -> str:
@@ -90,9 +93,7 @@ def _copy_manifest_bundle(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
 
 def _registry_row(manifest: dict[str, Any], workstream_id: str) -> dict[str, Any]:
     return next(
-        row
-        for row in manifest["workstreams"]
-        if row["workstream_id"] == workstream_id
+        row for row in manifest["workstreams"] if row["workstream_id"] == workstream_id
     )
 
 
@@ -125,9 +126,7 @@ def _register_blocked_card(
     workstream_id: str,
     owner_id: str,
 ) -> None:
-    template = _read_json(
-        _card_path(manifest_path, _registry_row(manifest, "CC-R01"))
-    )
+    template = _read_json(_card_path(manifest_path, _registry_row(manifest, "CC-R01")))
     template["workstream_id"] = workstream_id
     template["responsibility"] = f"Synthetic {workstream_id} ownership card."
     template["assignment"] = {
@@ -155,7 +154,9 @@ def _register_blocked_card(
     _write_json(manifest_path, manifest)
 
 
-def _assert_code(error: pytest.ExceptionInfo[IntegrationValidationError], code: str) -> None:
+def _assert_code(
+    error: pytest.ExceptionInfo[IntegrationValidationError], code: str
+) -> None:
     assert str(error.value).startswith(f"[{code}]"), str(error.value)
 
 
@@ -401,10 +402,13 @@ def test_canonical_integration_manifest_is_valid() -> None:
             "task_id": "/root",
         }
         assert card["authorization"]["class"] == "FORMAL"
-        assert tuple(
-            binding["workstream_id"]
-            for binding in card["authorization"]["dependency_bindings"]
-        ) == dependencies
+        assert (
+            tuple(
+                binding["workstream_id"]
+                for binding in card["authorization"]["dependency_bindings"]
+            )
+            == dependencies
+        )
         assert card["candidate"] == {"state": "NONE"}
         assert card["ledger"] == {"state": "NOT_STARTED"}
         assert card["scopes"] == []
@@ -487,9 +491,7 @@ def test_cc010_activation_boundary_is_exact() -> None:
     assert row["card"]["sha256"] == _digest(source)
     card = _read_json(path)
     assert card["workstream_id"] == row["workstream_id"] == "CC-010"
-    workstream_states, _ = integration_module._workstream_states(
-        _raw_overseer_state()
-    )
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
     dependencies = load_program_registry(PROGRAM)["CC-010"]
 
     assert card["assignment"] == {
@@ -502,10 +504,13 @@ def test_cc010_activation_boundary_is_exact() -> None:
         "id": "operator",
         "type": "OPERATOR",
     }
-    assert tuple(
-        binding["workstream_id"]
-        for binding in card["authorization"]["dependency_bindings"]
-    ) == dependencies
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == dependencies
+    )
     assert card["scopes"] == [
         {
             "kind": "FILE",
@@ -566,9 +571,7 @@ def test_cc018_activation_boundary_is_exact() -> None:
     assert row["card"]["sha256"] == _digest(source)
     card = _read_json(path)
     assert card["workstream_id"] == row["workstream_id"] == "CC-018"
-    workstream_states, _ = integration_module._workstream_states(
-        _raw_overseer_state()
-    )
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
     dependencies = load_program_registry(PROGRAM)["CC-018"]
 
     assert card["assignment"] == {
@@ -581,10 +584,13 @@ def test_cc018_activation_boundary_is_exact() -> None:
         "id": "operator",
         "type": "OPERATOR",
     }
-    assert tuple(
-        binding["workstream_id"]
-        for binding in card["authorization"]["dependency_bindings"]
-    ) == dependencies
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == dependencies
+    )
     assert card["scopes"] == [
         {
             "kind": "FILE",
@@ -766,9 +772,7 @@ def test_input_workstream_activation_boundaries_are_exact(
     assert row["card"]["sha256"] == _digest(source)
     card = _read_json(path)
     assert card["workstream_id"] == row["workstream_id"] == workstream_id
-    workstream_states, _ = integration_module._workstream_states(
-        _raw_overseer_state()
-    )
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
 
     assert card["assignment"] == assignment
     assert card["authorization"]["class"] == "FORMAL"
@@ -776,10 +780,13 @@ def test_input_workstream_activation_boundaries_are_exact(
         "id": "operator",
         "type": "OPERATOR",
     }
-    assert tuple(
-        binding["workstream_id"]
-        for binding in card["authorization"]["dependency_bindings"]
-    ) == load_program_registry(PROGRAM)[workstream_id]
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == load_program_registry(PROGRAM)[workstream_id]
+    )
     assert card["scopes"] == scopes
     assert (
         workstream_states[workstream_id],
@@ -807,9 +814,7 @@ def test_cc018_completion_checkpoint_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-018")
     card = _read_json(CONTRACT / row["card"]["path"])
-    workstream_states, _ = integration_module._workstream_states(
-        _raw_overseer_state()
-    )
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
 
     assert card["candidate"] == {
         "artifacts": [
@@ -846,6 +851,105 @@ def test_cc018_completion_checkpoint_is_exact() -> None:
     }
     assert workstream_states["CC-018"] == "COMPLETE"
     assert "CC-018" not in manifest["selections"]
+
+
+@pytest.mark.parametrize(
+    (
+        "workstream_id",
+        "base_commit",
+        "head_commit",
+        "head_tree",
+        "touched_path_count",
+        "report_byte_length",
+        "report_sha256",
+        "ledger_head_hash",
+    ),
+    (
+        (
+            "CC-011",
+            "388b610ef1d8bfb135db5f981d3acac6641e5d78",
+            "c0644e54b8b2ce3f74e6e63bebf842c8fae91cab",
+            "b318f4844d405126296d4892bfe34298dac5023e",
+            8,
+            8646,
+            "sha256:f0b7e91744fcd40b6787f82a6675daa0cdd5e7f39226c2b60d00bf19e62cf2e6",
+            "sha256:8533fb9c70fc6b15f99af64b3f9665d59a9e3d1760da38fdb9cf1decfca243f3",
+        ),
+        (
+            "CC-013",
+            "c0644e54b8b2ce3f74e6e63bebf842c8fae91cab",
+            "515a5688aced52d949eec4632d04330e9317f78f",
+            "858465a8fd662094f1f40a39a5625c0fe33bb7f6",
+            20,
+            9589,
+            "sha256:5b4a6ffcb481ada888b83519f80973c9d8ffe8bbf24a7d3a162234e56dcf6796",
+            "sha256:9dfd665cf718ad1537fab5316e022f23b92a9a69b2a6102b91ad996abb800ab9",
+        ),
+        (
+            "CC-015",
+            "515a5688aced52d949eec4632d04330e9317f78f",
+            "6fbe13dd2fdea3a557e393fe3238ebe7ff1946c1",
+            "86330922d45dd4fae35d32c4a0835b631dc23787",
+            14,
+            7680,
+            "sha256:23a94fd39fa673049b4ef19051130caa5b5d61e63dadc2c0b30878d8f8e9841c",
+            "sha256:df82b8b72ee70f1f08f4718cfa535f7f9289c7b1d2bc56dc7d990575d7b4f0a4",
+        ),
+    ),
+)
+def test_input_workstream_completion_checkpoints_are_exact(
+    workstream_id: str,
+    base_commit: str,
+    head_commit: str,
+    head_tree: str,
+    touched_path_count: int,
+    report_byte_length: int,
+    report_sha256: str,
+    ledger_head_hash: str,
+) -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, workstream_id)
+    card = _read_json(CONTRACT / row["card"]["path"])
+    report_path = f"conformance/contract_compiler/v0/evidence/{workstream_id}.json"
+    report = _read_json(ROOT / report_path)
+    expected_candidate = {
+        "artifacts": report["artifacts"],
+        "base_commit": base_commit,
+        "evidence": [
+            {
+                "byte_length": report_byte_length,
+                "path": report_path,
+                "result": "PASS",
+                "sha256": report_sha256,
+            }
+        ],
+        "head_commit": head_commit,
+        "head_tree": head_tree,
+        "state": "ELIGIBLE",
+    }
+
+    assert card["candidate"] == expected_candidate
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": f"{workstream_id}-WRK-000007",
+        "head_hash": ledger_head_hash,
+        "path": f"workstreams/{workstream_id}/ledger",
+        "state": "RECORDED",
+    }
+    touched = validate_candidate_history(
+        ROOT,
+        card["candidate"],
+        allowed_scopes=card["scopes"],
+        workstream_id=workstream_id,
+    )
+    assert len(touched) == touched_path_count
+    assert set(touched) == {
+        *(artifact["path"] for artifact in report["artifacts"]),
+        report_path,
+    }
+    workstream_states, _ = integration_module._workstream_states(_raw_overseer_state())
+    assert workstream_states[workstream_id] == "COMPLETE"
+    assert workstream_id not in manifest["selections"]
 
 
 @pytest.mark.parametrize("mutation", ("reverse", "reorder"))
@@ -1324,9 +1428,7 @@ def test_candidate_coordinates_require_full_commit_ids(tmp_path: Path) -> None:
     candidate["head_commit"] = head[:12]
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_GIT_COMMIT_ID")
 
@@ -1337,9 +1439,7 @@ def test_candidate_commit_must_resolve(tmp_path: Path) -> None:
     candidate["head_commit"] = "f" * 40
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_GIT_OBJECT_MISSING")
 
@@ -1353,9 +1453,7 @@ def test_candidate_head_must_descend_from_base(tmp_path: Path) -> None:
     candidate["head_tree"] = tree
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_GIT_ANCESTRY")
 
@@ -1414,9 +1512,7 @@ def test_x03_history_union_catches_themed_paths_deleted_before_head(
     candidate = _candidate(repository, base, head)
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_SCOPE_VIOLATION")
     assert all(relative in str(error.value) for relative in themed)
@@ -1428,9 +1524,7 @@ def test_candidate_head_tree_is_bound_exactly(tmp_path: Path) -> None:
     candidate["head_tree"] = base
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_CANDIDATE_TREE")
 
@@ -1441,9 +1535,7 @@ def test_candidate_artifact_digest_is_verified_at_head(tmp_path: Path) -> None:
     candidate["artifacts"][0]["sha256"] = "sha256:" + "0" * 64
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_ARTIFACT_DIGEST")
 
@@ -1454,9 +1546,7 @@ def test_failed_evidence_cannot_gate_candidate(tmp_path: Path) -> None:
     candidate["evidence"][0]["result"] = "FAIL"
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_EVIDENCE_FAILED")
 
@@ -1472,9 +1562,7 @@ def test_top_level_pass_cannot_mask_a_failed_evidence_check(tmp_path: Path) -> N
     candidate = _candidate(repository, base, head)
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_EVIDENCE_INVALID")
 
@@ -1487,7 +1575,11 @@ def test_selected_workstream_must_be_complete(
         if row["workstream_id"] != "CC-000":
             row["card"] = {"state": "ABSENT"}
     result_commit = "55d9da3b58d77d49bdcf449c376a26231d410824"
-    result_report = _git(ROOT, "show", f"{result_commit}:design/contract_compiler/workstreams/CC-000/evidence/result.json")
+    result_report = _git(
+        ROOT,
+        "show",
+        f"{result_commit}:design/contract_compiler/workstreams/CC-000/evidence/result.json",
+    )
     report_source = result_report.encode("utf-8")
 
     def integrate(card: dict[str, Any]) -> None:
@@ -1529,7 +1621,9 @@ def test_selected_workstream_must_be_complete(
     )
     _write_json(manifest_path, manifest)
     active_prefix = replace(ledger, entries=ledger.entries[: active_index + 1])
-    monkeypatch.setattr(integration_module, "load_ledger", lambda *args, **kwargs: active_prefix)
+    monkeypatch.setattr(
+        integration_module, "load_ledger", lambda *args, **kwargs: active_prefix
+    )
     monkeypatch.setattr(
         integration_module,
         "_validate_worker_ledger",
@@ -1634,9 +1728,7 @@ def test_quarantined_candidate_cannot_gate_integration(tmp_path: Path) -> None:
     candidate["reason"] = "Exploratory history is not integration authority."
 
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
-            repository, candidate, allowed_scopes=ALLOWED_SCOPES
-        )
+        validate_candidate_history(repository, candidate, allowed_scopes=ALLOWED_SCOPES)
 
     _assert_code(error, "CC000_CANDIDATE_STATE")
 
@@ -1750,9 +1842,7 @@ def test_worker_correction_replaces_a_tdd_result_without_reordering_it() -> None
 
     active = integration_module._active_tdd_results(entries)
 
-    assert [result["phase"] for result in active] == list(
-        integration_module.TDD_PHASES
-    )
+    assert [result["phase"] for result in active] == list(integration_module.TDD_PHASES)
     validate_tdd_gate("CC-R01", active)
 
 

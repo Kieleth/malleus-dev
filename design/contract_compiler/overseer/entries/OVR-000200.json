@@ -1,0 +1,32 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Author exactly six Quiet Bell LinkML source members under the CC-010 themed source prefix, with source-only version and import-graph coverage.",
+      "Bind seven non-evidence artifacts, one canonical report, seven TDD phases, and the exact 388b610..c0644e5 eligible candidate.",
+      "Preserve the CC-D14 original-text/data authorship and Apache-2.0 boundary while creating no visual asset or publication authority.",
+      "Keep direct inputs, operation traces, independently owned CC-012 oracles, corpus listing and checksums, compiler and runtime implementation, public API, package, Docker, release, selection, integration, and CC-R work outside CC-011."
+    ],
+    "evidence_entry_ids": ["OVR-000199"],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-011"
+  },
+  "entry_hash": "sha256:0714e9d279b32e933643e1244f8b9b8ef9334932f504e7b824cb9441609b4ea9",
+  "entry_id": "OVR-000200",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e81fb8057f5ae5a9c94bbcfdaf18b0c8dff897618bc2afb45a6254cfc9945d3d",
+  "recorded_at": "2026-08-28T22:06:02Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000199", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-011", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 200,
+  "subject": {"id": "CC-011", "type": "WORKSTREAM"},
+  "summary": "Complete the bounded CC-011 themed source workstream.",
+  "why": "OVR-000199 binds the exact eligible source-only candidate, independent audit and repair, seven worker TDD phases, strict scope, and passing source evidence needed to complete CC-011 without selecting it, publishing corpus membership, or claiming an oracle or compiled result."
+}

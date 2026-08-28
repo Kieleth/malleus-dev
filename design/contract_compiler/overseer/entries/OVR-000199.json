@@ -1,0 +1,38 @@
+{
+  "actor": {"id": "input-workstreams-completion-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-28T22:06:01Z",
+    "claims": [
+      "CC-011 is the exact 388b610..c0644e5 candidate at tree b318f4844d405126296d4892bfe34298dac5023e with eight authorized touched paths.",
+      "CC-013 is the exact c0644e5..515a568 candidate at tree 858465a8fd662094f1f40a39a5625c0fe33bb7f6 with twenty authorized touched paths.",
+      "CC-015 is the exact 515a568..6fbe13d candidate at tree 86330922d45dd4fae35d32c4a0835b631dc23787 with fourteen authorized touched paths.",
+      "Each committed worker ledger contains the exact seven ordered TDD phases, each candidate remains ELIGIBLE and unselected, and all three independent audits are closed after recorded repairs."
+    ],
+    "limitations": [
+      "corpus.json and checksums.json remain unchanged pending later integration-owner review of paired inputs and independently owned CC-012, CC-014, and CC-016 oracles.",
+      "Completion creates no oracle, expected output, compiler, runtime, public API, package, Docker, release, selection, integration, or CC-R result."
+    ]
+  },
+  "entry_hash": "sha256:e81fb8057f5ae5a9c94bbcfdaf18b0c8dff897618bc2afb45a6254cfc9945d3d",
+  "entry_id": "OVR-000199",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e401003910cfd4adfa704472ff354c23be520c35f6f7d82a64aa840c0bc8b504",
+  "recorded_at": "2026-08-28T22:06:01Z",
+  "references": [
+    {"digest": "sha256:c5bd540bc91fb35c343b6dbeb5091c08978c3f9a06836de9a92f4c14c2122de2", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-011-completion.json", "type": "EVIDENCE"},
+    {"digest": "sha256:59d3147498f782c1eabff52d81786ccb2c49c393ee20020b80c00c8f5dc4750c", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-013-completion.json", "type": "EVIDENCE"},
+    {"digest": "sha256:0349eb77899ce4b630229159b82a8cda2f7b014de8d8388b352165794b73d396", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-015-completion.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "c0644e54b8b2ce3f74e6e63bebf842c8fae91cab", "type": "COMMIT"},
+    {"relation": "EVIDENCES", "target": "515a5688aced52d949eec4632d04330e9317f78f", "type": "COMMIT"},
+    {"relation": "EVIDENCES", "target": "6fbe13dd2fdea3a557e393fe3238ebe7ff1946c1", "type": "COMMIT"},
+    {"relation": "AFFECTS", "target": "CC-011", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-013", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-015", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 199,
+  "subject": {"id": "input-workstreams-completion-verification", "type": "EVIDENCE"},
+  "summary": "Verify the bounded CC-011, CC-013, and CC-015 completion gates.",
+  "why": "Each input workstream may complete only after its exact candidate, canonical report, worker TDD chain, dependencies, independent audit, and unselected boundary pass mechanically without publishing corpus membership or claiming oracle results."
+}

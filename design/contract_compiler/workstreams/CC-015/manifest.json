@@ -42,10 +42,92 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 1456,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+        "sha256": "sha256:3bb5b580021b2f5ca6c0113a3ef63d047ce2dcf63e846ffc6fa4fe03b87fee98"
+      },
+      {
+        "byte_length": 1900,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml",
+        "sha256": "sha256:f842338536f01b581618cf51eeca03668bcb8ff7861b36f872870889158201b5"
+      },
+      {
+        "byte_length": 1459,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml",
+        "sha256": "sha256:80145c298d708d955cb3ee521bf7953feed287d1b97aab28b348ad63cd8b3d3e"
+      },
+      {
+        "byte_length": 1477,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml",
+        "sha256": "sha256:c389a0add25ca17516663abf92d4370e0b29efe14b522250b2056bc221c45c65"
+      },
+      {
+        "byte_length": 1456,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml",
+        "sha256": "sha256:b909bee4789dce0c0b25e0987cfc0f0fe67569138e482f25a3cb804e1ce8b877"
+      },
+      {
+        "byte_length": 1456,
+        "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml",
+        "sha256": "sha256:86d7ab9958d2bc0781a39807c428c837d18ef6c35b31470c0370d6d28359d404"
+      },
+      {
+        "byte_length": 238,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/closed-composition-semantic-change/operation.json",
+        "sha256": "sha256:3f9ad03b779c130458db9bb9f1280248a7c31f7a1efbed57d266feaa566f80fb"
+      },
+      {
+        "byte_length": 225,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-baseline/operation.json",
+        "sha256": "sha256:f9bc4221a97929721ba918a4b55d41166ff9faf1f7d1c01f02031fbe438f5dd8"
+      },
+      {
+        "byte_length": 237,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-explicit-defaults/operation.json",
+        "sha256": "sha256:29060217f49a2714f768435117728609e33f1bffc95d2d6eed0b788e7b21ed57"
+      },
+      {
+        "byte_length": 238,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-numeric-equivalent/operation.json",
+        "sha256": "sha256:cca6d32872723957357d97f3ce67b8265cb655050070f311d8c2a457f73fe8a7"
+      },
+      {
+        "byte_length": 237,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-presentation-only/operation.json",
+        "sha256": "sha256:7d128b820f40b930c1a4fdbf0ac77e10fb471a873454919afa34e7b974894f29"
+      },
+      {
+        "byte_length": 229,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-reordered/operation.json",
+        "sha256": "sha256:f20462428c7a5fe2694fa6b8d7ab319f6c134008669ff9a3ca18a4e077c9c1d8"
+      },
+      {
+        "byte_length": 12971,
+        "path": "tests/contract_compiler/test_neutral_domain_inputs.py",
+        "sha256": "sha256:2a35a73893d3c46a7088e5589f9cf4340dd8323654d087057b3a2a0f26c13e8a"
+      }
+    ],
+    "base_commit": "515a5688aced52d949eec4632d04330e9317f78f",
+    "evidence": [
+      {
+        "byte_length": 7680,
+        "path": "conformance/contract_compiler/v0/evidence/CC-015.json",
+        "result": "PASS",
+        "sha256": "sha256:23a94fd39fa673049b4ef19051130caa5b5d61e63dadc2c0b30878d8f8e9841c"
+      }
+    ],
+    "head_commit": "6fbe13dd2fdea3a557e393fe3238ebe7ff1946c1",
+    "head_tree": "86330922d45dd4fae35d32c4a0835b631dc23787",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 7,
+    "head_entry_id": "CC-015-WRK-000007",
+    "head_hash": "sha256:df82b8b72ee70f1f08f4718cfa535f7f9289c7b1d2bc56dc7d990575d7b4f0a4",
+    "path": "workstreams/CC-015/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Author only neutral-domain LinkML sources and operation inputs under the two exact CC-010 neutral_domain/sources and neutral_domain/traces/input prefixes, using the neutral semantic requirements fixed by CC-018 and the accepted CC-D05 fact model plus CC-D08 expression profile. Own exactly the two neutral input trees, canonical verification report, and fixed neutral-input validation test named by this card. Create no oracle or expected output, themed vocabulary, compiler or runtime implementation, public API, package, Docker, release, corpus or checksum publication, or CC-R work.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
