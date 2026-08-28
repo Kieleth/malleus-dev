@@ -1,0 +1,72 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 5073,
+      "path": "conformance/contract_compiler/v0/evidence/CC-010.json",
+      "sha256": "sha256:e185ebfd7db32946b47a06a9ee92516de1abba5e08bdafbf92454b4df99f74e5"
+    },
+    {
+      "byte_length": 21869,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:85991336f05cff92111c0bbd45b847e3dc5389d13e137cf82cbbeb708ddc525e"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-010/ledger/head.json",
+      "sha256": "sha256:cfaed02c02e516af0df3b0f01d7d34520735ec48496400e709018e646c5553f9"
+    },
+    {
+      "byte_length": 7023,
+      "path": "design/contract_compiler/workstreams/CC-010/manifest.json",
+      "sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a"
+    }
+  ],
+  "base_commit": "c1d4bc4b3c53d6683d2282b64728ddbdb083b94f",
+  "checks": [
+    {
+      "check_id": "cc010-candidate-history",
+      "method": "Validate the exact 426d26e..c1d4bc4 linear candidate, bound tree, seven authorized touched paths, six artifacts, and one verification report.",
+      "observed": "The direct candidate validator accepted the one-commit range, tree 8e6157460757de9e8783fab32ed14355cea8abfa, exact scope, artifact bytes, and evidence bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-worker-tdd",
+      "method": "Validate the worker-owned hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST gate.",
+      "observed": "Seven chained TDD_RESULT entries passed the strict phase gate; RED is EXPECTED_FAILURE, PACKAGE is NOT_APPLICABLE, and every other phase is PASS.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-protocol-bundle",
+      "method": "Verify the candidate report schema and exact equality between its six artifacts and the card artifact bundle.",
+      "observed": "The typed report binds six exact artifacts and seven passing checks; every current and committed byte length and SHA-256 digest matched.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-dependencies",
+      "method": "Validate all nine formal dependency bindings against current registered cards, completion entries, and exact integrated-head authority coordinates.",
+      "observed": "CC-000, D02, D03, D05, D06, D07, D08, D10, and D11 remained complete and exactly bound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-regression",
+      "method": "Run the local CI test profile plus focused final governance validation.",
+      "observed": "Ruff passed; 1,805 configured tests passed with 2 skips; 33 compiler tests and 40 GraphRecipe tests passed; the focused protocol and governance suites passed after the progress-safe correction.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-unselected-completion",
+      "method": "Validate the completion draft while leaving the candidate ELIGIBLE, selections unchanged, and all compiler and CC-R work absent.",
+      "observed": "CC-010 is complete evidence for its bounded protocol only. Its candidate remains ELIGIBLE and unselected; no source, oracle, compiler, runtime, package, Docker, release, or CC-R implementation is claimed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Completion closes only the three-corpus protocol scaffold; the empty bootstrap does not satisfy any CC-R stage.",
+    "Selection and INTEGRATED candidate state are separate overseer checkpoints and are not claimed here.",
+    "CC-017 owner separation must be made explicit when that downstream workstream is activated; CC-010 changes no owner policy for an inactive card.",
+    "Sphinx wiring, corpus content, compiler implementation, runtime behavior, packages, Docker, release, and public support claims remain outside CC-010."
+  ],
+  "recorded_at": "2026-08-28T18:52:53Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-010"
+}

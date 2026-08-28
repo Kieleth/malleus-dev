@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_conformance_protocol.py", "observed": "The exact identities, role prefixes, shared-requirements seam, four document kinds, raw-byte controls, and ordered R01 through R08 map passed without corpus content.", "phase": "SLICE", "result": "PASS"},
+  "entry_hash": "sha256:f81a8f526ad98b21672a172c399ce94affcba71e8e93de72bfa3cd99b90136a3",
+  "entry_id": "CC-010-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:d50d130d340b0402c4b1731c799313e8dd573d2891b5c644de8ba421c57b3a9a",
+  "recorded_at": "2026-08-28T18:48:27Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the closed empty-bootstrap conformance slice.",
+  "workstream_id": "CC-010"
+}

@@ -506,8 +506,6 @@ def test_cc010_activation_boundary_is_exact() -> None:
         binding["workstream_id"]
         for binding in card["authorization"]["dependency_bindings"]
     ) == dependencies
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
     assert card["scopes"] == [
         {
             "kind": "FILE",
@@ -538,7 +536,7 @@ def test_cc010_activation_boundary_is_exact() -> None:
             "path": "docs/contract_compiler/conformance_protocol.md",
         },
     ]
-    assert workstream_states["CC-010"] == "ACTIVE"
+    assert workstream_states["CC-010"] in {"ACTIVE", "COMPLETE"}
     assert "CC-010" not in manifest["selections"]
     responsibility = card["responsibility"]
     for required in (
@@ -853,7 +851,7 @@ def test_formal_activation_lists_incomplete_dependencies(tmp_path: Path) -> None
         validate_integration(ROOT, path)
 
     _assert_code(error, "CC000_DEPENDENCY_INCOMPLETE")
-    assert "CC-010" in str(error.value)
+    assert "CC-010" not in str(error.value)
     assert "CC-D11" not in str(error.value)
     assert "CC-016" in str(error.value)
 

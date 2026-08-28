@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": "Review the exact CC-010 card against package and release boundaries.", "observed": "NOT_APPLICABLE. CC-010 defines repository-local manifests, validation, and an internal guide, with no package, runtime, Docker, or release claim.", "phase": "PACKAGE", "result": "NOT_APPLICABLE"},
+  "entry_hash": "sha256:beb7e8f8a9bef2acd935e8afb96d18e84b82c8d420c305cb37d5fe0fb13a4b3d",
+  "entry_id": "CC-010-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a5f39aee8eaeb22d680fa0ac3fb95bec5fc5fed59c9198cf6da92cca516ddfb8",
+  "recorded_at": "2026-08-28T18:48:30Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-010"
+}

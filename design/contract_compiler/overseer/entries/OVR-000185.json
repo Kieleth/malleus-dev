@@ -1,0 +1,31 @@
+{
+  "actor": {"id": "cc010-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-28T18:52:55Z",
+    "claims": [
+      "The exact 426d26e..c1d4bc4 candidate is linear, tree-bound, and limited to the seven authorized CC-010 paths.",
+      "The strict three-corpus bootstrap, role-prefix layout, requirement grammar, raw-byte integrity, stage matrix, refusal matrix, and expansion guide all pass mechanically.",
+      "The worker ledger contains the exact seven ordered TDD phases, and the candidate remains ELIGIBLE and unselected."
+    ],
+    "limitations": [
+      "Completion closes only CC-010 protocol scaffolding and does not satisfy a CC-R stage.",
+      "CC-017 owner separation is required at its later activation; no inactive downstream ownership policy changes here."
+    ]
+  },
+  "entry_hash": "sha256:d51746df5c1ce05fbb75ceb6606685ea2cedcc556a2f66e846b18913bfd711bd",
+  "entry_id": "OVR-000185",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f5276c9e985cdca45e6b3f6b2eea7ed23c7368700a593751245207b8facc6b76",
+  "recorded_at": "2026-08-28T18:52:55Z",
+  "references": [
+    {"digest": "sha256:759f7a1f857bb6d30071e30de01b9b5f6f97500ea981e9011e290b9f9cdabe0e", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-010-completion.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "c1d4bc4b3c53d6683d2282b64728ddbdb083b94f", "type": "COMMIT"},
+    {"relation": "AFFECTS", "target": "CC-010", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 185,
+  "subject": {"id": "CC-010-completion-verification", "type": "EVIDENCE"},
+  "summary": "Verify the bounded CC-010 completion gate.",
+  "why": "CC-010 may complete only after its exact candidate, worker TDD phases, dependency bindings, independent protocol audit, and local CI evidence pass mechanically."
+}

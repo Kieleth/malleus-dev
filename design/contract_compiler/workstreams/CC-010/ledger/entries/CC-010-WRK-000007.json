@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python scripts/contract_compiler_ledger.py check; .venv/bin/python scripts/contract_compiler_integration.py check; validate_candidate_history for CC-010; verify-evidence CC-010; focused governance tests", "observed": "The overseer state, active card, exact one-commit candidate, seven-entry worker ledger, six-artifact report, unchanged selections, and focused governance suite all validated.", "phase": "ATTEST", "result": "PASS"},
+  "entry_hash": "sha256:56e12c948b9c0f5aef842f2e245390555cceb77991224cf91504c757442f8e96",
+  "entry_id": "CC-010-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:beb7e8f8a9bef2acd935e8afb96d18e84b82c8d420c305cb37d5fe0fb13a4b3d",
+  "recorded_at": "2026-08-28T18:48:31Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen CC-010 candidate and worker evidence.",
+  "workstream_id": "CC-010"
+}

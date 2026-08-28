@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_conformance_protocol.py", "observed": "Malformed, duplicate, nonfinite, drifted, unsafe, cross-role, unsorted, corrupt, mutated, linked, hybrid, and invalid-requirement cases refused while valid controls passed.", "phase": "DISPROOF", "result": "PASS"},
+  "entry_hash": "sha256:33c1e481633c920224bb3c8b1cf71ab20b2f680d10362bd83de8af5fdc46f896",
+  "entry_id": "CC-010-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f81a8f526ad98b21672a172c399ce94affcba71e8e93de72bfa3cd99b90136a3",
+  "recorded_at": "2026-08-28T18:48:28Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass the structural and raw-byte refusal matrix.",
+  "workstream_id": "CC-010"
+}

@@ -1,0 +1,31 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Define the exact three-corpus membership, integrity, path, ownership-separation, requirement, and stage-matrix protocol.",
+      "Bind the empty bootstrap, six protocol artifacts, one canonical report, seven TDD phases, and exact one-commit candidate.",
+      "Keep corpus content, compiler and runtime implementation, public API, Sphinx wiring, packaging, Docker, release, selection, and every CC-R stage outside CC-010."
+    ],
+    "evidence_entry_ids": ["OVR-000185"],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-010"
+  },
+  "entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+  "entry_id": "OVR-000186",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d51746df5c1ce05fbb75ceb6606685ea2cedcc556a2f66e846b18913bfd711bd",
+  "recorded_at": "2026-08-28T18:52:56Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000185", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-010", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 186,
+  "subject": {"id": "CC-010", "type": "WORKSTREAM"},
+  "summary": "Complete the bounded CC-010 conformance protocol workstream.",
+  "why": "OVR-000185 binds the exact eligible protocol candidate, independent audit, seven worker TDD phases, fixed refusal and expansion rules, and passing regression evidence needed to complete CC-010 without selecting it or starting compiler work."
+}

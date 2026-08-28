@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python scripts/ci.py test", "observed": "The local CI test profile passed Ruff, 1,805 configured tests with 2 skips, 33 compiler tests, both governance validators, 40 GraphRecipe tests, and purity.", "phase": "REGRESSION", "result": "PASS"},
+  "entry_hash": "sha256:a5f39aee8eaeb22d680fa0ac3fb95bec5fc5fed59c9198cf6da92cca516ddfb8",
+  "entry_id": "CC-010-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:33c1e481633c920224bb3c8b1cf71ab20b2f680d10362bd83de8af5fdc46f896",
+  "recorded_at": "2026-08-28T18:48:29Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the local merge-style regression gate.",
+  "workstream_id": "CC-010"
+}

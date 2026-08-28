@@ -77,10 +77,57 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 717,
+        "path": "conformance/contract_kernel/v0/checksums.json",
+        "sha256": "sha256:55b0b2588f95245454a32292b531afd6d4b3719984358020c93ca0f06aeb3a9e"
+      },
+      {
+        "byte_length": 1739,
+        "path": "conformance/contract_kernel/v0/corpus.json",
+        "sha256": "sha256:7fa6d757a1571983dd195dec955cd87cd34487fe8da810d8156313dbbf5ad4eb"
+      },
+      {
+        "byte_length": 10155,
+        "path": "conformance/contract_kernel/v0/corpus.schema.json",
+        "sha256": "sha256:acf148db5f482fe78281268ceb7b3c23d9cc762c52d6bbb24a6f5647fc896eeb"
+      },
+      {
+        "byte_length": 1542,
+        "path": "conformance/contract_kernel/v0/stage-matrix.json",
+        "sha256": "sha256:5e5844e8d827a787c470910709265e2949ef68d62d7185092d756ce28ce8647b"
+      },
+      {
+        "byte_length": 7478,
+        "path": "docs/contract_compiler/conformance_protocol.md",
+        "sha256": "sha256:e07c2c4b167f4d928727d180ac6ddaa6ca36d21031f127449ac132c3024dbdd6"
+      },
+      {
+        "byte_length": 29627,
+        "path": "tests/contract_compiler/test_conformance_protocol.py",
+        "sha256": "sha256:6690e2c68ffe96cea9a9effd4917d43b230372c6d4c6b012bb29a77dbce48b5a"
+      }
+    ],
+    "base_commit": "426d26e4386090c8b21c53939fd92a65fe44f4a1",
+    "evidence": [
+      {
+        "byte_length": 5073,
+        "path": "conformance/contract_compiler/v0/evidence/CC-010.json",
+        "result": "PASS",
+        "sha256": "sha256:e185ebfd7db32946b47a06a9ee92516de1abba5e08bdafbf92454b4df99f74e5"
+      }
+    ],
+    "head_commit": "c1d4bc4b3c53d6683d2282b64728ddbdb083b94f",
+    "head_tree": "8e6157460757de9e8783fab32ed14355cea8abfa",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 7,
+    "head_entry_id": "CC-010-WRK-000007",
+    "head_hash": "sha256:56e12c948b9c0f5aef842f2e245390555cceb77991224cf91504c757442f8e96",
+    "path": "workstreams/CC-010/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Define the three-corpus protocol, path and ownership conventions, membership and checksum grammar, and fixed validation tests only. Own exactly the protocol manifests, canonical verification report, validation test, and internal guide named by this card. Downstream source and oracle TREE scopes require their own future cards. This activation creates no source or oracle content, implementation or compiler code, generated expectations, public API, packaging, Docker, release, candidate, selection, worker ledger, or CC-R01 work.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_conformance_protocol.py", "observed": "All 21 fixed protocol tests passed against the minimum closed schema, empty corpus declarations, matrix, checksums, and guide.", "phase": "GREEN", "result": "PASS"},
+  "entry_hash": "sha256:d50d130d340b0402c4b1731c799313e8dd573d2891b5c644de8ba421c57b3a9a",
+  "entry_id": "CC-010-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:9fb1a763f89d86e91c96e26001bc3717f3e823e34e97ce4fc880f804cb660a24",
+  "recorded_at": "2026-08-28T18:48:26Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum three-corpus protocol implementation.",
+  "workstream_id": "CC-010"
+}

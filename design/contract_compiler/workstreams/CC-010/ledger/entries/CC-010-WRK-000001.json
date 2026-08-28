@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc010-conformance-protocol",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_conformance_protocol.py", "observed": "The pre-implementation run produced 11 failures and 4 passing raw-JSON controls. Every remaining failure refused because corpus.schema.json did not exist.", "phase": "RED", "result": "EXPECTED_FAILURE"},
+  "entry_hash": "sha256:9fb1a763f89d86e91c96e26001bc3717f3e823e34e97ce4fc880f804cb660a24",
+  "entry_id": "CC-010-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-28T18:48:25Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the genuine absent-protocol RED.",
+  "workstream_id": "CC-010"
+}
