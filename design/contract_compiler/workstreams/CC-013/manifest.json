@@ -1,0 +1,67 @@
+{
+  "assignment": {
+    "owner_id": "worker:cc013-feature-inputs",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc013_feature_inputs"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
+        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+        "completion_entry_id": "OVR-000186",
+        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+        "workstream_id": "CC-010"
+      },
+      {
+        "card_sha256": "sha256:4b8801e9f4764f2fe68779bb1ef433bca7cef99f6de66c73d9d6d4384678b2e6",
+        "completion_entry_hash": "sha256:9907f81061f1a76f3b513f0b280067baa10cd01be582bb845ce9037768c99f42",
+        "completion_entry_id": "OVR-000108",
+        "integrated_head": "b7721dffdc16ec61878338ff8c55213d320fc5ed",
+        "workstream_id": "CC-X01"
+      },
+      {
+        "card_sha256": "sha256:d25059a925f16dd33f2b00e1f81cd15c696d7da2dbbea86f804d72f70027791f",
+        "completion_entry_hash": "sha256:27fd91db050e2eb877a88d370b08ba8a3139935de0bd704a6569f79d5992a593",
+        "completion_entry_id": "OVR-000114",
+        "integrated_head": "8190dc3a4f22f376c7a0921169d15fed3de289f8",
+        "workstream_id": "CC-X02"
+      },
+      {
+        "card_sha256": "sha256:47c485893c41cda88733ddcc8a798b224c297f8264aaaa8f52ac91e9a0b5e5e0",
+        "completion_entry_hash": "sha256:8e47ee98981009b03d0315cc5823ffc76a95116f5e305c536b48b3d91d38a67e",
+        "completion_entry_id": "OVR-000192",
+        "integrated_head": "753ded3ab17ad9f5752703d8cb7b2f425bd28a23",
+        "workstream_id": "CC-018"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Author only feature-isolation sources and direct inputs under the exact CC-010 feature_cases/inputs prefix, using CC-X01 and CC-X02 as research evidence and the neutral semantic requirements fixed by CC-018. Own exactly the feature input tree, canonical verification report, and fixed feature-input validation test named by this card. Create no oracle or expected output, semantic classification or production-policy claim, compiler or runtime implementation, public API, package, Docker, release, corpus or checksum publication, or CC-R work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-013.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_feature_isolation_inputs.py"
+    }
+  ],
+  "workstream_id": "CC-013"
+}

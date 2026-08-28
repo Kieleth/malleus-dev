@@ -1,0 +1,75 @@
+{
+  "actor": {
+    "id": "input-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T20:39:01Z",
+    "claims": [
+      "CC-011, CC-013, and CC-015 each bind their direct dependencies in exact program order to current cards, COMPLETE entries and hashes, and first authority commits.",
+      "The three FORMAL cards assign three distinct workers and own exactly the CC-010 input prefixes, canonical worker reports, and fixed validation tests named by their cards.",
+      "The unchanged canonical owner policy separates each input owner from its future oracle owner and from CC-018. No policy or validator edit is required.",
+      "All three cards keep candidate NONE, ledger NOT_STARTED, and selection absent. No corpus content, oracle, compiler, runtime, publication, or CC-R work was created.",
+      "The fixed progress-safe activation test produced genuine RED on the three ABSENT registry rows and passes after exact registration except for states supplied by the following append-only transitions."
+    ],
+    "limitations": [
+      "This verifies activation readiness and boundary integrity only. It does not implement or complete any input workstream.",
+      "Each assigned worker must record its own genuine implementation RED and append-only TDD evidence before candidate eligibility.",
+      "Corpus membership and checksums remain a later integration-owner transaction after independently reviewed inputs and oracles exist."
+    ]
+  },
+  "entry_hash": "sha256:fb2f6c3bd11604724d703583aa2cf66b861099fa5a57744b665c4bfb7cc7f1cd",
+  "entry_id": "OVR-000194",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:db5afd7c22c70e64b17bd25083e15c59f083a2e55a7ec23dc1ceb77ebf59123c",
+  "recorded_at": "2026-08-28T20:39:01Z",
+  "references": [
+    {
+      "digest": "sha256:cf486b6a2326d7151ac1f4a4bbae5ec26a28d25d13703054ab613afea4268758",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-011-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:921887c0b56e0e8315d57a05706b99d1310dd46a45866727f9a94aca26e7d8a9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-013-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "digest": "sha256:318c0a3726de517ffcf691120625642f3a90305a1b85871940a54fead4ab1869",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-015-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000193",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-011",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-013",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-015",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 194,
+  "subject": {
+    "id": "input-workstreams-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact three input-workstream activation boundaries.",
+  "why": "Formal activation requires retained mechanical proof that the three input owners consume only accepted authority, have exact nonoverlapping scopes, remain distinct from requirements and oracle owners, and create no content or implementation before their own TDD work begins."
+}

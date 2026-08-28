@@ -1,0 +1,53 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Author only the themed vertical LinkML source corpus under the exact CC-010 themed_fixture/sources prefix.",
+      "Use the neutral CC-018 semantic requirements and the CC-D14 Quiet Bell text/data authorship and Apache-2.0 boundary.",
+      "Keep direct inputs, traces, oracle and expected output, compiler and runtime implementation, public API, package, Docker, release, corpus publication, and every CC-R stage outside CC-011."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000193",
+      "OVR-000194"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-011"
+  },
+  "entry_hash": "sha256:1cc3796de5f8121b981439a6412f7ad5cf59499344d2735ddbf66bfa6d7e33f4",
+  "entry_id": "OVR-000195",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fb2f6c3bd11604724d703583aa2cf66b861099fa5a57744b665c4bfb7cc7f1cd",
+  "recorded_at": "2026-08-28T20:39:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000193",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000194",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-011",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 195,
+  "subject": {
+    "id": "CC-011",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-011 themed source workstream.",
+  "why": "The exact dependency, authorship, scope, and owner-separation checks pass. This activation creates no source content, candidate, selection, or worker ledger. The assigned worker may TDD only the three scoped outputs and must record genuine RED plus append-only worker evidence before eligibility."
+}

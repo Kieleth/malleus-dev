@@ -143,7 +143,7 @@ def _register_blocked_card(
     ]
     relative = f"workstreams/{workstream_id}/manifest.json"
     path = manifest_path.parent / relative
-    path.parent.mkdir(parents=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
     source = _canonical_json(template).encode("utf-8")
     path.write_bytes(source)
     _registry_row(manifest, workstream_id)["card"] = {
@@ -392,7 +392,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 24
+    assert len(state.cards) == 27
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -641,6 +641,157 @@ def test_cc018_activation_boundary_is_exact() -> None:
         "expected facts, artifacts, diagnostics, or digests",
         "operations, traces, or outcomes",
         "themed vocabulary",
+        "compiler or runtime implementation",
+        "public API",
+        "package",
+        "Docker",
+        "release",
+        "corpus or checksum publication",
+        "CC-R work",
+    ):
+        assert required in responsibility
+
+
+@pytest.mark.parametrize(
+    ("workstream_id", "assignment", "scopes", "required_phrases"),
+    (
+        (
+            "CC-011",
+            {
+                "owner_id": "worker:cc011-themed-sources",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc011_themed_sources",
+            },
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/themed_fixture/sources",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-011.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_themed_source_corpus.py",
+                },
+            ],
+            (
+                "Author only the themed vertical LinkML source corpus",
+                "CC-010",
+                "CC-018",
+                "CC-D14",
+                "no direct-input triples or operation traces",
+                "oracle or expected output",
+            ),
+        ),
+        (
+            "CC-013",
+            {
+                "owner_id": "worker:cc013-feature-inputs",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc013_feature_inputs",
+            },
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/feature_cases/inputs",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-013.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_feature_isolation_inputs.py",
+                },
+            ],
+            (
+                "Author only feature-isolation sources and direct inputs",
+                "CC-010",
+                "CC-X01",
+                "CC-X02",
+                "CC-018",
+                "no oracle or expected output",
+            ),
+        ),
+        (
+            "CC-015",
+            {
+                "owner_id": "worker:cc015-neutral-inputs",
+                "state": "ASSIGNED",
+                "task_id": "/root/cc015_neutral_inputs",
+            },
+            [
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/neutral_domain/sources",
+                },
+                {
+                    "kind": "TREE",
+                    "path": "conformance/contract_kernel/v0/neutral_domain/traces/input",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "conformance/contract_compiler/v0/evidence/CC-015.json",
+                },
+                {
+                    "kind": "FILE",
+                    "path": "tests/contract_compiler/test_neutral_domain_inputs.py",
+                },
+            ],
+            (
+                "Author only neutral-domain LinkML sources and operation inputs",
+                "CC-010",
+                "CC-D05",
+                "CC-D08",
+                "CC-018",
+                "no oracle or expected output",
+            ),
+        ),
+    ),
+)
+def test_input_workstream_activation_boundaries_are_exact(
+    workstream_id: str,
+    assignment: dict[str, str],
+    scopes: list[dict[str, str]],
+    required_phrases: tuple[str, ...],
+) -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, workstream_id)
+    assert row["card"]["state"] == "PRESENT"
+    path = CONTRACT / row["card"]["path"]
+    source = path.read_bytes()
+    assert row["card"]["byte_length"] == len(source)
+    assert row["card"]["sha256"] == _digest(source)
+    card = _read_json(path)
+    assert card["workstream_id"] == row["workstream_id"] == workstream_id
+    workstream_states, _ = integration_module._workstream_states(
+        _raw_overseer_state()
+    )
+
+    assert card["assignment"] == assignment
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == load_program_registry(PROGRAM)[workstream_id]
+    assert card["scopes"] == scopes
+    assert (
+        workstream_states[workstream_id],
+        card["candidate"]["state"],
+        card["ledger"]["state"],
+    ) in {
+        ("ACTIVE", "NONE", "NOT_STARTED"),
+        ("COMPLETE", "ELIGIBLE", "RECORDED"),
+    }
+    assert workstream_id not in manifest["selections"]
+    responsibility = card["responsibility"]
+    for required in required_phrases + (
         "compiler or runtime implementation",
         "public API",
         "package",
@@ -1455,6 +1606,18 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
             if binding["workstream_id"] == "CC-010"
         ).update(card_sha256=cc010_digest),
     )
+    cc018_digest = _registry_row(manifest, "CC-018")["card"]["sha256"]
+
+    def rebind_active_input(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-018"]["card_sha256"] = cc018_digest
+
+    for workstream_id in ("CC-011", "CC-013", "CC-015"):
+        _rewrite_card(manifest_path, manifest, workstream_id, rebind_active_input)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 

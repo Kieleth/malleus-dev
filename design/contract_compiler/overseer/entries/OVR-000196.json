@@ -1,0 +1,53 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Author only feature-isolation sources and direct inputs under the exact CC-010 feature_cases/inputs prefix.",
+      "Use CC-X01 and CC-X02 only as research evidence and use the neutral semantic requirements fixed by CC-018.",
+      "Keep oracle and expected output, production-policy claims, compiler and runtime implementation, public API, package, Docker, release, corpus publication, and every CC-R stage outside CC-013."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000193",
+      "OVR-000194"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-013"
+  },
+  "entry_hash": "sha256:23c0e87c8ff91c078455f6e2f86ad75d5ecf8a0d0ebdf8d02e836b7694747dc8",
+  "entry_id": "OVR-000196",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1cc3796de5f8121b981439a6412f7ad5cf59499344d2735ddbf66bfa6d7e33f4",
+  "recorded_at": "2026-08-28T20:39:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000193",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000194",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-013",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 196,
+  "subject": {
+    "id": "CC-013",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-013 feature-input workstream.",
+  "why": "The exact dependency, research-evidence, scope, and owner-separation checks pass. This activation creates no feature input content, candidate, selection, or worker ledger. The assigned worker may TDD only the three scoped outputs and must record genuine RED plus append-only worker evidence before eligibility."
+}

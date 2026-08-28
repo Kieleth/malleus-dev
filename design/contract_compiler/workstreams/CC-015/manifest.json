@@ -1,0 +1,71 @@
+{
+  "assignment": {
+    "owner_id": "worker:cc015-neutral-inputs",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc015_neutral_inputs"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
+        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+        "completion_entry_id": "OVR-000186",
+        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+        "workstream_id": "CC-010"
+      },
+      {
+        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
+        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+        "completion_entry_id": "OVR-000150",
+        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+        "workstream_id": "CC-D05"
+      },
+      {
+        "card_sha256": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7",
+        "completion_entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
+        "completion_entry_id": "OVR-000164",
+        "integrated_head": "069d6383e928842ece7a378e08638bdb67efcd83",
+        "workstream_id": "CC-D08"
+      },
+      {
+        "card_sha256": "sha256:47c485893c41cda88733ddcc8a798b224c297f8264aaaa8f52ac91e9a0b5e5e0",
+        "completion_entry_hash": "sha256:8e47ee98981009b03d0315cc5823ffc76a95116f5e305c536b48b3d91d38a67e",
+        "completion_entry_id": "OVR-000192",
+        "integrated_head": "753ded3ab17ad9f5752703d8cb7b2f425bd28a23",
+        "workstream_id": "CC-018"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Author only neutral-domain LinkML sources and operation inputs under the two exact CC-010 neutral_domain/sources and neutral_domain/traces/input prefixes, using the neutral semantic requirements fixed by CC-018 and the accepted CC-D05 fact model plus CC-D08 expression profile. Own exactly the two neutral input trees, canonical verification report, and fixed neutral-input validation test named by this card. Create no oracle or expected output, themed vocabulary, compiler or runtime implementation, public API, package, Docker, release, corpus or checksum publication, or CC-R work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources"
+    },
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_kernel/v0/neutral_domain/traces/input"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-015.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_neutral_domain_inputs.py"
+    }
+  ],
+  "workstream_id": "CC-015"
+}

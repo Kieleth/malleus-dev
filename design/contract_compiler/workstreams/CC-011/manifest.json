@@ -1,0 +1,60 @@
+{
+  "assignment": {
+    "owner_id": "worker:cc011-themed-sources",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc011_themed_sources"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
+        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+        "completion_entry_id": "OVR-000186",
+        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+        "workstream_id": "CC-010"
+      },
+      {
+        "card_sha256": "sha256:4fece5d92b4e7480f8f19d56531e79f610dbdd91b785bbbb920b9467a710235c",
+        "completion_entry_hash": "sha256:92bd75f8bd8030bb425b3d848923470d53b1a8b7bbb0ba875cf8f13c67b622f2",
+        "completion_entry_id": "OVR-000142",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D14"
+      },
+      {
+        "card_sha256": "sha256:47c485893c41cda88733ddcc8a798b224c297f8264aaaa8f52ac91e9a0b5e5e0",
+        "completion_entry_hash": "sha256:8e47ee98981009b03d0315cc5823ffc76a95116f5e305c536b48b3d91d38a67e",
+        "completion_entry_id": "OVR-000192",
+        "integrated_head": "753ded3ab17ad9f5752703d8cb7b2f425bd28a23",
+        "workstream_id": "CC-018"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Author only the themed vertical LinkML source corpus under the exact CC-010 themed_fixture/sources prefix, using the neutral semantic requirements fixed by CC-018 and the Quiet Bell text/data authorship and Apache-2.0 boundary fixed by CC-D14. Own exactly the themed source tree, canonical verification report, and fixed source-corpus validation test named by this card. Create no direct-input triples or operation traces, oracle or expected output, compiler or runtime implementation, public API, package, Docker, release, corpus or checksum publication, or CC-R work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "TREE",
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-011.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_themed_source_corpus.py"
+    }
+  ],
+  "workstream_id": "CC-011"
+}

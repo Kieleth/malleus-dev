@@ -1,0 +1,60 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23118,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:7481405d36a2c037a4b7a9f641a6d15eef14c3a3db1390284eb765a9fb186660"
+    },
+    {
+      "byte_length": 2525,
+      "path": "design/contract_compiler/workstreams/CC-011/manifest.json",
+      "sha256": "sha256:b5b13df3b00197670d9da8a9df57d5e523bf4364c39c2f4cfdbf61687b4921da"
+    },
+    {
+      "byte_length": 61080,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:3e3dd20d75ff3d79f7a29a2b631ace2f81e686c766e400c91613555cfd9ab9d4"
+    }
+  ],
+  "base_commit": "753ded3ab17ad9f5752703d8cb7b2f425bd28a23",
+  "checks": [
+    {
+      "check_id": "cc011-activation-red",
+      "method": "Run the fixed three-case activation test before registering any input card.",
+      "observed": "The test produced exactly three expected failures. CC-011 failed because its registry row was ABSENT rather than PRESENT; no themed source, worker report, or source-corpus test existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-dependency-readiness",
+      "method": "Bind direct dependencies in program order to current card digests, exact COMPLETE entries and hashes, and first authority commits.",
+      "observed": "CC-010, CC-D14, and CC-018 are COMPLETE and PRESENT, and all three exact bindings validate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-source-boundary",
+      "method": "Compare the card with the CC-010 themed input prefixes, CC-018 requirements authority, and CC-D14 authorship and license decision.",
+      "observed": "CC-011 owns only themed_fixture/sources plus its canonical report and fixed test. Direct-input, trace, oracle, expected-output, compiler, and publication work remain outside the card.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-owner-separation",
+      "method": "Validate the unchanged canonical owner policy and compare assigned identities for CC-011, CC-012, and CC-018.",
+      "observed": "Existing canonical edges require CC-011 to differ from its future CC-012 oracle owner and the CC-018 requirements owner. No policy expansion is needed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc011-kiss-activation",
+      "method": "Inspect the card, registry row, selection list, worker ledger, changed paths, and absent content tree.",
+      "observed": "Candidate remains NONE, ledger remains NOT_STARTED, selection is absent, and activation creates no corpus content or implementation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies only the CC-011 activation boundary. It does not implement or complete the themed source corpus.",
+    "The assigned worker must create genuine implementation RED and append-only worker evidence before candidate eligibility.",
+    "Corpus membership, checksums, oracle content, compiler behavior, and every CC-R stage remain separate work."
+  ],
+  "recorded_at": "2026-08-28T20:38:06Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-011"
+}
