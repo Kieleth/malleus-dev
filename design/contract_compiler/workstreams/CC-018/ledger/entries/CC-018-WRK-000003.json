@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_semantic_scenario_requirements.py", "observed": "Three sorted neutral scenarios contain 9 globally unique sorted requirements, use exactly the five CC-010 kinds, and anchor only to OD-005, OD-006, and OD-008 without source, oracle, expected-output, implementation, or CC-R content.", "phase": "SLICE", "result": "PASS"},
+  "entry_hash": "sha256:b3574e1a2da984e9a9dcd29786c1fc9d8909b6b33a303710233a518f1c8b4a3c",
+  "entry_id": "CC-018-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a2ce31838f8c4de50750427d4c631c619ca78484c8d7b4624d3993b524f5aaea",
+  "recorded_at": "2026-08-28T19:57:43Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the neutral three-scenario semantic slice.",
+  "workstream_id": "CC-018"
+}

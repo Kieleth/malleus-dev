@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_semantic_scenario_requirements.py", "observed": "Root and nested duplicate keys plus NaN and positive or negative Infinity refused. Nonempty narrow ASCII identity grammar, exact-value locking, audited D05/D08 metamorphic and parity refinements, D06 full and standalone composition boundaries, and atomic whole-set or whole-compilation refusal all passed mechanically.", "phase": "DISPROOF", "result": "PASS"},
+  "entry_hash": "sha256:e1e23638e8d56d4e6cf89c655e126babce78438d6dcaf3b93d09cab237e9f08a",
+  "entry_id": "CC-018-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b3574e1a2da984e9a9dcd29786c1fc9d8909b6b33a303710233a518f1c8b4a3c",
+  "recorded_at": "2026-08-28T19:57:44Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass malformed-JSON, identity, and semantic-boundary disproofs.",
+  "workstream_id": "CC-018"
+}

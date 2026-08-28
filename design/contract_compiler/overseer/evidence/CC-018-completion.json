@@ -1,0 +1,77 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 6410,
+      "path": "conformance/contract_compiler/v0/evidence/CC-018.json",
+      "sha256": "sha256:b5391902dba8560179bbb59d5bec4e0c148b1a491a3fc46da7b609c7776c3fa7"
+    },
+    {
+      "byte_length": 22593,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:6d1341868af8a6a4bcfbd5b6915dc82cbd9940c5069675d0903626656c80b811"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-018/ledger/head.json",
+      "sha256": "sha256:170c5008f91a2bf382262ca0447042166f23b4ed12e1888c847592f75d3935d0"
+    },
+    {
+      "byte_length": 4244,
+      "path": "design/contract_compiler/workstreams/CC-018/manifest.json",
+      "sha256": "sha256:47c485893c41cda88733ddcc8a798b224c297f8264aaaa8f52ac91e9a0b5e5e0"
+    }
+  ],
+  "base_commit": "ce9e61499a590c8fe9a077b976b9616e619fe97f",
+  "checks": [
+    {
+      "check_id": "cc018-candidate-history",
+      "method": "Validate the exact b073f7d..ce9e614 one-commit candidate, bound tree, three authorized touched paths, two artifacts, and one verification report.",
+      "observed": "The direct candidate validator accepted tree 58a158ad51f80ee6052d4236b1d3939947198b06, the exact three-file scope, artifact bytes, and evidence bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-worker-tdd",
+      "method": "Validate the frozen worker-owned hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST gate.",
+      "observed": "Seven chained TDD_RESULT entries passed the strict phase gate; RED is EXPECTED_FAILURE, PACKAGE is NOT_APPLICABLE, and every other phase is PASS. Head is CC-018-WRK-000007 at sha256:a15037736d81a57f920ba8690298863b739f930e3a862f41e0543c6fb9be6c49.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-requirements-bundle",
+      "method": "Verify the candidate report schema and exact equality between its two artifacts and the card artifact bundle.",
+      "observed": "The typed report binds the exact neutral scenarios registry and fixed validation test. Three scenarios contain nine globally unique sorted requirements and all five CC-010 kinds, anchored only to OD-005, OD-006, and OD-008.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-dependencies",
+      "method": "Validate all four formal dependency bindings against current registered cards, completion entries, and exact first-authority coordinates.",
+      "observed": "CC-010, CC-D05, CC-D06, and CC-D08 remain complete and exactly bound.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-independent-audit",
+      "method": "Audit the exact ce9e614 tree, report, semantic obligations, fixed loader refusals, scope, worker chain, and KISS exclusions independently before completion metadata.",
+      "observed": "The independent candidate audit returned APPROVE with no P0-P3 finding. The eight worker-ledger files are frozen and unchanged by overseer completion.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-regression",
+      "method": "Run focused completion guards, full governance validation, changed-file Ruff, diff checks, and the fixed local CI test profile after freezing completion metadata.",
+      "observed": "Changed-file Ruff, diff, and 256 focused tests passed. Isolated CI passed Ruff, 1,808 tests with 3 skips, 42 compiler tests, ledger 192, integration 66/24/4, purity, and 40 GraphRecipe tests. The clean clone's third skip is expected because ignored malleus-moving/design/CLAIM_AND_EXECUTION_DOCTRINE.md is absent; the frozen worker's live run of 1,808 passed with 2 skips remains unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-unselected-completion",
+      "method": "Validate the completion checkpoint while leaving the exact candidate ELIGIBLE, selections unchanged, and every compiler and CC-R stage outside CC-018.",
+      "observed": "CC-018 completes only the bounded semantic-requirements registry. The candidate remains ELIGIBLE and unselected; no corpus case, compiler, runtime, package, Docker, release, or CC-R implementation is claimed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The shared requirements member remains OPTIONAL_UNTIL_LISTED in corpus.json and absent from checksums.json. Listing and checksum publication require a later integration-owner transaction with reviewed corpus cases.",
+    "Completion closes only the neutral semantic-obligation registry. It creates no concrete vector, source, direct-fact input, expected fact, artifact, diagnostic, operation, trace, outcome, corpus case, compiler, or runtime behavior.",
+    "The candidate remains ELIGIBLE and unselected. No INTEGRATED state, public API, namespace, package, Docker image, release, or CC-R stage is claimed."
+  ],
+  "recorded_at": "2026-08-28T20:23:09Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-018"
+}

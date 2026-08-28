@@ -1,0 +1,32 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Populate one neutral shared-requirements registry from accepted OD-005, OD-006, and OD-008 under the exact grammar fixed by CC-010.",
+      "Bind three scenarios, nine requirements, all five semantic obligation kinds, one canonical report, seven TDD phases, and the exact one-commit candidate.",
+      "Keep shared_requirements OPTIONAL_UNTIL_LISTED and unchecksummed until a later integration-owner transaction with reviewed corpus cases.",
+      "Keep concrete vectors, source and oracle content, compiler and runtime implementation, public API, packaging, Docker, release, selection, and every CC-R stage outside CC-018."
+    ],
+    "evidence_entry_ids": ["OVR-000191"],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-018"
+  },
+  "entry_hash": "sha256:8e47ee98981009b03d0315cc5823ffc76a95116f5e305c536b48b3d91d38a67e",
+  "entry_id": "OVR-000192",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7280b02328914063daf9f53be6eca4ea27319773e84131e32d8c07c08d2e61c1",
+  "recorded_at": "2026-08-28T20:23:12Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000191", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-018", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 192,
+  "subject": {"id": "CC-018", "type": "WORKSTREAM"},
+  "summary": "Complete the bounded CC-018 semantic-scenario requirements workstream.",
+  "why": "OVR-000191 binds the exact eligible candidate, independent audit, seven worker TDD phases, strict semantic-only registry, fixed refusal guards, and passing regression evidence needed to complete CC-018 without selecting it, publishing corpus membership, or starting compiler work."
+}

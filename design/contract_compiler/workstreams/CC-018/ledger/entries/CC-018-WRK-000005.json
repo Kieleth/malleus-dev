@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": ".venv/bin/python scripts/ci.py test", "observed": "The final local CI test profile passed Ruff, 1,808 configured tests with 2 skips, 42 contract-compiler tests, the 189-entry overseer ledger, 66-workstream integration with 24 cards and 4 selections, repository purity, and 40 GraphRecipe tests.", "phase": "REGRESSION", "result": "PASS"},
+  "entry_hash": "sha256:2aa2e0eba21b3262c6007279eeb97fc06866f205b4f199fa822e898d2b44fcef",
+  "entry_id": "CC-018-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:e1e23638e8d56d4e6cf89c655e126babce78438d6dcaf3b93d09cab237e9f08a",
+  "recorded_at": "2026-08-28T19:57:45Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the final local merge-style regression gate.",
+  "workstream_id": "CC-018"
+}

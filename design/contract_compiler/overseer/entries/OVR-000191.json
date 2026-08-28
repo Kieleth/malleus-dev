@@ -1,0 +1,32 @@
+{
+  "actor": {"id": "cc018-completion-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-28T20:23:11Z",
+    "claims": [
+      "The exact b073f7d..ce9e614 candidate is linear, tree-bound, and limited to the three authorized CC-018 paths.",
+      "The neutral registry contains exactly three sorted scenarios, nine globally unique sorted requirements, all five CC-010 kinds, and only OD-005, OD-006, and OD-008 anchors.",
+      "The frozen worker ledger contains the exact seven ordered TDD phases, and the candidate remains ELIGIBLE and unselected.",
+      "Independent candidate audit approved the exact ce9e614 tree with no P0-P3 finding."
+    ],
+    "limitations": [
+      "shared_requirements remains OPTIONAL_UNTIL_LISTED and absent from checksums.json pending a later integration-owner transaction with reviewed corpus cases.",
+      "Completion creates no concrete vector, corpus case, compiler, runtime, public API, package, Docker, release, or CC-R result."
+    ]
+  },
+  "entry_hash": "sha256:7280b02328914063daf9f53be6eca4ea27319773e84131e32d8c07c08d2e61c1",
+  "entry_id": "OVR-000191",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:25f23cb43facf2c6df556b3550374339417d69a51a5f32c3ec0f9a6f94fa9a6c",
+  "recorded_at": "2026-08-28T20:23:11Z",
+  "references": [
+    {"digest": "sha256:e01635239fc8476719de0df22b6147c8cdd81f710ea4e846aba76bbe45fec483", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-018-completion.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "ce9e61499a590c8fe9a077b976b9616e619fe97f", "type": "COMMIT"},
+    {"relation": "AFFECTS", "target": "CC-018", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 191,
+  "subject": {"id": "CC-018-completion-verification", "type": "EVIDENCE"},
+  "summary": "Verify the bounded CC-018 completion gate.",
+  "why": "CC-018 may complete only after its exact candidate, worker TDD phases, dependency bindings, semantic boundary, independent audit, and local CI evidence pass mechanically without publishing corpus membership or starting compiler work."
+}

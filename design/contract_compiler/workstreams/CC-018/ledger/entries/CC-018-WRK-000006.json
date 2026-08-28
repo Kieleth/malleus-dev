@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": "Review the exact CC-018 card and committed candidate against package and release boundaries.", "observed": "NOT_APPLICABLE. CC-018 adds one repository-local semantic requirements registry, its fixed test, and verification report, with no distribution, installed data, compiler, runtime, adapter, public API, Docker, or release claim.", "phase": "PACKAGE", "result": "NOT_APPLICABLE"},
+  "entry_hash": "sha256:e95d807295210bda08f3774aebd4e4412d05c5ab3a79420957a022aa37d139ef",
+  "entry_id": "CC-018-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:2aa2e0eba21b3262c6007279eeb97fc06866f205b4f199fa822e898d2b44fcef",
+  "recorded_at": "2026-08-28T19:57:46Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-018"
+}

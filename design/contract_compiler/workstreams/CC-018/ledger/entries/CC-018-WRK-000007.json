@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [{"byte_length": 6410, "path": "conformance/contract_compiler/v0/evidence/CC-018.json", "sha256": "sha256:b5391902dba8560179bbb59d5bec4e0c148b1a491a3fc46da7b609c7776c3fa7"}, {"byte_length": 5314, "path": "conformance/contract_kernel/v0/requirements/scenarios.json", "sha256": "sha256:758d2e69fefcfd4c8476a0c04988fba1763e31a73b4f6865da4d071568f4b662"}, {"byte_length": 12751, "path": "tests/contract_compiler/test_semantic_scenario_requirements.py", "sha256": "sha256:7df913fb88fae1c11bde9e6c93ab1df17b39114ca0c2250bd5c3e171c1a7fcdb"}], "command": "Verify commit ce9e61499a590c8fe9a077b976b9616e619fe97f, evidence CC-018, final independent audit, affected tests, and exact candidate bytes.", "observed": "Commit ce9e61499a590c8fe9a077b976b9616e619fe97f has tree 58a158ad51f80ee6052d4236b1d3939947198b06 and exactly the three authorized artifacts above. The report verified 2 artifacts and 11 PASS checks, 255 affected tests passed, and final independent audit approved with no P0-P3 findings.", "phase": "ATTEST", "result": "PASS"},
+  "entry_hash": "sha256:a15037736d81a57f920ba8690298863b739f930e3a862f41e0543c6fb9be6c49",
+  "entry_id": "CC-018-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:e95d807295210bda08f3774aebd4e4412d05c5ab3a79420957a022aa37d139ef",
+  "recorded_at": "2026-08-28T19:57:47Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen CC-018 candidate and worker evidence.",
+  "workstream_id": "CC-018"
+}

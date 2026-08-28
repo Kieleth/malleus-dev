@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_semantic_scenario_requirements.py", "observed": "All 9 fixed semantic-requirements tests passed against the minimum registry, strict duplicate-key and nonfinite JSON loader, narrow identifier guard, and exact statement lock.", "phase": "GREEN", "result": "PASS"},
+  "entry_hash": "sha256:a2ce31838f8c4de50750427d4c631c619ca78484c8d7b4624d3993b524f5aaea",
+  "entry_id": "CC-018-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:cf0740552bdc6851a10738f9911f887f359f5f1c3e23f3fe43097c18b8a2f35b",
+  "recorded_at": "2026-08-28T19:57:42Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum semantic requirements registry.",
+  "workstream_id": "CC-018"
+}

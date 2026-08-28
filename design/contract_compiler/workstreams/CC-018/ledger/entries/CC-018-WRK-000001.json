@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc018-semantic-scenarios",
+  "data": {"artifacts": [], "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_semantic_scenario_requirements.py", "observed": "The pre-registry run produced exactly 4 failures, all FileNotFoundError for the authorized absent conformance/contract_kernel/v0/requirements/scenarios.json member, with no semantic mismatch or unrelated failure.", "phase": "RED", "result": "EXPECTED_FAILURE"},
+  "entry_hash": "sha256:cf0740552bdc6851a10738f9911f887f359f5f1c3e23f3fe43097c18b8a2f35b",
+  "entry_id": "CC-018-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-28T19:57:41Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the genuine absent-registry RED.",
+  "workstream_id": "CC-018"
+}

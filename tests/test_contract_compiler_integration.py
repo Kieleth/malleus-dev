@@ -585,8 +585,6 @@ def test_cc018_activation_boundary_is_exact() -> None:
         binding["workstream_id"]
         for binding in card["authorization"]["dependency_bindings"]
     ) == dependencies
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
     assert card["scopes"] == [
         {
             "kind": "FILE",
@@ -616,7 +614,14 @@ def test_cc018_activation_boundary_is_exact() -> None:
         {"left": "CC-018", "right": "CC-020"},
         {"left": "CC-019", "right": "CC-020"},
     ]
-    assert workstream_states["CC-018"] == "ACTIVE"
+    assert (
+        workstream_states["CC-018"],
+        card["candidate"]["state"],
+        card["ledger"]["state"],
+    ) in {
+        ("ACTIVE", "NONE", "NOT_STARTED"),
+        ("COMPLETE", "ELIGIBLE", "RECORDED"),
+    }
     assert "CC-018" not in manifest["selections"]
     responsibility = card["responsibility"]
     for required in (
@@ -645,6 +650,51 @@ def test_cc018_activation_boundary_is_exact() -> None:
         "CC-R work",
     ):
         assert required in responsibility
+
+
+def test_cc018_completion_checkpoint_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-018")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    workstream_states, _ = integration_module._workstream_states(
+        _raw_overseer_state()
+    )
+
+    assert card["candidate"] == {
+        "artifacts": [
+            {
+                "byte_length": 5314,
+                "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
+                "sha256": "sha256:758d2e69fefcfd4c8476a0c04988fba1763e31a73b4f6865da4d071568f4b662",
+            },
+            {
+                "byte_length": 12751,
+                "path": "tests/contract_compiler/test_semantic_scenario_requirements.py",
+                "sha256": "sha256:7df913fb88fae1c11bde9e6c93ab1df17b39114ca0c2250bd5c3e171c1a7fcdb",
+            },
+        ],
+        "base_commit": "b073f7d4b44205231a81bb22f3ad9328cc1c7541",
+        "evidence": [
+            {
+                "byte_length": 6410,
+                "path": "conformance/contract_compiler/v0/evidence/CC-018.json",
+                "result": "PASS",
+                "sha256": "sha256:b5391902dba8560179bbb59d5bec4e0c148b1a491a3fc46da7b609c7776c3fa7",
+            }
+        ],
+        "head_commit": "ce9e61499a590c8fe9a077b976b9616e619fe97f",
+        "head_tree": "58a158ad51f80ee6052d4236b1d3939947198b06",
+        "state": "ELIGIBLE",
+    }
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": "CC-018-WRK-000007",
+        "head_hash": "sha256:a15037736d81a57f920ba8690298863b739f930e3a862f41e0543c6fb9be6c49",
+        "path": "workstreams/CC-018/ledger",
+        "state": "RECORDED",
+    }
+    assert workstream_states["CC-018"] == "COMPLETE"
+    assert "CC-018" not in manifest["selections"]
 
 
 @pytest.mark.parametrize("mutation", ("reverse", "reorder"))
