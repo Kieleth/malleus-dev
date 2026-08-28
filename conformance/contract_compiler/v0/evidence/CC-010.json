@@ -1,0 +1,88 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 717,
+      "path": "conformance/contract_kernel/v0/checksums.json",
+      "sha256": "sha256:55b0b2588f95245454a32292b531afd6d4b3719984358020c93ca0f06aeb3a9e"
+    },
+    {
+      "byte_length": 1739,
+      "path": "conformance/contract_kernel/v0/corpus.json",
+      "sha256": "sha256:7fa6d757a1571983dd195dec955cd87cd34487fe8da810d8156313dbbf5ad4eb"
+    },
+    {
+      "byte_length": 10155,
+      "path": "conformance/contract_kernel/v0/corpus.schema.json",
+      "sha256": "sha256:acf148db5f482fe78281268ceb7b3c23d9cc762c52d6bbb24a6f5647fc896eeb"
+    },
+    {
+      "byte_length": 1542,
+      "path": "conformance/contract_kernel/v0/stage-matrix.json",
+      "sha256": "sha256:5e5844e8d827a787c470910709265e2949ef68d62d7185092d756ce28ce8647b"
+    },
+    {
+      "byte_length": 7478,
+      "path": "docs/contract_compiler/conformance_protocol.md",
+      "sha256": "sha256:e07c2c4b167f4d928727d180ac6ddaa6ca36d21031f127449ac132c3024dbdd6"
+    },
+    {
+      "byte_length": 29627,
+      "path": "tests/contract_compiler/test_conformance_protocol.py",
+      "sha256": "sha256:6690e2c68ffe96cea9a9effd4917d43b230372c6d4c6b012bb29a77dbce48b5a"
+    }
+  ],
+  "base_commit": "426d26e4386090c8b21c53939fd92a65fe44f4a1",
+  "checks": [
+    {
+      "check_id": "cc010-red",
+      "method": "Run the complete fixed CC-010 protocol test before any protocol manifest exists.",
+      "observed": "The run produced 11 failures and 4 passing raw-JSON controls. Every remaining failure refused the absent conformance/contract_kernel/v0/corpus.schema.json protocol root.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-green",
+      "method": "Run tests/contract_compiler/test_conformance_protocol.py against the minimum closed manifests and guide.",
+      "observed": "All 21 focused protocol tests passed and scoped Ruff passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-slice",
+      "method": "Validate the exact empty bootstrap, three fixed corpus identities and role prefixes, four document kinds, ordered CC-R01 through CC-R08 matrix, shared requirements seam, and checksummed protocol controls.",
+      "observed": "The closed bootstrap validated with no invented scenario, source, oracle, trace, direct-fact, compiler, runtime, or generated expectation content.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-disproof",
+      "method": "Exercise malformed, duplicate-key and nonfinite JSON; missing and unknown fields; identity, order and addition drift; unsafe, cross-corpus and cross-role paths; unsorted or duplicate membership; checksum set, size and digest drift; same-size and changed-size byte mutation; symlinks; wrong discriminators; hybrid documents; and invalid requirement identity and ordering.",
+      "observed": "Every invalid class refused while valid direct-fact and trace input prefixes and their separate oracle prefixes remained admissible.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-regression",
+      "method": "Run the one-command local CI test profile after the final protocol repair.",
+      "observed": "Ruff passed; the configured suite passed 1,805 tests with 2 skips; the separate compiler suite passed 33 tests; GraphRecipe passed 40 tests; ledger, integration, and repository-purity gates passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-governance-baseline",
+      "method": "Validate the overseer ledger, integration manifest, active CC-010 authorization, verification-report schema, and unchanged selections before candidate metadata exists.",
+      "observed": "The 183-entry overseer ledger, 66-workstream integration state, 23 registered cards, four unchanged selections, active CC-010 card with candidate NONE and ledger NOT_STARTED, and this six-artifact verification report all validated.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-package",
+      "method": "Review the CC-010 scope against the package boundary.",
+      "observed": "PACKAGE NOT_APPLICABLE. CC-010 defines repository-local conformance manifests, validation, and an internal guide; it changes no wheel, sdist, installed corpus, public API, runtime, or release claim.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The bootstrap intentionally contains no cases and the shared requirements file remains OPTIONAL_UNTIL_LISTED; later owners must supply reviewed content before any research stage can pass.",
+    "The internal guide is not added to Sphinx navigation by CC-010; documentation wiring and public support claims remain outside this card.",
+    "CC-010 defines membership and integrity only. It does not implement a compiler, runtime contract, generated oracle, artifact, package, Docker image, release, or CC-R stage.",
+    "Current bundled ontologies remain a separate regression set, not a fourth independent corpus or an oracle for the new fact grammar."
+  ],
+  "recorded_at": "2026-08-28T18:36:54Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-010"
+}

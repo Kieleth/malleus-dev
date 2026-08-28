@@ -1,0 +1,270 @@
+{
+  "$id": "https://malleus.dev/schemas/contract-kernel/v0/corpus.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {"$ref": "#/$defs/corpusManifest"},
+    {"$ref": "#/$defs/stageMatrix"},
+    {"$ref": "#/$defs/checksumManifest"},
+    {"$ref": "#/$defs/scenarioRequirements"}
+  ],
+  "title": "Malleus contract-kernel conformance protocol v0",
+  "$defs": {
+    "case": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {"$ref": "#/$defs/identifier"},
+        "input_files": {
+          "items": {"$ref": "#/$defs/path"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "oracle_files": {
+          "items": {"$ref": "#/$defs/path"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "scenario_ids": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["case_id", "scenario_ids", "input_files", "oracle_files"],
+      "type": "object"
+    },
+    "checksum": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_length": {"minimum": 0, "type": "integer"},
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {
+          "maxLength": 71,
+          "minLength": 71,
+          "type": "string"
+        }
+      },
+      "required": ["path", "byte_length", "sha256"],
+      "type": "object"
+    },
+    "checksumManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "files": {
+          "items": {"$ref": "#/$defs/checksum"},
+          "type": "array"
+        },
+        "protocol": {"const": "contract-kernel/v0"},
+        "schema": {"const": "malleus.contract-kernel.checksums/v0"}
+      },
+      "required": ["schema", "protocol", "algorithm", "files"],
+      "type": "object"
+    },
+    "corpusEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "cases": {
+          "items": {"$ref": "#/$defs/case"},
+          "type": "array"
+        },
+        "corpus_id": {"$ref": "#/$defs/identifier"},
+        "input_prefixes": {
+          "items": {"$ref": "#/$defs/path"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "oracle_prefixes": {
+          "items": {"$ref": "#/$defs/path"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "root": {"$ref": "#/$defs/path"}
+      },
+      "required": ["corpus_id", "root", "input_prefixes", "oracle_prefixes", "cases"],
+      "type": "object"
+    },
+    "corpusManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "corpora": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "allOf": [
+                {"$ref": "#/$defs/corpusEntry"},
+                {
+                  "properties": {
+                    "corpus_id": {"const": "themed_vertical"},
+                    "input_prefixes": {"const": ["conformance/contract_kernel/v0/themed_fixture/direct-input", "conformance/contract_kernel/v0/themed_fixture/sources", "conformance/contract_kernel/v0/themed_fixture/traces/input"]},
+                    "oracle_prefixes": {"const": ["conformance/contract_kernel/v0/themed_fixture/oracle", "conformance/contract_kernel/v0/themed_fixture/traces/oracle"]},
+                    "root": {"const": "themed_fixture"}
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {"$ref": "#/$defs/corpusEntry"},
+                {
+                  "properties": {
+                    "corpus_id": {"const": "feature_isolation"},
+                    "input_prefixes": {"const": ["conformance/contract_kernel/v0/feature_cases/inputs"]},
+                    "oracle_prefixes": {"const": ["conformance/contract_kernel/v0/feature_cases/oracle"]},
+                    "root": {"const": "feature_cases"}
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {"$ref": "#/$defs/corpusEntry"},
+                {
+                  "properties": {
+                    "corpus_id": {"const": "neutral_domain"},
+                    "input_prefixes": {"const": ["conformance/contract_kernel/v0/neutral_domain/sources", "conformance/contract_kernel/v0/neutral_domain/traces/input"]},
+                    "oracle_prefixes": {"const": ["conformance/contract_kernel/v0/neutral_domain/oracle", "conformance/contract_kernel/v0/neutral_domain/traces/oracle"]},
+                    "root": {"const": "neutral_domain"}
+                  }
+                }
+              ]
+            }
+          ],
+          "type": "array"
+        },
+        "protocol": {"const": "contract-kernel/v0"},
+        "protocol_files": {
+          "const": [
+            "conformance/contract_kernel/v0/corpus.json",
+            "conformance/contract_kernel/v0/corpus.schema.json",
+            "conformance/contract_kernel/v0/stage-matrix.json"
+          ]
+        },
+        "schema": {"const": "malleus.contract-kernel.corpus/v0"},
+        "shared_requirements": {"$ref": "#/$defs/sharedRequirements"}
+      },
+      "required": ["schema", "protocol", "protocol_files", "shared_requirements", "corpora"],
+      "type": "object"
+    },
+    "identifier": {"minLength": 1, "type": "string"},
+    "path": {"minLength": 1, "type": "string"},
+    "scenario": {
+      "additionalProperties": false,
+      "properties": {
+        "requirements": {
+          "items": {"$ref": "#/$defs/semanticRequirement"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "scenario_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["scenario_id", "requirements"],
+      "type": "object"
+    },
+    "semanticRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "decision_anchors": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "kind": {
+          "enum": [
+            "POSITIVE",
+            "REFUSAL",
+            "METAMORPHIC",
+            "PARITY",
+            "COMPOSITION_DELTA"
+          ]
+        },
+        "requirement_id": {"$ref": "#/$defs/identifier"},
+        "statement": {"minLength": 1, "type": "string"}
+      },
+      "required": [
+        "requirement_id",
+        "kind",
+        "decision_anchors",
+        "statement"
+      ],
+      "type": "object"
+    },
+    "scenarioRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "scenarios": {
+          "items": {"$ref": "#/$defs/scenario"},
+          "minItems": 1,
+          "type": "array"
+        },
+        "schema": {"const": "malleus.contract-kernel.scenarios/v0"}
+      },
+      "required": ["schema", "scenarios"],
+      "type": "object"
+    },
+    "sharedRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "conformance/contract_kernel/v0/requirements/scenarios.json"},
+        "schema": {"const": "malleus.contract-kernel.scenarios/v0"},
+        "state": {"enum": ["OPTIONAL_UNTIL_LISTED", "LISTED"]}
+      },
+      "required": ["path", "schema", "state"],
+      "type": "object"
+    },
+    "stageEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "assigned_acceptance_tests": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "corpora": {
+          "const": ["themed_vertical", "feature_isolation", "neutral_domain"]
+        },
+        "stage": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["stage", "corpora", "assigned_acceptance_tests"],
+      "type": "object"
+    },
+    "stageMatrix": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {"const": "contract-kernel/v0"},
+        "cumulative_rule": {"const": "EACH_STAGE_RERUNS_PRIOR_SLICES"},
+        "schema": {"const": "malleus.contract-kernel.stage-matrix/v0"},
+        "stages": {
+          "items": false,
+          "maxItems": 8,
+          "minItems": 8,
+          "prefixItems": [
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-001"]}, "stage": {"const": "CC-R01"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-002"]}, "stage": {"const": "CC-R02"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-003"]}, "stage": {"const": "CC-R03"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-004", "AT-005", "AT-006"]}, "stage": {"const": "CC-R04"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-007"]}, "stage": {"const": "CC-R05"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-008", "AT-008a", "AT-010", "AT-011", "AT-012"]}, "stage": {"const": "CC-R06"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-009"]}, "stage": {"const": "CC-R07"}}}]},
+            {"allOf": [{"$ref": "#/$defs/stageEntry"}, {"properties": {"assigned_acceptance_tests": {"const": ["AT-001", "AT-002", "AT-003", "AT-004", "AT-005", "AT-006", "AT-007", "AT-008", "AT-008a", "AT-009", "AT-010", "AT-011", "AT-012"]}, "stage": {"const": "CC-R08"}}}]}
+          ],
+          "type": "array"
+        },
+        "whole_pipeline_obligations": {
+          "const": ["CURRENT_BUNDLED_ONTOLOGIES", "MUTATION_ADEQUACY"]
+        }
+      },
+      "required": ["schema", "protocol", "cumulative_rule", "whole_pipeline_obligations", "stages"],
+      "type": "object"
+    }
+  }
+}

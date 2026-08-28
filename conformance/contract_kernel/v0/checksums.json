@@ -1,0 +1,22 @@
+{
+  "algorithm": "sha256",
+  "files": [
+    {
+      "byte_length": 1739,
+      "path": "conformance/contract_kernel/v0/corpus.json",
+      "sha256": "sha256:7fa6d757a1571983dd195dec955cd87cd34487fe8da810d8156313dbbf5ad4eb"
+    },
+    {
+      "byte_length": 10155,
+      "path": "conformance/contract_kernel/v0/corpus.schema.json",
+      "sha256": "sha256:acf148db5f482fe78281268ceb7b3c23d9cc762c52d6bbb24a6f5647fc896eeb"
+    },
+    {
+      "byte_length": 1542,
+      "path": "conformance/contract_kernel/v0/stage-matrix.json",
+      "sha256": "sha256:5e5844e8d827a787c470910709265e2949ef68d62d7185092d756ce28ce8647b"
+    }
+  ],
+  "protocol": "contract-kernel/v0",
+  "schema": "malleus.contract-kernel.checksums/v0"
+}

@@ -1,0 +1,19 @@
+{
+  "cumulative_rule": "EACH_STAGE_RERUNS_PRIOR_SLICES",
+  "protocol": "contract-kernel/v0",
+  "schema": "malleus.contract-kernel.stage-matrix/v0",
+  "stages": [
+    {"assigned_acceptance_tests": ["AT-001"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R01"},
+    {"assigned_acceptance_tests": ["AT-002"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R02"},
+    {"assigned_acceptance_tests": ["AT-003"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R03"},
+    {"assigned_acceptance_tests": ["AT-004", "AT-005", "AT-006"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R04"},
+    {"assigned_acceptance_tests": ["AT-007"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R05"},
+    {"assigned_acceptance_tests": ["AT-008", "AT-008a", "AT-010", "AT-011", "AT-012"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R06"},
+    {"assigned_acceptance_tests": ["AT-009"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R07"},
+    {"assigned_acceptance_tests": ["AT-001", "AT-002", "AT-003", "AT-004", "AT-005", "AT-006", "AT-007", "AT-008", "AT-008a", "AT-009", "AT-010", "AT-011", "AT-012"], "corpora": ["themed_vertical", "feature_isolation", "neutral_domain"], "stage": "CC-R08"}
+  ],
+  "whole_pipeline_obligations": [
+    "CURRENT_BUNDLED_ONTOLOGIES",
+    "MUTATION_ADEQUACY"
+  ]
+}

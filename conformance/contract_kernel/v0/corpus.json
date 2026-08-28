@@ -1,0 +1,54 @@
+{
+  "corpora": [
+    {
+      "cases": [],
+      "corpus_id": "themed_vertical",
+      "input_prefixes": [
+        "conformance/contract_kernel/v0/themed_fixture/direct-input",
+        "conformance/contract_kernel/v0/themed_fixture/sources",
+        "conformance/contract_kernel/v0/themed_fixture/traces/input"
+      ],
+      "oracle_prefixes": [
+        "conformance/contract_kernel/v0/themed_fixture/oracle",
+        "conformance/contract_kernel/v0/themed_fixture/traces/oracle"
+      ],
+      "root": "themed_fixture"
+    },
+    {
+      "cases": [],
+      "corpus_id": "feature_isolation",
+      "input_prefixes": [
+        "conformance/contract_kernel/v0/feature_cases/inputs"
+      ],
+      "oracle_prefixes": [
+        "conformance/contract_kernel/v0/feature_cases/oracle"
+      ],
+      "root": "feature_cases"
+    },
+    {
+      "cases": [],
+      "corpus_id": "neutral_domain",
+      "input_prefixes": [
+        "conformance/contract_kernel/v0/neutral_domain/sources",
+        "conformance/contract_kernel/v0/neutral_domain/traces/input"
+      ],
+      "oracle_prefixes": [
+        "conformance/contract_kernel/v0/neutral_domain/oracle",
+        "conformance/contract_kernel/v0/neutral_domain/traces/oracle"
+      ],
+      "root": "neutral_domain"
+    }
+  ],
+  "protocol": "contract-kernel/v0",
+  "protocol_files": [
+    "conformance/contract_kernel/v0/corpus.json",
+    "conformance/contract_kernel/v0/corpus.schema.json",
+    "conformance/contract_kernel/v0/stage-matrix.json"
+  ],
+  "schema": "malleus.contract-kernel.corpus/v0",
+  "shared_requirements": {
+    "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
+    "schema": "malleus.contract-kernel.scenarios/v0",
+    "state": "OPTIONAL_UNTIL_LISTED"
+  }
+}
