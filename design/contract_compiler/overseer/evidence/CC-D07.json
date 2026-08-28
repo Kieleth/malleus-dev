@@ -1,0 +1,116 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:270ad3795f5c1350ee9024ca4a27a244404c05d4a6120fbf00a123f21b4d25eb"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:6819b890dca1cddccf6b0682880843def86119ed6760f19e70c9ab401f42684c"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:ea428bb0456d22398d77b2ade892ce0bef5e75e5969c494c3c11e0e5315e0b89"
+    },
+    {
+      "byte_length": 92337,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:2e29fc4170edc0c39bcf3731d15973fd2ebf759cac3f37264a7b22bbf4144292"
+    },
+    {
+      "byte_length": 90093,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:fc5f46e60123de176c584de225fdd76100bba4f4725d9bee77af4aa982c780e2"
+    },
+    {
+      "byte_length": 304414,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:dcd99af38d18d442b5080b054a6674a0892ee147b163597b184d220aad0a2970"
+    },
+    {
+      "byte_length": 26727,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:440c37bf807a01bedf9847ac6faadbecf63bffcb23068f228d35bfcefaa4eae1"
+    },
+    {
+      "byte_length": 101707,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:5b914f4092bdd46ea8b29023178172066c8da65135c0a2d42e5916318e9b1106"
+    },
+    {
+      "byte_length": 21114,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:1f36bb8b1562af281171469ea611fa3fff19ba58a9f20a0ec515ca57d18f77a2"
+    },
+    {
+      "byte_length": 33117,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:29d96ddf333c8221a7a368ded73edb0c74a0793c8d5c23fe0beb648f2863c98f"
+    },
+    {
+      "byte_length": 1844,
+      "path": "design/contract_compiler/workstreams/CC-D07/manifest.json",
+      "sha256": "sha256:22a84695ad57b4aad0e879781df579f8a917518b9f0856c83648735be4d93604"
+    },
+    {
+      "byte_length": 37709,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:9f8092027e9dc26f8feea896c155c3dc71b93bf6cfc4db2fb230dd6ce23ad5c3"
+    },
+    {
+      "byte_length": 219694,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:39a4334697c900af177c75fb48333fa69440fd06bee7a747bb705ecefab16e56"
+    }
+  ],
+  "base_commit": "069d6383e928842ece7a378e08638bdb67efcd83",
+  "checks": [
+    {
+      "check_id": "ccd07-red-tdd",
+      "method": "Run the new OD-007 contract guard before adding the decision, card, graph closure, or evidence.",
+      "observed": "The exact command `.venv/bin/pytest -q tests/test_contract_compiler_ledger.py -k od007 tests/test_contract_compiler_integration.py::test_canonical_integration_manifest_is_valid` exited 1 with 1 failed, 4 passed, and 149 deselected because the OD-007 heading count was zero. A separate integration-only run refused the expected changed-test digest drift; that was strict governance behavior, not a D07 semantic defect.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd07-dependency",
+      "method": "Match the CC-D07 zero-scope card to the exact CC-D06 card, completion entry, completion hash, and first authority head.",
+      "observed": "The card binds CC-D06 card sha256 0bd4ab01...64adb, completion OVR-000156 with hash 6367bdac...b9bac, and first authority head 0c899eb1...12ebf. It remains assigned to the overseer with no scope, candidate, selection, or worker ledger.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd07-topology",
+      "method": "Parse graph revision 19 and mechanically inspect the OD-007 selection, rejected topology revision, exact topology bindings, accepted-graph identity components, and projection parity.",
+      "observed": "All 28 Turtle blocks across the five Markdown projections and the canonical artifact contain the same 1,675 triples with 345 single-status subjects. OD-007 selects the protected replay-derived topology and rejects excluded GovernancePolicyGraphR2, which supersedes the unchanged historical Open GovernancePolicyGraph. The selected topology has no supersedes edge to that alternative and adds no governance-specific graph, head, snapshot, digest, synchronization, or query surface.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd07-replay-authorization",
+      "method": "Replay the abstract conceptual ledger-event trace and compare pre-state and post-state projections for ordinary writes, governance grants, direct policy self-amendment, external-root mutation, wrong authority source, wrong admission path, and same-event self-authorization.",
+      "observed": "Admission path alone derives domain versus governance membership, including misleading record names. Prior authority accepts a governance update only for following events. Every post-genesis refusal preserves records, authorities, accepted-event history, contract identity, and composition epoch identity; invalid genesis creates no state.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd07-epoch",
+      "method": "Update one governance-policy identity under the same GovernanceContract, then attempt a semantic GovernanceContract change under the old opaque composition epoch identity.",
+      "observed": "The same-contract policy-instance update changes the replay-derived governance projection while preserving the opaque composition epoch identity. A changed GovernanceContract identity refuses atomically under that epoch, leaving D06 responsible for constructing the new composition and epoch.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd07-boundaries-zero-scope",
+      "method": "Inspect protocol-ledger separation, protected-write semantics, current typed-policy placement, D10 ownership, confidentiality and read-policy exclusions, and the complete changed-file set.",
+      "observed": "The protocol ledger stays the authoritative event history and sole writer, not an accepted-graph partition or merged store. Current typed policies remain protocol-ledger artifacts and are not materialized. D10 retains cross-partition references, endpoints, reads, and exact stateful admission. CC-D07 adds design, graph, governance evidence, and tests only, with no production code, ontology YAML, dependency, package, API, policy language, storage, migration, or second graph.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies the selected logical topology, abstract replay semantics, graph parity, ownership boundaries, atomic refusals, and zero implementation scope. It does not implement governance records, events, APIs, storage, authentication, policy evaluation, migration, monitoring, or runtime behavior.",
+    "Exact governance record and wire fields, operation vocabulary, richer policy amendment and supersession semantics, bootstrap encoding and replacement, read authorization and confidentiality, physical storage, recovery, and external effects remain deferred. D10 retains cross-partition reference, endpoint, context, and stateful admission semantics.",
+    "Current typed policy artifacts remain protocol-ledger artifacts. OD-007 permits a future protected governance partition but does not materialize existing policies or decide which policy artifacts become accepted-graph records."
+  ],
+  "recorded_at": "2026-08-28T05:03:03Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D07"
+}

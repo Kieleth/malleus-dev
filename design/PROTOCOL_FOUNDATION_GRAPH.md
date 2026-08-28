@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 18,
-`sha256:2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068`
+revision 19,
+`sha256:dcd99af38d18d442b5080b054a6674a0892ee147b163597b184d220aad0a2970`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -983,6 +983,55 @@ mfg:IndependentRoleHeadsAndRecoveryDeferredBoundary rdf:type mfg:Boundary ;
 mfg:ArtifactBundleAndWireGrammarDeferredBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
+mfg:ProtectedReplayDerivedGovernancePartitionTopologyV0
+    rdf:type mfg:DesignObject ;
+    mfg:binds mfg:AcceptedTemporalGraphVersion ;
+    mfg:binds mfg:AcceptedTemporalGraphVersionHash ;
+    mfg:binds mfg:GovernedGraphContract ;
+    mfg:binds mfg:GovernanceContract ;
+    mfg:binds mfg:GovernanceBootstrap ;
+    mfg:binds mfg:ProtocolLedgerSoleWriteAuthorityBoundary ;
+    mfg:binds mfg:NoSeparateGovernanceGraphHeadSnapshotDigestSynchronizationOrQueryBoundary ;
+    mfg:binds mfg:GovernanceMembershipAdmissionPathOnlyNoCallerTypeNameNamespaceOrStorageInferenceBoundary ;
+    mfg:binds mfg:PriorAuthoritySingleExternalRootNoSameEventOrDirectPolicySelfAmendmentFollowingEventVisibilityBoundary ;
+    mfg:binds mfg:OrdinaryPathCannotDirectlyMutateGovernanceIdentityBoundary ;
+    mfg:binds mfg:SameGovernanceContractPolicyUpdateSameEpochSemanticContractChangeNewEpochBoundary ;
+    mfg:binds mfg:StandaloneStructuralGraphGovernedRoleOnlyBoundary ;
+    mfg:binds mfg:GovernanceRepresentationAndD10SemanticsDeferredBoundary ;
+    mfg:binds mfg:ProtectedWriteAdmissionNotReadConfidentialityBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ProtocolLedgerSoleWriteAuthorityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NoSeparateGovernanceGraphHeadSnapshotDigestSynchronizationOrQueryBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:GovernanceMembershipAdmissionPathOnlyNoCallerTypeNameNamespaceOrStorageInferenceBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:PriorAuthoritySingleExternalRootNoSameEventOrDirectPolicySelfAmendmentFollowingEventVisibilityBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:OrdinaryPathCannotDirectlyMutateGovernanceIdentityBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SameGovernanceContractPolicyUpdateSameEpochSemanticContractChangeNewEpochBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:GovernanceRepresentationAndD10SemanticsDeferredBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ProtectedWriteAdmissionNotReadConfidentialityBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
 mfg:StablePublicFactIdentityStillOD009Boundary rdf:type mfg:Boundary ;
     mfg:supersedes mfg:StablePublicFactIdentityStillOD008Boundary ;
     mfg:status mfg:AcceptedDesign .
@@ -1010,6 +1059,14 @@ recovery. A standalone structural graph is the one narrower case: it binds
 only the governed-graph role and structural state, has no protocol ledger, and
 is not an accepted-temporal composition. That exception never weakens the
 three required slots of a full composition.
+
+`OD-007` adds no second graph or governance-specific head. Protocol-ledger
+replay derives ordinary and protected governance partitions inside the full
+accepted-temporal graph. Both use its existing source-ledger, acceptance, and
+materialization identity components and one query surface. Governance
+membership comes only from the `GovernanceContract` admission path. A
+standalone structural graph has no governance role and cannot contain the
+protected partition.
 
 ## 5. Contract and graph revision
 
@@ -1364,10 +1421,11 @@ validation of an assessed sufficient grant on `AUTHORIZE`. It does not run
 authority monitors through `AssentPlan`, establish policy legitimacy or
 applicability, authenticate actors, or establish a grantor trust root.
 
-Current policies are ontology-typed protocol-ledger artifacts. They are not
-derived from or materialized as records in the accepted domain graph. A
-protected governance partition or separate governance graph is a new
-topology, not a description of current behavior.
+As current shipped behavior, policies are ontology-typed protocol-ledger
+artifacts. They are not derived from or materialized as records in the accepted
+domain graph. `OD-007` selects a future protected governance partition, not a
+description of current behavior or an instruction to materialize current
+policy artifacts.
 
 A graph-carried authority policy needs at least:
 
@@ -1383,19 +1441,25 @@ supersession lineage
 ```
 
 Policy representation in a KG is feasible. Policy legitimacy does not emerge
-from representation. If the same graph can freely change the policy that
-authorizes graph changes, it can authorize its own takeover.
+from representation. `OD-007` chooses one protected, replay-derived governance
+partition inside the full accepted-temporal graph for v0. A separate governance
+graph, head, snapshot, digest, synchronization protocol, and query surface are
+excluded from that topology.
 
-Two topologies remain open:
-
-| Topology | Benefit | Required guardrail |
-|---|---|---|
-| Protected governance partition in the accepted graph | One graph and query surface | Non-self-amendment rule enforced outside ordinary writes |
-| Separate governance graph | Cleaner trust and change boundary | Explicit synchronization and binding to governed graph heads |
-
-Both require a bootstrap trust root or genesis policy outside ordinary policy
-amendment. Malleus currently records actor IDs and authorization decisions but
-does not authenticate actors or establish grantor legitimacy.
+Authorization reads pre-event authority state, seeded at genesis by the
+external root and otherwise derived from accepted governance state. Authority
+introduced by a proposed update cannot authorize that same update. When the
+authority source is a policy, its identity must differ from the directly
+mutated policy identity, so a different prior accepted policy or the external
+bootstrap root must authorize the change. Exactly one genesis root sits outside
+both logical partitions; graph writes cannot create, replace, or delete it.
+Genesis alone establishes the root, which remains a prior authority source; no
+later event can establish a second root or bypass pre-event authorization. The
+one query surface states logical queryability, not confidential-read or access policy.
+Malleus currently records actor IDs and authorization decisions but does not
+authenticate actors or establish grantor legitimacy. Exact policy records,
+amendment and supersession representation, bootstrap encoding and any future
+replacement protocol, read authorization, and query filtering remain deferred.
 
 ```turtle
 mfg:AutomatedChangeAuthority rdf:type mfg:Package ;
@@ -1426,8 +1490,17 @@ mfg:GovernancePolicyGraph rdf:type mfg:DesignObject ;
     mfg:governedBy mfg:GovernanceBootstrap ;
     mfg:status mfg:Open .
 
+mfg:GovernancePolicyGraphR2 rdf:type mfg:DesignObject ;
+    mfg:supersedes mfg:GovernancePolicyGraph ;
+    mfg:status mfg:Excluded .
+
 mfg:GovernanceTopology rdf:type mfg:OpenQuestion ;
     mfg:status mfg:Open .
+
+mfg:GovernanceTopologyQuestionR2 rdf:type mfg:OpenQuestion ;
+    mfg:selects mfg:ProtectedReplayDerivedGovernancePartitionTopologyV0 ;
+    mfg:supersedes mfg:GovernanceTopology ;
+    mfg:status mfg:AcceptedDesign .
 ```
 
 ## 8. Three correction mechanisms and one unrelated delivery mechanism
@@ -1971,8 +2044,10 @@ artifact boundary. These author choices remain open:
    accepted-temporal epoch. Independent role heads remain deferred.
 4. **Compatibility scope.** Start with concrete graph replay compatibility, or
    also define schema-theoretic writer-to-reader analysis in the first package.
-5. **Governance topology.** Protected partition in one accepted graph, or a
-   separate governance graph.
+5. **Governance topology.** `OD-007` is **accepted**. Use one protected,
+   replay-derived governance partition in the full accepted-temporal graph,
+   with no governance-specific graph, head, snapshot, digest, synchronization,
+   or query surface.
 6. **Promotion boundary.** Keep the first slice research-local until the
    canonical intermediate and frontend conformance fixture are demonstrated,
    or authorize an immediate core API. A third-party frontend is not required

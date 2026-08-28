@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept one protected replay-derived governance partition inside the existing accepted-temporal graph, with ProtocolLedger as sole writer, admission-path-only membership, the existing graph identity components, and no governance-specific graph or query surface.",
+      "Bind one external genesis root, pre-event authority, following-event visibility, direct governance-policy non-self-amendment, ordinary-path direct-mutation protection, same-contract epoch preservation, and new-epoch refusal for GovernanceContract semantic change.",
+      "Close the historical topology question through an explicit Excluded same-type separate-graph revision, retain current typed policies as protocol-ledger artifacts, preserve D10 ownership and read-policy deferrals, and create no production implementation, schema, policy language, storage, migration, candidate, selection, or worker ledger."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000165",
+      "OVR-000166",
+      "OVR-000167"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D07"
+  },
+  "entry_hash": "sha256:6e81601272b31c0046512a52e40ef0fc0c3bf2e624ecec74997bd0517940921c",
+  "entry_id": "OVR-000168",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:15d7d6fb0c577f3c04a7feae0c74aa1490e4f2221141c625bca036e1f971927a",
+  "recorded_at": "2026-08-28T05:03:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000165",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000166",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000167",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D07",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-007",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 168,
+  "subject": {
+    "id": "CC-D07",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D07 under the protected replay-derived governance-partition topology.",
+  "why": "The operator decision, exact graph closure, dependency-bound zero-scope card, abstract replay and refusal model, retained RED and verification report, D10 boundary, and strict ledger chain satisfy every CC-D07 completion gate without starting implementation or choosing deferred policy, storage, API, read, migration, or recovery semantics."
+}

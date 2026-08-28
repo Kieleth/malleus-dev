@@ -87,8 +87,10 @@ HISTORICAL_R3_PATHS = (
 OD005_HEADING = "### OD-005: logical fact record and canonical bytes"
 OD005_NEXT_HEADING = "### OD-006: closed contract roles and composition"
 OD006_HEADING = OD005_NEXT_HEADING
-OD006_NEXT_HEADING = "### OD-008: closed LinkML v0 support profile"
-OD008_HEADING = OD006_NEXT_HEADING
+OD006_NEXT_HEADING = "### OD-007: protected governance partition topology"
+OD007_HEADING = OD006_NEXT_HEADING
+OD007_NEXT_HEADING = "### OD-008: closed LinkML v0 support profile"
+OD008_HEADING = OD007_NEXT_HEADING
 OD008_NEXT_HEADING = "### OD-011: resolver and import policy"
 OD005_SEED_TABLE_HEADER = (
     "Subject kind",
@@ -752,6 +754,16 @@ def _od006_section(decisions: str) -> str:
     section, after = section_and_after.split(OD006_NEXT_HEADING, 1)
     assert OD006_NEXT_HEADING not in before
     assert OD006_HEADING not in after
+    return section
+
+
+def _od007_section(decisions: str) -> str:
+    assert decisions.count(OD007_HEADING) == 1
+    assert decisions.count(OD007_NEXT_HEADING) == 1
+    before, section_and_after = decisions.split(OD007_HEADING, 1)
+    section, after = section_and_after.split(OD007_NEXT_HEADING, 1)
+    assert OD007_NEXT_HEADING not in before
+    assert OD007_HEADING not in after
     return section
 
 
@@ -1450,6 +1462,148 @@ def _assert_od006_closed_contract(section: str) -> None:
         "On the accepted-temporal path, a new role value is legal only through a newly constructed composition and a new epoch.",
     ):
         assert exact in prose
+
+
+class _Od007Refusal(ValueError):
+    pass
+
+
+class _Od007ReplayProjection:
+    """Abstract replay trace, never a wire, API, record, or operation schema.
+
+    The accepted-event sequence is the test-only lineage projection. It does
+    not replace or collapse SourceProtocolLedgerHead, AcceptanceHead, or
+    MaterializationHead. The methods consume validated conceptual ledger events.
+    They are not graph-write entry points.
+    """
+
+    def __init__(
+        self,
+        bootstrap_authorities: tuple[tuple[str, str], ...],
+        governance_contract_identity: str,
+        composition_epoch_identity: str,
+    ) -> None:
+        if len(bootstrap_authorities) != 1:
+            raise _Od007Refusal("genesis requires exactly one bootstrap authority root")
+        bootstrap_actor, bootstrap_source_identity = bootstrap_authorities[0]
+        self.governance_contract_identity = governance_contract_identity
+        self.composition_epoch_identity = composition_epoch_identity
+        self._bootstrap_actor = bootstrap_actor
+        self._bootstrap_source_identity = bootstrap_source_identity
+        self._authority_sources = {bootstrap_actor: bootstrap_source_identity}
+        self._events: list[tuple[str, tuple[object, ...]]] = []
+        self._records: dict[str, tuple[str, object]] = {}
+
+    @classmethod
+    def replay(
+        cls,
+        events: tuple[tuple[str, tuple[object, ...]], ...],
+        bootstrap_authorities: tuple[tuple[str, str], ...],
+        governance_contract_identity: str,
+        composition_epoch_identity: str,
+    ) -> _Od007ReplayProjection:
+        graph = cls(
+            bootstrap_authorities,
+            governance_contract_identity,
+            composition_epoch_identity,
+        )
+        for path, arguments in events:
+            if path == "domain":
+                graph.consume_domain_event(*arguments)
+            elif path == "governance":
+                graph.consume_governance_event(*arguments)
+            else:
+                raise AssertionError(f"unknown abstract trace path: {path}")
+        return graph
+
+    def accepted_events(self) -> tuple[tuple[str, tuple[object, ...]], ...]:
+        return tuple(self._events)
+
+    def query(self, record_id: str) -> tuple[str, object] | None:
+        return self._records.get(record_id)
+
+    def _check_role(self, admitted_role: str, expected_role: str) -> None:
+        if admitted_role != expected_role:
+            raise _Od007Refusal("operation used the wrong contract admission path")
+
+    def consume_domain_event(
+        self,
+        record_id: str,
+        value: object,
+        admitted_role: str,
+    ) -> None:
+        """Apply one abstract ordinary-path transition."""
+        self._check_role(admitted_role, "GovernedGraphContract")
+        if record_id == self._bootstrap_source_identity:
+            raise _Od007Refusal("graph transition cannot mutate the external bootstrap root")
+        if self._records.get(record_id, (None, None))[0] == "governance":
+            raise _Od007Refusal("ordinary transition cannot touch governance records")
+        self._records[record_id] = ("domain", value)
+        self._events.append(
+            (
+                "domain",
+                (record_id, value, admitted_role),
+            )
+        )
+
+    def consume_governance_event(
+        self,
+        record_id: str,
+        value: object,
+        actor: str,
+        authority_source_identity: str,
+        authority_additions: tuple[str, ...],
+        admitted_role: str,
+        governance_contract_identity: str,
+    ) -> None:
+        """Apply one abstract governance-path transition against prior state."""
+        self._check_role(admitted_role, "GovernanceContract")
+        if governance_contract_identity != self.governance_contract_identity:
+            raise _Od007Refusal("GovernanceContract semantic change requires a new epoch")
+        if actor not in self._authority_sources:
+            raise _Od007Refusal("governance transition lacks pre-event authority")
+        if authority_source_identity != self._authority_sources[actor]:
+            raise _Od007Refusal("governance transition names the wrong prior authority")
+        if record_id == self._bootstrap_source_identity:
+            raise _Od007Refusal("graph transition cannot mutate the external bootstrap root")
+        if authority_source_identity == record_id:
+            raise _Od007Refusal("governance policy cannot authorize its own amendment")
+        if self._bootstrap_actor in authority_additions:
+            raise _Od007Refusal("governance event cannot replace external root binding")
+        if any(added_actor in self._authority_sources for added_actor in authority_additions):
+            raise AssertionError(
+                "abstract D07 trace does not model authority-source replacement"
+            )
+        if self._records.get(record_id, (None, None))[0] == "domain":
+            raise _Od007Refusal("governance transition cannot reclassify a domain record")
+        self._records[record_id] = ("governance", value)
+        for added_actor in authority_additions:
+            self._authority_sources[added_actor] = record_id
+        self._events.append(
+            (
+                "governance",
+                (
+                    record_id,
+                    value,
+                    actor,
+                    authority_source_identity,
+                    authority_additions,
+                    admitted_role,
+                    governance_contract_identity,
+                ),
+            )
+        )
+
+
+def _od007_state(graph: _Od007ReplayProjection) -> tuple[object, ...]:
+    return (
+        graph.governance_contract_identity,
+        graph.composition_epoch_identity,
+        graph._bootstrap_source_identity,
+        tuple(sorted(graph._authority_sources.items())),
+        tuple(sorted(graph._records.items())),
+        tuple(graph._events),
+    )
 
 
 def _copy_ledger(tmp_path: Path) -> Path:
@@ -2264,7 +2418,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2282,13 +2436,13 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1630
+    assert len(canonical) == 1675
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 18",
+        "# Design graph revision: 19",
         "# Evidence cutoff: 2026-08-27",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -2305,7 +2459,7 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 18,",
+            "revision 19,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2337,6 +2491,11 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
             Literal("2026-08-26")
         }
         assert set(canonical.objects(subject, selects)) == {URIRef(f"{mfg}{selected}")}
+    od007 = URIRef(f"{cc}OD-007")
+    assert set(canonical.objects(od007, decision_date)) == {Literal("2026-08-27")}
+    assert set(canonical.objects(od007, selects)) == {
+        URIRef(f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0")
+    }
     rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     status = URIRef(f"{mfg}status")
     decided_by = URIRef(f"{mfg}decidedBy")
@@ -2346,6 +2505,13 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(od008, decided_by)) == {URIRef(f"{mfg}Author")}
     assert set(canonical.objects(od008, status)) == {URIRef(f"{mfg}AcceptedDesign")}
+    assert set(canonical.objects(od007, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od007, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od007, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
 
     od008_node_types = {
         "MalleusLinkMLSupportProfileV0": "SupportProfile",
@@ -2368,7 +2534,19 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
         "StablePublicFactIdentityStillOD009Boundary": "Boundary",
         "PublicCompilerPromotionStillOD009Boundary": "Boundary",
     }
-    for node, node_type in od008_node_types.items():
+    od007_node_types = {
+        "ProtectedReplayDerivedGovernancePartitionTopologyV0": "DesignObject",
+        "ProtocolLedgerSoleWriteAuthorityBoundary": "Boundary",
+        "NoSeparateGovernanceGraphHeadSnapshotDigestSynchronizationOrQueryBoundary": "Boundary",
+        "GovernanceMembershipAdmissionPathOnlyNoCallerTypeNameNamespaceOrStorageInferenceBoundary": "Boundary",
+        "PriorAuthoritySingleExternalRootNoSameEventOrDirectPolicySelfAmendmentFollowingEventVisibilityBoundary": "Boundary",
+        "OrdinaryPathCannotDirectlyMutateGovernanceIdentityBoundary": "Boundary",
+        "SameGovernanceContractPolicyUpdateSameEpochSemanticContractChangeNewEpochBoundary": "Boundary",
+        "GovernanceRepresentationAndD10SemanticsDeferredBoundary": "Boundary",
+        "ProtectedWriteAdmissionNotReadConfidentialityBoundary": "Boundary",
+        "GovernanceTopologyQuestionR2": "OpenQuestion",
+    }
+    for node, node_type in (od008_node_types | od007_node_types).items():
         subject = URIRef(f"{mfg}{node}")
         assert set(canonical.objects(subject, rdf_type)) == {
             URIRef(f"{mfg}{node_type}")
@@ -2478,6 +2656,22 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
             "StablePublicFactIdentityStillOD009Boundary",
             "PublicCompilerPromotionStillOD009Boundary",
         },
+        "ProtectedReplayDerivedGovernancePartitionTopologyV0": {
+            "AcceptedTemporalGraphVersion",
+            "AcceptedTemporalGraphVersionHash",
+            "GovernedGraphContract",
+            "GovernanceContract",
+            "GovernanceBootstrap",
+            "ProtocolLedgerSoleWriteAuthorityBoundary",
+            "NoSeparateGovernanceGraphHeadSnapshotDigestSynchronizationOrQueryBoundary",
+            "GovernanceMembershipAdmissionPathOnlyNoCallerTypeNameNamespaceOrStorageInferenceBoundary",
+            "PriorAuthoritySingleExternalRootNoSameEventOrDirectPolicySelfAmendmentFollowingEventVisibilityBoundary",
+            "OrdinaryPathCannotDirectlyMutateGovernanceIdentityBoundary",
+            "SameGovernanceContractPolicyUpdateSameEpochSemanticContractChangeNewEpochBoundary",
+            "StandaloneStructuralGraphGovernedRoleOnlyBoundary",
+            "GovernanceRepresentationAndD10SemanticsDeferredBoundary",
+            "ProtectedWriteAdmissionNotReadConfidentialityBoundary",
+        },
         "ExplicitSingleResolverProfileSelection": {
             "StrictMalleusResolverDefaultBoundary",
             "ExplicitNamedVersionedResolverAndConfigurationBoundary",
@@ -2538,11 +2732,60 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
             URIRef(f"{mfg}StablePublicFactIdentityStillOD009Boundary"), supersedes
         )
     ) == {URIRef(f"{mfg}StablePublicFactIdentityStillOD008Boundary")}
+    assert set(
+        canonical.objects(URIRef(f"{mfg}GovernanceTopologyQuestionR2"), supersedes)
+    ) == {URIRef(f"{mfg}GovernanceTopology")}
+    assert set(
+        canonical.objects(URIRef(f"{mfg}GovernanceTopologyQuestionR2"), selects)
+    ) == {
+        URIRef(f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0")
+    }
+    rejects = URIRef(f"{mfg}rejects")
+    assert set(canonical.objects(od007, rejects)) == {
+        URIRef(f"{mfg}GovernancePolicyGraphR2")
+    }
+    historical_graph = URIRef(f"{mfg}GovernancePolicyGraph")
+    rejected_graph = URIRef(f"{mfg}GovernancePolicyGraphR2")
+    assert set(canonical.objects(historical_graph, rdf_type)) == {
+        URIRef(f"{mfg}DesignObject")
+    }
+    assert set(canonical.objects(historical_graph, status)) == {URIRef(f"{mfg}Open")}
+    assert set(canonical.objects(rejected_graph, rdf_type)) == {
+        URIRef(f"{mfg}DesignObject")
+    }
+    assert set(canonical.objects(rejected_graph, status)) == {
+        URIRef(f"{mfg}Excluded")
+    }
+    assert set(canonical.objects(rejected_graph, supersedes)) == {historical_graph}
+    selected_topology = URIRef(
+        f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0"
+    )
+    assert set(canonical.objects(selected_topology, supersedes)) == set()
+    assert set(
+        canonical.objects(URIRef(f"{mfg}GovernanceTopology"), rdf_type)
+    ) == {URIRef(f"{mfg}OpenQuestion")}
+    assert set(
+        canonical.objects(URIRef(f"{mfg}GovernanceTopology"), status)
+    ) == {URIRef(f"{mfg}Open")}
     for retired in (
         "ExpressionVocabularyDeferredToOD008Boundary",
         "StablePublicFactIdentityStillOD008Boundary",
     ):
         assert set(canonical.subjects(binds, URIRef(f"{mfg}{retired}"))) == set()
+
+    assert {
+        str(value).removeprefix(mfg)
+        for value in canonical.objects(
+            URIRef(f"{mfg}AcceptedTemporalGraphVersionHash"), binds
+        )
+    } == {
+        "ContractCompositionHash",
+        "CanonicalStructuralStateHash",
+        "TemporalMetadataDigest",
+        "SourceProtocolLedgerHead",
+        "AcceptanceHead",
+        "MaterializationHead",
+    }
 
     role_hash_bindings = {
         "ProtocolRecordContractHash": {
@@ -2616,7 +2859,7 @@ def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 333
+    assert len(statuses) == 345
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -2950,6 +3193,272 @@ def test_od006_closed_composition_guard_rejects_adversarial_drift() -> None:
     for mutation in mutations:
         with pytest.raises(AssertionError):
             _assert_od006_closed_contract(mutation)
+
+
+def test_od007_protected_partition_contract_is_exact() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od007_section(decisions)
+    prose = " ".join(section.split())
+
+    for phrase in (
+        "`SourceProtocolLedgerHead`, `AcceptanceHead`, and `MaterializationHead` identity components remain unchanged",
+        "no governance-specific head, snapshot, or digest",
+        "The `ProtocolLedger` is the sole write authority.",
+        "not a third partition or the same physical store as the accepted graph",
+        "Membership never comes from a caller-supplied partition field, record-type guess, namespace, or storage convention",
+        "pre-event authority state, seeded at genesis by the external root and otherwise derived from accepted governance state",
+        "exactly one explicit bootstrap authority root at genesis",
+        "Domain and governance graph writes cannot create, replace, or delete that root.",
+        "cannot authorize itself",
+        "When the authority source is a governance policy, its identity must differ from the directly mutated governance-policy identity",
+        "cannot directly create, change, or delete a governance record identity",
+        "Cross-partition references, endpoints, and reads remain with D10",
+        "same accepted-graph lineage and existing state-identity components",
+        "same `GovernanceContract` identity stays in the current composition epoch",
+        "semantic change to the `GovernanceContract` changes its role-bound identity",
+        "As current shipped behavior, existing typed policy artifacts remain protocol-ledger artifacts",
+        "D07 does not materialize current artifacts",
+        "D07 selects no read authorization, filtering, query-access, or secrecy policy.",
+        "A standalone structural graph has no governance role and refuses governance records.",
+        "logical partition is not an RDF named graph, database, namespace, caller flag, or public wire field",
+        "`OD-010` retains exact endpoint, class-reference, context, and stateful admission semantics",
+        "This decision creates no production implementation, ontology YAML, record schema, operation vocabulary, API, storage layout, migration, or second graph.",
+    ):
+        assert phrase in prose
+
+    conformance = (
+        ROOT / "design" / "contract_compiler" / "conformance.md"
+    ).read_text(encoding="utf-8")
+    row = next(
+        line.casefold()
+        for line in conformance.splitlines()
+        if line.startswith("| AT-008a ")
+    )
+    for phrase in (
+        "protected replay-derived governance partition",
+        "single external bootstrap root",
+        "pre-event authority",
+        "same-contract policy update",
+        "no type/name/namespace/storage inference",
+        "no governance-specific head or query surface",
+        "atomic refusal",
+    ):
+        assert phrase in row
+
+    program = (
+        ROOT / "design" / "contract_compiler" / "program.md"
+    ).read_text(encoding="utf-8")
+    d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
+    for phrase in ("protected replay-derived governance partition", "epoch boundary"):
+        assert phrase in d07
+    remaining = decisions.split("## Remaining decisions after revision 19", 1)[1]
+    assert "| OD-007 |" not in remaining
+
+
+def test_od007_replay_uses_prior_state_and_shared_graph_lineage() -> None:
+    contract = "urn:malleus:test:governance-contract:v0"
+    epoch = "urn:opaque:composition-epoch"
+    bootstrap = (("actor:root", "urn:opaque:bootstrap-root"),)
+    graph = _Od007ReplayProjection(bootstrap, contract, epoch)
+    graph.consume_domain_event(
+        "policy:looks-protected",
+        "ordinary",
+        "GovernedGraphContract",
+    )
+    assert graph.query("policy:looks-protected") == ("domain", "ordinary")
+
+    before_refusal = _od007_state(graph)
+    with pytest.raises(_Od007Refusal, match="pre-event authority"):
+        graph.consume_governance_event(
+            "policy:self-grant",
+            "self-grant",
+            "actor:reviewer",
+            "policy:self-grant",
+            ("actor:reviewer",),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == before_refusal
+
+    graph.consume_governance_event(
+        "domain:looks-ordinary",
+        "grant",
+        "actor:root",
+        graph._bootstrap_source_identity,
+        ("actor:reviewer",),
+        "GovernanceContract",
+        contract,
+    )
+    assert graph.query("domain:looks-ordinary") == ("governance", "grant")
+
+    graph.consume_governance_event(
+        "policy:reviewer-update",
+        "accepted only after grant",
+        "actor:reviewer",
+        "domain:looks-ordinary",
+        (),
+        "GovernanceContract",
+        contract,
+    )
+    assert graph.query("policy:reviewer-update") == (
+        "governance",
+        "accepted only after grant",
+    )
+    graph.consume_governance_event(
+        "domain:looks-ordinary",
+        "revised policy instance",
+        "actor:root",
+        graph._bootstrap_source_identity,
+        (),
+        "GovernanceContract",
+        contract,
+    )
+    assert graph.query("domain:looks-ordinary") == (
+        "governance",
+        "revised policy instance",
+    )
+    assert graph.composition_epoch_identity == epoch
+    assert len(graph.accepted_events()) == 4
+    replayed = _Od007ReplayProjection.replay(
+        graph.accepted_events(),
+        bootstrap,
+        contract,
+        epoch,
+    )
+    assert _od007_state(replayed) == _od007_state(graph)
+
+
+@pytest.mark.parametrize(
+    "roots",
+    [(), (("actor:one", "root:one"), ("actor:two", "root:two"))],
+)
+def test_od007_genesis_requires_one_bootstrap_authority(
+    roots: tuple[tuple[str, str], ...],
+) -> None:
+    with pytest.raises(_Od007Refusal, match="exactly one bootstrap authority root"):
+        _Od007ReplayProjection(
+            roots,
+            "urn:malleus:test:governance-contract:v0",
+            "urn:opaque:composition-epoch",
+        )
+
+
+def test_od007_protected_partition_refusals_are_atomic() -> None:
+    contract = "urn:malleus:test:governance-contract:v0"
+    graph = _Od007ReplayProjection(
+        (("actor:root", "urn:opaque:bootstrap-root"),),
+        contract,
+        "urn:opaque:composition-epoch",
+    )
+    graph.consume_governance_event(
+        "policy:base",
+        "base policy instance",
+        "actor:root",
+        graph._bootstrap_source_identity,
+        ("actor:reviewer",),
+        "GovernanceContract",
+        contract,
+    )
+    graph.consume_domain_event(
+        "domain:base",
+        "base domain record",
+        "GovernedGraphContract",
+    )
+    accepted = _od007_state(graph)
+    assert graph.query(graph._bootstrap_source_identity) is None
+    with pytest.raises(_Od007Refusal, match="cannot authorize its own amendment"):
+        graph.consume_governance_event(
+            "policy:base",
+            "forbidden self-amendment",
+            "actor:reviewer",
+            "policy:base",
+            (),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="ordinary transition cannot touch"):
+        graph.consume_domain_event(
+            "policy:base",
+            "forbidden direct mutation",
+            "GovernedGraphContract",
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="external bootstrap root"):
+        graph.consume_domain_event(
+            graph._bootstrap_source_identity,
+            "forbidden bootstrap mutation",
+            "GovernedGraphContract",
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="external bootstrap root"):
+        graph.consume_governance_event(
+            graph._bootstrap_source_identity,
+            "forbidden bootstrap mutation",
+            "actor:root",
+            graph._bootstrap_source_identity,
+            (),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="wrong prior authority"):
+        graph.consume_governance_event(
+            "policy:wrong-source",
+            "wrong source",
+            "actor:reviewer",
+            "policy:not-authoritative",
+            (),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="replace external root binding"):
+        graph.consume_governance_event(
+            "policy:authority-overwrite",
+            "forbidden root replacement",
+            "actor:root",
+            graph._bootstrap_source_identity,
+            ("actor:root",),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="wrong contract admission path"):
+        graph.consume_governance_event(
+            "policy:wrong-role",
+            "wrong role",
+            "actor:root",
+            graph._bootstrap_source_identity,
+            (),
+            "GovernedGraphContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="requires a new epoch"):
+        graph.consume_governance_event(
+            "policy:new-contract",
+            "requires new epoch",
+            "actor:root",
+            graph._bootstrap_source_identity,
+            (),
+            "GovernanceContract",
+            "urn:malleus:test:governance-contract:v1",
+        )
+    assert _od007_state(graph) == accepted
+    with pytest.raises(_Od007Refusal, match="cannot reclassify a domain record"):
+        graph.consume_governance_event(
+            "domain:base",
+            "forbidden reclassification",
+            "actor:root",
+            graph._bootstrap_source_identity,
+            (),
+            "GovernanceContract",
+            contract,
+        )
+    assert _od007_state(graph) == accepted
 
 
 def test_od008_closed_profile_and_expression_identity_are_mechanical() -> None:

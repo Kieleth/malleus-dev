@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
+        "completion_entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
+        "completion_entry_id": "OVR-000156",
+        "integrated_head": "0c899eb1b312275298884cd19f28018273c92ebf",
+        "workstream_id": "CC-D06"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-007 with one protected replay-derived governance partition in the accepted graph, ProtocolLedger as sole write authority, pre-event authority state seeded by exactly one explicit external bootstrap root, no same-event self-authorization or direct policy self-amendment, the existing accepted-graph lineage and query surface with no governance-specific graph/head/query surface, same-epoch policy-instance updates under one GovernanceContract, and a new epoch for GovernanceContract semantic change. Retain the historical Open separate-graph proposal and close it through a same-type Excluded superseding revision; the selected topology does not supersede it and no current-query semantics are added. Cross-partition references, endpoints, reads, and exact stateful admission remain with D10. This zero-scope decision creates no implementation, ontology YAML, record schema, operation vocabulary, API, storage layout, migration, second graph, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D07"
+}

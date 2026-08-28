@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-007"
+    ],
+    "consequences": [
+      "CC-D10 can close endpoint, cross-partition reference, context, and stateful admission semantics against one accepted graph rather than choosing governance topology.",
+      "A future governance implementation must replay accepted ProtocolLedger events into the protected partition and enforce pre-event authority, external-root, direct non-self-amendment, and epoch boundaries without adding a governance-specific graph identity or query surface."
+    ],
+    "constraints": [
+      "ProtocolLedger remains the sole write authority and authoritative event history; it is neither an accepted-graph partition nor the same physical store as the graph.",
+      "Replay derives domain or governance membership only from the GovernedGraphContract or GovernanceContract admission path, never caller data, record type, name, namespace, or storage convention.",
+      "Governance mutation uses pre-event authority state seeded by exactly one external genesis root; missing or ambiguous roots refuse and graph writes cannot create, replace, or delete the root.",
+      "Same-event authority cannot authorize its event. When the authority source is a governance policy, its identity must differ from the directly mutated governance-policy identity.",
+      "Ordinary-path events cannot directly mutate governance identities. Cross-partition references, endpoints, reads, context, and exact stateful admission remain with OD-010.",
+      "A policy-instance update under the same GovernanceContract preserves the composition epoch; a semantic GovernanceContract change requires the new D06 composition and epoch.",
+      "The historical GovernancePolicyGraph remains Open. Same-type GovernancePolicyGraphR2 supersedes it with status Excluded; OD-007 rejects R2 exactly; the selected protected topology has no supersedes edge to either alternative; no effective-current query rule is introduced.",
+      "Existing typed policy artifacts remain protocol-ledger artifacts. Exact records, operations, wire and API fields, policy language, bootstrap encoding and replacement, authentication, read policy, storage, migration, recovery, monitoring, and implementation remain deferred."
+    ],
+    "decision_id": "OD-007",
+    "satisfies_workstreams": [
+      "CC-D07"
+    ],
+    "selected_option": "One protected replay-derived governance partition inside the accepted graph",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:4e11fad006fde1763454a0bc64f03b67e89eb031ac94dd8c8da4387fc33df0ed",
+  "entry_id": "OVR-000165",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
+  "recorded_at": "2026-08-28T05:03:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-007-protected-governance-partition-topology",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-007",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000156",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D07",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 165,
+  "subject": {
+    "id": "OD-007",
+    "type": "DECISION"
+  },
+  "summary": "Accept one protected replay-derived governance partition in the accepted graph.",
+  "why": "The protected partition keeps one accepted graph lineage and query surface while separating ordinary mutation from governance mutation. Pre-event authority, one external root, direct policy non-self-amendment, and D06 epoch identity provide the minimum integrity boundary without a second graph, synchronized heads, policy language, storage design, or implementation."
+}

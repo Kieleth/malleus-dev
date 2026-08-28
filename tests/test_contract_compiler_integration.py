@@ -341,12 +341,13 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D04": ("CC-X04",),
         "CC-D05": ("CC-D01", "CC-D02", "CC-D03"),
         "CC-D06": ("CC-D05",),
+        "CC-D07": ("CC-D06",),
         "CC-D08": ("CC-D02", "CC-D03", "CC-D05"),
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 20
+    assert len(state.cards) == 21
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -386,6 +387,23 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "public identifier",
     ):
         assert phrase in d06_responsibility
+    d07_responsibility = state.cards["CC-D07"]["responsibility"]
+    for phrase in (
+        "protected replay-derived governance partition",
+        "ProtocolLedger as sole write authority",
+        "pre-event authority state",
+        "explicit external bootstrap root",
+        "existing accepted-graph lineage and query surface",
+        "GovernanceContract semantic change",
+        "same-type Excluded superseding revision",
+        "selected topology does not supersede it",
+        "exact stateful admission remain with D10",
+        "zero-scope decision",
+        "no implementation",
+        "record schema",
+        "second graph",
+    ):
+        assert phrase in d07_responsibility
     d08_responsibility = state.cards["CC-D08"]["responsibility"]
     for phrase in (
         "closed exact-location LinkML v0 support profile",

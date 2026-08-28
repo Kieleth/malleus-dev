@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 18
+## Accepted directions in canonical graph revision 19
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -394,6 +394,8 @@ materialization remains pending.
 | OD-004 | New persisted-wire epoch with a typed hard break | Exact public diagnostic identifier is deferred to CC-W01; no fallback, receipt, migration, translation, rewrite, or reinterpretation of legacy `ontology_hash` |
 | OD-005 | Ontology-powered atomic subject-predicate-object facts in canonical JSON | Internal candidate digests are not stable public fact IDs; expression vocabulary, source-field mapping, admission, promotion, bundle bytes, and artifact envelope remain separately governed |
 | OD-006 | Three exact semantic roles in one closed composition and one v0 accepted-temporal epoch | No independent role heads, wire grammar, artifact schema, migration, or stable public fact IDs |
+| OD-007 | One protected replay-derived governance partition in the full accepted-temporal graph | ProtocolLedger stays sole write authority; no governance-specific graph, head, snapshot, digest, or query surface is added |
+| OD-008 | Closed exact-location LinkML v0 support profile with one flat exactly-one extension | General LinkML support, public adapter claims, stable public fact IDs, and plugin machinery remain outside this profile |
 | OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
@@ -402,7 +404,7 @@ The operator also excluded migration feature development from the foundation
 block. That is an execution-scope instruction, not approval to reuse an old
 wire field with new meaning.
 
-## Accepted compiler decisions from 2026-08-26
+## Accepted compiler decisions through 2026-08-27
 
 These choices are design authority. They do not implement a compiler, resolver,
 wire reader, package split, fixture, or publication.
@@ -866,6 +868,101 @@ artifact, bundle, public API, or migration mechanism.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-006`. `CC-D06` is complete.
+
+### OD-007: protected governance partition topology
+
+Decision state: ACCEPTED, one replay-derived accepted graph, 2026-08-27
+
+The accepted-temporal path has one accepted graph lineage with one query
+surface. Its existing `SourceProtocolLedgerHead`, `AcceptanceHead`, and
+`MaterializationHead` identity components remain unchanged. D07 adds no
+governance-specific head, snapshot, or digest. The `ProtocolLedger` is the sole
+write authority. Replay derives the accepted graph as two logical,
+replay-derived partitions: ordinary governed-domain records and protected
+governance records. The protocol ledger remains the authoritative event
+history, not a third partition or the same physical store as the accepted
+graph.
+
+Partition membership comes only from the contract admission path. A record
+admitted through the `GovernedGraphContract` path enters the ordinary domain
+partition. A record admitted through the `GovernanceContract` path enters the
+protected governance partition. Membership never comes from a caller-supplied
+partition field, record-type guess, namespace, or storage convention. The same
+logical record shape can therefore have different topology only when the
+normative contract path says so; a caller cannot obtain governance status by
+naming a type or partition.
+
+#### Prior-state authorization and visibility
+
+A governance mutation is authorized against pre-event authority state, seeded
+at genesis by the external root and otherwise derived from accepted governance
+state. There is exactly one explicit bootstrap authority root at genesis,
+outside both logical graph partitions. Missing or multiple bootstrap roots
+refuse genesis. Domain and governance graph writes cannot create, replace, or
+delete that root. Genesis alone seeds the root; no later event may introduce a
+second root or bypass pre-event authorization. The seeded root remains prior
+authority, while any future root-replacement protocol remains deferred. A
+proposed update cannot authorize itself: authority introduced by that update is
+absent from its pre-event state and cannot justify the same event. When the
+authority source is a governance policy, its identity must differ from the
+directly mutated governance-policy identity. A different prior accepted policy
+or the external bootstrap root must authorize that mutation.
+
+An accepted governance update affects only later events. Replay first checks
+the event against the prior accepted state, then atomically projects the
+accepted change. An ordinary governed-domain write cannot directly create,
+change, or delete a governance record identity. It cannot use an existing
+governance identity as its direct mutation record. A wrong role or admission
+path refuses rather than reclassifying the record. Cross-partition references,
+endpoints, and reads remain with D10; D07 does not classify them as mutations.
+Refusal leaves the event count, accepted graph lineage, existing state-identity
+components, authority state, and both logical partitions unchanged.
+
+Governance and domain changes advance the same accepted-graph lineage and
+existing state-identity components. There is no second governance head, paired
+snapshot, digest synchronization, cross-graph join, or recovery protocol.
+
+#### Contract identity and epoch
+
+A policy-instance change admitted under the same `GovernanceContract` identity
+stays in the current composition epoch. It changes accepted governance state
+and advances the accepted-graph lineage and its existing identity components,
+not the governance role-bound identity. A semantic
+change to the `GovernanceContract` changes its role-bound identity and the
+closed `ContractComposition` identity. Continuing the old epoch under that new
+contract refuses; D06 requires a newly bound composition and new epoch.
+
+#### Representation and deferred semantics
+
+This decision chooses logical topology, not storage or a public data model. The
+logical partition is not an RDF named graph, database, namespace, caller flag,
+or public wire field. One query surface means one accepted-graph query surface
+over its domain and governance partitions. It does not merge the protocol
+ledger and accepted graph into one store. Protected means write and admission
+integrity, not confidentiality or a read ACL. D07 selects no read authorization,
+filtering, query-access, or secrecy policy.
+
+As current shipped behavior, existing typed policy artifacts remain
+protocol-ledger artifacts. The accepted target permits future governance
+records, but D07 does not materialize current artifacts or choose which future
+policy artifacts should be materialized. Exact policy record representation,
+amendment operation, and supersession lineage remain with the deferred policy
+language; the direct policy-identity inequality above is already normative.
+Governance record schemas, operation names, event and wire fields, bootstrap
+encoding and any future root-replacement protocol, authentication, policy
+language, physical storage, external effects, monitoring orchestration,
+migration, and multi-head recovery remain deferred.
+The protected partition exists only in the full accepted-temporal graph. A
+standalone structural graph has no governance role and refuses governance
+records. `OD-010` retains exact endpoint,
+class-reference, context, and stateful admission semantics. `CC-R06` later owns
+the normative admission implementation and operation traces.
+
+This decision creates no production implementation, ontology YAML, record
+schema, operation vocabulary, API, storage layout, migration, or second graph.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-007`. `CC-D07` is complete.
 
 ### OD-008: closed LinkML v0 support profile
 
@@ -1444,14 +1541,13 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 18
+## Remaining decisions after revision 19
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
 
 | ID | Question | Blocks |
 |---|---|---|
-| OD-007 | Protected governance partition versus separate governance graph | Normative admission profile |
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |
 | OD-010 | Endpoint and generic class-reference semantics | Graph admission profile and operation traces |
 

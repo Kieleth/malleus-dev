@@ -1,0 +1,63 @@
+{
+  "actor": {
+    "id": "ccd07-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T05:03:03Z",
+    "claims": [
+      "OD-007 selects one protected replay-derived governance partition inside the accepted-temporal graph. The existing SourceProtocolLedgerHead, AcceptanceHead, and MaterializationHead components remain exact and no governance-specific graph, head, snapshot, digest, synchronization, or query surface is added.",
+      "GovernedGraphContract and GovernanceContract admission paths alone derive domain and governance membership. ProtocolLedger remains the sole writer and event history, not a third partition or merged store; record type, name, namespace, storage convention, and caller data do not classify membership.",
+      "Governance authorization reads pre-event authority state seeded by exactly one external root. Same-event authorization, direct governance-policy self-amendment, external-root mutation, wrong authority source, wrong role, and ordinary direct mutation of governance identity refuse atomically.",
+      "A policy-instance update under the same GovernanceContract preserves the opaque composition epoch identity. A semantic GovernanceContract change refuses under the old epoch and requires the D06 composition and epoch transition.",
+      "GovernancePolicyGraphR2 is the same-type Excluded revision superseding the unchanged historical Open GovernancePolicyGraph. OD-007 rejects R2 exactly; the selected protected topology does not supersede either alternative.",
+      "Canonical graph revision 19 and all five Markdown projections have exact 1,675-triple parity and 345 single-status subjects. The retained RED failed on the absent OD-007 decision section, while the final abstract trace and graph guards pass without production, ontology YAML, dependency, package, API, policy-language, storage, migration, or second-graph changes."
+    ],
+    "limitations": [
+      "This verifies design authority, topology, abstract replay behavior, graph parity, evidence, and refusal boundaries. It does not implement governance records, events, storage, APIs, authentication, policy evaluation, monitoring, migration, recovery, or runtime behavior.",
+      "D10 retains cross-partition reference, endpoint, context, read, and stateful admission semantics. Current typed policies remain protocol-ledger artifacts and are not materialized by D07; exact policy representation, amendment, supersession, bootstrap replacement, confidentiality, and read authorization remain deferred."
+    ]
+  },
+  "entry_hash": "sha256:15d7d6fb0c577f3c04a7feae0c74aa1490e4f2221141c625bca036e1f971927a",
+  "entry_id": "OVR-000167",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:583cb489e3e5f5491aa3fc9bfdc7e88d46973bd08931f2833a5adcb9e9efe368",
+  "recorded_at": "2026-08-28T05:03:03Z",
+  "references": [
+    {
+      "digest": "sha256:1bff4ca32bfec7e80a6bc934b314634d22d6136904c44b87505ef8e519cd9559",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D07.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000165",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000166",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-007",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D07",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 167,
+  "subject": {
+    "id": "CC-D07-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the protected replay-derived governance-partition contract.",
+  "why": "The retained report binds every governed artifact and its checks cover sole-writer replay, admission-path membership, external-root and pre-event authority, direct non-self-amendment, epoch identity, graph closure, D10 ownership, current-policy placement, and zero implementation scope."
+}

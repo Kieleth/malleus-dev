@@ -261,6 +261,55 @@ admission behavior, source-field or expression classification, public
 promotion, stable public fact identifiers, consumer-bundle bytes, artifact
 bytes, persisted epoch bytes, compatibility, migration, or multi-head recovery.
 
+## OD-007 protected-partition conformance boundary
+
+The conformance model is a replay trace, not a proposed wire format or runtime
+API. It contains one protocol event sequence, one accepted graph lineage, and
+one query surface over ordinary domain and protected governance records.
+Existing source-ledger, acceptance, and materialization head components remain
+part of accepted-graph identity. The topology adds no governance-specific head,
+graph, snapshot, digest, or query API.
+
+Each conceptual operation carries the contract path produced by admission
+evaluation, never a requested partition. Replay derives governance membership
+only from the `GovernanceContract` path. The abstract trace accepts no partition
+input and uses no record-type classification rule. A standalone structural
+graph has no governance role and refuses every governance-partition record.
+
+The minimum positive trace is ordered:
+
+1. Genesis supplies one explicit bootstrap authority root outside both logical
+   partitions. Zero or two roots refuse before state exists. Neither graph path
+   can create, replace, or delete the root. No later event can introduce another
+   root or bypass pre-event authorization; the seeded root remains prior
+   authority.
+2. An ordinary write accepted through `GovernedGraphContract` becomes queryable
+   in the domain partition without changing governance state or epoch.
+3. The bootstrap authority submits a governance update under the current
+   `GovernanceContract`. Authorization reads pre-event authority state seeded
+   by the external root and otherwise derived from accepted governance state.
+   The accepted update becomes queryable only after the event.
+4. Authority introduced by that update can authorize the following event, but
+   not the event that introduced it. When the authority source is a policy, its
+   identity must differ from the directly mutated policy identity; a different
+   prior policy or the external root must authorize it.
+5. A later policy-instance update under the same `GovernanceContract` advances
+   the accepted-graph lineage without starting a new composition epoch.
+
+Invalid genesis creates no accepted state. Every post-genesis transition
+refusal asserts identical pre-state and post-state queries, accepted event
+projection, authority set, partitions, and epoch. The test-only event sequence
+represents lineage without replacing or collapsing the existing accepted-graph
+identity components. The negative trace covers missing or ambiguous bootstrap,
+graph mutation of the external root, same-event
+self-authorization, direct policy self-amendment, ordinary direct mutation of a
+governance identity, wrong role or admission path, and a `GovernanceContract`
+semantic change under the old epoch. Exact endpoint,
+reference, context, operation, authentication, policy-language, and
+materialization semantics remain outside this trace. Cross-partition
+references, read authorization, filtering, confidentiality, and query-access
+policy also remain deferred.
+
 ## OD-008 closed support-profile conformance boundary
 
 The LinkML v0 adapter profile classifies each exact source location as
@@ -320,6 +369,7 @@ regression obligation.
 | AT-006 | Expressions | Generic flat exactly-one and retained Assent ValidTime | Empty or duplicate branch, duplicate or unknown condition, internal contradiction, nesting, any/all/none | Exact three-kind normalized expression, order-independent internal structural IDs and facts, or typed atomic refusal |
 | AT-007 | Canonical facts | Immutable D05 seed plus exact expression extension, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null outside enum body, array, nested object, noncanonical decimal, unsupported expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
 | AT-008 | Effective contract and closed composition | Complete P/D/G role closures, fixed conceptual v0 role tags and constructors, one composition, one accepted-temporal epoch, and standalone D-only structural graph | Missing, duplicate, extra, unknown, swapped, incomplete, ambient, equal-payload, unbound replacement, mixed-composition, independent-head, wrong-use, structural/full-path confusion, wrong fixed role tag, domain, version, or composition constructor | Exact domain-separated role and composition identities; delta matrix; new composition and epoch for any semantic role change; exact atomic refusal |
+| AT-008a | Protected replay-derived governance partition | One accepted graph lineage, single external bootstrap root, pre-event authority, ordinary write, authorized governance update, following-event visibility, same-contract policy update | Missing or ambiguous root, root graph mutation, same-event self-authorization, direct policy self-amendment, ordinary write directly mutates governance identity, wrong role or admission path, GovernanceContract semantic change under old epoch | Admission-path-only membership with no type/name/namespace/storage inference, no governance-specific head or query surface, exact pre-state/post-state queries, same epoch for policy instances under the same contract, new epoch boundary for contract change, atomic refusal |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |
 | AT-011 | Graph context | Baseline operation trace | Duplicate ID, relation before endpoint, missing bearer, abstract root | Exact decisions, state digests, and final records |
