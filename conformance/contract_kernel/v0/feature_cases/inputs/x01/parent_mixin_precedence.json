@@ -1,0 +1,1 @@
+{"classes":{"Child":{"is_a":"Parent","mixins":["MixinA"]},"MixinA":{"mixin":true,"slot_usage":{"value":{"multivalued":true,"range":"float"}},"slots":["value"]},"Parent":{"slot_usage":{"value":{"range":"integer","required":true}},"slots":["value"]}},"id":"https://example.org/cc-x01/parent-mixin-precedence","name":"parent_mixin_precedence","slots":{"value":{"range":"string"}}}

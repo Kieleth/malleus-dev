@@ -1,0 +1,1 @@
+{"classes":{"Thing":{"attributes":{"value":{"range":"integer","required":true}},"slot_usage":{"global_value":{"range":"float","required":true}},"slots":["global_value"]}},"id":"https://example.org/cc-x01/attribute-slot-usage","name":"attribute_slot_usage","slots":{"global_value":{"range":"string"}}}

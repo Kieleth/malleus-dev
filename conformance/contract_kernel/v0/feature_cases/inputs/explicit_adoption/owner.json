@@ -1,0 +1,1 @@
+{"id":"https://example.malleus.dev/cc013/adoption-owner","name":"adoption_owner","slots":{"shared_value":{"description":"Authoritative owner presentation.","range":"string","required":true}}}

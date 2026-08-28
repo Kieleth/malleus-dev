@@ -1,0 +1,1 @@
+{"id":"https://example.malleus.dev/cc013/conflict-subject","imports":["https://example.malleus.dev/cc013/conflict-owner"],"name":"conflict_subject","slots":{"shared_value":{"range":"integer","required":true}}}

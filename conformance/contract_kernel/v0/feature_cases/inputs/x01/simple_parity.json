@@ -1,0 +1,1 @@
+{"classes":{"Thing":{"slots":["value"]}},"id":"https://example.org/cc-x01/simple-parity","name":"simple_parity","slots":{"value":{"range":"string","required":true}}}

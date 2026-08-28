@@ -1,0 +1,1 @@
+{"classes":{"Thing":{"slot_usage":{"value":{"identifier":false,"inlined":false,"multivalued":false,"required":false}},"slots":["value"]}},"id":"https://example.org/cc-x01/explicit-false","name":"explicit_false","slots":{"value":{"identifier":true,"inlined":true,"multivalued":true,"range":"string","required":true}}}

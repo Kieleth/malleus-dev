@@ -1,0 +1,1 @@
+{"classes":{"Thing":{"description":"Baseline class description.","slots":["value"]}},"description":"Baseline schema description.","id":"https://example.malleus.dev/cc013/presentation","name":"presentation_equivalence","slots":{"value":{"description":"Baseline slot description.","range":"string","required":true}},"title":"Baseline title"}

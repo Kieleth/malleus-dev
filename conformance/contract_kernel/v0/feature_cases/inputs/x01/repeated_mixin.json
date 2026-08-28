@@ -1,0 +1,1 @@
+{"classes":{"Child":{"mixins":["MixinA","MixinA"]},"MixinA":{"mixin":true,"slot_usage":{"value":{"required":true}},"slots":["value"]}},"id":"https://example.org/cc-x01/repeated-mixin","name":"repeated_mixin","slots":{"value":{"range":"string"}}}

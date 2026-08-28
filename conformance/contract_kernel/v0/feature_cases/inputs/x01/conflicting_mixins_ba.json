@@ -1,0 +1,1 @@
+{"classes":{"Child":{"mixins":["MixinB","MixinA"]},"MixinA":{"mixin":true,"slot_usage":{"value":{"range":"integer"}},"slots":["value"]},"MixinB":{"mixin":true,"slot_usage":{"value":{"range":"float"}},"slots":["value"]}},"id":"https://example.org/cc-x01/conflicting-mixins-ba","name":"conflicting_mixins_ba","slots":{"value":{"range":"string"}}}

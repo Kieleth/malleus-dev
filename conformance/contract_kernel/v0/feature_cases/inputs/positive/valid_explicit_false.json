@@ -1,0 +1,1 @@
+{"classes":{"Record":{"slot_usage":{"value":{"identifier":false,"inlined":false,"multivalued":false,"required":false}},"slots":["value"]}},"id":"https://example.malleus.dev/d08-explicit-false","imports":["linkml:types"],"name":"d08_explicit_false","slots":{"value":{"identifier":false,"inlined":false,"multivalued":false,"range":"string","required":false}}}

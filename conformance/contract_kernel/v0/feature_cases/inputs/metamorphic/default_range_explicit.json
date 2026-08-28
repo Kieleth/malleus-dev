@@ -1,0 +1,1 @@
+{"classes":{"Thing":{"slots":["value"]}},"default_range":"integer","id":"https://example.org/cc-x01/default-range","name":"default_range","slots":{"value":{"range":"integer"}}}

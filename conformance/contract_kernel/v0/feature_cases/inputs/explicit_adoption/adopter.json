@@ -1,0 +1,1 @@
+{"id":"https://example.malleus.dev/cc013/adoption-subject","imports":["https://example.malleus.dev/cc013/adoption-owner"],"name":"adoption_subject","slots":{"shared_value":{"annotations":{"adopts":true},"description":"Adopter presentation.","range":"string","required":true}}}

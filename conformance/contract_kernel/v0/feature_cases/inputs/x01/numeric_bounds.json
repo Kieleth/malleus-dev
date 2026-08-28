@@ -1,0 +1,1 @@
+{"classes":{"Child":{"is_a":"Parent","slot_usage":{"value":{"maximum_value":95,"minimum_value":5}}},"Parent":{"slot_usage":{"value":{"maximum_value":90,"minimum_value":10}},"slots":["value"]}},"id":"https://example.org/cc-x01/numeric-bounds","name":"numeric_bounds","slots":{"value":{"maximum_value":100,"minimum_value":0,"range":"float"}}}
