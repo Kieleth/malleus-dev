@@ -1,0 +1,6 @@
+{
+  "operation": "COMPILE_SOURCE",
+  "requirement_id": "linkml-profile-metamorphic",
+  "scenario_id": "linkml-support-profile",
+  "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml"
+}

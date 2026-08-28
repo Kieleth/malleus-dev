@@ -1,0 +1,57 @@
+id: https://example.malleus.dev/greenhouse
+name: greenhouse_presentation
+version: presentation-2
+title: Greenhouse reading catalogue
+description: Alternate prose for the same neutral greenhouse contract.
+imports:
+  - linkml:types
+default_range: string
+types:
+  Celsius:
+    typeof: float
+    description: A Celsius temperature value.
+enums:
+  PlantState:
+    description: Labels used when observing plant condition.
+    permissible_values:
+      HEALTHY:
+        description: No stress was observed.
+      STRESSED:
+        description: Stress was observed.
+slots:
+  specimen_id:
+    description: Identifies the sampled plant locally.
+    identifier: true
+  temperature:
+    description: Stores measured air temperature.
+    range: Celsius
+    minimum_value: -20
+    maximum_value: 60
+  state:
+    description: Stores the plant condition label.
+    range: PlantState
+classes:
+  Sample:
+    description: Describes a sample from the greenhouse.
+  Traceable:
+    description: Adds specimen traceability to an observation.
+    mixin: true
+  Observation:
+    description: Describes one greenhouse measurement.
+    is_a: Sample
+    mixins:
+      - Traceable
+    slots:
+      - specimen_id
+      - temperature
+      - state
+    attributes:
+      note:
+        description: Carries optional local prose.
+    exactly_one_of:
+      - slot_conditions:
+          state:
+            equals_string: HEALTHY
+      - slot_conditions:
+          temperature:
+            value_presence: PRESENT

@@ -1,0 +1,57 @@
+description: A neutral greenhouse vocabulary for compiler conformance.
+title: Greenhouse observations
+version: 1.0.0
+name: greenhouse
+id: https://example.malleus.dev/greenhouse
+default_range: string
+imports:
+  - linkml:types
+classes:
+  Observation:
+    exactly_one_of:
+      - slot_conditions:
+          temperature:
+            value_presence: PRESENT
+      - slot_conditions:
+          state:
+            equals_string: HEALTHY
+    attributes:
+      note:
+        description: A local note about the observation.
+    slots:
+      - specimen_id
+      - temperature
+      - state
+    mixins:
+      - Traceable
+    is_a: Sample
+    description: One observation of a greenhouse specimen.
+  Traceable:
+    mixin: true
+    description: A mixin for observations tied to a specimen.
+  Sample:
+    description: A greenhouse sample.
+slots:
+  state:
+    range: PlantState
+    description: The observed plant state.
+  temperature:
+    maximum_value: 60
+    minimum_value: -20
+    range: Celsius
+    description: The measured air temperature.
+  specimen_id:
+    identifier: true
+    description: The local identifier for a sampled plant.
+enums:
+  PlantState:
+    permissible_values:
+      STRESSED:
+        description: The plant shows observed stress.
+      HEALTHY:
+        description: The plant shows no observed stress.
+    description: The observed state of a plant.
+types:
+  Celsius:
+    description: Temperature measured in degrees Celsius.
+    typeof: float
