@@ -1,0 +1,66 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 21869,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:83eb9890f7c9bd3c48d84849a3bf2b03749157cf486adc3e24363924638223c3"
+    },
+    {
+      "byte_length": 4985,
+      "path": "design/contract_compiler/workstreams/CC-010/manifest.json",
+      "sha256": "sha256:a7e54de92d09815367d219e9661f3ced85348f8fd47ef1cfbbbcfcda2d0bcc89"
+    },
+    {
+      "byte_length": 48621,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:c0fdf90b7e10f786ec13b0a4a064367d9d715af017739d347cc6d42368d32925"
+    }
+  ],
+  "base_commit": "2a5c86fcef6ca9b287594ff17f81ec33994132b8",
+  "checks": [
+    {
+      "check_id": "cc010-activation-red",
+      "method": "Run `.venv/bin/pytest -q tests/test_contract_compiler_integration.py::test_cc010_activation_boundary_is_exact` before registering the card.",
+      "observed": "The command exited 1 with one failed test. The exact assertion expected the CC-010 registry card state PRESENT and observed ABSENT. No conformance implementation or corpus byte existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-dependency-readiness",
+      "method": "Load the current overseer projection and bind every direct CC-010 dependency to its current card digest, exact COMPLETE entry ID and hash, and first authority commit.",
+      "observed": "CC-000, CC-D02, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, and CC-D11 are COMPLETE and PRESENT. Their nine exact bindings validate. CC-D09 is open but is not a CC-010 dependency.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-scope-separation",
+      "method": "Compare all six proposed FILE scopes with every active FORMAL or EXPLORATION_ONLY card and inspect each path in the current tree.",
+      "observed": "All six paths were absent before activation and none overlaps an active scope. Source and oracle TREE ownership remains unassigned for separate future workstreams.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-registry-targeting-guard",
+      "method": "Compare every non-CC-010 registry row once with its exact HEAD structure keyed by workstream ID, then run the permanent generic row/card identity regression and the exact CC-010 activation guard.",
+      "observed": "Independent review caught an initial positional edit that placed the CC-010 pointer on CC-D09. The draft was not ledgered. CC-D09 was restored. The one-time comparison passed for all 65 other rows. Existing generic validation plus the exact CC-010 identity assertion prevent recurrence without blocking future activations.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-active-binding-regression",
+      "method": "Run the canonical card-count guard and the synthetic selection-authorization test after CC-010 becomes an active dependency consumer.",
+      "observed": "The canonical guard requires 23 cards. The synthetic X03/D11 mutation fixture now mechanically rebinds CC-010 to the mutated D11 card before reaching its intended selection-authorization assertion. Both tests pass without weakening dependency validation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-kiss-boundary",
+      "method": "Inspect the exact card, registry row, activation guard, changed paths, candidate state, selection list, and worker-ledger pointer.",
+      "observed": "CC-010 owns only four protocol manifest files, one fixed validation test, and one internal guide. Candidate is NONE, ledger is NOT_STARTED, and selection is absent. No corpus source, oracle, compiler, generated expectation, public API, package, Docker, release, or R01 work is authorized.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This evidence authorizes and verifies the CC-010 boundary only. It does not implement or complete the conformance protocol.",
+    "No CC-R stage is activated. CC-R01 remains blocked on the later source and oracle workstreams named by the program.",
+    "The worker must create its own RED and append-only worker evidence before any CC-010 implementation candidate can become eligible."
+  ],
+  "recorded_at": "2026-08-28T17:47:34Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-010"
+}

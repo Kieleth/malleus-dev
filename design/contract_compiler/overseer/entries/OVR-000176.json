@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "cc010-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T17:47:36Z",
+    "claims": [
+      "All nine direct CC-010 dependencies are COMPLETE and each dependency binding matches its current card, exact completion entry and hash, and first authority commit.",
+      "The FORMAL card assigns one worker, keeps candidate NONE and ledger NOT_STARTED, and owns exactly six FILE scopes for the three-corpus protocol, grammar, fixed validation tests, and internal guide.",
+      "All six scopes were absent before activation and overlap no active card. Source and oracle TREE scopes remain unassigned for their separate future workstreams.",
+      "The exact activation guard preserves RED evidence, binds the card pointer and bytes, and excludes compiler implementation, generated expectations, public API, packaging, Docker, release, and R01 work."
+    ],
+    "limitations": [
+      "This verifies activation readiness and boundary integrity only. It does not implement or complete CC-010.",
+      "No CC-R stage is active, eligible, integrated, complete, or selected by this fact."
+    ]
+  },
+  "entry_hash": "sha256:626d407227ab1a3ecedd5a56c7d0b1ae54f58fce8916a8a964ddef87ad3c6c28",
+  "entry_id": "OVR-000176",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:65b38d27f4798ea3ddb73ae524725f08a576ff23d7dd7467d7cefc6c52e21879",
+  "recorded_at": "2026-08-28T17:47:36Z",
+  "references": [
+    {
+      "digest": "sha256:fca1febd87d6485e311a4ec26388ea07f1a121c61acb1dae9d48a26a2af6c34b",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-010-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000175",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 176,
+  "subject": {
+    "id": "CC-010-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact CC-010 activation boundary and dependencies.",
+  "why": "Formal activation requires immutable evidence that the dependency set is complete, the card is exact, the proposed files do not collide with active ownership, and the slice does not silently begin compiler or corpus implementation."
+}

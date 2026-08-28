@@ -392,7 +392,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 22
+    assert len(state.cards) == 23
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -475,6 +475,83 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-R06 retains production admission TDD",
     ):
         assert phrase in d10_responsibility
+
+
+def test_cc010_activation_boundary_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-010")
+    assert row["card"]["state"] == "PRESENT"
+    path = CONTRACT / row["card"]["path"]
+    source = path.read_bytes()
+    assert row["card"]["byte_length"] == len(source)
+    assert row["card"]["sha256"] == _digest(source)
+    card = _read_json(path)
+    assert card["workstream_id"] == row["workstream_id"] == "CC-010"
+    workstream_states, _ = integration_module._workstream_states(
+        _raw_overseer_state()
+    )
+    dependencies = load_program_registry(PROGRAM)["CC-010"]
+
+    assert card["assignment"] == {
+        "owner_id": "worker:cc010-conformance-protocol",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc010_conformance_protocol",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == dependencies
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["scopes"] == [
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/corpus.schema.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/corpus.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/stage-matrix.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/checksums.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_conformance_protocol.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "docs/contract_compiler/conformance_protocol.md",
+        },
+    ]
+    assert workstream_states["CC-010"] == "ACTIVE"
+    assert "CC-010" not in manifest["selections"]
+    responsibility = card["responsibility"]
+    for required in (
+        "three-corpus protocol",
+        "path and ownership conventions",
+        "membership and checksum grammar",
+        "fixed validation tests",
+        "no source or oracle content",
+        "implementation or compiler code",
+        "generated expectations",
+        "public API",
+        "packaging",
+        "Docker",
+        "release",
+        "CC-R01",
+    ):
+        assert required in responsibility
 
 
 def test_registry_card_pointer_must_match_its_workstream_row(tmp_path: Path) -> None:
@@ -1171,6 +1248,17 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
             card_sha256=x03_digest,
             integrated_head=result_commit,
         ),
+    )
+    d11_digest = _registry_row(manifest, "CC-D11")["card"]["sha256"]
+    _rewrite_card(
+        manifest_path,
+        manifest,
+        "CC-010",
+        lambda card: next(
+            binding
+            for binding in card["authorization"]["dependency_bindings"]
+            if binding["workstream_id"] == "CC-D11"
+        ).update(card_sha256=d11_digest),
     )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)

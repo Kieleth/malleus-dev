@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-010"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:83eb9890f7c9bd3c48d84849a3bf2b03749157cf486adc3e24363924638223c3",
+        "before_digest": "sha256:db875686136b9a627631962d348e9b4809f0f5ea3909bb6f77f948fee50dd11f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:fca1febd87d6485e311a4ec26388ea07f1a121c61acb1dae9d48a26a2af6c34b",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-010-activation.json"
+      },
+      {
+        "after_digest": "sha256:a7e54de92d09815367d219e9661f3ced85348f8fd47ef1cfbbbcfcda2d0bcc89",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-010/manifest.json"
+      },
+      {
+        "after_digest": "sha256:c0fdf90b7e10f786ec13b0a4a064367d9d715af017739d347cc6d42368d32925",
+        "before_digest": "sha256:5bee92f63e241c0215526f29004586c0cb1ad2786b4b7ef1e5350e4ae17c675f",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:65b38d27f4798ea3ddb73ae524725f08a576ff23d7dd7467d7cefc6c52e21879",
+  "entry_id": "OVR-000175",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:13b1f24cf53474739dfaa5f6f050e8c23464753d179e02087bd0257782a68353",
+  "recorded_at": "2026-08-28T17:47:35Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:fca1febd87d6485e311a4ec26388ea07f1a121c61acb1dae9d48a26a2af6c34b",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-010-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-010/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 175,
+  "subject": {
+    "id": "cc010-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-010 three-corpus protocol boundary.",
+  "why": "Every direct dependency is complete and exactly bound, so CC-010 may own only the six protocol-definition and validation files needed before independent source and oracle work. The card keeps candidate and worker ledger empty, starts no R stage, and excludes corpus content, compiler implementation, generated expectations, public API, packaging, Docker, and release work."
+}
