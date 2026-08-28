@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.contract_compiler_ledger import (  # noqa: E402
     LedgerValidationError,
+    _superseded_entries,
     canonical_json,
     entry_hash,
     load_ledger,
@@ -6233,12 +6234,31 @@ def test_evidence_sealing_checks_source_bytes(tmp_path: Path) -> None:
 
 def test_latest_document_revision_must_match_current_bytes(tmp_path: Path) -> None:
     copied = _copy_ledger(tmp_path)
-    target = copied / "entries" / "OVR-000009.json"
+    target_path = ".gitignore"
+    entry_paths = sorted((copied / "entries").glob("*.json"))
+    entries = [json.loads(path.read_text(encoding="utf-8")) for path in entry_paths]
+    superseded = _superseded_entries(entries)
+    active_revisions = [
+        path
+        for path, entry in zip(entry_paths, entries, strict=True)
+        if entry["entry_id"] not in superseded
+        and entry["entry_type"] == "DOCUMENT_REVISION"
+        and any(document["path"] == target_path for document in entry["data"]["documents"])
+    ]
+    assert active_revisions
+    target = active_revisions[-1]
+
+    def corrupt_latest_revision(value) -> None:
+        document = next(
+            document
+            for document in value["data"]["documents"]
+            if document["path"] == target_path
+        )
+        document["after_digest"] = "sha256:" + "0" * 64
+
     _rewrite_entry(
         target,
-        lambda value: value["data"]["documents"][0].update(
-            after_digest="sha256:" + "0" * 64
-        ),
+        corrupt_latest_revision,
         rehash=False,
     )
     _reseal(copied)
