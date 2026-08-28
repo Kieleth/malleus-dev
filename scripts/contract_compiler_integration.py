@@ -708,6 +708,29 @@ def _cycle(registry: Mapping[str, Sequence[str]]) -> tuple[str, ...] | None:
     return None
 
 
+def _require_worker_evidence_scope(card: Mapping[str, Any]) -> None:
+    """Require one canonical verification-report path for scoped formal workers."""
+    owner = card["assignment"].get("owner_id")
+    scopes = card["scopes"]
+    if (
+        card["authorization"]["class"] != "FORMAL"
+        or owner is None
+        or owner == "overseer"
+        or not scopes
+    ):
+        return
+    workstream_id = card["workstream_id"]
+    expected = {
+        "kind": "FILE",
+        "path": f"conformance/contract_compiler/v0/evidence/{workstream_id}.json",
+    }
+    if expected not in scopes:
+        _fail(
+            "CC000_EVIDENCE_SCOPE",
+            f"{workstream_id}: scoped formal worker must own {expected['path']}",
+        )
+
+
 def _workstream_states(ledger_state: Any) -> tuple[dict[str, str], dict[str, dict[str, Any]]]:
     superseded = superseded_entries(ledger_state.entries)
     states: dict[str, str] = {}
@@ -812,6 +835,7 @@ def validate_integration(
             "BLOCKED",
         }:
             _fail("CC000_ASSIGNMENT", f"{workstream_id}: active authorization needs an owner")
+        _require_worker_evidence_scope(card)
         for scope in card["scopes"]:
             _safe_path(scope["path"], f"{workstream_id} scope")
             if owner != "overseer" and any(

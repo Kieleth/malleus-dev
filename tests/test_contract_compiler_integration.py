@@ -527,6 +527,10 @@ def test_cc010_activation_boundary_is_exact() -> None:
         },
         {
             "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-010.json",
+        },
+        {
+            "kind": "FILE",
             "path": "tests/contract_compiler/test_conformance_protocol.py",
         },
         {
@@ -565,6 +569,28 @@ def test_registry_card_pointer_must_match_its_workstream_row(tmp_path: Path) -> 
         validate_integration(ROOT, path)
 
     _assert_code(error, "CC000_CARD_ID")
+
+
+def test_formal_worker_scope_requires_canonical_evidence_file(tmp_path: Path) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+
+    def remove_evidence_scope(card: dict[str, Any]) -> None:
+        card["scopes"] = [
+            scope
+            for scope in card["scopes"]
+            if scope
+            != {
+                "kind": "FILE",
+                "path": "conformance/contract_compiler/v0/evidence/CC-001.json",
+            }
+        ]
+
+    _rewrite_card(path, manifest, "CC-001", remove_evidence_scope)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_EVIDENCE_SCOPE")
 
 
 def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:

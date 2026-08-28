@@ -82,7 +82,7 @@
   "ledger": {
     "state": "NOT_STARTED"
   },
-  "responsibility": "Define the three-corpus protocol, path and ownership conventions, membership and checksum grammar, and fixed validation tests only. Own exactly the protocol manifests, validation test, and internal guide named by this card. Downstream source and oracle TREE scopes require their own future cards. This activation creates no source or oracle content, implementation or compiler code, generated expectations, public API, packaging, Docker, release, candidate, selection, worker ledger, or CC-R01 work.",
+  "responsibility": "Define the three-corpus protocol, path and ownership conventions, membership and checksum grammar, and fixed validation tests only. Own exactly the protocol manifests, canonical verification report, validation test, and internal guide named by this card. Downstream source and oracle TREE scopes require their own future cards. This activation creates no source or oracle content, implementation or compiler code, generated expectations, public API, packaging, Docker, release, candidate, selection, worker ledger, or CC-R01 work.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
     {
@@ -100,6 +100,10 @@
     {
       "kind": "FILE",
       "path": "conformance/contract_kernel/v0/checksums.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-010.json"
     },
     {
       "kind": "FILE",

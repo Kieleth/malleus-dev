@@ -1,0 +1,59 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 21869,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:38400fb4a1ade362ddfd49d0f2efc6d743488fbcbb867d6ad18b72b641a1f6c7"
+    },
+    {
+      "byte_length": 5121,
+      "path": "design/contract_compiler/workstreams/CC-010/manifest.json",
+      "sha256": "sha256:5f7b6ca9537550afe2b65e3bbfc5094ce1ad0a4ee80cd0140e25ff499188a59d"
+    },
+    {
+      "byte_length": 38946,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:3e0d4ffbf783099caaf4837c6c75c1fa60d22d304de04b39626cd9443a2059fb"
+    },
+    {
+      "byte_length": 49431,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:922b9200bf967f21b331089f7b38b613c717144e76460ff3c7e01d5a0cc5546d"
+    }
+  ],
+  "base_commit": "6bfa1970d386f8c622c149023f8fd4750f33fadc",
+  "checks": [
+    {
+      "check_id": "cc010-evidence-scope-defect",
+      "method": "Apply the existing candidate-history and evidence-report rules to the six-scope CC-010 activation boundary before implementation begins.",
+      "observed": "Every eligible candidate requires a nonempty canonical verification report, and every touched candidate path must be inside card scope. CC-010 omitted its required report path, so a conforming worker could not produce an eligible candidate. No implementation existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-evidence-scope-red",
+      "method": "Run `.venv/bin/pytest -q tests/test_contract_compiler_integration.py::test_formal_worker_evidence_scope_guard_is_fail_closed` before adding the validator guard.",
+      "observed": "The temporary RED command exited 1 because `_require_worker_evidence_scope` did not exist. After GREEN, that probe was folded into the single end-to-end public-validator regression to keep the permanent test surface minimal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-evidence-scope-guard",
+      "method": "Run one end-to-end manifest mutation that removes the canonical evidence scope from CC-001 through the public integration validator.",
+      "observed": "The regression passes and reports CC000_EVIDENCE_SCOPE. The guard applies only to scoped FORMAL cards assigned to a non-overseer worker. It preserves zero-scope decision cards, overseer-owned cards, planning or blocked cards, and exploration-only cards.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc010-evidence-scope-correction",
+      "method": "Compare the corrected card and registry pointer with commit 6bfa1970, then inspect candidate, ledger, selection, and implementation paths.",
+      "observed": "Exactly one FILE scope was added: conformance/contract_compiler/v0/evidence/CC-010.json. The original six implementation scopes are unchanged. Candidate remains NONE, worker ledger remains NOT_STARTED, CC-010 remains unselected, and no implementation file exists or changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This correction repairs activation ownership and adds a generic admission guard. It creates no CC-010 implementation, corpus, oracle, candidate, worker ledger, selection, or R-stage work.",
+    "The future worker verification report is scoped but does not exist yet. It must be created and bound by the worker's own TDD candidate history.",
+    "The original activation evidence remains historical at its committed digest. This report records the append-only correction rather than rewriting it."
+  ],
+  "recorded_at": "2026-08-28T18:07:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-010"
+}

@@ -1,0 +1,40 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "cc010-activation-boundary",
+      "CC-010"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000175"
+  },
+  "entry_hash": "sha256:51f893b83e88922f05dbb238132b8e3380ea7137974b6ce072b103d626d54929",
+  "entry_id": "OVR-000178",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ec2f551ac115bf4592929defb54709b24ac9a20a2bc78188553a2a7dc2add121",
+  "recorded_at": "2026-08-28T18:07:03Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000175",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 178,
+  "subject": {
+    "id": "cc010-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Correct the CC-010 activation boundary that omitted worker evidence ownership.",
+  "why": "Pre-implementation audit proved that the six-scope card could not produce an eligible formal candidate because its required canonical verification report was outside worker scope. OVR-000175 remains historical, but a replacement document revision must add exactly that FILE scope and bind the generic prevention guard."
+}

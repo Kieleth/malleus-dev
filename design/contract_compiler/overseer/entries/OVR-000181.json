@@ -1,0 +1,89 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-010"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:38400fb4a1ade362ddfd49d0f2efc6d743488fbcbb867d6ad18b72b641a1f6c7",
+        "before_digest": "sha256:db875686136b9a627631962d348e9b4809f0f5ea3909bb6f77f948fee50dd11f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:7d70415b90b22acef520c1edcbb2cb6303d9f898b69e037ba3abaab11adbe097",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-010-activation-scope-correction.json"
+      },
+      {
+        "after_digest": "sha256:5f7b6ca9537550afe2b65e3bbfc5094ce1ad0a4ee80cd0140e25ff499188a59d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-010/manifest.json"
+      },
+      {
+        "after_digest": "sha256:3e0d4ffbf783099caaf4837c6c75c1fa60d22d304de04b39626cd9443a2059fb",
+        "before_digest": "sha256:cc98ba5319c698a347e8b576e394cf9d2716b972cbaf044051d66612fdfe026e",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:922b9200bf967f21b331089f7b38b613c717144e76460ff3c7e01d5a0cc5546d",
+        "before_digest": "sha256:5bee92f63e241c0215526f29004586c0cb1ad2786b4b7ef1e5350e4ae17c675f",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:cedec18da002e00709d5d400534a169068171e8c07a8a2eaea523565dc93d356",
+  "entry_id": "OVR-000181",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a5168d5fb19a010235a8350d72084ef873f0cd5caf5a43b19e08342d22b2828f",
+  "recorded_at": "2026-08-28T18:07:06Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:7d70415b90b22acef520c1edcbb2cb6303d9f898b69e037ba3abaab11adbe097",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-010-activation-scope-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-010/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 181,
+  "subject": {
+    "id": "cc010-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Replace the CC-010 activation boundary with exact evidence ownership.",
+  "why": "The corrected card adds only the canonical CC-010 verification-report FILE scope. The integration validator now rejects the same omission for every scoped FORMAL non-overseer worker while preserving decision, overseer, planning, blocked, and exploration cards. The six implementation scopes, candidate, worker ledger, selection, program, graph, and implementation bytes remain unchanged."
+}

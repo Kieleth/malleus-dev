@@ -1,0 +1,40 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-010-activation-verification",
+      "CC-010"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000176"
+  },
+  "entry_hash": "sha256:97de6420919f6bf0e88ddad415008d7dfb0b32a36956b7e5ec7f992c29737bf5",
+  "entry_id": "OVR-000179",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:51f893b83e88922f05dbb238132b8e3380ea7137974b6ce072b103d626d54929",
+  "recorded_at": "2026-08-28T18:07:04Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000176",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 179,
+  "subject": {
+    "id": "CC-010-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Correct the incomplete CC-010 activation verification.",
+  "why": "OVR-000176 verified six implementation scopes but did not test whether the worker could own and retain the canonical evidence report required by candidate admission. A replacement verified fact must bind the corrected seven-scope card and the new fail-closed integration guard."
+}

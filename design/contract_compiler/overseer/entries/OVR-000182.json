@@ -1,0 +1,51 @@
+{
+  "actor": {
+    "id": "cc010-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T18:07:07Z",
+    "claims": [
+      "The CC-010 card owns its canonical verification report at conformance/contract_compiler/v0/evidence/CC-010.json in addition to the unchanged six implementation scopes.",
+      "A scoped FORMAL card assigned to a non-overseer worker now fails integration validation unless it owns the exact canonical verification-report FILE scope derived from its workstream ID.",
+      "The public-validator regression removes the evidence scope from a valid integrated worker card and receives exact diagnostic CC000_EVIDENCE_SCOPE before candidate or selection evaluation.",
+      "CC-010 remains ACTIVE, unselected, candidate NONE, and worker ledger NOT_STARTED. No protocol implementation, corpus, oracle, generated expectation, public API, package, Docker, release, or R-stage byte was created or changed."
+    ],
+    "limitations": [
+      "This replacement verifies the corrected activation boundary and generic guard only. It does not implement or complete CC-010.",
+      "The scoped worker report remains future output and must be created through the worker's own append-only TDD history."
+    ]
+  },
+  "entry_hash": "sha256:0f39cf3c28f51f54893c34ca5f2d7e097339c329cba5e8b3deee93aa1907af33",
+  "entry_id": "OVR-000182",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cedec18da002e00709d5d400534a169068171e8c07a8a2eaea523565dc93d356",
+  "recorded_at": "2026-08-28T18:07:07Z",
+  "references": [
+    {
+      "digest": "sha256:7d70415b90b22acef520c1edcbb2cb6303d9f898b69e037ba3abaab11adbe097",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-010-activation-scope-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000181",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 182,
+  "subject": {
+    "id": "CC-010-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the corrected seven-scope CC-010 activation boundary.",
+  "why": "The replacement verification closes the omitted-evidence ownership defect before implementation and proves the generic guard against the full integration validator rather than relying on a prose convention."
+}

@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-010"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000177"
+  },
+  "entry_hash": "sha256:a5168d5fb19a010235a8350d72084ef873f0cd5caf5a43b19e08342d22b2828f",
+  "entry_id": "OVR-000180",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:97de6420919f6bf0e88ddad415008d7dfb0b32a36956b7e5ec7f992c29737bf5",
+  "recorded_at": "2026-08-28T18:07:05Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000177",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-010",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 180,
+  "subject": {
+    "id": "CC-010",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the six-scope CC-010 activation state.",
+  "why": "OVR-000177 activated an implementation worker without ownership of the evidence file that its formal candidate must create. No implementation began. A replacement ACTIVE state must follow the corrected card, retained correction evidence, and generic worker-evidence scope guard."
+}
