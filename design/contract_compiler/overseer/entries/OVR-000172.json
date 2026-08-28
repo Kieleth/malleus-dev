@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept every non-inlined Class-valued SlotUse as a strong same-role and same-partition graph reference over accepted prestate plus earlier dependency-ordered candidate writes, with class-ancestry matching, mixin-only refusal, and whole-candidate atomic refusal.",
+      "Keep relation endpoints Entity-only, signal bearers Entity-or-Relation, one global record-ID namespace, and referentially closed selected temporal views without runtime sorting, fixed-point lookup, repair, cascade, deletion, cross-role borrowing, or a second query surface.",
+      "Promote the decision through canonical graph revision 20, all five exact projections, compact abstract TDD, a dependency-bound zero-scope card, retained RED and verification evidence, and no production, ontology, package, dependency, API, storage, themed-source, candidate, selection, or worker-ledger change."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000169",
+      "OVR-000170",
+      "OVR-000171"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D10"
+  },
+  "entry_hash": "sha256:7ed32de82a3ad544778ee5d593390f84efe8eed4a95b018d38b2b171c2fd2c6b",
+  "entry_id": "OVR-000172",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4abfd1ad8f54477e9e9d498fd198f11d1143daf4695dcb56a744869198df4521",
+  "recorded_at": "2026-08-28T05:04:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000169",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000170",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000171",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D10",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-010",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 172,
+  "subject": {
+    "id": "CC-D10",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D10 under the strong local contextual-reference contract.",
+  "why": "The operator decision, exact graph closure, dependency-bound zero-scope card, compact reference and temporal-view model, retained RED and verification report, and strict governance chain satisfy every CC-D10 completion gate while leaving runtime admission and public diagnostics to CC-R06."
+}

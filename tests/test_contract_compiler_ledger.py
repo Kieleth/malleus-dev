@@ -91,7 +91,9 @@ OD006_NEXT_HEADING = "### OD-007: protected governance partition topology"
 OD007_HEADING = OD006_NEXT_HEADING
 OD007_NEXT_HEADING = "### OD-008: closed LinkML v0 support profile"
 OD008_HEADING = OD007_NEXT_HEADING
-OD008_NEXT_HEADING = "### OD-011: resolver and import policy"
+OD008_NEXT_HEADING = "### OD-010: contextual graph references and endpoints"
+OD010_HEADING = OD008_NEXT_HEADING
+OD010_NEXT_HEADING = "### OD-011: resolver and import policy"
 OD005_SEED_TABLE_HEADER = (
     "Subject kind",
     "Predicate",
@@ -183,6 +185,67 @@ OD008_PROFILE_HEADER = (
     "IDENTITY_ONLY",
     "ANNOTATION_ONLY",
     "REJECTED",
+)
+OD010_REFERENCE_ROWS = (
+    ("Case", "Outcome", "Reason"),
+    (
+        "present scalar target or every multivalue target exists in the same role and partition and has the declared class or subclass",
+        "ACCEPT",
+        "the complete strong-reference obligation is satisfied",
+    ),
+    (
+        "inlined class-valued SlotUse",
+        "ACCEPT AS CONTAINED VALUE",
+        "it is not a graph reference",
+    ),
+    (
+        "missing target, wrong concrete type, or mixin-only match",
+        "REFUSE CANDIDATE",
+        "existence and class ancestry are mandatory; usesMixin is not subClassOf",
+    ),
+    (
+        "target in another contract role or replay-derived partition",
+        "REFUSE CANDIDATE",
+        "D06 forbids borrowing another role's registry or facts",
+    ),
+    (
+        "target admitted earlier in dependency order",
+        "ACCEPT",
+        "earlier candidate state is visible",
+    ),
+    (
+        "target admitted later, self-reference through the same create, or reference cycle",
+        "REFUSE CANDIDATE",
+        "runtime does not search, reorder, or solve a fixed point",
+    ),
+    (
+        "primitive ID or hash scalar outside a class-valued SlotUse",
+        "SCALAR CONTENT",
+        "it does not masquerade as a contextual graph reference",
+    ),
+)
+OD010_CONTEXT_ROWS = (
+    ("Contextual rule", "Accept", "Refuse"),
+    (
+        "Relation endpoint",
+        "existing same-role and same-partition Entity of the declared class or subclass",
+        "missing, Event, Signal, Relation, protocol, governance, cross-role, cross-partition, or wrong Entity type",
+    ),
+    (
+        "Signal bearer",
+        "existing same-role and same-partition Entity or Relation",
+        "missing, Event, Signal, cross-role, or cross-partition target",
+    ),
+    (
+        "Record identity",
+        "one unused ID",
+        "reuse across any graph category or partition",
+    ),
+    (
+        "Selected temporal view",
+        "every visible strong reference, endpoint, and bearer has its visible target",
+        "any visible referrer with an omitted target",
+    ),
 )
 OD008_PROFILE_ROWS = (
     (
@@ -774,6 +837,16 @@ def _od008_section(decisions: str) -> str:
     section, after = section_and_after.split(OD008_NEXT_HEADING, 1)
     assert OD008_NEXT_HEADING not in before
     assert OD008_HEADING not in after
+    return section
+
+
+def _od010_section(decisions: str) -> str:
+    assert decisions.count(OD010_HEADING) == 1
+    assert decisions.count(OD010_NEXT_HEADING) == 1
+    before, section_and_after = decisions.split(OD010_HEADING, 1)
+    section, after = section_and_after.split(OD010_NEXT_HEADING, 1)
+    assert OD010_NEXT_HEADING not in before
+    assert OD010_HEADING not in after
     return section
 
 
@@ -1464,6 +1537,31 @@ def _assert_od006_closed_contract(section: str) -> None:
         assert exact in prose
 
 
+def _assert_od010_contract(section: str) -> None:
+    assert _markdown_tables(section) == (OD010_REFERENCE_ROWS, OD010_CONTEXT_ROWS)
+    prose = " ".join(section.split())
+    for exact in (
+        "Every non-inlined class-valued `SlotUse` is a strong graph reference.",
+        "A present scalar value and every member of a present multivalue must resolve.",
+        "D10 runs after the active general missing-value, null, presence, and cardinality evaluation and validates only surviving non-null scalar or list members.",
+        "It neither changes nor owns missing, null, presence, or cardinality outcomes.",
+        "The concrete target type must equal the declared class range or be its `subClassOf` descendant.",
+        "`usesMixin` alone never satisfies the declared class range.",
+        "Admission reads accepted prestate plus earlier dependency-ordered candidate writes.",
+        "Later writes, self-reference through the same create, forward lookup, fixed-point search, and reference cycles refuse the whole candidate.",
+        "The runtime performs no topological sort.",
+        "Cross-partition and cross-role strong references refuse in v0.",
+        "Relation endpoints remain existing `Entity` records matching the declared endpoint class or subtype.",
+        "Signal bearer remains an explicit contextual admission rule",
+        "one global record-ID namespace across graph categories and logical partitions",
+        "Every selected temporal view must be referentially closed",
+        "Admission does not cascade, repair, delete, infer reverse dependencies, propagate uncertainty, or prove interval containment.",
+        "One query surface remains; these admission rules create no confidentiality, read-authorization, filtering, or ACL policy.",
+        "This decision creates no production implementation, ontology YAML, dependency, package, API, storage, migration, deletion, cascade, repair, or public diagnostic grammar.",
+    ):
+        assert exact in prose
+
+
 class _Od007Refusal(ValueError):
     pass
 
@@ -1604,6 +1702,138 @@ def _od007_state(graph: _Od007ReplayProjection) -> tuple[object, ...]:
         tuple(sorted(graph._records.items())),
         tuple(graph._events),
     )
+
+
+class _Od010Refusal(ValueError):
+    pass
+
+
+_Od010Record = tuple[str, str, str, tuple[str, ...]]
+_Od010Admission = tuple[
+    str,
+    str,
+    str,
+    str,
+    tuple[tuple[str, str], ...],
+    tuple[tuple[str, str], ...],
+    str | None,
+]
+_OD010_ROLE = "GovernedGraphContract"
+_OD010_PARTITION = "domain"
+_OD010_PARENTS = {
+    "ArchiveExaminer": "Entity",
+    "InquiryDossier": "Entity",
+    "EvidenceFolio": "Entity",
+    "EvidenceAttachment": "Entity",
+    "Work": "Entity",
+    "MixinCarrier": "Entity",
+    "CitesFolioRelation": "Relation",
+    "SealReviewEvent": "Event",
+    "SealDiscrepancySignal": "Signal",
+}
+_OD010_MIXINS = {"MixinCarrier": {"EvidenceAttachment"}}
+
+
+def _od010_obligation(
+    record_id: str,
+    record_type: str = "Work",
+    *,
+    role: str = _OD010_ROLE,
+    partition: str = _OD010_PARTITION,
+    refs: tuple[tuple[str, str], ...] = (),
+    endpoints: tuple[tuple[str, str], ...] = (),
+    bearer: str | None = None,
+) -> _Od010Admission:
+    """Build a test-only proof tuple, never a record, wire, or public API."""
+    return record_id, record_type, role, partition, refs, endpoints, bearer
+
+
+def _od010_is_subclass(actual: str, expected: str) -> bool:
+    seen = set()
+    while actual not in seen:
+        if actual == expected:
+            return True
+        seen.add(actual)
+        parent = _OD010_PARENTS.get(actual)
+        if parent is None:
+            return False
+        actual = parent
+    return False
+
+
+def _od010_contextual_targets(
+    *,
+    class_valued: bool,
+    inlined: bool,
+    surviving_values: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Classify already-shaped values without defining source or wire fields."""
+    if not class_valued or inlined:
+        return ()
+    return surviving_values
+
+
+def _od010_resolve(
+    records: dict[str, _Od010Record],
+    target_id: str,
+    expected_type: str,
+    role: str,
+    partition: str,
+) -> None:
+    target = records.get(target_id)
+    if target is None:
+        raise _Od010Refusal("strong reference target is absent from visible state")
+    target_type, target_role, target_partition, _ = target
+    if target_role != role or target_partition != partition:
+        raise _Od010Refusal("strong reference crosses role or partition")
+    if not _od010_is_subclass(target_type, expected_type):
+        raise _Od010Refusal("strong reference target does not satisfy class ancestry")
+
+
+def _od010_admit_candidate(
+    prestate: dict[str, _Od010Record],
+    admissions: tuple[_Od010Admission, ...],
+) -> dict[str, _Od010Record]:
+    """Evaluate abstract proof obligations, never candidate or wire fields."""
+    overlay = dict(prestate)
+    for record_id, record_type, role, partition, refs, endpoints, bearer in admissions:
+        if record_id in overlay:
+            raise _Od010Refusal("record ID already exists in the global namespace")
+        for target_id, expected_type in refs:
+            _od010_resolve(overlay, target_id, expected_type, role, partition)
+        for target_id, expected_type in endpoints:
+            if not _od010_is_subclass(expected_type, "Entity"):
+                raise _Od010Refusal("relation endpoint range is not Entity")
+            _od010_resolve(overlay, target_id, expected_type, role, partition)
+        if bearer is not None:
+            target = overlay.get(bearer)
+            if target is None:
+                raise _Od010Refusal("signal bearer is absent from visible state")
+            target_type, target_role, target_partition, _ = target
+            if target_role != role or target_partition != partition:
+                raise _Od010Refusal("signal bearer crosses role or partition")
+            if not any(
+                _od010_is_subclass(target_type, allowed)
+                for allowed in ("Entity", "Relation")
+            ):
+                raise _Od010Refusal("signal bearer is not Entity or Relation")
+        targets = tuple(
+            target_id for target_id, _ in refs + endpoints
+        ) + (() if bearer is None else (bearer,))
+        overlay[record_id] = (record_type, role, partition, targets)
+    return overlay
+
+
+def _od010_select_temporal_view(
+    records: dict[str, _Od010Record],
+    visible_ids: frozenset[str],
+) -> dict[str, _Od010Record]:
+    if not visible_ids <= records.keys():
+        raise _Od010Refusal("temporal view selects an absent record")
+    for record_id in visible_ids:
+        if any(target not in visible_ids for target in records[record_id][3]):
+            raise _Od010Refusal("temporal view is not referentially closed")
+    return {record_id: records[record_id] for record_id in sorted(visible_ids)}
 
 
 def _copy_ledger(tmp_path: Path) -> Path:
@@ -2418,7 +2648,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2436,13 +2666,13 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1675
+    assert len(canonical) == 1716
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 19",
+        "# Design graph revision: 20",
         "# Evidence cutoff: 2026-08-27",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -2459,7 +2689,7 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 19,",
+            "revision 20,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2496,6 +2726,11 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     assert set(canonical.objects(od007, selects)) == {
         URIRef(f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0")
     }
+    od010 = URIRef(f"{cc}OD-010")
+    assert set(canonical.objects(od010, decision_date)) == {Literal("2026-08-27")}
+    assert set(canonical.objects(od010, selects)) == {
+        URIRef(f"{mfg}StrongLocalContextualReferenceAdmissionProfileV0")
+    }
     rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     status = URIRef(f"{mfg}status")
     decided_by = URIRef(f"{mfg}decidedBy")
@@ -2510,6 +2745,13 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(od007, decided_by)) == {URIRef(f"{mfg}Author")}
     assert set(canonical.objects(od007, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(od010, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od010, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od010, status)) == {
         URIRef(f"{mfg}AcceptedDesign")
     }
 
@@ -2546,7 +2788,21 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
         "ProtectedWriteAdmissionNotReadConfidentialityBoundary": "Boundary",
         "GovernanceTopologyQuestionR2": "OpenQuestion",
     }
-    for node, node_type in (od008_node_types | od007_node_types).items():
+    od010_node_types = {
+        "StrongLocalContextualReferenceAdmissionProfileV0": "NormativeAdmissionProfile",
+        "SurvivingNonInlinedClassValuesStrongReferenceBoundary": "Boundary",
+        "ClassOrSubclassTargetNoMixinOnlyMatchBoundary": "Boundary",
+        "SameRoleSamePartitionNoRegistryFactBorrowingBoundary": "Boundary",
+        "AcceptedPrestateEarlierOrderedWritesWholeCandidateAtomicNoRuntimeSortBoundary": "Boundary",
+        "EntityOnlyRelationEndpointsEntityOrRelationSignalBearersBoundary": "Boundary",
+        "GlobalRecordIDNamespaceReferentiallyClosedTemporalViewsBoundary": "Boundary",
+        "InlinedValuesAndPrimitiveIDHashScalarsNotContextualReferencesBoundary": "Boundary",
+        "NoCascadeRepairDeletionMigrationReadAccessOrImplementationBoundary": "Boundary",
+        "GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary": "Boundary",
+    }
+    for node, node_type in (
+        od008_node_types | od007_node_types | od010_node_types
+    ).items():
         subject = URIRef(f"{mfg}{node}")
         assert set(canonical.objects(subject, rdf_type)) == {
             URIRef(f"{mfg}{node_type}")
@@ -2672,6 +2928,17 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
             "GovernanceRepresentationAndD10SemanticsDeferredBoundary",
             "ProtectedWriteAdmissionNotReadConfidentialityBoundary",
         },
+        "StrongLocalContextualReferenceAdmissionProfileV0": {
+            "SurvivingNonInlinedClassValuesStrongReferenceBoundary",
+            "ClassOrSubclassTargetNoMixinOnlyMatchBoundary",
+            "SameRoleSamePartitionNoRegistryFactBorrowingBoundary",
+            "AcceptedPrestateEarlierOrderedWritesWholeCandidateAtomicNoRuntimeSortBoundary",
+            "EntityOnlyRelationEndpointsEntityOrRelationSignalBearersBoundary",
+            "GlobalRecordIDNamespaceReferentiallyClosedTemporalViewsBoundary",
+            "InlinedValuesAndPrimitiveIDHashScalarsNotContextualReferencesBoundary",
+            "NoCascadeRepairDeletionMigrationReadAccessOrImplementationBoundary",
+            "GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary",
+        },
         "ExplicitSingleResolverProfileSelection": {
             "StrictMalleusResolverDefaultBoundary",
             "ExplicitNamedVersionedResolverAndConfigurationBoundary",
@@ -2736,6 +3003,14 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
         canonical.objects(URIRef(f"{mfg}GovernanceTopologyQuestionR2"), supersedes)
     ) == {URIRef(f"{mfg}GovernanceTopology")}
     assert set(
+        canonical.objects(
+            URIRef(
+                f"{mfg}GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary"
+            ),
+            supersedes,
+        )
+    ) == {URIRef(f"{mfg}GovernanceRepresentationAndD10SemanticsDeferredBoundary")}
+    assert set(
         canonical.objects(URIRef(f"{mfg}GovernanceTopologyQuestionR2"), selects)
     ) == {
         URIRef(f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0")
@@ -2743,6 +3018,25 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     rejects = URIRef(f"{mfg}rejects")
     assert set(canonical.objects(od007, rejects)) == {
         URIRef(f"{mfg}GovernancePolicyGraphR2")
+    }
+    endpoint_expansion = URIRef(f"{mfg}EntityEventSignalRelationEndpointExpansionV0")
+    assert set(canonical.objects(od010, rejects)) == {endpoint_expansion}
+    assert set(canonical.objects(endpoint_expansion, rdf_type)) == {
+        URIRef(f"{mfg}DesignObject")
+    }
+    assert set(canonical.objects(endpoint_expansion, status)) == {
+        URIRef(f"{mfg}Excluded")
+    }
+    depends_on = URIRef(f"{mfg}dependsOn")
+    assert set(
+        canonical.objects(
+            URIRef(f"{mfg}StrongLocalContextualReferenceAdmissionProfileV0"),
+            depends_on,
+        )
+    ) == {
+        URIRef(f"{mfg}ThreeRoleClosedContractCompositionProfile"),
+        URIRef(f"{mfg}ProtectedReplayDerivedGovernancePartitionTopologyV0"),
+        URIRef("https://malleus.dev/ontology-kg-realization/LocalReferenceDependencyRule"),
     }
     historical_graph = URIRef(f"{mfg}GovernancePolicyGraph")
     rejected_graph = URIRef(f"{mfg}GovernancePolicyGraphR2")
@@ -2859,7 +3153,7 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 345
+    assert len(statuses) == 357
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -2869,14 +3163,13 @@ def test_revision_19_graph_is_generated_from_all_turtle_projections() -> None:
         "distinct status."
     ) in realization
 
-    depends_on = URIRef(f"{mfg}dependsOn")
     edges = {
         (subject, object_)
         for subject, _, object_ in canonical.triples((None, depends_on, None))
     }
     nodes = {node for edge in edges for node in edge}
-    assert len(nodes) == 103
-    assert len(edges) == 105
+    assert len(nodes) == 107
+    assert len(edges) == 108
     successors = {node: set() for node in nodes}
     indegree = {node: 0 for node in nodes}
     for dependent, prerequisite in edges:
@@ -3099,6 +3392,8 @@ def test_od006_closed_three_role_composition_is_mechanical() -> None:
     conformance = (
         ROOT / "design" / "contract_compiler" / "conformance.md"
     ).read_text(encoding="utf-8")
+    assert "OD-010 now supplies their outcomes" in conformance
+    assert "Cross-partition references, read authorization" not in conformance
     row = next(line.casefold() for line in conformance.splitlines() if line.startswith("| AT-008 "))
     for phrase in (
         "complete p/d/g role closures",
@@ -3253,7 +3548,7 @@ def test_od007_protected_partition_contract_is_exact() -> None:
     d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
     for phrase in ("protected replay-derived governance partition", "epoch boundary"):
         assert phrase in d07
-    remaining = decisions.split("## Remaining decisions after revision 19", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 20", 1)[1]
     assert "| OD-007 |" not in remaining
 
 
@@ -3459,6 +3754,365 @@ def test_od007_protected_partition_refusals_are_atomic() -> None:
             contract,
         )
     assert _od007_state(graph) == accepted
+
+
+def test_od010_contextual_reference_contract_is_exact() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od010_section(decisions)
+    _assert_od010_contract(section)
+    integration = json.loads(INTEGRATION.read_text(encoding="utf-8"))
+    row = next(
+        item
+        for item in integration["workstreams"]
+        if item["workstream_id"] == "CC-D10"
+    )
+    assert row["card"] == {
+        "byte_length": (
+            ROOT
+            / "design"
+            / "contract_compiler"
+            / "workstreams"
+            / "CC-D10"
+            / "manifest.json"
+        ).stat().st_size,
+        "path": "workstreams/CC-D10/manifest.json",
+        "sha256": "sha256:"
+        + hashlib.sha256(
+            (
+                ROOT
+                / "design"
+                / "contract_compiler"
+                / "workstreams"
+                / "CC-D10"
+                / "manifest.json"
+            ).read_bytes()
+        ).hexdigest(),
+        "state": "PRESENT",
+    }
+    program = (
+        ROOT / "design" / "contract_compiler" / "program.md"
+    ).read_text(encoding="utf-8")
+    d10 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D10 "))
+    for phrase in (
+        "strong same-role and same-partition class references",
+        "entity-only endpoints",
+        "entity-or-relation bearer",
+        "ordered candidate visibility",
+        "referentially closed temporal views",
+    ):
+        assert phrase in d10
+    remaining = decisions.split("## Remaining decisions after revision 20", 1)[1]
+    assert "| OD-010 |" not in remaining
+
+    conformance = (
+        ROOT / "design" / "contract_compiler" / "conformance.md"
+    ).read_text(encoding="utf-8")
+    context = next(line.casefold() for line in conformance.splitlines() if line.startswith("| AT-011 "))
+    staging = next(line.casefold() for line in conformance.splitlines() if line.startswith("| AT-012 "))
+    for phrase in (
+        "generic class reference",
+        "entity-only relation endpoint",
+        "entity-or-relation signal bearer",
+        "same role and partition",
+        "mixin-only",
+        "referential closure",
+    ):
+        assert phrase in context
+    for phrase in (
+        "earlier dependency-ordered target",
+        "later target",
+        "self-reference",
+        "cycle",
+        "whole-candidate refusal",
+        "no runtime topological sort",
+    ):
+        assert phrase in staging
+
+
+def test_od010_quiet_bell_and_recon_strong_references_accept() -> None:
+    admission = _od010_obligation
+    admissions = (
+        admission("Vella", "ArchiveExaminer"),
+        admission("TheQuietBell", "InquiryDossier"),
+        admission("NinthQuire", "EvidenceFolio"),
+        admission(
+            "CitesFolioRelation",
+            "CitesFolioRelation",
+            endpoints=(
+                ("TheQuietBell", "InquiryDossier"),
+                ("NinthQuire", "EvidenceFolio"),
+            ),
+        ),
+        admission(
+            "SealReviewEvent",
+            "SealReviewEvent",
+            refs=(("CitesFolioRelation", "Relation"),),
+        ),
+        admission(
+            "SealDiscrepancySignal",
+            "SealDiscrepancySignal",
+            bearer="CitesFolioRelation",
+        ),
+        admission("evidence:one", "EvidenceAttachment"),
+        admission("evidence:two", "EvidenceAttachment"),
+        admission(
+            "work:one",
+            refs=(
+                ("evidence:one", "EvidenceAttachment"),
+                ("evidence:two", "EvidenceAttachment"),
+            ),
+        ),
+        admission(
+            "entity-bearer-signal",
+            "SealDiscrepancySignal",
+            bearer="TheQuietBell",
+        ),
+    )
+    accepted = _od010_admit_candidate({}, admissions)
+    assert tuple(accepted) == tuple(item[0] for item in admissions)
+    assert _od010_select_temporal_view(accepted, frozenset(accepted)) == accepted
+
+
+def test_od010_inlined_values_never_become_contextual_targets() -> None:
+    missing = ("not-a-graph-record",)
+    assert _od010_contextual_targets(
+        class_valued=True,
+        inlined=True,
+        surviving_values=missing,
+    ) == ()
+    assert _od010_contextual_targets(
+        class_valued=False,
+        inlined=False,
+        surviving_values=missing,
+    ) == ()
+    assert _od010_contextual_targets(
+        class_valued=True,
+        inlined=False,
+        surviving_values=("target",),
+    ) == ("target",)
+
+
+def test_od010_contextual_refusals_preserve_the_complete_prestate() -> None:
+    admission = _od010_obligation
+    prestate = _od010_admit_candidate(
+        {},
+        (
+            admission("entity", "InquiryDossier"),
+            admission("attachment", "EvidenceAttachment"),
+            admission("carrier", "MixinCarrier"),
+            admission("event", "SealReviewEvent"),
+            admission("signal", "SealDiscrepancySignal"),
+            admission("relation", "CitesFolioRelation"),
+        ),
+    )
+    accepted_prestate_reference = _od010_admit_candidate(
+        prestate,
+        (admission("prestate-ref", refs=(("attachment", "EvidenceAttachment"),)),),
+    )
+    assert accepted_prestate_reference["prestate-ref"][3] == ("attachment",)
+    # Opaque foreign-state probes exercise lookup refusal. They are not admitted
+    # combinations and make no D06 or D07 validity claim.
+    prestate["other-role"] = (
+        "EvidenceAttachment",
+        "GovernanceContract",
+        _OD010_PARTITION,
+        (),
+    )
+    prestate["other-partition"] = (
+        "EvidenceAttachment",
+        _OD010_ROLE,
+        "governance",
+        (),
+    )
+    assert "EvidenceAttachment" in _OD010_MIXINS["MixinCarrier"]
+    def assert_refuses(
+        case: str,
+        message: str,
+        admissions: tuple[_Od010Admission, ...],
+    ) -> None:
+        before = dict(prestate)
+        with pytest.raises(_Od010Refusal) as error:
+            _od010_admit_candidate(prestate, admissions)
+        assert message in str(error.value), case
+        assert prestate == before, case
+
+    generic_cases = (
+        ("missing", "absent", "EvidenceAttachment", "absent from visible state"),
+        ("wrong-type", "entity", "EvidenceAttachment", "class ancestry"),
+        ("mixin-only", "carrier", "EvidenceAttachment", "class ancestry"),
+        ("cross-role", "other-role", "EvidenceAttachment", "crosses role or partition"),
+        ("cross-partition", "other-partition", "EvidenceAttachment", "crosses role or partition"),
+    )
+    for case, target, expected, message in generic_cases:
+        assert_refuses(
+            case,
+            message,
+            (admission(case, refs=((target, expected),)),),
+        )
+
+    sequence_cases = (
+        (
+            "forward",
+            (
+                admission("forward", refs=(("later", "EvidenceAttachment"),)),
+                admission("later", "EvidenceAttachment"),
+            ),
+        ),
+        ("self", (admission("self", refs=(("self", "Work"),)),)),
+        (
+            "cycle",
+            (
+                admission("cycle:a", refs=(("cycle:b", "Work"),)),
+                admission("cycle:b", refs=(("cycle:a", "Work"),)),
+            ),
+        ),
+        (
+            "rollback after staged write",
+            (
+                admission("staged", "EvidenceAttachment"),
+                admission("invalid", refs=(("absent", "EvidenceAttachment"),)),
+            ),
+        ),
+    )
+    for case, admissions in sequence_cases:
+        assert_refuses(case, "absent from visible state", admissions)
+
+    endpoint_cases = (
+        ("Event endpoint", "event", "Entity", "class ancestry"),
+        ("Relation endpoint", "relation", "Entity", "class ancestry"),
+        (
+            "non-Entity endpoint range",
+            "relation",
+            "Relation",
+            "relation endpoint range is not Entity",
+        ),
+        ("Signal endpoint", "signal", "Entity", "class ancestry"),
+        ("wrong Entity subtype", "entity", "EvidenceFolio", "class ancestry"),
+        (
+            "cross-role endpoint",
+            "other-role",
+            "Entity",
+            "crosses role or partition",
+        ),
+        (
+            "cross-partition endpoint",
+            "other-partition",
+            "Entity",
+            "crosses role or partition",
+        ),
+        ("missing endpoint", "absent", "Entity", "absent from visible state"),
+    )
+    for case, target, expected, message in endpoint_cases:
+        assert_refuses(
+            case,
+            message,
+            (admission(case, "CitesFolioRelation", endpoints=((target, expected),)),),
+        )
+
+    bearer_cases = (
+        ("Event bearer", "event", "not Entity or Relation"),
+        ("Signal bearer", "signal", "not Entity or Relation"),
+        ("missing bearer", "absent", "absent from visible state"),
+        ("cross-role bearer", "other-role", "crosses role or partition"),
+        ("cross-partition bearer", "other-partition", "crosses role or partition"),
+    )
+    for case, bearer, message in bearer_cases:
+        assert_refuses(
+            case,
+            message,
+            (admission(case, "SealDiscrepancySignal", bearer=bearer),),
+        )
+
+    duplicate_id_cases = (
+        ("cross-category duplicate ID", admission("relation")),
+        (
+            "cross-partition duplicate ID",
+            admission("attachment", "EvidenceAttachment", partition="governance"),
+        ),
+    )
+    for case, duplicate in duplicate_id_cases:
+        assert_refuses(case, "global namespace", (duplicate,))
+    assert_refuses(
+        "one bad multivalue member",
+        "absent from visible state",
+        (
+            admission(
+                "one-bad-multivalue",
+                refs=(
+                    ("attachment", "EvidenceAttachment"),
+                    ("absent", "EvidenceAttachment"),
+                ),
+            ),
+        ),
+    )
+
+
+def test_od010_temporal_views_refuse_incomplete_reference_closure() -> None:
+    admission = _od010_obligation
+    records = _od010_admit_candidate(
+        {},
+        (
+            admission("dossier", "InquiryDossier"),
+            admission("folio", "EvidenceFolio"),
+            admission(
+                "citation",
+                "CitesFolioRelation",
+                endpoints=(
+                    ("dossier", "InquiryDossier"),
+                    ("folio", "EvidenceFolio"),
+                ),
+            ),
+            admission(
+                "review",
+                "SealReviewEvent",
+                refs=(("citation", "Relation"),),
+            ),
+            admission(
+                "discrepancy",
+                "SealDiscrepancySignal",
+                bearer="citation",
+            ),
+        ),
+    )
+    incomplete_views = (
+        ("missing dossier", frozenset(records) - {"dossier"}),
+        ("missing folio", frozenset(records) - {"folio"}),
+        ("missing citation", frozenset(records) - {"citation"}),
+        ("isolated generic reference", frozenset({"review"})),
+        ("isolated signal bearer", frozenset({"discrepancy"})),
+    )
+    before = dict(records)
+    for case, visible in incomplete_views:
+        with pytest.raises(_Od010Refusal, match="referentially closed"):
+            _od010_select_temporal_view(records, visible)
+        assert records == before, case
+
+
+def test_od010_contract_guard_rejects_semantic_drift() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od010_section(decisions)
+    mutations = (
+        section.replace(
+            "REFUSE CANDIDATE | runtime does not search, reorder, or solve a fixed point",
+            "ACCEPT | runtime searches the batch",
+            1,
+        ),
+        section.replace(
+            "Relation endpoints remain existing `Entity` records",
+            "Relation endpoints may be any record",
+            1,
+        ),
+        section.replace("`usesMixin` alone never satisfies", "`usesMixin` satisfies", 1),
+        section.replace("Every selected temporal view must be referentially closed", "Temporal views may dangle", 1),
+    )
+    assert all(mutation != section for mutation in mutations)
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_od010_contract(mutation)
 
 
 def test_od008_closed_profile_and_expression_identity_are_mechanical() -> None:

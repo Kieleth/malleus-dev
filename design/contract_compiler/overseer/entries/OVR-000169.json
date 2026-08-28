@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-010"
+    ],
+    "consequences": [
+      "CC-010 can now require contextual-reference admission without choosing a second graph, runtime scheduler, cross-role bridge, or read-access policy.",
+      "CC-R06 retains production admission TDD, public diagnostics, and implementation against this closed design contract."
+    ],
+    "constraints": [
+      "Every non-inlined Class-valued SlotUse is a strong graph reference. After the active general missing, null, presence, and cardinality pass, each surviving non-null scalar or multivalue member must resolve to an existing record of the declared class or subclass; mixin use alone is insufficient.",
+      "Admission visibility is accepted prestate plus earlier dependency-ordered candidate writes. Later, forward, same-create self, and cyclic references refuse the whole candidate and preserve pre-candidate state; runtime performs no topological sort or fixed-point search.",
+      "Every strong reference resolves in the same exact D06 admission role and replay-derived D07 partition. Cross-role and cross-partition targets refuse; primitive IDs and hashes outside Class-valued SlotUses remain scalar content.",
+      "Inlined Class values remain contained values and never enter contextual graph lookup.",
+      "Relation endpoints resolve to existing same-role and same-partition Entity records matching the declared endpoint class or subtype. Missing, wrong Entity type, Event, Signal, Relation, protocol, governance, cross-role, and cross-partition endpoints refuse.",
+      "Signal bearer remains an explicit same-role and same-partition contextual rule over an existing Entity or Relation. Missing, Event, Signal, cross-role, and cross-partition bearers refuse; bearer_id is not remodeled.",
+      "One global record-ID namespace remains across graph categories and partitions. Every selected temporal view must contain the target of each visible strong reference, endpoint, and bearer or refuse as structurally incomplete.",
+      "GraphRecipe dependency ordering remains compiler-side. The decision retains the existing one query surface and creates no read authorization, confidentiality, filtering, ACL, cascade, reverse-dependency inference, uncertainty propagation, interval proof, repair, migration, deletion, production, ontology, dependency, package, API, storage, or public diagnostic contract."
+    ],
+    "decision_id": "OD-010",
+    "satisfies_workstreams": [
+      "CC-D10"
+    ],
+    "selected_option": "Strong same-role and same-partition contextual references with Entity-only endpoints",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:f45a013f2e48b74e63ffa24f0c5d9930829ae306b0ab3dc26272aa12b89a0140",
+  "entry_id": "OVR-000169",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6e81601272b31c0046512a52e40ef0fc0c3bf2e624ecec74997bd0517940921c",
+  "recorded_at": "2026-08-28T05:04:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-010-contextual-graph-references-and-endpoints",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-010",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000168",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D10",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 169,
+  "subject": {
+    "id": "OD-010",
+    "type": "DECISION"
+  },
+  "summary": "Accept strong same-role and same-partition contextual graph references with Entity-only endpoints.",
+  "why": "The selected local-reference rule closes graph integrity with one visible admission context, one ID namespace, and referentially closed views. It preserves D06 role isolation, D07 partition topology, compiler-owned ordering, and KISS deferrals without inventing runtime scheduling, a second query surface, or implementation."
+}

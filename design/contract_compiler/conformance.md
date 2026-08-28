@@ -47,8 +47,10 @@ The baseline operation trace is intentionally small:
 1. Create examiner `Vella`.
 2. Create dossier `TheQuietBell`.
 3. Create folio `NinthQuire`.
-4. Create the dossier-to-folio citation relation.
-5. Create the seal-review event.
+4. Create the dossier-to-folio citation relation with two existing Entity
+   endpoints.
+5. Create the seal-review event with a class-valued reference to that existing
+   Relation.
 6. Create the discrepancy signal borne by the relation.
 
 This trace exercises required and optional values, enum values, collections,
@@ -304,11 +306,49 @@ identity components. The negative trace covers missing or ambiguous bootstrap,
 graph mutation of the external root, same-event
 self-authorization, direct policy self-amendment, ordinary direct mutation of a
 governance identity, wrong role or admission path, and a `GovernanceContract`
-semantic change under the old epoch. Exact endpoint,
-reference, context, operation, authentication, policy-language, and
-materialization semantics remain outside this trace. Cross-partition
-references, read authorization, filtering, confidentiality, and query-access
-policy also remain deferred.
+semantic change under the old epoch. Exact endpoint, reference, and context
+semantics remain outside this D07 trace; OD-010 now supplies their outcomes.
+Operation, authentication, policy-language, and materialization semantics stay
+outside this trace. Read authorization, filtering, confidentiality, and
+query-access policy remain deferred.
+
+## OD-010 contextual-reference conformance boundary
+
+D10 begins after the active general missing-value, null, presence, and
+cardinality pass and owns none of those outcomes. Every surviving scalar or
+multivalue member of a non-inlined class-valued `SlotUse` is a strong
+reference. Inlined class values remain contained data.
+
+Resolution reads accepted prestate plus earlier dependency-ordered candidate
+writes in the same D06 role and replay-derived D07 partition. It checks target
+existence and exact class or `subClassOf` ancestry. A mixin-only match, missing
+target, wrong type, cross-role target, or cross-partition target refuses the
+whole candidate without changing pre-candidate state. Later targets,
+self-reference through one create, and cycles refuse. The accepted GraphRecipe
+`DependsOn` rule remains the compiler-side ordering prerequisite; runtime
+admission neither topologically sorts nor searches for a fixed point.
+
+Relation endpoints remain existing Entity records matching the declared class
+or subtype. Event, Signal, Relation, protocol, governance, missing, and wrong-
+type endpoints refuse. A Signal bearer remains a separate contextual rule:
+existing same-partition Entity or Relation accepts; missing, Event, Signal,
+cross-role, and cross-partition bearers refuse. All graph categories and both
+partitions share one record-ID namespace.
+
+The minimum planned positive trace is the six-step Quiet Bell sequence. The
+citation Relation follows its dossier and folio Entity endpoints; the review
+Event follows and strongly references that Relation; the discrepancy Signal
+follows and uses it as bearer. Recon `Work.evidence_ids` separately proves that
+every member of a strong multivalue resolves to an existing
+`EvidenceAttachment`.
+
+Every temporal selection repeats the same closure test over visible strong
+references, endpoints, and bearers. A visible referrer with an omitted target
+refuses the view as structurally incomplete. This is admission and structural
+integrity on the existing one query surface, not read authorization,
+confidentiality, filtering, or ACL behavior. Cascade, reverse dependency,
+uncertainty propagation, interval-containment proof, repair, migration,
+deletion, diagnostics, and implementation remain outside D10.
 
 ## OD-008 closed support-profile conformance boundary
 
@@ -372,8 +412,8 @@ regression obligation.
 | AT-008a | Protected replay-derived governance partition | One accepted graph lineage, single external bootstrap root, pre-event authority, ordinary write, authorized governance update, following-event visibility, same-contract policy update | Missing or ambiguous root, root graph mutation, same-event self-authorization, direct policy self-amendment, ordinary write directly mutates governance identity, wrong role or admission path, GovernanceContract semantic change under old epoch | Admission-path-only membership with no type/name/namespace/storage inference, no governance-specific head or query surface, exact pre-state/post-state queries, same epoch for policy instances under the same contract, new epoch boundary for contract change, atomic refusal |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |
-| AT-011 | Graph context | Baseline operation trace | Duplicate ID, relation before endpoint, missing bearer, abstract root | Exact decisions, state digests, and final records |
-| AT-012 | Staging | Ordered intra-batch dependency | Invalid member, stale candidate | Whole-batch refusal, no partial mutation, exact visibility |
+| AT-011 | Graph context | Generic class reference, Entity-only relation endpoint, Entity-or-Relation signal bearer, same role and partition, and referential closure | Missing or wrong type, mixin-only match, cross-role or cross-partition target, Event/Signal/Relation endpoint, missing or invalid bearer, duplicate global ID, incomplete temporal view, abstract root | Exact decisions, state digests, final records, and atomic refusal with no access-policy claim |
+| AT-012 | Staging | Earlier dependency-ordered target | Later target, self-reference, cycle, invalid member, stale candidate | Whole-candidate refusal, no partial mutation, exact visibility, and no runtime topological sort or fixed-point search |
 | AT-013a | Consumer cutover | Themed smoke through each cut-over view | Old import and fallback probes from the cut-over consumer | Existing domain suites pass and that consumer executes only the new path; comparison-only legacy code may still exist elsewhere |
 | AT-014 | Packaging | Normal distribution, compiler environment, sdist | LinkML import blocked on the artifact-backed runtime path | Corpus discoverable, artifacts load, fresh compiler output matches packaged files |
 | AT-015 | Docs and examples | Themed public trace | Private import and copied fixture probes | Doctests pass using only public APIs and literal fixture inclusion |

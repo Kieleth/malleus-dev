@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 19
+## Accepted directions in canonical graph revision 20
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -396,6 +396,7 @@ materialization remains pending.
 | OD-006 | Three exact semantic roles in one closed composition and one v0 accepted-temporal epoch | No independent role heads, wire grammar, artifact schema, migration, or stable public fact IDs |
 | OD-007 | One protected replay-derived governance partition in the full accepted-temporal graph | ProtocolLedger stays sole write authority; no governance-specific graph, head, snapshot, digest, or query surface is added |
 | OD-008 | Closed exact-location LinkML v0 support profile with one flat exactly-one extension | General LinkML support, public adapter claims, stable public fact IDs, and plugin machinery remain outside this profile |
+| OD-010 | Strong same-role and same-partition class references, Entity-only relation endpoints, and Entity-or-Relation signal bearers | Ordered candidate visibility and referential closure add no runtime sorting, cross-role borrowing, cascade, repair, deletion, or read-access policy |
 | OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
@@ -1468,6 +1469,105 @@ remain blocked on `OD-009`.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-008`. `CC-D08` is complete.
 
+### OD-010: contextual graph references and endpoints
+
+Decision state: ACCEPTED, strong local references and closed views, 2026-08-27
+
+Every non-inlined class-valued `SlotUse` is a strong graph reference. An
+active value is supplied by the preceding general shape pass. A present scalar
+value and every member of a present multivalue must resolve. The concrete target
+type must equal the declared class range or be its `subClassOf` descendant.
+`usesMixin` alone never satisfies the declared class range. An inlined class
+value is contained data, not a graph reference.
+
+D10 runs after the active general missing-value, null, presence, and cardinality
+evaluation and validates only surviving non-null scalar or list members. It
+neither changes nor owns missing, null, presence, or cardinality outcomes.
+
+Admission reads accepted prestate plus earlier dependency-ordered candidate
+writes. Later writes, self-reference through the same create, forward lookup,
+fixed-point search, and reference cycles refuse the whole candidate. Any
+failure preserves the complete pre-candidate state. GraphRecipe `DependsOn`
+and topological lowering remain compiler-side prerequisites. The runtime
+performs no topological sort.
+
+Strong references resolve only inside the same exact D06 contract role and the
+same replay-derived D07 partition. Cross-partition and cross-role strong
+references refuse in v0. A role never borrows declarations, facts, registries,
+defaults, or subtype proofs from another role. Equal qualified class IRIs or
+equal contract payloads do not relax that boundary. A future cross-role bridge
+requires a separately versioned admission decision and independent proof from
+both complete role contracts. Primitive IDs and hashes may remain scalar
+content outside a class-valued `SlotUse`; they do not masquerade as contextual
+references.
+
+| Case | Outcome | Reason |
+|---|---|---|
+| present scalar target or every multivalue target exists in the same role and partition and has the declared class or subclass | ACCEPT | the complete strong-reference obligation is satisfied |
+| inlined class-valued SlotUse | ACCEPT AS CONTAINED VALUE | it is not a graph reference |
+| missing target, wrong concrete type, or mixin-only match | REFUSE CANDIDATE | existence and class ancestry are mandatory; usesMixin is not subClassOf |
+| target in another contract role or replay-derived partition | REFUSE CANDIDATE | D06 forbids borrowing another role's registry or facts |
+| target admitted earlier in dependency order | ACCEPT | earlier candidate state is visible |
+| target admitted later, self-reference through the same create, or reference cycle | REFUSE CANDIDATE | runtime does not search, reorder, or solve a fixed point |
+| primitive ID or hash scalar outside a class-valued SlotUse | SCALAR CONTENT | it does not masquerade as a contextual graph reference |
+
+#### Endpoints, bearers, identity, and views
+
+Relation endpoints remain existing `Entity` records matching the declared
+endpoint class or subtype. They resolve in the same exact role and partition as
+the Relation. Event, Signal, Relation, protocol, and governance records refuse
+as endpoints. Relation-as-endpoint still requires a different storage model
+because current relations are edges, not graph nodes; D10 does not select such
+a model.
+
+Signal bearer remains an explicit contextual admission rule, not a remodeled
+class-union slot. Its existing same-role and same-partition target must be an
+`Entity` or `Relation`. A missing, Event, or Signal bearer refuses. D10 does not
+remodel `bearer_id`.
+
+The accepted graph retains one global record-ID namespace across graph
+categories and logical partitions. Reusing an ID refuses regardless of record
+kind or partition. Every selected temporal view must be referentially closed
+for every visible strong reference, relation endpoint, and signal bearer. A
+view containing a referrer without its target refuses as structurally
+incomplete. Admission does not cascade, repair, delete, infer reverse
+dependencies, propagate uncertainty, or prove interval containment.
+
+| Contextual rule | Accept | Refuse |
+|---|---|---|
+| Relation endpoint | existing same-role and same-partition Entity of the declared class or subclass | missing, Event, Signal, Relation, protocol, governance, cross-role, cross-partition, or wrong Entity type |
+| Signal bearer | existing same-role and same-partition Entity or Relation | missing, Event, Signal, cross-role, or cross-partition target |
+| Record identity | one unused ID | reuse across any graph category or partition |
+| Selected temporal view | every visible strong reference, endpoint, and bearer has its visible target | any visible referrer with an omitted target |
+
+One query surface remains; these admission rules create no confidentiality,
+read-authorization, filtering, or ACL policy. D06 composition identities and
+epoch changes remain exact. D07 topology and protected-write authorization
+remain unchanged.
+
+#### Concrete conformance traces
+
+The existing Recon `Work.evidence_ids` multivalue is the generic reference
+case: each present ID resolves to an existing `EvidenceAttachment` of that
+exact class or subclass before `Work` is admitted.
+
+The planned Quiet Bell Archive conformance trace has six ordered creates:
+examiner `Vella`,
+dossier `TheQuietBell`, folio `NinthQuire`, `CitesFolioRelation` from the
+dossier Entity to the folio Entity, `SealReviewEvent` with a class-valued
+reference to that existing Relation, then `SealDiscrepancySignal` borne by the
+same Relation. It proves an Entity-to-Entity relation, a generic Event-to-
+Relation strong reference, and an Entity-or-Relation bearer without widening
+relation endpoints.
+
+This decision creates no production implementation, ontology YAML, dependency,
+package, API, storage, migration, deletion, cascade, repair, or public
+diagnostic grammar. Exact runtime admission TDD and diagnostics remain with
+`CC-R06`.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-010`. `CC-D10` is complete.
+
 ### OD-011: resolver and import policy
 
 Decision state: ACCEPTED, explicit replaceable resolver, 2026-08-26
@@ -1541,7 +1641,7 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 19
+## Remaining decisions after revision 20
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
@@ -1549,7 +1649,6 @@ dependent workstream starts.
 | ID | Question | Blocks |
 |---|---|---|
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |
-| OD-010 | Endpoint and generic class-reference semantics | Graph admission profile and operation traces |
 
 Compatibility analysis, partial migration rules, automatic dependency repair,
 and external effect delivery remain outside the foundation block.

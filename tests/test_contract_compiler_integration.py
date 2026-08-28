@@ -343,11 +343,12 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D06": ("CC-D05",),
         "CC-D07": ("CC-D06",),
         "CC-D08": ("CC-D02", "CC-D03", "CC-D05"),
+        "CC-D10": ("CC-D07",),
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 21
+    assert len(state.cards) == 22
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -416,6 +417,20 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "stable public fact identifier",
     ):
         assert phrase in d08_responsibility
+    d10_responsibility = state.cards["CC-D10"]["responsibility"]
+    for phrase in (
+        "strong non-inlined class-valued references",
+        "same exact D06 role and replay-derived D07 partition",
+        "whole-candidate refusal",
+        "Entity-only relation endpoints",
+        "Entity-or-Relation signal bearers",
+        "global graph-record ID namespace",
+        "referentially closed temporal views",
+        "zero-scope decision",
+        "no runtime sort",
+        "CC-R06 retains production admission TDD",
+    ):
+        assert phrase in d10_responsibility
 
 
 def test_registry_card_pointer_must_match_its_workstream_row(tmp_path: Path) -> None:

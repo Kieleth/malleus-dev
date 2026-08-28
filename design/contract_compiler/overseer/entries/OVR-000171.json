@@ -1,0 +1,65 @@
+{
+  "actor": {
+    "id": "ccd10-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T05:04:03Z",
+    "claims": [
+      "Every non-inlined Class-valued SlotUse is a strong graph reference after the active general shape pass. Each surviving non-null scalar or multivalue member resolves to the declared class or subclass; mixin use alone refuses and inlined Class values remain contained.",
+      "The visible admission context is accepted prestate plus earlier dependency-ordered candidate writes. Forward, later, same-create self, cyclic, missing, wrong-type, and mixed-validity multivalue references refuse the whole candidate without changing pre-candidate state; runtime never sorts or solves a fixed point.",
+      "Strong references, relation endpoints, and signal bearers stay in the exact admission role and replay-derived partition. Relation endpoints are existing matching Entity records only; signal bearers are existing Entity or Relation records only; category, class, role, partition, and absence refusals are independently exercised.",
+      "One global record-ID namespace rejects reuse across categories and partitions. Every selected temporal view is referentially closed for generic references, endpoints, and bearers; structurally incomplete views refuse without repair, deletion, or cascade.",
+      "The abstract proofs accept Recon Work.evidence_ids to EvidenceAttachment targets and the planned six-step Quiet Bell dossier, folio, Entity relation, Event-to-Relation reference, and Signal-to-Relation bearer sequence. No themed source file or ontology fixture is created.",
+      "Canonical graph revision 20 and all five Markdown projections have exact 1,716-triple parity and 357 single-status subjects. The 107-node, 108-edge dependsOn graph is acyclic; OD-010 selects the strong local profile, rejects widened endpoints, and supersedes only the stale D07 D10 deferral with the exact governance-representation and read-policy residual.",
+      "The retained RED failed on the absent OD-010 authority, card, and outcomes. The final design, graph, card, evidence, ledger, integration, mutation-sensitive guards, and validation close CC-D10 without production, ontology, dependency, package, API, storage, scheduler, read-policy, migration, repair, or deletion changes."
+    ],
+    "limitations": [
+      "This verifies design authority, abstract contextual admission, graph parity, atomic refusal, temporal closure, retained evidence, and zero implementation scope. It does not implement admission, diagnostics, storage, APIs, ontology schemas, dependencies, packages, migration, or deletion.",
+      "D10 begins after the active general missing, null, presence, and cardinality pass and neither changes nor owns those outcomes. CC-R06 retains production admission TDD and public diagnostics.",
+      "Cross-role bridges, relation-as-endpoint storage, cascade, reverse-dependency processing, uncertainty propagation, interval-containment proof, repair, migration, deletion, read authorization, confidentiality, filtering, and ACL behavior remain deferred."
+    ]
+  },
+  "entry_hash": "sha256:4abfd1ad8f54477e9e9d498fd198f11d1143daf4695dcb56a744869198df4521",
+  "entry_id": "OVR-000171",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1a10e2b39d3ed08494705daddaa623a823e19ccbcb94b25263dddabcc2d0a10f",
+  "recorded_at": "2026-08-28T05:04:03Z",
+  "references": [
+    {
+      "digest": "sha256:3ccb6f468936efac93f6eb4da6f1732aea9e56f05fa0c43437331c4c1905cab0",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D10.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000169",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000170",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-010",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D10",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 171,
+  "subject": {
+    "id": "CC-D10-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the strong local contextual-reference contract.",
+  "why": "The retained report binds every governed artifact and its checks cover class-range ancestry, role and partition isolation, candidate visibility, endpoints, bearers, global identity, temporal closure, graph lineage, planned examples, atomic refusal, and zero implementation scope."
+}

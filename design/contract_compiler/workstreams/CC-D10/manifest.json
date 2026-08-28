@@ -1,0 +1,33 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:22a84695ad57b4aad0e879781df579f8a917518b9f0856c83648735be4d93604",
+        "completion_entry_hash": "sha256:6e81601272b31c0046512a52e40ef0fc0c3bf2e624ecec74997bd0517940921c",
+        "completion_entry_id": "OVR-000168",
+        "integrated_head": "c56e11547167a4bcb490bd1b440b559b50199850",
+        "workstream_id": "CC-D07"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-010 with strong non-inlined class-valued references resolved against accepted prestate plus earlier dependency-ordered candidate writes in the same exact D06 role and replay-derived D07 partition; exact class-or-subClassOf target checks with no mixin-only match; whole-candidate refusal for missing, wrong, cross-boundary, forward, self, or cyclic targets; Entity-only relation endpoints; explicit Entity-or-Relation signal bearers; one global graph-record ID namespace; and referentially closed temporal views. Preserve the existing general missing/null/presence/cardinality pass, GraphRecipe compiler-side DependsOn lowering, D06 composition and epoch identities, D07 topology, and one query surface. This zero-scope decision creates no runtime sort, cross-role bridge, cascade, reverse-dependency engine, uncertainty propagation, interval proof, repair, deletion, migration, diagnostics, implementation, ontology YAML, dependency, package, API, storage, candidate, selection, or worker ledger; CC-R06 retains production admission TDD.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D10"
+}

@@ -19,8 +19,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 19,
-`sha256:dcd99af38d18d442b5080b054a6674a0892ee147b163597b184d220aad0a2970`
+revision 20,
+`sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a`
 
 Evidence cutoff: 2026-08-27
 
@@ -1279,6 +1279,12 @@ governance topology on 2026-08-27:
     external root and otherwise derived from accepted governance state; policy
     instances under the same governance contract stay in the same epoch; no
     governance-specific head, graph, or query surface is added.
+18. `OD-010` selects strong same-role and same-partition non-inlined class
+    references over accepted prestate plus earlier ordered writes, Entity-only
+    relation endpoints, Entity-or-Relation signal bearers, one global record-ID
+    namespace, and referentially closed temporal views. Runtime sorting,
+    cross-role borrowing, cascade, repair, deletion, migration, and read-access
+    policy remain outside the decision.
 
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
@@ -1935,13 +1941,13 @@ Performed on 2026-08-27:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,675 RDF triples.
+   1,716 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,675 triples. Both directed set differences
+   the same 1,716 triples. Both directed set differences
    were empty.
-3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
+3. The canonical `dependsOn` graph has 107 nodes and 108 edges, with no directed
    dependency cycle.
-4. All 345 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 357 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1962,37 +1968,42 @@ Performed on 2026-08-27:
 8. `OD-007` has the same decision invariants with `decisionDate "2026-08-27"`,
    selects the protected replay-derived governance-partition topology, and
    rejects the separate-governance-graph alternative.
-9. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
+9. `OD-010` has the same decision invariants with `decisionDate "2026-08-27"`,
+   selects the strong local contextual-reference admission profile, rejects
+   Entity/Event/Signal relation endpoints, and binds the exact role, partition,
+   ancestry, ordering, endpoint, bearer, identity, temporal-closure, and
+   zero-implementation boundaries.
+10. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
    ANTLR, and setuptools coordinates. It additionally binds the exact
    `prefixcommons` input and local-version derivation, package and BSD 3-Clause
    license payload identity, two byte-identical network-denied transforms, v3
    evidence boundary, direct derived-wheel resolver input, runtime test-package
    exclusions, Malleus maintenance ownership, and governed future-replacement
    boundary.
-10. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
+11. `ProtocolCompositionCompleteness` has exactly `Candidate` status, six
    coverage obligations, an explicit universal-completeness exclusion, and
    addressable counterevidence and revision semantics.
-11. The three partially evidenced completeness obligations have exactly
+12. The three partially evidenced completeness obligations have exactly
    `Partial` status. The other three remain exactly `Candidate`.
-12. The first-slice fixture and offline core CI gate have exactly `Implemented`
+13. The first-slice fixture and offline core CI gate have exactly `Implemented`
    status; the wider TDD program and experimental learning have exactly
    `Partial` status. `GE-030` through `GE-100`, Lutra, second-backend
    conformance, public promotion, generated-schema parity, and execution-
    environment closure remain open.
-13. The active report identity supersedes three retained identities. Each
+14. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-14. The canonical body contains 1,675 unique, lexically sorted N-Triples. Its
+15. The canonical body contains 1,716 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `dcd99af38d18d442b5080b054a6674a0892ee147b163597b184d220aad0a2970`, and every
-   owned Markdown graph reference names revision 19 and that digest.
-15. All 24 relative Markdown links in the five owned
+   `16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a`, and every
+   owned Markdown graph reference names revision 20 and that digest.
+16. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
-16. None of the five owned Markdown documents or the canonical Turtle artifact
+17. None of the five owned Markdown documents or the canonical Turtle artifact
    contains an absolute home-directory or local-file URI locator.
-17. Trailing-whitespace checks over the seven identity files and the privacy
+18. Trailing-whitespace checks over the seven identity files and the privacy
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 19 was frozen. Existing GraphRecipe implementation
+rerun before revision 20 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

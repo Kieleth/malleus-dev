@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 19,
-`sha256:dcd99af38d18d442b5080b054a6674a0892ee147b163597b184d220aad0a2970`
+revision 20,
+`sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -1041,6 +1041,73 @@ mfg:PublicCompilerPromotionStillOD009Boundary rdf:type mfg:Boundary ;
 
 mfg:StablePublicFactIdentityStillOD008Boundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
+
+@prefix cc: <https://malleus.dev/contract-compiler/> .
+@prefix okg: <https://malleus.dev/ontology-kg-realization/> .
+
+cc:OD-010 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-27" ;
+    mfg:selects mfg:StrongLocalContextualReferenceAdmissionProfileV0 ;
+    mfg:rejects mfg:EntityEventSignalRelationEndpointExpansionV0 ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StrongLocalContextualReferenceAdmissionProfileV0
+    rdf:type mfg:NormativeAdmissionProfile ;
+    mfg:dependsOn mfg:ThreeRoleClosedContractCompositionProfile ;
+    mfg:dependsOn mfg:ProtectedReplayDerivedGovernancePartitionTopologyV0 ;
+    mfg:dependsOn okg:LocalReferenceDependencyRule ;
+    mfg:binds mfg:SurvivingNonInlinedClassValuesStrongReferenceBoundary ;
+    mfg:binds mfg:ClassOrSubclassTargetNoMixinOnlyMatchBoundary ;
+    mfg:binds mfg:SameRoleSamePartitionNoRegistryFactBorrowingBoundary ;
+    mfg:binds mfg:AcceptedPrestateEarlierOrderedWritesWholeCandidateAtomicNoRuntimeSortBoundary ;
+    mfg:binds mfg:EntityOnlyRelationEndpointsEntityOrRelationSignalBearersBoundary ;
+    mfg:binds mfg:GlobalRecordIDNamespaceReferentiallyClosedTemporalViewsBoundary ;
+    mfg:binds mfg:InlinedValuesAndPrimitiveIDHashScalarsNotContextualReferencesBoundary ;
+    mfg:binds mfg:NoCascadeRepairDeletionMigrationReadAccessOrImplementationBoundary ;
+    mfg:binds mfg:GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SurvivingNonInlinedClassValuesStrongReferenceBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ClassOrSubclassTargetNoMixinOnlyMatchBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SameRoleSamePartitionNoRegistryFactBorrowingBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:AcceptedPrestateEarlierOrderedWritesWholeCandidateAtomicNoRuntimeSortBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:EntityOnlyRelationEndpointsEntityOrRelationSignalBearersBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:GlobalRecordIDNamespaceReferentiallyClosedTemporalViewsBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:InlinedValuesAndPrimitiveIDHashScalarsNotContextualReferencesBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NoCascadeRepairDeletionMigrationReadAccessOrImplementationBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary
+    rdf:type mfg:Boundary ;
+    mfg:supersedes mfg:GovernanceRepresentationAndD10SemanticsDeferredBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:EntityEventSignalRelationEndpointExpansionV0
+    rdf:type mfg:DesignObject ;
+    mfg:status mfg:Excluded .
 ```
 
 Each role-bound identity logically binds the fixed
@@ -1067,6 +1134,15 @@ materialization identity components and one query surface. Governance
 membership comes only from the `GovernanceContract` admission path. A
 standalone structural graph has no governance role and cannot contain the
 protected partition.
+
+`OD-010` binds strong non-inlined class references to the same role and
+replay-derived partition, accepted prestate plus earlier dependency-ordered
+writes, exact class ancestry, Entity-only relation endpoints, Entity-or-
+Relation signal bearers, one global record-ID namespace, and referentially
+closed temporal views. It rejects the Entity/Event/Signal endpoint expansion.
+GraphRecipe keeps compiler-side `DependsOn` lowering; admission does not sort,
+search a fixed point, borrow another role's facts, or add cascade, repair,
+deletion, migration, or read-access policy.
 
 ## 5. Contract and graph revision
 
@@ -2048,7 +2124,12 @@ artifact boundary. These author choices remain open:
    replay-derived governance partition in the full accepted-temporal graph,
    with no governance-specific graph, head, snapshot, digest, synchronization,
    or query surface.
-6. **Promotion boundary.** Keep the first slice research-local until the
+6. **Contextual references and endpoints.** `OD-010` is **accepted**. Resolve
+   strong non-inlined class references in the same role and partition against
+   accepted prestate plus earlier dependency-ordered writes; retain Entity-only
+   relation endpoints, Entity-or-Relation signal bearers, one global ID
+   namespace, and referentially closed temporal views.
+7. **Promotion boundary.** Keep the first slice research-local until the
    canonical intermediate and frontend conformance fixture are demonstrated,
    or authorize an immediate core API. A third-party frontend is not required
    for v0 promotion, but the test-only alternate producer must prove that

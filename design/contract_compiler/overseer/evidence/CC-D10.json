@@ -1,0 +1,122 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:25ee5363765fb57e4b8b6163f25b686f3c8fdf080b9128f40e2a32307d922342"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:43852de1c82f44228ca683dd9344b7ca608a701ebc428bd864ba646cf39db14d"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:615b85155f035fba5414b480c7ba235afbeab4266e3e5e1834bcc2c35417ba2f"
+    },
+    {
+      "byte_length": 93108,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:c2659bed0bb1ffa468890b9c4d3c72441a0758561b0583f64d57af5716f5a98c"
+    },
+    {
+      "byte_length": 93887,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:90a32d5538fcd625d32db02f0ec3bd03364292dd27722358f5649adb09297500"
+    },
+    {
+      "byte_length": 312808,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a"
+    },
+    {
+      "byte_length": 29517,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:e7bea7e05b6d1d3e6b2a500b527c0971e4852760643d6bc2b51dfd0546953ff2"
+    },
+    {
+      "byte_length": 107907,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:633b03f2fc3235c5d0364292b2526eb246235f031a54c19eeec299d849f65108"
+    },
+    {
+      "byte_length": 21289,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:e0eec4634ab9ae009210a83f953b4e34987bb8f0a4035ca0695fefd1862a6ce1"
+    },
+    {
+      "byte_length": 33552,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:5aec3ea52f883810ca794db0342053f3d6ce5d28423f620f52f043f6fd883434"
+    },
+    {
+      "byte_length": 1900,
+      "path": "design/contract_compiler/workstreams/CC-D10/manifest.json",
+      "sha256": "sha256:75f3533acf2412b4e5770f3718587fde668591ccded77a56d60f30b0a2ee5bd9"
+    },
+    {
+      "byte_length": 38316,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:047abb02b542b3cdbb59284ae2b0a3118395238ba20b38e82f3602e3d76b6c24"
+    },
+    {
+      "byte_length": 244732,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:c3c6e2bb8515143426be9171e56fbf693cbaea7e9f9853b66155829d76fb84ab"
+    }
+  ],
+  "base_commit": "c56e11547167a4bcb490bd1b440b559b50199850",
+  "checks": [
+    {
+      "check_id": "ccd10-red-tdd",
+      "method": "Run the new OD-010 contract guard before adding the decision, card, graph profile, or governance evidence.",
+      "observed": "The exact command `.venv/bin/pytest -q tests/test_contract_compiler_ledger.py::test_od010_contextual_reference_contract_is_exact` exited 1 with one failed test. Its assertion enumerated the absent OD-010 heading, strong-reference rule, ordered-candidate context, Entity-only endpoint rule, explicit bearer rule, global ID namespace, temporal closure, and PRESENT CC-D10 card.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-dependency-card",
+      "method": "Match the zero-scope CC-D10 card to the exact CC-D07 card, completion entry, completion hash, and first authority head.",
+      "observed": "The card binds CC-D07 card sha256 22a84695...3604, completion OVR-000168 with hash 6e816012...0921c, and integrated head c56e1154...9850. It remains assigned to the overseer with no scope, candidate, selection, or worker ledger.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-generic-reference-context",
+      "method": "Evaluate the compact abstract oracle over generic scalar and multivalue references, exact class ancestry, mixin-only targets, cross-role and cross-partition targets, earlier and later writes, self-reference, cycles, and staged rollback.",
+      "observed": "Recon Work.evidence_ids accepts only after both EvidenceAttachment targets. Missing, wrong-type, mixin-only, cross-boundary, forward, self, and cyclic targets refuse the whole candidate. A failure after an earlier staged write preserves the complete pre-candidate state. The model receives only surviving values after the separately owned general missing/null/presence/cardinality pass.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-endpoint-bearer-identity",
+      "method": "Apply the contextual endpoint, bearer, and global record-ID matrices against same-role and same-partition state plus opaque foreign-context probes.",
+      "observed": "Entity endpoints of the declared class or subclass accept. Event, Signal, Relation, missing, wrong-Entity-subtype, cross-role, and cross-partition endpoints refuse. Entity and Relation bearers accept; missing, Event, Signal, cross-role, and cross-partition bearers refuse. Reusing a Relation ID as a Work ID refuses under the one global namespace.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-quiet-bell-and-temporal-closure",
+      "method": "Run the planned six-step Quiet Bell proof obligations and remove each required endpoint or reference target from selected temporal views.",
+      "observed": "The dossier-to-folio Entity relation, review Event-to-Relation class reference, and discrepancy Signal-to-Relation bearer accept in dependency order. An Entity bearer also accepts. A selected view omitting the dossier, folio, or citation target refuses as structurally incomplete.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-graph",
+      "method": "Parse canonical graph revision 20 and all Markdown Turtle projections, inspect exact OD-010 selection, rejection, bindings, D06/D07/GraphRecipe dependencies, residual D07 supersession, status uniqueness, and dependency acyclicity.",
+      "observed": "All 28 Turtle blocks and canonical N-Triples contain the same 1,716 triples. There are 357 single-status subjects and 107 nodes with 108 edges in the acyclic dependsOn graph. OD-010 selects the strong local profile, rejects widened Event/Signal endpoints, and supersedes the broad historical D07 D10 deferral only with the exact governance-representation/read-policy residual.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd10-kiss-boundaries",
+      "method": "Inspect changed paths, deferred semantics, and exact hard guards, then run the affected and full suites, changed-file Ruff, ledger, integration, evidence, graph parity, and diff checks.",
+      "observed": "The final governed diff is design, graph, zero-scope card, retained evidence, generated governance projection, and tests only. It creates no production, ontology, dependency, package, API, storage, runtime sort, cross-role bridge, cascade, repair, deletion, migration, read-access policy, candidate, selection, or worker ledger. All final validation commands pass.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies design authority, abstract contextual admission semantics, graph parity, atomic refusal, temporal closure, retained evidence, and zero implementation scope. It does not implement admission, diagnostics, storage, APIs, ontology schemas, dependencies, packages, migration, or deletion.",
+    "D10 begins after the active general missing/null/presence/cardinality pass and neither changes nor owns those outcomes. CC-R06 retains normative runtime admission TDD and public diagnostics.",
+    "Cross-role bridges, relation-as-endpoint storage, cascade, reverse dependency processing, uncertainty propagation, interval-containment proof, repair, migration, deletion, read authorization, confidentiality, filtering, and ACL behavior remain deferred."
+  ],
+  "recorded_at": "2026-08-28T05:04:03Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D10"
+}
