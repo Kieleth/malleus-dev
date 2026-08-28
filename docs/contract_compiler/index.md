@@ -15,6 +15,41 @@ neutral outputs, and provenance. Sphinx must surface that contract without
 redefining it. Another adapter may replace LinkML only behind the same explicit
 neutral output contract.
 
+## Local CI and compiler TDD
+
+Run the repository's complete local gate with one fixed command:
+
+```console
+python scripts/ci.py
+```
+
+The default `all` profile runs Ruff over the governed Python boundaries, the
+full configured pytest suite, the overseer-ledger and integration validators,
+the GraphRecipe conformance slice, strict Sphinx HTML, doctest, and linkcheck
+builds, then a real package build, metadata check, clean-environment install,
+and console-script smoke tests. It reads no command from a card, manifest, or
+ledger. A governance record is evidence, never executable CI input.
+
+The same runner exposes fixed `test`, `docs`, and `package` profiles so the
+Python-version matrix can share work without repeating the full suite. GitHub
+Actions calls these profiles with `--require-clean`. Local runs tolerate
+pre-existing edits but mechanically refuse any tracked or untracked change
+caused by a check. A future local merge hook or merge
+queue must call this runner rather than copy its commands. No hook installer is
+part of this scaffold.
+
+Compiler work keeps the failing RED observation in its immutable worker ledger
+and commit history. Live CI does not keep a deliberately failing test on the
+branch head. It runs the corrected GREEN test plus the cumulative SLICE,
+DISPROOF, REGRESSION, PACKAGE, and ATTEST checks. The integration validator
+requires one active result per phase, in that exact order, before a `CC-R`
+candidate can become eligible, integrated, complete, or selected.
+
+Place each future `CC-R01` through `CC-R08` test module under
+`tests/contract_compiler/`. Pytest discovers that directory from one
+configuration entry, so a new stage enters both local and remote CI without a
+new workflow, marker, or command registry.
+
 ```{toctree}
 :maxdepth: 1
 

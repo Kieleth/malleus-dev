@@ -74,34 +74,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Run tests
-        run: pytest -v
-      - name: Validate contract compiler overseer ledger
-        run: |
-          python -m ruff check scripts/contract_compiler_ledger.py tests/test_contract_compiler_ledger.py
-          python -m pytest -q tests/test_contract_compiler_ledger.py
-          python scripts/contract_compiler_ledger.py check
-      - name: Validate contract compiler integration gate
-        run: |
-          python -m ruff check scripts/contract_compiler_integration.py tests/test_contract_compiler_integration.py
-          python -m pytest -q tests/test_contract_compiler_integration.py
-          python scripts/contract_compiler_integration.py check
+      - name: Run the shared local test gate
+        run: python scripts/ci.py test --require-clean
       - name: Build strict documentation
         if: matrix.python-version == '3.12'
-        env:
-          PYTHONDONTWRITEBYTECODE: "1"
-          PYTHONHASHSEED: "0"
-          SOURCE_DATE_EPOCH: "0"
-        run: |
-          python -m sphinx -W --keep-going -n -b html docs /tmp/malleus-docs/html
-          python -m sphinx -W --keep-going -n -b doctest docs /tmp/malleus-docs/doctest
-          python -m sphinx -W --keep-going -n -b linkcheck docs /tmp/malleus-docs/linkcheck
-          git diff --exit-code
-          test -z "$(git status --porcelain=v1)"
-      - name: Run GraphRecipe conformance slice
-        run: |
-          python -m ruff check src/malleus research/ontology_driven_kg_realization/experiments/graph_recipe
-          PYTHONPATH=src python -m pytest -q research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py
+        run: python scripts/ci.py docs --require-clean
 
   build:
     name: Build wheel + sdist
@@ -122,29 +99,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install ".[dev]"
 
-      - name: Build wheel + sdist
-        run: python -m build
-
-      - name: twine check
-        run: python -m twine check dist/*
-
-      - name: Smoke-test the built wheel in a clean environment
-        # twine check validates metadata, never entry-point targets. Install
-        # the wheel and invoke every declared console script so a manifest
-        # referencing uncommitted files fails here, not on a user's machine.
-        run: |
-          python -m venv /tmp/wheel-smoke
-          /tmp/wheel-smoke/bin/pip install --quiet dist/*.whl
-          cd /tmp
-          SCHEMA=$(/tmp/wheel-smoke/bin/python -c "from malleus.ontology import bundled_ontology_path; print(bundled_ontology_path('malleus.yaml'))")
-          /tmp/wheel-smoke/bin/malleus-inquisitor "$SCHEMA"
-          /tmp/wheel-smoke/bin/malleus-recon --help
+      - name: Build, check, and smoke-test distributions
+        run: python scripts/ci.py package --artifacts /tmp/malleus-dist --require-clean
 
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist/
+          path: /tmp/malleus-dist/
 
   publish-pypi:
     name: Publish to PyPI

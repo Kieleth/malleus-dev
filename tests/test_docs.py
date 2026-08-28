@@ -47,11 +47,6 @@ SPHINX_EXTENSIONS = {
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
 }
-DOCS_COMMANDS = (
-    "python -m sphinx -W --keep-going -n -b html docs /tmp/malleus-docs/html",
-    "python -m sphinx -W --keep-going -n -b doctest docs /tmp/malleus-docs/doctest",
-    "python -m sphinx -W --keep-going -n -b linkcheck docs /tmp/malleus-docs/linkcheck",
-)
 INFRASTRUCTURE_DOCTEST = '>>> {"manifest": "validated"}["manifest"]'
 PYTHON_ALIASES = {"py", "pycon", "python", "python3"}
 SPHINX_TEST_DIRECTIVES = ("testcode", "testsetup", "testcleanup")
@@ -1123,13 +1118,9 @@ def test_ci_and_release_run_one_exact_docs_gate(workflow: str) -> None:
     )[0]
 
     assert "if: matrix.python-version == '3.12'" in step
-    assert 'PYTHONDONTWRITEBYTECODE: "1"' in step
-    assert 'PYTHONHASHSEED: "0"' in step
-    assert 'SOURCE_DATE_EPOCH: "0"' in step
-    assert "git diff --exit-code" in step
-    assert 'test -z "$(git status --porcelain=v1)"' in step
-    for command in DOCS_COMMANDS:
-        assert source.count(command) == 1
+    assert "run: python scripts/ci.py docs --require-clean" in step
+    assert source.count("python scripts/ci.py docs --require-clean") == 1
+    assert "python -m sphinx" not in source
 
 
 def test_strict_html_build_is_source_pure(tmp_path: Path) -> None:

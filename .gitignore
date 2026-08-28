@@ -55,6 +55,7 @@ Thumbs.db
 !/scripts/
 /scripts/*
 !/scripts/__init__.py
+!/scripts/ci.py
 !/scripts/contract_compiler_integration.py
 !/scripts/contract_compiler_ledger.py
 /malleus-moving/

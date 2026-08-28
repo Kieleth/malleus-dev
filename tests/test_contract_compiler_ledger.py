@@ -35,6 +35,7 @@ from scripts.contract_compiler_ledger import (  # noqa: E402
 from scripts.contract_compiler_integration import (  # noqa: E402
     validate_candidate_history,
 )
+from scripts.ci import plan as ci_plan  # noqa: E402
 
 
 OVERSEER = ROOT / "design" / "contract_compiler" / "overseer"
@@ -1979,18 +1980,30 @@ def _workflow_commands(run_blocks: list[str]) -> list[list[str]]:
 
 
 def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -> None:
+    plan = ci_plan("test")
+    assert [command.name for command in plan] == [
+        "quality",
+        "tests",
+        "ledger",
+        "integration",
+        "graph-recipe",
+    ]
+    commands_by_name = {command.name: command.argv for command in plan}
+    assert commands_by_name["tests"][1:] == ("-m", "pytest")
+    assert commands_by_name["ledger"][1:] == (
+        "scripts/contract_compiler_ledger.py",
+        "check",
+    )
+    assert all(
+        "verify-evidence" not in argument
+        for command in plan
+        for argument in command.argv
+    )
     for workflow in STEADY_STATE_WORKFLOWS:
         run_blocks = _workflow_run_blocks(workflow)
         assert all("verify-evidence" not in run_block for run_block in run_blocks)
         commands = _workflow_commands(run_blocks)
-        assert [
-            "python",
-            "-m",
-            "pytest",
-            "-q",
-            "tests/test_contract_compiler_ledger.py",
-        ] in commands
-        assert ["python", "scripts/contract_compiler_ledger.py", "check"] in commands
+        assert ["python", "scripts/ci.py", "test", "--require-clean"] in commands
 
 
 def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:

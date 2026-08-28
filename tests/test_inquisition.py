@@ -1426,27 +1426,38 @@ class TestReleaseWorkflowIsFailClosed:
         assert run_gate("tag", "v1.2.3").returncode == 0
 
     def test_release_runs_every_supported_python_and_the_research_gate(self):
+        from scripts import ci as ci_runner
+
         jobs = self._jobs()
-        assert jobs["test"]["strategy"]["matrix"]["python-version"] == [
+        supported = [
             "3.10",
             "3.11",
             "3.12",
             "3.13",
         ]
-        gate = (
-            "PYTHONPATH=src python -m pytest -q "
-            "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py"
-        )
-        lint_gate = (
-            "python -m ruff check src/malleus "
-            "research/ontology_driven_kg_realization/experiments/graph_recipe"
+        assert jobs["test"]["strategy"]["matrix"]["python-version"] == supported
+        ci_jobs = yaml.safe_load(self.CI.read_text(encoding="utf-8"))["jobs"]
+        assert ci_jobs["test"]["strategy"]["matrix"]["python-version"] == supported
+        plan = ci_runner.plan("test")
+        by_name = {command.name: command.argv for command in plan}
+        assert by_name["quality"][1:4] == ("-m", "ruff", "check")
+        assert "src/malleus" in by_name["quality"]
+        assert str(ci_runner.GRAPH_RECIPE) in by_name["quality"]
+        assert by_name["graph-recipe"][1:] == (
+            "-m",
+            "pytest",
+            "-q",
+            str(ci_runner.GRAPH_RECIPE / "test_cases.py"),
         )
         for workflow_path in (self.RELEASE, self.CI):
             workflow = workflow_path.read_text(encoding="utf-8")
-            assert lint_gate in workflow
-            assert gate in workflow
+            assert workflow.count(
+                "python scripts/ci.py test --require-clean"
+            ) == 1
 
     def test_workflows_cannot_invoke_undeclared_ruff(self):
+        from scripts import ci as ci_runner
+
         try:
             import tomllib
         except ModuleNotFoundError:  # Python 3.10
@@ -1458,13 +1469,12 @@ class TestReleaseWorkflowIsFailClosed:
             for dependency in config["project"]["optional-dependencies"]["dev"]
         }
         invokers = [
-            workflow_path.name
-            for workflow_path in (self.RELEASE, self.CI)
-            if "python -m ruff" in workflow_path.read_text(encoding="utf-8")
+            command.name
+            for command in ci_runner.plan("all")
+            if command.argv[1:3] == ("-m", "ruff")
         ]
-        assert not invokers or "ruff" in declared, (
-            f"workflows invoke undeclared Ruff: {invokers}"
-        )
+        assert invokers == ["quality"]
+        assert "ruff" in declared
 
 
 def test_wrong_format_document_is_refused_not_judged(tmp_path):
@@ -1708,45 +1718,34 @@ def test_the_release_gate_reads_the_same_version_a_parser_would():
 
 
 def test_the_release_gate_step_runs_locally():
-    """Run the whole CI step, not one command from it.
+    """Run the complete research slice from the shared CI plan.
 
     The v0.11.0 tag was cut three times. The third failure was this guard's
-    own fault: it extracted the `ruff` line from a step that runs two
-    commands, so the conformance slice CI executes stayed outside the local
-    suite and a digest it pins drifted unnoticed. The step is now executed
-    verbatim, so `pytest` alone answers "is this taggable" for everything
-    that step covers, whatever is added to it later.
+    own fault: it executed the Ruff half but omitted GraphRecipe. Both fixed
+    commands now come from the same plan that release and pull-request CI call.
     """
-    import os
-    import shutil
     import subprocess
-    import sys
-    import tempfile
-    import yaml as _yaml
+    from scripts import ci as ci_runner
 
     root = Path(__file__).parent.parent
-    if shutil.which("ruff") is None:
-        pytest.skip("ruff is not installed; it is in the dev extra")
-    workflow = _yaml.safe_load((root / ".github" / "workflows" / "release.yml").read_text())
-    steps = [
-        step
-        for job in workflow["jobs"].values()
-        for step in job.get("steps", [])
-        if "ruff check" in str(step.get("run", ""))
+    research_commands = [
+        command
+        for command in ci_runner.plan("test")
+        if command.name in {"quality", "graph-recipe"}
     ]
-    assert steps, "no CI step runs ruff any more; this guard rotted"
-
-    # CI calls `python`; a dev machine may only have `python3`. Bind the name
-    # to this interpreter rather than assuming the runner's PATH.
-    with tempfile.TemporaryDirectory() as shim:
-        os.symlink(sys.executable, Path(shim) / "python")
-        env = {**os.environ, "PATH": f"{shim}{os.pathsep}{os.environ['PATH']}"}
-        for step in steps:
-            result = subprocess.run(
-                ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
-                cwd=root, capture_output=True, text=True, env=env,
-            )
-            assert result.returncode == 0, (
-                f"CI step {step.get('name', '<unnamed>')!r} fails locally:\n"
-                f"{result.stdout[-3000:]}{result.stderr[-2000:]}"
-            )
+    assert [command.name for command in research_commands] == [
+        "quality",
+        "graph-recipe",
+    ]
+    for command in research_commands:
+        result = subprocess.run(
+            command.argv,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, (
+            f"shared CI command {command.name!r} fails locally:\n"
+            f"{result.stdout[-3000:]}{result.stderr[-2000:]}"
+        )

@@ -8,6 +8,7 @@ import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -20,6 +21,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.contract_compiler_integration import (  # noqa: E402
     IntegrationValidationError,
     load_program_registry,
+    validate_tdd_gate,
     validate_candidate_history,
     validate_integration,
 )
@@ -245,6 +247,48 @@ ALLOWED_SCOPES = (
     {"kind": "TREE", "path": "allowed"},
     {"kind": "TREE", "path": "evidence"},
 )
+
+
+def _complete_tdd_results() -> list[dict[str, str]]:
+    return [
+        {
+            "phase": phase,
+            "result": "EXPECTED_FAILURE" if phase == "RED" else "PASS",
+        }
+        for phase in integration_module.TDD_PHASES
+    ]
+
+
+def _syntactic_candidate(state: str = "ELIGIBLE") -> dict[str, Any]:
+    return {
+        "artifacts": [
+            {
+                "byte_length": 1,
+                "path": "candidate/result.txt",
+                "sha256": "sha256:" + "0" * 64,
+            }
+        ],
+        "base_commit": "0" * 40,
+        "evidence": [
+            {
+                "byte_length": 1,
+                "path": "candidate/evidence.json",
+                "result": "PASS",
+                "sha256": "sha256:" + "0" * 64,
+            }
+        ],
+        "head_commit": "0" * 40,
+        "head_tree": "0" * 40,
+        "state": state,
+    }
+
+
+def _raw_overseer_state() -> SimpleNamespace:
+    entries = tuple(
+        _read_json(path)
+        for path in sorted((CONTRACT / "overseer" / "entries").glob("*.json"))
+    )
+    return SimpleNamespace(entries=entries)
 
 
 def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
@@ -507,19 +551,18 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
-def test_integration_ci_has_full_history_and_no_duplicate_yaml_keys(
+def test_workflows_delegate_to_the_fixed_local_runner_with_full_history(
     workflow: str,
 ) -> None:
-    value = yaml.load(
-        (ROOT / ".github" / "workflows" / workflow).read_text(encoding="utf-8"),
-        Loader=_UniqueYamlLoader,
-    )
+    path = ROOT / ".github" / "workflows" / workflow
+    source = path.read_text(encoding="utf-8")
+    value = yaml.load(source, Loader=_UniqueYamlLoader)
     jobs = value["jobs"]
     guarded = [
         job
         for job in jobs.values()
         if any(
-            step.get("name") == "Validate contract compiler integration gate"
+            step.get("run") == "python scripts/ci.py test --require-clean"
             for step in job["steps"]
         )
     ]
@@ -530,6 +573,40 @@ def test_integration_ci_has_full_history_and_no_duplicate_yaml_keys(
             step for step in job["steps"] if step.get("uses") == "actions/checkout@v4"
         )
         assert checkout["with"]["fetch-depth"] == 0
+    required = {
+        "python scripts/ci.py test --require-clean",
+        "python scripts/ci.py docs --require-clean",
+    }
+    if workflow == "tests.yml":
+        required.add("python scripts/ci.py package --require-clean")
+        job = guarded[0]
+        assert job["strategy"]["matrix"]["python-version"] == [
+            "3.10",
+            "3.11",
+            "3.12",
+            "3.13",
+        ]
+        package_step = next(
+            step
+            for step in job["steps"]
+            if step.get("run") == "python scripts/ci.py package --require-clean"
+        )
+        assert "if" not in package_step
+    else:
+        required.add(
+            "python scripts/ci.py package --artifacts /tmp/malleus-dist --require-clean"
+        )
+        assert "path: /tmp/malleus-dist/" in source
+    for command in required:
+        assert source.count(command) == 1
+    for replaced in (
+        "run: pytest",
+        "python -m pytest",
+        "python -m sphinx",
+        "python -m build",
+        "contract_compiler_integration.py check",
+    ):
+        assert replaced not in source
 
 
 def test_owned_governance_markdown_has_no_trailing_whitespace() -> None:
@@ -1116,3 +1193,168 @@ def test_quarantined_candidate_cannot_gate_integration(tmp_path: Path) -> None:
         )
 
     _assert_code(error, "CC000_CANDIDATE_STATE")
+
+
+def test_research_tdd_phases_must_be_unique() -> None:
+    results = _complete_tdd_results()
+    results.insert(2, dict(results[1]))
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_tdd_gate("CC-R01", results)
+
+    _assert_code(error, "CC000_TDD_DUPLICATE")
+
+
+def test_research_tdd_phases_must_follow_canonical_order() -> None:
+    results = _complete_tdd_results()
+    results[1], results[2] = results[2], results[1]
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_tdd_gate("CC-R01", results)
+
+    _assert_code(error, "CC000_TDD_ORDER")
+
+
+@pytest.mark.parametrize(
+    ("phase", "wrong_result"),
+    [
+        ("RED", "PASS"),
+        ("RED", "NOT_APPLICABLE"),
+        ("GREEN", "EXPECTED_FAILURE"),
+        ("GREEN", "NOT_APPLICABLE"),
+        ("SLICE", "EXPECTED_FAILURE"),
+        ("SLICE", "NOT_APPLICABLE"),
+        ("DISPROOF", "EXPECTED_FAILURE"),
+        ("DISPROOF", "NOT_APPLICABLE"),
+        ("REGRESSION", "EXPECTED_FAILURE"),
+        ("REGRESSION", "NOT_APPLICABLE"),
+        ("ATTEST", "EXPECTED_FAILURE"),
+        ("ATTEST", "NOT_APPLICABLE"),
+    ],
+)
+def test_research_tdd_result_matrix_is_exact(
+    phase: str,
+    wrong_result: str,
+) -> None:
+    results = _complete_tdd_results()
+    next(result for result in results if result["phase"] == phase)["result"] = (
+        wrong_result
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_tdd_gate("CC-R01", results)
+
+    _assert_code(error, "CC000_TDD_RESULT")
+
+
+@pytest.mark.parametrize("package_result", ["EXPECTED_FAILURE", "NOT_APPLICABLE"])
+def test_research_package_phase_has_only_two_exact_results(
+    package_result: str,
+) -> None:
+    results = _complete_tdd_results()
+    package = next(result for result in results if result["phase"] == "PACKAGE")
+    package["result"] = package_result
+
+    if package_result == "NOT_APPLICABLE":
+        validate_tdd_gate("CC-R01", results)
+        return
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_tdd_gate("CC-R01", results)
+
+    _assert_code(error, "CC000_TDD_RESULT")
+
+
+def test_worker_correction_replaces_a_tdd_result_without_reordering_it() -> None:
+    entries = [
+        {
+            "data": {"phase": "RED", "result": "EXPECTED_FAILURE"},
+            "entry_id": "CC-R01-WRK-000001",
+            "entry_type": "TDD_RESULT",
+        },
+        {
+            "data": {"phase": "GREEN", "result": "NOT_APPLICABLE"},
+            "entry_id": "CC-R01-WRK-000002",
+            "entry_type": "TDD_RESULT",
+        },
+        {
+            "data": {
+                "supersedes_entry_id": "CC-R01-WRK-000002",
+                "reason": "Replace the malformed GREEN observation.",
+            },
+            "entry_id": "CC-R01-WRK-000003",
+            "entry_type": "CORRECTION",
+        },
+        {
+            "data": {"phase": "GREEN", "result": "PASS"},
+            "entry_id": "CC-R01-WRK-000004",
+            "entry_type": "TDD_RESULT",
+        },
+        *[
+            {
+                "data": {"phase": phase, "result": "PASS"},
+                "entry_id": f"CC-R01-WRK-{sequence:06d}",
+                "entry_type": "TDD_RESULT",
+            }
+            for sequence, phase in enumerate(
+                integration_module.TDD_PHASES[2:],
+                start=5,
+            )
+        ],
+    ]
+
+    active = integration_module._active_tdd_results(entries)
+
+    assert [result["phase"] for result in active] == list(
+        integration_module.TDD_PHASES
+    )
+    validate_tdd_gate("CC-R01", active)
+
+
+@pytest.mark.parametrize("candidate_state", ["ELIGIBLE", "INTEGRATED"])
+def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    candidate_state: str,
+) -> None:
+    manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    _rewrite_card(
+        manifest_path,
+        manifest,
+        "CC-R01",
+        lambda card: card.update(candidate=_syntactic_candidate(candidate_state)),
+    )
+    monkeypatch.setattr(
+        integration_module,
+        "load_ledger",
+        lambda *args, **kwargs: _raw_overseer_state(),
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, manifest_path)
+
+    _assert_code(error, "CC000_TDD_INCOMPLETE")
+
+
+def test_research_workstream_cannot_be_complete_before_tdd_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path, _ = _copy_manifest_bundle(tmp_path)
+    original = integration_module._workstream_states
+    monkeypatch.setattr(
+        integration_module,
+        "load_ledger",
+        lambda *args, **kwargs: _raw_overseer_state(),
+    )
+
+    def completed_r01(ledger_state):
+        states, entries = original(ledger_state)
+        states["CC-R01"] = "COMPLETE"
+        return states, entries
+
+    monkeypatch.setattr(integration_module, "_workstream_states", completed_r01)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, manifest_path)
+
+    _assert_code(error, "CC000_TDD_INCOMPLETE")

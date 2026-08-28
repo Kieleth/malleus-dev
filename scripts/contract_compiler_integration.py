@@ -51,6 +51,15 @@ TDD_PHASES = (
     "PACKAGE",
     "ATTEST",
 )
+TDD_RESULTS = {
+    "RED": frozenset({"EXPECTED_FAILURE"}),
+    "GREEN": frozenset({"PASS"}),
+    "SLICE": frozenset({"PASS"}),
+    "DISPROOF": frozenset({"PASS"}),
+    "REGRESSION": frozenset({"PASS"}),
+    "PACKAGE": frozenset({"PASS", "NOT_APPLICABLE"}),
+    "ATTEST": frozenset({"PASS"}),
+}
 
 
 class IntegrationValidationError(ValueError):
@@ -539,10 +548,10 @@ def _validate_worker_ledger(
     bundle: Path,
     card: dict[str, Any],
     schema: dict[str, Any],
-) -> dict[str, dict[str, str]]:
+) -> tuple[dict[str, Any], ...]:
     pointer = card["ledger"]
     if pointer["state"] == "NOT_STARTED":
-        return {}
+        return ()
     root = _bundle_path(bundle, pointer["path"], f"{card['workstream_id']} ledger")
     head = _read_json(root / "head.json")
     _validate_schema(head, schema, "workerLedgerHead", f"{root}/head.json")
@@ -596,17 +605,81 @@ def _validate_worker_ledger(
             _fail("CC000_WORKER_LEDGER", f"{workstream_id}: card {key} is stale")
     if not paths or head["head_entry_id"] != paths[-1].stem or head["head_hash"] != previous:
         _fail("CC000_WORKER_LEDGER", f"{workstream_id}: head is stale")
+    return _active_tdd_results(entries)
+
+
+def _active_tdd_results(
+    entries: Sequence[Mapping[str, Any]],
+) -> tuple[dict[str, Any], ...]:
+    """Return active TDD observations in ledger order after corrections."""
     superseded: set[str] = set()
     for entry in reversed(entries):
         if entry["entry_id"] in superseded or entry["entry_type"] != "CORRECTION":
             continue
         superseded.add(entry["data"]["supersedes_entry_id"])
-    phases = {
-        entry["data"]["phase"]: entry["data"]
+    return tuple(
+        dict(entry["data"])
         for entry in entries
-        if entry["entry_id"] not in superseded and entry["entry_type"] == "TDD_RESULT"
-    }
-    return phases
+        if entry["entry_id"] not in superseded
+        and entry["entry_type"] == "TDD_RESULT"
+    )
+
+
+def validate_tdd_gate(
+    workstream_id: str,
+    results: Sequence[Mapping[str, Any]],
+) -> None:
+    """Require the exact, ordered research TDD contract at its earned gate."""
+    phases = [result["phase"] for result in results]
+    duplicates = sorted(
+        phase for phase in set(phases) if phases.count(phase) > 1
+    )
+    if duplicates:
+        _fail(
+            "CC000_TDD_DUPLICATE",
+            f"{workstream_id}: duplicate active phases {duplicates}",
+        )
+    missing = [phase for phase in TDD_PHASES if phase not in phases]
+    unexpected = [phase for phase in phases if phase not in TDD_PHASES]
+    if missing or unexpected:
+        _fail(
+            "CC000_TDD_INCOMPLETE",
+            f"{workstream_id}: missing {missing}, unexpected {unexpected}",
+        )
+    if phases != list(TDD_PHASES):
+        _fail(
+            "CC000_TDD_ORDER",
+            f"{workstream_id}: phases must follow {list(TDD_PHASES)}",
+        )
+    for result in results:
+        phase = result["phase"]
+        observed = result["result"]
+        if observed not in TDD_RESULTS[phase]:
+            _fail(
+                "CC000_TDD_RESULT",
+                f"{workstream_id}: {phase} cannot record {observed}",
+            )
+
+
+def _validate_legacy_selected_tdd(
+    workstream_id: str,
+    results: Sequence[Mapping[str, Any]],
+) -> None:
+    """Preserve the original selected-card gate outside CC-R workstreams."""
+    phases = {result["phase"]: result for result in results}
+    missing = [phase for phase in TDD_PHASES if phase not in phases]
+    failed = [
+        phase
+        for phase, data in phases.items()
+        if data["result"] not in {"PASS", "EXPECTED_FAILURE", "NOT_APPLICABLE"}
+        or (phase == "RED" and data["result"] != "EXPECTED_FAILURE")
+        or (phase not in {"RED", "PACKAGE"} and data["result"] != "PASS")
+    ]
+    if missing or failed:
+        _fail(
+            "CC000_TDD_INCOMPLETE",
+            f"{workstream_id}: missing {missing}, failed {failed}",
+        )
 
 
 def _cycle(registry: Mapping[str, Sequence[str]]) -> tuple[str, ...] | None:
@@ -794,7 +867,7 @@ def validate_integration(
             _fail("CC000_LEDGER_ANCHOR", f"overseer checkpoint {field} is stale")
     states, state_entries = _workstream_states(ledger_state)
 
-    phase_results: dict[str, dict[str, dict[str, str]]] = {}
+    phase_results: dict[str, tuple[dict[str, Any], ...]] = {}
     for workstream_id, card in cards.items():
         phase_results[workstream_id] = _validate_worker_ledger(bundle, card, schema)
         if card["authorization"]["class"] != "FORMAL":
@@ -836,6 +909,19 @@ def validate_integration(
                 anchor["path"],
             )
 
+    selections = tuple(manifest["selections"])
+    for workstream_id, card in cards.items():
+        if not workstream_id.startswith("CC-R"):
+            continue
+        candidate_state = card["candidate"]["state"]
+        earned = (
+            candidate_state in {"ELIGIBLE", "INTEGRATED"}
+            or states.get(workstream_id) == "COMPLETE"
+            or workstream_id in selections
+        )
+        if earned:
+            validate_tdd_gate(workstream_id, phase_results[workstream_id])
+
     snapshot = manifest["authority"]["snapshot"]
     if require_sealed and snapshot["state"] != "SEALED":
         _fail("CC000_UNSEALED", "integration manifest has no result-commit seal")
@@ -847,7 +933,6 @@ def validate_integration(
             source = _git_bytes(repository, result_commit, path, "authority snapshot")
             _verify_artifact_bytes(artifact, source, f"authority snapshot {path}")
 
-    selections = tuple(manifest["selections"])
     for workstream_id in selections:
         if workstream_id not in cards:
             _fail("CC000_SELECTION", f"{workstream_id} has no registered card")
@@ -870,19 +955,10 @@ def validate_integration(
             allowed_scopes=tuple(card["scopes"]),
             workstream_id=workstream_id,
         )
-        phases = phase_results[workstream_id]
-        missing = [phase for phase in TDD_PHASES if phase not in phases]
-        failed = [
-            phase
-            for phase, data in phases.items()
-            if data["result"] not in {"PASS", "EXPECTED_FAILURE", "NOT_APPLICABLE"}
-            or (phase == "RED" and data["result"] != "EXPECTED_FAILURE")
-            or (phase not in {"RED", "PACKAGE"} and data["result"] != "PASS")
-        ]
-        if missing or failed:
-            _fail(
-                "CC000_TDD_INCOMPLETE",
-                f"{workstream_id}: missing {missing}, failed {failed}",
+        if not workstream_id.startswith("CC-R"):
+            _validate_legacy_selected_tdd(
+                workstream_id,
+                phase_results[workstream_id],
             )
     return IntegrationState(
         manifest=manifest,
