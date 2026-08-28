@@ -1,0 +1,94 @@
+{
+  "schema": "malleus.contract-kernel.scenarios/v0",
+  "scenarios": [
+    {
+      "requirements": [
+        {
+          "decision_anchors": [
+            "OD-005"
+          ],
+          "kind": "POSITIVE",
+          "requirement_id": "atomic-fact-positive",
+          "statement": "A complete fact set over the closed Class, Slot, SlotUse, Enum, and Scalar seed consists of exact three-member subject-predicate-object records whose subjects and predicates are full absolute identifiers and whose objects have the predicate-declared type; it accepts atomically and canonicalizes to one order-independent compact UTF-8 JSON array."
+        },
+        {
+          "decision_anchors": [
+            "OD-005"
+          ],
+          "kind": "REFUSAL",
+          "requirement_id": "atomic-fact-refusal",
+          "statement": "An unknown member, kind, or predicate, a wrong object or target kind, an unresolved non-seed target, incomplete required structure, a duplicate, a cardinality conflict, a contradiction, a declared cycle, or a noncanonical value refuses the whole fact set without accepting a subset."
+        }
+      ],
+      "scenario_id": "atomic-fact-contract"
+    },
+    {
+      "requirements": [
+        {
+          "decision_anchors": [
+            "OD-006"
+          ],
+          "kind": "COMPOSITION_DELTA",
+          "requirement_id": "closed-composition-delta",
+          "statement": "A presentation-only or provenance-only change preserves all role, composition, and epoch identities; a semantic change to one role leaves the other two role identities unchanged, changes that role identity and the composition, and starts a new accepted-temporal epoch; a standalone governed-graph change changes only its role and structural-state identity, with no ledger epoch."
+        },
+        {
+          "decision_anchors": [
+            "OD-006"
+          ],
+          "kind": "POSITIVE",
+          "requirement_id": "closed-composition-positive",
+          "statement": "A full accepted-temporal contract contains exactly one complete ProtocolRecordContract, GovernedGraphContract, and GovernanceContract, with each role bound by the fixed v0 role identity inputs and one composition binding exactly those roles. A standalone structural graph instead binds exactly one GovernedGraphContract and one structural-state identity, with no protocol or governance role, composition, accepted-temporal marker, or ledger."
+        },
+        {
+          "decision_anchors": [
+            "OD-006"
+          ],
+          "kind": "REFUSAL",
+          "requirement_id": "closed-composition-refusal",
+          "statement": "A missing, duplicate, extra, unknown, swapped, incomplete, ambient, independently advanced, or mixed-composition role; a wrong role or composition token, tag, version, or identity domain; equal payload used interchangeably across roles; an inferred current or latest role or composition; an unbound semantic replacement; role misuse; accepted-temporal state bound only to the domain role; or structural-only and full-composition confusion refuses the whole composition without continuing the prior epoch."
+        }
+      ],
+      "scenario_id": "closed-contract-composition"
+    },
+    {
+      "requirements": [
+        {
+          "decision_anchors": [
+            "OD-005",
+            "OD-008"
+          ],
+          "kind": "METAMORPHIC",
+          "requirement_id": "linkml-profile-metamorphic",
+          "statement": "Reordering semantically unordered source members, declarations, branches, conditions, or fact records preserves the semantic facts and candidate identities. Equivalent explicit and defaulted values preserve them while provenance differs, equivalent supported numeric source lexemes converge to the same canonical decimal fact, and changing only classified presentation fields preserves them while source attestation changes."
+        },
+        {
+          "decision_anchors": [
+            "OD-005",
+            "OD-008"
+          ],
+          "kind": "PARITY",
+          "requirement_id": "linkml-profile-parity",
+          "statement": "A supported LinkML source, its independently owned direct-fact input, and its independent oracle yield identical metamodel-valid atomic facts and exact canonical fact bytes."
+        },
+        {
+          "decision_anchors": [
+            "OD-008"
+          ],
+          "kind": "POSITIVE",
+          "requirement_id": "linkml-profile-positive",
+          "statement": "A source using only the closed exact-location LinkML v0 profile maps enforced fields, exact defaults, authoritative symbols, and the one flat exactly-one extension into the active atomic-fact metamodel, preserves authored false, produces deterministic effective SlotUse semantics, and retains provenance separately."
+        },
+        {
+          "decision_anchors": [
+            "OD-008"
+          ],
+          "kind": "REFUSAL",
+          "requirement_id": "linkml-profile-refusal",
+          "statement": "An unlisted or wrong-location field or annotation, malformed or ambiguous declaration, unsupported builtin or expression, invalid default or reference, or contradictory effective constraint refuses the whole compilation; parser acceptance never expands the profile."
+        }
+      ],
+      "scenario_id": "linkml-support-profile"
+    }
+  ]
+}

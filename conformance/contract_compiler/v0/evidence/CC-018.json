@@ -1,0 +1,91 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 5314,
+      "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
+      "sha256": "sha256:758d2e69fefcfd4c8476a0c04988fba1763e31a73b4f6865da4d071568f4b662"
+    },
+    {
+      "byte_length": 12751,
+      "path": "tests/contract_compiler/test_semantic_scenario_requirements.py",
+      "sha256": "sha256:7df913fb88fae1c11bde9e6c93ab1df17b39114ca0c2250bd5c3e171c1a7fcdb"
+    }
+  ],
+  "base_commit": "b073f7d4b44205231a81bb22f3ad9328cc1c7541",
+  "checks": [
+    {
+      "check_id": "cc018-red",
+      "method": "Run the complete fixed CC-018 semantic-requirements test before the reserved scenarios member exists.",
+      "observed": "The run produced exactly 4 failures. Every failure was FileNotFoundError for the authorized absent conformance/contract_kernel/v0/requirements/scenarios.json member; there was no semantic mismatch or unrelated failure.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-refinement-red",
+      "method": "Tighten the fixed OD-005 positive obligation to name its closed five-kind seed before changing the registry.",
+      "observed": "The run produced exactly 1 exact-content failure and 3 passes until the registry visibly named Class, Slot, SlotUse, Enum, and Scalar while retaining exact three-member atomic facts.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-duplicate-key-red",
+      "method": "Add direct root and nested duplicate-key mutations before replacing the default JSON loader.",
+      "observed": "The old loader produced exactly 2 DID NOT RAISE failures and 4 passes because it silently retained the last duplicate schema and kind members. A test-only object-pairs hook then made both malformed documents refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-semantic-coverage-red",
+      "method": "Tighten the exact expected registry with the accepted D05 default and numeric metamorphisms and D06 standalone, delta, and refusal boundaries before changing the registry.",
+      "observed": "The run produced exactly 1 exact-content failure and 5 passes until the same four existing requirement statements carried the accepted semantics, with no new requirement, field, or design choice.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-final-red",
+      "method": "Add nonfinite-number refusal, narrow identifier membership, and the final accepted OD-005 and OD-008 statement expectations before changing the loader or registry.",
+      "observed": "The run produced exactly 4 failures and 5 passes: one exact registry mismatch plus one failure each for accepted NaN, Infinity, and -Infinity. The ASCII identifier check and both duplicate-key regressions already passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-green",
+      "method": "Run tests/contract_compiler/test_semantic_scenario_requirements.py against the final minimum registry and fail-closed test loader.",
+      "observed": "All 9 fixed semantic-requirements tests passed and scoped Ruff passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-semantic-slice",
+      "method": "Compare the registry exactly with the accepted OD-005, OD-006, and OD-008 conformance boundaries and the CC-010 scenario grammar.",
+      "observed": "Three sorted neutral scenarios contain 9 globally unique sorted requirements and exactly all five fixed kinds, anchored only to OD-005, OD-006, and OD-008. Their statements preserve closed atomic facts, full and standalone composition, exact LinkML mapping, explicit/default and numeric metamorphisms, authored false, deterministic SlotUse, atomic refusal, and frontend parity without concrete vectors.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-boundary",
+      "method": "Validate the document with the CC-010 schema, strict raw-JSON loader, narrow identifier guard, and exact-content guard, then inspect every key and statement for the authorized semantic-only surface.",
+      "observed": "Duplicate keys and nonfinite numbers refuse; every scenario ID, requirement ID, and anchor is nonempty narrow ASCII; and only the eight CC-010 scenario fields occur. The registry contains no fixture vocabulary, source path or bytes, LinkML encoding, direct fact triples, expected payload, diagnostic code, operation trace, implementation choice, public API, package, release, corpus or checksum publication, or CC-R result.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-affected",
+      "method": "Run the CC-018 test, CC-010 protocol test, integration validator tests, and overseer-ledger tests together.",
+      "observed": "All 255 affected tests passed in 45.04 seconds.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-regression",
+      "method": "Run the fixed local CI test profile after freezing the registry and test.",
+      "observed": "Ruff passed; the configured suite passed 1,808 tests with 2 skips; the complete contract-compiler test directory passed 42 tests; the 189-entry overseer ledger, 66-workstream integration state with 24 cards and 4 selections, repository-purity gate, and 40 GraphRecipe tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-package",
+      "method": "Review the exact three-file CC-018 scope against package and release boundaries.",
+      "observed": "PACKAGE NOT_APPLICABLE. CC-018 adds one repository-local semantic requirements registry, its fixed test, and this verification report; it changes no distribution, installed data, runtime, public API, compiler, adapter, artifact, Docker image, or release claim.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-018 states shared semantic obligation families only. It does not create concrete vectors, source or direct-fact input, independent expected facts, artifacts, diagnostics, operation traces, or outcomes.",
+    "The shared requirements member remains OPTIONAL_UNTIL_LISTED in corpus.json and outside checksums.json. A later integration owner must list and checksum it with reviewed cases; CC-018 publishes no corpus membership.",
+    "CC-018 does not implement or select a compiler, runtime, adapter API, public namespace, stable identifier, package, release, or any CC-R stage."
+  ],
+  "recorded_at": "2026-08-28T19:49:33Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-018"
+}
