@@ -46,9 +46,11 @@ requires one active result per phase, in that exact order, before a `CC-R`
 candidate can become eligible, integrated, complete, or selected.
 
 Place each future `CC-R01` through `CC-R08` test module under
-`tests/contract_compiler/`. Pytest discovers that directory from one
-configuration entry, so a new stage enters both local and remote CI without a
-new workflow, marker, or command registry.
+`tests/contract_compiler/`. The fixed `compiler-tests` runner stage executes
+that directory after the configured full suite, so a new R stage enters both
+local and remote CI without changing `pyproject.toml`, a workflow, a marker, or
+a command registry. Keeping this research-local path out of the package-wide
+pytest configuration also avoids rebinding unrelated GraphRecipe identities.
 
 ```{toctree}
 :maxdepth: 1

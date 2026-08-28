@@ -1984,6 +1984,7 @@ def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -
     assert [command.name for command in plan] == [
         "quality",
         "tests",
+        "compiler-tests",
         "ledger",
         "integration",
         "graph-recipe",

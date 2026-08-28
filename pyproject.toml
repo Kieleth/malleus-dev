@@ -199,7 +199,6 @@ core-metadata-version = "2.4"
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = [
-    "tests/contract_compiler",
     "tests/test_contract_compiler_ledger.py",
     "tests/test_contract_compiler_integration.py",
     "tests/test_contract_compiler_environment.py",

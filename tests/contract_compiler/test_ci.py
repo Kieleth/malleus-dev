@@ -7,6 +7,11 @@ from types import SimpleNamespace
 
 import pytest
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - Python 3.10 CI
+    import tomli as tomllib
+
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -20,6 +25,7 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
     assert [command.name for command in commands] == [
         "quality",
         "tests",
+        "compiler-tests",
         "ledger",
         "integration",
         "graph-recipe",
@@ -31,6 +37,21 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
         "package-smoke",
     ]
     assert sum(command.argv[-1] == "pytest" for command in commands) == 1
+    compiler = next(command for command in commands if command.name == "compiler-tests")
+    assert compiler.argv[1:] == (
+        "-m",
+        "pytest",
+        "-q",
+        "tests/contract_compiler",
+    )
+
+
+def test_compiler_tests_are_not_duplicated_in_pytest_configuration() -> None:
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert "tests/contract_compiler" not in config["tool"]["pytest"][
+        "ini_options"
+    ]["testpaths"]
 
 
 def test_fixed_profiles_are_subsets_of_the_default_plan() -> None:
