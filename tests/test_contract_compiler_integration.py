@@ -392,7 +392,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 23
+    assert len(state.cards) == 24
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -554,6 +554,116 @@ def test_cc010_activation_boundary_is_exact() -> None:
         "CC-R01",
     ):
         assert required in responsibility
+
+
+def test_cc018_activation_boundary_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-018")
+    assert row["card"]["state"] == "PRESENT"
+    path = CONTRACT / row["card"]["path"]
+    source = path.read_bytes()
+    assert row["card"]["byte_length"] == len(source)
+    assert row["card"]["sha256"] == _digest(source)
+    card = _read_json(path)
+    assert card["workstream_id"] == row["workstream_id"] == "CC-018"
+    workstream_states, _ = integration_module._workstream_states(
+        _raw_overseer_state()
+    )
+    dependencies = load_program_registry(PROGRAM)["CC-018"]
+
+    assert card["assignment"] == {
+        "owner_id": "worker:cc018-semantic-scenarios",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc018_semantic_scenarios",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == dependencies
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["scopes"] == [
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-018.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_semantic_scenario_requirements.py",
+        },
+    ]
+    assert manifest["owner_separations"] == [
+        {"left": "CC-011", "right": "CC-012"},
+        {"left": "CC-011", "right": "CC-018"},
+        {"left": "CC-012", "right": "CC-018"},
+        {"left": "CC-013", "right": "CC-014"},
+        {"left": "CC-013", "right": "CC-018"},
+        {"left": "CC-014", "right": "CC-018"},
+        {"left": "CC-015", "right": "CC-016"},
+        {"left": "CC-015", "right": "CC-018"},
+        {"left": "CC-016", "right": "CC-018"},
+        {"left": "CC-017", "right": "CC-018"},
+        {"left": "CC-018", "right": "CC-019"},
+        {"left": "CC-018", "right": "CC-020"},
+        {"left": "CC-019", "right": "CC-020"},
+    ]
+    assert workstream_states["CC-018"] == "ACTIVE"
+    assert "CC-018" not in manifest["selections"]
+    responsibility = card["responsibility"]
+    for required in (
+        "Populate one neutral machine-readable registry",
+        "OD-005, OD-006, and OD-008",
+        "stable unique scenario and requirement identities",
+        "decision anchors",
+        "path, schema, ordering, identity, and kind grammar remain CC-010 authority",
+        "POSITIVE",
+        "REFUSAL",
+        "METAMORPHIC",
+        "PARITY",
+        "COMPOSITION_DELTA",
+        "no source bytes or paths",
+        "LinkML encoding",
+        "direct fact triples",
+        "expected facts, artifacts, diagnostics, or digests",
+        "operations, traces, or outcomes",
+        "themed vocabulary",
+        "compiler or runtime implementation",
+        "public API",
+        "package",
+        "Docker",
+        "release",
+        "corpus or checksum publication",
+        "CC-R work",
+    ):
+        assert required in responsibility
+
+
+@pytest.mark.parametrize("mutation", ("reverse", "reorder"))
+def test_owner_separation_order_is_canonical(
+    tmp_path: Path,
+    mutation: str,
+) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+    edges = manifest["owner_separations"]
+    if mutation == "reverse":
+        edges[1]["left"], edges[1]["right"] = edges[1]["right"], edges[1]["left"]
+    else:
+        edges[0], edges[1] = edges[1], edges[0]
+    _write_json(path, manifest)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_OWNER_POLICY_DRIFT")
 
 
 def test_registry_card_pointer_must_match_its_workstream_row(tmp_path: Path) -> None:
@@ -1283,6 +1393,17 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
             for binding in card["authorization"]["dependency_bindings"]
             if binding["workstream_id"] == "CC-D11"
         ).update(card_sha256=d11_digest),
+    )
+    cc010_digest = _registry_row(manifest, "CC-010")["card"]["sha256"]
+    _rewrite_card(
+        manifest_path,
+        manifest,
+        "CC-018",
+        lambda card: next(
+            binding
+            for binding in card["authorization"]["dependency_bindings"]
+            if binding["workstream_id"] == "CC-010"
+        ).update(card_sha256=cc010_digest),
     )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)

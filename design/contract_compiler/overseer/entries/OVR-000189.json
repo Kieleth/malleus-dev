@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Populate one neutral shared-requirements registry from accepted OD-005, OD-006, and OD-008 under the exact grammar already fixed by CC-010.",
+      "Author stable unique scenario and requirement identities, decision anchors, and POSITIVE, REFUSAL, METAMORPHIC, PARITY, and COMPOSITION_DELTA obligations in the three exact card scopes.",
+      "Keep source, direct fact, expected output, operation, trace, themed vocabulary, compiler, runtime, public API, package, Docker, release, corpus publication, and every CC-R stage outside CC-018.",
+      "Leave LISTED and checksum publication to a later integration-owner transaction and leave CC-015/CC-017 plus CC-016/CC-017 owner separation to CC-017 activation."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000187",
+      "OVR-000188"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-018"
+  },
+  "entry_hash": "sha256:7796cc8ffe6b352ff521f0aeaf9b3ee1bc9fa4de58550555dc10277b1f7e22ef",
+  "entry_id": "OVR-000189",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bb23c0765ba7d783dadfa1e2e30c3e7617d6a32491eb672f1af032b516accc14",
+  "recorded_at": "2026-08-28T19:15:28Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000187",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000188",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-018",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 189,
+  "subject": {
+    "id": "CC-018",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate the bounded CC-018 semantic-scenario requirements workstream.",
+  "why": "The exact dependency, CC-010 authority, scope, and owner-separation checks pass. This activation creates no scenario content, candidate, selection, or worker ledger. The assigned worker may now TDD only the three scoped files and must record genuine RED plus append-only worker evidence before eligibility."
+}

@@ -1,0 +1,99 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-010",
+      "CC-011",
+      "CC-012",
+      "CC-013",
+      "CC-014",
+      "CC-015",
+      "CC-016",
+      "CC-017",
+      "CC-018",
+      "CC-019",
+      "CC-020"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:cd1e77bddc426826692c863a4523c644f6eb73f05c8abe596a35bb677286cc5e",
+        "before_digest": "sha256:85991336f05cff92111c0bbd45b847e3dc5389d13e137cf82cbbeb708ddc525e",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:f936ae016cf7bc310b09e4ca23a3ab95c80c6a3339489e0710c894366fcdb1f8",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-018-activation.json"
+      },
+      {
+        "after_digest": "sha256:4cf295ea0112d41a2ea31d0f798c5edaa251ec6432727257f78bbd70417ce3fc",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-018/manifest.json"
+      },
+      {
+        "after_digest": "sha256:e392e71b2629333320f4a83656723c69de223b48f9b7afee9eb07bb05a492502",
+        "before_digest": "sha256:3e0d4ffbf783099caaf4837c6c75c1fa60d22d304de04b39626cd9443a2059fb",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:c878975871d5042fc43fa9be2d9d60e01469a83dde30cf180b2df56b87044332",
+        "before_digest": "sha256:96ea7b921b616b2810b48af0d5ad59653fae0649204c71f7f985dea24001ee1b",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c15fb13ee1a0c2e1e6306ec15bf1480ca9814b18ad4cce69125a3bf746d4b6a8",
+  "entry_id": "OVR-000187",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+  "recorded_at": "2026-08-28T19:15:26Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:f936ae016cf7bc310b09e4ca23a3ab95c80c6a3339489e0710c894366fcdb1f8",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-018-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-018/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-018",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 187,
+  "subject": {
+    "id": "cc018-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-018 semantic-requirements boundary.",
+  "why": "All four direct dependencies are complete and exactly bound. CC-018 may now own only the neutral shared-requirements registry, its worker report, and its fixed validation test. Canonical symmetric owner separation keeps the requirements owner distinct from every planned source, direct-input, oracle, and trace owner without starting content or compiler work."
+}

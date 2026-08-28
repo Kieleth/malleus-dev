@@ -34,13 +34,20 @@ from scripts.contract_compiler_ledger import _superseded_entries as superseded_e
 COMMIT = re.compile(r"^[0-9a-f]{40}$")
 WORKSTREAM = re.compile(r"^CC-[A-Z0-9]+$")
 GLOB_CHARACTERS = frozenset("*?[")
-EXPECTED_OWNER_SEPARATIONS = frozenset(
-    {
-        ("CC-011", "CC-012"),
-        ("CC-013", "CC-014"),
-        ("CC-015", "CC-016"),
-        ("CC-019", "CC-020"),
-    }
+EXPECTED_OWNER_SEPARATIONS = (
+    ("CC-011", "CC-012"),
+    ("CC-011", "CC-018"),
+    ("CC-012", "CC-018"),
+    ("CC-013", "CC-014"),
+    ("CC-013", "CC-018"),
+    ("CC-014", "CC-018"),
+    ("CC-015", "CC-016"),
+    ("CC-015", "CC-018"),
+    ("CC-016", "CC-018"),
+    ("CC-017", "CC-018"),
+    ("CC-018", "CC-019"),
+    ("CC-018", "CC-020"),
+    ("CC-019", "CC-020"),
 )
 TDD_PHASES = (
     "RED",
@@ -798,7 +805,7 @@ def validate_integration(
                 f"{workstream_id}: {dependencies!r} != {program[workstream_id]!r}",
             )
 
-    owner_pairs = frozenset(
+    owner_pairs = tuple(
         (item["left"], item["right"]) for item in manifest["owner_separations"]
     )
     if owner_pairs != EXPECTED_OWNER_SEPARATIONS:

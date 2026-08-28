@@ -1,0 +1,53 @@
+{
+  "actor": {
+    "id": "cc018-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-28T19:15:27Z",
+    "claims": [
+      "CC-010, CC-D05, CC-D06, and CC-D08 are COMPLETE and each dependency binding matches its current card, exact completion entry and hash, and first authority commit.",
+      "The FORMAL card assigns one worker, keeps candidate NONE and ledger NOT_STARTED, remains unselected, and owns exactly three FILE scopes for a neutral scenario registry, canonical worker report, and fixed validation test.",
+      "CC-018 populates the path, schema, ordering, identity, and five-kind grammar already fixed by CC-010; it does not redefine that authority or publish corpus membership and checksums.",
+      "The canonical 13-edge owner policy keeps CC-018 distinct from CC-011 through CC-017 and CC-019 through CC-020. Reversed endpoints and reordered pairs refuse mechanically.",
+      "No scenario content, source, direct input, oracle, operation, trace, outcome, compiler, runtime, public API, package, Docker, release, corpus publication, or CC-R work was created or activated."
+    ],
+    "limitations": [
+      "This verifies activation readiness and boundary integrity only. It does not implement or complete CC-018.",
+      "The assigned worker must record genuine RED and append-only TDD evidence before any candidate can become eligible.",
+      "LISTED and checksum publication remain a later integration-owner transaction. CC-015/CC-017 and CC-016/CC-017 owner separation remains for the CC-017 activation gate."
+    ]
+  },
+  "entry_hash": "sha256:bb23c0765ba7d783dadfa1e2e30c3e7617d6a32491eb672f1af032b516accc14",
+  "entry_id": "OVR-000188",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c15fb13ee1a0c2e1e6306ec15bf1480ca9814b18ad4cce69125a3bf746d4b6a8",
+  "recorded_at": "2026-08-28T19:15:27Z",
+  "references": [
+    {
+      "digest": "sha256:f936ae016cf7bc310b09e4ca23a3ab95c80c6a3339489e0710c894366fcdb1f8",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-018-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000187",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-018",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 188,
+  "subject": {
+    "id": "CC-018-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact CC-018 activation boundary and ownership policy.",
+  "why": "Formal activation requires retained proof that CC-018 consumes only accepted decision authority, preserves CC-010 grammar ownership, has exact nonoverlapping output scopes, and cannot share an owner with any planned producer or oracle that consumes its requirements."
+}

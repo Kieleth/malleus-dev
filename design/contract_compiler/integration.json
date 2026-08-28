@@ -50,12 +50,48 @@
       "right": "CC-012"
     },
     {
+      "left": "CC-011",
+      "right": "CC-018"
+    },
+    {
+      "left": "CC-012",
+      "right": "CC-018"
+    },
+    {
       "left": "CC-013",
       "right": "CC-014"
     },
     {
+      "left": "CC-013",
+      "right": "CC-018"
+    },
+    {
+      "left": "CC-014",
+      "right": "CC-018"
+    },
+    {
       "left": "CC-015",
       "right": "CC-016"
+    },
+    {
+      "left": "CC-015",
+      "right": "CC-018"
+    },
+    {
+      "left": "CC-016",
+      "right": "CC-018"
+    },
+    {
+      "left": "CC-017",
+      "right": "CC-018"
+    },
+    {
+      "left": "CC-018",
+      "right": "CC-019"
+    },
+    {
+      "left": "CC-018",
+      "right": "CC-020"
     },
     {
       "left": "CC-019",
@@ -625,7 +661,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 3136,
+        "path": "workstreams/CC-018/manifest.json",
+        "sha256": "sha256:4cf295ea0112d41a2ea31d0f798c5edaa251ec6432727257f78bbd70417ce3fc",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-010",

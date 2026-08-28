@@ -1,0 +1,72 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 22593,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:cd1e77bddc426826692c863a4523c644f6eb73f05c8abe596a35bb677286cc5e"
+    },
+    {
+      "byte_length": 3136,
+      "path": "design/contract_compiler/workstreams/CC-018/manifest.json",
+      "sha256": "sha256:4cf295ea0112d41a2ea31d0f798c5edaa251ec6432727257f78bbd70417ce3fc"
+    },
+    {
+      "byte_length": 39139,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:e392e71b2629333320f4a83656723c69de223b48f9b7afee9eb07bb05a492502"
+    },
+    {
+      "byte_length": 53645,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:c878975871d5042fc43fa9be2d9d60e01469a83dde30cf180b2df56b87044332"
+    }
+  ],
+  "base_commit": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+  "checks": [
+    {
+      "check_id": "cc018-activation-red",
+      "method": "Run `.venv/bin/pytest -q tests/test_contract_compiler_integration.py::test_cc018_activation_boundary_is_exact` before registering the card.",
+      "observed": "The command exited 1 with one failed test. The exact assertion expected the CC-018 registry card state PRESENT and observed ABSENT. No scenario registry, worker report, or semantic-requirements test existed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-dependency-readiness",
+      "method": "Bind each direct dependency in program registry order to its current card digest, exact COMPLETE entry ID and hash, and first authority commit.",
+      "observed": "CC-010, CC-D05, CC-D06, and CC-D08 are COMPLETE and PRESENT. All four exact bindings validate, including CC-010 completion OVR-000186 at first authority commit 5b08309601ab7f2bd07bf9747ec8c5879a699d58.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-cc010-authority",
+      "method": "Compare the responsibility and three scopes with the completed CC-010 protocol and its reserved shared-requirements member.",
+      "observed": "CC-018 may populate stable scenario and requirement values under the path, schema, ordering, identity, and five-kind grammar already fixed by CC-010. It does not redefine that grammar or publish corpus membership and checksums.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-owner-separation",
+      "method": "Canonicalize each symmetric endpoint pair and the complete 13-edge sequence, compare it with the registry, and mutate one endpoint orientation and one pair order through the public validator.",
+      "observed": "The original four input-oracle pairs remain. CC-018 is separated from CC-011 through CC-017 and CC-019 through CC-020. Both reversal and reorder mutations refuse with CC000_OWNER_POLICY_DRIFT. Neither deferred CC-015/CC-017 neutral-source/direct-fact separation nor CC-016/CC-017 direct-fact/oracle separation is added here.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-scope-separation",
+      "method": "Inspect the three proposed FILE scopes, compare them with every active card, and compare every non-CC-018 registry row with HEAD by exact workstream ID.",
+      "observed": "All three worker-output paths are absent before activation and overlap no active scope. Every other registry row, including CC-D09, and the selection list remain byte-equivalent to HEAD after keyed comparison.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc018-kiss-boundary",
+      "method": "Inspect the exact card, registry row, owner policy, changed paths, candidate, selection list, and worker-ledger pointer.",
+      "observed": "CC-018 owns only one neutral requirements registry, one canonical worker report, and one fixed validation test. Candidate is NONE, ledger is NOT_STARTED, and selection is absent. No scenario content, source, oracle, compiler, runtime, public API, package, Docker, release, corpus publication, or CC-R work was created.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This evidence authorizes and verifies only the CC-018 boundary. It does not implement or complete semantic scenario requirements.",
+    "The future worker must create its own RED and append-only worker evidence before a CC-018 implementation candidate can become eligible.",
+    "Changing shared_requirements to LISTED and publishing its checksum remain a later integration-owner transaction after independently reviewed corpus inputs and oracles exist.",
+    "The CC-015/CC-017 and CC-016/CC-017 owner-separation edges remain a separate CC-017 activation gate. Neither edge is added here. No source, direct-input, oracle, trace, compiler, or CC-R workstream is activated here."
+  ],
+  "recorded_at": "2026-08-28T19:15:25Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-018"
+}
