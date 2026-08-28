@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc013-feature-inputs",
+  "data": {"artifacts": [], "command": "python -m pytest -q tests/contract_compiler/test_feature_isolation_inputs.py tests/contract_compiler/test_semantic_scenario_requirements.py tests/contract_compiler/test_conformance_protocol.py tests/test_contract_compiler_divergence.py tests/test_contract_compiler_duplicate_scan.py", "observed": "All 64 affected tests passed. They mechanically preserved AB/BA grouping, numeric-lexeme equality, default-versus-explicit and presentation-only relations, valid explicit false, allowed-removal equality for adoption, unmarked structural conflict, forbidden-output absence, retained CC-X01 evidence, and CC-X02 measurement isolation.", "phase": "DISPROOF", "result": "PASS"},
+  "entry_hash": "sha256:3b3852e451e1082b432c446536ed9d35095338a0777ce7b705e76b5e411714c0",
+  "entry_id": "CC-013-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f57356c0a34a28d7b7b3e9459da95ba1163e4c22b89abfde6163237fd59160a2",
+  "recorded_at": "2026-08-28T21:36:10Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass the retained-evidence and source-boundary disproofs.",
+  "workstream_id": "CC-013"
+}

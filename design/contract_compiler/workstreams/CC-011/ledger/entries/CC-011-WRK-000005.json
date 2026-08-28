@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc011-themed-sources",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler",
+    "observed": "All 65 then-current contract-compiler tests passed in 0.50 seconds. The focused CC-011, CC-018, and CC-010 affected set separately passed all 43 tests, and scoped Ruff passed.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:7734a6b7097f60db85f8587d5a2a48dab90afda56b974726d40998a1c001fc81",
+  "entry_id": "CC-011-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:402be63508a7a1127909debe2d8d2050276d8644d9c4b74b9100f6acedd99151",
+  "recorded_at": "2026-08-28T21:35:36Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the affected compiler regression gate.",
+  "workstream_id": "CC-011"
+}

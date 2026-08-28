@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc013-feature-inputs",
+  "data": {"artifacts": [], "command": "python -m pytest -q tests/contract_compiler/test_feature_isolation_inputs.py tests/contract_compiler/test_semantic_scenario_requirements.py", "observed": "Exactly 11 sorted cases own 18 unique source members. Nine preserve all CC-X01 source bytes, lengths, and digests; every case maps only to an existing CC-018 linkml-support-profile requirement; no separate input manifest, direct fact, corpus row, or expected output was created.", "phase": "SLICE", "result": "PASS"},
+  "entry_hash": "sha256:f57356c0a34a28d7b7b3e9459da95ba1163e4c22b89abfde6163237fd59160a2",
+  "entry_id": "CC-013-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:23d60a5da67613f9d8553ff86a14f58f4c7ae0ca7d8560752b2bc06aca08bbfb",
+  "recorded_at": "2026-08-28T21:36:09Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the bounded feature-input and semantic-requirement slice.",
+  "workstream_id": "CC-013"
+}

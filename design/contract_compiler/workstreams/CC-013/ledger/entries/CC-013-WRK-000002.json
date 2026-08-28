@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc013-feature-inputs",
+  "data": {"artifacts": [], "command": "python -m pytest -q tests/contract_compiler/test_feature_isolation_inputs.py", "observed": "All 7 fixed feature-input tests passed against the minimum 11-case, 18-file input tree, strict JSON loader, exact inventory, retained-byte locks, CC-018 requirement bindings, and source-only boundary.", "phase": "GREEN", "result": "PASS"},
+  "entry_hash": "sha256:23d60a5da67613f9d8553ff86a14f58f4c7ae0ca7d8560752b2bc06aca08bbfb",
+  "entry_id": "CC-013-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:ecf15799b6a1f968fd0aee20e1a5acf7f07981ee63aa0d2894fc7b65a2d0725f",
+  "recorded_at": "2026-08-28T21:36:08Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum feature-isolation input corpus.",
+  "workstream_id": "CC-013"
+}

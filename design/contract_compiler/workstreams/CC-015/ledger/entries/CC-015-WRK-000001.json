@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc015-neutral-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_inputs.py",
+    "observed": "The pre-input run produced exactly 4 expected failures: the exact source inventory was empty, the first compile-source operation was absent, and both source-content tests failed on the absent greenhouse baseline. No semantic mismatch or unrelated failure occurred.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:ea896d61e2ea49f6cd868a90f12a2e9a08a07c10981babfb4cc8581ecb556f03",
+  "entry_id": "CC-015-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-28T21:35:37Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the genuine absent-neutral-input RED.",
+  "workstream_id": "CC-015"
+}

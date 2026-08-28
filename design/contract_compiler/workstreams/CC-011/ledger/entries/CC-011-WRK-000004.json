@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc011-themed-sources",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_themed_source_corpus.py",
+    "observed": "Two duplicate-key mutations and five non-JSON YAML mutations refuse. Exact membership, symlink exclusion, import closure and acyclicity, semantic version projections, expected-output vocabulary exclusion, and the CC-D14 authorship boundary pass mechanically.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:402be63508a7a1127909debe2d8d2050276d8644d9c4b74b9100f6acedd99151",
+  "entry_id": "CC-011-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:2065daabc38d07a4b92edd3b2555de6ba69b8a52b64d84f48367849930a0a13d",
+  "recorded_at": "2026-08-28T21:35:35Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass raw-source and ownership-boundary disproofs.",
+  "workstream_id": "CC-011"
+}

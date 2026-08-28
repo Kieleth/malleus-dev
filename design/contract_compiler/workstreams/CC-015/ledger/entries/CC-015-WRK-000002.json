@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc015-neutral-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_inputs.py",
+    "observed": "All 4 fixed neutral-input tests passed against six greenhouse LinkML sources and six compile-source stimuli. A later independent semantic audit found one P1 in the explicit-default variant; the repaired final GREEN is retained by the later DISPROOF and REGRESSION entries.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:629d3f33f35e047d0d4d85885ddca7d57dd9b154da5b896bae233bbad18f88fd",
+  "entry_id": "CC-015-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:ea896d61e2ea49f6cd868a90f12a2e9a08a07c10981babfb4cc8581ecb556f03",
+  "recorded_at": "2026-08-28T21:35:38Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum neutral source and operation-input slice.",
+  "workstream_id": "CC-015"
+}

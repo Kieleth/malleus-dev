@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc015-neutral-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "Review the exact CC-015 card and committed artifact against package and release boundaries.",
+    "observed": "NOT_APPLICABLE. CC-015 adds repository-local conformance source and compile-source input fixtures, a fixed test, and verification report. It changes no distribution, installed data, compiler, adapter, runtime, public API, Docker image, or release claim.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:84c685e2b4eedc1ec977e6073b4948dfcf5be4dd70b0f6d46280ffb5a7403faa",
+  "entry_id": "CC-015-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a893ad938eecedd12a1e4de19642689bee15a44b1bfa6c1630b58ebd774b6896",
+  "recorded_at": "2026-08-28T21:35:42Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-015"
+}

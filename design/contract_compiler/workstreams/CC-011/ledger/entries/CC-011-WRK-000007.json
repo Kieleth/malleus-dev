@@ -1,0 +1,60 @@
+{
+  "actor_id": "worker:cc011-themed-sources",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 8646,
+        "path": "conformance/contract_compiler/v0/evidence/CC-011.json",
+        "sha256": "sha256:f0b7e91744fcd40b6787f82a6675daa0cdd5e7f39226c2b60d00bf19e62cf2e6"
+      },
+      {
+        "byte_length": 1821,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/activity.yaml",
+        "sha256": "sha256:66814b70e6756f8038afc9aa7b4344f07be509a08b952473cb410b1c59df9f54"
+      },
+      {
+        "byte_length": 1378,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/entities.yaml",
+        "sha256": "sha256:b9076cf744f59a1aefc5e2e5d347cb5e5f14481df5ba1e177ea19315a26c529f"
+      },
+      {
+        "byte_length": 1166,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/foundation.yaml",
+        "sha256": "sha256:2fe7824e048e474fb33be09239cd249b9303d307327d9e5ce2d9eca8cc535948"
+      },
+      {
+        "byte_length": 845,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.0/quiet_bell.yaml",
+        "sha256": "sha256:2b93cf1a25439d3d7dcc67556429d72e9783373b7283794a10f99137ed6c5a7a"
+      },
+      {
+        "byte_length": 880,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.1/quiet_bell.yaml",
+        "sha256": "sha256:5a7b56c07301426c21d4dc68356549450ac0a0f2fd40c92cb9cf6033aa469f80"
+      },
+      {
+        "byte_length": 1081,
+        "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.1.0/quiet_bell.yaml",
+        "sha256": "sha256:faeeb2e7013400a5930793f42058464e727715aa7658f35a6340b791e059c698"
+      },
+      {
+        "byte_length": 15184,
+        "path": "tests/contract_compiler/test_themed_source_corpus.py",
+        "sha256": "sha256:cdc501f9b2b161cc764cb6c4a44f795fb3796bd23b1f0dbfef16cca1e5a306cd"
+      }
+    ],
+    "command": "Verify commit c0644e54b8b2ce3f74e6e63bebf842c8fae91cab, tree b318f4844d405126296d4892bfe34298dac5023e, corrected evidence CC-011, exact artifact bytes, and independent audit.",
+    "observed": "Commit c0644e54b8b2ce3f74e6e63bebf842c8fae91cab has tree b318f4844d405126296d4892bfe34298dac5023e and exactly the 8 authorized artifacts bound here. Evidence CC-011 contains 11 PASS checks and binds its 7 non-evidence artifacts. Independent audit reported no P0-P2 and one P3 evidence wording defect; that wording was corrected before this commit, then the 7 bindings, 13 focused tests, and Ruff revalidated.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8533fb9c70fc6b15f99af64b3f9665d59a9e3d1760da38fdb9cf1decfca243f3",
+  "entry_id": "CC-011-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:063ca637d6a0f3a37b392404bef6349301cbd98dabd030f8595c6e0187ee6f14",
+  "recorded_at": "2026-08-28T21:35:38Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen CC-011 artifact and corrected evidence.",
+  "workstream_id": "CC-011"
+}

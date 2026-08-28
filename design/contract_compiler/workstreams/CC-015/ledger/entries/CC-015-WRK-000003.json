@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc015-neutral-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_inputs.py",
+    "observed": "The exact slice contains one greenhouse baseline, five bounded source variants, and six input-only COMPILE_SOURCE stimuli. Every stimulus binds a declared CC-018 scenario and requirement and a confined source path. No oracle, expected value, fact, artifact, diagnostic, decision, state digest, runtime-admission operation, compiler, or corpus publication is present.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:b6e3c4911af3992d8ffa4a5f9bda01d68a563a1da8bd19b92ea114bec03ac2da",
+  "entry_id": "CC-015-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:629d3f33f35e047d0d4d85885ddca7d57dd9b154da5b896bae233bbad18f88fd",
+  "recorded_at": "2026-08-28T21:35:39Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the bounded neutral-domain input slice.",
+  "workstream_id": "CC-015"
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc011-themed-sources",
+  "data": {
+    "artifacts": [],
+    "command": "Review the exact CC-011 card and committed artifact against compiler, runtime, package, publication, and release boundaries.",
+    "observed": "NOT_APPLICABLE. CC-011 adds repository-local authored conformance source, one fixed test, and verification evidence, with no compiler, resolver, runtime, public API, distribution, installed data, Docker image, public asset, publication, or release claim.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:063ca637d6a0f3a37b392404bef6349301cbd98dabd030f8595c6e0187ee6f14",
+  "entry_id": "CC-011-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:7734a6b7097f60db85f8587d5a2a48dab90afda56b974726d40998a1c001fc81",
+  "recorded_at": "2026-08-28T21:35:37Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-011"
+}

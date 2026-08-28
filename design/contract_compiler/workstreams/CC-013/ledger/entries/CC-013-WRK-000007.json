@@ -1,0 +1,40 @@
+{
+  "actor_id": "worker:cc013-feature-inputs",
+  "data": {
+    "artifacts": [
+      {"byte_length": 9589, "path": "conformance/contract_compiler/v0/evidence/CC-013.json", "sha256": "sha256:5b4a6ffcb481ada888b83519f80973c9d8ffe8bbf24a7d3a162234e56dcf6796"},
+      {"byte_length": 142, "path": "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/owner.json", "sha256": "sha256:9a59cd18d040be262b729609405bf6ac4e04c83426be7788286afd17c6b2cd11"},
+      {"byte_length": 210, "path": "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/redeclaration.json", "sha256": "sha256:f6762a2754b75175e152b58492e61ce3f8ba54edf484cb9bff9fbb6cdd36744d"},
+      {"byte_length": 277, "path": "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/adopter.json", "sha256": "sha256:1983347e771638c41dea08a1771bcea11cf155a552691393c1e816c588bf7232"},
+      {"byte_length": 192, "path": "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/owner.json", "sha256": "sha256:b397043c3ab3b603ae59c3af4c68f9fe203af7fdd1eec891f3609a7dbe4801b5"},
+      {"byte_length": 177, "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/default_range_explicit.json", "sha256": "sha256:c4bd65697241cfa5f1e539ca204723c2c3feaf6bb5f216a1229b21287d588454"},
+      {"byte_length": 350, "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/numeric_bounds_equivalent_lexemes.json", "sha256": "sha256:7c96f5477ec81d6f300574e2874255f7f241b1362b695b8b75c4365216c66175"},
+      {"byte_length": 340, "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_baseline.json", "sha256": "sha256:9fab5e8553dddbc02b4816967d7a1d6d09452c26fe393aa561b6550e05239918"},
+      {"byte_length": 336, "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_changed.json", "sha256": "sha256:f8e59eb6eda21006ab1b95e55b41116376eb37f53db15556ad560488e2a79006"},
+      {"byte_length": 358, "path": "conformance/contract_kernel/v0/feature_cases/inputs/positive/valid_explicit_false.json", "sha256": "sha256:1ebe5f0dc472c57ba8868aea8798fe8c870616e936617e6e452d899269d479ab"},
+      {"byte_length": 301, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/attribute_slot_usage.json", "sha256": "sha256:3bb785cb41ca321076fc9e345f72e98e66fd456864904b2b74170fbb78e90bbd"},
+      {"byte_length": 345, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ab.json", "sha256": "sha256:360a04667c2358ee9ea5a59ede7208fb1b8ddb5a97a3b5800cd24e4ae0fc71fc"},
+      {"byte_length": 345, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ba.json", "sha256": "sha256:f5abfc71242cd22e14ed8a83073c908c569690ce0cb50811d1d39ef72c4b81aa"},
+      {"byte_length": 160, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/default_range.json", "sha256": "sha256:114309aa47a174861e091d6ce4454f46a21982b9cdc01cb295d8bf26e4318866"},
+      {"byte_length": 317, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/explicit_false.json", "sha256": "sha256:b6067d9ed6d57d5c2d59324990ed151975c66f826d4596bb7fb6d8dca0bc7a8c"},
+      {"byte_length": 341, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/numeric_bounds.json", "sha256": "sha256:310927cfee843803cced8933ada89d678f3cef385c7a9393f8b882e6c6e0921b"},
+      {"byte_length": 378, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/parent_mixin_precedence.json", "sha256": "sha256:058dba6e97e138ccdf75f0ae928f289b261f6cd21f89f6f0f9ceb464032f0d37"},
+      {"byte_length": 246, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/repeated_mixin.json", "sha256": "sha256:0d39ee50aa8f475c1abdacbba395520014a5d95341734ee96b069598df6a3b1b"},
+      {"byte_length": 166, "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/simple_parity.json", "sha256": "sha256:88b64ac3d7bff49d8a04d7b9b428aa1fddb57311ffdece661c5b01e1ef64efbe"},
+      {"byte_length": 10562, "path": "tests/contract_compiler/test_feature_isolation_inputs.py", "sha256": "sha256:f5c039c8fa3fd7b89599e61ccc443066df03457e4be6ec297c6d6740b4d4c109"}
+    ],
+    "command": "Verify base c0644e54b8b2ce3f74e6e63bebf842c8fae91cab, artifact commit 515a5688aced52d949eec4632d04330e9317f78f, evidence CC-013, final independent audit, affected tests, and exact committed bytes.",
+    "observed": "Artifact commit 515a5688aced52d949eec4632d04330e9317f78f is based directly on c0644e54b8b2ce3f74e6e63bebf842c8fae91cab, has tree 858465a8fd662094f1f40a39a5625c0fe33bb7f6, and contains exactly the 20 authorized artifacts above. The 9,589-byte report was recorded at 2026-08-28T21:52:18Z, verified 19 artifacts and 10 PASS checks, and 7 focused and 64 affected tests passed. Final independent audit verdict: Clean. No P0, P1, P2, or P3 findings.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:9dfd665cf718ad1537fab5316e022f23b92a9a69b2a6102b91ad996abb800ab9",
+  "entry_id": "CC-013-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:aa3ada3fb39b870ecfee1543cdf8918f1c0d29e8938d95610c3490bca95af4c6",
+  "recorded_at": "2026-08-28T21:54:29Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen CC-013 artifact and worker evidence.",
+  "workstream_id": "CC-013"
+}

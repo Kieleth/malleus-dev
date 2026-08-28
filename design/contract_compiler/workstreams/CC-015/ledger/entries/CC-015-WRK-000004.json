@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc015-neutral-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_inputs.py && python -m ruff check tests/contract_compiler/test_neutral_domain_inputs.py",
+    "observed": "Independent audit found one P1: explicit-defaults.yaml authored required=true on the global specimen_id Slot, changing its required=false Slot fact instead of merely exposing the identifier-induced effective SlotUse value. The repair removed that member and its test pop expectation, left effective SlotUse required=true implicit, and then passed all 4 focused tests plus Ruff. Exact inventory, strict JSON/YAML loading, confined paths, CC-018 references, bounded deltas, and absence of result fields remained enforced.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ee36e4fbccfbf3af69a2a0db4091089af74441d6abd0a35b41c9656923fc0cf7",
+  "entry_id": "CC-015-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b6e3c4911af3992d8ffa4a5f9bda01d68a563a1da8bd19b92ea114bec03ac2da",
+  "recorded_at": "2026-08-28T21:35:40Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Repair the audited global-Slot versus effective-SlotUse defect.",
+  "workstream_id": "CC-015"
+}

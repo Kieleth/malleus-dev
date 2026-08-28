@@ -1,0 +1,13 @@
+{
+  "actor_id": "worker:cc013-feature-inputs",
+  "data": {"artifacts": [], "command": "Review the exact CC-013 card and committed artifact against package and release boundaries.", "observed": "NOT_APPLICABLE. CC-013 adds repository-local source stimuli, one fixed test, and verification evidence, with no distribution, installed data, public API, compiler, runtime, artifact format, corpus publication, Docker image, or release claim.", "phase": "PACKAGE", "result": "NOT_APPLICABLE"},
+  "entry_hash": "sha256:aa3ada3fb39b870ecfee1543cdf8918f1c0d29e8938d95610c3490bca95af4c6",
+  "entry_id": "CC-013-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:049be6fef5bc79c4237d83917333d43db0424ac8f1ba54de2a393763aecc79b8",
+  "recorded_at": "2026-08-28T21:36:12Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-013"
+}
