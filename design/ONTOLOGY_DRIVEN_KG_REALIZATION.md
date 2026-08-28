@@ -9,7 +9,7 @@ Decision authority: author
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
 contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
-`OD-006`, and `OD-011` through `OD-014`
+`OD-006`, `OD-008`, and `OD-011` through `OD-014`
 
 Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, and 2026-08-26
 
@@ -19,10 +19,10 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 17,
-`sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`
+revision 18,
+`sha256:2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068`
 
-Evidence cutoff: 2026-08-26
+Evidence cutoff: 2026-08-27
 
 Private implementation-audit snapshot:
 `sha256:9b62ed651e0b571a3301da559494d55fd9fe35f7790016a64cb163f43214f47a`
@@ -1222,7 +1222,7 @@ backend, broad workload quality, or public capability. Those remain in
     conformance suite.
 
 The author accepted the contract compiler directions on 2026-08-24, the exact
-compiler baseline on 2026-08-25, and eight blocking policies on 2026-08-26:
+compiler baseline on 2026-08-25, and nine blocking policies on 2026-08-26:
 
 1. `AD-001` selects `EffectiveContract` as the public runtime root. The API may
    break before 1.0, but implementation promotion remains gated by conformance.
@@ -1267,6 +1267,11 @@ compiler baseline on 2026-08-25, and eight blocking policies on 2026-08-26:
     composition per ledger epoch, and a governed-graph-only structural case.
     Independent role heads, wire encodings, migration, and stable public fact
     IDs remain deferred.
+16. `OD-008` selects one closed exact-location LinkML v0 support profile,
+    strict JSON-shaped YAML, a pinned seven-name builtin map, explicit
+    defaults and provenance, the immutable D05 seed plus one flat exactly-one
+    extension, and internal content identities. Public compiler promotion
+    remains with `OD-009`.
 
 `OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
@@ -1370,6 +1375,12 @@ cc:OD-006 rdf:type mfg:DecisionRecord ;
     mfg:selects mfg:ThreeRoleClosedContractCompositionProfile ;
     mfg:status mfg:AcceptedDesign .
 
+cc:OD-008 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-26" ;
+    mfg:selects mfg:MalleusLinkMLSupportProfileV0 ;
+    mfg:status mfg:AcceptedDesign .
+
 cc:OD-011 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
     mfg:decisionDate "2026-08-26" ;
@@ -1433,6 +1444,7 @@ mfg:AtomicOntologyPoweredCanonicalFactContract rdf:type mfg:Boundary ;
     mfg:binds mfg:ExactNonExpressionSeedContractMetamodel ;
     mfg:binds mfg:AtomicCanonicalJSONFactProfileV0 ;
     mfg:binds mfg:AbsoluteIdentifierExactUnicodeSymbolPolicyV0 ;
+    mfg:binds mfg:LinkMLV0SlashQualifiedSymbolPolicy ;
     mfg:binds mfg:ContractMetamodelSemanticAuthorityOverJSONBoundary ;
     mfg:binds mfg:ClosedThreeMemberCanonicalJSONFactWireBoundary ;
     mfg:binds mfg:CanonicalDecimalLexicalNumericObjectBoundary ;
@@ -1440,7 +1452,7 @@ mfg:AtomicOntologyPoweredCanonicalFactContract rdf:type mfg:Boundary ;
     mfg:binds mfg:StructuralIdentityAndExternalProvenanceBoundary ;
     mfg:binds mfg:FrontendDirectFactConformanceOnlyParityBoundary ;
     mfg:binds mfg:ExactSeedMetamodelBootstrapTrustBoundary ;
-    mfg:binds mfg:ExpressionVocabularyDeferredToOD008Boundary ;
+    mfg:binds mfg:ExpressionCapableContractMetamodelV0 ;
     mfg:binds mfg:AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary ;
     mfg:binds mfg:NoGenericDefaultValueOrRuntimeDefaultBoundary ;
     mfg:status mfg:AcceptedDesign .
@@ -1452,6 +1464,66 @@ mfg:ExactNonExpressionSeedContractMetamodel rdf:type mfg:ContractMetamodel ;
     mfg:binds mfg:ExactScalarAndSeedPrimitiveFactRule ;
     mfg:binds mfg:ExactWholeSetSeedFactInvariant ;
     mfg:binds mfg:SourceToFactCompletenessSeparateConformanceBoundary ;
+    mfg:identifiedBy <urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b> ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FlatExactlyOneExpressionExtensionV0 rdf:type mfg:ContractMetamodel ;
+    mfg:binds mfg:ExactlyOneGroupFactRule ;
+    mfg:binds mfg:ExactlyOneAlternativeFactRule ;
+    mfg:binds mfg:SlotConditionFactRule ;
+    mfg:binds mfg:FlatExactlyOneWholeSetInvariant ;
+    mfg:identifiedBy <urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:99527d21040cbdda9dd7c579af7f40af8645de9b5f4b1e8ba28b40ddff7d53e6> ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExpressionCapableContractMetamodelV0 rdf:type mfg:ContractMetamodel ;
+    mfg:binds mfg:ExactNonExpressionSeedContractMetamodel ;
+    mfg:binds mfg:FlatExactlyOneExpressionExtensionV0 ;
+    mfg:binds mfg:ClosedSeedExpressionRuleUnionCompositionV0 ;
+    mfg:identifiedBy <urn:malleus:contract-metamodel:expression-capable:v0:sha256:65aae23b7a0892a4d2ae2b5adc6888f1ddd39c94ce03f412d50a6a5ccd5d0964> ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactlyOneGroupFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExactlyOneAlternativeFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SlotConditionFactRule rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FlatExactlyOneWholeSetInvariant rdf:type mfg:Invariant ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ClosedSeedExpressionRuleUnionCompositionV0 rdf:type mfg:Boundary ;
+    mfg:supersedes mfg:ExpressionVocabularyDeferredToOD008Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ClosedExactLocationClassificationV0 rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StrictJSONShapedYAMLSourceGrammarV0 rdf:type mfg:SupportProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:TrustedLinkML1_11_1SevenBuiltinMapV0 rdf:type mfg:SupportProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkML1_11_1ElaborationAndDefaultProfileV0 rdf:type mfg:SupportProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LosslessSourceDeclarationAndProvenanceProfileV0 rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV0SlashQualifiedSymbolPolicy rdf:type mfg:SymbolIdentityPolicy ;
+    mfg:identifiedBy <urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0> ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:RetainedCorpusWholeSourceClosureV0 rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:FrontendAdapterConstructionInjectionDeferredBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NoGeneralLinkMLSupportClaimBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:AtomicCanonicalJSONFactProfileV0 rdf:type mfg:FactCanonicalizationProfile ;
@@ -1845,17 +1917,17 @@ mfg:FutureForkSeparateGovernedBaselineRevisionBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 ```
 
-Performed on 2026-08-26:
+Performed on 2026-08-27:
 
 1. The 28 Turtle blocks across the foundation, pillar, GraphRecipe profile,
    checkpoint, and TDD experiment projections parsed as
-   1,563 RDF triples.
+   1,630 RDF triples.
 2. [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl) parsed as
-   the same 1,563 triples. Both directed set differences
+   the same 1,630 triples. Both directed set differences
    were empty.
 3. The canonical `dependsOn` graph has 103 nodes and 105 edges, with no directed
    dependency cycle.
-4. All 314 subjects carrying `mfg:status` have exactly one distinct status.
+4. All 333 subjects carrying `mfg:status` have exactly one distinct status.
    The 0.11 temporal slice has the required three dependency edges, two
    implemented capabilities, two open obligations, and one implemented
    observation binding all four.
@@ -1867,12 +1939,12 @@ Performed on 2026-08-26:
    "2026-08-24"`, one selected object, and `status AcceptedDesign`. `AD-002`
    remains represented only by `OKG-D012`. `OD-012` has the same invariants
    with `decisionDate "2026-08-25"` and selects exactly the R3 release baseline.
-7. `OD-002` through `OD-006`, `OD-011`, `OD-013`, and `OD-014` have the same
+7. `OD-002` through `OD-006`, `OD-008`, `OD-011`, `OD-013`, and `OD-014` have the same
    decision invariants with `decisionDate "2026-08-26"` and select exactly the
-   eight accepted policy objects. Those objects bind the exact adoption,
+   nine accepted policy objects. Those objects bind the exact adoption,
    divergence classification, hard-break, atomic-fact, closed-composition,
-   resolver, packaging, and themed publication boundaries recorded by the
-   decision workbook.
+   closed support profile, resolver, packaging, and themed publication
+   boundaries recorded by the decision workbook.
 8. The `OD-012` R3 baseline retains the exact R2 release, Python, pip, OCI,
    ANTLR, and setuptools coordinates. It additionally binds the exact
    `prefixcommons` input and local-version derivation, package and BSD 3-Clause
@@ -1893,10 +1965,10 @@ Performed on 2026-08-26:
 12. The active report identity supersedes three retained identities. Each
    addressable refresh observation binds adjacent identities to the hard guard.
    Both workflow-step nodes bind the Ruff gate and the 40-test fixture.
-13. The canonical body contains 1,563 unique, lexically sorted N-Triples. Its
+13. The canonical body contains 1,630 unique, lexically sorted N-Triples. Its
    SHA-256 is
-   `4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`, and every
-   owned Markdown graph reference names revision 17 and that digest.
+   `2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068`, and every
+   owned Markdown graph reference names revision 18 and that digest.
 14. All 24 relative Markdown links in the five owned
     Markdown documents resolve locally.
 15. None of the five owned Markdown documents or the canonical Turtle artifact
@@ -1905,5 +1977,5 @@ Performed on 2026-08-26:
     regression test report no error.
 
 The graph projection, invariant, link, privacy, and whitespace checks were
-rerun before revision 17 was frozen. Existing GraphRecipe implementation
+rerun before revision 18 was frozen. Existing GraphRecipe implementation
 evidence was not reissued by this design-only promotion.

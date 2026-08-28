@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 17
+## Accepted directions in canonical graph revision 18
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -465,6 +465,13 @@ The immutable CC-X01 cases are classified exactly:
 | `explicit_false` | `EQUAL` | Preserve explicit false |
 | `default_range` | `LINKML` | Materialize the LinkML default explicitly with provenance |
 | `attribute_slot_usage` | `LINKML` | Use pinned LinkML meaning |
+
+`EQUAL` and `LINKML` classify the measured elaboration projection. They do not
+promise that the later closed support profile and contract metamodel admit the
+whole source. In particular, `explicit_false` still proves that the effective
+`SlotUse` preserves authored `false`, while `OD-008` refuses that complete
+source because its separate global String-valued `Slot` authors
+`inlined=true`, which violates the immutable D05 range invariant.
 
 Future public adapter code must document its supported declarations,
 refusals, defaults, neutral outputs, and provenance in docstrings. Sphinx
@@ -571,11 +578,12 @@ The parent-plus-`usesMixin` graph is acyclic. Every `usesMixin` target has
 The Scalar `typeof` graph is acyclic and terminates in exactly one seed
 primitive. Every non-seed identifier target resolves in the same fact set.
 
-Bounds are legal only when `valueRange` resolves through a Scalar chain to
-`Integer` or `Float`, and `minimum` cannot exceed `maximum`. `equalsString` is
-legal only for a String-resolving or Enum range. `inlined=true` is legal only
-for a Class range. `valuePresence=ABSENT` conflicts with `required=true` and
-with `equalsString`.
+Bounds are legal only when `valueRange` directly names `Integer` or `Float`, or
+resolves through a Scalar chain terminating there, and `minimum` cannot exceed
+`maximum`. `equalsString` is legal only when `valueRange` directly names
+`String` or an Enum, or resolves through a Scalar chain terminating in
+`String`. `inlined=true` is legal only for a Class range.
+`valuePresence=ABSENT` conflicts with `required=true` and with `equalsString`.
 
 A `Slot` can be an authoritative module-global declaration or a deterministic
 qualified class-local declaration, so the accepted `attribute_slot_usage`
@@ -649,8 +657,9 @@ lowercase SHA-256 digest of the exact sorted canonical fact-array bytes. Both
 envelopes bind the exact content-addressed metamodel identity, candidate
 canonicalization-profile identity, and exact symbol-policy identity. These
 digests are computed, never supplied as a fourth fact member. They are internal
-candidate identities only. Stable public fact IDs remain blocked on `OD-008`
-and require a later governed promotion.
+candidate identities only. `OD-008` completes their expression-capable
+metamodel inputs. Stable public identifiers still require the promotion
+decision at `OD-009`.
 
 #### Whole-set validation and provenance
 
@@ -695,10 +704,9 @@ unclassified expression. Record and member order canonicalize to the same
 bytes. An adapter that cannot preserve an exact supported numeric value refuses
 rather than rounding.
 
-Only expression vocabulary remains with `OD-008`, which also maps source fields
-to this exact seed and any separately governed expression extension. It cannot
-silently change the seed without a new metamodel version. No `ChoiceGroup` or
-other expression predicate is accepted here. Bootstrap
+`OD-008` now maps source fields to this exact seed and adds one separately
+versioned, closed expression extension. It does not change the seed. No
+expression predicate outside that exact extension is accepted. Bootstrap
 trusts one exact versioned seed `ContractMetamodel` at the boundary; it makes no
 recursive self-validation or shipped self-hosting claim.
 `NormativeAdmissionProfile` separately owns missing, null, reference, context,
@@ -778,7 +786,8 @@ preservation, inferred current role, or optional slot in the v0 full
 composition. These are candidate logical identity inputs, not a persisted
 record, consumer-bundle schema, artifact envelope, canonical byte grammar, or
 stable public identifier. `CC-D16`, `CC-R07`, and `CC-W01` retain those wire
-decisions. Stable public fact identities remain governed by open `OD-008`.
+decisions. `OD-008` completes the candidate fact-identity inputs; `OD-009`
+still owns public promotion and identifier publication.
 
 One physical artifact may package all three complete role contracts. The split
 is semantic modularity, not three packages, installations, processes, ledgers,
@@ -848,8 +857,8 @@ Whole-composition validation refuses atomically; no subset is accepted.
 
 `OD-006` defines role and composition structure only. `OD-007` owns governance
 storage topology; `OD-010` owns endpoint, reference, context, and stateful
-admission semantics; `OD-008` owns source-field and expression classification
-and the remaining stable-public-fact-identity gate; `OD-009` owns promotion;
+admission semantics; `OD-008` owns source-field and expression classification;
+`OD-009` owns public promotion and identifier publication;
 `CC-D16` owns the consumer-bundle grammar; `CC-R07` owns the reloadable
 artifact envelope; and `CC-W01` owns persisted wire, migration, and exact epoch
 encoding. This decision creates no implementation, ontology YAML, package,
@@ -857,6 +866,510 @@ artifact, bundle, public API, or migration mechanism.
 
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-006`. `CC-D06` is complete.
+
+### OD-008: closed LinkML v0 support profile
+
+Decision state: ACCEPTED, exact KISS subset and flat exactly-one extension, 2026-08-26
+
+Malleus does not claim general LinkML support. The first compiler adapter accepts
+one closed, versioned subset exercised by current Malleus semantics and the
+governed conformance corpus. This keeps the neutral facts deterministic, keeps
+LinkML semantics out of the runtime, and keeps another frontend replaceable at
+the same neutral boundary. Fail-closed classification also makes an upstream
+LinkML feature addition visible instead of silently changing a contract.
+
+Every source member is classified by its exact location. The four classes are
+exhaustive and disjoint:
+
+* `ENFORCED` changes elaboration or emits ordinary semantic facts.
+* `IDENTITY_ONLY` establishes a module, declaration, reference, or authoritative
+  owner, but emits no fact solely for that source member.
+* `ANNOTATION_ONLY` is retained as queryable projection and provenance metadata
+  and is excluded from semantic facts and `EffectiveContract` identity.
+* `REJECTED` refuses the whole compilation.
+
+Anything absent from the exact table at its exact location is `REJECTED`.
+Moving an accepted field or annotation to another location does not preserve
+support. A parser branch alone cannot expand this profile.
+
+#### Exact location classification
+
+The notation `map key` means the authored key identifying one declaration or
+condition. Reference values inside an enforcing container remain
+`IDENTITY_ONLY`, while the container's structure is `ENFORCED`.
+
+| Exact source location | ENFORCED | IDENTITY_ONLY | ANNOTATION_ONLY | REJECTED |
+|---|---|---|---|---|
+| schema root | `types`, `enums`, `slots`, `classes`, `imports`, `default_range` | `id`, `prefixes`; each prefix key and value; each import reference; the `default_range` reference | `name`, `version`, `title`, `description` | every other field; every annotation |
+| `types.<type>` | `typeof` | declaration map key; `typeof` reference | `uri`, `description` | every other field; every annotation |
+| `enums.<enum>` | `permissible_values` | declaration map key | `description` | every other field; every annotation |
+| `enums.<enum>.permissible_values.<value>` | permissible-value map key | none | `description` | every other field; every annotation |
+| `slots.<slot>` global declaration | `range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence` | declaration map key; `range` reference; `annotations.adopts` only for the exact imported global-slot redeclaration authorized by `OD-002` | `description` | every other field; every other annotation, including `annotations.retires` |
+| `classes.<class>` | `is_a`, `mixin`, `mixins`, `abstract`, `slots`, `attributes`, `slot_usage`, `exactly_one_of` | declaration map key; references in `is_a`, `mixins`, and `slots` | `class_uri`, `description` | every other field; every annotation |
+| `classes.<class>.attributes.<slot>` | `range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence` | local declaration map key; `range` reference | `description` | every other field; every annotation |
+| `classes.<class>.slot_usage.<slot>` | `range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence` | authoritative slot reference map key; `range` reference | `description` | every other field; every annotation |
+| `classes.<class>.exactly_one_of` | flat nonempty alternative sequence | none | none | empty sequence; `any_of`, `all_of`, `none_of`; nesting; every other expression field |
+| one `exactly_one_of` alternative | one nonempty `slot_conditions` map | each `slot_conditions` map key is an authoritative qualified slot reference | none | empty alternative; every other field; every annotation |
+| one `slot_conditions.<slot>` condition | `required`, `equals_string`, `value_presence`, with at least one present | the authoritative slot reference inherited from its map key | none | every other field; every annotation; nested expression |
+
+At every location, unknown fields and unknown annotations refuse. In
+particular, `annotations.retires`, `range_expression`, `rules`, `unique_keys`,
+patterns, cardinality constructs outside the exact table, `any_of`, `all_of`,
+`none_of`, and all broad or unearned LinkML constructs refuse. Repeated or
+conflicting mixins refuse. Duplicate declarations refuse except for the exact
+`OD-002` adopted imported global-slot redeclaration.
+
+#### Exact raw source grammar and symbols
+
+The adapter inspects the duplicate-key-preserving typed YAML source before it
+constructs any LinkML object. V0 accepts exactly one mapping document and no
+YAML directive or document-boundary marker. Its value tree is JSON-shaped.
+Duplicate mapping keys, aliases, anchors, merge keys, all explicit YAML tags,
+including core tags such as `!!str`, non-string mapping keys, and implicit
+LinkML coercion refuse. At a permissible-value body,
+only the empty plain scalar after `:` and lowercase plain `null` denote the same
+empty declaration. `~`, title-case or uppercase null, and null anywhere else
+refuse. These raw value rules are exact:
+
+| Exact source member | Required raw value |
+|---|---|
+| document and every declaration, attribute, slot-usage, alternative, condition, annotation, or description-bearing body | mapping; never null |
+| schema `id` and `name` | required nonempty strings |
+| `version`, `title`, every `description`, `class_uri`, type `uri`, and `equals_string` | string when present |
+| `prefixes` | mapping from an ASCII identifier key to a nonempty absolute-IRI string |
+| `imports`, class `mixins`, and class `slots` | sequence of nonempty reference strings; a scalar is not promoted to a sequence |
+| `types`, `enums`, `slots`, `classes`, `attributes`, `slot_usage`, `permissible_values`, and `slot_conditions` | mapping with the location-specific key and body rules |
+| `default_range`, `typeof`, `range`, and `is_a` | one nonempty reference string |
+| `mixin`, `abstract`, `required`, `multivalued`, `identifier`, and `inlined` | raw lowercase `true` or `false`; quoted, title-case, and YAML-only Boolean spellings refuse |
+| `minimum_value` and `maximum_value` | one finite JSON-number lexical scalar under the grammar below; retain the exact source lexeme |
+| `value_presence` | string exactly `PRESENT` or `ABSENT` |
+| `exactly_one_of` | nonempty sequence of alternative mappings |
+| `annotations` at the one adopted-slot location | mapping exactly `adopts: true`, with literal Boolean `true` |
+| one permissible-value body | raw empty scalar or lowercase `null`, empty mapping, or mapping exactly `description: <string>` |
+
+The exact bound lexeme grammar is:
+
+```text
+number = ["-"] integer [fraction] [exponent]
+integer = "0" | nonzero-digit {digit}
+fraction = "." digit {digit}
+exponent = ("e" | "E") ["+" | "-"] digit {digit}
+```
+
+The token contains no whitespace. It is read from the raw source before YAML
+tag resolution, so `5e0` is numeric even though PyYAML 6.0.3 would tag it as a
+string. Canonicalization uses D05 arbitrary-precision decimal rules, never a
+binary float.
+
+| Lexeme class | Exact examples | Result |
+|---|---|---|
+| accepted | `0`, `-0`, `5`, `5.0`, `5e0`, `5E-2`, `1e+3`, `-12.34` | parse exactly, then canonicalize under D05 |
+| refused | `+1`, `01`, `0x10`, `1_0`, `1:20`, `.5`, `1.`, `.inf`, `.nan`, quoted `"1"` | not in the exact grammar |
+
+Declaration, class-local attribute, and prefix keys use one closed ASCII
+grammar: the first character is a letter or underscore and every later
+character is a letter, digit, or underscore. A permissible-value key is any
+nonempty string and emits that exact string as `cf:enumValue`.
+
+Schema `id` is the semantic module IRI. Schema IDs and prefix values must be
+absolute RFC 3987 IRIs with a nonempty scheme. A literal code point whose
+Unicode general category is `Cc` or `Cs` refuses before format validation.
+Schema `id` additionally has no query, fragment, or trailing slash.
+A module-global declaration key `K` has the
+qualified symbol `schema-id + "/" + K`. A class-local attribute key `A` on
+qualified class `C` has the qualified symbol `C + "/" + A`. These are exact
+string joins. There is no escaping, case folding, Unicode normalization, path
+normalization, or caller-selected base. The key grammar makes the slash
+boundaries unambiguous.
+
+A bare reference resolves to exactly one authoritative declaration in the
+retained import closure. A prefixed reference expands by exact concatenation of
+the retained prefix value and suffix, then must resolve to that same
+authoritative declaration. Unknown, ambiguous, or differently qualified
+references refuse. The D02 adopted imported global slot is the only duplicate
+ownership exception. `name` and `version` remain module metadata only: changing
+either preserves qualified semantic symbols, facts, and candidate fact
+identities while changing source attestation. Prefixes affect semantic identity
+only when a retained reference uses them.
+
+The exact internal symbol-policy identity bound by D05 candidate fact and
+fact-set envelopes is
+`urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0`. It covers the
+key grammar, slash joins, prefix expansion, authoritative resolution, and D02
+ownership exception above. It is an internal v0 identity, not D09 public
+namespace or stable-ID promotion.
+
+Each permissible-value key is `ENFORCED` because it emits one `cf:enumValue`
+fact. Null means an empty value declaration, not a semantic null. Null is
+rejected everywhere else in this profile.
+
+#### Trusted LinkML builtins
+
+The exact authored import `linkml:types` selects one trusted builtin lookup map.
+It does not admit upstream `types.yaml` as ordinary user source. The map is
+bound to `linkml-runtime==1.11.1`, retained root wheel
+`linkml_runtime-1.11.1-py3-none-any.whl` with SHA-256
+`b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da`,
+member `linkml_runtime/linkml_model/model/schema/types.yaml`, exactly 7,296
+member bytes, and member SHA-256
+`1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00`.
+A mismatch refuses. D11 provenance retains the authored import, exact resolved
+source, wheel identity, member path, length, digest, and profile identity.
+
+The case-sensitive map has exactly seven names:
+
+| LinkML source name | Neutral target | Additional facts when referenced |
+|---|---|---|
+| `string` | `cf:String` | none; trusted D05 seed target |
+| `integer` | `cf:Integer` | none; trusted D05 seed target |
+| `float` | `cf:Float` | none; trusted D05 seed target |
+| `boolean` | `cf:Boolean` | none; trusted D05 seed target |
+| `datetime` | `cf:DateTime` | none; trusted D05 seed target |
+| `date` | `https://w3id.org/linkml/types/date` | `rdf:type cf:Scalar`; `cf:typeof cf:String` |
+| `uri` | `https://w3id.org/linkml/types/uri` | `rdf:type cf:Scalar`; `cf:typeof cf:String` |
+
+`date` and `uri` retain distinct range identities without claiming LinkML
+lexical validation. Their two ordinary Scalar facts appear in the same fact set
+when referenced. Every other upstream builtin or declaration refuses unless it
+is separately declared by valid ordinary source under this profile.
+
+#### Exact neutral mapping
+
+Schema containers and import closure establish the declarations to compile.
+The exact v0 omitted-value matrix is:
+
+| Effective location | Omitted field | Materialized result |
+|---|---|---|
+| class declaration | `mixin` | `cf:isMixin=false` |
+| class declaration | `abstract` | `cf:abstract=false` |
+| global slot, local attribute, or effective `SlotUse` | `range` | schema `default_range`; if that is absent, seed `String` |
+| global slot, local attribute, or effective `SlotUse` | `required` | `cf:required=false` |
+| global slot, local attribute, or effective `SlotUse` | `multivalued` | `cf:multivalued=false` |
+| global slot, local attribute, or effective `SlotUse` | `identifier` | `cf:identifier=false` |
+| supported `Slot` or `SlotUse` with non-Class range | `inlined` | `cf:inlined=false` |
+| supported `Slot` or `SlotUse` with Class range whose target has exactly one effective identifier slot | `inlined` | `cf:inlined=false` |
+| supported `Slot` or `SlotUse` with Class range whose target has no effective identifier slot | `inlined` | `cf:inlined=true` |
+| type declaration | `typeof` | no default; refuse incomplete Scalar |
+| any supported constraint location | `equals_string`, `minimum_value`, `maximum_value`, `value_presence` | no fact |
+| class declaration | `is_a`, `mixins`, `slots`, `attributes`, `slot_usage`, `exactly_one_of` | no relation or expression fact |
+
+The pinned LinkML identifier-based `inlined` derivation runs during exact
+elaboration, before ordinary missing-value fill. More than one effective
+identifier slot on the target Class refuses. Explicit `inlined` remains
+explicit; D05 still refuses `inlined=true` on a non-Class range.
+
+Defaults apply only after exact LinkML 1.11.1 elaboration. The class-ancestor
+closure uses this exact pinned traversal:
+
+```text
+ancestors = [class]
+stack = [class]
+visited = []
+while stack is not empty:
+  current = stack.pop_last()
+  visited.append(current)
+  for parent in authored_mixins_then_is_a(current):
+    if parent is absent from visited and ancestors:
+      stack.append(parent)
+      ancestors.append(parent)
+apply slot_usage for each class in reverse(ancestors)
+```
+
+Every parent resolves first and the closure must be acyclic. A local attribute
+is the base instead of a same-named global slot. The base declaration is copied,
+then each applicable `slot_usage` source in the exact reversed closure updates
+it, ending with the class itself. Explicit `false` is present and overrides.
+Repeated authored mixins and distinct explicitly present single-valued
+`ENFORCED` values for the same slot field from two applicable mixin sources
+refuse before order can pick a winner. Annotation-only differences never cause
+that refusal. Every authored description remains separately retained, and no
+effective semantic description winner is selected. Numeric bounds are the one
+merge exception: elaboration
+chooses the greatest minimum and least maximum across base and applicable
+sources, then applies D05 range and ordering invariants. Effective `identifier=true` forces
+effective `required=true`; an explicit `required=false` on that same effective
+slot refuses as a contradiction. Every applied or filled default is
+an ordinary D05 fact with separate derivation provenance. Explicit `false` is
+preserved. A defaulted value and the equivalent explicit value produce the
+same semantic fact and candidate fact identity, but different source and
+provenance attestations.
+
+The immutable CC-X01 `explicit_false` vector remains `EQUAL` evidence for its
+measured effective `SlotUse`, including all four authored `false` values. The
+whole source nevertheless refuses in D08 because its separate global Slot has
+String range with `inlined=true`, forbidden by D05. A distinct positive vector
+uses a String global Slot and class `slot_usage` with literal `false` for
+`required`, `multivalued`, `identifier`, and `inlined`; it compiles to the same
+four false facts with exact explicit-value provenance.
+
+The distinct positive vector is exact:
+
+```yaml
+id: https://example.malleus.dev/d08-explicit-false
+name: d08_explicit_false
+imports:
+  - linkml:types
+slots:
+  value:
+    range: string
+    required: false
+    multivalued: false
+    identifier: false
+    inlined: false
+classes:
+  Record:
+    slots:
+      - value
+    slot_usage:
+      value:
+        required: false
+        multivalued: false
+        identifier: false
+        inlined: false
+```
+
+The retained conformance corpus has these exact D08 outcomes:
+
+| Governed source vector | D08 outcome | Exact reason |
+|---|---|---|
+| `ontology/malleus.yaml` | ACCEPT | closed non-expression profile and trusted seven-name builtin map |
+| `ontology/assent.yaml` | ACCEPT | closed profile plus flat `exactly_one_of` ValidTime evidence |
+| `ontology/domains/attack.yaml` | ACCEPT | closed non-expression profile |
+| `ontology/domains/cyp450.yaml` | ACCEPT | closed non-expression profile |
+| `ontology/domains/ocr.yaml` | ACCEPT | closed non-expression profile |
+| `ontology/domains/recon.yaml` | ACCEPT | closed non-expression profile |
+| `CC-X01/simple_parity` | ACCEPT | supported direct slot use |
+| `CC-X01/parent_mixin_precedence` | ACCEPT | exact pinned ancestor traversal |
+| `CC-X01/repeated_mixin` | REFUSE | repeated authored mixin reference |
+| `CC-X01/conflicting_mixins_ab` | REFUSE | conflicting ENFORCED mixin values |
+| `CC-X01/conflicting_mixins_ba` | REFUSE | same conflict after source-order reversal |
+| `CC-X01/numeric_bounds` | ACCEPT | supported numeric-bound intersection |
+| `CC-X01/explicit_false` | REFUSE | measured SlotUse remains EQUAL, but global String Slot has illegal `inlined=true` |
+| `CC-X01/default_range` | ACCEPT | supported `default_range` materialization with provenance |
+| `CC-X01/attribute_slot_usage` | ACCEPT | supported local attribute plus applicable `slot_usage` |
+| `D08/valid_explicit_false` | ACCEPT | separate valid String Slot and SlotUse with four explicit false values |
+
+Type `typeof`, enum permissible-value keys, class `is_a`, `mixin`, `mixins`,
+and `abstract`, and all supported slot constraint fields map to the exact D05
+seed predicates and invariants. Class `slots`, local `attributes`, and
+`slot_usage` retain distinct lossless declaration evidence before producing
+their effective neutral `Slot`, `SlotUse`, and constraint facts. References
+resolve to exact qualified identities before facts are emitted. Adoption maps
+to the imported authoritative slot owner and emits no adoption fact.
+
+Every distinct applicable class slot produces exactly one `SlotUse`. A local
+attribute declares a deterministic qualified class-local `Slot` and its
+`SlotUse`. A `slots` reference resolves to an authoritative global, inherited,
+or adopted slot and produces its class `SlotUse`. Parent and mixin slots remain
+applicable under the selected elaboration rules. A `slot_usage` key must resolve
+to an already applicable slot; it can refine that `SlotUse` but cannot introduce
+a slot or disappear silently. Duplicate `slots` references, a duplicate
+attribute/reference for the same class-local use, and ambiguous applicable
+owners refuse.
+
+`title`, every listed `description`, `class_uri`, and type `uri` remain retained
+and queryable outside semantic facts. Erasing or changing only those members
+preserves the fact set, candidate fact identities, role-bound identity, and
+composition identity. It changes retained source and provenance attestation.
+
+#### Versioned exactly-one expression extension
+
+The immutable `ExactNonExpressionSeedContractMetamodel` from D05 is not edited.
+`FlatExactlyOneExpressionExtensionV0` is composed with that exact seed to
+produce the named combined `ExpressionCapableContractMetamodelV0` identity.
+The extension adds exactly three structural kinds:
+
+| Subject kind | Predicate | Object type or target | Cardinality |
+|---|---|---|---|
+| `ExactlyOneGroup` | `rdf:type` | exactly `ExactlyOneGroup` | 1 |
+| `ExactlyOneGroup` | `cf:onClass` | `Class` | 1 |
+| `ExactlyOneAlternative` | `rdf:type` | exactly `ExactlyOneAlternative` | 1 |
+| `ExactlyOneAlternative` | `cf:inGroup` | `ExactlyOneGroup` | 1 |
+| `SlotCondition` | `rdf:type` | exactly `SlotCondition` | 1 |
+| `SlotCondition` | `cf:inAlternative` | `ExactlyOneAlternative` | 1 |
+| `SlotCondition` | `cf:usesSlot` | authoritative qualified `Slot` | 1 |
+| `SlotCondition` | `cf:required` | Boolean | 0..1 |
+| `SlotCondition` | `cf:equalsString` | string | 0..1 |
+| `SlotCondition` | `cf:valuePresence` | string `PRESENT` or `ABSENT` | 0..1 |
+
+Every group has one class and one or more alternatives. Every alternative
+belongs to one group and has one or more conditions. Every condition belongs to
+one alternative, uses one authoritative qualified slot that has an applicable
+effective `SlotUse` on the group's declaring class, and carries at least one of
+the three optional condition predicates. The condition fact points to the
+authoritative `Slot`; applicability and range checks use that declaring-class
+`SlotUse`. `equalsString` is legal only when the effective range directly names
+String or an Enum, or resolves through a Scalar chain terminating in String,
+exactly as in D05. Inside one condition,
+`valuePresence=ABSENT` conflicts with `required=true` and with any
+`equalsString`. No cross-branch or cross-group satisfiability analysis is
+performed, and no other base-slot or branch narrowing is declared
+contradictory.
+
+Each class has at most one directly declared group. That group is reified
+exactly once on its declaring class. A descendant applies every ancestor group
+plus its local group conjunctively through the same accepted class-ancestor
+closure; inherited groups are not copied or reidentified on the descendant.
+There is no source-order winner.
+
+#### Exact internal metamodel identities
+
+The D05 table is immutable. D08 gives that exact table and its already accepted
+invariants a content identity without changing either. Metamodel envelope arrays
+sort their complete canonical JSON member bytes. Every invariant object binds
+both its stable mnemonic `id` and its exact normative `rule`; the mnemonic alone
+has no authority. Structural-identity profile objects bind the exact envelope
+domain, member set, SHA-256 encoding, output prefix, and any sorted-array rule.
+Each member of the envelope's `rules` array is the exact D05 or D08 table row
+with Markdown backticks removed and its `cf:`, `rdf:type`, or
+`rdfs:subClassOf` predicate cell expanded to the full absolute IRI before
+hashing. The invariant propositions remain the exact strings shown in their
+`rule` members. The seed envelope is:
+
+```json
+{"domain":"malleus.contract-metamodel/non-expression-seed/v0","invariants":[{"id":"absent-conflicts-with-required-true-or-equals-string","rule":"valuePresence=ABSENT refuses when required=true or equalsString is present on the same Slot or SlotUse."},{"id":"atomic-whole-fact-set-validation","rule":"Validation accepts or refuses the complete supplied fact set atomically; it never returns or accepts a valid subset after any violation."},{"id":"class-parent-and-mixin-graph-acyclic","rule":"The union of rdfs:subClassOf and cf:usesMixin edges between Class subjects is acyclic."},{"id":"enforced-kind-predicate-cardinality-and-whole-set-completeness","rule":"Every fact subject has exactly one rdf:type kind fact and exactly the closed kind-specific predicate cardinalities in the active metamodel's rules; no other kind or predicate is legal."},{"id":"equals-string-only-string-resolving-or-enum-range","rule":"On a Slot or SlotUse subject, cf:equalsString is legal only when cf:valueRange directly names cf:String or an Enum, or resolves through a Scalar chain terminating in cf:String."},{"id":"every-non-seed-identifier-target-resolves-in-fact-set","rule":"Every object of rdfs:subClassOf, cf:usesMixin, cf:typeof, cf:valueRange, cf:onClass, or cf:usesSlot resolves to a fact subject in the same whole fact set, except an allowed SeedPrimitive object of cf:typeof or cf:valueRange."},{"id":"exact-duplicate-fact-record-refuses","rule":"An exact duplicate subject-predicate-object fact record refuses the whole fact set; convergent derivation provenance remains outside the fact set."},{"id":"inlined-true-only-class-range","rule":"cf:inlined=true is legal only when cf:valueRange names Class."},{"id":"numeric-bounds-only-integer-or-float-and-minimum-not-greater-than-maximum","rule":"cf:minimum and cf:maximum are legal only when cf:valueRange directly names cf:Integer or cf:Float, or resolves through a Scalar chain terminating in cf:Integer or cf:Float, and minimum cannot exceed maximum."},{"id":"scalar-typeof-acyclic-and-terminates-in-seed-primitive","rule":"The Scalar cf:typeof graph is acyclic and every path terminates in exactly one of the five SeedPrimitive targets."},{"id":"seed-primitives-are-targets-not-fact-subjects","rule":"The five SeedPrimitive IRIs are trusted targets and cannot occur as fact subjects."},{"id":"uses-mixin-target-has-is-mixin-true","rule":"Every cf:usesMixin object resolves to a Class subject in the same whole fact set whose cf:isMixin object is true."}],"primitives":["Boolean","DateTime","Float","Integer","String"],"rules":[["Class","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly Class","1"],["Class","http://www.w3.org/2000/01/rdf-schema#subClassOf","Class","0..1"],["Class","https://malleus.dev/contract-facts/abstract","Boolean","1"],["Class","https://malleus.dev/contract-facts/isMixin","Boolean","1"],["Class","https://malleus.dev/contract-facts/usesMixin","distinct Class with isMixin=true","0..*"],["Enum","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly Enum","1"],["Enum","https://malleus.dev/contract-facts/enumValue","distinct string","0..*"],["Scalar","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly Scalar","1"],["Scalar","https://malleus.dev/contract-facts/typeof","Scalar or SeedPrimitive","1"],["Slot","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly Slot","1"],["Slot, SlotUse","https://malleus.dev/contract-facts/equalsString","string","0..1"],["Slot, SlotUse","https://malleus.dev/contract-facts/identifier","Boolean","1"],["Slot, SlotUse","https://malleus.dev/contract-facts/inlined","Boolean","1"],["Slot, SlotUse","https://malleus.dev/contract-facts/maximum","canonical decimal lexical string","0..1"],["Slot, SlotUse","https://malleus.dev/contract-facts/minimum","canonical decimal lexical string","0..1"],["Slot, SlotUse","https://malleus.dev/contract-facts/multivalued","Boolean","1"],["Slot, SlotUse","https://malleus.dev/contract-facts/required","Boolean","1"],["Slot, SlotUse","https://malleus.dev/contract-facts/valuePresence","string PRESENT or ABSENT","0..1"],["Slot, SlotUse","https://malleus.dev/contract-facts/valueRange","Class, Enum, Scalar, or SeedPrimitive","1"],["SlotUse","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly SlotUse","1"],["SlotUse","https://malleus.dev/contract-facts/onClass","Class","1"],["SlotUse","https://malleus.dev/contract-facts/usesSlot","Slot","1"]],"seed_namespace":"https://malleus.dev/contract-facts/","structural_identity_canonicalization":"malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0","structural_identity_profiles":[{"digest_encoding":"lowercase-hex","domain":"malleus.contract-structure.slot-use/v0","hash":"sha256","members":["class","domain","slot"],"output_prefix":"urn:malleus:contract-structure:slot-use:v0:sha256:"}]}
+```
+
+Its 4,819 UTF-8 bytes yield
+`urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b`.
+The expression-extension envelope is:
+
+```json
+{"domain":"malleus.contract-metamodel/flat-exactly-one-extension/v0","invariants":[{"id":"alternative-has-one-or-more-conditions","rule":"Every ExactlyOneAlternative belongs to one ExactlyOneGroup and has one or more SlotCondition subjects."},{"id":"condition-equals-string-uses-d05-effective-slot-use-range-rule","rule":"SlotCondition cf:equalsString is legal only when the declaring-class effective SlotUse range directly names cf:String or an Enum, or resolves through a Scalar chain terminating in cf:String."},{"id":"condition-has-one-or-more-enforcing-members","rule":"Every SlotCondition has at least one of cf:required, cf:equalsString, or cf:valuePresence."},{"id":"condition-slot-has-applicable-effective-slot-use-on-declaring-class","rule":"Every SlotCondition cf:usesSlot target has an applicable effective SlotUse on the ExactlyOneGroup declaring Class."},{"id":"declaring-class-group-reified-once-and-inherited-conjunctively-without-copy","rule":"Each Class has at most one directly declared ExactlyOneGroup; that group is reified once on its declaring Class; descendants apply ancestor and local groups conjunctively without copied or reidentified groups."},{"id":"duplicate-semantic-alternatives-and-conditions-refuse","rule":"Duplicate semantic alternatives in one group and duplicate authoritative-slot conditions in one alternative refuse the whole fact set."},{"id":"group-and-alternative-structural-targets-resolve-in-whole-fact-set","rule":"Every cf:inGroup object resolves in the same whole fact set to ExactlyOneGroup, and every cf:inAlternative object resolves there to ExactlyOneAlternative."},{"id":"group-has-one-or-more-alternatives","rule":"Every ExactlyOneGroup names one Class and has one or more ExactlyOneAlternative subjects."},{"id":"only-flat-class-exactly-one-of","rule":"Only flat class exactly_one_of is legal; nested, any_of, all_of, and none_of forms refuse, and no cross-branch or cross-group satisfiability analysis occurs."},{"id":"semantic-order-independent-structural-identities","rule":"Branch, condition, and member order does not change structural envelopes, subjects, or canonical facts; source indexes never enter identity."},{"id":"value-presence-absent-conflicts-with-required-true-or-equals-string","rule":"Within one SlotCondition, cf:valuePresence ABSENT refuses with cf:required true or any cf:equalsString."}],"rules":[["ExactlyOneAlternative","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly ExactlyOneAlternative","1"],["ExactlyOneAlternative","https://malleus.dev/contract-facts/inGroup","ExactlyOneGroup","1"],["ExactlyOneGroup","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly ExactlyOneGroup","1"],["ExactlyOneGroup","https://malleus.dev/contract-facts/onClass","Class","1"],["SlotCondition","http://www.w3.org/1999/02/22-rdf-syntax-ns#type","exactly SlotCondition","1"],["SlotCondition","https://malleus.dev/contract-facts/equalsString","string","0..1"],["SlotCondition","https://malleus.dev/contract-facts/inAlternative","ExactlyOneAlternative","1"],["SlotCondition","https://malleus.dev/contract-facts/required","Boolean","0..1"],["SlotCondition","https://malleus.dev/contract-facts/usesSlot","authoritative qualified Slot","1"],["SlotCondition","https://malleus.dev/contract-facts/valuePresence","string PRESENT or ABSENT","0..1"]],"seed_namespace":"https://malleus.dev/contract-facts/","semantic_member_profiles":[{"minimum_optional_members":1,"name":"slot-condition-semantics","optional_members":["equalsString","required","valuePresence"],"required_members":["slot"]}],"structural_identity_canonicalization":"malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0","structural_identity_profiles":[{"digest_encoding":"lowercase-hex","domain":"malleus.contract-structure.exactly-one-alternative/v0","hash":"sha256","members":["alternative_semantic_digest","domain","group"],"output_prefix":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:"},{"digest_encoding":"lowercase-hex","domain":"malleus.contract-structure.exactly-one-group/v0","hash":"sha256","members":["alternative_semantic_digests","class","domain"],"output_prefix":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:","sorted_arrays":{"alternative_semantic_digests":"canonical-json-string-bytes-ascending"}},{"digest_encoding":"lowercase-hex","domain":"malleus.contract-structure.slot-condition/v0","hash":"sha256","members":["alternative","domain","slot"],"output_prefix":"urn:malleus:contract-structure:slot-condition:v0:sha256:"},{"digest_encoding":"lowercase-hex","domain":"malleus.exactly-one-alternative-semantics/v0","hash":"sha256","members":["conditions","domain"],"output_prefix":"sha256:","sorted_arrays":{"conditions":"canonical-json-object-bytes-ascending"}}]}
+```
+
+Its 4,762 UTF-8 bytes yield
+`urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:99527d21040cbdda9dd7c579af7f40af8645de9b5f4b1e8ba28b40ddff7d53e6`.
+Composition is role-bound, not a commutative component set. The operator makes
+the active rules the exact closed union of the base and extension rule rows;
+duplicate kind-predicate rows refuse composition. Both invariant sets apply
+with their literal subject and whole-set quantifiers. An invariant reference to
+active rules means that union, and a kind or predicate outside it refuses. Its
+exact envelope is:
+
+```json
+{"base":"urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b","domain":"malleus.contract-metamodel/composition/v0","extension":"urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:99527d21040cbdda9dd7c579af7f40af8645de9b5f4b1e8ba28b40ddff7d53e6","operator":"The active rules are the exact closed union of base.rules and extension.rules; duplicate kind-predicate rows refuse composition; both invariant sets apply with their literal subject and whole-set quantifiers; every invariant reference to active rules means that union; no other kind or predicate is legal."}
+```
+
+Its 655 UTF-8 bytes yield the combined
+`ExpressionCapableContractMetamodelV0` identity
+`urn:malleus:contract-metamodel:expression-capable:v0:sha256:65aae23b7a0892a4d2ae2b5adc6888f1ddd39c94ce03f412d50a6a5ccd5d0964`.
+These are internal candidate identities used by D05 envelopes, not D09 public
+identifiers. Reordering rules or invariants preserves the sorted envelope;
+adding, removing, or changing semantic content changes the component and
+combined identities.
+
+Structural identity is semantic and order-independent. All envelopes use the
+D05 compact, sorted-key UTF-8 canonical JSON grammar with no terminal newline.
+A condition-semantics object contains exactly `slot` plus each present neutral
+member from `required`, `equalsString`, and `valuePresence`. Conditions sort by
+their canonical object bytes. The alternative-semantics envelope contains
+exactly `conditions` and domain
+`malleus.exactly-one-alternative-semantics/v0`. Its lowercase SHA-256 digest is
+written as `sha256:<hex>`.
+
+The group envelope contains exactly `alternative_semantic_digests`, `class`,
+and domain `malleus.contract-structure.exactly-one-group/v0`. Alternative
+digests sort lexically. The alternative envelope contains exactly
+`alternative_semantic_digest`, `domain` equal to
+`malleus.contract-structure.exactly-one-alternative/v0`, and `group`. The
+condition envelope contains exactly `alternative`, `domain` equal to
+`malleus.contract-structure.slot-condition/v0`, and `slot`. Each structural
+subject is the lowercase SHA-256 of its exact envelope bytes under these
+prefixes:
+
+```text
+urn:malleus:contract-structure:exactly-one-group:v0:sha256:<hex>
+urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:<hex>
+urn:malleus:contract-structure:slot-condition:v0:sha256:<hex>
+```
+
+These are internal candidate structural IDs, not published stable IDs.
+Reordering branches, conditions, or their members preserves envelopes,
+structural IDs, and canonical facts. Source indexes never enter identity. A
+duplicate semantic branch, duplicate condition for one authoritative slot,
+unknown slot, known but inapplicable slot, incompatible `equalsString` range,
+empty group, empty branch, extra member, wrong value type, internal
+contradiction, unsupported combinator, or nested expression refuses the whole
+compilation.
+
+A neutral positive example is a `ChoiceCarrier` class with one group containing
+two alternatives: `left_value` present and `right_value` present. The exact alternative
+semantics bytes are:
+
+```json
+{"conditions":[{"slot":"https://example.malleus.dev/domain/left_value","valuePresence":"PRESENT"}],"domain":"malleus.exactly-one-alternative-semantics/v0"}
+```
+
+```json
+{"conditions":[{"slot":"https://example.malleus.dev/domain/right_value","valuePresence":"PRESENT"}],"domain":"malleus.exactly-one-alternative-semantics/v0"}
+```
+
+Their digests are respectively
+`sha256:10f5b3992c471304ed0382e000f93ff6ef2aa0240bc1501dfae25e834267016a`
+and
+`sha256:1c8099c0364055a950dd2ff3eaecfbd4554fb8199ff3f0af2be0679d25d1bbb9`.
+The exact group envelope is:
+
+```json
+{"alternative_semantic_digests":["sha256:10f5b3992c471304ed0382e000f93ff6ef2aa0240bc1501dfae25e834267016a","sha256:1c8099c0364055a950dd2ff3eaecfbd4554fb8199ff3f0af2be0679d25d1bbb9"],"class":"https://example.malleus.dev/domain/ChoiceCarrier","domain":"malleus.contract-structure.exactly-one-group/v0"}
+```
+
+It yields
+`urn:malleus:contract-structure:exactly-one-group:v0:sha256:7c7fff294828d255018a04f67dfd0d2f86307867882e07866a25c1bfc7cca1f1`.
+For the `left_value` branch, the exact alternative and condition envelopes are:
+
+```json
+{"alternative_semantic_digest":"sha256:10f5b3992c471304ed0382e000f93ff6ef2aa0240bc1501dfae25e834267016a","domain":"malleus.contract-structure.exactly-one-alternative/v0","group":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:7c7fff294828d255018a04f67dfd0d2f86307867882e07866a25c1bfc7cca1f1"}
+```
+
+```json
+{"alternative":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:15c008ee7b1dc89621e92acf93bb0f2d572102aa5430569af899e656da375b81","domain":"malleus.contract-structure.slot-condition/v0","slot":"https://example.malleus.dev/domain/left_value"}
+```
+
+They yield
+`urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:15c008ee7b1dc89621e92acf93bb0f2d572102aa5430569af899e656da375b81`
+and
+`urn:malleus:contract-structure:slot-condition:v0:sha256:7c973812ba4ba438f046cf89fd3038fe41a218c2fc4ebb0dd67b578a5a681e7a`.
+The second branch follows the same exact rules. The bundled Assent `ValidTime`
+expression is retained as real vertical evidence for the same shape. Its
+themed names do not enter the core vocabulary.
+
+#### Identity and expansion boundary
+
+This decision freezes the expression-capable metamodel and exact
+source-to-fact mapping needed by the D05 internal candidate digests. A change
+to an enforcing field, symbol identity, qualified reference, or expression
+semantic changes the affected facts and identities. Annotation-only and
+provenance-only edits do not. D06 role and composition tags do not enter an
+individual fact digest; role-bound and composition identities still prevent
+cross-role interchange.
+
+Expanding support requires one named use case or query, an operator decision,
+an exact-location classification, mapping to the unchanged seed or a newly
+versioned metamodel extension, explicit default and provenance behavior,
+positive and refusal examples, independent source/direct-fact/oracle parity,
+metamorphic identity tests, profile and metamodel version review, adapter
+support-matrix documentation, and strict Sphinx verification. Unknown input
+stays rejected until all gates land atomically.
+
+Future work may construct or inject another frontend adapter at the existing
+neutral boundary. D08 does not design a plugin framework, discovery mechanism,
+registry, lifecycle, or public injection API. Any future adapter must declare
+its implementation and version plus its exact support, default, and resolver
+profiles, then pass the same neutral fact, metamodel, canonicalization,
+provenance, artifact, runtime, direct-fact, and independent-oracle conformance
+contract.
+
+The Sphinx-rendered internal developer guide records that workflow. It is a
+repository projection, not public adapter or API promotion. Decision records,
+the metamodel, tests, and validated manifests remain authoritative. `CC-R02`
+may later implement and characterize the adapter, but public docstrings,
+namespace placement, stable public fact identifiers, and public support claims
+remain blocked on `OD-009`.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-008`. `CC-D08` is complete.
 
 ### OD-011: resolver and import policy
 
@@ -931,7 +1444,7 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 17
+## Remaining decisions after revision 18
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
@@ -939,7 +1452,6 @@ dependent workstream starts.
 | ID | Question | Blocks |
 |---|---|---|
 | OD-007 | Protected governance partition versus separate governance graph | Normative admission profile |
-| OD-008 | Exact fields that are enforcing, identity-only, annotation-only, or rejected | Support profile and metamorphic tests |
 | OD-009 | Promotion after research CC-R08 versus earlier experimental public package | Production namespace and autodoc |
 | OD-010 | Endpoint and generic class-reference semantics | Graph admission profile and operation traces |
 

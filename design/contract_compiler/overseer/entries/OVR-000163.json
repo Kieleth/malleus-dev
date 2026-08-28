@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "ccd08-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-27T04:10:03Z",
+    "claims": [
+      "OD-008 closes one exact LinkML-v0 source profile: every listed location is exactly ENFORCED, IDENTITY_ONLY, ANNOTATION_ONLY, or REJECTED, and every unlisted field or annotation refuses atomically.",
+      "The strict JSON-shaped YAML grammar rejects coercion, duplicate keys, aliases, anchors, merges, every explicit YAML tag including core tags, and wrong raw types; it retains only the exact permissible-value null exception and exact JSON-number path to D05 decimal canonicalization.",
+      "The trusted LinkML Runtime 1.11.1 types.yaml member and seven-name builtin map, default elaboration, inheritance traversal, enforced-only mixin conflicts, declaration evidence, provenance, and slash-qualified symbol policy are exact and mechanically guarded.",
+      "The immutable D05 seed, flat exactly-one extension, and closed-union composition reproduce the exact internal identities 1c68a612...c71b, 99527d21...53e6, and 65aae23b...0964; structural identities are semantic and source-order independent.",
+      "The six bundled schemas are admitted; the CC-X01 whole-source outcomes are five admitted and four refused, including explicit_false refusal, while a separate valid explicit-false source passes. Presentation erasure preserves facts and candidate identity while changing retained source attestation.",
+      "Canonical graph revision 18 and all five Markdown projections have exact 1,630-triple parity, 333 single-status subjects, an acyclic 103-node, 105-edge dependsOn graph, exact OD-008 selection, same-type supersession, and separate D09 stable-identity and public-promotion boundaries.",
+      "The Sphinx guide is an internal governed projection with an atomic expansion workflow. CC-D08 remains zero-scope with candidate NONE, worker ledger NOT_STARTED, no selection, and no parser, compiler, ontology YAML, dependency, package, artifact, plugin framework, namespace, stable public identifier, or API change."
+    ],
+    "limitations": [
+      "This verifies governance, source and fact contracts, internal identities, retained corpus outcomes, graph parity, documentation, and refusal guards. It does not implement or promote a parser, compiler, frontend adapter, plugin framework, artifact, package, runtime path, namespace, or API.",
+      "CC-R02 retains implementation and characterization. OD-009 retains public namespace, adapter docstrings, stable public fact identifiers, and support claims. Other deferred decisions and downstream work remain unchanged."
+    ]
+  },
+  "entry_hash": "sha256:9ff61ee70f2cebcac9320d5081a8060a5cc7f442820c2c94c50f20e62d802e8d",
+  "entry_id": "OVR-000163",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0b8a6b815f6a276918bbe58fa61d5281d2df1b064e6c98c6d25fa5817ec6fe0e",
+  "recorded_at": "2026-08-27T04:10:03Z",
+  "references": [
+    {
+      "digest": "sha256:cd95e75149317baeb8b061db4169e0ba2070fc82201025a59926f274f527b2d2",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D08.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000161",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000162",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-008",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D08",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 163,
+  "subject": {
+    "id": "CC-D08-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the closed LinkML v0 source-to-fact and expression profile.",
+  "why": "The retained report binds every governed artifact and its checks cover exact source closure, trusted builtins, defaults, identities, expression composition, corpus outcomes, graph parity, internal documentation, future-adapter obligations, public-promotion gates, and zero implementation scope."
+}

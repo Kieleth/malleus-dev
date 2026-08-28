@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 17,
-`sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac`
+revision 18,
+`sha256:2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -521,7 +521,19 @@ mfg:ReplaceableContractFrontendBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:MalleusLinkMLSupportProfileV0 rdf:type mfg:SupportProfile ;
-    mfg:status mfg:Candidate .
+    mfg:binds mfg:ClosedExactLocationClassificationV0 ;
+    mfg:binds mfg:StrictJSONShapedYAMLSourceGrammarV0 ;
+    mfg:binds mfg:TrustedLinkML1_11_1SevenBuiltinMapV0 ;
+    mfg:binds mfg:LinkML1_11_1ElaborationAndDefaultProfileV0 ;
+    mfg:binds mfg:LosslessSourceDeclarationAndProvenanceProfileV0 ;
+    mfg:binds mfg:LinkMLV0SlashQualifiedSymbolPolicy ;
+    mfg:binds mfg:ExpressionCapableContractMetamodelV0 ;
+    mfg:binds mfg:RetainedCorpusWholeSourceClosureV0 ;
+    mfg:binds mfg:FrontendAdapterConstructionInjectionDeferredBoundary ;
+    mfg:binds mfg:NoGeneralLinkMLSupportClaimBoundary ;
+    mfg:binds mfg:StablePublicFactIdentityStillOD009Boundary ;
+    mfg:binds mfg:PublicCompilerPromotionStillOD009Boundary ;
+    mfg:status mfg:AcceptedDesign .
 
 mfg:FrontendConformanceSuite rdf:type mfg:TestObligation ;
     mfg:tests mfg:FrontendParity ;
@@ -714,11 +726,12 @@ uses the imported owner's qualified slot identifier.
 Fact and fact-set digests are computed from domain-separated candidate
 envelopes binding the exact metamodel, canonicalization profile, symbol policy,
 and canonical fact or ordered fact-array digest. They are internal candidate
-identities, not stable public fact IDs, which remain blocked on `OD-008`. Only
-expression vocabulary remains deferred to `OD-008`; the exact
-seed cannot change silently. Provenance, descriptions, source spans, diagnostics, and compiler
-identity remain outside semantic fact-set identity. Equivalent explicit and
-implicit defaults yield the same fact with distinct retained provenance.
+identities, not stable public fact IDs, which remain blocked on `OD-009`.
+`OD-008` composes the immutable seed with the closed flat exactly-one
+extension; neither component can change silently. Provenance, descriptions,
+source spans, diagnostics, and compiler identity remain outside semantic
+fact-set identity. Equivalent explicit and implicit defaults yield the same
+fact with distinct retained provenance.
 
 The Turtle below remains a readable projection of logical meaning. It is not
 the normative runtime wire or persisted artifact envelope:
@@ -940,7 +953,7 @@ mfg:ThreeRoleClosedContractCompositionProfile rdf:type mfg:DesignObject ;
     mfg:binds mfg:OneArtifactMayPackageThreeRolesBoundary ;
     mfg:binds mfg:IndependentRoleHeadsAndRecoveryDeferredBoundary ;
     mfg:binds mfg:ArtifactBundleAndWireGrammarDeferredBoundary ;
-    mfg:binds mfg:StablePublicFactIdentityStillOD008Boundary ;
+    mfg:binds mfg:StablePublicFactIdentityStillOD009Boundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:ExactThreeNamedRoleCardinalityBoundary rdf:type mfg:Boundary ;
@@ -970,6 +983,13 @@ mfg:IndependentRoleHeadsAndRecoveryDeferredBoundary rdf:type mfg:Boundary ;
 mfg:ArtifactBundleAndWireGrammarDeferredBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
+mfg:StablePublicFactIdentityStillOD009Boundary rdf:type mfg:Boundary ;
+    mfg:supersedes mfg:StablePublicFactIdentityStillOD008Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:PublicCompilerPromotionStillOD009Boundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
 mfg:StablePublicFactIdentityStillOD008Boundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 ```
@@ -980,7 +1000,7 @@ exact `EffectiveContract` identity. The composition identity binds the fixed
 `ContractCompositionIdentityV0` constructor plus the three named role-bound
 identities. Neither constructor is caller-selectable. Exact lexical and
 canonical bytes remain with `CC-D16`, `CC-R07`, and `CC-W01`; stable public
-fact identities remain with `OD-008`.
+fact identities remain with `OD-009`.
 
 The v0 accepted-temporal path binds one exact composition identity for one
 ledger epoch. Any protocol, domain, or governance role change changes the

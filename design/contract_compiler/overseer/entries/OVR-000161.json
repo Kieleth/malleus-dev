@@ -1,0 +1,75 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-008"
+    ],
+    "consequences": [
+      "CC-R02 can implement and characterize the selected LinkML frontend against a closed neutral contract without choosing hidden parser, default, identity, expression, or refusal semantics.",
+      "A future frontend can be constructed or injected only after it declares exact implementation, support, default, and resolver profiles and passes the same neutral fact, metamodel, canonicalization, provenance, artifact, runtime, direct-fact, and independent-oracle conformance contract."
+    ],
+    "constraints": [
+      "Every exact supported source location is classified once as ENFORCED, IDENTITY_ONLY, ANNOTATION_ONLY, or REJECTED; every unlisted field or annotation refuses and no general LinkML support is claimed.",
+      "The strict JSON-shaped YAML grammar, seven-name trusted LinkML 1.11.1 builtin map, exact elaboration/default profile, declaration evidence, provenance, and slash-qualified symbols are closed and versioned.",
+      "The immutable D05 seed composes only with FlatExactlyOneExpressionExtensionV0 under the exact closed-union operator, producing the internal ExpressionCapableContractMetamodelV0 and deterministic order-independent structural identities.",
+      "The retained corpus has exact whole-source admission outcomes, including whole-source refusal of the CC-X01 explicit_false measurement plus a separate valid explicit-false positive; every named counterexample refuses atomically.",
+      "Future adapters may be constructed or injected, but D08 creates no plugin framework, discovery mechanism, registry, lifecycle, public injection API, parser, compiler, ontology YAML, package, artifact, candidate, selection, or worker ledger.",
+      "The internal Sphinx guide is a governed repository projection. Public adapter docstrings, namespaces, stable public fact identifiers, and support claims remain blocked on OD-009."
+    ],
+    "decision_id": "OD-008",
+    "satisfies_workstreams": [
+      "CC-D08"
+    ],
+    "selected_option": "Closed exact-location LinkML v0 profile with one flat exactly-one expression extension",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:fb8a6b8ca1d033fe3091d6a2e8f2a723c794ad99753819fd8d67e9b9e1cb0e4e",
+  "entry_id": "OVR-000161",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ddbe57d05e1d5d47edbee464b823844edbb1f77a330fb0cfb6c755fe49294357",
+  "recorded_at": "2026-08-27T04:10:01Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-008-closed-linkml-v0-support-profile",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-008",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000137",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000138",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000150",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D08",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 161,
+  "subject": {
+    "id": "OD-008",
+    "type": "DECISION"
+  },
+  "summary": "Accept the closed exact-location LinkML v0 support profile.",
+  "why": "The closed profile makes the current Malleus source subset deterministic, auditable, and replaceable without inheriting hidden LinkML semantics. One small flat expression extension covers the retained need while all unearned syntax stays refused. This preserves KISS, gives CC-R02 an exact implementation target, and keeps public promotion with OD-009."
+}

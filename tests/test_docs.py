@@ -102,12 +102,149 @@ PUBLIC_GUIDES = {
     "RECIPES.md",
     "RECON_CONTRACT.md",
 }
-PUBLIC_DOC_SOURCES = PUBLIC_GUIDES | {
+INTERNAL_CONTRACT_COMPILER_DOC_SOURCES = {
     "contract_compiler/index.md",
     "contract_compiler/manifests.md",
+    "contract_compiler/support_profile.md",
+}
+PUBLIC_DOC_SOURCES = PUBLIC_GUIDES | {
     "index.md",
     "reference/index.md",
 }
+REPOSITORY_DOC_SOURCES = PUBLIC_DOC_SOURCES | INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
+SUPPORT_PROFILE_ROWS = (
+    (
+        "schema root",
+        "`types`, `enums`, `slots`, `classes`, `imports`, `default_range`",
+        "`id`, `prefixes`; each prefix key and value; each import reference; the `default_range` reference",
+        "`name`, `version`, `title`, `description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`types.<type>`",
+        "`typeof`",
+        "declaration map key; `typeof` reference",
+        "`uri`, `description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`enums.<enum>`",
+        "`permissible_values`",
+        "declaration map key",
+        "`description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`enums.<enum>.permissible_values.<value>`",
+        "permissible-value map key",
+        "none",
+        "`description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`slots.<slot>` global declaration",
+        "`range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence`",
+        "declaration map key; `range` reference; `annotations.adopts` only for the exact imported global-slot redeclaration authorized by `OD-002`",
+        "`description`",
+        "every other field; every other annotation, including `annotations.retires`",
+    ),
+    (
+        "`classes.<class>`",
+        "`is_a`, `mixin`, `mixins`, `abstract`, `slots`, `attributes`, `slot_usage`, `exactly_one_of`",
+        "declaration map key; references in `is_a`, `mixins`, and `slots`",
+        "`class_uri`, `description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`classes.<class>.attributes.<slot>`",
+        "`range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence`",
+        "local declaration map key; `range` reference",
+        "`description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`classes.<class>.slot_usage.<slot>`",
+        "`range`, `required`, `multivalued`, `identifier`, `inlined`, `equals_string`, `minimum_value`, `maximum_value`, `value_presence`",
+        "authoritative slot reference map key; `range` reference",
+        "`description`",
+        "every other field; every annotation",
+    ),
+    (
+        "`classes.<class>.exactly_one_of`",
+        "flat nonempty alternative sequence",
+        "none",
+        "none",
+        "empty sequence; `any_of`, `all_of`, `none_of`; nesting; every other expression field",
+    ),
+    (
+        "one `exactly_one_of` alternative",
+        "one nonempty `slot_conditions` map",
+        "each `slot_conditions` map key is an authoritative qualified slot reference",
+        "none",
+        "empty alternative; every other field; every annotation",
+    ),
+    (
+        "one `slot_conditions.<slot>` condition",
+        "`required`, `equals_string`, `value_presence`, with at least one present",
+        "the authoritative slot reference inherited from its map key",
+        "none",
+        "every other field; every annotation; nested expression",
+    ),
+)
+EXPRESSION_EXTENSION_ROWS = (
+    ("`ExactlyOneGroup`", "`rdf:type`", "exactly `ExactlyOneGroup`", "1"),
+    ("`ExactlyOneGroup`", "`cf:onClass`", "`Class`", "1"),
+    (
+        "`ExactlyOneAlternative`",
+        "`rdf:type`",
+        "exactly `ExactlyOneAlternative`",
+        "1",
+    ),
+    (
+        "`ExactlyOneAlternative`",
+        "`cf:inGroup`",
+        "`ExactlyOneGroup`",
+        "1",
+    ),
+    ("`SlotCondition`", "`rdf:type`", "exactly `SlotCondition`", "1"),
+    (
+        "`SlotCondition`",
+        "`cf:inAlternative`",
+        "`ExactlyOneAlternative`",
+        "1",
+    ),
+    (
+        "`SlotCondition`",
+        "`cf:usesSlot`",
+        "authoritative qualified `Slot`",
+        "1",
+    ),
+    ("`SlotCondition`", "`cf:required`", "Boolean", "0..1"),
+    ("`SlotCondition`", "`cf:equalsString`", "string", "0..1"),
+    (
+        "`SlotCondition`",
+        "`cf:valuePresence`",
+        "string `PRESENT` or `ABSENT`",
+        "0..1",
+    ),
+)
+INTERNAL_METAMODEL_IDENTITY_ROWS = (
+    (
+        "`ExactNonExpressionSeedContractMetamodel`",
+        "4,819",
+        "`urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b`",
+    ),
+    (
+        "`FlatExactlyOneExpressionExtensionV0`",
+        "4,762",
+        "`urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:99527d21040cbdda9dd7c579af7f40af8645de9b5f4b1e8ba28b40ddff7d53e6`",
+    ),
+    (
+        "`ExpressionCapableContractMetamodelV0`",
+        "655",
+        "`urn:malleus:contract-metamodel:expression-capable:v0:sha256:65aae23b7a0892a4d2ae2b5adc6888f1ddd39c94ce03f412d50a6a5ccd5d0964`",
+    ),
+)
 APPROVED_REFERENCE_PATH = DOCS / "reference" / "index.md"
 APPROVED_REFERENCE_SOURCE = (
     "# Current package-root reference\n"
@@ -147,6 +284,115 @@ def _public_doc_paths(root: Path = DOCS) -> list[Path]:
     missing = [path for path in paths if not path.is_file()]
     assert missing == [], f"required public documentation sources are missing: {missing}"
     return paths
+
+
+def _repository_doc_paths(root: Path = DOCS) -> list[Path]:
+    paths = [root / relative for relative in sorted(REPOSITORY_DOC_SOURCES)]
+    missing = [path for path in paths if not path.is_file()]
+    assert missing == [], f"required repository documentation sources are missing: {missing}"
+    return paths
+
+
+def _table_after(source: str, heading: str) -> tuple[tuple[str, ...], ...]:
+    tail = source.split(heading, 1)[1]
+    lines = tail.splitlines()
+    start = next(index for index, line in enumerate(lines) if line.startswith("|"))
+    rows: list[tuple[str, ...]] = []
+    for line in lines[start + 2 :]:
+        if not line.startswith("|"):
+            break
+        rows.append(tuple(cell.strip() for cell in line.strip("|").split("|")))
+    return tuple(rows)
+
+
+def _table_named(source: str, header: tuple[str, ...]) -> tuple[tuple[str, ...], ...]:
+    lines = source.splitlines()
+    matches: list[tuple[tuple[str, ...], ...]] = []
+    for index, line in enumerate(lines):
+        if not line.startswith("|"):
+            continue
+        cells = tuple(cell.strip() for cell in line.strip("|").split("|"))
+        if cells != header:
+            continue
+        rows: list[tuple[str, ...]] = []
+        for row in lines[index + 2 :]:
+            if not row.startswith("|"):
+                break
+            rows.append(tuple(cell.strip() for cell in row.strip("|").split("|")))
+        matches.append(tuple(rows))
+    assert len(matches) == 1
+    return matches[0]
+
+
+def _assert_support_profile_guide(source: str) -> None:
+    assert _table_after(source, "## Four exact classifications") == SUPPORT_PROFILE_ROWS
+    assert _table_after(source, "## Exactly-one expression boundary") == (
+        EXPRESSION_EXTENSION_ROWS
+    )
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    for header in (
+        ("Exact source member", "Required raw value"),
+        ("Lexeme class", "Exact examples", "Result"),
+        ("LinkML source name", "Neutral target", "Additional facts when referenced"),
+        ("Effective location", "Omitted field", "Materialized result"),
+        ("Governed source vector", "D08 outcome", "Exact reason"),
+    ):
+        assert _table_named(source, header) == _table_named(decisions, header)
+    assert _table_named(
+        source,
+        ("Component", "Canonical byte length", "Internal content identity"),
+    ) == INTERNAL_METAMODEL_IDENTITY_ROWS
+    for phrase in (
+        "Unknown input fails instead of acquiring hidden upstream semantics.",
+        "The adapter emits deterministic, frontend-neutral facts.",
+        "Another frontend can target the same neutral contract",
+        "Parser acceptance is not compiler support.",
+        "all explicit YAML tags, including core tags such as `!!str`",
+        "Unlisted input is `REJECTED`.",
+        "`annotations.adopts` is identity-only there, is rejected everywhere else, and never emits an adoption fact.",
+        "A presentation-erasure change touching only those fields preserves facts, candidate fact identities, role-bound identity, and composition identity.",
+        "Source indexes never enter identity.",
+        "urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0",
+        "Unicode general category is `Cc` or `Cs` refuses before format validation.",
+        "linkml_runtime-1.11.1-py3-none-any.whl` with SHA-256 `b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da",
+        "linkml_runtime/linkml_model/model/schema/types.yaml",
+        "1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
+        "Empty groups or branches, duplicate semantic alternatives, duplicate conditions, unknown or inapplicable slots, incompatible `equalsString` ranges, extra fields, wrong types, contradictions, nested expressions, and `any_of`, `all_of`, or `none_of` refuse atomically.",
+        "Each class has at most one directly declared group, reified once on that class.",
+        "Its operator makes active rules the exact closed union of both rule sets",
+        "Bounds are legal for a direct `cf:Integer` or `cf:Float` range, or a Scalar chain terminating in one of them.",
+        "Public namespace placement, public adapter docstrings, stable public fact identifiers, and public documentation remain blocked on `CC-D09` and `OD-009`.",
+        "Unknown input remains rejected until all gates pass together.",
+        "This decision does not design a plugin framework, discovery registry, lifecycle, or public injection API.",
+        "declare its implementation and version plus its exact support, default, and resolver profiles",
+        "neutral fact, metamodel, canonicalization, provenance, artifact, runtime, direct-fact, and independent-oracle conformance contract",
+    ):
+        assert phrase in " ".join(source.split())
+
+    workflow = source.split("## How to expand the profile", 1)[1]
+    steps = tuple(
+        line.split(". ", 1)[1]
+        for line in workflow.splitlines()
+        if line[:1].isdigit() and ". " in line
+    )
+    assert len(steps) == 12
+    for required in (
+        "named Malleus use case or query",
+        "operator decision",
+        "exact location",
+        "existing D05 seed",
+        "defaulted",
+        "smallest positive example",
+        "independent source, direct-fact, and oracle parity",
+        "metamorphic tests",
+        "support-profile and metamodel-extension versions",
+        "exact support matrix",
+        "strict Sphinx HTML, doctest, and linkcheck",
+        "independent evidence review",
+    ):
+        assert any(required in step for step in steps)
 
 
 def _approved_eval_rst_island(path: Path) -> bool:
@@ -686,8 +932,132 @@ def test_sphinx_configuration_is_strict_and_has_required_extensions() -> None:
     assert conf.exclude_patterns == []
     conf_tree = ast.parse((DOCS / "conf.py").read_text(encoding="utf-8"))
     assert _forbidden_example_operations(conf_tree) == []
-    assert set(conf.include_patterns) == PUBLIC_DOC_SOURCES
+    assert set(conf.include_patterns) == REPOSITORY_DOC_SOURCES
     assert "COST_AWARE_MODEL_ARCHITECTURE_RECON.md" not in conf.include_patterns
+
+
+def test_contract_compiler_support_profile_is_rendered_and_exact() -> None:
+    index = (DOCS / "contract_compiler" / "index.md").read_text(encoding="utf-8")
+    toctree = index.split("```{toctree}", 1)[1].split("```", 1)[0]
+    assert tuple(line for line in toctree.splitlines() if line) == (
+        ":maxdepth: 1",
+        "manifests",
+        "support_profile",
+    )
+
+    guide = (DOCS / "contract_compiler" / "support_profile.md").read_text(
+        encoding="utf-8"
+    )
+    _assert_support_profile_guide(guide)
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    assert _table_after(decisions, "#### Exact location classification") == (
+        SUPPORT_PROFILE_ROWS
+    )
+    assert _table_after(decisions, "#### Versioned exactly-one expression extension") == (
+        EXPRESSION_EXTENSION_ROWS
+    )
+    assert "contract_compiler/support_profile.md" in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
+    assert "contract_compiler/support_profile.md" not in PUBLIC_DOC_SOURCES
+    assert "contract_compiler/index.md" not in PUBLIC_DOC_SOURCES
+    assert "contract_compiler/manifests.md" not in PUBLIC_DOC_SOURCES
+    assert set(_public_doc_paths()).isdisjoint(
+        {DOCS / path for path in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES}
+    )
+
+
+def test_contract_compiler_support_profile_refuses_semantic_drift() -> None:
+    guide = (DOCS / "contract_compiler" / "support_profile.md").read_text(
+        encoding="utf-8"
+    )
+    class_row = next(
+        line
+        for line in guide.splitlines()
+        if line.startswith("| `classes.<class>` |")
+    )
+    condition_row = next(
+        line
+        for line in guide.splitlines()
+        if line.startswith("| `SlotCondition` | `cf:valuePresence`")
+    )
+    mutations = (
+        guide.replace(
+            class_row,
+            class_row.replace(
+                "| `class_uri`, `description` |",
+                "`class_uri`; | `description` |",
+            ),
+            1,
+        ),
+        guide.replace(
+            "including `annotations.retires`",
+            "excluding `annotations.retires`",
+            1,
+        ),
+        guide.replace(
+            "rejected everywhere else, and never emits an adoption fact.",
+            "`annotations.adopts` emits an adoption fact.",
+            1,
+        ),
+        guide.replace(
+            class_row,
+            class_row.replace("`exactly_one_of`", "`exactly_one_of`, `rules`"),
+            1,
+        ),
+        guide.replace(condition_row, "", 1),
+        guide.replace(
+            condition_row,
+            condition_row
+            + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
+            1,
+        ),
+        guide.replace("Source indexes never enter identity.", "", 1),
+        guide.replace(
+            "contradictions, nested expressions, and `any_of`,\n`all_of`, or `none_of` refuse atomically.",
+            "nested expressions are accepted.",
+            1,
+        ),
+        guide.replace(
+            "| `minimum_value` and `maximum_value` | one finite JSON-number lexical scalar under the grammar below; retain the exact source lexeme |",
+            "| `minimum_value` and `maximum_value` | any YAML number |",
+            1,
+        ),
+        guide.replace(
+            "| `date` | `https://w3id.org/linkml/types/date` | `rdf:type cf:Scalar`; `cf:typeof cf:String` |",
+            "| `date` | `cf:String` | none |",
+            1,
+        ),
+        guide.replace(
+            "| supported `Slot` or `SlotUse` with non-Class range | `inlined` | `cf:inlined=false` |",
+            "| supported `Slot` or `SlotUse` with non-Class range | `inlined` | `cf:inlined=true` |",
+            1,
+        ),
+        guide.replace(
+            "| `CC-X01/explicit_false` | REFUSE |",
+            "| `CC-X01/explicit_false` | ACCEPT |",
+            1,
+        ),
+        guide.replace(
+            "65aae23b7a0892a4d2ae2b5adc6888f1ddd39c94ce03f412d50a6a5ccd5d0964",
+            "07e6513939875ebff0b7495f202d49545e8b836aebe72befdd16a7684b982f59",
+            1,
+        ),
+        guide.replace(
+            "does not design a plugin framework, discovery registry, lifecycle,\nor public injection API",
+            "defines a plugin registry",
+            1,
+        ),
+        guide.replace(
+            "provenance, artifact, runtime,\ndirect-fact",
+            "provenance, direct-fact",
+            1,
+        ),
+    )
+    assert all(mutation != guide for mutation in mutations)
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_support_profile_guide(mutation)
 
 
 def test_dev_dependencies_pin_the_verified_docs_toolchain() -> None:
@@ -981,9 +1351,9 @@ def test_manifest_directive_has_no_user_selected_input_or_raw_fallback() -> None
     assert forbidden_calls == [], f"raw governance fallback calls: {forbidden_calls}"
 
 
-def test_public_python_examples_are_ast_checked() -> None:
+def test_repository_python_examples_are_ast_checked() -> None:
     assert list(DOCS.rglob("*.rst")) == []
-    public_paths = _public_doc_paths()
+    public_paths = _repository_doc_paths()
     autosummaries = [
         (path, capture)
         for path in public_paths
@@ -1052,20 +1422,20 @@ def test_eval_rst_permission_cannot_be_spoofed_by_path_or_location(
     ) == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
 
 
-def test_public_scan_excludes_unpublished_markdown_but_rst_stays_refused(
+def test_repository_scan_excludes_unrendered_markdown_but_rst_stays_refused(
     tmp_path: Path,
 ) -> None:
     copied_docs = tmp_path / "docs"
-    for relative in PUBLIC_DOC_SOURCES:
+    for relative in REPOSITORY_DOC_SOURCES:
         path = copied_docs / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("# Published\n", encoding="utf-8")
+        path.write_text("# Rendered repository source\n", encoding="utf-8")
     excluded = copied_docs / "COST_AWARE_MODEL_ARCHITECTURE_RECON.md"
     excluded.write_text("```python\nimport linkml\n```\n", encoding="utf-8")
     forbidden_rst = copied_docs / "excluded.rst"
     forbidden_rst.write_text("content\n", encoding="utf-8")
 
-    selected = _public_doc_paths(copied_docs)
+    selected = _repository_doc_paths(copied_docs)
     assert excluded not in selected
     assert forbidden_rst not in selected
     with pytest.raises(AssertionError, match="authored docs must be MyST Markdown"):

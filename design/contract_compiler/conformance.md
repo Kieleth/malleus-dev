@@ -88,7 +88,7 @@ Never overload one version string.
 | Compiler attestation | exact manifest digest | Compiler environment and input provenance |
 | Presentation version | docs or web build | Nonsemantic rendering and narrative |
 
-Candidate source cases, finalized only after `OD-008` classifies fields:
+Accepted source cases under the exact `OD-008` field classification:
 
 | Source | Purpose | Expected semantic relation |
 |---|---|---|
@@ -167,7 +167,9 @@ delta.
    operation outcome. At least one semantic assertion must fail for each
    mutation.
 9. A presentation-erasure transform changes only fields that `OD-008`
-   classifies annotation-only, such as display labels and descriptions. Schema
+   classifies annotation-only: schema name, version, title, and description;
+   class, slot, type, enum, permissible-value, and slot-usage descriptions;
+   class URI; and type URI. Schema
    symbols, identifiers, enforcing annotations, and operation order do not
    change. Alpha-renaming may be tested for graph isomorphism later, but does
    not imply identical canonical bytes or digest.
@@ -200,15 +202,16 @@ forms, an illegal kind/predicate pair, seed primitive used as a fact subject,
 invalid mixin or cycle, invalid bound/range pair, reversed bounds,
 `equalsString` on the wrong range, `inlined=true` on the wrong range,
 `valuePresence=ABSENT` in conflict with `required=true` or `equalsString`, and
-every expression pending `OD-008`. It proves that input member and record order
+every expression outside the exact OD-008 extension. It proves that input member and record order
 do not change canonical bytes and that a description-only edit does not change
 semantic facts. Whole-set validation is atomic: completeness, cardinality,
 object and target kind, required structure, declared acyclicity, duplicates,
 and contradictions pass or refuse together.
 
 Internal candidate digests bind the exact metamodel, canonicalization profile,
-symbol policy, and canonical fact or ordered-fact digest. Stable public fact IDs
-remain blocked on `OD-008`. The direct-fact bytes are not the
+symbol policy, and canonical fact or ordered-fact digest. OD-008 completes the
+candidate metamodel inputs; stable public fact identifiers remain blocked on
+`OD-009`. The direct-fact bytes are not the
 persisted artifact envelope selected later by `CC-R07` and `CC-W01`.
 
 ## OD-006 closed-composition conformance boundary
@@ -258,6 +261,50 @@ admission behavior, source-field or expression classification, public
 promotion, stable public fact identifiers, consumer-bundle bytes, artifact
 bytes, persisted epoch bytes, compatibility, migration, or multi-head recovery.
 
+## OD-008 closed support-profile conformance boundary
+
+The LinkML v0 adapter profile classifies each exact source location as
+`ENFORCED`, `IDENTITY_ONLY`, `ANNOTATION_ONLY`, or `REJECTED`. The classes are
+closed, exhaustive, and disjoint. An unlisted field or annotation, or a listed
+member at the wrong location, refuses. `annotations.adopts` is identity-only at
+the exact imported global-slot redeclaration authorized by OD-002 and emits no
+semantic fact. `annotations.retires` and every unlisted annotation refuse.
+
+The classified source slice covers all six bundled ontology shapes and all nine
+CC-X01 sources, retaining each accepted or refusal outcome instead of treating
+the inventory as nine positive compilations. It includes null permissible-value
+bodies as exact empty value declarations, explicit false, applied default
+range, parent and mixin precedence, restrictive numeric-bound intersection,
+distinct global slot, attribute, and slot-usage evidence, one SlotUse per
+applicable class slot, and the exact retained Assent flat `ValidTime`
+expression. Presentation erasure
+preserves facts and candidate identities while changing source attestation.
+
+The immutable D05 seed composes with exactly
+`FlatExactlyOneExpressionExtensionV0` to form
+`ExpressionCapableContractMetamodelV0`. The extension has only
+`ExactlyOneGroup`, `ExactlyOneAlternative`, and `SlotCondition`; its exact
+predicates, cardinalities, typed values, canonical structural envelopes, SHA-256
+URNs, and whole-set invariants are frozen. Branch, condition, and member order
+are nonsemantic. Inherited and local groups are conjunctive.
+
+The refusal slice covers an extra or wrong-location field, unknown annotation,
+retirement marker, malformed adoption marker, duplicate declaration or slot
+reference, unresolved or ambiguous slot use, repeated or conflicting mixin,
+wrong reference kind, unlisted builtin, null outside a permissible-value body,
+wrong permissible-value body, empty group or branch, duplicate semantic branch
+or condition, unknown condition slot, wrong condition type, internal
+`ABSENT`/required/equals contradiction, nested expression, and every unsupported
+combinator. Each refusal is atomic. Parser acceptance alone never expands the
+profile.
+
+An expansion case is incomplete until the exact location classification,
+seed-or-versioned-extension mapping, default and provenance behavior, positive
+and refusal cases, independent source/direct-fact/oracle parity, metamorphic
+identity tests, profile and metamodel versioning, internal guide, strict Sphinx
+builds, and independent evidence review land together. Public adapter
+docstrings and stable public identifiers remain under OD-009.
+
 ## Acceptance-test matrix
 
 Every row defines the assigned themed-vertical slice, focused countercases, and
@@ -266,12 +313,12 @@ regression obligation.
 | AT | Stage | Themed slice | Countercases | Required result |
 |---|---|---|---|---|
 | AT-001 | Resolver and closure | Root, nested relative import, diamond | Missing import, network locator, resolver failure, directed import cycle, same locator with different bytes, different locators with identical bytes | Exact retained bytes, lengths, digests, module instances, authored ordinals, every parent edge, deterministic order, no hidden I/O under process and operating-system containment; resolver failure never tries another profile; the same locator with different bytes and every directed cycle refuse with retained lineage; different locators with identical bytes remain distinct module observations |
-| AT-002 | Parser and support profile | All baseline declarations | Duplicate key, unknown field, unsupported attribute | Exact declared module or stable typed refusal; every field classified |
+| AT-002 | Parser and support profile | All six bundled shapes, nine divergence sources, exact location classes, retained builtins, null enum body | Duplicate key, unknown or moved field, unknown annotation, retires, wrong body, unsupported builtin | Exact declared module or typed atomic refusal; exact closed classification and source inventory; parser acceptance alone changes nothing |
 | AT-003 | Binder and composition | Root plus domain symbols | Collision, adoption marker/equality refusal matrix, ambiguity | Literal Boolean adoption marker and exact pre-default equality accept only the authorized slot case; every other matrix cell refuses |
 | AT-004 | Hierarchy and mixins | Examiner subtype and Agent mixin | Unknown parent, repeated mixin, order conflict | Exact ancestor and mixin facts or stable refusal |
 | AT-005 | Slot induction | Baseline and additive source | Bounds, explicit false, missing range, attribute versus slot | Exact effective constraints; every applied default is materialized with provenance |
-| AT-006 | Expressions | Locator exactly-one-of | Nested expression, unsupported combinator | Exact normalized expression or stable refusal |
-| AT-007 | Canonical facts | Exact seed kinds and predicates, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null, array, nested object, noncanonical decimal, expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
+| AT-006 | Expressions | Generic flat exactly-one and retained Assent ValidTime | Empty or duplicate branch, duplicate or unknown condition, internal contradiction, nesting, any/all/none | Exact three-kind normalized expression, order-independent internal structural IDs and facts, or typed atomic refusal |
+| AT-007 | Canonical facts | Immutable D05 seed plus exact expression extension, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null outside enum body, array, nested object, noncanonical decimal, unsupported expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
 | AT-008 | Effective contract and closed composition | Complete P/D/G role closures, fixed conceptual v0 role tags and constructors, one composition, one accepted-temporal epoch, and standalone D-only structural graph | Missing, duplicate, extra, unknown, swapped, incomplete, ambient, equal-payload, unbound replacement, mixed-composition, independent-head, wrong-use, structural/full-path confusion, wrong fixed role tag, domain, version, or composition constructor | Exact domain-separated role and composition identities; delta matrix; new composition and epoch for any semantic role change; exact atomic refusal |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |

@@ -1,0 +1,147 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 95723,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:fc7ba395333bcab285baf2b414d188388d7d1a4e26b58743894812f911e1d620"
+    },
+    {
+      "byte_length": 32806,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:74eebc40f6ee5c5fcf744f07eff03168ef7a758871cea394cf6419e40d7d611f"
+    },
+    {
+      "byte_length": 22954,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:9e69ad5734b42bea690edde4f99c47e3e8728dc55b6aa7b71e1dffcd7e0cd410"
+    },
+    {
+      "byte_length": 295325,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068"
+    },
+    {
+      "byte_length": 86200,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:66daee393a6e24c7ef300a61ebe6337b80b8f583003b974b6fd60db11da14321"
+    },
+    {
+      "byte_length": 91379,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:45470f7ca4bb4544491ca93df1f1446e691897cf8ad108381322744040b27bde"
+    },
+    {
+      "byte_length": 20904,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:95016bab233e61fed4084a2b1bd631a1abbdce2f0723072e770f815f7a37a68d"
+    },
+    {
+      "byte_length": 18419,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:6862fba6e91da507ed2477e46523576bf4093e9014f6f47a5ddcf63c8fc0cd5c"
+    },
+    {
+      "byte_length": 44188,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:590dd27ebefe98fe7577887057f2f910d59095b9b64360b830395486f526120a"
+    },
+    {
+      "byte_length": 20939,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:b47364831ebbad1b8086be0b3e6c27e6fb12e5dacfbce6e969c15bd0616ae8f2"
+    },
+    {
+      "byte_length": 2124,
+      "path": "design/contract_compiler/workstreams/CC-D08/manifest.json",
+      "sha256": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7"
+    },
+    {
+      "byte_length": 1742,
+      "path": "docs/conf.py",
+      "sha256": "sha256:f0f050e4eb889a281758c91f8f3c332dd6fc839bc9c866a9e490043753202c70"
+    },
+    {
+      "byte_length": 988,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:b61e6ec8039d33866297e998ba7a908cba8268c93035bba0ab7f7334d885d616"
+    },
+    {
+      "byte_length": 25985,
+      "path": "docs/contract_compiler/support_profile.md",
+      "sha256": "sha256:a85ca786bf288ecbe374b5b4c3db5c487d9a74acab6f8ba443334ad08a3b6c79"
+    },
+    {
+      "byte_length": 198784,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:21037babf96db39def1b5c390ceee7055a8b842c0865e58f3a4aa601b93a2936"
+    },
+    {
+      "byte_length": 36984,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:50c282e7092a2e5723745ac1300a2a086c49a035a0d24ff58d26e8e5bad3c738"
+    },
+    {
+      "byte_length": 72321,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:37961f7860b2391edd3bb84411d38cb002de0df284c1a23457108ce2cd5e6515"
+    }
+  ],
+  "base_commit": "44a6ffd9b5fcedbf31ce81efbad596154b4e0fb2",
+  "checks": [
+    {
+      "check_id": "ccd08-dependency",
+      "method": "Match the CC-D08 zero-scope card to the exact CC-D02, CC-D03, and CC-D05 cards, completion entries, hashes, and first authority heads.",
+      "observed": "The card binds all three required authorities exactly, remains assigned to the overseer, has no scopes, candidate, selection, or worker ledger, and its integration pointer is on the CC-D08 row while CC-D07 remains absent.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-closed-source-profile",
+      "method": "Parse the exact-location support table and exercise raw-source, value-type, symbol, builtin, default, inheritance, conflict, and whole-corpus guards.",
+      "observed": "Every listed location is exactly ENFORCED, IDENTITY_ONLY, ANNOTATION_ONLY, or REJECTED; unlisted fields and annotations refuse. The six bundled schemas and five admitted CC-X01 vectors close, four CC-X01 whole sources refuse, and a separate valid explicit-false vector passes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-expression-metamodel",
+      "method": "Recompute the immutable D05 seed, flat exactly-one extension, combined identities, structural IDs, and mixed-fact composition probes from exact canonical envelopes.",
+      "observed": "The 4,819-byte seed, 4,762-byte extension, and 655-byte composition reproduce identities 1c68a612...c71b, 99527d21...53e6, and 65aae23b...0964. Order mutations preserve semantic facts and IDs; semantic, dangling-target, extra-kind, duplicate-group, applicability, and range violations refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-trusted-builtins",
+      "method": "Open the retained LinkML Runtime 1.11.1 wheel member and compare its exact bytes, digest, upstream type keys, and retained-corpus references with the seven-name trusted map.",
+      "observed": "The exact 7,296-byte types.yaml member has sha256 1c79b264...e00; the retained corpus references exactly string, integer, float, boolean, datetime, date, and uri, while an injected unlisted builtin is detected.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-source-identity",
+      "method": "Exercise presentation erasure, provenance changes, slash-qualified symbol construction, defaults, adoption identity, and structural order metamorphisms.",
+      "observed": "Schema name/version, descriptions, class_uri, and type uri do not enter semantic facts or candidate identity; schema id, declaration keys, enforced values, and expression semantics do. annotations.adopts controls ownership only and emits no semantic fact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-graph",
+      "method": "Parse all 28 Turtle projections and compare them with canonical graph revision 18, then check status uniqueness, dependency acyclicity, OD-008 selection, exact profile bindings, identities, and D09 boundaries.",
+      "observed": "Both graph forms contain the same 1,630 triples with empty directed differences and sha256 2bfe5813...1068. All 333 status subjects have one status; the 103-node, 105-edge dependsOn graph is acyclic; OD-008 selects exactly MalleusLinkMLSupportProfileV0.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-sphinx",
+      "method": "Inspect and build the internal Sphinx support-profile projection with exact table, defaults, identity, corpus, refusal, expansion, adapter, and promotion-boundary guards.",
+      "observed": "The guide renders from the repository toctree, remains outside the public promotion set, mirrors the governed contract, explains why support is intentionally narrow, and gives the atomic expansion workflow. It creates no plugin framework or public adapter/API claim.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd08-boundaries-zero-scope",
+      "method": "Inspect implementation, ontology, package, dependency, Docker, API, artifact, selection, worker-ledger, D07, D09, and future-adapter boundaries.",
+      "observed": "CC-D08 changes governance, tests, graph projections, and one internal guide only. It adds no parser or compiler code, ontology YAML, dependency, package, artifact, public namespace, stable public fact identifier, plugin registry, candidate, selection, or worker ledger.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies the closed support contract, exact internal identities, retained inputs, graph parity, internal documentation, and refusal boundaries. It does not implement a parser, compiler, adapter, plugin framework, artifact, runtime path, package, namespace, or public API.",
+    "CC-R02 still owns implementation and adapter characterization. OD-009 still owns public namespace, docstrings, stable public fact identifiers, and support claims. OD-007, admission, packaging execution, compatibility, migration, and downstream work remain separate."
+  ],
+  "recorded_at": "2026-08-27T04:10:03Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D08"
+}

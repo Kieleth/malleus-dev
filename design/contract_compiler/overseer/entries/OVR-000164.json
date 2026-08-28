@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept one closed exact-location LinkML v0 source profile with strict raw grammar, trusted seven-name builtin map, exact defaults, lossless declaration evidence, provenance, slash-qualified symbols, four exhaustive classifications, and fail-closed unknown input.",
+      "Compose the immutable D05 seed with exactly FlatExactlyOneExpressionExtensionV0 under the closed-union operator; bind exact internal metamodel and structural identities, retained whole-source outcomes, positive and refusal vectors, and graph revision 18.",
+      "Render the internal expansion guide through Sphinx while keeping implementation with CC-R02 and public docstrings, namespaces, stable public fact identifiers, and support claims with OD-009; create no parser, compiler, plugin framework, candidate, selection, or worker ledger."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000161",
+      "OVR-000162",
+      "OVR-000163"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D08"
+  },
+  "entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
+  "entry_id": "OVR-000164",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9ff61ee70f2cebcac9320d5081a8060a5cc7f442820c2c94c50f20e62d802e8d",
+  "recorded_at": "2026-08-27T04:10:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000161",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000162",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000163",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D08",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "OD-008",
+      "type": "DECISION"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 164,
+  "subject": {
+    "id": "CC-D08",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete CC-D08 under the closed LinkML v0 support profile.",
+  "why": "The operator decision, exact source grammar and mapping, complete expression extension, deterministic internal identities, retained corpus closure, coherent graph and projections, strict internal guide, dependency-bound zero-scope card, retained report, and adversarial guards satisfy every CC-D08 completion gate without starting implementation or public promotion."
+}

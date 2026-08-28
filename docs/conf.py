@@ -58,6 +58,7 @@ include_patterns = [
     "RECON_CONTRACT.md",
     "contract_compiler/index.md",
     "contract_compiler/manifests.md",
+    "contract_compiler/support_profile.md",
     "reference/index.md",
 ]
 linkcheck_ignore = []

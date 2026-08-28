@@ -1,0 +1,226 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-008",
+      "CC-D08"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:6862fba6e91da507ed2477e46523576bf4093e9014f6f47a5ddcf63c8fc0cd5c",
+        "before_digest": "sha256:9f0e131281ae20d908f8ab6f2025b89362aeec1e6a7b2789d6221081f77efc64",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:95016bab233e61fed4084a2b1bd631a1abbdce2f0723072e770f815f7a37a68d",
+        "before_digest": "sha256:7077daa80ad3a239b946171a91553707d586831f6af2a5b708a4928b060199a6",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:590dd27ebefe98fe7577887057f2f910d59095b9b64360b830395486f526120a",
+        "before_digest": "sha256:007544525f96ada4d2370429235a764efaefdddb0302b5461402a476b09b35de",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:45470f7ca4bb4544491ca93df1f1446e691897cf8ad108381322744040b27bde",
+        "before_digest": "sha256:4ab592c8ba1326478dc71aa5f7901965bbdab636b519e726bd6652a055cd34b1",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:66daee393a6e24c7ef300a61ebe6337b80b8f583003b974b6fd60db11da14321",
+        "before_digest": "sha256:bc01281f969e350395429566bca376716008840e417fa37b4d709a3b2f9ea908",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:2bfe58135516ef814d030670380145f989ec86d753d8fea69c62b64c13bf1068",
+        "before_digest": "sha256:4198a705992f9062c3fec296cc7115aba5a0ed520b1eff06514076cdec6725ac",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:9e69ad5734b42bea690edde4f99c47e3e8728dc55b6aa7b71e1dffcd7e0cd410",
+        "before_digest": "sha256:b2285545b6f330d754ab84c68cae4ee0c85086cd3bac6654bcb0a59a88550b56",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/conformance.md"
+      },
+      {
+        "after_digest": "sha256:fc7ba395333bcab285baf2b414d188388d7d1a4e26b58743894812f911e1d620",
+        "before_digest": "sha256:82f3483e3e153545a22fd5990b83d85d700de6abc88236ed645591b62e577926",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:b47364831ebbad1b8086be0b3e6c27e6fb12e5dacfbce6e969c15bd0616ae8f2",
+        "before_digest": "sha256:06aabc1c8d2f77422f72cee29ffbd964fe0ae431d55cb519b2bb8c9085c24cd9",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:cd95e75149317baeb8b061db4169e0ba2070fc82201025a59926f274f527b2d2",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D08.json"
+      },
+      {
+        "after_digest": "sha256:74eebc40f6ee5c5fcf744f07eff03168ef7a758871cea394cf6419e40d7d611f",
+        "before_digest": "sha256:40e0b52cba344b1bcded93a25f0fda119a5cd8c5c6db6aa865b76bd778efc180",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D08/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f0f050e4eb889a281758c91f8f3c332dd6fc839bc9c866a9e490043753202c70",
+        "before_digest": "sha256:8d1ce17cac0c6346a74a5ee04ff06c3951451a8832ec78177e90539747b42471",
+        "change": "MODIFIED",
+        "path": "docs/conf.py"
+      },
+      {
+        "after_digest": "sha256:b61e6ec8039d33866297e998ba7a908cba8268c93035bba0ab7f7334d885d616",
+        "before_digest": "sha256:b0793ef1afc91b8140c9e229a003de6664dc6961f21aac9414d2d163eaa6fc47",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:a85ca786bf288ecbe374b5b4c3db5c487d9a74acab6f8ba443334ad08a3b6c79",
+        "change": "CREATED",
+        "path": "docs/contract_compiler/support_profile.md"
+      },
+      {
+        "after_digest": "sha256:50c282e7092a2e5723745ac1300a2a086c49a035a0d24ff58d26e8e5bad3c738",
+        "before_digest": "sha256:1bda6746e016e996e901c92b822c4969f6afe5e618d6a2c87f2cdd715b064c72",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:21037babf96db39def1b5c390ceee7055a8b842c0865e58f3a4aa601b93a2936",
+        "before_digest": "sha256:9394a9e028562383ce6b3405a239f73eed20dc4bdfa5475780d7425f6ac54a4a",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:37961f7860b2391edd3bb84411d38cb002de0df284c1a23457108ce2cd5e6515",
+        "before_digest": "sha256:ebd8c1594b43380402f2179dd1563ccd8a4613cf47b80b44cf7bbcb5b30b6a41",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:0b8a6b815f6a276918bbe58fa61d5281d2df1b064e6c98c6d25fa5817ec6fe0e",
+  "entry_id": "OVR-000162",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fb8a6b8ca1d033fe3091d6a2e8f2a723c794ad99753819fd8d67e9b9e1cb0e4e",
+  "recorded_at": "2026-08-27T04:10:02Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/conformance.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D08/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/conf.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/support_profile.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:cd95e75149317baeb8b061db4169e0ba2070fc82201025a59926f274f527b2d2",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D08.json",
+      "type": "EVIDENCE"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 162,
+  "subject": {
+    "id": "contract-compiler-od008-r18",
+    "type": "DOCUMENT"
+  },
+  "summary": "Promote OD-008 into canonical graph revision 18 and its internal Sphinx guide.",
+  "why": "One governance-only revision keeps the decision workbook, program, conformance spine, canonical graph, five projections, strict integration pointer, zero-scope card, retained evidence, internal developer guide, and adversarial guards on the same closed source-to-fact and expression contract."
+}

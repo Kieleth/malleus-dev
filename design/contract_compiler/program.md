@@ -101,11 +101,12 @@ three-role composition; `CC-D16` still owns exact fields and byte grammar. Its p
 meaning is explained in
 [`decisions.md`](decisions.md#od-001-consumer-bundle-manifest).
 
-Revision 17 also accepts `OD-002` through `OD-006`, `OD-011`, `OD-013`, and
+Revision 18 also accepts `OD-002` through `OD-006`, `OD-008`, `OD-011`, `OD-013`, and
 `OD-014`: exact slot-only adoption; pinned LinkML 1.11.1 as the replaceable
 default adapter; a typed persisted-wire hard break; ontology-powered atomic
 facts in canonical JSON; three roles in one closed composition and one v0
-accepted-temporal epoch; one explicit resolver profile with strict Malleus
+accepted-temporal epoch; one closed exact-location LinkML v0 support profile
+and flat exactly-one expression extension; one explicit resolver profile with strict Malleus
 defaults; one normal distribution including the compiler and LinkML; and the
 Quiet Bell Archive fixture/publication boundary. The exact rules and limitations
 are in [`decisions.md`](decisions.md).
@@ -309,7 +310,7 @@ decisions remain open.
 | CC-D05 | Close OD-005 logical fact vocabulary and wire encoding | CC-D01, CC-D02, CC-D03 | Ontology authority, atomic fact and byte grammar, internal candidate identity envelopes, examples, counterexamples, and decision record accepted |
 | CC-D06 | Close OD-006 contract roles | CC-D05 | Exact three-role closure, fixed conceptual v0 identity constructors, composition and epoch deltas, structural-only exception, refusal matrix, and deferred wire boundaries accepted |
 | CC-D07 | Close OD-007 governance topology | CC-D06 | Admission examples distinguish protected partition and separate graph |
-| CC-D08 | Close OD-008 field classification | CC-D02, CC-D03, CC-D05 | Every supported field and Malleus annotation has one versioned classification |
+| CC-D08 | Close OD-008 field classification | CC-D02, CC-D03, CC-D05 | Closed exact-location LinkML v0 profile, exact defaults and source-to-fact mapping, immutable D05 seed plus flat exactly-one extension, deterministic structural IDs, retained-corpus closure, refusals, and expansion workflow accepted |
 | CC-D09 | Close OD-009 promotion boundary | CC-D01, CC-D05 | Named evidence gate and namespace policy accepted |
 | CC-D10 | Close OD-010 endpoint and generic class-reference semantics | CC-D07 | Contextual graph cases have accepted outcomes |
 | CC-D11 | Close OD-011 import identity, order, cycle, resolver, and fallback policy | CC-X03 | Import observations, examples, counterexamples, and exact policy accepted |
@@ -321,8 +322,9 @@ decisions remain open.
 
 CC-D05 permits computed internal candidate fact and fact-set digests only.
 CC-D06 closes the three semantic roles and logical composition identity inputs;
-it does not create public identifiers or bytes. Stable public fact identifiers
-still wait for CC-D08. No admission profile begins before CC-D07 and CC-D10.
+it does not create public identifiers or bytes. CC-D08 completes the candidate
+expression-capable fact-identity inputs; public identifier publication still
+waits for CC-D09. No admission profile begins before CC-D07 and CC-D10.
 No production implementation begins before CC-D09. Research characterization
 may proceed without deciding outcomes.
 

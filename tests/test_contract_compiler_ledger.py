@@ -6,11 +6,16 @@ import shlex
 import shutil
 import subprocess
 import sys
+import zipfile
 from datetime import datetime, timedelta
+from decimal import Decimal
 from pathlib import Path
+from unicodedata import category
+from urllib.parse import urlsplit
 
 import pytest
 import yaml
+from jsonschema import FormatChecker
 from markdown_it import MarkdownIt
 from rdflib import Graph, Literal, URIRef
 from rdflib.exceptions import ParserError
@@ -82,7 +87,9 @@ HISTORICAL_R3_PATHS = (
 OD005_HEADING = "### OD-005: logical fact record and canonical bytes"
 OD005_NEXT_HEADING = "### OD-006: closed contract roles and composition"
 OD006_HEADING = OD005_NEXT_HEADING
-OD006_NEXT_HEADING = "### OD-011: resolver and import policy"
+OD006_NEXT_HEADING = "### OD-008: closed LinkML v0 support profile"
+OD008_HEADING = OD006_NEXT_HEADING
+OD008_NEXT_HEADING = "### OD-011: resolver and import policy"
 OD005_SEED_TABLE_HEADER = (
     "Subject kind",
     "Predicate",
@@ -168,6 +175,491 @@ OD006_DELTA_TABLE = (
     ("Domain semantic edit", "same", "changed", "same", "changed", "new"),
     ("Governance semantic edit", "same", "same", "changed", "changed", "new"),
 )
+OD008_PROFILE_HEADER = (
+    "Exact source location",
+    "ENFORCED",
+    "IDENTITY_ONLY",
+    "ANNOTATION_ONLY",
+    "REJECTED",
+)
+OD008_PROFILE_ROWS = (
+    (
+        "schema root",
+        "types, enums, slots, classes, imports, default_range",
+        "id, prefixes; each prefix key and value; each import reference; the default_range reference",
+        "name, version, title, description",
+        "every other field; every annotation",
+    ),
+    (
+        "types.<type>",
+        "typeof",
+        "declaration map key; typeof reference",
+        "uri, description",
+        "every other field; every annotation",
+    ),
+    (
+        "enums.<enum>",
+        "permissible_values",
+        "declaration map key",
+        "description",
+        "every other field; every annotation",
+    ),
+    (
+        "enums.<enum>.permissible_values.<value>",
+        "permissible-value map key",
+        "none",
+        "description",
+        "every other field; every annotation",
+    ),
+    (
+        "slots.<slot> global declaration",
+        "range, required, multivalued, identifier, inlined, equals_string, minimum_value, maximum_value, value_presence",
+        "declaration map key; range reference; annotations.adopts only for the exact imported global-slot redeclaration authorized by OD-002",
+        "description",
+        "every other field; every other annotation, including annotations.retires",
+    ),
+    (
+        "classes.<class>",
+        "is_a, mixin, mixins, abstract, slots, attributes, slot_usage, exactly_one_of",
+        "declaration map key; references in is_a, mixins, and slots",
+        "class_uri, description",
+        "every other field; every annotation",
+    ),
+    (
+        "classes.<class>.attributes.<slot>",
+        "range, required, multivalued, identifier, inlined, equals_string, minimum_value, maximum_value, value_presence",
+        "local declaration map key; range reference",
+        "description",
+        "every other field; every annotation",
+    ),
+    (
+        "classes.<class>.slot_usage.<slot>",
+        "range, required, multivalued, identifier, inlined, equals_string, minimum_value, maximum_value, value_presence",
+        "authoritative slot reference map key; range reference",
+        "description",
+        "every other field; every annotation",
+    ),
+    (
+        "classes.<class>.exactly_one_of",
+        "flat nonempty alternative sequence",
+        "none",
+        "none",
+        "empty sequence; any_of, all_of, none_of; nesting; every other expression field",
+    ),
+    (
+        "one exactly_one_of alternative",
+        "one nonempty slot_conditions map",
+        "each slot_conditions map key is an authoritative qualified slot reference",
+        "none",
+        "empty alternative; every other field; every annotation",
+    ),
+    (
+        "one slot_conditions.<slot> condition",
+        "required, equals_string, value_presence, with at least one present",
+        "the authoritative slot reference inherited from its map key",
+        "none",
+        "every other field; every annotation; nested expression",
+    ),
+)
+OD008_SOURCE_VALUE_ROWS = (
+    (
+        "document and every declaration, attribute, slot-usage, alternative, condition, annotation, or description-bearing body",
+        "mapping; never null",
+    ),
+    ("schema id and name", "required nonempty strings"),
+    (
+        "version, title, every description, class_uri, type uri, and equals_string",
+        "string when present",
+    ),
+    (
+        "prefixes",
+        "mapping from an ASCII identifier key to a nonempty absolute-IRI string",
+    ),
+    (
+        "imports, class mixins, and class slots",
+        "sequence of nonempty reference strings; a scalar is not promoted to a sequence",
+    ),
+    (
+        "types, enums, slots, classes, attributes, slot_usage, permissible_values, and slot_conditions",
+        "mapping with the location-specific key and body rules",
+    ),
+    (
+        "default_range, typeof, range, and is_a",
+        "one nonempty reference string",
+    ),
+    (
+        "mixin, abstract, required, multivalued, identifier, and inlined",
+        "raw lowercase true or false; quoted, title-case, and YAML-only Boolean spellings refuse",
+    ),
+    (
+        "minimum_value and maximum_value",
+        "one finite JSON-number lexical scalar under the grammar below; retain the exact source lexeme",
+    ),
+    ("value_presence", "string exactly PRESENT or ABSENT"),
+    ("exactly_one_of", "nonempty sequence of alternative mappings"),
+    (
+        "annotations at the one adopted-slot location",
+        "mapping exactly adopts: true, with literal Boolean true",
+    ),
+    (
+        "one permissible-value body",
+        "raw empty scalar or lowercase null, empty mapping, or mapping exactly description: <string>",
+    ),
+)
+OD008_BUILTIN_ROWS = (
+    ("string", "cf:String", "none; trusted D05 seed target"),
+    ("integer", "cf:Integer", "none; trusted D05 seed target"),
+    ("float", "cf:Float", "none; trusted D05 seed target"),
+    ("boolean", "cf:Boolean", "none; trusted D05 seed target"),
+    ("datetime", "cf:DateTime", "none; trusted D05 seed target"),
+    (
+        "date",
+        "https://w3id.org/linkml/types/date",
+        "rdf:type cf:Scalar; cf:typeof cf:String",
+    ),
+    (
+        "uri",
+        "https://w3id.org/linkml/types/uri",
+        "rdf:type cf:Scalar; cf:typeof cf:String",
+    ),
+)
+OD008_CORPUS_ROWS = (
+    (
+        "ontology/malleus.yaml",
+        "ACCEPT",
+        "closed non-expression profile and trusted seven-name builtin map",
+    ),
+    (
+        "ontology/assent.yaml",
+        "ACCEPT",
+        "closed profile plus flat exactly_one_of ValidTime evidence",
+    ),
+    (
+        "ontology/domains/attack.yaml",
+        "ACCEPT",
+        "closed non-expression profile",
+    ),
+    (
+        "ontology/domains/cyp450.yaml",
+        "ACCEPT",
+        "closed non-expression profile",
+    ),
+    (
+        "ontology/domains/ocr.yaml",
+        "ACCEPT",
+        "closed non-expression profile",
+    ),
+    (
+        "ontology/domains/recon.yaml",
+        "ACCEPT",
+        "closed non-expression profile",
+    ),
+    ("CC-X01/simple_parity", "ACCEPT", "supported direct slot use"),
+    (
+        "CC-X01/parent_mixin_precedence",
+        "ACCEPT",
+        "exact pinned ancestor traversal",
+    ),
+    (
+        "CC-X01/repeated_mixin",
+        "REFUSE",
+        "repeated authored mixin reference",
+    ),
+    (
+        "CC-X01/conflicting_mixins_ab",
+        "REFUSE",
+        "conflicting ENFORCED mixin values",
+    ),
+    (
+        "CC-X01/conflicting_mixins_ba",
+        "REFUSE",
+        "same conflict after source-order reversal",
+    ),
+    ("CC-X01/numeric_bounds", "ACCEPT", "supported numeric-bound intersection"),
+    (
+        "CC-X01/explicit_false",
+        "REFUSE",
+        "measured SlotUse remains EQUAL, but global String Slot has illegal inlined=true",
+    ),
+    (
+        "CC-X01/default_range",
+        "ACCEPT",
+        "supported default_range materialization with provenance",
+    ),
+    (
+        "CC-X01/attribute_slot_usage",
+        "ACCEPT",
+        "supported local attribute plus applicable slot_usage",
+    ),
+    (
+        "D08/valid_explicit_false",
+        "ACCEPT",
+        "separate valid String Slot and SlotUse with four explicit false values",
+    ),
+)
+OD008_DEFAULT_ROWS = (
+    ("class declaration", "mixin", "cf:isMixin=false"),
+    ("class declaration", "abstract", "cf:abstract=false"),
+    (
+        "global slot, local attribute, or effective SlotUse",
+        "range",
+        "schema default_range; if that is absent, seed String",
+    ),
+    (
+        "global slot, local attribute, or effective SlotUse",
+        "required",
+        "cf:required=false",
+    ),
+    (
+        "global slot, local attribute, or effective SlotUse",
+        "multivalued",
+        "cf:multivalued=false",
+    ),
+    (
+        "global slot, local attribute, or effective SlotUse",
+        "identifier",
+        "cf:identifier=false",
+    ),
+    ("supported Slot or SlotUse with non-Class range", "inlined", "cf:inlined=false"),
+    (
+        "supported Slot or SlotUse with Class range whose target has exactly one effective identifier slot",
+        "inlined",
+        "cf:inlined=false",
+    ),
+    (
+        "supported Slot or SlotUse with Class range whose target has no effective identifier slot",
+        "inlined",
+        "cf:inlined=true",
+    ),
+    ("type declaration", "typeof", "no default; refuse incomplete Scalar"),
+    (
+        "any supported constraint location",
+        "equals_string, minimum_value, maximum_value, value_presence",
+        "no fact",
+    ),
+    (
+        "class declaration",
+        "is_a, mixins, slots, attributes, slot_usage, exactly_one_of",
+        "no relation or expression fact",
+    ),
+)
+OD008_EXPRESSION_ROWS = (
+    ("ExactlyOneGroup", "rdf:type", "exactly ExactlyOneGroup", "1"),
+    ("ExactlyOneGroup", "cf:onClass", "Class", "1"),
+    (
+        "ExactlyOneAlternative",
+        "rdf:type",
+        "exactly ExactlyOneAlternative",
+        "1",
+    ),
+    ("ExactlyOneAlternative", "cf:inGroup", "ExactlyOneGroup", "1"),
+    ("SlotCondition", "rdf:type", "exactly SlotCondition", "1"),
+    ("SlotCondition", "cf:inAlternative", "ExactlyOneAlternative", "1"),
+    ("SlotCondition", "cf:usesSlot", "authoritative qualified Slot", "1"),
+    ("SlotCondition", "cf:required", "Boolean", "0..1"),
+    ("SlotCondition", "cf:equalsString", "string", "0..1"),
+    (
+        "SlotCondition",
+        "cf:valuePresence",
+        "string PRESENT or ABSENT",
+        "0..1",
+    ),
+)
+OD008_SEED_INVARIANTS = (
+    (
+        "absent-conflicts-with-required-true-or-equals-string",
+        "valuePresence=ABSENT refuses when required=true or equalsString is present on the same Slot or SlotUse.",
+    ),
+    (
+        "atomic-whole-fact-set-validation",
+        "Validation accepts or refuses the complete supplied fact set atomically; it never returns or accepts a valid subset after any violation.",
+    ),
+    (
+        "class-parent-and-mixin-graph-acyclic",
+        "The union of rdfs:subClassOf and cf:usesMixin edges between Class subjects is acyclic.",
+    ),
+    (
+        "enforced-kind-predicate-cardinality-and-whole-set-completeness",
+        "Every fact subject has exactly one rdf:type kind fact and exactly the closed kind-specific predicate cardinalities in the active metamodel's rules; no other kind or predicate is legal.",
+    ),
+    (
+        "equals-string-only-string-resolving-or-enum-range",
+        "On a Slot or SlotUse subject, cf:equalsString is legal only when cf:valueRange directly names cf:String or an Enum, or resolves through a Scalar chain terminating in cf:String.",
+    ),
+    (
+        "every-non-seed-identifier-target-resolves-in-fact-set",
+        "Every object of rdfs:subClassOf, cf:usesMixin, cf:typeof, cf:valueRange, cf:onClass, or cf:usesSlot resolves to a fact subject in the same whole fact set, except an allowed SeedPrimitive object of cf:typeof or cf:valueRange.",
+    ),
+    (
+        "exact-duplicate-fact-record-refuses",
+        "An exact duplicate subject-predicate-object fact record refuses the whole fact set; convergent derivation provenance remains outside the fact set.",
+    ),
+    (
+        "inlined-true-only-class-range",
+        "cf:inlined=true is legal only when cf:valueRange names Class.",
+    ),
+    (
+        "numeric-bounds-only-integer-or-float-and-minimum-not-greater-than-maximum",
+        "cf:minimum and cf:maximum are legal only when cf:valueRange directly names cf:Integer or cf:Float, or resolves through a Scalar chain terminating in cf:Integer or cf:Float, and minimum cannot exceed maximum.",
+    ),
+    (
+        "scalar-typeof-acyclic-and-terminates-in-seed-primitive",
+        "The Scalar cf:typeof graph is acyclic and every path terminates in exactly one of the five SeedPrimitive targets.",
+    ),
+    (
+        "seed-primitives-are-targets-not-fact-subjects",
+        "The five SeedPrimitive IRIs are trusted targets and cannot occur as fact subjects.",
+    ),
+    (
+        "uses-mixin-target-has-is-mixin-true",
+        "Every cf:usesMixin object resolves to a Class subject in the same whole fact set whose cf:isMixin object is true.",
+    ),
+)
+OD008_SEED_STRUCTURAL_IDENTITY_PROFILES = (
+    {
+        "digest_encoding": "lowercase-hex",
+        "domain": "malleus.contract-structure.slot-use/v0",
+        "hash": "sha256",
+        "members": ["class", "domain", "slot"],
+        "output_prefix": "urn:malleus:contract-structure:slot-use:v0:sha256:",
+    },
+)
+OD008_EXPRESSION_INVARIANTS = (
+    (
+        "alternative-has-one-or-more-conditions",
+        "Every ExactlyOneAlternative belongs to one ExactlyOneGroup and has one or more SlotCondition subjects.",
+    ),
+    (
+        "condition-equals-string-uses-d05-effective-slot-use-range-rule",
+        "SlotCondition cf:equalsString is legal only when the declaring-class effective SlotUse range directly names cf:String or an Enum, or resolves through a Scalar chain terminating in cf:String.",
+    ),
+    (
+        "condition-has-one-or-more-enforcing-members",
+        "Every SlotCondition has at least one of cf:required, cf:equalsString, or cf:valuePresence.",
+    ),
+    (
+        "condition-slot-has-applicable-effective-slot-use-on-declaring-class",
+        "Every SlotCondition cf:usesSlot target has an applicable effective SlotUse on the ExactlyOneGroup declaring Class.",
+    ),
+    (
+        "declaring-class-group-reified-once-and-inherited-conjunctively-without-copy",
+        "Each Class has at most one directly declared ExactlyOneGroup; that group is reified once on its declaring Class; descendants apply ancestor and local groups conjunctively without copied or reidentified groups.",
+    ),
+    (
+        "duplicate-semantic-alternatives-and-conditions-refuse",
+        "Duplicate semantic alternatives in one group and duplicate authoritative-slot conditions in one alternative refuse the whole fact set.",
+    ),
+    (
+        "group-has-one-or-more-alternatives",
+        "Every ExactlyOneGroup names one Class and has one or more ExactlyOneAlternative subjects.",
+    ),
+    (
+        "group-and-alternative-structural-targets-resolve-in-whole-fact-set",
+        "Every cf:inGroup object resolves in the same whole fact set to ExactlyOneGroup, and every cf:inAlternative object resolves there to ExactlyOneAlternative.",
+    ),
+    (
+        "only-flat-class-exactly-one-of",
+        "Only flat class exactly_one_of is legal; nested, any_of, all_of, and none_of forms refuse, and no cross-branch or cross-group satisfiability analysis occurs.",
+    ),
+    (
+        "semantic-order-independent-structural-identities",
+        "Branch, condition, and member order does not change structural envelopes, subjects, or canonical facts; source indexes never enter identity.",
+    ),
+    (
+        "value-presence-absent-conflicts-with-required-true-or-equals-string",
+        "Within one SlotCondition, cf:valuePresence ABSENT refuses with cf:required true or any cf:equalsString.",
+    ),
+)
+OD008_EXPRESSION_STRUCTURAL_IDENTITY_PROFILES = (
+    {
+        "digest_encoding": "lowercase-hex",
+        "domain": "malleus.exactly-one-alternative-semantics/v0",
+        "hash": "sha256",
+        "members": ["conditions", "domain"],
+        "output_prefix": "sha256:",
+        "sorted_arrays": {
+            "conditions": "canonical-json-object-bytes-ascending",
+        },
+    },
+    {
+        "digest_encoding": "lowercase-hex",
+        "domain": "malleus.contract-structure.exactly-one-group/v0",
+        "hash": "sha256",
+        "members": ["alternative_semantic_digests", "class", "domain"],
+        "output_prefix": (
+            "urn:malleus:contract-structure:exactly-one-group:v0:sha256:"
+        ),
+        "sorted_arrays": {
+            "alternative_semantic_digests": "canonical-json-string-bytes-ascending",
+        },
+    },
+    {
+        "digest_encoding": "lowercase-hex",
+        "domain": "malleus.contract-structure.exactly-one-alternative/v0",
+        "hash": "sha256",
+        "members": [
+            "alternative_semantic_digest",
+            "domain",
+            "group",
+        ],
+        "output_prefix": (
+            "urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:"
+        ),
+    },
+    {
+        "digest_encoding": "lowercase-hex",
+        "domain": "malleus.contract-structure.slot-condition/v0",
+        "hash": "sha256",
+        "members": ["alternative", "domain", "slot"],
+        "output_prefix": (
+            "urn:malleus:contract-structure:slot-condition:v0:sha256:"
+        ),
+    },
+)
+OD008_EXPRESSION_SEMANTIC_MEMBER_PROFILES = (
+    {
+        "minimum_optional_members": 1,
+        "name": "slot-condition-semantics",
+        "optional_members": ["equalsString", "required", "valuePresence"],
+        "required_members": ["slot"],
+    },
+)
+OD008_SEED_METAMODEL_ID = (
+    "urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:"
+    "1c68a612f3e7a0f80c31965aa5525954921dfbee60d151552d10d61cb0aac71b"
+)
+OD008_EXPRESSION_METAMODEL_ID = (
+    "urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:"
+    "99527d21040cbdda9dd7c579af7f40af8645de9b5f4b1e8ba28b40ddff7d53e6"
+)
+OD008_COMPOSITION_OPERATOR = (
+    "The active rules are the exact closed union of base.rules and extension.rules; "
+    "duplicate kind-predicate rows refuse composition; both invariant sets apply "
+    "with their literal subject and whole-set quantifiers; every invariant reference "
+    "to active rules means that union; no other kind or predicate is legal."
+)
+OD008_COMBINED_METAMODEL_ID = (
+    "urn:malleus:contract-metamodel:expression-capable:v0:sha256:"
+    "65aae23b7a0892a4d2ae2b5adc6888f1ddd39c94ce03f412d50a6a5ccd5d0964"
+)
+OD008_SYMBOL_POLICY_ID = (
+    "urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0"
+)
+OD008_ANCESTOR_FENCE = """ancestors = [class]
+stack = [class]
+visited = []
+while stack is not empty:
+  current = stack.pop_last()
+  visited.append(current)
+  for parent in authored_mixins_then_is_a(current):
+    if parent is absent from visited and ancestors:
+      stack.append(parent)
+      ancestors.append(parent)
+apply slot_usage for each class in reverse(ancestors)"""
+OD008_NUMBER_FENCE = """number = ["-"] integer [fraction] [exponent]
+integer = "0" | nonzero-digit {digit}
+fraction = "." digit {digit}
+exponent = ("e" | "E") ["+" | "-"] digit {digit}"""
 OD006_CONSTRUCTOR_FENCES = (
     """RoleBoundContractIdentity(
   fixed logical token: malleus.contract-role-bound-identity/v0,
@@ -263,6 +755,16 @@ def _od006_section(decisions: str) -> str:
     return section
 
 
+def _od008_section(decisions: str) -> str:
+    assert decisions.count(OD008_HEADING) == 1
+    assert decisions.count(OD008_NEXT_HEADING) == 1
+    before, section_and_after = decisions.split(OD008_HEADING, 1)
+    section, after = section_and_after.split(OD008_NEXT_HEADING, 1)
+    assert OD008_NEXT_HEADING not in before
+    assert OD008_HEADING not in after
+    return section
+
+
 def _markdown_tables(section: str) -> tuple[tuple[tuple[str, ...], ...], ...]:
     tables: list[tuple[tuple[str, ...], ...]] = []
     rows: list[tuple[str, ...]] | None = None
@@ -286,6 +788,568 @@ def _markdown_tables(section: str) -> tuple[tuple[tuple[str, ...], ...], ...]:
             rows = None
     assert rows is None and row is None
     return tuple(tables)
+
+
+def _table_named(
+    section: str,
+    header: tuple[str, ...],
+) -> tuple[tuple[str, ...], ...]:
+    matches = tuple(table[1:] for table in _markdown_tables(section) if table[0] == header)
+    assert len(matches) == 1
+    return tuple(tuple(cell.replace("`", "") for cell in row) for row in matches[0])
+
+
+def _assert_od008_closed_profile(section: str) -> None:
+    assert _table_named(section, OD008_PROFILE_HEADER) == OD008_PROFILE_ROWS
+    assert _table_named(section, ("Exact source member", "Required raw value")) == (
+        OD008_SOURCE_VALUE_ROWS
+    )
+    assert _table_named(
+        section,
+        ("LinkML source name", "Neutral target", "Additional facts when referenced"),
+    ) == OD008_BUILTIN_ROWS
+    assert _table_named(
+        section,
+        ("Governed source vector", "D08 outcome", "Exact reason"),
+    ) == OD008_CORPUS_ROWS
+    assert _table_named(
+        section,
+        ("Effective location", "Omitted field", "Materialized result"),
+    ) == OD008_DEFAULT_ROWS
+    assert _table_named(
+        section,
+        ("Subject kind", "Predicate", "Object type or target", "Cardinality"),
+    ) == OD008_EXPRESSION_ROWS
+    prose = " ".join(section.split())
+    for phrase in (
+        "Anything absent from the exact table at its exact location is `REJECTED`.",
+        "A parser branch alone cannot expand this profile.",
+        "V0 accepts exactly one mapping document and no YAML directive or document-boundary marker.",
+        "all explicit YAML tags, including core tags such as `!!str`",
+        "implicit LinkML coercion refuse",
+        "qualified symbol `schema-id + \"/\" + K`",
+        "qualified symbol `C + \"/\" + A`",
+        "There is no escaping, case folding, Unicode normalization, path normalization",
+        "The exact authored import `linkml:types` selects one trusted builtin lookup map.",
+        "It does not admit upstream `types.yaml` as ordinary user source.",
+        "`linkml_runtime-1.11.1-py3-none-any.whl` with SHA-256 `b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da`",
+        "`linkml_runtime/linkml_model/model/schema/types.yaml`",
+        "`1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00`",
+        "exactly 7,296 member bytes",
+        "Null means an empty value declaration, not a semantic null.",
+        "`name` and `version` remain module metadata only",
+        "Each permissible-value key is `ENFORCED` because it emits one `cf:enumValue` fact.",
+        "Effective `identifier=true` forces effective `required=true`",
+        "pinned LinkML identifier-based `inlined` derivation",
+        "Annotation-only differences never cause that refusal.",
+        "A `slot_usage` key must resolve to an already applicable slot",
+        "authoritative slot owner and emits no adoption fact",
+        "The immutable `ExactNonExpressionSeedContractMetamodel` from D05 is not edited.",
+        "`FlatExactlyOneExpressionExtensionV0` is composed with that exact seed",
+        "`ExpressionCapableContractMetamodelV0` identity",
+        "applicable effective `SlotUse` on the group's declaring class",
+        "inherited groups are not copied or reidentified",
+        "no other base-slot or branch narrowing is declared contradictory",
+        OD008_SEED_METAMODEL_ID,
+        OD008_EXPRESSION_METAMODEL_ID,
+        OD008_COMBINED_METAMODEL_ID,
+        OD008_SYMBOL_POLICY_ID,
+        "These are internal candidate structural IDs, not published stable IDs.",
+        "Source indexes never enter identity.",
+        "D08 does not design a plugin framework",
+        "declare its implementation and version plus its exact support, default, and resolver profiles",
+        "public support claims remain blocked on `OD-009`.",
+    ):
+        assert phrase in prose
+    for rejected in (
+        "`annotations.retires`",
+        "`range_expression`",
+        "`rules`",
+        "`unique_keys`",
+        "`any_of`",
+        "`all_of`",
+        "`none_of`",
+    ):
+        assert rejected in section
+
+    od005 = _od005_section(
+        (ROOT / "design" / "contract_compiler" / "decisions.md").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert _od005_seed_table_rows(od005) == OD005_SEED_ROWS
+    assert _od005_seed_primitives(od005) == OD005_SEED_PRIMITIVES
+    assert {row[0] for row in OD008_EXPRESSION_ROWS}.isdisjoint(
+        {row[0] for row in OD005_SEED_ROWS}
+    )
+    text_fences = tuple(
+        token.content.removesuffix("\n")
+        for token in MarkdownIt("commonmark").parse(section)
+        if token.type == "fence" and token.info.strip() == "text"
+    )
+    assert text_fences == (
+        OD008_NUMBER_FENCE,
+        OD008_ANCESTOR_FENCE,
+        "urn:malleus:contract-structure:exactly-one-group:v0:sha256:<hex>\n"
+        "urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:<hex>\n"
+        "urn:malleus:contract-structure:slot-condition:v0:sha256:<hex>",
+    )
+    yaml_fences = tuple(
+        token.content
+        for token in MarkdownIt("commonmark").parse(section)
+        if token.type == "fence" and token.info.strip() == "yaml"
+    )
+    assert len(yaml_fences) == 1
+    explicit_false = _od008_assert_raw_source_grammar(yaml_fences[0])
+    _od008_assert_exact_value_types(explicit_false)
+    assert explicit_false["slots"]["value"] == {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "range": "string",
+        "required": False,
+    }
+    assert explicit_false["classes"]["Record"]["slot_usage"]["value"] == {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": False,
+    }
+
+
+def _od008_source_shape_inventory(
+    documents: list[dict[str, object]],
+) -> tuple[dict[str, set[str]], set[type[object]], int]:
+    observed = {
+        name: set()
+        for name in (
+            "schema",
+            "type",
+            "enum",
+            "permissible_value",
+            "slot",
+            "class",
+            "attribute",
+            "slot_usage",
+            "alternative",
+            "condition",
+            "slot_annotation",
+        )
+    }
+    permissible_body_types: set[type[object]] = set()
+    null_permissible_values = 0
+
+    def mapping(value: object, location: str) -> dict[str, object]:
+        assert isinstance(value, dict), f"{location} body must be a map"
+        assert all(isinstance(key, str) for key in value), f"{location} keys must be strings"
+        return value
+
+    for document_index, document in enumerate(documents):
+        root = mapping(document, f"document[{document_index}]")
+        observed["schema"].update(root)
+        for kind, observed_name in (
+            ("types", "type"),
+            ("enums", "enum"),
+            ("slots", "slot"),
+            ("classes", "class"),
+        ):
+            declarations = mapping(root.get(kind, {}), f"document[{document_index}].{kind}")
+            for name, raw_declaration in declarations.items():
+                declaration = mapping(
+                    raw_declaration,
+                    f"document[{document_index}].{kind}.{name}",
+                )
+                observed[observed_name].update(declaration)
+                if kind == "enums":
+                    values = mapping(
+                        declaration.get("permissible_values", {}),
+                        f"document[{document_index}].enums.{name}.permissible_values",
+                    )
+                    for value_name, body in values.items():
+                        permissible_body_types.add(type(body))
+                        if body is None:
+                            null_permissible_values += 1
+                            continue
+                        value = mapping(
+                            body,
+                            f"document[{document_index}].enums.{name}.permissible_values.{value_name}",
+                        )
+                        assert set(value) <= {"description"}
+                        if "description" in value:
+                            assert isinstance(value["description"], str)
+                        observed["permissible_value"].update(value)
+                elif kind == "slots":
+                    if "annotations" in declaration:
+                        annotations = mapping(
+                            declaration["annotations"],
+                            f"document[{document_index}].slots.{name}.annotations",
+                        )
+                        observed["slot_annotation"].update(annotations)
+                elif kind == "classes":
+                    for field, observed_field in (
+                        ("attributes", "attribute"),
+                        ("slot_usage", "slot_usage"),
+                    ):
+                        nested = mapping(
+                            declaration.get(field, {}),
+                            f"document[{document_index}].classes.{name}.{field}",
+                        )
+                        for nested_name, nested_body in nested.items():
+                            body = mapping(
+                                nested_body,
+                                f"document[{document_index}].classes.{name}.{field}.{nested_name}",
+                            )
+                            observed[observed_field].update(body)
+                    alternatives = declaration.get("exactly_one_of", [])
+                    assert isinstance(alternatives, list)
+                    for alternative_index, alternative_body in enumerate(alternatives):
+                        alternative = mapping(
+                            alternative_body,
+                            f"document[{document_index}].classes.{name}.exactly_one_of[{alternative_index}]",
+                        )
+                        observed["alternative"].update(alternative)
+                        conditions = mapping(
+                            alternative.get("slot_conditions", {}),
+                            f"document[{document_index}].classes.{name}.exactly_one_of[{alternative_index}].slot_conditions",
+                        )
+                        for slot, condition_body in conditions.items():
+                            condition = mapping(
+                                condition_body,
+                                f"document[{document_index}].classes.{name}.exactly_one_of[{alternative_index}].slot_conditions.{slot}",
+                            )
+                            observed["condition"].update(condition)
+    return observed, permissible_body_types, null_permissible_values
+
+
+def _od008_is_json_number_lexeme(value: str) -> bool:
+    index = 0
+    if value.startswith("-"):
+        index = 1
+    if index == len(value):
+        return False
+    if value[index] == "0":
+        index += 1
+        if index < len(value) and "0" <= value[index] <= "9":
+            return False
+    elif "1" <= value[index] <= "9":
+        index += 1
+        while index < len(value) and "0" <= value[index] <= "9":
+            index += 1
+    else:
+        return False
+    if index < len(value) and value[index] == ".":
+        index += 1
+        start = index
+        while index < len(value) and "0" <= value[index] <= "9":
+            index += 1
+        if index == start:
+            return False
+    if index < len(value) and value[index] in "eE":
+        index += 1
+        if index < len(value) and value[index] in "+-":
+            index += 1
+        start = index
+        while index < len(value) and "0" <= value[index] <= "9":
+            index += 1
+        if index == start:
+            return False
+    return index == len(value)
+
+
+def _od008_assert_raw_source_grammar(source: str) -> dict[str, object]:
+    forbidden_tokens = (
+        yaml.tokens.AliasToken,
+        yaml.tokens.AnchorToken,
+        yaml.tokens.DirectiveToken,
+        yaml.tokens.DocumentEndToken,
+        yaml.tokens.DocumentStartToken,
+        yaml.tokens.TagToken,
+    )
+    tokens = tuple(yaml.scan(source))
+    assert not any(isinstance(token, forbidden_tokens) for token in tokens)
+    documents = tuple(yaml.compose_all(source, Loader=yaml.SafeLoader))
+    assert len(documents) == 1
+    root = documents[0]
+    assert isinstance(root, yaml.nodes.MappingNode)
+    boolean_fields = {
+        "abstract",
+        "adopts",
+        "identifier",
+        "inlined",
+        "mixin",
+        "multivalued",
+        "required",
+    }
+    bound_fields = {"maximum_value", "minimum_value"}
+
+    def visit(node: yaml.nodes.Node, *, permissible_body: bool = False) -> None:
+        if isinstance(node, yaml.nodes.ScalarNode):
+            if node.tag == "tag:yaml.org,2002:null":
+                assert permissible_body
+                assert node.style is None
+                assert node.value in {"", "null"}
+            return
+        if isinstance(node, yaml.nodes.SequenceNode):
+            for item in node.value:
+                visit(item)
+            return
+        assert isinstance(node, yaml.nodes.MappingNode)
+        keys: set[str] = set()
+        for key, value in node.value:
+            assert isinstance(key, yaml.nodes.ScalarNode)
+            assert key.tag == "tag:yaml.org,2002:str"
+            assert key.value and key.value not in keys
+            keys.add(key.value)
+            if key.value in boolean_fields:
+                assert isinstance(value, yaml.nodes.ScalarNode)
+                assert value.style is None
+                assert value.value in {"true", "false"}
+            elif key.value in bound_fields:
+                assert isinstance(value, yaml.nodes.ScalarNode)
+                assert value.style is None
+                assert _od008_is_json_number_lexeme(value.value)
+            elif key.value == "permissible_values":
+                assert isinstance(value, yaml.nodes.MappingNode)
+                permissible_keys: set[str] = set()
+                for pv_key, pv_body in value.value:
+                    assert isinstance(pv_key, yaml.nodes.ScalarNode)
+                    assert pv_key.tag == "tag:yaml.org,2002:str"
+                    assert pv_key.value and pv_key.value not in permissible_keys
+                    permissible_keys.add(pv_key.value)
+                    visit(pv_body, permissible_body=True)
+                continue
+            visit(value)
+
+    visit(root)
+    loaded = yaml.safe_load(source)
+    assert isinstance(loaded, dict)
+
+    def retain_numbers(node: yaml.nodes.Node, value: object) -> object:
+        if isinstance(node, yaml.nodes.SequenceNode):
+            assert isinstance(value, list) and len(node.value) == len(value)
+            return [
+                retain_numbers(item_node, item_value)
+                for item_node, item_value in zip(node.value, value)
+            ]
+        if not isinstance(node, yaml.nodes.MappingNode):
+            return value
+        assert isinstance(value, dict)
+        result = dict(value)
+        for key_node, value_node in node.value:
+            assert isinstance(key_node, yaml.nodes.ScalarNode)
+            key = key_node.value
+            if key in bound_fields:
+                assert isinstance(value_node, yaml.nodes.ScalarNode)
+                result[key] = Decimal(value_node.value)
+            else:
+                result[key] = retain_numbers(value_node, result[key])
+        return result
+
+    loaded = retain_numbers(root, loaded)
+    assert isinstance(loaded, dict)
+    return loaded
+
+
+def _od008_assert_exact_value_types(document: dict[str, object]) -> None:
+    prefix_names: set[str] = set()
+    root_fields = {
+        "classes",
+        "default_range",
+        "description",
+        "enums",
+        "id",
+        "imports",
+        "name",
+        "prefixes",
+        "slots",
+        "title",
+        "types",
+        "version",
+    }
+    constraint_fields = {
+        "description",
+        "equals_string",
+        "identifier",
+        "inlined",
+        "maximum_value",
+        "minimum_value",
+        "multivalued",
+        "range",
+        "required",
+        "value_presence",
+    }
+
+    def ascii_key(value: object) -> bool:
+        if not isinstance(value, str) or not value:
+            return False
+        first = value[0]
+        if not ("A" <= first <= "Z" or "a" <= first <= "z" or first == "_"):
+            return False
+        return all(
+            "A" <= char <= "Z"
+            or "a" <= char <= "z"
+            or "0" <= char <= "9"
+            or char == "_"
+            for char in value[1:]
+        )
+
+    def mapping(value: object) -> dict[str, object]:
+        assert isinstance(value, dict)
+        assert all(isinstance(key, str) and key for key in value)
+        return value
+
+    def string(value: object) -> None:
+        assert isinstance(value, str) and value
+
+    def absolute_iri(value: object, *, schema_id: bool = False) -> None:
+        string(value)
+        assert all(category(char) not in {"Cc", "Cs"} for char in value)
+        assert FormatChecker().conforms(value, "iri")
+        parsed = urlsplit(value)
+        assert parsed.scheme
+        if schema_id:
+            assert not parsed.query and not parsed.fragment
+            assert not value.endswith("/")
+
+    def reference(value: object) -> None:
+        string(value)
+        if ":" not in value:
+            assert ascii_key(value)
+            return
+        prefix, separator, suffix = value.partition(":")
+        assert separator and prefix in prefix_names and ascii_key(suffix)
+
+    def optional_string(body: dict[str, object], field: str) -> None:
+        if field in body:
+            assert isinstance(body[field], str)
+
+    def string_sequence(value: object) -> None:
+        assert isinstance(value, list) and all(
+            isinstance(item, str) and item for item in value
+        )
+
+    def constraints(body: dict[str, object], *, annotations: bool = False) -> None:
+        allowed = constraint_fields | ({"annotations"} if annotations else set())
+        assert set(body) <= allowed
+        if "range" in body:
+            reference(body["range"])
+        optional_string(body, "equals_string")
+        for field in (
+            "required",
+            "multivalued",
+            "identifier",
+            "inlined",
+        ):
+            if field in body:
+                assert type(body[field]) is bool
+        for field in ("minimum_value", "maximum_value"):
+            if field in body:
+                value = body[field]
+                assert isinstance(value, Decimal) and value.is_finite()
+        if "value_presence" in body:
+            assert body["value_presence"] in {"PRESENT", "ABSENT"}
+        optional_string(body, "description")
+        if "annotations" in body:
+            assert annotations
+            assert mapping(body["annotations"]) == {"adopts": True}
+
+    root = mapping(document)
+    assert set(root) <= root_fields
+    assert "id" in root and "name" in root
+    absolute_iri(root["id"], schema_id=True)
+    string(root["name"])
+    for field in ("version", "title", "description"):
+        optional_string(root, field)
+    if "prefixes" in root:
+        prefixes = mapping(root["prefixes"])
+        assert all(ascii_key(key) for key in prefixes)
+        prefix_names.update(prefixes)
+        for value in prefixes.values():
+            absolute_iri(value)
+    if "imports" in root:
+        string_sequence(root["imports"])
+    if "default_range" in root:
+        reference(root["default_range"])
+
+    for container in ("types", "enums", "slots", "classes"):
+        assert all(ascii_key(key) for key in mapping(root.get(container, {})))
+
+    for body in mapping(root.get("types", {})).values():
+        declaration = mapping(body)
+        assert set(declaration) <= {"description", "typeof", "uri"}
+        assert "typeof" in declaration
+        reference(declaration["typeof"])
+        optional_string(declaration, "uri")
+        optional_string(declaration, "description")
+    for body in mapping(root.get("enums", {})).values():
+        declaration = mapping(body)
+        assert set(declaration) <= {"description", "permissible_values"}
+        optional_string(declaration, "description")
+        for pv_body in mapping(declaration.get("permissible_values", {})).values():
+            if pv_body is None:
+                continue
+            value = mapping(pv_body)
+            assert set(value) <= {"description"}
+            optional_string(value, "description")
+    for body in mapping(root.get("slots", {})).values():
+        constraints(mapping(body), annotations=True)
+    for body in mapping(root.get("classes", {})).values():
+        declaration = mapping(body)
+        assert set(declaration) <= {
+            "abstract",
+            "attributes",
+            "class_uri",
+            "description",
+            "exactly_one_of",
+            "is_a",
+            "mixin",
+            "mixins",
+            "slot_usage",
+            "slots",
+        }
+        if "is_a" in declaration:
+            reference(declaration["is_a"])
+        for field in ("class_uri", "description"):
+            optional_string(declaration, field)
+        for field in ("mixin", "abstract"):
+            if field in declaration:
+                assert type(declaration[field]) is bool
+        for field in ("mixins", "slots"):
+            if field in declaration:
+                string_sequence(declaration[field])
+                for item in declaration[field]:
+                    reference(item)
+        for field in ("attributes", "slot_usage"):
+            nested_declarations = mapping(declaration.get(field, {}))
+            if field == "attributes":
+                assert all(ascii_key(key) for key in nested_declarations)
+            else:
+                for key in nested_declarations:
+                    reference(key)
+            for nested in nested_declarations.values():
+                constraints(mapping(nested))
+        if "exactly_one_of" in declaration:
+            alternatives = declaration["exactly_one_of"]
+            assert isinstance(alternatives, list) and alternatives
+            for raw_alternative in alternatives:
+                alternative = mapping(raw_alternative)
+                assert set(alternative) == {"slot_conditions"}
+                conditions = mapping(alternative["slot_conditions"])
+                assert conditions
+                for slot_reference, raw_condition in conditions.items():
+                    reference(slot_reference)
+                    condition = mapping(raw_condition)
+                    assert condition and set(condition) <= {
+                        "equals_string",
+                        "required",
+                        "value_presence",
+                    }
+                    for field in ("equals_string",):
+                        optional_string(condition, field)
+                    if "required" in condition:
+                        assert type(condition["required"]) is bool
+                    if "value_presence" in condition:
+                        assert condition["value_presence"] in {"PRESENT", "ABSENT"}
 
 
 def _od006_constructor_fences(section: str) -> tuple[str, ...]:
@@ -1200,7 +2264,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_18_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -1218,14 +2282,14 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1563
+    assert len(canonical) == 1630
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 17",
-        "# Evidence cutoff: 2026-08-26",
+        "# Design graph revision: 18",
+        "# Evidence cutoff: 2026-08-27",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
         "#",
@@ -1241,7 +2305,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 17,",
+            "revision 18,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -1262,6 +2326,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
         "OD-004": "TypedPersistedWireEpochHardBreakProfile",
         "OD-005": "AtomicOntologyPoweredCanonicalFactContract",
         "OD-006": "ThreeRoleClosedContractCompositionProfile",
+        "OD-008": "MalleusLinkMLSupportProfileV0",
         "OD-011": "ExplicitSingleResolverProfileSelection",
         "OD-013": "SingleDistributionCompilerIncludedPackagingTopology",
         "OD-014": "QuietBellArchiveFixturePublicationBoundary",
@@ -1272,7 +2337,45 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             Literal("2026-08-26")
         }
         assert set(canonical.objects(subject, selects)) == {URIRef(f"{mfg}{selected}")}
+    rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+    status = URIRef(f"{mfg}status")
+    decided_by = URIRef(f"{mfg}decidedBy")
+    od008 = URIRef(f"{cc}OD-008")
+    assert set(canonical.objects(od008, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od008, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od008, status)) == {URIRef(f"{mfg}AcceptedDesign")}
 
+    od008_node_types = {
+        "MalleusLinkMLSupportProfileV0": "SupportProfile",
+        "FlatExactlyOneExpressionExtensionV0": "ContractMetamodel",
+        "ExpressionCapableContractMetamodelV0": "ContractMetamodel",
+        "ExactlyOneGroupFactRule": "Boundary",
+        "ExactlyOneAlternativeFactRule": "Boundary",
+        "SlotConditionFactRule": "Boundary",
+        "FlatExactlyOneWholeSetInvariant": "Invariant",
+        "ClosedSeedExpressionRuleUnionCompositionV0": "Boundary",
+        "ClosedExactLocationClassificationV0": "Boundary",
+        "StrictJSONShapedYAMLSourceGrammarV0": "SupportProfile",
+        "TrustedLinkML1_11_1SevenBuiltinMapV0": "SupportProfile",
+        "LinkML1_11_1ElaborationAndDefaultProfileV0": "SupportProfile",
+        "LosslessSourceDeclarationAndProvenanceProfileV0": "Boundary",
+        "LinkMLV0SlashQualifiedSymbolPolicy": "SymbolIdentityPolicy",
+        "RetainedCorpusWholeSourceClosureV0": "Boundary",
+        "FrontendAdapterConstructionInjectionDeferredBoundary": "Boundary",
+        "NoGeneralLinkMLSupportClaimBoundary": "Boundary",
+        "StablePublicFactIdentityStillOD009Boundary": "Boundary",
+        "PublicCompilerPromotionStillOD009Boundary": "Boundary",
+    }
+    for node, node_type in od008_node_types.items():
+        subject = URIRef(f"{mfg}{node}")
+        assert set(canonical.objects(subject, rdf_type)) == {
+            URIRef(f"{mfg}{node_type}")
+        }
+        assert set(canonical.objects(subject, status)) == {
+            URIRef(f"{mfg}AcceptedDesign")
+        }
     binds = URIRef(f"{mfg}binds")
     required_bindings = {
         "ExactSlotOnlyExplicitAdoptionProfile": {
@@ -1318,6 +2421,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             "ExactNonExpressionSeedContractMetamodel",
             "AtomicCanonicalJSONFactProfileV0",
             "AbsoluteIdentifierExactUnicodeSymbolPolicyV0",
+            "LinkMLV0SlashQualifiedSymbolPolicy",
             "ContractMetamodelSemanticAuthorityOverJSONBoundary",
             "ClosedThreeMemberCanonicalJSONFactWireBoundary",
             "CanonicalDecimalLexicalNumericObjectBoundary",
@@ -1325,7 +2429,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             "StructuralIdentityAndExternalProvenanceBoundary",
             "FrontendDirectFactConformanceOnlyParityBoundary",
             "ExactSeedMetamodelBootstrapTrustBoundary",
-            "ExpressionVocabularyDeferredToOD008Boundary",
+            "ExpressionCapableContractMetamodelV0",
             "AdmissionArtifactBundleAndPromotionSeparateAuthorityBoundary",
             "NoGenericDefaultValueOrRuntimeDefaultBoundary",
         },
@@ -1339,7 +2443,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             "OneArtifactMayPackageThreeRolesBoundary",
             "IndependentRoleHeadsAndRecoveryDeferredBoundary",
             "ArtifactBundleAndWireGrammarDeferredBoundary",
-            "StablePublicFactIdentityStillOD008Boundary",
+            "StablePublicFactIdentityStillOD009Boundary",
         },
         "ExactNonExpressionSeedContractMetamodel": {
             "ExactClassSeedFactRule",
@@ -1348,6 +2452,31 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             "ExactScalarAndSeedPrimitiveFactRule",
             "ExactWholeSetSeedFactInvariant",
             "SourceToFactCompletenessSeparateConformanceBoundary",
+        },
+        "FlatExactlyOneExpressionExtensionV0": {
+            "ExactlyOneGroupFactRule",
+            "ExactlyOneAlternativeFactRule",
+            "SlotConditionFactRule",
+            "FlatExactlyOneWholeSetInvariant",
+        },
+        "ExpressionCapableContractMetamodelV0": {
+            "ExactNonExpressionSeedContractMetamodel",
+            "FlatExactlyOneExpressionExtensionV0",
+            "ClosedSeedExpressionRuleUnionCompositionV0",
+        },
+        "MalleusLinkMLSupportProfileV0": {
+            "ClosedExactLocationClassificationV0",
+            "StrictJSONShapedYAMLSourceGrammarV0",
+            "TrustedLinkML1_11_1SevenBuiltinMapV0",
+            "LinkML1_11_1ElaborationAndDefaultProfileV0",
+            "LosslessSourceDeclarationAndProvenanceProfileV0",
+            "LinkMLV0SlashQualifiedSymbolPolicy",
+            "ExpressionCapableContractMetamodelV0",
+            "RetainedCorpusWholeSourceClosureV0",
+            "FrontendAdapterConstructionInjectionDeferredBoundary",
+            "NoGeneralLinkMLSupportClaimBoundary",
+            "StablePublicFactIdentityStillOD009Boundary",
+            "PublicCompilerPromotionStillOD009Boundary",
         },
         "ExplicitSingleResolverProfileSelection": {
             "StrictMalleusResolverDefaultBoundary",
@@ -1386,6 +2515,34 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
             str(value).removeprefix(mfg)
             for value in canonical.objects(URIRef(f"{mfg}{selected}"), binds)
         } == expected
+
+    identified_by = URIRef(f"{mfg}identifiedBy")
+    metamodel_identities = {
+        "ExactNonExpressionSeedContractMetamodel": OD008_SEED_METAMODEL_ID,
+        "FlatExactlyOneExpressionExtensionV0": OD008_EXPRESSION_METAMODEL_ID,
+        "ExpressionCapableContractMetamodelV0": OD008_COMBINED_METAMODEL_ID,
+        "LinkMLV0SlashQualifiedSymbolPolicy": OD008_SYMBOL_POLICY_ID,
+    }
+    for subject, identity in metamodel_identities.items():
+        assert set(canonical.objects(URIRef(f"{mfg}{subject}"), identified_by)) == {
+            URIRef(identity)
+        }
+    supersedes = URIRef(f"{mfg}supersedes")
+    assert set(
+        canonical.objects(
+            URIRef(f"{mfg}ClosedSeedExpressionRuleUnionCompositionV0"), supersedes
+        )
+    ) == {URIRef(f"{mfg}ExpressionVocabularyDeferredToOD008Boundary")}
+    assert set(
+        canonical.objects(
+            URIRef(f"{mfg}StablePublicFactIdentityStillOD009Boundary"), supersedes
+        )
+    ) == {URIRef(f"{mfg}StablePublicFactIdentityStillOD008Boundary")}
+    for retired in (
+        "ExpressionVocabularyDeferredToOD008Boundary",
+        "StablePublicFactIdentityStillOD008Boundary",
+    ):
+        assert set(canonical.subjects(binds, URIRef(f"{mfg}{retired}"))) == set()
 
     role_hash_bindings = {
         "ProtocolRecordContractHash": {
@@ -1459,7 +2616,7 @@ def test_revision_17_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 314
+    assert len(statuses) == 333
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -1503,19 +2660,19 @@ def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
 
     assert "JSON and any future JSON Schema define syntax only." in prose
     assert "wire facts always carry the full absolute IRI" in prose
-    assert "Only expression vocabulary remains with `OD-008`" in prose
+    assert "`OD-008` now maps source fields to this exact seed" in prose
     assert "final predicate inventory" not in prose
     assert "There is no generic `defaultValue` fact" in prose
     assert "not a public or second first-party authoring language" in prose
     assert "never the normative runtime wire" in prose
-    assert "stable public fact ids remain blocked on `od-008`" in prose.casefold()
+    assert "stable public identifiers still require the promotion decision at `od-009`" in prose.casefold()
     assert "stable public fact ids remain blocked on `od-006`" not in prose.casefold()
     for rule in (
         "The parent-plus-`usesMixin` graph is acyclic.",
         "Every `usesMixin` target has `isMixin=true`",
         "The Scalar `typeof` graph is acyclic and terminates in exactly one seed primitive.",
         "Every non-seed identifier target resolves in the same fact set.",
-        "Bounds are legal only when `valueRange` resolves through a Scalar chain to `Integer` or `Float`",
+        "Bounds are legal only when `valueRange` directly names `Integer` or `Float`, or resolves through a Scalar chain terminating there",
         "`valuePresence=ABSENT` conflicts with `required=true` and with `equalsString`.",
         "deterministic qualified class-local declaration",
         "Source-to-fact completeness is separately proven by support-profile conformance and independent oracles.",
@@ -1684,7 +2841,7 @@ def test_od006_closed_three_role_composition_is_mechanical() -> None:
         "Whole-composition validation refuses atomically",
         "`OD-007` owns governance storage topology",
         "`OD-010` owns endpoint, reference, context, and stateful admission semantics",
-        "Stable public fact identities remain governed by open `OD-008`.",
+        "`OD-008` completes the candidate fact-identity inputs; `OD-009` still owns public promotion and identifier publication.",
         "This decision creates no implementation, ontology YAML, package, artifact, bundle, public API, or migration mechanism.",
     ):
         assert phrase in prose
@@ -1795,7 +2952,1479 @@ def test_od006_closed_composition_guard_rejects_adversarial_drift() -> None:
             _assert_od006_closed_contract(mutation)
 
 
-def test_revision_17_conformance_rows_guard_closed_decisions() -> None:
+def test_od008_closed_profile_and_expression_identity_are_mechanical() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od008_section(decisions)
+    _assert_od008_closed_profile(section)
+
+    blocks = [
+        token.content.removesuffix("\n")
+        for token in MarkdownIt("commonmark").parse(section)
+        if token.type == "fence" and token.info.strip() == "json"
+    ]
+    assert len(blocks) == 8
+    values = [json.loads(block) for block in blocks]
+    assert all(canonical_json(value) == block for value, block in zip(values, blocks))
+
+    def one(domain: str) -> tuple[str, dict[str, object]]:
+        matches = [
+            (block, value)
+            for block, value in zip(blocks, values)
+            if value.get("domain") == domain
+        ]
+        assert len(matches) == 1
+        return matches[0]
+
+    predicate_iris = {
+        "rdf:type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "rdfs:subClassOf": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+    }
+
+    def expanded_rule(row: tuple[str, ...]) -> list[str]:
+        cells = [cell.replace("`", "") for cell in row]
+        predicate = cells[1]
+        cells[1] = predicate_iris.get(
+            predicate,
+            (
+                "https://malleus.dev/contract-facts/" + predicate.removeprefix("cf:")
+                if predicate.startswith("cf:")
+                else predicate
+            ),
+        )
+        return cells
+
+    seed_block, seed = one("malleus.contract-metamodel/non-expression-seed/v0")
+    assert len(seed_block.encode("utf-8")) == 4819
+    assert seed == {
+        "domain": "malleus.contract-metamodel/non-expression-seed/v0",
+        "invariants": sorted(
+            [
+                {"id": identifier, "rule": rule}
+                for identifier, rule in OD008_SEED_INVARIANTS
+            ],
+            key=canonical_json,
+        ),
+        "primitives": sorted(OD005_SEED_PRIMITIVES),
+        "rules": sorted(
+            [expanded_rule(row) for row in OD005_SEED_ROWS],
+            key=canonical_json,
+        ),
+        "seed_namespace": "https://malleus.dev/contract-facts/",
+        "structural_identity_canonicalization": (
+            "malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0"
+        ),
+        "structural_identity_profiles": sorted(
+            OD008_SEED_STRUCTURAL_IDENTITY_PROFILES,
+            key=canonical_json,
+        ),
+    }
+    seed_id = (
+        "urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:"
+        + hashlib.sha256(seed_block.encode("utf-8")).hexdigest()
+    )
+    assert seed_id == OD008_SEED_METAMODEL_ID
+
+    extension_block, extension = one(
+        "malleus.contract-metamodel/flat-exactly-one-extension/v0"
+    )
+    assert len(extension_block.encode("utf-8")) == 4762
+    assert extension == {
+        "domain": "malleus.contract-metamodel/flat-exactly-one-extension/v0",
+        "invariants": sorted(
+            [
+                {"id": identifier, "rule": rule}
+                for identifier, rule in OD008_EXPRESSION_INVARIANTS
+            ],
+            key=canonical_json,
+        ),
+        "rules": sorted(
+            [expanded_rule(row) for row in OD008_EXPRESSION_ROWS],
+            key=canonical_json,
+        ),
+        "semantic_member_profiles": sorted(
+            OD008_EXPRESSION_SEMANTIC_MEMBER_PROFILES,
+            key=canonical_json,
+        ),
+        "seed_namespace": "https://malleus.dev/contract-facts/",
+        "structural_identity_canonicalization": (
+            "malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0"
+        ),
+        "structural_identity_profiles": sorted(
+            OD008_EXPRESSION_STRUCTURAL_IDENTITY_PROFILES,
+            key=canonical_json,
+        ),
+    }
+    extension_id = (
+        "urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:"
+        + hashlib.sha256(extension_block.encode("utf-8")).hexdigest()
+    )
+    assert extension_id == OD008_EXPRESSION_METAMODEL_ID
+
+    def assert_absolute_rule_predicates(component: dict[str, object]) -> None:
+        rules = component["rules"]
+        assert isinstance(rules, list)
+        for rule in rules:
+            assert isinstance(rule, list) and len(rule) == 4
+            predicate = rule[1]
+            assert isinstance(predicate, str) and urlsplit(predicate).scheme
+
+    assert_absolute_rule_predicates(seed)
+    assert_absolute_rule_predicates(extension)
+    relative_predicate = json.loads(json.dumps(seed))
+    relative_predicate["rules"][0][1] = "relative-predicate"
+    with pytest.raises(AssertionError):
+        assert_absolute_rule_predicates(relative_predicate)
+
+    combined_block, combined = one("malleus.contract-metamodel/composition/v0")
+    assert len(combined_block.encode("utf-8")) == 655
+    assert combined == {
+        "base": seed_id,
+        "operator": OD008_COMPOSITION_OPERATOR,
+        "domain": "malleus.contract-metamodel/composition/v0",
+        "extension": extension_id,
+    }
+    combined_id = (
+        "urn:malleus:contract-metamodel:expression-capable:v0:sha256:"
+        + hashlib.sha256(combined_block.encode("utf-8")).hexdigest()
+    )
+    assert combined_id == OD008_COMBINED_METAMODEL_ID
+
+    seed_prefix = "urn:malleus:contract-metamodel:non-expression-seed:v0:sha256:"
+    extension_prefix = (
+        "urn:malleus:contract-metamodel:flat-exactly-one-extension:v0:sha256:"
+    )
+
+    def content_id(prefix: str, component: dict[str, object]) -> str:
+        return prefix + hashlib.sha256(
+            canonical_json(component).encode("utf-8")
+        ).hexdigest()
+
+    def composed_id(base: str, expression: str) -> str:
+        envelope = {
+            "base": base,
+            "operator": OD008_COMPOSITION_OPERATOR,
+            "domain": "malleus.contract-metamodel/composition/v0",
+            "extension": expression,
+        }
+        return (
+            "urn:malleus:contract-metamodel:expression-capable:v0:sha256:"
+            + hashlib.sha256(canonical_json(envelope).encode("utf-8")).hexdigest()
+        )
+
+    seed_mutations: list[dict[str, object]] = []
+    for path, replacement in (
+        (("domain",), "malleus.contract-metamodel/non-expression-seed/v1"),
+        (("invariants", 0, "rule"), "changed invariant proposition"),
+        (("primitives", 0), "ChangedPrimitive"),
+        (("rules", 0, 1), "https://example.test/changed-predicate"),
+        (("rules", 0, 2), "changed object type"),
+        (("rules", 0, 3), "0..1"),
+        (("seed_namespace",), "https://example.test/changed-seed/"),
+        (("structural_identity_canonicalization",), "changed-canonicalization"),
+        (("structural_identity_profiles", 0, "domain"), "changed-domain"),
+        (("structural_identity_profiles", 0, "members", 0), "changed-member"),
+        (("structural_identity_profiles", 0, "hash"), "sha512"),
+        (("structural_identity_profiles", 0, "digest_encoding"), "uppercase-hex"),
+        (("structural_identity_profiles", 0, "output_prefix"), "changed-prefix"),
+    ):
+        changed = json.loads(json.dumps(seed))
+        target: object = changed
+        for key in path[:-1]:
+            target = target[key]
+        target[path[-1]] = replacement
+        seed_mutations.append(changed)
+
+    extension_mutations: list[dict[str, object]] = []
+    for path, replacement in (
+        (("domain",), "malleus.contract-metamodel/flat-exactly-one-extension/v1"),
+        (("invariants", 0, "rule"), "changed invariant proposition"),
+        (("rules", 0, 1), "https://example.test/changed-predicate"),
+        (("rules", 0, 2), "changed object type"),
+        (("rules", 0, 3), "0..1"),
+        (("semantic_member_profiles", 0, "minimum_optional_members"), 2),
+        (("semantic_member_profiles", 0, "optional_members", 0), "changedMember"),
+        (("semantic_member_profiles", 0, "required_members", 0), "changedMember"),
+        (("seed_namespace",), "https://example.test/changed-seed/"),
+        (("structural_identity_canonicalization",), "changed-canonicalization"),
+        (("structural_identity_profiles", 0, "domain"), "changed-domain"),
+        (("structural_identity_profiles", 0, "members", 0), "changed-member"),
+        (("structural_identity_profiles", 0, "hash"), "sha512"),
+        (("structural_identity_profiles", 0, "digest_encoding"), "uppercase-hex"),
+        (("structural_identity_profiles", 0, "output_prefix"), "changed-prefix"),
+        (
+            (
+                "structural_identity_profiles",
+                1,
+                "sorted_arrays",
+                "alternative_semantic_digests",
+            ),
+            "source-order",
+        ),
+    ):
+        changed = json.loads(json.dumps(extension))
+        target = changed
+        for key in path[:-1]:
+            target = target[key]
+        target[path[-1]] = replacement
+        extension_mutations.append(changed)
+
+    for changed in seed_mutations:
+        changed_seed_id = content_id(seed_prefix, changed)
+        assert changed_seed_id != seed_id
+        assert composed_id(changed_seed_id, extension_id) != combined_id
+    for changed in extension_mutations:
+        changed_extension_id = content_id(extension_prefix, changed)
+        assert changed_extension_id != extension_id
+        assert composed_id(seed_id, changed_extension_id) != combined_id
+    assert composed_id(extension_id, seed_id) != combined_id
+    combined_prefix = (
+        "urn:malleus:contract-metamodel:expression-capable:v0:sha256:"
+    )
+    for member, replacement in (
+        ("domain", "malleus.contract-metamodel/composition/v1"),
+        ("operator", "changed composition operator"),
+    ):
+        changed_combined = dict(combined)
+        changed_combined[member] = replacement
+        assert content_id(combined_prefix, changed_combined) != combined_id
+
+    alternative_pairs = [
+        (block, value)
+        for block, value in zip(blocks, values)
+        if value.get("domain") == "malleus.exactly-one-alternative-semantics/v0"
+    ]
+    assert len(alternative_pairs) == 2
+    alternative_pairs.sort(key=lambda pair: pair[1]["conditions"][0]["slot"])
+    alternative_blocks = [pair[0] for pair in alternative_pairs]
+    alternative_semantics = [pair[1] for pair in alternative_pairs]
+    assert [value["conditions"][0]["slot"] for value in alternative_semantics] == [
+        "https://example.malleus.dev/domain/left_value",
+        "https://example.malleus.dev/domain/right_value",
+    ]
+    alternative_digests = [
+        "sha256:" + hashlib.sha256(block.encode("utf-8")).hexdigest()
+        for block in alternative_blocks
+    ]
+    assert alternative_digests == [
+        "sha256:10f5b3992c471304ed0382e000f93ff6ef2aa0240bc1501dfae25e834267016a",
+        "sha256:1c8099c0364055a950dd2ff3eaecfbd4554fb8199ff3f0af2be0679d25d1bbb9",
+    ]
+
+    group_block, group_envelope = one(
+        "malleus.contract-structure.exactly-one-group/v0"
+    )
+    alternative_block, alternative_envelope = one(
+        "malleus.contract-structure.exactly-one-alternative/v0"
+    )
+    condition_block, condition_envelope = one(
+        "malleus.contract-structure.slot-condition/v0"
+    )
+    assert group_envelope == {
+        "alternative_semantic_digests": sorted(alternative_digests),
+        "class": "https://example.malleus.dev/domain/ChoiceCarrier",
+        "domain": "malleus.contract-structure.exactly-one-group/v0",
+    }
+    group = (
+        "urn:malleus:contract-structure:exactly-one-group:v0:sha256:"
+        + hashlib.sha256(group_block.encode("utf-8")).hexdigest()
+    )
+    assert group == (
+        "urn:malleus:contract-structure:exactly-one-group:v0:sha256:"
+        "7c7fff294828d255018a04f67dfd0d2f86307867882e07866a25c1bfc7cca1f1"
+    )
+    assert alternative_envelope == {
+        "alternative_semantic_digest": alternative_digests[0],
+        "domain": "malleus.contract-structure.exactly-one-alternative/v0",
+        "group": group,
+    }
+    alternative = (
+        "urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:"
+        + hashlib.sha256(alternative_block.encode("utf-8")).hexdigest()
+    )
+    assert alternative == (
+        "urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:"
+        "15c008ee7b1dc89621e92acf93bb0f2d572102aa5430569af899e656da375b81"
+    )
+    assert condition_envelope == {
+        "alternative": alternative,
+        "domain": "malleus.contract-structure.slot-condition/v0",
+        "slot": "https://example.malleus.dev/domain/left_value",
+    }
+    condition = (
+        "urn:malleus:contract-structure:slot-condition:v0:sha256:"
+        + hashlib.sha256(condition_block.encode("utf-8")).hexdigest()
+    )
+    assert condition == (
+        "urn:malleus:contract-structure:slot-condition:v0:sha256:"
+        "7c973812ba4ba438f046cf89fd3038fe41a218c2fc4ebb0dd67b578a5a681e7a"
+    )
+
+    reversed_group = dict(group_envelope)
+    reversed_group["alternative_semantic_digests"] = sorted(
+        reversed(group_envelope["alternative_semantic_digests"])
+    )
+    assert canonical_json(reversed_group) == group_block
+
+
+def test_od008_composition_is_one_closed_mixed_rule_union() -> None:
+    rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    cf = "https://malleus.dev/contract-facts/"
+
+    def rule_pairs(rows: tuple[tuple[str, ...], ...]) -> tuple[tuple[str, str], ...]:
+        pairs: list[tuple[str, str]] = []
+        for kind_cell, predicate_cell, _, _ in rows:
+            predicate = predicate_cell.replace("`", "")
+            if predicate == "rdf:type":
+                predicate = rdf_type
+            elif predicate == "rdfs:subClassOf":
+                predicate = "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+            elif predicate.startswith("cf:"):
+                predicate = cf + predicate.removeprefix("cf:")
+            pairs.extend(
+                (kind.strip(), predicate)
+                for kind in kind_cell.replace("`", "").split(",")
+            )
+        return tuple(pairs)
+
+    base_pairs = rule_pairs(OD005_SEED_ROWS)
+    extension_pairs = rule_pairs(OD008_EXPRESSION_ROWS)
+
+    def compose(
+        base: tuple[tuple[str, str], ...],
+        extension: tuple[tuple[str, str], ...],
+    ) -> set[tuple[str, str]]:
+        rows = (*base, *extension)
+        if len(set(rows)) != len(rows):
+            raise ValueError("duplicate kind-predicate composition row")
+        return set(rows)
+
+    active = compose(base_pairs, extension_pairs)
+    assert set(base_pairs).isdisjoint(extension_pairs)
+    with pytest.raises(ValueError, match="duplicate kind-predicate"):
+        compose(base_pairs, (*extension_pairs, base_pairs[0]))
+
+    facts = [
+        ("C", "Class", rdf_type, cf + "Class"),
+        ("C", "Class", cf + "abstract", False),
+        ("C", "Class", cf + "isMixin", False),
+        ("S", "Slot", rdf_type, cf + "Slot"),
+        ("S", "Slot", cf + "valueRange", cf + "String"),
+        ("S", "Slot", cf + "required", False),
+        ("S", "Slot", cf + "multivalued", False),
+        ("S", "Slot", cf + "identifier", False),
+        ("S", "Slot", cf + "inlined", False),
+        ("SU", "SlotUse", rdf_type, cf + "SlotUse"),
+        ("SU", "SlotUse", cf + "valueRange", cf + "String"),
+        ("SU", "SlotUse", cf + "required", False),
+        ("SU", "SlotUse", cf + "multivalued", False),
+        ("SU", "SlotUse", cf + "identifier", False),
+        ("SU", "SlotUse", cf + "inlined", False),
+        ("SU", "SlotUse", cf + "onClass", "C"),
+        ("SU", "SlotUse", cf + "usesSlot", "S"),
+        ("G", "ExactlyOneGroup", rdf_type, cf + "ExactlyOneGroup"),
+        ("G", "ExactlyOneGroup", cf + "onClass", "C"),
+        ("A", "ExactlyOneAlternative", rdf_type, cf + "ExactlyOneAlternative"),
+        ("A", "ExactlyOneAlternative", cf + "inGroup", "G"),
+        ("K", "SlotCondition", rdf_type, cf + "SlotCondition"),
+        ("K", "SlotCondition", cf + "inAlternative", "A"),
+        ("K", "SlotCondition", cf + "usesSlot", "S"),
+        ("K", "SlotCondition", cf + "required", True),
+        ("K", "SlotCondition", cf + "equalsString", "LEFT"),
+    ]
+
+    def assert_unique_declared_groups(
+        group_class_pairs: list[tuple[object, object]],
+    ) -> None:
+        classes = [class_id for _, class_id in group_class_pairs]
+        assert len(set(classes)) == len(classes)
+
+    assert_unique_declared_groups([("G", "C"), ("G2", "C2")])
+    with pytest.raises(AssertionError):
+        assert_unique_declared_groups([("G", "C"), ("G2", "C")])
+
+    def assert_closed_mixed_fact_set(rows: list[tuple[str, str, str, object]]) -> None:
+        assert all((kind, predicate) in active for _, kind, predicate, _ in rows)
+        subjects = {subject: kind for subject, kind, _, _ in rows}
+        type_counts = {
+            subject: sum(1 for fact in rows if fact[0] == subject and fact[2] == rdf_type)
+            for subject in subjects
+        }
+        assert set(type_counts.values()) == {1}
+
+        def targets(subject: str, predicate: str) -> list[object]:
+            return [obj for sub, _, pred, obj in rows if sub == subject and pred == predicate]
+
+        groups = [subject for subject, kind in subjects.items() if kind == "ExactlyOneGroup"]
+        alternatives = [
+            subject
+            for subject, kind in subjects.items()
+            if kind == "ExactlyOneAlternative"
+        ]
+        conditions = [
+            subject for subject, kind in subjects.items() if kind == "SlotCondition"
+        ]
+        declaring_classes: list[object] = []
+        for group in groups:
+            on_class = targets(group, cf + "onClass")
+            assert len(on_class) == 1 and subjects.get(on_class[0]) == "Class"
+            declaring_classes.extend(on_class)
+        assert_unique_declared_groups(list(zip(groups, declaring_classes)))
+        for alternative in alternatives:
+            in_group = targets(alternative, cf + "inGroup")
+            assert len(in_group) == 1
+            assert subjects.get(in_group[0]) == "ExactlyOneGroup"
+        for condition in conditions:
+            in_alternative = targets(condition, cf + "inAlternative")
+            assert len(in_alternative) == 1
+            assert subjects.get(in_alternative[0]) == "ExactlyOneAlternative"
+            group = targets(in_alternative[0], cf + "inGroup")
+            assert len(group) == 1
+            declaring_class = targets(group[0], cf + "onClass")
+            assert len(declaring_class) == 1
+            slot = targets(condition, cf + "usesSlot")
+            assert len(slot) == 1 and subjects.get(slot[0]) == "Slot"
+            applicable_uses = [
+                subject
+                for subject, kind in subjects.items()
+                if kind == "SlotUse"
+                and targets(subject, cf + "onClass") == declaring_class
+                and targets(subject, cf + "usesSlot") == slot
+            ]
+            assert len(applicable_uses) == 1
+            if targets(condition, cf + "equalsString"):
+                value_range = targets(applicable_uses[0], cf + "valueRange")
+                assert len(value_range) == 1
+                current = value_range[0]
+                visited: set[object] = set()
+                while subjects.get(current) == "Scalar":
+                    assert current not in visited
+                    visited.add(current)
+                    typeof = targets(current, cf + "typeof")
+                    assert len(typeof) == 1
+                    current = typeof[0]
+                assert current == cf + "String" or subjects.get(current) == "Enum"
+        assert all(any(targets(alt, cf + "inGroup") == [group] for alt in alternatives) for group in groups)
+        assert all(
+            any(targets(condition, cf + "inAlternative") == [alternative] for condition in conditions)
+            for alternative in alternatives
+        )
+
+    assert_closed_mixed_fact_set(facts)
+    with pytest.raises(AssertionError):
+        assert_closed_mixed_fact_set(
+            [*facts, ("X", "FourthKind", rdf_type, cf + "FourthKind")]
+        )
+    with pytest.raises(AssertionError):
+        assert_closed_mixed_fact_set(
+            [*facts, ("K", "SlotCondition", cf + "experimental", "x")]
+        )
+    for predicate, replacement in (
+        (cf + "inGroup", "missing-group"),
+        (cf + "inAlternative", "missing-alternative"),
+        (cf + "usesSlot", "missing-slot"),
+    ):
+        dangling = [
+            (subject, kind, pred, replacement if pred == predicate else obj)
+            for subject, kind, pred, obj in facts
+        ]
+        with pytest.raises(AssertionError):
+            assert_closed_mixed_fact_set(dangling)
+    wrong_class = [
+        (subject, kind, predicate, "missing-class" if subject == "SU" and predicate == cf + "onClass" else obj)
+        for subject, kind, predicate, obj in facts
+    ]
+    with pytest.raises(AssertionError):
+        assert_closed_mixed_fact_set(wrong_class)
+    with pytest.raises(AssertionError):
+        assert_closed_mixed_fact_set(
+            [
+                *facts,
+                ("G2", "ExactlyOneGroup", rdf_type, cf + "ExactlyOneGroup"),
+                ("G2", "ExactlyOneGroup", cf + "onClass", "C"),
+            ]
+        )
+
+
+def test_od008_constraint_ranges_preserve_direct_primitives_and_scalar_chains() -> None:
+    scalar_terminal = {
+        "StringScalar": "String",
+        "IntegerScalar": "Integer",
+        "FloatScalar": "Float",
+        "BooleanScalar": "Boolean",
+    }
+
+    def terminal(range_name: str) -> str:
+        return scalar_terminal.get(range_name, range_name)
+
+    def admits_equals_string(range_name: str) -> bool:
+        return range_name.startswith("Enum:") or terminal(range_name) == "String"
+
+    def admits_bound(range_name: str) -> bool:
+        return terminal(range_name) in {"Integer", "Float"}
+
+    assert all(
+        admits_equals_string(name) for name in ("String", "StringScalar", "Enum:State")
+    )
+    assert not any(
+        admits_equals_string(name) for name in ("Integer", "BooleanScalar")
+    )
+    assert all(
+        admits_bound(name)
+        for name in ("Integer", "Float", "IntegerScalar", "FloatScalar")
+    )
+    assert not any(admits_bound(name) for name in ("String", "BooleanScalar"))
+
+
+def test_od008_expression_identity_ignores_branch_condition_and_member_order() -> None:
+    rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    cf = "https://malleus.dev/contract-facts/"
+    class_id = "https://example.malleus.dev/domain/ChoiceCarrier"
+
+    def structural_id(prefix: str, envelope: dict[str, object]) -> str:
+        digest = hashlib.sha256(canonical_json(envelope).encode("utf-8")).hexdigest()
+        return f"urn:malleus:contract-structure:{prefix}:v0:sha256:{digest}"
+
+    def compile_expression(
+        alternatives: list[list[dict[str, object]]],
+    ) -> tuple[str, tuple[str, ...], tuple[str, ...], str]:
+        semantic_alternatives: list[tuple[str, list[dict[str, object]]]] = []
+        for conditions in alternatives:
+            normalized = sorted(
+                (dict(condition) for condition in conditions),
+                key=canonical_json,
+            )
+            semantic = {
+                "conditions": normalized,
+                "domain": "malleus.exactly-one-alternative-semantics/v0",
+            }
+            digest = "sha256:" + hashlib.sha256(
+                canonical_json(semantic).encode("utf-8")
+            ).hexdigest()
+            semantic_alternatives.append((digest, normalized))
+        semantic_alternatives.sort(key=lambda item: item[0])
+        group = structural_id(
+            "exactly-one-group",
+            {
+                "alternative_semantic_digests": [
+                    digest for digest, _ in semantic_alternatives
+                ],
+                "class": class_id,
+                "domain": "malleus.contract-structure.exactly-one-group/v0",
+            },
+        )
+        facts: list[dict[str, object]] = [
+            {"subject": group, "predicate": rdf_type, "object": cf + "ExactlyOneGroup"},
+            {"subject": group, "predicate": cf + "onClass", "object": class_id},
+        ]
+        alternative_ids: list[str] = []
+        condition_ids: list[str] = []
+        for semantic_digest, conditions in semantic_alternatives:
+            alternative = structural_id(
+                "exactly-one-alternative",
+                {
+                    "alternative_semantic_digest": semantic_digest,
+                    "domain": "malleus.contract-structure.exactly-one-alternative/v0",
+                    "group": group,
+                },
+            )
+            alternative_ids.append(alternative)
+            facts.extend(
+                (
+                    {
+                        "subject": alternative,
+                        "predicate": rdf_type,
+                        "object": cf + "ExactlyOneAlternative",
+                    },
+                    {
+                        "subject": alternative,
+                        "predicate": cf + "inGroup",
+                        "object": group,
+                    },
+                )
+            )
+            for semantics in conditions:
+                slot = semantics["slot"]
+                assert isinstance(slot, str)
+                condition = structural_id(
+                    "slot-condition",
+                    {
+                        "alternative": alternative,
+                        "domain": "malleus.contract-structure.slot-condition/v0",
+                        "slot": slot,
+                    },
+                )
+                condition_ids.append(condition)
+                facts.extend(
+                    (
+                        {
+                            "subject": condition,
+                            "predicate": rdf_type,
+                            "object": cf + "SlotCondition",
+                        },
+                        {
+                            "subject": condition,
+                            "predicate": cf + "inAlternative",
+                            "object": alternative,
+                        },
+                        {
+                            "subject": condition,
+                            "predicate": cf + "usesSlot",
+                            "object": slot,
+                        },
+                    )
+                )
+                for member, predicate in (
+                    ("required", "required"),
+                    ("equalsString", "equalsString"),
+                    ("valuePresence", "valuePresence"),
+                ):
+                    if member in semantics:
+                        facts.append(
+                            {
+                                "subject": condition,
+                                "predicate": cf + predicate,
+                                "object": semantics[member],
+                            }
+                        )
+        return (
+            group,
+            tuple(sorted(alternative_ids)),
+            tuple(sorted(condition_ids)),
+            canonical_json(sorted(facts, key=canonical_json)),
+        )
+
+    left = {
+        "slot": "https://example.malleus.dev/domain/left_value",
+        "required": True,
+        "equalsString": "LEFT",
+    }
+    right = {
+        "slot": "https://example.malleus.dev/domain/right_value",
+        "valuePresence": "PRESENT",
+    }
+    fallback = {
+        "slot": "https://example.malleus.dev/domain/fallback_value",
+        "valuePresence": "PRESENT",
+    }
+    baseline = compile_expression([[left, right], [fallback]])
+    reordered_left = {
+        "equalsString": "LEFT",
+        "required": True,
+        "slot": "https://example.malleus.dev/domain/left_value",
+    }
+    permuted = compile_expression([[fallback], [right, reordered_left]])
+    assert baseline == permuted
+
+
+def test_od008_default_and_identifier_truth_tables_are_exact() -> None:
+    def effective_inlined(
+        *, explicit: bool | None, range_kind: str, target_identifiers: int
+    ) -> bool:
+        if range_kind == "Class" and target_identifiers > 1:
+            raise ValueError("multiple effective identifiers")
+        if explicit is not None:
+            if explicit and range_kind != "Class":
+                raise ValueError("D05 Class-only inlined guard")
+            return explicit
+        if range_kind != "Class":
+            return False
+        return target_identifiers == 0
+
+    assert effective_inlined(
+        explicit=None, range_kind="String", target_identifiers=0
+    ) is False
+    assert effective_inlined(
+        explicit=None, range_kind="Class", target_identifiers=1
+    ) is False
+    assert effective_inlined(
+        explicit=None, range_kind="Class", target_identifiers=0
+    ) is True
+    assert effective_inlined(
+        explicit=False, range_kind="String", target_identifiers=0
+    ) is False
+    with pytest.raises(ValueError, match="multiple effective identifiers"):
+        effective_inlined(explicit=None, range_kind="Class", target_identifiers=2)
+    with pytest.raises(ValueError, match="multiple effective identifiers"):
+        effective_inlined(explicit=False, range_kind="Class", target_identifiers=2)
+    with pytest.raises(ValueError, match="multiple effective identifiers"):
+        effective_inlined(explicit=True, range_kind="Class", target_identifiers=2)
+    with pytest.raises(ValueError, match="Class-only"):
+        effective_inlined(explicit=True, range_kind="String", target_identifiers=0)
+
+    def effective_required(
+        *, identifier: bool, required: bool | None
+    ) -> bool:
+        if identifier and required is False:
+            raise ValueError("explicit required=false conflicts with identifier=true")
+        return identifier if required is None else required
+
+    assert effective_required(identifier=False, required=None) is False
+    assert effective_required(identifier=True, required=None) is True
+    assert effective_required(identifier=False, required=False) is False
+    with pytest.raises(ValueError, match="conflicts"):
+        effective_required(identifier=True, required=False)
+
+
+def test_od008_expression_admission_and_inheritance_are_exact() -> None:
+    def admit_condition(
+        *,
+        applicable: bool,
+        range_kind: str,
+        required: bool | None = None,
+        equals_string: str | None = None,
+        value_presence: str | None = None,
+    ) -> tuple[tuple[str, object], ...]:
+        if not applicable:
+            raise ValueError("slot has no declaring-class effective SlotUse")
+        if equals_string is not None and range_kind not in {"String", "Enum"}:
+            raise ValueError("equalsString range")
+        if value_presence == "ABSENT" and (
+            required is True or equals_string is not None
+        ):
+            raise ValueError("condition contradiction")
+        members = {
+            "equalsString": equals_string,
+            "required": required,
+            "valuePresence": value_presence,
+        }
+        result = tuple(sorted((key, value) for key, value in members.items() if value is not None))
+        if not result:
+            raise ValueError("empty condition")
+        return result
+
+    assert admit_condition(applicable=True, range_kind="String", equals_string="A")
+    assert admit_condition(applicable=True, range_kind="Enum", equals_string="OPEN")
+    assert admit_condition(applicable=True, range_kind="Integer", required=True)
+    with pytest.raises(ValueError, match="effective SlotUse"):
+        admit_condition(applicable=False, range_kind="String", required=True)
+    with pytest.raises(ValueError, match="range"):
+        admit_condition(applicable=True, range_kind="Integer", equals_string="1")
+    with pytest.raises(ValueError, match="contradiction"):
+        admit_condition(
+            applicable=True,
+            range_kind="String",
+            equals_string="A",
+            value_presence="ABSENT",
+        )
+
+    # Separate branches may narrow differently. V0 performs no cross-branch analysis.
+    assert admit_condition(applicable=True, range_kind="String", equals_string="A")
+    assert admit_condition(applicable=True, range_kind="String", equals_string="B")
+
+    ancestor_group = "urn:malleus:contract-structure:exactly-one-group:v0:sha256:ancestor"
+    local_group = "urn:malleus:contract-structure:exactly-one-group:v0:sha256:local"
+    applied_on_child = (ancestor_group, local_group)
+    assert applied_on_child[0] == ancestor_group
+    assert len(set(applied_on_child)) == 2
+
+
+def test_od008_annotation_only_mixin_changes_preserve_semantics() -> None:
+    enforced_fields = {
+        "equals_string",
+        "identifier",
+        "inlined",
+        "maximum_value",
+        "minimum_value",
+        "multivalued",
+        "range",
+        "required",
+        "value_presence",
+    }
+
+    def project(mixins: list[dict[str, object]]) -> tuple[str, str]:
+        semantic: dict[str, object] = {}
+        for mixin in mixins:
+            for field in enforced_fields & mixin.keys():
+                if field in semantic and semantic[field] != mixin[field]:
+                    raise ValueError("conflicting ENFORCED values")
+                semantic[field] = mixin[field]
+        source_attestation = hashlib.sha256(
+            canonical_json(mixins).encode("utf-8")
+        ).hexdigest()
+        semantic_identity = hashlib.sha256(
+            canonical_json(semantic).encode("utf-8")
+        ).hexdigest()
+        return source_attestation, semantic_identity
+
+    baseline = [
+        {"description": "first prose", "required": True},
+        {"description": "second prose", "required": True},
+    ]
+    edited = [
+        {"description": "changed prose", "required": True},
+        {"required": True},
+    ]
+    baseline_source, baseline_semantics = project(baseline)
+    edited_source, edited_semantics = project(edited)
+    assert baseline_source != edited_source
+    assert baseline_semantics == edited_semantics
+    with pytest.raises(ValueError, match="ENFORCED"):
+        project([{"required": True}, {"required": False}])
+
+
+def test_od008_symbol_metadata_erasure_and_schema_identity_are_mechanical() -> None:
+    def projection(schema: dict[str, str]) -> tuple[str, str, str]:
+        class_id = schema["id"] + "/Record"
+        slot_id = schema["id"] + "/value"
+        fact = {
+            "object": "https://malleus.dev/contract-facts/Class",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "subject": class_id,
+        }
+        envelope = {
+            "canonicalization_profile": (
+                "malleus.canonical-json/d05-compact-sorted-key-utf8-no-newline/v0"
+            ),
+            "domain": "malleus.contract-fact/candidate-v0",
+            "fact": fact,
+            "metamodel": OD008_COMBINED_METAMODEL_ID,
+            "symbol_policy": OD008_SYMBOL_POLICY_ID,
+        }
+        source_attestation = hashlib.sha256(
+            canonical_json(schema).encode("utf-8")
+        ).hexdigest()
+        candidate = hashlib.sha256(canonical_json(envelope).encode("utf-8")).hexdigest()
+        return canonical_json((class_id, slot_id, fact)), candidate, source_attestation
+
+    baseline = {
+        "id": "https://example.test/schema",
+        "name": "one",
+        "version": "1",
+    }
+    metadata_edit = {**baseline, "name": "two", "version": "2"}
+    identity_edit = {**baseline, "id": "https://example.test/other"}
+    baseline_projection, baseline_candidate, baseline_source = projection(baseline)
+    metadata_projection, metadata_candidate, metadata_source = projection(metadata_edit)
+    identity_projection, identity_candidate, _ = projection(identity_edit)
+    assert metadata_projection == baseline_projection
+    assert metadata_candidate == baseline_candidate
+    assert metadata_source != baseline_source
+    assert identity_projection != baseline_projection
+    assert identity_candidate != baseline_candidate
+
+
+def test_od008_closed_profile_rejects_adversarial_drift() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    section = _od008_section(decisions)
+    class_row = next(
+        line for line in section.splitlines() if line.startswith("| `classes.<class>` |")
+    )
+    expression_row = next(
+        line
+        for line in section.splitlines()
+        if line.startswith("| `SlotCondition` | `cf:valuePresence`")
+    )
+    mutations = (
+        section.replace(
+            class_row,
+            class_row.replace("`class_uri`, `description`", "`description`"),
+            1,
+        ),
+        section.replace(
+            "including `annotations.retires`",
+            "excluding `annotations.retires`",
+            1,
+        ),
+        section.replace(
+            "emits no adoption fact",
+            "emits one adoption fact",
+            1,
+        ),
+        section.replace(
+            class_row,
+            class_row.replace("`exactly_one_of`", "`exactly_one_of`, `rules`"),
+            1,
+        ),
+        section.replace(expression_row, "", 1),
+        section.replace(
+            expression_row,
+            expression_row
+            + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
+            1,
+        ),
+        section.replace("Source indexes never enter identity.", "", 1),
+        section.replace("current = stack.pop_last()", "current = stack.pop_first()", 1),
+        section.replace(
+            "no other base-slot or branch narrowing is declared\ncontradictory",
+            "All base-slot narrowing is contradictory",
+            1,
+        ),
+        section.replace(
+            "public docstrings,\nnamespace placement, stable public fact identifiers, and public support claims\nremain blocked on `OD-009`.",
+            "public support is promoted now.",
+            1,
+        ),
+    )
+    assert all(mutation != section for mutation in mutations)
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_od008_closed_profile(mutation)
+
+
+def test_od008_profile_covers_retained_source_shapes_exactly() -> None:
+    bundled = (
+        ROOT / "ontology" / "malleus.yaml",
+        ROOT / "ontology" / "assent.yaml",
+        *sorted((ROOT / "ontology" / "domains").glob("*.yaml")),
+    )
+    assert len(bundled) == 6
+    sources = [path.read_text(encoding="utf-8") for path in bundled]
+    cases = json.loads(
+        (
+            ROOT
+            / "conformance"
+            / "contract_compiler"
+            / "v0"
+            / "linkml_legacy_divergence"
+            / "cases.json"
+        ).read_text(encoding="utf-8")
+    )["cases"]
+    assert len(cases) == 9
+    sources.extend(case["source_text"] for case in cases)
+    documents = [_od008_assert_raw_source_grammar(source) for source in sources]
+    for document in documents:
+        _od008_assert_exact_value_types(document)
+
+    outcomes = {vector: outcome for vector, outcome, _ in OD008_CORPUS_ROWS}
+    bundled_relatives = tuple(path.relative_to(ROOT).as_posix() for path in bundled)
+    assert {path: outcomes[path] for path in bundled_relatives} == {
+        path: "ACCEPT" for path in bundled_relatives
+    }
+    case_outcomes = {
+        vector.removeprefix("CC-X01/"): outcome
+        for vector, outcome in outcomes.items()
+        if vector.startswith("CC-X01/")
+    }
+    assert case_outcomes == {
+        "attribute_slot_usage": "ACCEPT",
+        "conflicting_mixins_ab": "REFUSE",
+        "conflicting_mixins_ba": "REFUSE",
+        "default_range": "ACCEPT",
+        "explicit_false": "REFUSE",
+        "numeric_bounds": "ACCEPT",
+        "parent_mixin_precedence": "ACCEPT",
+        "repeated_mixin": "REFUSE",
+        "simple_parity": "ACCEPT",
+    }
+    case_documents = {
+        case["case_id"]: document for case, document in zip(cases, documents[6:])
+    }
+    repeated = case_documents["repeated_mixin"]
+    assert repeated["classes"]["Child"]["mixins"] == ["MixinA", "MixinA"]
+    for case_id, order in (
+        ("conflicting_mixins_ab", ["MixinA", "MixinB"]),
+        ("conflicting_mixins_ba", ["MixinB", "MixinA"]),
+    ):
+        conflicting = case_documents[case_id]
+        assert conflicting["classes"]["Child"]["mixins"] == order
+        assert {
+            conflicting["classes"][name]["slot_usage"]["value"]["range"]
+            for name in order
+        } == {"integer", "float"}
+    measured_false = case_documents["explicit_false"]
+    assert measured_false["slots"]["value"]["range"] == "string"
+    assert measured_false["slots"]["value"]["inlined"] is True
+    assert measured_false["classes"]["Thing"]["slot_usage"]["value"] == {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": False,
+    }
+
+    builtin_names = {row[0] for row in OD008_BUILTIN_ROWS}
+    observed_range_references: set[str] = set()
+
+    def collect_builtins(value: object, field: str | None = None) -> None:
+        if isinstance(value, dict):
+            for key, member in value.items():
+                collect_builtins(member, key)
+        elif isinstance(value, list):
+            for member in value:
+                collect_builtins(member, field)
+        elif field in {"default_range", "range", "typeof"}:
+            assert isinstance(value, str)
+            observed_range_references.add(value)
+
+    for document in documents:
+        collect_builtins(document)
+    retained_wheel = (
+        ROOT
+        / "conformance"
+        / "contract_compiler"
+        / "v0"
+        / "compiler_environment"
+        / "roots"
+        / "linkml_runtime-1.11.1-py3-none-any.whl"
+    )
+    wheel_bytes = retained_wheel.read_bytes()
+    assert hashlib.sha256(wheel_bytes).hexdigest() == (
+        "b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da"
+    )
+    member_path = "linkml_runtime/linkml_model/model/schema/types.yaml"
+    with zipfile.ZipFile(retained_wheel) as archive:
+        member = archive.read(member_path)
+        assert archive.namelist().count(member_path) == 1
+    assert len(member) == 7296
+    assert hashlib.sha256(member).hexdigest() == (
+        "1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    )
+    upstream_types = set(yaml.safe_load(member)["types"])
+
+    def upstream_references(references: set[str]) -> set[str]:
+        return references & upstream_types
+
+    assert upstream_references(observed_range_references) == builtin_names
+    assert upstream_references(observed_range_references | {"decimal"}) != builtin_names
+
+    observed, permissible_body_types, null_permissible_values = (
+        _od008_source_shape_inventory(documents)
+    )
+
+    assert observed == {
+        "schema": {
+            "classes",
+            "default_range",
+            "description",
+            "enums",
+            "id",
+            "imports",
+            "name",
+            "prefixes",
+            "slots",
+            "title",
+            "types",
+            "version",
+        },
+        "type": {"description", "typeof", "uri"},
+        "enum": {"description", "permissible_values"},
+        "permissible_value": {"description"},
+        "slot": {
+            "annotations",
+            "description",
+            "identifier",
+            "inlined",
+            "maximum_value",
+            "minimum_value",
+            "multivalued",
+            "range",
+            "required",
+        },
+        "class": {
+            "abstract",
+            "attributes",
+            "class_uri",
+            "description",
+            "exactly_one_of",
+            "is_a",
+            "mixin",
+            "mixins",
+            "slot_usage",
+            "slots",
+        },
+        "attribute": {"range", "required"},
+        "slot_usage": {
+            "description",
+            "equals_string",
+            "identifier",
+            "inlined",
+            "maximum_value",
+            "minimum_value",
+            "multivalued",
+            "range",
+            "required",
+        },
+        "alternative": {"slot_conditions"},
+        "condition": {"equals_string", "required", "value_presence"},
+        "slot_annotation": {"adopts"},
+    }
+    assert permissible_body_types == {dict, type(None)}
+    assert null_permissible_values > 0
+
+    allowed = {
+        "schema": {
+            "id",
+            "name",
+            "version",
+            "prefixes",
+            "imports",
+            "default_range",
+            "title",
+            "description",
+            "types",
+            "enums",
+            "slots",
+            "classes",
+        },
+        "type": {"typeof", "uri", "description"},
+        "enum": {"permissible_values", "description"},
+        "permissible_value": {"description"},
+        "slot": {
+            "range",
+            "required",
+            "multivalued",
+            "identifier",
+            "inlined",
+            "equals_string",
+            "minimum_value",
+            "maximum_value",
+            "value_presence",
+            "description",
+            "annotations",
+        },
+        "class": {
+            "is_a",
+            "mixin",
+            "mixins",
+            "abstract",
+            "slots",
+            "attributes",
+            "slot_usage",
+            "exactly_one_of",
+            "class_uri",
+            "description",
+        },
+        "attribute": {
+            "range",
+            "required",
+            "multivalued",
+            "identifier",
+            "inlined",
+            "equals_string",
+            "minimum_value",
+            "maximum_value",
+            "value_presence",
+            "description",
+        },
+        "slot_usage": {
+            "range",
+            "required",
+            "multivalued",
+            "identifier",
+            "inlined",
+            "equals_string",
+            "minimum_value",
+            "maximum_value",
+            "value_presence",
+            "description",
+        },
+        "alternative": {"slot_conditions"},
+        "condition": {"required", "equals_string", "value_presence"},
+        "slot_annotation": {"adopts"},
+    }
+    assert all(observed[location] <= keys for location, keys in allowed.items())
+
+    for document in documents:
+        for declaration in (document.get("slots") or {}).values():
+            annotations = (declaration or {}).get("annotations")
+            if annotations is not None:
+                assert annotations == {"adopts": True}
+
+
+@pytest.mark.parametrize(
+    "document",
+    (
+        {"types": {"T": None}},
+        {"enums": {"E": None}},
+        {"slots": {"s": None}},
+        {"classes": {"C": None}},
+        {"classes": {"C": {"attributes": {"a": None}}}},
+        {"classes": {"C": {"slot_usage": {"s": None}}}},
+        {"classes": {"C": {"exactly_one_of": [None]}}},
+        {
+            "classes": {
+                "C": {
+                    "exactly_one_of": [
+                        {"slot_conditions": {"s": None}},
+                    ]
+                }
+            }
+        },
+        {"enums": {"E": {"permissible_values": {"X": "not-a-map"}}}},
+        {
+            "enums": {
+                "E": {"permissible_values": {"X": {"description": None}}}
+            }
+        },
+    ),
+)
+def test_od008_source_shape_guard_rejects_null_or_wrong_bodies(
+    document: dict[str, object],
+) -> None:
+    with pytest.raises(AssertionError):
+        _od008_source_shape_inventory([document])
+
+
+def test_od008_null_permissible_value_is_one_exact_empty_declaration() -> None:
+    observed, body_types, null_count = _od008_source_shape_inventory(
+        [{"enums": {"E": {"permissible_values": {"EMPTY": None}}}}]
+    )
+    assert body_types == {type(None)}
+    assert null_count == 1
+    assert observed["permissible_value"] == set()
+
+
+@pytest.mark.parametrize(
+    "lexeme",
+    ("0", "-0", "5", "5.0", "5e0", "5E-2", "1e+3", "-12.34"),
+)
+def test_od008_exact_source_number_grammar_accepts_json_numbers(lexeme: str) -> None:
+    assert _od008_is_json_number_lexeme(lexeme)
+    document = _od008_assert_raw_source_grammar(
+        "id: https://example.test/schema\n"
+        "name: numeric\n"
+        "slots:\n"
+        "  count:\n"
+        "    minimum_value: "
+        + lexeme
+        + "\n"
+    )
+    _od008_assert_exact_value_types(document)
+    bound = document["slots"]["count"]["minimum_value"]
+    assert bound == Decimal(lexeme)
+
+
+@pytest.mark.parametrize(
+    "lexeme",
+    (
+        "+1",
+        "01",
+        "0x10",
+        "1_0",
+        "1:20",
+        ".5",
+        "1.",
+        ".inf",
+        ".nan",
+        "1١",
+        '"1"',
+    ),
+)
+def test_od008_exact_source_number_grammar_refuses_non_json_numbers(
+    lexeme: str,
+) -> None:
+    assert not _od008_is_json_number_lexeme(lexeme.strip('"')) or lexeme == '"1"'
+    with pytest.raises(AssertionError):
+        _od008_assert_raw_source_grammar(
+            "id: https://example.test/schema\n"
+            "name: numeric\n"
+            "slots:\n"
+            "  count:\n"
+            "    minimum_value: "
+            + lexeme
+            + "\n"
+        )
+
+
+@pytest.mark.parametrize("lexeme", ("true", "false"))
+def test_od008_raw_boolean_grammar_accepts_lowercase_only(lexeme: str) -> None:
+    document = _od008_assert_raw_source_grammar(
+        "id: https://example.test/schema\n"
+        "name: boolean\n"
+        "slots:\n"
+        "  value:\n"
+        "    required: "
+        + lexeme
+        + "\n"
+    )
+    _od008_assert_exact_value_types(document)
+
+
+@pytest.mark.parametrize(
+    "lexeme",
+    ('"false"', "False", "FALSE", "yes", "on"),
+)
+def test_od008_raw_boolean_grammar_refuses_quoted_or_yaml_spellings(
+    lexeme: str,
+) -> None:
+    with pytest.raises(AssertionError):
+        _od008_assert_raw_source_grammar(
+            "id: https://example.test/schema\n"
+            "name: boolean\n"
+            "slots:\n"
+            "  value:\n"
+            "    required: "
+            + lexeme
+            + "\n"
+        )
+
+
+@pytest.mark.parametrize("body", ("", "null"))
+def test_od008_raw_permissible_value_empty_forms_are_exact(body: str) -> None:
+    source = (
+        "id: https://example.test/schema\n"
+        "name: enum\n"
+        "enums:\n"
+        "  State:\n"
+        "    permissible_values:\n"
+        "      OPEN:"
+        + ("\n" if not body else f" {body}\n")
+    )
+    document = _od008_assert_raw_source_grammar(source)
+    _od008_assert_exact_value_types(document)
+
+
+@pytest.mark.parametrize("body", ("~", "Null", "NULL"))
+def test_od008_raw_permissible_value_refuses_yaml_only_nulls(body: str) -> None:
+    with pytest.raises(AssertionError):
+        _od008_assert_raw_source_grammar(
+            "id: https://example.test/schema\n"
+            "name: enum\n"
+            "enums:\n"
+            "  State:\n"
+            "    permissible_values:\n"
+            f"      OPEN: {body}\n"
+        )
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "id: https://example.test/schema\nname: one\nname: two\n",
+        "id: https://example.test/schema\nname: &name one\ntitle: *name\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  C:\n    <<: {}\n",
+        "id: https://example.test/schema\nname: !custom one\n",
+        "1: value\nid: https://example.test/schema\nname: one\n",
+        "---\nid: https://example.test/schema\nname: one\n",
+        "%YAML 1.2\n---\nid: https://example.test/schema\nname: one\n",
+        "id: https://example.test/schema\nname: one\n...\n",
+        "id: https://example.test/schema\nname: one\n---\nid: https://example.test/other\nname: two\n",
+        "id: https://example.test/schema\nname: null\n",
+        "scalar\n",
+        "- item\n",
+    ),
+)
+def test_od008_raw_source_guard_refuses_yaml_expansion_and_nulls(source: str) -> None:
+    with pytest.raises(AssertionError):
+        _od008_assert_raw_source_grammar(source)
+
+
+@pytest.mark.parametrize(
+    ("source", "token_type"),
+    (
+        (
+            "id: https://example.test/schema\nname: &name one\n",
+            yaml.tokens.AnchorToken,
+        ),
+        (
+            "id: https://example.test/schema\nname: *missing\n",
+            yaml.tokens.AliasToken,
+        ),
+        (
+            "%YAML 1.2\n---\nid: https://example.test/schema\nname: one\n",
+            yaml.tokens.DirectiveToken,
+        ),
+        (
+            "id: https://example.test/schema\nname: !!str one\n",
+            yaml.tokens.TagToken,
+        ),
+    ),
+)
+def test_od008_raw_source_guard_refuses_each_yaml_structure_token(
+    source: str, token_type: type[yaml.tokens.Token]
+) -> None:
+    assert any(isinstance(token, token_type) for token in yaml.scan(source))
+    with pytest.raises(AssertionError):
+        _od008_assert_raw_source_grammar(source)
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "id: https://example.test/schema\nname: one\nclasses:\n  C: null\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  C:\n    exactly_one_of:\n      - null\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s: {}\nclasses:\n  C:\n    slots: [s]\n    exactly_one_of:\n      - slot_conditions:\n          s: null\n",
+        "id: https://example.test/schema\nname: one\nenums:\n  E:\n    permissible_values:\n      V: text\n",
+    ),
+)
+def test_od008_raw_source_bytes_refuse_wrong_body_shapes(source: str) -> None:
+    with pytest.raises(AssertionError):
+        document = _od008_assert_raw_source_grammar(source)
+        _od008_assert_exact_value_types(document)
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "id: https://example.test/schema\nname: one\nimports: linkml:types\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  C:\n    mixins: M\n",
+        'id: https://example.test/schema\nname: one\nslots:\n  s:\n    required: "false"\n',
+    ),
+)
+def test_od008_exact_value_types_refuse_linkml_coercions(source: str) -> None:
+    with pytest.raises(AssertionError):
+        document = _od008_assert_raw_source_grammar(source)
+        _od008_assert_exact_value_types(document)
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "id: relative\nname: one\n",
+        "id: https://example.test/schema\n",
+        "name: one\n",
+        "id: urn:foo bar\nname: one\n",
+        "id: https://example.test/a b\nname: one\n",
+        'id: "https://example.test/schema\\n"\nname: one\n',
+        "id: https://example.test/schema?query\nname: one\n",
+        "id: https://example.test/schema#fragment\nname: one\n",
+        "id: https://example.test/schema/\nname: one\n",
+        "id: https://example.test/schema\nname: one\nbogus: x\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  É: {}\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  bad-key: {}\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  C:\n    bogus: x\n",
+        "id: https://example.test/schema\nname: one\ntypes:\n  T:\n    typeof: string\n    bogus: x\n",
+        "id: https://example.test/schema\nname: one\nenums:\n  E:\n    bogus: x\n",
+        "id: https://example.test/schema\nname: one\nenums:\n  E:\n    permissible_values:\n      V:\n        bogus: x\n",
+        "id: https://example.test/schema\nname: one\nprefixes:\n  É: https://example.test/\n",
+        "id: https://example.test/schema\nname: one\nprefixes:\n  ex: relative\n",
+        "id: https://example.test/schema\nname: one\nprefixes:\n  ex: https://example.test/a b/\n",
+        'id: https://example.test/schema\nname: one\nslots:\n  s:\n    range: ""\n',
+        "id: https://example.test/schema\nname: one\nslots:\n  s:\n    bogus: x\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s:\n    annotations:\n      adopts: true\n      bogus: true\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s:\n    range: ex:Thing\n",
+        "id: https://example.test/schema\nname: one\nprefixes:\n  ex: https://example.test/\nslots:\n  s:\n    range: ex:Thing:Extra\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s:\n    range: Thíng\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s: {}\nclasses:\n  C:\n    slots: [s]\n    exactly_one_of:\n      - slot_conditions:\n          s:\n            bogus: true\n",
+        "id: https://example.test/schema\nname: one\nclasses:\n  C:\n    attributes:\n      a:\n        bogus: x\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s: {}\nclasses:\n  C:\n    slots: [s]\n    slot_usage:\n      s:\n        bogus: x\n",
+        "id: https://example.test/schema\nname: one\nslots:\n  s: {}\nclasses:\n  C:\n    slots: [s]\n    exactly_one_of:\n      - slot_conditions:\n          s:\n            required: true\n        bogus: x\n",
+    ),
+)
+def test_od008_exact_location_symbol_and_iri_guards_refuse_drift(source: str) -> None:
+    document = _od008_assert_raw_source_grammar(source)
+    with pytest.raises(AssertionError):
+        _od008_assert_exact_value_types(document)
+
+
+def test_od008_absolute_iri_guard_preserves_valid_unicode_iris() -> None:
+    document = _od008_assert_raw_source_grammar(
+        "id: https://example.test/café\n"
+        "name: unicode\n"
+        "prefixes:\n"
+        "  ex: https://example.test/résumé/\n"
+        "slots:\n"
+        "  value:\n"
+        "    range: ex:Text\n"
+    )
+    _od008_assert_exact_value_types(document)
+    _od008_assert_exact_value_types(
+        _od008_assert_raw_source_grammar("id: http:foo\nname: generic_iri\n")
+    )
+    _od008_assert_exact_value_types(
+        _od008_assert_raw_source_grammar('id: "foo:"\nname: empty_hier_part\n')
+    )
+    _od008_assert_exact_value_types(
+        _od008_assert_raw_source_grammar(
+            'id: "https://example.test/a\u00a0b"\nname: rfc_iri_separator\n'
+        )
+    )
+
+
+def test_revision_18_conformance_rows_guard_closed_decisions() -> None:
     rows = {
         cells[0]: line.casefold()
         for line in (
@@ -1823,7 +4452,7 @@ def test_revision_17_conformance_rows_guard_closed_decisions() -> None:
     for phrase in ("every applied default", "materialized", "provenance"):
         assert phrase in rows["AT-005"]
     for phrase in (
-        "exact seed kinds and predicates",
+        "immutable d05 seed plus exact expression extension",
         "complete reified slotuse",
         "seed subject",
         "invalid bound or range",

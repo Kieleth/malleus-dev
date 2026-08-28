@@ -1,0 +1,47 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7",
+        "completion_entry_hash": "sha256:01550bd8c179637dfdfa0cdd648fb59704e830e1f3f9547264e9363df2a2f0b3",
+        "completion_entry_id": "OVR-000137",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D02"
+      },
+      {
+        "card_sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
+        "completion_entry_hash": "sha256:95eb2b94409029554120beb0e1552a9dbd39151b0d7eb18c1c5469003af489e2",
+        "completion_entry_id": "OVR-000138",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D03"
+      },
+      {
+        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
+        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+        "completion_entry_id": "OVR-000150",
+        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+        "workstream_id": "CC-D05"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-008 with one closed exact-location LinkML v0 support profile, exact default and source-to-fact mapping, immutable D05 seed composed with one flat exactly-one expression extension, deterministic internal structural identities, retained-corpus closure, fail-closed counterexamples, and a Sphinx-rendered internal expansion guide. This zero-scope decision creates no parser, compiler, ontology YAML, public adapter, docstring, namespace, stable public fact identifier, artifact, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D08"
+}

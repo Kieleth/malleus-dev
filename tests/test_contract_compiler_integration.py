@@ -255,6 +255,7 @@ def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
     assert registry["CC-D06"] == ("CC-D05",)
+    assert registry["CC-D08"] == ("CC-D02", "CC-D03", "CC-D05")
     assert registry["CC-R01"] == (
         "CC-000",
         "CC-X03",
@@ -340,11 +341,12 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D04": ("CC-X04",),
         "CC-D05": ("CC-D01", "CC-D02", "CC-D03"),
         "CC-D06": ("CC-D05",),
+        "CC-D08": ("CC-D02", "CC-D03", "CC-D05"),
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 19
+    assert len(state.cards) == 20
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -384,6 +386,31 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "public identifier",
     ):
         assert phrase in d06_responsibility
+    d08_responsibility = state.cards["CC-D08"]["responsibility"]
+    for phrase in (
+        "closed exact-location LinkML v0 support profile",
+        "immutable D05 seed",
+        "flat exactly-one expression extension",
+        "deterministic internal structural identities",
+        "Sphinx-rendered internal expansion guide",
+        "zero-scope decision",
+        "no parser",
+        "stable public fact identifier",
+    ):
+        assert phrase in d08_responsibility
+
+
+def test_registry_card_pointer_must_match_its_workstream_row(tmp_path: Path) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+    _registry_row(manifest, "CC-D07")["card"] = copy.deepcopy(
+        _registry_row(manifest, "CC-D08")["card"]
+    )
+    _write_json(path, manifest)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_CARD_ID")
 
 
 def test_candidate_evidence_schema_accepts_result_but_no_unknown_fields() -> None:

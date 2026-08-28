@@ -19,4 +19,5 @@ neutral output contract.
 :maxdepth: 1
 
 manifests
+support_profile
 ```
