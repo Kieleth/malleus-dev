@@ -53,6 +53,8 @@ SMALL_SHOP_ORACLE_CANDIDATE_TREE = "cc46360437de6a2ad07d875e4e54404b7e7ce06e"
 QUIET_BELL_ORACLE_ACTIVATION_COMMIT = "c6e3616b292050ae0bbd0be9af40ca83ae9a91d1"
 QUIET_BELL_REACTIVATION_BASE = "d56c30f85b92d7452ca126d488bf027b42ee67f5"
 QUIET_BELL_REACTIVATION_COMMIT = "67560d41be90601e1d01235f3730e16f3e01cd91"
+QUIET_BELL_REACTIVATION_REPAIR_COMMIT = "a8f87cb453f861bba611b9beff0e564a36c40a2b"
+QUIET_BELL_REACTIVATION_ENTRY = "OVR-000236"
 QUIET_BELL_DEPENDENCIES = (
     "CC-010",
     "CC-D02",
@@ -363,6 +365,109 @@ def _candidate(repository: Path, base: str, head: str) -> dict[str, Any]:
             }
         ],
     }
+
+
+def _quiet_bell_history_candidate(
+    tmp_path: Path,
+    *,
+    base_commit: str,
+    copy_authority_entry: bool = False,
+    descendant_base: bool = False,
+) -> tuple[Path, dict[str, Any]]:
+    repository = tmp_path / "quiet-bell-candidate"
+    subprocess.run(
+        ["git", "clone", "--quiet", str(ROOT), str(repository)],
+        check=True,
+        capture_output=True,
+    )
+    _git(repository, "config", "user.name", "CC-000 Test")
+    _git(repository, "config", "user.email", "cc000@example.invalid")
+    _git(repository, "checkout", "--detach", base_commit)
+
+    authority_relative = (
+        f"design/contract_compiler/overseer/entries/"
+        f"{QUIET_BELL_REACTIVATION_ENTRY}.json"
+    )
+    authority_path = repository / authority_relative
+    if copy_authority_entry:
+        authority_path.parent.mkdir(parents=True, exist_ok=True)
+        authority_path.write_bytes((ROOT / authority_relative).read_bytes())
+        base_commit = _commit(repository, "copy authority bytes without ancestry")
+    if descendant_base:
+        (repository / "candidate-base.txt").write_text(
+            "authorized descendant\n",
+            encoding="utf-8",
+        )
+        base_commit = _commit(repository, "authorized descendant base")
+
+    artifact_relative = (
+        "conformance/contract_kernel/v0/themed_fixture/oracle/candidate.json"
+    )
+    artifact_path = repository / artifact_relative
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+    artifact_path.write_text('{"outcome":"REFUSE"}\n', encoding="utf-8")
+    artifact = artifact_path.read_bytes()
+    evidence_relative = "conformance/contract_compiler/v0/evidence/CC-012.json"
+    evidence_path = repository / evidence_relative
+    evidence_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(
+        evidence_path,
+        {
+            "artifacts": [
+                {
+                    "byte_length": len(artifact),
+                    "path": artifact_relative,
+                    "sha256": _digest(artifact),
+                }
+            ],
+            "base_commit": base_commit,
+            "checks": [
+                {
+                    "check_id": "cc012-synthetic-candidate",
+                    "method": "Exercise candidate authority admission.",
+                    "observed": "The private artifact matched its report.",
+                    "result": "PASS",
+                }
+            ],
+            "limitations": [],
+            "recorded_at": "2026-08-29T18:00:00Z",
+            "schema": "malleus.contract-compiler.verification-report/v1",
+            "workstream_id": "CC-012",
+        },
+    )
+    head_commit = _commit(repository, "candidate content")
+    evidence = evidence_path.read_bytes()
+    candidate = {
+        "artifacts": [
+            {
+                "byte_length": len(artifact),
+                "path": artifact_relative,
+                "sha256": _digest(artifact),
+            }
+        ],
+        "base_commit": base_commit,
+        "evidence": [
+            {
+                "byte_length": len(evidence),
+                "path": evidence_relative,
+                "result": "PASS",
+                "sha256": _digest(evidence),
+            }
+        ],
+        "head_commit": head_commit,
+        "head_tree": _git(repository, "rev-parse", f"{head_commit}^{{tree}}"),
+        "state": "ELIGIBLE",
+    }
+    _git(repository, "checkout", "--detach", "main")
+    return repository, candidate
+
+
+def _quiet_bell_candidate_authority() -> tuple[list[dict[str, str]], dict[str, Any]]:
+    card = _read_json(CONTRACT / "workstreams/CC-012/manifest.json")
+    entry = _read_json(
+        CONTRACT / "overseer" / "entries" / f"{QUIET_BELL_REACTIVATION_ENTRY}.json"
+    )
+    return card["scopes"], entry
 
 
 ALLOWED_SCOPES = (
@@ -1787,7 +1892,16 @@ def test_quiet_bell_reactivation_correction_report_is_exact() -> None:
         "tests/test_contract_compiler_integration.py",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_REACTIVATION_REPAIR_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert {check["check_id"] for check in report["checks"]} == {
@@ -1872,7 +1986,7 @@ def test_quiet_bell_reactivation_correction_transaction_is_exact() -> None:
     )
     superseded = integration_module.superseded_entries(entries)
     assert {"OVR-000230", "OVR-000231"} <= superseded
-    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    states, state_entries = integration_module._workstream_states(_overseer_prefix(236))
     assert states["CC-012"] == "ACTIVE"
     assert state_entries["CC-012"]["entry_id"] == "OVR-000236"
 
@@ -1886,9 +2000,117 @@ def test_quiet_bell_reactivation_correction_transaction_is_exact() -> None:
         for entry in transaction
     )
     assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_REACTIVATION_REPAIR_COMMIT}:design/contract_compiler/"
+            "overseer/head.json",
+        )
+    )
     assert head["entry_count"] == 236
     assert head["head_entry_id"] == "OVR-000236"
+    assert head["head_hash"] == activation["entry_hash"]
+
+
+def test_quiet_bell_candidate_authority_hardening_report_is_exact() -> None:
+    report_path = (
+        CONTRACT / "overseer/evidence/CC-012-candidate-authority-hardening.json"
+    )
+    report = _read_json(report_path)
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_REACTIVATION_REPAIR_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "scripts/contract_compiler_integration.py",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    assert {check["check_id"] for check in report["checks"]} == {
+        "cc012-authority-red",
+        "cc012-trusted-history",
+        "cc012-descendant-base",
+        "cc012-all-candidate-admission",
+        "cc012-bootstrap-compatibility",
+        "cc012-frozen-content-boundary",
+    }
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert all(
+        any(term in limitation for limitation in report["limitations"])
+        for term in (
+            "oracle content",
+            "candidate",
+            "compiler semantics",
+            "public contract",
+        )
+    )
+
+
+def test_quiet_bell_candidate_authority_hardening_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 237 <= entry["sequence"] <= 240)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(237, 241)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "CORRECTION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    correction, revision, verification, activation = transaction
+    assert correction["data"]["replacement_required"] is True
+    assert correction["data"]["supersedes_entry_id"] == "OVR-000236"
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/overseer/evidence/CC-012-candidate-authority-hardening.json": "CREATED",
+        "scripts/contract_compiler_integration.py": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "cc012-candidate-authority-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000229",
+        "OVR-000234",
+        "OVR-000235",
+        "OVR-000238",
+        "OVR-000239",
+    ]
+    assert activation["data"]["deliverables"][-1].endswith(
+        "equal or descend from the first trusted commit containing OVR-000240."
+    )
+    superseded = integration_module.superseded_entries(entries)
+    assert {"OVR-000230", "OVR-000231", "OVR-000236"} <= superseded
+    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    assert states["CC-012"] == "ACTIVE"
+    assert state_entries["CC-012"]["entry_id"] == "OVR-000240"
+
+    report_time = datetime.fromisoformat(
+        _read_json(
+            CONTRACT / "overseer/evidence/CC-012-candidate-authority-hardening.json"
+        )["recorded_at"].replace("Z", "+00:00")
+    )
+    times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert times[0] < report_time < times[1] < times[2] < times[3]
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 240
+    assert head["head_entry_id"] == "OVR-000240"
     assert head["head_hash"] == activation["entry_hash"]
 
 
@@ -3745,6 +3967,154 @@ def test_linear_candidate_with_exact_scopes_and_evidence_is_accepted(
     )
 
     assert touched == ("allowed/result.txt", "evidence/checks.json")
+
+
+@pytest.mark.parametrize(
+    "copy_authority_entry",
+    (False, True),
+    ids=("missing-entry", "copied-entry"),
+)
+def test_stale_quiet_bell_branch_cannot_bypass_candidate_authority(
+    tmp_path: Path,
+    copy_authority_entry: bool,
+) -> None:
+    repository, candidate = _quiet_bell_history_candidate(
+        tmp_path,
+        base_commit=QUIET_BELL_REACTIVATION_COMMIT,
+        copy_authority_entry=copy_authority_entry,
+    )
+    scopes, authority = _quiet_bell_candidate_authority()
+
+    validate_candidate_history(
+        repository,
+        candidate,
+        allowed_scopes=scopes,
+        workstream_id="CC-012",
+    )
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=scopes,
+            workstream_id="CC-012",
+            authority_entry=authority,
+            overseer_path="design/contract_compiler/overseer",
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_AUTHORITY")
+@pytest.mark.parametrize("descendant_base", (False, True))
+def test_authority_floor_accepts_equal_or_descendant_candidate_base(
+    tmp_path: Path,
+    descendant_base: bool,
+) -> None:
+    repository, candidate = _quiet_bell_history_candidate(
+        tmp_path,
+        base_commit=QUIET_BELL_REACTIVATION_REPAIR_COMMIT,
+        descendant_base=descendant_base,
+    )
+    scopes, authority = _quiet_bell_candidate_authority()
+
+    touched = validate_candidate_history(
+        repository,
+        candidate,
+        allowed_scopes=scopes,
+        workstream_id="CC-012",
+        authority_entry=authority,
+        overseer_path="design/contract_compiler/overseer",
+    )
+
+    assert set(touched) == {
+        "conformance/contract_compiler/v0/evidence/CC-012.json",
+        "conformance/contract_kernel/v0/themed_fixture/oracle/candidate.json",
+    }
+
+
+def test_integration_admits_every_unselected_integrable_candidate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    admitted: list[str] = []
+
+    def record_candidate(*args, workstream_id=None, **kwargs):
+        if workstream_id is not None:
+            admitted.append(workstream_id)
+        return ()
+
+    monkeypatch.setattr(
+        integration_module,
+        "validate_candidate_history",
+        record_candidate,
+    )
+
+    validate_integration(ROOT)
+
+    assert "CC-X01" in admitted
+
+
+def test_candidate_authority_uses_latest_active_not_complete_or_superseded() -> None:
+    authorities = integration_module._latest_active_authority_entries(
+        _raw_overseer_state()
+    )
+
+    assert authorities["CC-021"]["entry_id"] == "OVR-000219"
+    assert authorities["CC-012"]["entry_id"] == "OVR-000240"
+    assert "OVR-000231" not in {entry["entry_id"] for entry in authorities.values()}
+
+
+def test_existing_candidates_satisfy_generic_authority_floor() -> None:
+    manifest = _read_json(INTEGRATION)
+    authorities = integration_module._latest_active_authority_entries(
+        _raw_overseer_state()
+    )
+    checked = []
+    for row in manifest["workstreams"]:
+        if row["card"]["state"] != "PRESENT":
+            continue
+        card = _read_json(CONTRACT / row["card"]["path"])
+        if card["candidate"]["state"] not in {"ELIGIBLE", "INTEGRATED"}:
+            continue
+        validate_candidate_history(
+            ROOT,
+            card["candidate"],
+            allowed_scopes=card["scopes"],
+            workstream_id=card["workstream_id"],
+            authority_entry=authorities[card["workstream_id"]],
+            overseer_path="design/contract_compiler/overseer",
+        )
+        checked.append(card["workstream_id"])
+
+    assert len(checked) == 15
+    assert "CC-000" in checked
+
+
+def test_bootstrap_authority_must_be_first_in_candidate_history() -> None:
+    card = _read_json(CONTRACT / "workstreams/CC-000/manifest.json")
+    authority = _read_json(CONTRACT / "overseer/entries/OVR-000008.json")
+    validate_candidate_history(
+        ROOT,
+        card["candidate"],
+        allowed_scopes=card["scopes"],
+        workstream_id="CC-000",
+        authority_entry=authority,
+        overseer_path="design/contract_compiler/overseer",
+    )
+
+    broadened = copy.deepcopy(card["candidate"])
+    broadened["base_commit"] = _git(
+        ROOT,
+        "rev-parse",
+        f"{card['candidate']['base_commit']}^",
+    )
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            ROOT,
+            broadened,
+            allowed_scopes=card["scopes"],
+            workstream_id="CC-000",
+            authority_entry=authority,
+            overseer_path="design/contract_compiler/overseer",
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_AUTHORITY")
 
 
 def test_candidate_coordinates_require_full_commit_ids(tmp_path: Path) -> None:

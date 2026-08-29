@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000236"
+  },
+  "entry_hash": "sha256:496012cad6a17e899e0584176f0366e6a200c8d26a5b16d677a64434e34896ab",
+  "entry_id": "OVR-000237",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c40e1127c74ba6215ee5b17e0cfa63701b6925a51a008cca898bbf92a51a3579",
+  "recorded_at": "2026-08-29T17:25:09Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000236",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 237,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the Quiet Bell candidate-base authority sentence.",
+  "why": "OVR-000236 requires the first candidate base to be the commit that introduced that entry. Candidate-admission hardening must land before content production, but adding those governance bytes to the old candidate range would violate the worker's content-only scopes. A replacement state must preserve the authorization while allowing the candidate base to equal or descend from the trusted hardening commit."
+}

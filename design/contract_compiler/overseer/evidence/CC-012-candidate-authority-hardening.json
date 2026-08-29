@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 43618,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:8312bf373d44fedcf0471f11a090b194a28b1a9ceaa964b8c6277673f850c2f7"
+    },
+    {
+      "byte_length": 169464,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:04b90675688d804984cea2da2fc9e24a3f2174ddf8546599721dbd1608a07f50"
+    }
+  ],
+  "base_commit": "a8f87cb453f861bba611b9beff0e564a36c40a2b",
+  "checks": [
+    {
+      "check_id": "cc012-authority-red",
+      "method": "Run the stale-base, copied-entry, equal-floor, descendant-floor, unselected-admission, active-entry selection, compatibility, and bootstrap guards before implementing candidate authority admission.",
+      "observed": "The focused command exited 1 with eight failures. Authority-aware candidate arguments and latest-active selection were absent; the unselected-admission case reached the expected governance digest drift from the new RED test bytes before candidate admission.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-trusted-history",
+      "method": "Create valid Quiet Bell candidates from stale commit 67560d4, once without OVR-000236 and once after copying its exact bytes onto the stale branch, while resolving authority only from trusted HEAD history.",
+      "observed": "Authority-agnostic history accepts the scoped stale candidate. Authority admission refuses both variants with CC000_CANDIDATE_AUTHORITY because neither base descends from the trusted a8f87cb introduction of OVR-000236; copied bytes do not create ancestry.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-descendant-base",
+      "method": "Start otherwise identical candidates at the exact trusted authority commit and at a later descendant, then run history, scope, artifact, evidence, and authority validation.",
+      "observed": "Both bases pass. Candidate authority is a floor, so hardening can precede content while base-to-head remains limited to worker-owned paths.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-all-candidate-admission",
+      "method": "Instrument complete integration validation and require candidate-history admission for every ELIGIBLE or INTEGRATED card, including unselected CC-X01, before applying selection-only checks.",
+      "observed": "All fifteen current candidates enter generic authority-aware validation. The selected-only duplicate was removed, while selected state and TDD gates remain unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-bootstrap-compatibility",
+      "method": "Validate all current candidates against their latest non-superseded ACTIVE entry and broaden the original CC-000 base by one pre-authority commit.",
+      "observed": "Fourteen ordinary candidates descend from their trusted authority floor. The historical CC-000 bootstrap passes only because its authority introduction is exactly the first commit in its validated linear range; the broadened range refuses.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-content-boundary",
+      "method": "Inspect Git status and the Quiet Bell, neutral Greenhouse, and compiler edge-case cards, dependencies, candidates, ledgers, selections, and owned content paths.",
+      "observed": "No card, integration row, schema, DAG, oracle content, compiler semantic, fixture, package, release, Docker, or adjacent workstream byte changed. Quiet Bell remains the only active oracle control and its candidate remains NONE.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report hardens governance admission only. It creates no Quiet Bell oracle content, candidate, worker ledger, completion, selection, integration, compiler semantics, runtime behavior, fixture, package, release, or Docker change.",
+    "The authority-floor labels and verification report are repository governance data, not a public contract, runtime artifact, or wire-format promise.",
+    "Future Quiet Bell candidate evidence must start at the hardening commit or a descendant and remains subject to its exact card scopes, private vocabulary, independent authorship, TDD chain, and later completion review.",
+    "Neutral Greenhouse and compiler edge cases remain paused and require later reviewed activations in the recorded order without cross-control semantic dependencies."
+  ],
+  "recorded_at": "2026-08-29T17:25:10Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

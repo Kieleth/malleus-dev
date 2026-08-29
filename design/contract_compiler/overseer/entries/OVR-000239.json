@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "cc012-candidate-authority-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T17:25:12Z",
+    "claims": [
+      "Every ELIGIBLE or INTEGRATED candidate, selected or unselected, enters generic authority-aware history validation.",
+      "Candidate authority is the latest non-superseded ACTIVE workstream entry, not a later COMPLETE entry or a superseded activation.",
+      "The trusted entry-introducing commit must be an ancestor of or equal to candidate.base_commit; copying exact entry bytes onto a stale branch does not satisfy ancestry.",
+      "A bootstrap candidate may predate its authority entry only when the trusted entry-introducing commit is exactly the first commit in its validated linear candidate range.",
+      "Fourteen ordinary existing candidates satisfy the ancestry floor and the historical CC-000 candidate satisfies only the structural bootstrap allowance.",
+      "Quiet Bell candidate remains NONE, all content paths remain absent, and the Small Shop process-only and three-control execution boundaries are unchanged."
+    ],
+    "limitations": [
+      "This fact verifies repository governance admission only. It creates no oracle content, candidate, compiler semantic, runtime, package, release, selection, or public contract.",
+      "OVR-000240 must be committed before it can become the trusted floor for future Quiet Bell candidate admission."
+    ]
+  },
+  "entry_hash": "sha256:b95bdc996f410c2917eb80f81112dac6332f75f5654b65ae401733fb7268a3c2",
+  "entry_id": "OVR-000239",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3b5ae740270b9079639f255682de9d17f8a7596d55209daed3b4487d7ec1ac46",
+  "recorded_at": "2026-08-29T17:25:12Z",
+  "references": [
+    {
+      "digest": "sha256:4be93f9bc6e7211f87df112e43c3f6268c96939c56267eb40b97857d2df8cfbf",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-authority-hardening.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000238",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 239,
+  "subject": {
+    "id": "cc012-candidate-authority-hardening",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify generic trusted-history candidate authority admission.",
+  "why": "The hardening report and OVR-000238 mechanically distinguish trusted Git ancestry from copied governance bytes, admit descendant bases, cover unselected candidates, preserve existing candidate compatibility, and keep every content and downstream boundary unchanged."
+}

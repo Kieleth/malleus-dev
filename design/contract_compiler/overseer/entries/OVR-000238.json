@@ -1,0 +1,88 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:4be93f9bc6e7211f87df112e43c3f6268c96939c56267eb40b97857d2df8cfbf",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-012-candidate-authority-hardening.json"
+      },
+      {
+        "after_digest": "sha256:8312bf373d44fedcf0471f11a090b194a28b1a9ceaa964b8c6277673f850c2f7",
+        "before_digest": "sha256:f64da771c8c78e1e58a403247d4731a53667731960df1893a2c38cc84bf31f79",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:04b90675688d804984cea2da2fc9e24a3f2174ddf8546599721dbd1608a07f50",
+        "before_digest": "sha256:c3b462801525a48aa386e8278068ad9c2b725ff3e847f7974913c45e8bdf70cf",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:3b5ae740270b9079639f255682de9d17f8a7596d55209daed3b4487d7ec1ac46",
+  "entry_id": "OVR-000238",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:496012cad6a17e899e0584176f0366e6a200c8d26a5b16d677a64434e34896ab",
+  "recorded_at": "2026-08-29T17:25:11Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-authority-hardening.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:4be93f9bc6e7211f87df112e43c3f6268c96939c56267eb40b97857d2df8cfbf",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-authority-hardening.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a8f87cb453f861bba611b9beff0e564a36c40a2b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000237",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 238,
+  "subject": {
+    "id": "cc012-candidate-authority-hardening",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind generic candidate authority-floor admission and its adversarial tests.",
+  "why": "Candidate-local Git history proved scope and evidence but did not prove that a candidate began after its latest authorization, and unselected eligible candidates bypassed generic admission. This revision binds the minimal ledger-derived ancestry guard, copied-entry refusal, descendant-base support, structural bootstrap compatibility, and all-candidate integration admission."
+}

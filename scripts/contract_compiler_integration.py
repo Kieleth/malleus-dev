@@ -379,6 +379,81 @@ def _validate_dependency_integrated_head(
             )
 
 
+def _authority_entry_commit(
+    repository: Path,
+    authority_entry: Mapping[str, Any],
+    overseer_path: str,
+) -> str:
+    entry_id = authority_entry["entry_id"]
+    entry_path = _safe_path(
+        f"{overseer_path}/entries/{entry_id}.json",
+        "candidate authority entry",
+    )
+    current_path = repository / entry_path
+    if not current_path.is_file() or _read_json(current_path) != authority_entry:
+        _fail(
+            "CC000_CANDIDATE_AUTHORITY",
+            f"{entry_id}: current authority entry does not match the ledger",
+        )
+    history = _git(
+        repository,
+        "log",
+        "--format=%H",
+        "--reverse",
+        "--diff-filter=A",
+        "HEAD",
+        "--",
+        entry_path,
+    )
+    introductions = history.stdout.splitlines()
+    if history.returncode or len(introductions) != 1:
+        _fail(
+            "CC000_CANDIDATE_AUTHORITY",
+            f"{entry_id}: authority entry has no unique trusted introduction",
+        )
+    introduction = introductions[0]
+    source = _git(repository, "show", f"{introduction}:{entry_path}", text=False)
+    parents = _git(repository, "show", "-s", "--format=%P", introduction)
+    parent_has_path = any(
+        not _git(repository, "show", f"{parent}:{entry_path}", text=False).returncode
+        for parent in parents.stdout.split()
+    )
+    if (
+        source.returncode
+        or source.stdout != current_path.read_bytes()
+        or parents.returncode
+        or parent_has_path
+    ):
+        _fail(
+            "CC000_CANDIDATE_AUTHORITY",
+            f"{entry_id}: trusted introduction does not create the exact entry",
+        )
+    return introduction
+
+
+def _validate_candidate_authority(
+    repository: Path,
+    base: str,
+    commits: Sequence[str],
+    authority_entry: Mapping[str, Any],
+    overseer_path: str,
+) -> None:
+    introduction = _authority_entry_commit(
+        repository,
+        authority_entry,
+        overseer_path,
+    )
+    ancestry = _git(repository, "merge-base", "--is-ancestor", introduction, base)
+    if not ancestry.returncode:
+        return
+    if authority_entry["data"]["bootstrap"] and commits[0] == introduction:
+        return
+    _fail(
+        "CC000_CANDIDATE_AUTHORITY",
+        f"base_commit does not descend from active authority {authority_entry['entry_id']}",
+    )
+
+
 def _verify_artifact_bytes(
     artifact: Mapping[str, Any], source: bytes, context: str
 ) -> None:
@@ -474,6 +549,8 @@ def validate_candidate_history(
     *,
     allowed_scopes: Sequence[Mapping[str, str]],
     workstream_id: str | None = None,
+    authority_entry: Mapping[str, Any] | None = None,
+    overseer_path: str | None = None,
 ) -> tuple[str, ...]:
     """Validate exact commits and every path touched, including later deletions."""
     repository = repository.resolve()
@@ -501,6 +578,31 @@ def validate_candidate_history(
         expected_parent = fields[0]
     if not commits or commits[-1] != head:
         _fail("CC000_GIT_HISTORY", "candidate range contains no head commit")
+    if (authority_entry is None) != (overseer_path is None):
+        _fail(
+            "CC000_CANDIDATE_AUTHORITY",
+            "authority entry and overseer path must be supplied together",
+        )
+    if authority_entry is not None and overseer_path is not None:
+        data = authority_entry.get("data", {})
+        if (
+            authority_entry.get("entry_type") != "WORKSTREAM_STATE"
+            or data.get("new_state") != "ACTIVE"
+            or (
+                workstream_id is not None and data.get("workstream_id") != workstream_id
+            )
+        ):
+            _fail(
+                "CC000_CANDIDATE_AUTHORITY",
+                "candidate authority must be the workstream's ACTIVE state entry",
+            )
+        _validate_candidate_authority(
+            repository,
+            base,
+            commits,
+            authority_entry,
+            overseer_path,
+        )
     actual_tree = _git(repository, "rev-parse", f"{head}^{{tree}}")
     if actual_tree.returncode or candidate.get("head_tree") != actual_tree.stdout.strip():
         _fail("CC000_CANDIDATE_TREE", "head_tree does not bind the candidate tree")
@@ -753,6 +855,22 @@ def _workstream_states(ledger_state: Any) -> tuple[dict[str, str], dict[str, dic
     return states, entries
 
 
+def _latest_active_authority_entries(
+    ledger_state: Any,
+) -> dict[str, dict[str, Any]]:
+    superseded = superseded_entries(ledger_state.entries)
+    entries: dict[str, dict[str, Any]] = {}
+    for entry in ledger_state.entries:
+        if (
+            entry["entry_id"] in superseded
+            or entry["entry_type"] != "WORKSTREAM_STATE"
+            or entry["data"]["new_state"] != "ACTIVE"
+        ):
+            continue
+        entries[entry["data"]["workstream_id"]] = entry
+    return entries
+
+
 def _verify_current_file(path: Path, record: Mapping[str, Any], context: str) -> None:
     if not path.is_file():
         _fail("CC000_ARTIFACT_MISSING", f"{context}: {path} does not exist")
@@ -899,6 +1017,7 @@ def validate_integration(
         if anchor[field] != expected:
             _fail("CC000_LEDGER_ANCHOR", f"overseer checkpoint {field} is stale")
     states, state_entries = _workstream_states(ledger_state)
+    authority_entries = _latest_active_authority_entries(ledger_state)
 
     phase_results: dict[str, tuple[dict[str, Any], ...]] = {}
     for workstream_id, card in cards.items():
@@ -982,12 +1101,26 @@ def validate_integration(
             )
         if card["candidate"]["state"] != "INTEGRATED":
             _fail("CC000_CANDIDATE_STATE", f"{workstream_id} is not INTEGRATED")
+
+    for workstream_id, card in cards.items():
+        if card["candidate"]["state"] not in {"ELIGIBLE", "INTEGRATED"}:
+            continue
+        authority_entry = authority_entries.get(workstream_id)
+        if authority_entry is None:
+            _fail(
+                "CC000_CANDIDATE_AUTHORITY",
+                f"{workstream_id}: no ACTIVE authority entry exists",
+            )
         validate_candidate_history(
             repository,
             card["candidate"],
             allowed_scopes=tuple(card["scopes"]),
             workstream_id=workstream_id,
+            authority_entry=authority_entry,
+            overseer_path=anchor["path"],
         )
+
+    for workstream_id in selections:
         if not workstream_id.startswith("CC-R"):
             _validate_legacy_selected_tdd(
                 workstream_id,
