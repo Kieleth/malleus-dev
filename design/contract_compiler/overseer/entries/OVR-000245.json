@@ -1,0 +1,24 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "affected_subject_ids": ["cc012-candidate-clean-base-hardening", "CC-000", "CC-012"],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000243"
+  },
+  "entry_hash": "sha256:49aaa6ee54c791a652b8306e8f4783baced7ca4ac736d268ed5de81a071e35d5",
+  "entry_id": "OVR-000245",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:0599384bdfcd7c1ad71445e498da455a77eac6dd121932a311fed40a592c6fd0",
+  "recorded_at": "2026-08-29T18:50:00Z",
+  "references": [
+    {"relation": "SUPERSEDES", "target": "OVR-000243", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 245,
+  "subject": {"id": "cc012-candidate-clean-base-hardening", "type": "EVIDENCE"},
+  "summary": "Replace the incomplete clean-base verification fact.",
+  "why": "OVR-000243 did not prove that an authority-introducing commit has a parent, and its legacy rule did not require continuing exact prefix-240 candidate identity after demotion, alternate identity, quarantine, or card-path relocation. A replacement fact must close both admissions."
+}

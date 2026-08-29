@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 51996,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:f9712b74ffabb1d061aefc0fb15f996917566fb0bcea477cf1a2132ca016fd1f"
+    },
+    {
+      "byte_length": 191524,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:772ee7598e588263404876b774d69cf374b2d9f888fd0dcc6394170ed092065f"
+    }
+  ],
+  "base_commit": "1afaef29ad20ec503721488c9edbef3bfdadbb18",
+  "checks": [
+    {
+      "check_id": "cc012-closure-red",
+      "method": "Run root-authority, frozen NONE, frozen QUARANTINED, alternate identity, historical path relocation, broadened bootstrap, provisional identity, unchanged-state, state-progression, and later-completion cases before implementing closure.",
+      "observed": "The focused command exited 1 with seven failures. Root authority and all frozen continuity violations were accepted; unchanged ELIGIBLE, ELIGIBLE to INTEGRATED, and later-completion controls passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-root-authority",
+      "method": "Create a strict new candidate whose ACTIVE entry and governed helper share the repository root commit.",
+      "observed": "Admission refuses with CC000_CANDIDATE_CLEAN_BASE because a root authority has no parent against which governed scope cleanliness can be proven.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-policy-path",
+      "method": "Read the exact integration manifest at trusted policy commit cba6de0 and relocate the current CC-X03 card path while preserving its card object.",
+      "observed": "Frozen continuity refuses with CC000_CANDIDATE_LEGACY. Historical card paths come only from the policy manifest, never from current mutable card pointers.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-continuity",
+      "method": "For each policy card COMPLETE at prefix 240, compare the current latest non-superseded COMPLETE entry ID and hash, card path, scopes, and full candidate identity with the trusted snapshot.",
+      "observed": "Unchanged ELIGIBLE and the sole allowed ELIGIBLE to INTEGRATED progression pass. NONE, QUARANTINED, broadened, provisional, alternate, relocated, or scope-changed historical records refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-reactivation-redo",
+      "method": "Append a later genuine ACTIVE and COMPLETE coordinate for CC-X03 and present a different eligible candidate identity.",
+      "observed": "The changed completion coordinate disables frozen legacy classification. The candidate proceeds only through existing strict authority, clean-base, declared-delta, blob-change, scope, evidence, and history admission.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-content-boundary",
+      "method": "Inspect Git status and all card, schema, integration manifest, DAG, oracle, compiler, fixture, package, release, Docker, and adjacent-workstream paths.",
+      "observed": "Only the validator, its tests, and append-only overseer closure changed. Quiet Bell content remains frozen, Small Shop contributes process learning only, and Quiet Bell then Greenhouse then compiler edge cases remains unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is repository governance enforced against the trusted repository HEAD. It is not external attestation, remote-repository identity, or a public artifact contract.",
+    "Parent-relative path and blob checks are not an information-flow proof and do not claim to detect information copied through unrecorded channels.",
+    "This report creates no Quiet Bell oracle content, candidate, worker ledger, completion, selection, integration, compiler semantic, runtime, fixture, package, release, or Docker behavior.",
+    "Historical continuity applies only while the exact prefix-240 completion ID and hash remain current. A later completion coordinate must earn strict new-candidate admission."
+  ],
+  "recorded_at": "2026-08-29T18:50:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

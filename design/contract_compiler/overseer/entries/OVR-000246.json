@@ -1,0 +1,23 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "affected_subject_ids": ["CC-012"],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000244"
+  },
+  "entry_hash": "sha256:ab4acdf2e1b135a17c34b6ff7eaa8192ca2266cb36fabc586839eb3ab4d707d7",
+  "entry_id": "OVR-000246",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:49aaa6ee54c791a652b8306e8f4783baced7ca4ac736d268ed5de81a071e35d5",
+  "recorded_at": "2026-08-29T18:50:01Z",
+  "references": [
+    {"relation": "SUPERSEDES", "target": "OVR-000244", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 246,
+  "subject": {"id": "CC-012", "type": "WORKSTREAM"},
+  "summary": "Replace the activation that depended on incomplete clean-base evidence.",
+  "why": "OVR-000244 depends on superseded OVR-000243. Quiet Bell must return to ACTIVE only after replacement evidence proves root-authority refusal and frozen historical candidate continuity."
+}

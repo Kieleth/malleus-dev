@@ -1,0 +1,33 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "affected_ids": ["CC-000", "CC-012"],
+    "documents": [
+      {"after_digest": "sha256:16043c840964cbd97e7b8e03848ab39d3003963e8c1f2a3487f10ca05e51d056", "change": "CREATED", "path": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-closure.json"},
+      {"after_digest": "sha256:f9712b74ffabb1d061aefc0fb15f996917566fb0bcea477cf1a2132ca016fd1f", "before_digest": "sha256:db211c3f04acf69931a58987e17b3fe02cbf247d131b49038b74243d4c20cf38", "change": "MODIFIED", "path": "scripts/contract_compiler_integration.py"},
+      {"after_digest": "sha256:772ee7598e588263404876b774d69cf374b2d9f888fd0dcc6394170ed092065f", "before_digest": "sha256:f501eb903bddb08534d0c833bf813418e002520f571888c17628a663fb166a06", "change": "MODIFIED", "path": "tests/test_contract_compiler_integration.py"}
+    ]
+  },
+  "entry_hash": "sha256:5f565583adfcade4df690aa3212f17f94d96bccff6d11569bf6fca6e72fc2c78",
+  "entry_id": "OVR-000247",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ab4acdf2e1b135a17c34b6ff7eaa8192ca2266cb36fabc586839eb3ab4d707d7",
+  "recorded_at": "2026-08-29T18:50:03Z",
+  "references": [
+    {"relation": "DEFINES", "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-closure.json", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "scripts/contract_compiler_integration.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_contract_compiler_integration.py", "type": "DOCUMENT"},
+    {"digest": "sha256:16043c840964cbd97e7b8e03848ab39d3003963e8c1f2a3487f10ca05e51d056", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-closure.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "1afaef29ad20ec503721488c9edbef3bfdadbb18", "type": "COMMIT"},
+    {"relation": "EVIDENCES", "target": "OVR-000245", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000246", "type": "ENTRY"},
+    {"relation": "IMPLEMENTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "IMPLEMENTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 247,
+  "subject": {"id": "cc012-candidate-clean-base-closure", "type": "DOCUMENT"},
+  "summary": "Bind root-authority refusal and frozen candidate continuity.",
+  "why": "Strict new-candidate admission needs a non-root authority commit, while frozen legacy admission must derive historical card paths from the trusted policy manifest and preserve exact completed candidate identity until a genuine later completion cycle replaces it."
+}

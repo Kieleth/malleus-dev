@@ -57,6 +57,7 @@ QUIET_BELL_REACTIVATION_REPAIR_COMMIT = "a8f87cb453f861bba611b9beff0e564a36c40a2
 QUIET_BELL_REACTIVATION_ENTRY = "OVR-000236"
 QUIET_BELL_AUTHORITY_HARDENING_COMMIT = "cba6de054bfc1241460998b8744efe02adce9ae4"
 QUIET_BELL_AUTHORITY_HARDENING_ENTRY = "OVR-000240"
+QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT = "1afaef29ad20ec503721488c9edbef3bfdadbb18"
 QUIET_BELL_DEPENDENCIES = (
     "CC-010",
     "CC-D02",
@@ -378,19 +379,13 @@ def _clean_base_candidate(
     authority_path: str | None = None,
     revert_output: bool = False,
     candidate_helper: bool = False,
+    root_authority: bool = False,
 ) -> tuple[Path, dict[str, Any], dict[str, Any]]:
     repository = tmp_path / "clean-base-candidate"
     repository.mkdir()
     _git(repository, "init", "-b", "main")
     _git(repository, "config", "user.name", "CC-000 Test")
     _git(repository, "config", "user.email", "cc000@example.invalid")
-    (repository / "README.md").write_text("fixture\n", encoding="utf-8")
-    if revert_output:
-        root_result = repository / "allowed" / "result.txt"
-        root_result.parent.mkdir(parents=True)
-        root_result.write_text("base\n", encoding="utf-8")
-    _commit(repository, "root")
-
     authority = {
         "entry_id": "OVR-TEST-ACTIVE",
         "entry_type": "WORKSTREAM_STATE",
@@ -403,13 +398,20 @@ def _clean_base_candidate(
     authority_file = (
         repository / "governance" / "entries" / f"{authority['entry_id']}.json"
     )
+    (repository / "README.md").write_text("fixture\n", encoding="utf-8")
+    if revert_output:
+        root_result = repository / "allowed" / "result.txt"
+        root_result.parent.mkdir(parents=True)
+        root_result.write_text("base\n", encoding="utf-8")
+    if not root_authority:
+        _commit(repository, "root")
     authority_file.parent.mkdir(parents=True)
     _write_json(authority_file, authority)
     if authority_path is not None:
         bundled = repository / authority_path
         bundled.parent.mkdir(parents=True, exist_ok=True)
         bundled.write_text("bundled\n", encoding="utf-8")
-    _commit(repository, "active authority")
+    _commit(repository, "root authority" if root_authority else "active authority")
 
     if merge_prebase:
         _git(repository, "switch", "-c", "stale-scope")
@@ -575,6 +577,18 @@ def _quiet_bell_candidate_authority() -> tuple[list[dict[str, str]], dict[str, A
         CONTRACT / "overseer" / "entries" / f"{QUIET_BELL_REACTIVATION_ENTRY}.json"
     )
     return card["scopes"], entry
+
+
+def _current_candidate_cards() -> tuple[dict[str, dict[str, Any]], dict[str, str]]:
+    manifest = _read_json(INTEGRATION)
+    rows = [row for row in manifest["workstreams"] if row["card"]["state"] == "PRESENT"]
+    return (
+        {
+            row["workstream_id"]: _read_json(CONTRACT / row["card"]["path"])
+            for row in rows
+        },
+        {row["workstream_id"]: row["card"]["path"] for row in rows},
+    )
 
 
 ALLOWED_SCOPES = (
@@ -2250,7 +2264,16 @@ def test_quiet_bell_candidate_clean_base_hardening_report_is_exact() -> None:
         "tests/test_contract_compiler_integration.py",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert {check["check_id"] for check in report["checks"]} == {
@@ -2312,7 +2335,7 @@ def test_quiet_bell_candidate_clean_base_hardening_transaction_is_exact() -> Non
     assert "scope-untouched prehistory" in activation["data"]["deliverables"][-1]
     superseded = integration_module.superseded_entries(entries)
     assert "OVR-000240" in superseded
-    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    states, state_entries = integration_module._workstream_states(_overseer_prefix(244))
     assert states["CC-012"] == "ACTIVE"
     assert state_entries["CC-012"]["entry_id"] == "OVR-000244"
 
@@ -2326,9 +2349,112 @@ def test_quiet_bell_candidate_clean_base_hardening_transaction_is_exact() -> Non
         for entry in transaction
     )
     assert times[0] < report_time < times[1] < times[2] < times[3]
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT}:design/contract_compiler/"
+            "overseer/head.json",
+        )
+    )
     assert head["entry_count"] == 244
     assert head["head_entry_id"] == "OVR-000244"
+    assert head["head_hash"] == activation["entry_hash"]
+
+
+def test_quiet_bell_candidate_clean_base_closure_report_is_exact() -> None:
+    report = _read_json(
+        CONTRACT / "overseer/evidence/CC-012-candidate-clean-base-closure.json"
+    )
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "scripts/contract_compiler_integration.py",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    assert {check["check_id"] for check in report["checks"]} == {
+        "cc012-closure-red",
+        "cc012-root-authority",
+        "cc012-policy-path",
+        "cc012-frozen-continuity",
+        "cc012-reactivation-redo",
+        "cc012-frozen-content-boundary",
+    }
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any("trusted repository HEAD" in item for item in report["limitations"])
+    assert any("information-flow proof" in item for item in report["limitations"])
+
+
+def test_quiet_bell_candidate_clean_base_closure_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 245 <= entry["sequence"] <= 249)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(245, 250)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "CORRECTION",
+        "CORRECTION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    fact_correction, state_correction, revision, verification, activation = transaction
+    assert fact_correction["data"]["supersedes_entry_id"] == "OVR-000243"
+    assert state_correction["data"]["supersedes_entry_id"] == "OVR-000244"
+    assert fact_correction["data"]["replacement_required"] is True
+    assert state_correction["data"]["replacement_required"] is True
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-closure.json": "CREATED",
+        "scripts/contract_compiler_integration.py": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "cc012-candidate-clean-base-closure-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000229",
+        "OVR-000234",
+        "OVR-000235",
+        "OVR-000247",
+        "OVR-000248",
+    ]
+    assert activation["data"]["deliverables"][-1].endswith(
+        "first trusted commit containing OVR-000249."
+    )
+    superseded = integration_module.superseded_entries(entries)
+    assert {"OVR-000243", "OVR-000244"} <= superseded
+    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    assert states["CC-012"] == "ACTIVE"
+    assert state_entries["CC-012"]["entry_id"] == "OVR-000249"
+
+    report_time = datetime.fromisoformat(
+        _read_json(
+            CONTRACT / "overseer/evidence/CC-012-candidate-clean-base-closure.json"
+        )["recorded_at"].replace("Z", "+00:00")
+    )
+    times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 249
+    assert head["head_entry_id"] == "OVR-000249"
     assert head["head_hash"] == activation["entry_hash"]
 
 
@@ -4276,7 +4402,7 @@ def test_candidate_authority_uses_latest_active_not_complete_or_superseded() -> 
     )
 
     assert authorities["CC-021"]["entry_id"] == "OVR-000219"
-    assert authorities["CC-012"]["entry_id"] == "OVR-000244"
+    assert authorities["CC-012"]["entry_id"] == "OVR-000249"
     assert {"OVR-000231", "OVR-000240"}.isdisjoint(
         entry["entry_id"] for entry in authorities.values()
     )
@@ -4366,6 +4492,29 @@ def test_clean_base_refuses_content_bundled_with_authority(tmp_path: Path) -> No
     _assert_code(error, "CC000_CANDIDATE_CLEAN_BASE")
 
 
+def test_clean_base_refuses_root_authority_with_bundled_content(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(
+        tmp_path,
+        authority_path="allowed/root-helper.py",
+        root_authority=True,
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_CLEAN_BASE")
+
+
 def test_clean_base_refuses_declared_output_reverted_to_base(tmp_path: Path) -> None:
     repository, candidate, authority = _clean_base_candidate(
         tmp_path,
@@ -4423,17 +4572,7 @@ def test_clean_base_refuses_undeclared_candidate_helper(tmp_path: Path) -> None:
 
 
 def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
-    manifest = _read_json(INTEGRATION)
-    cards = {
-        row["workstream_id"]: _read_json(CONTRACT / row["card"]["path"])
-        for row in manifest["workstreams"]
-        if row["card"]["state"] == "PRESENT"
-    }
-    card_paths = {
-        row["workstream_id"]: row["card"]["path"]
-        for row in manifest["workstreams"]
-        if row["card"]["state"] == "PRESENT"
-    }
+    cards, card_paths = _current_candidate_cards()
 
     legacy = integration_module._frozen_legacy_candidate_ids(
         ROOT,
@@ -4452,6 +4591,123 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
 
 
 @pytest.mark.parametrize(
+    "state",
+    ("NONE", "QUARANTINED", "ALTERNATE"),
+)
+def test_frozen_completed_candidate_continuity_refuses_replacement(
+    state: str,
+) -> None:
+    cards, card_paths = _current_candidate_cards()
+    candidate = copy.deepcopy(cards["CC-X03"]["candidate"])
+    if state == "NONE":
+        candidate = {"state": "NONE"}
+    elif state == "QUARANTINED":
+        candidate = {
+            "base_commit": candidate["base_commit"],
+            "head_commit": candidate["head_commit"],
+            "limitations": ["Historical candidate was demoted."],
+            "observed_touched_paths": [
+                item["path"] for item in candidate["artifacts"] + candidate["evidence"]
+            ],
+            "reason": "Historical candidate was demoted.",
+            "state": "QUARANTINED",
+        }
+    else:
+        candidate["base_commit"] = _git(
+            ROOT, "rev-parse", f"{candidate['base_commit']}^"
+        )
+    cards["CC-X03"]["candidate"] = candidate
+
+    with pytest.raises(IntegrationValidationError) as error:
+        integration_module._frozen_legacy_candidate_ids(
+            ROOT,
+            cards,
+            card_paths,
+            _raw_overseer_state(),
+            "design/contract_compiler/overseer",
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_LEGACY")
+
+
+def test_frozen_completed_candidate_refuses_historical_card_relocation() -> None:
+    cards, card_paths = _current_candidate_cards()
+    card_paths["CC-X03"] = "workstreams/relocated-CC-X03.json"
+
+    with pytest.raises(IntegrationValidationError) as error:
+        integration_module._frozen_legacy_candidate_ids(
+            ROOT,
+            cards,
+            card_paths,
+            _raw_overseer_state(),
+            "design/contract_compiler/overseer",
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_LEGACY")
+
+
+@pytest.mark.parametrize("integrated", (False, True), ids=("unchanged", "integrated"))
+def test_frozen_completed_candidate_allows_only_state_progression(
+    integrated: bool,
+) -> None:
+    cards, card_paths = _current_candidate_cards()
+    if integrated:
+        cards["CC-X03"]["candidate"]["state"] = "INTEGRATED"
+
+    legacy = integration_module._frozen_legacy_candidate_ids(
+        ROOT,
+        cards,
+        card_paths,
+        _raw_overseer_state(),
+        "design/contract_compiler/overseer",
+    )
+
+    assert "CC-X03" in legacy
+
+
+def test_later_completion_coordinate_uses_strict_candidate_admission() -> None:
+    cards, card_paths = _current_candidate_cards()
+    cards["CC-X03"]["candidate"]["base_commit"] = _git(
+        ROOT,
+        "rev-parse",
+        f"{cards['CC-X03']['candidate']['base_commit']}^",
+    )
+    ledger = _raw_overseer_state()
+    later_entries = ledger.entries + (
+        {
+            "data": {
+                "new_state": "ACTIVE",
+                "workstream_id": "CC-X03",
+            },
+            "entry_hash": "sha256:" + "1" * 64,
+            "entry_id": "OVR-TEST-X03-REACTIVE",
+            "entry_type": "WORKSTREAM_STATE",
+            "sequence": 1001,
+        },
+        {
+            "data": {
+                "new_state": "COMPLETE",
+                "workstream_id": "CC-X03",
+            },
+            "entry_hash": "sha256:" + "2" * 64,
+            "entry_id": "OVR-TEST-X03-RECOMPLETE",
+            "entry_type": "WORKSTREAM_STATE",
+            "sequence": 1002,
+        },
+    )
+
+    legacy = integration_module._frozen_legacy_candidate_ids(
+        ROOT,
+        cards,
+        card_paths,
+        SimpleNamespace(entries=later_entries),
+        "design/contract_compiler/overseer",
+    )
+
+    assert "CC-X03" not in legacy
+
+
+@pytest.mark.parametrize(
     ("workstream_id", "base_commit"),
     (
         ("CC-000", "c410f11229e7c33a4fab9ebdfc9e2e109f18cbf7^"),
@@ -4463,47 +4719,22 @@ def test_legacy_candidate_identity_cannot_be_rebound(
     workstream_id: str,
     base_commit: str,
 ) -> None:
-    manifest = _read_json(INTEGRATION)
-    cards = {
-        row["workstream_id"]: _read_json(CONTRACT / row["card"]["path"])
-        for row in manifest["workstreams"]
-        if row["card"]["state"] == "PRESENT"
-    }
-    card_paths = {
-        row["workstream_id"]: row["card"]["path"]
-        for row in manifest["workstreams"]
-        if row["card"]["state"] == "PRESENT"
-    }
+    cards, card_paths = _current_candidate_cards()
     rebound = copy.deepcopy(cards[workstream_id])
     rebound["candidate"]["base_commit"] = _git(ROOT, "rev-parse", base_commit)
     cards[workstream_id] = rebound
     ledger = _raw_overseer_state()
 
-    legacy = integration_module._frozen_legacy_candidate_ids(
-        ROOT,
-        cards,
-        card_paths,
-        ledger,
-        "design/contract_compiler/overseer",
-    )
-
-    assert workstream_id not in legacy
-    authority = integration_module._latest_active_authority_entries(ledger)[
-        workstream_id
-    ]
-
     with pytest.raises(IntegrationValidationError) as error:
-        validate_candidate_history(
+        integration_module._frozen_legacy_candidate_ids(
             ROOT,
-            rebound["candidate"],
-            allowed_scopes=rebound["scopes"],
-            workstream_id=workstream_id,
-            authority_entry=authority,
-            overseer_path="design/contract_compiler/overseer",
-            enforce_clean_base=True,
+            cards,
+            card_paths,
+            ledger,
+            "design/contract_compiler/overseer",
         )
 
-    _assert_code(error, "CC000_CANDIDATE_AUTHORITY")
+    _assert_code(error, "CC000_CANDIDATE_LEGACY")
 
 
 def test_candidate_coordinates_require_full_commit_ids(tmp_path: Path) -> None:

@@ -1,0 +1,36 @@
+{
+  "actor": {"id": "cc012-candidate-clean-base-closure-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-29T18:50:04Z",
+    "claims": [
+      "Strict new-candidate admission refuses a root authority commit because it has no parent against which governed-scope cleanliness can be proved.",
+      "Frozen historical card paths are derived from the exact integration manifest at trusted policy commit cba6de054bfc1241460998b8744efe02adce9ae4.",
+      "A workstream whose current completion coordinate equals its prefix-240 completion must preserve the historical card path, scopes, and candidate identity, allowing only unchanged state or ELIGIBLE to INTEGRATED progression.",
+      "NONE, QUARANTINED, alternate or provisional identity, and historical card-path relocation refuse mechanically instead of escaping legacy validation.",
+      "A genuine later ACTIVE and COMPLETE cycle changes the completion coordinate and therefore uses strict new-candidate admission rather than frozen legacy admission.",
+      "Quiet Bell remains content-free, Small Shop contributes process learning only, and the execution order remains Quiet Bell then Greenhouse then compiler edge cases."
+    ],
+    "limitations": [
+      "This verifies repository governance against trusted HEAD, not external attestation, remote identity, or information-flow security.",
+      "This creates no oracle content, candidate, compiler semantic, runtime, fixture, package, release, selection, or public contract.",
+      "OVR-000249 must be committed before its trusted introduction can become the practical base for future Quiet Bell content."
+    ]
+  },
+  "entry_hash": "sha256:ebeb2c12e45526de3109c4db688c5c72760df9b2f61b9c1fa6df6179eaee27e5",
+  "entry_id": "OVR-000248",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5f565583adfcade4df690aa3212f17f94d96bccff6d11569bf6fca6e72fc2c78",
+  "recorded_at": "2026-08-29T18:50:04Z",
+  "references": [
+    {"digest": "sha256:16043c840964cbd97e7b8e03848ab39d3003963e8c1f2a3487f10ca05e51d056", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-closure.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "OVR-000247", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 248,
+  "subject": {"id": "cc012-candidate-clean-base-hardening", "type": "EVIDENCE"},
+  "summary": "Verify root-authority refusal and exact frozen candidate continuity.",
+  "why": "The closure report and OVR-000247 prove that root commits cannot establish clean authority, exact policy-era completed candidates cannot evade continuity through state or path mutation, and legitimate later completion cycles remain governed by strict admission."
+}

@@ -1,0 +1,36 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the independent Quiet Bell source-descriptor, import-graph, declaration, binding, elaboration, fact, and logical artifact expectations only from exact CC-011 sources and accepted decisions.",
+      "Use only the closed private fixture-local logical JSON labels, retain contradictions as RED, and transfer no Small Shop expected value, fact, identifier, derivation, shared helper, or interface into Quiet Bell.",
+      "Complete Quiet Bell before neutral Greenhouse, then complete neutral Greenhouse before compiler edge cases, without cross-control bindings.",
+      "The practical candidate base is the first trusted commit containing OVR-000249."
+    ],
+    "evidence_entry_ids": ["OVR-000229", "OVR-000234", "OVR-000235", "OVR-000247", "OVR-000248"],
+    "new_state": "ACTIVE",
+    "previous_state": "PAUSED",
+    "workstream_id": "CC-012"
+  },
+  "entry_hash": "sha256:84cab327bed43774293198b9261803b738f7ec8c2eb5bce6bbfea6f1e225c715",
+  "entry_id": "OVR-000249",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ebeb2c12e45526de3109c4db688c5c72760df9b2f61b9c1fa6df6179eaee27e5",
+  "recorded_at": "2026-08-29T18:50:05Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000229", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000234", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000235", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000247", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000248", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 249,
+  "subject": {"id": "CC-012", "type": "WORKSTREAM"},
+  "summary": "Reactivate Quiet Bell behind closed candidate admission.",
+  "why": "OVR-000245 and OVR-000246 require replacement evidence and authority. OVR-000247 and OVR-000248 close root-authority and frozen-continuity admissions while preserving the independent Quiet Bell boundary and accepted execution order."
+}

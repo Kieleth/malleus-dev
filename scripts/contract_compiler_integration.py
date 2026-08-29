@@ -492,6 +492,20 @@ def _validate_clean_base(
     base: str,
     allowed_scopes: Sequence[Mapping[str, str]],
 ) -> None:
+    authority_parents = _git(
+        repository,
+        "show",
+        "-s",
+        "--format=%P",
+        authority_commit,
+    )
+    if authority_parents.returncode:
+        _fail("CC000_GIT_HISTORY", "cannot inspect candidate authority parents")
+    if not authority_parents.stdout.split():
+        _fail(
+            "CC000_CANDIDATE_CLEAN_BASE",
+            "candidate authority cannot be a root commit",
+        )
     prebase = _git(repository, "rev-list", base, f"^{authority_commit}")
     if prebase.returncode:
         _fail("CC000_GIT_HISTORY", "cannot enumerate candidate prehistory")
@@ -960,6 +974,38 @@ def _candidate_matches_snapshot(
     return progressed == snapshot
 
 
+def _latest_complete_entries(ledger_state: Any) -> dict[str, dict[str, Any]]:
+    superseded = superseded_entries(ledger_state.entries)
+    complete: dict[str, dict[str, Any]] = {}
+    for entry in ledger_state.entries:
+        if (
+            entry["entry_id"] not in superseded
+            and entry["entry_type"] == "WORKSTREAM_STATE"
+            and entry["data"]["new_state"] == "COMPLETE"
+        ):
+            complete[entry["data"]["workstream_id"]] = entry
+    return complete
+
+
+def _git_json_object(
+    repository: Path,
+    commit: str,
+    path: str,
+) -> dict[str, Any] | None:
+    source = _git(repository, "show", f"{commit}:{path}", text=False)
+    if source.returncode:
+        return None
+    try:
+        value = json.loads(
+            source.stdout.decode("utf-8"),
+            object_pairs_hook=_unique_object,
+            parse_constant=_reject_constant,
+        )
+    except (IntegrationValidationError, UnicodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
 def _frozen_legacy_candidate_ids(
     repository: Path,
     cards: Mapping[str, Mapping[str, Any]],
@@ -994,38 +1040,63 @@ def _frozen_legacy_candidate_ids(
             "legacy candidate snapshot authority is not the trusted OVR-000240 introduction",
         )
     prefix = type("LedgerPrefix", (), {"entries": prefix_entries})()
-    states, _ = _workstream_states(prefix)
+    states, prefix_state_entries = _workstream_states(prefix)
+    current_complete = _latest_complete_entries(ledger_state)
+    policy_manifest = _git_json_object(
+        repository,
+        LEGACY_CANDIDATE_SNAPSHOT_COMMIT,
+        "design/contract_compiler/integration.json",
+    )
+    if policy_manifest is None:
+        _fail("CC000_CANDIDATE_LEGACY", "legacy policy manifest is absent")
+    policy_paths = {
+        row["workstream_id"]: row["card"]["path"]
+        for row in policy_manifest["workstreams"]
+        if row["card"]["state"] == "PRESENT"
+    }
     legacy: set[str] = set()
-    for workstream_id, card in cards.items():
-        if states.get(workstream_id) != "COMPLETE" or card["candidate"][
-            "state"
-        ] not in {"ELIGIBLE", "INTEGRATED"}:
+    for workstream_id, prefix_completion in prefix_state_entries.items():
+        if states.get(workstream_id) != "COMPLETE":
             continue
-        relative = _safe_path(card_paths[workstream_id], "legacy card snapshot")
-        source = _git(
-            repository,
-            "show",
-            f"{LEGACY_CANDIDATE_SNAPSHOT_COMMIT}:design/contract_compiler/{relative}",
-            text=False,
-        )
-        if source.returncode:
+        current_completion = current_complete.get(workstream_id)
+        if current_completion is None or (
+            current_completion["entry_id"],
+            current_completion["entry_hash"],
+        ) != (
+            prefix_completion["entry_id"],
+            prefix_completion["entry_hash"],
+        ):
             continue
-        try:
-            snapshot = json.loads(
-                source.stdout.decode("utf-8"),
-                object_pairs_hook=_unique_object,
-                parse_constant=_reject_constant,
-            )
-        except (IntegrationValidationError, UnicodeError, json.JSONDecodeError):
+        relative = policy_paths.get(workstream_id)
+        if relative is None:
             continue
         if (
-            isinstance(snapshot, dict)
-            and card["scopes"] == snapshot.get("scopes")
-            and _candidate_matches_snapshot(
-                card["candidate"],
-                snapshot.get("candidate", {}),
+            card_paths.get(workstream_id) != relative
+            or workstream_id not in cards
+        ):
+            _fail(
+                "CC000_CANDIDATE_LEGACY",
+                f"{workstream_id}: historical card path changed",
+            )
+        snapshot = _git_json_object(
+            repository,
+            LEGACY_CANDIDATE_SNAPSHOT_COMMIT,
+            "design/contract_compiler/"
+            + _safe_path(relative, "legacy card snapshot"),
+        )
+        card = cards[workstream_id]
+        if (
+            snapshot is None
+            or card["scopes"] != snapshot.get("scopes")
+            or not _candidate_matches_snapshot(
+                card["candidate"], snapshot.get("candidate", {})
             )
         ):
+            _fail(
+                "CC000_CANDIDATE_LEGACY",
+                f"{workstream_id}: frozen candidate continuity changed",
+            )
+        if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}:
             legacy.add(workstream_id)
     return frozenset(legacy)
 
