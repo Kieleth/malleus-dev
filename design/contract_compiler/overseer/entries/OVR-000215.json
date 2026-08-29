@@ -1,0 +1,61 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b7792e7f4eb349cd43c8a3be62278df248f242f03ab58d71e5ce38659fb29968",
+        "before_digest": "sha256:7b93696139772f05e50198909d03c41fd32d52c407e0b7cb0723d94d45d5dca1",
+        "change": "MODIFIED",
+        "path": "scripts/ci.py"
+      },
+      {
+        "after_digest": "sha256:e3cefd245aa5fca8c4bbf34c8d26dd861fb9600362c286cc52b3440e8ebdbf2e",
+        "before_digest": "sha256:98c7464add127fcf86188cfcaaa3d3166a5152767e8f8c26753a286116e42c0b",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_ci.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:99e118fd111ef1f432cf75d48e05d18a33d17be4263655bd44c5eb969853769d",
+  "entry_id": "OVR-000215",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:aba7e488d59f7c3ad169c8a73e30b40e4a04f156f72260272b8a2ad76e3998bc",
+  "recorded_at": "2026-08-29T03:55:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "scripts/ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6cf44fa180963f8bd4d5f92aa2045582b9c28093",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 215,
+  "subject": {
+    "id": "small-shop-ci-registration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the Small Shop research journal in the fixed all-profile CI plan.",
+  "why": "The exact research journal committed at 6cf44fa180963f8bd4d5f92aa2045582b9c28093 with tree 4884a167f7d0213bf0962102f2a8c8cba6ee1896 now has a fixed shell-free validation command for research/ontology_driven_kg_realization/experiments/small_shop. The command runs once after GraphRecipe in the all profile, Ruff checks the same directory, and test, docs, and package profiles remain byte-for-byte unchanged. The ledger schema restricts EVIDENCE references to verification reports under overseer/evidence, so this revision binds the exact commit and names the research journal path without misclassifying it as overseer evidence or adding it as a governed document. This changes no compiler semantics, runtime authority, acceptance authority, public API, package content, hook installation, or release policy."
+}

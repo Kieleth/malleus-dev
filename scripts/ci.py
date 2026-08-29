@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 GRAPH_RECIPE = Path(
     "research/ontology_driven_kg_realization/experiments/graph_recipe"
 )
+SMALL_SHOP = Path(
+    "research/ontology_driven_kg_realization/experiments/small_shop"
+)
 
 
 @dataclass(frozen=True)
@@ -61,6 +64,7 @@ QUALITY = Command(
         "tests/test_contract_compiler_integration.py",
         "src/malleus",
         str(GRAPH_RECIPE),
+        str(SMALL_SHOP),
     ),
 )
 TEST = (
@@ -95,6 +99,16 @@ TEST = (
         ),
     ),
 )
+SMALL_SHOP_TEST = Command(
+    "small-shop",
+    (
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        str(SMALL_SHOP),
+    ),
+)
 DOCS = tuple(
     Command(
         f"docs-{builder}",
@@ -118,7 +132,7 @@ PACKAGE = (
     Command("package-smoke", (sys.executable, "-m", "venv")),
 )
 PROFILES = {
-    "all": (*TEST, *DOCS, *PACKAGE),
+    "all": (*TEST, SMALL_SHOP_TEST, *DOCS, *PACKAGE),
     "test": TEST,
     "docs": DOCS,
     "package": PACKAGE,

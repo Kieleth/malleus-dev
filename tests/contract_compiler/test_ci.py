@@ -29,6 +29,7 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
         "ledger",
         "integration",
         "graph-recipe",
+        "small-shop",
         "docs-html",
         "docs-doctest",
         "docs-linkcheck",
@@ -44,6 +45,17 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
         "-q",
         "tests/contract_compiler",
     )
+    small_shop = next(command for command in commands if command.name == "small-shop")
+    assert small_shop.argv == (
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        str(ci.SMALL_SHOP),
+    )
+    assert sum(command.name == "small-shop" for command in commands) == 1
+    quality = next(command for command in commands if command.name == "quality")
+    assert quality.argv.count(str(ci.SMALL_SHOP)) == 1
 
 
 def test_compiler_tests_are_not_duplicated_in_pytest_configuration() -> None:
@@ -61,6 +73,7 @@ def test_fixed_profiles_are_subsets_of_the_default_plan() -> None:
         commands = ci.plan(profile)
         assert commands
         assert {command.name for command in commands} < all_names
+        assert all(command.name != "small-shop" for command in commands)
 
 
 def test_unknown_ci_profile_is_refused() -> None:
