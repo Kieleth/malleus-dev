@@ -1,0 +1,82 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 1033,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle/tbox-expectations.json",
+      "sha256": "sha256:0a8d3fdae6f16117643d898eb7576022e61700d3f83d286ff164fb66f6ae0f31"
+    },
+    {
+      "byte_length": 2763,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle/ret-000-ret-010.json",
+      "sha256": "sha256:4565c5f2dd84670c762c0a53e5a0868fe8cab6f1781a9757ecb41581e7f32fcc"
+    },
+    {
+      "byte_length": 26448,
+      "path": "tests/contract_compiler/test_small_shop_fixture_oracle.py",
+      "sha256": "sha256:2d6086b05c8776c035cfc165775c827017d05437c50ce9f27f826a7e6c0d4baa"
+    }
+  ],
+  "base_commit": "870c993fe2442b40fd1934edbf00003033c591b1",
+  "checks": [
+    {
+      "check_id": "cc022-genuine-red",
+      "method": "Run the fixed oracle test while both private JSON members and this verification report are absent.",
+      "observed": "The exact command `python -m pytest -q tests/contract_compiler/test_small_shop_fixture_oracle.py` exited 1 with 2 failed and 4 passed. The only failures were FileNotFoundError for tbox-expectations.json and ret-000-ret-010.json.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-frozen-input-decision-binding",
+      "method": "Parse the frozen input manifest and seven members, parse the accepted OD-002, OD-003, OD-005, OD-006, OD-008, OD-010, and OD-011 manifests and evidence, and verify exact SHA-256 and Git coordinates without importing compiler code.",
+      "observed": "The 2,481-byte input manifest has sha256 7583bfbc...49e8; all seven member lengths and hashes match. Candidate 39f41544...37e4 at tree 4d50c14a...bb35 is the direct parent of completion e5535033...1cdf at tree 06ddc6bf...3b9. Completion coordinate OVR-000222 has hash 2d7e2f65...abe2. Every accepted decision byte binding and PASS report is exact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-independent-hand-derivation",
+      "method": "Derive the closed fixture-local expectations from the accepted controls, the retained e27 row, selection, time context, and X1 reference row, then compare the hand-authored private bytes with the fixed literal oracle.",
+      "observed": "The private members were authored only after the missing-file RED. The source value 07-05 17:00 under %d-%m %H:%M, synthetic year 2000, and UTC derives 2000-05-07T17:00:00Z; the sole reference row resolves X1 to X. No compiler, runtime, LinkML, OntologyRegistry, GraphRecipe, protocol, or projector implementation was imported or executed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-tbox-expectations",
+      "method": "Compare the three frozen ontology source members and the accepted OD-008 closed-source evidence against the exact private TBox expectations.",
+      "observed": "small-shop.yaml accepts. The description-only member differs from baseline only in description, has a different exact source attestation, and retains the same semantic contract. The baseline plus root instances: {} refuses atomically because instances is not a listed schema-root field. The oracle contains no fact array, EffectiveContract digest, or invented diagnostic code.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-logical-result",
+      "method": "Evaluate the ontology-only and selected RET-010 logical expectations against the exact frozen input bindings and retained OD-010 endpoint refusal.",
+      "observed": "RET-000 has zero ABox logical objects and zero ProposedOperation values. RET-010 selects e27, O1, and X1; binds X1 to product X; expects SalesOrder O1 with order_number O1, InventoryUnit X1 with product_code X, and OrderContainsUnit from O1 to X1 with ORDER_CONTAINS_UNIT at 2000-05-07T17:00:00Z. Review is passive with no acceptance authority, evidence is closed, and Event-to-Entity correlation remains typed RED at EVENT_ENTITY_CORRELATION_REPRESENTATION_UNSELECTED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-independence-no-compiler-read",
+      "method": "Inspect the test imports, frozen compiler-input member list, and every non-cache production source file below src/malleus for the exact oracle root and both private filenames without importing or executing production sources.",
+      "observed": "The test imports only ast, csv, datetime, hashlib, json, pathlib, and subprocess for read-only Git checks. Neither private file is a compiler input. No production source contains the exact oracle root, tbox-expectations.json, or ret-000-ret-010.json.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-private-non-public-boundary",
+      "method": "Parse both private members with duplicate-key rejection and compare their bytes with sorted-key, two-space, UTF-8 JSON plus one terminal LF, then inspect the complete metadata and representation boundaries.",
+      "observed": "Both members are BOM-free canonical private fixture-local test evidence, independently hand-authored, forbidden as compiler input, non-public, compatibility-free, and explicitly unstable with no public schema. Semantic edits require independently reviewed expected-delta evidence. Fixture keys are not final or public IDs, and the logical relation is not a public ABox encoding.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-exclusions-and-validation",
+      "method": "Inspect the closed key sets and explicit exclusion list, then run the focused GREEN, all contract-compiler tests, the Small Shop research suite, Ruff check, Ruff format check, the repository diff check, and canonical evidence verification.",
+      "observed": "The oracles contain no mappings, transformation code, identity rules, recipes, ProposedOperation bytes or order, candidates, evidence outcomes, protocol events, or ledger, KG, or replay output. Focused GREEN passed 6 tests; tests/contract_compiler passed 86; the Small Shop suite passed 55; Ruff check, Ruff format check, and git diff --check passed. The evidence verifier confirmed 3 artifacts and 8 recorded checks for CC-022.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Public schema, public ABox or output format, stable wire format, and final identifiers remain deferred.",
+    "A complete compiler fact array, EffectiveContract digest, production diagnostics, and compiler artifact output remain deferred.",
+    "Mappings, transformation code, identity rules, GraphRecipe or other recipe representation, and ProposedOperation bytes or ordering remain deferred.",
+    "Compiler and runtime implementation, staging, protocol events or decisions, ledger state, accepted knowledge-graph projection, and replay output remain deferred.",
+    "Corpus publication, checksums, package, release, selection, integration, compatibility, and migration remain outside this evidence.",
+    "All CC-R work remains outside this evidence.",
+    "RET-020 and all later Small Shop cases remain deferred. This report covers only the fixed TBox controls, RET-000, RET-010, and the retained Event-correlation RED boundary."
+  ],
+  "recorded_at": "2026-08-29T08:41:36Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-022"
+}

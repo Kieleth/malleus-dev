@@ -1,0 +1,30 @@
+{
+  "fixture_id": "OKG-FX001",
+  "metadata": {
+    "artifact_class": "PRIVATE_FIXTURE_LOCAL_TEST_EVIDENCE",
+    "authorship": "INDEPENDENTLY_HAND_AUTHORED",
+    "compiler_input": false,
+    "future_semantic_edits": "INDEPENDENTLY_REVIEWED_EXPECTED_DELTA_EVIDENCE_REQUIRED",
+    "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+    "wire_format": "PRIVATE_UNSTABLE_NO_PUBLIC_SCHEMA"
+  },
+  "tbox_expectations": {
+    "controlled_baseline": {
+      "disposition": "ACCEPT",
+      "source_member": "tbox/small-shop.yaml"
+    },
+    "description_only": {
+      "disposition": "ACCEPT",
+      "exact_source_attestation": "DIFFERENT",
+      "semantic_contract": "SAME",
+      "source_member": "tbox/small-shop-description-only.yaml"
+    },
+    "root_instances": {
+      "atomic": true,
+      "disposition": "REFUSE",
+      "refusal_basis": "instances is not a listed schema-root field under accepted OD-008.",
+      "refused_root_field": "instances",
+      "source_member": "tbox/small-shop-root-instances.yaml"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "cases": {
+    "RET-000": {
+      "abox_logical_object_count": 0,
+      "case_scope": "ONTOLOGY_ONLY",
+      "disposition": "ACCEPT",
+      "proposed_operation_value_count": 0
+    },
+    "RET-010": {
+      "derivation": {
+        "evidence_sufficiency": "CLOSED_DERIVATION_PACKAGE",
+        "review": {
+          "acceptance_authority": false,
+          "semantics": "PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY"
+        }
+      },
+      "expected_outputs": {
+        "logical_entities": [
+          {
+            "attributes": {
+              "order_number": "O1"
+            },
+            "class": "SalesOrder",
+            "fixture_key": "O1"
+          },
+          {
+            "attributes": {
+              "product_code": "X"
+            },
+            "class": "InventoryUnit",
+            "fixture_key": "X1"
+          }
+        ],
+        "logical_relation": {
+          "class": "OrderContainsUnit",
+          "relation_type": "ORDER_CONTAINS_UNIT",
+          "source_fixture_key": "O1",
+          "target_fixture_key": "X1"
+        },
+        "temporal_provenance": "FIXTURE_DERIVED_SYNTHETIC_YEAR_AND_UTC",
+        "valid_time": "2000-05-07T17:00:00Z"
+      },
+      "frozen_input_bindings": {
+        "inventory_lookup": {
+          "inventory_unit_id": "X1",
+          "product_code": "X"
+        },
+        "selected_source": {
+          "event_id": "e27",
+          "inventory_unit_id": "X1",
+          "order_id": "O1"
+        },
+        "source_time": {
+          "grammar": "%d-%m %H:%M",
+          "synthetic_year": 2000,
+          "timezone": "UTC",
+          "value": "07-05 17:00"
+        }
+      },
+      "retained_typed_red": {
+        "event_object_expected": false,
+        "event_to_entity_correlation_output_expected": false,
+        "named_gap": "EVENT_ENTITY_CORRELATION_REPRESENTATION_UNSELECTED",
+        "status": "TYPED_RED"
+      }
+    }
+  },
+  "fixture_id": "OKG-FX001",
+  "metadata": {
+    "artifact_class": "PRIVATE_FIXTURE_LOCAL_TEST_EVIDENCE",
+    "authorship": "INDEPENDENTLY_HAND_AUTHORED",
+    "compiler_input": false,
+    "future_semantic_edits": "INDEPENDENTLY_REVIEWED_EXPECTED_DELTA_EVIDENCE_REQUIRED",
+    "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+    "wire_format": "PRIVATE_UNSTABLE_NO_PUBLIC_SCHEMA"
+  },
+  "representation_boundaries": {
+    "excluded_representations": [
+      "MAPPINGS",
+      "TRANSFORMATION_CODE",
+      "IDENTITY_RULES",
+      "RECIPES",
+      "PROPOSED_OPERATION_BYTES_OR_ORDER",
+      "CANDIDATES",
+      "EVIDENCE_OUTCOMES",
+      "PROTOCOL_EVENTS",
+      "LEDGER_KG_REPLAY_OUTPUT"
+    ],
+    "fixture_key_semantics": "SOURCE_FIXTURE_KEYS_NOT_FINAL_OR_PUBLIC_IDS",
+    "logical_relation_semantics": "PRIVATE_LOGICAL_EXPECTATION_NOT_PUBLIC_ABOX_ENCODING"
+  }
+}
