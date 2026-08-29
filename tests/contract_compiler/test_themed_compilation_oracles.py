@@ -437,11 +437,27 @@ def _assert_exact_accepted_bindings(oracle: dict[str, Any]) -> None:
     references = [binding["reference"] for binding in bindings]
     assert len(references) == len(set(references))
     assert set(references) == set(EXPECTED_ACCEPTED_BINDINGS) | UNRESOLVED_BINDINGS
+    assert all(
+        set(binding) == {"reference", "target"}
+        for binding in bindings
+        if isinstance(binding["target"], str)
+    )
     assert {
         binding["reference"]: binding["target"]
         for binding in bindings
         if isinstance(binding["target"], str)
     } == EXPECTED_ACCEPTED_BINDINGS
+
+
+def _assert_exact_local_elaboration_keys(oracle: dict[str, Any]) -> None:
+    assert set(oracle["local_elaboration"]) == {
+        "class_defaults",
+        "complete_slots",
+        "enum_values",
+        "exactly_one",
+        "incomplete_slots",
+        "scalars",
+    }
 
 
 def _assert_exact_class_defaults(oracle: dict[str, Any]) -> None:
@@ -540,6 +556,7 @@ def test_declarations_bind_only_symbols_derived_from_controlled_sources() -> Non
 
 def test_local_defaults_are_explicit_and_downstream_stages_refuse_atomically() -> None:
     oracle = _load_oracle()
+    _assert_exact_local_elaboration_keys(oracle)
     _assert_exact_class_defaults(oracle)
     _assert_exact_complete_slots(oracle)
     _assert_exact_enum_values(oracle)
@@ -610,6 +627,8 @@ def test_local_defaults_are_explicit_and_downstream_stages_refuse_atomically() -
         "complete-slot-maximum-changed",
         "enum-value-changed",
         "scalar-target-changed",
+        "local-elaboration-member-added",
+        "accepted-binding-member-added",
     ),
 )
 def test_exact_semantic_guards_reject_corruptions(mutation: str) -> None:
@@ -639,11 +658,22 @@ def test_exact_semantic_guards_reject_corruptions(mutation: str) -> None:
     elif mutation == "enum-value-changed":
         oracle["local_elaboration"]["enum_values"][0]["value"] = "OTHER"
         guard = _assert_exact_enum_values
-    else:
+    elif mutation == "scalar-target-changed":
         oracle["local_elaboration"]["scalars"][0]["typeof"] = (
             "https://malleus.dev/contract-facts/Float"
         )
         guard = _assert_exact_scalars
+    elif mutation == "local-elaboration-member-added":
+        oracle["local_elaboration"]["unexpected"] = []
+        guard = _assert_exact_local_elaboration_keys
+    else:
+        binding = next(
+            item
+            for item in oracle["qualified_bindings"]
+            if item["reference"] == "ArchiveExaminer"
+        )
+        binding["outcome"] = "ERROR"
+        guard = _assert_exact_accepted_bindings
 
     with pytest.raises(AssertionError):
         guard(oracle)
