@@ -137,6 +137,30 @@ The exact selected values are:
 The earlier journal decision remains an immutable statement that these choices
 were deferred at that time. The appended decision records their later approval.
 
+## Private answer-key representation
+
+The answer key may now be written as private, fixture-local logical JSON. It is
+not a public format and carries no compatibility contract. The bytes are
+independently hand-authored test evidence, never compiler input, and may change
+when the public format is designed.
+
+The ontology-only case accepts with zero population and zero `ProposedOperation` values.
+The first populated case expects
+`2000-05-07T17:00:00Z`, states that `O1` is a `SalesOrder`, states that `X1` is
+an `InventoryUnit` for product `X`, and relates them with
+`ORDER_CONTAINS_UNIT` from `O1` to `X1`. Review remains passive exact review
+with no acceptance authority. Event correlation remains typed RED.
+
+The ontology controls are fixed as follows: baseline ontology: accept;
+description-only ontology: accept, where source identity differs while semantic
+identity stays the same; root `instances` field: refuse atomically as an
+unlisted root field.
+
+This decision defers the public ABox/output encoding, final identifiers,
+compiler-stage facts, digests, diagnostics, and artifact wire format; mapping,
+transformation, identity, recipe, and operation representation; and protocol,
+knowledge-graph, and replay representation.
+
 ## Journal staging
 
 Each v1 record hash uses this exact preimage, encoded as canonical JSON via `malleus.ledger`:

@@ -32,6 +32,29 @@ RET_010_SELECTED_VALUES = {
     "evidence_sufficiency": "CLOSED_DERIVATION_PACKAGE",
     "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
 }
+ORACLE_REPRESENTATION_SELECTED_VALUES = {
+    "oracle_representation": "PRIVATE_FIXTURE_LOCAL_LOGICAL_JSON",
+    "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+    "oracle_authorship": "INDEPENDENTLY_HAND_AUTHORED",
+    "compiler_consumption": "FORBIDDEN",
+    "ret_000_ontology_only": "ACCEPT_ZERO_POPULATION_ZERO_PROPOSED_OPERATION",
+    "ret_010_normalized_valid_time": "2000-05-07T17:00:00Z",
+    "ret_010_sales_order": "O1_IS_SALES_ORDER",
+    "ret_010_inventory_unit": "X1_IS_INVENTORY_UNIT_FOR_PRODUCT_X",
+    "ret_010_relation": "ORDER_CONTAINS_UNIT_O1_TO_X1",
+    "review_semantics": "PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY",
+    "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
+    "tbox_baseline": "ACCEPT",
+    "tbox_description_only": "ACCEPT_SOURCE_DIFFERENT_SEMANTIC_SAME",
+    "tbox_root_instances": "ATOMIC_REFUSE_UNLISTED_ROOT_FIELD",
+}
+ORACLE_REPRESENTATION_DEFERRED_VALUES = {
+    "public_abox_output_encoding": "DEFERRED",
+    "final_identifiers": "DEFERRED",
+    "compiler_stage_facts_digests_diagnostics_artifact_wire": "DEFERRED",
+    "mapping_transformation_identity_recipe_operation_representation": "DEFERRED",
+    "protocol_kg_replay_representation": "DEFERRED",
+}
 
 
 def _load_journal() -> ModuleType:
@@ -151,7 +174,9 @@ def _record(
         "recorded_at": recorded_at,
         "responsible_actor": "test:operator",
         "previous_record_hash": previous_record_hash,
-        "payload": payload if payload is not None else _intent_payload(journal, repository),
+        "payload": payload
+        if payload is not None
+        else _intent_payload(journal, repository),
     }
     record["record_hash"] = journal._record_hash(record)
     return record
@@ -241,6 +266,40 @@ def test_charter_records_the_approved_ret_010_fixture_bundle() -> None:
         assert required in approved
 
 
+def test_charter_records_the_private_oracle_representation_boundary() -> None:
+    text = CHARTER.read_text(encoding="utf-8")
+    approved = " ".join(
+        text.split("## Private answer-key representation", 1)[1]
+        .split("## Journal staging", 1)[0]
+        .split()
+    )
+
+    for required in (
+        "private, fixture-local logical JSON",
+        "not a public format",
+        "no compatibility contract",
+        "independently hand-authored",
+        "never compiler input",
+        "zero population and zero `ProposedOperation` values",
+        "`2000-05-07T17:00:00Z`",
+        "`O1` is a `SalesOrder`",
+        "`X1` is an `InventoryUnit` for product `X`",
+        "`ORDER_CONTAINS_UNIT` from `O1` to `X1`",
+        "passive exact review",
+        "Event correlation remains typed RED",
+        "baseline ontology: accept",
+        "description-only ontology: accept",
+        "source identity differs while semantic identity stays the same",
+        "root `instances` field: refuse atomically",
+        "public ABox/output encoding",
+        "final identifiers",
+        "compiler-stage facts, digests, diagnostics, and artifact wire format",
+        "mapping, transformation, identity, recipe, and operation representation",
+        "protocol, knowledge-graph, and replay representation",
+    ):
+        assert required in approved
+
+
 def test_charter_defers_unconsumed_journal_kinds_tdd_first() -> None:
     text = CHARTER.read_text(encoding="utf-8")
 
@@ -266,8 +325,7 @@ def test_charter_fixes_hash_preimage_and_evidence_role_paths() -> None:
         "canonical JSON via `malleus.ledger`",
         "`RUNNING_DOMAIN_CHECKPOINT` -> "
         "`design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md`",
-        "`ONTOLOGY_REALIZATION_DESIGN` -> "
-        "`design/ONTOLOGY_DRIVEN_KG_REALIZATION.md`",
+        "`ONTOLOGY_REALIZATION_DESIGN` -> `design/ONTOLOGY_DRIVEN_KG_REALIZATION.md`",
         "exactly once in every v1 seed payload",
     ):
         assert required in text
@@ -304,16 +362,19 @@ def test_record_hash_known_vector_is_independent_of_implementation_helper() -> N
     )
 
 
-@pytest.mark.parametrize("field", [
-    "schema_version",
-    "sequence",
-    "kind",
-    "recorded_at",
-    "responsible_actor",
-    "previous_record_hash",
-    "payload",
-    "record_hash",
-])
+@pytest.mark.parametrize(
+    "field",
+    [
+        "schema_version",
+        "sequence",
+        "kind",
+        "recorded_at",
+        "responsible_actor",
+        "previous_record_hash",
+        "payload",
+        "record_hash",
+    ],
+)
 def test_missing_envelope_field_refuses(
     tmp_path: Path,
     repository: dict[str, object],
@@ -494,7 +555,10 @@ def test_exact_predecessor_hash_is_required(
     [
         (lambda payload: payload.pop("series_id"), "missing fields"),
         (lambda payload: payload.__setitem__("surprise", True), "unknown fields"),
-        (lambda payload: payload.__setitem__("claims_under_test", "claim"), "claims_under_test"),
+        (
+            lambda payload: payload.__setitem__("claims_under_test", "claim"),
+            "claims_under_test",
+        ),
         (lambda payload: payload.__setitem__("evidence", {}), "evidence"),
         (lambda payload: payload.__setitem__("repository", []), "repository"),
     ],
@@ -709,10 +773,13 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
     assert hashlib.sha256(b"".join(seed_lines[:3])).hexdigest() == (
         "1604a217529f8694be12d246596a8650422c7d79899e22ccc05bb6b5725dcd2a"
     )
+    assert hashlib.sha256(b"".join(seed_lines[:4])).hexdigest() == (
+        "cebfc42b6602413d6da78cf75aa860040f9b1d33c60842783dd1b6873bd3b35f"
+    )
     records = journal.read_journal(
         SEED,
         root=ROOT,
-        expected_count=4,
+        expected_count=5,
         expected_head_hash=journal.EXPECTED_HEAD_HASH,
     )
 
@@ -721,30 +788,31 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         "OPERATOR_DECISION_RECORDED",
         "INTENT_RECORDED",
         "OPERATOR_DECISION_RECORDED",
+        "OPERATOR_DECISION_RECORDED",
     ]
     assert [record["payload"].get("decision_key") for record in records] == [
         "canonical_running_domain",
         "compiler_authority_boundary",
         None,
         "ret_010_fixture_bundle",
+        "small_shop_oracle_representation",
     ]
     formal_decision_refs = [
         records[position]["payload"]["formal_decision_refs"]
-        for position in (0, 1, 3)
+        for position in (0, 1, 3, 4)
     ]
-    assert formal_decision_refs == [["OKG-D013"], [], []]
-    assert sum(
-        reference == "OKG-D013"
-        for references in formal_decision_refs
-        for reference in references
-    ) == 1
+    assert formal_decision_refs == [["OKG-D013"], [], [], []]
+    assert (
+        sum(
+            reference == "OKG-D013"
+            for references in formal_decision_refs
+            for reference in references
+        )
+        == 1
+    )
     assert records[2]["payload"]["ret_sequence"] == list(journal.RET_SEQUENCE)
-    assert records[2]["payload"]["claims_under_test"] == list(
-        journal.CLAIMS_UNDER_TEST
-    )
-    assert records[2]["payload"]["excluded_claims"] == list(
-        journal.EXCLUDED_CLAIMS
-    )
+    assert records[2]["payload"]["claims_under_test"] == list(journal.CLAIMS_UNDER_TEST)
+    assert records[2]["payload"]["excluded_claims"] == list(journal.EXCLUDED_CLAIMS)
     assert all(
         record["payload"]["repository"]
         == {
@@ -757,6 +825,13 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         "commit": "c191dd59b5922e3dadd38b9c218b2338db7bb67d",
         "tree": "ac004a35c56ed68da2e00279e626c1dd3c791408",
     }
+    assert records[4]["payload"]["repository"] == {
+        "commit": "e5535033d8f1886271d827ddeed4662196410cdf",
+        "tree": "06ddc6bf9282481082ed6750a651e386020783b9",
+    }
+    assert records[4]["sequence"] == 5
+    assert records[4]["responsible_actor"] == "author:luis-guzman-lorenzo"
+    assert records[4]["previous_record_hash"] == records[3]["record_hash"]
     assert records[1]["payload"]["deferred_values"] == {
         "ret_010_source_occurrence": "DEFERRED",
         "x1_to_x_transform": "DEFERRED",
@@ -767,8 +842,17 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
     }
     assert records[3]["payload"]["selected_values"] == RET_010_SELECTED_VALUES
     assert records[3]["payload"]["deferred_values"] == {}
+    assert (
+        records[4]["payload"]["selected_values"]
+        == ORACLE_REPRESENTATION_SELECTED_VALUES
+    )
+    assert (
+        records[4]["payload"]["deferred_values"]
+        == ORACLE_REPRESENTATION_DEFERRED_VALUES
+    )
     assert all(record["recorded_at"] > "2026-08-29T03:37:14Z" for record in records)
     assert records[3]["recorded_at"] > "2026-08-29T04:23:34Z"
+    assert records[4]["recorded_at"] > "2026-08-29T06:25:16Z"
     completed = subprocess.run(
         (sys.executable, str(JOURNAL_MODULE), "check"),
         cwd=ROOT,
@@ -777,4 +861,4 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stderr
-    assert f"4 records, head {journal.EXPECTED_HEAD_HASH}" in completed.stdout
+    assert f"5 records, head {journal.EXPECTED_HEAD_HASH}" in completed.stdout

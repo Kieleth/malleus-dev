@@ -23,7 +23,7 @@ SCHEMA_VERSION = "1"
 GENESIS = "GENESIS"
 RECORD_HASH_DOMAIN = "malleus:research:small-shop-journal:v1"
 EXPECTED_HEAD_HASH = (
-    "sha256:a1d5d89be132c05fac585fd269aec5b5c9790f16971138e68a4c158738dc6cc2"
+    "sha256:1b16128d623cc7b1348f98f636be83d7a1514011b63d112ad09dbb3946564d61"
 )
 
 SERIES_ID = "SMALL_SHOP_GRAPH_REALIZATION"
@@ -102,6 +102,34 @@ OPERATOR_DECISIONS = {
             "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
         },
         "deferred_values": {},
+    },
+    "small_shop_oracle_representation": {
+        "formal_decision_refs": [],
+        "selected_values": {
+            "oracle_representation": "PRIVATE_FIXTURE_LOCAL_LOGICAL_JSON",
+            "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+            "oracle_authorship": "INDEPENDENTLY_HAND_AUTHORED",
+            "compiler_consumption": "FORBIDDEN",
+            "ret_000_ontology_only": ("ACCEPT_ZERO_POPULATION_ZERO_PROPOSED_OPERATION"),
+            "ret_010_normalized_valid_time": "2000-05-07T17:00:00Z",
+            "ret_010_sales_order": "O1_IS_SALES_ORDER",
+            "ret_010_inventory_unit": "X1_IS_INVENTORY_UNIT_FOR_PRODUCT_X",
+            "ret_010_relation": "ORDER_CONTAINS_UNIT_O1_TO_X1",
+            "review_semantics": "PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY",
+            "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
+            "tbox_baseline": "ACCEPT",
+            "tbox_description_only": "ACCEPT_SOURCE_DIFFERENT_SEMANTIC_SAME",
+            "tbox_root_instances": "ATOMIC_REFUSE_UNLISTED_ROOT_FIELD",
+        },
+        "deferred_values": {
+            "public_abox_output_encoding": "DEFERRED",
+            "final_identifiers": "DEFERRED",
+            "compiler_stage_facts_digests_diagnostics_artifact_wire": "DEFERRED",
+            "mapping_transformation_identity_recipe_operation_representation": (
+                "DEFERRED"
+            ),
+            "protocol_kg_replay_representation": "DEFERRED",
+        },
     },
 }
 
@@ -213,13 +241,9 @@ def _timestamp(value: Any, context: str) -> datetime:
 
 def _record_hash(record: dict[str, Any]) -> str:
     body = {
-        key: deepcopy(value)
-        for key, value in record.items()
-        if key != "record_hash"
+        key: deepcopy(value) for key, value in record.items() if key != "record_hash"
     }
-    return content_digest(
-        {"domain_separator": RECORD_HASH_DOMAIN, "record": body}
-    )
+    return content_digest({"domain_separator": RECORD_HASH_DOMAIN, "record": body})
 
 
 def _git(root: Path, argv: tuple[str, ...], context: str) -> bytes:
@@ -248,11 +272,15 @@ def _validate_repository(value: Any, root: Path) -> tuple[str, str]:
         ("git", "cat-file", "-e", f"{commit}^{{commit}}"),
         f"repository commit does not exist: {commit}",
     )
-    observed_tree = _git(
-        root,
-        ("git", "rev-parse", f"{commit}^{{tree}}"),
-        f"cannot resolve tree for repository commit {commit}",
-    ).decode("ascii").strip()
+    observed_tree = (
+        _git(
+            root,
+            ("git", "rev-parse", f"{commit}^{{tree}}"),
+            f"cannot resolve tree for repository commit {commit}",
+        )
+        .decode("ascii")
+        .strip()
+    )
     if observed_tree != tree:
         raise JournalError(
             f"repository tree mismatch: expected {tree}, observed {observed_tree}"
@@ -286,7 +314,9 @@ def _committed_artifact(root: Path, commit: str, path: str) -> bytes:
         raise JournalError(f"evidence.path is not a committed file: {path}")
     entries = [item for item in entry.split(b"\0") if item]
     if len(entries) != 1 or b"\t" not in entries[0]:
-        raise JournalError(f"evidence.path does not resolve to one committed file: {path}")
+        raise JournalError(
+            f"evidence.path does not resolve to one committed file: {path}"
+        )
     header, encoded_path = entries[0].split(b"\t", 1)
     fields = header.split(b" ")
     if len(fields) != 3:
@@ -328,9 +358,7 @@ def _validate_evidence(value: Any, root: Path, commit: str) -> None:
         if identity in seen:
             raise JournalError(f"evidence contains duplicate role/path: {role} {path}")
         seen.add(identity)
-        expected_digest = _sha256(
-            artifact["sha256"], f"evidence[{position}].sha256"
-        )
+        expected_digest = _sha256(artifact["sha256"], f"evidence[{position}].sha256")
         expected_length = artifact["byte_length"]
         if isinstance(expected_length, bool) or not isinstance(expected_length, int):
             raise JournalError(f"evidence[{position}].byte_length must be an integer")
@@ -478,7 +506,9 @@ def read_journal(
             )
         sequence = record["sequence"]
         if isinstance(sequence, bool) or not isinstance(sequence, int):
-            raise JournalError(f"record {expected_sequence} sequence must be an integer")
+            raise JournalError(
+                f"record {expected_sequence} sequence must be an integer"
+            )
         if sequence != expected_sequence:
             raise JournalError(
                 f"record sequence mismatch: expected {expected_sequence}, got {sequence}"
@@ -534,7 +564,7 @@ def check() -> tuple[int, str]:
     records = read_journal(
         JOURNAL,
         root=ROOT,
-        expected_count=4,
+        expected_count=5,
         expected_head_hash=EXPECTED_HEAD_HASH,
     )
     return len(records), records[-1]["record_hash"]
