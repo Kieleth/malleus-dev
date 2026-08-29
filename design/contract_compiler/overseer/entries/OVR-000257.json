@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the private Quiet Bell source-descriptor, import, declaration, binding, elaboration, fact, and logical comparison answer key only from exact Quiet Bell sources and accepted decisions.",
+      "Bind the exact 195a369..9cc23c4 four-commit eligible candidate, canonical report, strict clean-base admission, and seven worker TDD phases with no P0-P3 audit issue.",
+      "Keep the candidate unselected and non-public, retain missing exact import as atomic refusal with downstream NOT_CLAIMED, and transfer only process technique into separately owned later controls."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000256"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-012"
+  },
+  "entry_hash": "sha256:4d192b09ed875f62a27d68b2776255775a5d43159fdc12a28fe1c3f8fbd0adc9",
+  "entry_id": "OVR-000257",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f7358ea3ef64f6691b62a46859b1fe3c9946ca8eb8d806ef5bb161565e5d8728",
+  "recorded_at": "2026-08-29T21:36:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000256",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 257,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded Quiet Bell answer-key workstream.",
+  "why": "OVR-000256 binds the exact eligible independently authored answer key, canonical report, seven worker TDD phases, dependency closure, semantic refusal and nonclaim boundaries, process-only lessons, unselected private scope, and clean audit required for completion without later-control or compiler authority."
+}

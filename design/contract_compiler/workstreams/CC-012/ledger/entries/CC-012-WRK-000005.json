@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler && run the focused themed-source, requirements, protocol, ledger, integration, and GraphRecipe neighbors.",
+    "observed": "Candidate observation recorded 101 contract-compiler tests and 58 neighboring tests passing before governance completion; GraphRecipe separately passed 40.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:a08a553a752f52e1502583537bc461ea85fdc527da3cb9b392e72085e36f6681",
+  "entry_id": "CC-012-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:3c72fe0e4773405f0838f749b21adb9549b23699b47372b44804ac01a422ced8",
+  "recorded_at": "2026-08-29T21:34:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Record candidate-observed regression suites.",
+  "workstream_id": "CC-012"
+}

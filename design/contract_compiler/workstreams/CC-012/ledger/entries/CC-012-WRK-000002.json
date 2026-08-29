@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_themed_compilation_oracles.py",
+    "observed": "All 15 fixed Quiet Bell oracle tests passed after the private fixture-local JSON oracle and canonical report were hand-authored and closed.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c699ab14d985fdc1c6071dea154b05b5bf9d927741666ae381e161bc3721170a",
+  "entry_id": "CC-012-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c52cd8b06191bbcacef5466447e2669dc36ac32f379c75c66527c15313d32363",
+  "recorded_at": "2026-08-29T21:34:02Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the private Quiet Bell answer key.",
+  "workstream_id": "CC-012"
+}

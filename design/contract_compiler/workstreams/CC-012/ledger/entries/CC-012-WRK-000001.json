@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_themed_compilation_oracles.py",
+    "observed": "The initial fixed test exited 1 with exactly 6 failures and 3 passes before oracle bytes existed. One failure was empty oracle membership and five were FileNotFoundError failures for the absent private oracle.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:c52cd8b06191bbcacef5466447e2669dc36ac32f379c75c66527c15313d32363",
+  "entry_id": "CC-012-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-29T21:34:01Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the missing Quiet Bell oracle RED.",
+  "workstream_id": "CC-012"
+}

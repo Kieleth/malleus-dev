@@ -59,6 +59,14 @@ QUIET_BELL_AUTHORITY_HARDENING_COMMIT = "cba6de054bfc1241460998b8744efe02adce9ae
 QUIET_BELL_AUTHORITY_HARDENING_ENTRY = "OVR-000240"
 QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT = "1afaef29ad20ec503721488c9edbef3bfdadbb18"
 QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT = "1d17a613940a26fac70debbecbf6fab29e318cf7"
+QUIET_BELL_CANDIDATE_BASE = "195a369636f9fe9ce1a0e8f4cb9d950836164e79"
+QUIET_BELL_CANDIDATE_COMMIT = "9cc23c445711fa07df0103dac85c7196ada14d81"
+QUIET_BELL_CANDIDATE_TREE = "24a63271ad701960c9257f75ee874078066631e6"
+QUIET_BELL_CANDIDATE_PATHS = {
+    "conformance/contract_compiler/v0/evidence/CC-012.json",
+    "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
+    "tests/contract_compiler/test_themed_compilation_oracles.py",
+}
 QUIET_BELL_DEPENDENCIES = (
     "CC-010",
     "CC-D02",
@@ -1356,11 +1364,16 @@ def test_oracle_workstream_activation_boundaries_are_exact(
         {current["assignment"]["owner_id"] for current in cards.values()}
     ) == len(cards)
     assert card["scopes"] == scopes
+    expected_lifecycle = (
+        ("COMPLETE", "ELIGIBLE", "RECORDED")
+        if workstream_id == "CC-012"
+        else (workstream_state, "NONE", "NOT_STARTED")
+    )
     assert (
         workstream_states[workstream_id],
         card["candidate"]["state"],
         card["ledger"]["state"],
-    ) == (workstream_state, "NONE", "NOT_STARTED")
+    ) == expected_lifecycle
     assert workstream_id not in manifest["selections"]
     responsibility = card["responsibility"]
     for required in required_phrases + (
@@ -1770,12 +1783,23 @@ def _assert_quiet_bell_private_boundary(responsibility: str) -> None:
 
 
 def test_quiet_bell_reactivation_boundary_is_exact() -> None:
-    manifest = _read_json(INTEGRATION)
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CANDIDATE_BASE}:design/contract_compiler/integration.json",
+        )
+    )
     row = _registry_row(manifest, "CC-012")
-    card_path = CONTRACT / row["card"]["path"]
-    card_source = card_path.read_bytes()
-    card = _read_json(card_path)
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    card_path = f"design/contract_compiler/{row['card']['path']}"
+    card_source = subprocess.run(
+        ["git", "show", f"{QUIET_BELL_CANDIDATE_BASE}:{card_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    card = json.loads(card_source)
+    states, _ = integration_module._workstream_states(_overseer_prefix(254))
 
     assert row["card"] == {
         "byte_length": len(card_source),
@@ -1817,7 +1841,13 @@ def test_quiet_bell_reactivation_boundary_is_exact() -> None:
 
 
 def test_quiet_bell_reactivation_controls_hold_before_content() -> None:
-    manifest = _read_json(INTEGRATION)
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CANDIDATE_BASE}:design/contract_compiler/integration.json",
+        )
+    )
     base_manifest = json.loads(
         _git(
             ROOT,
@@ -1856,13 +1886,17 @@ def test_quiet_bell_reactivation_controls_hold_before_content() -> None:
     assert manifest["revision"] == base_manifest["revision"] == 2
     assert manifest["selections"] == base_manifest["selections"]
     assert manifest["owner_separations"] == base_manifest["owner_separations"]
-    assert not any(
-        (ROOT / path).exists()
-        for path in (
-            "conformance/contract_kernel/v0/themed_fixture/oracle",
-            "conformance/contract_compiler/v0/evidence/CC-012.json",
-            "tests/contract_compiler/test_themed_compilation_oracles.py",
+    assert (
+        _git(
+            ROOT,
+            "ls-tree",
+            "-r",
+            "--name-only",
+            QUIET_BELL_CANDIDATE_BASE,
+            "--",
+            *sorted(QUIET_BELL_CANDIDATE_PATHS),
         )
+        == ""
     )
 
 
@@ -2488,7 +2522,16 @@ def test_quiet_bell_git_object_identity_report_is_exact() -> None:
         "tests/test_contract_compiler_integration.py",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_CANDIDATE_BASE}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert {check["check_id"] for check in report["checks"]} == {
@@ -2543,7 +2586,7 @@ def test_quiet_bell_git_object_identity_transaction_is_exact() -> None:
     )
     superseded = integration_module.superseded_entries(entries)
     assert {"OVR-000248", "OVR-000249"} <= superseded
-    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    states, state_entries = integration_module._workstream_states(_overseer_prefix(254))
     assert states["CC-012"] == "ACTIVE"
     assert state_entries["CC-012"]["entry_id"] == "OVR-000254"
 
@@ -2557,19 +2600,36 @@ def test_quiet_bell_git_object_identity_transaction_is_exact() -> None:
         for entry in transaction
     )
     assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CANDIDATE_BASE}:design/contract_compiler/overseer/head.json",
+        )
+    )
     assert head["entry_count"] == 254
     assert head["head_entry_id"] == "OVR-000254"
     assert head["head_hash"] == activation["entry_hash"]
 
 
 def test_quiet_bell_greenhouse_edge_execution_order_has_no_control_bindings() -> None:
-    manifest = _read_json(INTEGRATION)
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CANDIDATE_BASE}:design/contract_compiler/integration.json",
+        )
+    )
     order = ("CC-012", "CC-016", "CC-014")
     control_ids = set(order)
     cards = {
-        workstream_id: _read_json(
-            _card_path(INTEGRATION, _registry_row(manifest, workstream_id))
+        workstream_id: json.loads(
+            _git(
+                ROOT,
+                "show",
+                f"{QUIET_BELL_CANDIDATE_BASE}:design/contract_compiler/"
+                f"{_registry_row(manifest, workstream_id)['card']['path']}",
+            )
         )
         for workstream_id in order
     }
@@ -2590,14 +2650,19 @@ def test_quiet_bell_greenhouse_edge_execution_order_has_no_control_bindings() ->
         "design/contract_compiler/workstreams/CC-016/manifest.json",
     )
     for path in frozen_paths:
-        assert (ROOT / path).read_bytes() == subprocess.run(
+        assert subprocess.run(
+            ["git", "show", f"{QUIET_BELL_CANDIDATE_BASE}:{path}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout == subprocess.run(
             ["git", "show", f"{QUIET_BELL_REACTIVATION_COMMIT}:{path}"],
             cwd=ROOT,
             check=True,
             capture_output=True,
         ).stdout
 
-    entries = _raw_overseer_state().entries
+    entries = _overseer_prefix(254).entries
     superseded = integration_module.superseded_entries(entries)
     active_state_entries = tuple(
         entry
@@ -2627,7 +2692,7 @@ def test_quiet_bell_greenhouse_edge_execution_order_has_no_control_bindings() ->
                 for entry in entries
             )
 
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    states, _ = integration_module._workstream_states(_overseer_prefix(254))
     assert tuple(states[workstream_id] for workstream_id in order) == (
         "ACTIVE",
         "PAUSED",
@@ -2647,6 +2712,350 @@ def test_quiet_bell_greenhouse_edge_execution_order_has_no_control_bindings() ->
         "NOT_STARTED",
         "NOT_STARTED",
     )
+
+
+def test_quiet_bell_completion_candidate_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-012")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    report_path = ROOT / "conformance/contract_compiler/v0/evidence/CC-012.json"
+    report_source = report_path.read_bytes()
+    report = _read_json(report_path)
+    expected_artifacts = [
+        {
+            "byte_length": 18567,
+            "path": "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
+            "sha256": "sha256:cd7dbb8c4c8c81fb1d9d67e1423ba51e3bfa73b91d47a86f2381d1672f85e3e0",
+        },
+        {
+            "byte_length": 26431,
+            "path": "tests/contract_compiler/test_themed_compilation_oracles.py",
+            "sha256": "sha256:d89242537da772c87f079bb393c11b75697897c554768917ef0700e6b9904e98",
+        },
+    ]
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-012/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert report["artifacts"] == expected_artifacts
+    assert card["candidate"] == {
+        "artifacts": expected_artifacts,
+        "base_commit": QUIET_BELL_CANDIDATE_BASE,
+        "evidence": [
+            {
+                "byte_length": 7871,
+                "path": "conformance/contract_compiler/v0/evidence/CC-012.json",
+                "result": "PASS",
+                "sha256": "sha256:c200af169a1101540ef79fee313bec0f9bbf1ddf52bdd719f807d10392dba658",
+            }
+        ],
+        "head_commit": QUIET_BELL_CANDIDATE_COMMIT,
+        "head_tree": QUIET_BELL_CANDIDATE_TREE,
+        "state": "ELIGIBLE",
+    }
+    assert len(report_source) == 7871
+    assert _digest(report_source) == (
+        "sha256:c200af169a1101540ef79fee313bec0f9bbf1ddf52bdd719f807d10392dba658"
+    )
+    assert card["responsibility"] == QUIET_BELL_ORACLE_RESPONSIBILITY
+    assert len(card["authorization"]["dependency_bindings"]) == 9
+    scopes, authority = _quiet_bell_candidate_authority()
+    touched = validate_candidate_history(
+        ROOT,
+        card["candidate"],
+        allowed_scopes=scopes,
+        workstream_id="CC-012",
+        authority_entry=authority,
+        overseer_path="design/contract_compiler/overseer",
+        enforce_clean_base=True,
+    )
+    assert touched == tuple(sorted(QUIET_BELL_CANDIDATE_PATHS))
+
+
+def test_quiet_bell_completion_worker_chain_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    card = _read_json(CONTRACT / _registry_row(manifest, "CC-012")["card"]["path"])
+    ledger_root = CONTRACT / "workstreams/CC-012/ledger"
+    entries = [
+        _read_json(path) for path in sorted((ledger_root / "entries").glob("*.json"))
+    ]
+    head = _read_json(ledger_root / "head.json")
+
+    assert len(entries) == 7
+    assert [entry["data"]["phase"] for entry in entries] == list(
+        integration_module.TDD_PHASES
+    )
+    assert [entry["data"]["result"] for entry in entries] == [
+        "EXPECTED_FAILURE",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "NOT_APPLICABLE",
+        "PASS",
+    ]
+    assert {entry["actor_id"] for entry in entries} == {
+        "worker:cc012-themed-oracles"
+    }
+    candidate_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", QUIET_BELL_CANDIDATE_COMMIT)
+    )
+    entry_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in entries
+    )
+    assert entry_times[0] > candidate_time
+    assert all(later > earlier for earlier, later in zip(entry_times, entry_times[1:]))
+    assert "exactly 6 failures and 3 passes" in entries[0]["data"]["observed"]
+    assert "All 15 fixed Quiet Bell oracle tests passed" in entries[1]["data"][
+        "observed"
+    ]
+    assert "four-commit" in entries[2]["data"]["observed"]
+    assert "three paths" in entries[2]["data"]["observed"]
+    assert "9 passed and 6 deselected" in entries[3]["data"]["observed"]
+    assert "refused-binding extra-member" in entries[3]["data"]["observed"]
+    assert "101 contract-compiler" in entries[4]["data"]["observed"]
+    assert "58 neighboring" in entries[4]["data"]["observed"]
+    assert entries[5]["data"]["phase"] == "PACKAGE"
+    assert "private repository-local test evidence" in entries[5]["data"]["observed"]
+    assert QUIET_BELL_CANDIDATE_COMMIT in entries[6]["data"]["command"]
+    assert "no P0-P3" in entries[6]["data"]["observed"]
+    previous = "GENESIS"
+    for entry in entries:
+        assert entry["previous_entry_hash"] == previous
+        assert entry["entry_hash"] == integration_module.worker_entry_hash(entry)
+        previous = entry["entry_hash"]
+    assert head == {
+        "canonicalization": "malleus-canonical-json-v1",
+        "entry_count": 7,
+        "head_entry_id": "CC-012-WRK-000007",
+        "head_hash": entries[-1]["entry_hash"],
+        "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+        "workstream_id": "CC-012",
+    }
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": "CC-012-WRK-000007",
+        "head_hash": head["head_hash"],
+        "path": "workstreams/CC-012/ledger",
+        "state": "RECORDED",
+    }
+
+
+def test_quiet_bell_completion_semantics_are_exact() -> None:
+    oracle = _read_json(
+        ROOT / "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json"
+    )
+    assert len(oracle["sources"]) == 6
+    refused_imports = [
+        edge for edge in oracle["import_edges"] if edge["resolution"] != "ACCEPT"
+    ]
+    assert refused_imports == [
+        {
+            "literal": "malleus",
+            "ordinal": 1,
+            "parent": "modules/foundation.yaml",
+            "resolution": {"outcome": "REFUSE"},
+        }
+    ]
+    assert sum(
+        binding["target"] == {"outcome": "REFUSE"}
+        for binding in oracle["qualified_bindings"]
+    ) == 11
+    assert [version["version"] for version in oracle["versions"]] == [
+        "1.0.0",
+        "1.0.1",
+        "1.1.0",
+    ]
+    for version in oracle["versions"]:
+        assert set(version["compiled"]) == {
+            "compilation",
+            "elaboration",
+            "effective_contract",
+            "fact_set",
+            "facts",
+            "logical_artifact",
+            "qualified_bindings",
+        }
+        assert all(
+            outcome == {"outcome": "REFUSE"}
+            for outcome in version["compiled"].values()
+        )
+    assert [
+        comparison["authored_local_semantic_projection"]
+        for comparison in oracle["comparisons"]
+    ] == ["SAME", "DIFFERENT", "DIFFERENT"]
+    for comparison in oracle["comparisons"]:
+        assert comparison["raw_source"] == "DIFFERENT"
+        assert comparison["source_attestation"] == "DIFFERENT"
+        assert {
+            comparison["compiled_facts"],
+            comparison["validated_fact_set"],
+            comparison["effective_contract"],
+            comparison["logical_artifact"],
+        } == {"NOT_CLAIMED"}
+
+
+def test_quiet_bell_completion_report_is_bounded() -> None:
+    report = _read_json(CONTRACT / "overseer/evidence/CC-012-completion.json")
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_CANDIDATE_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "conformance/contract_compiler/v0/evidence/CC-012.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-012/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    checks = {check["check_id"]: check for check in report["checks"]}
+    assert set(checks) == {
+        "cc012-candidate-history",
+        "cc012-card-report-equality",
+        "cc012-semantic-boundary",
+        "cc012-worker-tdd",
+        "cc012-dependencies",
+        "cc012-independent-audit",
+        "cc012-regression",
+        "cc012-unselected-completion",
+        "cc012-process-lessons",
+    }
+    assert all(check["result"] == "PASS" for check in checks.values())
+    assert "9 passed and 6 deselected" in checks["cc012-worker-tdd"]["observed"]
+    assert "no P0-P3" in checks["cc012-independent-audit"]["observed"]
+    assert "process technique only" in checks["cc012-process-lessons"]["observed"]
+    assert any("private" in limitation for limitation in report["limitations"])
+    assert any("bare malleus import" in limitation for limitation in report["limitations"])
+    assert any("CC-R" in limitation for limitation in report["limitations"])
+
+
+def test_quiet_bell_completion_transaction_is_exact() -> None:
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 255 <= entry["sequence"] <= 257
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000255",
+        "OVR-000256",
+        "OVR-000257",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completion = transaction
+    expected_documents = {
+        "conformance/contract_compiler/v0/evidence/CC-012.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-012-completion.json",
+        "design/contract_compiler/workstreams/CC-012/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+        *{
+            "design/contract_compiler/workstreams/CC-012/ledger/entries/"
+            f"CC-012-WRK-{sequence:06d}.json"
+            for sequence in range(1, 8)
+        },
+    }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert {document["path"] for document in revision["data"]["documents"]} == (
+        expected_documents
+    )
+    assert verification["actor"] == {
+        "id": "cc012-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert len(verification["data"]["claims"]) >= 8
+    assert completion["data"]["previous_state"] == "ACTIVE"
+    assert completion["data"]["new_state"] == "COMPLETE"
+    assert completion["data"]["blockers"] == []
+    assert completion["data"]["evidence_entry_ids"] == ["OVR-000256"]
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 257
+    assert head["head_entry_id"] == "OVR-000257"
+    assert head["head_hash"] == completion["entry_hash"]
+
+
+def test_quiet_bell_completion_preserves_adjacent_authority() -> None:
+    manifest = _read_json(INTEGRATION)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    cards = {
+        workstream_id: _read_json(
+            _card_path(INTEGRATION, _registry_row(manifest, workstream_id))
+        )
+        for workstream_id in ("CC-012", "CC-014", "CC-016")
+    }
+
+    assert manifest["revision"] == 2
+    assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
+    assert states["CC-012"] == "COMPLETE"
+    assert states["CC-014"] == states["CC-016"] == "PAUSED"
+    assert cards["CC-012"]["candidate"]["state"] == "ELIGIBLE"
+    assert cards["CC-012"]["ledger"]["state"] == "RECORDED"
+    for workstream_id in ("CC-014", "CC-016"):
+        assert cards[workstream_id]["candidate"] == {"state": "NONE"}
+        assert cards[workstream_id]["ledger"] == {"state": "NOT_STARTED"}
+    assert "CC-012" not in manifest["selections"]
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+    control_ids = {"CC-012", "CC-014", "CC-016"}
+    for workstream_id, card in cards.items():
+        assert control_ids.isdisjoint(
+            _registry_row(manifest, workstream_id)["depends_on"]
+        )
+        assert control_ids.isdisjoint(
+            binding["workstream_id"]
+            for binding in card["authorization"].get("dependency_bindings", [])
+        )
+    later_activations = [
+        entry
+        for entry in _raw_overseer_state().entries
+        if entry["sequence"] > 254
+        and entry["entry_type"] == "WORKSTREAM_STATE"
+        and entry["data"]["workstream_id"] in {"CC-014", "CC-016"}
+        and entry["data"]["new_state"] == "ACTIVE"
+    ]
+    assert later_activations == []
+
+
+def test_quiet_bell_process_lessons_transfer_no_semantics() -> None:
+    report = _read_json(CONTRACT / "overseer/evidence/CC-012-completion.json")
+    lessons = next(
+        check["observed"]
+        for check in report["checks"]
+        if check["check_id"] == "cc012-process-lessons"
+    )
+    for phrase in (
+        "historical tests read historical Git",
+        "accepted and refused shapes",
+        "every semantic section and union arm",
+        "authored-local from compiled",
+        "missing exact import atomically refuses",
+        "each identity layer separately",
+        "own sources and accepted decisions",
+        "process technique only",
+    ):
+        assert phrase in lessons
+    for forbidden in (
+        "expected values transfer",
+        "facts transfer",
+        "identifiers transfer",
+        "derivations transfer",
+        "helper transfer",
+        "interface transfer",
+        "DAG edge transfer",
+    ):
+        assert forbidden not in lessons
 
 
 def test_small_shop_program_boundary_is_exact() -> None:
@@ -3777,13 +4186,16 @@ def test_small_shop_reanchor_preserves_adjacent_authority() -> None:
             "diff",
             "--name-only",
             SMALL_SHOP_REANCHOR_BASE,
+            SMALL_SHOP_ACTIVATION_COMMIT,
             "--",
             *unchanged,
         )
         == ""
     )
-    canonical = (ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.ttl").read_text(
-        encoding="utf-8"
+    canonical = _git(
+        ROOT,
+        "show",
+        f"{SMALL_SHOP_ACTIVATION_COMMIT}:design/PROTOCOL_FOUNDATION_GRAPH.ttl",
     )
     assert "# Design graph revision: 21" in canonical
     assert "<https://malleus.dev/ontology-kg-realization/OKG-FX001>" in canonical
@@ -4537,7 +4949,7 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 14
+    assert len(checked) == 15
     assert "CC-000" not in checked
 
 
@@ -4692,6 +5104,7 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         workstream_id
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
+        and workstream_id != "CC-012"
     }
 
 

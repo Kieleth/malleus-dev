@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_themed_compilation_oracles.py -k exact_semantic_guards",
+    "observed": "All nine independent semantic mutations were rejected: 9 passed and 6 deselected. The closed set includes the refused-binding extra-member guard and covers every semantic section and union arm.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:3c72fe0e4773405f0838f749b21adb9549b23699b47372b44804ac01a422ced8",
+  "entry_id": "CC-012-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0a393319aa538e6c0db7bf804098d975cbe72d3b938d4ac0ab02c3990f3fd258",
+  "recorded_at": "2026-08-29T21:34:04Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass all nine semantic mutation disproofs.",
+  "workstream_id": "CC-012"
+}

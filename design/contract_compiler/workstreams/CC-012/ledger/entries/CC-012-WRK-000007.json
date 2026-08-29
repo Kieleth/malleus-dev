@@ -1,0 +1,35 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 7871,
+        "path": "conformance/contract_compiler/v0/evidence/CC-012.json",
+        "sha256": "sha256:c200af169a1101540ef79fee313bec0f9bbf1ddf52bdd719f807d10392dba658"
+      },
+      {
+        "byte_length": 18567,
+        "path": "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
+        "sha256": "sha256:cd7dbb8c4c8c81fb1d9d67e1423ba51e3bfa73b91d47a86f2381d1672f85e3e0"
+      },
+      {
+        "byte_length": 26431,
+        "path": "tests/contract_compiler/test_themed_compilation_oracles.py",
+        "sha256": "sha256:d89242537da772c87f079bb393c11b75697897c554768917ef0700e6b9904e98"
+      }
+    ],
+    "command": "Verify candidate 9cc23c445711fa07df0103dac85c7196ada14d81, base 195a369636f9fe9ce1a0e8f4cb9d950836164e79, tree 24a63271ad701960c9257f75ee874078066631e6, exact three-path diff, report equality, clean-base admission, independent audit, changed-file Ruff, and diff checks.",
+    "observed": "All three frozen candidate paths and declared artifacts match exact bytes. Strict clean-base admission returns exactly the three paths. Independent audit found no P0-P3 issue; changed-file Ruff and diff checks passed.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:06d3de43866a6bc93595846b1568fa3cf21f487b74e0822190ef2baa15b162fc",
+  "entry_id": "CC-012-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:aefa2b32e463d44288e8dda8ce5e481b948f3961d75f705b9242d76a9781e0ac",
+  "recorded_at": "2026-08-29T21:34:07Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen Quiet Bell candidate.",
+  "workstream_id": "CC-012"
+}

@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "cc012-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T21:36:01Z",
+    "claims": [
+      "CC-012 is the exact linear 195a369636f9fe9ce1a0e8f4cb9d950836164e79..9cc23c445711fa07df0103dac85c7196ada14d81 four-commit candidate at tree 24a63271ad701960c9257f75ee874078066631e6 with exactly three authorized touched paths.",
+      "The eligible card and canonical report bind the same exact private Quiet Bell oracle and fixed test; the report is the sole PASS evidence pointer and all three candidate paths match exact bytes.",
+      "Six exact sources support the authored-local descriptor, import, declaration, binding, elaboration, and version-comparison answer key. The missing exact malleus import refuses complete compilation atomically and every downstream compiled comparison remains NOT_CLAIMED.",
+      "The assigned worker ledger contains the exact seven ordered TDD phases after candidate HEAD and binds the genuine 6-failure/3-pass RED, 15-pass GREEN, four-commit slice, 9-pass/6-deselected mutation disproof, regression observations, package nonapplicability, and clean attestation.",
+      "All nine formal dependencies and relevant owner-separation edges remain exact. Quiet Bell, neutral Greenhouse, and compiler edge cases have no cross-control dependency or card binding.",
+      "Independent exact-tree audit found no P0-P3 issue after the refused-binding extra-member guard was closed. Changed-file Ruff and diff checking pass.",
+      "Completion and fixed full CI gates pass, including strict documentation, package build, clean install, and CLI smoke coverage.",
+      "Only process technique is retained for later controls: pin historical reads, close accepted and refused shapes, mutate semantic sections and union arms, separate authored-local from compiled, fail closed on missing imports, and compare identity layers separately.",
+      "Expected values remain derived only from each control's own sources and accepted decisions. No values, facts, identifiers, derivations, helpers, interfaces, or DAG edges transfer from Quiet Bell.",
+      "CC-012 remains ELIGIBLE and unselected. CC-014 and CC-016 remain PAUSED with no candidate or ledger, and no later activation, compiler implementation, runtime behavior, corpus publication, package, release, selection, integration, or CC-R authority changed."
+    ],
+    "limitations": [
+      "The private JSON representation defines no public format, runtime artifact, compatibility, migration, or stable public identifier contract.",
+      "The answer key proves hand-authored expectations and atomic nonclaims, not executable compiler or runtime behavior.",
+      "Neutral Greenhouse and compiler edge-case semantics remain independently owned and unstarted.",
+      "All public, package, release, selection, integration, and CC-R behavior remains deferred."
+    ]
+  },
+  "entry_hash": "sha256:f7358ea3ef64f6691b62a46859b1fe3c9946ca8eb8d806ef5bb161565e5d8728",
+  "entry_id": "OVR-000256",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b6a5c6d1e1d123a78cbf1014ce1b6d01f6bfb246b1208bde3871d3a0299b197f",
+  "recorded_at": "2026-08-29T21:36:01Z",
+  "references": [
+    {
+      "digest": "sha256:48c0ca02c95c2f3ea0d9f1b50419604314e04039f918b40f1782ce9d1e86db33",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000255",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9cc23c445711fa07df0103dac85c7196ada14d81",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 256,
+  "subject": {
+    "id": "cc012-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded Quiet Bell answer-key completion gate.",
+  "why": "Quiet Bell may complete only after its exact independent candidate, report equality, semantic and refusal boundaries, worker TDD chain, formal dependencies, clean audit, full regression gate, process-only lessons, adjacent states, and unselected private boundary pass mechanically."
+}

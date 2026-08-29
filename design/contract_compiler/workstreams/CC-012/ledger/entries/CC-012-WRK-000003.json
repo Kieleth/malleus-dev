@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc012-themed-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect the linear 195a369636f9fe9ce1a0e8f4cb9d950836164e79..9cc23c445711fa07df0103dac85c7196ada14d81 candidate, tree, diff, artifacts, report, and closed fixture semantics.",
+    "observed": "The four-commit linear candidate ends at tree 24a63271ad701960c9257f75ee874078066631e6 and touches exactly three paths: two declared artifacts and one canonical PASS report.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:0a393319aa538e6c0db7bf804098d975cbe72d3b938d4ac0ab02c3990f3fd258",
+  "entry_id": "CC-012-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c699ab14d985fdc1c6071dea154b05b5bf9d927741666ae381e161bc3721170a",
+  "recorded_at": "2026-08-29T21:34:03Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the exact four-commit Quiet Bell slice.",
+  "workstream_id": "CC-012"
+}
