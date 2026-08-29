@@ -33,6 +33,7 @@ import scripts.contract_compiler_integration as integration_module  # noqa: E402
 CONTRACT = ROOT / "design" / "contract_compiler"
 INTEGRATION = CONTRACT / "integration.json"
 PROGRAM = CONTRACT / "program.md"
+SMALL_SHOP_REANCHOR_BASE = "0d2070475b775d10cacb8481aeff448f6af7c377"
 
 
 def _canonical_json(value: Any) -> str:
@@ -293,10 +294,10 @@ def _raw_overseer_state() -> SimpleNamespace:
     return SimpleNamespace(entries=entries)
 
 
-def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 66
+    assert len(registry) == 69
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
@@ -313,6 +314,38 @@ def test_program_registry_contains_the_exact_approved_66_workstreams() -> None:
         "CC-014",
         "CC-015",
         "CC-016",
+        "CC-021",
+        "CC-022",
+    )
+    assert registry["CC-021"] == ("CC-010", "CC-D03", "CC-D08", "CC-D11")
+    assert registry["CC-022"] == (
+        "CC-010",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-D10",
+        "CC-D11",
+        "CC-021",
+    )
+    for workstream_id in ("CC-R02", "CC-R03", "CC-R04", "CC-R05", "CC-R06", "CC-R07"):
+        assert registry[workstream_id][-2:] == ("CC-021", "CC-022")
+    assert registry["CC-R08"] == (
+        "CC-R01",
+        "CC-R02",
+        "CC-R03",
+        "CC-R04",
+        "CC-R05",
+        "CC-R06",
+        "CC-R07",
+    )
+    assert registry["CC-R09"] == (
+        "CC-R08",
+        "CC-D07",
+        "CC-D10",
+        "CC-021",
+        "CC-022",
     )
     assert registry["CC-P52"] == ("CC-P45", "CC-P51", "CC-PUB01")
 
@@ -323,7 +356,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 66
+    assert len(state.workstreams) == 69
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -394,7 +427,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 30
+    assert len(state.cards) == 31
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -620,6 +653,8 @@ def test_cc018_activation_boundary_is_exact() -> None:
         {"left": "CC-018", "right": "CC-019"},
         {"left": "CC-018", "right": "CC-020"},
         {"left": "CC-019", "right": "CC-020"},
+        {"left": "CC-021", "right": "CC-022"},
+        {"left": "CC-022", "right": "CC-R09"},
     ]
     assert (
         workstream_states["CC-018"],
@@ -946,18 +981,11 @@ def test_oracle_workstream_activation_boundaries_are_exact(
 
     assert card["workstream_id"] == row["workstream_id"] == workstream_id
     assert card["assignment"] == assignment
-    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["class"] == "BLOCKED"
     assert card["authorization"]["authorized_by"] == {
         "id": "operator",
         "type": "OPERATOR",
     }
-    assert (
-        tuple(
-            binding["workstream_id"]
-            for binding in card["authorization"]["dependency_bindings"]
-        )
-        == load_program_registry(PROGRAM)[workstream_id]
-    )
     assert len(
         {current["assignment"]["owner_id"] for current in cards.values()}
     ) == len(cards)
@@ -966,10 +994,7 @@ def test_oracle_workstream_activation_boundaries_are_exact(
         workstream_states[workstream_id],
         card["candidate"]["state"],
         card["ledger"]["state"],
-    ) in {
-        ("ACTIVE", "NONE", "NOT_STARTED"),
-        ("COMPLETE", "ELIGIBLE", "RECORDED"),
-    }
+    ) == ("PAUSED", "NONE", "NOT_STARTED")
     assert workstream_id not in manifest["selections"]
     responsibility = card["responsibility"]
     for required in required_phrases + (
@@ -1099,6 +1124,312 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
             "OVR-000203",
             "OVR-000204",
         ]
+
+
+def test_small_shop_input_activation_boundary_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-021")
+    assert manifest["revision"] == 2
+    assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
+    assert row["card"]["state"] == "PRESENT"
+    path = CONTRACT / row["card"]["path"]
+    source = path.read_bytes()
+    assert row["card"]["byte_length"] == len(source)
+    assert row["card"]["sha256"] == _digest(source)
+    card = _read_json(path)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+
+    assert card["workstream_id"] == "CC-021"
+    assert card["assignment"] == {
+        "owner_id": "worker:cc021-small-shop-inputs",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc021_small_shop_inputs",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == ("CC-010", "CC-D03", "CC-D08", "CC-D11")
+    assert card["scopes"] == [
+        {
+            "kind": "TREE",
+            "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-021.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+        },
+    ]
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert states["CC-021"] == "ACTIVE"
+    assert "CC-021" not in manifest["selections"]
+    for relative in (
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input",
+        "conformance/contract_compiler/v0/evidence/CC-021.json",
+        "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    ):
+        assert not (ROOT / relative).exists()
+    for phrase in (
+        "controlled Small Shop Fulfilment input bytes only",
+        "no expected facts",
+        "mappings",
+        "recipes",
+        "ProposedOperation",
+        "outcomes",
+        "compiler or runtime implementation",
+        "protocol or accepted knowledge-graph state",
+    ):
+        assert phrase in card["responsibility"]
+
+    assert _registry_row(manifest, "CC-022")["card"] == {"state": "ABSENT"}
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+
+
+@pytest.mark.parametrize(
+    ("workstream_id", "old_blocker"),
+    (
+        (
+            "CC-012",
+            "Content production waits for operator approval of fixture-local private resolver, profile, configuration, media-type, and source-blob tokens; CC-R07 retains runtime artifact bytes and wire grammar.",
+        ),
+        (
+            "CC-014",
+            "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes.",
+        ),
+        (
+            "CC-016",
+            "Content production waits for operator approval of minimal private refusal and relations JSON shapes.",
+        ),
+    ),
+)
+def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
+    workstream_id: str,
+    old_blocker: str,
+) -> None:
+    manifest = _read_json(INTEGRATION)
+    card_path = CONTRACT / _registry_row(manifest, workstream_id)["card"]["path"]
+    card = _read_json(card_path)
+    prior = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_REANCHOR_BASE}:{card_path.relative_to(ROOT)}",
+        )
+    )
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    anchor_gate = (
+        "Resume only after CC-021 controlled Small Shop inputs and CC-022 "
+        "independent Small Shop oracle are complete and fresh dependency bindings "
+        "are issued."
+    )
+
+    for key in (
+        "assignment",
+        "candidate",
+        "ledger",
+        "responsibility",
+        "schema",
+        "scopes",
+        "workstream_id",
+    ):
+        assert card[key] == prior[key]
+    assert card["authorization"] == {
+        "authorized_by": prior["authorization"]["authorized_by"],
+        "blockers": [old_blocker, anchor_gate],
+        "class": "BLOCKED",
+    }
+    assert _registry_row(manifest, workstream_id)["depends_on"][-2:] == [
+        "CC-021",
+        "CC-022",
+    ]
+    assert states[workstream_id] == "PAUSED"
+    activation_report = (
+        CONTRACT / "overseer" / "evidence" / f"{workstream_id}-activation.json"
+    )
+    assert (
+        activation_report.read_bytes()
+        == subprocess.run(
+            [
+                "git",
+                "show",
+                f"{SMALL_SHOP_REANCHOR_BASE}:{activation_report.relative_to(ROOT)}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+    )
+
+
+def test_small_shop_program_boundary_is_exact() -> None:
+    source = PROGRAM.read_text(encoding="utf-8")
+    for exact in (
+        "RET-000 | Ontology alone produces no ABox.",
+        "RET-010 | Create `O1`, distinct physical item `X1`, and `OrderContainsUnit(O1, X1)`.",
+        "RET-020 | After `I1` and `I2` exist, create `P1` and two invoice-settlement relations.",
+        "RET-030 | Preserve the supplier-order `B` correction at `e7` and bounded invoice `I2` correction at `e9`.",
+        "RET-040 | Refuse the `e27` Event-to-Entity correlation with a typed gap.",
+        "RET-050 | Refuse per-entity Event ordering with a typed gap.",
+        "RET-060 | Reproduce the accepted result deterministically under later source integration.",
+        "Quiet Bell, feature-isolation, and Greenhouse remain independent conformance controls.",
+        "future external proposal producer",
+        "The deterministic compiler never invokes it.",
+        "Replay never invokes it.",
+        "this program authorizes no skill implementation",
+    ):
+        assert exact in source
+
+
+def test_small_shop_reanchor_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 209 <= entry["sequence"] <= 214)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(209, 215)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "small-shop-compiler-reanchor-boundary",
+        "small-shop-compiler-reanchor-verification",
+        "CC-012",
+        "CC-014",
+        "CC-016",
+        "CC-021",
+    )
+    expected_paths = {
+        "design/contract_compiler/program.md",
+        "design/contract_compiler/integration.schema.json",
+        "scripts/contract_compiler_integration.py",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "design/contract_compiler/workstreams/CC-014/manifest.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "design/contract_compiler/workstreams/CC-R01/manifest.json",
+        "design/contract_compiler/workstreams/CC-021/manifest.json",
+        "design/contract_compiler/overseer/evidence/CC-021-activation.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    assert {
+        item["path"] for item in transaction[0]["data"]["documents"]
+    } == expected_paths
+    assert transaction[0]["data"]["affected_ids"] == [
+        "CC-000",
+        "CC-012",
+        "CC-014",
+        "CC-016",
+        "CC-021",
+        "CC-022",
+        "CC-R01",
+        "CC-R02",
+        "CC-R03",
+        "CC-R04",
+        "CC-R05",
+        "CC-R06",
+        "CC-R07",
+        "CC-R09",
+    ]
+    for transition, workstream_id in zip(
+        transaction[2:5], ("CC-012", "CC-014", "CC-016")
+    ):
+        assert transition["data"]["workstream_id"] == workstream_id
+        assert transition["data"]["previous_state"] == "ACTIVE"
+        assert transition["data"]["new_state"] == "PAUSED"
+        assert transition["data"]["bootstrap"] is False
+        assert transition["data"]["evidence_entry_ids"] == [
+            "OVR-000209",
+            "OVR-000210",
+        ]
+    activation = transaction[5]
+    assert activation["data"]["workstream_id"] == "CC-021"
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is True
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000209",
+        "OVR-000210",
+    ]
+
+    base_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", SMALL_SHOP_REANCHOR_BASE)
+    )
+    report = _read_json(CONTRACT / "overseer" / "evidence" / "CC-021-activation.json")
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert report_time > base_time
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+
+
+def test_small_shop_reanchor_preserves_adjacent_authority() -> None:
+    unchanged = (
+        "conformance/contract_kernel/v0/corpus.json",
+        "conformance/contract_kernel/v0/checksums.json",
+        "conformance/contract_kernel/v0/themed_fixture",
+        "conformance/contract_kernel/v0/feature_cases",
+        "conformance/contract_kernel/v0/neutral_domain",
+        "scripts/contract_compiler_environment.py",
+        "src/malleus",
+        "pyproject.toml",
+        ".github/workflows/tests.yml",
+        ".github/workflows/release.yml",
+        "design/PROTOCOL_FOUNDATION_GRAPH.md",
+        "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+        "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md",
+    )
+    assert (
+        _git(
+            ROOT,
+            "diff",
+            "--name-only",
+            SMALL_SHOP_REANCHOR_BASE,
+            "--",
+            *unchanged,
+        )
+        == ""
+    )
+    canonical = (ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.ttl").read_text(
+        encoding="utf-8"
+    )
+    assert "# Design graph revision: 21" in canonical
+    assert "<https://malleus.dev/ontology-kg-realization/OKG-FX001>" in canonical
+
+
+def test_formal_workstream_cannot_be_paused(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original = integration_module._workstream_states
+
+    def pause_cc021(ledger_state):
+        states, entries = original(ledger_state)
+        states["CC-021"] = "PAUSED"
+        return states, entries
+
+    monkeypatch.setattr(integration_module, "_workstream_states", pause_cc021)
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT)
+
+    _assert_code(error, "CC000_WORKSTREAM_STATE")
 
 
 def test_cc018_completion_checkpoint_is_exact() -> None:
@@ -1354,7 +1685,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 66 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 69 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -2004,27 +2335,15 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
     for workstream_id in ("CC-011", "CC-013", "CC-015"):
         _rewrite_card(manifest_path, manifest, workstream_id, rebind_active_input)
 
-    for workstream_id, paired_input_id in (
-        ("CC-012", "CC-011"),
-        ("CC-014", "CC-013"),
-        ("CC-016", "CC-015"),
-    ):
-        paired_input_digest = _registry_row(manifest, paired_input_id)["card"]["sha256"]
+    def rebind_small_shop_input(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-D11"]["card_sha256"] = d11_digest
 
-        def rebind_active_oracle(card: dict[str, Any]) -> None:
-            bindings = {
-                binding["workstream_id"]: binding
-                for binding in card["authorization"]["dependency_bindings"]
-            }
-            bindings["CC-010"]["card_sha256"] = cc010_digest
-            bindings[paired_input_id]["card_sha256"] = paired_input_digest
-
-        _rewrite_card(
-            manifest_path,
-            manifest,
-            workstream_id,
-            rebind_active_oracle,
-        )
+    _rewrite_card(manifest_path, manifest, "CC-021", rebind_small_shop_input)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 

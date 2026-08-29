@@ -48,6 +48,8 @@ EXPECTED_OWNER_SEPARATIONS = (
     ("CC-018", "CC-019"),
     ("CC-018", "CC-020"),
     ("CC-019", "CC-020"),
+    ("CC-021", "CC-022"),
+    ("CC-022", "CC-R09"),
 )
 TDD_PHASES = (
     "RED",

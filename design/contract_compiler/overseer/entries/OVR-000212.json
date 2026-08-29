@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes.",
+      "Resume only after CC-021 controlled Small Shop inputs and CC-022 independent Small Shop oracle are complete and fresh dependency bindings are issued."
+    ],
+    "bootstrap": false,
+    "deliverables": [
+      "Preserve the independently derived feature-case compilation and refusal oracle boundary exactly as activated.",
+      "Retain the exact worker assignment, scopes, candidate NONE, ledger NOT_STARTED, responsibility, and prior activation report without creating oracle bytes.",
+      "Pause formal production behind the Small Shop anchor gate; resume only through a later reviewed authorization with fresh dependency bindings."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000209",
+      "OVR-000210"
+    ],
+    "new_state": "PAUSED",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-014"
+  },
+  "entry_hash": "sha256:70cd5d105f3005ed64d998bbd0cc93c91f3cd00a876aae60daf91c6ab82304fe",
+  "entry_id": "OVR-000212",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4c52b1213ae76f436a31cd1d21fcb00af1b374f2390ed46935fe0ceda20c4b46",
+  "recorded_at": "2026-08-29T03:06:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000209",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000210",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 212,
+  "subject": {
+    "id": "CC-014",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Pause the bounded CC-014 feature-oracle workstream behind the Small Shop anchor.",
+  "why": "The oracle boundary remains useful as an independent control, but content production must not continue ahead of the canonical Small Shop inputs and independently authored Small Shop oracle. Pausing preserves prior work and prevents stale formal bindings from silently resuming it."
+}

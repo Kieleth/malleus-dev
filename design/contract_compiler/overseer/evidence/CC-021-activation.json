@@ -1,0 +1,102 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 35870,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:050f2d134e19302064c0d7eac099a488ccc0e6d104abb0bca92df09150c94538"
+    },
+    {
+      "byte_length": 23339,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:2ce5893ab3ad044e1ca6718c48be688d8f1bbc7c54451204df73be844bd4b8eb"
+    },
+    {
+      "byte_length": 39191,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:f64da771c8c78e1e58a403247d4731a53667731960df1893a2c38cc84bf31f79"
+    },
+    {
+      "byte_length": 25002,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:71db2b0b98df3d309e4f79cd8d87f604d748691f70f67ab21fb05892b392138a"
+    },
+    {
+      "byte_length": 1869,
+      "path": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "sha256": "sha256:8e0e423070b3c0f71ebf156ef13089f96048a862a2b64e85836e02ba475ae753"
+    },
+    {
+      "byte_length": 1791,
+      "path": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "sha256": "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e"
+    },
+    {
+      "byte_length": 1831,
+      "path": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "sha256": "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f"
+    },
+    {
+      "byte_length": 946,
+      "path": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "sha256": "sha256:a9c85b08754633696b29e1dc9db57d522e8ad5c193a05a2b449e9c262c6ffd2b"
+    },
+    {
+      "byte_length": 2960,
+      "path": "design/contract_compiler/workstreams/CC-021/manifest.json",
+      "sha256": "sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1"
+    },
+    {
+      "byte_length": 87383,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:482c83a92f6c1d09df85cac258983fa28ddca160a8322d086360eee6976f8d68"
+    }
+  ],
+  "base_commit": "0d2070475b775d10cacb8481aeff448f6af7c377",
+  "checks": [
+    {
+      "check_id": "cc021-reanchor-red",
+      "method": "Run the fixed Small Shop reanchor tests before changing the program, registry, cards, or ledger.",
+      "observed": "The focused test produced exactly eight expected failures and one unchanged-authority control pass. Missing behavior covered the 69-row registry, CC-021 activation, three oracle pauses, exact RET ladder, six-entry transaction, and FORMAL plus PAUSED refusal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-dependency-readiness",
+      "method": "Bind CC-021 direct dependencies in program order to current card digests, exact COMPLETE entries and hashes, and first authority commits.",
+      "observed": "CC-010, CC-D03, CC-D08, and CC-D11 are COMPLETE and PRESENT, and all four exact dependency bindings validate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-registry-boundary",
+      "method": "Parse the program, validate the integration schema, compare all registry dependencies, check owner separation, and reject cycles.",
+      "observed": "Integration revision 2 contains exactly 69 acyclic workstreams, 15 exact owner-separation pairs, 31 present cards, and the unchanged four selections. CC-022 and CC-R09 remain ABSENT.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-input-only-scope",
+      "method": "Compare the CC-021 card with the operator-authorized input prefix, canonical report path, and fixed test path, then inspect the filesystem.",
+      "observed": "CC-021 owns exactly three scopes, candidate remains NONE, ledger remains NOT_STARTED, and no input, expected fact, mapping, recipe, operation, outcome, compiler, runtime, protocol, accepted-KG, or research-journal artifact was created.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-paused-controls",
+      "method": "Compare CC-012, CC-014, and CC-016 cards and activation reports byte-semantically with base commit 0d207047, excluding only the authorized authorization change.",
+      "observed": "All three retain exact assignment, scopes, candidate NONE, ledger NOT_STARTED, responsibility, schema, IDs, and prior activation-report bytes. Each is BLOCKED on its retained content blocker plus the Small Shop anchor gate and requires fresh bindings before resumption.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-adjacent-authority",
+      "method": "Diff the base against all existing corpus, checksum, compiler-environment, runtime, package, release, revision-21 foundation, and OKG-FX001 authority paths.",
+      "observed": "All adjacent authority is unchanged. Quiet Bell, feature-isolation, and Greenhouse remain independent controls; revision 21 and OKG-FX001 remain the exact canonical foundation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report verifies only the Small Shop compiler reanchor and CC-021 activation boundary. It creates no Small Shop input bytes and does not complete CC-021.",
+    "CC-022 and CC-R09 remain planned registry rows without cards, assignments, scopes, candidates, worker ledgers, or implementation authority.",
+    "The exact source occurrence for RET-010 remains open. This transaction fixes the semantic ladder but selects no e27 warehouse input or alternate allocation source.",
+    "The optional ontology-builder or corrector remains a future external proposal producer. No skill, model call, compiler dependency, or replay dependency is implemented."
+  ],
+  "recorded_at": "2026-08-29T03:05:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-021"
+}

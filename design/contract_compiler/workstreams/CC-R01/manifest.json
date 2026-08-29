@@ -10,7 +10,8 @@
     "blockers": [
       "CC-X03 must produce clean registered evidence.",
       "CC-D11 must decide import identity, ordering, cycles, resolver behavior, and fallback.",
-      "CC-010 through CC-016 must establish the governed inputs and independent oracles."
+      "CC-010 through CC-016 must establish the governed inputs and independent oracles.",
+      "CC-021 controlled Small Shop inputs and CC-022 independent Small Shop oracle must complete before fresh formal dependency bindings are issued."
     ],
     "class": "BLOCKED"
   },

@@ -9,44 +9,11 @@
       "id": "operator",
       "type": "OPERATOR"
     },
-    "class": "FORMAL",
-    "dependency_bindings": [
-      {
-        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
-        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
-        "completion_entry_id": "OVR-000186",
-        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
-        "workstream_id": "CC-010"
-      },
-      {
-        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
-        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
-        "completion_entry_id": "OVR-000150",
-        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
-        "workstream_id": "CC-D05"
-      },
-      {
-        "card_sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
-        "completion_entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
-        "completion_entry_id": "OVR-000156",
-        "integrated_head": "0c899eb1b312275298884cd19f28018273c92ebf",
-        "workstream_id": "CC-D06"
-      },
-      {
-        "card_sha256": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7",
-        "completion_entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
-        "completion_entry_id": "OVR-000164",
-        "integrated_head": "069d6383e928842ece7a378e08638bdb67efcd83",
-        "workstream_id": "CC-D08"
-      },
-      {
-        "card_sha256": "sha256:645aac6eed097fbd36b130be5efe69eb90a592a3a838ad7d590c5c4fd01bb49f",
-        "completion_entry_hash": "sha256:c056a7c1a73fc0047fd4cc7c5f58006b91bef83fa0269658c870763c99bf5f50",
-        "completion_entry_id": "OVR-000202",
-        "integrated_head": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
-        "workstream_id": "CC-015"
-      }
-    ]
+    "blockers": [
+      "Content production waits for operator approval of minimal private refusal and relations JSON shapes.",
+      "Resume only after CC-021 controlled Small Shop inputs and CC-022 independent Small Shop oracle are complete and fresh dependency bindings are issued."
+    ],
+    "class": "BLOCKED"
   },
   "candidate": {
     "state": "NONE"

@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "small-shop-reanchor-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T03:06:01Z",
+    "claims": [
+      "The approved program and integration revision 2 contain exactly 69 matching acyclic workstreams, 15 canonical owner-separation pairs, 31 present cards, and four unchanged selections.",
+      "CC-021 binds four complete dependencies and owns only the controlled Small Shop input prefix, canonical report, and fixed input test while candidate remains NONE and worker ledger remains NOT_STARTED.",
+      "CC-022 and CC-R09 are planned ABSENT rows. CC-R01 through CC-R07 bind CC-021 and CC-022 directly, while CC-R08 retains the prior stage dependencies and therefore binds them transitively.",
+      "CC-012, CC-014, and CC-016 retain exact assignment, scopes, candidate, worker-ledger, responsibility, schema, ID, and activation-report semantics while their authorization changes from FORMAL to BLOCKED.",
+      "The exact RET-000 through RET-060 ladder and future external ontology-builder or corrector boundary are recorded without creating input, oracle, compiler, runtime, protocol, KG, journal, skill, model-call, package, release, or corpus bytes.",
+      "Existing conformance corpora, checksums, compiler environment, runtime, package, release, revision-21 foundation, and OKG-FX001 authority are unchanged."
+    ],
+    "limitations": [
+      "This verifies the reanchor and activation boundary only. It does not implement or complete CC-021, CC-022, or CC-R09.",
+      "The Small Shop source occurrence and future CC-022 and CC-R09 scopes remain unselected.",
+      "Paused oracle work requires both anchor workstreams complete and fresh dependency bindings before any formal resumption.",
+      "The optional external proposal producer remains future work and has no dependency edge or implementation."
+    ]
+  },
+  "entry_hash": "sha256:fcb4fc18108a15f64f2a4dda219ee6ff7492474381ac08a81ca4f3cf80c259cc",
+  "entry_id": "OVR-000210",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1ced4c7a964dffa970c4a721a70f81c1f2c12548b17d36b0838f4ce7ef47fbcf",
+  "recorded_at": "2026-08-29T03:06:01Z",
+  "references": [
+    {
+      "digest": "sha256:dbd208ce3c120046a3fd13df049718c18d97b911ad0c0621fd94050f20f0ff56",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000209",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 210,
+  "subject": {
+    "id": "small-shop-compiler-reanchor-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact Small Shop compiler reanchor and CC-021 activation boundary.",
+  "why": "Activation and pausing require retained mechanical proof that the accepted dependency graph, exact scopes, prior oracle semantics, canonical foundation, and untouched adjacent authority remain coherent before any Small Shop bytes or compiler implementation are authored."
+}

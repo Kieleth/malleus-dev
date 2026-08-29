@@ -96,6 +96,14 @@
     {
       "left": "CC-019",
       "right": "CC-020"
+    },
+    {
+      "left": "CC-021",
+      "right": "CC-022"
+    },
+    {
+      "left": "CC-022",
+      "right": "CC-R09"
     }
   ],
   "program_id": "CC-PROGRAM-001",
@@ -269,7 +277,7 @@
       }
     }
   ],
-  "revision": 1,
+  "revision": 2,
   "schema": "malleus.contract-compiler.integration/v1",
   "selections": [
     "CC-000",
@@ -585,9 +593,9 @@
     },
     {
       "card": {
-        "byte_length": 4124,
+        "byte_length": 1869,
         "path": "workstreams/CC-012/manifest.json",
-        "sha256": "sha256:99d5202a25652fe9785f99a893b5e8998dff6b9ce2aa8d11a8d3c8ae08b83e5e",
+        "sha256": "sha256:8e0e423070b3c0f71ebf156ef13089f96048a862a2b64e85836e02ba475ae753",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -597,7 +605,9 @@
         "CC-D05",
         "CC-D06",
         "CC-D08",
-        "CC-011"
+        "CC-011",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-012"
     },
@@ -618,9 +628,9 @@
     },
     {
       "card": {
-        "byte_length": 3662,
+        "byte_length": 1791,
         "path": "workstreams/CC-014/manifest.json",
-        "sha256": "sha256:d3e6a3d59f96e2a8e5ac2602cf46952e4c82bc25a053a92a5697688983b084c7",
+        "sha256": "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -629,7 +639,9 @@
         "CC-D03",
         "CC-D05",
         "CC-D08",
-        "CC-013"
+        "CC-013",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-014"
     },
@@ -650,9 +662,9 @@
     },
     {
       "card": {
-        "byte_length": 3437,
+        "byte_length": 1831,
         "path": "workstreams/CC-016/manifest.json",
-        "sha256": "sha256:eee4228caf2867e3686be7a0d201a7468fb8726aabd298d61485e4703c3989e4",
+        "sha256": "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -660,7 +672,9 @@
         "CC-D05",
         "CC-D06",
         "CC-D08",
-        "CC-015"
+        "CC-015",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-016"
     },
@@ -717,6 +731,38 @@
     },
     {
       "card": {
+        "byte_length": 2960,
+        "path": "workstreams/CC-021/manifest.json",
+        "sha256": "sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1",
+        "state": "PRESENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D03",
+        "CC-D08",
+        "CC-D11"
+      ],
+      "workstream_id": "CC-021"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-010",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-D10",
+        "CC-D11",
+        "CC-021"
+      ],
+      "workstream_id": "CC-022"
+    },
+    {
+      "card": {
         "state": "ABSENT"
       },
       "depends_on": [
@@ -727,9 +773,9 @@
     },
     {
       "card": {
-        "byte_length": 794,
+        "byte_length": 946,
         "path": "workstreams/CC-R01/manifest.json",
-        "sha256": "sha256:4c043652f47f121ad792115eabde30971bbbe881372515f35790153721fc22d8",
+        "sha256": "sha256:a9c85b08754633696b29e1dc9db57d522e8ad5c193a05a2b449e9c262c6ffd2b",
         "state": "PRESENT"
       },
       "depends_on": [
@@ -742,7 +788,9 @@
         "CC-013",
         "CC-014",
         "CC-015",
-        "CC-016"
+        "CC-016",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R01"
     },
@@ -762,7 +810,9 @@
         "CC-013",
         "CC-014",
         "CC-015",
-        "CC-016"
+        "CC-016",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R02"
     },
@@ -782,7 +832,9 @@
         "CC-013",
         "CC-014",
         "CC-015",
-        "CC-016"
+        "CC-016",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R03"
     },
@@ -800,7 +852,9 @@
         "CC-013",
         "CC-014",
         "CC-015",
-        "CC-016"
+        "CC-016",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R04"
     },
@@ -821,7 +875,9 @@
         "CC-015",
         "CC-016",
         "CC-017",
-        "CC-018"
+        "CC-018",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R05"
     },
@@ -841,7 +897,9 @@
         "CC-015",
         "CC-016",
         "CC-019",
-        "CC-020"
+        "CC-020",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R06"
     },
@@ -854,7 +912,9 @@
         "CC-010",
         "CC-012",
         "CC-014",
-        "CC-016"
+        "CC-016",
+        "CC-021",
+        "CC-022"
       ],
       "workstream_id": "CC-R07"
     },
@@ -872,6 +932,19 @@
         "CC-R07"
       ],
       "workstream_id": "CC-R08"
+    },
+    {
+      "card": {
+        "state": "ABSENT"
+      },
+      "depends_on": [
+        "CC-R08",
+        "CC-D07",
+        "CC-D10",
+        "CC-021",
+        "CC-022"
+      ],
+      "workstream_id": "CC-R09"
     },
     {
       "card": {

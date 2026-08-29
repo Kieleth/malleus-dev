@@ -15,7 +15,7 @@ schema-valid blocks under [`overseer/entries/`](overseer/entries/), governed by
 [`overseer/ledger.schema.json`](overseer/ledger.schema.json). The former
 handover ledger is a frozen pointer, not a second event store.
 
-CC-000 is the machine gate for parallel work. The complete 66-workstream DAG,
+CC-000 is the machine gate for parallel work. The complete 69-workstream DAG,
 reserved scopes, owner-separation rules, active card digests, ledger checkpoint,
 and selected results live in [`integration.json`](integration.json), validated
 against [`integration.schema.json`](integration.schema.json). Active cards under
@@ -343,15 +343,17 @@ may proceed without deciding outcomes.
 | CC-002 | Reproducible selected compiler environment | Materialized selected published root wheels and sdists, exact resolver artifact, unchanged deterministic ANTLR source-build proof, retained upstream `prefixcommons` derivative input, two byte-identical network-denied derived `0.1.12+malleus.1` wheels, payload and license identity proof, v3 derivation record, complete hash-pinned wheel-only runtime closure excluding test packages, retained wheelhouse, immutable OCI identities, platform verification, `pip check`, package and LinkML smokes, and clean offline-install attestation | CC-000, CC-D12 |
 | CC-010 | Three-corpus protocol and independent oracle process | `conformance/contract_kernel/v0` manifests and checks | CC-000, CC-D02, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D11 |
 | CC-011 | Themed vertical source corpus | Themed source files only | CC-010, CC-D14, CC-018 |
-| CC-012 | Independently authored themed expected compilation artifacts | Themed source descriptors, import graph, declarations, bindings, elaboration, facts, and artifact oracle only | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011 |
+| CC-012 | Independently authored themed expected compilation artifacts | Themed source descriptors, import graph, declarations, bindings, elaboration, facts, and artifact oracle only | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011, CC-021, CC-022 |
 | CC-013 | Feature-isolation inputs | Feature-case sources and direct inputs only | CC-010, CC-X01, CC-X02, CC-018 |
-| CC-014 | Independently authored feature-case oracles | Feature-case expected values only | CC-010, CC-D02, CC-D03, CC-D05, CC-D08, CC-013 |
+| CC-014 | Independently authored feature-case oracles | Feature-case expected values only | CC-010, CC-D02, CC-D03, CC-D05, CC-D08, CC-013, CC-021, CC-022 |
 | CC-015 | Neutral-domain source and operation inputs | Neutral-domain sources and inputs only | CC-010, CC-D05, CC-D08, CC-018 |
-| CC-016 | Independently authored neutral-domain oracles | Neutral-domain expected values only | CC-010, CC-D05, CC-D06, CC-D08, CC-015 |
+| CC-016 | Independently authored neutral-domain oracles | Neutral-domain expected values only | CC-010, CC-D05, CC-D06, CC-D08, CC-015, CC-021, CC-022 |
 | CC-017 | Independently authored direct-fact conformance input | Direct-fact input only | CC-010, CC-D05, CC-D06, CC-D08, CC-018 |
 | CC-018 | Semantic scenario requirements shared by source, direct-input, and oracle owners | Scenario requirements only | CC-010, CC-D05, CC-D06, CC-D08 |
 | CC-019 | Themed operation-trace inputs | Themed ordered operations only | CC-010, CC-011, CC-018 |
 | CC-020 | Independently authored themed trace outcomes | Expected decisions, diagnostics, state digests, and final records only | CC-010, CC-D07, CC-D10, CC-019 |
+| CC-021 | Controlled Small Shop Fulfilment inputs | Exact ontology and domain input bytes only; no expected values, mappings, recipes, operations, outcomes, compiler, runtime, protocol, or accepted graph state | CC-010, CC-D03, CC-D08, CC-D11 |
+| CC-022 | Independently authored Small Shop Fulfilment oracle | Expected values only, independently derived after the controlled inputs are complete | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-D10, CC-D11, CC-021 |
 | CC-PUB01 | Themed fixture authorship, license, and public-review record | Public fixture text and asset manifest only | CC-011, CC-D14 |
 
 Every source or direct-input workstream has a different owner from its oracle.
@@ -359,18 +361,43 @@ The direct-fact owner reads accepted decisions and the metamodel, not oracle
 files. One change may not alter compiler code and expected facts unless an
 independently reviewed expected-delta manifest explains every semantic change.
 
+Small Shop Fulfilment is the canonical end-to-end consumer. It does not replace
+the three independent compiler controls.
+Quiet Bell, feature-isolation, and Greenhouse remain independent conformance controls.
+CC-021 owns controlled
+input bytes only. CC-022 independently authors the Small Shop oracle only after
+CC-021 completes. The first research-local realization waits for both.
+
+The running ladder is fixed:
+
+| Case | Required boundary |
+|---|---|
+| RET-000 | Ontology alone produces no ABox. |
+| RET-010 | Create `O1`, distinct physical item `X1`, and `OrderContainsUnit(O1, X1)`. |
+| RET-020 | After `I1` and `I2` exist, create `P1` and two invoice-settlement relations. |
+| RET-030 | Preserve the supplier-order `B` correction at `e7` and bounded invoice `I2` correction at `e9`. |
+| RET-040 | Refuse the `e27` Event-to-Entity correlation with a typed gap. |
+| RET-050 | Refuse per-entity Event ordering with a typed gap. |
+| RET-060 | Reproduce the accepted result deterministically under later source integration. |
+
+A future ontology-builder/corrector is only a future external proposal producer.
+It supplies exact attested candidate bytes to normal review
+and protocol handling. The deterministic compiler never invokes it.
+Replay never invokes it. It has no dependency edge in this graph, and this program authorizes no skill implementation.
+
 ### Wave 1: research-local compiler proof
 
 | ID | Deliverable | Depends on | Mandatory AT slice |
 |---|---|---|---|
-| CC-R01 | Controlled retained-source and recursive import boundary | CC-000, CC-X03, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Nested import, diamond, missing import, network refusal, no try-next profile, every import ordinal and edge, same-locator/different-bytes refusal, different-locator/same-bytes distinction, directed-cycle lineage refusal, deterministic byte observations |
-| CC-R02 | LinkML parser adapter and support-profile classifier emitting lossless per-module declarations before any global merge | CC-002, CC-R01, CC-D03, CC-D08, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Duplicate key, unknown field, supported field, unsupported construct, explicit-presence and raw adoption evidence |
-| CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
-| CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
-| CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018 | Frontend, direct-fact input, and each independent oracle match exactly |
-| CC-R06 | Admission profile and effective contract | CC-R05, CC-D07, CC-D10, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020 | Valid and invalid records plus contextual operation traces |
-| CC-R07 | Reloadable experimental artifact | CC-R06, CC-010, CC-012, CC-014, CC-016 | Deep immutability, corruption refusal, unknown grammar refusal, deterministic reload |
+| CC-R01 | Controlled retained-source and recursive import boundary | CC-000, CC-X03, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Nested import, diamond, missing import, network refusal, no try-next profile, every import ordinal and edge, same-locator/different-bytes refusal, different-locator/same-bytes distinction, directed-cycle lineage refusal, deterministic byte observations |
+| CC-R02 | LinkML parser adapter and support-profile classifier emitting lossless per-module declarations before any global merge | CC-002, CC-R01, CC-D03, CC-D08, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Duplicate key, unknown field, supported field, unsupported construct, explicit-presence and raw adoption evidence |
+| CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
+| CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
+| CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018, CC-021, CC-022 | Frontend, direct-fact input, and each independent oracle match exactly |
+| CC-R06 | Admission profile and effective contract | CC-R05, CC-D07, CC-D10, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces |
+| CC-R07 | Reloadable experimental artifact | CC-R06, CC-010, CC-012, CC-014, CC-016, CC-021, CC-022 | Deep immutability, corruption refusal, unknown grammar refusal, deterministic reload |
 | CC-R08 | Whole-pipeline conformance attestation | CC-R01, CC-R02, CC-R03, CC-R04, CC-R05, CC-R06, CC-R07 | All three corpora, prior slices, current bundled ontologies, mutation adequacy |
+| CC-R09 | Research-local Small Shop source-to-ABox vertical | CC-R08, CC-D07, CC-D10, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal |
 
 The first foundation block is complete only at CC-R08. Passing one stage does not
 authorize production use.
@@ -482,13 +509,13 @@ must not import private stage modules, LinkML classes, or test helpers.
 
 ## Parked work
 
-During CC-R01 through CC-R08, do not merge unrelated foundation changes:
+During CC-R01 through CC-R09, do not merge unrelated foundation changes:
 
 * the D0 methodology candidate at `7d913ed`;
 * the O2 endpoint feasibility commit at `20d883f`;
 * migration grades beyond the existing narrow Recon TOTAL bridge;
-* methodology controls, GraphRecipe expansion, LLM preparation, OCR C2, SMT
-  measurement, and paper integration.
+* methodology controls, GraphRecipe expansion outside CC-R09, LLM preparation,
+  OCR C2, SMT measurement, and paper integration.
 
 These remain preserved decision or research artifacts. The three empty Claude
 worktrees contain nothing to incorporate. Current ontology promotion on `main`

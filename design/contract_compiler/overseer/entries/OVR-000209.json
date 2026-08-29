@@ -1,0 +1,187 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012",
+      "CC-014",
+      "CC-016",
+      "CC-021",
+      "CC-022",
+      "CC-R01",
+      "CC-R02",
+      "CC-R03",
+      "CC-R04",
+      "CC-R05",
+      "CC-R06",
+      "CC-R07",
+      "CC-R09"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:050f2d134e19302064c0d7eac099a488ccc0e6d104abb0bca92df09150c94538",
+        "before_digest": "sha256:5aec3ea52f883810ca794db0342053f3d6ce5d28423f620f52f043f6fd883434",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:2ce5893ab3ad044e1ca6718c48be688d8f1bbc7c54451204df73be844bd4b8eb",
+        "before_digest": "sha256:80eb5b46642d530e3226d202b40fbe5e6a1355ca0cf7030745f8dbccd0e29e30",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:f64da771c8c78e1e58a403247d4731a53667731960df1893a2c38cc84bf31f79",
+        "before_digest": "sha256:e392e71b2629333320f4a83656723c69de223b48f9b7afee9eb07bb05a492502",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:71db2b0b98df3d309e4f79cd8d87f604d748691f70f67ab21fb05892b392138a",
+        "before_digest": "sha256:e5ada0e9cff0824c59ae66dd1d78be68eb27dfe0746612f984801bbe36ad9d11",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:8e0e423070b3c0f71ebf156ef13089f96048a862a2b64e85836e02ba475ae753",
+        "before_digest": "sha256:99d5202a25652fe9785f99a893b5e8998dff6b9ce2aa8d11a8d3c8ae08b83e5e",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-012/manifest.json"
+      },
+      {
+        "after_digest": "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e",
+        "before_digest": "sha256:d3e6a3d59f96e2a8e5ac2602cf46952e4c82bc25a053a92a5697688983b084c7",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-014/manifest.json"
+      },
+      {
+        "after_digest": "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f",
+        "before_digest": "sha256:eee4228caf2867e3686be7a0d201a7468fb8726aabd298d61485e4703c3989e4",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-016/manifest.json"
+      },
+      {
+        "after_digest": "sha256:a9c85b08754633696b29e1dc9db57d522e8ad5c193a05a2b449e9c262c6ffd2b",
+        "before_digest": "sha256:4c043652f47f121ad792115eabde30971bbbe881372515f35790153721fc22d8",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-021/manifest.json"
+      },
+      {
+        "after_digest": "sha256:dbd208ce3c120046a3fd13df049718c18d97b911ad0c0621fd94050f20f0ff56",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-021-activation.json"
+      },
+      {
+        "after_digest": "sha256:482c83a92f6c1d09df85cac258983fa28ddca160a8322d086360eee6976f8d68",
+        "before_digest": "sha256:8ae342769cca3a1af8707b5a61cd41e5c7ae13c32d974ad1fd7f6c94be665a8e",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1ced4c7a964dffa970c4a721a70f81c1f2c12548b17d36b0838f4ce7ef47fbcf",
+  "entry_id": "OVR-000209",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3de0ca2590896756124f0b318073029dc5641dc7d119933548db8e7ba21ddc53",
+  "recorded_at": "2026-08-29T03:06:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-021/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:dbd208ce3c120046a3fd13df049718c18d97b911ad0c0621fd94050f20f0ff56",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0d2070475b775d10cacb8481aeff448f6af7c377",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 209,
+  "subject": {
+    "id": "small-shop-compiler-reanchor-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Reanchor the compiler program on the controlled Small Shop consumer.",
+  "why": "The revision-21 foundation fixes OKG-FX001 and the deterministic compiler boundary. This transaction preserves the three existing corpora as independent controls, pauses their oracle producers without rewriting owned semantics, activates only controlled Small Shop inputs, and leaves the independent Small Shop oracle and research-local source-to-ABox vertical unassigned."
+}
