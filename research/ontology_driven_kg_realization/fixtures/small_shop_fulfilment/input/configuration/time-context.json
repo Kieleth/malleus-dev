@@ -1,14 +1,14 @@
 {
-  "ambiguous_local_time": "REFUSE",
-  "calendar": "PROLEPTIC_GREGORIAN",
-  "context_id": "ret-010-fixture-time-v1",
-  "derived_value_classification": "FIXTURE_DERIVED",
-  "fixture_year": 2000,
-  "nonexistent_local_time": "REFUSE",
-  "schema": "malleus.small-shop.time-context/v1",
-  "source_field": "time",
-  "source_format": "%d-%m %H:%M",
-  "source_member": "sources/warehouse.jsonl",
-  "timezone": "UTC",
-  "timezone_semantics": "FIXED_UTC_NO_DST"
+    "ambiguous_local_time": "REFUSE",
+    "calendar": "PROLEPTIC_GREGORIAN",
+    "context_id": "ret-010-fixture-time-v1",
+    "derived_value_classification": "FIXTURE_DERIVED",
+    "fixture_year": 2000,
+    "nonexistent_local_time": "REFUSE",
+    "schema": "malleus.small-shop.time-context/v1",
+    "source_field": "time",
+    "source_format": "%d-%m %H:%M",
+    "source_member": "sources/warehouse.jsonl",
+    "timezone": "UTC",
+    "timezone_semantics": "FIXED_UTC_NO_DST"
 }

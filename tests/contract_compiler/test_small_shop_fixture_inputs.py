@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import math
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -25,8 +26,13 @@ INPUT_ROOT = (
 )
 REPORT = ROOT / "conformance" / "contract_compiler" / "v0" / "evidence" / "CC-021.json"
 TEST_PATH = Path(__file__).resolve()
-BASE_COMMIT = "927ab183e33de09d62a3a6dba834306d54f35962"
-BASE_COMMIT_TIME = datetime(2026, 8, 29, 5, 3, 43, tzinfo=timezone.utc)
+BASE_COMMIT = "f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6"
+BASE_COMMIT_TIME = datetime(2026, 8, 29, 5, 40, 57, tzinfo=timezone.utc)
+AUTHORIZATION_ENTRY = "design/contract_compiler/overseer/entries/OVR-000219.json"
+PROVISIONAL_ATTEMPT = "9b2afa8327bac1dd18ddca281e10f736cb1337fc"
+INPUT_PREFIX = (
+    "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input"
+)
 
 MEMBERS = (
     "configuration/ret-010-selection.json",
@@ -61,6 +67,22 @@ NON_MANIFEST_MEMBERS = {
         "application/yaml",
     ),
     "tbox/small-shop.yaml": ("LINKML_TBOX", "application/yaml"),
+}
+REISSUED_CONFIGURATION_MEMBERS = (
+    "configuration/ret-010-selection.json",
+    "configuration/time-context.json",
+)
+INHERITED_MEMBERS = tuple(
+    member
+    for member in MEMBERS
+    if member not in {"manifest.json", *REISSUED_CONFIGURATION_MEMBERS}
+)
+REISSUE_PATHS = {
+    f"{INPUT_PREFIX}/configuration/ret-010-selection.json",
+    f"{INPUT_PREFIX}/configuration/time-context.json",
+    f"{INPUT_PREFIX}/manifest.json",
+    "conformance/contract_compiler/v0/evidence/CC-021.json",
+    "tests/contract_compiler/test_small_shop_fixture_inputs.py",
 }
 
 BASELINE_TBOX: dict[str, Any] = {
@@ -321,6 +343,19 @@ def _digest(path: Path) -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _git(*arguments: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=ROOT,
+        capture_output=True,
+        check=check,
+    )
+
+
+def _bytes_at(revision: str, repository_path: str) -> bytes:
+    return _git("show", f"{revision}:{repository_path}").stdout
+
+
 def _walk(value: Any) -> list[Any]:
     values = [value]
     if isinstance(value, dict):
@@ -537,6 +572,37 @@ def test_time_context_contains_only_the_approved_derivation_parameters() -> None
     assert "normalized_timestamp" not in context
 
 
+def test_configuration_semantics_are_reissued_after_authorization() -> None:
+    for member in REISSUED_CONFIGURATION_MEMBERS:
+        repository_path = f"{INPUT_PREFIX}/{member}"
+        current = (INPUT_ROOT / member).read_bytes()
+        provisional = _bytes_at(PROVISIONAL_ATTEMPT, repository_path)
+        value = _load_json(INPUT_ROOT / member)
+
+        assert _load_json_text(provisional.decode("utf-8")) == value
+        assert current != provisional
+        assert current == (
+            json.dumps(
+                value,
+                allow_nan=False,
+                ensure_ascii=False,
+                indent=4,
+                sort_keys=True,
+            )
+            + "\n"
+        ).encode("utf-8")
+
+
+def test_inherited_source_and_tbox_bytes_are_unchanged_from_provisional_attempt() -> (
+    None
+):
+    for member in INHERITED_MEMBERS:
+        assert (INPUT_ROOT / member).read_bytes() == _bytes_at(
+            PROVISIONAL_ATTEMPT,
+            f"{INPUT_PREFIX}/{member}",
+        )
+
+
 def test_every_input_role_is_closed_and_oracle_free() -> None:
     values = [
         _load_json(INPUT_ROOT / "manifest.json"),
@@ -597,6 +663,7 @@ def test_cc021_verification_report_binds_exact_scope_and_claims() -> None:
         "cc021-e27-transcription",
         "cc021-selection-lookup-time",
         "cc021-oracle-free",
+        "cc021-reissue",
         "cc021-affected",
         "cc021-package",
     }
@@ -619,3 +686,49 @@ def test_cc021_verification_report_binds_exact_scope_and_claims() -> None:
         "no public API, package, or release",
     ):
         assert phrase in limitations
+
+
+def test_cc021_base_is_first_commit_containing_reactivation_authority() -> None:
+    additions = (
+        _git(
+            "log",
+            "--diff-filter=A",
+            "--format=%H",
+            "--",
+            AUTHORIZATION_ENTRY,
+        )
+        .stdout.decode("ascii")
+        .splitlines()
+    )
+
+    assert additions == [BASE_COMMIT]
+    assert (
+        _git("cat-file", "-e", f"{BASE_COMMIT}:{AUTHORIZATION_ENTRY}").returncode == 0
+    )
+    assert (
+        _git(
+            "cat-file",
+            "-e",
+            f"{BASE_COMMIT}^:{AUTHORIZATION_ENTRY}",
+            check=False,
+        ).returncode
+        != 0
+    )
+
+
+def test_corrected_candidate_has_exact_prospective_reissue_cut() -> None:
+    changed = (
+        _git(
+            "diff",
+            "--name-only",
+            BASE_COMMIT,
+            "--",
+            INPUT_PREFIX,
+            "conformance/contract_compiler/v0/evidence/CC-021.json",
+            "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+        )
+        .stdout.decode("utf-8")
+        .splitlines()
+    )
+
+    assert set(changed) == REISSUE_PATHS

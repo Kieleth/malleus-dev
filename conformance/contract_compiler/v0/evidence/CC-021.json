@@ -1,19 +1,19 @@
 {
   "artifacts": [
     {
-      "byte_length": 225,
+      "byte_length": 239,
       "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/ret-010-selection.json",
-      "sha256": "sha256:3124798e9958b80c786ee556e2b945991510ae1bd169c038de624709a9feaafd"
+      "sha256": "sha256:11000db0f0262137a7c0075987c7d7202452ab32232f8e94fa8821f80b8a1af7"
     },
     {
-      "byte_length": 455,
+      "byte_length": 479,
       "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/time-context.json",
-      "sha256": "sha256:9e8e86a44bf9f4e6f1632918174e60302fb1b6bef820ab6b632279c69475a83f"
+      "sha256": "sha256:799cae6f980615a087e3d97bdc824ceda4410be2c93d92723829cd96c9a00561"
     },
     {
       "byte_length": 2481,
       "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/manifest.json",
-      "sha256": "sha256:de3b776cc959add9aea3bfd90b35c0f7461ff0f2f770e3682ac413437d685a40"
+      "sha256": "sha256:7583bfbc6f9aff6382727a7befa333c82b73bed221d8958d6bb7e1a55d0549e8"
     },
     {
       "byte_length": 36,
@@ -41,23 +41,23 @@
       "sha256": "sha256:f374c7f1c1cba4ecbf747ca9471511307ea5cca1051540d5bf533a17360ca528"
     },
     {
-      "byte_length": 20161,
+      "byte_length": 23482,
       "path": "tests/contract_compiler/test_small_shop_fixture_inputs.py",
-      "sha256": "sha256:c89f90684354cd6ab5dd959941b5c337c2c83a33de6b75eaf3654da841312d97"
+      "sha256": "sha256:3353fb7ba981a99af8bb36513eec7eb74ebe8c5ca34f2b798493965e08e339f9"
     }
   ],
-  "base_commit": "927ab183e33de09d62a3a6dba834306d54f35962",
+  "base_commit": "f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6",
   "checks": [
     {
       "check_id": "cc021-red",
-      "method": "Run the complete fixed CC-021 input test before the reserved input tree and report exist.",
-      "observed": "The genuine RED produced exactly 9 absent-authorized-file failures and 1 passing malformed-input guard. No semantic mismatch, compiler call, production change, or unrelated failure occurred.",
+      "method": "Require the corrected report to bind the first commit containing OVR-000219 before changing the provisional report bytes.",
+      "observed": "The genuine prospective RED produced exactly 1 failure and 10 passes. The sole failure was the report base mismatch: the pre-authorization report named 927ab183e33de09d62a3a6dba834306d54f35962 while the fixed test required f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6. The independent Git-history assertion already passed and proved f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6 is the first commit containing OVR-000219.",
       "result": "PASS"
     },
     {
       "check_id": "cc021-green",
-      "method": "Run tests/contract_compiler/test_small_shop_fixture_inputs.py after adding only the eight inputs and this report.",
-      "observed": "All 10 fixed CC-021 input tests passed.",
+      "method": "Run tests/contract_compiler/test_small_shop_fixture_inputs.py after the exact post-authorization reissue.",
+      "observed": "All 14 fixed CC-021 input and prospective-authorization tests passed.",
       "result": "PASS"
     },
     {
@@ -103,9 +103,15 @@
       "result": "PASS"
     },
     {
+      "check_id": "cc021-reissue",
+      "method": "Compare the two configuration values and five inherited source/TBox byte streams with provisional attempt 9b2afa8327bac1dd18ddca281e10f736cb1337fc, then inspect the f6b2bf9-scoped prospective diff.",
+      "observed": "Both configuration members retain identical parsed JSON but have deterministic four-space post-authorization bytes. The warehouse JSONL, inventory CSV, and three TBox members remain byte-identical to 9b2afa8. The only prospective reissue paths are the two configurations, manifest, fixed test, and this report.",
+      "result": "PASS"
+    },
+    {
       "check_id": "cc021-affected",
       "method": "Run the complete tests/contract_compiler directory with the CC-021 input slice present.",
-      "observed": "All 76 contract-compiler tests passed.",
+      "observed": "All 80 contract-compiler tests passed.",
       "result": "PASS"
     },
     {
@@ -120,11 +126,11 @@
     "The synthetic year 2000 and fixed UTC are explicit fixture assumptions because the retained source text supplies neither year nor timezone.",
     "X2 and Y1 remain retained in the source row but are not selected by RET-010.",
     "The lookup, selection, and time context are raw input parameters, not mapping or transformation implementations.",
-    "CC-021 makes no normalized value, expected refusal, identity, fact, artifact, recipe, operation-order, outcome, protocol, ledger, or accepted-KG claim.",
-    "These inputs have no corpus or checksum publication and create no public API, package, or release.",
-    "The pre-integration all gate remains intentionally RED while CC-021 is ACTIVE and its activation guard requires every owned path to be absent; the separate overseer completion transaction must replace that state before unified CI and its package gates can pass."
+    "CC-021 creates no oracle or expected output, no normalized value, expected refusal, identity, fact, artifact, recipe, operation order, mapping or transformation implementation, compiler or runtime behavior, protocol decision, ledger state, or accepted-KG state.",
+    "These inputs have no corpus or checksum publication and create no public API, package, or release, no publication, and no workstream completion.",
+    "Commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc is a provisional pre-authorization attempt superseded as evidence by this post-authorization candidate report. This report intentionally claims no corrected candidate commit before one exists."
   ],
-  "recorded_at": "2026-08-29T05:12:21Z",
+  "recorded_at": "2026-08-29T05:47:29Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-021"
 }

@@ -1,9 +1,9 @@
 {
-  "event_id": "e27",
-  "inventory_unit_id": "X1",
-  "order_id": "O1",
-  "schema": "malleus.small-shop.selection/v1",
-  "selection_id": "RET-010",
-  "source_member": "sources/warehouse.jsonl",
-  "source_record_ordinal": 1
+    "event_id": "e27",
+    "inventory_unit_id": "X1",
+    "order_id": "O1",
+    "schema": "malleus.small-shop.selection/v1",
+    "selection_id": "RET-010",
+    "source_member": "sources/warehouse.jsonl",
+    "source_record_ordinal": 1
 }
