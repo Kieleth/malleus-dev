@@ -1,0 +1,639 @@
+{
+  "configuration": {
+    "capabilities": "TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0",
+    "media_type": "TEST_ONLY_JSON_SHAPED_YAML",
+    "profile": "TEST_ONLY_LINKML_V0_PROFILE",
+    "resolver": "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0"
+  },
+  "sources": [
+    {
+      "byte_length": 1821,
+      "outcome": "ACCEPT",
+      "path": "modules/activity.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_66814b70e6756f8038afc9aa7b4344f07be509a08b952473cb410b1c59df9f54"
+    },
+    {
+      "byte_length": 1378,
+      "outcome": "ACCEPT",
+      "path": "modules/entities.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_b9076cf744f59a1aefc5e2e5d347cb5e5f14481df5ba1e177ea19315a26c529f"
+    },
+    {
+      "byte_length": 1166,
+      "outcome": "ACCEPT",
+      "path": "modules/foundation.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_2fe7824e048e474fb33be09239cd249b9303d307327d9e5ce2d9eca8cc535948"
+    },
+    {
+      "byte_length": 845,
+      "outcome": "ACCEPT",
+      "path": "v1.0.0/quiet_bell.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_2b93cf1a25439d3d7dcc67556429d72e9783373b7283794a10f99137ed6c5a7a"
+    },
+    {
+      "byte_length": 880,
+      "outcome": "ACCEPT",
+      "path": "v1.0.1/quiet_bell.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_5a7b56c07301426c21d4dc68356549450ac0a0f2fd40c92cb9cf6033aa469f80"
+    },
+    {
+      "byte_length": 1081,
+      "outcome": "ACCEPT",
+      "path": "v1.1.0/quiet_bell.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_faeeb2e7013400a5930793f42058464e727715aa7658f35a6340b791e059c698"
+    }
+  ],
+  "import_edges": [
+    {
+      "child": "modules/foundation.yaml",
+      "literal": "foundation",
+      "ordinal": 0,
+      "parent": "modules/activity.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/entities.yaml",
+      "literal": "entities",
+      "ordinal": 1,
+      "parent": "modules/activity.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/foundation.yaml",
+      "literal": "foundation",
+      "ordinal": 0,
+      "parent": "modules/entities.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "linkml:types",
+      "literal": "linkml:types",
+      "ordinal": 0,
+      "parent": "modules/foundation.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "literal": "malleus",
+      "ordinal": 1,
+      "parent": "modules/foundation.yaml",
+      "resolution": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "child": "modules/entities.yaml",
+      "literal": "../modules/entities",
+      "ordinal": 0,
+      "parent": "v1.0.0/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/activity.yaml",
+      "literal": "../modules/activity",
+      "ordinal": 1,
+      "parent": "v1.0.0/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/activity.yaml",
+      "literal": "../modules/activity",
+      "ordinal": 0,
+      "parent": "v1.0.1/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/entities.yaml",
+      "literal": "../modules/entities",
+      "ordinal": 1,
+      "parent": "v1.0.1/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/entities.yaml",
+      "literal": "../modules/entities",
+      "ordinal": 0,
+      "parent": "v1.1.0/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    },
+    {
+      "child": "modules/activity.yaml",
+      "literal": "../modules/activity",
+      "ordinal": 1,
+      "parent": "v1.1.0/quiet_bell.yaml",
+      "resolution": "ACCEPT"
+    }
+  ],
+  "declarations": {
+    "modules/activity.yaml": {
+      "Class": [
+        "https://malleus.dev/conformance/quiet-bell/activity/CitesFolioRelation",
+        "https://malleus.dev/conformance/quiet-bell/activity/SealDiscrepancySignal",
+        "https://malleus.dev/conformance/quiet-bell/activity/SealReviewEvent"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/activity/reviewed_by",
+        "https://malleus.dev/conformance/quiet-bell/activity/reviewed_relation"
+      ]
+    },
+    "modules/entities.yaml": {
+      "Class": [
+        "https://malleus.dev/conformance/quiet-bell/entities/ArchiveExaminer",
+        "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio",
+        "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio/locator"
+      ]
+    },
+    "modules/foundation.yaml": {
+      "Enum": [
+        "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveEventKind",
+        "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveRelationKind",
+        "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveSignalKind"
+      ],
+      "Scalar": [
+        "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/foundation/certainty",
+        "https://malleus.dev/conformance/quiet-bell/foundation/content_digest",
+        "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark"
+      ]
+    },
+    "v1.0.0/quiet_bell.yaml": {
+      "Class": [
+        "https://malleus.dev/conformance/quiet-bell/InquiryDossier"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code"
+      ]
+    },
+    "v1.0.1/quiet_bell.yaml": {
+      "Class": [
+        "https://malleus.dev/conformance/quiet-bell/InquiryDossier"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code"
+      ]
+    },
+    "v1.1.0/quiet_bell.yaml": {
+      "Class": [
+        "https://malleus.dev/conformance/quiet-bell/InquiryDossier"
+      ],
+      "Slot": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code",
+        "https://malleus.dev/conformance/quiet-bell/marginal_note"
+      ]
+    }
+  },
+  "qualified_bindings": [
+    {
+      "reference": "Agent",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "ArchiveEventKind",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveEventKind"
+    },
+    {
+      "reference": "ArchiveExaminer",
+      "target": "https://malleus.dev/conformance/quiet-bell/entities/ArchiveExaminer"
+    },
+    {
+      "reference": "ArchiveRelationKind",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveRelationKind"
+    },
+    {
+      "reference": "ArchiveShelfmark",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark"
+    },
+    {
+      "reference": "ArchiveSignalKind",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveSignalKind"
+    },
+    {
+      "reference": "CitesFolioRelation",
+      "target": "https://malleus.dev/conformance/quiet-bell/activity/CitesFolioRelation"
+    },
+    {
+      "reference": "Entity",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "Event",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "EvidenceFolio",
+      "target": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio"
+    },
+    {
+      "reference": "EvidenceLocator",
+      "target": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator"
+    },
+    {
+      "reference": "InquiryDossier",
+      "target": "https://malleus.dev/conformance/quiet-bell/InquiryDossier"
+    },
+    {
+      "reference": "Relation",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "Signal",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "agent_type",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "assigned_examiner",
+      "target": "https://malleus.dev/conformance/quiet-bell/assigned_examiner"
+    },
+    {
+      "reference": "certainty",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/certainty"
+    },
+    {
+      "reference": "content_digest",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest"
+    },
+    {
+      "reference": "dossier_code",
+      "target": "https://malleus.dev/conformance/quiet-bell/dossier_code"
+    },
+    {
+      "reference": "event_type",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "float",
+      "target": "https://malleus.dev/contract-facts/Float"
+    },
+    {
+      "reference": "marginal_note",
+      "target": "https://malleus.dev/conformance/quiet-bell/marginal_note"
+    },
+    {
+      "reference": "relation_type",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "reviewed_by",
+      "target": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_by"
+    },
+    {
+      "reference": "reviewed_relation",
+      "target": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_relation"
+    },
+    {
+      "reference": "shelfmark",
+      "target": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark"
+    },
+    {
+      "reference": "signal_type",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "source_id",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    },
+    {
+      "reference": "string",
+      "target": "https://malleus.dev/contract-facts/String"
+    },
+    {
+      "reference": "target_id",
+      "target": {
+        "outcome": "REFUSE"
+      }
+    }
+  ],
+  "local_elaboration": {
+    "class_defaults": [
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/InquiryDossier"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/CitesFolioRelation"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/SealDiscrepancySignal"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/SealReviewEvent"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/ArchiveExaminer"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio"
+      },
+      {
+        "abstract": false,
+        "isMixin": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator"
+      }
+    ],
+    "complete_slots": [
+      {
+        "identifier": false,
+        "inlined": false,
+        "maximum": "1",
+        "minimum": "0",
+        "multivalued": false,
+        "required": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/certainty",
+        "valueRange": "https://malleus.dev/contract-facts/Float"
+      },
+      {
+        "identifier": false,
+        "inlined": false,
+        "multivalued": false,
+        "required": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest",
+        "valueRange": "https://malleus.dev/contract-facts/String"
+      },
+      {
+        "identifier": false,
+        "inlined": false,
+        "multivalued": false,
+        "required": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark",
+        "valueRange": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark"
+      },
+      {
+        "identifier": false,
+        "inlined": true,
+        "multivalued": false,
+        "required": true,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio/locator",
+        "valueRange": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator"
+      },
+      {
+        "identifier": false,
+        "inlined": false,
+        "multivalued": false,
+        "required": false,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/marginal_note",
+        "valueRange": "https://malleus.dev/contract-facts/String"
+      },
+      {
+        "identifier": false,
+        "inlined": false,
+        "multivalued": false,
+        "required": true,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/dossier_code",
+        "valueRange": "https://malleus.dev/contract-facts/String"
+      }
+    ],
+    "enum_values": [
+      {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveEventKind",
+        "value": "SEAL_REVIEW"
+      },
+      {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveRelationKind",
+        "value": "CITES_FOLIO"
+      },
+      {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveSignalKind",
+        "value": "SEAL_DISCREPANCY"
+      }
+    ],
+    "exactly_one": {
+      "alternatives": [
+        [
+          {
+            "slot": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest",
+            "valuePresence": "ABSENT"
+          },
+          {
+            "required": true,
+            "slot": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark"
+          }
+        ],
+        [
+          {
+            "required": true,
+            "slot": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest"
+          },
+          {
+            "slot": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark",
+            "valuePresence": "ABSENT"
+          }
+        ]
+      ],
+      "class": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator",
+      "outcome": "ACCEPT"
+    },
+    "incomplete_slots": [
+      {
+        "effective_value": {
+          "outcome": "REFUSE"
+        },
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_by"
+      },
+      {
+        "effective_value": {
+          "outcome": "REFUSE"
+        },
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_relation"
+      },
+      {
+        "effective_value": {
+          "outcome": "REFUSE"
+        },
+        "symbol": "https://malleus.dev/conformance/quiet-bell/assigned_examiner"
+      }
+    ],
+    "scalars": [
+      {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark",
+        "typeof": "https://malleus.dev/contract-facts/String"
+      }
+    ]
+  },
+  "versions": [
+    {
+      "authored_local": {
+        "declarations": "ACCEPT",
+        "import_graph": "ACCEPT",
+        "source_descriptors": "ACCEPT"
+      },
+      "compiled": {
+        "compilation": {
+          "outcome": "REFUSE"
+        },
+        "elaboration": {
+          "outcome": "REFUSE"
+        },
+        "effective_contract": {
+          "outcome": "REFUSE"
+        },
+        "fact_set": {
+          "outcome": "REFUSE"
+        },
+        "facts": {
+          "outcome": "REFUSE"
+        },
+        "logical_artifact": {
+          "outcome": "REFUSE"
+        },
+        "qualified_bindings": {
+          "outcome": "REFUSE"
+        }
+      },
+      "root": "v1.0.0/quiet_bell.yaml",
+      "semantic_members": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "authored_local": {
+        "declarations": "ACCEPT",
+        "import_graph": "ACCEPT",
+        "source_descriptors": "ACCEPT"
+      },
+      "compiled": {
+        "compilation": {
+          "outcome": "REFUSE"
+        },
+        "elaboration": {
+          "outcome": "REFUSE"
+        },
+        "effective_contract": {
+          "outcome": "REFUSE"
+        },
+        "fact_set": {
+          "outcome": "REFUSE"
+        },
+        "facts": {
+          "outcome": "REFUSE"
+        },
+        "logical_artifact": {
+          "outcome": "REFUSE"
+        },
+        "qualified_bindings": {
+          "outcome": "REFUSE"
+        }
+      },
+      "root": "v1.0.1/quiet_bell.yaml",
+      "semantic_members": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code"
+      ],
+      "version": "1.0.1"
+    },
+    {
+      "authored_local": {
+        "declarations": "ACCEPT",
+        "import_graph": "ACCEPT",
+        "source_descriptors": "ACCEPT"
+      },
+      "compiled": {
+        "compilation": {
+          "outcome": "REFUSE"
+        },
+        "elaboration": {
+          "outcome": "REFUSE"
+        },
+        "effective_contract": {
+          "outcome": "REFUSE"
+        },
+        "fact_set": {
+          "outcome": "REFUSE"
+        },
+        "facts": {
+          "outcome": "REFUSE"
+        },
+        "logical_artifact": {
+          "outcome": "REFUSE"
+        },
+        "qualified_bindings": {
+          "outcome": "REFUSE"
+        }
+      },
+      "root": "v1.1.0/quiet_bell.yaml",
+      "semantic_members": [
+        "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+        "https://malleus.dev/conformance/quiet-bell/dossier_code",
+        "https://malleus.dev/conformance/quiet-bell/marginal_note"
+      ],
+      "version": "1.1.0"
+    }
+  ],
+  "comparisons": [
+    {
+      "authored_local_semantic_projection": "SAME",
+      "compiled_facts": "NOT_CLAIMED",
+      "effective_contract": "NOT_CLAIMED",
+      "left": "1.0.0",
+      "logical_artifact": "NOT_CLAIMED",
+      "raw_source": "DIFFERENT",
+      "right": "1.0.1",
+      "source_attestation": "DIFFERENT",
+      "validated_fact_set": "NOT_CLAIMED"
+    },
+    {
+      "authored_local_semantic_projection": "DIFFERENT",
+      "compiled_facts": "NOT_CLAIMED",
+      "effective_contract": "NOT_CLAIMED",
+      "left": "1.0.0",
+      "logical_artifact": "NOT_CLAIMED",
+      "raw_source": "DIFFERENT",
+      "right": "1.1.0",
+      "source_attestation": "DIFFERENT",
+      "validated_fact_set": "NOT_CLAIMED"
+    },
+    {
+      "authored_local_semantic_projection": "DIFFERENT",
+      "compiled_facts": "NOT_CLAIMED",
+      "effective_contract": "NOT_CLAIMED",
+      "left": "1.0.1",
+      "logical_artifact": "NOT_CLAIMED",
+      "raw_source": "DIFFERENT",
+      "right": "1.1.0",
+      "source_attestation": "DIFFERENT",
+      "validated_fact_set": "NOT_CLAIMED"
+    }
+  ]
+}

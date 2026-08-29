@@ -1,0 +1,87 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18567,
+      "path": "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
+      "sha256": "sha256:cd7dbb8c4c8c81fb1d9d67e1423ba51e3bfa73b91d47a86f2381d1672f85e3e0"
+    },
+    {
+      "byte_length": 16877,
+      "path": "tests/contract_compiler/test_themed_compilation_oracles.py",
+      "sha256": "sha256:4974ccca40a2cd0babe68649d581f16e93e88f1e568cdcc2b596fd000274011b"
+    }
+  ],
+  "base_commit": "195a369636f9fe9ce1a0e8f4cb9d950836164e79",
+  "checks": [
+    {
+      "check_id": "cc012-authority-scope",
+      "method": "Verify exact HEAD, current CC-012 card, non-superseded OVR-000254 authority, dependency bindings, owned paths, and pre-existing worktree dirt before authorship.",
+      "observed": "HEAD was exactly 195a369636f9fe9ce1a0e8f4cb9d950836164e79. OVR-000254 is ACTIVE with no blocker. Only the one oracle, fixed test, and this report were added inside the three authorized scopes; unrelated research, design, and handover dirt was preserved.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-tdd-red",
+      "method": "Write the fixed private-oracle test before the oracle, run it, then tighten the local-versus-compiled comparison assertions before changing the JSON.",
+      "observed": "The first run exited 1 with exactly 6 failures: one empty oracle membership and five FileNotFoundError failures. The comparison refinement then produced exactly 2 failures and 4 passes before the oracle gained the missing explicit layers and third pair.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-source-descriptors",
+      "method": "Read and hash only the six controlled Quiet Bell LinkML members, then compare their paths, lengths, and source-blob labels with CC-011 evidence.",
+      "observed": "The three shared modules and three version roots match exact lengths 1821, 1378, 1166, 845, 880, and 1081 and their recorded SHA-256 digests. They appear only as derivation sources and source descriptors, never copied answer values.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-private-oracle-green",
+      "method": "Run the six fixed oracle membership, descriptor, import, declaration, binding, elaboration, comparison, and private-vocabulary checks plus scoped Ruff.",
+      "observed": "pytest reported 6 passed in 0.06 seconds. Ruff reported All checks passed. The oracle has one JSON member and uses only the authorized resolver, profile, capability, media, source-blob, outcome, and comparison labels.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-resolution-refusal",
+      "method": "Compare every authored import and qualified reference with the six exact source descriptors and trusted LinkML builtin decision without consulting an external ontology or compiler output.",
+      "observed": "Ten local or trusted-builtin edges accept. The bare malleus edge has no exact retained source descriptor in the controlled six-member set and is minimal REFUSE. Eleven inherited Malleus bindings and every downstream compilation, elaboration, fact, fact-set, EffectiveContract, and logical artifact outcome are minimal REFUSE.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-logical-comparisons",
+      "method": "Compare all three version pairs at separate raw-source, source-attestation, authored-local-semantic, compiled-fact, validated-fact-set, EffectiveContract, and logical-artifact layers.",
+      "observed": "Every raw source and source attestation pair is DIFFERENT. The authored local projection is SAME only for 1.0.0 and 1.0.1; both pairs involving 1.1.0 are DIFFERENT because marginal_note is added. Every compiled layer is NOT_CLAIMED, never SAME because both roots refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-neighboring-controls",
+      "method": "Run the themed source, semantic requirements, conformance protocol, fixed oracle, complete contract-compiler, overseer ledger, integration-state, and GraphRecipe controls.",
+      "observed": "The complete contract-compiler directory passed 92 tests. The ledger validated 254 entries, integration validated 69 workstreams, 32 cards, and 4 selections, and GraphRecipe passed 40 tests. A combined governance run passed 197 and hit only the frozen pre-content absence assertion described in limitations.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-fixed-local-ci",
+      "method": "Run python scripts/ci.py test unchanged, then run later fixed gates separately after the profile stopped at its first failure.",
+      "observed": "Quality passed. Configured pytest reported 1901 passed, 2 skipped, and 1 failure at the pre-content CC-012 absence assertion, then the profile stopped. Separately, contract-compiler 92, ledger 254, integration 69/32/4, and GraphRecipe 40 all passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-diff-boundary",
+      "method": "Run git diff --check and inspect base-to-worktree membership against the exact CC-012 scopes and declared report artifacts.",
+      "observed": "Diff checking passed. The candidate delta contains exactly quiet_bell.json, this report, and test_themed_compilation_oracles.py. The artifacts list declares the oracle and test with exact bytes and digests; the report correctly excludes itself.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-package-boundary",
+      "method": "Inspect the candidate against compiler, runtime, package, Docker, corpus, checksum, selection, integration, and governance-completion boundaries.",
+      "observed": "PACKAGE NOT_APPLICABLE. No implementation, dependency, distribution, installed data, Docker, source input, corpus membership, checksum, selection, integration manifest, card, or overseer ledger byte changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The controlled Quiet Bell set supplies six exact source descriptors but no exact retained descriptor for the authored bare malleus import. This oracle therefore refuses every complete binding, elaboration, fact, fact-set, EffectiveContract, and logical artifact result rather than importing conditional future facts.",
+    "SAME and DIFFERENT describe only the authored local semantic projection. Compiled facts, validated fact sets, EffectiveContract values, and logical artifacts remain NOT_CLAIMED for every pair because all three compilations refuse.",
+    "The fixed integration test test_quiet_bell_reactivation_controls_hold_before_content still asserts that all authorized CC-012 content paths are absent. Once this candidate creates them, that pre-content guard is the sole failure in both the combined neighboring run and fixed configured pytest. Updating it is outside CC-012 scope and governance completion remains untouched.",
+    "The JSON is private fixture-local test evidence. It is not compiler input, a public format, a compatibility promise, runtime artifact bytes, wire grammar, a stable public identifier set, corpus publication, or CC-R authority.",
+    "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
+  ],
+  "recorded_at": "2026-08-29T20:10:59Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}
