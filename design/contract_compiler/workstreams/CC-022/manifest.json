@@ -1,0 +1,102 @@
+{
+  "assignment": {
+    "owner_id": "worker:cc022-small-shop-oracle",
+    "state": "ASSIGNED",
+    "task_id": "/root/cc022_small_shop_oracle"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
+        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+        "completion_entry_id": "OVR-000186",
+        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+        "workstream_id": "CC-010"
+      },
+      {
+        "card_sha256": "sha256:c649d411edd45a82a4d7559b5efc69ba8fade92327c998a685f4e57d7415ebb7",
+        "completion_entry_hash": "sha256:01550bd8c179637dfdfa0cdd648fb59704e830e1f3f9547264e9363df2a2f0b3",
+        "completion_entry_id": "OVR-000137",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D02"
+      },
+      {
+        "card_sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
+        "completion_entry_hash": "sha256:95eb2b94409029554120beb0e1552a9dbd39151b0d7eb18c1c5469003af489e2",
+        "completion_entry_id": "OVR-000138",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D03"
+      },
+      {
+        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
+        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+        "completion_entry_id": "OVR-000150",
+        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+        "workstream_id": "CC-D05"
+      },
+      {
+        "card_sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
+        "completion_entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
+        "completion_entry_id": "OVR-000156",
+        "integrated_head": "0c899eb1b312275298884cd19f28018273c92ebf",
+        "workstream_id": "CC-D06"
+      },
+      {
+        "card_sha256": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7",
+        "completion_entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
+        "completion_entry_id": "OVR-000164",
+        "integrated_head": "069d6383e928842ece7a378e08638bdb67efcd83",
+        "workstream_id": "CC-D08"
+      },
+      {
+        "card_sha256": "sha256:75f3533acf2412b4e5770f3718587fde668591ccded77a56d60f30b0a2ee5bd9",
+        "completion_entry_hash": "sha256:7ed32de82a3ad544778ee5d593390f84efe8eed4a95b018d38b2b171c2fd2c6b",
+        "completion_entry_id": "OVR-000172",
+        "integrated_head": "f8896dd67e96c82402dd6acd34be85fa8c836f1e",
+        "workstream_id": "CC-D10"
+      },
+      {
+        "card_sha256": "sha256:cc86c841ff11cb5b19d37278ee7555aa3ed486b784e24e0095fce4e801438561",
+        "completion_entry_hash": "sha256:b56c5993b918cae7c4784da47dee48edd77df8b8d694741eecb4a0a29b1341dd",
+        "completion_entry_id": "OVR-000140",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D11"
+      },
+      {
+        "card_sha256": "sha256:69c442de7a6948d9a5e44d3a031ed536c892cfa8bbdc0b7f84b872ef8134075b",
+        "completion_entry_hash": "sha256:2d7e2f6500baaae317043be97e1850d5b0ba11efa60044fbd9c13db70514abe2",
+        "completion_entry_id": "OVR-000222",
+        "integrated_head": "e5535033d8f1886271d827ddeed4662196410cdf",
+        "workstream_id": "CC-021"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Hand-author exactly two private fixture-local logical JSON answer-key members, tbox-expectations.json and ret-000-ret-010.json, plus one canonical verification report and one fixed oracle validation test. Bind the approved Small Shop oracle decision, accepted OD-002, OD-003, OD-005, OD-006, OD-008, OD-010, and OD-011, OKG-FX001, and completed CC-021 inputs. Never generate or export these bytes from LinkML, OntologyRegistry, compiler or runtime code, GraphRecipe, protocol state, or implementation. They are independently hand-authored test-only evidence, never compiler input, and define no public format or compatibility contract. Own only baseline ACCEPT; description-only ACCEPT with source DIFFERENT and semantic SAME; root-instances atomic REFUSE; ontology-only zero population and zero ProposedOperation values; accepted e27, O1, and X1; X1-to-X lookup; normalized fixture-derived time; logical O1, X1, and ORDER_CONTAINS_UNIT; passive exact review; closed derivation; and retained Event-correlation RED. Exclude a full imported-fact oracle, public tokens, mappings, transformations, final identities, public ABox, recipes, operation bytes or ordering, compiler or runtime implementation, staging, protocol, ledger, knowledge graph, replay, journal mutation, corpus or checksum publication, package, release, selection, integration, and all CC-R work.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "TREE",
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-022.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_small_shop_fixture_oracle.py"
+    }
+  ],
+  "workstream_id": "CC-022"
+}

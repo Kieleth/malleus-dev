@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d9aaa8eb722d55cb42b65f045218ec9cd677267cae0be9341a6ddc705c1f0685",
+        "before_digest": "sha256:2fcef3a7d4ec27b5415580be8701b4105198227d759b0822d3a76abf2a65f0d8",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:1961f50b334575c659db189422b59467f705a4f018a3fcddd2037e0eb5f5aec5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-022-activation.json"
+      },
+      {
+        "after_digest": "sha256:973acec2cc226301bb3a308d76abfa92c3c6c077e8da376bbe236308064c7baa",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/manifest.json"
+      },
+      {
+        "after_digest": "sha256:b4a517c63cbe542859d415d4d182d851ad355428ba41dc77f412eba8a47b84fb",
+        "before_digest": "sha256:e3bf6bf262106bfe1eabab49384e9096d958fe3408f3c62e7c3fc9a0fdb22f46",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:61dbd58b0d6bf28b11647582762434ea3a8822069425d66f3a0c29283ba4b83b",
+  "entry_id": "OVR-000223",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2d7e2f6500baaae317043be97e1850d5b0ba11efa60044fbd9c13db70514abe2",
+  "recorded_at": "2026-08-29T08:05:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-022/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:1961f50b334575c659db189422b59467f705a4f018a3fcddd2037e0eb5f5aec5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-022-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "453e01fba105fd97cabef6c2b99777a2ade39538",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 223,
+  "subject": {
+    "id": "cc022-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Activate the independent Small Shop answer-key boundary.",
+  "why": "The operator approved private fixture-local logical JSON as independently hand-authored test evidence with no public compatibility contract and no compiler consumption. This transaction binds that exact decision, nine complete dependencies, strict input-oracle owner separation, and an empty three-scope worker boundary before any answer-key byte is authored."
+}

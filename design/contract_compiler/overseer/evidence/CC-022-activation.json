@@ -1,0 +1,74 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:d9aaa8eb722d55cb42b65f045218ec9cd677267cae0be9341a6ddc705c1f0685"
+    },
+    {
+      "byte_length": 5590,
+      "path": "design/contract_compiler/workstreams/CC-022/manifest.json",
+      "sha256": "sha256:973acec2cc226301bb3a308d76abfa92c3c6c077e8da376bbe236308064c7baa"
+    },
+    {
+      "byte_length": 124907,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:b4a517c63cbe542859d415d4d182d851ad355428ba41dc77f412eba8a47b84fb"
+    }
+  ],
+  "base_commit": "453e01fba105fd97cabef6c2b99777a2ade39538",
+  "checks": [
+    {
+      "check_id": "cc022-activation-red",
+      "method": "Run `.venv/bin/pytest -q tests/test_contract_compiler_integration.py::test_small_shop_oracle_activation_boundary_is_exact tests/test_contract_compiler_integration.py::test_small_shop_oracle_activation_report_binds_operator_decision tests/test_contract_compiler_integration.py::test_small_shop_oracle_activation_transaction_is_exact` before creating the card, report, or entries.",
+      "observed": "The command exited 1 with exactly three failures in 0.23s: the CC-022 row was ABSENT, the activation report was absent, and OVR-000223 through OVR-000225 were absent. Completed input, absent oracle content, paused controls, absent CC-R09, and operator-decision controls passed before those failures.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-dependency-readiness",
+      "method": "Resolve every direct dependency in program order to its current card digest, active COMPLETE entry ID and hash, and first authority commit.",
+      "observed": "CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-D10, CC-D11, and CC-021 are PRESENT and COMPLETE. All nine exact bindings validate, including CC-021 completion OVR-000222 at first authority commit e5535033d8f1886271d827ddeed4662196410cdf.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-journal-decision-binding",
+      "method": "Inspect the exact operator-decision commit, tree, diff, journal sequence, decision key, and retained head hash.",
+      "observed": "Commit 453e01fba105fd97cabef6c2b99777a2ade39538 has tree cb56d2f0079c8cfc4eff5b3fe42b7737fdb5346f and changes exactly four Small Shop charter and journal paths. Journal decision 5 is small_shop_oracle_representation and retains head sha256:1b16128d623cc7b1348f98f636be83d7a1514011b63d112ad09dbb3946564d61. It approves private fixture-local logical JSON, independent hand authorship, no compiler consumption, and no public compatibility contract.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-oracle-boundary",
+      "method": "Compare the assignment, responsibility, and exact three scopes with the approved decision, accepted ontology decisions, OKG-FX001, and completed controlled inputs.",
+      "observed": "CC-022 owns only the Small Shop oracle prefix, canonical CC-022 report, and fixed oracle test. Its responsibility fixes exactly two private logical answer-key members and the approved ACCEPT, REFUSE, identity-relation, temporal, passive-review, closed-evidence, and retained Event-correlation RED meanings while excluding public and implementation artifacts.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-owner-separation",
+      "method": "Verify the unchanged canonical owner-separation policy and compare the CC-021 input owner, CC-022 oracle owner, and future CC-R09 boundary.",
+      "observed": "The existing CC-021/CC-022 and CC-022/CC-R09 pairs remain exact. worker:cc022-small-shop-oracle differs from worker:cc021-small-shop-inputs, and CC-R09 remains absent and unassigned.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-kiss-activation",
+      "method": "Inspect the exact card, keyed integration delta, scopes, candidate, worker-ledger pointer, selections, and filesystem before content production.",
+      "observed": "Only the CC-022 ABSENT card pointer changes in integration revision 2. Candidate is NONE, ledger is NOT_STARTED, and selection is absent. The oracle prefix, canonical worker report, and fixed worker test remain absent. No answer-key, full-fact, public-format, mapping, compiler, runtime, protocol, graph, replay, corpus, package, release, or CC-R byte is created.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-adjacent-state",
+      "method": "Compare all other keyed registry rows and integration fields with the exact decision base and project current workstream states.",
+      "observed": "All 68 non-CC-022 rows, four selections, 15 owner-separation pairs, authority, reserved scopes, revision, and schema are unchanged. CC-021 remains COMPLETE; CC-012, CC-014, and CC-016 remain PAUSED; CC-R09 remains ABSENT. No paused oracle is resumed and no corpus or compiler runway workstream changes state.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This activation creates no oracle bytes, complete imported-fact answer key, worker report, worker test, candidate, worker ledger, selection, or completion claim.",
+    "The private logical JSON is test evidence only. It defines no public format, compatibility contract, public ABox encoding, final identifier, diagnostic, or artifact wire grammar.",
+    "No compiler or runtime implementation, mapping, transformation, identity, GraphRecipe, ProposedOperation, staging, protocol, ledger, knowledge graph, or replay behavior is implemented or claimed.",
+    "CC-R09 remains absent and no compiler runway or paused oracle workstream resumes in this transaction.",
+    "corpus membership, checksums, package, release, and publication remain later reviewed integration-owner work."
+  ],
+  "recorded_at": "2026-08-29T08:05:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-022"
+}

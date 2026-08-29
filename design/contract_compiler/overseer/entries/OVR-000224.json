@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "cc022-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T08:05:02Z",
+    "claims": [
+      "All nine direct CC-022 dependencies are PRESENT and COMPLETE and bind current card digests, active completion entries and hashes, and first authority commits in exact program order.",
+      "Operator decision commit 453e01fba105fd97cabef6c2b99777a2ade39538 and tree cb56d2f0079c8cfc4eff5b3fe42b7737fdb5346f contain exactly four decision paths and the fifth journal decision at head sha256:1b16128d623cc7b1348f98f636be83d7a1514011b63d112ad09dbb3946564d61.",
+      "CC-022 owns exactly one empty oracle prefix, one absent canonical report, and one absent fixed test for two hand-authored private fixture-local logical JSON members.",
+      "The existing CC-021/CC-022 and CC-022/CC-R09 owner-separation pairs remain exact, and the assigned CC-022 owner differs from the completed CC-021 input owner.",
+      "Candidate remains NONE, worker ledger remains NOT_STARTED, selection remains absent, and no oracle content, public format, compiler or runtime, realization, protocol, graph, replay, corpus, package, release, or CC-R byte is created.",
+      "CC-021 remains COMPLETE; CC-012, CC-014, and CC-016 remain PAUSED; CC-R09 remains ABSENT; no existing workstream is resumed or otherwise changes state."
+    ],
+    "limitations": [
+      "This verifies activation and boundary integrity only. It does not implement or complete CC-022.",
+      "The assigned worker must hand-author the two answer-key members through genuine TDD and may not derive them from implementation output.",
+      "Full imported facts, public encoding, compiler and runtime behavior, CC-R09, paused-oracle resumption, and corpus publication remain outside this transaction."
+    ]
+  },
+  "entry_hash": "sha256:97dcd183b2248149b57a24bc573a11f0db8cf5cbe17e139cd031121bda3bfd97",
+  "entry_id": "OVR-000224",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:61dbd58b0d6bf28b11647582762434ea3a8822069425d66f3a0c29283ba4b83b",
+  "recorded_at": "2026-08-29T08:05:02Z",
+  "references": [
+    {
+      "digest": "sha256:1961f50b334575c659db189422b59467f705a4f018a3fcddd2037e0eb5f5aec5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-022-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000223",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "453e01fba105fd97cabef6c2b99777a2ade39538",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 224,
+  "subject": {
+    "id": "cc022-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact Small Shop answer-key activation boundary.",
+  "why": "Formal oracle activation requires retained mechanical proof that accepted decisions and completed inputs are exact, input and oracle owners remain separate, scopes are empty and nonoverlapping, and no implementation output or downstream authority enters the independent answer key."
+}

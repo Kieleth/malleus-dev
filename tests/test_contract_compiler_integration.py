@@ -41,8 +41,17 @@ SMALL_SHOP_PROVISIONAL_TREE = "ae4a2468683ad681a96a66a4ef0a0005ebe510fb"
 SMALL_SHOP_AUTHORITY_COMMIT = "f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6"
 SMALL_SHOP_CANDIDATE_COMMIT = "39f41544ff47c60663d1eed7b4ec8959165f37e4"
 SMALL_SHOP_CANDIDATE_TREE = "4d50c14af6dd0f4c84dbd89c6407b02711d3bb35"
+SMALL_SHOP_INPUT_COMPLETION_COMMIT = "e5535033d8f1886271d827ddeed4662196410cdf"
+SMALL_SHOP_ORACLE_DECISION_COMMIT = "453e01fba105fd97cabef6c2b99777a2ade39538"
+SMALL_SHOP_ORACLE_DECISION_TREE = "cb56d2f0079c8cfc4eff5b3fe42b7737fdb5346f"
+SMALL_SHOP_ORACLE_DECISION_HASH = (
+    "sha256:1b16128d623cc7b1348f98f636be83d7a1514011b63d112ad09dbb3946564d61"
+)
 SMALL_SHOP_INPUT_ROOT = (
     "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input"
+)
+SMALL_SHOP_ORACLE_ROOT = (
+    "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle"
 )
 SMALL_SHOP_CANDIDATE_PATHS = {
     "conformance/contract_compiler/v0/evidence/CC-021.json",
@@ -72,6 +81,25 @@ SMALL_SHOP_RESPONSIBILITY = (
     "state, replay receipts, or research-journal findings. Create no CC-022 oracle "
     "or CC-R work, corpus or checksum publication, public API, package, Docker, or "
     "release change."
+)
+SMALL_SHOP_ORACLE_RESPONSIBILITY = (
+    "Hand-author exactly two private fixture-local logical JSON answer-key members, "
+    "tbox-expectations.json and ret-000-ret-010.json, plus one canonical verification "
+    "report and one fixed oracle validation test. Bind the approved Small Shop oracle "
+    "decision, accepted OD-002, OD-003, OD-005, OD-006, OD-008, OD-010, and OD-011, "
+    "OKG-FX001, and completed CC-021 inputs. Never generate or export these bytes from "
+    "LinkML, OntologyRegistry, compiler or runtime code, GraphRecipe, protocol state, or "
+    "implementation. They are independently hand-authored test-only evidence, never "
+    "compiler input, and define no public format or compatibility contract. Own only "
+    "baseline ACCEPT; description-only ACCEPT with source DIFFERENT and semantic SAME; "
+    "root-instances atomic REFUSE; ontology-only zero population and zero "
+    "ProposedOperation values; accepted e27, O1, and X1; X1-to-X lookup; normalized "
+    "fixture-derived time; logical O1, X1, and ORDER_CONTAINS_UNIT; passive exact review; "
+    "closed derivation; and retained Event-correlation RED. Exclude a full imported-fact "
+    "oracle, public tokens, mappings, transformations, final identities, public ABox, "
+    "recipes, operation bytes or ordering, compiler or runtime implementation, staging, "
+    "protocol, ledger, knowledge graph, replay, journal mutation, corpus or checksum "
+    "publication, package, release, selection, integration, and all CC-R work."
 )
 
 
@@ -466,7 +494,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
     }
-    assert len(state.cards) == 31
+    assert len(state.cards) == 32
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -1241,7 +1269,7 @@ def test_small_shop_input_completion_boundary_is_exact() -> None:
     )
     assert set(touched) == SMALL_SHOP_CANDIDATE_PATHS
 
-    assert _registry_row(manifest, "CC-022")["card"] == {"state": "ABSENT"}
+    assert _registry_row(manifest, "CC-022")["card"]["state"] == "PRESENT"
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
 
 
@@ -1786,7 +1814,16 @@ def test_cc021_completion_evidence_and_worker_chain_are_exact() -> None:
         "design/contract_compiler/workstreams/CC-021/manifest.json",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{SMALL_SHOP_INPUT_COMPLETION_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert all(check["result"] == "PASS" for check in report["checks"])
@@ -1916,7 +1953,7 @@ def test_cc021_completion_transaction_is_exact() -> None:
     }
 
 
-def test_cc021_completion_preserves_paused_oracles_and_future_absence() -> None:
+def test_cc021_completion_preserves_paused_controls_and_future_implementation() -> None:
     manifest = _read_json(INTEGRATION)
     states, _ = integration_module._workstream_states(_raw_overseer_state())
 
@@ -1924,8 +1961,313 @@ def test_cc021_completion_preserves_paused_oracles_and_future_absence() -> None:
     assert states["CC-012"] == "PAUSED"
     assert states["CC-014"] == "PAUSED"
     assert states["CC-016"] == "PAUSED"
-    assert _registry_row(manifest, "CC-022")["card"] == {"state": "ABSENT"}
+    oracle_row = _registry_row(manifest, "CC-022")
+    oracle_card = _read_json(CONTRACT / oracle_row["card"]["path"])
+    assert oracle_row["card"]["state"] == "PRESENT"
+    assert oracle_card["candidate"] == {"state": "NONE"}
+    assert oracle_card["ledger"] == {"state": "NOT_STARTED"}
+    assert states["CC-022"] == "ACTIVE"
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+
+
+def test_small_shop_oracle_activation_boundary_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    prior_manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ORACLE_DECISION_COMMIT}:design/contract_compiler/integration.json",
+        )
+    )
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    oracle_paths = (
+        ROOT / SMALL_SHOP_ORACLE_ROOT,
+        ROOT / "conformance/contract_compiler/v0/evidence/CC-022.json",
+        ROOT / "tests/contract_compiler/test_small_shop_fixture_oracle.py",
+    )
+
+    assert len(manifest["workstreams"]) == 69
+    assert manifest["revision"] == 2
+    assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
+    assert states["CC-021"] == "COMPLETE"
+    assert states["CC-012"] == states["CC-014"] == states["CC-016"] == "PAUSED"
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+    assert all(not path.exists() for path in oracle_paths)
+    assert {
+        row["workstream_id"]: row
+        for row in manifest["workstreams"]
+        if row["workstream_id"] != "CC-022"
+    } == {
+        row["workstream_id"]: row
+        for row in prior_manifest["workstreams"]
+        if row["workstream_id"] != "CC-022"
+    }
+    for key in (
+        "authority",
+        "canonicalization",
+        "owner_separations",
+        "program_id",
+        "reserved_scopes",
+        "revision",
+        "schema",
+        "selections",
+    ):
+        assert manifest[key] == prior_manifest[key]
+
+    row = _registry_row(manifest, "CC-022")
+    assert row["card"]["state"] == "PRESENT"
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-022/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    card = _read_json(card_path)
+    assert card["assignment"] == {
+        "owner_id": "worker:cc022-small-shop-oracle",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc022_small_shop_oracle",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == (
+        "CC-010",
+        "CC-D02",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D08",
+        "CC-D10",
+        "CC-D11",
+        "CC-021",
+    )
+    assert card["scopes"] == [
+        {"kind": "TREE", "path": SMALL_SHOP_ORACLE_ROOT},
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-022.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_small_shop_fixture_oracle.py",
+        },
+    ]
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["responsibility"] == SMALL_SHOP_ORACLE_RESPONSIBILITY
+    assert states["CC-022"] == "ACTIVE"
+    assert "CC-022" not in manifest["selections"]
+
+    cards = {
+        workstream_id: _read_json(
+            CONTRACT / _registry_row(manifest, workstream_id)["card"]["path"]
+        )
+        for workstream_id in ("CC-021", "CC-022")
+    }
+    assert (
+        cards["CC-021"]["assignment"]["owner_id"]
+        != (cards["CC-022"]["assignment"]["owner_id"])
+    )
+    assert {tuple(edge.values()) for edge in manifest["owner_separations"]} >= {
+        ("CC-021", "CC-022"),
+        ("CC-022", "CC-R09"),
+    }
+
+
+def test_small_shop_oracle_activation_report_binds_operator_decision() -> None:
+    decision_paths = {
+        "research/ontology_driven_kg_realization/experiments/small_shop/CHARTER.md",
+        "research/ontology_driven_kg_realization/experiments/small_shop/journal.jsonl",
+        "research/ontology_driven_kg_realization/experiments/small_shop/journal.py",
+        "research/ontology_driven_kg_realization/experiments/small_shop/test_journal.py",
+    }
+    assert _git(ROOT, "rev-parse", f"{SMALL_SHOP_ORACLE_DECISION_COMMIT}^{{tree}}") == (
+        SMALL_SHOP_ORACLE_DECISION_TREE
+    )
+    assert (
+        set(
+            _git(
+                ROOT,
+                "diff-tree",
+                "--no-commit-id",
+                "--name-only",
+                "-r",
+                SMALL_SHOP_ORACLE_DECISION_COMMIT,
+            ).splitlines()
+        )
+        == decision_paths
+    )
+    journal = [
+        json.loads(line)
+        for line in (
+            ROOT
+            / "research/ontology_driven_kg_realization/experiments/small_shop/journal.jsonl"
+        )
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert len(journal) == 5
+    assert journal[-1]["sequence"] == 5
+    assert journal[-1]["record_hash"] == SMALL_SHOP_ORACLE_DECISION_HASH
+    assert journal[-1]["payload"]["decision_key"] == (
+        "small_shop_oracle_representation"
+    )
+
+    report_path = CONTRACT / "overseer/evidence/CC-022-activation.json"
+    report = _read_json(report_path)
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-022"
+    assert report["base_commit"] == SMALL_SHOP_ORACLE_DECISION_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-022/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    checks = {check["check_id"]: check for check in report["checks"]}
+    assert set(checks) == {
+        "cc022-activation-red",
+        "cc022-dependency-readiness",
+        "cc022-journal-decision-binding",
+        "cc022-oracle-boundary",
+        "cc022-owner-separation",
+        "cc022-kiss-activation",
+        "cc022-adjacent-state",
+    }
+    assert all(check["result"] == "PASS" for check in checks.values())
+    assert (
+        SMALL_SHOP_ORACLE_DECISION_COMMIT
+        in checks["cc022-journal-decision-binding"]["observed"]
+    )
+    assert (
+        SMALL_SHOP_ORACLE_DECISION_TREE
+        in checks["cc022-journal-decision-binding"]["observed"]
+    )
+    assert (
+        SMALL_SHOP_ORACLE_DECISION_HASH
+        in checks["cc022-journal-decision-binding"]["observed"]
+    )
+    assert all(
+        any(term in limitation for limitation in report["limitations"])
+        for term in ("oracle bytes", "public format", "compiler", "CC-R09", "corpus")
+    )
+
+    decision_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", SMALL_SHOP_ORACLE_DECISION_COMMIT)
+    )
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    assert report_time > decision_time
+
+
+def test_small_shop_oracle_activation_transaction_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    assert states["CC-021"] == "COMPLETE"
+    assert states["CC-012"] == states["CC-014"] == states["CC-016"] == "PAUSED"
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 223 <= entry["sequence"] <= 225
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000223",
+        "OVR-000224",
+        "OVR-000225",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "cc022-activation-boundary",
+        "cc022-activation-verification",
+        "CC-022",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-022"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-022-activation.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-022/manifest.json": "CREATED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    report_path = CONTRACT / "overseer/evidence/CC-022-activation.json"
+    report_digest = _digest(report_path.read_bytes())
+    assert (
+        next(
+            reference
+            for reference in revision["references"]
+            if reference["type"] == "EVIDENCE"
+        )["digest"]
+        == report_digest
+    )
+    assert {
+        (reference["relation"], reference["type"], reference["target"])
+        for reference in revision["references"]
+    } >= {
+        ("EVIDENCES", "COMMIT", SMALL_SHOP_ORACLE_DECISION_COMMIT),
+        ("IMPLEMENTS", "WORKSTREAM", "CC-022"),
+    }
+    assert verification["actor"] == {
+        "id": "cc022-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert {
+        (reference["relation"], reference["type"], reference["target"])
+        for reference in verification["references"]
+    } >= {
+        ("EVIDENCES", "ENTRY", "OVR-000223"),
+        ("EVIDENCES", "COMMIT", SMALL_SHOP_ORACLE_DECISION_COMMIT),
+        ("AFFECTS", "WORKSTREAM", "CC-022"),
+    }
+    assert activation["data"]["workstream_id"] == "CC-022"
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is True
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000223",
+        "OVR-000224",
+    ]
+    assert activation["data"]["deliverables"] == [
+        "Hand-author exactly tbox-expectations.json and ret-000-ret-010.json as private fixture-local logical JSON answer-key evidence.",
+        "Bind the approved operator decision, accepted ontology decisions, OKG-FX001, and completed controlled Small Shop inputs without consuming implementation output.",
+        "Keep the oracle test-only and non-public; create no compiler input, mapping, recipe, operation, protocol, ledger, knowledge graph, replay, corpus, package, release, integration, or CC-R bytes.",
+    ]
+
+    report = _read_json(report_path)
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 225
+    assert head["head_entry_id"] == "OVR-000225"
+    assert head["head_hash"] == activation["entry_hash"]
 
 
 def test_small_shop_reanchor_preserves_adjacent_authority() -> None:
@@ -2891,6 +3233,18 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-D11"]["card_sha256"] = d11_digest
 
     _rewrite_card(manifest_path, manifest, "CC-021", rebind_small_shop_input)
+    cc021_digest = _registry_row(manifest, "CC-021")["card"]["sha256"]
+
+    def rebind_small_shop_oracle(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-D11"]["card_sha256"] = d11_digest
+        bindings["CC-021"]["card_sha256"] = cc021_digest
+
+    _rewrite_card(manifest_path, manifest, "CC-022", rebind_small_shop_oracle)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 
