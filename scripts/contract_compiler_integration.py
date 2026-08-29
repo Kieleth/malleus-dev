@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import subprocess
 import sys
@@ -294,10 +295,11 @@ def _git(
     text: bool = True,
 ) -> subprocess.CompletedProcess[Any]:
     return subprocess.run(
-        ["git", *arguments],
+        ["git", "--no-replace-objects", *arguments],
         cwd=repository,
         capture_output=True,
         check=False,
+        env={**os.environ, "GIT_GRAFT_FILE": os.devnull},
         text=text,
     )
 

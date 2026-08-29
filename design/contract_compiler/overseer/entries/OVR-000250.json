@@ -1,0 +1,20 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"affected_subject_ids": ["cc012-candidate-clean-base-hardening", "CC-000", "CC-012"], "replacement_required": true, "supersedes_entry_id": "OVR-000248"},
+  "entry_hash": "sha256:abb238f9a04feb3ecbdc7181a3acbbef04874173ae3d4c867ff256a38068a394",
+  "entry_id": "OVR-000250",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:84cab327bed43774293198b9261803b738f7ec8c2eb5bce6bbfea6f1e225c715",
+  "recorded_at": "2026-08-29T19:20:00Z",
+  "references": [
+    {"relation": "SUPERSEDES", "target": "OVR-000248", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 250,
+  "subject": {"id": "cc012-candidate-clean-base-hardening", "type": "EVIDENCE"},
+  "summary": "Replace the incomplete historical-object identity fact.",
+  "why": "OVR-000248 claimed exact historical path continuity while candidate-admission Git reads still honored repository-local replacement references and legacy grafts. A replacement fact must prove that admission reads the trusted object store without those overlays."
+}

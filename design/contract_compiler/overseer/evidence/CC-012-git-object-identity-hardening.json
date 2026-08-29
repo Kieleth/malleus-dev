@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 52088,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:611e14112663e97850400020f57d9dfafbabb1ca2f67f876a8996d9b5aa828f0"
+    },
+    {
+      "byte_length": 198230,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:caca568a6c8a92a9f183049e8de4440d656a65b4d8d863593d6908df6336d4de"
+    }
+  ],
+  "base_commit": "1d17a613940a26fac70debbecbf6fab29e318cf7",
+  "checks": [
+    {
+      "check_id": "cc012-git-identity-red",
+      "method": "Run the isolated replacement-reference regression before production hardening.",
+      "observed": "The relocated frozen historical card was accepted, producing the required RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-replacement-ref-refusal",
+      "method": "Repeat the replacement-reference attack through the centralized Git runner after hardening.",
+      "observed": "The relocated historical path refused with CC000_CANDIDATE_LEGACY.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-graft-overlay-refusal",
+      "method": "Install a legacy info/grafts parent overlay and inspect history through the centralized Git runner.",
+      "observed": "The authentic parent remained visible because graft lookup used the null device.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-normal-history",
+      "method": "Run unchanged and ELIGIBLE to INTEGRATED frozen-snapshot controls against ordinary history.",
+      "observed": "Both valid frozen candidate forms passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-admission-controls",
+      "method": "Run historical relocation, root-authority, frozen-continuity, and clean-base refusal tests.",
+      "observed": "All adjacent admission controls passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-content-boundary",
+      "method": "Inspect the authorized diff and current Quiet Bell candidate state.",
+      "observed": "No oracle, fixture, candidate, compiler semantic, or adjacent workstream content changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This proves deterministic local admission against the trusted Git object store with replacement and graft overlays disabled. It is not external attestation or remote-repository identity.",
+    "This does not prove information-flow security or authenticate objects outside the trusted repository.",
+    "The hardening changes no global environment, Git configuration, replacement reference, graft file, oracle content, candidate, compiler semantic, runtime, fixture, package, release, selection, or public contract."
+  ],
+  "recorded_at": "2026-08-29T19:20:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

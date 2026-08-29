@@ -1,0 +1,35 @@
+{
+  "actor": {"id": "cc012-git-object-identity-verifier", "type": "MECHANICAL"},
+  "data": {
+    "as_of": "2026-08-29T19:20:04Z",
+    "claims": [
+      "A clean-clone replacement reference that preserves exact OVR-000240 bytes but relocates the historical card path refuses with CC000_CANDIDATE_LEGACY.",
+      "Every centralized candidate-admission Git command disables replacement objects and redirects legacy graft lookup to the null device without mutating repository or global configuration.",
+      "Normal exact frozen snapshots and ELIGIBLE to INTEGRATED progression continue to pass.",
+      "Historical path relocation, root-authority, frozen-continuity, and clean-base controls remain enforced.",
+      "Quiet Bell remains content-free, Small Shop contributes process learning only, and execution remains Quiet Bell then Greenhouse then compiler edge cases."
+    ],
+    "limitations": [
+      "This verifies local admission against the trusted Git object store, not external attestation or remote-repository identity.",
+      "This is not an information-flow proof and does not authenticate objects outside the trusted repository.",
+      "This creates no oracle content, candidate, compiler semantic, runtime, fixture, package, release, selection, or public contract."
+    ]
+  },
+  "entry_hash": "sha256:469d179e93beb88c9061da252dde89d8e04e826a440207f860dee400099c09fc",
+  "entry_id": "OVR-000253",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:091b6648414ecc4ac2972d293032ffefe41a222807fa30a9e04904dba49c8772",
+  "recorded_at": "2026-08-29T19:20:04Z",
+  "references": [
+    {"digest": "sha256:d5dc03b65662498884ef1e3a5569a9f39d28064ebda0c60846164566fda4cde3", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-012-git-object-identity-hardening.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "OVR-000252", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 253,
+  "subject": {"id": "cc012-candidate-clean-base-hardening", "type": "EVIDENCE"},
+  "summary": "Verify deterministic local Git object identity for candidate admission.",
+  "why": "The hardening report and OVR-000252 prove that repository-local object and ancestry overlays cannot redefine the historical policy bytes used by candidate admission while ordinary history remains compatible."
+}

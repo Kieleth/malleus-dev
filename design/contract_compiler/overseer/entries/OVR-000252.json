@@ -1,0 +1,33 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {
+    "affected_ids": ["CC-000", "CC-012"],
+    "documents": [
+      {"after_digest": "sha256:d5dc03b65662498884ef1e3a5569a9f39d28064ebda0c60846164566fda4cde3", "change": "CREATED", "path": "design/contract_compiler/overseer/evidence/CC-012-git-object-identity-hardening.json"},
+      {"after_digest": "sha256:611e14112663e97850400020f57d9dfafbabb1ca2f67f876a8996d9b5aa828f0", "before_digest": "sha256:f9712b74ffabb1d061aefc0fb15f996917566fb0bcea477cf1a2132ca016fd1f", "change": "MODIFIED", "path": "scripts/contract_compiler_integration.py"},
+      {"after_digest": "sha256:caca568a6c8a92a9f183049e8de4440d656a65b4d8d863593d6908df6336d4de", "before_digest": "sha256:772ee7598e588263404876b774d69cf374b2d9f888fd0dcc6394170ed092065f", "change": "MODIFIED", "path": "tests/test_contract_compiler_integration.py"}
+    ]
+  },
+  "entry_hash": "sha256:091b6648414ecc4ac2972d293032ffefe41a222807fa30a9e04904dba49c8772",
+  "entry_id": "OVR-000252",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fd42f3430158094e5beaeec41089aa1aecad779ceeda1d7733b38c867b40b13e",
+  "recorded_at": "2026-08-29T19:20:03Z",
+  "references": [
+    {"relation": "DEFINES", "target": "design/contract_compiler/overseer/evidence/CC-012-git-object-identity-hardening.json", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "scripts/contract_compiler_integration.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_contract_compiler_integration.py", "type": "DOCUMENT"},
+    {"digest": "sha256:d5dc03b65662498884ef1e3a5569a9f39d28064ebda0c60846164566fda4cde3", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-012-git-object-identity-hardening.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "1d17a613940a26fac70debbecbf6fab29e318cf7", "type": "COMMIT"},
+    {"relation": "EVIDENCES", "target": "OVR-000250", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000251", "type": "ENTRY"},
+    {"relation": "IMPLEMENTS", "target": "CC-000", "type": "WORKSTREAM"},
+    {"relation": "IMPLEMENTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 252,
+  "subject": {"id": "cc012-git-object-identity-hardening", "type": "DOCUMENT"},
+  "summary": "Bind deterministic Git object identity for candidate admission.",
+  "why": "Every candidate-admission Git command must read ordinary object history independent of repository-local replacement references and legacy graft overlays, while leaving repository configuration and overlay files untouched."
+}

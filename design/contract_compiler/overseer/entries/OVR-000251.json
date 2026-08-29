@@ -1,0 +1,19 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"affected_subject_ids": ["CC-012"], "replacement_required": true, "supersedes_entry_id": "OVR-000249"},
+  "entry_hash": "sha256:fd42f3430158094e5beaeec41089aa1aecad779ceeda1d7733b38c867b40b13e",
+  "entry_id": "OVR-000251",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:abb238f9a04feb3ecbdc7181a3acbbef04874173ae3d4c867ff256a38068a394",
+  "recorded_at": "2026-08-29T19:20:01Z",
+  "references": [
+    {"relation": "SUPERSEDES", "target": "OVR-000249", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-012", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 251,
+  "subject": {"id": "CC-012", "type": "WORKSTREAM"},
+  "summary": "Replace the activation dependent on incomplete Git identity evidence.",
+  "why": "OVR-000249 depends on superseded OVR-000248. Quiet Bell must return to ACTIVE only after replacement evidence proves replacement-reference and graft-overlay refusal."
+}

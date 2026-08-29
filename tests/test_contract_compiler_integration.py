@@ -58,6 +58,7 @@ QUIET_BELL_REACTIVATION_ENTRY = "OVR-000236"
 QUIET_BELL_AUTHORITY_HARDENING_COMMIT = "cba6de054bfc1241460998b8744efe02adce9ae4"
 QUIET_BELL_AUTHORITY_HARDENING_ENTRY = "OVR-000240"
 QUIET_BELL_CLEAN_BASE_HARDENING_COMMIT = "1afaef29ad20ec503721488c9edbef3bfdadbb18"
+QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT = "1d17a613940a26fac70debbecbf6fab29e318cf7"
 QUIET_BELL_DEPENDENCIES = (
     "CC-010",
     "CC-D02",
@@ -2375,7 +2376,16 @@ def test_quiet_bell_candidate_clean_base_closure_report_is_exact() -> None:
         "tests/test_contract_compiler_integration.py",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert {check["check_id"] for check in report["checks"]} == {
@@ -2438,7 +2448,7 @@ def test_quiet_bell_candidate_clean_base_closure_transaction_is_exact() -> None:
     )
     superseded = integration_module.superseded_entries(entries)
     assert {"OVR-000243", "OVR-000244"} <= superseded
-    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    states, state_entries = integration_module._workstream_states(_overseer_prefix(249))
     assert states["CC-012"] == "ACTIVE"
     assert state_entries["CC-012"]["entry_id"] == "OVR-000249"
 
@@ -2452,9 +2462,104 @@ def test_quiet_bell_candidate_clean_base_closure_transaction_is_exact() -> None:
         for entry in transaction
     )
     assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT}:design/contract_compiler/"
+            "overseer/head.json",
+        )
+    )
     assert head["entry_count"] == 249
     assert head["head_entry_id"] == "OVR-000249"
+    assert head["head_hash"] == activation["entry_hash"]
+
+
+def test_quiet_bell_git_object_identity_report_is_exact() -> None:
+    report = _read_json(
+        CONTRACT / "overseer/evidence/CC-012-git-object-identity-hardening.json"
+    )
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "scripts/contract_compiler_integration.py",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    assert {check["check_id"] for check in report["checks"]} == {
+        "cc012-git-identity-red",
+        "cc012-replacement-ref-refusal",
+        "cc012-graft-overlay-refusal",
+        "cc012-normal-history",
+        "cc012-admission-controls",
+        "cc012-content-boundary",
+    }
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any("trusted Git object store" in item for item in report["limitations"])
+    assert any("external attestation" in item for item in report["limitations"])
+
+
+def test_quiet_bell_git_object_identity_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 250 <= entry["sequence"] <= 254)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(250, 255)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "CORRECTION",
+        "CORRECTION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    fact_correction, state_correction, revision, verification, activation = transaction
+    assert fact_correction["data"]["supersedes_entry_id"] == "OVR-000248"
+    assert state_correction["data"]["supersedes_entry_id"] == "OVR-000249"
+    assert fact_correction["data"]["replacement_required"] is True
+    assert state_correction["data"]["replacement_required"] is True
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert verification["actor"] == {
+        "id": "cc012-git-object-identity-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000229",
+        "OVR-000234",
+        "OVR-000235",
+        "OVR-000252",
+        "OVR-000253",
+    ]
+    assert activation["data"]["deliverables"][-1].endswith(
+        "first trusted commit containing OVR-000254."
+    )
+    superseded = integration_module.superseded_entries(entries)
+    assert {"OVR-000248", "OVR-000249"} <= superseded
+    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    assert states["CC-012"] == "ACTIVE"
+    assert state_entries["CC-012"]["entry_id"] == "OVR-000254"
+
+    report_time = datetime.fromisoformat(
+        _read_json(
+            CONTRACT / "overseer/evidence/CC-012-git-object-identity-hardening.json"
+        )["recorded_at"].replace("Z", "+00:00")
+    )
+    times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 254
+    assert head["head_entry_id"] == "OVR-000254"
     assert head["head_hash"] == activation["entry_hash"]
 
 
@@ -4402,7 +4507,7 @@ def test_candidate_authority_uses_latest_active_not_complete_or_superseded() -> 
     )
 
     assert authorities["CC-021"]["entry_id"] == "OVR-000219"
-    assert authorities["CC-012"]["entry_id"] == "OVR-000249"
+    assert authorities["CC-012"]["entry_id"] == "OVR-000254"
     assert {"OVR-000231", "OVR-000240"}.isdisjoint(
         entry["entry_id"] for entry in authorities.values()
     )
@@ -4644,6 +4749,84 @@ def test_frozen_completed_candidate_refuses_historical_card_relocation() -> None
         )
 
     _assert_code(error, "CC000_CANDIDATE_LEGACY")
+
+
+def test_frozen_candidate_ignores_git_replacement_path_relocation(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "replacement"
+    subprocess.run(
+        ["git", "clone", "--shared", str(ROOT), str(repository)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    _git(repository, "checkout", QUIET_BELL_AUTHORITY_HARDENING_COMMIT)
+    manifest_path = repository / "design/contract_compiler/integration.json"
+    manifest = _read_json(manifest_path)
+    row = _registry_row(manifest, "CC-X03")
+    original = manifest_path.parent / row["card"]["path"]
+    relocated = "workstreams/relocated-CC-X03/manifest.json"
+    destination = manifest_path.parent / relocated
+    destination.parent.mkdir(parents=True)
+    shutil.copy2(original, destination)
+    original.unlink()
+    row["card"]["path"] = relocated
+    _write_json(manifest_path, manifest)
+    _git(repository, "add", "-A")
+    replacement_tree = _git(repository, "write-tree")
+    replacement_commit = _git(
+        repository,
+        "commit-tree",
+        replacement_tree,
+        "-p",
+        f"{QUIET_BELL_AUTHORITY_HARDENING_COMMIT}^",
+        "-m",
+        "replacement overlay",
+    )
+    _git(
+        repository,
+        "replace",
+        QUIET_BELL_AUTHORITY_HARDENING_COMMIT,
+        replacement_commit,
+    )
+    cards, card_paths = _current_candidate_cards()
+    card_paths["CC-X03"] = relocated
+
+    with pytest.raises(IntegrationValidationError) as error:
+        integration_module._frozen_legacy_candidate_ids(
+            repository,
+            cards,
+            card_paths,
+            _raw_overseer_state(),
+            "design/contract_compiler/overseer",
+        )
+
+    _assert_code(error, "CC000_CANDIDATE_LEGACY")
+
+
+def test_candidate_git_commands_ignore_legacy_grafts(tmp_path: Path) -> None:
+    repository = tmp_path / "graft"
+    subprocess.run(
+        ["git", "clone", "--shared", str(ROOT), str(repository)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    grafts = repository / ".git/info/grafts"
+    grafts.write_text(QUIET_BELL_AUTHORITY_HARDENING_COMMIT + "\n", encoding="utf-8")
+
+    result = integration_module._git(
+        repository,
+        "rev-list",
+        "--parents",
+        "-n",
+        "1",
+        QUIET_BELL_AUTHORITY_HARDENING_COMMIT,
+    )
+
+    assert result.returncode == 0
+    assert len(result.stdout.split()) == 2
 
 
 @pytest.mark.parametrize("integrated", (False, True), ids=("unchanged", "integrated"))
