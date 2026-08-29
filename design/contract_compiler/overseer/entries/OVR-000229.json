@@ -1,0 +1,104 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e097a1063f5e3ae8af7d4b120e0ea192e1081e4039401d3328deffc79e4edcfa",
+        "before_digest": "sha256:73a50a2589598228af44e3d4260e9e8d79886deb22803a2fff5451b991883d50",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:9f109662db0d5500500f995c2d0ddd1c102754b4819ce56580b243e370364e1a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-012-reactivation.json"
+      },
+      {
+        "after_digest": "sha256:78ce9d5736345880a98b120feb22e1cc40bc61dd8b5491ec4ece5e97ca858bdb",
+        "before_digest": "sha256:8e0e423070b3c0f71ebf156ef13089f96048a862a2b64e85836e02ba475ae753",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-012/manifest.json"
+      },
+      {
+        "after_digest": "sha256:ac18d4978d973f1aa0a9cae4ecbc364330b8a568e8489a0e11987b541c577ed9",
+        "before_digest": "sha256:1b32027c25800e5805da536432aacfb806fd4ffd2762592a344a57218c21e4e4",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:68271378885fed00e918d6355df22a62b965acbe43d63e276c05e43d32d11795",
+  "entry_id": "OVR-000229",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:37f7cacdc881548bfe51a04624d1f9c4fe7fe813455540c7da6a8bc1f542fc9d",
+  "recorded_at": "2026-08-29T16:20:47Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:9f109662db0d5500500f995c2d0ddd1c102754b4819ce56580b243e370364e1a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d56c30f85b92d7452ca126d488bf027b42ee67f5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000211",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000222",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000228",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 229,
+  "subject": {
+    "id": "cc012-reactivation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Reactivate the independent Quiet Bell answer-key boundary.",
+  "why": "The operator selected Quiet Bell first and approved its private fixture-local convention. This transaction binds nine complete dependencies, exact test-only labels, independent hand-authorship, Small Shop process-only separation, and an empty three-scope worker boundary before any answer-key byte is authored."
+}

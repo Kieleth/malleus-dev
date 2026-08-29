@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "cc012-reactivation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T16:20:48Z",
+    "claims": [
+      "The operator authorizes only the Quiet Bell independent answer-key workstream to resume; the neutral-greenhouse and compiler-edge suites remain paused behind separate later authorizations.",
+      "CC-012 binds exactly nine complete dependencies in program order to their current card digests, completion entries and hashes, and required integrated heads.",
+      "The exact worker assignment, three scopes, candidate NONE, ledger NOT_STARTED, schema, workstream ID, and unselected state are unchanged.",
+      "The private fixture-local logical JSON convention is closed to the exact test-only resolver, profile, configuration, media-type, source-blob, ACCEPT or minimal REFUSE outcome, and SAME, DIFFERENT, or NOT_CLAIMED comparison labels.",
+      "The labels are non-public, carry no compatibility contract, are never compiler input, and define no runtime artifact bytes or wire grammar; NOT_CLAIMED is an explicit nonassertion.",
+      "Every expected value must be hand-authored from exact Quiet Bell sources and accepted decisions, never generated or exported from LinkML, OntologyRegistry, or implementation under test, and contradictions must remain RED.",
+      "Small Shop supplies only process, representation, and testing precedent. No Small Shop value, fact, identifier, derivation, cross-oracle dependency, card binding, shared helper, or interface enters CC-012.",
+      "All three CC-012 owned content paths remain absent. CC-014 and CC-016 remain byte-identical BLOCKED cards in PAUSED state, and CC-R09 remains absent."
+    ],
+    "limitations": [
+      "This verification authorizes no oracle content, candidate, worker ledger, selection, completion, compiler, runtime, artifact wire format, corpus integration, package, release, or CC-R work.",
+      "Later answer-key suites require separate reviewed authorization and may reuse only the private representation and testing workflow, never Quiet Bell expected values."
+    ]
+  },
+  "entry_hash": "sha256:72f132510038e56b664348f7760d7c63f92226958594326e443a652237eebf8b",
+  "entry_id": "OVR-000230",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:68271378885fed00e918d6355df22a62b965acbe43d63e276c05e43d32d11795",
+  "recorded_at": "2026-08-29T16:20:48Z",
+  "references": [
+    {
+      "digest": "sha256:9f109662db0d5500500f995c2d0ddd1c102754b4819ce56580b243e370364e1a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000229",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d56c30f85b92d7452ca126d488bf027b42ee67f5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 230,
+  "subject": {
+    "id": "cc012-reactivation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact Quiet Bell answer-key reactivation boundary.",
+  "why": "Formal reactivation requires retained mechanical proof that the fresh dependency bindings, private token vocabulary, independent authorship rule, absence of content, and unchanged adjacent suites match the operator's Quiet Bell-first sequence."
+}

@@ -50,6 +50,54 @@ SMALL_SHOP_ORACLE_DECISION_HASH = (
 SMALL_SHOP_ORACLE_ACTIVATION_COMMIT = "870c993fe2442b40fd1934edbf00003033c591b1"
 SMALL_SHOP_ORACLE_CANDIDATE_COMMIT = "660cb408b0c28785d96731d976e6cbc1aeb9a69c"
 SMALL_SHOP_ORACLE_CANDIDATE_TREE = "cc46360437de6a2ad07d875e4e54404b7e7ce06e"
+QUIET_BELL_ORACLE_ACTIVATION_COMMIT = "c6e3616b292050ae0bbd0be9af40ca83ae9a91d1"
+QUIET_BELL_REACTIVATION_BASE = "d56c30f85b92d7452ca126d488bf027b42ee67f5"
+QUIET_BELL_DEPENDENCIES = (
+    "CC-010",
+    "CC-D02",
+    "CC-D03",
+    "CC-D05",
+    "CC-D06",
+    "CC-D08",
+    "CC-011",
+    "CC-021",
+    "CC-022",
+)
+QUIET_BELL_PRIVATE_TOKENS = (
+    "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0",
+    "TEST_ONLY_LINKML_V0_PROFILE",
+    "TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0",
+    "TEST_ONLY_JSON_SHAPED_YAML",
+    "TEST_ONLY_SOURCE_BLOB_SHA256_<64-lowercase-hex>",
+    "ACCEPT",
+    '{"outcome":"REFUSE"}',
+    "SAME",
+    "DIFFERENT",
+    "NOT_CLAIMED",
+)
+QUIET_BELL_ORACLE_RESPONSIBILITY = (
+    "Author only independently derived themed expected compilation artifacts under "
+    "the exact CC-010 themed_fixture/oracle prefix, using the accepted decisions and "
+    "completed CC-011 sources. Own source descriptors, import graph, declarations, "
+    "bindings, elaboration, facts, logical artifact expectations, one canonical "
+    "verification report, and one fixed oracle validation test. Represent expectations "
+    "only as private fixture-local logical JSON with the closed test-only labels "
+    "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0, TEST_ONLY_LINKML_V0_PROFILE, "
+    "TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0, TEST_ONLY_JSON_SHAPED_YAML, and "
+    "TEST_ONLY_SOURCE_BLOB_SHA256_<64-lowercase-hex>. Allowed outcomes are ACCEPT or "
+    'the minimal {"outcome":"REFUSE"}; allowed comparisons are SAME, DIFFERENT, '
+    "and NOT_CLAIMED, where NOT_CLAIMED is an explicit nonassertion. These labels and "
+    "JSON bytes are test-only, non-public, carry no compatibility contract, are never "
+    "compiler input, and define no runtime artifact bytes or wire grammar. Write every "
+    "oracle by hand from the exact Quiet Bell sources and accepted decisions, never "
+    "generate or export it from LinkML, OntologyRegistry, or the implementation under "
+    "test. The completed Small Shop answer key is process, representation, and testing "
+    "precedent only; use no Small Shop domain values, facts, identifiers, or derivations. "
+    "Do not assume every Quiet Bell source accepts; retain any contradiction as RED. "
+    "Create no source or trace input, runtime artifact bytes or wire grammar, compiler "
+    "or runtime implementation, public API, package, Docker, release, corpus or checksum "
+    "publication, selection, integration, or CC-R work."
+)
 SMALL_SHOP_INPUT_ROOT = (
     "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input"
 )
@@ -362,6 +410,16 @@ def _raw_overseer_state() -> SimpleNamespace:
         for path in sorted((CONTRACT / "overseer" / "entries").glob("*.json"))
     )
     return SimpleNamespace(entries=entries)
+
+
+def _overseer_prefix(sequence: int) -> SimpleNamespace:
+    return SimpleNamespace(
+        entries=tuple(
+            entry
+            for entry in _raw_overseer_state().entries
+            if entry["sequence"] <= sequence
+        )
+    )
 
 
 def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
@@ -923,6 +981,8 @@ def test_input_workstream_activation_boundaries_are_exact(
         "paired_input_id",
         "scopes",
         "required_phrases",
+        "authorization_class",
+        "workstream_state",
     ),
     (
         (
@@ -958,6 +1018,8 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "logical artifact expectations",
                 "Create no source or trace input, runtime artifact bytes or wire grammar",
             ),
+            "FORMAL",
+            "ACTIVE",
         ),
         (
             "CC-014",
@@ -986,6 +1048,8 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "CC-013 inputs",
                 "no input source",
             ),
+            "BLOCKED",
+            "PAUSED",
         ),
         (
             "CC-016",
@@ -1019,6 +1083,8 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "operation outcomes",
                 "no source or operation input",
             ),
+            "BLOCKED",
+            "PAUSED",
         ),
     ),
 )
@@ -1028,6 +1094,8 @@ def test_oracle_workstream_activation_boundaries_are_exact(
     paired_input_id: str,
     scopes: list[dict[str, str]],
     required_phrases: tuple[str, ...],
+    authorization_class: str,
+    workstream_state: str,
 ) -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, workstream_id)
@@ -1051,7 +1119,7 @@ def test_oracle_workstream_activation_boundaries_are_exact(
 
     assert card["workstream_id"] == row["workstream_id"] == workstream_id
     assert card["assignment"] == assignment
-    assert card["authorization"]["class"] == "BLOCKED"
+    assert card["authorization"]["class"] == authorization_class
     assert card["authorization"]["authorized_by"] == {
         "id": "operator",
         "type": "OPERATOR",
@@ -1064,7 +1132,7 @@ def test_oracle_workstream_activation_boundaries_are_exact(
         workstream_states[workstream_id],
         card["candidate"]["state"],
         card["ledger"]["state"],
-    ) == ("PAUSED", "NONE", "NOT_STARTED")
+    ) == (workstream_state, "NONE", "NOT_STARTED")
     assert workstream_id not in manifest["selections"]
     responsibility = card["responsibility"]
     for required in required_phrases + (
@@ -1324,10 +1392,6 @@ def test_small_shop_original_activation_remains_historically_exact() -> None:
     ("workstream_id", "old_blocker"),
     (
         (
-            "CC-012",
-            "Content production waits for operator approval of fixture-local private resolver, profile, configuration, media-type, and source-blob tokens; CC-R07 retains runtime artifact bytes and wire grammar.",
-        ),
-        (
             "CC-014",
             "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes.",
         ),
@@ -1394,6 +1458,299 @@ def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
             capture_output=True,
         ).stdout
     )
+
+
+def test_quiet_bell_prior_activation_and_pause_remain_historical() -> None:
+    card_path = "design/contract_compiler/workstreams/CC-012/manifest.json"
+    activation_card = json.loads(
+        _git(ROOT, "show", f"{QUIET_BELL_ORACLE_ACTIVATION_COMMIT}:{card_path}")
+    )
+    paused_card = json.loads(
+        _git(ROOT, "show", f"{QUIET_BELL_REACTIVATION_BASE}:{card_path}")
+    )
+    activation = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/"
+            "overseer/entries/OVR-000205.json",
+        )
+    )
+    pause = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_REACTIVATION_BASE}:design/contract_compiler/overseer/"
+            "entries/OVR-000211.json",
+        )
+    )
+
+    assert activation_card["authorization"]["class"] == "FORMAL"
+    assert activation["data"] == {
+        "blockers": [
+            "Content production waits for operator approval of fixture-local private "
+            "resolver, profile, configuration, media-type, and source-blob tokens; "
+            "CC-R07 retains runtime artifact bytes and wire grammar."
+        ],
+        "bootstrap": True,
+        "deliverables": activation["data"]["deliverables"],
+        "evidence_entry_ids": ["OVR-000203", "OVR-000204"],
+        "new_state": "ACTIVE",
+        "previous_state": "PLANNED",
+        "workstream_id": "CC-012",
+    }
+    assert paused_card["authorization"]["class"] == "BLOCKED"
+    assert pause["data"]["previous_state"] == "ACTIVE"
+    assert pause["data"]["new_state"] == "PAUSED"
+    assert pause["data"]["bootstrap"] is False
+    assert (
+        _git(
+            ROOT,
+            "ls-tree",
+            "-r",
+            "--name-only",
+            QUIET_BELL_ORACLE_ACTIVATION_COMMIT,
+            "--",
+            "conformance/contract_kernel/v0/themed_fixture/oracle",
+            "conformance/contract_compiler/v0/evidence/CC-012.json",
+            "tests/contract_compiler/test_themed_compilation_oracles.py",
+        )
+        == ""
+    )
+
+
+def _assert_quiet_bell_private_boundary(responsibility: str) -> None:
+    for token in QUIET_BELL_PRIVATE_TOKENS:
+        assert token in responsibility
+    assert "public format" not in responsibility
+    assert "PUBLIC_MALLEUS_RESOLVER" not in responsibility
+    assert "Small Shop domain values" in responsibility
+    assert "use no Small Shop domain values" in responsibility
+
+
+def test_quiet_bell_reactivation_boundary_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-012")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-012/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:cc012-themed-oracles",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc012_themed_oracles",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == QUIET_BELL_DEPENDENCIES
+    )
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["responsibility"] == QUIET_BELL_ORACLE_RESPONSIBILITY
+    _assert_quiet_bell_private_boundary(card["responsibility"])
+    assert states["CC-012"] == "ACTIVE"
+    assert states["CC-014"] == states["CC-016"] == "PAUSED"
+    assert (
+        sum(
+            states[workstream_id] == "ACTIVE"
+            for workstream_id in ("CC-012", "CC-014", "CC-016")
+        )
+        == 1
+    )
+    assert "CC-012" not in manifest["selections"]
+
+
+def test_quiet_bell_reactivation_controls_hold_before_content() -> None:
+    manifest = _read_json(INTEGRATION)
+    base_manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_REACTIVATION_BASE}:design/contract_compiler/integration.json",
+        )
+    )
+    for workstream_id, expected_digest in (
+        (
+            "CC-014",
+            "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e",
+        ),
+        (
+            "CC-016",
+            "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f",
+        ),
+    ):
+        assert _registry_row(manifest, workstream_id) == _registry_row(
+            base_manifest, workstream_id
+        )
+        assert (
+            _registry_row(manifest, workstream_id)["card"]["sha256"] == expected_digest
+        )
+    assert _registry_row(manifest, "CC-012")["depends_on"] == list(
+        QUIET_BELL_DEPENDENCIES
+    )
+    assert (
+        _registry_row(manifest, "CC-014")["depends_on"]
+        == _registry_row(base_manifest, "CC-014")["depends_on"]
+    )
+    assert (
+        _registry_row(manifest, "CC-016")["depends_on"]
+        == _registry_row(base_manifest, "CC-016")["depends_on"]
+    )
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+    assert manifest["revision"] == base_manifest["revision"] == 2
+    assert manifest["selections"] == base_manifest["selections"]
+    assert manifest["owner_separations"] == base_manifest["owner_separations"]
+    assert not any(
+        (ROOT / path).exists()
+        for path in (
+            "conformance/contract_kernel/v0/themed_fixture/oracle",
+            "conformance/contract_compiler/v0/evidence/CC-012.json",
+            "tests/contract_compiler/test_themed_compilation_oracles.py",
+        )
+    )
+
+
+def test_quiet_bell_reactivation_report_is_exact() -> None:
+    report_path = CONTRACT / "overseer/evidence/CC-012-reactivation.json"
+    report = _read_json(report_path)
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_REACTIVATION_BASE
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    assert {check["check_id"] for check in report["checks"]} == {
+        "cc012-reactivation-red",
+        "cc012-dependency-readiness",
+        "cc012-private-token-boundary",
+        "cc012-independent-authorship",
+        "cc012-small-shop-separation",
+        "cc012-adjacent-state",
+        "cc012-kiss-reactivation",
+    }
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert all(
+        any(term in limitation for limitation in report["limitations"])
+        for term in (
+            "oracle content",
+            "candidate",
+            "compiler",
+            "runtime artifact",
+            "later suites",
+        )
+    )
+
+
+def test_quiet_bell_reactivation_transaction_is_exact() -> None:
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 229 <= entry["sequence"] <= 231
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000229",
+        "OVR-000230",
+        "OVR-000231",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "cc012-reactivation-boundary",
+        "cc012-reactivation-verification",
+        "CC-012",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert {document["path"] for document in revision["data"]["documents"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-012-reactivation.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    assert verification["actor"] == {
+        "id": "cc012-reactivation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["workstream_id"] == "CC-012"
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000229",
+        "OVR-000230",
+    ]
+    report_time = datetime.fromisoformat(
+        _read_json(CONTRACT / "overseer/evidence/CC-012-reactivation.json")[
+            "recorded_at"
+        ].replace("Z", "+00:00")
+    )
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 231
+    assert head["head_entry_id"] == "OVR-000231"
+    assert head["head_hash"] == activation["entry_hash"]
+
+
+def test_quiet_bell_private_tokens_reject_public_lookalikes() -> None:
+    responsibility = QUIET_BELL_ORACLE_RESPONSIBILITY.replace(
+        "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0",
+        "PUBLIC_MALLEUS_RESOLVER_V0",
+    )
+
+    with pytest.raises(AssertionError):
+        _assert_quiet_bell_private_boundary(responsibility)
+
+
+@pytest.mark.parametrize("mutation", ("missing", "stale"))
+def test_quiet_bell_dependency_bindings_fail_closed(
+    tmp_path: Path, mutation: str
+) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+
+    def mutate(card: dict[str, Any]) -> None:
+        if mutation == "missing":
+            card["authorization"]["dependency_bindings"].pop()
+        else:
+            card["authorization"]["dependency_bindings"][0]["card_sha256"] = (
+                "sha256:" + "0" * 64
+            )
+
+    _rewrite_card(path, manifest, "CC-012", mutate)
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_integration(ROOT, path)
+
+    _assert_code(error, "CC000_DEPENDENCY_BINDING")
 
 
 def test_small_shop_program_boundary_is_exact() -> None:
@@ -1964,7 +2321,7 @@ def test_cc021_completion_preserves_paused_controls_and_future_implementation() 
             f"{SMALL_SHOP_INPUT_COMPLETION_COMMIT}:design/contract_compiler/integration.json",
         )
     )
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    states, _ = integration_module._workstream_states(_overseer_prefix(222))
 
     assert states["CC-021"] == "COMPLETE"
     assert states["CC-012"] == "PAUSED"
@@ -2198,7 +2555,16 @@ def test_small_shop_oracle_completion_report_is_bounded() -> None:
         "design/contract_compiler/workstreams/CC-022/manifest.json",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_REACTIVATION_BASE}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     assert all(check["result"] == "PASS" for check in report["checks"])
@@ -2258,8 +2624,14 @@ def test_small_shop_oracle_completion_transaction_is_exact() -> None:
 
 
 def test_small_shop_oracle_completion_preserves_adjacent_authority() -> None:
-    manifest = _read_json(INTEGRATION)
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_REACTIVATION_BASE}:design/contract_compiler/integration.json",
+        )
+    )
+    states, _ = integration_module._workstream_states(_overseer_prefix(228))
     assert len(manifest["workstreams"]) == 69
     assert (
         len(
@@ -2375,8 +2747,15 @@ def test_small_shop_oracle_activation_report_binds_operator_decision() -> None:
 
 
 def test_small_shop_oracle_activation_transaction_is_exact() -> None:
-    manifest = _read_json(INTEGRATION)
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/"
+            "integration.json",
+        )
+    )
+    states, _ = integration_module._workstream_states(_overseer_prefix(225))
     assert states["CC-021"] == "COMPLETE"
     assert states["CC-012"] == states["CC-014"] == states["CC-016"] == "PAUSED"
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
@@ -2519,12 +2898,12 @@ def test_formal_workstream_cannot_be_paused(
 ) -> None:
     original = integration_module._workstream_states
 
-    def pause_cc021(ledger_state):
+    def pause_cc012(ledger_state):
         states, entries = original(ledger_state)
-        states["CC-021"] = "PAUSED"
+        states["CC-012"] = "PAUSED"
         return states, entries
 
-    monkeypatch.setattr(integration_module, "_workstream_states", pause_cc021)
+    monkeypatch.setattr(integration_module, "_workstream_states", pause_cc012)
     with pytest.raises(IntegrationValidationError) as error:
         validate_integration(ROOT)
 
@@ -3455,6 +3834,20 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-021"]["card_sha256"] = cc021_digest
 
     _rewrite_card(manifest_path, manifest, "CC-022", rebind_small_shop_oracle)
+    cc011_digest = _registry_row(manifest, "CC-011")["card"]["sha256"]
+    cc022_digest = _registry_row(manifest, "CC-022")["card"]["sha256"]
+
+    def rebind_quiet_bell_oracle(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-011"]["card_sha256"] = cc011_digest
+        bindings["CC-021"]["card_sha256"] = cc021_digest
+        bindings["CC-022"]["card_sha256"] = cc022_digest
+
+    _rewrite_card(manifest_path, manifest, "CC-012", rebind_quiet_bell_oracle)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 

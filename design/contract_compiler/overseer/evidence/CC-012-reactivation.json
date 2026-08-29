@@ -1,0 +1,75 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:e097a1063f5e3ae8af7d4b120e0ea192e1081e4039401d3328deffc79e4edcfa"
+    },
+    {
+      "byte_length": 5838,
+      "path": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "sha256": "sha256:78ce9d5736345880a98b120feb22e1cc40bc61dd8b5491ec4ece5e97ca858bdb"
+    },
+    {
+      "byte_length": 147111,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:ac18d4978d973f1aa0a9cae4ecbc364330b8a568e8489a0e11987b541c577ed9"
+    }
+  ],
+  "base_commit": "d56c30f85b92d7452ca126d488bf027b42ee67f5",
+  "checks": [
+    {
+      "check_id": "cc012-reactivation-red",
+      "method": "Run the focused Quiet Bell reactivation, boundary, report, transaction, and dependency-binding guards before changing the paused card or overseer ledger.",
+      "observed": "The command exited 1 with exactly 6 failures and 3 passes. The card was still BLOCKED in two guards, the reactivation report and OVR-000229 through OVR-000231 were absent, and both dependency mutations found no formal binding list. The absent-content and adjacent-suite controls passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-dependency-readiness",
+      "method": "Resolve all nine direct dependencies in program order to their current card digest, active completion entry ID and hash, and mechanically required integrated head.",
+      "observed": "CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011, CC-021, and CC-022 are complete and exactly bound. CC-021 binds OVR-000222 at e5535033d8f1886271d827ddeed4662196410cdf and CC-022 binds OVR-000228 at d56c30f85b92d7452ca126d488bf027b42ee67f5.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-private-token-boundary",
+      "method": "Inspect the exact responsibility and mutation guard for the closed resolver, profile, configuration, media-type, source-blob, outcome, and comparison labels.",
+      "observed": "The card names only TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0, TEST_ONLY_LINKML_V0_PROFILE, TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0, TEST_ONLY_JSON_SHAPED_YAML, TEST_ONLY_SOURCE_BLOB_SHA256_<64-lowercase-hex>, ACCEPT, minimal REFUSE, SAME, DIFFERENT, and NOT_CLAIMED. They are private fixture labels with no public or compatibility claim, and a public-looking resolver mutation fails its hard guard.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-independent-authorship",
+      "method": "Compare the exact assignment, three scopes, responsibility, candidate, ledger, and absent owned paths with the completed Quiet Bell sources and accepted decisions.",
+      "observed": "The independent oracle owner retains exactly the themed oracle tree, canonical CC-012 report, and fixed oracle test. Expected values must be hand-authored only from exact Quiet Bell sources and accepted decisions, never generated or exported from LinkML, OntologyRegistry, or implementation output. Candidate is NONE, ledger is NOT_STARTED, and all owned content paths remain absent.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-small-shop-separation",
+      "method": "Verify that completed Small Shop work is representation, process, and testing precedent only and is not a semantic dependency of Quiet Bell oracle values.",
+      "observed": "CC-021 and CC-022 are formal dependency gates, but the responsibility forbids reuse of Small Shop domain values, facts, identifiers, or derivations. No cross-oracle workstream dependency, card binding, shared helper, or expected value was created.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-adjacent-state",
+      "method": "Compare the feature-edge and neutral-greenhouse cards, registry rows, dependencies, selections, owner separations, and future executable row byte-for-byte with the reactivation base.",
+      "observed": "CC-014 and CC-016 remain byte-identical BLOCKED cards in PAUSED state with candidate NONE and ledger NOT_STARTED. Their dependency lists and bindings are unchanged, selections and owner separations are unchanged, and CC-R09 remains absent.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-kiss-reactivation",
+      "method": "Inspect the keyed integration delta, exact card, prior immutable activation and pause history, and the prospective worker boundary before any oracle byte is authored.",
+      "observed": "Only the CC-012 card pointer changes in integration revision 2. The original activation and later pause remain immutable history. This transaction permits one answer-key owner to start after its activation commit; it creates no content, candidate, worker ledger, compiler stage, public interface, or authority for either later answer-key suite.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This reactivation creates no oracle content, canonical worker report, fixed worker test, candidate, worker ledger, selection, or completion claim.",
+    "Private fixture-local JSON and labels define no public format, compatibility contract, public identifier, diagnostic vocabulary, migration promise, or runtime artifact wire grammar.",
+    "No compiler or runtime implementation, resolver, mapping, transformation, effective contract, artifact, protocol, ledger, graph, replay, package, release, or corpus behavior is implemented or claimed.",
+    "The worker must derive Quiet Bell expectations independently and retain contradictions as RED rather than assuming that every source accepts.",
+    "The neutral-greenhouse and compiler-edge answer-key suites remain later suites requiring separate authorization after their named learning handoffs.",
+    "All runtime artifact bytes, wire grammar, corpus integration, checksums, package data, release, selection, and CC-R work remain outside this transaction."
+  ],
+  "recorded_at": "2026-08-29T16:20:46Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

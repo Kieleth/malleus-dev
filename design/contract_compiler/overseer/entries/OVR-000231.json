@@ -1,0 +1,53 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the independent Quiet Bell source-descriptor, import-graph, declaration, binding, elaboration, fact, and logical artifact expectations only from exact CC-011 sources and accepted decisions.",
+      "Use only the closed private fixture-local logical JSON labels, retain contradictions as RED, and create no public format, compatibility contract, compiler input, runtime artifact bytes, or wire grammar.",
+      "Keep Small Shop as process, representation, and testing precedent only; leave CC-014 and CC-016 paused; and base the first candidate on the first commit containing OVR-000231."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000229",
+      "OVR-000230"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PAUSED",
+    "workstream_id": "CC-012"
+  },
+  "entry_hash": "sha256:7dae8e3976a07eec0ff106d27a848f41c933522f1e973272d746c9f38c65883a",
+  "entry_id": "OVR-000231",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:72f132510038e56b664348f7760d7c63f92226958594326e443a652237eebf8b",
+  "recorded_at": "2026-08-29T16:20:49Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000229",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000230",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 231,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reactivate the independent CC-012 Quiet Bell answer-key workstream.",
+  "why": "The Small Shop input and independent answer-key gates are complete, the operator approved the private convention for Quiet Bell, all nine direct dependencies are freshly bound, and OVR-000229 through OVR-000230 prove the narrow content-free boundary."
+}
