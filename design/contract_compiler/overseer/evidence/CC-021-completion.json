@@ -1,0 +1,89 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8937,
+      "path": "conformance/contract_compiler/v0/evidence/CC-021.json",
+      "sha256": "sha256:0f8e9cc36402081c26a07191027210267ce26163f7d13706e59e16800df01e4d"
+    },
+    {
+      "byte_length": 25002,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:2fcef3a7d4ec27b5415580be8701b4105198227d759b0822d3a76abf2a65f0d8"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-021/ledger/head.json",
+      "sha256": "sha256:93dfb205add48232862ada30d8f45e62cf3240ef9e8a187cfef439cc95317334"
+    },
+    {
+      "byte_length": 6278,
+      "path": "design/contract_compiler/workstreams/CC-021/manifest.json",
+      "sha256": "sha256:69c442de7a6948d9a5e44d3a031ed536c892cfa8bbdc0b7f84b872ef8134075b"
+    }
+  ],
+  "base_commit": "39f41544ff47c60663d1eed7b4ec8959165f37e4",
+  "checks": [
+    {
+      "check_id": "cc021-candidate-history",
+      "method": "Validate the exact f6b2bf9..39f4154 one-commit candidate, bound tree, five authorized touched paths, nine artifacts, and one canonical report. Derive the first commit adding OVR-000219 and prove its parent lacks that entry.",
+      "observed": "The candidate validator accepted tree 4d50c14af6dd0f4c84dbd89c6407b02711d3bb35 and exactly the two configuration members, manifest, fixed test, and canonical report. Base f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6 is mechanically the first commit containing OVR-000219, and its parent lacks the entry.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-input-bundle",
+      "method": "Require exact equality between the canonical report's nine-artifact map and the eligible card's artifact map, then recompute every length and digest from candidate bytes.",
+      "observed": "The card and report bind the same exact eight input members and fixed input test. The report is the sole PASS evidence pointer and is not duplicated as a candidate artifact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-inherited-identities",
+      "method": "Compare the three TBox members, warehouse JSONL, and inventory CSV at provisional 9b2afa8, authority boundary f6b2bf9, and candidate 39f4154.",
+      "observed": "All five previously authorized ontology or domain-source members are byte-identical at all three coordinates.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-parameter-reissue",
+      "method": "Parse both configuration members at provisional and candidate coordinates, compare values, and require different post-authority bytes.",
+      "observed": "SCENARIO_SELECTION and SOURCE_TIME_CONTEXT preserve exact parsed values while their bytes differ after the prospective authority boundary. Manifest, test, and report are also present in the exact candidate range.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-worker-tdd",
+      "method": "Validate the assigned worker's canonical hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST phases.",
+      "observed": "Seven chained TDD_RESULT entries pass the strict phase gate. RED is EXPECTED_FAILURE, PACKAGE is NOT_APPLICABLE, and every other phase is PASS. Head is CC-021-WRK-000007 at sha256:d6e88b33991068b8ab06d7fa9f0204953c5f684965da445c37647061e4c97d03.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-dependencies",
+      "method": "Validate all four formal dependency bindings against current registered cards, completion entries, hashes, and exact first-authority coordinates.",
+      "observed": "CC-010, CC-D03, CC-D08, and CC-D11 remain complete and exactly bound. No dependency or owner-separation row changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-independent-audit",
+      "method": "Independently audit candidate 39f4154, tree 4d50c14a, exact five-path diff, source provenance, parameter boundary, malformed-input refusals, and absence of oracle content before completion metadata.",
+      "observed": "The clean independent candidate audit approved the exact candidate with no findings.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-regression",
+      "method": "Run the 14 focused input tests, all 80 contract-compiler tests, completion guards, integration and ledger validators, evidence verification, changed-file Ruff, diff checks, and the fixed full local CI profile.",
+      "observed": "Final gates passed: 8 focused completion guards, 255 integration and ledger tests, 80 contract-compiler tests, changed-file Ruff and diff checks, and full CI with 1,849 tests passed and 2 skipped. Full CI also passed the 40-case GraphRecipe suite, 54-case Small Shop journal suite, strict Sphinx HTML, doctest, and linkcheck, sdist and wheel build, twine validation, clean install, and CLI smoke tests.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-unselected-completion",
+      "method": "Require CC-021 COMPLETE while its exact candidate remains ELIGIBLE and unselected; scan all candidate, selection, integration, and dependency authority for the provisional commit and inspect adjacent future boundaries.",
+      "observed": "Commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc remains absent from every authority coordinate. Selections remain unchanged; CC-022 and CC-R09 remain absent; CC-012, CC-014, and CC-016 remain paused. No oracle, compiler, runtime, protocol, graph, corpus, package, release, or publication state changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "CC-021 closes only the controlled ontology, domain-source, scenario-selection, and source-time-context input bundle. It creates no CC-022 oracle or expected output.",
+    "Completion creates no mapping, transformation, identity, recipe, ProposedOperation, compiler, adapter, runtime, protocol event, protocol ledger state, accepted knowledge graph, or replay receipt.",
+    "The candidate remains ELIGIBLE and unselected. It has no corpus or checksum publication and creates no public API, installed package data, package, image, release, or publication claim."
+  ],
+  "recorded_at": "2026-08-29T05:51:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-021"
+}

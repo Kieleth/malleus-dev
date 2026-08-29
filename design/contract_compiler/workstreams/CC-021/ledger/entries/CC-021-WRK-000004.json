@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    "observed": "The fixed disproofs reject BOM, invalid UTF-8, CRLF, missing terminal LF, double terminal LF, duplicate JSON keys, nonfinite JSON, duplicate YAML keys, and symlinks. Closed-shape and recursive guards exclude oracle, output, mapping, transformation, compiler, runtime, protocol, and accepted-graph content.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:94cadefce1cc32f2f79395a9b6b37baa9255443f35cd664d91d6c1fa0423c721",
+  "entry_id": "CC-021-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:89b65e280e19008159c7ce10f943e0d2323441112e6217757e5ff4e69064a2ff",
+  "recorded_at": "2026-08-29T05:50:04Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass malformed-input and authority-boundary disproofs.",
+  "workstream_id": "CC-021"
+}

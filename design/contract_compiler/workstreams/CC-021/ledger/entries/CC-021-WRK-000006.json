@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "Review the exact CC-021 card and candidate against package and release boundaries.",
+    "observed": "NOT_APPLICABLE. CC-021 adds repository-local controlled inputs, one fixed test, and verification evidence only. It changes no installed data, compiler, adapter, runtime, public API, distribution, image, or release claim.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:d3751bf3dd1d0597de0f57eb5581c1c41bbd1dd7bd752f76687e05f85ffcdc3a",
+  "entry_id": "CC-021-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:731f1900722a228ff52c4b7e5c755f10ddc09771dccbfec416eca2511ea6aec3",
+  "recorded_at": "2026-08-29T05:50:06Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the repository-only package boundary.",
+  "workstream_id": "CC-021"
+}

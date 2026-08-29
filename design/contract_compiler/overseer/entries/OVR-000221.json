@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "cc021-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T05:52:01Z",
+    "claims": [
+      "CC-021 is the exact f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6..39f41544ff47c60663d1eed7b4ec8959165f37e4 one-commit candidate at tree 4d50c14af6dd0f4c84dbd89c6407b02711d3bb35 with five authorized touched paths.",
+      "The candidate card and canonical report bind the same nine artifacts and one PASS evidence pointer; all exact bytes and hashes verify at the candidate head.",
+      "Five ontology or domain-source members retain exact identity from the provisional commit through the authority boundary and candidate, while both parameter values remain semantically equal and are byte-reissued after authority.",
+      "The assigned worker ledger contains the exact seven ordered TDD phases and binds 14 focused passes, 80 contract-compiler passes, the exact candidate, and independent clean audit with no findings.",
+      "CC-021 remains ELIGIBLE and unselected. Commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc is absent from all candidate, selection, integration, and dependency authority.",
+      "CC-022 and CC-R09 remain absent; CC-012, CC-014, and CC-016 remain paused; no oracle, compiler, runtime, protocol, graph, corpus, public, package, or release boundary changed."
+    ],
+    "limitations": [
+      "This verifies completion of controlled CC-021 inputs only. It creates no CC-022 oracle, expected output, realization result, compiler behavior, runtime behavior, protocol or accepted-graph state.",
+      "The candidate remains unselected and unpublished. No corpus, checksum, public API, package, image, release, or paper claim is made."
+    ]
+  },
+  "entry_hash": "sha256:1d460a9e5b652214a0ae435e14c92a9e188c4b730d33653e7ab22a9e059c3da2",
+  "entry_id": "OVR-000221",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1c7dd3526b88a5a7d4f7981b7611824a932e09a88f2406fdd306b303a4cf0c8c",
+  "recorded_at": "2026-08-29T05:52:01Z",
+  "references": [
+    {
+      "digest": "sha256:c9cec9a91c5ba61b9d25c2c79ff0f24bedae4ccb00ec2bfe858aef161b272a81",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000220",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "39f41544ff47c60663d1eed7b4ec8959165f37e4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 221,
+  "subject": {
+    "id": "cc021-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded CC-021 completion gate.",
+  "why": "CC-021 may complete only after its exact post-authorization candidate, canonical report, worker TDD chain, dependencies, independent audit, and unselected boundary pass mechanically without claiming an oracle or any downstream realization behavior."
+}

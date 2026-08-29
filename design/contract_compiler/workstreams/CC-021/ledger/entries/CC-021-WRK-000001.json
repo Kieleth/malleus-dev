@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    "observed": "Against prospective base f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6, the post-authorization guard produced exactly 1 expected failure and 10 passes. The sole failure was the stale pre-authorization report base; the Git-history guard already proved this base is the first commit containing OVR-000219.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:51d9637057242bebb9445a1b5e0d9237b9ca27d927943bbfdf4a8452390ac25e",
+  "entry_id": "CC-021-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-29T05:50:01Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the genuine post-authorization candidate RED.",
+  "workstream_id": "CC-021"
+}

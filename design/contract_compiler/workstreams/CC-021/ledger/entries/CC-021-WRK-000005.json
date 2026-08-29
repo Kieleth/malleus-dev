@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler",
+    "observed": "All 80 contract-compiler tests passed against candidate 39f41544ff47c60663d1eed7b4ec8959165f37e4.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:731f1900722a228ff52c4b7e5c755f10ddc09771dccbfec416eca2511ea6aec3",
+  "entry_id": "CC-021-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:94cadefce1cc32f2f79395a9b6b37baa9255443f35cd664d91d6c1fa0423c721",
+  "recorded_at": "2026-08-29T05:50:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the contract-compiler regression suite.",
+  "workstream_id": "CC-021"
+}

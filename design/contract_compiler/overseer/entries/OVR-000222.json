@@ -1,0 +1,48 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Author exactly eight controlled Small Shop input members: three TBox sources, one warehouse occurrence, one fixture-local inventory lookup, one scenario selection, one source-time context, and one manifest.",
+      "Bind nine non-evidence artifacts, one canonical report, seven TDD phases, and the exact f6b2bf9..39f4154 eligible candidate.",
+      "Preserve five inherited source identities while reissuing the two parameter members and their three derived governance bytes after OVR-000219.",
+      "Keep CC-022 oracle and expected output, mappings, transformations, identities, recipes, operations, compiler and runtime implementation, protocol and accepted graph state, corpus and checksum publication, public API, package, Docker, release, selection, and integration outside CC-021."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000221"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-021"
+  },
+  "entry_hash": "sha256:2d7e2f6500baaae317043be97e1850d5b0ba11efa60044fbd9c13db70514abe2",
+  "entry_id": "OVR-000222",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1d460a9e5b652214a0ae435e14c92a9e188c4b730d33653e7ab22a9e059c3da2",
+  "recorded_at": "2026-08-29T05:52:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000221",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 222,
+  "subject": {
+    "id": "CC-021",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded CC-021 Small Shop input workstream.",
+  "why": "OVR-000221 binds the exact eligible post-authorization input-only candidate, canonical report, seven worker TDD phases, strict scope, dependency closure, and clean audit needed to complete CC-021 without selecting it or claiming CC-022 or downstream realization behavior."
+}

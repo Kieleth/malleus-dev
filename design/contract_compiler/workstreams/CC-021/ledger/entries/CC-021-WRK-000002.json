@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    "observed": "All 14 fixed CC-021 input, malformed-byte, scope, and prospective-authorization tests passed after the exact five-path reissue.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c1f0b6524d611c7589772ce5cf0535b7af15ebfa6ab814c9375e4cf094487d46",
+  "entry_id": "CC-021-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:51d9637057242bebb9445a1b5e0d9237b9ca27d927943bbfdf4a8452390ac25e",
+  "recorded_at": "2026-08-29T05:50:02Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the controlled Small Shop input bundle.",
+  "workstream_id": "CC-021"
+}

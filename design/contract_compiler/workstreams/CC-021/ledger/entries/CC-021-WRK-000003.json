@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc021-small-shop-inputs",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect the exact f6b2bf9..39f4154 candidate and its manifest roles.",
+    "observed": "The candidate reissues exactly SCENARIO_SELECTION, SOURCE_TIME_CONTEXT, manifest, fixed test, and canonical report. The two parameter values remain semantically equal to the provisional values, while the warehouse row, inventory row, and three TBox members retain exact byte identity.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:89b65e280e19008159c7ce10f943e0d2323441112e6217757e5ff4e69064a2ff",
+  "entry_id": "CC-021-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c1f0b6524d611c7589772ce5cf0535b7af15ebfa6ab814c9375e4cf094487d46",
+  "recorded_at": "2026-08-29T05:50:03Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the exact authorized input slice.",
+  "workstream_id": "CC-021"
+}
