@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from hashlib import sha256
 import json
 from pathlib import Path
 from typing import Any
+
+import pytest
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -204,6 +207,136 @@ UNRESOLVED_BINDINGS = {
     "source_id",
     "target_id",
 }
+EXPECTED_ACCEPTED_BINDINGS = {
+    "ArchiveEventKind": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveEventKind",
+    "ArchiveExaminer": "https://malleus.dev/conformance/quiet-bell/entities/ArchiveExaminer",
+    "ArchiveRelationKind": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveRelationKind",
+    "ArchiveShelfmark": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark",
+    "ArchiveSignalKind": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveSignalKind",
+    "CitesFolioRelation": "https://malleus.dev/conformance/quiet-bell/activity/CitesFolioRelation",
+    "EvidenceFolio": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio",
+    "EvidenceLocator": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator",
+    "InquiryDossier": "https://malleus.dev/conformance/quiet-bell/InquiryDossier",
+    "assigned_examiner": "https://malleus.dev/conformance/quiet-bell/assigned_examiner",
+    "certainty": "https://malleus.dev/conformance/quiet-bell/foundation/certainty",
+    "content_digest": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest",
+    "dossier_code": "https://malleus.dev/conformance/quiet-bell/dossier_code",
+    "float": "https://malleus.dev/contract-facts/Float",
+    "marginal_note": "https://malleus.dev/conformance/quiet-bell/marginal_note",
+    "reviewed_by": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_by",
+    "reviewed_relation": "https://malleus.dev/conformance/quiet-bell/activity/reviewed_relation",
+    "shelfmark": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark",
+    "string": "https://malleus.dev/contract-facts/String",
+}
+EXPECTED_CLASS_DEFAULTS = [
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/InquiryDossier",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/CitesFolioRelation",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/SealDiscrepancySignal",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/activity/SealReviewEvent",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/ArchiveExaminer",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio",
+    },
+    {
+        "abstract": False,
+        "isMixin": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator",
+    },
+]
+EXPECTED_COMPLETE_SLOTS = [
+    {
+        "identifier": False,
+        "inlined": False,
+        "maximum": "1",
+        "minimum": "0",
+        "multivalued": False,
+        "required": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/certainty",
+        "valueRange": "https://malleus.dev/contract-facts/Float",
+    },
+    {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/content_digest",
+        "valueRange": "https://malleus.dev/contract-facts/String",
+    },
+    {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/shelfmark",
+        "valueRange": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark",
+    },
+    {
+        "identifier": False,
+        "inlined": True,
+        "multivalued": False,
+        "required": True,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceFolio/locator",
+        "valueRange": "https://malleus.dev/conformance/quiet-bell/entities/EvidenceLocator",
+    },
+    {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": False,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/marginal_note",
+        "valueRange": "https://malleus.dev/contract-facts/String",
+    },
+    {
+        "identifier": False,
+        "inlined": False,
+        "multivalued": False,
+        "required": True,
+        "symbol": "https://malleus.dev/conformance/quiet-bell/dossier_code",
+        "valueRange": "https://malleus.dev/contract-facts/String",
+    },
+]
+EXPECTED_ENUM_VALUES = [
+    {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveEventKind",
+        "value": "SEAL_REVIEW",
+    },
+    {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveRelationKind",
+        "value": "CITES_FOLIO",
+    },
+    {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveSignalKind",
+        "value": "SEAL_DISCREPANCY",
+    },
+]
+EXPECTED_SCALARS = [
+    {
+        "symbol": "https://malleus.dev/conformance/quiet-bell/foundation/ArchiveShelfmark",
+        "typeof": "https://malleus.dev/contract-facts/String",
+    }
+]
 EXPECTED_COMPARISONS = [
     {
         "authored_local_semantic_projection": "SAME",
@@ -299,6 +432,34 @@ def _objects(value: Any) -> list[dict[str, Any]]:
     return []
 
 
+def _assert_exact_accepted_bindings(oracle: dict[str, Any]) -> None:
+    bindings = oracle["qualified_bindings"]
+    references = [binding["reference"] for binding in bindings]
+    assert len(references) == len(set(references))
+    assert set(references) == set(EXPECTED_ACCEPTED_BINDINGS) | UNRESOLVED_BINDINGS
+    assert {
+        binding["reference"]: binding["target"]
+        for binding in bindings
+        if isinstance(binding["target"], str)
+    } == EXPECTED_ACCEPTED_BINDINGS
+
+
+def _assert_exact_class_defaults(oracle: dict[str, Any]) -> None:
+    assert oracle["local_elaboration"]["class_defaults"] == EXPECTED_CLASS_DEFAULTS
+
+
+def _assert_exact_complete_slots(oracle: dict[str, Any]) -> None:
+    assert oracle["local_elaboration"]["complete_slots"] == EXPECTED_COMPLETE_SLOTS
+
+
+def _assert_exact_enum_values(oracle: dict[str, Any]) -> None:
+    assert oracle["local_elaboration"]["enum_values"] == EXPECTED_ENUM_VALUES
+
+
+def _assert_exact_scalars(oracle: dict[str, Any]) -> None:
+    assert oracle["local_elaboration"]["scalars"] == EXPECTED_SCALARS
+
+
 def test_private_oracle_membership_configuration_and_source_descriptors() -> None:
     members = tuple(
         sorted(
@@ -374,10 +535,15 @@ def test_declarations_bind_only_symbols_derived_from_controlled_sources() -> Non
         "https://malleus.dev/contract-facts/String",
     }
     assert asserted_targets <= local_targets | seed_targets
+    _assert_exact_accepted_bindings(oracle)
 
 
 def test_local_defaults_are_explicit_and_downstream_stages_refuse_atomically() -> None:
     oracle = _load_oracle()
+    _assert_exact_class_defaults(oracle)
+    _assert_exact_complete_slots(oracle)
+    _assert_exact_enum_values(oracle)
+    _assert_exact_scalars(oracle)
     elaboration = oracle["local_elaboration"]
     complete = {item["symbol"]: item for item in elaboration["complete_slots"]}
 
@@ -433,6 +599,54 @@ def test_local_defaults_are_explicit_and_downstream_stages_refuse_atomically() -
     for version in oracle["versions"]:
         assert version["authored_local"] == EXPECTED_AUTHORED_LOCAL_RESULTS
         assert version["compiled"] == EXPECTED_COMPILED_RESULTS
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "resolved-target-swapped",
+        "accepted-binding-removed",
+        "class-default-flipped",
+        "complete-slot-maximum-changed",
+        "enum-value-changed",
+        "scalar-target-changed",
+    ),
+)
+def test_exact_semantic_guards_reject_corruptions(mutation: str) -> None:
+    oracle = deepcopy(_load_oracle())
+
+    if mutation == "resolved-target-swapped":
+        binding = next(
+            item
+            for item in oracle["qualified_bindings"]
+            if item["reference"] == "ArchiveExaminer"
+        )
+        binding["target"] = EXPECTED_ACCEPTED_BINDINGS["EvidenceFolio"]
+        guard = _assert_exact_accepted_bindings
+    elif mutation == "accepted-binding-removed":
+        oracle["qualified_bindings"] = [
+            item
+            for item in oracle["qualified_bindings"]
+            if item["reference"] != "ArchiveExaminer"
+        ]
+        guard = _assert_exact_accepted_bindings
+    elif mutation == "class-default-flipped":
+        oracle["local_elaboration"]["class_defaults"][0]["abstract"] = True
+        guard = _assert_exact_class_defaults
+    elif mutation == "complete-slot-maximum-changed":
+        oracle["local_elaboration"]["complete_slots"][0]["maximum"] = "999"
+        guard = _assert_exact_complete_slots
+    elif mutation == "enum-value-changed":
+        oracle["local_elaboration"]["enum_values"][0]["value"] = "OTHER"
+        guard = _assert_exact_enum_values
+    else:
+        oracle["local_elaboration"]["scalars"][0]["typeof"] = (
+            "https://malleus.dev/contract-facts/Float"
+        )
+        guard = _assert_exact_scalars
+
+    with pytest.raises(AssertionError):
+        guard(oracle)
 
 
 def test_version_meanings_and_nonclaims_are_exact() -> None:
