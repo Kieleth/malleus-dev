@@ -19,6 +19,8 @@ ROOT = HERE.parents[3]
 CHARTER = HERE / "CHARTER.md"
 JOURNAL_MODULE = HERE / "journal.py"
 SEED = HERE / "journal.jsonl"
+CHECKPOINT_PATH = "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md"
+ONTOLOGY_DESIGN_PATH = "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
 
 
 def _load_journal() -> ModuleType:
@@ -41,34 +43,41 @@ def _git(root: Path, *argv: str) -> bytes:
     return result.stdout
 
 
-def _new_repository(path: Path, *, symlink: bool = False) -> dict[str, object]:
+def _new_repository(
+    path: Path,
+    *,
+    symlink: bool = False,
+    omit: str | None = None,
+) -> dict[str, object]:
     path.mkdir()
     _git(path, "init", "--quiet")
     _git(path, "config", "user.email", "small-shop@example.invalid")
     _git(path, "config", "user.name", "Small Shop Test")
-    evidence_path = path / "design" / "evidence.md"
-    evidence_path.parent.mkdir()
-    evidence_path.write_bytes(b"committed evidence\n")
-    relative = "design/evidence.md"
-    if symlink:
-        link = path / "design" / "evidence-link.md"
-        link.symlink_to("evidence.md")
-        relative = "design/evidence-link.md"
+    sources = {
+        CHECKPOINT_PATH: b"checkpoint evidence\n",
+        ONTOLOGY_DESIGN_PATH: b"ontology design evidence\n",
+    }
+    for relative, source in sources.items():
+        target = path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if relative == omit:
+            continue
+        if symlink and relative == ONTOLOGY_DESIGN_PATH:
+            source_path = target.with_name("ontology-source.md")
+            source_path.write_bytes(source)
+            target.symlink_to(source_path.name)
+            sources[relative] = source_path.name.encode("utf-8")
+        else:
+            target.write_bytes(source)
     _git(path, "add", "design")
     _git(path, "commit", "--quiet", "-m", "fixture")
     commit = _git(path, "rev-parse", "HEAD^{commit}").decode().strip()
     tree = _git(path, "rev-parse", "HEAD^{tree}").decode().strip()
-    source = (
-        (path / relative).read_bytes()
-        if not symlink
-        else b"evidence.md"
-    )
     return {
         "root": path,
         "commit": commit,
         "tree": tree,
-        "path": relative,
-        "source": source,
+        "sources": sources,
     }
 
 
@@ -78,16 +87,24 @@ def repository(tmp_path_factory: pytest.TempPathFactory) -> dict[str, object]:
 
 
 def _evidence(repository: dict[str, object]) -> list[dict[str, object]]:
-    source = repository["source"]
-    assert isinstance(source, bytes)
-    return [
-        {
-            "role": "ONTOLOGY_REALIZATION_DESIGN",
-            "path": repository["path"],
-            "sha256": "sha256:" + hashlib.sha256(source).hexdigest(),
-            "byte_length": len(source),
-        }
-    ]
+    sources = repository["sources"]
+    assert isinstance(sources, dict)
+    evidence = []
+    for role, relative in (
+        ("ONTOLOGY_REALIZATION_DESIGN", ONTOLOGY_DESIGN_PATH),
+        ("RUNNING_DOMAIN_CHECKPOINT", CHECKPOINT_PATH),
+    ):
+        source = sources[relative]
+        assert isinstance(source, bytes)
+        evidence.append(
+            {
+                "role": role,
+                "path": relative,
+                "sha256": "sha256:" + hashlib.sha256(source).hexdigest(),
+                "byte_length": len(source),
+            }
+        )
+    return evidence
 
 
 def _intent_payload(journal: ModuleType, repository: dict[str, object]) -> dict:
@@ -219,6 +236,53 @@ def test_charter_defers_unconsumed_journal_kinds_tdd_first() -> None:
     ):
         assert f"`{kind}`" in text
     assert "must be added TDD-first" in text
+
+
+def test_charter_fixes_hash_preimage_and_evidence_role_paths() -> None:
+    text = CHARTER.read_text(encoding="utf-8")
+
+    for required in (
+        '"domain_separator":"malleus:research:small-shop-journal:v1"',
+        '"record":record_without_record_hash',
+        "canonical JSON via `malleus.ledger`",
+        "`RUNNING_DOMAIN_CHECKPOINT` -> "
+        "`design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md`",
+        "`ONTOLOGY_REALIZATION_DESIGN` -> "
+        "`design/ONTOLOGY_DRIVEN_KG_REALIZATION.md`",
+        "exactly once in every v1 seed payload",
+    ):
+        assert required in text
+
+
+def test_record_hash_known_vector_is_independent_of_implementation_helper() -> None:
+    first_line = SEED.read_bytes().splitlines()[0]
+    record = json.loads(first_line)
+    body = {
+        "schema_version": record["schema_version"],
+        "sequence": record["sequence"],
+        "kind": record["kind"],
+        "recorded_at": record["recorded_at"],
+        "responsible_actor": record["responsible_actor"],
+        "previous_record_hash": record["previous_record_hash"],
+        "payload": record["payload"],
+    }
+    preimage = {
+        "domain_separator": "malleus:research:small-shop-journal:v1",
+        "record": body,
+    }
+    canonical = json.dumps(
+        preimage,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    observed = "sha256:" + hashlib.sha256(canonical).hexdigest()
+
+    assert observed == record["record_hash"]
+    assert observed == (
+        "sha256:2da1373ea715ac98b3bce4d4dfc42866fa605a6295f1fdb3ba3936f9963f7ba0"
+    )
 
 
 @pytest.mark.parametrize("field", [
@@ -439,7 +503,7 @@ def test_operator_decision_payload_is_exact_and_typed(
     journal = _load_journal()
     payload = {
         "decision_key": "compiler_authority_boundary",
-        "formal_decision_refs": ["OKG-D013"],
+        "formal_decision_refs": [],
         "selected_values": deepcopy(
             journal.OPERATOR_DECISIONS["compiler_authority_boundary"]["selected_values"]
         ),
@@ -487,7 +551,6 @@ def test_bad_or_mismatched_git_coordinates_refuse(
     [
         ("/tmp/evidence.md", "repository-relative"),
         ("../evidence.md", "parent escape"),
-        ("design/missing.md", "not a committed file"),
     ],
 )
 def test_invalid_evidence_path_refuses(
@@ -506,6 +569,20 @@ def test_invalid_evidence_path_refuses(
     _assert_refused(journal, path, repository, expected)
 
 
+def test_required_evidence_path_must_be_committed(tmp_path: Path) -> None:
+    journal = _load_journal()
+    repository = _new_repository(
+        tmp_path / "repository",
+        omit=ONTOLOGY_DESIGN_PATH,
+    )
+    payload = _intent_payload(journal, repository)
+    record = _record(journal, repository, payload=payload)
+    path = tmp_path / "journal.jsonl"
+    _write(path, [record])
+
+    _assert_refused(journal, path, repository, "not a committed file")
+
+
 def test_committed_symlink_evidence_refuses(tmp_path: Path) -> None:
     journal = _load_journal()
     repository = _new_repository(tmp_path / "repository", symlink=True)
@@ -515,6 +592,34 @@ def test_committed_symlink_evidence_refuses(tmp_path: Path) -> None:
     _write(path, [record])
 
     _assert_refused(journal, path, repository, "symlink")
+
+
+def test_evidence_role_refuses_a_different_committed_path(
+    tmp_path: Path,
+    repository: dict[str, object],
+) -> None:
+    journal = _load_journal()
+    payload = _intent_payload(journal, repository)
+    payload["evidence"][0]["role"] = "RUNNING_DOMAIN_CHECKPOINT"
+    record = _record(journal, repository, payload=payload)
+    path = tmp_path / "journal.jsonl"
+    _write(path, [record])
+
+    _assert_refused(journal, path, repository, "must bind")
+
+
+def test_evidence_requires_both_v1_role_path_pairs_once(
+    tmp_path: Path,
+    repository: dict[str, object],
+) -> None:
+    journal = _load_journal()
+    payload = _intent_payload(journal, repository)
+    payload["evidence"] = payload["evidence"][:1]
+    record = _record(journal, repository, payload=payload)
+    path = tmp_path / "journal.jsonl"
+    _write(path, [record])
+
+    _assert_refused(journal, path, repository, "exact v1 role/path set")
 
 
 @pytest.mark.parametrize(
@@ -597,6 +702,15 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         "canonical_running_domain",
         "compiler_authority_boundary",
     ]
+    formal_decision_refs = [
+        record["payload"]["formal_decision_refs"] for record in records[:2]
+    ]
+    assert formal_decision_refs == [["OKG-D013"], []]
+    assert sum(
+        reference == "OKG-D013"
+        for references in formal_decision_refs
+        for reference in references
+    ) == 1
     assert records[2]["payload"]["ret_sequence"] == list(journal.RET_SEQUENCE)
     assert records[2]["payload"]["claims_under_test"] == list(
         journal.CLAIMS_UNDER_TEST

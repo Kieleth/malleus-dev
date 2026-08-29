@@ -121,6 +121,20 @@ implementation consumer.
 
 ## Journal staging
 
+Each v1 record hash uses this exact preimage, encoded as canonical JSON via `malleus.ledger`:
+
+```text
+record_hash = content_digest({"domain_separator":"malleus:research:small-shop-journal:v1","record":record_without_record_hash})
+```
+
+The v1 evidence vocabulary is closed to these role and path pairs:
+
+- `RUNNING_DOMAIN_CHECKPOINT` -> `design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md`
+- `ONTOLOGY_REALIZATION_DESIGN` -> `design/ONTOLOGY_DRIVEN_KG_REALIZATION.md`
+
+Both pairs occur exactly once in every v1 seed payload. The repository commit,
+tree, committed blob bytes, SHA-256 digest, and byte length remain mandatory.
+
 Journal version 1 accepts only `OPERATOR_DECISION_RECORDED` and
 `INTENT_RECORDED`, the kinds required by the truthful seed. The following kinds
 remain future work and must be added TDD-first when the first real consumer

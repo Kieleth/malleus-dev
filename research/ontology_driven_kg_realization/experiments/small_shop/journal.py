@@ -23,7 +23,7 @@ SCHEMA_VERSION = "1"
 GENESIS = "GENESIS"
 RECORD_HASH_DOMAIN = "malleus:research:small-shop-journal:v1"
 EXPECTED_HEAD_HASH = (
-    "sha256:0886e76a1ff9936e5e01c7a0d3f06e0f4343ea3bce446974fc23407a95d7a552"
+    "sha256:a83d7b9f689334643a3e04b403c359e4aca903c9e9e3664c9b2188a1c33049f6"
 )
 
 SERIES_ID = "SMALL_SHOP_GRAPH_REALIZATION"
@@ -72,7 +72,7 @@ OPERATOR_DECISIONS = {
         "deferred_values": {},
     },
     "compiler_authority_boundary": {
-        "formal_decision_refs": ["OKG-D013"],
+        "formal_decision_refs": [],
         "selected_values": {
             "compiler": "DETERMINISTIC_CLOSED_INPUT",
             "ontology_builder_corrector": "OPTIONAL_EXTERNAL_PROPOSAL_PRODUCER",
@@ -121,9 +121,11 @@ INTENT_FIELDS = {
 REPOSITORY_FIELDS = {"commit", "tree"}
 EVIDENCE_FIELDS = {"role", "path", "sha256", "byte_length"}
 KINDS = {"OPERATOR_DECISION_RECORDED", "INTENT_RECORDED"}
-EVIDENCE_ROLES = {
-    "RUNNING_DOMAIN_CHECKPOINT",
-    "ONTOLOGY_REALIZATION_DESIGN",
+EVIDENCE_ROLE_PATHS = {
+    "RUNNING_DOMAIN_CHECKPOINT": (
+        "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md"
+    ),
+    "ONTOLOGY_REALIZATION_DESIGN": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
 }
 
 
@@ -299,9 +301,14 @@ def _validate_evidence(value: Any, root: Path, commit: str) -> None:
     for position, item in enumerate(value, start=1):
         artifact = _exact_fields(item, EVIDENCE_FIELDS, f"evidence[{position}]")
         role = _nonblank_string(artifact["role"], f"evidence[{position}].role")
-        if role not in EVIDENCE_ROLES:
+        required_path = EVIDENCE_ROLE_PATHS.get(role)
+        if required_path is None:
             raise JournalError(f"evidence[{position}].role is unsupported: {role}")
         path = _repository_path(artifact["path"])
+        if path != required_path:
+            raise JournalError(
+                f"evidence role {role} must bind {required_path}, got {path}"
+            )
         identity = (role, path)
         if identity in seen:
             raise JournalError(f"evidence contains duplicate role/path: {role} {path}")
@@ -326,6 +333,8 @@ def _validate_evidence(value: Any, root: Path, commit: str) -> None:
                 f"evidence[{position}].byte_length mismatch: "
                 f"expected {expected_length}, observed {len(source)}"
             )
+    if seen != set(EVIDENCE_ROLE_PATHS.items()):
+        raise JournalError("evidence must contain the exact v1 role/path set once")
 
 
 def _validate_common_payload(payload: dict[str, Any], root: Path) -> None:
