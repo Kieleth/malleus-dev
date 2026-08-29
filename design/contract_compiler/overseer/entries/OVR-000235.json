@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "id": "cc012-reactivation-correction-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T16:47:04Z",
+    "claims": [
+      "CC-021 and CC-022 remain pre-existing formal process-readiness bindings of CC-012; the Quiet Bell reactivation created no new DAG edge.",
+      "No Small Shop expected value, fact, identifier, derivation, shared helper, or interface transfers into Quiet Bell.",
+      "The operator-selected execution order is Quiet Bell, then neutral Greenhouse, then compiler edge cases; no control depends on or formally binds another control.",
+      "Only CC-012 is ACTIVE. CC-016 and CC-014 remain PAUSED with their cards, dependencies, bindings, candidates, and worker-ledger states unchanged.",
+      "The public-lookalike mutation retains every required private token and is refused because it adds forbidden PUBLIC_MALLEUS_RESOLVER material.",
+      "The original activation deliverables are guarded by literal expected text; the original reactivation report, integration registry, and three oracle-control cards remain byte-identical to commit 67560d41be90601e1d01235f3730e16f3e01cd91.",
+      "All Quiet Bell oracle content paths remain absent, candidate remains NONE, worker ledger remains NOT_STARTED, and selection remains absent."
+    ],
+    "limitations": [
+      "This replacement verifies governance recovery only. It creates no oracle content, compiler, fixture, runtime, public format, candidate, completion, package, release, selection, or CC-R authority.",
+      "Future Greenhouse and edge-case activation transactions must preserve the recorded order without adding cross-control semantic dependencies or transferring expected values."
+    ]
+  },
+  "entry_hash": "sha256:961ed60338283afe34519c234a9cc683ccff3181040b246d4315be578826bd4d",
+  "entry_id": "OVR-000235",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bd916576a2bf043372381ef17467beb3983b853331074add73dd68568d7d70cc",
+  "recorded_at": "2026-08-29T16:47:04Z",
+  "references": [
+    {
+      "digest": "sha256:c6f1dfd187cf24bd8abeba872f90c49963cece0369b87ce8d19d3b5b510cbe5d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000234",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 235,
+  "subject": {
+    "id": "cc012-reactivation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Replace the Quiet Bell reactivation verification with exact process and semantic boundaries.",
+  "why": "OVR-000232 requires a replacement verified fact. The correction report and OVR-000234 prove the unchanged process-readiness dependencies, absence of new DAG or semantic transfer, durable execution order, direct public-lookalike refusal, literal historical guard, and frozen content boundary."
+}

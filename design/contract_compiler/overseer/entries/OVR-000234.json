@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c6f1dfd187cf24bd8abeba872f90c49963cece0369b87ce8d19d3b5b510cbe5d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-012-reactivation-correction.json"
+      },
+      {
+        "after_digest": "sha256:c3b462801525a48aa386e8278068ad9c2b725ff3e847f7974913c45e8bdf70cf",
+        "before_digest": "sha256:ac18d4978d973f1aa0a9cae4ecbc364330b8a568e8489a0e11987b541c577ed9",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:bd916576a2bf043372381ef17467beb3983b853331074add73dd68568d7d70cc",
+  "entry_id": "OVR-000234",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:58a889d28ff7b67d3ea8901ed6d4b819080d675ed8db838a87b9f8ddc9028cb2",
+  "recorded_at": "2026-08-29T16:47:03Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation-correction.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:c6f1dfd187cf24bd8abeba872f90c49963cece0369b87ce8d19d3b5b510cbe5d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-reactivation-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "67560d41be90601e1d01235f3730e16f3e01cd91",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000232",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000233",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 234,
+  "subject": {
+    "id": "cc012-reactivation-correction-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record the append-only Quiet Bell reactivation correction boundary.",
+  "why": "The recovery requires one immutable report and durable tests that distinguish pre-existing process-readiness bindings from forbidden semantic transfer, enforce the operator's execution order without DAG edges, reject added public-looking vocabulary directly, and preserve the original activation history with literal assertions."
+}

@@ -1,0 +1,40 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "cc012-reactivation-verification",
+      "CC-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000230"
+  },
+  "entry_hash": "sha256:bcbbd8def163206e62cdb9df1146bfc34e7d6b2f64e3b81426f327c72451df17",
+  "entry_id": "OVR-000232",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7dae8e3976a07eec0ff106d27a848f41c933522f1e973272d746c9f38c65883a",
+  "recorded_at": "2026-08-29T16:47:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000230",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 232,
+  "subject": {
+    "id": "cc012-reactivation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Correct the Quiet Bell reactivation verification wording.",
+  "why": "OVR-000230 denied any cross-oracle dependency or card binding even though CC-021 and CC-022 were already formal process-readiness dependencies of CC-012. That wording could be read as contradicting the unchanged approved DAG. A replacement verified fact must distinguish those pre-existing process gates from the correctly forbidden transfer of Small Shop expected values, facts, identifiers, derivations, shared helpers, or interfaces."
+}

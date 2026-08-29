@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the independent Quiet Bell source-descriptor, import-graph, declaration, binding, elaboration, fact, and logical artifact expectations only from exact CC-011 sources and accepted decisions.",
+      "Use only the closed private fixture-local logical JSON labels, retain contradictions as RED, and transfer no Small Shop expected value, fact, identifier, derivation, shared helper, or interface into Quiet Bell.",
+      "Complete Quiet Bell before neutral Greenhouse, then complete neutral Greenhouse before compiler edge cases, without cross-control bindings; base the first candidate on the first commit containing OVR-000236."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000229",
+      "OVR-000234",
+      "OVR-000235"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PAUSED",
+    "workstream_id": "CC-012"
+  },
+  "entry_hash": "sha256:c40e1127c74ba6215ee5b17e0cfa63701b6925a51a008cca898bbf92a51a3579",
+  "entry_id": "OVR-000236",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:961ed60338283afe34519c234a9cc683ccff3181040b246d4315be578826bd4d",
+  "recorded_at": "2026-08-29T16:47:05Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000229",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000234",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000235",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 236,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Reactivate Quiet Bell under the corrected process and semantic boundary.",
+  "why": "OVR-000233 requires replacement state authority. OVR-000229 preserves the original bounded document transaction, while OVR-000234 and OVR-000235 provide corrected evidence that keeps process-readiness dependencies explicit, forbids semantic transfer, and enforces the operator's execution order without changing the DAG."
+}

@@ -52,6 +52,7 @@ SMALL_SHOP_ORACLE_CANDIDATE_COMMIT = "660cb408b0c28785d96731d976e6cbc1aeb9a69c"
 SMALL_SHOP_ORACLE_CANDIDATE_TREE = "cc46360437de6a2ad07d875e4e54404b7e7ce06e"
 QUIET_BELL_ORACLE_ACTIVATION_COMMIT = "c6e3616b292050ae0bbd0be9af40ca83ae9a91d1"
 QUIET_BELL_REACTIVATION_BASE = "d56c30f85b92d7452ca126d488bf027b42ee67f5"
+QUIET_BELL_REACTIVATION_COMMIT = "67560d41be90601e1d01235f3730e16f3e01cd91"
 QUIET_BELL_DEPENDENCIES = (
     "CC-010",
     "CC-D02",
@@ -1493,7 +1494,18 @@ def test_quiet_bell_prior_activation_and_pause_remain_historical() -> None:
             "CC-R07 retains runtime artifact bytes and wire grammar."
         ],
         "bootstrap": True,
-        "deliverables": activation["data"]["deliverables"],
+        "deliverables": [
+            "Author only independently derived themed source descriptors, import graph, "
+            "declarations, bindings, elaboration, facts, and logical artifact expectations "
+            "under the exact CC-010 themed oracle prefix, with no runtime artifact bytes "
+            "or wire grammar.",
+            "Use accepted decisions and completed CC-011 sources, and write expected "
+            "values by hand rather than exporting them from LinkML, OntologyRegistry, "
+            "or the implementation under test.",
+            "Keep source and trace inputs, compiler and runtime implementation, public "
+            "API, package, Docker, release, corpus publication, selection, integration, "
+            "and every CC-R stage outside CC-012.",
+        ],
         "evidence_entry_ids": ["OVR-000203", "OVR-000204"],
         "new_state": "ACTIVE",
         "previous_state": "PLANNED",
@@ -1523,7 +1535,9 @@ def _assert_quiet_bell_private_boundary(responsibility: str) -> None:
     for token in QUIET_BELL_PRIVATE_TOKENS:
         assert token in responsibility
     assert "public format" not in responsibility
-    assert "PUBLIC_MALLEUS_RESOLVER" not in responsibility
+    assert "PUBLIC_MALLEUS_RESOLVER" not in responsibility, (
+        "public-looking resolver material is forbidden"
+    )
     assert "Small Shop domain values" in responsibility
     assert "use no Small Shop domain values" in responsibility
 
@@ -1715,19 +1729,24 @@ def test_quiet_bell_reactivation_transaction_is_exact() -> None:
         later > earlier
         for earlier, later in zip(transaction_times, transaction_times[1:])
     )
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_REACTIVATION_COMMIT}:design/contract_compiler/overseer/"
+            "head.json",
+        )
+    )
     assert head["entry_count"] == 231
     assert head["head_entry_id"] == "OVR-000231"
     assert head["head_hash"] == activation["entry_hash"]
 
 
 def test_quiet_bell_private_tokens_reject_public_lookalikes() -> None:
-    responsibility = QUIET_BELL_ORACLE_RESPONSIBILITY.replace(
-        "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0",
-        "PUBLIC_MALLEUS_RESOLVER_V0",
-    )
+    responsibility = QUIET_BELL_ORACLE_RESPONSIBILITY + " PUBLIC_MALLEUS_RESOLVER_V0"
+    assert all(token in responsibility for token in QUIET_BELL_PRIVATE_TOKENS)
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(AssertionError, match="public-looking resolver"):
         _assert_quiet_bell_private_boundary(responsibility)
 
 
@@ -1751,6 +1770,212 @@ def test_quiet_bell_dependency_bindings_fail_closed(
         validate_integration(ROOT, path)
 
     _assert_code(error, "CC000_DEPENDENCY_BINDING")
+
+
+def test_quiet_bell_reactivation_correction_report_is_exact() -> None:
+    report_path = CONTRACT / "overseer/evidence/CC-012-reactivation-correction.json"
+    report = _read_json(report_path)
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-012"
+    assert report["base_commit"] == QUIET_BELL_REACTIVATION_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "design/contract_compiler/workstreams/CC-014/manifest.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    assert {check["check_id"] for check in report["checks"]} == {
+        "cc012-correction-red",
+        "cc012-append-only-supersession",
+        "cc012-process-readiness-truth",
+        "cc012-execution-order",
+        "cc012-public-token-guard",
+        "cc012-frozen-boundaries",
+    }
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    truth = next(
+        check
+        for check in report["checks"]
+        if check["check_id"] == "cc012-process-readiness-truth"
+    )["observed"]
+    for exact in (
+        "pre-existing formal process-readiness bindings",
+        "no new DAG edge",
+        "no Small Shop expected value, fact, identifier, derivation, shared helper, or interface",
+    ):
+        assert exact in truth
+
+
+def test_quiet_bell_reactivation_correction_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 232 <= entry["sequence"] <= 236)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(232, 237)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "CORRECTION",
+        "CORRECTION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "cc012-reactivation-verification",
+        "CC-012",
+        "cc012-reactivation-correction-boundary",
+        "cc012-reactivation-verification",
+        "CC-012",
+    )
+    verification_correction, state_correction, revision, verification, activation = (
+        transaction
+    )
+    for correction, target in (
+        (verification_correction, "OVR-000230"),
+        (state_correction, "OVR-000231"),
+    ):
+        assert correction["data"]["replacement_required"] is True
+        assert correction["data"]["supersedes_entry_id"] == target
+        assert ("SUPERSEDES", "ENTRY", target) in {
+            (reference["relation"], reference["type"], reference["target"])
+            for reference in correction["references"]
+        }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-012"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/overseer/evidence/CC-012-reactivation-correction.json": "CREATED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "cc012-reactivation-correction-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000229",
+        "OVR-000234",
+        "OVR-000235",
+    ]
+    assert activation["data"]["deliverables"][-1].endswith(
+        "the first commit containing OVR-000236."
+    )
+    superseded = integration_module.superseded_entries(entries)
+    assert {"OVR-000230", "OVR-000231"} <= superseded
+    states, state_entries = integration_module._workstream_states(_raw_overseer_state())
+    assert states["CC-012"] == "ACTIVE"
+    assert state_entries["CC-012"]["entry_id"] == "OVR-000236"
+
+    report_time = datetime.fromisoformat(
+        _read_json(CONTRACT / "overseer/evidence/CC-012-reactivation-correction.json")[
+            "recorded_at"
+        ].replace("Z", "+00:00")
+    )
+    times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert times[0] < times[1] < report_time < times[2] < times[3] < times[4]
+    head = _read_json(CONTRACT / "overseer/head.json")
+    assert head["entry_count"] == 236
+    assert head["head_entry_id"] == "OVR-000236"
+    assert head["head_hash"] == activation["entry_hash"]
+
+
+def test_quiet_bell_greenhouse_edge_execution_order_has_no_control_bindings() -> None:
+    manifest = _read_json(INTEGRATION)
+    order = ("CC-012", "CC-016", "CC-014")
+    control_ids = set(order)
+    cards = {
+        workstream_id: _read_json(
+            _card_path(INTEGRATION, _registry_row(manifest, workstream_id))
+        )
+        for workstream_id in order
+    }
+    for workstream_id, card in cards.items():
+        assert control_ids.isdisjoint(
+            _registry_row(manifest, workstream_id)["depends_on"]
+        )
+        assert control_ids.isdisjoint(
+            binding["workstream_id"]
+            for binding in card["authorization"].get("dependency_bindings", [])
+        )
+
+    frozen_paths = (
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-012-reactivation.json",
+        "design/contract_compiler/workstreams/CC-012/manifest.json",
+        "design/contract_compiler/workstreams/CC-014/manifest.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+    )
+    for path in frozen_paths:
+        assert (ROOT / path).read_bytes() == subprocess.run(
+            ["git", "show", f"{QUIET_BELL_REACTIVATION_COMMIT}:{path}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+
+    entries = _raw_overseer_state().entries
+    superseded = integration_module.superseded_entries(entries)
+    active_state_entries = tuple(
+        entry
+        for entry in entries
+        if entry["entry_id"] not in superseded
+        and entry["entry_type"] == "WORKSTREAM_STATE"
+        and entry["sequence"] >= 232
+        and entry["data"]["workstream_id"] in control_ids
+    )
+    assert [entry["data"]["workstream_id"] for entry in active_state_entries] == [
+        "CC-012"
+    ]
+    for predecessor, successor in zip(order, order[1:]):
+        successor_activations = [
+            entry
+            for entry in active_state_entries
+            if entry["data"]["workstream_id"] == successor
+            and entry["data"]["new_state"] == "ACTIVE"
+        ]
+        for successor_activation in successor_activations:
+            assert any(
+                entry["entry_id"] not in superseded
+                and entry["entry_type"] == "WORKSTREAM_STATE"
+                and entry["data"]["workstream_id"] == predecessor
+                and entry["data"]["new_state"] == "COMPLETE"
+                and entry["sequence"] < successor_activation["sequence"]
+                for entry in entries
+            )
+
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    assert tuple(states[workstream_id] for workstream_id in order) == (
+        "ACTIVE",
+        "PAUSED",
+        "PAUSED",
+    )
+    assert tuple(
+        cards[workstream_id]["candidate"]["state"] for workstream_id in order
+    ) == (
+        "NONE",
+        "NONE",
+        "NONE",
+    )
+    assert tuple(
+        cards[workstream_id]["ledger"]["state"] for workstream_id in order
+    ) == (
+        "NOT_STARTED",
+        "NOT_STARTED",
+        "NOT_STARTED",
+    )
 
 
 def test_small_shop_program_boundary_is_exact() -> None:

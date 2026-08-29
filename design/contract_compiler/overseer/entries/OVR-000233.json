@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000231"
+  },
+  "entry_hash": "sha256:58a889d28ff7b67d3ea8901ed6d4b819080d675ed8db838a87b9f8ddc9028cb2",
+  "entry_id": "OVR-000233",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bcbbd8def163206e62cdb9df1146bfc34e7d6b2f64e3b81426f327c72451df17",
+  "recorded_at": "2026-08-29T16:47:01Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000231",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 233,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the Quiet Bell activation that relied on superseded verification.",
+  "why": "OVR-000231 used OVR-000230 as activation evidence. Once that verification is superseded, the dependent ACTIVE projection cannot remain current authority. This correction restores the prior PAUSED projection until a replacement verified fact states the exact process-readiness and semantic-separation truth."
+}

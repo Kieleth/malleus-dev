@@ -1,0 +1,78 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:e097a1063f5e3ae8af7d4b120e0ea192e1081e4039401d3328deffc79e4edcfa"
+    },
+    {
+      "byte_length": 5838,
+      "path": "design/contract_compiler/workstreams/CC-012/manifest.json",
+      "sha256": "sha256:78ce9d5736345880a98b120feb22e1cc40bc61dd8b5491ec4ece5e97ca858bdb"
+    },
+    {
+      "byte_length": 1791,
+      "path": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "sha256": "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e"
+    },
+    {
+      "byte_length": 1831,
+      "path": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "sha256": "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f"
+    },
+    {
+      "byte_length": 156328,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:c3b462801525a48aa386e8278068ad9c2b725ff3e847f7974913c45e8bdf70cf"
+    }
+  ],
+  "base_commit": "67560d41be90601e1d01235f3730e16f3e01cd91",
+  "checks": [
+    {
+      "check_id": "cc012-correction-red",
+      "method": "Run the focused correction-report, correction-transaction, execution-order, public-token, and literal historical-activation guards before appending replacement authority.",
+      "observed": "The command exited 1 with exactly 3 failures and 2 passes. The correction report and OVR-000232 through OVR-000236 were absent, and no post-correction Quiet Bell activation existed. The repaired public-lookalike guard and literal historical deliverables guard passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-append-only-supersession",
+      "method": "Inspect the immutable 67560d4 transaction, then require separate corrections for the flawed verified fact and its dependent activation before replacement evidence and state.",
+      "observed": "OVR-000230 and OVR-000231 remain immutable historical blocks. OVR-000232 and OVR-000233 supersede them with replacement_required true; OVR-000234 revises only this report and the integration test; OVR-000235 replaces the verified fact; OVR-000236 replaces PAUSED-to-ACTIVE authority.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-process-readiness-truth",
+      "method": "Compare the approved program, integration registry, three oracle-control cards, and exact Quiet Bell responsibility before and after the reactivation commit.",
+      "observed": "CC-021 and CC-022 remain pre-existing formal process-readiness bindings. The reactivation created no new DAG edge, and no Small Shop expected value, fact, identifier, derivation, shared helper, or interface transfers into Quiet Bell.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-execution-order",
+      "method": "Enforce the operator-selected Quiet Bell, then neutral Greenhouse, then compiler edge-case execution order while forbidding dependencies and authorization bindings among the three controls.",
+      "observed": "Only Quiet Bell is ACTIVE. Neutral Greenhouse and compiler edge cases remain PAUSED. None of the three registry rows or cards depends on or binds another control, and any later activation requires its predecessor to have completed first.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-public-token-guard",
+      "method": "Retain every required private fixture token, add forbidden public-looking resolver material, and require the boundary guard to refuse that added material directly.",
+      "observed": "All required TEST_ONLY labels remain present in the mutation. The guard refuses because PUBLIC_MALLEUS_RESOLVER material was added, not because private evidence was removed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-boundaries",
+      "method": "Compare integration, the original reactivation report, and all three oracle-control cards byte-for-byte with commit 67560d4, then inspect owned content paths and candidate state.",
+      "observed": "The integration registry, original report, and CC-012, CC-014, and CC-016 cards are byte-identical to 67560d4. No oracle content exists; all candidates remain NONE and worker ledgers NOT_STARTED; selections, dependencies, compiler, fixtures, and runtime are unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This report corrects governance evidence and activation authority only. It creates no oracle content, candidate, worker ledger, selection, completion, compiler, fixture, runtime, package, release, or public contract.",
+    "CC-021 and CC-022 remain process-readiness dependencies. They contribute no Quiet Bell semantic value and this correction does not remove or add any formal dependency binding.",
+    "The private fixture representation and testing workflow remain non-public and carry no compatibility, migration, runtime artifact, or wire-format promise.",
+    "Neutral Greenhouse and compiler edge cases require later reviewed activations in the recorded order; this report creates no cross-control DAG edge, card binding, helper, or interface.",
+    "The separately observed stale historic-wire measurement remains pre-existing, excluded from fixed CI, and outside this correction."
+  ],
+  "recorded_at": "2026-08-29T16:47:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}
