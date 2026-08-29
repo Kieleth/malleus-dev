@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_small_shop_fixture_oracle.py",
+    "observed": "The fixed test exited 1 with exactly 2 failures and 4 passes. Both failures were FileNotFoundError for the absent private answer-key members, tbox-expectations.json and ret-000-ret-010.json.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:d3ec45718f60121a7bf05a2d8e33072069a253d814833892cdf0e3332c0c012f",
+  "entry_id": "CC-022-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-29T08:44:01Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the missing-answer-key RED.",
+  "workstream_id": "CC-022"
+}

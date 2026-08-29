@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author exactly two private fixture-local logical JSON answer-key members for the accepted TBox controls and RET-000/RET-010 meaning.",
+      "Bind the exact 870c993..660cb40 eligible candidate, canonical report, and seven worker TDD phases with no P0-P2 audit issue.",
+      "Keep the candidate unselected and non-public while preserving Event-to-Entity correlation as typed RED and all executable realization, compiler, protocol, graph, corpus, package, release, and CC-R work outside CC-022."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000227"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-022"
+  },
+  "entry_hash": "sha256:37f7cacdc881548bfe51a04624d1f9c4fe7fe813455540c7da6a8bc1f542fc9d",
+  "entry_id": "OVR-000228",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:413b0e5ef246ce483fc56053abf74800cf882cc135d274fdc22a6e05236a63db",
+  "recorded_at": "2026-08-29T08:46:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000227",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 228,
+  "subject": {
+    "id": "CC-022",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded Small Shop answer-key workstream.",
+  "why": "OVR-000227 binds the exact eligible independently authored answer key, canonical report, seven worker TDD phases, dependency closure, private non-public boundary, and clean P0-P2 audit needed to complete CC-022 without selection or downstream implementation authority."
+}

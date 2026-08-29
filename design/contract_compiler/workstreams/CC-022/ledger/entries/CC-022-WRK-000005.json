@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler && python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/test_journal.py",
+    "observed": "Candidate-observed regression gates passed exactly 86 contract-compiler tests and 55 Small Shop research-journal tests.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4ba96da6bde97837b1e64e859195d5c417584b20eeece2ec7a080e6814432f35",
+  "entry_id": "CC-022-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c39b13ae948fd8bc701c3075b54833605c76783b3353f335117a6489fe91b43a",
+  "recorded_at": "2026-08-29T08:44:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass candidate-observed regression suites.",
+  "workstream_id": "CC-022"
+}

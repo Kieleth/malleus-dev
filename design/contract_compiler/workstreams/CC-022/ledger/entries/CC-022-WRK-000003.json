@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect candidate 660cb408b0c28785d96731d976e6cbc1aeb9a69c, its parent, tree, exact four-path diff, and closed fixture semantics.",
+    "observed": "The one-commit candidate adds only the two private answer-key members, fixed test, and canonical report. It binds the approved TBox controls, ontology-only empty population, RET-010 logical answer, passive review, closed derivation, and retained Event-correlation RED.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:02030c4280ce6c00b53429829bf63fe00658fb2c4dc860319cef16ecf4e8760a",
+  "entry_id": "CC-022-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:7daebd839befb5801ea7fdc2e6ac2b18fa9aec55670a0a925472e7dbadf32fa8",
+  "recorded_at": "2026-08-29T08:44:03Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the exact answer-key slice.",
+  "workstream_id": "CC-022"
+}

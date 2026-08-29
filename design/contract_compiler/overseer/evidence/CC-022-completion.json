@@ -1,0 +1,87 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 7243,
+      "path": "conformance/contract_compiler/v0/evidence/CC-022.json",
+      "sha256": "sha256:a05c283bde20bd1bf292ab9f9ae485b55c1fcbebf48880db0b41a5db5abe77e8"
+    },
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:73a50a2589598228af44e3d4260e9e8d79886deb22803a2fff5451b991883d50"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-022/ledger/head.json",
+      "sha256": "sha256:46da881e7ef4c6375ae3eee0bd3f90e0dfc0454104ea161efa688bf3dd05c34b"
+    },
+    {
+      "byte_length": 6991,
+      "path": "design/contract_compiler/workstreams/CC-022/manifest.json",
+      "sha256": "sha256:dc46674de6e3eb4e23413228665717fa8c7bd1e2221698872f7c0f84ab07dc86"
+    }
+  ],
+  "base_commit": "660cb408b0c28785d96731d976e6cbc1aeb9a69c",
+  "checks": [
+    {
+      "check_id": "cc022-candidate-history",
+      "method": "Validate the exact 870c993..660cb40 one-commit candidate, direct parent, tree cc463604, four touched paths, three non-evidence artifacts, and one canonical PASS report.",
+      "observed": "Candidate 660cb408b0c28785d96731d976e6cbc1aeb9a69c has parent 870c993fe2442b40fd1934edbf00003033c591b1, tree cc46360437de6a2ad07d875e4e54404b7e7ce06e, and exactly the two private JSON members, fixed test, and canonical report.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-artifact-equality",
+      "method": "Require exact equality between the canonical report's three artifacts and the eligible card's artifact list, then recompute every candidate byte length and SHA-256.",
+      "observed": "The card and canonical report bind the same two private answer-key members and fixed test. The canonical report is the sole PASS evidence pointer and every candidate byte verifies at 660cb40.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-independent-answer-key",
+      "method": "Verify the operator decision, frozen input and ontology-decision coordinates, closed logical derivation, independent hand-authorship, and lack of compiler or runtime execution.",
+      "observed": "The candidate binds the approved private fixture-local representation and completed controlled inputs. Its expected TBox and RET-000/RET-010 meanings were hand-authored after the missing-file RED without importing or executing compiler, runtime, recipe, protocol, or projector implementation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-worker-tdd",
+      "method": "Validate the assigned worker's canonical seven-entry hash chain and exact ordered RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST phases.",
+      "observed": "Seven chained TDD_RESULT entries pass. RED records exactly 2 missing-file failures and 4 passes; GREEN records 6 passes; PACKAGE is NOT_APPLICABLE; head is CC-022-WRK-000007 at sha256:038ef20d7646ba943e4e69fcb28b96d227b823ef77f5eac8078c0e28692b1659.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-dependencies",
+      "method": "Validate all nine formal dependency bindings against current cards, completion entries and hashes, first completion-authority commits, and the two owner-separation edges.",
+      "observed": "All nine dependencies remain complete and exactly bound. Input and answer-key owners remain distinct; the answer-key and future executable owner-separation edge remains unchanged. No dependency, owner, or selection authority changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-independent-audit",
+      "method": "Independently audit candidate 660cb40, its exact four-path diff, accepted semantics, refusal boundaries, independent authorship, and absence of downstream implementation or output.",
+      "observed": "Independent audit found no P0-P2 issue. The sole retained P3 limitation is that the exact-literal production-path scan is a current-state tripwire rather than a general information-flow proof.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-regression",
+      "method": "Run focused answer-key and completion guards, contract-compiler and Small Shop suites, integration and ledger validators, both evidence verifiers, changed-file Ruff and diff checks, then the fixed full local CI profile.",
+      "observed": "Candidate-observed gates passed 6 focused tests, 86 contract-compiler tests, and 55 Small Shop tests. Completion gates and full CI pass with strict Sphinx, package build, clean install, and CLI smoke coverage.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc022-unselected-completion",
+      "method": "Require the answer-key work COMPLETE while its exact candidate remains ELIGIBLE and unselected, then inspect adjacent paused oracle packages and the absent future executable vertical.",
+      "observed": "The candidate remains ELIGIBLE and absent from the four selections. CC-012, CC-014, and CC-016 remain PAUSED; CC-R09 remains ABSENT; no public format, mapping, compiler, runtime, protocol, graph, replay, corpus, package, release, or CC-R authority changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The two fixture-local JSON members are private, unstable test evidence. They define no public schema, ABox encoding, facts wire format, stable identifiers, compatibility, migration, or artifact format.",
+    "The exact-literal production-path scan is a current-state tripwire, not a general information-flow proof.",
+    "Complete fact arrays, semantic or source digests, production diagnostics, mappings, transformation code, identity rules, recipe representation, and ProposedOperation bytes or ordering remain deferred.",
+    "Compiler and runtime implementation, staging, protocol events or decisions, ledger state, accepted knowledge-graph projection, replay, and corpus publication remain deferred.",
+    "Checksums, installed data, package, image, release, selection, and integration remain outside this evidence.",
+    "All CC-R work remains outside this evidence. Paused independent oracle packages and the future Small Shop executable vertical are unchanged.",
+    "RET-020 and all later Small Shop cases remain deferred. Event-to-Entity correlation remains a typed RED boundary."
+  ],
+  "recorded_at": "2026-08-29T08:45:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-022"
+}

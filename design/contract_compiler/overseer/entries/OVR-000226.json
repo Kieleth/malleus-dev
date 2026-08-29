@@ -1,0 +1,129 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:a05c283bde20bd1bf292ab9f9ae485b55c1fcbebf48880db0b41a5db5abe77e8",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-022.json"
+      },
+      {
+        "after_digest": "sha256:73a50a2589598228af44e3d4260e9e8d79886deb22803a2fff5451b991883d50",
+        "before_digest": "sha256:d9aaa8eb722d55cb42b65f045218ec9cd677267cae0be9341a6ddc705c1f0685",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:213f12b7297943b877181b63badd8817c74b4ce68f0edc19b8f16ca9811d8053",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-022-completion.json"
+      },
+      {
+        "after_digest": "sha256:38e032313d4d1450719024e86a8a2879d0f5241ff2c8731ef27cf390a82aaf7c",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000001.json"
+      },
+      {
+        "after_digest": "sha256:e8f8cfc2a0770461516abca705c234addc03ce8d3fd5b1597fc40ba43e3cb4d5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000002.json"
+      },
+      {
+        "after_digest": "sha256:91d0725aba6ecc575f0f38656bc69ef558296be40510d548582a3b1d68526b19",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000003.json"
+      },
+      {
+        "after_digest": "sha256:bd306d35111a76f798f355a042e243501c441bf0bca488f5d3cb4239dc539bcb",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000004.json"
+      },
+      {
+        "after_digest": "sha256:9a2ee5fc525bb84a6bd2470a80288d02851b90ce26bbafb3740d75296ce8915f",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000005.json"
+      },
+      {
+        "after_digest": "sha256:79fdf30217f46ebbde787a598e748216e2f0c8a3de95a05e365ae34aca8c4c07",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000006.json"
+      },
+      {
+        "after_digest": "sha256:3cfbedf8dd64de23f0a4ef34a99a8aec5282ef61116abdc228daa4ba799687cf",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/entries/CC-022-WRK-000007.json"
+      },
+      {
+        "after_digest": "sha256:46da881e7ef4c6375ae3eee0bd3f90e0dfc0454104ea161efa688bf3dd05c34b",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-022/ledger/head.json"
+      },
+      {
+        "after_digest": "sha256:dc46674de6e3eb4e23413228665717fa8c7bd1e2221698872f7c0f84ab07dc86",
+        "before_digest": "sha256:973acec2cc226301bb3a308d76abfa92c3c6c077e8da376bbe236308064c7baa",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-022/manifest.json"
+      },
+      {
+        "after_digest": "sha256:1b32027c25800e5805da536432aacfb806fd4ffd2762592a344a57218c21e4e4",
+        "before_digest": "sha256:b4a517c63cbe542859d415d4d182d851ad355428ba41dc77f412eba8a47b84fb",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ed1df5cf66d6fd9899844a1dccee00e51dfb2eca40bdb201c21072038a0209bf",
+  "entry_id": "OVR-000226",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:72800bff960afd18e2ce57ad99db7c2ff9e61e251d142ecee5c6e7a7b929f994",
+  "recorded_at": "2026-08-29T08:46:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-022/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-022/ledger/head.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:213f12b7297943b877181b63badd8817c74b4ce68f0edc19b8f16ca9811d8053",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-022-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 226,
+  "subject": {
+    "id": "cc022-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the eligible Small Shop answer-key candidate and worker TDD ledger.",
+  "why": "Completion review binds the exact one-commit private answer-key candidate, canonical three-artifact report, assigned worker's seven-entry TDD chain, independent audit with no P0-P2 issue, and unchanged unselected boundary while deferring public formats and all executable realization, compiler, protocol, graph, corpus, package, release, and CC-R work."
+}

@@ -1,0 +1,40 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 7243,
+        "path": "conformance/contract_compiler/v0/evidence/CC-022.json",
+        "sha256": "sha256:a05c283bde20bd1bf292ab9f9ae485b55c1fcbebf48880db0b41a5db5abe77e8"
+      },
+      {
+        "byte_length": 2763,
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle/ret-000-ret-010.json",
+        "sha256": "sha256:4565c5f2dd84670c762c0a53e5a0868fe8cab6f1781a9757ecb41581e7f32fcc"
+      },
+      {
+        "byte_length": 1033,
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle/tbox-expectations.json",
+        "sha256": "sha256:0a8d3fdae6f16117643d898eb7576022e61700d3f83d286ff164fb66f6ae0f31"
+      },
+      {
+        "byte_length": 26448,
+        "path": "tests/contract_compiler/test_small_shop_fixture_oracle.py",
+        "sha256": "sha256:2d6086b05c8776c035cfc165775c827017d05437c50ce9f27f826a7e6c0d4baa"
+      }
+    ],
+    "command": "Verify candidate 660cb408b0c28785d96731d976e6cbc1aeb9a69c, parent 870c993fe2442b40fd1934edbf00003033c591b1, tree cc46360437de6a2ad07d875e4e54404b7e7ce06e, exact four-path diff, canonical report, and independent audit.",
+    "observed": "The four frozen artifacts match exact candidate bytes. Independent audit found no P0-P2 issue and retained only the nonblocking exact-literal tripwire limitation.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:038ef20d7646ba943e4e69fcb28b96d227b823ef77f5eac8078c0e28692b1659",
+  "entry_id": "CC-022-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b2b43f72d25866fbfcacb4e7501a2639f95dc9593d36b8c2dc99bda52bb3d997",
+  "recorded_at": "2026-08-29T08:44:07Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen answer-key candidate.",
+  "workstream_id": "CC-022"
+}

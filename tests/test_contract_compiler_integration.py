@@ -47,6 +47,9 @@ SMALL_SHOP_ORACLE_DECISION_TREE = "cb56d2f0079c8cfc4eff5b3fe42b7737fdb5346f"
 SMALL_SHOP_ORACLE_DECISION_HASH = (
     "sha256:1b16128d623cc7b1348f98f636be83d7a1514011b63d112ad09dbb3946564d61"
 )
+SMALL_SHOP_ORACLE_ACTIVATION_COMMIT = "870c993fe2442b40fd1934edbf00003033c591b1"
+SMALL_SHOP_ORACLE_CANDIDATE_COMMIT = "660cb408b0c28785d96731d976e6cbc1aeb9a69c"
+SMALL_SHOP_ORACLE_CANDIDATE_TREE = "cc46360437de6a2ad07d875e4e54404b7e7ce06e"
 SMALL_SHOP_INPUT_ROOT = (
     "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input"
 )
@@ -1954,7 +1957,13 @@ def test_cc021_completion_transaction_is_exact() -> None:
 
 
 def test_cc021_completion_preserves_paused_controls_and_future_implementation() -> None:
-    manifest = _read_json(INTEGRATION)
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_INPUT_COMPLETION_COMMIT}:design/contract_compiler/integration.json",
+        )
+    )
     states, _ = integration_module._workstream_states(_raw_overseer_state())
 
     assert states["CC-021"] == "COMPLETE"
@@ -1962,16 +1971,18 @@ def test_cc021_completion_preserves_paused_controls_and_future_implementation() 
     assert states["CC-014"] == "PAUSED"
     assert states["CC-016"] == "PAUSED"
     oracle_row = _registry_row(manifest, "CC-022")
-    oracle_card = _read_json(CONTRACT / oracle_row["card"]["path"])
-    assert oracle_row["card"]["state"] == "PRESENT"
-    assert oracle_card["candidate"] == {"state": "NONE"}
-    assert oracle_card["ledger"] == {"state": "NOT_STARTED"}
-    assert states["CC-022"] == "ACTIVE"
+    assert oracle_row["card"] == {"state": "ABSENT"}
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
 
 
 def test_small_shop_oracle_activation_boundary_is_exact() -> None:
-    manifest = _read_json(INTEGRATION)
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/integration.json",
+        )
+    )
     prior_manifest = json.loads(
         _git(
             ROOT,
@@ -1979,20 +1990,31 @@ def test_small_shop_oracle_activation_boundary_is_exact() -> None:
             f"{SMALL_SHOP_ORACLE_DECISION_COMMIT}:design/contract_compiler/integration.json",
         )
     )
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
     oracle_paths = (
-        ROOT / SMALL_SHOP_ORACLE_ROOT,
-        ROOT / "conformance/contract_compiler/v0/evidence/CC-022.json",
-        ROOT / "tests/contract_compiler/test_small_shop_fixture_oracle.py",
+        SMALL_SHOP_ORACLE_ROOT,
+        "conformance/contract_compiler/v0/evidence/CC-022.json",
+        "tests/contract_compiler/test_small_shop_fixture_oracle.py",
     )
 
     assert len(manifest["workstreams"]) == 69
     assert manifest["revision"] == 2
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
-    assert states["CC-021"] == "COMPLETE"
-    assert states["CC-012"] == states["CC-014"] == states["CC-016"] == "PAUSED"
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
-    assert all(not path.exists() for path in oracle_paths)
+    assert all(
+        subprocess.run(
+            [
+                "git",
+                "cat-file",
+                "-e",
+                f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:{path}",
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+        ).returncode
+        != 0
+        for path in oracle_paths
+    )
     assert {
         row["workstream_id"]: row
         for row in manifest["workstreams"]
@@ -2016,15 +2038,24 @@ def test_small_shop_oracle_activation_boundary_is_exact() -> None:
 
     row = _registry_row(manifest, "CC-022")
     assert row["card"]["state"] == "PRESENT"
-    card_path = CONTRACT / row["card"]["path"]
-    card_source = card_path.read_bytes()
+    card_source = subprocess.run(
+        [
+            "git",
+            "show",
+            f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/"
+            f"{row['card']['path']}",
+        ],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
     assert row["card"] == {
         "byte_length": len(card_source),
         "path": "workstreams/CC-022/manifest.json",
         "sha256": _digest(card_source),
         "state": "PRESENT",
     }
-    card = _read_json(card_path)
+    card = json.loads(card_source)
     assert card["assignment"] == {
         "owner_id": "worker:cc022-small-shop-oracle",
         "state": "ASSIGNED",
@@ -2063,12 +2094,16 @@ def test_small_shop_oracle_activation_boundary_is_exact() -> None:
     assert card["candidate"] == {"state": "NONE"}
     assert card["ledger"] == {"state": "NOT_STARTED"}
     assert card["responsibility"] == SMALL_SHOP_ORACLE_RESPONSIBILITY
-    assert states["CC-022"] == "ACTIVE"
     assert "CC-022" not in manifest["selections"]
 
     cards = {
-        workstream_id: _read_json(
-            CONTRACT / _registry_row(manifest, workstream_id)["card"]["path"]
+        workstream_id: json.loads(
+            _git(
+                ROOT,
+                "show",
+                f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/"
+                f"{_registry_row(manifest, workstream_id)['card']['path']}",
+            )
         )
         for workstream_id in ("CC-021", "CC-022")
     }
@@ -2080,6 +2115,166 @@ def test_small_shop_oracle_activation_boundary_is_exact() -> None:
         ("CC-021", "CC-022"),
         ("CC-022", "CC-R09"),
     }
+
+
+def test_small_shop_oracle_completion_candidate_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-022")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    canonical_report = ROOT / "conformance/contract_compiler/v0/evidence/CC-022.json"
+    report = _read_json(canonical_report)
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-022/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["candidate"] == {
+        "artifacts": report["artifacts"],
+        "base_commit": SMALL_SHOP_ORACLE_ACTIVATION_COMMIT,
+        "evidence": [
+            {
+                "byte_length": len(canonical_report.read_bytes()),
+                "path": "conformance/contract_compiler/v0/evidence/CC-022.json",
+                "result": "PASS",
+                "sha256": _digest(canonical_report.read_bytes()),
+            }
+        ],
+        "head_commit": SMALL_SHOP_ORACLE_CANDIDATE_COMMIT,
+        "head_tree": SMALL_SHOP_ORACLE_CANDIDATE_TREE,
+        "state": "ELIGIBLE",
+    }
+    assert card["candidate"]["artifacts"] == report["artifacts"]
+    assert card["responsibility"] == SMALL_SHOP_ORACLE_RESPONSIBILITY
+    assert len(card["authorization"]["dependency_bindings"]) == 9
+    validate_candidate_history(ROOT, card["candidate"], allowed_scopes=card["scopes"])
+
+
+def test_small_shop_oracle_completion_worker_chain_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    card = _read_json(CONTRACT / _registry_row(manifest, "CC-022")["card"]["path"])
+    ledger_root = CONTRACT / "workstreams/CC-022/ledger"
+    entries = [
+        _read_json(path) for path in sorted((ledger_root / "entries").glob("*.json"))
+    ]
+    head = _read_json(ledger_root / "head.json")
+
+    assert len(entries) == 7
+    assert [entry["data"]["phase"] for entry in entries] == list(
+        integration_module.TDD_PHASES
+    )
+    assert entries[0]["data"]["result"] == "EXPECTED_FAILURE"
+    assert entries[5]["data"]["result"] == "NOT_APPLICABLE"
+    assert all(
+        entry["data"]["result"] == "PASS" for entry in (*entries[1:5], entries[6])
+    )
+    assert {entry["actor_id"] for entry in entries} == {
+        "worker:cc022-small-shop-oracle"
+    }
+    assert head["entry_count"] == 7
+    assert head["head_entry_id"] == "CC-022-WRK-000007"
+    assert head["head_hash"] == entries[-1]["entry_hash"]
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": "CC-022-WRK-000007",
+        "head_hash": head["head_hash"],
+        "path": "workstreams/CC-022/ledger",
+        "state": "RECORDED",
+    }
+
+
+def test_small_shop_oracle_completion_report_is_bounded() -> None:
+    report = _read_json(CONTRACT / "overseer/evidence/CC-022-completion.json")
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-022"
+    assert report["base_commit"] == SMALL_SHOP_ORACLE_CANDIDATE_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "conformance/contract_compiler/v0/evidence/CC-022.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-022/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-022/manifest.json",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any(
+        "tripwire" in limitation and "information-flow proof" in limitation
+        for limitation in report["limitations"]
+    )
+    assert all(
+        any(term.lower() in limitation.lower() for limitation in report["limitations"])
+        for term in ("public", "mapping", "compiler", "protocol", "package", "CC-R")
+    )
+
+
+def test_small_shop_oracle_completion_transaction_is_exact() -> None:
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 226 <= entry["sequence"] <= 228
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000226",
+        "OVR-000227",
+        "OVR-000228",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completion = transaction
+    expected_documents = {
+        "conformance/contract_compiler/v0/evidence/CC-022.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-022-completion.json",
+        "design/contract_compiler/workstreams/CC-022/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-022/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+        *{
+            "design/contract_compiler/workstreams/CC-022/ledger/entries/"
+            f"CC-022-WRK-{sequence:06d}.json"
+            for sequence in range(1, 8)
+        },
+    }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-022"]
+    assert {document["path"] for document in revision["data"]["documents"]} == (
+        expected_documents
+    )
+    assert verification["actor"] == {
+        "id": "cc022-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert completion["data"]["previous_state"] == "ACTIVE"
+    assert completion["data"]["new_state"] == "COMPLETE"
+    assert completion["data"]["blockers"] == []
+    assert completion["data"]["evidence_entry_ids"] == ["OVR-000227"]
+
+
+def test_small_shop_oracle_completion_preserves_adjacent_authority() -> None:
+    manifest = _read_json(INTEGRATION)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    assert len(manifest["workstreams"]) == 69
+    assert (
+        len(
+            _read_json(CONTRACT / "workstreams/CC-022/manifest.json")["authorization"][
+                "dependency_bindings"
+            ]
+        )
+        == 9
+    )
+    assert len(manifest["owner_separations"]) == 15
+    assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
+    assert states["CC-022"] == "COMPLETE"
+    assert states["CC-012"] == states["CC-014"] == states["CC-016"] == "PAUSED"
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+    assert "CC-022" not in manifest["selections"]
 
 
 def test_small_shop_oracle_activation_report_binds_operator_decision() -> None:
@@ -2132,7 +2327,16 @@ def test_small_shop_oracle_activation_report_binds_operator_decision() -> None:
         "tests/test_contract_compiler_integration.py",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     checks = {check["check_id"]: check for check in report["checks"]}
@@ -2264,7 +2468,13 @@ def test_small_shop_oracle_activation_transaction_is_exact() -> None:
         later > earlier
         for earlier, later in zip(transaction_times, transaction_times[1:])
     )
-    head = _read_json(CONTRACT / "overseer/head.json")
+    head = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ORACLE_ACTIVATION_COMMIT}:design/contract_compiler/overseer/head.json",
+        )
+    )
     assert head["entry_count"] == 225
     assert head["head_entry_id"] == "OVR-000225"
     assert head["head_hash"] == activation["entry_hash"]

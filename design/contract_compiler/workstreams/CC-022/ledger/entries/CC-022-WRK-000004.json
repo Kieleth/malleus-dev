@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect imports, representation metadata, compiler-input membership, closed keys, exclusions, and production-source exact literals without executing implementation code.",
+    "observed": "The answer key is private, non-public, compatibility-free, closed, and absent from compiler inputs. It contains no mapping, recipe, operation, protocol, ledger, or knowledge-graph output, and no compiler or runtime implementation is imported or executed. The exact-literal production-path scan is a useful current-state tripwire, not a general information-flow proof.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c39b13ae948fd8bc701c3075b54833605c76783b3353f335117a6489fe91b43a",
+  "entry_id": "CC-022-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:02030c4280ce6c00b53429829bf63fe00658fb2c4dc860319cef16ecf4e8760a",
+  "recorded_at": "2026-08-29T08:44:04Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass independence and exclusion disproofs.",
+  "workstream_id": "CC-022"
+}

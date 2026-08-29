@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_small_shop_fixture_oracle.py",
+    "observed": "All 6 fixed answer-key tests passed after the two private fixture-local JSON members and canonical report were hand-authored.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:7daebd839befb5801ea7fdc2e6ac2b18fa9aec55670a0a925472e7dbadf32fa8",
+  "entry_id": "CC-022-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:d3ec45718f60121a7bf05a2d8e33072069a253d814833892cdf0e3332c0c012f",
+  "recorded_at": "2026-08-29T08:44:02Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the private Small Shop answer key.",
+  "workstream_id": "CC-022"
+}

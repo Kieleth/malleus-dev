@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "cc022-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T08:46:01Z",
+    "claims": [
+      "CC-022 is the exact 870c993fe2442b40fd1934edbf00003033c591b1..660cb408b0c28785d96731d976e6cbc1aeb9a69c one-commit candidate at tree cc46360437de6a2ad07d875e4e54404b7e7ce06e with four authorized touched paths.",
+      "The eligible card and canonical report bind the same exact two private answer-key members and fixed test, with the report as the sole PASS evidence pointer.",
+      "The answer key binds the approved operator decision, complete controlled inputs, accepted ontology decisions, independent hand-authorship, closed derivation, passive review, and retained Event-correlation RED.",
+      "The assigned worker ledger contains the exact seven ordered TDD phases and binds the genuine 2-failure/4-pass RED, 6-pass GREEN, candidate-observed 86 compiler and 55 Small Shop tests, and independent audit with no P0-P2 issue.",
+      "All nine dependencies and both owner-separation edges remain exact. CC-022 remains ELIGIBLE and unselected; the four integration selections and every unrelated registry row remain unchanged.",
+      "CC-012, CC-014, and CC-016 remain PAUSED; CC-R09 remains ABSENT; no public format, compiler, runtime, protocol, graph, replay, corpus, package, release, or CC-R authority changed."
+    ],
+    "limitations": [
+      "The private JSON representation is unstable test evidence and defines no public format, fact encoding, stable identifier, compatibility, or migration contract.",
+      "The exact-literal production-path scan is a current-state tripwire, not a general information-flow proof.",
+      "All executable realization, compiler and runtime, protocol and accepted graph, replay, corpus, package, release, and CC-R behavior remains deferred."
+    ]
+  },
+  "entry_hash": "sha256:413b0e5ef246ce483fc56053abf74800cf882cc135d274fdc22a6e05236a63db",
+  "entry_id": "OVR-000227",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ed1df5cf66d6fd9899844a1dccee00e51dfb2eca40bdb201c21072038a0209bf",
+  "recorded_at": "2026-08-29T08:46:01Z",
+  "references": [
+    {
+      "digest": "sha256:213f12b7297943b877181b63badd8817c74b4ce68f0edc19b8f16ca9811d8053",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-022-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000226",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "660cb408b0c28785d96731d976e6cbc1aeb9a69c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 227,
+  "subject": {
+    "id": "cc022-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded Small Shop answer-key completion gate.",
+  "why": "The answer-key work may complete only after its exact independently authored candidate, canonical report, worker TDD chain, dependencies, audit, private non-public boundary, and unselected state pass mechanically without claiming any downstream executable behavior."
+}

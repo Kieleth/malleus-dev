@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc022-small-shop-oracle",
+  "data": {
+    "artifacts": [],
+    "command": "Review the exact candidate against installed, public, package, image, and release surfaces.",
+    "observed": "NOT_APPLICABLE. The candidate contains private repository-local test evidence only and changes no installed data, public format, compiler, runtime, distribution, image, or release surface.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:b2b43f72d25866fbfcacb4e7501a2639f95dc9593d36b8c2dc99bda52bb3d997",
+  "entry_id": "CC-022-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:4ba96da6bde97837b1e64e859195d5c417584b20eeece2ec7a080e6814432f35",
+  "recorded_at": "2026-08-29T08:44:06Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the test-only package boundary.",
+  "workstream_id": "CC-022"
+}
