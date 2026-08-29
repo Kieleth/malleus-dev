@@ -1,0 +1,88 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2203d4ce872f4cc4bda90ab75d52dd56a78d4294528ef55bcaab3a7c0f36bc48",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-hardening.json"
+      },
+      {
+        "after_digest": "sha256:db211c3f04acf69931a58987e17b3fe02cbf247d131b49038b74243d4c20cf38",
+        "before_digest": "sha256:8312bf373d44fedcf0471f11a090b194a28b1a9ceaa964b8c6277673f850c2f7",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:f501eb903bddb08534d0c833bf813418e002520f571888c17628a663fb166a06",
+        "before_digest": "sha256:04b90675688d804984cea2da2fc9e24a3f2174ddf8546599721dbd1608a07f50",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1118dd5d9d4fa228545c9180337bfa798f1b30a38afadbdc9a834f1b143f429e",
+  "entry_id": "OVR-000242",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3ca40a710853e9abe8ad31161765a533a54691b2f372a0f37778216536e318f2",
+  "recorded_at": "2026-08-29T18:14:02Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-hardening.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:2203d4ce872f4cc4bda90ab75d52dd56a78d4294528ef55bcaab3a7c0f36bc48",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-hardening.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "cba6de054bfc1241460998b8744efe02adce9ae4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000241",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 242,
+  "subject": {
+    "id": "cc012-candidate-clean-base-hardening",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind strict clean-base admission and exact frozen legacy compatibility.",
+  "why": "The validator must reject candidate content hidden before base or outside declared artifact and evidence paths while keeping the fifteen exact candidates already COMPLETE at ledger prefix 240 valid. This revision binds the smallest repository-local history checks and their adversarial tests."
+}

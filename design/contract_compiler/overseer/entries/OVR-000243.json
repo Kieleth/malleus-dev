@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "cc012-candidate-clean-base-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T18:14:03Z",
+    "claims": [
+      "New candidates require an authentic latest non-superseded ACTIVE entry whose trusted introduction is an ancestor of or equal to candidate.base_commit.",
+      "The authority commit and every commit reachable from base but not authority are compared with every parent and must change no allowed-scope path.",
+      "The linear base-to-head touched-path set equals the declared artifact and evidence path set, and every declared head blob differs from its base blob.",
+      "Merged stale artifacts, merged hidden helpers, add-delete prehistory, authority-bundled content, undeclared candidate helpers, and changed-then-restored outputs refuse mechanically.",
+      "Only the exact fifteen COMPLETE candidate snapshots at ledger prefix 240 are grandfathered, allowing solely ELIGIBLE to INTEGRATED state progression; broadened CC-000 and provisional CC-021 objects are not legacy.",
+      "Quiet Bell candidate remains NONE, Small Shop supplies process learning only, and Quiet Bell then Greenhouse then compiler edge cases remains the execution order."
+    ],
+    "limitations": [
+      "This verifies repository governance against trusted HEAD, not external attestation, remote identity, or information-flow security.",
+      "This creates no oracle content, candidate, compiler semantic, runtime, fixture, package, release, selection, or public contract.",
+      "OVR-000244 must be committed before its trusted introduction can become the practical base for future Quiet Bell content."
+    ]
+  },
+  "entry_hash": "sha256:77db86716f0f75a78e57506268148f915c5649d1f69d7d6e26cb7598d1db999e",
+  "entry_id": "OVR-000243",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1118dd5d9d4fa228545c9180337bfa798f1b30a38afadbdc9a834f1b143f429e",
+  "recorded_at": "2026-08-29T18:14:03Z",
+  "references": [
+    {
+      "digest": "sha256:2203d4ce872f4cc4bda90ab75d52dd56a78d4294528ef55bcaab3a7c0f36bc48",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-012-candidate-clean-base-hardening.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000242",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 243,
+  "subject": {
+    "id": "cc012-candidate-clean-base-hardening",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify strict clean-base candidate admission and exact legacy freeze.",
+  "why": "The hardening report and OVR-000242 prove that allowed-scope bytes cannot enter before the declared candidate range, that candidate commits contain only declared outputs and evidence, and that legacy admission is closed over exact prefix-240 snapshots rather than a broad bootstrap or historical exception."
+}

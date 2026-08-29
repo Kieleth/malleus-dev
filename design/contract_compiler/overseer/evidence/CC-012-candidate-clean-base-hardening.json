@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 49554,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:db211c3f04acf69931a58987e17b3fe02cbf247d131b49038b74243d4c20cf38"
+    },
+    {
+      "byte_length": 183125,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:f501eb903bddb08534d0c833bf813418e002520f571888c17628a663fb166a06"
+    }
+  ],
+  "base_commit": "cba6de054bfc1241460998b8744efe02adce9ae4",
+  "checks": [
+    {
+      "check_id": "cc012-clean-base-red",
+      "method": "Run the stale-merge, hidden-helper, add-delete, bundled-authority, reverted-output, exact-delta, legacy-prefix, broadened-bootstrap, and provisional-rebind cases before implementing clean-base admission.",
+      "observed": "The focused command exited 1 with nine failures. The clean-base argument and frozen legacy selector were absent; the two integration rebind cases reached the expected prior test-document digest drift before candidate admission.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-authority-scope-clean",
+      "method": "Create an otherwise valid candidate whose trusted ACTIVE authority commit also changes one allowed-scope path.",
+      "observed": "Admission refuses with CC000_CANDIDATE_CLEAN_BASE. Authorization and worker content cannot share the authority commit.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-all-parent-prehistory",
+      "method": "Place stale output or an undeclared helper on a post-authority side branch and merge it before base; separately add and delete an allowed-scope path between authority and base.",
+      "observed": "All variants refuse. The validator inspects every commit reachable from base but not authority and compares each commit with every parent, so a merge result, side-parent delta, or later deletion cannot hide governed prehistory.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-exact-declared-delta",
+      "method": "Compare the exact base-to-head touched-path set with candidate artifact and evidence paths, add an undeclared in-scope helper, and change then restore one declared output to its base bytes.",
+      "observed": "The exact two-path candidate passes. The helper refuses with CC000_CANDIDATE_DECLARATION and the restored output refuses with CC000_CANDIDATE_UNCHANGED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-legacy",
+      "method": "Resolve the exact OVR-000240 introduction at cba6de0, project COMPLETE workstreams at ledger prefix 240, and compare current scopes and candidate identity with each card snapshot at that commit while allowing only ELIGIBLE to INTEGRATED state progression.",
+      "observed": "Exactly fifteen existing candidates qualify. A broadened CC-000 bootstrap object and a provisional CC-021 rebind do not qualify and enter strict authority admission instead.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc012-frozen-content-boundary",
+      "method": "Inspect Git status and all card, schema, integration manifest, DAG, oracle, compiler, fixture, package, release, Docker, and adjacent-workstream paths.",
+      "observed": "Only the two validator files and append-only overseer hardening transaction changed. Quiet Bell content remains frozen, its candidate remains NONE, Small Shop contributes process learning only, and the Quiet Bell then Greenhouse then edge-case order is unchanged.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is repository governance enforced against the trusted repository HEAD. It is not external attestation, remote-repository identity, or a public artifact contract.",
+    "Path and blob history checks are not an information-flow proof. They refuse governed Git deltas but do not claim to detect information copied from unrecorded channels.",
+    "This report creates no Quiet Bell oracle content, candidate, worker ledger, completion, selection, integration, compiler semantic, runtime, fixture, package, release, or Docker behavior.",
+    "Only exact prefix-240 candidate snapshots are grandfathered. Every later candidate must satisfy trusted authority, clean prehistory, exact declared delta, changed-blob, digest, report, scope, and linear-history checks."
+  ],
+  "recorded_at": "2026-08-29T18:14:01Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-012"
+}

@@ -1,0 +1,39 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-012"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000240"
+  },
+  "entry_hash": "sha256:3ca40a710853e9abe8ad31161765a533a54691b2f372a0f37778216536e318f2",
+  "entry_id": "OVR-000241",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c9e4ee6a5508e313f85aa35a52abe32f65717d54a3a34bb546b1c89f032de4fe",
+  "recorded_at": "2026-08-29T18:14:00Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000240",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-012",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 241,
+  "subject": {
+    "id": "CC-012",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Replace Quiet Bell activation with clean-base candidate authority.",
+  "why": "OVR-000240 proves that the candidate base follows trusted activation, but ancestry alone permits governed content to enter through authority-adjacent commits, side branches, merges, or reverted paths before the declared candidate range. A replacement state must require scope-untouched prehistory and preserve only exact historical candidate snapshots as legacy."
+}

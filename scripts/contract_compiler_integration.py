@@ -69,6 +69,9 @@ TDD_RESULTS = {
     "PACKAGE": frozenset({"PASS", "NOT_APPLICABLE"}),
     "ATTEST": frozenset({"PASS"}),
 }
+LEGACY_CANDIDATE_PREFIX = 240
+LEGACY_CANDIDATE_AUTHORITY_ENTRY = "OVR-000240"
+LEGACY_CANDIDATE_SNAPSHOT_COMMIT = "cba6de054bfc1241460998b8744efe02adce9ae4"
 
 
 class IntegrationValidationError(ValueError):
@@ -434,10 +437,9 @@ def _authority_entry_commit(
 def _validate_candidate_authority(
     repository: Path,
     base: str,
-    commits: Sequence[str],
     authority_entry: Mapping[str, Any],
     overseer_path: str,
-) -> None:
+) -> str:
     introduction = _authority_entry_commit(
         repository,
         authority_entry,
@@ -445,13 +447,71 @@ def _validate_candidate_authority(
     )
     ancestry = _git(repository, "merge-base", "--is-ancestor", introduction, base)
     if not ancestry.returncode:
-        return
-    if authority_entry["data"]["bootstrap"] and commits[0] == introduction:
-        return
+        return introduction
     _fail(
         "CC000_CANDIDATE_AUTHORITY",
         f"base_commit does not descend from active authority {authority_entry['entry_id']}",
     )
+
+
+def _name_status_paths(source: bytes, context: str) -> tuple[str, ...]:
+    tokens = [token.decode("utf-8") for token in source.split(b"\0") if token]
+    paths: set[str] = set()
+    index = 0
+    while index < len(tokens):
+        status = tokens[index]
+        index += 1
+        path_count = 2 if status.startswith(("R", "C")) else 1
+        if index + path_count > len(tokens):
+            _fail("CC000_GIT_HISTORY", f"malformed path record in {context}")
+        for path in tokens[index : index + path_count]:
+            paths.add(_safe_path(path, context))
+        index += path_count
+    return tuple(sorted(paths))
+
+
+def _changed_paths(repository: Path, parent: str, commit: str) -> tuple[str, ...]:
+    result = _git(
+        repository,
+        "diff",
+        "--name-status",
+        "-M",
+        "-z",
+        parent,
+        commit,
+        text=False,
+    )
+    if result.returncode:
+        _fail("CC000_GIT_HISTORY", f"cannot compare {parent} with {commit}")
+    return _name_status_paths(result.stdout, f"commit {commit}")
+
+
+def _validate_clean_base(
+    repository: Path,
+    authority_commit: str,
+    base: str,
+    allowed_scopes: Sequence[Mapping[str, str]],
+) -> None:
+    prebase = _git(repository, "rev-list", base, f"^{authority_commit}")
+    if prebase.returncode:
+        _fail("CC000_GIT_HISTORY", "cannot enumerate candidate prehistory")
+    for commit in (authority_commit, *prebase.stdout.splitlines()):
+        parents = _git(repository, "show", "-s", "--format=%P", commit)
+        if parents.returncode:
+            _fail("CC000_GIT_HISTORY", f"cannot inspect parents for {commit}")
+        for parent in parents.stdout.split():
+            changed = _changed_paths(repository, parent, commit)
+            governed = tuple(
+                path
+                for path in changed
+                if any(_scope_contains(scope, path) for scope in allowed_scopes)
+            )
+            if governed:
+                _fail(
+                    "CC000_CANDIDATE_CLEAN_BASE",
+                    f"candidate scope changed before base in {commit}: "
+                    + ", ".join(governed),
+                )
 
 
 def _verify_artifact_bytes(
@@ -487,17 +547,7 @@ def _touched_paths(repository: Path, commits: Sequence[str]) -> tuple[str, ...]:
         )
         if result.returncode:
             _fail("CC000_GIT_HISTORY", f"cannot inspect commit {commit}")
-        tokens = [token.decode("utf-8") for token in result.stdout.split(b"\0") if token]
-        index = 0
-        while index < len(tokens):
-            status = tokens[index]
-            index += 1
-            path_count = 2 if status.startswith(("R", "C")) else 1
-            if index + path_count > len(tokens):
-                _fail("CC000_GIT_HISTORY", f"malformed path record in {commit}")
-            for path in tokens[index : index + path_count]:
-                touched.add(_safe_path(path, f"commit {commit}"))
-            index += path_count
+        touched.update(_name_status_paths(result.stdout, f"commit {commit}"))
     return tuple(sorted(touched))
 
 
@@ -551,6 +601,7 @@ def validate_candidate_history(
     workstream_id: str | None = None,
     authority_entry: Mapping[str, Any] | None = None,
     overseer_path: str | None = None,
+    enforce_clean_base: bool = False,
 ) -> tuple[str, ...]:
     """Validate exact commits and every path touched, including later deletions."""
     repository = repository.resolve()
@@ -596,12 +647,23 @@ def validate_candidate_history(
                 "CC000_CANDIDATE_AUTHORITY",
                 "candidate authority must be the workstream's ACTIVE state entry",
             )
-        _validate_candidate_authority(
+        authority_commit = _validate_candidate_authority(
             repository,
             base,
-            commits,
             authority_entry,
             overseer_path,
+        )
+        if enforce_clean_base:
+            _validate_clean_base(
+                repository,
+                authority_commit,
+                base,
+                allowed_scopes,
+            )
+    elif enforce_clean_base:
+        _fail(
+            "CC000_CANDIDATE_AUTHORITY",
+            "clean-base admission requires trusted active authority",
         )
     actual_tree = _git(repository, "rev-parse", f"{head}^{{tree}}")
     if actual_tree.returncode or candidate.get("head_tree") != actual_tree.stdout.strip():
@@ -618,6 +680,7 @@ def validate_candidate_history(
             "candidate history touched unauthorized paths: " + ", ".join(outside),
         )
     candidate_artifacts: dict[str, Mapping[str, Any]] = {}
+    declared_paths: set[str] = set()
     for kind in ("artifacts", "evidence"):
         records = candidate.get(kind)
         if not isinstance(records, list) or not records:
@@ -626,6 +689,14 @@ def validate_candidate_history(
             path = _safe_path(record["path"], f"candidate {kind}")
             source = _git_bytes(repository, head, path, f"candidate {kind}")
             _verify_artifact_bytes(record, source, f"candidate {kind} {path}")
+            declared_paths.add(path)
+            if enforce_clean_base:
+                base_source = _git(repository, "show", f"{base}:{path}", text=False)
+                if not base_source.returncode and base_source.stdout == source:
+                    _fail(
+                        "CC000_CANDIDATE_UNCHANGED",
+                        f"{path}: declared head blob equals the base blob",
+                    )
             if kind == "artifacts":
                 if path in candidate_artifacts:
                     _fail("CC000_CANDIDATE", f"duplicate candidate artifact {path}")
@@ -647,6 +718,11 @@ def validate_candidate_history(
                     "CC000_EVIDENCE_INVALID",
                     f"{path}: report artifacts do not equal candidate artifacts",
                 )
+    if enforce_clean_base and set(touched) != declared_paths:
+        _fail(
+            "CC000_CANDIDATE_DECLARATION",
+            "candidate touched paths do not equal declared artifacts and evidence",
+        )
     return touched
 
 
@@ -871,6 +947,89 @@ def _latest_active_authority_entries(
     return entries
 
 
+def _candidate_matches_snapshot(
+    candidate: Mapping[str, Any],
+    snapshot: Mapping[str, Any],
+) -> bool:
+    if candidate == snapshot:
+        return True
+    if snapshot.get("state") != "ELIGIBLE" or candidate.get("state") != "INTEGRATED":
+        return False
+    progressed = dict(candidate)
+    progressed["state"] = "ELIGIBLE"
+    return progressed == snapshot
+
+
+def _frozen_legacy_candidate_ids(
+    repository: Path,
+    cards: Mapping[str, Mapping[str, Any]],
+    card_paths: Mapping[str, str],
+    ledger_state: Any,
+    overseer_path: str,
+) -> frozenset[str]:
+    prefix_entries = tuple(
+        entry
+        for entry in ledger_state.entries
+        if entry["sequence"] <= LEGACY_CANDIDATE_PREFIX
+    )
+    authority = next(
+        (
+            entry
+            for entry in prefix_entries
+            if entry["entry_id"] == LEGACY_CANDIDATE_AUTHORITY_ENTRY
+        ),
+        None,
+    )
+    if (
+        authority is None
+        or _authority_entry_commit(
+            repository,
+            authority,
+            overseer_path,
+        )
+        != LEGACY_CANDIDATE_SNAPSHOT_COMMIT
+    ):
+        _fail(
+            "CC000_CANDIDATE_LEGACY",
+            "legacy candidate snapshot authority is not the trusted OVR-000240 introduction",
+        )
+    prefix = type("LedgerPrefix", (), {"entries": prefix_entries})()
+    states, _ = _workstream_states(prefix)
+    legacy: set[str] = set()
+    for workstream_id, card in cards.items():
+        if states.get(workstream_id) != "COMPLETE" or card["candidate"][
+            "state"
+        ] not in {"ELIGIBLE", "INTEGRATED"}:
+            continue
+        relative = _safe_path(card_paths[workstream_id], "legacy card snapshot")
+        source = _git(
+            repository,
+            "show",
+            f"{LEGACY_CANDIDATE_SNAPSHOT_COMMIT}:design/contract_compiler/{relative}",
+            text=False,
+        )
+        if source.returncode:
+            continue
+        try:
+            snapshot = json.loads(
+                source.stdout.decode("utf-8"),
+                object_pairs_hook=_unique_object,
+                parse_constant=_reject_constant,
+            )
+        except (IntegrationValidationError, UnicodeError, json.JSONDecodeError):
+            continue
+        if (
+            isinstance(snapshot, dict)
+            and card["scopes"] == snapshot.get("scopes")
+            and _candidate_matches_snapshot(
+                card["candidate"],
+                snapshot.get("candidate", {}),
+            )
+        ):
+            legacy.add(workstream_id)
+    return frozenset(legacy)
+
+
 def _verify_current_file(path: Path, record: Mapping[str, Any], context: str) -> None:
     if not path.is_file():
         _fail("CC000_ARTIFACT_MISSING", f"{context}: {path} does not exist")
@@ -938,6 +1097,7 @@ def validate_integration(
 
     cards: dict[str, dict[str, Any]] = {}
     card_digests: dict[str, str] = {}
+    card_paths: dict[str, str] = {}
     for row in rows:
         reference = row["card"]
         if reference["state"] == "ABSENT":
@@ -974,6 +1134,7 @@ def validate_integration(
                 )
         cards[workstream_id] = card
         card_digests[workstream_id] = reference["sha256"]
+        card_paths[workstream_id] = reference["path"]
 
     active = {
         workstream_id: card
@@ -1102,8 +1263,23 @@ def validate_integration(
         if card["candidate"]["state"] != "INTEGRATED":
             _fail("CC000_CANDIDATE_STATE", f"{workstream_id} is not INTEGRATED")
 
+    legacy_candidates = _frozen_legacy_candidate_ids(
+        repository,
+        cards,
+        card_paths,
+        ledger_state,
+        anchor["path"],
+    )
     for workstream_id, card in cards.items():
         if card["candidate"]["state"] not in {"ELIGIBLE", "INTEGRATED"}:
+            continue
+        if workstream_id in legacy_candidates:
+            validate_candidate_history(
+                repository,
+                card["candidate"],
+                allowed_scopes=tuple(card["scopes"]),
+                workstream_id=workstream_id,
+            )
             continue
         authority_entry = authority_entries.get(workstream_id)
         if authority_entry is None:
@@ -1118,6 +1294,7 @@ def validate_integration(
             workstream_id=workstream_id,
             authority_entry=authority_entry,
             overseer_path=anchor["path"],
+            enforce_clean_base=True,
         )
 
     for workstream_id in selections:
