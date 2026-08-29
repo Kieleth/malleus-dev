@@ -1,0 +1,83 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25002,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:4303f98ecbd94f7df55764cf65e03f70619c4b03cbb428edcbb16d370fdc6234"
+    },
+    {
+      "byte_length": 36303,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:807f5d2b39a2b7d1729cf4ec6b548c4c37459ee73995506afde4fced963b6ef8"
+    },
+    {
+      "byte_length": 3294,
+      "path": "design/contract_compiler/workstreams/CC-021/manifest.json",
+      "sha256": "sha256:98cbcaed679a518d30adfe8c4fc9cb3cca7ca7a9585f4b82d368c1ca4b1d4204"
+    },
+    {
+      "byte_length": 101763,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:bd23938061021ac7a7b0799ff4d19a4d8593aa7ac7b68909a60c735c5abae978"
+    }
+  ],
+  "base_commit": "9b2afa8327bac1dd18ddca281e10f736cb1337fc",
+  "checks": [
+    {
+      "check_id": "cc021-operator-intent-precedes-provisional",
+      "method": "Inspect the retained ret_010_fixture_bundle operator decision and compare its commit with the provisional commit ancestry and timestamps.",
+      "observed": "Commit 927ab183e33de09d62a3a6dba834306d54f35962 records the exact retained occurrence, entity selection, lookup, and source-time decisions and is the direct parent of the later provisional commit.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-old-card-authority",
+      "method": "Hash the CC-021 card that governed the provisional commit and read its responsibility literally.",
+      "observed": "The old card is 2960 bytes with sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1. It authorized ontology and domain source bytes but did not name the two declarative parameter roles.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-provisional-diff",
+      "method": "Resolve the provisional commit parent, tree, and complete first-parent path diff without interpreting later files.",
+      "observed": "Commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc has parent 927ab183e33de09d62a3a6dba834306d54f35962, tree ae4a2468683ad681a96a66a4ef0a0005ebe510fb, and exactly ten added paths.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-scope-classification",
+      "method": "Classify all ten provisional paths against the literal old responsibility and the two manifest parameter roles.",
+      "observed": "Five TBox or domain-source members were authorized. SCENARIO_SELECTION and SOURCE_TIME_CONTEXT were the two overreaching members. Those two configs, their manifest, test, and CC-021 report are the exact five bytes that require post-authorization reissue.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-provisional-nonauthority",
+      "method": "Inspect integration selections, sealed authority, every candidate coordinate, and every dependency integrated head.",
+      "observed": "The provisional commit appears in no candidate base or head, selection, sealed integration result, or dependency integrated head. It is PROVISIONAL_NONCANDIDATE evidence only and cannot gate integration.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-prospective-reauthorization",
+      "method": "Compare the revised responsibility with the operator decision and require all later candidate bytes to start after this recovery transaction.",
+      "observed": "The revision prospectively permits only SCENARIO_SELECTION and SOURCE_TIME_CONTEXT raw parameters beside ontology and domain sources. It permits no normalized values, output, mapping code, or transformation code.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-unchanged-boundaries",
+      "method": "Compare the revised card and integration row with the old assignment, authorization, dependencies, scopes, candidate, ledger, selection, and registry state.",
+      "observed": "Owner, task, FORMAL operator authorization, four dependency bindings, three exact scopes, candidate NONE, worker ledger NOT_STARTED, unselected state, revision 2, owner separations, and sealed authority are unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-forbidden-side-effects",
+      "method": "Inspect the recovery cut against input, canonical CC-021 evidence, worker ledger, program, schemas, scripts, corpus, journal, runtime, compiler, package, documentation, and publication paths.",
+      "observed": "The recovery changes only the program, integration, CC-021 card, this report, four append-only ledger entries, head, generated status, and fixed integration test. No candidate or product byte is changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This recovery authorizes no CC-021 candidate and starts no worker ledger.",
+    "It completes no workstream and creates no oracle, CC-R implementation, corpus, checksum, package, release, or publication authority.",
+    "The provisional commit remains noncandidate evidence forever; a corrected candidate must start from the first commit containing OVR-000219."
+  ],
+  "recorded_at": "2026-08-29T05:29:10Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-021"
+}

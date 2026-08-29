@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "The provisional commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc cannot gate candidacy; a corrected candidate must start after the authorization-recovery boundary."
+    ],
+    "bootstrap": false,
+    "deliverables": [
+      "Author controlled Small Shop Fulfilment ontology and domain source bytes under the exact research input prefix, declarative parameter members with manifest roles SCENARIO_SELECTION and SOURCE_TIME_CONTEXT, one canonical verification report, and one fixed input validation test.",
+      "The parameter members may select the retained occurrence and entity tuple and declare fixture-local source format, calendar, synthetic year, and timezone. They are raw parameters, not mapping or transformation code, and must contain no normalized values or outputs.",
+      "Inputs may contain no expected facts, mappings, transformations, identities, recipes, ProposedOperation values, candidates, evidence outcomes, compiler or runtime implementation, protocol or accepted knowledge-graph state, replay receipts, or research-journal findings.",
+      "Create no CC-022 oracle or CC-R work, corpus or checksum publication, public API, package, Docker, or release change."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000216",
+      "OVR-000217"
+    ],
+    "new_state": "PAUSED",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-021"
+  },
+  "entry_hash": "sha256:c08e6bc9bb659b2ccfd5eb7f6233a06387e9818280e9f45402cd93950b4cb079",
+  "entry_id": "OVR-000218",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:564079c1f6a86dc96f0d5e7bd34b09258965c2ea56ad32e47a5da413520a1c40",
+  "recorded_at": "2026-08-29T05:29:13Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000216",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000217",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 218,
+  "subject": {
+    "id": "CC-021",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Pause CC-021 at the prospective authorization boundary.",
+  "why": "A formal candidate cannot inherit the two config members or their derived bytes from provisional history that preceded explicit role authority. The temporary pause makes that discontinuity explicit without invalidating the five TBox and domain-source members that were already within the prior card."
+}

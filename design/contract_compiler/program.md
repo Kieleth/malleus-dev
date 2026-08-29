@@ -352,7 +352,7 @@ may proceed without deciding outcomes.
 | CC-018 | Semantic scenario requirements shared by source, direct-input, and oracle owners | Scenario requirements only | CC-010, CC-D05, CC-D06, CC-D08 |
 | CC-019 | Themed operation-trace inputs | Themed ordered operations only | CC-010, CC-011, CC-018 |
 | CC-020 | Independently authored themed trace outcomes | Expected decisions, diagnostics, state digests, and final records only | CC-010, CC-D07, CC-D10, CC-019 |
-| CC-021 | Controlled Small Shop Fulfilment inputs | Exact ontology and domain input bytes only; no expected values, mappings, recipes, operations, outcomes, compiler, runtime, protocol, or accepted graph state | CC-010, CC-D03, CC-D08, CC-D11 |
+| CC-021 | Controlled Small Shop Fulfilment inputs | Ontology/domain sources plus raw `SCENARIO_SELECTION` and `SOURCE_TIME_CONTEXT` fixture parameters only; no normalized values, expected values, mappings, transformations, recipes, operations, outcomes, compiler, runtime, protocol, or accepted graph state | CC-010, CC-D03, CC-D08, CC-D11 |
 | CC-022 | Independently authored Small Shop Fulfilment oracle | Expected values only, independently derived after the controlled inputs are complete | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-D10, CC-D11, CC-021 |
 | CC-PUB01 | Themed fixture authorship, license, and public-review record | Public fixture text and asset manifest only | CC-011, CC-D14 |
 
@@ -364,9 +364,11 @@ independently reviewed expected-delta manifest explains every semantic change.
 Small Shop Fulfilment is the canonical end-to-end consumer. It does not replace
 the three independent compiler controls.
 Quiet Bell, feature-isolation, and Greenhouse remain independent conformance controls.
-CC-021 owns controlled
-input bytes only. CC-022 independently authors the Small Shop oracle only after
-CC-021 completes. The first research-local realization waits for both.
+CC-021 owns controlled ontology and domain source bytes plus raw `SCENARIO_SELECTION` and `SOURCE_TIME_CONTEXT` fixture parameters only.
+The parameter members may select the retained occurrence/entity tuple and declare fixture-local source format, calendar, synthetic year, and timezone.
+They contain no normalized values or outputs and implement no mapping or transformation.
+CC-022 independently authors the Small Shop oracle only after CC-021 completes.
+The first research-local realization waits for both.
 
 The running ladder is fixed:
 

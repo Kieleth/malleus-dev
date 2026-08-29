@@ -1,0 +1,63 @@
+{
+  "actor": {
+    "id": "cc021-authorization-recovery-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-29T05:29:12Z",
+    "claims": [
+      "The RET-010 operator intent in 927ab183e33de09d62a3a6dba834306d54f35962 preceded the provisional commit, but the formal card then in force did not authorize SCENARIO_SELECTION or SOURCE_TIME_CONTEXT parameter members.",
+      "Commit 9b2afa8327bac1dd18ddca281e10f736cb1337fc is provisional noncandidate evidence. It is absent from candidate bases, candidate heads, selections, sealed integration authority, and dependency integrated heads.",
+      "Exactly five TBox or domain-source members were authorized by the old card. The two config members exceeded it, and those configs plus their derived manifest, test, and report require post-authorization reissue.",
+      "OVR-000216 grants prospective authority only for raw SCENARIO_SELECTION and SOURCE_TIME_CONTEXT parameters beside the retained ontology and domain source surface. It grants no normalized value, output, mapping code, or transformation code.",
+      "The current card preserves its exact owner, task, FORMAL operator authorization, four dependency bindings, three scopes, candidate NONE, worker ledger NOT_STARTED, and unselected integration state.",
+      "CC-022 and CC-R09 remain absent, while CC-012, CC-014, and CC-016 remain paused behind their existing blockers and the Small Shop anchor gate."
+    ],
+    "limitations": [
+      "This fact verifies authorization recovery only. It does not verify a corrected candidate or complete CC-021.",
+      "It creates no oracle, realization stage, compiler behavior, runtime behavior, package, release, corpus, checksum, or publication authority."
+    ]
+  },
+  "entry_hash": "sha256:564079c1f6a86dc96f0d5e7bd34b09258965c2ea56ad32e47a5da413520a1c40",
+  "entry_id": "OVR-000217",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:951d7b12a07fae26df3a5ebf34bccc98b1b085029447453b22cdfd471232d418",
+  "recorded_at": "2026-08-29T05:29:12Z",
+  "references": [
+    {
+      "digest": "sha256:44c6fad35771adafc448b26b161e85e3bfe1b7ad9636cddf6a9517b8ffef8952",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-authorization-recovery.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000216",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "927ab183e33de09d62a3a6dba834306d54f35962",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9b2afa8327bac1dd18ddca281e10f736cb1337fc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 217,
+  "subject": {
+    "id": "cc021-authorization-recovery-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the forward-only CC-021 authorization recovery.",
+  "why": "The provisional history must remain immutable and nonauthoritative. Mechanical classification distinguishes the five bytes valid under the prior card from the five bytes requiring a prospective authority boundary and later reissue, without widening CC-021 into oracle, compiler, runtime, or publication work."
+}

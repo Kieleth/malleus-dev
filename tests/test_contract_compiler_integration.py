@@ -34,6 +34,25 @@ CONTRACT = ROOT / "design" / "contract_compiler"
 INTEGRATION = CONTRACT / "integration.json"
 PROGRAM = CONTRACT / "program.md"
 SMALL_SHOP_REANCHOR_BASE = "0d2070475b775d10cacb8481aeff448f6af7c377"
+SMALL_SHOP_ACTIVATION_COMMIT = "37cf69d57ee85f8a5f936661f1cf5fbdb975573b"
+SMALL_SHOP_OPERATOR_APPROVAL = "927ab183e33de09d62a3a6dba834306d54f35962"
+SMALL_SHOP_PROVISIONAL_COMMIT = "9b2afa8327bac1dd18ddca281e10f736cb1337fc"
+SMALL_SHOP_PROVISIONAL_TREE = "ae4a2468683ad681a96a66a4ef0a0005ebe510fb"
+SMALL_SHOP_RESPONSIBILITY = (
+    "Author controlled Small Shop Fulfilment ontology and domain source bytes under "
+    "the exact research input prefix, declarative parameter members with manifest "
+    "roles SCENARIO_SELECTION and SOURCE_TIME_CONTEXT, one canonical verification "
+    "report, and one fixed input validation test. The parameter members may select "
+    "the retained occurrence and entity tuple and declare fixture-local source "
+    "format, calendar, synthetic year, and timezone. They are raw parameters, not "
+    "mapping or transformation code, and must contain no normalized values or "
+    "outputs. Inputs may contain no expected facts, mappings, transformations, "
+    "identities, recipes, ProposedOperation values, candidates, evidence outcomes, "
+    "compiler or runtime implementation, protocol or accepted knowledge-graph "
+    "state, replay receipts, or research-journal findings. Create no CC-022 oracle "
+    "or CC-R work, corpus or checksum publication, public API, package, Docker, or "
+    "release change."
+)
 
 
 def _canonical_json(value: Any) -> str:
@@ -1126,7 +1145,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
         ]
 
 
-def test_small_shop_input_activation_boundary_is_exact() -> None:
+def test_small_shop_input_reauthorization_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
     assert manifest["revision"] == 2
@@ -1172,26 +1191,54 @@ def test_small_shop_input_activation_boundary_is_exact() -> None:
     assert card["ledger"] == {"state": "NOT_STARTED"}
     assert states["CC-021"] == "ACTIVE"
     assert "CC-021" not in manifest["selections"]
-    for relative in (
-        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input",
-        "conformance/contract_compiler/v0/evidence/CC-021.json",
-        "tests/contract_compiler/test_small_shop_fixture_inputs.py",
-    ):
-        assert not (ROOT / relative).exists()
-    for phrase in (
-        "controlled Small Shop Fulfilment input bytes only",
-        "no expected facts",
-        "mappings",
-        "recipes",
-        "ProposedOperation",
-        "outcomes",
-        "compiler or runtime implementation",
-        "protocol or accepted knowledge-graph state",
-    ):
-        assert phrase in card["responsibility"]
+    assert card["responsibility"] == SMALL_SHOP_RESPONSIBILITY
 
     assert _registry_row(manifest, "CC-022")["card"] == {"state": "ABSENT"}
     assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+
+
+def test_small_shop_original_activation_remains_historically_exact() -> None:
+    card_path = "design/contract_compiler/workstreams/CC-021/manifest.json"
+    old_card = json.loads(
+        _git(ROOT, "show", f"{SMALL_SHOP_ACTIVATION_COMMIT}:{card_path}")
+    )
+    activation = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ACTIVATION_COMMIT}:design/contract_compiler/overseer/"
+            "entries/OVR-000214.json",
+        )
+    )
+
+    assert old_card["responsibility"] == (
+        "Author controlled Small Shop Fulfilment input bytes only under the exact "
+        "research input prefix, with one canonical verification report and one fixed "
+        "input validation test. Inputs may include ontology and domain source bytes, "
+        "but no expected facts, mappings, transformations, identities, recipes, "
+        "ProposedOperation values, candidates, evidence outcomes, compiler or runtime "
+        "implementation, protocol or accepted knowledge-graph state, replay receipts, "
+        "or research-journal findings. Create no CC-022 oracle or CC-R work, corpus or "
+        "checksum publication, public API, package, Docker, or release change."
+    )
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is True
+    assert (
+        _git(
+            ROOT,
+            "ls-tree",
+            "-r",
+            "--name-only",
+            SMALL_SHOP_ACTIVATION_COMMIT,
+            "--",
+            "research/ontology_driven_kg_realization/fixtures/"
+            "small_shop_fulfilment/input",
+            "conformance/contract_compiler/v0/evidence/CC-021.json",
+            "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+        )
+        == ""
+    )
 
 
 @pytest.mark.parametrize(
@@ -1273,6 +1320,16 @@ def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
 def test_small_shop_program_boundary_is_exact() -> None:
     source = PROGRAM.read_text(encoding="utf-8")
     for exact in (
+        "Ontology/domain sources plus raw `SCENARIO_SELECTION` and "
+        "`SOURCE_TIME_CONTEXT` fixture parameters only; no normalized values, "
+        "expected values, mappings, transformations, recipes, operations, outcomes, "
+        "compiler, runtime, protocol, or accepted graph state",
+        "CC-021 owns controlled ontology and domain source bytes plus raw "
+        "`SCENARIO_SELECTION` and `SOURCE_TIME_CONTEXT` fixture parameters only.",
+        "The parameter members may select the retained occurrence/entity tuple and "
+        "declare fixture-local source format, calendar, synthetic year, and timezone.",
+        "They contain no normalized values or outputs and implement no mapping or "
+        "transformation.",
         "RET-000 | Ontology alone produces no ABox.",
         "RET-010 | Create `O1`, distinct physical item `X1`, and `OrderContainsUnit(O1, X1)`.",
         "RET-020 | After `I1` and `I2` exist, create `P1` and two invoice-settlement relations.",
@@ -1379,6 +1436,267 @@ def test_small_shop_reanchor_transaction_is_exact() -> None:
         later > earlier
         for earlier, later in zip(transaction_times, transaction_times[1:])
     )
+
+
+def test_cc021_provisional_commit_is_classified_without_candidate_authority() -> None:
+    provisional_paths = {
+        "conformance/contract_compiler/v0/evidence/CC-021.json",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/configuration/ret-010-selection.json",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/configuration/time-context.json",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/manifest.json",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/sources/inventory-units.csv",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/sources/warehouse.jsonl",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop-description-only.yaml",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop-root-instances.yaml",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop.yaml",
+        "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    }
+    parameter_paths = {
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/configuration/ret-010-selection.json",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/configuration/time-context.json",
+    }
+    inherited_paths = {
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/sources/inventory-units.csv",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/sources/warehouse.jsonl",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop-description-only.yaml",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop-root-instances.yaml",
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/tbox/small-shop.yaml",
+    }
+    required_reissue = provisional_paths - inherited_paths
+
+    assert _git(ROOT, "rev-parse", f"{SMALL_SHOP_PROVISIONAL_COMMIT}^") == (
+        SMALL_SHOP_OPERATOR_APPROVAL
+    )
+    assert _git(ROOT, "rev-parse", f"{SMALL_SHOP_PROVISIONAL_COMMIT}^{{tree}}") == (
+        SMALL_SHOP_PROVISIONAL_TREE
+    )
+    assert (
+        set(
+            _git(
+                ROOT,
+                "diff-tree",
+                "--no-commit-id",
+                "--name-only",
+                "-r",
+                SMALL_SHOP_PROVISIONAL_COMMIT,
+            ).splitlines()
+        )
+        == provisional_paths
+    )
+    assert parameter_paths == {
+        path for path in provisional_paths if "/configuration/" in path
+    }
+    assert len(parameter_paths) == 2
+    assert len(inherited_paths) == 5
+    assert required_reissue == {
+        "conformance/contract_compiler/v0/evidence/CC-021.json",
+        *parameter_paths,
+        "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/"
+        "input/manifest.json",
+        "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+    }
+
+    manifest = _read_json(INTEGRATION)
+    assert "CC-021" not in manifest["selections"]
+    assert manifest["authority"]["snapshot"]["result_commit"] != (
+        SMALL_SHOP_PROVISIONAL_COMMIT
+    )
+    for row in manifest["workstreams"]:
+        if row["card"]["state"] != "PRESENT":
+            continue
+        card = _read_json(CONTRACT / row["card"]["path"])
+        candidate = card["candidate"]
+        assert candidate.get("base_commit") != SMALL_SHOP_PROVISIONAL_COMMIT
+        assert candidate.get("head_commit") != SMALL_SHOP_PROVISIONAL_COMMIT
+        for binding in card["authorization"].get("dependency_bindings", []):
+            assert binding["integrated_head"] != SMALL_SHOP_PROVISIONAL_COMMIT
+
+
+def test_cc021_authorization_recovery_evidence_is_exact() -> None:
+    report_path = (
+        CONTRACT / "overseer" / "evidence" / "CC-021-authorization-recovery.json"
+    )
+    report = _read_json(report_path)
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-021"
+    assert report["base_commit"] == SMALL_SHOP_PROVISIONAL_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/program.md",
+        "design/contract_compiler/workstreams/CC-021/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    checks = {check["check_id"]: check for check in report["checks"]}
+    assert set(checks) == {
+        "cc021-operator-intent-precedes-provisional",
+        "cc021-old-card-authority",
+        "cc021-provisional-diff",
+        "cc021-scope-classification",
+        "cc021-provisional-nonauthority",
+        "cc021-prospective-reauthorization",
+        "cc021-unchanged-boundaries",
+        "cc021-forbidden-side-effects",
+    }
+    assert all(check["result"] == "PASS" for check in checks.values())
+    assert (
+        SMALL_SHOP_OPERATOR_APPROVAL
+        in checks["cc021-operator-intent-precedes-provisional"]["observed"]
+    )
+    assert SMALL_SHOP_PROVISIONAL_COMMIT in checks["cc021-provisional-diff"]["observed"]
+    assert (
+        "sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1"
+        in checks["cc021-old-card-authority"]["observed"]
+    )
+    assert "2960 bytes" in checks["cc021-old-card-authority"]["observed"]
+    assert any("candidate" in limitation for limitation in report["limitations"])
+    assert any("CC-R" in limitation for limitation in report["limitations"])
+
+
+def test_cc021_authorization_recovery_transaction_is_exact() -> None:
+    entries = _raw_overseer_state().entries
+    transaction = tuple(entry for entry in entries if 216 <= entry["sequence"] <= 219)
+    assert tuple(entry["entry_id"] for entry in transaction) == tuple(
+        f"OVR-{sequence:06d}" for sequence in range(216, 220)
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "cc021-authorization-recovery",
+        "cc021-authorization-recovery-verification",
+        "CC-021",
+        "CC-021",
+    )
+    revision, verification, paused, active = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-021"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/"
+        "CC-021-authorization-recovery.json": "CREATED",
+        "design/contract_compiler/program.md": "MODIFIED",
+        "design/contract_compiler/workstreams/CC-021/manifest.json": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    report_path = (
+        CONTRACT / "overseer" / "evidence" / "CC-021-authorization-recovery.json"
+    )
+    report_digest = _digest(report_path.read_bytes())
+    revision_refs = {
+        (reference["relation"], reference["type"], reference["target"])
+        for reference in revision["references"]
+    }
+    assert (
+        "EVIDENCES",
+        "EVIDENCE",
+        "design/contract_compiler/overseer/evidence/CC-021-authorization-recovery.json",
+    ) in revision_refs
+    assert (
+        next(
+            reference
+            for reference in revision["references"]
+            if reference["type"] == "EVIDENCE"
+        )["digest"]
+        == report_digest
+    )
+    assert {
+        reference["target"]
+        for reference in revision["references"]
+        if reference["type"] == "COMMIT"
+    } == {SMALL_SHOP_OPERATOR_APPROVAL, SMALL_SHOP_PROVISIONAL_COMMIT}
+    assert {
+        (reference["relation"], reference["type"], reference["target"])
+        for reference in verification["references"]
+    } >= {
+        ("EVIDENCES", "ENTRY", "OVR-000216"),
+        ("EVIDENCES", "COMMIT", SMALL_SHOP_OPERATOR_APPROVAL),
+        ("EVIDENCES", "COMMIT", SMALL_SHOP_PROVISIONAL_COMMIT),
+        ("AFFECTS", "WORKSTREAM", "CC-021"),
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert any(
+        "provisional noncandidate" in claim.lower()
+        for claim in verification["data"]["claims"]
+    )
+    assert any(
+        "prospective" in claim.lower() for claim in verification["data"]["claims"]
+    )
+
+    assert paused["data"]["previous_state"] == "ACTIVE"
+    assert paused["data"]["new_state"] == "PAUSED"
+    assert paused["data"]["bootstrap"] is False
+    assert paused["data"]["evidence_entry_ids"] == [
+        "OVR-000216",
+        "OVR-000217",
+    ]
+    assert len(paused["data"]["blockers"]) == 1
+    assert "cannot gate candidacy" in paused["data"]["blockers"][0]
+
+    assert active["data"]["previous_state"] == "PAUSED"
+    assert active["data"]["new_state"] == "ACTIVE"
+    assert active["data"]["bootstrap"] is False
+    assert active["data"]["evidence_entry_ids"] == [
+        "OVR-000216",
+        "OVR-000217",
+    ]
+    assert active["data"]["blockers"] == []
+    assert SMALL_SHOP_RESPONSIBILITY in " ".join(active["data"]["deliverables"])
+    assert any(
+        "first commit containing OVR-000219" in deliverable
+        for deliverable in active["data"]["deliverables"]
+    )
+
+    report = _read_json(report_path)
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    provisional_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", SMALL_SHOP_PROVISIONAL_COMMIT)
+    )
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert report_time > provisional_time
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+
+
+def test_cc021_recovery_preserves_paused_oracles_and_future_absence() -> None:
+    manifest = _read_json(INTEGRATION)
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+
+    assert states["CC-021"] == "ACTIVE"
+    assert states["CC-012"] == "PAUSED"
+    assert states["CC-014"] == "PAUSED"
+    assert states["CC-016"] == "PAUSED"
+    assert _registry_row(manifest, "CC-022")["card"] == {"state": "ABSENT"}
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
 
 
 def test_small_shop_reanchor_preserves_adjacent_authority() -> None:

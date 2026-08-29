@@ -1,0 +1,105 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-021"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:44c6fad35771adafc448b26b161e85e3bfe1b7ad9636cddf6a9517b8ffef8952",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-021-authorization-recovery.json"
+      },
+      {
+        "after_digest": "sha256:4303f98ecbd94f7df55764cf65e03f70619c4b03cbb428edcbb16d370fdc6234",
+        "before_digest": "sha256:71db2b0b98df3d309e4f79cd8d87f604d748691f70f67ab21fb05892b392138a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:807f5d2b39a2b7d1729cf4ec6b548c4c37459ee73995506afde4fced963b6ef8",
+        "before_digest": "sha256:050f2d134e19302064c0d7eac099a488ccc0e6d104abb0bca92df09150c94538",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:98cbcaed679a518d30adfe8c4fc9cb3cca7ca7a9585f4b82d368c1ca4b1d4204",
+        "before_digest": "sha256:645787b641fce5e7da1314c80e27f5df3117fd8b332c73c3932030260968a7d1",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-021/manifest.json"
+      },
+      {
+        "after_digest": "sha256:bd23938061021ac7a7b0799ff4d19a4d8593aa7ac7b68909a60c735c5abae978",
+        "before_digest": "sha256:482c83a92f6c1d09df85cac258983fa28ddca160a8322d086360eee6976f8d68",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:951d7b12a07fae26df3a5ebf34bccc98b1b085029447453b22cdfd471232d418",
+  "entry_id": "OVR-000216",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:99e118fd111ef1f432cf75d48e05d18a33d17be4263655bd44c5eb969853769d",
+  "recorded_at": "2026-08-29T05:29:11Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-authorization-recovery.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-021/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:44c6fad35771adafc448b26b161e85e3bfe1b7ad9636cddf6a9517b8ffef8952",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-021-authorization-recovery.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "927ab183e33de09d62a3a6dba834306d54f35962",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9b2afa8327bac1dd18ddca281e10f736cb1337fc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 216,
+  "subject": {
+    "id": "cc021-authorization-recovery",
+    "type": "DOCUMENT"
+  },
+  "summary": "Recover the CC-021 parameter authorization prospectively.",
+  "why": "The operator selected the RET-010 fixture bundle before provisional bytes were written, but the formal CC-021 card authorized only ontology and domain source bytes. This forward-only revision names the two declarative parameter roles without rewriting OVR-000214 or granting the provisional commit candidate authority. It preserves all ownership, dependency, scope, state, selection, worker-ledger, and product boundaries."
+}

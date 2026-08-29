@@ -47,7 +47,7 @@
   "ledger": {
     "state": "NOT_STARTED"
   },
-  "responsibility": "Author controlled Small Shop Fulfilment input bytes only under the exact research input prefix, with one canonical verification report and one fixed input validation test. Inputs may include ontology and domain source bytes, but no expected facts, mappings, transformations, identities, recipes, ProposedOperation values, candidates, evidence outcomes, compiler or runtime implementation, protocol or accepted knowledge-graph state, replay receipts, or research-journal findings. Create no CC-022 oracle or CC-R work, corpus or checksum publication, public API, package, Docker, or release change.",
+  "responsibility": "Author controlled Small Shop Fulfilment ontology and domain source bytes under the exact research input prefix, declarative parameter members with manifest roles SCENARIO_SELECTION and SOURCE_TIME_CONTEXT, one canonical verification report, and one fixed input validation test. The parameter members may select the retained occurrence and entity tuple and declare fixture-local source format, calendar, synthetic year, and timezone. They are raw parameters, not mapping or transformation code, and must contain no normalized values or outputs. Inputs may contain no expected facts, mappings, transformations, identities, recipes, ProposedOperation values, candidates, evidence outcomes, compiler or runtime implementation, protocol or accepted knowledge-graph state, replay receipts, or research-journal findings. Create no CC-022 oracle or CC-R work, corpus or checksum publication, public API, package, Docker, or release change.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
   "scopes": [
     {
