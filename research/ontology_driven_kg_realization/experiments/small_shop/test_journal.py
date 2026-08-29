@@ -21,6 +21,17 @@ JOURNAL_MODULE = HERE / "journal.py"
 SEED = HERE / "journal.jsonl"
 CHECKPOINT_PATH = "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md"
 ONTOLOGY_DESIGN_PATH = "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+RET_010_SELECTED_VALUES = {
+    "source_occurrence": "RETAIN_E27_DERIVE_ENTITY_PAIRS_SELECT_O1_X1",
+    "x1_to_x_transform": "EXPLICIT_TOTAL_LOOKUP_X1_TO_X",
+    "relation_type_literal": "ORDER_CONTAINS_UNIT",
+    "source_time_grammar": "%d-%m %H:%M",
+    "normalized_valid_time": "2000-05-07T17:00:00Z",
+    "temporal_provenance": "FIXTURE_DERIVED_SYNTHETIC_YEAR_AND_UTC",
+    "review_semantics": "PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY",
+    "evidence_sufficiency": "CLOSED_DERIVATION_PACKAGE",
+    "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
+}
 
 
 def _load_journal() -> ModuleType:
@@ -204,22 +215,30 @@ def test_charter_freezes_identity_compiler_skill_and_authority_guards() -> None:
         assert required in text
 
 
-def test_charter_leaves_exactly_six_fixture_choices_deferred() -> None:
+def test_charter_records_the_approved_ret_010_fixture_bundle() -> None:
     text = CHARTER.read_text(encoding="utf-8")
-    deferred = text.split("## Deferred fixture choices", 1)[1].split(
+    approved = text.split("## Approved RET-010 fixture bundle", 1)[1].split(
         "## Journal staging", 1
     )[0]
 
-    assert deferred.count("DEFERRED") == 1
-    for choice in (
-        "`RET-010` source occurrence",
-        "`X1` to `X` transformation",
-        "Relation-type literal",
-        "Valid-time, calendar, and timezone policy",
-        "Passive versus gating review",
-        "Evidence-sufficiency rule",
+    for required in (
+        "retains `e27` as the source occurrence",
+        "Entity-to-Entity candidate pairs",
+        "selects only `O1` and `X1`",
+        "explicit total lookup from `X1` to `X`",
+        "`ORDER_CONTAINS_UNIT`",
+        "`%d-%m %H:%M`",
+        "`2000-05-07T17:00:00Z`",
+        "does not create or support an `e27` Event node",
+        "fixture-derived",
+        "not claims made by the publication",
+        "passive",
+        "does not accept input",
+        "deterministic derivation",
+        "not real-world truth",
+        "RET-040 remains typed RED",
     ):
-        assert choice in deferred
+        assert required in approved
 
 
 def test_charter_defers_unconsumed_journal_kinds_tdd_first() -> None:
@@ -686,10 +705,14 @@ def test_unaccepted_identity_or_skill_authority_claim_refuses(
 
 def test_committed_seed_has_exact_records_and_cli_check() -> None:
     journal = _load_journal()
+    seed_lines = SEED.read_bytes().splitlines(keepends=True)
+    assert hashlib.sha256(b"".join(seed_lines[:3])).hexdigest() == (
+        "1604a217529f8694be12d246596a8650422c7d79899e22ccc05bb6b5725dcd2a"
+    )
     records = journal.read_journal(
         SEED,
         root=ROOT,
-        expected_count=3,
+        expected_count=4,
         expected_head_hash=journal.EXPECTED_HEAD_HASH,
     )
 
@@ -697,15 +720,19 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         "OPERATOR_DECISION_RECORDED",
         "OPERATOR_DECISION_RECORDED",
         "INTENT_RECORDED",
+        "OPERATOR_DECISION_RECORDED",
     ]
-    assert [record["payload"].get("decision_key") for record in records[:2]] == [
+    assert [record["payload"].get("decision_key") for record in records] == [
         "canonical_running_domain",
         "compiler_authority_boundary",
+        None,
+        "ret_010_fixture_bundle",
     ]
     formal_decision_refs = [
-        record["payload"]["formal_decision_refs"] for record in records[:2]
+        records[position]["payload"]["formal_decision_refs"]
+        for position in (0, 1, 3)
     ]
-    assert formal_decision_refs == [["OKG-D013"], []]
+    assert formal_decision_refs == [["OKG-D013"], [], []]
     assert sum(
         reference == "OKG-D013"
         for references in formal_decision_refs
@@ -724,8 +751,12 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
             "commit": "37cf69d57ee85f8a5f936661f1cf5fbdb975573b",
             "tree": "00251ce0809e5240cfa08fc4e192811d30de8380",
         }
-        for record in records
+        for record in records[:3]
     )
+    assert records[3]["payload"]["repository"] == {
+        "commit": "c191dd59b5922e3dadd38b9c218b2338db7bb67d",
+        "tree": "ac004a35c56ed68da2e00279e626c1dd3c791408",
+    }
     assert records[1]["payload"]["deferred_values"] == {
         "ret_010_source_occurrence": "DEFERRED",
         "x1_to_x_transform": "DEFERRED",
@@ -734,7 +765,10 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         "passive_or_gating_review": "DEFERRED",
         "evidence_sufficiency_rule": "DEFERRED",
     }
+    assert records[3]["payload"]["selected_values"] == RET_010_SELECTED_VALUES
+    assert records[3]["payload"]["deferred_values"] == {}
     assert all(record["recorded_at"] > "2026-08-29T03:37:14Z" for record in records)
+    assert records[3]["recorded_at"] > "2026-08-29T04:23:34Z"
     completed = subprocess.run(
         (sys.executable, str(JOURNAL_MODULE), "check"),
         cwd=ROOT,
@@ -743,4 +777,4 @@ def test_committed_seed_has_exact_records_and_cli_check() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stderr
-    assert f"3 records, head {journal.EXPECTED_HEAD_HASH}" in completed.stdout
+    assert f"4 records, head {journal.EXPECTED_HEAD_HASH}" in completed.stdout

@@ -105,19 +105,37 @@ graph mutation, or a journal entry alone never counts as GREEN.
 The public ABox encoding profile and any Event-endpoint expansion are deferred.
 Neither is selected by this charter.
 
-## Deferred fixture choices
+## Approved RET-010 fixture bundle
 
-The following choices remain `DEFERRED`. This charter records no selection:
+The approved research direction retains `e27` as the source occurrence, derives
+Entity-to-Entity candidate pairs, and selects only `O1` and `X1`. Deriving that
+view from `e27` does not create or support an `e27` Event node. Event correlation
+support remains `RET_040_REMAINS_TYPED_RED`, so RET-040 remains typed RED.
 
-1. `RET-010` source occurrence.
-2. `X1` to `X` transformation.
-3. Relation-type literal.
-4. Valid-time, calendar, and timezone policy.
-5. Passive versus gating review.
-6. Evidence-sufficiency rule.
+The `X1` to `X` transform is an explicit total lookup from `X1` to `X`. The
+relation-type literal is `ORDER_CONTAINS_UNIT`. The source-time grammar is
+`%d-%m %H:%M`, normalized to `2000-05-07T17:00:00Z`. The synthetic year and UTC
+are fixture-derived temporal provenance, not claims made by the publication.
 
-Each choice requires an explicit decision and a failing test before its first
-implementation consumer.
+Review is passive exact review. It records the check but does not accept input
+and has no acceptance authority. Evidence sufficiency means a closed
+derivation package. Its claim is scoped to deterministic derivation from the
+declared inputs, not real-world truth.
+
+The exact selected values are:
+
+1. `source_occurrence: RETAIN_E27_DERIVE_ENTITY_PAIRS_SELECT_O1_X1`
+2. `x1_to_x_transform: EXPLICIT_TOTAL_LOOKUP_X1_TO_X`
+3. `relation_type_literal: ORDER_CONTAINS_UNIT`
+4. `source_time_grammar: %d-%m %H:%M`
+5. `normalized_valid_time: 2000-05-07T17:00:00Z`
+6. `temporal_provenance: FIXTURE_DERIVED_SYNTHETIC_YEAR_AND_UTC`
+7. `review_semantics: PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY`
+8. `evidence_sufficiency: CLOSED_DERIVATION_PACKAGE`
+9. `event_correlation_support: RET_040_REMAINS_TYPED_RED`
+
+The earlier journal decision remains an immutable statement that these choices
+were deferred at that time. The appended decision records their later approval.
 
 ## Journal staging
 

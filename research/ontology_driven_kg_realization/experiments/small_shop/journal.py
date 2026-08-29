@@ -23,7 +23,7 @@ SCHEMA_VERSION = "1"
 GENESIS = "GENESIS"
 RECORD_HASH_DOMAIN = "malleus:research:small-shop-journal:v1"
 EXPECTED_HEAD_HASH = (
-    "sha256:a83d7b9f689334643a3e04b403c359e4aca903c9e9e3664c9b2188a1c33049f6"
+    "sha256:a1d5d89be132c05fac585fd269aec5b5c9790f16971138e68a4c158738dc6cc2"
 )
 
 SERIES_ID = "SMALL_SHOP_GRAPH_REALIZATION"
@@ -87,6 +87,21 @@ OPERATOR_DECISIONS = {
             "passive_or_gating_review": "DEFERRED",
             "evidence_sufficiency_rule": "DEFERRED",
         },
+    },
+    "ret_010_fixture_bundle": {
+        "formal_decision_refs": [],
+        "selected_values": {
+            "source_occurrence": "RETAIN_E27_DERIVE_ENTITY_PAIRS_SELECT_O1_X1",
+            "x1_to_x_transform": "EXPLICIT_TOTAL_LOOKUP_X1_TO_X",
+            "relation_type_literal": "ORDER_CONTAINS_UNIT",
+            "source_time_grammar": "%d-%m %H:%M",
+            "normalized_valid_time": "2000-05-07T17:00:00Z",
+            "temporal_provenance": "FIXTURE_DERIVED_SYNTHETIC_YEAR_AND_UTC",
+            "review_semantics": "PASSIVE_EXACT_REVIEW_NOT_ACCEPT_AUTHORITY",
+            "evidence_sufficiency": "CLOSED_DERIVATION_PACKAGE",
+            "event_correlation_support": "RET_040_REMAINS_TYPED_RED",
+        },
+        "deferred_values": {},
     },
 }
 
@@ -519,7 +534,7 @@ def check() -> tuple[int, str]:
     records = read_journal(
         JOURNAL,
         root=ROOT,
-        expected_count=3,
+        expected_count=4,
         expected_head_hash=EXPECTED_HEAD_HASH,
     )
     return len(records), records[-1]["record_hash"]
