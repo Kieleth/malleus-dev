@@ -2,16 +2,21 @@
 
 Design status: accepted pillar, candidate protocol and completeness claim
 
-Design revision: 7
+Design revision: 8
 
 Decision authority: author
 
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
+`OKG-D013`, Small Shop Fulfilment is the canonical running fixture;
 contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
-`OD-008`, and `OD-011` through `OD-014`
+`OD-008`, and `OD-010` through `OD-014`
 
-Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, 2026-08-26, and 2026-08-27
+Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, 2026-08-26, 2026-08-27,
+and 2026-08-28
+
+Canonical running-fixture decision: `OKG-D013` selects fixture object
+`OKG-FX001`, **Small Shop Fulfilment**
 
 Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
 This is an ancestry base only, not the tested implementation snapshot. The
@@ -22,7 +27,9 @@ Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GR
 revision 20,
 `sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a`
 
-Evidence cutoff: 2026-08-27
+Protocol-design evidence cutoff: 2026-08-27
+
+Running-fixture evidence cutoff: 2026-08-28
 
 Private implementation-audit snapshot:
 `sha256:9b62ed651e0b571a3301da559494d55fd9fe35f7790016a64cb163f43214f47a`
@@ -61,16 +68,347 @@ The pillar, OTTR recipe formalism, and replaceable LinkML frontend boundary are
 accepted. The exact contract object model, backend profiles, mapping artifacts,
 ledger integration, and public API remain candidate design.
 
+### 1.1 Canonical running fixture: Small Shop Fulfilment
+
+`OKG-D013` selects `OKG-FX001`, **Small Shop Fulfilment**, as the canonical
+running domain for this pillar. `OKG-D013` is the accepted decision;
+`OKG-FX001` is the fixture object it selects. Every explanation, object-model
+decision, Gedankenexperiment, conformance fixture, and eventual public example
+for Graph Realization must use this domain first. A different domain may be an
+independent stress fixture. Replacing this domain requires a superseding
+decision and dependency-impact analysis.
+
+`OKG-FX001` is synthetic and informed by Fahland's published example. It is not
+copied source data. Its retail vocabulary remains fixture-local and does not
+enter the Malleus protocol ontology. The decision changes no shipped capability
+and does not claim that fixture bytes, a LinkML ontology, mappings, recipes, or
+expected artifacts already exist. Exact fixture bytes and independently
+authored oracles remain separate work. Existing `GE-000` through `GE-020`
+fixtures remain frozen historical evidence; they are not retroactively rethemed
+or regenerated. `OKG-D013` also does not override contract-compiler `OD-010` or
+its current Entity-only relation endpoint boundary.
+
+#### Literature ancestry and Malleus composition
+
+The fixture takes its event fabric from Dirk Fahland's
+[Event Knowledge Graph chapter](https://doi.org/10.1007/978-3-031-08848-3_9):
+customer orders, supplier orders, physical items, actors, invoices, payments,
+corrections, shipment activities, and later integration of warehouse events.
+The chapter establishes the usefulness of representing one event against
+multiple participating entities and retaining per-entity order. It does not
+establish Malleus's contract compilation, evidence admission, epistemic
+decision, protocol-ledger authority, bitemporal projection, or migration
+semantics.
+
+Three other systems contribute bounded techniques around that domain:
+
+1. [SLOGERT](https://doi.org/10.1007/978-3-030-77385-4_38) contributes
+   heterogeneous log-template extraction, semantic annotation, and OTTR-based
+   graph construction.
+2. [Blue Brain Nexus](https://doi.org/10.3233/SW-222974) contributes
+   append-only resource evolution and replayed materialized projections.
+3. [OntoLogX](https://doi.org/10.1002/aisy.202501381) contributes
+   ontology-guided generation, explicit validation, targeted correction, and
+   persist-only-valid gating.
+
+Malleus composes those independently established pieces with identified source
+closure, replaceable contract compilation, declared mapping and identity
+contracts, atomic candidate identity, evidence checks, review and assent,
+valid-time interpretation, protocol-ledger replay, and dependency-closed
+evolution. Novelty, if established later, belongs to that composition and its
+results, not to the retail pieces themselves.
+
+#### Fixed conceptual closure
+
+The minimal fixture contains:
+
+| Kind | Fixed conceptual members |
+|---|---|
+| Actors | `R1` through `R5` |
+| Customer orders | `O1`, `O2` |
+| Supplier orders | `A`, `B`; `e4` records `B` as `1Y` and `e7` updates it to `2Y` |
+| Product kinds | `X`, `Y` |
+| Physical inventory units | `X1`, `X2`, `X3`, `Y1`, `Y2` |
+| Invoices | `I1`, `I2`; `e9` records an update to `I2` without exposing the changed value |
+| Payment | `P1`, settling `I1` and `I2` |
+| Domain occurrences | create, place, receive, unpack, update, pack, ship, receive payment, and clear invoice |
+
+The first retained source closure should expose heterogeneous but deterministic
+inputs with roles equivalent to:
+
+```text
+orders.csv
+supplier-orders.json
+warehouse.jsonl
+invoices.csv
+payments.csv
+```
+
+Those filenames are explanatory until exact corpus bytes are independently
+authored and bound. Their separation is normative: the realization design must
+show how the same domain is composed from several sources rather than hiding
+all population behind one already-clean graph file.
+
+#### One occurrence carried to the current representation boundary
+
+Use the warehouse's packing occurrence as the primary discriminating path:
+
+```json
+{
+  "event_id": "e27",
+  "activity": "PACK_SHIPMENT",
+  "time": "07-05 17:00",
+  "actor": "R4",
+  "order": "O1",
+  "items": ["X1", "X2", "Y1"]
+}
+```
+
+This JSON is an explanatory source shape, not an accepted public wire and not a
+claim that the occurrence happened. The paper supplies no year or timezone for
+this value. An executable fixture must separately declare its calendar year,
+source format, timezone database and version, and refusal behavior for ambiguous
+or nonexistent local times. A normalized timestamp is fixture-derived, not a
+paper claim. The occurrence should travel through retained source,
+transformation, mapping, and identity handling until the current `OD-010`
+endpoint boundary returns a typed construction gap. The self-contained
+`O1` plus `X1` topology below is the first green path. The `P1` settlement is
+the second green path after its invoice dependencies exist. The layers must
+remain distinct:
+
+| Object | Concrete meaning for `e27` | What it is not |
+|---|---|---|
+| Source occurrence | One retained warehouse record says `R4` packed `O1` using `X1`, `X2`, and `Y1` at a stated time | Accepted knowledge |
+| Semantic proposal | The desired identified patch would interpret the record under exact mapping, transformation, identity, recipe, evidence, and contract identities; current construction stops before emitting it as stageable operations | A ledger event or accepted patch |
+| Protocol event | A future governed run can record the source, typed gap, review, or decision in transaction order; it cannot record an accepted application for an unrepresentable candidate | The warehouse occurrence itself |
+| Accepted temporal KG | The graph remains unchanged when the typed construction gap blocks the candidate | A lossy property encoding of the missing event correlations |
+
+The protocol ledger and accepted KG therefore encode different orderings. The
+ledger orders Malleus transitions. The KG represents accepted domain meaning,
+including domain-valid time, identity, relations, provenance, and supersession.
+
+#### What controls each boundary
+
+| Concern | `OKG-FX001` example | Authority |
+|---|---|---|
+| Human authoring syntax | `SalesOrder`, `InventoryUnit`, fields, constraints, and relation signatures | LinkML v0 frontend |
+| Governed contract meaning | Frontend-neutral facts and their effective constraints | `EffectiveContract` |
+| Observed bytes | The exact retained `warehouse.jsonl` record | Source artifact identity |
+| Source interpretation | `order` maps to the order symbol and `items` maps to physical-unit symbols | `SourceMappingContract` |
+| Normalization | Timestamp, quantity, money, and code normalization | `TransformationContract` plus named implementation |
+| Stable ABox identity | `O1` becomes an order identity while `X` and `X1` remain product-kind and physical-unit identities | `IdentityResolutionPolicy` |
+| Reusable topology | Required records, relations, properties, and construction dependencies | OTTR `GraphRecipe` |
+| Construction intent | Ordered existing `ProposedOperation` values | GraphRecipe assembler |
+| Structural legality | Types, fields, endpoints, references, and atomic staging | Effective contract plus Malleus runtime |
+| Evidential acceptability | Required warehouse, invoice, or payment evidence and conflict handling | Named evidence and epistemic policy |
+| Transaction order and replay | Proposal, check, decision, and application history | `ProtocolLedger` |
+| Read representation | Accepted NetworkX view now; additional conformant projections later | Projector plus `GraphBackendProfile` |
+
+LinkML is the replaceable source language. Contracts are identified rule and
+policy data. Named code compiles or enforces those contracts. OTTR expands only
+finite topology. None of those parts may silently assume the responsibilities
+of another.
+
+#### Deterministic compiler and optional proposal producer
+
+The accepted compiler boundary is a deterministic partial function. Exact,
+closed inputs produce exact compiled artifacts or an exact typed refusal.
+Producer identity is irrelevant: the compiler applies the same rules to the
+same bytes whether a person, a program, or an optional Malleus skill authored
+them. It does not infer what an incomplete ontology probably meant.
+
+An optional Malleus ontology-builder/corrector skill may propose exact ontology
+or patch bytes from an existing ontology or from retained project evidence when
+no ontology exists. That skill is outside the trusted compiler. Its output is a
+content-addressed proposal that enters ordinary evidence, review, and decision
+handling. Only accepted exact bytes become compiler input. The compiler never
+calls the skill, and replay uses retained bytes and recorded artifacts without
+calling it again.
+
+#### GREEN 1: self-contained order and physical unit
+
+The first positive topology creates order `O1`, distinct physical item `X1`,
+and one fixture-defined `OrderContainsUnit` relation in an empty graph base.
+Fahland's example supports the `O1` and `X1` association through the packing
+occurrence. The direct predicate name, direction, and any standalone allocation
+source record are fixture decisions. They must be declared and evidenced rather
+than attributed to the paper or inferred from the earlier create-order event.
+This derived Entity-to-Entity view does not satisfy or erase the separate RED
+obligation to represent `e27` and its correlations. One recipe invocation can
+emit:
+
+```text
+Record(shop:member/order-o1,
+       mgrp:CreateEntity,
+       shop:SalesOrder,
+       "order:O1")
+Property(shop:member/order-o1,
+         shop:orderNumber,
+         "O1")
+
+Record(shop:member/unit-x1,
+       mgrp:CreateEntity,
+       shop:InventoryUnit,
+       "unit:X1")
+Property(shop:member/unit-x1,
+         shop:productCode,
+         "X")
+
+Record(shop:member/contains-x1,
+       mgrp:CreateRelation,
+       shop:OrderContainsUnit,
+       "relation:O1:X1")
+RelationSource(shop:member/contains-x1, "order:O1")
+RelationTarget(shop:member/contains-x1, "unit:X1")
+DependsOn(shop:member/contains-x1, shop:member/order-o1)
+DependsOn(shop:member/contains-x1, shop:member/unit-x1)
+```
+
+The qualified `member` is a construction-local handle. The string `record_id`
+is the ABox identity that survives in the graph. `DependsOn` determines safe
+construction order; it is not a domain relation. The assembler must lower the
+complete fact set to this ordered intent:
+
+```text
+1. CREATE_ENTITY SalesOrder order:O1 {"order_number":"O1"}
+2. CREATE_ENTITY InventoryUnit unit:X1 {"product_code":"X"}
+3. CREATE_RELATION OrderContainsUnit relation:O1:X1
+   source=order:O1 target=unit:X1
+```
+
+#### GREEN 2: payment settlement against an existing base
+
+The second positive topology uses the paper's payment `P1`, which settles
+invoices `I1` and `I2`. Both invoices must already exist in the verified graph
+base. The first fixture recipe is fixed at two invoice arguments. It does not
+claim generic collection expansion, arbitrary fan-out, or cardinality
+enforcement. One invocation can emit:
+
+```text
+Record(shop:member/payment-p1,
+       mgrp:CreateEntity,
+       shop:Payment,
+       "payment:P1")
+Property(shop:member/payment-p1,
+         shop:paymentNumber,
+         "P1")
+
+Record(shop:member/settles-i1,
+       mgrp:CreateRelation,
+       shop:PaymentSettlesInvoiceRelation,
+       "relation:P1:I1")
+RelationSource(shop:member/settles-i1, "payment:P1")
+RelationTarget(shop:member/settles-i1, "invoice:I1")
+DependsOn(shop:member/settles-i1, shop:member/payment-p1)
+
+Record(shop:member/settles-i2,
+       mgrp:CreateRelation,
+       shop:PaymentSettlesInvoiceRelation,
+       "relation:P1:I2")
+RelationSource(shop:member/settles-i2, "payment:P1")
+RelationTarget(shop:member/settles-i2, "invoice:I2")
+DependsOn(shop:member/settles-i2, shop:member/payment-p1)
+```
+
+The assembler must lower the complete fact set to this ordered intent:
+
+```text
+1. CREATE_ENTITY Payment payment:P1 {"payment_number":"P1"}
+2. CREATE_RELATION PaymentSettlesInvoiceRelation relation:P1:I1
+   source=payment:P1 target=invoice:I1
+3. CREATE_RELATION PaymentSettlesInvoiceRelation relation:P1:I2
+   source=payment:P1 target=invoice:I2
+```
+
+The direct settlement predicate and its direction are fixture-derived from the
+published `e30` co-occurrence of `P1`, `I1`, and `I2`. They are not native EKG
+correlation edges. All names above remain fixture-local explanatory vocabulary
+until independent source and oracle work fixes exact qualified symbols. They
+are not public Malleus identifiers.
+
+#### GREEN 3: actual corrections without identity collapse
+
+The temporal thread uses the corrections present in the paper:
+
+```text
+e4  Supplier order B records 1 unit of product Y
+e7  Supplier order B is updated to 2 units of product Y
+e9  Invoice I2 is updated
+```
+
+An executable fixture must define the versioned state or claim identity that
+`e7` supersedes. The paper does not expose the changed invoice value at `e9`, so
+the fixture must either retain only the occurrence of an update or independently
+author and identify the corrected invoice details. It may not invent those
+details as a paper claim.
+
+`Y1` and `Y2` are two distinct physical items. Both arrive in `e19`, are unpacked
+separately in `e20` and `e21`, and are later packed with different orders. One
+must never supersede the other. If an allocation relation were corrected in a
+future synthetic case, the relation version would change while both item
+identities remained intact. GraphRecipe emits `ProposedOperation` values only;
+a separate temporal binding supplies valid time, supersession, acceptance, and
+ledger application.
+
+#### Concrete phase map
+
+| Phase | `OKG-FX001` object |
+|---|---|
+| 0. Effective contract | Compile the exact accepted shop ontology sources into one reloadable contract; a root `instances` field must refuse rather than become population or disappear |
+| 1. Logical contract | Derive the legal order, unit, invoice, payment, event, and relation record roles and constraints |
+| 2. Backend projection | State exactly what the NetworkX gate enforces and what remains an external admission check |
+| 3. Recipes | Compile self-contained `OrderContainsUnit`, fixed-arity `PaymentSettlementTwoInvoices`, correction-state, and packing-event topology under the narrowed OTTR profile |
+| 4. Population policy | Bind each source path, transformation, identity rule, recipe selection, evidence requirement, and collision behavior |
+| 5. Construction plan | Produce one content-addressed atomic plan with ordered operations and derivation traces for a selected source closure |
+| 6. Stage and verify | Refuse the whole plan on a missing unit, invalid endpoint, identity collision, unsupported event correlation, or failed evidence check |
+| 7. Decide and materialize | Apply only a candidate-bound `ACCEPT`; every other decision leaves the accepted graph unchanged |
+| 8. Attest | Bind source, contract, mapping, identity, recipe, implementation, plan, checks, decision, heads, and resulting graph identity |
+| 9. Evolve | Supersede the declared state of supplier order `B` at `e7`, retain the bounded `I2` update at `e9`, then test an ontology revision that introduces first-class `Shipment` records and partial shipments |
+
+#### Required RED boundaries
+
+The fixture is valuable because it exposes present limits rather than adapting
+the story to whatever the code already happens to support:
+
+1. **Ontology is not population.** The shop ontology alone must produce zero
+   orders, items, invoices, payments, events, and relations.
+2. **Unknown source-language fields refuse.** A root `instances` member and any
+   arbitrary unlisted root member must refuse the entire contract compilation.
+3. **The upper ABox seam is absent.** No shipped frontend-neutral source
+   occurrence, mapping, identity, recipe-invocation, or semantic graph-patch API
+   currently produces `ProposedOperation` values.
+4. **Event correlation is not currently representable as an ordinary Malleus
+   relation.** The accepted `OD-010` profile permits Entity-only relation
+   endpoints, while Fahland's event graph correlates `e27` to an order, several
+   units, and, when the actor layer is included, `R4`, and relates events through
+   per-entity order. The first
+   experiment must expose this mismatch and refuse or report a typed gap. It may
+   not invent an implicit property edge or broaden endpoint semantics.
+5. **Semantic and source identity differ.** A description-only ontology edit
+   changes exact source attestation while preserving effective semantic facts.
+   A required-field, range, identity, or used-prefix change affects the
+   appropriate semantic contract identity.
+6. **Evolution is dependency-closed.** Introducing first-class `Shipment`
+   records must identify affected ontology facts, mappings, recipes, plans,
+   existing ABox records, projections, and readers before migration is accepted.
+7. **Physical identity is not revision identity.** `Y1` and `Y2` are distinct
+   items. No mapping, recipe, temporal write, or repair may model either as a
+   version, alias, or superseding record of the other.
+
+Physics and chemistry remain desirable independent stress domains, especially
+for units, uncertainty, instrument observations, competing models, and ontology
+evolution. They follow this baseline. They do not delay or replace it.
+
 ## 2. “KG structure” names four different things
 
 The phrase must not hide four separate outputs:
 
-| Layer | Exact meaning | What the ontology can determine |
-|---|---|---|
-| Logical graph contract | Permitted record kinds, inheritance, properties, relation signatures, and constraints | Mostly derivable from an effective contract |
-| Backend graph schema | Labels or types, fields, endpoint constraints, indexes, and other target-specific declarations | Partly derivable after a backend capability profile is supplied |
-| Reusable graph topology | A parameterized pattern of records and relations that must occur together | Constrained by the ontology, but selected and parameterized by a recipe |
-| Instance population | Concrete identities, values, relations, provenance, and source evidence | Requires source mappings, identity policy, transformations, and source artifacts |
+| Layer | Exact meaning | `OKG-FX001` example | What the ontology can determine | Controlling input |
+|---|---|---|---|---|
+| Logical graph contract | Permitted record kinds, inheritance, properties, relation signatures, and constraints | `SalesOrder`, `InventoryUnit`, and a legal Entity-to-Entity `OrderContainsUnit` signature; later `PaymentSettlesInvoiceRelation` | Mostly derivable from an effective contract | `EffectiveContract` plus the logical-contract compiler |
+| Backend graph schema | Labels or types, fields, endpoint constraints, indexes, and other target-specific declarations | NetworkX node attributes for `O1` and `X1`, and one keyed relation record between them | Partly derivable after a backend capability profile is supplied | `GraphBackendProfile` plus projection code |
+| Reusable graph topology | A parameterized pattern of records and relations that must occur together | First `OrderWithUnit(O1, X1)`; then fixed-arity `PaymentSettlementTwoInvoices(P1, I1, I2)` after its base exists | Constrained by the ontology, but selected and parameterized by a recipe | OTTR `GraphRecipe` plus invocation |
+| Instance population | Concrete identities, values, relations, provenance, and source evidence | Retained fixture sources identify `O1` and `X1` and explicitly support the fixture-derived relation; later sources identify `P1`, `I1`, and `I2` | Requires source mappings, identity policy, transformations, and source artifacts | Source closure plus mapping, transformation, identity, conflict, and evidence contracts |
 
 An optional fifth projection represents the ontology itself as graph data. That
 is useful for introspection, but it is not the domain instance graph and does
@@ -338,8 +676,9 @@ being misreported as materialized graphs. The plan binds:
 9. All gaps, exclusions, and warnings.
 
 Deterministic inputs must produce identical canonical plans and digests.
-Nondeterministic producers may supply values, but each attempt and exact output
-is retained as an observed input before plan compilation.
+External proposal producers may supply values, but each attempt and exact
+output is retained as an observed input before plan compilation. The compiler
+never invokes those producers.
 
 Output: `GraphConstructionPlan` or a blocked result with typed gaps.
 
@@ -424,10 +763,64 @@ foundation graph vocabulary. They do not select RDF as a public wire format.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix mfg: <https://malleus.dev/foundation-graph/> .
 @prefix okg: <https://malleus.dev/ontology-kg-realization/> .
+@prefix cc: <https://malleus.dev/contract-compiler/> .
 
 okg:OntologyDrivenKGRealization rdf:type mfg:Package ;
     mfg:dependsOn mfg:ContractKernel ;
     mfg:status mfg:AcceptedDesign .
+
+okg:OKG-FX001 rdf:type mfg:DesignObject ;
+    mfg:dependsOn cc:OD-010 ;
+    mfg:governedBy okg:SmallShopFixtureOnlyBoundary ;
+    mfg:governedBy okg:FrozenGE000ThroughGE020Boundary ;
+    mfg:governedBy okg:CorrectedSmallShopExperimentLadderBoundary ;
+    mfg:governedBy okg:DistinctPhysicalItemsNeverSupersedeBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:SmallShopFixtureOnlyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:FrozenGE000ThroughGE020Boundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:CorrectedSmallShopExperimentLadderBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:DistinctPhysicalItemsNeverSupersedeBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:OKG-D013 rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-28" ;
+    mfg:selects okg:OKG-FX001 ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:OntologyDrivenKGRealization mfg:governedBy okg:OKG-D013 .
+
+okg:DeterministicCompilerOptionalProposalProducerArchitecture
+    rdf:type mfg:DesignObject ;
+    mfg:binds okg:DeterministicCompilerExactOutputOrTypedRefusalBoundary ;
+    mfg:binds okg:OntologyBuilderCorrectorOutsideTrustedCompilerBoundary ;
+    mfg:binds okg:OntologyBuilderCorrectorProtocolReviewBoundary ;
+    mfg:binds okg:ReplayNeverCallsOntologyBuilderCorrectorBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:DeterministicCompilerExactOutputOrTypedRefusalBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:OntologyBuilderCorrectorOutsideTrustedCompilerBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:OntologyBuilderCorrectorProtocolReviewBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:ReplayNeverCallsOntologyBuilderCorrectorBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+okg:OntologyDrivenKGRealization
+    mfg:governedBy okg:DeterministicCompilerOptionalProposalProducerArchitecture .
 
 okg:LogicalGraphContract rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;
@@ -1220,6 +1613,28 @@ backend, broad workload quality, or public capability. Those remain in
     facts remain bootstrap and conformance inputs, and a custom frontend may
     replace LinkML only through the same normative artifact boundary and
     conformance suite.
+13. `OKG-D013`, running-domain fixture policy, was **accepted on 2026-08-28**.
+    It selects fixture object `OKG-FX001`, Small Shop Fulfilment, for pillar
+    explanations, research-local experiments, and future conformance work.
+    Shop vocabulary remains fixture-local. The fixture is synthetic and
+    literature-informed rather than copied source data. Existing `GE-000`
+    through `GE-020` fixtures remain frozen historical evidence. Replacement
+    requires a superseding decision and impact analysis. The decision does not
+    override contract-compiler `OD-010`.
+
+`OKG-D013` and `OKG-FX001` are deliberately distinct. The former records the
+author's accepted selection and replacement rule. The latter is the governed
+fixture object against which explanations and experiments can bind exact
+sources, symbols, mappings, recipes, and independently authored oracles. This
+is a design and test-governance change, not a new runtime protocol semantic.
+
+Separately on 2026-08-28, the author accepted
+`DeterministicCompilerOptionalProposalProducerArchitecture`. The trusted
+compiler is deterministic and fail-closed. An optional ontology-builder or
+corrector skill may produce exact candidate bytes, but remains outside the
+compiler, enters through ordinary protocol review, and is never called during
+replay. This architecture boundary is not another object selected by
+`OKG-D013`.
 
 The author accepted the contract compiler directions on 2026-08-24, the exact
 compiler baseline on 2026-08-25, nine blocking policies on 2026-08-26, and the
@@ -1286,19 +1701,32 @@ governance topology on 2026-08-27:
     cross-role borrowing, cascade, repair, deletion, migration, and read-access
     policy remain outside the decision.
 
-`OKG-D001` and `OKG-D007` through `OKG-D012` are closed. OTTR is sufficient for
+`OKG-D001` and `OKG-D007` through `OKG-D013` are closed. OTTR is sufficient for
 the narrowed topology role, the five experiment-exposed microdecisions are
 accepted design, and LinkML is selected without becoming a privileged protocol
-dependency. A later change requires addressable counterevidence and a
-superseding decision, not an implicit implementation choice.
+dependency. `OKG-FX001` now anchors explanation and empirical work across those
+decisions. A later fixture replacement requires a superseding decision,
+preserved lineage, and dependency-impact analysis. A protocol-design change
+still requires addressable counterevidence and a superseding decision, not an
+implicit implementation choice.
 
-The literature and local implementation audits are closed for this design
+The literature and local implementation audits are closed for the prior design
 pass. The research-local GraphRecipe first slice now exists, but public runtime
-promotion remains open. The main pillar resumes the exact contract-kernel
-object-model decision, then `OKG-D002` through `OKG-D006` in order. The
-GraphRecipe branch resumes at `GE-030` without changing that main sequence.
+promotion remains open. Before further abstract expansion, the main pillar and
+its compiler dependency must restate their next claims against `OKG-FX001` and
+show the exact concrete object at every boundary. That grounding does not erase
+the accepted dependency graph: the exact contract-kernel object model remains
+the first unresolved protocol dependency, followed by `OKG-D002` through
+`OKG-D006`; the GraphRecipe experiment branch remains open at `GE-030`.
 
 ## 14. Mechanical validation of this design pass
+
+`OKG-D013` and `OKG-FX001` were accepted after the revision 20 validation
+recorded below. Their tuples are now present in this source document. Canonical
+foundation-graph revision 21, its digest, the renewed aggregate counts, and the
+overseer `DOCUMENT_REVISION` belong to the compiler-lane reanchoring
+transaction. The revision 20 report remains historical evidence and must not be
+read as covering this decision.
 
 The accepted contract compiler directions are projected through one dedicated
 block:
