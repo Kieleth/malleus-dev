@@ -440,7 +440,6 @@ def _assert_exact_accepted_bindings(oracle: dict[str, Any]) -> None:
     assert all(
         set(binding) == {"reference", "target"}
         for binding in bindings
-        if isinstance(binding["target"], str)
     )
     assert {
         binding["reference"]: binding["target"]
@@ -629,6 +628,7 @@ def test_local_defaults_are_explicit_and_downstream_stages_refuse_atomically() -
         "scalar-target-changed",
         "local-elaboration-member-added",
         "accepted-binding-member-added",
+        "refused-binding-member-added",
     ),
 )
 def test_exact_semantic_guards_reject_corruptions(mutation: str) -> None:
@@ -666,13 +666,21 @@ def test_exact_semantic_guards_reject_corruptions(mutation: str) -> None:
     elif mutation == "local-elaboration-member-added":
         oracle["local_elaboration"]["unexpected"] = []
         guard = _assert_exact_local_elaboration_keys
-    else:
+    elif mutation == "accepted-binding-member-added":
         binding = next(
             item
             for item in oracle["qualified_bindings"]
             if item["reference"] == "ArchiveExaminer"
         )
         binding["outcome"] = "ERROR"
+        guard = _assert_exact_accepted_bindings
+    else:
+        binding = next(
+            item
+            for item in oracle["qualified_bindings"]
+            if item["reference"] == "Agent"
+        )
+        binding["unexpected"] = []
         guard = _assert_exact_accepted_bindings
 
     with pytest.raises(AssertionError):

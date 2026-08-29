@@ -6,9 +6,9 @@
       "sha256": "sha256:cd7dbb8c4c8c81fb1d9d67e1423ba51e3bfa73b91d47a86f2381d1672f85e3e0"
     },
     {
-      "byte_length": 26152,
+      "byte_length": 26431,
       "path": "tests/contract_compiler/test_themed_compilation_oracles.py",
-      "sha256": "sha256:b5a13abf5f70fa2ee08936a078cc510b1579c04f4e2bb94569d2e4d10a232c15"
+      "sha256": "sha256:d89242537da772c87f079bb393c11b75697897c554768917ef0700e6b9904e98"
     }
   ],
   "base_commit": "195a369636f9fe9ce1a0e8f4cb9d950836164e79",
@@ -34,13 +34,13 @@
     {
       "check_id": "cc012-private-oracle-green",
       "method": "Run the fixed oracle membership, descriptor, import, declaration, exact binding, exact elaboration, comparison, mutation-adequacy, and private-vocabulary checks plus scoped Ruff.",
-      "observed": "pytest reported 14 passed in 0.11 seconds. Ruff reported All checks passed. The oracle has one JSON member and uses only the authorized resolver, profile, capability, media, source-blob, outcome, and comparison labels.",
+      "observed": "pytest reported 15 passed in 0.11 seconds. Ruff reported All checks passed. The oracle has one JSON member and uses only the authorized resolver, profile, capability, media, source-blob, outcome, and comparison labels.",
       "result": "PASS"
     },
     {
       "check_id": "cc012-semantic-mutation-adequacy",
-      "method": "Corrupt eight independent in-memory oracle variants and invoke only the exact guard responsible for the changed semantic section.",
-      "observed": "All 8 mutations were rejected: the prior six semantic value changes plus an unexpected local_elaboration member and outcome ERROR beside an accepted binding target. The two new verbose cases passed with 12 non-mutation tests deselected.",
+      "method": "Corrupt nine independent in-memory oracle variants and invoke only the exact guard responsible for the changed semantic section.",
+      "observed": "The refused-binding outer-member case first failed as intended with DID NOT RAISE: 1 failed and 14 deselected while the filtered guard remained. After removing that filter, all 9 mutations were rejected; the new verbose case passed with 14 deselected.",
       "result": "PASS"
     },
     {
@@ -58,7 +58,7 @@
     {
       "check_id": "cc012-neighboring-controls",
       "method": "Run the themed source, semantic requirements, conformance protocol, fixed oracle, complete contract-compiler, overseer ledger, integration-state, and GraphRecipe controls.",
-      "observed": "The focused neighboring set passed 57 tests and the complete contract-compiler directory passed 100. The ledger validated 254 entries, integration validated 69 workstreams, 32 cards, and 4 selections, and GraphRecipe passed 40. The sole fixed-suite failure remains the frozen pre-content assertion in limitations.",
+      "observed": "The focused neighboring set passed 58 tests and the complete contract-compiler directory passed 101. The ledger validated 254 entries, integration validated 69 workstreams, 32 cards, and 4 selections, and GraphRecipe passed 40. The sole fixed-suite failure remains the frozen pre-content assertion in limitations.",
       "result": "PASS"
     },
     {
@@ -87,7 +87,7 @@
     "The JSON is private fixture-local test evidence. It is not compiler input, a public format, a compatibility promise, runtime artifact bytes, wire grammar, a stable public identifier set, corpus publication, or CC-R authority.",
     "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
   ],
-  "recorded_at": "2026-08-29T21:26:05Z",
+  "recorded_at": "2026-08-29T21:32:40Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-012"
 }
