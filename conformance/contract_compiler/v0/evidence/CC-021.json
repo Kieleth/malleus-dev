@@ -1,0 +1,130 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 225,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/ret-010-selection.json",
+      "sha256": "sha256:3124798e9958b80c786ee556e2b945991510ae1bd169c038de624709a9feaafd"
+    },
+    {
+      "byte_length": 455,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/time-context.json",
+      "sha256": "sha256:9e8e86a44bf9f4e6f1632918174e60302fb1b6bef820ab6b632279c69475a83f"
+    },
+    {
+      "byte_length": 2481,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/manifest.json",
+      "sha256": "sha256:de3b776cc959add9aea3bfd90b35c0f7461ff0f2f770e3682ac413437d685a40"
+    },
+    {
+      "byte_length": 36,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/inventory-units.csv",
+      "sha256": "sha256:2e18a2a88c5964b80036799fe9f044d91e4dc790789b701df5f50a86c24a59ec"
+    },
+    {
+      "byte_length": 118,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/warehouse.jsonl",
+      "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e"
+    },
+    {
+      "byte_length": 1137,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop-description-only.yaml",
+      "sha256": "sha256:e4a5898ccf85493c7a866c3891055ffe4ecb776361dfc1306b538627c7b6c74f"
+    },
+    {
+      "byte_length": 1143,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop-root-instances.yaml",
+      "sha256": "sha256:fbb37113a0546a0e1dced65579e830fbdc4087c918b4d98a534852a574eb961b"
+    },
+    {
+      "byte_length": 1129,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop.yaml",
+      "sha256": "sha256:f374c7f1c1cba4ecbf747ca9471511307ea5cca1051540d5bf533a17360ca528"
+    },
+    {
+      "byte_length": 20161,
+      "path": "tests/contract_compiler/test_small_shop_fixture_inputs.py",
+      "sha256": "sha256:c89f90684354cd6ab5dd959941b5c337c2c83a33de6b75eaf3654da841312d97"
+    }
+  ],
+  "base_commit": "927ab183e33de09d62a3a6dba834306d54f35962",
+  "checks": [
+    {
+      "check_id": "cc021-red",
+      "method": "Run the complete fixed CC-021 input test before the reserved input tree and report exist.",
+      "observed": "The genuine RED produced exactly 9 absent-authorized-file failures and 1 passing malformed-input guard. No semantic mismatch, compiler call, production change, or unrelated failure occurred.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-green",
+      "method": "Run tests/contract_compiler/test_small_shop_fixture_inputs.py after adding only the eight inputs and this report.",
+      "observed": "All 10 fixed CC-021 input tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-ruff",
+      "method": "Run scoped Ruff check and format verification on the fixed CC-021 Python test.",
+      "observed": "Scoped Ruff check and format verification passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-inventory-hash",
+      "method": "Inspect the input tree without following symlinks, parse every text member strictly, and recompute every manifest byte length and SHA-256 digest.",
+      "observed": "Exactly eight UTF-8, LF-only, single-terminal-LF members exist; none is a symlink. The sorted manifest names every nonmanifest member exactly once with its exact role, media type, length, and digest, and does not hash itself.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-tbox-input",
+      "method": "Compare the baseline TBox byte-derived value with the closed CC-021 LinkML input shape and OD-008 root surface without invoking any compiler or ontology registry.",
+      "observed": "The source imports linkml:types and malleus; declares SalesOrder, InventoryUnit, OrderContainsUnit, the two scalar slots, and the approved ORDER_CONTAINS_UNIT vocabulary; and contains no population, mapping, identity, recipe, invocation, prior graph, output, or unsupported root field.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-authored-deltas",
+      "method": "Parse the two complete TBox vectors and mechanically remove only the one authorized authored delta before comparing each with the baseline.",
+      "observed": "The description vector differs only in one root description string. The root-instances vector differs only by root instances: {}. No refusal or identity outcome is asserted.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-e27-transcription",
+      "method": "Strictly parse the one-line warehouse JSONL member and compare its closed raw object with the approved Table 1 e27 transcription.",
+      "observed": "The sole record is e27, Pack Shipment, 07-05 17:00, R4, O1, with ordered items X1, X2, and Y1. It contains no normalized time, semantic direction, facts, or operations.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-selection-lookup-time",
+      "method": "Resolve RET-010 to source record ordinal 1, O1, and X1; resolve X1 exactly once in the reference CSV; and compare the time context with the nine approved fixture parameters.",
+      "observed": "Selection, lookup, and time-context integrity passed. The fixed UTC context needs no timezone database and contains no normalized timestamp.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-oracle-free",
+      "method": "Apply role-specific exact shapes and recursively scan every parsed input key for output, oracle, protocol, accepted-graph, model, prompt, and generated-candidate vocabulary.",
+      "observed": "All input roles are closed and oracle-free. The test imports and calls no production compiler, OntologyRegistry, GraphRecipe, ProtocolLedger, or AcceptedGraphProjector and makes no result assertion.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-affected",
+      "method": "Run the complete tests/contract_compiler directory with the CC-021 input slice present.",
+      "observed": "All 76 contract-compiler tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc021-package",
+      "method": "Review the exact eight-input, one-test, one-report scope against package and release boundaries.",
+      "observed": "PACKAGE NOT_APPLICABLE. CC-021 adds repository-local controlled inputs and verification evidence only; it changes no installed data, compiler, adapter, runtime, public API, distribution, image, or release claim.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a controlled transcription of one published event row and one fixture-local reference row, not a complete reproduction of the source dataset.",
+    "The synthetic year 2000 and fixed UTC are explicit fixture assumptions because the retained source text supplies neither year nor timezone.",
+    "X2 and Y1 remain retained in the source row but are not selected by RET-010.",
+    "The lookup, selection, and time context are raw input parameters, not mapping or transformation implementations.",
+    "CC-021 makes no normalized value, expected refusal, identity, fact, artifact, recipe, operation-order, outcome, protocol, ledger, or accepted-KG claim.",
+    "These inputs have no corpus or checksum publication and create no public API, package, or release.",
+    "The pre-integration all gate remains intentionally RED while CC-021 is ACTIVE and its activation guard requires every owned path to be absent; the separate overseer completion transaction must replace that state before unified CI and its package gates can pass."
+  ],
+  "recorded_at": "2026-08-29T05:12:21Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-021"
+}

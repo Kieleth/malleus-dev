@@ -1,0 +1,50 @@
+id: https://malleus.dev/schema/small-shop-fulfilment
+name: small_shop_fulfilment
+version: 0.1.0
+title: Small Shop Fulfilment TBox
+description: Presentation-only description variant for the OKG-FX001 controlled TBox.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  shop: https://malleus.dev/schema/small-shop-fulfilment/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  ShopRelationKind:
+    permissible_values:
+      ORDER_CONTAINS_UNIT:
+slots:
+  order_number:
+    range: string
+  product_code:
+    range: string
+classes:
+  SalesOrder:
+    is_a: Entity
+    slots:
+      - order_number
+    slot_usage:
+      order_number:
+        required: true
+  InventoryUnit:
+    is_a: Entity
+    slots:
+      - product_code
+    slot_usage:
+      product_code:
+        required: true
+  OrderContainsUnit:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: ShopRelationKind
+        required: true
+        equals_string: ORDER_CONTAINS_UNIT
+      source_id:
+        range: SalesOrder
+        required: true
+      target_id:
+        range: InventoryUnit
+        required: true

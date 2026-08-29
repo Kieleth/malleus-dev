@@ -1,0 +1,68 @@
+{
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "small-shop-ret-000-ret-010-v1",
+  "limitations": [
+    "Only the one retained e27 source row and one X1 reference row are in scope.",
+    "The source time omits year and timezone; separate fixture context records both assumptions.",
+    "These members contain inputs only and make no compiler or runtime result claim."
+  ],
+  "members": [
+    {
+      "byte_length": 225,
+      "media_type": "application/json",
+      "path": "configuration/ret-010-selection.json",
+      "role": "SCENARIO_SELECTION",
+      "sha256": "sha256:3124798e9958b80c786ee556e2b945991510ae1bd169c038de624709a9feaafd"
+    },
+    {
+      "byte_length": 455,
+      "media_type": "application/json",
+      "path": "configuration/time-context.json",
+      "role": "SOURCE_TIME_CONTEXT",
+      "sha256": "sha256:9e8e86a44bf9f4e6f1632918174e60302fb1b6bef820ab6b632279c69475a83f"
+    },
+    {
+      "byte_length": 36,
+      "media_type": "text/csv",
+      "path": "sources/inventory-units.csv",
+      "role": "DOMAIN_REFERENCE_DATA",
+      "sha256": "sha256:2e18a2a88c5964b80036799fe9f044d91e4dc790789b701df5f50a86c24a59ec"
+    },
+    {
+      "byte_length": 118,
+      "media_type": "application/x-ndjson",
+      "path": "sources/warehouse.jsonl",
+      "role": "SOURCE_OCCURRENCE_TRANSCRIPTION",
+      "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e"
+    },
+    {
+      "byte_length": 1137,
+      "media_type": "application/yaml",
+      "path": "tbox/small-shop-description-only.yaml",
+      "role": "LINKML_DESCRIPTION_VARIANT",
+      "sha256": "sha256:e4a5898ccf85493c7a866c3891055ffe4ecb776361dfc1306b538627c7b6c74f"
+    },
+    {
+      "byte_length": 1143,
+      "media_type": "application/yaml",
+      "path": "tbox/small-shop-root-instances.yaml",
+      "role": "LINKML_ROOT_INSTANCES_VECTOR",
+      "sha256": "sha256:fbb37113a0546a0e1dced65579e830fbdc4087c918b4d98a534852a574eb961b"
+    },
+    {
+      "byte_length": 1129,
+      "media_type": "application/yaml",
+      "path": "tbox/small-shop.yaml",
+      "role": "LINKML_TBOX",
+      "sha256": "sha256:f374c7f1c1cba4ecbf747ca9471511307ea5cca1051540d5bf533a17360ca528"
+    }
+  ],
+  "schema": "malleus.small-shop.input-set/v1",
+  "source_attribution": {
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "event_id": "e27",
+    "source_locator": "Table 1",
+    "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+    "work_title": "Event Knowledge Graphs"
+  }
+}
