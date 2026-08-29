@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 20,
-`sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a`
+revision 21,
+`sha256:0fbfb892128c20f009c61e1077dc8c35b264580f3c083acaa3c64049e3f33c39`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change

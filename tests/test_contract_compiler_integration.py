@@ -1003,7 +1003,8 @@ def test_oracle_activation_report_follows_its_base_commit(
     report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
     transaction_times = tuple(
         datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
-        for entry in _raw_overseer_state().entries[-5:]
+        for entry in _raw_overseer_state().entries
+        if 203 <= entry["sequence"] <= 207
     )
 
     assert report_time > base_time
@@ -1017,7 +1018,9 @@ def test_oracle_activation_report_follows_its_base_commit(
 def test_oracle_workstream_activation_transaction_is_exact() -> None:
     workstream_ids = ("CC-012", "CC-014", "CC-016")
     ledger = _raw_overseer_state()
-    transaction = ledger.entries[-5:]
+    transaction = tuple(
+        entry for entry in ledger.entries if 203 <= entry["sequence"] <= 207
+    )
     assert tuple(entry["entry_id"] for entry in transaction) == (
         "OVR-000203",
         "OVR-000204",

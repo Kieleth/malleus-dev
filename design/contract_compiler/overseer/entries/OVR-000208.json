@@ -1,0 +1,150 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PROGRAM-001",
+      "OKG-D013",
+      "OKG-FX001",
+      "DeterministicCompilerOptionalProposalProducerArchitecture"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:cec7b6febe187bacadf8eea69264a6df34e58c42d4d342244a5f8d51514c26cc",
+        "change": "CREATED",
+        "path": "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:fa4c1d033528261d18d946663f4149bd956271b8257528e6ef1a190a898ee1ec",
+        "before_digest": "sha256:25ee5363765fb57e4b8b6163f25b686f3c8fdf080b9128f40e2a32307d922342",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:e53aba0459e3096cc8cd44f8a56d5da968e0cac8f323cc2a8fed499ef452be73",
+        "before_digest": "sha256:43852de1c82f44228ca683dd9344b7ca608a701ebc428bd864ba646cf39db14d",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:b23cb2c75269008e0db1dc0263e916edf68f9bb5688987c8d43e7806b1077e30",
+        "before_digest": "sha256:615b85155f035fba5414b480c7ba235afbeab4266e3e5e1834bcc2c35417ba2f",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:f3cf195998a40891cb76584f43ad677b325575bc7aba28484dcf816ddcd501dd",
+        "before_digest": "sha256:c2659bed0bb1ffa468890b9c4d3c72441a0758561b0583f64d57af5716f5a98c",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:a3bc87de033df798a321e310aa588c71b361726739aaad2d260fc4a9a88d6d86",
+        "before_digest": "sha256:90a32d5538fcd625d32db02f0ec3bd03364292dd27722358f5649adb09297500",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:0fbfb892128c20f009c61e1077dc8c35b264580f3c083acaa3c64049e3f33c39",
+        "before_digest": "sha256:16eda5d16adfee5f54fa651a7b13ac18baff7fcaf4d6cd133ab82846b3fa169a",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:8ae342769cca3a1af8707b5a61cd41e5c7ae13c32d974ad1fd7f6c94be665a8e",
+        "before_digest": "sha256:7b4f76c3fb4d6f38e13ce8b0f8347c1e1d081c0a3c5a4797d2bd2c7db1a0f545",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:1d38bd275197da3f3d9de6ed89e92ac4159bd517c86d2d02afd6829040acd90b",
+        "before_digest": "sha256:90ddfa67e162e7152771d42f3629782ef03dacb2c1b4b9bb2a872f6f562b82e5",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:3de0ca2590896756124f0b318073029dc5641dc7d119933548db8e7ba21ddc53",
+  "entry_id": "OVR-000208",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:68c118e51ecdf0eb92b789cfe8ba99903e0fc907484ddfb6811e34f6938a1f22",
+  "recorded_at": "2026-08-29T02:39:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8a45dce167844246b42b2e6332764738047b66d1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/ontology-kg-realization/OKG-D013",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/ontology-kg-realization/OKG-FX001",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/ontology-kg-realization/DeterministicCompilerOptionalProposalProducerArchitecture",
+      "type": "CANONICAL_URI"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 208,
+  "subject": {
+    "id": "small-shop-foundation-reanchoring",
+    "type": "DOCUMENT"
+  },
+  "summary": "Reanchor the canonical foundation graph on Small Shop Fulfilment.",
+  "why": "Revision 21 binds the author-selected OKG-FX001 fixture, corrected experiment ladder, and deterministic compiler with an optional external proposal producer while preserving the prior revision-20 report and leaving compiler workstreams, integration, manifests, evidence, and production code unchanged."
+}

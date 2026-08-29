@@ -2663,7 +2663,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2681,14 +2681,14 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1716
+    assert len(canonical) == 1752
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 20",
-        "# Evidence cutoff: 2026-08-27",
+        "# Design graph revision: 21",
+        "# Evidence cutoff: 2026-08-28",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
         "#",
@@ -2704,13 +2704,14 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 20,",
+            "revision 21,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
 
     cc = "https://malleus.dev/contract-compiler/"
     mfg = "https://malleus.dev/foundation-graph/"
+    okg = "https://malleus.dev/ontology-kg-realization/"
     selects = URIRef(f"{mfg}selects")
     decision_date = URIRef(f"{mfg}decisionDate")
     assert set(canonical.objects(URIRef(f"{cc}OD-012"), decision_date)) == {
@@ -2770,6 +2771,29 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
         URIRef(f"{mfg}AcceptedDesign")
     }
 
+    okg_d013 = URIRef(f"{okg}OKG-D013")
+    okg_fx001 = URIRef(f"{okg}OKG-FX001")
+    architecture = URIRef(
+        f"{okg}DeterministicCompilerOptionalProposalProducerArchitecture"
+    )
+    assert set(canonical.objects(okg_d013, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(okg_d013, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(okg_d013, decision_date)) == {
+        Literal("2026-08-28")
+    }
+    assert set(canonical.objects(okg_d013, selects)) == {okg_fx001}
+    assert set(canonical.objects(okg_d013, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(okg_fx001, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(architecture, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+
     od008_node_types = {
         "MalleusLinkMLSupportProfileV0": "SupportProfile",
         "FlatExactlyOneExpressionExtensionV0": "ContractMetamodel",
@@ -2826,6 +2850,15 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
             URIRef(f"{mfg}AcceptedDesign")
         }
     binds = URIRef(f"{mfg}binds")
+    assert {
+        str(value).removeprefix(okg)
+        for value in canonical.objects(architecture, binds)
+    } == {
+        "DeterministicCompilerExactOutputOrTypedRefusalBoundary",
+        "OntologyBuilderCorrectorOutsideTrustedCompilerBoundary",
+        "OntologyBuilderCorrectorProtocolReviewBoundary",
+        "ReplayNeverCallsOntologyBuilderCorrectorBoundary",
+    }
     required_bindings = {
         "ExactSlotOnlyExplicitAdoptionProfile": {
             "SlotDeclarationsOnlyAdoptionBoundary",
@@ -3168,14 +3201,13 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 357
+    assert len(statuses) == 368
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
     ).read_text(encoding="utf-8")
     assert (
-        f"4. All {len(statuses)} subjects carrying `mfg:status` have exactly one "
-        "distinct status."
+        "4. All 357 subjects carrying `mfg:status` have exactly one distinct status."
     ) in realization
 
     edges = {
@@ -3183,8 +3215,8 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
         for subject, _, object_ in canonical.triples((None, depends_on, None))
     }
     nodes = {node for edge in edges for node in edge}
-    assert len(nodes) == 107
-    assert len(edges) == 108
+    assert len(nodes) == 109
+    assert len(edges) == 109
     successors = {node: set() for node in nodes}
     indegree = {node: 0 for node in nodes}
     for dependent, prerequisite in edges:
@@ -3200,6 +3232,22 @@ def test_revision_20_graph_is_generated_from_all_turtle_projections() -> None:
             if indegree[successor] == 0:
                 ready.append(successor)
     assert visited == len(nodes)
+
+    checkpoint = (
+        ROOT / "design" / "GRAPH_REALIZATION_RUNNING_DOMAIN_CHECKPOINT.md"
+    ).read_text(encoding="utf-8")
+    for exact in (
+        "Create `O1`, distinct physical item\n   `X1`, and fixture-defined `OrderContainsUnit(O1, X1)`",
+        "After `I1` and `I2` exist, create\n   `P1` and two `PaymentSettlesInvoiceRelation` records.",
+        "supplier-order `B` change from\n   `1Y` at `e4` to `2Y` at `e7`, then retain the bounded `I2` update at `e9`.",
+        "e27 correlates with O1, X1, X2, Y1, and R4",
+        "`Y1` and `Y2` are distinct physical items.",
+        "Exact, closed input bytes produce\nexact compiled artifacts or an exact typed refusal.",
+        "The skill is an untrusted proposal producer outside the\ncompiler.",
+        "Its bytes enter ordinary evidence, review, and decision handling.",
+        "Replay uses retained bytes and\nrecorded artifacts and never calls the skill.",
+    ):
+        assert exact in checkpoint
 
 
 def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
