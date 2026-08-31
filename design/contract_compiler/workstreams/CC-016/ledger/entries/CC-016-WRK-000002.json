@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc016-neutral-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_oracles.py",
+    "observed": "All 28 fixed Greenhouse answer-key tests passed after both private JSON files and every audit repair were present.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:7e1be7b297c8941d5aeb9560dc99435a8eda5567bf32329bd5b4ea606b6318c7",
+  "entry_id": "CC-016-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:00d569ed3146e8762453d3a083b932931fbd21c957bf8061c6aac867a72ad2f7",
+  "recorded_at": "2026-08-31T20:26:41Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the private Greenhouse answer key.",
+  "workstream_id": "CC-016"
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc016-neutral-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "python -m pytest -q tests/contract_compiler/test_neutral_domain_oracles.py -k 'exact_guards_detect_private_oracle_mutations or no_producer_guard_rejects_hidden_producer_imports'",
+    "observed": "All 14 mutation and hidden-producer cases passed with 14 deselected. The guards reject fact, JSON-type, outcome, delta, relation, member, static import, direct dynamic import, exec, and pytest import-bypass changes. Two independent 90-fact arrays also exposed and rejected the wrong colon-form structural domain.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:855f4851efff00c6c844648a235a58aaf3ed7acdc3dc72db2f1189f32455c1fd",
+  "entry_id": "CC-016-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8f1a54bd555d7ff227b75e433e0bba368f69278c37e90b399606d350d97ca22c",
+  "recorded_at": "2026-08-31T20:26:43Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass all Greenhouse semantic and isolation disproofs.",
+  "workstream_id": "CC-016"
+}

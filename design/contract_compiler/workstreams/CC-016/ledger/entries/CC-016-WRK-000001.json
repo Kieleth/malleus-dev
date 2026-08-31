@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc016-neutral-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Run the fixed Greenhouse oracle test before answer bytes, then run each independent audit regression before its guard repair.",
+    "observed": "Initial RED was exactly 2 failures and 20 passes because both answer files were absent. Later strict-type RED was 2 failures and 8 passes with 14 deselected, direct dynamic-import RED was 1 failure and 1 pass with 23 deselected, and pytest import-bypass RED was 1 failure and 3 passes with 24 deselected.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:00d569ed3146e8762453d3a083b932931fbd21c957bf8061c6aac867a72ad2f7",
+  "entry_id": "CC-016-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-08-31T20:26:40Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the missing-answer and audit-regression RED states.",
+  "workstream_id": "CC-016"
+}

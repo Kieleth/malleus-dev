@@ -115,6 +115,16 @@ QUIET_BELL_ORACLE_RESPONSIBILITY = (
     "publication, selection, integration, or CC-R work."
 )
 GREENHOUSE_REACTIVATION_BASE = "c12e52ea743d8809c91974653b62192b166753e9"
+GREENHOUSE_ACTIVATION_ENTRY = "OVR-000263"
+GREENHOUSE_CANDIDATE_BASE = "6969f193eb9e57f815bb73c38b7094a980e1642c"
+GREENHOUSE_CANDIDATE_COMMIT = "f654d215a5877061512f8125147fe0f8f6a26db3"
+GREENHOUSE_CANDIDATE_TREE = "760ca219e9b47ff7c70687b0dd4fe5caf7bbb00b"
+GREENHOUSE_CANDIDATE_PATHS = {
+    "conformance/contract_compiler/v0/evidence/CC-016.json",
+    "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
+    "conformance/contract_kernel/v0/neutral_domain/traces/oracle/compile-source-outcomes.json",
+    "tests/contract_compiler/test_neutral_domain_oracles.py",
+}
 GREENHOUSE_DEPENDENCIES = (
     "CC-010",
     "CC-D05",
@@ -622,6 +632,14 @@ def _quiet_bell_candidate_authority() -> tuple[list[dict[str, str]], dict[str, A
     card = _read_json(CONTRACT / "workstreams/CC-012/manifest.json")
     entry = _read_json(
         CONTRACT / "overseer" / "entries" / f"{QUIET_BELL_REACTIVATION_ENTRY}.json"
+    )
+    return card["scopes"], entry
+
+
+def _greenhouse_candidate_authority() -> tuple[list[dict[str, str]], dict[str, Any]]:
+    card = _read_json(CONTRACT / "workstreams/CC-016/manifest.json")
+    entry = _read_json(
+        CONTRACT / "overseer" / "entries" / f"{GREENHOUSE_ACTIVATION_ENTRY}.json"
     )
     return card["scopes"], entry
 
@@ -1293,7 +1311,7 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "Create no source or trace input, runtime artifact bytes or wire grammar",
             ),
             "FORMAL",
-            "ACTIVE",
+            "COMPLETE",
         ),
         (
             "CC-014",
@@ -1358,7 +1376,7 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "no source or operation input",
             ),
             "FORMAL",
-            "ACTIVE",
+            "COMPLETE",
         ),
     ),
 )
@@ -1405,7 +1423,7 @@ def test_oracle_workstream_activation_boundaries_are_exact(
     expected_lifecycle = {
         "CC-012": ("COMPLETE", "ELIGIBLE", "RECORDED"),
         "CC-014": (workstream_state, "NONE", "NOT_STARTED"),
-        "CC-016": (workstream_state, "NONE", "NOT_STARTED"),
+        "CC-016": (workstream_state, "ELIGIBLE", "RECORDED"),
     }[workstream_id]
     assert (
         workstream_states[workstream_id],
@@ -2965,7 +2983,16 @@ def test_quiet_bell_completion_report_is_bounded() -> None:
         "design/contract_compiler/workstreams/CC-012/manifest.json",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{QUIET_BELL_COMPLETION_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     checks = {check["check_id"]: check for check in report["checks"]}
@@ -3315,6 +3342,267 @@ def test_greenhouse_reactivation_transaction_is_exact() -> None:
         later > earlier
         for earlier, later in zip(transaction_times, transaction_times[1:])
     )
+
+
+def test_greenhouse_completion_candidate_is_exact_and_private() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-016")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    report_path = ROOT / "conformance/contract_compiler/v0/evidence/CC-016.json"
+    report_source = report_path.read_bytes()
+    report = _read_json(report_path)
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-016/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
+        "conformance/contract_kernel/v0/neutral_domain/traces/oracle/compile-source-outcomes.json",
+        "tests/contract_compiler/test_neutral_domain_oracles.py",
+    }
+    assert card["candidate"] == {
+        "artifacts": report["artifacts"],
+        "base_commit": GREENHOUSE_CANDIDATE_BASE,
+        "evidence": [
+            {
+                "byte_length": len(report_source),
+                "path": "conformance/contract_compiler/v0/evidence/CC-016.json",
+                "result": "PASS",
+                "sha256": _digest(report_source),
+            }
+        ],
+        "head_commit": GREENHOUSE_CANDIDATE_COMMIT,
+        "head_tree": GREENHOUSE_CANDIDATE_TREE,
+        "state": "ELIGIBLE",
+    }
+    assert card["responsibility"] == GREENHOUSE_ORACLE_RESPONSIBILITY
+    assert "CC-016" not in manifest["selections"]
+    scopes, authority = _greenhouse_candidate_authority()
+    touched = validate_candidate_history(
+        ROOT,
+        card["candidate"],
+        allowed_scopes=scopes,
+        workstream_id="CC-016",
+        authority_entry=authority,
+        overseer_path="design/contract_compiler/overseer",
+        enforce_clean_base=True,
+    )
+    assert touched == tuple(sorted(GREENHOUSE_CANDIDATE_PATHS))
+
+
+def test_greenhouse_completion_worker_chain_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    card = _read_json(CONTRACT / _registry_row(manifest, "CC-016")["card"]["path"])
+    ledger_root = CONTRACT / "workstreams/CC-016/ledger"
+    entries = [
+        _read_json(path) for path in sorted((ledger_root / "entries").glob("*.json"))
+    ]
+    head = _read_json(ledger_root / "head.json")
+
+    assert len(entries) == 7
+    assert [entry["data"]["phase"] for entry in entries] == list(
+        integration_module.TDD_PHASES
+    )
+    assert [entry["data"]["result"] for entry in entries] == [
+        "EXPECTED_FAILURE",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "NOT_APPLICABLE",
+        "PASS",
+    ]
+    assert {entry["actor_id"] for entry in entries} == {
+        "worker:cc016-neutral-oracles"
+    }
+    candidate_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", GREENHOUSE_CANDIDATE_COMMIT)
+    )
+    entry_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in entries
+    )
+    assert entry_times[0] > candidate_time
+    assert all(later > earlier for earlier, later in zip(entry_times, entry_times[1:]))
+    assert "2 failures and 20 passes" in entries[0]["data"]["observed"]
+    assert "All 28 fixed Greenhouse" in entries[1]["data"]["observed"]
+    assert "seven-commit" in entries[2]["data"]["observed"]
+    assert "14 mutation" in entries[3]["data"]["observed"]
+    assert "129 contract-compiler" in entries[4]["data"]["observed"]
+    assert "NOT_APPLICABLE" in entries[5]["data"]["observed"]
+    assert GREENHOUSE_CANDIDATE_COMMIT in entries[6]["data"]["command"]
+    assert "no P0-P3" in entries[6]["data"]["observed"]
+
+    previous = "GENESIS"
+    for entry in entries:
+        assert entry["previous_entry_hash"] == previous
+        assert entry["entry_hash"] == integration_module.worker_entry_hash(entry)
+        previous = entry["entry_hash"]
+    assert head == {
+        "canonicalization": "malleus-canonical-json-v1",
+        "entry_count": 7,
+        "head_entry_id": "CC-016-WRK-000007",
+        "head_hash": entries[-1]["entry_hash"],
+        "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+        "workstream_id": "CC-016",
+    }
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": "CC-016-WRK-000007",
+        "head_hash": head["head_hash"],
+        "path": "workstreams/CC-016/ledger",
+        "state": "RECORDED",
+    }
+
+
+def test_greenhouse_completion_semantics_are_exact() -> None:
+    oracle = _read_json(
+        ROOT / "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json"
+    )
+    operations = _read_json(
+        ROOT
+        / "conformance/contract_kernel/v0/neutral_domain/traces/oracle/compile-source-outcomes.json"
+    )["operations"]
+    canonical_facts = json.dumps(
+        oracle["baseline_facts"],
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+    assert len(oracle["baseline_facts"]) == 90
+    assert len(canonical_facts) == 17906
+    assert hashlib.sha256(canonical_facts).hexdigest() == (
+        "4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4"
+    )
+    assert len(oracle["semantic_change"]["removed_facts"]) == 2
+    assert len(oracle["semantic_change"]["added_facts"]) == 2
+    assert {source["outcome"] for source in oracle["sources"]} == {"ACCEPT"}
+    assert len(operations) == 6
+    assert {operation["outcome"] for operation in operations} == {"ACCEPT"}
+    assert {len(operation["relations"]) for operation in operations} == {11}
+    assert all(
+        operation["relations"]["logical_artifact"] == "NOT_CLAIMED"
+        for operation in operations
+    )
+    assert oracle["configuration"]["artifact_role"] == "CONFORMANCE_FIXTURE"
+    assert oracle["configuration"]["public_contract"] is False
+
+
+def test_greenhouse_completion_report_is_bounded() -> None:
+    report = _read_json(CONTRACT / "overseer/evidence/CC-016-completion.json")
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-016"
+    assert report["base_commit"] == GREENHOUSE_CANDIDATE_COMMIT
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "conformance/contract_compiler/v0/evidence/CC-016.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-016/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+    }
+    for artifact in report["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    checks = {check["check_id"]: check for check in report["checks"]}
+    assert set(checks) == {
+        "cc016-candidate-history",
+        "cc016-card-report-equality",
+        "cc016-semantic-boundary",
+        "cc016-worker-tdd",
+        "cc016-dependencies",
+        "cc016-independent-audit",
+        "cc016-regression",
+        "cc016-unselected-completion",
+        "cc016-process-lessons",
+    }
+    assert all(check["result"] == "PASS" for check in checks.values())
+    assert any("private" in limitation.lower() for limitation in report["limitations"])
+    assert any("optional profile" in limitation.lower() for limitation in report["limitations"])
+    assert any("CC-R" in limitation for limitation in report["limitations"])
+
+
+def test_greenhouse_completion_transaction_and_adjacent_state_are_exact() -> None:
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 265 <= entry["sequence"] <= 267
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000265",
+        "OVR-000266",
+        "OVR-000267",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completion = transaction
+    assert tuple(entry["subject"] for entry in transaction) == (
+        {"id": "cc016-completion-boundary", "type": "DOCUMENT"},
+        {"id": "cc016-completion-verification", "type": "EVIDENCE"},
+        {"id": "CC-016", "type": "WORKSTREAM"},
+    )
+    expected_documents = {
+        "conformance/contract_compiler/v0/evidence/CC-016.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-016-completion.json",
+        "design/contract_compiler/workstreams/CC-016/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+        *{
+            "design/contract_compiler/workstreams/CC-016/ledger/entries/"
+            f"CC-016-WRK-{sequence:06d}.json"
+            for sequence in range(1, 8)
+        },
+    }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-016"]
+    assert {document["path"] for document in revision["data"]["documents"]} == (
+        expected_documents
+    )
+    assert verification["actor"] == {
+        "id": "cc016-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert completion["data"]["previous_state"] == "ACTIVE"
+    assert completion["data"]["new_state"] == "COMPLETE"
+    assert completion["data"]["bootstrap"] is False
+    assert completion["data"]["workstream_id"] == "CC-016"
+    assert completion["data"]["blockers"] == []
+    assert completion["data"]["evidence_entry_ids"] == ["OVR-000266"]
+    assert verification["previous_entry_hash"] == revision["entry_hash"]
+    assert completion["previous_entry_hash"] == verification["entry_hash"]
+
+    report_time = datetime.fromisoformat(
+        _read_json(CONTRACT / "overseer/evidence/CC-016-completion.json")[
+            "recorded_at"
+        ].replace("Z", "+00:00")
+    )
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
+
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    manifest = _read_json(INTEGRATION)
+    card = _read_json(CONTRACT / _registry_row(manifest, "CC-016")["card"]["path"])
+    assert states["CC-012"] == states["CC-016"] == "COMPLETE"
+    assert states["CC-014"] == "PAUSED"
+    assert card["candidate"]["state"] == "ELIGIBLE"
+    assert card["ledger"]["state"] == "RECORDED"
+    assert "CC-016" not in manifest["selections"]
 
 
 def test_small_shop_program_boundary_is_exact() -> None:
@@ -4935,7 +5223,8 @@ def test_formal_activation_lists_incomplete_dependencies(tmp_path: Path) -> None
     _assert_code(error, "CC000_DEPENDENCY_INCOMPLETE")
     assert "CC-010" not in str(error.value)
     assert "CC-D11" not in str(error.value)
-    assert "CC-016" in str(error.value)
+    assert "CC-016" not in str(error.value)
+    assert "CC-014" in str(error.value)
 
 
 def test_dependency_integrated_head_commit_must_resolve(tmp_path: Path) -> None:
@@ -5179,6 +5468,7 @@ def test_candidate_authority_uses_latest_active_not_complete_or_superseded() -> 
 
     assert authorities["CC-021"]["entry_id"] == "OVR-000219"
     assert authorities["CC-012"]["entry_id"] == "OVR-000254"
+    assert authorities["CC-016"]["entry_id"] == "OVR-000263"
     assert {"OVR-000231", "OVR-000240"}.isdisjoint(
         entry["entry_id"] for entry in authorities.values()
     )
@@ -5208,7 +5498,7 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 15
+    assert len(checked) == 16
     assert "CC-000" not in checked
 
 
@@ -5363,7 +5653,7 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         workstream_id
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
-        and workstream_id != "CC-012"
+        and workstream_id not in {"CC-012", "CC-016"}
     }
 
 
@@ -5905,7 +6195,20 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
 
     _rewrite_card(manifest_path, manifest, "CC-022", rebind_small_shop_oracle)
     cc011_digest = _registry_row(manifest, "CC-011")["card"]["sha256"]
+    cc015_digest = _registry_row(manifest, "CC-015")["card"]["sha256"]
     cc022_digest = _registry_row(manifest, "CC-022")["card"]["sha256"]
+
+    def rebind_greenhouse_oracle(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-015"]["card_sha256"] = cc015_digest
+        bindings["CC-021"]["card_sha256"] = cc021_digest
+        bindings["CC-022"]["card_sha256"] = cc022_digest
+
+    _rewrite_card(manifest_path, manifest, "CC-016", rebind_greenhouse_oracle)
 
     def rebind_quiet_bell_oracle(card: dict[str, Any]) -> None:
         bindings = {

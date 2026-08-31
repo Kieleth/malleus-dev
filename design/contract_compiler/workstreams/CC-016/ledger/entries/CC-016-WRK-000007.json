@@ -1,0 +1,40 @@
+{
+  "actor_id": "worker:cc016-neutral-oracles",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 8537,
+        "path": "conformance/contract_compiler/v0/evidence/CC-016.json",
+        "sha256": "sha256:3d7cb5d8414ea223342df693266b69d1a8938fa878f4d48c244f1c1572185410"
+      },
+      {
+        "byte_length": 23304,
+        "path": "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
+        "sha256": "sha256:56bc2836a903ed4151d5e6ea728be0f1ee1fe84883a6a5305c44717a3fe16f82"
+      },
+      {
+        "byte_length": 5567,
+        "path": "conformance/contract_kernel/v0/neutral_domain/traces/oracle/compile-source-outcomes.json",
+        "sha256": "sha256:e99ab7ed2a957312cbfb4b07d022a0e463b874c43f57208e687e2e60c8c1bdf5"
+      },
+      {
+        "byte_length": 34059,
+        "path": "tests/contract_compiler/test_neutral_domain_oracles.py",
+        "sha256": "sha256:6e4d0fc526d88f7ecdc58dc425c99195ca679a9a72798b8e674948f94859d428"
+      }
+    ],
+    "command": "Verify candidate f654d215a5877061512f8125147fe0f8f6a26db3, base 6969f193eb9e57f815bb73c38b7094a980e1642c, tree 760ca219e9b47ff7c70687b0dd4fe5caf7bbb00b, exact four-path diff, report equality, independent audit repairs, changed-file Ruff, and diff checks.",
+    "observed": "All four frozen candidate paths match exact bytes. Independent review found and closed Boolean-number, dynamic-import, pytest import-bypass, and evidence-count defects; no P0-P3 issue remains. Changed-file Ruff, format, evidence, focused, mutation, and diff checks pass.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8f995a3a04b2d625f94ad2618f3e998502267d60615655cb0fe1cd05a10c24a1",
+  "entry_id": "CC-016-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:6a086bde31625e198abb7c026f1bf34cc2f38e47434ee0a2b05820ec61254ccb",
+  "recorded_at": "2026-08-31T20:26:46Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen Greenhouse candidate.",
+  "workstream_id": "CC-016"
+}

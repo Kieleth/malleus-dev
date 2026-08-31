@@ -1,0 +1,65 @@
+{
+  "actor": {
+    "id": "cc016-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-31T20:35:01Z",
+    "claims": [
+      "CC-016 is the exact linear 6969f193eb9e57f815bb73c38b7094a980e1642c..f654d215a5877061512f8125147fe0f8f6a26db3 seven-commit candidate at tree 760ca219e9b47ff7c70687b0dd4fe5caf7bbb00b with exactly four authorized touched paths.",
+      "The eligible card and canonical report bind the same exact two private Greenhouse answer files and fixed test. The report is the sole PASS evidence pointer and all four candidate paths match exact committed bytes.",
+      "All six controlled sources accept. The baseline and four equivalent variants compile to the same 90 semantic facts. The maximum-55 variant changes exactly two facts and the domain-dependent identities while protocol and governance roles remain unchanged.",
+      "The assigned worker ledger contains the exact seven ordered TDD phases after candidate HEAD and binds the genuine initial RED, final GREEN, seven-commit slice, mutation and producer disproofs, regression observations, package nonapplicability, and clean attestation.",
+      "All seven formal dependencies and relevant owner-separation edges remain exact. Quiet Bell is chronology only, not semantic authority. Greenhouse and compiler edge cases have no cross-control dependency or card binding.",
+      "Independent audits found and closed Boolean-number equality, direct dynamic import, pytest import bypass, and evidence-count defects. Final exact-tree audit found no P0-P3 issue.",
+      "The candidate-observed focused, mutation, contract-compiler, evidence, Ruff, format, and diff gates pass.",
+      "Only process technique is retained for compiler edge cases: derive from owned inputs, compare identity layers separately, enforce exact JSON types, recompute structural domains, close producer paths, and retain unsupported layers as NOT_CLAIMED.",
+      "Expected values remain derived only from Greenhouse sources and accepted decisions. No Quiet Bell or Small Shop value, fact, identifier, derivation, helper, interface, or authority enters this answer key.",
+      "CC-016 remains ELIGIBLE and unselected. CC-014 remains PAUSED with no candidate or ledger. No compiler stage, runtime, public format, package, release, selection, integration, or CC-R authority changed."
+    ],
+    "limitations": [
+      "The two Greenhouse JSON files are private fixture-local conformance evidence. They define no public format, compatibility contract, runtime artifact, wire grammar, stable public identifier, or protocol invariant.",
+      "This proves the accepted compiler-enabled optional profile for six controlled sources, not executable compiler or runtime behavior.",
+      "Logical artifact remains NOT_CLAIMED. Reloadable artifact bytes and public identity promotion remain outside this workstream.",
+      "Compiler edge-case semantics remain independently owned and paused.",
+      "All public, package, release, selection, integration, and CC-R behavior remains deferred."
+    ]
+  },
+  "entry_hash": "sha256:c33dd6ecf8706edaf4843324452766d373fef25ca180dbd21138903c2a9e3406",
+  "entry_id": "OVR-000266",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ce5a41faee2d3f10168cfdac74a11846ec5862a3da929ca390a98b29b29cb4eb",
+  "recorded_at": "2026-08-31T20:35:01Z",
+  "references": [
+    {
+      "digest": "sha256:d24819ce829b08f30a25007ac57ec6d7d427325aa05ccd8f931679fce4405548",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-016-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000265",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f654d215a5877061512f8125147fe0f8f6a26db3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 266,
+  "subject": {
+    "id": "cc016-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded Greenhouse answer-key completion gate.",
+  "why": "Greenhouse may complete only after its exact independent candidate, report equality, semantic and producer boundaries, worker TDD chain, formal dependencies, clean audit, regression gate, process-only lessons, adjacent states, and unselected private boundary pass mechanically."
+}

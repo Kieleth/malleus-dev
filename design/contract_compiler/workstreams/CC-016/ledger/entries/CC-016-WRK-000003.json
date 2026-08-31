@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc016-neutral-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect the linear 6969f193eb9e57f815bb73c38b7094a980e1642c..f654d215a5877061512f8125147fe0f8f6a26db3 candidate, tree, diff, report, and private fixture boundary.",
+    "observed": "The seven-commit linear candidate ends at tree 760ca219e9b47ff7c70687b0dd4fe5caf7bbb00b and touches exactly four authorized paths: two private answer files, one fixed test, and one canonical PASS report.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8f1a54bd555d7ff227b75e433e0bba368f69278c37e90b399606d350d97ca22c",
+  "entry_id": "CC-016-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:7e1be7b297c8941d5aeb9560dc99435a8eda5567bf32329bd5b4ea606b6318c7",
+  "recorded_at": "2026-08-31T20:26:42Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the exact seven-commit Greenhouse slice.",
+  "workstream_id": "CC-016"
+}

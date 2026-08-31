@@ -1,0 +1,92 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8537,
+      "path": "conformance/contract_compiler/v0/evidence/CC-016.json",
+      "sha256": "sha256:3d7cb5d8414ea223342df693266b69d1a8938fa878f4d48c244f1c1572185410"
+    },
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:4010847220a0adac8866504e330b9171ad10a9eb8102a4183224c2410f8d5065"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-016/ledger/head.json",
+      "sha256": "sha256:06339fe962adb415631cbde2c1af1339ff83bcd0f064c0ae0204c4a624214ed2"
+    },
+    {
+      "byte_length": 6297,
+      "path": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "sha256": "sha256:bcf3e6ea90078073474ae72d34ff785552efe17d42c87d5cb258e950b9815d32"
+    }
+  ],
+  "base_commit": "f654d215a5877061512f8125147fe0f8f6a26db3",
+  "checks": [
+    {
+      "check_id": "cc016-candidate-history",
+      "method": "Validate the linear seven-commit candidate from activation floor 6969f193 through f654d215, tree 760ca219, exact four-path scope, canonical PASS report, and clean-base authority floor.",
+      "observed": "The candidate has no merge, descends from the first trusted activation floor, and touches exactly two private answer files, one fixed test, and one canonical report. Every artifact and evidence digest matches the committed candidate tree.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-card-report-equality",
+      "method": "Require exact equality between the canonical report's three artifacts and the eligible card's artifact list, then recompute candidate and evidence lengths and SHA-256 values.",
+      "observed": "The card and report bind the same 23,304-byte compilation answer, 5,567-byte operation answer, and 34,059-byte fixed test. The 8,537-byte canonical report is the sole PASS evidence pointer.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-semantic-boundary",
+      "method": "Verify six exact source descriptors, 90 canonical baseline facts, deterministic structural envelopes, equivalent variants, exact maximum-55 delta, six operation outcomes, eleven relation axes, and private metadata.",
+      "observed": "All six sources ACCEPT. Four variants change raw source and attestation only. The semantic variant changes exactly two maximum facts and the domain-dependent identities while protocol and governance roles remain SAME. Logical artifact remains NOT_CLAIMED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-worker-tdd",
+      "method": "Validate the assigned worker's seven-entry hash chain, ordered TDD phases, genuine initial and audit RED states, final GREEN, exact slice, disproofs, regressions, package boundary, and attestation.",
+      "observed": "Seven chained phases pass. Initial RED was 2 failures and 20 passes; three later audit RED states reproduced exact defects; GREEN is 28 passes; DISPROOF is 14 passes with 14 deselected; PACKAGE is NOT_APPLICABLE.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-dependencies",
+      "method": "Validate all seven formal dependency bindings, Greenhouse input-oracle owner separation, the recorded Quiet Bell then Greenhouse then edge-case order, and absence of cross-control dependencies or bindings.",
+      "observed": "All seven direct dependencies remain complete and exactly bound. Quiet Bell is completion chronology only, not semantic authority. Compiler edge cases remain independently owned and paused; no dependency, owner, selection, or DAG authority changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-independent-audit",
+      "method": "Independently audit each committed candidate revision, exact facts and identities, closed JSON types, producer independence, private scope, sibling-fixture isolation, report equality, and final tree.",
+      "observed": "Independent audit found Boolean-number equality, direct dynamic import, pytest import-bypass, and evidence-count defects. Each was reproduced as RED, repaired, and mechanically guarded. Final f654d215 audit found no P0-P3 issue.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-regression",
+      "method": "Run focused Greenhouse, mutation and producer-disproof subsets, complete contract-compiler tests, canonical evidence verification, changed-file Ruff, format, and diff checks at the candidate boundary.",
+      "observed": "Candidate-observed gates passed 28 focused tests, 14 mutation and producer cases, and 129 contract-compiler tests. Evidence verification confirmed 3 artifacts and 10 checks. Ruff, focused format, and diff checks passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-unselected-completion",
+      "method": "Require the completed Greenhouse candidate to remain ELIGIBLE, private, and absent from selections while preserving the paused compiler-edge answer key and absent future executable compiler row.",
+      "observed": "The candidate remains ELIGIBLE and unselected. Compiler edge cases remain PAUSED with candidate NONE and ledger NOT_STARTED; no compiler stage, runtime, corpus publication, package, release, or public behavior was created.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-process-lessons",
+      "method": "Extract reusable answer-key technique for the later edge-case suite while prohibiting semantic, identifier, helper, interface, or authority transfer between independent controls.",
+      "observed": "Retain process only: derive from owned inputs and accepted decisions; compare source, facts, roles, composition, epoch, and artifact separately; enforce exact JSON types; recompute structural domains; close static and dynamic producer paths; keep unsupported layers NOT_CLAIMED.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The two Greenhouse JSON files are private fixture-local conformance evidence. They define no public format, compatibility contract, runtime artifact, wire grammar, stable public identifier, or protocol invariant.",
+    "This completion proves the accepted compiler-enabled optional profile only for six controlled sources. Base-protocol adopters may choose another compiler, another adapter, or no semantic ledger where their profile permits it.",
+    "Logical artifact remains NOT_CLAIMED. Reloadable artifact bytes, public identity promotion, migration, and persisted-wire compatibility remain outside this workstream.",
+    "This completion provides an independent answer key, not compiler, LinkML adapter, resolver, runtime, protocol event, ledger, graph, projector, package, or release implementation.",
+    "Compiler edge-case semantics remain separately owned and paused. No Greenhouse fact, identifier, derivation, helper, or interface transfers into that suite.",
+    "Corpus publication, selection, public API, package, release, and every CC-R executable stage remain deferred."
+  ],
+  "recorded_at": "2026-08-31T20:34:06Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-016"
+}

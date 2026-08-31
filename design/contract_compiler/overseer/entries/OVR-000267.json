@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the private neutral Greenhouse source, fact, identity, and operation answer key only from exact Greenhouse sources and accepted decisions.",
+      "Bind the exact 6969f19..f654d21 seven-commit eligible candidate, canonical report, strict clean-base admission, and seven worker TDD phases with no P0-P3 audit issue.",
+      "Keep the candidate unselected and non-public, retain logical artifact as NOT_CLAIMED, and transfer only process technique into separately owned compiler edge cases."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000266"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-016"
+  },
+  "entry_hash": "sha256:effccb950e99a7c17f3686a505b3342f1a507bb3bf991c14d66ba0d855235cb1",
+  "entry_id": "OVR-000267",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c33dd6ecf8706edaf4843324452766d373fef25ca180dbd21138903c2a9e3406",
+  "recorded_at": "2026-08-31T20:35:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000266",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 267,
+  "subject": {
+    "id": "CC-016",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded Greenhouse answer-key workstream.",
+  "why": "OVR-000266 binds the exact eligible independently authored answer key, canonical report, seven worker TDD phases, dependency closure, semantic and producer boundaries, process-only lessons, unselected private scope, and clean audit required for completion without compiler-edge or executable compiler authority."
+}
