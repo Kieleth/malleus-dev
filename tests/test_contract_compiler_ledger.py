@@ -2747,6 +2747,12 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     assert set(canonical.objects(od010, selects)) == {
         URIRef(f"{mfg}StrongLocalContextualReferenceAdmissionProfileV0")
     }
+    od015 = URIRef(f"{cc}OD-015")
+    architecture = URIRef(f"{mfg}ExecutorOnlyProtocolMachineArchitecture")
+    assert set(canonical.objects(od015, decision_date)) == {
+        Literal("2026-08-31")
+    }
+    assert set(canonical.objects(od015, selects)) == {architecture}
     rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     status = URIRef(f"{mfg}status")
     decided_by = URIRef(f"{mfg}decidedBy")
@@ -2768,6 +2774,16 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(od010, decided_by)) == {URIRef(f"{mfg}Author")}
     assert set(canonical.objects(od010, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(od015, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od015, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od015, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(architecture, status)) == {
         URIRef(f"{mfg}AcceptedDesign")
     }
 
@@ -2860,6 +2876,14 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
         "ReplayNeverCallsOntologyBuilderCorrectorBoundary",
     }
     required_bindings = {
+        "ExecutorOnlyProtocolMachineArchitecture": {
+            "StrictNeutralContractIRBoundary",
+            "StrictProtocolMachineIRBoundary",
+            "SeparateExactIdentityPolicyAndProjectionProgramsBoundary",
+            "GenericInterpreterNoProtocolAuthorityBoundary",
+            "NoArbitraryCodeEscapeHatchBoundary",
+            "CrossImplementationReplayParityBoundary",
+        },
         "ExactSlotOnlyExplicitAdoptionProfile": {
             "SlotDeclarationsOnlyAdoptionBoundary",
             "LiteralBooleanAdoptsTrueRequiredBoundary",

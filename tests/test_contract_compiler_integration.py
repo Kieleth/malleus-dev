@@ -770,6 +770,24 @@ def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
     assert registry["CC-P52"] == ("CC-P45", "CC-P51", "CC-PUB01")
 
 
+def test_research_runway_exposes_the_machine_and_realization_handoffs() -> None:
+    program = PROGRAM.read_text(encoding="utf-8")
+    normalized = " ".join(program.split())
+
+    for required in (
+        "strict protocol-machine program",
+        "generic interpreter",
+        "lean-review conformance",
+        "no profile-specific event, record, or field name",
+        "no arbitrary-code escape hatch",
+        "frontend-neutral PopulationPlan",
+        "GraphConstructionPlan artifact boundary",
+        "canonical generic validation receipt",
+        "no stable public API claim",
+    ):
+        assert required in normalized
+
+
 def test_canonical_integration_manifest_is_valid() -> None:
     state = validate_integration(ROOT)
     x03 = state.cards["CC-X03"]

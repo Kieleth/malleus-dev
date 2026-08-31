@@ -2088,6 +2088,20 @@ def test_protocol_boundary_taxonomy_is_closed_and_separates_capability_status() 
     assert "One document or module may contain several roles" in normalized
 
 
+def test_portable_protocol_machine_keeps_authority_out_of_the_executor() -> None:
+    principles = (DOCS / "PRINCIPLES.md").read_text(encoding="utf-8")
+    assent = (DOCS / "ASSENT_PROTOCOL.md").read_text(encoding="utf-8")
+    normalized_principles = " ".join(principles.split())
+    normalized_assent = " ".join(assent.split())
+
+    assert "Protocol authority lives in identified artifacts" in normalized_principles
+    assert "A second conforming interpreter" in normalized_principles
+    assert "same accepted state or typed refusal" in normalized_principles
+    assert "arbitrary-code escape hatch" in normalized_principles
+    assert "current Python handlers are regression evidence" in normalized_assent
+    assert "not protocol authority" in normalized_assent
+
+
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
     for path in (ROOT / "README.md", DOCS / "ADOPTION_GUIDE.md"):
         text = path.read_text(encoding="utf-8")

@@ -373,8 +373,19 @@ class TestRubricIsWellFormedAndFailsLoud:
         assert "within" in optional_text
         assert "compiler-enabled profile" in optional_text
 
+        authority = rites["protocol_authority_is_data"]
+        assert authority["severity"] == HERESY
+        authority_text = f"{authority['question']} {authority['lesson']}".lower()
+        for requirement in (
+            "second conforming interpreter",
+            "same accepted state or typed refusal",
+            "profile-specific",
+            "arbitrary-code escape hatch",
+        ):
+            assert requirement in authority_text
+
     def test_rubric_version_records_protocol_boundary_instrument_change(self):
-        assert int(_rubric()["version"]) == 10
+        assert int(_rubric()["version"]) == 11
 
     def test_unparseable_rubric_refuses(self, tmp_path):
         path = tmp_path / "rubric.yaml"
@@ -1693,6 +1704,8 @@ class TestSkillsAreInstallable:
             "lowest affected profile",
             "guarantees omitted",
             "compiler-enabled profile",
+            "EXECUTOR_ONLY",
+            "second conforming interpreter",
             "self-inquisition",
             "not repository or protocol conformance",
         ):
@@ -1709,6 +1722,7 @@ class TestSkillsAreInstallable:
             "## Malleus-self branch",
             "protocol_role_is_explicit",
             "optional_profile_stays_optional",
+            "protocol_authority_is_data",
             "Never treat its purity seal as repository conformance",
             "Quiet Bell, Neutral Greenhouse, Small Shop, and CYP450",
             "Only a bounded, frozen test input, answer key, or scenario",
