@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-016"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b2bfb2ddc2ee0a1edc392e1cbffe4ab31552c8928917ef378e6a460ca3cda38f",
+        "before_digest": "sha256:75f93dc5370a2827d19f47a6fa5bdb9957bc577f0d7e3999852314dc3733b435",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:57fd52f303e0ff3991496ba682d9b522099d676ffafaca44904c2ad9e5b81703",
+  "entry_id": "OVR-000264",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c0988295a83fc34465ac474cbb5ebb8037dbf33e6fbb107474d7bb86aecc7248",
+  "recorded_at": "2026-08-31T19:33:57Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000263",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 264,
+  "subject": {
+    "id": "cc016-evidence-limitation-casefold-guard",
+    "type": "DOCUMENT"
+  },
+  "summary": "Normalize Greenhouse limitation-label comparisons.",
+  "why": "The activation report correctly names the corpus boundary, but the first committed guard compared that prose case-sensitively. Normalizing both the expected labels and report text prevents capitalization from masquerading as missing evidence while retaining every required boundary check."
+}

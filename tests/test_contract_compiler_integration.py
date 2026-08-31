@@ -3244,8 +3244,8 @@ def test_greenhouse_reactivation_report_is_exact() -> None:
     }
     assert all(check["result"] == "PASS" for check in checks.values())
     assert all(
-        any(term in limitation for limitation in report["limitations"])
-        for term in ("answer-key", "public", "compiler", "corpus", "CC-R")
+        any(term in limitation.lower() for limitation in report["limitations"])
+        for term in ("answer-key", "public", "compiler", "corpus", "cc-r")
     )
 
     base_time = datetime.fromisoformat(
