@@ -955,6 +955,7 @@ def test_oracles_are_absent_from_inputs_and_the_test_imports_no_producer() -> No
         '__import__("linkml_runtime")',
         'exec("import linkml_runtime")',
         "from linkml_runtime import Any",
+        'pytest.importorskip("linkml_runtime")',
     ),
 )
 def test_no_producer_guard_rejects_hidden_producer_imports(snippet: str) -> None:
