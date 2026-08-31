@@ -1,0 +1,127 @@
+{
+  "configuration": {
+    "artifact_media_type": "TEST_ONLY_PRIVATE_JSON",
+    "artifact_role": "CONFORMANCE_FIXTURE",
+    "capabilities": "TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0",
+    "profile": "TEST_ONLY_LINKML_V0_PROFILE",
+    "public_contract": false,
+    "resolver": "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0",
+    "source_media_type": "TEST_ONLY_JSON_SHAPED_YAML"
+  },
+  "operations": [
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/closed-composition-semantic-change/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "DIFFERENT",
+        "compiled_facts": "DIFFERENT",
+        "contract_composition": "DIFFERENT",
+        "effective_contract": "DIFFERENT",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "DIFFERENT",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "DIFFERENT"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml"
+    },
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-baseline/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "SAME",
+        "compiled_facts": "SAME",
+        "contract_composition": "SAME",
+        "effective_contract": "SAME",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "SAME",
+        "source_attestation": "SAME",
+        "validated_fact_set": "SAME"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml"
+    },
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-explicit-defaults/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "SAME",
+        "compiled_facts": "SAME",
+        "contract_composition": "SAME",
+        "effective_contract": "SAME",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml"
+    },
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-numeric-equivalent/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "SAME",
+        "compiled_facts": "SAME",
+        "contract_composition": "SAME",
+        "effective_contract": "SAME",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml"
+    },
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-presentation-only/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "SAME",
+        "compiled_facts": "SAME",
+        "contract_composition": "SAME",
+        "effective_contract": "SAME",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml"
+    },
+    {
+      "input_path": "conformance/contract_kernel/v0/neutral_domain/traces/input/linkml-profile-reordered/operation.json",
+      "outcome": "ACCEPT",
+      "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "relations": {
+        "accepted_temporal_epoch": "SAME",
+        "compiled_facts": "SAME",
+        "contract_composition": "SAME",
+        "effective_contract": "SAME",
+        "governance_contract": "SAME",
+        "governed_graph_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "protocol_record_contract": "SAME",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml"
+    }
+  ]
+}

@@ -517,24 +517,54 @@ def _strings(value: Any) -> list[str]:
     return [value] if isinstance(value, str) else []
 
 
+def _assert_json_types_match(value: Any, expected: Any) -> None:
+    assert type(value) is type(expected)
+    if isinstance(expected, dict):
+        assert set(value) == set(expected)
+        for key, item in expected.items():
+            _assert_json_types_match(value[key], item)
+    elif isinstance(expected, list):
+        assert len(value) == len(expected)
+        for item, expected_item in zip(value, expected):
+            _assert_json_types_match(item, expected_item)
+
+
 def _assert_no_producer_dependency(source: str) -> None:
     tree = ast.parse(source)
-    imported_roots = {
-        alias.name.split(".", maxsplit=1)[0]
-        for node in ast.walk(tree)
-        if isinstance(node, (ast.Import, ast.ImportFrom))
-        for alias in node.names
-        if alias.name != "annotations"
-    }
+    imported_roots: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported_roots.update(
+                alias.name.split(".", maxsplit=1)[0] for alias in node.names
+            )
+        elif isinstance(node, ast.ImportFrom):
+            assert node.module is not None
+            imported_roots.add(node.module.split(".", maxsplit=1)[0])
     assert imported_roots == {
-        "Any",
-        "Path",
+        "__future__",
         "ast",
-        "deepcopy",
+        "copy",
+        "hashlib",
         "json",
+        "pathlib",
         "pytest",
-        "sha256",
+        "typing",
     }
+    forbidden_calls = {
+        node.func.id
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id in {"__import__", "compile", "eval", "exec"}
+    }
+    forbidden_calls.update(
+        node.func.attr
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr in {"import_module", "run_module", "run_path"}
+    )
+    assert not forbidden_calls
 
 
 def _assert_digest_token(value: str, prefix: str) -> None:
@@ -549,6 +579,7 @@ def _assert_outcome(value: Any) -> None:
 
 
 def _assert_compilation_oracle(value: dict[str, Any]) -> None:
+    _assert_json_types_match(value, EXPECTED_COMPILATION_ORACLE)
     assert set(value) == {
         "baseline_facts",
         "compilations",
@@ -591,6 +622,7 @@ def _assert_compilation_oracle(value: dict[str, Any]) -> None:
 
 
 def _assert_operation_oracle(value: dict[str, Any]) -> None:
+    _assert_json_types_match(value, EXPECTED_OPERATION_ORACLE)
     assert set(value) == {"configuration", "operations"}
     assert value["configuration"] == CONFIGURATION
     assert value["operations"] == EXPECTED_OPERATION_OUTCOMES
@@ -917,7 +949,15 @@ def test_oracles_are_absent_from_inputs_and_the_test_imports_no_producer() -> No
     _assert_no_producer_dependency(Path(__file__).read_text(encoding="utf-8"))
 
 
-def test_no_producer_guard_rejects_direct_dynamic_import() -> None:
+@pytest.mark.parametrize(
+    "snippet",
+    (
+        '__import__("linkml_runtime")',
+        'exec("import linkml_runtime")',
+        "from linkml_runtime import Any",
+    ),
+)
+def test_no_producer_guard_rejects_hidden_producer_imports(snippet: str) -> None:
     source = Path(__file__).read_text(encoding="utf-8")
     with pytest.raises(AssertionError):
-        _assert_no_producer_dependency(source + '\n__import__("linkml_runtime")\n')
+        _assert_no_producer_dependency(f"{source}\n{snippet}\n")

@@ -1,0 +1,122 @@
+{
+  "baseline_facts": [{"object":"-20","predicate":"https://malleus.dev/contract-facts/minimum","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":"-20","predicate":"https://malleus.dev/contract-facts/minimum","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"60","predicate":"https://malleus.dev/contract-facts/maximum","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":"60","predicate":"https://malleus.dev/contract-facts/maximum","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"HEALTHY","predicate":"https://malleus.dev/contract-facts/enumValue","subject":"https://example.malleus.dev/greenhouse/PlantState"},{"object":"HEALTHY","predicate":"https://malleus.dev/contract-facts/equalsString","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:ff6e3ab82671dbb26b59ef72b7e7aba75b635c60e65927290232ff15bf10e5cf"},{"object":"PRESENT","predicate":"https://malleus.dev/contract-facts/valuePresence","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:8e6a37dee67ef89a97d413791d1c227bbf843d3676def59fb5c9af966437587f"},{"object":"STRESSED","predicate":"https://malleus.dev/contract-facts/enumValue","subject":"https://example.malleus.dev/greenhouse/PlantState"},{"object":"https://example.malleus.dev/greenhouse/Celsius","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":"https://example.malleus.dev/greenhouse/Celsius","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"https://example.malleus.dev/greenhouse/Observation","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:9879af547ef8a1370a50d60d075dae1b68a63cf8a378c62b9118fa3f9d6aa574"},{"object":"https://example.malleus.dev/greenhouse/Observation","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":"https://example.malleus.dev/greenhouse/Observation","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":"https://example.malleus.dev/greenhouse/Observation","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"https://example.malleus.dev/greenhouse/Observation","predicate":"https://malleus.dev/contract-facts/onClass","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":"https://example.malleus.dev/greenhouse/Observation/note","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":"https://example.malleus.dev/greenhouse/PlantState","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/greenhouse/state"},{"object":"https://example.malleus.dev/greenhouse/PlantState","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":"https://example.malleus.dev/greenhouse/Sample","predicate":"http://www.w3.org/2000/01/rdf-schema#subClassOf","subject":"https://example.malleus.dev/greenhouse/Observation"},{"object":"https://example.malleus.dev/greenhouse/Traceable","predicate":"https://malleus.dev/contract-facts/usesMixin","subject":"https://example.malleus.dev/greenhouse/Observation"},{"object":"https://example.malleus.dev/greenhouse/specimen_id","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":"https://example.malleus.dev/greenhouse/state","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:ff6e3ab82671dbb26b59ef72b7e7aba75b635c60e65927290232ff15bf10e5cf"},{"object":"https://example.malleus.dev/greenhouse/state","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":"https://example.malleus.dev/greenhouse/temperature","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:8e6a37dee67ef89a97d413791d1c227bbf843d3676def59fb5c9af966437587f"},{"object":"https://example.malleus.dev/greenhouse/temperature","predicate":"https://malleus.dev/contract-facts/usesSlot","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/Observation"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/Sample"},{"object":"https://malleus.dev/contract-facts/Class","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/Traceable"},{"object":"https://malleus.dev/contract-facts/Enum","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/PlantState"},{"object":"https://malleus.dev/contract-facts/ExactlyOneAlternative","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:847fa3c090e228a792bb79d696bb82ea37e2edebe727d2c1581ce8bbf0a82dad"},{"object":"https://malleus.dev/contract-facts/ExactlyOneAlternative","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:e8ef1131caeb64f7c51af755bd69aee594b139383f1a8288d4e9364fe8c48c73"},{"object":"https://malleus.dev/contract-facts/ExactlyOneGroup","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:9879af547ef8a1370a50d60d075dae1b68a63cf8a378c62b9118fa3f9d6aa574"},{"object":"https://malleus.dev/contract-facts/Float","predicate":"https://malleus.dev/contract-facts/typeof","subject":"https://example.malleus.dev/greenhouse/Celsius"},{"object":"https://malleus.dev/contract-facts/Scalar","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/Celsius"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/state"},{"object":"https://malleus.dev/contract-facts/Slot","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":"https://malleus.dev/contract-facts/SlotCondition","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:8e6a37dee67ef89a97d413791d1c227bbf843d3676def59fb5c9af966437587f"},{"object":"https://malleus.dev/contract-facts/SlotCondition","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:ff6e3ab82671dbb26b59ef72b7e7aba75b635c60e65927290232ff15bf10e5cf"},{"object":"https://malleus.dev/contract-facts/SlotUse","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":"https://malleus.dev/contract-facts/SlotUse","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":"https://malleus.dev/contract-facts/SlotUse","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":"https://malleus.dev/contract-facts/SlotUse","predicate":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":"https://malleus.dev/contract-facts/String","predicate":"https://malleus.dev/contract-facts/valueRange","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:847fa3c090e228a792bb79d696bb82ea37e2edebe727d2c1581ce8bbf0a82dad","predicate":"https://malleus.dev/contract-facts/inAlternative","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:8e6a37dee67ef89a97d413791d1c227bbf843d3676def59fb5c9af966437587f"},{"object":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:e8ef1131caeb64f7c51af755bd69aee594b139383f1a8288d4e9364fe8c48c73","predicate":"https://malleus.dev/contract-facts/inAlternative","subject":"urn:malleus:contract-structure:slot-condition:v0:sha256:ff6e3ab82671dbb26b59ef72b7e7aba75b635c60e65927290232ff15bf10e5cf"},{"object":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:9879af547ef8a1370a50d60d075dae1b68a63cf8a378c62b9118fa3f9d6aa574","predicate":"https://malleus.dev/contract-facts/inGroup","subject":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:847fa3c090e228a792bb79d696bb82ea37e2edebe727d2c1581ce8bbf0a82dad"},{"object":"urn:malleus:contract-structure:exactly-one-group:v0:sha256:9879af547ef8a1370a50d60d075dae1b68a63cf8a378c62b9118fa3f9d6aa574","predicate":"https://malleus.dev/contract-facts/inGroup","subject":"urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:e8ef1131caeb64f7c51af755bd69aee594b139383f1a8288d4e9364fe8c48c73"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/greenhouse/Observation"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/greenhouse/Sample"},{"object":false,"predicate":"https://malleus.dev/contract-facts/abstract","subject":"https://example.malleus.dev/greenhouse/Traceable"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/greenhouse/state"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":false,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/greenhouse/state"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":false,"predicate":"https://malleus.dev/contract-facts/inlined","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":false,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/greenhouse/Observation"},{"object":false,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/greenhouse/Sample"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/greenhouse/state"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":false,"predicate":"https://malleus.dev/contract-facts/multivalued","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/greenhouse/Observation/note"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/greenhouse/state"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"https://example.malleus.dev/greenhouse/temperature"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:1bfb1cf705602cde0a82f40465a418febaab02d24fa9d666ed833940fead2c0a"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"},{"object":false,"predicate":"https://malleus.dev/contract-facts/required","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:e33dfa2fb125a065137ac3d88b49c5742b0a29ed69e5def656b467f4e0768dd0"},{"object":true,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"https://example.malleus.dev/greenhouse/specimen_id"},{"object":true,"predicate":"https://malleus.dev/contract-facts/identifier","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"},{"object":true,"predicate":"https://malleus.dev/contract-facts/isMixin","subject":"https://example.malleus.dev/greenhouse/Traceable"},{"object":true,"predicate":"https://malleus.dev/contract-facts/required","subject":"urn:malleus:contract-structure:slot-use:v0:sha256:61e084e16ea3ef4e89d061a8a95f843962b6dd02e9a7871718da2f89d5d90591"}],
+  "compilations": [
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml"
+    },
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml"
+    },
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml"
+    },
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml"
+    },
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml"
+    },
+    {
+      "canonical_fact_byte_length": 17906,
+      "canonical_facts_sha256": "TEST_ONLY_CANONICAL_FACTS_SHA256_20de741716c686ea5beb48951c0b9ecab05f63348745a6bd424c834748d32664",
+      "fact_count": 90,
+      "outcome": "ACCEPT",
+      "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml"
+    }
+  ],
+  "configuration": {
+    "artifact_media_type": "TEST_ONLY_PRIVATE_JSON",
+    "artifact_role": "CONFORMANCE_FIXTURE",
+    "capabilities": "TEST_ONLY_REPOSITORY_FILE_NETWORK_DENIED_V0",
+    "profile": "TEST_ONLY_LINKML_V0_PROFILE",
+    "public_contract": false,
+    "resolver": "TEST_ONLY_STRICT_MALLEUS_RESOLVER_V0",
+    "source_media_type": "TEST_ONLY_JSON_SHAPED_YAML"
+  },
+  "semantic_change": {
+    "added_facts": [
+      {
+        "object": "55",
+        "predicate": "https://malleus.dev/contract-facts/maximum",
+        "subject": "https://example.malleus.dev/greenhouse/temperature"
+      },
+      {
+        "object": "55",
+        "predicate": "https://malleus.dev/contract-facts/maximum",
+        "subject": "urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"
+      }
+    ],
+    "reference_source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+    "removed_facts": [
+      {
+        "object": "60",
+        "predicate": "https://malleus.dev/contract-facts/maximum",
+        "subject": "https://example.malleus.dev/greenhouse/temperature"
+      },
+      {
+        "object": "60",
+        "predicate": "https://malleus.dev/contract-facts/maximum",
+        "subject": "urn:malleus:contract-structure:slot-use:v0:sha256:cc51d84fdfbb1f9f6bba0c2fe30b13b98fd3001d38589f83506d2f238c94675d"
+      }
+    ],
+    "source_path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml"
+  },
+  "sources": [
+    {
+      "byte_length": 1456,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_3bb5b580021b2f5ca6c0113a3ef63d047ce2dcf63e846ffc6fa4fe03b87fee98"
+    },
+    {
+      "byte_length": 1900,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_f842338536f01b581618cf51eeca03668bcb8ff7861b36f872870889158201b5"
+    },
+    {
+      "byte_length": 1459,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_80145c298d708d955cb3ee521bf7953feed287d1b97aab28b348ad63cd8b3d3e"
+    },
+    {
+      "byte_length": 1477,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_c389a0add25ca17516663abf92d4370e0b29efe14b522250b2056bc221c45c65"
+    },
+    {
+      "byte_length": 1456,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_b909bee4789dce0c0b25e0987cfc0f0fe67569138e482f25a3cb804e1ce8b877"
+    },
+    {
+      "byte_length": 1456,
+      "outcome": "ACCEPT",
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml",
+      "source_blob": "TEST_ONLY_SOURCE_BLOB_SHA256_86d7ab9958d2bc0781a39807c428c837d18ef6c35b31470c0370d6d28359d404"
+    }
+  ]
+}

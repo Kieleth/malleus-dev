@@ -1,0 +1,93 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23304,
+      "path": "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
+      "sha256": "sha256:56bc2836a903ed4151d5e6ea728be0f1ee1fe84883a6a5305c44717a3fe16f82"
+    },
+    {
+      "byte_length": 5567,
+      "path": "conformance/contract_kernel/v0/neutral_domain/traces/oracle/compile-source-outcomes.json",
+      "sha256": "sha256:e99ab7ed2a957312cbfb4b07d022a0e463b874c43f57208e687e2e60c8c1bdf5"
+    },
+    {
+      "byte_length": 33986,
+      "path": "tests/contract_compiler/test_neutral_domain_oracles.py",
+      "sha256": "sha256:9605a3436335740ea2716984f530b29729a5fa88746b3d765a199c8452fc9d1d"
+    }
+  ],
+  "base_commit": "6969f193eb9e57f815bb73c38b7094a980e1642c",
+  "checks": [
+    {
+      "check_id": "cc016-authority-scope",
+      "method": "Verify the activation floor, initial RED commit, two audit-regression commits, assigned CC-016 paths, and pre-existing worktree dirt before closing GREEN.",
+      "observed": "The activation floor is 6969f193eb9e57f815bb73c38b7094a980e1642c. Initial RED is f86e51b5d7de703d15ec2e770e2ed5c1c7267b6d; strict-type RED is e28fe5b and dynamic-producer RED is 3257fb4. The candidate remains confined to greenhouse.json, compile-source-outcomes.json, this report, and the fixed test. Unrelated research, design, and handover files were not changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-genuine-red",
+      "method": "Run the complete frozen Greenhouse test while both private answer files are absent.",
+      "observed": "The focused command exited 1 with exactly 2 failures and 20 passes. The failures were the exact empty-file-inventory assertions for greenhouse.json and compile-source-outcomes.json; every source, fact, structural-envelope, delta, relation, mutation, JSON, private-boundary, and dependency control passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-independent-fact-answer",
+      "method": "Hand-derive all 90 neutral facts from the six exact Greenhouse sources and accepted OD-005 and OD-008 rules, then canonicalize the literal array without importing or executing a compiler producer.",
+      "observed": "The baseline and four equivalent variants contain the same 90 facts in 17,906 compact sorted UTF-8 JSON bytes with SHA-256 4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4. The global specimen_id Slot has required=false while its effective Observation SlotUse has required=true. All six controlled sources ACCEPT.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-structural-domain-disproof",
+      "method": "Recompute the exact SlotUse, exactly-one group, alternative-semantics, alternative, and condition identities from literal canonical envelopes and compare two independent 90-record arrays byte for byte.",
+      "observed": "The independently derived arrays agreed exactly. This disproved the earlier f0d3a9ff...bfdb and 7fa6d9e2...458a fact digests: those candidates used a colon-form alternative structural domain instead of the accepted dot-separated domain, changing the structural subjects in 12 expression facts. The corrected baseline and maximum-55 digests are 4103a7cf...64db4 and 20de7417...32664.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-equivalent-variants",
+      "method": "Compare baseline with reordered members, explicit defaults, equivalent numeric lexemes, and presentation-only edits at the exact source, attestation, fact, EffectiveContract, role, composition, epoch, and logical-artifact axes.",
+      "observed": "Each variant has a different raw source and source attestation while preserving validated facts, EffectiveContract meaning, all three roles, composition, and accepted-temporal epoch. Logical artifact remains NOT_CLAIMED because artifact wire bytes are outside this answer key.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-semantic-delta",
+      "method": "Apply only the declared temperature maximum change from canonical string 60 to 55 to the authoritative Slot and its Observation SlotUse, then canonicalize the complete result.",
+      "observed": "The exact delta removes two facts and adds two facts while preserving all structural subjects. The changed set remains 90 facts and 17,906 bytes with SHA-256 20de741716c686ea5beb48951c0b9ecab05f63348745a6bd424c834748d32664. Validated facts, EffectiveContract, GovernedGraphContract, composition, and epoch are DIFFERENT; ProtocolRecordContract and GovernanceContract remain SAME.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-private-boundary",
+      "method": "Validate exact file inventory, no symlinks, closed keys, exact result unions, duplicate-key and nonfinite-number refusal, private metadata, and absence from production inputs and producer dependencies.",
+      "observed": "The answer key contains exactly two private JSON files. ACCEPT, minimal REFUSE, SAME, DIFFERENT, and NOT_CLAIMED remain test-only labels. The files declare CONFORMANCE_FIXTURE and Boolean public_contract=false. Exact recursive JSON type checks reject Boolean-number equality collisions, and the static plus direct-dynamic import guard finds no LinkML, OntologyRegistry, compiler, runtime, protocol, or projector producer.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-audit-regressions",
+      "method": "Reproduce both independent-audit findings before repair, then rerun the new strict-type and hidden-producer mutations through the corrected guards.",
+      "observed": "The Boolean-to-number mutations produced exactly 2 failures and 8 passes with 14 deselected before the recursive type guard. A direct dynamic import produced exactly 1 failure and 1 pass with 23 deselected before the producer guard was corrected. GREEN rejects both Boolean-number substitutions plus direct __import__, exec, and disguised ImportFrom producer paths; 13 combined mutation cases pass.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-green-and-mutations",
+      "method": "Run the complete focused GREEN test and the isolated in-memory mutation subset against the two answer files.",
+      "observed": "The corrected focused GREEN run passed 27 tests. The combined mutation and hidden-producer subset passed 13 cases, proving changes to facts, exact JSON types, outcomes, deltas, relation values, relation membership, top-level membership, static import roots, and direct dynamic execution paths are rejected.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-quality-diff-package",
+      "method": "Run Ruff check and format check on the frozen test, run git diff --check on the exact answer-key scope, and inspect package and runtime boundaries.",
+      "observed": "Ruff reported All checks passed and the test was already formatted. git diff --check passed. The canonical verifier confirmed 3 artifacts and 10 recorded checks for CC-016. PACKAGE NOT_APPLICABLE: no implementation, dependency, package, Docker, installed data, public API, source input, corpus manifest, checksum, card, ledger, integration, selection, or governance byte changed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "These JSON files are private fixture-local conformance evidence. They are not compiler input, a public data format, a compatibility contract, runtime artifact bytes, wire grammar, stable public identifiers, or a protocol invariant.",
+    "The answer key demonstrates the accepted compiler-enabled optional profile only for the six controlled Greenhouse sources. It does not claim general LinkML support or require the compiler-enabled profile for base-protocol adopters.",
+    "Logical artifact remains NOT_CLAIMED. Artifact envelopes, reloadable bytes, public namespace promotion, migration, and persisted-wire compatibility remain outside this workstream.",
+    "No compiler, LinkML adapter, resolver, runtime, protocol event, ledger, graph, projector, package, release, or CC-R stage is implemented or selected here.",
+    "Refusal adequacy is exercised by fixed in-memory oracle corruptions. This slice adds no seventh Greenhouse source and makes no broad compiler-edge-case claim.",
+    "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
+  ],
+  "recorded_at": "2026-08-31T20:02:35Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-016"
+}
