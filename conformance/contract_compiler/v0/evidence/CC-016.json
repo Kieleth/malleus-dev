@@ -20,7 +20,7 @@
   "checks": [
     {
       "check_id": "cc016-authority-scope",
-      "method": "Verify the activation floor, initial RED commit, two audit-regression commits, assigned CC-016 paths, and pre-existing worktree dirt before closing GREEN.",
+      "method": "Verify the activation floor, initial RED commit, three audit-regression commits, assigned CC-016 paths, and pre-existing worktree dirt before closing GREEN.",
       "observed": "The activation floor is 6969f193eb9e57f815bb73c38b7094a980e1642c. Initial RED is f86e51b5d7de703d15ec2e770e2ed5c1c7267b6d; strict-type RED is e28fe5b; direct dynamic-producer RED is 3257fb4; and the pytest import-bypass RED is 9feaa82. The candidate remains confined to greenhouse.json, compile-source-outcomes.json, this report, and the fixed test. Unrelated research, design, and handover files were not changed.",
       "result": "PASS"
     },
