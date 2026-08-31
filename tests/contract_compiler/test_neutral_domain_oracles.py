@@ -517,6 +517,26 @@ def _strings(value: Any) -> list[str]:
     return [value] if isinstance(value, str) else []
 
 
+def _assert_no_producer_dependency(source: str) -> None:
+    tree = ast.parse(source)
+    imported_roots = {
+        alias.name.split(".", maxsplit=1)[0]
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.Import, ast.ImportFrom))
+        for alias in node.names
+        if alias.name != "annotations"
+    }
+    assert imported_roots == {
+        "Any",
+        "Path",
+        "ast",
+        "deepcopy",
+        "json",
+        "pytest",
+        "sha256",
+    }
+
+
 def _assert_digest_token(value: str, prefix: str) -> None:
     assert value.startswith(prefix)
     digest = value.removeprefix(prefix)
@@ -894,20 +914,10 @@ def test_oracles_are_absent_from_inputs_and_the_test_imports_no_producer() -> No
         for token in forbidden_input_tokens:
             assert token not in raw
 
-    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
-    imported_roots = {
-        alias.name.split(".", maxsplit=1)[0]
-        for node in ast.walk(tree)
-        if isinstance(node, (ast.Import, ast.ImportFrom))
-        for alias in node.names
-        if alias.name != "annotations"
-    }
-    assert imported_roots == {
-        "Any",
-        "Path",
-        "ast",
-        "deepcopy",
-        "json",
-        "pytest",
-        "sha256",
-    }
+    _assert_no_producer_dependency(Path(__file__).read_text(encoding="utf-8"))
+
+
+def test_no_producer_guard_rejects_direct_dynamic_import() -> None:
+    source = Path(__file__).read_text(encoding="utf-8")
+    with pytest.raises(AssertionError):
+        _assert_no_producer_dependency(source + '\n__import__("linkml_runtime")\n')
