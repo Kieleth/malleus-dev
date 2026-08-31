@@ -1,6 +1,6 @@
 ---
 name: malleus-inquisitor
-description: Run an Ordo Malleus inquisition on a malleus-adopting project. Use when the user asks to audit, inquisit, review, or check a project's ontology/KG discipline, or invokes /malleus-inquisitor with a project path. Produces MALLEUS_INQUISITION.md in the inspected repo.
+description: Run an Ordo Malleus inquisition on Malleus itself or an adopting project. Use when the user asks to audit, inquisit, review, or check protocol, profile, ontology, or KG discipline. Produces MALLEUS_INQUISITION.md in the inspected repo.
 ---
 
 # The Ordo Malleus inquisitor
@@ -58,12 +58,26 @@ decides whether it enters this slice.
 
 ## Procedure
 
-1. **Locate the schema(s)** in the target project (LinkML YAML importing
-   malleus, or a malleus-shaped ontology in another format; say which).
-2. **Run the mechanical rites**: `malleus-inquisitor <schema> [--map
-   malleus=<path>]` (or `python -m malleus.inquisition.cli` from a malleus
-   checkout). Include its verdict verbatim in the findings file.
-3. **Apply the judgment rites** from the `judgment:` section of the rubric.
+1. **Locate claimed profiles before schemas.** Read the public capability
+   claims, configuration, package surface, and architecture boundary. Record
+   each profile as claimed, not claimed, or unknown. For every relevant
+   deliverable or claim, identify whether it is a `PROTOCOL_INVARIANT`,
+   `OPTIONAL_PROFILE`, `REFERENCE_IMPLEMENTATION`, `CONFORMANCE_FIXTURE`, or
+   `ADOPTER_CHOICE`, and name the lowest affected profile plus the guarantees
+   omitted below it. A dependency, shipped default, fixture, or schema file is
+   not by itself a profile claim.
+2. **Locate the root-ontology-profile schema only when that profile is
+   claimed.** Find the LinkML YAML importing malleus and say which file is the
+   subject. A schema in another format is evidence for a separate profile; the
+   mechanical rites below cannot judge it.
+3. **Run the mechanical rites only for the root ontology profile**:
+   `malleus-inquisitor <schema> [--map malleus=<path>]` (or `python -m
+   malleus.inquisition.cli` from a malleus checkout). Include its verdict
+   verbatim and label its scope `ROOT ONTOLOGY PROFILE`. If that profile is not
+   claimed, record `NOT RUN: profile not claimed`. Never treat its purity seal
+   as repository conformance, protocol conformance, or evidence for another
+   profile.
+4. **Apply the judgment rites** from the `judgment:` section of the rubric.
    Resolve its path, never assume one: this skill installs into projects
    that have no malleus checkout, and the packaged rubric lives inside
    site-packages.
@@ -80,19 +94,48 @@ decides whether it enters this slice.
    rite, inspect the actual code paths: constructors, every write path
    including property updates and deserialization, readers per declared
    type, rule engines, provenance fields.
-4. **Rank findings**: HERESY (the rule is explicit and broken), SUSPICION
+5. **Rank findings**: HERESY (the rule is explicit and broken), SUSPICION
    (probably a defect; a deliberate design may survive it), NOTE,
    COMMENDATION (discipline worth keeping and showcasing; always include
    these, an inquisition that finds only sin is not credible).
-5. **Write `MALLEUS_INQUISITION.md`** at the target repo root using the
+6. **Write `MALLEUS_INQUISITION.md`** at the target repo root using the
    template below, and add one pointer line to the target's CLAUDE.md if it
    has one ("An Ordo Malleus inquisition is on file: MALLEUS_INQUISITION.md;
    consult it before touching schema or KG code.").
-6. **Close the loop upstream.** If you found a failure mode the rubric does
+7. **Close the loop upstream.** If you found a failure mode the rubric does
    not cover, or a rite that misfires, propose the GENERIC lesson (no
    project names, no internals) as an addition to rubric.yaml: direct edit
    when working for the malleus author, a GitHub issue or PR against
    malleus-dev otherwise. This is how the Ordo learns.
+
+## Malleus-self branch
+
+When the inspected repository is Malleus itself, audit the protocol boundary
+before applying adopter-schema rules:
+
+1. Classify every changed deliverable and capability claim using the five
+   roles above. Apply `protocol_role_is_explicit` and
+   `optional_profile_stays_optional` across code, docs, skills, fixtures, and
+   tests.
+2. Check that core runtime code does not import research, conformance, or test
+   trees, and that the root ontology imports no domain, research, conformance,
+   or fixture ontology. Use syntax-aware Python and YAML parsing, not text
+   matching.
+3. Run schema rites against `ontology/malleus.yaml` only for the root ontology
+   profile. Judge compiler, semantic-history, assent, projection, and other
+   optional profiles from their own contracts and conformance evidence.
+4. Treat Quiet Bell, Neutral Greenhouse, Small Shop, and CYP450 as conformance
+   fixtures. Classify each future example from its stated purpose. Only a
+   bounded, frozen test input, answer key, or scenario is a
+   `CONFORMANCE_FIXTURE`; a tutorial or illustrative domain is not one by
+   default. A fixture may reveal a protocol invariant; its vocabulary,
+   pipeline, and expected domain result do not become that invariant.
+
+Record each self-audit judgment as one row, not prose alone:
+
+| claim | role | evidence | unsupported transfer | verdict |
+|---|---|---|---|---|
+| `<exact claim>` | `<one of the five roles>` | `<direct observation>` | `<none or leaked authority>` | `<pass or finding>` |
 
 ## What changed in 0.9.0 (affects how you read a report)
 
@@ -127,7 +170,9 @@ inspected project is private IP unless told otherwise.
 # Ordo Malleus: Inquisition of <project>
 
 Date: <date>. Inquisitor: malleus-inquisitor skill, rubric v<version>.
-Mechanical rites verdict: <PURITY SEAL | N heresies> (output below).
+Claimed profiles: <profile: CLAIMED | NOT CLAIMED | UNKNOWN>.
+Mechanical rites scope: ROOT ONTOLOGY PROFILE.
+Mechanical rites verdict: <PURITY SEAL | N heresies | NOT RUN> (output below).
 
 ## Heresies
 ### H1. <one-line finding>  [rubric: <rite id>]
@@ -150,6 +195,9 @@ a check, a CI gate>.
 - Scale depth to the ask: a quick check inspects the schema and the write
   paths; a full inquisition also runs the reader census and citation
   integrity, which need repo-wide searches.
+- A root ontology profile purity seal answers only whether that LinkML schema
+  passed those mechanical rites. It says nothing by itself about repository,
+  protocol, compiler, ledger, projection, or domain conformance.
 - Do not fix anything during an inquisition. Report. The fix sessions come
   after, armed with the findings file.
 - If the project does not use malleus at all, say so in three lines and

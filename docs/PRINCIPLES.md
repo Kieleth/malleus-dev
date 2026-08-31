@@ -19,6 +19,42 @@ consequence of it or a limit on it.
 
 ---
 
+(protocol-boundary-taxonomy)=
+## Protocol boundary taxonomy
+
+Every substantial Malleus claim or deliverable boundary has one of these
+roles. One document or module may contain several roles when each claim and
+boundary is labeled clearly:
+
+| Role | Meaning |
+|---|---|
+| `PROTOCOL_INVARIANT` | A portable guarantee that every implementation claiming the corresponding Malleus base boundary must preserve. The base invariants are an explicit contract, identified inputs and outputs, atomic fail-closed handling, no semantic guessing, and separation of structural conformance, epistemic acceptance, and action authorization. |
+| `OPTIONAL_PROFILE` | A named set of additional contracts and guarantees. It is binding only when an adopter claims that profile. Shipping or using a profile by default does not promote it into the base protocol. |
+| `REFERENCE_IMPLEMENTATION` | One implementation of an invariant or profile. Its libraries, storage model, wire format, and APIs are evidence and convenience, not requirements for an independent conforming implementation. |
+| `CONFORMANCE_FIXTURE` | A bounded input, answer key, or scenario used to test an invariant or profile. Its vocabulary and modeling choices have no authority outside the stated test. |
+| `ADOPTER_CHOICE` | A domain ontology, representation, policy, backend, profile selection, or extension that Malleus deliberately leaves to the adopter. |
+
+This vocabulary is closed for protocol-boundary classification. Capability
+status is a separate axis: implemented, accepted design, candidate, and future
+work say whether something exists, not what authority it has. An optional
+profile can be shipped or merely designed; a reference implementation can be
+production-ready or experimental.
+
+The five root primitives, `Entity`, `Event`, `Signal`, `Agent`, and `Relation`,
+belong to Malleus's default typed-graph profile. They are not universal data
+models or base protocol invariants. Assent, semantic-history and replay, and
+graph realization are optional profiles. The current LinkML, Python, JSONL,
+NetworkX, Prolog, and OTTR paths are reference implementations or selected
+profile mechanisms. CYP450, Quiet Bell, Neutral Greenhouse, and Small Shop
+Fulfilment are conformance fixtures or examples; none can define a general
+protocol rule by itself.
+
+An adopter may stop before an optional profile or replace its implementation.
+It may claim only the guarantees of the profiles it actually implements and
+passes. For example, bypassing the semantic-history profile gives up Malleus
+claims about ledger authority, historical replay, and reconstruction of
+accepted state; it does not invalidate a conforming structural-admission use.
+
 ## 1. Encoding is the step you cannot skip
 
 Between a source and a conclusion there has to be an identified, typed
@@ -169,11 +205,13 @@ repair input. Ambiguity and unsupported meaning reject before effects.
 The `malleus-dev` maintainer skill turns this principle into a stage-contract
 and replacement checklist.
 
-## 7. The ledger is authority; governed read stores are projections
+## 7. Within the semantic-history profile, the ledger is authority
 
-The protocol ledger records the ordered history of what Malleus proposed,
-checked, decided, and applied. It is the authority for those protocol
-commitments. It is not factual truth about the domain.
+When the optional semantic-history and replay profile is selected, the protocol
+ledger records the ordered history of what Malleus proposed, checked, decided,
+and applied. Within that profile it is the authority for those protocol
+commitments. It is not factual truth about the domain, and projects that do not
+claim this profile need not use it.
 
 The complete projection contract Malleus is working toward requires identified
 inputs, initial state, projector, contract and interpretation profiles, side

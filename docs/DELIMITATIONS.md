@@ -26,6 +26,14 @@ The candidate contribution is their protocolized composition, the explicit
 boundaries between them, and the behavior measured when the whole protocol
 runs.
 
+That complete lifecycle is the strongest composed Malleus profile used for
+research evaluation, not the minimum definition of adoption. Structural
+admission, Assent, semantic history and replay, and graph realization remain
+separately claimable profiles. The
+[protocol boundary taxonomy](protocol-boundary-taxonomy) governs
+which statements are portable invariants, profiles, reference mechanisms,
+fixtures, or adopter choices.
+
 ## Five foundations to inherit explicitly
 
 Independent groups reached each ingredient before or alongside Malleus. That

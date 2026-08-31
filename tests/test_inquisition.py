@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import copy
 import json
 import re
@@ -222,14 +223,18 @@ def test_cli_exit_codes_and_json(tmp_path, capsys):
     good = _write_schema(tmp_path, GOOD_SCHEMA)
     map_arg = f"malleus={ROOT_MAP['malleus']}"
     assert main([str(good), "--map", map_arg]) == 0
-    assert "PURITY SEAL GRANTED" in capsys.readouterr().out
+    text_report = capsys.readouterr().out
+    assert "ROOT ONTOLOGY PROFILE" in text_report
+    assert "PURITY SEAL GRANTED" in text_report
 
     bad = tmp_path / "bad.yaml"
     bad.write_text((tmp_path / "domain.yaml").read_text())  # reuse, then break it
     bad.write_text(textwrap.dedent(LOOSE_SCHEMA))
     assert main([str(bad), "--map", map_arg, "--json"]) == 1
     out = capsys.readouterr().out
-    assert '"purity": false' in out
+    parsed = json.loads(out)
+    assert parsed["purity"] is False
+    assert parsed["scope"] == "root-ontology-profile"
 
 
 REQUIRED_LINES = [
@@ -344,6 +349,32 @@ class TestRubricIsWellFormedAndFailsLoud:
             "evidence_does_not_transfer",
             "module_declares_its_interface",
         } <= ids
+
+    def test_protocol_boundary_rites_are_heresies_with_false_positive_controls(self):
+        rites = {rite["id"]: rite for rite in _rubric()["judgment"]}
+
+        role = rites["protocol_role_is_explicit"]
+        assert role["severity"] == HERESY
+        role_text = f"{role['question']} {role['lesson']}".lower()
+        for classification in (
+            "protocol_invariant",
+            "optional_profile",
+            "reference_implementation",
+            "conformance_fixture",
+            "adopter_choice",
+        ):
+            assert classification in role_text
+        assert "neither is itself" in role_text
+
+        optional = rites["optional_profile_stays_optional"]
+        assert optional["severity"] == HERESY
+        optional_text = f"{optional['question']} {optional['lesson']}".lower()
+        assert "lowest affected profile" in optional_text
+        assert "within" in optional_text
+        assert "compiler-enabled profile" in optional_text
+
+    def test_rubric_version_records_protocol_boundary_instrument_change(self):
+        assert int(_rubric()["version"]) == 10
 
     def test_unparseable_rubric_refuses(self, tmp_path):
         path = tmp_path / "rubric.yaml"
@@ -1645,6 +1676,47 @@ class TestSkillsAreInstallable:
         )
         assert not missing_rules, f"Unix doctrine omits rules: {missing_rules}"
 
+    def test_malleus_dev_skill_keeps_profiles_and_fixtures_in_their_roles(self):
+        skill = (
+            self.SKILL_ROOT / "malleus-dev" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        normalized = " ".join(skill.split())
+        for classification in (
+            "PROTOCOL_INVARIANT",
+            "OPTIONAL_PROFILE",
+            "REFERENCE_IMPLEMENTATION",
+            "CONFORMANCE_FIXTURE",
+            "ADOPTER_CHOICE",
+        ):
+            assert classification in skill
+        for requirement in (
+            "lowest affected profile",
+            "guarantees omitted",
+            "compiler-enabled profile",
+            "self-inquisition",
+            "not repository or protocol conformance",
+        ):
+            assert requirement in normalized
+
+    def test_inquisitor_scopes_schema_rites_and_has_a_malleus_self_branch(self):
+        skill = (
+            self.SKILL_ROOT / "malleus-inquisitor" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        normalized = " ".join(skill.split())
+        for requirement in (
+            "Locate claimed profiles before schemas",
+            "only for the root ontology profile",
+            "## Malleus-self branch",
+            "protocol_role_is_explicit",
+            "optional_profile_stays_optional",
+            "Never treat its purity seal as repository conformance",
+            "Quiet Bell, Neutral Greenhouse, Small Shop, and CYP450",
+            "Only a bounded, frozen test input, answer key, or scenario",
+            "| claim | role | evidence | unsupported transfer | verdict |",
+        ):
+            assert requirement in normalized
+        assert "every future example as conformance fixtures" not in normalized
+
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
         out = capsys.readouterr().out
@@ -1670,6 +1742,59 @@ class TestSkillsAreInstallable:
         ) == 0
         for directory in (".claude", ".codex"):
             self._assert_installed_tree(tmp_path / directory / "skills")
+
+
+class TestProtocolProfileBoundaries:
+    """Mechanical tripwires for the protocol/profile/fixture boundary."""
+
+    ROOT = Path(__file__).parent.parent
+
+    @staticmethod
+    def _imported_modules(path: Path) -> set[str]:
+        relative = path.relative_to(TestProtocolProfileBoundaries.ROOT / "src")
+        package = list(relative.parent.parts)
+        modules: set[str] = set()
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                modules.update(alias.name for alias in node.names)
+                continue
+            if not isinstance(node, ast.ImportFrom):
+                continue
+            if node.level:
+                base = package[: len(package) - node.level + 1]
+                if node.module:
+                    modules.add(".".join(base + node.module.split(".")))
+                else:
+                    modules.update(".".join(base + [alias.name]) for alias in node.names)
+            elif node.module:
+                modules.add(node.module)
+        return modules
+
+    def test_core_runtime_does_not_import_research_conformance_or_tests(self):
+        forbidden = {"research", "conformance", "tests"}
+        offenders = []
+        for path in sorted((self.ROOT / "src" / "malleus").rglob("*.py")):
+            for module in self._imported_modules(path):
+                parts = module.split(".")
+                if parts and parts[0] == "malleus":
+                    parts = parts[1:]
+                if parts and parts[0] in forbidden:
+                    offenders.append(f"{path.relative_to(self.ROOT)} -> {module}")
+        assert not offenders, (
+            "core runtime imports must not depend on research, conformance, "
+            f"or test trees: {offenders}"
+        )
+
+    def test_root_ontology_does_not_import_domain_or_fixture_ontologies(self):
+        root = self.ROOT / "ontology" / "malleus.yaml"
+        document = yaml.safe_load(root.read_text(encoding="utf-8"))
+        imports = document.get("imports")
+        assert imports == ["linkml:types"], (
+            "the root ontology profile has one reviewed language-level import; "
+            "any added dependency needs an explicit boundary review, got "
+            f"{imports!r}"
+        )
 
 
 def test_every_rite_accepted_on_the_roadmap_exists_in_the_rubric():

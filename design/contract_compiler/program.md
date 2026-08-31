@@ -69,7 +69,7 @@ retained sources + one explicitly selected resolver profile
        type system
        record shape validation
        graph admission
-  -> KnowledgeGraph, Staging, Logic, Assent, Recon, OCR
+  -> independent consumers: KnowledgeGraph, Staging, Logic, Assent, Recon, OCR
 ```
 
 No public object after `ContractFrontend` may contain a LinkML class. Every
@@ -267,6 +267,13 @@ The runtime consumes narrow views instead of a compiler object:
 | Graph admission | KG and Staging |
 | Compilation provenance | Compiler, Inquisition, audit tooling only |
 
+These consumers are independent, not a mandatory serial runtime chain. Each
+consumer declares the narrow views and optional profiles it needs. Using the
+compiled contract for structural graph admission does not require Logic,
+Assent, Recon, OCR, or semantic-history replay. The workstream dependencies
+below order this repository's safe cutover; they do not define an adopter's
+required protocol stack.
+
 ## Workstream graph
 
 ```text
@@ -361,7 +368,7 @@ The direct-fact owner reads accepted decisions and the metamodel, not oracle
 files. One change may not alter compiler code and expected facts unless an
 independently reviewed expected-delta manifest explains every semantic change.
 
-Small Shop Fulfilment is the canonical end-to-end consumer. It does not replace
+Small Shop Fulfilment is the primary end-to-end fixture. It does not replace
 the three independent compiler controls.
 Quiet Bell, feature-isolation, and Greenhouse remain independent conformance controls.
 CC-021 owns controlled ontology and domain source bytes plus raw `SCENARIO_SELECTION` and `SOURCE_TIME_CONTEXT` fixture parameters only.

@@ -1,0 +1,74 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PROGRAM-001",
+      "OKG-D013"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:01b11e96fd935c220f3263d615b6c48cd3ee2bc3c9a4fb155c3fff749447db34",
+        "before_digest": "sha256:f3cf195998a40891cb76584f43ad677b325575bc7aba28484dcf816ddcd501dd",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:10f93af71dd6452c7775eeaed8efd467ad6310ea02c172a9059521ddd5c0cbb5",
+        "before_digest": "sha256:807f5d2b39a2b7d1729cf4ec6b548c4c37459ee73995506afde4fced963b6ef8",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:27a3847922891ad0d2ee31583825f255a42408c0ad8e344e6f1cec17b8a97686",
+        "before_digest": "sha256:5df010fd544128e56aa8b5f4fc201fd75f12cefbf040ca6724bcf5a6ac02a512",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:634953f559c667f3174e9b9ff22b2b201f114ca731acd67cdeb16ca6294182f7",
+        "before_digest": "sha256:280abd5f7c1a39c1ddc73e4b0330b49b8162c58191aaedeb985f133e1bdbc5bf",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:caa091988022a8e5df9ba1738ac032c148c15cb89f9e03b72099880bcf244434",
+  "entry_id": "OVR-000258",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4d192b09ed875f62a27d68b2776255775a5d43159fdc12a28fe1c3f8fbd0adc9",
+  "recorded_at": "2026-08-31T18:34:32Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_inquisition.py",
+      "type": "DOCUMENT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 258,
+  "subject": {
+    "id": "protocol-profile-boundary-clarification",
+    "type": "DOCUMENT"
+  },
+  "summary": "Separate protocol invariants, optional profiles, reference implementations, fixtures, and adopter choices.",
+  "why": "The program and Graph Realization design had allowed the current full stack and Small Shop fixture to read as universal protocol requirements. This revision keeps the selected fixture and compiler plan intact while stating their actual scope, separating structural realization from optional governance, and adding mechanical regression checks against future authority leakage."
+}

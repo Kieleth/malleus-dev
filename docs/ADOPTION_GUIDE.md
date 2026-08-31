@@ -25,6 +25,14 @@ keep doing it after week one, which is where most projects fail.
 Malleus is a ladder. Climb only as high as your project needs. Most projects
 stop at level 2 or 3.
 
+The ladder is a convenience map for the current Python reference
+implementation, not a claim that every Malleus adopter must traverse one
+serial stack. Each higher guarantee is an optional profile. An adopter may
+stop, replace an implementation behind a conforming boundary, or omit a
+profile and give up only that profile's guarantees. The authoritative role
+definitions are in the
+[protocol boundary taxonomy](protocol-boundary-taxonomy).
+
 | Level | What you get | What you use | Use it when |
 |-------|-------------|--------------|-------------|
 | 1 | Shared vocabulary | Your YAML schema + LinkML code generators. No malleus runtime. | You want one source of truth for types across frontend, backend, and data. |
@@ -43,7 +51,7 @@ want levels 1 to 3. Do not let the top of the ladder scare you off the bottom.
 
 ## Day one
 
-### 1. Get the root schema
+### 1. Get the default typed-graph schema
 
 Two options. Installing the package gives you the schema plus the runtime:
 
@@ -100,15 +108,21 @@ registry = OntologyRegistry(
 )
 ```
 
-### 3. Extend, never redefine
+### 3. Extend the default profile, never redefine it
 
-Everything in malleus is one of five things. Your concepts subclass them:
+Every record using the default typed-graph profile is one of five things. Your
+concepts subclass them:
 
 - **Entity**: a thing that persists. A drug, a server, a character, an invoice.
 - **Event**: a thing that happens. A deployment, an attack, a payment.
 - **Signal**: a quality computed from events. A risk score, a health status.
 - **Agent**: a trait (mixin) for anything that can act or decide.
 - **Relation**: a typed, directed edge between entities, itself a record with an id.
+
+These five primitives are a supplied modeling profile, not universal protocol
+law. A project using another type system can still implement Malleus protocol
+invariants, but it cannot claim this profile unless it preserves its contracts
+and passes its conformance tests.
 
 ```yaml
 classes:

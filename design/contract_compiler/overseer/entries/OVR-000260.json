@@ -1,0 +1,40 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:511921e7bc0702ba3e0acc52fc2702c27fc01dd19f7c81e7c8111af9c10f9971",
+        "before_digest": "sha256:634953f559c667f3174e9b9ff22b2b201f114ca731acd67cdeb16ca6294182f7",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:e592f1a5ac5369313dc79ef96e9d221110b6858b3f5501632fa37406d9fffe82",
+  "entry_id": "OVR-000260",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:575b479b674014911aa34604fc70987e38ac7401aa237c0fcd70f25fa0828313",
+  "recorded_at": "2026-08-31T18:50:42Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_inquisition.py",
+      "type": "DOCUMENT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 260,
+  "subject": {
+    "id": "inquisitor-example-role-guard",
+    "type": "DOCUMENT"
+  },
+  "summary": "Prevent illustrative examples from being classified as conformance fixtures by default.",
+  "why": "The self-inquisition guidance correctly keeps Quiet Bell, Neutral Greenhouse, Small Shop, and CYP450 bounded but overgeneralized that role to every future example. This test binds the narrower rule: only a bounded frozen test input, answer key, or scenario is a conformance fixture, and every other example must be classified from its actual purpose."
+}

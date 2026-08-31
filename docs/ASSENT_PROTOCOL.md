@@ -4,6 +4,13 @@ Malleus separates structural graph materialization, epistemic acceptance, and
 action authorization. These are different operations with different records
 and state machines.
 
+Assent is an `OPTIONAL_PROFILE`. The separation between structural validity,
+epistemic acceptance, and authorization is a protocol invariant; adopting
+these exact records, events, state machines, and ledger is not. Projects that
+do not claim the Assent profile may use structural admission alone. The schema,
+Python handlers, and JSONL envelope described here are the current reference
+implementation of this profile.
+
 The assent schema is `ontology/assent.yaml`. It imports the minimal Malleus
 root ontology rather than expanding that root with protocol-specific concepts.
 

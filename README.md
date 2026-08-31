@@ -4,7 +4,8 @@
 [![Python](https://img.shields.io/pypi/pyversions/malleus-dev.svg)](https://pypi.org/project/malleus-dev/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-A root ontology in LinkML, and the opinion that words have power.
+A protocol for typed, fail-closed semantic change, with a Python reference
+implementation and the opinion that words have power.
 
 ## Why this exists
 
@@ -14,16 +15,19 @@ The practical bet: if you define your domain once, in an ontology, you can propa
 
 When that actually happens across a codebase, something unexpectedly useful shows up. Components stop drifting apart. The frontend and backend stop disagreeing about what a "Drug" is. A new contributor learns one vocabulary instead of five. Whole classes of bugs (the ones caused by definitions sliding between modules) just stop existing. Adding a new concept becomes one change in one file, flowing outward through whatever code generators you've wired up.
 
-That's malleus: a small, stable root vocabulary, plus the mechanics to keep everything built on top of it honest.
+That's Malleus: portable protocol invariants, optional profiles, and reference
+tools for keeping declared meaning honest. The bundled typed-graph stack is one
+way to adopt those invariants, not the definition of the protocol. See the
+[protocol boundary taxonomy](docs/PRINCIPLES.md#protocol-boundary-taxonomy).
 
 Current package boundary: `0.13.3`, `stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
 
-## The core primitives
+## Default typed-graph profile
 
-Everything in malleus is one of five things:
+The bundled typed-graph profile models records through five root primitives:
 
 - **Entity**: something that persists through time. A drug, a server, a person, a concept.
 - **Event**: something that happens. A click, a deployment, an interaction detected.
@@ -33,7 +37,10 @@ Everything in malleus is one of five things:
 
 Plus four cross-cutting mixins so every typed thing can carry basics without reinventing them: `Identifiable` (id, name), `Temporal` (created_at, updated_at), `Describable` (description, tags), `Statusable` (ACTIVE, INACTIVE, DESTROYED).
 
-Domains extend this root. CYP450 drug interactions, MITRE ATT&CK threat models, both come with examples in this repo. Writing your own is a YAML file.
+Domains using this profile extend its root. CYP450 drug interactions and MITRE
+ATT&CK threat models are examples, not protocol vocabulary. Adopters may use a
+different representation while preserving the protocol invariants and any
+optional profiles they claim.
 
 ## Install
 
@@ -84,7 +91,9 @@ assert op.op_status.value == "REJECTED"
 print(op.rejection_reason)   # "Unknown entity type: 'NotAType'"
 ```
 
-The `OntologyRegistry` is the constructor parameter for the `KnowledgeGraph`. No registry, no KG. That's the rule, and it's the whole point: the graph can only ever hold things the ontology says exist.
+In the Python reference implementation, `OntologyRegistry` is the constructor
+parameter for `KnowledgeGraph`. No registry, no governed graph in this profile:
+the graph can only hold records admitted by its bound contract.
 
 `STAGED` means an operation passed validation inside an isolated candidate. `COMMITTED` means it was structurally materialized. Neither means the record is true, epistemically accepted, or authorized for action.
 
@@ -284,8 +293,9 @@ mistaken for the complete state. Projection also refuses if selected records
 lose a required endpoint; dependency-closed temporal projection remains open.
 
 A later retroactive supersession affects only transaction views that include
-the later event. The JSONL ledger is the authority; NetworkX is rebuilt as a
-defensive projection. Accepted projections omit the local
+the later event. Within the optional semantic-history profile, the JSONL ledger
+is the authority and NetworkX is rebuilt as a defensive projection. Accepted
+projections omit the local
 `KnowledgeGraph.operations` audit because those operation timestamps are
 execution-local and are not ledger commitments.
 
@@ -296,7 +306,9 @@ serialization remain outside version 0.13.3.
 
 ## Architecture
 
-For the layer-by-layer walkthrough (vocabulary, typed graph, ground truth loading, logic engine, distributed convergence), see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+For the layer-by-layer walkthrough (vocabulary, typed graph, example seed-data
+loading, logic engine, distributed convergence), see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Adoption guides:
 - [docs/PRINCIPLES.md](docs/PRINCIPLES.md): what malleus claims and what it does not, the six principles the rites defend, and the future work that is reserved rather than asserted

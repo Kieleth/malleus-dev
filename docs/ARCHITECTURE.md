@@ -2,11 +2,19 @@
 
 A Feynman-style walkthrough of the system. No jargon without explanation. Building blocks first, then assembly.
 
+This document describes the current Python reference stack. Its LinkML-shaped
+sources, five graph primitives, NetworkX store, Prolog verifier, JSONL ledger,
+and projectors are not universal Malleus requirements. The
+[protocol boundary taxonomy](protocol-boundary-taxonomy)
+separates protocol invariants, optional profiles, reference implementations,
+fixtures, and adopter choices.
+
 ---
 
-## Layer 0: The Vocabulary (What CAN Exist)
+## Layer 0: Default Typed-Graph Vocabulary (What CAN Exist)
 
-Everything starts with a YAML file that says what things are allowed in this universe.
+In this reference stack, the typed-graph profile starts with a YAML file that
+says what records are allowed in its governed universe.
 
 ```
 malleus.yaml (the root vocabulary)
@@ -17,7 +25,10 @@ malleus.yaml (the root vocabulary)
 └── Relation  "a typed edge between two entities"
 ```
 
-This is the root. It doesn't know about drugs or hackers. It just knows: things exist, things happen, things relate.
+This is the profile's root. It doesn't know about drugs or hackers. It just
+knows: things exist, things happen, things relate. Another conforming Malleus
+implementation may choose another representation and claim only the profiles
+it implements.
 
 Then a domain extension adds specifics:
 
@@ -208,7 +219,7 @@ KnowledgeGraph (kg.py)
 
 Tests verify that invalid types, properties, values, identifiers, predicates, and endpoints reject without graph mutation. `COMMITTED` means structural materialization only. It does not mean true, epistemically accepted, or authorized for action.
 
-The separate [Assent Protocol](ASSENT_PROTOCOL.md) defines immutable protocol
+The optional [Assent Protocol](ASSENT_PROTOCOL.md) profile defines immutable protocol
 records, disjoint assessment and decision outcomes, replay-derived transition
 state, and a strict hash-linked JSONL envelope. It does not change the meaning
 of `Operation.COMMITTED`.
@@ -247,9 +258,11 @@ This is structural materialization, not assent-gated accepted-graph projection.
 
 ---
 
-## Layer 2: The Ground Truth (Static Data)
+## Layer 2: CYP450 Example Seed Data (Not Ground Truth)
 
-Before Shelob runs, we load curated pharmacological data into the KG.
+Before Shelob runs, this example loads curated pharmacological seed data into
+the KG. The seed is a bounded fixture: it exercises the implementation but is
+not factual ground truth and has no authority over the protocol.
 
 ```
 cyp450_seed.yaml → load_cyp450_data() → KnowledgeGraph
@@ -369,10 +382,12 @@ the code-level boundary between experimental condition C3, monitoring recorded
 with control disabled, and C4, the same monitoring followed by explicit policy
 control.
 
-## Layer 3c: Assent-Gated Accepted Graph
+## Layer 3c: Optional Assent-Gated Accepted Graph
 
-Stage 7b connects the Stage 4 structural candidate to the Stage 6 epistemic
-decision without collapsing their meanings.
+When the Assent and semantic-history profiles are selected, Stage 7b connects
+the Stage 4 structural candidate to the Stage 6 epistemic decision without
+collapsing their meanings. Projects that need only structural admission may
+stop before this layer.
 
 ```text
 Externally supplied graph
@@ -399,7 +414,7 @@ ProposedSubgraph -> monitor outputs -> EpistemicDecision
               replay-derived NetworkX graph
 ```
 
-The JSONL ledger is authoritative. Candidate registration and accepted
+Within this optional profile, the JSONL ledger is authoritative. Candidate registration and accepted
 application replay both restage the exact writes against the reconstructed
 accepted graph and recompute all digests. A candidate-bound `ACCEPT` requires
 one application in the same event. Non-accepting verdicts require none. The
@@ -617,7 +632,7 @@ not proof that either data-flow direction is safe.
 
 ---
 
-## The Full Stack (Library)
+## The Full Stack (Python Reference Implementation)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

@@ -1,14 +1,15 @@
-"""Command-line entry for the Ordo Malleus mechanical rites.
+"""Command-line entry for the Malleus root ontology profile rites.
 
 Usage:
     malleus-inquisitor path/to/schema.yaml
     malleus-inquisitor path/to/schema.yaml --map malleus=vendor/malleus.yaml --json
     malleus-inquisitor install-skills [--user | --project DIR] [--agent AGENT]
 
-Exit code 0 with a purity seal, 1 when heresies are recorded, 2 on bad usage
-or a broken instrument (an unreadable or malformed rubric). A broken subject
-is a finding; a broken instrument is never reported as one, because an
-operator reading exit 1 must be able to trust that their schema was judged.
+Exit code 0 with a root ontology profile purity seal, 1 when heresies are
+recorded, 2 on bad usage or a broken instrument (an unreadable or malformed
+rubric). A broken subject is a finding; a broken instrument is never reported
+as one, because an operator reading exit 1 must be able to trust that their
+schema was judged.
 """
 
 from __future__ import annotations
@@ -90,7 +91,7 @@ def main(argv: list[str] | None = None) -> int:
         return _install_skills(argv[1:])
     parser = argparse.ArgumentParser(
         prog="malleus-inquisitor",
-        description="Ordo Malleus: mechanical rites over a malleus-derived schema.",
+        description="Mechanical rites for the Malleus root ontology profile.",
     )
     parser.add_argument("schema", help="path to the project's LinkML schema")
     parser.add_argument("--map", action="append", default=[], metavar="NAME=PATH",
@@ -140,7 +141,7 @@ def main(argv: list[str] | None = None) -> int:
             else str(bundled_ontology_path("malleus.yaml").resolve())
     except Exception:  # noqa: BLE001 - reporting must never outrank the report
         root_used = args.root or "<no bundled root found>"
-    print(f"ORDO MALLEUS :: inquisition of {args.schema}")
+    print(f"ORDO MALLEUS :: ROOT ONTOLOGY PROFILE :: inquisition of {args.schema}")
     print(f"malleus {malleus.__version__}, root {root_used}")
     print(f"rubric {rites.path} (v{rites.version}, sha256 {rites.digest[:12]}…)")
     print(f"{len(rites.disabled_mechanical)} mechanical and "
@@ -157,7 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     if report.purity:
         # A seal is only as wide as the rubric that granted it, and it says so
         # on its face: silence from a rite that never ran is not a pass.
-        print("PURITY SEAL GRANTED"
+        print("ROOT ONTOLOGY PROFILE PURITY SEAL GRANTED"
               + (f" UNDER A TUNED RUBRIC ({len(disabled)} disabled, "
                  f"{len(downgraded)} downgraded). "
                  "The unjudged are not thereby innocent."

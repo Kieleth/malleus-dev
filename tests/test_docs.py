@@ -76,6 +76,13 @@ PUBLIC_GUIDE_ROOT_IMPORTS = (
     "stage_subgraph",
 )
 PUBLIC_IMPORT_TARGETS = {"malleus", "malleus.OntologyRegistry"}
+PROTOCOL_BOUNDARY_ROLES = (
+    "PROTOCOL_INVARIANT",
+    "OPTIONAL_PROFILE",
+    "REFERENCE_IMPLEMENTATION",
+    "CONFORMANCE_FIXTURE",
+    "ADOPTER_CHOICE",
+)
 MYST_CONFIG = MdParserConfig(enable_extensions=set(), fence_as_directive=set())
 MYST_PARSER = create_md_parser(MYST_CONFIG, RendererHTML)
 MYST_TOPMATTER_CONFIG_KEYS = {"html_meta", "myst", "substitutions"}
@@ -2069,3 +2076,45 @@ def test_unrecognized_executable_markup_is_refused() -> None:
 
     root_import = ast.parse("from malleus import OntologyRegistry")
     assert _forbidden_example_operations(root_import) == []
+
+
+def test_protocol_boundary_taxonomy_is_closed_and_separates_capability_status() -> None:
+    principles = (DOCS / "PRINCIPLES.md").read_text(encoding="utf-8")
+    normalized = " ".join(principles.split())
+
+    assert "## Protocol boundary taxonomy" in principles
+    assert all(role in principles for role in PROTOCOL_BOUNDARY_ROLES)
+    assert "Capability status is a separate axis" in normalized
+    assert "One document or module may contain several roles" in normalized
+
+
+def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
+    for path in (ROOT / "README.md", DOCS / "ADOPTION_GUIDE.md"):
+        text = path.read_text(encoding="utf-8")
+        assert "Everything in malleus is one of five things" not in text
+
+
+def test_semantic_history_is_an_optional_profile() -> None:
+    design = (
+        ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md"
+    ).read_text(encoding="utf-8")
+
+    assert "The semantic-history and replay profile is optional." in design
+
+
+def test_graph_realization_separates_structure_governance_and_fixture_authority() -> None:
+    design = (
+        ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+    ).read_text(encoding="utf-8")
+
+    assert "StructuralGraphRealization" in design
+    assert "GovernedAcceptedRealization" in design
+    assert "No fixture has protocol authority." in design
+    assert "structurally independent fixture" in design
+    assert "`PROTOCOL_INVARIANT`" in design
+
+
+def test_architecture_does_not_call_a_domain_example_ground_truth() -> None:
+    architecture = (DOCS / "ARCHITECTURE.md").read_text(encoding="utf-8")
+
+    assert "## Layer 2: The Ground Truth (Static Data)" not in architecture

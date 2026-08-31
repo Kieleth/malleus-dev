@@ -2981,10 +2981,8 @@ def test_quiet_bell_completion_transaction_is_exact() -> None:
     assert completion["data"]["new_state"] == "COMPLETE"
     assert completion["data"]["blockers"] == []
     assert completion["data"]["evidence_entry_ids"] == ["OVR-000256"]
-    head = _read_json(CONTRACT / "overseer/head.json")
-    assert head["entry_count"] == 257
-    assert head["head_entry_id"] == "OVR-000257"
-    assert head["head_hash"] == completion["entry_hash"]
+    assert verification["previous_entry_hash"] == revision["entry_hash"]
+    assert completion["previous_entry_hash"] == verification["entry_hash"]
 
 
 def test_quiet_bell_completion_preserves_adjacent_authority() -> None:

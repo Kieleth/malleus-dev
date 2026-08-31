@@ -1,4 +1,4 @@
-"""The Ordo Malleus: mechanical rites for inspecting a malleus-derived schema.
+"""Mechanical rites for the Malleus root ontology profile.
 
 (An ontology named after a hammer attracts inquisitors. We keep them
 useful.)
@@ -35,6 +35,7 @@ _TYPE_SLOTS = {"Event": "event_type", "Relation": "relation_type", "Signal": "si
 
 
 RUBRIC_PATH = Path(__file__).parent / "rubric.yaml"
+REPORT_SCOPE = "root-ontology-profile"
 
 
 class RubricError(RuntimeError):
@@ -351,6 +352,7 @@ class Report:
         return json.dumps(
             {
                 "schema": self.schema_path,
+                "scope": REPORT_SCOPE,
                 "purity": self.purity,
                 "rubric": Path(self.rites.path).name,
                 "rubric_version": self.rites.version,

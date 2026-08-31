@@ -8,14 +8,14 @@ Decision authority: author
 
 Accepted decisions: `OKG-D000`, ontology-driven KG realization is a pillar;
 `OKG-D012`, LinkML is the replaceable first-party contract frontend for v0;
-`OKG-D013`, Small Shop Fulfilment is the canonical running fixture;
+`OKG-D013`, Small Shop Fulfilment is the selected primary vertical fixture;
 contract compiler `AD-001`, `AD-003` through `AD-005`, `OD-001` through
 `OD-008`, and `OD-010` through `OD-014`
 
 Decision dates: 2026-08-17, 2026-08-24, 2026-08-25, 2026-08-26, 2026-08-27,
 and 2026-08-28
 
-Canonical running-fixture decision: `OKG-D013` selects fixture object
+Primary vertical-fixture decision: `OKG-D013` selects fixture object
 `OKG-FX001`, **Small Shop Fulfilment**
 
 Public ancestry base: `27ca54c33fe705827bc845e876cb6ff24293c8f0`.
@@ -48,6 +48,11 @@ paper/research worktrees remain outside this document.
 
 Ontology-driven KG realization is a Malleus pillar.
 
+Graph Realization is an `OPTIONAL_PROFILE`. It defines deterministic
+construction and structural admission boundaries without requiring Assent, a
+protocol ledger, or an accepted temporal projection. Those mechanisms belong
+to separately claimable profiles.
+
 The pillar name keeps the ontology visible. The enclosed mechanism is the
 `Graph Realization Protocol`, because “ontology-to-KG” would incorrectly imply
 that the ontology alone supplies mappings, identities, recipes, and instances.
@@ -56,27 +61,37 @@ The pillar asks a precise question:
 
 > Given an evolving effective domain contract, what additional declared inputs
 > are required to deterministically derive a target graph schema, construct a
-> candidate instance graph, diagnose every gap, admit the candidate through
-> Malleus, and reproduce or migrate the result?
+> candidate instance graph, diagnose every gap, pass structural admission, and
+> reproduce or migrate the result? When governance profiles are selected, what
+> additional inputs bind that result to an accepted projection?
 
-This is a protocol inside the protocol. Its compiler has no privileged write
-path. It produces an exact construction plan whose operations pass through the
-existing structural gate, staging, monitoring, decision, and materialization
-mechanisms.
+This is an optional profile inside the protocol. Its compiler has no privileged
+write path. It produces an exact construction plan whose operations pass
+through the existing structural gate and staging mechanism. Monitoring,
+epistemic decision, semantic history, and accepted projection are optional
+governance extensions to that structural result.
 
 The pillar, OTTR recipe formalism, and replaceable LinkML frontend boundary are
 accepted. The exact contract object model, backend profiles, mapping artifacts,
 ledger integration, and public API remain candidate design.
 
-### 1.1 Canonical running fixture: Small Shop Fulfilment
+### 1.1 Primary vertical fixture: Small Shop Fulfilment
 
 `OKG-D013` selects `OKG-FX001`, **Small Shop Fulfilment**, as the canonical
-running domain for this pillar. `OKG-D013` is the accepted decision;
-`OKG-FX001` is the fixture object it selects. Every explanation, object-model
-decision, Gedankenexperiment, conformance fixture, and eventual public example
-for Graph Realization must use this domain first. A different domain may be an
-independent stress fixture. Replacing this domain requires a superseding
-decision and dependency-impact analysis.
+running domain for this pillar. Here, canonical means the first maintained
+end-to-end example, not a normative domain model. `OKG-D013` is the accepted
+decision; `OKG-FX001` is the fixture object it selects. The program uses this
+fixture to keep one vertical explanation and regression thread coherent.
+Independent fixtures remain separate controls and do not require Small Shop
+vocabulary or topology. Replacing the primary program fixture requires a
+superseding decision and dependency-impact analysis.
+
+No fixture has protocol authority. A rule suggested by Small Shop remains
+fixture-local until a structurally independent fixture exercises the same
+boundary and independent justification and conformance evidence show that the
+rule is domain-neutral. A vocabulary rename or another retailer scenario is
+not structurally independent. Only then may the rule be proposed as a
+`PROTOCOL_INVARIANT`; repetition does not promote it automatically.
 
 `OKG-FX001` is synthetic and informed by Fahland's published example. It is not
 copied source data. Its retail vocabulary remains fixture-local and does not
@@ -547,13 +562,26 @@ GraphConstructionPlan
 CandidateSubgraph
   = stage(GraphConstructionPlan.proposed_operations)
 
-GraphRealization
-  = decide_and_materialize(CandidateSubgraph, EpistemicPolicy)
+StructuralGraphRealization
+  = structurally_materialize(CandidateSubgraph)
+
+GovernedAcceptedRealization
+  = decide_and_project(
+      CandidateSubgraph,
+      EpistemicPolicy,
+      ProtocolLedger,
+    )
 ```
 
 Every function above returns either a content-addressed result or typed gaps.
 No phase silently drops a source field, ontology fact, recipe member, proposed
 operation, or target capability mismatch.
+
+`StructuralGraphRealization` is the profile's sufficient structural output. It
+claims contract-bound construction and atomic admission, not truth or
+acceptance. `GovernedAcceptedRealization` is optional and exists only when the
+adopter also selects the Assent and semantic-history profiles. It adds the
+guarantees of those profiles without redefining the structural output.
 
 ### Phase 0: Resolve the effective contract
 
@@ -689,20 +717,24 @@ refusals remain refusals. The compiler cannot filter or rewrite rejected
 operations after observing the gate. A new plan revision must preserve the
 failed attempt and its diagnostics.
 
-Logical, temporal, conflict, uncertainty, evidence, and authority monitors are
-selected by exact policy. A backend projection check also verifies that the
-target artifact and runtime behavior agree for the exercised semantics.
+The structural branch verifies admission plus the exercised backend projection
+semantics. Logical, temporal, conflict, uncertainty, evidence, and authority
+monitors are selected only when their optional profiles and exact policies are
+claimed.
 
-Output: staged candidate, operations, monitor records, and typed witnesses.
+Output: staged candidate, operations, structural diagnostics, and, when
+selected, profile-specific monitor records and typed witnesses.
 
-### Phase 7: Decide and materialize
+### Phase 7: Materialize structurally, optionally govern
 
-Structural validity is not epistemic acceptance. A candidate-bound `ACCEPT`
-may produce an accepted graph application through the existing protocol.
-`REJECT`, `DEFER`, and `CONTEST` leave the base graph unchanged.
+Structural materialization produces a `StructuralGraphRealization` and makes no
+epistemic claim. If the Assent and semantic-history profiles are also selected,
+a candidate-bound `ACCEPT` may produce a `GovernedAcceptedRealization` through
+the existing protocol. `REJECT`, `DEFER`, and `CONTEST` leave that governed
+base graph unchanged.
 
-Output: a materialized structural snapshot or accepted temporal graph version,
-with exact protocol heads.
+Output: a materialized structural snapshot, or, under the optional governance
+profiles, an accepted temporal graph version with exact protocol heads.
 
 ### Phase 8: Attest the realization
 
@@ -721,6 +753,10 @@ decision and materialization heads
 resulting graph identity
 execution identity
 ```
+
+Decision and protocol-head fields are present only for a
+`GovernedAcceptedRealization`. A structural attestation binds the construction
+and structural result without inventing ledger coordinates.
 
 The attestation proves replay of the recorded construction under the declared
 implementation boundary. It does not prove source truth, producer honesty, or
@@ -1035,6 +1071,8 @@ lineage described here.
 14. Same deterministic inputs produce the same plan and digest.
 15. Contract evolution traverses all projections, recipes, mappings, plans,
     attestations, and affected graph records before migration can succeed.
+16. A fixture-derived rule remains local until a structurally independent
+    fixture and independent justification support the same boundary.
 
 Minimum typed gap codes are:
 

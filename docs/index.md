@@ -3,6 +3,11 @@
 This repository build presents the public guides and validated engineering
 projections. It does not publish a site or create a release artifact.
 
+Start with the
+[protocol boundary taxonomy](protocol-boundary-taxonomy). It
+distinguishes portable protocol invariants from optional profiles, the current
+reference implementation, conformance fixtures, and adopter choices.
+
 ```{toctree}
 :maxdepth: 2
 

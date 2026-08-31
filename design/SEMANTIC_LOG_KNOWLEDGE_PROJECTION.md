@@ -4,6 +4,12 @@ Status: non-authoritative literature and design synthesis. Current-capability
 statements are observational and must defer to code and implementation-status
 documents.
 
+The semantic-history and replay profile is optional. It adds a retained
+authority, historical replay, and accepted-view reconstruction to the base
+protocol. An adopter may omit it and retain only the guarantees of the lower
+profiles it implements. The current JSONL ledger and NetworkX projector are a
+reference implementation of this profile, not universal storage requirements.
+
 Evidence pass: 2026-08-28.
 
 ## The exact question
@@ -18,7 +24,7 @@ protocol recognized and decided, not everything that happened in the domain.
 The accepted graph represents protocol-governed commitments, not factual truth
 by definition.
 
-The target thesis is:
+Within this optional profile, the target thesis is:
 
 > Given a declared contract and complete retained input closure, Malleus can
 > treat one ordered protocol ledger as the authoritative history of admitted
@@ -436,7 +442,8 @@ replace one stage through typed boundaries and conformance tests.
 3. stOTTR 0.1.4 under the Malleus GraphRecipe Profile v0 remains the selected
    authored topology-template representation. OTTR expands finite topology; it
    does not govern evidence, admission, provenance, migration, or effects.
-4. The protocol ledger remains the one linear write authority.
+4. Within the semantic-history and replay profile, the protocol ledger remains
+   the one linear write authority.
 5. Causal and dependency relations remain typed KG structure, not a separate
    DAG subsystem.
 6. Contract facts, protocol events, graph operations, and accepted views remain
@@ -568,8 +575,9 @@ Passing examples alone would not establish closure.
 
 Defensible:
 
-> Malleus uses one ontology-bound protocol ledger as the authoritative history
-> for replay-derived accepted temporal knowledge views.
+> When the semantic-history and replay profile is selected, Malleus uses one
+> ontology-bound protocol ledger as the authoritative history for
+> replay-derived accepted temporal knowledge views.
 
 > The design composes established log, event-sourcing, temporal-KG,
 > knowledge-representation, provenance, and neurosymbolic lineages behind an

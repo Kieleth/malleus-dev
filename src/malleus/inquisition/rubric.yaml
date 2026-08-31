@@ -29,7 +29,7 @@
 # packaged file works and is reverted without warning by the next upgrade,
 # taking every severity you raised with it.
 
-version: 9
+version: 10
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -132,6 +132,34 @@ mechanical:
       must not be flagged; the unimplemented value behind it must be).
 
 judgment:
+  - id: protocol_role_is_explicit
+    question: >-
+      Does every deliverable and capability claim name its lowest affected
+      profile and classify its role as PROTOCOL_INVARIANT, OPTIONAL_PROFILE,
+      REFERENCE_IMPLEMENTATION, CONFORMANCE_FIXTURE, or ADOPTER_CHOICE,
+      without treating a shipped default or a fixture as protocol authority?
+    severity: HERESY
+    lesson: >-
+      A reference implementation can faithfully realize a protocol invariant,
+      and a conformance fixture can exercise it. Neither is itself the
+      invariant. When those roles are left implicit, the most complete default
+      quietly becomes mandatory and the current example's vocabulary becomes
+      universal doctrine. Classification is about the authority of the claim,
+      not its file location: protocol prose can describe an adopter choice,
+      while runtime code can enforce a genuine invariant.
+  - id: optional_profile_stays_optional
+    question: >-
+      Does an OPTIONAL_PROFILE stay optional outside its declared lowest
+      affected profile, while dependencies genuinely required within that
+      profile remain allowed?
+    severity: HERESY
+    lesson: >-
+      Requiring LinkML or an EffectiveContract within the compiler-enabled
+      profile is legitimate. Requiring either from adopters who do not claim
+      that profile turns one toolchain into the protocol. This rite does not
+      condemn profile-internal dependencies. It condemns an optional profile,
+      default adapter, fixture, or derived artifact leaking into core APIs,
+      unqualified success claims, or unrelated conformance gates.
   - id: gate_integrity
     question: >-
       Is the registry constructor-required and enforced on EVERY write path:

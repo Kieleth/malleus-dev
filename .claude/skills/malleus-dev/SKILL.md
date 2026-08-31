@@ -28,7 +28,25 @@ in the same change.
 
 ## Before you build: bind the slice
 
-Record these four items before writing code:
+Before writing code, classify every deliverable and every capability claim.
+Use exactly one role for each claim:
+
+- `PROTOCOL_INVARIANT`: a domain-, fixture-, adapter-, and backend-independent
+  rule of the base protocol.
+- `OPTIONAL_PROFILE`: an additional set of guarantees that becomes normative
+  only when an adopter claims that profile.
+- `REFERENCE_IMPLEMENTATION`: one shipped way to realize a claimed profile.
+- `CONFORMANCE_FIXTURE`: frozen evidence that tests a boundary. A fixture is
+  never protocol vocabulary or authority.
+- `ADOPTER_CHOICE`: a domain, representation, storage, workflow, or policy
+  decision outside the guarantees of the claimed profiles.
+
+For each deliverable, name the lowest affected profile and the guarantees
+omitted when that profile is not selected. Stop if the classification or
+profile is unclear. A shipped default does not become a protocol invariant by
+being convenient, and a fixture does not become one by catching a real bug.
+
+Then record these four items:
 
 1. The exact claim or requirement being satisfied.
 2. The smallest observation that would show it holds or fails.
@@ -168,7 +186,11 @@ Output derivedFrom InputArtifact
 The graph records the dependency. Tests establish that the implementation
 obeys it.
 
-## Accepted contract-frontend boundary
+## Accepted compiler-enabled profile boundary
+
+This section applies only when the compiler-enabled profile is claimed. It
+does not make the compiler, LinkML, or an EffectiveContract mandatory for the
+base protocol or for adopters that select other profiles.
 
 For v0, LinkML is the sole first-party human-authored ontology frontend. A
 LinkML source must be interpreted by an exact, execution-identified official
@@ -184,13 +206,14 @@ lineage. Malleus validates and canonicalizes that result into an
 Any custom frontend may replace LinkML at this boundary if it emits the same
 normative intermediate and passes the same frontend conformance suite. Direct
 contract facts remain an internal bootstrap and conformance input, not a
-second first-party authoring language. Runtime graph construction,
-GraphRecipe, admission, replay, and migration consume the compiled contract
-and must run without LinkML installed.
+second first-party authoring language. Within integrations that claim this
+profile, runtime graph construction, GraphRecipe, admission, replay, and
+migration consume the compiled contract and must run without LinkML installed.
 
 Generated JSON Schema, SHACL, OWL, RDF, Python, or other schemas are optional
-projections. Each binds its generator and profile and reports semantic
-coverage and loss. No projection can bypass the effective contract.
+projections of this profile. Each binds its generator and profile and reports
+semantic coverage and loss. While the compiler-enabled profile is claimed, no
+projection can bypass the effective contract.
 
 ## Implementation sequence
 
@@ -215,6 +238,14 @@ passes the same suite. Never retain an implicit fallback or two authoritative
 interpretations of the same source language.
 
 ## Completion gate
+
+Before declaring completion, perform a self-inquisition over the changed
+claims and boundaries. Apply `protocol_role_is_explicit` and
+`optional_profile_stays_optional`, record the lowest affected profile and its
+omitted guarantees, and correct any fixture or default that acquired normative
+authority. Run the mechanical schema rites only when the root ontology profile
+is in scope. A root ontology profile purity seal is not repository or protocol
+conformance.
 
 A modularity claim is supported only when all applicable checks pass:
 

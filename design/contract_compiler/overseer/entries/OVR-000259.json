@@ -1,0 +1,41 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-012"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:6c2e046550301aee74de56e94525f774482e7a88127f4c0e72921e72cc377da9",
+        "before_digest": "sha256:64d6c422c77be0cd962937eb84785cbb9f395121996dae8833b749e0d3533131",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:575b479b674014911aa34604fc70987e38ac7401aa237c0fcd70f25fa0828313",
+  "entry_id": "OVR-000259",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:caa091988022a8e5df9ba1738ac032c148c15cb89f9e03b72099880bcf244434",
+  "recorded_at": "2026-08-31T18:44:28Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 259,
+  "subject": {
+    "id": "quiet-bell-history-extensibility-guard",
+    "type": "DOCUMENT"
+  },
+  "summary": "Keep the Quiet Bell completion test exact without freezing the overseer ledger tip.",
+  "why": "The historical transaction test correctly binds entries 255 through 257 but incorrectly required entry 257 to remain the final ledger head. Replacing that global-tip assertion with exact local hash-chain assertions preserves the intended history check and permits later append-only governance entries."
+}

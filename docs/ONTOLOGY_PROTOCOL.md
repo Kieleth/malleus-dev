@@ -1,12 +1,19 @@
 # Ontology Protocol
 
-How to adopt the Malleus root ontology in any project.
+How to adopt the default Malleus typed-graph ontology profile in a project.
+
+This root ontology is an `OPTIONAL_PROFILE`, not the universal Malleus data
+model. It gives adopters one interoperable representation and one tested
+reference path. A project may use another ontology or type system while
+preserving the protocol invariants and claiming only the profiles it actually
+implements.
 
 ---
 
 ## What Malleus provides
 
-A minimal shared identity and metadata layer. Five core concepts:
+A minimal shared identity and metadata layer for the default typed-graph
+profile. It has five root concepts:
 
 | Concept | What it is | BFO/PROV alignment |
 |---------|-----------|---------------------|
@@ -199,9 +206,12 @@ gen-shacl schema/your_project.yaml  # generate SHACL shapes
 
 ## Rules
 
-1. **Never redefine Malleus types.** Extend them. If Entity doesn't have what you need, add slots via `slot_usage` or create a subclass.
+1. **Never redefine types while claiming this profile.** Extend them. If Entity doesn't have what you need, add slots via `slot_usage` or create a subclass.
 
-2. **Never add domain-specific concepts to Malleus.** If it's not universal across all projects, it belongs in your project schema. Push things UP only when two or more projects independently need the same concept.
+2. **Never add domain-specific concepts to the shared profile.** If it is not
+   shared by independent adopters of this profile, it belongs in a project
+   schema. Repeated use can justify a proposal; it does not promote the concept
+   automatically.
 
 3. **Constrain string slots.** Malleus uses `range: string` for extensibility. Your project MUST narrow these to enums or specific types.
 

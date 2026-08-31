@@ -3,6 +3,13 @@
 How to build a governed Knowledge Graph under a bound ontology and admission
 contract.
 
+This document defines an `OPTIONAL_PROFILE`: the default typed-graph structural
+admission profile. An adopter can preserve Malleus protocol invariants with a
+different data model or without materializing a knowledge graph. The
+LinkML-shaped registry, Python `KnowledgeGraph`, and NetworkX store described
+below are the current reference implementation, not universal wire or storage
+requirements.
+
 ---
 
 ## Core principle: the ontology is the KG's constitutive grammar
@@ -38,7 +45,7 @@ identity does not. Current records retain their bytes, content identity, and
 recorded ontology hash. They do not retain a complete reader, interpretation-
 profile, or effective-contract identity.
 
-## Two architectures and Malleus's choice
+## Two architectures and this profile's choice
 
 **Architecture A: Ontology defines KG (constitutive)**
 ```
@@ -71,7 +78,7 @@ Validation report (after the fact)
 The KG is independent. The ontology is an external document. Non-conforming
 data may remain materialized while a validator reports it.
 
-Malleus selects Architecture A for its accepted governed graph. Architecture B
+This profile selects Architecture A for its governed graph. Architecture B
 is valid for diagnostics, migration analysis, and systems whose contract is to
 report rather than gate. It cannot provide Malleus's pre-materialization
 invariant by itself. Store-specific SHACL gates and other validating databases
@@ -80,7 +87,7 @@ invention.
 
 ## Principles
 
-### 1. The KG cannot be constructed without an ontology
+### 1. A governed KG in this profile cannot be constructed without an ontology
 
 The registry loaded from the ontology is a required constructor parameter. No
 registry, no governed `KnowledgeGraph`.
