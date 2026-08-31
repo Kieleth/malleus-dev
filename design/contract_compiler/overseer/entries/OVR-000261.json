@@ -1,0 +1,109 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-016"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:34030a1094bd1ad4a0e65d136eaeed0639104987a70bb98985633ac7e77ff043",
+        "before_digest": "sha256:26c784fc57f384e71c9576feda98aaad8a56d06c47e050a35506a3c8fe816129",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:97cc61d4fe2f6bcfb4905c7444df568144897fb24278756650b19ab127320bcf",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-016-reactivation.json"
+      },
+      {
+        "after_digest": "sha256:bd47e0f0073162534e68f18dd7e9dae13876b72a144cfa37c08a071427d38546",
+        "before_digest": "sha256:26123e398e10fe84a544f4fbd6c8526f018e80f0989fb3243a69fd7f3fa9930f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-016/manifest.json"
+      },
+      {
+        "after_digest": "sha256:75f93dc5370a2827d19f47a6fa5bdb9957bc577f0d7e3999852314dc3733b435",
+        "before_digest": "sha256:6c2e046550301aee74de56e94525f774482e7a88127f4c0e72921e72cc377da9",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:cd6d8049a5f7a6b38c60b6df1cc2b4b07692b5febf1edceb0b5164391fea633a",
+  "entry_id": "OVR-000261",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e592f1a5ac5369313dc79ef96e9d221110b6858b3f5501632fa37406d9fffe82",
+  "recorded_at": "2026-08-31T19:25:59Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/overseer/evidence/CC-016-reactivation.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:97cc61d4fe2f6bcfb4905c7444df568144897fb24278756650b19ab127320bcf",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-016-reactivation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c12e52ea743d8809c91974653b62192b166753e9",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000213",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000222",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000228",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000257",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-016",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 261,
+  "subject": {
+    "id": "cc016-reactivation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Reactivate the independent Greenhouse answer-key boundary.",
+  "why": "Quiet Bell is complete, the operator approved the private test convention for Greenhouse, and both Small Shop gates are complete. This transaction binds seven current dependencies, independent hand-authorship, process-only lesson transfer, and an empty four-scope worker boundary before any Greenhouse answer-key byte is authored."
+}

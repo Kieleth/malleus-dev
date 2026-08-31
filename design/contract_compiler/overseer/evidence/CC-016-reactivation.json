@@ -1,0 +1,75 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25177,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:34030a1094bd1ad4a0e65d136eaeed0639104987a70bb98985633ac7e77ff043"
+    },
+    {
+      "byte_length": 4940,
+      "path": "design/contract_compiler/workstreams/CC-016/manifest.json",
+      "sha256": "sha256:bd47e0f0073162534e68f18dd7e9dae13876b72a144cfa37c08a071427d38546"
+    },
+    {
+      "byte_length": 224111,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:75f93dc5370a2827d19f47a6fa5bdb9957bc577f0d7e3999852314dc3733b435"
+    }
+  ],
+  "base_commit": "c12e52ea743d8809c91974653b62192b166753e9",
+  "checks": [
+    {
+      "check_id": "cc016-reactivation-red",
+      "method": "Run the focused Greenhouse reactivation, shared oracle-boundary, prior-pause, and Quiet Bell completion guards before changing the blocked card or overseer ledger.",
+      "observed": "The command exited 1 with exactly 4 expected failures, 4 passes, and 151 deselected tests. The card was still BLOCKED, OVR-000263 was absent from three guards, and the historical controls passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-dependency-readiness",
+      "method": "Resolve all seven direct dependencies in program order to their current card digest, active completion entry ID and hash, and mechanically required first integrated head.",
+      "observed": "The contract kernel, fact model, composition model, LinkML profile, Greenhouse inputs, Small Shop inputs, and Small Shop answer key are complete and exactly bound. Quiet Bell is complete scheduling evidence only and is neither a dependency nor a binding.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-private-representation",
+      "method": "Inspect the exact responsibility and hard guards for the closed private outcome and relation labels.",
+      "observed": "The card allows only ACCEPT, minimal {\"outcome\":\"REFUSE\"}, SAME, DIFFERENT, and NOT_CLAIMED. The labels and JSON are private test evidence, never compiler input, and define no public format, compatibility contract, runtime artifact, or wire grammar.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-independent-authorship",
+      "method": "Compare the assignment, four scopes, responsibility, candidate, ledger, and absent owned paths with the completed Greenhouse inputs and accepted decisions.",
+      "observed": "The independent answer-key owner retains only the two neutral oracle trees, canonical report, and fixed test. Expected values must be hand-authored from exact Greenhouse sources and accepted decisions, never generated or exported from LinkML, OntologyRegistry, or compiler output. Candidate is NONE, ledger is NOT_STARTED, and all owned content paths remain absent.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-quiet-bell-separation",
+      "method": "Verify the recorded Quiet Bell then Greenhouse execution order without creating a cross-control dependency, binding, helper, interface, or semantic transfer.",
+      "observed": "Quiet Bell is COMPLETE before Greenhouse activation. Only process technique transfers. No Quiet Bell expected value, fact, identifier, derivation, helper, interface, or semantic dependency enters the Greenhouse card.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-adjacent-state",
+      "method": "Compare the edge-case card, selections, owner separations, corpus files, future executable row, and original Greenhouse activation report with the reactivation base.",
+      "observed": "Compiler edge cases remain PAUSED with candidate NONE and ledger NOT_STARTED. Selections, owner separations, corpus membership, checksums, and the absent future executable row are unchanged. The original Greenhouse activation report remains byte-identical history.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc016-kiss-reactivation",
+      "method": "Inspect the keyed integration delta, exact card, append-only transaction, and prospective answer-key boundary before any answer-key byte is authored.",
+      "observed": "Only the Greenhouse card pointer changes in integration revision 2. This transaction permits one independent owner to start after the activation commit. It creates no answer key, candidate, worker ledger, compiler stage, public interface, corpus publication, or edge-case authority.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This reactivation creates no answer-key content, canonical worker report, fixed worker test, candidate, worker ledger, selection, or completion claim.",
+    "Private fixture-local JSON and labels define no public format, compatibility contract, public identifier, diagnostic vocabulary, migration promise, or runtime artifact wire grammar.",
+    "No compiler or runtime implementation, mapping, transformation, effective contract, artifact, protocol, ledger, graph, replay, package, or release behavior is implemented or claimed.",
+    "The worker must derive Greenhouse expectations independently and retain contradictions as RED rather than assuming that every source accepts.",
+    "Corpus membership and checksums remain outside this transaction and require a later integration-owner review.",
+    "All runtime artifact bytes, packaging, release, selection, integration, and CC-R work remain outside this transaction."
+  ],
+  "recorded_at": "2026-08-31T19:24:47Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-016"
+}

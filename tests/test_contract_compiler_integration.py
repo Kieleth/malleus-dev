@@ -62,6 +62,7 @@ QUIET_BELL_CLEAN_BASE_CLOSURE_COMMIT = "1d17a613940a26fac70debbecbf6fab29e318cf7
 QUIET_BELL_CANDIDATE_BASE = "195a369636f9fe9ce1a0e8f4cb9d950836164e79"
 QUIET_BELL_CANDIDATE_COMMIT = "9cc23c445711fa07df0103dac85c7196ada14d81"
 QUIET_BELL_CANDIDATE_TREE = "24a63271ad701960c9257f75ee874078066631e6"
+QUIET_BELL_COMPLETION_COMMIT = "8d04fc285070a0594aabccef0b926a8cec3bb132"
 QUIET_BELL_CANDIDATE_PATHS = {
     "conformance/contract_compiler/v0/evidence/CC-012.json",
     "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
@@ -111,6 +112,43 @@ QUIET_BELL_ORACLE_RESPONSIBILITY = (
     "Do not assume every Quiet Bell source accepts; retain any contradiction as RED. "
     "Create no source or trace input, runtime artifact bytes or wire grammar, compiler "
     "or runtime implementation, public API, package, Docker, release, corpus or checksum "
+    "publication, selection, integration, or CC-R work."
+)
+GREENHOUSE_REACTIVATION_BASE = "c12e52ea743d8809c91974653b62192b166753e9"
+GREENHOUSE_DEPENDENCIES = (
+    "CC-010",
+    "CC-D05",
+    "CC-D06",
+    "CC-D08",
+    "CC-015",
+    "CC-021",
+    "CC-022",
+)
+GREENHOUSE_PRIVATE_TOKENS = (
+    "ACCEPT",
+    '{"outcome":"REFUSE"}',
+    "SAME",
+    "DIFFERENT",
+    "NOT_CLAIMED",
+)
+GREENHOUSE_ORACLE_RESPONSIBILITY = (
+    "Author only independently derived neutral-domain expected values under the exact "
+    "CC-010 neutral_domain/oracle and neutral_domain/traces/oracle prefixes, using "
+    "accepted decisions and completed CC-015 inputs. Own source compilation "
+    "expectations, operation outcomes, one canonical verification report, and one "
+    "fixed oracle validation test. Represent expectations only as private "
+    "fixture-local logical JSON. Allowed outcomes are ACCEPT or the minimal "
+    '{"outcome":"REFUSE"}; allowed relations are SAME, DIFFERENT, and NOT_CLAIMED, '
+    "where NOT_CLAIMED is an explicit nonassertion. These labels and JSON bytes are "
+    "test-only, non-public, carry no compatibility contract, are never compiler input, "
+    "and define no runtime artifact bytes or wire grammar. Write every oracle by hand "
+    "from the exact Greenhouse sources and accepted decisions, never generate or "
+    "export it from LinkML, OntologyRegistry, or the implementation under test. The "
+    "completed Quiet Bell answer key transfers process technique only; use no Quiet "
+    "Bell expected value, fact, identifier, derivation, helper, interface, or semantic "
+    "dependency. Do not assume every Greenhouse source accepts; retain any contradiction "
+    "as RED. Create no source or operation input, themed vocabulary, compiler or runtime "
+    "implementation, public API, package, Docker, release, corpus or checksum "
     "publication, selection, integration, or CC-R work."
 )
 SMALL_SHOP_INPUT_ROOT = (
@@ -1319,8 +1357,8 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "operation outcomes",
                 "no source or operation input",
             ),
-            "BLOCKED",
-            "PAUSED",
+            "FORMAL",
+            "ACTIVE",
         ),
     ),
 )
@@ -1364,11 +1402,11 @@ def test_oracle_workstream_activation_boundaries_are_exact(
         {current["assignment"]["owner_id"] for current in cards.values()}
     ) == len(cards)
     assert card["scopes"] == scopes
-    expected_lifecycle = (
-        ("COMPLETE", "ELIGIBLE", "RECORDED")
-        if workstream_id == "CC-012"
-        else (workstream_state, "NONE", "NOT_STARTED")
-    )
+    expected_lifecycle = {
+        "CC-012": ("COMPLETE", "ELIGIBLE", "RECORDED"),
+        "CC-014": (workstream_state, "NONE", "NOT_STARTED"),
+        "CC-016": (workstream_state, "NONE", "NOT_STARTED"),
+    }[workstream_id]
     assert (
         workstream_states[workstream_id],
         card["candidate"]["state"],
@@ -1636,10 +1674,6 @@ def test_small_shop_original_activation_remains_historically_exact() -> None:
             "CC-014",
             "Content production waits for the operator to decide whether the CC-013 explicit-false boundary splits into separate positive and refusal cases and to approve minimal private refusal and relations JSON shapes.",
         ),
-        (
-            "CC-016",
-            "Content production waits for operator approval of minimal private refusal and relations JSON shapes.",
-        ),
     ),
 )
 def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
@@ -1699,6 +1733,24 @@ def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
             capture_output=True,
         ).stdout
     )
+
+
+def test_greenhouse_prior_pause_remains_historical() -> None:
+    card_path = "design/contract_compiler/workstreams/CC-016/manifest.json"
+    card = json.loads(_git(ROOT, "show", f"{GREENHOUSE_REACTIVATION_BASE}:{card_path}"))
+    states, _ = integration_module._workstream_states(_overseer_prefix(260))
+
+    assert card["authorization"] == {
+        "authorized_by": {"id": "operator", "type": "OPERATOR"},
+        "blockers": [
+            "Content production waits for operator approval of minimal private refusal and relations JSON shapes.",
+            "Resume only after CC-021 controlled Small Shop inputs and CC-022 independent Small Shop oracle are complete and fresh dependency bindings are issued.",
+        ],
+        "class": "BLOCKED",
+    }
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert states["CC-016"] == "PAUSED"
 
 
 def test_quiet_bell_prior_activation_and_pause_remain_historical() -> None:
@@ -2986,11 +3038,22 @@ def test_quiet_bell_completion_transaction_is_exact() -> None:
 
 
 def test_quiet_bell_completion_preserves_adjacent_authority() -> None:
-    manifest = _read_json(INTEGRATION)
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{QUIET_BELL_COMPLETION_COMMIT}:design/contract_compiler/integration.json",
+        )
+    )
+    states, _ = integration_module._workstream_states(_overseer_prefix(257))
     cards = {
-        workstream_id: _read_json(
-            _card_path(INTEGRATION, _registry_row(manifest, workstream_id))
+        workstream_id: json.loads(
+            _git(
+                ROOT,
+                "show",
+                f"{QUIET_BELL_COMPLETION_COMMIT}:design/contract_compiler/"
+                f"{_registry_row(manifest, workstream_id)['card']['path']}",
+            )
         )
         for workstream_id in ("CC-012", "CC-014", "CC-016")
     }
@@ -3017,7 +3080,7 @@ def test_quiet_bell_completion_preserves_adjacent_authority() -> None:
         )
     later_activations = [
         entry
-        for entry in _raw_overseer_state().entries
+        for entry in _overseer_prefix(257).entries
         if entry["sequence"] > 254
         and entry["entry_type"] == "WORKSTREAM_STATE"
         and entry["data"]["workstream_id"] in {"CC-014", "CC-016"}
@@ -3054,6 +3117,204 @@ def test_quiet_bell_process_lessons_transfer_no_semantics() -> None:
         "DAG edge transfer",
     ):
         assert forbidden not in lessons
+
+
+def _greenhouse_reactivation_commit() -> str:
+    authority = next(
+        entry
+        for entry in _raw_overseer_state().entries
+        if entry["entry_id"] == "OVR-000263"
+    )
+    return integration_module._authority_entry_commit(
+        ROOT,
+        authority,
+        "design/contract_compiler/overseer",
+    )
+
+
+def test_greenhouse_reactivation_boundary_is_exact() -> None:
+    activation_commit = _greenhouse_reactivation_commit()
+    manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{activation_commit}:design/contract_compiler/integration.json",
+        )
+    )
+    row = _registry_row(manifest, "CC-016")
+    card_path = f"design/contract_compiler/{row['card']['path']}"
+    card_source = subprocess.run(
+        ["git", "show", f"{activation_commit}:{card_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    card = json.loads(card_source)
+    states, _ = integration_module._workstream_states(_overseer_prefix(263))
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-016/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:cc016-neutral-oracles",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc016_neutral_oracles",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert (
+        tuple(
+            binding["workstream_id"]
+            for binding in card["authorization"]["dependency_bindings"]
+        )
+        == GREENHOUSE_DEPENDENCIES
+    )
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["responsibility"] == GREENHOUSE_ORACLE_RESPONSIBILITY
+    for token in GREENHOUSE_PRIVATE_TOKENS:
+        assert token in card["responsibility"]
+    for forbidden in ("public format", "Quiet Bell expected value transfer"):
+        assert forbidden not in card["responsibility"]
+
+    control_ids = {"CC-012", "CC-014", "CC-016"}
+    assert control_ids.isdisjoint(row["depends_on"])
+    assert control_ids.isdisjoint(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    )
+    assert states["CC-012"] == "COMPLETE"
+    assert states["CC-016"] == "ACTIVE"
+    assert states["CC-014"] == "PAUSED"
+    assert "CC-016" not in manifest["selections"]
+    assert _registry_row(manifest, "CC-R09")["card"] == {"state": "ABSENT"}
+    assert (
+        _git(
+            ROOT,
+            "ls-tree",
+            "-r",
+            "--name-only",
+            activation_commit,
+            "--",
+            "conformance/contract_kernel/v0/neutral_domain/oracle",
+            "conformance/contract_kernel/v0/neutral_domain/traces/oracle",
+            "conformance/contract_compiler/v0/evidence/CC-016.json",
+            "tests/contract_compiler/test_neutral_domain_oracles.py",
+        )
+        == ""
+    )
+
+
+def test_greenhouse_reactivation_report_is_exact() -> None:
+    activation_commit = _greenhouse_reactivation_commit()
+    report = _read_json(CONTRACT / "overseer/evidence/CC-016-reactivation.json")
+
+    assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
+    assert report["workstream_id"] == "CC-016"
+    assert report["base_commit"] == GREENHOUSE_REACTIVATION_BASE
+    assert {artifact["path"] for artifact in report["artifacts"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    for artifact in report["artifacts"]:
+        source = subprocess.run(
+            ["git", "show", f"{activation_commit}:{artifact['path']}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == _digest(source)
+    checks = {check["check_id"]: check for check in report["checks"]}
+    assert set(checks) == {
+        "cc016-reactivation-red",
+        "cc016-dependency-readiness",
+        "cc016-private-representation",
+        "cc016-independent-authorship",
+        "cc016-quiet-bell-separation",
+        "cc016-adjacent-state",
+        "cc016-kiss-reactivation",
+    }
+    assert all(check["result"] == "PASS" for check in checks.values())
+    assert all(
+        any(term in limitation for limitation in report["limitations"])
+        for term in ("answer-key", "public", "compiler", "corpus", "CC-R")
+    )
+
+    base_time = datetime.fromisoformat(
+        _git(ROOT, "show", "-s", "--format=%cI", GREENHOUSE_REACTIVATION_BASE)
+    )
+    report_time = datetime.fromisoformat(report["recorded_at"].replace("Z", "+00:00"))
+    assert report_time > base_time
+
+
+def test_greenhouse_reactivation_transaction_is_exact() -> None:
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 261 <= entry["sequence"] <= 263
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000261",
+        "OVR-000262",
+        "OVR-000263",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    assert tuple(entry["subject"]["id"] for entry in transaction) == (
+        "cc016-reactivation-boundary",
+        "cc016-reactivation-verification",
+        "CC-016",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-016"]
+    assert {document["path"] for document in revision["data"]["documents"]} == {
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-016-reactivation.json",
+        "design/contract_compiler/workstreams/CC-016/manifest.json",
+        "tests/test_contract_compiler_integration.py",
+    }
+    assert verification["actor"] == {
+        "id": "cc016-reactivation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert activation["data"]["workstream_id"] == "CC-016"
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["bootstrap"] is False
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000261",
+        "OVR-000262",
+    ]
+    assert verification["previous_entry_hash"] == revision["entry_hash"]
+    assert activation["previous_entry_hash"] == verification["entry_hash"]
+
+    report_time = datetime.fromisoformat(
+        _read_json(CONTRACT / "overseer/evidence/CC-016-reactivation.json")[
+            "recorded_at"
+        ].replace("Z", "+00:00")
+    )
+    transaction_times = tuple(
+        datetime.fromisoformat(entry["recorded_at"].replace("Z", "+00:00"))
+        for entry in transaction
+    )
+    assert transaction_times[0] > report_time
+    assert all(
+        later > earlier
+        for earlier, later in zip(transaction_times, transaction_times[1:])
+    )
 
 
 def test_small_shop_program_boundary_is_exact() -> None:
