@@ -562,7 +562,8 @@ def _assert_no_producer_dependency(source: str) -> None:
         for node in ast.walk(tree)
         if isinstance(node, ast.Call)
         and isinstance(node.func, ast.Attribute)
-        and node.func.attr in {"import_module", "run_module", "run_path"}
+        and node.func.attr
+        in {"import_module", "importorskip", "run_module", "run_path"}
     )
     assert not forbidden_calls
 

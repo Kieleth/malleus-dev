@@ -11,9 +11,9 @@
       "sha256": "sha256:e99ab7ed2a957312cbfb4b07d022a0e463b874c43f57208e687e2e60c8c1bdf5"
     },
     {
-      "byte_length": 33986,
+      "byte_length": 34059,
       "path": "tests/contract_compiler/test_neutral_domain_oracles.py",
-      "sha256": "sha256:9605a3436335740ea2716984f530b29729a5fa88746b3d765a199c8452fc9d1d"
+      "sha256": "sha256:6e4d0fc526d88f7ecdc58dc425c99195ca679a9a72798b8e674948f94859d428"
     }
   ],
   "base_commit": "6969f193eb9e57f815bb73c38b7094a980e1642c",
@@ -21,7 +21,7 @@
     {
       "check_id": "cc016-authority-scope",
       "method": "Verify the activation floor, initial RED commit, two audit-regression commits, assigned CC-016 paths, and pre-existing worktree dirt before closing GREEN.",
-      "observed": "The activation floor is 6969f193eb9e57f815bb73c38b7094a980e1642c. Initial RED is f86e51b5d7de703d15ec2e770e2ed5c1c7267b6d; strict-type RED is e28fe5b and dynamic-producer RED is 3257fb4. The candidate remains confined to greenhouse.json, compile-source-outcomes.json, this report, and the fixed test. Unrelated research, design, and handover files were not changed.",
+      "observed": "The activation floor is 6969f193eb9e57f815bb73c38b7094a980e1642c. Initial RED is f86e51b5d7de703d15ec2e770e2ed5c1c7267b6d; strict-type RED is e28fe5b; direct dynamic-producer RED is 3257fb4; and the pytest import-bypass RED is 9feaa82. The candidate remains confined to greenhouse.json, compile-source-outcomes.json, this report, and the fixed test. Unrelated research, design, and handover files were not changed.",
       "result": "PASS"
     },
     {
@@ -57,19 +57,19 @@
     {
       "check_id": "cc016-private-boundary",
       "method": "Validate exact file inventory, no symlinks, closed keys, exact result unions, duplicate-key and nonfinite-number refusal, private metadata, and absence from production inputs and producer dependencies.",
-      "observed": "The answer key contains exactly two private JSON files. ACCEPT, minimal REFUSE, SAME, DIFFERENT, and NOT_CLAIMED remain test-only labels. The files declare CONFORMANCE_FIXTURE and Boolean public_contract=false. Exact recursive JSON type checks reject Boolean-number equality collisions, and the static plus direct-dynamic import guard finds no LinkML, OntologyRegistry, compiler, runtime, protocol, or projector producer.",
+      "observed": "The answer key contains exactly two private JSON files. ACCEPT, minimal REFUSE, SAME, DIFFERENT, and NOT_CLAIMED remain test-only labels. The files declare CONFORMANCE_FIXTURE and Boolean public_contract=false. Exact recursive JSON type checks reject Boolean-number equality collisions, and the static plus direct-dynamic import guard, including pytest.importorskip, finds no LinkML, OntologyRegistry, compiler, runtime, protocol, or projector producer.",
       "result": "PASS"
     },
     {
       "check_id": "cc016-audit-regressions",
       "method": "Reproduce both independent-audit findings before repair, then rerun the new strict-type and hidden-producer mutations through the corrected guards.",
-      "observed": "The Boolean-to-number mutations produced exactly 2 failures and 8 passes with 14 deselected before the recursive type guard. A direct dynamic import produced exactly 1 failure and 1 pass with 23 deselected before the producer guard was corrected. GREEN rejects both Boolean-number substitutions plus direct __import__, exec, and disguised ImportFrom producer paths; 13 combined mutation cases pass.",
+      "observed": "Before repair, Boolean-to-number mutations produced 2 failures, 8 passes, 14 deselected; direct dynamic import produced 1 failure, 1 pass, 23 deselected; and pytest.importorskip produced 1 failure, 3 passes, 24 deselected. GREEN rejects both Boolean-number substitutions plus __import__, exec, disguised ImportFrom, and pytest.importorskip; all 14 combined mutation cases pass.",
       "result": "PASS"
     },
     {
       "check_id": "cc016-green-and-mutations",
       "method": "Run the complete focused GREEN test and the isolated in-memory mutation subset against the two answer files.",
-      "observed": "The corrected focused GREEN run passed 27 tests. The combined mutation and hidden-producer subset passed 13 cases, proving changes to facts, exact JSON types, outcomes, deltas, relation values, relation membership, top-level membership, static import roots, and direct dynamic execution paths are rejected.",
+      "observed": "The corrected focused GREEN run passed 28 tests. The combined mutation and hidden-producer subset passed 14 cases, proving changes to facts, exact JSON types, outcomes, deltas, relation values, relation membership, top-level membership, static import roots, and direct dynamic execution paths are rejected.",
       "result": "PASS"
     },
     {
@@ -87,7 +87,7 @@
     "Refusal adequacy is exercised by fixed in-memory oracle corruptions. This slice adds no seventh Greenhouse source and makes no broad compiler-edge-case claim.",
     "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
   ],
-  "recorded_at": "2026-08-31T20:02:35Z",
+  "recorded_at": "2026-08-31T20:21:28Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-016"
 }
