@@ -787,12 +787,14 @@ def test_relation_axes_preserve_two_roles_and_change_only_domain_dependents() ->
     ("target", "mutation"),
     (
         ("compilation", "fact-object"),
+        ("compilation", "fact-boolean-type"),
         ("compilation", "source-outcome"),
         ("compilation", "delta-member"),
         ("compilation", "top-level-member"),
         ("operation", "relation"),
         ("operation", "outcome"),
         ("operation", "relations-member"),
+        ("operation", "configuration-boolean-type"),
         ("operation", "top-level-member"),
     ),
 )
@@ -804,6 +806,11 @@ def test_exact_guards_detect_private_oracle_mutations(
         value = deepcopy(EXPECTED_COMPILATION_ORACLE)
         if mutation == "fact-object":
             value["baseline_facts"][0]["object"] = "CORRUPT"
+        elif mutation == "fact-boolean-type":
+            boolean_fact = next(
+                fact for fact in value["baseline_facts"] if fact["object"] is False
+            )
+            boolean_fact["object"] = 0
         elif mutation == "source-outcome":
             value["sources"][0]["outcome"] = "ERROR"
         elif mutation == "delta-member":
@@ -819,6 +826,8 @@ def test_exact_guards_detect_private_oracle_mutations(
             value["operations"][0]["outcome"] = "ERROR"
         elif mutation == "relations-member":
             value["operations"][0]["relations"]["unexpected"] = "SAME"
+        elif mutation == "configuration-boolean-type":
+            value["configuration"]["public_contract"] = 0
         else:
             value["unexpected"] = True
         guard = _assert_operation_oracle
