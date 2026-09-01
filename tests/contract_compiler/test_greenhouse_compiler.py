@@ -23,6 +23,7 @@ ORACLE = json.loads(
     ).read_text(encoding="utf-8")
 )
 IMPLEMENTATION = ROOT / "src/malleus/_contract_compiler.py"
+PROFILE = ROOT / "src/malleus/_contract_compiler_profile.json"
 
 
 def _expected_compilations() -> dict[str, dict[str, object]]:
@@ -115,3 +116,29 @@ def test_compiler_is_bytes_in_and_does_not_import_the_legacy_registry() -> None:
 
     assert "malleus.ontology" not in imports
     assert "OntologyRegistry" not in imports
+
+
+def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+
+    assert profile["schema"] == "malleus.contract-compiler.linkml-profile/v0"
+    assert profile["linkml_runtime_version"] == "1.11.1"
+    assert set(profile) >= {
+        "builtins",
+        "defaults",
+        "field_classification",
+        "predicates",
+        "structural_identities",
+    }
+
+    implementation = IMPLEMENTATION.read_text(encoding="utf-8")
+    policy = PROFILE.read_text(encoding="utf-8")
+    for fixture_literal in (
+        "greenhouse",
+        "Observation",
+        "PlantState",
+        "specimen_id",
+        "temperature",
+    ):
+        assert fixture_literal not in implementation
+        assert fixture_literal not in policy
