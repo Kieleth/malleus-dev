@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "/Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q tests/contract_compiler/test_linkml_adapter.py",
+    "observed": "Pytest stopped during collection with exactly one ModuleNotFoundError for malleus._contract_linkml_adapter. Corrected RED commits e7361e3 and c5e9be0 contained the fixed adapter tests and no adapter production module.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:f77aa85f80e9ec01aeac3c9ef5f4c358705c40bcfaf1341f4c7790e895392879",
+  "entry_id": "CC-R02-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-01T18:44:36Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the missing retained LinkML adapter RED.",
+  "workstream_id": "CC-R02"
+}

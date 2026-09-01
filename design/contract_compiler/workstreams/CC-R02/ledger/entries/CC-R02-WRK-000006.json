@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Review the CC-R02 card and candidate against package configuration, wheel, sdist, installed-data, public API, image, and release surfaces.",
+    "observed": "NOT_APPLICABLE. CC-R02 owns a private research adapter, delegated bootstrap compiler changes, profile, tests, evidence, and ledger. Root commit bb56848 records the separate post-candidate wheel-exclusion RED and is deliberately excluded from this sibling candidate. The worker changes no package configuration or public export.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:d160713fa22b3822bb34e3408625a22be22b75b195fc6221cae691973f0623cc",
+  "entry_id": "CC-R02-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:47399ac4b6d61e957cca46cdcaed8446047c564122dad8792ee40cb4511a54d7",
+  "recorded_at": "2026-09-01T18:44:41Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the root-owned package boundary.",
+  "workstream_id": "CC-R02"
+}
