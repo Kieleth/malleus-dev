@@ -602,6 +602,62 @@ def test_forged_trusted_flag_cannot_remove_source_declarations() -> None:
     assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
 
 
+def test_schema_id_must_equal_the_authored_root_identity() -> None:
+    schema_id = "https://example.test/schema-id"
+    closure = _declared({schema_id: _source(schema_id)}, root=schema_id)
+    forged = replace(
+        closure,
+        modules=(replace(closure.modules[0], schema_id=f"{schema_id}/forged"),),
+    )
+
+    refusal = _reason(forged)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
+@pytest.mark.parametrize("mutation", ("body", "identity", "ordinal", "occurrence"))
+def test_declarations_and_occurrences_must_equal_the_authored_root(
+    mutation: str,
+) -> None:
+    schema_id = "https://example.test/internal-coherence"
+    closure = _declared(
+        {
+            schema_id: _source(
+                schema_id,
+                "classes:\n  Record:\n    description: Exact source body.\n",
+            )
+        },
+        root=schema_id,
+    )
+    module = closure.modules[0]
+    declaration = module.declarations[0]
+    if mutation == "body":
+        declarations = (replace(declaration, body=AuthoredMapping(())),)
+        module = replace(module, declarations=declarations)
+    elif mutation == "identity":
+        declarations = (
+            replace(
+                declaration,
+                name="Other",
+                identifier=f"{schema_id}/Other",
+                path=("classes", "Other"),
+            ),
+        )
+        module = replace(module, declarations=declarations)
+    elif mutation == "ordinal":
+        module = replace(
+            module,
+            declarations=(replace(declaration, ordinal=9),),
+        )
+    else:
+        module = replace(module, occurrences=module.occurrences[1:])
+    forged = replace(closure, modules=(module,))
+
+    refusal = _reason(forged)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
 @pytest.mark.parametrize("mutation", ("edge", "root"))
 def test_forged_closure_topology_cannot_change_binding_authority(mutation: str) -> None:
     closure = _owner_and_adopter()
@@ -630,6 +686,25 @@ def test_forged_closure_topology_cannot_change_binding_authority(mutation: str) 
     refusal = _reason(forged)
 
     assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
+def test_valid_deep_linear_closure_does_not_depend_on_python_recursion() -> None:
+    module_ids = tuple(
+        f"https://example.test/deep/m{index:04d}" for index in range(1201)
+    )
+    documents = {
+        module_id: _source(
+            module_id,
+            imports=(() if index == len(module_ids) - 1 else (module_ids[index + 1],)),
+        )
+        for index, module_id in enumerate(module_ids)
+    }
+    closure = _declared(documents, root=module_ids[0])
+
+    result = bind_contract(closure)
+
+    assert result.declared_closure is closure
+    assert all(item.trusted for item in result.declarations)
 
 
 def test_diagnostic_order_ignores_import_module_and_declaration_order() -> None:
@@ -670,6 +745,27 @@ def test_diagnostic_order_ignores_import_module_and_declaration_order() -> None:
         "MissingA",
         "MissingZ",
     )
+
+
+def test_collision_diagnostic_representative_ignores_module_order() -> None:
+    root = "https://example.test/collision-root"
+    child = "https://example.test/collision-child"
+    documents = {
+        root: _source(
+            root,
+            "classes:\n  Record: {}\n",
+            (child,),
+        ),
+        child: _source(root, "classes:\n  Record: {}\n"),
+    }
+    first = _declared(documents, root=root, module_order=(root, child))
+    second = _declared(documents, root=root, module_order=(child, root))
+
+    first_refusal = _reason(first)
+    second_refusal = _reason(second)
+
+    assert first_refusal.reason is BindingRefusalReason.QUALIFIED_IDENTIFIER_COLLISION
+    assert first_refusal.diagnostics == second_refusal.diagnostics
 
 
 class _QuietResolver:
