@@ -139,7 +139,7 @@ def test_wrong_or_extra_baseline_is_rejected():
         runner.validate_cases(extra)
 
 
-def test_retained_baseline_wheels_are_required_and_hash_checked(tmp_path):
+def test_retained_baseline_lock_and_direct_roots_are_hash_checked(tmp_path):
     manifest = _read(
         ROOT
         / "conformance"
@@ -151,16 +151,47 @@ def test_retained_baseline_wheels_are_required_and_hash_checked(tmp_path):
     selected = runner.retained_baseline(manifest)
     assert [item.distribution for item in selected] == ["linkml", "linkml-runtime"]
     assert [item.version for item in selected] == ["1.11.1", "1.11.1"]
+    assert [item.path.parent.name for item in selected] == ["roots", "roots"]
+
+    locked = runner.locked_requirements()
+    assert locked["linkml"] == {
+        "sha256": "sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed",
+        "version": "1.11.1",
+    }
+    assert locked["linkml-runtime"] == {
+        "sha256": "sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da",
+        "version": "1.11.1",
+    }
 
     corrupt = deepcopy(manifest)
     artifact = next(
         item
-        for item in corrupt["wheelhouse"]["artifacts"]
-        if item.get("distribution") == "linkml-runtime"
+        for item in corrupt["roots"]["artifacts"]
+        if item.get("filename") == "linkml_runtime-1.11.1-py3-none-any.whl"
     )
     artifact["sha256"] = "sha256:" + "0" * 64
     with pytest.raises(runner.DivergenceError, match="linkml-runtime"):
         runner.retained_baseline(corrupt)
+
+
+def test_lock_parser_refuses_unhashed_duplicate_and_unpinned_requirements(tmp_path):
+    lock = tmp_path / "requirements.lock"
+
+    lock.write_text(
+        "linkml==1.11.1 --hash=sha256:" + "1" * 64 + "\n"
+        "linkml==1.11.1 --hash=sha256:" + "1" * 64 + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(runner.DivergenceError, match="duplicate"):
+        runner.locked_requirements(lock)
+
+    lock.write_text("linkml>=1.11.1\n", encoding="utf-8")
+    with pytest.raises(runner.DivergenceError, match="exactly pinned"):
+        runner.locked_requirements(lock)
+
+    lock.write_text("linkml==1.11.1\n", encoding="utf-8")
+    with pytest.raises(runner.DivergenceError, match="hash"):
+        runner.locked_requirements(lock)
 
 
 def test_observations_have_exact_independent_engine_structure_and_no_policy():

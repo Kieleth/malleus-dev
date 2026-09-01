@@ -25,7 +25,6 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
     assert [command.name for command in commands] == [
         "quality",
         "tests",
-        "compiler-tests",
         "ledger",
         "integration",
         "graph-recipe",
@@ -38,13 +37,7 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
         "package-smoke",
     ]
     assert sum(command.argv[-1] == "pytest" for command in commands) == 1
-    compiler = next(command for command in commands if command.name == "compiler-tests")
-    assert compiler.argv[1:] == (
-        "-m",
-        "pytest",
-        "-q",
-        "tests/contract_compiler",
-    )
+    assert all(command.name != "compiler-tests" for command in commands)
     small_shop = next(command for command in commands if command.name == "small-shop")
     assert small_shop.argv == (
         sys.executable,
@@ -58,10 +51,10 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
     assert quality.argv.count(str(ci.SMALL_SHOP)) == 1
 
 
-def test_compiler_tests_are_not_duplicated_in_pytest_configuration() -> None:
+def test_default_pytest_collects_the_compiler_tests_without_a_duplicate_ci_stage() -> None:
     config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
-    assert "tests/contract_compiler" not in config["tool"]["pytest"][
+    assert "tests/contract_compiler" in config["tool"]["pytest"][
         "ini_options"
     ]["testpaths"]
 
