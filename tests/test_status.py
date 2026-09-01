@@ -6,6 +6,7 @@ from pathlib import Path
 import yaml
 
 import malleus
+from malleus.assent import PAYLOAD_FIELDS, EventType, ProtocolLedger
 from malleus.logic import LogicContract
 from malleus.status import IMPLEMENTATION_STATUS
 
@@ -106,6 +107,7 @@ def test_stage_eight_c_boundary_is_explicit():
     assert "independent-outcome-observation-recording" in (
         IMPLEMENTATION_STATUS.implemented_capabilities
     )
+    assert "review-report-recording" in IMPLEMENTATION_STATUS.implemented_capabilities
     assert (
         "deterministic-authorization-control-selection"
         in IMPLEMENTATION_STATUS.implemented_capabilities
@@ -152,6 +154,25 @@ def test_capability_status_sets_are_unique_and_disjoint():
     assert set(implemented).isdisjoint(pending)
 
 
+def test_shipped_protocol_doors_cannot_remain_pending():
+    """A machine-visible event door must agree with the status boundary."""
+    shipped_doors = {
+        "review-report-recording": (
+            EventType.REVIEW_RECORDED,
+            {"report", "findings"},
+            "_review_report",
+        ),
+    }
+
+    implemented = set(IMPLEMENTATION_STATUS.implemented_capabilities)
+    pending = set(IMPLEMENTATION_STATUS.pending_capabilities)
+    for capability, (event_type, payload_fields, handler_name) in shipped_doors.items():
+        assert PAYLOAD_FIELDS[event_type] == payload_fields
+        assert callable(getattr(ProtocolLedger, handler_name, None))
+        assert capability in implemented
+        assert capability not in pending
+
+
 def test_ontology_versions_match_status_boundary():
     root = yaml.safe_load((ROOT / "ontology" / "malleus.yaml").read_text(encoding="utf-8"))
     assent = yaml.safe_load((ROOT / "ontology" / "assent.yaml").read_text(encoding="utf-8"))
@@ -165,6 +186,10 @@ def test_status_document_names_current_version_and_boundary():
     assert f"`{IMPLEMENTATION_STATUS.boundary}`" in document
     for capability in IMPLEMENTATION_STATUS.pending_capabilities:
         assert f"`{capability}`" in document
+    assert "`review-report-recording`" in document
+    assert "one atomic report" in document
+    assert "`MigrationReceipt` records" in document
+    assert "The receipt is not a protocol-ledger boundary event" in document
 
 
 def test_readme_names_current_version_and_boundary():

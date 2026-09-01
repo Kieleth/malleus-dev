@@ -261,25 +261,21 @@ upgrade. The grammar change alone was survivable, because the envelope accepts
 both grammars. Two further asks follow as A9 and A10, and both are sharper than
 this entry was.
 
-Still open, and the smaller half: a migration receipt. Re-anchoring under the
-current grammar produces no typed record binding the old identity, the new
-identity and the boundary event. Verification is fixed; migration is not
-recorded.
+**The receipt is implemented, with a narrower boundary than the design.**
+`MigrationReceipt` records one asserted old and new ontology hash, grade,
+reason, issue time, previous-receipt digest, and optional delta digest.
+`MigrationChain` validates a gapless, acyclic sequence, saves and loads it as
+JSON, checks the live head, and stops backward hash acceptance at a declared
+`HARD_BREAK`.
 
-Design decided in conversation and written up in
-`design/ONTOLOGY_MIGRATION_RECEIPT.md`. Its conclusions, so this file is
-sufficient without opening it: a malleus migration never transforms a record,
-it transforms how a record is read, because the ledger cannot be rewritten. A
-receipt is never revoked, only superseded forward. Every ontology a receipt
-names stays readable forever, which obliges a permanent conformance fixture per
-named grammar. The unit of guarantee is a bundled release, so the receipt binds
-bundle identities rather than single-ontology ones. The delta is recorded in
-KGCL form and checked against a derivation, so the record cannot lie. A change
-is legitimate when it carries a reading rule of a declared grade: total,
-partial and naming its own gaps, or an explicit hard break. What malleus
-refuses is an undeclared break. Unsettled: branch and merge of ontology
-versions, what mechanism records the authorisation, and granularity below the
-bundle.
+Still open: the receipt is not a protocol-ledger boundary event and does not
+bind a release bundle. It carries no transform, reader, record mapping, query
+rewrite, or mechanically verified delta. `TOTAL` and `PARTIAL` currently accept
+prior hashes identically; core `ProtocolLedger` does not consume migration
+chains; and Recon is the only current source consumer. Branch and merge,
+authorization, and granularity below one ontology also remain unsettled. The
+implemented receipt records a change; it does not establish that every older
+record has a valid interpretation under the new ontology.
 
 ### A9. The envelope accepts two grammars; everything else still compares one
 

@@ -26,6 +26,9 @@ complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
   `CLARIFY` selection, and verdict-scoped grant validation
 - Evidence and evidence-assertion proposal members with typed polarity, exact
   claim and evidence references, and decision-local citation checks
+- `review-report-recording`: one exact review request target, one atomic report
+  with zero or more immutable findings, one immutable disposition per finding,
+  and independent requests for re-review or multiple reviewers
 
 ## Stage 8a
 
@@ -195,8 +198,9 @@ no authorization validity interval.
 ## OCR evidence-integrity profile
 
 Capability `AUDIT_ONLY`. The package ships a profile that verifies a document
-evidence bundle and writes nothing to a protocol ledger, because human review
-has no ledger event door while `review-report-recording` stays unimplemented.
+evidence bundle and writes nothing to a protocol ledger. Core Assent now has a
+lean review request, report, finding, and disposition path, but the OCR profile
+does not submit its reviewer results through that path.
 
 The profile's vocabulary is `ontology/domains/ocr.yaml`, a LinkML domain schema
 importing the root, and every identity plane is a typed record under a root
@@ -288,9 +292,16 @@ assumption, and `verified_ontology_hashes` reports which were encountered so a
 replay under an earlier grammar is a fact the caller can act on. Nothing is
 silently recomputed and nothing is silently accepted.
 
-Not implemented: a migration receipt. Re-anchoring under the current grammar
-produces no typed record binding the old identity, the new identity and the
-boundary event. Verification is fixed; migration is not recorded.
+Implemented, with a narrower boundary: `MigrationReceipt` records one asserted
+old and new ontology hash, grade, reason, issue time, prior-receipt digest, and
+optional delta digest. `MigrationChain` validates a gapless, acyclic sequence,
+persists it as JSON, checks its live head, and stops backward hash acceptance at
+a declared `HARD_BREAK`.
+
+The receipt is not a protocol-ledger boundary event. It carries no transform,
+reader, record mapping, query rewrite, or verified delta. `TOTAL` and `PARTIAL`
+currently accept prior hashes identically, core `ProtocolLedger` does not
+consume migration chains, and Recon is the only current source consumer.
 
 ## Not implemented
 
@@ -315,7 +326,6 @@ boundary event. Verification is fixed; migration is not recorded.
   is a commitment about how an outcome would be checked. Malleus executes
   nothing and observes nothing. This entry was removed at 0.8.0 while the
   capability remained absent; it is restored
-- `review-report-recording`: an `EventType` that can carry a `ReviewReport`; the type exists in the schema with no protocol door
 - `protocol-actor-registration`: registering `ProtocolActor` records so `responsible_actor_id` can range over actors instead of bare strings
 - `untrusted-rule-program-sandboxing`: safe execution of uploaded or otherwise untrusted rule programs
 - `monitor-execution-orchestration`: general orchestration beyond the optional

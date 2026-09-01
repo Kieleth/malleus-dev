@@ -223,9 +223,8 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
     }
 
     implementation = IMPLEMENTATION.read_text(encoding="utf-8")
-    semantic_policy = deepcopy(profile)
-    semantic_policy["support_profile"] = ""
-    policy = json.dumps(semantic_policy, ensure_ascii=False, sort_keys=True)
+    assert profile["support_profile"] == "malleus.linkml/private-v0"
+    policy = json.dumps(profile, ensure_ascii=False, sort_keys=True)
     for fixture_literal in (
         "greenhouse",
         "Observation",
