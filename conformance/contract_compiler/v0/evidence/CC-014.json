@@ -1,0 +1,88 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 18972,
+      "path": "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json",
+      "sha256": "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd428017068"
+    },
+    {
+      "byte_length": 22080,
+      "path": "tests/contract_compiler/test_feature_case_oracles.py",
+      "sha256": "sha256:1a2d89cb6a70cfef03c9e3067610d1ffd85f86b478efaecc2d4125f74c6b35fe"
+    }
+  ],
+  "base_commit": "607706796bf157f10d2a911a57cff39a72876795",
+  "checks": [
+    {
+      "check_id": "cc014-authority-scope",
+      "method": "Verify exact activation base, assigned owner, authorized oracle, report, test, and append-only worker-ledger paths, and pre-existing worktree dirt before authorship.",
+      "observed": "HEAD was exactly 607706796bf157f10d2a911a57cff39a72876795. The candidate uses only the authorized private oracle, canonical report, fixed test, and CC-014 worker ledger. Unrelated modified research files and untracked design and handover files were preserved.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-tdd-red",
+      "method": "Write and run the fixed answer-key test before creating any feature oracle bytes.",
+      "observed": "The corrected RED run exited 1 with exactly 8 expected failures and 6 passing corruption controls. Every failure was the empty oracle inventory or FileNotFoundError for the absent feature_cases.json member. Ruff passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-source-outcomes",
+      "method": "Bind all 18 exact CC-013 source members by path, byte length, and SHA-256, then hand-derive whole-compilation outcomes only from OD-002, OD-003, OD-005, and OD-008.",
+      "observed": "All 18 source descriptors match CC-013. Thirteen roots ACCEPT. Five roots atomically REFUSE: the unmarked conflicting duplicate, both conflicting mixin orders, the retained whole-source explicit-false vector, and the repeated-mixin vector.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-exact-projections",
+      "method": "Hand-derive exact class, authoritative global-slot, class-local-slot, effective SlotUse, ownership, default, and numeric-bound feature projections for every accepted root without executing an implementation.",
+      "observed": "All 13 accepted roots have exact private projections. Parent-plus-mixin precedence yields Child.value Float, required and multivalued true; numeric intersection yields global 0..100 and Parent/Child 10..90; attribute SlotUse preserves separate global and class-local slots; explicit adoption retains the imported owner; all refused roots emit no projection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-relations-and-split",
+      "method": "Close all 11 input groups and assign SAME, DIFFERENT, or NOT_CLAIMED only to the four groups bound to the metamorphic requirement.",
+      "observed": "Conflicting mixin order has the same refusal outcome but no claimed compiled meaning. Defaulted versus explicit range, equivalent numeric lexemes, and presentation-only edits preserve compiled facts, validated facts, and EffectiveContract meaning while changing raw source and source attestation. Explicit false remains two separate accepted and refused outcomes, never a whole-compilation SAME claim.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-provenance-nonclaims",
+      "method": "Validate exact decision anchors, source-lexeme evidence, default provenance, adoption ownership, private configuration tokens, and explicit nonclaims.",
+      "observed": "The answer key binds CC-013 and OD-002, OD-003, OD-005, and OD-008; retains both numeric lexical forms; distinguishes authored from defaulted range; records that adoption emits no semantic marker fact; and leaves canonical bytes, implementation conformance, diagnostics, identity, wire format, public compatibility, and runtime conformance NOT_CLAIMED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-isolation-and-shapes",
+      "method": "Validate duplicate-key and nonfinite-number refusal, exact recursive JSON types and number lexemes, closed ACCEPT/refusal/relation unions, and static plus hidden producer isolation.",
+      "observed": "Boolean-number substitutions and integer-decimal lexical substitutions are rejected. Refusal is exactly {\"outcome\":\"REFUSE\"}; relations use only SAME, DIFFERENT, or NOT_CLAIMED. AST guards reject direct imports, importlib, runpy, __import__, eval, exec, import_module, pytest.importorskip, and pytest plugin bypasses. No compiler, LinkML execution, OntologyRegistry, Greenhouse, or Quiet Bell authority is consumed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-green-and-disproof",
+      "method": "Run the complete focused answer-key test and the isolated corruption plus hidden-producer subset.",
+      "observed": "The focused suite passed 16 tests. The disproof subset passed 9 tests with 7 deselected, rejecting configuration, outcome, projection, relation, provenance, nonclaim, JSON-type, numeric-lexeme, and forbidden-producer changes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-neighbors-and-regression",
+      "method": "Run neighboring feature inputs, Quiet Bell and Greenhouse inputs/oracles, then the complete tests/contract_compiler directory.",
+      "observed": "All 67 neighboring oracle and input tests passed. The complete contract-compiler directory passed 239 tests.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-quality-diff-package",
+      "method": "Run changed-file Ruff check and format check, verify the evidence snapshot, inspect the exact base-to-candidate diff, run git diff --check, and review package and release surfaces.",
+      "observed": "Ruff and format passed, evidence bytes match, and diff checking passed. PACKAGE NOT_APPLICABLE: the candidate changes private repository-local conformance evidence only, with no compiler, runtime, dependency, distribution, installed data, public API, corpus, checksum, Docker, selection, integration, or release change.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The JSON is a private fixture-local answer key. Its selectors and tokens are not compiler input, neutral IR, a public data format, a compatibility contract, runtime artifact bytes, wire grammar, or stable public identifiers.",
+    "The feature projections are exact expected semantic values for these 18 controlled sources. They do not claim that any current compiler or runtime conforms; later implementation stages must prove that independently.",
+    "Canonical fact bytes, logical artifact bytes, public diagnostic identifiers, and public EffectiveContract identity remain outside this workstream.",
+    "No compiler, LinkML adapter, resolver, runtime, protocol event, ledger, graph, projector, package, release, corpus membership, checksum, selection, integration, or compiler-stage completion is implemented here.",
+    "Explicit adoption, conflicting duplicate, and explicit false are not metamorphic groups. Only the four requirement-bound metamorphic pairs carry comparison relations.",
+    "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
+  ],
+  "recorded_at": "2026-09-01T07:18:33Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-014"
+}
