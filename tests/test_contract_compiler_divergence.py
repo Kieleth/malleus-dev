@@ -26,6 +26,16 @@ CASES = (
 )
 OBSERVATIONS = CASES.with_name("observations.json")
 EVIDENCE = ROOT / "conformance" / "contract_compiler" / "v0" / "evidence" / "CC-X01.json"
+CORRECTION_EVIDENCE = EVIDENCE.with_name("CC-X01-environment-contract-correction.json")
+HISTORICAL_EVIDENCE_COMMIT = "f9a09e24502fe8185fd06925e2a0bb92d8cc4e06"
+REPLACEMENT_GUARANTEE = (
+    "For the exact Linux compiler conformance environment, Malleus retains a "
+    "hash-pinned lock plus source and direct build inputs. Missing transitive "
+    "packages may be downloaded and must match their hashes. Malleus no longer "
+    "claims installation from repository-retained bytes without network access. "
+    "Normal cross-platform package metadata pins only the direct LinkML "
+    "compatibility requirement."
+)
 
 EXPECTED_CASE_IDS = [
     "simple_parity",
@@ -170,7 +180,7 @@ def test_retained_baseline_lock_and_direct_roots_are_hash_checked(tmp_path):
         if item.get("filename") == "linkml_runtime-1.11.1-py3-none-any.whl"
     )
     artifact["sha256"] = "sha256:" + "0" * 64
-    with pytest.raises(runner.DivergenceError, match="linkml-runtime"):
+    with pytest.raises(runner.DivergenceError, match="retained artifact bytes differ"):
         runner.retained_baseline(corrupt)
 
 
@@ -379,7 +389,7 @@ def test_cli_cannot_import_ontology_registry_from_hostile_pythonpath(tmp_path):
     assert "HOSTILE ONTOLOGY IMPORT" not in completed.stderr
 
 
-def test_evidence_binds_the_measurements_without_claiming_a_decision():
+def test_historical_evidence_binds_its_original_measurement_commit():
     evidence = _read(EVIDENCE)
     assert set(evidence) == {
         "schema",
@@ -403,8 +413,49 @@ def test_evidence_binds_the_measurements_without_claiming_a_decision():
     assert all(check["result"] == "PASS" for check in evidence["checks"])
     assert evidence["limitations"]
     for artifact in evidence["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        completed = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{HISTORICAL_EVIDENCE_COMMIT}:{artifact['path']}",
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+        )
+        assert completed.returncode == 0, completed.stderr.decode("utf-8")
+        source = completed.stdout
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == "sha256:" + hashlib.sha256(source).hexdigest()
     for mapping in _walk(evidence):
         assert not FORBIDDEN_DECISION_KEYS & set(mapping)
+
+
+def test_environment_correction_replaces_only_the_availability_guarantee():
+    correction = _read(CORRECTION_EVIDENCE)
+    assert set(correction) == {
+        "schema",
+        "workstream_id",
+        "recorded_at",
+        "corrects",
+        "historical_evidence_commit",
+        "replacement_guarantee",
+        "artifacts",
+        "checks",
+        "limitations",
+    }
+    assert correction["schema"] == "malleus.contract-compiler.evidence-correction/v1"
+    assert correction["workstream_id"] == "CC-X01"
+    assert correction["historical_evidence_commit"] == HISTORICAL_EVIDENCE_COMMIT
+    assert correction["replacement_guarantee"] == REPLACEMENT_GUARANTEE
+    assert correction["corrects"]["path"] == (
+        "conformance/contract_compiler/v0/evidence/CC-X01.json"
+    )
+    assert correction["corrects"]["scope"] == "environment availability only"
+    assert correction["checks"]
+    assert all(check["result"] == "PASS" for check in correction["checks"])
+    assert correction["limitations"]
+    for artifact in correction["artifacts"]:
+        source = (ROOT / artifact["path"]).read_bytes()
+        assert artifact["byte_length"] == len(source)
+        assert artifact["sha256"] == "sha256:" + hashlib.sha256(source).hexdigest()
