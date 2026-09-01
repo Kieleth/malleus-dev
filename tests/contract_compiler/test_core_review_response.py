@@ -76,6 +76,14 @@ PAYLOAD_FIELDS = {
         "intended_recipient_id",
         "review_question",
     },
+    "REREVIEW_RECORDED": {
+        "report_id",
+        "request_id",
+        "review_outcome",
+        "finding_outcomes",
+        "validation",
+        "rationale",
+    },
 }
 
 
@@ -134,7 +142,11 @@ def test_review_response_journal_is_closed_ordered_and_source_linked() -> None:
         assert event["schema"] == SCHEMA
         assert isinstance(event["event_id"], str) and event["event_id"]
         assert event["generated_at"].endswith("Z")
-        assert event["responsible_actor_id"] in {"actor:operator", "actor:overseer"}
+        assert event["responsible_actor_id"] in {
+            "actor:operator",
+            "actor:overseer",
+            "actor:independent-reviewer",
+        }
         assert event["event_type"] in PAYLOAD_FIELDS
         assert set(event["payload"]) == PAYLOAD_FIELDS[event["event_type"]]
         assert len(event["source_event_ids"]) == len(set(event["source_event_ids"]))
@@ -228,35 +240,64 @@ def test_correction_evidence_resolves_only_committed_exact_bytes() -> None:
         assert payload["rationale"]
 
 
-def test_fresh_rereview_targets_the_corrected_commit_not_a_review_record() -> None:
+def test_rereview_requests_target_corrected_commits_not_review_records() -> None:
     events = _events()
     requests = [event for event in events if event["event_type"] == "REREVIEW_REQUESTED"]
-    assert len(requests) == 1
-    request = requests[0]
-    assert request is events[-1]
-    payload = request["payload"]
-    assert payload["request_id"] == "rereview-request:core:1"
-    assert payload["prior_review_id"] == REVIEW_ID
-    assert payload["target_tree"] == _tree(payload["target_commit"])
-    assert payload["target_commit"] not in {
-        "bb56848a1ec711de7a90d362cb92c60ac11656e9",
-        "ecc56d6453963759cfbdf38c9d6c510520a46a39",
-    }
+    assert requests
+    assert [event["payload"]["request_id"] for event in requests] == [
+        f"rereview-request:core:{number}"
+        for number in range(1, len(requests) + 1)
+    ]
     correction_by_id = {
         event["event_id"]: event
         for event in events
         if event["event_type"] == "CORRECTION_EVIDENCED"
     }
-    assert set(payload["correction_event_ids"]) <= set(correction_by_id)
-    covered = {
-        finding_id
-        for event_id in payload["correction_event_ids"]
-        for finding_id in correction_by_id[event_id]["payload"]["finding_ids"]
+    for request in requests:
+        payload = request["payload"]
+        assert payload["prior_review_id"] == REVIEW_ID
+        assert payload["target_tree"] == _tree(payload["target_commit"])
+        assert payload["target_commit"] not in {
+            "bb56848a1ec711de7a90d362cb92c60ac11656e9",
+            "ecc56d6453963759cfbdf38c9d6c510520a46a39",
+        }
+        assert set(payload["correction_event_ids"]) <= set(correction_by_id)
+        covered = {
+            finding_id
+            for event_id in payload["correction_event_ids"]
+            for finding_id in correction_by_id[event_id]["payload"]["finding_ids"]
+        }
+        assert set(payload["finding_ids"]) == covered
+        assert request["source_event_ids"] == payload["correction_event_ids"]
+        assert payload["intended_recipient_id"] == "actor:independent-reviewer"
+        assert payload["review_question"]
+
+
+def test_every_rereview_request_has_one_independent_result() -> None:
+    events = _events()
+    requests = {
+        event["payload"]["request_id"]: event
+        for event in events
+        if event["event_type"] == "REREVIEW_REQUESTED"
     }
-    assert set(payload["finding_ids"]) == covered
-    assert request["source_event_ids"] == payload["correction_event_ids"]
-    assert payload["intended_recipient_id"] == "actor:independent-reviewer"
-    assert payload["review_question"]
+    results = [event for event in events if event["event_type"] == "REREVIEW_RECORDED"]
+    assert len(results) == len(requests)
+    assert {event["payload"]["request_id"] for event in results} == set(requests)
+    for event in results:
+        payload = event["payload"]
+        request = requests[payload["request_id"]]
+        assert event["responsible_actor_id"] == "actor:independent-reviewer"
+        assert event["source_event_ids"] == [request["event_id"]]
+        assert payload["report_id"]
+        assert payload["review_outcome"] in {"SATISFIED", "RETURN"}
+        assert set(payload["finding_outcomes"]) == set(
+            request["payload"]["finding_ids"]
+        )
+        for outcome in payload["finding_outcomes"].values():
+            assert outcome in {"SATISFIED", "RETURN"}
+        assert payload["validation"]
+        assert all(isinstance(item, str) and item for item in payload["validation"])
+        assert payload["rationale"]
 
 
 def test_handover_points_to_the_response_without_rewriting_historical_evidence() -> None:
