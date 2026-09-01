@@ -123,6 +123,41 @@ def test_unknown_root_field_refuses_the_whole_source() -> None:
         compile_linkml_contract(source, locator="memory:unknown-root-field")
 
 
+@pytest.mark.parametrize(
+    "name,source",
+    (
+        (
+            "duplicate-key",
+            (SOURCE_ROOT / "baseline.yaml").read_bytes()
+            + b"id: https://example.invalid/duplicate\n",
+        ),
+        (
+            "quoted-number",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"maximum_value: 60", b'maximum_value: "60"'),
+        ),
+        (
+            "yaml-only-boolean",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"identifier: true", b"identifier: TRUE"),
+        ),
+        (
+            "unresolved-import",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"linkml:types", b"unresolved-module"),
+        ),
+    ),
+)
+def test_raw_profile_refuses_before_linkml_coercion(
+    name: str, source: bytes
+) -> None:
+    with pytest.raises(ContractCompileError):
+        compile_linkml_contract(source, locator=f"memory:{name}")
+
+
 def test_compiler_is_bytes_in_and_does_not_import_the_legacy_registry() -> None:
     tree = ast.parse(IMPLEMENTATION.read_text(encoding="utf-8"))
     imports = {
