@@ -558,6 +558,170 @@ def _qualified_identifier(
     )
 
 
+def _declaration_matches(
+    value: AuthoredValue,
+    pattern: tuple[str, ...],
+    *,
+    path: tuple[str, ...],
+    variables: Mapping[str, str],
+) -> tuple[tuple[tuple[str, ...], Mapping[str, str], AuthoredMapping], ...]:
+    if not pattern:
+        return ((path, variables, value),) if type(value) is AuthoredMapping else ()
+    if type(value) is not AuthoredMapping:
+        return ()
+    token = pattern[0]
+    fields = (
+        value.fields
+        if token.startswith("$")
+        else tuple(field for field in value.fields if field.name == token)
+    )
+    matches: list[tuple[tuple[str, ...], Mapping[str, str], AuthoredMapping]] = []
+    for field in fields:
+        bound = dict(variables)
+        if token.startswith("$"):
+            prior = bound.setdefault(token, field.name)
+            if prior != field.name:
+                continue
+        matches.extend(
+            _declaration_matches(
+                field.value,
+                pattern[1:],
+                path=path + (field.name,),
+                variables=bound,
+            )
+        )
+    return tuple(matches)
+
+
+def _expected_declarations(
+    module: DeclaredModule, profile: _Profile
+) -> tuple[DeclaredDeclaration, ...]:
+    declarations: list[DeclaredDeclaration] = []
+    for root_field in module.root.fields:
+        for path_spec in profile.qualification_paths:
+            if not path_spec.pattern or path_spec.pattern[0] != root_field.name:
+                continue
+            for path, variables, body in _declaration_matches(
+                root_field.value,
+                path_spec.pattern[1:],
+                path=(root_field.name,),
+                variables={},
+            ):
+                name = variables["$name"]
+                declarations.append(
+                    DeclaredDeclaration(
+                        name=name,
+                        identifier=profile.separator.join(
+                            (
+                                module.schema_id,
+                                *(variables[token] for token in path_spec.identity),
+                            )
+                        ),
+                        kind=path_spec.kind,
+                        ordinal=len(declarations),
+                        path=path,
+                        body=body,
+                    )
+                )
+    return tuple(declarations)
+
+
+def _expected_occurrences(
+    value: AuthoredValue,
+    *,
+    path: tuple[str | int, ...] = (),
+    ordinal_path: tuple[int, ...] = (),
+) -> tuple[
+    tuple[
+        tuple[str | int, ...],
+        tuple[int, ...],
+        AuthoredValue,
+        AuthoredField | None,
+    ],
+    ...,
+]:
+    expected: list[
+        tuple[
+            tuple[str | int, ...],
+            tuple[int, ...],
+            AuthoredValue,
+            AuthoredField | None,
+        ]
+    ] = []
+    if type(value) is AuthoredMapping:
+        for field in value.fields:
+            field_path = path + (field.name,)
+            field_ordinals = ordinal_path + (field.ordinal,)
+            expected.extend(
+                _expected_occurrences(
+                    field.value,
+                    path=field_path,
+                    ordinal_path=field_ordinals,
+                )
+            )
+            expected.append((field_path, field_ordinals, field.value, field))
+    elif type(value) is AuthoredSequence:
+        for item in value.items:
+            item_path = path + (item.ordinal,)
+            item_ordinals = ordinal_path + (item.ordinal,)
+            expected.extend(
+                _expected_occurrences(
+                    item.value,
+                    path=item_path,
+                    ordinal_path=item_ordinals,
+                )
+            )
+            expected.append((item_path, item_ordinals, item.value, None))
+    return tuple(expected)
+
+
+def _validate_module_evidence(module: DeclaredModule, profile: _Profile) -> None:
+    root_id = _mapping_field(module.root, "id")
+    if (
+        root_id is None
+        or type(root_id.value) is not AuthoredScalar
+        or root_id.value.kind != "STRING"
+        or root_id.value.value != module.schema_id
+    ):
+        raise _input_refusal(
+            "declared schema ID differs from the authored root identity",
+            module_id=module.module_id,
+            path=("id",),
+        )
+    if module.declarations != _expected_declarations(module, profile):
+        raise _input_refusal(
+            "declared declarations differ from the authored root",
+            module_id=module.module_id,
+        )
+    expected_occurrences = _expected_occurrences(module.root)
+    if len(module.occurrences) != len(expected_occurrences):
+        raise _input_refusal(
+            "classified occurrences differ from the authored root",
+            module_id=module.module_id,
+        )
+    for occurrence, expected in zip(
+        module.occurrences, expected_occurrences, strict=True
+    ):
+        path, ordinal_path, value, field = expected
+        if (
+            occurrence.path != path
+            or occurrence.ordinal_path != ordinal_path
+            or occurrence.value != value
+            or (
+                field is not None
+                and (
+                    occurrence.classification != field.classification
+                    or occurrence.value_classification != field.value_classification
+                )
+            )
+        ):
+            raise _input_refusal(
+                "classified occurrences differ from the authored root",
+                module_id=module.module_id,
+                path=occurrence.path,
+            )
+
+
 def _validate_source(source: object, module_id: str) -> None:
     if (
         type(source) is not RetainedSource
@@ -665,6 +829,15 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
                 )
                 for declaration in module.declarations
             )
+            expected_occurrences = tuple(
+                ClassifiedOccurrence(
+                    ("trusted_builtins", builtin.name),
+                    (index,),
+                    "IDENTITY_ONLY",
+                    AuthoredScalar("STRING", builtin.name, builtin.name),
+                )
+                for index, builtin in enumerate(profile.builtins)
+            )
             if (
                 module.module_id != profile.trusted_module_id
                 or module.schema_id != profile.trusted_schema_id
@@ -673,6 +846,7 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
                 or module.authored_imports
                 or module.root != AuthoredMapping(())
                 or observed_declarations != expected_declarations
+                or module.occurrences != expected_occurrences
             ):
                 raise _input_refusal(
                     "trusted module does not match the exact profile authority",
@@ -699,6 +873,13 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
                 type(occurrence) is not ClassifiedOccurrence
                 or type(occurrence.path) is not tuple
                 or type(occurrence.ordinal_path) is not tuple
+                or any(type(item) not in {str, int} for item in occurrence.path)
+                or any(type(item) is not int for item in occurrence.ordinal_path)
+                or type(occurrence.classification) is not str
+                or (
+                    occurrence.value_classification is not None
+                    and type(occurrence.value_classification) is not str
+                )
             ):
                 raise _input_refusal("classified occurrence is malformed")
             _validate_authored(occurrence.value, occurrence.path)
@@ -726,6 +907,8 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
                     source_identifier=declaration.identifier,
                     path=declaration.path,
                 )
+        if not module.trusted:
+            _validate_module_evidence(module, profile)
 
     if declared_ids != set(observations):
         raise _input_refusal("declared and retained module sets differ")
@@ -779,21 +962,24 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
     if reachable != declared_ids:
         raise _input_refusal("source closure contains a module outside the exact root")
 
-    active: set[str] = set()
+    active = {root.resolved_locator}
     completed: set[str] = set()
-
-    def visit(module_id: str) -> None:
-        if module_id in active:
+    stack = [(root.resolved_locator, iter(sorted(children[root.resolved_locator])))]
+    while stack:
+        module_id, descendants = stack[-1]
+        try:
+            child = next(descendants)
+        except StopIteration:
+            active.remove(module_id)
+            completed.add(module_id)
+            stack.pop()
+            continue
+        if child in active:
             raise _input_refusal("source closure contains an import cycle")
-        if module_id in completed:
-            return
-        active.add(module_id)
-        for child in children[module_id]:
-            visit(child)
-        active.remove(module_id)
-        completed.add(module_id)
-
-    visit(root.resolved_locator)
+        if child in completed:
+            continue
+        active.add(child)
+        stack.append((child, iter(sorted(children[child]))))
     return closure
 
 
@@ -932,12 +1118,15 @@ def _qualified(
             _diagnostic(
                 BindingRefusalReason.QUALIFIED_IDENTIFIER_COLLISION,
                 "multiple declarations have the same qualified identifier",
-                module_id=group[0].module_id,
-                source_identifier=group[0].identifier,
-                path=group[0].path,
+                module_id=representative.module_id,
+                source_identifier=representative.identifier,
+                path=representative.path,
                 candidates=tuple(item.module_id for item in group),
             )
             for group in collisions
+            for representative in (
+                min(group, key=lambda item: (item.module_id, item.path)),
+            )
         )
         raise _refuse(*diagnostics)
 

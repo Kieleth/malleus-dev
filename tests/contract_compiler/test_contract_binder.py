@@ -25,6 +25,8 @@ from malleus._contract_linkml_adapter import (
     AuthoredScalar,
     AuthoredSequence,
     AuthoredSequenceItem,
+    AuthoredValue,
+    ClassifiedOccurrence,
     DeclaredContractClosure,
     DeclaredDeclaration,
     DeclaredModule,
@@ -166,16 +168,102 @@ def _replace_declaration_body(
     name: str,
     body: AuthoredMapping,
 ) -> DeclaredContractClosure:
+    def replace_path(
+        value: AuthoredValue, path: tuple[str, ...], replacement: AuthoredMapping
+    ) -> AuthoredValue:
+        if not path:
+            return replacement
+        assert isinstance(value, AuthoredMapping)
+        return AuthoredMapping(
+            tuple(
+                replace(
+                    field,
+                    value=replace_path(field.value, path[1:], replacement),
+                )
+                if field.name == path[0]
+                else field
+                for field in value.fields
+            )
+        )
+
+    def occurrences(
+        value: AuthoredValue,
+        prior: dict[tuple[str | int, ...], ClassifiedOccurrence],
+        *,
+        path: tuple[str | int, ...] = (),
+        ordinal_path: tuple[int, ...] = (),
+    ) -> tuple[ClassifiedOccurrence, ...]:
+        result: list[ClassifiedOccurrence] = []
+        if isinstance(value, AuthoredMapping):
+            for field in value.fields:
+                field_path = path + (field.name,)
+                field_ordinals = ordinal_path + (field.ordinal,)
+                result.extend(
+                    occurrences(
+                        field.value,
+                        prior,
+                        path=field_path,
+                        ordinal_path=field_ordinals,
+                    )
+                )
+                result.append(
+                    ClassifiedOccurrence(
+                        field_path,
+                        field_ordinals,
+                        field.classification,
+                        field.value,
+                        field.value_classification,
+                    )
+                )
+        elif isinstance(value, AuthoredSequence):
+            for item in value.items:
+                item_path = path + (item.ordinal,)
+                item_ordinals = ordinal_path + (item.ordinal,)
+                result.extend(
+                    occurrences(
+                        item.value,
+                        prior,
+                        path=item_path,
+                        ordinal_path=item_ordinals,
+                    )
+                )
+                previous = prior.get(item_path)
+                result.append(
+                    ClassifiedOccurrence(
+                        item_path,
+                        item_ordinals,
+                        previous.classification if previous else "ENFORCED",
+                        item.value,
+                        previous.value_classification if previous else None,
+                    )
+                )
+        return tuple(result)
+
     modules: list[DeclaredModule] = []
     for module in closure.modules:
         if module.module_id != module_id:
             modules.append(module)
             continue
+        declaration_path = next(
+            declaration.path
+            for declaration in module.declarations
+            if declaration.name == name
+        )
+        root = replace_path(module.root, declaration_path, body)
+        assert isinstance(root, AuthoredMapping)
         declarations = tuple(
             replace(declaration, body=body) if declaration.name == name else declaration
             for declaration in module.declarations
         )
-        modules.append(replace(module, declarations=declarations))
+        prior = {occurrence.path: occurrence for occurrence in module.occurrences}
+        modules.append(
+            replace(
+                module,
+                root=root,
+                declarations=declarations,
+                occurrences=occurrences(root, prior),
+            )
+        )
     return replace(closure, modules=tuple(modules))
 
 
