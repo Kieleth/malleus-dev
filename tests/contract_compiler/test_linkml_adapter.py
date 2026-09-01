@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+import malleus._contract_linkml_adapter as adapter_module
 from malleus._contract_linkml_adapter import (
     AuthoredMapping,
     AuthoredScalar,
@@ -1097,6 +1098,70 @@ def test_mutated_profile_cannot_bless_arbitrary_trusted_module_bytes() -> None:
     with pytest.raises(LinkMLAdapterRefusal) as caught:
         parse_linkml_module(
             _observation("attacker:types", source, ()),
+            profile=profile,
+        )
+
+    assert caught.value.reason is LinkMLRefusalReason.INVALID_PROFILE
+
+
+def test_caller_cannot_bypass_profile_validation_with_internal_wrapper() -> None:
+    source = b"not LinkML\n"
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["trusted_import"] = "attacker:types"
+    profile["trusted_module"] = {
+        "module_id": "attacker:types",
+        "schema_id": "urn:attacker:schema",
+        "byte_length": len(source),
+        "sha256": "sha256:" + sha256(source).hexdigest(),
+    }
+    profile["builtins"] = {
+        "attacker": {"form": "ABSOLUTE", "value": "urn:attacker:builtin"}
+    }
+    profile["seed_primitives"] = ["attacker"]
+    forged = adapter_module._AdapterProfile(profile, "attacker-selected-digest")
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation("attacker:types", source, ()),
+            profile=forged,  # type: ignore[arg-type]
+        )
+
+    assert caught.value.reason is LinkMLRefusalReason.INVALID_PROFILE
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "ordinal-bool",
+        "ordinal-float",
+        "required-int",
+        "required-float",
+        "min-fields-bool",
+        "values-int",
+    ),
+)
+def test_adapter_policy_comparison_is_type_exact(mutation: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if mutation == "ordinal-bool":
+        profile["source_ordering"]["ordinal_base"] = False
+    elif mutation == "ordinal-float":
+        profile["source_ordering"]["ordinal_base"] = 0.0
+    elif mutation == "required-int":
+        profile["node_shapes"]["schema"]["fields"]["name"]["required"] = 1
+    elif mutation == "required-float":
+        profile["node_shapes"]["schema"]["fields"]["name"]["required"] = 1.0
+    elif mutation == "min-fields-bool":
+        profile["node_shapes"]["condition"]["min_fields"] = True
+    else:
+        profile["node_shapes"]["adoption_annotations"]["fields"]["adopts"][
+            "values"
+        ] = [1]
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation(
+                "aliased-profile", b"id: https://example.org/x\nname: x\n", ()
+            ),
             profile=profile,
         )
 

@@ -252,19 +252,16 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
     default_profile["defaults"]["class"]["abstract"] = True
 
     ordinary = _compile("baseline.yaml")
-    without_abstract = compile_linkml_contract(
-        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-        locator="memory:annotation-profile",
-        profile=annotation_profile,
-    )
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:annotation-profile",
+            profile=annotation_profile,
+        )
     abstract_by_default = compile_linkml_contract(
         (SOURCE_ROOT / "baseline.yaml").read_bytes(),
         locator="memory:default-profile",
         profile=default_profile,
-    )
-    assert without_abstract.canonical_facts != ordinary.canonical_facts
-    assert not any(
-        fact.predicate.endswith("/abstract") for fact in without_abstract.facts
     )
     with pytest.raises(ContractCompileError, match="profile"):
         compile_linkml_contract(
@@ -273,10 +270,10 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
             profile=identity_profile,
         )
     assert (
-        without_abstract.implementation.profile_sha256
+        abstract_by_default.implementation.profile_sha256
         == hashlib.sha256(
             json.dumps(
-                annotation_profile,
+                default_profile,
                 ensure_ascii=False,
                 separators=(",", ":"),
                 sort_keys=True,
@@ -288,6 +285,18 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
         fact.predicate.endswith("/abstract") and fact.object is True
         for fact in abstract_by_default.facts
     )
+
+
+def test_compiler_threads_one_active_profile_through_parser_and_lowering() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["source_ordering"]["ordinal_base"] = False
+
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:aliased-parser-profile",
+            profile=profile,
+        )
 
 
 def test_non_enforced_rule_operand_refuses_the_profile() -> None:
