@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Run the fixed profile-coherence reproductions before production repair.",
+    "observed": "The wrapper bypass, bool/int/float policy aliases, and parser/lowering profile mismatch reproduce as expected failures.",
+    "phase": "RED",
+    "result": "FAIL"
+  },
+  "entry_hash": "sha256:bca11a34e79cd3afb6d351788536aabcbfc3d39180fed1e4b6631e6d04eda2c5",
+  "entry_id": "CC-R02-WRK-000015",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:bfc1e066ff41b50d2a8837df9b53c7f7fb5f7c221bb227fc7a24c583b8a8220b",
+  "recorded_at": "2026-09-01T19:07:07Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 15,
+  "summary": "Record the profile-coherence repair RED.",
+  "workstream_id": "CC-R02"
+}

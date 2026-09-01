@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Mutate caller wrappers, nested parser policy scalar types, and the parser profile independently from lowering.",
+    "observed": "Every bypass and alias refuses atomically as INVALID_PROFILE; downstream default/lowering policy remains separately injectable.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:6bed5a09fe2498a96aa59d8743111e130f31c9597d8189aee5e92b8eceab3234",
+  "entry_id": "CC-R02-WRK-000018",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b810f1c833ce14f1b3472c0734b9580ae1da6ed7f2a413954ffef79070bef24a",
+  "recorded_at": "2026-09-01T19:07:10Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 18,
+  "summary": "Pass the corrected profile disproofs.",
+  "workstream_id": "CC-R02"
+}
