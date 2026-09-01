@@ -1,14 +1,15 @@
-"""Private LinkML adapter for a small, explicit neutral-contract subset.
+"""Private compiler for a small, explicit neutral-contract subset.
 
 The adjacent profile owns the accepted source shapes and semantic policy. This
-module supplies generic parsing, validation, identity, and fact-encoding
-mechanisms. It performs no source or network resolution.
+module delegates source parsing to the retained-source LinkML adapter, then
+supplies validation, identity, and fact-encoding mechanisms. It performs no
+source or network resolution.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from hashlib import sha256
 from importlib.metadata import PackageNotFoundError, version
 import json
@@ -17,18 +18,7 @@ from typing import Any, Mapping
 from unicodedata import category
 from urllib.parse import urlsplit
 
-from linkml_runtime.linkml_model.meta import SchemaDefinition
-from linkml_runtime.loaders import yaml_loader
-import yaml
-from yaml.nodes import MappingNode, Node, ScalarNode, SequenceNode
-from yaml.tokens import (
-    AliasToken,
-    AnchorToken,
-    DirectiveToken,
-    DocumentEndToken,
-    DocumentStartToken,
-    TagToken,
-)
+import malleus._contract_linkml_adapter
 
 
 class ContractCompileError(ValueError):
@@ -99,6 +89,7 @@ class CompilerImplementation:
     support_profile: str
     profile_sha256: str
     executor_sha256: str
+    adapter_executor_sha256: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -162,6 +153,16 @@ def _canonical_json(value: object) -> bytes:
     ).encode("utf-8")
 
 
+def _canonical_decimal(value: str) -> str:
+    """Lower one already validated numeric lexeme into the D05 fact form."""
+
+    decimal = Decimal(value)
+    if decimal.is_zero():
+        return "0"
+    fixed = format(decimal, "f")
+    return fixed.rstrip("0").rstrip(".") if "." in fixed else fixed
+
+
 def _plain_json(value: object) -> object:
     if isinstance(value, Mapping):
         if not all(isinstance(key, str) for key in value):
@@ -181,9 +182,10 @@ _CLASSIFICATIONS = (
     "ANNOTATION_ONLY",
     "ENFORCED",
     "IDENTITY_ONLY",
-    "UNSUPPORTED",
+    "REJECTED",
 )
 _PARSERS = {
+    "adoption_annotations",
     "boolean",
     "decimal",
     "enum_values",
@@ -192,9 +194,11 @@ _PARSERS = {
     "module_iri",
     "named",
     "nonempty_string",
+    "prefixes",
     "string",
     "string_list",
 }
+_KEY_PARSERS = {"ascii_identifier", "nonempty_string", "reference"}
 _RESOLVERS = {"class", "mixin_list", "range", "seed"}
 _ROOT_KEYS = {
     "adapter",
@@ -215,9 +219,13 @@ _ROOT_KEYS = {
     "support_profile",
     "symbol_policy",
     "trusted_import",
+    "source_ordering",
+    "trusted_module",
 }
 _SHAPE_KEYS = {
+    "bootstrap",
     "constraints",
+    "declaration_kind",
     "fields",
     "kind",
     "label",
@@ -227,10 +235,16 @@ _SHAPE_KEYS = {
     "use_identity",
 }
 _FIELD_KEYS = {
+    "bootstrap",
+    "bootstrap_max_items",
     "classification",
     "default",
     "identity_role",
     "item_shape",
+    "item_classification",
+    "key_classification",
+    "key_parser",
+    "value_classification",
     "max_items",
     "member",
     "min_items",
@@ -274,6 +288,7 @@ _PREDICATE_NAMES = {
     "value_range",
 }
 _SHAPE_NAMES = {
+    "adoption_annotations",
     "alternative",
     "attribute",
     "class",
@@ -282,6 +297,7 @@ _SHAPE_NAMES = {
     "permissible_value",
     "schema",
     "slot",
+    "slot_usage",
     "type",
 }
 _IDENTITY_NAMES = {
@@ -461,6 +477,7 @@ def _validate_field(
         "default",
         "identity_role",
         "item_shape",
+        "key_parser",
         "member",
         "parser",
         "predicate",
@@ -471,26 +488,71 @@ def _validate_field(
             _profile_string(field[member], f"{where}.{member}")
     if classification not in _CLASSIFICATIONS or parser not in _PARSERS:
         raise ContractCompileError(f"profile {where} has an unknown operation")
-    if parser == "mapping" and classification != "UNSUPPORTED":
+    if parser == "mapping" and classification != "REJECTED":
         raise ContractCompileError(f"profile {where}.parser is not executable")
     if "required" in field and not isinstance(field["required"], bool):
         raise ContractCompileError(f"profile {where}.required must be boolean")
-    if classification == "UNSUPPORTED" and set(field) != {
+    if classification == "REJECTED" and set(field) != {
         "classification",
         "parser",
     }:
         raise ContractCompileError(f"profile {where} has unread unsupported policy")
+    if "bootstrap" in field and field["bootstrap"] != "REJECTED":
+        raise ContractCompileError(f"profile {where}.bootstrap is not executable")
+    if "bootstrap_max_items" in field:
+        _nonnegative(field["bootstrap_max_items"], f"{where}.bootstrap_max_items")
+        if parser not in {"items", "named", "string_list"}:
+            raise ContractCompileError(f"profile {where}.bootstrap_max_items is unread")
+    for member in (
+        "item_classification",
+        "key_classification",
+        "value_classification",
+    ):
+        if member in field and field[member] not in {
+            "ANNOTATION_ONLY",
+            "ENFORCED",
+            "IDENTITY_ONLY",
+        }:
+            raise ContractCompileError(f"profile {where}.{member} is invalid")
+    if "item_classification" in field and parser not in {"items", "string_list"}:
+        raise ContractCompileError(f"profile {where}.item_classification is unread")
+    if "key_classification" in field and parser not in {
+        "enum_values",
+        "named",
+        "prefixes",
+    }:
+        raise ContractCompileError(f"profile {where}.key_classification is unread")
+    if parser in {"items", "string_list"} and "item_classification" not in field:
+        raise ContractCompileError(f"profile {where} lacks item classification")
+    if parser in {"enum_values", "named", "prefixes"}:
+        if (
+            "key_classification" not in field
+            or field.get("key_parser") not in _KEY_PARSERS
+        ):
+            raise ContractCompileError(f"profile {where} lacks key policy")
+    elif "key_parser" in field:
+        raise ContractCompileError(f"profile {where}.key_parser is unread")
+    if "value_classification" in field and parser not in {
+        "module_iri",
+        "nonempty_string",
+        "prefixes",
+        "string",
+    }:
+        raise ContractCompileError(f"profile {where}.value_classification is unread")
     for cardinality in ("min_items", "max_items"):
         if cardinality in field:
             _nonnegative(field[cardinality], f"{where}.{cardinality}")
     if field.get("min_items", 0) > field.get("max_items", float("inf")):
         raise ContractCompileError(f"profile {where} has inverted cardinality")
     if "item_shape" in field:
-        if parser not in {"enum_values", "items", "named"}:
+        if parser not in {"adoption_annotations", "enum_values", "items", "named"}:
             raise ContractCompileError(f"profile {where}.item_shape is unread")
         if field["item_shape"] not in shapes:
             raise ContractCompileError(f"profile {where}.item_shape is unknown")
-    if parser in {"enum_values", "items", "named"} and "item_shape" not in field:
+    if (
+        parser in {"adoption_annotations", "enum_values", "items", "named"}
+        and "item_shape" not in field
+    ):
         raise ContractCompileError(f"profile {where} lacks item_shape")
     if "predicate" in field:
         if field["predicate"] not in predicates:
@@ -523,21 +585,62 @@ def _validate_field(
             raise ContractCompileError(
                 f"profile {where}.resolver has an incompatible parser"
             )
-    if "identity_role" in field and (
-        classification != "IDENTITY_ONLY" or field["identity_role"] != "module"
-    ):
+    if "identity_role" in field and classification != "IDENTITY_ONLY":
         raise ContractCompileError(f"profile {where}.identity_role is invalid")
-    if "identity_role" in field and (
-        parser != "module_iri" or field.get("required") is not True
-    ):
-        raise ContractCompileError(f"profile {where}.identity_role is not executable")
-    if classification == "IDENTITY_ONLY" and shape_name != "schema":
-        raise ContractCompileError(f"profile {where}.identity_role is outside schema")
     if classification == "IDENTITY_ONLY" and "identity_role" not in field:
         raise ContractCompileError(f"profile {where} lacks an identity_role")
+    identity_contracts = {
+        "module": ("schema", "module_iri", True),
+        "prefix_map": ("schema", "prefixes", False),
+        "adoption_marker": (None, None, None),
+    }
+    if classification == "IDENTITY_ONLY":
+        role = field["identity_role"]
+        if role not in identity_contracts:
+            raise ContractCompileError(f"profile {where}.identity_role is invalid")
+        required_shape, required_parser, required = identity_contracts[role]
+        if required_shape is not None and shape_name != required_shape:
+            raise ContractCompileError(
+                f"profile {where}.identity_role is outside its shape"
+            )
+        if required_parser is not None and parser != required_parser:
+            raise ContractCompileError(
+                f"profile {where}.identity_role is not executable"
+            )
+        wrong_presence = (
+            field.get("required") is not True
+            if required is True
+            else field.get("required") is True
+        )
+        if required is not None and wrong_presence:
+            raise ContractCompileError(
+                f"profile {where}.identity_role has wrong presence"
+            )
+        if role == "adoption_marker" and not (
+            (shape_name == "slot" and parser == "adoption_annotations")
+            or (
+                shape_name == "adoption_annotations"
+                and field_name == "adopts"
+                and parser == "boolean"
+                and field.get("required") is True
+            )
+        ):
+            raise ContractCompileError(
+                f"profile {where}.identity_role is outside adoption"
+            )
     if "values" in field:
-        _string_list(field["values"], f"{where}.values")
-        if parser not in {"nonempty_string", "string"}:
+        values = field["values"]
+        if parser == "boolean":
+            if (
+                not isinstance(values, list)
+                or not values
+                or any(type(item) is not bool for item in values)
+                or len(values) != len(set(values))
+            ):
+                raise ContractCompileError(f"profile {where}.values is invalid")
+        else:
+            _string_list(values, f"{where}.values")
+        if parser not in {"boolean", "nonempty_string", "string"}:
             raise ContractCompileError(f"profile {where}.values is unread")
     if ("min_items" in field or "max_items" in field) and parser not in {
         "enum_values",
@@ -935,7 +1038,7 @@ def _validate_plan(
         raise ContractCompileError("profile conditions field is not executable")
     if (
         conditions.get("min_items") != 1
-        or conditions.get("max_items") != 1
+        or conditions.get("bootstrap_max_items") != 1
         or conditions.get("required") is not True
     ):
         raise ContractCompileError(
@@ -1119,25 +1222,32 @@ def _validate_plan(
         for field_name, field in shape["fields"].items():
             if (
                 field["classification"] == "ENFORCED"
+                and field.get("bootstrap") != "REJECTED"
+                and shape.get("bootstrap") != "DEFERRED"
                 and (shape_name, field_name) not in consumed_fields
             ):
                 raise ContractCompileError(
                     f"profile field {shape_name}.{field_name} has no semantic consumer"
                 )
     for shape_name, shape in shapes.items():
-        if "kind" in shape and shape_name not in declaration_shapes:
+        deferred = shape.get("bootstrap") == "DEFERRED"
+        if "kind" in shape and shape_name not in declaration_shapes and not deferred:
             raise ContractCompileError(
                 f"profile shape {shape_name!r} has unread kind policy"
             )
-        if "use_identity" in shape and shape_name not in slot_shapes:
+        if "use_identity" in shape and shape_name not in slot_shapes and not deferred:
             raise ContractCompileError(
                 f"profile shape {shape_name!r} has unread identity policy"
             )
-        if "rules" in shape and shape_name not in slot_shapes:
+        if "rules" in shape and shape_name not in slot_shapes and not deferred:
             raise ContractCompileError(
                 f"profile shape {shape_name!r} has unread rule policy"
             )
-        if "constraints" in shape and shape_name not in effective_shapes:
+        if (
+            "constraints" in shape
+            and shape_name not in effective_shapes
+            and not deferred
+        ):
             raise ContractCompileError(
                 f"profile shape {shape_name!r} has unread constraint policy"
             )
@@ -1147,8 +1257,10 @@ def _validate_plan(
                     f"profile field {shape_name}.{field_name} has unread member policy"
                 )
             if (
-                "default" in field or "schema_default" in field
-            ) and shape_name not in effective_shapes:
+                ("default" in field or "schema_default" in field)
+                and shape_name not in effective_shapes
+                and not deferred
+            ):
                 raise ContractCompileError(
                     f"profile field {shape_name}.{field_name} has unread default policy"
                 )
@@ -1173,6 +1285,33 @@ def _validate_profile(data: Mapping[str, Any]) -> None:
     _absolute_identifier(str(data["namespace"]), "namespace")
     if not str(data["namespace"]).endswith("/"):
         raise ContractCompileError("profile namespace must be an absolute IRI base")
+    source_ordering = _profile_mapping(data["source_ordering"], "source_ordering")
+    _exact_keys(
+        source_ordering,
+        {"field_order", "module_order", "ordinal_base"},
+        "source_ordering",
+    )
+    if source_ordering != {
+        "field_order": "PRESERVE_AUTHORED",
+        "module_order": "PRESERVE_SOURCE_CLOSURE",
+        "ordinal_base": 0,
+    }:
+        raise ContractCompileError("profile source ordering is unsupported")
+    trusted_module = _profile_mapping(data["trusted_module"], "trusted_module")
+    _exact_keys(
+        trusted_module,
+        {"byte_length", "module_id", "schema_id", "sha256"},
+        "trusted_module",
+    )
+    if (
+        isinstance(trusted_module["byte_length"], bool)
+        or trusted_module["byte_length"] != 7296
+        or trusted_module["module_id"] != data["trusted_import"]
+        or trusted_module["schema_id"] != "https://w3id.org/linkml/types"
+        or trusted_module["sha256"]
+        != "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    ):
+        raise ContractCompileError("profile trusted module identity is unsupported")
     defaults = _profile_mapping(data["defaults"], "defaults")
     _exact_keys(defaults, {"class", "slot"}, "defaults")
     _exact_keys(
@@ -1229,6 +1368,20 @@ def _validate_profile(data: Mapping[str, Any]) -> None:
                 f"profile node shape {shape_name!r} is not closed"
             )
         _profile_string(shape["label"], f"node_shapes.{shape_name}.label")
+        if "bootstrap" in shape and shape["bootstrap"] != "DEFERRED":
+            raise ContractCompileError(
+                f"profile node shape {shape_name!r} bootstrap is unsupported"
+            )
+        if "declaration_kind" in shape and shape["declaration_kind"] not in {
+            "Attribute",
+            "Class",
+            "Enum",
+            "Scalar",
+            "Slot",
+        }:
+            raise ContractCompileError(
+                f"profile node shape {shape_name!r} declaration kind is unsupported"
+            )
         fields = _profile_mapping(shape["fields"], f"node_shapes.{shape_name}.fields")
         if "kind" in shape and shape["kind"] not in kinds:
             raise ContractCompileError(
@@ -1354,249 +1507,6 @@ def _load_profile(injected: Mapping[str, object] | None) -> _Profile:
     return _Profile(data, digest)
 
 
-_YAML_STRING = "tag:yaml.org,2002:str"
-_YAML_BOOLEAN = "tag:yaml.org,2002:bool"
-_YAML_NULL = "tag:yaml.org,2002:null"
-
-
-def _mapping_items(node: Node, where: str) -> list[tuple[str, Node]]:
-    if not isinstance(node, MappingNode):
-        raise ContractCompileError(f"{where} must be a mapping")
-    result: list[tuple[str, Node]] = []
-    seen: set[str] = set()
-    for key_node, value_node in node.value:
-        if not isinstance(key_node, ScalarNode) or key_node.tag != _YAML_STRING:
-            raise ContractCompileError(f"{where} has a non-string mapping key")
-        key = key_node.value
-        if key == "<<":
-            raise ContractCompileError(f"{where} contains a YAML merge key")
-        if key in seen:
-            raise ContractCompileError(f"{where} repeats field {key!r}")
-        seen.add(key)
-        result.append((key, value_node))
-    return result
-
-
-def _string(node: Node, where: str, *, nonempty: bool = False) -> str:
-    if not isinstance(node, ScalarNode) or node.tag != _YAML_STRING:
-        raise ContractCompileError(f"{where} must be a string")
-    if nonempty and not node.value:
-        raise ContractCompileError(f"{where} must be a nonempty string")
-    return node.value
-
-
-def _boolean(node: Node, where: str) -> bool:
-    if (
-        not isinstance(node, ScalarNode)
-        or node.style is not None
-        or node.tag != _YAML_BOOLEAN
-        or node.value not in {"true", "false"}
-    ):
-        raise ContractCompileError(f"{where} must be raw lowercase true or false")
-    return node.value == "true"
-
-
-def _decimal(node: Node, where: str) -> str:
-    if not isinstance(node, ScalarNode) or node.style is not None:
-        raise ContractCompileError(f"{where} must be an unquoted JSON number")
-    text = node.value
-    index = 1 if text.startswith("-") else 0
-    if index >= len(text):
-        raise ContractCompileError(f"{where} has an invalid numeric lexeme")
-    if text[index] == "0":
-        index += 1
-        if index < len(text) and text[index].isdigit():
-            raise ContractCompileError(f"{where} has a leading zero")
-    elif "1" <= text[index] <= "9":
-        while index < len(text) and text[index].isdigit():
-            index += 1
-    else:
-        raise ContractCompileError(f"{where} has an invalid integer part")
-    if index < len(text) and text[index] == ".":
-        index += 1
-        start = index
-        while index < len(text) and text[index].isdigit():
-            index += 1
-        if index == start:
-            raise ContractCompileError(f"{where} has an empty fraction")
-    if index < len(text) and text[index] in {"e", "E"}:
-        index += 1
-        if index < len(text) and text[index] in {"+", "-"}:
-            index += 1
-        start = index
-        while index < len(text) and text[index].isdigit():
-            index += 1
-        if index == start:
-            raise ContractCompileError(f"{where} has an empty exponent")
-    if index != len(text):
-        raise ContractCompileError(f"{where} has an invalid numeric lexeme")
-    try:
-        value = Decimal(text)
-    except InvalidOperation as error:
-        raise ContractCompileError(f"{where} is not a finite decimal") from error
-    if not value.is_finite():
-        raise ContractCompileError(f"{where} is not a finite decimal")
-    if value.is_zero():
-        return "0"
-    fixed = format(value, "f")
-    return fixed.rstrip("0").rstrip(".") if "." in fixed else fixed
-
-
-def _identifier(value: str, where: str) -> str:
-    try:
-        _local_identifier(value, where)
-    except ContractCompileError:
-        raise ContractCompileError(f"{where} has invalid declaration key {value!r}")
-    return value
-
-
-def _module_iri(node: Node, where: str) -> str:
-    value = _string(node, where, nonempty=True)
-    try:
-        _absolute_identifier(value, where)
-        parts = urlsplit(value)
-    except ContractCompileError as error:
-        raise ContractCompileError(f"{where} must be an absolute IRI") from error
-    if parts.query or parts.fragment or value.endswith("/"):
-        raise ContractCompileError(
-            f"{where} must be an absolute module IRI without query or fragment"
-        )
-    return value
-
-
-class _RawParser:
-    def __init__(self, profile: _Profile) -> None:
-        self.profile = profile
-
-    @staticmethod
-    def _cardinality(values: object, spec: Mapping[str, Any], where: str) -> None:
-        if not isinstance(values, (list, tuple, dict)):
-            return
-        if "min_items" in spec and len(values) < spec["min_items"]:
-            raise ContractCompileError(f"{where} has too few items")
-        if "max_items" in spec and len(values) > spec["max_items"]:
-            raise ContractCompileError(f"{where} has too many items")
-
-    def _value(self, node: Node, spec: Mapping[str, Any], where: str) -> object:
-        operation = spec["parser"]
-        if operation == "string":
-            result: object = _string(node, where)
-        elif operation == "nonempty_string":
-            result = _string(node, where, nonempty=True)
-        elif operation == "module_iri":
-            result = _module_iri(node, where)
-        elif operation == "boolean":
-            result = _boolean(node, where)
-        elif operation == "decimal":
-            result = _decimal(node, where)
-        elif operation == "string_list":
-            if not isinstance(node, SequenceNode):
-                raise ContractCompileError(f"{where} must be a sequence")
-            result = tuple(
-                _string(item, f"{where} item", nonempty=True) for item in node.value
-            )
-            if len(result) != len(set(result)):
-                raise ContractCompileError(f"{where} repeats an item")
-        elif operation == "items":
-            if not isinstance(node, SequenceNode):
-                raise ContractCompileError(f"{where} must be a sequence")
-            result = tuple(
-                self._shape(item, spec["item_shape"], f"{where}[{index}]")
-                for index, item in enumerate(node.value)
-            )
-        elif operation == "named":
-            result = {}
-            for key, item in _mapping_items(node, where):
-                if (
-                    self.profile.mapping("symbol_policy")["key_parser"]
-                    != "ascii_identifier"
-                ):
-                    raise ContractCompileError(
-                        "profile symbol key parser is not executable"
-                    )
-                name = _identifier(key, where)
-                result[name] = self._shape(item, spec["item_shape"], f"{where}.{name}")
-        elif operation == "enum_values":
-            result = {}
-            for key, item in _mapping_items(node, where):
-                if not key:
-                    raise ContractCompileError(f"{where} has an empty value")
-                if isinstance(item, ScalarNode) and item.tag == _YAML_NULL:
-                    if item.style is not None or item.value not in {"", "null"}:
-                        raise ContractCompileError(
-                            f"{where}.{key} has unsupported null syntax"
-                        )
-                    result[key] = {}
-                else:
-                    result[key] = self._shape(
-                        item, spec["item_shape"], f"{where}.{key}"
-                    )
-        else:
-            raise ContractCompileError(
-                f"profile parser operation {operation!r} is not executable"
-            )
-        self._cardinality(result, spec, where)
-        if "values" in spec and result not in spec["values"]:
-            raise ContractCompileError(f"{where} has an unsupported value")
-        return result
-
-    def _shape(self, node: Node, shape_name: str, where: str) -> dict[str, object]:
-        shape = self.profile.shape(shape_name)
-        fields = self.profile.fields(shape_name)
-        values = _mapping_items(node, where)
-        unknown = [name for name, _ in values if name not in fields]
-        if unknown:
-            raise ContractCompileError(
-                f"{where} contains unsupported field {unknown[0]!r}"
-            )
-        result: dict[str, object] = {}
-        for name, value in values:
-            spec = fields[name]
-            if spec["classification"] == "UNSUPPORTED":
-                raise ContractCompileError(
-                    f"{where} contains unsupported field {name!r}"
-                )
-            result[name] = self._value(value, spec, f"{where}.{name}")
-        missing = [
-            name
-            for name, spec in fields.items()
-            if spec.get("required") is True and name not in result
-        ]
-        if missing:
-            raise ContractCompileError(
-                f"{where} is missing required field {sorted(missing)[0]!r}"
-            )
-        if len(result) < shape.get("min_fields", 0):
-            raise ContractCompileError(f"{where} has too few fields")
-        if len(result) > shape.get("max_fields", float("inf")):
-            raise ContractCompileError(f"{where} has too many fields")
-        return result
-
-    def parse(self, text: str) -> dict[str, object]:
-        try:
-            forbidden = (
-                AliasToken,
-                AnchorToken,
-                DirectiveToken,
-                DocumentEndToken,
-                DocumentStartToken,
-                TagToken,
-            )
-            for token in yaml.scan(text, Loader=yaml.SafeLoader):
-                if isinstance(token, forbidden):
-                    raise ContractCompileError(
-                        f"source contains unsupported YAML token {type(token).__name__}"
-                    )
-            documents = list(yaml.compose_all(text, Loader=yaml.SafeLoader))
-        except yaml.YAMLError as error:
-            raise ContractCompileError(f"source is not valid YAML: {error}") from error
-        if len(documents) != 1 or documents[0] is None:
-            raise ContractCompileError(
-                "source must contain exactly one mapping document"
-            )
-        return self._shape(documents[0], "schema", "schema root")
-
-
 class _ContractBuilder:
     def __init__(self) -> None:
         self._declarations: dict[str, tuple[str, list[ContractProperty]]] = {}
@@ -1658,6 +1568,7 @@ class _LinkMLAdapter:
     def __init__(self, schema: Mapping[str, object], profile: _Profile) -> None:
         self.schema = schema
         self.profile = profile
+        self._enforce_bootstrap_shape("schema", schema)
         self.namespace = str(profile.data["namespace"])
         self.builder = _ContractBuilder()
         module_field = self._identity_field("schema", "module")
@@ -1680,6 +1591,40 @@ class _LinkMLAdapter:
         self.slot_shape = ""
         self.scalar_shape = ""
         self.scalar_base_field = ""
+
+    def _enforce_bootstrap_shape(
+        self, shape_name: str, source: Mapping[str, object]
+    ) -> None:
+        shape = self.profile.shape(shape_name)
+        if shape.get("bootstrap") == "DEFERRED":
+            raise ContractCompileError(
+                f"shape {shape_name!r} is deferred beyond the bootstrap compiler"
+            )
+        for field, spec in self.profile.fields(shape_name).items():
+            if field not in source:
+                continue
+            if spec.get("bootstrap") == "REJECTED":
+                raise ContractCompileError(
+                    f"field {shape_name}.{field} is deferred beyond the bootstrap "
+                    "compiler"
+                )
+            value = source[field]
+            maximum = spec.get("bootstrap_max_items")
+            if maximum is not None and isinstance(value, (Mapping, tuple)):
+                if len(value) > maximum:
+                    raise ContractCompileError(
+                        f"field {shape_name}.{field} exceeds the bootstrap compiler"
+                    )
+            item_shape = spec.get("item_shape")
+            if item_shape is None:
+                continue
+            parser = spec["parser"]
+            if parser in {"named", "enum_values"}:
+                for item in value.values():
+                    self._enforce_bootstrap_shape(str(item_shape), item)
+            elif parser == "items":
+                for item in value:
+                    self._enforce_bootstrap_shape(str(item_shape), item)
 
     def _identity_field(self, shape: str, role: str) -> str:
         matches = [
@@ -1726,7 +1671,18 @@ class _LinkMLAdapter:
         else:
             raise ContractCompileError(f"unknown profile read purpose {purpose!r}")
         if field in source:
-            return source[field]
+            if spec.get("bootstrap") == "REJECTED":
+                raise ContractCompileError(
+                    f"field {shape}.{field} is deferred beyond the bootstrap compiler"
+                )
+            value = source[field]
+            maximum = spec.get("bootstrap_max_items")
+            if maximum is not None and isinstance(value, (Mapping, tuple)):
+                if len(value) > maximum:
+                    raise ContractCompileError(
+                        f"field {shape}.{field} exceeds the bootstrap compiler"
+                    )
+            return value
         return default
 
     def _collection(self, name: str) -> Mapping[str, Mapping[str, object]]:
@@ -1847,6 +1803,8 @@ class _LinkMLAdapter:
         return value
 
     def _resolve(self, spec: Mapping[str, Any], value: object) -> object:
+        if spec["parser"] == "decimal":
+            return _canonical_decimal(str(value))
         resolver = spec.get("resolver")
         if resolver == "range":
             return self._range(str(value))
@@ -2319,18 +2277,6 @@ def _encode_facts(
     return tuple(sorted(facts, key=lambda fact: _canonical_json(fact.as_dict())))
 
 
-def _decode_source(source: bytes) -> str:
-    if not isinstance(source, bytes):
-        raise TypeError("source must be bytes")
-    try:
-        text = source.decode("utf-8")
-    except UnicodeDecodeError as error:
-        raise ContractCompileError("source is not valid UTF-8") from error
-    if text.startswith("\ufeff"):
-        raise ContractCompileError("source must not contain a byte-order mark")
-    return text
-
-
 def _validate_versions(profile: _Profile) -> None:
     expected = {
         "linkml": profile.data["linkml_version"],
@@ -2349,16 +2295,6 @@ def _validate_versions(profile: _Profile) -> None:
             )
 
 
-def _validate_linkml(text: str, profile: _Profile) -> None:
-    try:
-        yaml_loader.loads(text, target_class=SchemaDefinition)
-    except Exception as error:
-        required = profile.data["linkml_runtime_version"]
-        raise ContractCompileError(
-            f"LinkML Runtime {required} rejected the source: {error}"
-        ) from error
-
-
 def compile_linkml_contract(
     source: bytes,
     *,
@@ -2370,16 +2306,20 @@ def compile_linkml_contract(
     if not isinstance(locator, str) or not locator:
         raise TypeError("locator must be a nonempty string")
     active = _load_profile(profile)
-    text = _decode_source(source)
     try:
-        schema = _RawParser(active).parse(text)
         _validate_versions(active)
-        _validate_linkml(text, active)
+        parsed = malleus._contract_linkml_adapter._parse_linkml_source(
+            source,
+            module_id=locator,
+        )
+        schema = parsed.plain
         contract = _LinkMLAdapter(schema, active).adapt()
         facts = _encode_facts(contract, active)
         canonical = _canonical_json([fact.as_dict() for fact in facts])
     except ContractCompileError:
         raise
+    except malleus._contract_linkml_adapter.LinkMLAdapterRefusal as error:
+        raise ContractCompileError(str(error)) from error
     except (KeyError, RuntimeError, TypeError, ValueError) as error:
         raise ContractCompileError(
             f"profile execution refused malformed state: {error}"
@@ -2401,5 +2341,8 @@ def compile_linkml_contract(
             support_profile=str(active.data["support_profile"]),
             profile_sha256=active.digest,
             executor_sha256=sha256(Path(__file__).read_bytes()).hexdigest(),
+            adapter_executor_sha256=sha256(
+                Path(__file__).with_name("_contract_linkml_adapter.py").read_bytes()
+            ).hexdigest(),
         ),
     )
