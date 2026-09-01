@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
 import tomllib
 import zipfile
 
@@ -27,6 +28,13 @@ ORACLE = json.loads(
 )
 IMPLEMENTATION = ROOT / "src/malleus/_contract_compiler.py"
 PROFILE = ROOT / "src/malleus/_contract_compiler_profile.json"
+MINIMAL_SOURCE = b"""\
+id: https://example.org/minimal
+name: minimal
+imports:
+  - linkml:types
+default_range: string
+"""
 
 
 def _expected_compilations() -> dict[str, dict[str, object]]:
@@ -206,7 +214,9 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
         "lowering_plan",
         "node_shapes",
         "predicates",
+        "range_resolution",
         "structural_identities",
+        "symbol_policy",
     }
 
     implementation = IMPLEMENTATION.read_text(encoding="utf-8")
@@ -227,9 +237,10 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
 def test_profile_classifications_and_defaults_are_executed() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     annotation_profile = deepcopy(profile)
-    annotation_profile["node_shapes"]["slot"]["fields"]["maximum_value"][
-        "classification"
-    ] = "ANNOTATION_ONLY"
+    annotation_profile["node_shapes"]["class"]["fields"]["abstract"] = {
+        "classification": "ANNOTATION_ONLY",
+        "parser": "boolean",
+    }
     identity_profile = deepcopy(profile)
     identity_profile["node_shapes"]["slot"]["fields"]["maximum_value"][
         "classification"
@@ -238,7 +249,7 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
     default_profile["defaults"]["class"]["abstract"] = True
 
     ordinary = _compile("baseline.yaml")
-    without_maximum = compile_linkml_contract(
+    without_abstract = compile_linkml_contract(
         (SOURCE_ROOT / "baseline.yaml").read_bytes(),
         locator="memory:annotation-profile",
         profile=annotation_profile,
@@ -248,9 +259,9 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
         locator="memory:default-profile",
         profile=default_profile,
     )
-    assert without_maximum.canonical_facts != ordinary.canonical_facts
+    assert without_abstract.canonical_facts != ordinary.canonical_facts
     assert not any(
-        fact.predicate.endswith("/maximum") for fact in without_maximum.facts
+        fact.predicate.endswith("/abstract") for fact in without_abstract.facts
     )
     with pytest.raises(ContractCompileError, match="profile"):
         compile_linkml_contract(
@@ -259,7 +270,7 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
             profile=identity_profile,
         )
     assert (
-        without_maximum.implementation.profile_sha256
+        without_abstract.implementation.profile_sha256
         == hashlib.sha256(
             json.dumps(
                 annotation_profile,
@@ -273,6 +284,72 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
     assert any(
         fact.predicate.endswith("/abstract") and fact.object is True
         for fact in abstract_by_default.facts
+    )
+
+
+def test_non_enforced_rule_operand_refuses_the_profile() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["node_shapes"]["slot"]["fields"]["required"]["classification"] = (
+        "ANNOTATION_ONLY"
+    )
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:non-enforced-rule-operand",
+            profile=profile,
+        )
+
+
+def test_non_enforced_field_refuses_stale_fact_policy() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["node_shapes"]["class"]["fields"]["abstract"]["classification"] = (
+        "ANNOTATION_ONLY"
+    )
+
+    with pytest.raises(ContractCompileError, match="predicate is unread"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:non-enforced-default",
+            profile=profile,
+        )
+
+
+def test_condition_range_rule_reads_its_profile_operands() -> None:
+    source = (
+        (SOURCE_ROOT / "baseline.yaml")
+        .read_bytes()
+        .replace(b"    range: PlantState\n", b"    range: float\n")
+    )
+    with pytest.raises(ContractCompileError, match="string or enum range"):
+        compile_linkml_contract(source, locator="memory:string-condition-on-float")
+
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["lowering_plan"][-1]["string_builtin"] = "float"
+    result = compile_linkml_contract(
+        source,
+        locator="memory:profile-selected-condition-range",
+        profile=profile,
+    )
+
+    assert result.facts
+
+
+def test_derived_predicates_are_lowering_operands() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["lowering_plan"][-2]["on_class_predicate"] = "subclass_of"
+
+    result = compile_linkml_contract(
+        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+        locator="memory:profile-selected-derived-predicate",
+        profile=profile,
+    )
+
+    assert result.canonical_facts != _compile("baseline.yaml").canonical_facts
+    assert not any(
+        fact.predicate.endswith("/onClass")
+        and fact.subject.startswith("urn:malleus:contract-structure:slot-use:")
+        for fact in result.facts
     )
 
 
@@ -533,7 +610,9 @@ def test_profile_refuses_incomplete_operation_records(record: str) -> None:
     elif record == "constraint":
         profile["node_shapes"]["slot"]["constraints"][1].pop("range")
     elif record == "identity":
-        profile["structural_identities"]["slot_use"]["members"] = ["class"]
+        profile["structural_identities"]["slot_use"]["member_roles"] = {
+            "class": "class"
+        }
     else:
         profile["lowering_plan"][0]["op"] = "unknown"
 
@@ -541,6 +620,214 @@ def test_profile_refuses_incomplete_operation_records(record: str) -> None:
         compile_linkml_contract(
             (SOURCE_ROOT / "baseline.yaml").read_bytes(),
             locator=f"memory:invalid-profile-{record}",
+            profile=profile,
+        )
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+        "annotation-mapping-parser",
+        "missing-declaration-kind",
+        "non-enforced-scalar-operand",
+        "non-enforced-enum-operand",
+        "wrong-identity-roles",
+        "unread-field-member",
+        "unread-shape-identity",
+        "unread-shape-kind",
+        "unread-shape-constraint",
+        "unread-direct-default",
+        "unconsumed-enforced-field",
+        "identity-outside-schema",
+        "condition-member-slot-alias",
+        "condition-member-duplicate",
+        "condition-cardinality-gap",
+        "incompatible-schema-default",
+        "decimal-default",
+        "ordered-bounds-typed-operands",
+        "namespace-noncollection",
+        "enum-value-body-policy",
+        "collection-predicate",
+        "foreign-enum-values-predicate",
+        "resolver-parser-mismatch",
+    ),
+)
+def test_profile_grammar_is_closed_before_source_coverage(case: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if case == "annotation-mapping-parser":
+        profile["node_shapes"]["schema"]["fields"]["prefixes"]["classification"] = (
+            "ANNOTATION_ONLY"
+        )
+    elif case == "missing-declaration-kind":
+        profile["node_shapes"]["type"].pop("kind")
+    elif case == "non-enforced-scalar-operand":
+        profile["node_shapes"]["type"]["fields"]["typeof"] = {
+            "classification": "ANNOTATION_ONLY",
+            "parser": "nonempty_string",
+        }
+    elif case == "non-enforced-enum-operand":
+        profile["node_shapes"]["enum"]["fields"]["permissible_values"] = {
+            "classification": "ANNOTATION_ONLY",
+            "item_shape": "permissible_value",
+            "parser": "enum_values",
+        }
+    elif case == "wrong-identity-roles":
+        profile["structural_identities"]["alternative_semantics"]["member_roles"] = {
+            "bogus": "bogus"
+        }
+    elif case == "unread-field-member":
+        profile["node_shapes"]["slot"]["fields"]["maximum_value"]["member"] = "maximum"
+    elif case == "unread-shape-identity":
+        profile["node_shapes"]["class"]["use_identity"] = "slot_use"
+    elif case == "unread-shape-kind":
+        profile["node_shapes"]["schema"]["kind"] = "class"
+    elif case == "unread-shape-constraint":
+        profile["node_shapes"]["schema"]["constraints"] = [
+            {
+                "field": "default_range",
+                "op": "equals",
+                "value": "string",
+            }
+        ]
+    elif case == "unread-direct-default":
+        profile["node_shapes"]["type"]["fields"]["typeof"]["default"] = "slot.range"
+    elif case == "unconsumed-enforced-field":
+        profile["node_shapes"]["schema"]["fields"]["name"]["classification"] = (
+            "ENFORCED"
+        )
+    elif case == "identity-outside-schema":
+        profile["node_shapes"]["class"]["fields"]["description"] = {
+            "classification": "IDENTITY_ONLY",
+            "identity_role": "module",
+            "parser": "module_iri",
+            "required": True,
+        }
+    elif case == "condition-member-slot-alias":
+        profile["node_shapes"]["condition"]["fields"]["equals_string"]["member"] = (
+            "slot"
+        )
+    elif case == "condition-member-duplicate":
+        profile["node_shapes"]["condition"]["fields"]["value_presence"]["member"] = (
+            "equalsString"
+        )
+    elif case == "condition-cardinality-gap":
+        profile["node_shapes"]["alternative"]["fields"]["slot_conditions"][
+            "max_items"
+        ] = 2
+    elif case == "incompatible-schema-default":
+        profile["node_shapes"]["slot"]["fields"]["required"]["schema_default"] = (
+            "default_range"
+        )
+    elif case == "decimal-default":
+        profile["node_shapes"]["slot"]["fields"]["minimum_value"]["default"] = (
+            "slot.range"
+        )
+    elif case == "ordered-bounds-typed-operands":
+        bounds = profile["node_shapes"]["slot"]["constraints"][1]
+        bounds["minimum"] = "required"
+        bounds["maximum"] = "multivalued"
+        bounds["allowed_builtin_ranges"] = ["float", "string"]
+    elif case == "namespace-noncollection":
+        profile["lowering_plan"][1]["collections"] = ["name"]
+    elif case == "enum-value-body-policy":
+        profile["node_shapes"]["enum"]["fields"]["permissible_values"]["item_shape"] = (
+            "condition"
+        )
+    elif case == "collection-predicate":
+        profile["node_shapes"]["class"]["fields"]["exactly_one_of"]["predicate"] = (
+            "enum_value"
+        )
+    elif case == "foreign-enum-values-predicate":
+        profile["node_shapes"]["slot"]["fields"]["annotations"] = {
+            "classification": "ENFORCED",
+            "item_shape": "permissible_value",
+            "parser": "enum_values",
+            "predicate": "enum_value",
+        }
+    else:
+        profile["node_shapes"]["slot"]["fields"]["required"]["resolver"] = "mixin_list"
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            MINIMAL_SOURCE,
+            locator=f"memory:closed-profile-{case}",
+            profile=profile,
+        )
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+        "invalid-term",
+        "term-collision",
+        "relative-structural-prefix",
+        "invalid-module-role",
+        "non-boolean-rule",
+        "builtin-kind-collision",
+        "field-predicate-alias",
+        "derived-predicate-alias",
+        "derived-kind-alias",
+        "unsupported-symbol-separator",
+    ),
+)
+def test_profile_cannot_emit_malformed_or_collapsed_facts(case: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if case == "invalid-term":
+        profile["predicates"]["maximum_value"]["value"] = "bad predicate"
+    elif case == "term-collision":
+        profile["predicates"]["maximum_value"] = deepcopy(
+            profile["predicates"]["minimum_value"]
+        )
+    elif case == "relative-structural-prefix":
+        profile["structural_identities"]["slot_use"]["prefix"] = "relative-"
+    elif case == "invalid-module-role":
+        module = profile["node_shapes"]["schema"]["fields"]["id"]
+        module.pop("identity_role")
+        module["classification"] = "ANNOTATION_ONLY"
+        name = profile["node_shapes"]["schema"]["fields"]["name"]
+        name["classification"] = "IDENTITY_ONLY"
+        name["identity_role"] = "module"
+    elif case == "non-boolean-rule":
+        rule = profile["node_shapes"]["slot"]["rules"][0]
+        rule["then_field"] = "range"
+        rule["then_value"] = "float"
+    elif case == "builtin-kind-collision":
+        profile["builtins"]["float"] = deepcopy(profile["kinds"]["class"])
+    elif case == "field-predicate-alias":
+        profile["node_shapes"]["slot"]["fields"]["maximum_value"]["predicate"] = (
+            "minimum_value"
+        )
+    elif case == "derived-predicate-alias":
+        profile["lowering_plan"][-2]["uses_slot_predicate"] = "on_class"
+    elif case == "derived-kind-alias":
+        profile["lowering_plan"][-1]["alternative_kind"] = "exactly_one_group"
+    else:
+        profile["symbol_policy"]["separator"] = "#"
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            MINIMAL_SOURCE,
+            locator=f"memory:safe-profile-{case}",
+            profile=profile,
+        )
+
+
+def test_generated_subject_cannot_alias_a_semantic_resource() -> None:
+    baseline = _compile("baseline.yaml")
+    generated = next(
+        declaration.identifier
+        for declaration in baseline.contract.declarations
+        if declaration.identifier.startswith(
+            "urn:malleus:contract-structure:slot-use:v0:sha256:"
+        )
+    )
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["kinds"]["class"] = {"form": "ABSOLUTE", "value": generated}
+
+    with pytest.raises(ContractCompileError, match="aliases semantic resource"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:generated-resource-alias",
             profile=profile,
         )
 
@@ -575,6 +862,7 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
             sys.executable,
             "-m",
             "build",
+            "--sdist",
             "--wheel",
             "--no-isolation",
             "--outdir",
@@ -588,12 +876,21 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
     )
     assert result.returncode == 0, result.stdout + result.stderr
     wheels = tuple(tmp_path.glob("*.whl"))
+    sdists = tuple(tmp_path.glob("*.tar.gz"))
     assert len(wheels) == 1
+    assert len(sdists) == 1
     with zipfile.ZipFile(wheels[0]) as archive:
         members = set(archive.namelist())
+    with tarfile.open(sdists[0], mode="r:gz") as archive:
+        source_members = set(archive.getnames())
 
     assert "/src/malleus/_contract_compiler.py" in excluded
     assert "/src/malleus/_contract_compiler_profile.json" in excluded
     assert "malleus/_contract_compiler.py" not in members
     assert "malleus/_contract_compiler_profile.json" not in members
+    assert not any(
+        member.endswith("/src/malleus/_contract_compiler.py")
+        or member.endswith("/src/malleus/_contract_compiler_profile.json")
+        for member in source_members
+    )
     assert "compile_linkml_contract" not in malleus.__all__

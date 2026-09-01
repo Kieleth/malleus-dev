@@ -1,0 +1,208 @@
+{
+  "schema": "malleus.contract-compiler.linkml-profile/v0",
+  "adapter": "linkml",
+  "support_profile": "malleus.linkml/greenhouse-bootstrap-v0",
+  "linkml_version": "1.11.1",
+  "linkml_runtime_version": "1.11.1",
+  "canonicalization": "malleus.canonical-json/compact-sorted-key-utf8-no-newline/v0",
+  "namespace": "https://malleus.dev/contract-facts/",
+  "trusted_import": "linkml:types",
+  "symbol_policy": {
+    "identity": "urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0",
+    "join_operation": "delimiter_join",
+    "key_parser": "ascii_identifier",
+    "separator": "/"
+  },
+  "range_resolution": {
+    "builtin_registry": "builtins",
+    "declaration_collections": ["types", "enums"],
+    "op": "ordered_spaces"
+  },
+  "builtins": {
+    "float": {"form": "LOCAL", "value": "Float"},
+    "string": {"form": "LOCAL", "value": "String"}
+  },
+  "seed_primitives": ["float", "string"],
+  "defaults": {
+    "class": {"abstract": false, "mixin": false},
+    "slot": {
+      "identifier": false,
+      "inlined": false,
+      "multivalued": false,
+      "range": "string",
+      "required": false
+    }
+  },
+  "kinds": {
+    "class": {"form": "LOCAL", "value": "Class"},
+    "enum": {"form": "LOCAL", "value": "Enum"},
+    "exactly_one_alternative": {"form": "LOCAL", "value": "ExactlyOneAlternative"},
+    "exactly_one_group": {"form": "LOCAL", "value": "ExactlyOneGroup"},
+    "scalar": {"form": "LOCAL", "value": "Scalar"},
+    "slot": {"form": "LOCAL", "value": "Slot"},
+    "slot_condition": {"form": "LOCAL", "value": "SlotCondition"},
+    "slot_use": {"form": "LOCAL", "value": "SlotUse"}
+  },
+  "predicates": {
+    "abstract": {"form": "LOCAL", "value": "abstract"},
+    "enum_value": {"form": "LOCAL", "value": "enumValue"},
+    "equals_string": {"form": "LOCAL", "value": "equalsString"},
+    "identifier": {"form": "LOCAL", "value": "identifier"},
+    "in_alternative": {"form": "LOCAL", "value": "inAlternative"},
+    "in_group": {"form": "LOCAL", "value": "inGroup"},
+    "inlined": {"form": "LOCAL", "value": "inlined"},
+    "is_mixin": {"form": "LOCAL", "value": "isMixin"},
+    "maximum_value": {"form": "LOCAL", "value": "maximum"},
+    "minimum_value": {"form": "LOCAL", "value": "minimum"},
+    "multivalued": {"form": "LOCAL", "value": "multivalued"},
+    "on_class": {"form": "LOCAL", "value": "onClass"},
+    "required": {"form": "LOCAL", "value": "required"},
+    "subclass_of": {"form": "ABSOLUTE", "value": "http://www.w3.org/2000/01/rdf-schema#subClassOf"},
+    "type": {"form": "ABSOLUTE", "value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},
+    "typeof": {"form": "LOCAL", "value": "typeof"},
+    "uses_mixin": {"form": "LOCAL", "value": "usesMixin"},
+    "uses_slot": {"form": "LOCAL", "value": "usesSlot"},
+    "value_presence": {"form": "LOCAL", "value": "valuePresence"},
+    "value_range": {"form": "LOCAL", "value": "valueRange"}
+  },
+  "node_shapes": {
+    "schema": {
+      "label": "schema root",
+      "fields": {
+        "id": {"classification": "IDENTITY_ONLY", "identity_role": "module", "parser": "module_iri", "required": true},
+        "name": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string", "required": true},
+        "version": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "title": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "imports": {"classification": "ENFORCED", "parser": "string_list"},
+        "default_range": {"classification": "ENFORCED", "parser": "nonempty_string"},
+        "types": {"classification": "ENFORCED", "item_shape": "type", "parser": "named"},
+        "enums": {"classification": "ENFORCED", "item_shape": "enum", "parser": "named"},
+        "slots": {"classification": "ENFORCED", "item_shape": "slot", "parser": "named"},
+        "classes": {"classification": "ENFORCED", "item_shape": "class", "parser": "named"},
+        "prefixes": {"classification": "UNSUPPORTED", "parser": "mapping"}
+      }
+    },
+    "type": {
+      "fields": {
+        "typeof": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "typeof", "required": true, "resolver": "seed"},
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"}
+      },
+      "kind": "scalar",
+      "label": "type declaration"
+    },
+    "enum": {
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "permissible_values": {"classification": "ENFORCED", "item_shape": "permissible_value", "parser": "enum_values", "predicate": "enum_value"}
+      },
+      "kind": "enum",
+      "label": "enum declaration"
+    },
+    "permissible_value": {
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"}
+      },
+      "label": "permissible value"
+    },
+    "slot": {
+      "constraints": [
+        {"field": "inlined", "op": "equals", "value": false},
+        {"allowed_builtin_ranges": ["float"], "maximum": "maximum_value", "minimum": "minimum_value", "op": "ordered_bounds", "range": "range"}
+      ],
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range"},
+        "required": {"classification": "ENFORCED", "default": "slot.required", "parser": "boolean", "predicate": "required"},
+        "multivalued": {"classification": "ENFORCED", "default": "slot.multivalued", "parser": "boolean", "predicate": "multivalued"},
+        "identifier": {"classification": "ENFORCED", "default": "slot.identifier", "parser": "boolean", "predicate": "identifier"},
+        "inlined": {"classification": "ENFORCED", "default": "slot.inlined", "parser": "boolean", "predicate": "inlined"},
+        "minimum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "minimum_value"},
+        "maximum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "maximum_value"},
+        "equals_string": {"classification": "UNSUPPORTED", "parser": "string"},
+        "value_presence": {"classification": "UNSUPPORTED", "parser": "nonempty_string"},
+        "annotations": {"classification": "UNSUPPORTED", "parser": "mapping"}
+      },
+      "kind": "slot",
+      "label": "slot declaration",
+      "rules": [
+        {"applies_to": "slot_use", "if_field": "identifier", "if_value": true, "op": "implies", "refuse_explicit_conflict": true, "then_field": "required", "then_value": true}
+      ],
+      "use_identity": "slot_use"
+    },
+    "attribute": {
+      "constraints": [
+        {"field": "inlined", "op": "equals", "value": false},
+        {"allowed_builtin_ranges": ["float"], "maximum": "maximum_value", "minimum": "minimum_value", "op": "ordered_bounds", "range": "range"}
+      ],
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range"},
+        "required": {"classification": "ENFORCED", "default": "slot.required", "parser": "boolean", "predicate": "required"},
+        "multivalued": {"classification": "ENFORCED", "default": "slot.multivalued", "parser": "boolean", "predicate": "multivalued"},
+        "identifier": {"classification": "ENFORCED", "default": "slot.identifier", "parser": "boolean", "predicate": "identifier"},
+        "inlined": {"classification": "ENFORCED", "default": "slot.inlined", "parser": "boolean", "predicate": "inlined"},
+        "minimum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "minimum_value"},
+        "maximum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "maximum_value"},
+        "equals_string": {"classification": "UNSUPPORTED", "parser": "string"},
+        "value_presence": {"classification": "UNSUPPORTED", "parser": "nonempty_string"}
+      },
+      "kind": "slot",
+      "label": "local attribute",
+      "rules": [
+        {"applies_to": "slot_use", "if_field": "identifier", "if_value": true, "op": "implies", "refuse_explicit_conflict": true, "then_field": "required", "then_value": true}
+      ],
+      "use_identity": "slot_use"
+    },
+    "class": {
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "class_uri": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
+        "abstract": {"classification": "ENFORCED", "default": "class.abstract", "parser": "boolean", "predicate": "abstract"},
+        "mixin": {"classification": "ENFORCED", "default": "class.mixin", "parser": "boolean", "predicate": "is_mixin"},
+        "is_a": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "subclass_of", "resolver": "class"},
+        "mixins": {"classification": "ENFORCED", "max_items": 1, "parser": "string_list", "predicate": "uses_mixin", "resolver": "mixin_list"},
+        "slots": {"classification": "ENFORCED", "parser": "string_list"},
+        "attributes": {"classification": "ENFORCED", "item_shape": "attribute", "parser": "named"},
+        "exactly_one_of": {"classification": "ENFORCED", "item_shape": "alternative", "min_items": 1, "parser": "items"},
+        "slot_usage": {"classification": "UNSUPPORTED", "parser": "mapping"}
+      },
+      "kind": "class",
+      "label": "class declaration"
+    },
+    "alternative": {
+      "fields": {
+        "slot_conditions": {"classification": "ENFORCED", "item_shape": "condition", "max_items": 1, "min_items": 1, "parser": "named", "required": true}
+      },
+      "label": "exactly one alternative"
+    },
+    "condition": {
+      "fields": {
+        "equals_string": {"classification": "ENFORCED", "member": "equalsString", "parser": "string", "predicate": "equals_string"},
+        "required": {"classification": "UNSUPPORTED", "parser": "boolean"},
+        "value_presence": {"classification": "ENFORCED", "member": "valuePresence", "parser": "nonempty_string", "predicate": "value_presence", "values": ["ABSENT", "PRESENT"]}
+      },
+      "kind": "slot_condition",
+      "label": "slot condition",
+      "max_fields": 1,
+      "min_fields": 1
+    }
+  },
+  "structural_identities": {
+    "slot_use": {"domain": "malleus.contract-structure.slot-use/v0", "member_roles": {"class": "class", "domain": "domain", "slot": "slot"}, "prefix": "urn:malleus:contract-structure:slot-use:v0:sha256:"},
+    "alternative_semantics": {"domain": "malleus.exactly-one-alternative-semantics/v0", "member_roles": {"conditions": "conditions", "domain": "domain"}, "prefix": "sha256:"},
+    "exactly_one_group": {"domain": "malleus.contract-structure.exactly-one-group/v0", "member_roles": {"alternative_semantic_digests": "alternative_semantic_digests", "class": "class", "domain": "domain"}, "prefix": "urn:malleus:contract-structure:exactly-one-group:v0:sha256:"},
+    "exactly_one_alternative": {"domain": "malleus.contract-structure.exactly-one-alternative/v0", "member_roles": {"alternative_semantic_digest": "alternative_semantic_digest", "domain": "domain", "group": "group"}, "prefix": "urn:malleus:contract-structure:exactly-one-alternative:v0:sha256:"},
+    "slot_condition": {"domain": "malleus.contract-structure.slot-condition/v0", "member_roles": {"alternative": "alternative", "domain": "domain", "slot": "slot"}, "prefix": "urn:malleus:contract-structure:slot-condition:v0:sha256:"}
+  },
+  "lowering_plan": [
+    {"field": "imports", "op": "validate_imports"},
+    {"collections": ["types", "enums", "slots", "classes"], "op": "validate_shared_namespace"},
+    {"base_field": "typeof", "collection": "types", "op": "declare_direct_seed_scalars", "shape": "type"},
+    {"collection": "enums", "op": "declare_enums", "shape": "enum", "values_field": "permissible_values"},
+    {"attribute_field": "attributes", "attribute_shape": "attribute", "classes_collection": "classes", "op": "declare_slots", "slot_shape": "slot", "slots_collection": "slots"},
+    {"collection": "classes", "derived_mixin_forbidden_fields": ["is_a", "slots", "attributes", "mixins", "exactly_one_of"], "mixin_field": "mixin", "mixins_field": "mixins", "op": "declare_shallow_classes", "parent_field": "is_a", "parent_semantic_fields": ["is_a", "slots", "attributes", "mixins", "exactly_one_of"], "shape": "class"},
+    {"attributes_field": "attributes", "classes_collection": "classes", "kind": "slot_use", "on_class_predicate": "on_class", "op": "lower_slot_uses", "slots_field": "slots", "uses_slot_predicate": "uses_slot"},
+    {"alternative_identity": "exactly_one_alternative", "alternative_in_group_predicate": "in_group", "alternative_kind": "exactly_one_alternative", "alternatives_field": "exactly_one_of", "classes_collection": "classes", "condition_identity": "slot_condition", "condition_in_alternative_predicate": "in_alternative", "condition_shape": "condition", "condition_slot_member": "slot", "condition_uses_slot_predicate": "uses_slot", "condition_value_field": "equals_string", "conditions_field": "slot_conditions", "enum_collection": "enums", "group_identity": "exactly_one_group", "group_kind": "exactly_one_group", "group_on_class_predicate": "on_class", "op": "lower_flat_exactly_one", "range_field": "range", "semantic_identity": "alternative_semantics", "string_builtin": "string"}
+  ]
+}
