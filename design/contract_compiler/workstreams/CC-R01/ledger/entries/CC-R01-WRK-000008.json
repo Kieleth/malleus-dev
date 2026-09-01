@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py -k 'refusal or refuses or malformed or conflict or cycle or distinct or opaque or unexpected or subclass or injected or production or complete_fixed'",
+    "observed": "All 32 disproof cases passed with 6 deselected. They cover root and nested collaborator refusal, no second resolver surface, unchanged unexpected errors, every locator/content/media identity countercase, content and media conflict precedence before cycle, self/two-node/longer cycles with exact lineage, malformed collaborator values, exact-type subclass rejection before field access, invalid root and selection, no partial results, exact locator identity, opaque bytes, no ambient I/O, exact production import allowlist, no production regex or frontend tokens, and the fixed RED-before-GREEN history coordinates.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ae5c4e9f3068331c2ffedb6bc754a81946d0af4acd07c084464c55290d318ad7",
+  "entry_id": "CC-R01-WRK-000008",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:9992b1dd07d08ce7f1ef31dbbdc793b172ee61367633b654e62ab257cffcd08d",
+  "recorded_at": "2026-09-01T15:30:38Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 8,
+  "summary": "Pass retained-source refusal and isolation disproofs.",
+  "workstream_id": "CC-R01"
+}

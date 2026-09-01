@@ -36,7 +36,9 @@ from malleus._contract_source import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTIVATION_COMMIT = "dbc5eaee8493275b3d0c468b77f5567711507cd8"
+CORRECTED_RED_COMMIT = "8a297ed84fb15e96dfd4ef73a4db8475b86225de"
+CORRECTED_GREEN_COMMIT = "16d11cc0a6ad2ac944e6fe2d87d174bb23190a24"
+CORRECTED_RED_TEST_BLOB = "38aa69ce63a97a29c04c1e96405a5e09ef9f7d77"
 MODULE_PATH = "src/malleus/_contract_source.py"
 TEST_PATH = "tests/contract_compiler/test_retained_source_boundary.py"
 SELECTION = ResolverSelection(
@@ -583,6 +585,30 @@ def test_source_conflict_precedes_cycle_classification() -> None:
     _assert_no_partial_result(refusal)
 
 
+def test_media_type_conflict_also_precedes_cycle_classification() -> None:
+    resolver = _MemoryResolver(
+        {
+            "root": _source("module:root", b"root", "type:first"),
+            "child": _source("module:child", b"child"),
+            "back": _source("module:root", b"root", "type:second"),
+        }
+    )
+    reader = _MemoryImportReader(
+        {
+            "module:root": ("child",),
+            "module:child": ("back",),
+        }
+    )
+
+    with pytest.raises(SourceBoundaryRefusal) as caught:
+        _build(resolver, reader)
+
+    refusal = caught.value
+    assert refusal.reason is RefusalReason.LOCATOR_OBSERVATION_CONFLICT
+    assert refusal.lineage == ("module:root", "module:child", "module:root")
+    _assert_no_partial_result(refusal)
+
+
 def test_distinct_locators_with_identical_bytes_remain_distinct() -> None:
     shared = b"same"
     resolver = _MemoryResolver(
@@ -718,15 +744,16 @@ def test_malformed_resolver_results_refuse_atomically(result: Any) -> None:
 
 
 def test_resolver_result_subclasses_refuse_before_field_access() -> None:
-    class ExtendedResolvedSource(ResolvedSource):
-        pass
+    class PoisonResolvedSource(ResolvedSource):
+        def __getattribute__(self, name: str) -> Any:
+            if name in {"resolved_locator", "source_bytes", "media_type"}:
+                raise AssertionError("subclass field was read")
+            return super().__getattribute__(name)
 
-    result = ExtendedResolvedSource("module:root", b"root", "test/type")
+    result = PoisonResolvedSource("module:root", b"root", "test/type")
 
     class ExtendedResultResolver:
-        def resolve(
-            self, request: RootRequest | ImportRequest
-        ) -> ExtendedResolvedSource:
+        def resolve(self, request: RootRequest | ImportRequest) -> PoisonResolvedSource:
             del request
             return result
 
@@ -917,28 +944,16 @@ def _commit_has(commit: str, path: str) -> bool:
 
 
 def test_complete_fixed_test_bytes_precede_the_corrected_green_module() -> None:
-    commits = _git(
-        "rev-list",
-        "--reverse",
-        f"{ACTIVATION_COMMIT}..HEAD",
-        "--",
-        MODULE_PATH,
-        TEST_PATH,
-    ).stdout.splitlines()
-    current_test_blob = _git("rev-parse", f"HEAD:{TEST_PATH}").stdout.strip()
-
-    corrected_red_index = next(
-        index
-        for index, commit in enumerate(commits)
-        if _commit_has(commit, TEST_PATH)
-        and not _commit_has(commit, MODULE_PATH)
-        and _git("rev-parse", f"{commit}:{TEST_PATH}").stdout.strip()
-        == current_test_blob
+    assert _git("rev-parse", f"{CORRECTED_GREEN_COMMIT}^").stdout.strip() == (
+        CORRECTED_RED_COMMIT
     )
-
-    assert any(
-        _commit_has(commit, MODULE_PATH)
-        and _git("rev-parse", f"{commit}:{TEST_PATH}").stdout.strip()
-        == current_test_blob
-        for commit in commits[corrected_red_index + 1 :]
+    assert _commit_has(CORRECTED_RED_COMMIT, TEST_PATH)
+    assert not _commit_has(CORRECTED_RED_COMMIT, MODULE_PATH)
+    assert _commit_has(CORRECTED_GREEN_COMMIT, MODULE_PATH)
+    assert _git("rev-parse", f"{CORRECTED_RED_COMMIT}:{TEST_PATH}").stdout.strip() == (
+        CORRECTED_RED_TEST_BLOB
+    )
+    assert (
+        _git("rev-parse", f"{CORRECTED_GREEN_COMMIT}:{TEST_PATH}").stdout.strip()
+        == CORRECTED_RED_TEST_BLOB
     )
