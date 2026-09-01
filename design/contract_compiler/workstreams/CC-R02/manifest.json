@@ -1,0 +1,149 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccr02-linkml-adapter",
+    "state": "ASSIGNED",
+    "task_id": "/root/r02_linkml_adapter"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:ae597ff598607d1f7e3eea6d5a4c00e618d196957bb5ac526daa32e72c96f759",
+        "completion_entry_hash": "sha256:e0eaf379e6f5b708952d63510fa0a98b16b05f457304244ac4cec20501f51c4d",
+        "completion_entry_id": "OVR-000101",
+        "integrated_head": "c521785c03a3a02bb666879eb525573b81e4491f",
+        "workstream_id": "CC-002"
+      },
+      {
+        "card_sha256": "sha256:97243edcd150eca06ad892a952ac6ecd87c6529909fce64e75bcc07b8c1b0226",
+        "completion_entry_hash": "sha256:97e8d9c3d057dc3c1ed9a18866f60fae19b05c07a076058dc44ff19fde98d25d",
+        "completion_entry_id": "OVR-000292",
+        "integrated_head": "183e332211f637ee653cd98a18618efb1f5dd546",
+        "workstream_id": "CC-R01"
+      },
+      {
+        "card_sha256": "sha256:e10dacbcdc6343d5360a47179bc9762732a30f0b05b91d70282eac776ac72146",
+        "completion_entry_hash": "sha256:95eb2b94409029554120beb0e1552a9dbd39151b0d7eb18c1c5469003af489e2",
+        "completion_entry_id": "OVR-000138",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D03"
+      },
+      {
+        "card_sha256": "sha256:b771de9568edc9557ba14271a40780aaa3181b1a5a94d6cb446f5ed4b7f1b2e7",
+        "completion_entry_hash": "sha256:045b91ce91c9f5ce9cee735f252d96cadf21b97d3c142dae0cb68f7d2a121d48",
+        "completion_entry_id": "OVR-000164",
+        "integrated_head": "069d6383e928842ece7a378e08638bdb67efcd83",
+        "workstream_id": "CC-D08"
+      },
+      {
+        "card_sha256": "sha256:cc86c841ff11cb5b19d37278ee7555aa3ed486b784e24e0095fce4e801438561",
+        "completion_entry_hash": "sha256:b56c5993b918cae7c4784da47dee48edd77df8b8d694741eecb4a0a29b1341dd",
+        "completion_entry_id": "OVR-000140",
+        "integrated_head": "f81399117d166f8c3c70a060361fda5e668f0823",
+        "workstream_id": "CC-D11"
+      },
+      {
+        "card_sha256": "sha256:044bd8bf7630a312210163388ba5b1800930f7b8bb6cd8363f129c6f9173a29a",
+        "completion_entry_hash": "sha256:07bc69eb114eb81334bc9bc26a3a01e4e7bf0717b82a981c618ba594ea4ce67b",
+        "completion_entry_id": "OVR-000186",
+        "integrated_head": "5b08309601ab7f2bd07bf9747ec8c5879a699d58",
+        "workstream_id": "CC-010"
+      },
+      {
+        "card_sha256": "sha256:857273c4f02919869046ff6823337c05e5d11ac982b56cd1d68a532aaad0727c",
+        "completion_entry_hash": "sha256:0714e9d279b32e933643e1244f8b9b8ef9334932f504e7b824cb9441609b4ea9",
+        "completion_entry_id": "OVR-000200",
+        "integrated_head": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
+        "workstream_id": "CC-011"
+      },
+      {
+        "card_sha256": "sha256:e2bbb190c936070ee8c25e5c9bdc4cc3b0f3df77a2e8983e3080cc45d9d9c5e4",
+        "completion_entry_hash": "sha256:4d192b09ed875f62a27d68b2776255775a5d43159fdc12a28fe1c3f8fbd0adc9",
+        "completion_entry_id": "OVR-000257",
+        "integrated_head": "8d04fc285070a0594aabccef0b926a8cec3bb132",
+        "workstream_id": "CC-012"
+      },
+      {
+        "card_sha256": "sha256:188afa0693fcf19a2e2216f987484da233d1b6d6189382b01785af707211628f",
+        "completion_entry_hash": "sha256:aa04bfa0601f9d6a949888a5c474dfbd8e095a702a64e6b7a951e6550eba96ef",
+        "completion_entry_id": "OVR-000201",
+        "integrated_head": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
+        "workstream_id": "CC-013"
+      },
+      {
+        "card_sha256": "sha256:71f153f224b913a972f3507cfa7250759a76d322926b926cc182e6685f43d2be",
+        "completion_entry_hash": "sha256:295e4b5eb8c7b62e8be0de8a9f966a1a7f4103da763188aa914b0baf801b21b4",
+        "completion_entry_id": "OVR-000285",
+        "integrated_head": "3afca71f59c563eb559109ca4007a68e02fbf0ba",
+        "workstream_id": "CC-014"
+      },
+      {
+        "card_sha256": "sha256:645aac6eed097fbd36b130be5efe69eb90a592a3a838ad7d590c5c4fd01bb49f",
+        "completion_entry_hash": "sha256:c056a7c1a73fc0047fd4cc7c5f58006b91bef83fa0269658c870763c99bf5f50",
+        "completion_entry_id": "OVR-000202",
+        "integrated_head": "5c25ed55465fd1fe98ec0f27562ef00054cd6024",
+        "workstream_id": "CC-015"
+      },
+      {
+        "card_sha256": "sha256:bcf3e6ea90078073474ae72d34ff785552efe17d42c87d5cb258e950b9815d32",
+        "completion_entry_hash": "sha256:effccb950e99a7c17f3686a505b3342f1a507bb3bf991c14d66ba0d855235cb1",
+        "completion_entry_id": "OVR-000267",
+        "integrated_head": "5f185469832a1ec1653f0e9ace2de697f3c4726d",
+        "workstream_id": "CC-016"
+      },
+      {
+        "card_sha256": "sha256:69c442de7a6948d9a5e44d3a031ed536c892cfa8bbdc0b7f84b872ef8134075b",
+        "completion_entry_hash": "sha256:2d7e2f6500baaae317043be97e1850d5b0ba11efa60044fbd9c13db70514abe2",
+        "completion_entry_id": "OVR-000222",
+        "integrated_head": "e5535033d8f1886271d827ddeed4662196410cdf",
+        "workstream_id": "CC-021"
+      },
+      {
+        "card_sha256": "sha256:dc46674de6e3eb4e23413228665717fa8c7bd1e2221698872f7c0f84ab07dc86",
+        "completion_entry_hash": "sha256:37f7cacdc881548bfe51a04624d1f9c4fe7fe813455540c7da6a8bc1f542fc9d",
+        "completion_entry_id": "OVR-000228",
+        "integrated_head": "d56c30f85b92d7452ca126d488bf027b42ee67f5",
+        "workstream_id": "CC-022"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Implement one private LinkML 1.11.1 parser and support-profile adapter over retained ModuleObservation values and complete SourceClosure values. Emit immutable lossless per-module declarations, ordered authored imports, explicit field presence, raw scalar lexemes and annotations, and exact retained provenance, or one typed atomic refusal. Keep one machine-readable profile and move the existing Greenhouse bootstrap onto the same parser so there is no second parser or fallback. Own no resolver or I/O, qualified binding, global merge or adoption decision, inheritance or default elaboration, facts, artifact, protocol, package, public API, legacy OntologyRegistry behavior, or fixture meaning.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "src/malleus/_contract_linkml_adapter.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "src/malleus/_contract_compiler.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "src/malleus/_contract_compiler_profile.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_linkml_adapter.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/contract_compiler/test_greenhouse_compiler.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-R02.json"
+    }
+  ],
+  "workstream_id": "CC-R02"
+}

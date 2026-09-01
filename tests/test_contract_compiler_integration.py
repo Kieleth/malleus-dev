@@ -305,6 +305,24 @@ def _rewrite_card(
     return card
 
 
+def _rebind_current_dependency_card_digests(
+    manifest_path: Path,
+    manifest: dict[str, Any],
+    workstream_id: str,
+) -> None:
+    def rebind(card: dict[str, Any]) -> None:
+        for binding in card["authorization"]["dependency_bindings"]:
+            dependency = _registry_row(manifest, binding["workstream_id"])
+            binding["card_sha256"] = dependency["card"]["sha256"]
+            dependency_card = _read_json(_card_path(manifest_path, dependency))
+            if dependency_card["candidate"]["state"] == "INTEGRATED":
+                binding["integrated_head"] = dependency_card["candidate"][
+                    "head_commit"
+                ]
+
+    _rewrite_card(manifest_path, manifest, workstream_id, rebind)
+
+
 def _register_blocked_card(
     manifest_path: Path,
     manifest: dict[str, Any],
@@ -959,7 +977,9 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D17": ("CC-D05", "CC-D06"),
         "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 34
+    assert len(state.cards) == 35
+    assert state.cards["CC-R02"]["authorization"]["class"] == "FORMAL"
+    assert workstream_states["CC-R02"] == "ACTIVE"
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -6722,6 +6742,7 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-X03"]["integrated_head"] = result_commit
 
     _rewrite_card(manifest_path, manifest, "CC-R01", rebind_retained_source)
+    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 
@@ -6863,15 +6884,20 @@ def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
     candidate_state: str,
 ) -> None:
     manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    candidate = _syntactic_candidate(candidate_state)
+    if candidate_state == "INTEGRATED":
+        candidate["head_commit"] = "183e332211f637ee653cd98a18618efb1f5dd546"
+        candidate["head_tree"] = "b22d2f4354a74f408a05e9bd3f7feaf147bf3b6e"
     _rewrite_card(
         manifest_path,
         manifest,
         "CC-R01",
         lambda card: card.update(
-            candidate=_syntactic_candidate(candidate_state),
+            candidate=candidate,
             ledger={"state": "NOT_STARTED"},
         ),
     )
+    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
     monkeypatch.setattr(
         integration_module,
         "load_ledger",
@@ -6895,6 +6921,7 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
         "CC-R01",
         lambda card: card.update(ledger={"state": "NOT_STARTED"}),
     )
+    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
     original = integration_module._workstream_states
     monkeypatch.setattr(
         integration_module,
@@ -7394,3 +7421,120 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     ]
     assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
     assert "CC-R01" not in manifest["selections"]
+
+
+def test_linkml_adapter_activation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R02")
+    assert row["card"]["state"] == "PRESENT"
+
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R02/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:ccr02-linkml-adapter",
+        "state": "ASSIGNED",
+        "task_id": "/root/r02_linkml_adapter",
+    }
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == tuple(row["depends_on"])
+    assert card["scopes"] == [
+        {"kind": "FILE", "path": "src/malleus/_contract_linkml_adapter.py"},
+        {"kind": "FILE", "path": "src/malleus/_contract_compiler.py"},
+        {
+            "kind": "FILE",
+            "path": "src/malleus/_contract_compiler_profile.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_linkml_adapter.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-R02.json",
+        },
+    ]
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert "lossless per-module" in card["responsibility"]
+    assert "one machine-readable profile" in card["responsibility"]
+    assert "no second parser" in card["responsibility"]
+    assert states["CC-R02"] == "ACTIVE"
+    assert "CC-R02" not in manifest["selections"]
+
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 293 <= entry["sequence"] <= 295
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000293",
+        "OVR-000294",
+        "OVR-000295",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R02"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R02-activation.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R02/manifest.json": "CREATED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert all(
+        not document["path"].startswith("src/malleus/")
+        and "test_linkml_adapter.py" not in document["path"]
+        and document["path"]
+        != "conformance/contract_compiler/v0/evidence/CC-R02.json"
+        for document in revision["data"]["documents"]
+    )
+    assert verification["actor"] == {
+        "id": "ccr02-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["workstream_id"] == "CC-R02"
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == ["OVR-000293", "OVR-000294"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R02-activation.json")
+    assert report["base_commit"] == "183e332211f637ee653cd98a18618efb1f5dd546"
+    assert report["workstream_id"] == "CC-R02"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    chronology = [
+        datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+        for value in (
+            report["recorded_at"],
+            revision["recorded_at"],
+            verification["recorded_at"],
+            activation["recorded_at"],
+        )
+    ]
+    assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))

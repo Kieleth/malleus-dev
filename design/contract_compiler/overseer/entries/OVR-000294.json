@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "ccr02-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T17:21:02Z",
+    "claims": [
+      "All fourteen direct dependencies are COMPLETE and bound in exact program order to their current cards, completion entries and hashes, and required Git coordinates.",
+      "The card assigns one worker and exactly six implementation, regression-test, and evidence files. Existing retained-source code, corpora, oracles, runtime, protocol, ledger, graph, and public package files are outside worker ownership.",
+      "The adapter receives only retained ModuleObservation and SourceClosure values. It may parse exact bytes, classify the closed LinkML 1.11.1 subset, cross-check authored imports, and emit immutable lossless per-module evidence or one typed atomic refusal.",
+      "One machine-readable profile owns source classification and one parser mechanism executes it. The Greenhouse bootstrap must delegate to that parser; a second parser, legacy path, or try-next fallback is forbidden.",
+      "Qualified binding, duplicate ownership and adoption decisions, hierarchy and default elaboration, canonical facts, artifacts, protocol-machine behavior, KnowledgeChangeSet construction, and runtime cutover remain later stages.",
+      "Quiet Bell is tested first for exact module and import evidence while its recorded missing import remains a full-compilation refusal. Greenhouse follows as a neutrality control, then feature cases close exact acceptance and refusal edges.",
+      "Candidate remains NONE, worker ledger remains NOT_STARTED, selections remain unchanged, and activation creates no adapter implementation, production test, worker evidence, public API, package, or fixture byte."
+    ],
+    "limitations": [
+      "This verifies activation and boundary integrity only. It does not implement or complete the LinkML adapter.",
+      "The assigned worker must produce genuine implementation RED before production GREEN and retain the ordered TDD chain.",
+      "Public namespace, stable identifiers, autodoc, packaging, selection, promotion, and release remain separately governed."
+    ]
+  },
+  "entry_hash": "sha256:ab6d09c67ca377b257d59eeaa0e0e24695f88f3c38147cccb1deb57ffc7b578d",
+  "entry_id": "OVR-000294",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d9e87ecff76c12cd8f54051724d0b94210f2d763516d713cde1c3e0f201d0f9b",
+  "recorded_at": "2026-09-01T17:21:02Z",
+  "references": [
+    {
+      "digest": "sha256:ae0da647322dd6b6d2440ba643e77fd05985e11dd182f029e69c5adce6e1a200",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000293",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "183e332211f637ee653cd98a18618efb1f5dd546",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 294,
+  "subject": {
+    "id": "ccr02-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact private LinkML adapter activation boundary.",
+  "why": "Formal parser work starts only after dependency closure, one-profile authority, stage separation, exact worker scope, cumulative corpus order, genuine TDD, atomic refusal, and public-boundary deferrals are explicit and mechanically guarded."
+}

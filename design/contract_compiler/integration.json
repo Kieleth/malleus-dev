@@ -825,7 +825,10 @@
     },
     {
       "card": {
-        "state": "ABSENT"
+        "byte_length": 7016,
+        "path": "workstreams/CC-R02/manifest.json",
+        "sha256": "sha256:5858cfff1e29a01b6f8de13ecfed7d18a887edb641ab02bf3ace8260b2fdac62",
+        "state": "PRESENT"
       },
       "depends_on": [
         "CC-002",

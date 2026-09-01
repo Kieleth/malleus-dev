@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 26297,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:d952bc1d08abb6bf17e3fd2443a095b81b3e6736feed33513b670fb623cc647f"
+    },
+    {
+      "byte_length": 7016,
+      "path": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "sha256": "sha256:5858cfff1e29a01b6f8de13ecfed7d18a887edb641ab02bf3ace8260b2fdac62"
+    },
+    {
+      "byte_length": 278163,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:6629bdfb3fd08a5dc028e14340a39bc1c34f66a1de29e4561341654834b1e1de"
+    }
+  ],
+  "base_commit": "183e332211f637ee653cd98a18618efb1f5dd546",
+  "checks": [
+    {
+      "check_id": "ccr02-activation-red",
+      "method": "Add and run the fixed activation guard before creating the adapter card or changing overseer state.",
+      "observed": "The test failed at the first intended boundary: the CC-R02 card was ABSENT rather than PRESENT. No adapter, profile, stage test, or worker evidence byte existed or was created by RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-dependency-readiness",
+      "method": "Bind all fourteen direct dependencies in program order to their current card digests, exact COMPLETE entries and hashes, and required Git coordinates.",
+      "observed": "All fourteen direct dependencies are COMPLETE. The newest dependency is the retained-source completion at Core commit 183e332 and OVR-000292. Activation changes no dependency edge or selection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-parser-boundary",
+      "method": "Compare the card with the accepted parser and support-profile stage, the completed retained-source values, and the later binder, elaborator, fact, artifact, and runtime stages.",
+      "observed": "The worker may read retained module and closure values and emit immutable lossless per-module authored evidence or one typed atomic refusal. It owns no resolution, I/O, binding, merge, adoption decision, elaboration, facts, artifact, protocol, or public API.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-single-parser-policy",
+      "method": "Require one machine-readable LinkML support profile and one raw parser mechanism, with the existing Greenhouse bootstrap delegating to that parser rather than retaining a competing parser or fallback.",
+      "observed": "The exact worker scopes permit extracting the parser, updating its one profile, and retaining Greenhouse fact behavior as an adjacent regression control. A second parser, try-next profile, legacy fallback, and profile-specific fixture branch remain forbidden.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-tdd-and-corpus-order",
+      "method": "Bind fixed tests before production for Quiet Bell modules first, Greenhouse neutrality second, feature and refusal edges third, then cumulative retained-source and compiler regression.",
+      "observed": "The card and activation require exact source inventory, ordered imports, explicit presence, raw false, numeric and adoption evidence, closed classification, atomic refusal, import cross-checking, and no hidden file or network reads across all three reviewed corpora.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-scope-and-release-cut",
+      "method": "Inspect the six worker scopes and the activation revision for implementation, package, public namespace, stable identifier, fixture, or selection changes.",
+      "observed": "The six worker scopes are exact. Activation changes governance and its fixed guard only. Package exclusion, source-archive treatment, public documentation, stable identifiers, promotion, and release remain root-owned or separately governed after a candidate exists.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction activates the private parser and support-profile stage. It does not implement or complete the adapter.",
+    "Quiet Bell proves per-module authored declarations and import inventory at this stage; its complete compilation remains refused on the independently recorded missing import.",
+    "Duplicate ownership, adoption acceptance, qualified binding, mixin and inheritance semantics, defaults, facts, artifacts, protocol-machine execution, KnowledgeChangeSet production, and runtime cutover remain later work.",
+    "The assigned worker must retain a genuine implementation RED and the ordered TDD evidence chain before any eligible candidate is claimed.",
+    "No public API, package, selection, release, stable identifier, public diagnostic, or general LinkML compatibility promise is created."
+  ],
+  "recorded_at": "2026-09-01T17:21:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R02"
+}
