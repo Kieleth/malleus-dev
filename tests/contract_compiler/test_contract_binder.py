@@ -32,6 +32,7 @@ from malleus._contract_linkml_adapter import (
     DeclaredModule,
     LinkMLImportReader,
     adapt_linkml_closure,
+    parse_linkml_module,
 )
 from malleus._contract_source import (
     CollaboratorRefusal,
@@ -746,6 +747,43 @@ def test_declarations_and_occurrences_must_equal_the_authored_root(
     assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("classification", "ANNOTATION_ONLY"),
+        ("value_classification", "ANNOTATION_ONLY"),
+    ),
+)
+def test_sequence_item_occurrence_policy_must_match_the_exact_adapter_evidence(
+    field: str,
+    value: str,
+) -> None:
+    schema_id = "https://example.test/sequence-evidence"
+    closure = _declared(
+        {
+            schema_id: _source(
+                schema_id,
+                "slots:\n  value: {}\n"
+                "classes:\n  Record:\n    slots:\n      - value\n",
+            )
+        },
+        root=schema_id,
+    )
+    module = closure.modules[0]
+    path = ("classes", "Record", "slots", 0)
+    occurrences = tuple(
+        replace(occurrence, **{field: value})
+        if occurrence.path == path
+        else occurrence
+        for occurrence in module.occurrences
+    )
+    forged = replace(closure, modules=(replace(module, occurrences=occurrences),))
+
+    refusal = _reason(forged)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
 @pytest.mark.parametrize("mutation", ("edge", "root"))
 def test_forged_closure_topology_cannot_change_binding_authority(mutation: str) -> None:
     closure = _owner_and_adopter()
@@ -793,6 +831,39 @@ def test_valid_deep_linear_closure_does_not_depend_on_python_recursion() -> None
 
     assert result.declared_closure is closure
     assert all(item.trusted for item in result.declarations)
+
+
+def test_two_node_import_cycle_is_one_typed_atomic_refusal() -> None:
+    root = "https://example.test/cycle/root"
+    child = "https://example.test/cycle/child"
+    observations = (
+        _observation(root, _source(root, imports=(child,))),
+        _observation(child, _source(child, imports=(root,))),
+    )
+    root_source = observations[0].source
+    source_closure = SourceClosure(
+        selection=SELECTION,
+        root=RootResolution(
+            requested_locator=f"request:{root}",
+            resolved_locator=root,
+            source_sha256=root_source.sha256,
+            resolver_selection=SELECTION,
+        ),
+        modules=observations,
+        import_edges=(
+            ResolvedImportEdge(root, 0, child, child, SELECTION),
+            ResolvedImportEdge(child, 0, root, root, SELECTION),
+        ),
+    )
+    closure = DeclaredContractClosure(
+        source_closure=source_closure,
+        modules=tuple(parse_linkml_module(item) for item in observations),
+    )
+
+    refusal = _reason(closure)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+    assert refusal.diagnostics == (refusal.diagnostics[0],)
 
 
 def test_diagnostic_order_ignores_import_module_and_declaration_order() -> None:
