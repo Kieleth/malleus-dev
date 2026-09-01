@@ -232,7 +232,7 @@ NUMERIC_PROJECTION = {
 
 EXPECTED_SOURCES = [
     {
-        "byte_length": byte_length,
+        "byte_length": Decimal(byte_length),
         "path": path,
         "source_blob": f"TEST_ONLY_CC014_SOURCE_BLOB_SHA256_{digest}",
     }
@@ -458,6 +458,7 @@ def _load_oracle() -> dict[str, Any]:
 
 
 def _validate_oracle(value: dict[str, Any]) -> None:
+    _assert_exact_json_types(EXPECTED_ORACLE, value)
     assert value == EXPECTED_ORACLE
     assert set(value) == {
         "configuration",
@@ -485,6 +486,22 @@ def _validate_oracle(value: dict[str, Any]) -> None:
         for comparison in value["relations"]
         for relation in comparison["dimensions"].values()
     )
+
+
+def _assert_exact_json_types(expected: Any, actual: Any) -> None:
+    assert type(actual) is type(expected)
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for key, expected_value in expected.items():
+            _assert_exact_json_types(expected_value, actual[key])
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected)
+        for expected_value, actual_value in zip(expected, actual, strict=True):
+            _assert_exact_json_types(expected_value, actual_value)
+    elif isinstance(expected, Decimal):
+        assert actual.as_tuple() == expected.as_tuple()
+    else:
+        assert actual == expected
 
 
 def test_oracle_is_one_strict_private_member() -> None:
@@ -580,17 +597,37 @@ def test_answer_key_has_no_forbidden_execution_dependency() -> None:
     assert not (
         imports
         & {
+            "importlib",
             "linkml",
             "linkml_runtime",
             "malleus._contract_compiler",
             "malleus.registry",
+            "runpy",
             "subprocess",
         }
+    )
+    forbidden_calls = {"__import__", "eval", "exec", "import_module", "importorskip"}
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        if isinstance(node.func, ast.Name):
+            assert node.func.id not in forbidden_calls
+        elif isinstance(node.func, ast.Attribute):
+            assert node.func.attr not in forbidden_calls
+    assert not any(
+        isinstance(node, (ast.Assign, ast.AnnAssign))
+        and any(
+            isinstance(target, ast.Name) and target.id == "pytest_plugins"
+            for target in (
+                node.targets if isinstance(node, ast.Assign) else [node.target]
+            )
+        )
+        for node in ast.walk(tree)
     )
     oracle_text = ORACLE_PATH.read_text(encoding="utf-8")
     assert "greenhouse" not in oracle_text.lower()
     assert "quiet_bell" not in oracle_text.lower()
-    assert "OntologyRegistry" not in source
+    assert "Ontology" + "Registry" not in source
 
 
 def _mutate_configuration(value: dict[str, Any]) -> None:
@@ -619,6 +656,14 @@ def _mutate_nonclaim(value: dict[str, Any]) -> None:
     value["nonclaims"]["public_compatibility"] = "SAME"
 
 
+def _mutate_boolean_type(value: dict[str, Any]) -> None:
+    value["provenance"]["adoption"]["semantic_fact_emitted_for_marker"] = Decimal(0)
+
+
+def _mutate_integer_lexeme(value: dict[str, Any]) -> None:
+    value["sources"][0]["byte_length"] = Decimal("142.0")
+
+
 @pytest.mark.parametrize(
     "mutation",
     (
@@ -628,6 +673,8 @@ def _mutate_nonclaim(value: dict[str, Any]) -> None:
         _mutate_relation,
         _mutate_provenance,
         _mutate_nonclaim,
+        _mutate_boolean_type,
+        _mutate_integer_lexeme,
     ),
 )
 def test_corruption_controls_reject_each_semantic_section(

@@ -1,0 +1,662 @@
+{
+  "configuration": {
+    "capabilities": "TEST_ONLY_CC014_REPOSITORY_FILE_NETWORK_DENIED_V0",
+    "media_type": "TEST_ONLY_CC014_JSON_SOURCE_V0",
+    "profile": "TEST_ONLY_CC014_LINKML_1_11_1_PROFILE_V0",
+    "resolver": "TEST_ONLY_CC014_STRICT_RESOLVER_V0"
+  },
+  "groups": {
+    "attribute-slot-usage": [
+      "x01/attribute_slot_usage.json"
+    ],
+    "conflicting-duplicate": [
+      "duplicate_conflict/owner.json",
+      "duplicate_conflict/redeclaration.json"
+    ],
+    "conflicting-mixins-order": [
+      "x01/conflicting_mixins_ab.json",
+      "x01/conflicting_mixins_ba.json"
+    ],
+    "default-range-equivalence": [
+      "metamorphic/default_range_explicit.json",
+      "x01/default_range.json"
+    ],
+    "explicit-adoption": [
+      "explicit_adoption/adopter.json",
+      "explicit_adoption/owner.json"
+    ],
+    "explicit-false-boundary": [
+      "positive/valid_explicit_false.json",
+      "x01/explicit_false.json"
+    ],
+    "numeric-bounds-lexemes": [
+      "metamorphic/numeric_bounds_equivalent_lexemes.json",
+      "x01/numeric_bounds.json"
+    ],
+    "parent-mixin-precedence": [
+      "x01/parent_mixin_precedence.json"
+    ],
+    "presentation-only-change": [
+      "metamorphic/presentation_baseline.json",
+      "metamorphic/presentation_changed.json"
+    ],
+    "repeated-mixin": [
+      "x01/repeated_mixin.json"
+    ],
+    "simple-parity": [
+      "x01/simple_parity.json"
+    ]
+  },
+  "nonclaims": {
+    "canonical_fact_bytes": "NOT_CLAIMED",
+    "compiler_implementation_conformance": "NOT_CLAIMED",
+    "diagnostic_identifiers": "NOT_CLAIMED",
+    "effective_contract_identity": "NOT_CLAIMED",
+    "logical_artifact_wire_format": "NOT_CLAIMED",
+    "public_compatibility": "NOT_CLAIMED",
+    "runtime_conformance": "NOT_CLAIMED"
+  },
+  "outcomes": {
+    "duplicate_conflict/owner.json": "ACCEPT",
+    "duplicate_conflict/redeclaration.json": {
+      "outcome": "REFUSE"
+    },
+    "explicit_adoption/adopter.json": "ACCEPT",
+    "explicit_adoption/owner.json": "ACCEPT",
+    "metamorphic/default_range_explicit.json": "ACCEPT",
+    "metamorphic/numeric_bounds_equivalent_lexemes.json": "ACCEPT",
+    "metamorphic/presentation_baseline.json": "ACCEPT",
+    "metamorphic/presentation_changed.json": "ACCEPT",
+    "positive/valid_explicit_false.json": "ACCEPT",
+    "x01/attribute_slot_usage.json": "ACCEPT",
+    "x01/conflicting_mixins_ab.json": {
+      "outcome": "REFUSE"
+    },
+    "x01/conflicting_mixins_ba.json": {
+      "outcome": "REFUSE"
+    },
+    "x01/default_range.json": "ACCEPT",
+    "x01/explicit_false.json": {
+      "outcome": "REFUSE"
+    },
+    "x01/numeric_bounds.json": "ACCEPT",
+    "x01/parent_mixin_precedence.json": "ACCEPT",
+    "x01/repeated_mixin.json": {
+      "outcome": "REFUSE"
+    },
+    "x01/simple_parity.json": "ACCEPT"
+  },
+  "projections": {
+    "duplicate_conflict/owner.json": {
+      "classes": {},
+      "global_slots": {
+        "shared_value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_uses": {}
+    },
+    "explicit_adoption/adopter.json": {
+      "classes": {},
+      "global_slots": {
+        "shared_value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_owners": {
+        "shared_value": "https://example.malleus.dev/cc013/adoption-owner/shared_value"
+      },
+      "slot_uses": {}
+    },
+    "explicit_adoption/owner.json": {
+      "classes": {},
+      "global_slots": {
+        "shared_value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_owners": {
+        "shared_value": "https://example.malleus.dev/cc013/adoption-owner/shared_value"
+      },
+      "slot_uses": {}
+    },
+    "metamorphic/default_range_explicit.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": false
+        }
+      }
+    },
+    "metamorphic/numeric_bounds_equivalent_lexemes.json": {
+      "classes": {
+        "Child": {
+          "abstract": false,
+          "is_a": "Parent",
+          "is_mixin": false
+        },
+        "Parent": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "100",
+          "minimum": "0",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Child.value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "90",
+          "minimum": "10",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        },
+        "Parent.value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "90",
+          "minimum": "10",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        }
+      }
+    },
+    "metamorphic/presentation_baseline.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_uses": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      }
+    },
+    "metamorphic/presentation_changed.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_uses": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      }
+    },
+    "positive/valid_explicit_false.json": {
+      "classes": {
+        "Record": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Record.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": false
+        }
+      }
+    },
+    "x01/attribute_slot_usage.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "global_value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": false
+        }
+      },
+      "local_slots": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": true
+        }
+      },
+      "slot_uses": {
+        "Thing.global_value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "float",
+          "required": true
+        },
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": true
+        }
+      }
+    },
+    "x01/default_range.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": false
+        }
+      }
+    },
+    "x01/numeric_bounds.json": {
+      "classes": {
+        "Child": {
+          "abstract": false,
+          "is_a": "Parent",
+          "is_mixin": false
+        },
+        "Parent": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "100",
+          "minimum": "0",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Child.value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "90",
+          "minimum": "10",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        },
+        "Parent.value": {
+          "identifier": false,
+          "inlined": false,
+          "maximum": "90",
+          "minimum": "10",
+          "multivalued": false,
+          "range": "float",
+          "required": false
+        }
+      }
+    },
+    "x01/parent_mixin_precedence.json": {
+      "classes": {
+        "Child": {
+          "abstract": false,
+          "is_a": "Parent",
+          "is_mixin": false,
+          "mixins": [
+            "MixinA"
+          ]
+        },
+        "MixinA": {
+          "abstract": false,
+          "is_mixin": true
+        },
+        "Parent": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": false
+        }
+      },
+      "slot_uses": {
+        "Child.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": true,
+          "range": "float",
+          "required": true
+        },
+        "MixinA.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": true,
+          "range": "float",
+          "required": false
+        },
+        "Parent.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "integer",
+          "required": true
+        }
+      }
+    },
+    "x01/simple_parity.json": {
+      "classes": {
+        "Thing": {
+          "abstract": false,
+          "is_mixin": false
+        }
+      },
+      "global_slots": {
+        "value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      },
+      "slot_uses": {
+        "Thing.value": {
+          "identifier": false,
+          "inlined": false,
+          "multivalued": false,
+          "range": "string",
+          "required": true
+        }
+      }
+    }
+  },
+  "provenance": {
+    "accepted_decisions": [
+      "OD-002",
+      "OD-003",
+      "OD-005",
+      "OD-008"
+    ],
+    "adoption": {
+      "adopter": "explicit_adoption/adopter.json",
+      "authoritative_owner": "explicit_adoption/owner.json",
+      "marker": "TEST_ONLY_CC014_AUTHORED_BOOLEAN_TRUE",
+      "semantic_fact_emitted_for_marker": false
+    },
+    "default_range": {
+      "metamorphic/default_range_explicit.json": "TEST_ONLY_CC014_AUTHORED_VALUE",
+      "x01/default_range.json": "TEST_ONLY_CC014_SCHEMA_DEFAULT_VALUE"
+    },
+    "derivation": "TEST_ONLY_CC014_HAND_AUTHORED_WITHOUT_IMPLEMENTATION_OUTPUT",
+    "input_evidence": "CC-013",
+    "numeric_lexemes": {
+      "metamorphic/numeric_bounds_equivalent_lexemes.json": {
+        "classes.Child.slot_usage.value.maximum_value": "9.5e1",
+        "classes.Child.slot_usage.value.minimum_value": "5.0",
+        "classes.Parent.slot_usage.value.maximum_value": "9e1",
+        "classes.Parent.slot_usage.value.minimum_value": "1e1",
+        "slots.value.maximum_value": "1e2",
+        "slots.value.minimum_value": "0e0"
+      },
+      "x01/numeric_bounds.json": {
+        "classes.Child.slot_usage.value.maximum_value": "95",
+        "classes.Child.slot_usage.value.minimum_value": "5",
+        "classes.Parent.slot_usage.value.maximum_value": "90",
+        "classes.Parent.slot_usage.value.minimum_value": "10",
+        "slots.value.maximum_value": "100",
+        "slots.value.minimum_value": "0"
+      }
+    }
+  },
+  "relations": [
+    {
+      "case_id": "conflicting-mixins-order",
+      "dimensions": {
+        "compilation_outcome": "SAME",
+        "compiled_facts": "NOT_CLAIMED",
+        "effective_contract": "NOT_CLAIMED",
+        "logical_artifact": "NOT_CLAIMED",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "NOT_CLAIMED"
+      },
+      "left": "x01/conflicting_mixins_ab.json",
+      "right": "x01/conflicting_mixins_ba.json"
+    },
+    {
+      "case_id": "default-range-equivalence",
+      "dimensions": {
+        "compilation_outcome": "SAME",
+        "compiled_facts": "SAME",
+        "effective_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "left": "x01/default_range.json",
+      "right": "metamorphic/default_range_explicit.json"
+    },
+    {
+      "case_id": "numeric-bounds-lexemes",
+      "dimensions": {
+        "compilation_outcome": "SAME",
+        "compiled_facts": "SAME",
+        "effective_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "left": "x01/numeric_bounds.json",
+      "right": "metamorphic/numeric_bounds_equivalent_lexemes.json"
+    },
+    {
+      "case_id": "presentation-only-change",
+      "dimensions": {
+        "compilation_outcome": "SAME",
+        "compiled_facts": "SAME",
+        "effective_contract": "SAME",
+        "logical_artifact": "NOT_CLAIMED",
+        "raw_source": "DIFFERENT",
+        "source_attestation": "DIFFERENT",
+        "validated_fact_set": "SAME"
+      },
+      "left": "metamorphic/presentation_baseline.json",
+      "right": "metamorphic/presentation_changed.json"
+    }
+  ],
+  "sources": [
+    {
+      "byte_length": 142,
+      "path": "duplicate_conflict/owner.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_9a59cd18d040be262b729609405bf6ac4e04c83426be7788286afd17c6b2cd11"
+    },
+    {
+      "byte_length": 210,
+      "path": "duplicate_conflict/redeclaration.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_f6762a2754b75175e152b58492e61ce3f8ba54edf484cb9bff9fbb6cdd36744d"
+    },
+    {
+      "byte_length": 277,
+      "path": "explicit_adoption/adopter.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_1983347e771638c41dea08a1771bcea11cf155a552691393c1e816c588bf7232"
+    },
+    {
+      "byte_length": 192,
+      "path": "explicit_adoption/owner.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_b397043c3ab3b603ae59c3af4c68f9fe203af7fdd1eec891f3609a7dbe4801b5"
+    },
+    {
+      "byte_length": 177,
+      "path": "metamorphic/default_range_explicit.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_c4bd65697241cfa5f1e539ca204723c2c3feaf6bb5f216a1229b21287d588454"
+    },
+    {
+      "byte_length": 350,
+      "path": "metamorphic/numeric_bounds_equivalent_lexemes.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_7c96f5477ec81d6f300574e2874255f7f241b1362b695b8b75c4365216c66175"
+    },
+    {
+      "byte_length": 340,
+      "path": "metamorphic/presentation_baseline.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_9fab5e8553dddbc02b4816967d7a1d6d09452c26fe393aa561b6550e05239918"
+    },
+    {
+      "byte_length": 336,
+      "path": "metamorphic/presentation_changed.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_f8e59eb6eda21006ab1b95e55b41116376eb37f53db15556ad560488e2a79006"
+    },
+    {
+      "byte_length": 358,
+      "path": "positive/valid_explicit_false.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_1ebe5f0dc472c57ba8868aea8798fe8c870616e936617e6e452d899269d479ab"
+    },
+    {
+      "byte_length": 301,
+      "path": "x01/attribute_slot_usage.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_3bb785cb41ca321076fc9e345f72e98e66fd456864904b2b74170fbb78e90bbd"
+    },
+    {
+      "byte_length": 345,
+      "path": "x01/conflicting_mixins_ab.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_360a04667c2358ee9ea5a59ede7208fb1b8ddb5a97a3b5800cd24e4ae0fc71fc"
+    },
+    {
+      "byte_length": 345,
+      "path": "x01/conflicting_mixins_ba.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_f5abfc71242cd22e14ed8a83073c908c569690ce0cb50811d1d39ef72c4b81aa"
+    },
+    {
+      "byte_length": 160,
+      "path": "x01/default_range.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_114309aa47a174861e091d6ce4454f46a21982b9cdc01cb295d8bf26e4318866"
+    },
+    {
+      "byte_length": 317,
+      "path": "x01/explicit_false.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_b6067d9ed6d57d5c2d59324990ed151975c66f826d4596bb7fb6d8dca0bc7a8c"
+    },
+    {
+      "byte_length": 341,
+      "path": "x01/numeric_bounds.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_310927cfee843803cced8933ada89d678f3cef385c7a9393f8b882e6c6e0921b"
+    },
+    {
+      "byte_length": 378,
+      "path": "x01/parent_mixin_precedence.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_058dba6e97e138ccdf75f0ae928f289b261f6cd21f89f6f0f9ceb464032f0d37"
+    },
+    {
+      "byte_length": 246,
+      "path": "x01/repeated_mixin.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_0d39ee50aa8f475c1abdacbba395520014a5d95341734ee96b069598df6a3b1b"
+    },
+    {
+      "byte_length": 166,
+      "path": "x01/simple_parity.json",
+      "source_blob": "TEST_ONLY_CC014_SOURCE_BLOB_SHA256_88b64ac3d7bff49d8a04d7b9b428aa1fddb57311ffdece661c5b01e1ef64efbe"
+    }
+  ]
+}

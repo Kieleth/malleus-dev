@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/ruff format --check tests/contract_compiler/test_feature_case_oracles.py && .venv/bin/ruff check tests/contract_compiler/test_feature_case_oracles.py && .venv/bin/pytest -q tests/contract_compiler/test_feature_case_oracles.py",
+    "observed": "All 16 fixed feature-answer-key tests passed and scoped Ruff passed after the single private JSON oracle was hand-authored. Exact JSON type checks distinguish booleans from numbers and integer from decimal lexemes; AST guards close direct, dynamic, exec, and pytest import-bypass paths.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c6be0f5c6b25dc4b4790df84d8a4b6d7c5248f244e2713fccc5bd4cba17657ba",
+  "entry_id": "CC-014-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0cc3b0ba9896594d52a9660cee737dbee3e5cfcd575b19c2ba842ff60e95668b",
+  "recorded_at": "2026-09-01T07:16:24Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Record the hand-authored feature-answer-key GREEN.",
+  "workstream_id": "CC-014"
+}
