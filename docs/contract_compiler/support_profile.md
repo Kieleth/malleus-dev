@@ -22,7 +22,7 @@ not a compatibility promise. Both files remain outside the built distribution
 until the full resolver, parser, binder, elaborator, validator, dependency
 identity, artifact, and promotion gates are satisfied.
 
-### Private lowering instruction set
+## Private lowering instruction set
 
 The JSON profile is the authority for this bootstrap's semantic choices. The
 Python module implements a closed eight-operation instruction set:

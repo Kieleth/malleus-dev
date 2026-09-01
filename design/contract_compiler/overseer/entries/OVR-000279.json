@@ -1,0 +1,62 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:cad1725ef350806479a35a8a971edd051c938cfa004a2ea73948b7cb1dfa4ae4",
+        "before_digest": "sha256:5dc962b3c7971c9a1cb7f11861a6d87933abf6764e31772035af5e9ed17878b1",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/support_profile.md"
+      },
+      {
+        "after_digest": "sha256:de19fcbdcf4d464402927aedaee1b130f8da6de53b0394cb962eaf5aa1221d8b",
+        "before_digest": "sha256:6717ea5717903c9f99e78d8fd80ce78e589eca3c2dcd270d9b3cafead53b7e52",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:bea7279514cc5cdbac141934cc42cd44ff6ec7e58a1c363b5a6a50c85bfb2701",
+  "entry_id": "OVR-000279",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:dabfe7b46434c5a390dc63964209ad61ffd5315b38cf2750f94985eff1ea8036",
+  "recorded_at": "2026-09-01T04:46:13Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/support_profile.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 279,
+  "subject": {
+    "id": "greenhouse-bootstrap-ci-binding-correction",
+    "type": "DOCUMENT"
+  },
+  "summary": "Correct the private compiler guide heading and rebind the GraphRecipe package snapshot.",
+  "why": "Sphinx correctly refused a skipped heading level in the new internal guide. The package exclusion also changed pyproject.toml, so the prescribed GraphRecipe rebind updates only that package-boundary digest. No compiler, corpus, fixture, receipt, or GraphRecipe behavior changes."
+}
