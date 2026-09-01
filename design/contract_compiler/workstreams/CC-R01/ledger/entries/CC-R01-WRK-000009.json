@@ -1,0 +1,21 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "claims": [
+      "A 1,201-module acyclic import chain fails with a raw RecursionError in the recursive executor, so the current runtime accidentally imports the host Python recursion limit as policy.",
+      "The ordering regression now checks import-edge tuple order for traversal and caller-supplied sort-key strategies, not only module order."
+    ],
+    "limitations": [
+      "This observation records the failing regression before the explicit-stack repair. It makes no GREEN, package, corpus, or completion claim."
+    ]
+  },
+  "entry_hash": "sha256:2974a55d63d1ab42ad23ba0aad7542136802bf0e8afd66640b3af667f95c4416",
+  "entry_id": "CC-R01-WRK-000009",
+  "entry_type": "OBSERVATION",
+  "previous_entry_hash": "sha256:ae5c4e9f3068331c2ffedb6bc754a81946d0af4acd07c084464c55290d318ad7",
+  "recorded_at": "2026-09-01T15:35:15Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 9,
+  "summary": "Expose the host-recursion defect and missing edge-order assertions.",
+  "workstream_id": "CC-R01"
+}

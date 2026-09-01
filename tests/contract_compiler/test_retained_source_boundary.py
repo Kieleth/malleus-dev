@@ -356,6 +356,15 @@ def test_ordering_changes_only_tuple_presentation() -> None:
         "module:common",
         "module:right",
     ]
+    assert [
+        (edge.parent_module_id, edge.parent_import_ordinal)
+        for edge in traversal.import_edges
+    ] == [
+        ("module:root", 0),
+        ("module:left", 0),
+        ("module:root", 1),
+        ("module:right", 0),
+    ]
     assert frozenset(canonical.modules) == frozenset(traversal.modules)
     assert frozenset(canonical.import_edges) == frozenset(traversal.import_edges)
 
@@ -386,6 +395,15 @@ def test_ordering_changes_only_tuple_presentation() -> None:
         "module:root",
         "module:left",
         "module:common",
+    ]
+    assert [
+        (edge.parent_module_id, edge.parent_import_ordinal)
+        for edge in custom.import_edges
+    ] == [
+        ("module:right", 0),
+        ("module:root", 1),
+        ("module:root", 0),
+        ("module:left", 0),
     ]
     assert frozenset(custom.modules) == frozenset(canonical.modules)
     assert frozenset(custom.import_edges) == frozenset(canonical.import_edges)
@@ -714,6 +732,28 @@ def test_every_directed_cycle_refuses_with_exact_locator_lineage(
     assert refusal.lineage == expected_lineage
     assert isinstance(refusal.request, ImportRequest)
     _assert_no_partial_result(refusal)
+
+
+def test_deep_acyclic_chain_has_no_host_recursion_boundary() -> None:
+    module_count = 1_201
+    routes = {"root": _source("module:0000", b"0")}
+    imports: dict[str, tuple[str, ...]] = {}
+    for index in range(module_count):
+        module = f"module:{index:04d}"
+        if index + 1 == module_count:
+            imports[module] = ()
+            continue
+        literal = f"next:{index + 1:04d}"
+        routes[literal] = _source(f"module:{index + 1:04d}", str(index + 1).encode())
+        imports[module] = (literal,)
+
+    closure = _build(_MemoryResolver(routes), _MemoryImportReader(imports))
+
+    assert len(closure.modules) == module_count
+    assert len(closure.import_edges) == module_count - 1
+    assert closure.root.resolved_locator == "module:0000"
+    assert closure.import_edges[0].parent_module_id == "module:0000"
+    assert closure.import_edges[-1].child_module_id == "module:1200"
 
 
 @pytest.mark.parametrize(
