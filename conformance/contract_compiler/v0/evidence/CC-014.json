@@ -6,9 +6,9 @@
       "sha256": "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd428017068"
     },
     {
-      "byte_length": 23201,
+      "byte_length": 23720,
       "path": "tests/contract_compiler/test_feature_case_oracles.py",
-      "sha256": "sha256:fddef4750654e75dd1b226bef6b7db6042f92b5d93bff2e4468e2c194d567e19"
+      "sha256": "sha256:4f217511d88b43cb8d50edc344bda8a99e4567bafb28f7e02f4fa349ebc9313c"
     }
   ],
   "base_commit": "607706796bf157f10d2a911a57cff39a72876795",
@@ -52,19 +52,19 @@
     {
       "check_id": "cc014-isolation-and-shapes",
       "method": "Validate duplicate-key and nonfinite-number refusal, exact recursive JSON types and number lexemes, closed ACCEPT/refusal/relation unions, and static plus hidden producer isolation under an exact import allowlist.",
-      "observed": "Boolean-number substitutions and integer-decimal lexical substitutions are rejected. Refusal is exactly {\"outcome\":\"REFUSE\"}; relations use only SAME, DIFFERENT, or NOT_CLAIMED. The exact import allowlist validates both modules and imported names. Call guards reject __import__, eval, exec, import_module, pytest.importorskip, pytest.main plugin loading, and pytest_plugins assignment. No compiler, LinkML execution, OntologyRegistry, Greenhouse, or Quiet Bell authority is consumed.",
+      "observed": "Boolean-number and integer-decimal substitutions refuse. Refusal is exactly {\"outcome\":\"REFUSE\"}; relations use only SAME, DIFFERENT, or NOT_CLAIMED. The exact import allowlist validates modules and imported names. Only direct pytest.mark and pytest.raises attributes are allowed; aliased main and importorskip refuse. Dynamic lookup, import, execution, and pytest_plugins paths refuse. No compiler, LinkML execution, OntologyRegistry, Greenhouse, or Quiet Bell authority is consumed.",
       "result": "PASS"
     },
     {
       "check_id": "cc014-green-and-disproof",
       "method": "Run the complete focused answer-key test and the isolated corruption plus hidden-producer subset.",
-      "observed": "The repaired focused suite passed 19 tests. The disproof subset passed 12 tests with 7 deselected, rejecting configuration, outcome, projection, relation, provenance, nonclaim, JSON-type, numeric-lexeme, forbidden from-import, aliased builtins import, and pytest.main plugin-loading changes.",
+      "observed": "The repaired focused suite passed 21 tests. The disproof subset passed 14 tests with 7 deselected, rejecting configuration, outcome, projection, relation, provenance, nonclaim, JSON-type, numeric-lexeme, forbidden from-import, aliased builtins import, direct or aliased pytest.main, and aliased pytest.importorskip changes.",
       "result": "PASS"
     },
     {
       "check_id": "cc014-neighbors-and-regression",
       "method": "Run neighboring feature inputs, Quiet Bell and Greenhouse inputs/oracles, then the complete tests/contract_compiler directory.",
-      "observed": "All 67 neighboring oracle and input tests passed. The complete contract-compiler directory passed 242 tests after the producer-allowlist repair.",
+      "observed": "All 67 neighboring oracle and input tests passed. The complete contract-compiler directory passed 244 tests after both producer-guard repairs.",
       "result": "PASS"
     },
     {
@@ -75,7 +75,7 @@
     }
   ],
   "limitations": [
-    "The JSON is a private fixture-local answer key. Its selectors and tokens are not compiler input, neutral IR, a public data format, a compatibility contract, runtime artifact bytes, wire grammar, or stable public identifiers.",
+    "The JSON is a private fixture-local answer key. Its selectors and tokens are not compiler input, neutral IR, a public data format, a compatibility contract, runtime artifact bytes, wire grammar, or stable public identifiers. The AST producer guard is a focused regression tripwire over this fixed test, not a complete information-flow proof or sandbox; independent review and source ownership remain required.",
     "The feature projections are exact expected semantic values for these 18 controlled sources. They do not claim that any current compiler or runtime conforms; later implementation stages must prove that independently.",
     "Canonical fact bytes, logical artifact bytes, public diagnostic identifiers, and public EffectiveContract identity remain outside this workstream.",
     "No compiler, LinkML adapter, resolver, runtime, protocol event, ledger, graph, projector, package, release, corpus membership, checksum, selection, integration, or compiler-stage completion is implemented here.",

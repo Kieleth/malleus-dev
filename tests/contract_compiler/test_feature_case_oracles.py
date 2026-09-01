@@ -609,7 +609,20 @@ def _assert_no_producer_source(source: str) -> None:
                 alias.asname is None and alias.name in allowed_names
                 for alias in node.names
             )
-    forbidden_calls = {"__import__", "eval", "exec", "import_module", "importorskip"}
+    forbidden_calls = {
+        "__import__",
+        "eval",
+        "exec",
+        "getattr",
+        "import_module",
+        "importorskip",
+        "setattr",
+        "vars",
+    }
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+            if node.value.id == "pytest":
+                assert node.attr in {"mark", "raises"}
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
@@ -649,6 +662,11 @@ def test_answer_key_has_no_forbidden_execution_dependency() -> None:
         "from malleus import _contract_compiler\n",
         "from builtins import __import__ as load\n",
         "import pytest\npytest.main(['-p', 'producer_plugin'])\n",
+        "import pytest\nrun = pytest.main\nrun(['-p', 'producer_plugin'])\n",
+        (
+            "import pytest\nload = pytest.importorskip\n"
+            "load('malleus._contract_compiler')\n"
+        ),
     ),
 )
 def test_hidden_producer_mutations_are_rejected(source: str) -> None:
