@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 26809,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:c3862750dc379428b61909dff1c0f432239e096d3457cfe69d1a5b810afbe44f"
+    },
+    {
+      "byte_length": 7252,
+      "path": "design/contract_compiler/workstreams/CC-R03/manifest.json",
+      "sha256": "sha256:44018b9a56e88f0570a5ba44ffd2a97bb9eca4acc00d294e25ee8f5fb572ed62"
+    },
+    {
+      "byte_length": 295865,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:532353f939321d207b61f87b2c3167fcfbcfd48fcad56ed7f8c3aeb3b70c0b72"
+    }
+  ],
+  "base_commit": "18068c4a33722e9f882de6335e6f3e74ddfa9931",
+  "checks": [
+    {
+      "check_id": "ccr03-activation-red",
+      "method": "Add and run the exact activation guard before creating the card or changing overseer state.",
+      "observed": "The guard failed at the intended first boundary because the CC-R03 card was ABSENT rather than PRESENT. No binder, profile, binder test, or worker evidence byte existed or was created by RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-dependency-readiness",
+      "method": "Bind all fourteen direct dependencies in program order to current card digests, exact active COMPLETE entries and hashes, and the first Git commit containing each completion entry.",
+      "observed": "All fourteen dependencies are COMPLETE. CC-R02 binds its forward-corrected completion at OVR-000312 and commit 18068c4. No dependency edge or selection changes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-closed-boundary",
+      "method": "Compare the worker contract with the completed retained closure and declaration adapter outputs and with later elaboration, fact, artifact, protocol, and runtime stages.",
+      "observed": "The worker consumes one immutable DeclaredContractClosure and returns one immutable binding/composition result or one typed atomic refusal. It performs no source or resolver I/O and owns no parser classification or later semantic stage.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-binding-semantics",
+      "method": "Freeze qualification, reference resolution, builtin, ownership, adoption, provenance, and diagnostic obligations in the card and activation guard.",
+      "observed": "Qualification comes from schema IDs; references resolve only inside the exact retained closure or trusted builtins; ownership is singular; only accepted explicit slot adoption composes; provenance and diagnostics are deterministic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-tdd-refusal-matrix",
+      "method": "Require fixed tests before implementation for immutable boundaries, atomic refusal, collisions, unknown and ambiguous references, order invariance, cumulative regression, and pre-binder import refusal.",
+      "observed": "The worker contract freezes every named RED category. Quiet Bell's missing retained import must refuse upstream, before binder execution.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-scope-and-authority-cut",
+      "method": "Inspect the four worker scopes, governance-only activation files, candidate, ledger, selection, package, and public surfaces.",
+      "observed": "The worker owns exactly one private binder module, one private profile, one test module, and one evidence report. Candidate is NONE, worker ledger is NOT_STARTED, selection is absent, and activation creates no implementation, package, release, public API, governance migration, or fixture policy.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction activates the private qualified-binding and explicit-composition stage. It does not implement or complete the binder.",
+    "Hierarchy, mixin, default, slot, and expression elaboration remain in the later elaboration stage.",
+    "Neutral facts, EffectiveContract, artifacts, protocol execution, semantic transitions, runtime, and graph projection remain later work.",
+    "Quiet Bell remains an upstream refusal because its authored malleus import has no retained governed source; CC-R03 must not invent or resolve it.",
+    "No public API, package, version, release, selection, fixture-specific policy, or general compatibility promise is created."
+  ],
+  "recorded_at": "2026-09-01T23:10:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R03"
+}

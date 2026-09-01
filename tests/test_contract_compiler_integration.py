@@ -7900,3 +7900,129 @@ def test_linkml_adapter_package_gate_is_forward_corrected() -> None:
         for limitation in report["limitations"]
     )
     assert "CC-R02" not in manifest["selections"]
+
+
+def test_qualified_binder_activation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R03")
+    assert row["depends_on"] == [
+        "CC-R02",
+        "CC-D02",
+        "CC-D05",
+        "CC-D06",
+        "CC-D11",
+        "CC-010",
+        "CC-011",
+        "CC-012",
+        "CC-013",
+        "CC-014",
+        "CC-015",
+        "CC-016",
+        "CC-021",
+        "CC-022",
+    ]
+    assert row["card"]["state"] == "PRESENT"
+
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R03/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:ccr03-qualified-binder",
+        "state": "ASSIGNED",
+        "task_id": "/root/ccr03_qualified_binder",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert [
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ] == row["depends_on"]
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["scopes"] == [
+        {"kind": "FILE", "path": "src/malleus/_contract_binder.py"},
+        {
+            "kind": "FILE",
+            "path": "src/malleus/_contract_binding_profile.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_contract_binder.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-R03.json",
+        },
+    ]
+    responsibility = card["responsibility"]
+    for required in (
+        "DeclaredContractClosure",
+        "schema IDs",
+        "trusted builtins",
+        "one authoritative owner",
+        "accepted explicit slot adoption",
+        "typed atomic refusal",
+        "exact provenance",
+        "deterministic diagnostics",
+    ):
+        assert required in responsibility
+    for excluded in (
+        "source or resolver I/O",
+        "hierarchy, mixin, default, slot, or expression elaboration",
+        "neutral facts",
+        "EffectiveContract",
+        "protocol, change-set, runtime, or graph",
+        "package, version, release, or public API",
+        "governance migration",
+        "fixture-specific policy",
+    ):
+        assert excluded in responsibility
+
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    assert states["CC-R03"] == "ACTIVE"
+    assert "CC-R03" not in manifest["selections"]
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 313 <= entry["sequence"] <= 315
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000313",
+        "OVR-000314",
+        "OVR-000315",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R03-activation.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R03/manifest.json": "CREATED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "ccr03-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000313",
+        "OVR-000314",
+    ]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R03-activation.json")
+    assert report["base_commit"] == "18068c4a33722e9f882de6335e6f3e74ddfa9931"
+    assert report["workstream_id"] == "CC-R03"
+    assert all(check["result"] == "PASS" for check in report["checks"])

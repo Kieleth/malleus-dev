@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R03"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c3862750dc379428b61909dff1c0f432239e096d3457cfe69d1a5b810afbe44f",
+        "before_digest": "sha256:5b0bfaeea8aed67e45e07f4ab6a89d8827837b421c92e1960688278ccb9a2278",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:44018b9a56e88f0570a5ba44ffd2a97bb9eca4acc00d294e25ee8f5fb572ed62",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:479afd2ea4b77c1b1f6b478a8c4ce9ed3469e62fe0240fe78c539c54c92bd31a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R03-activation.json"
+      },
+      {
+        "after_digest": "sha256:532353f939321d207b61f87b2c3167fcfbcfd48fcad56ed7f8c3aeb3b70c0b72",
+        "before_digest": "sha256:c392c99ea72eb1d9b71d3b25efee1fb7ef9ba2807c36bfecc5c53ff7737499c1",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6a0d3a560b0c80b508b68946846864ad14947ca1e7b64c76af6dde8a36209904",
+  "entry_id": "OVR-000313",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:14e1b6e6adfe11f557074250006dc620be3ff3ff4a251cc053278f67f4080e07",
+  "recorded_at": "2026-09-01T23:10:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:479afd2ea4b77c1b1f6b478a8c4ce9ed3469e62fe0240fe78c539c54c92bd31a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R03-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "18068c4a33722e9f882de6335e6f3e74ddfa9931",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 313,
+  "subject": {
+    "id": "ccr03-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private qualified-binding and explicit-composition stage.",
+  "why": "The completed retained closure and declaration adapter now supply the exact closed input for a separate binder. This revision assigns only that boundary, freezes its refusal and determinism obligations, and creates no binder implementation or later semantic authority."
+}

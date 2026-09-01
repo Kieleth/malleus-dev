@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "ccr03-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T23:10:02Z",
+    "claims": [
+      "CC-R03 binds exactly fourteen COMPLETE dependencies in program order to their current card digests, active completion entries and hashes, and first containing commits.",
+      "The assigned worker consumes one immutable DeclaredContractClosure and produces one immutable binding/composition result or one typed atomic refusal.",
+      "Declarations qualify from schema IDs; references resolve only against the exact retained closure and trusted builtins; ownership is singular; only accepted explicit slot adoption composes.",
+      "Exact provenance and deterministic diagnostics are required independent of import and declaration order.",
+      "The fixed implementation RED covers immutable input/output, atomic refusal, qualification, resolution, builtins, positive adoption, the full refusal matrix, collisions, unknown and ambiguous references, order invariance, cumulative R01/R02 regression, and pre-binder missing-import refusal.",
+      "The four worker scopes are exact. Candidate is NONE, worker ledger is NOT_STARTED, selection is absent, and no implementation or public authority is created."
+    ],
+    "limitations": [
+      "This verification activates CC-R03 but does not implement or complete it.",
+      "Source and resolver I/O, parsing and classification, elaboration, neutral facts, artifacts, protocol execution, runtime, graph projection, packages, releases, public APIs, governance migration, and fixture policy remain outside this worker.",
+      "Quiet Bell's missing import remains an upstream typed refusal and must stop before binder execution.",
+      "No successor workstream is activated."
+    ]
+  },
+  "entry_hash": "sha256:d7f7f672303f58bbfc059c79191887dfa0d8c4f4b18b1bd805d3461e477956fb",
+  "entry_id": "OVR-000314",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6a0d3a560b0c80b508b68946846864ad14947ca1e7b64c76af6dde8a36209904",
+  "recorded_at": "2026-09-01T23:10:02Z",
+  "references": [
+    {
+      "digest": "sha256:479afd2ea4b77c1b1f6b478a8c4ce9ed3469e62fe0240fe78c539c54c92bd31a",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R03-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000313",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 314,
+  "subject": {
+    "id": "ccr03-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the private qualified-binder activation boundary.",
+  "why": "The report proves dependency readiness, the closed binder contract, exact worker scopes, required RED categories, and the absence of implementation, selection, package, release, public API, or later-stage authority."
+}
