@@ -889,17 +889,17 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
 
     assert "/src/malleus/_contract_compiler.py" in excluded
     assert "/src/malleus/_contract_compiler_profile.json" in excluded
-    assert "/src/malleus/_contract_source.py" in wheel_excluded
+    assert set(wheel_excluded) == {
+        "/src/malleus/_contract_compiler.py",
+        "/src/malleus/_contract_compiler_profile.json",
+        "/src/malleus/_contract_source.py",
+    }
     assert "malleus/_contract_compiler.py" not in members
     assert "malleus/_contract_compiler_profile.json" not in members
     assert "malleus/_contract_source.py" not in members
     assert not any(
         member.endswith("/src/malleus/_contract_compiler.py")
         or member.endswith("/src/malleus/_contract_compiler_profile.json")
-        for member in source_members
-    )
-    assert any(
-        member.endswith("/src/malleus/_contract_source.py")
         for member in source_members
     )
     assert "compile_linkml_contract" not in malleus.__all__
