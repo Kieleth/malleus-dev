@@ -157,6 +157,13 @@ class _QualificationPath:
 
 
 @dataclass(frozen=True, slots=True)
+class _SequenceOccurrence:
+    pattern: tuple[str, ...]
+    classification: str
+    value_classification: str | None
+
+
+@dataclass(frozen=True, slots=True)
 class _Profile:
     profile_id: str
     digest: str
@@ -164,6 +171,7 @@ class _Profile:
     qualification_paths: tuple[_QualificationPath, ...]
     input_support_profile: str
     input_profile_sha256: str
+    sequence_occurrences: tuple[_SequenceOccurrence, ...]
     global_paths: tuple[str, ...]
     prefix_map_field: str
     trusted_module_id: str
@@ -355,9 +363,47 @@ def _load_profile() -> _Profile:
     declared_input = _mapping(root["declared_input"], "declared_input")
     _exact_keys(
         declared_input,
-        {"profile_sha256", "support_profile"},
+        {"profile_sha256", "sequence_item_occurrences", "support_profile"},
         "declared_input",
     )
+    occurrence_values = declared_input["sequence_item_occurrences"]
+    if type(occurrence_values) is not list or not occurrence_values:
+        raise _profile_refusal(
+            "profile sequence_item_occurrences must be a nonempty array"
+        )
+    sequence_occurrences: list[_SequenceOccurrence] = []
+    for index, value in enumerate(occurrence_values):
+        spec = _mapping(value, f"sequence_item_occurrences[{index}]")
+        _exact_keys(
+            spec,
+            {"classification", "pattern", "value_classification"},
+            f"sequence_item_occurrences[{index}]",
+        )
+        raw_pattern = spec["pattern"]
+        if type(raw_pattern) is not list or any(
+            type(item) is not str or not item for item in raw_pattern
+        ):
+            raise _profile_refusal("profile sequence occurrence pattern is malformed")
+        value_classification = spec["value_classification"]
+        if value_classification is not None:
+            value_classification = _string(
+                value_classification,
+                f"sequence_item_occurrences[{index}].value_classification",
+            )
+        sequence_occurrences.append(
+            _SequenceOccurrence(
+                pattern=tuple(raw_pattern),
+                classification=_string(
+                    spec["classification"],
+                    f"sequence_item_occurrences[{index}].classification",
+                ),
+                value_classification=value_classification,
+            )
+        )
+    if len({item.pattern for item in sequence_occurrences}) != len(
+        sequence_occurrences
+    ):
+        raise _profile_refusal("profile sequence occurrence patterns collide")
 
     trusted = _mapping(root["trusted_module"], "trusted_module")
     _exact_keys(
@@ -468,6 +514,7 @@ def _load_profile() -> _Profile:
         input_profile_sha256=_string(
             declared_input["profile_sha256"], "declared_input.profile_sha256"
         ),
+        sequence_occurrences=tuple(sequence_occurrences),
         global_paths=_strings(root["global_declaration_paths"], "global paths"),
         prefix_map_field=_string(root["prefix_map_field"], "prefix_map_field"),
         trusted_module_id=_string(trusted["module_id"], "trusted module_id"),
@@ -628,6 +675,7 @@ def _expected_declarations(
 
 def _expected_occurrences(
     value: AuthoredValue,
+    profile: _Profile,
     *,
     path: tuple[str | int, ...] = (),
     ordinal_path: tuple[int, ...] = (),
@@ -636,7 +684,8 @@ def _expected_occurrences(
         tuple[str | int, ...],
         tuple[int, ...],
         AuthoredValue,
-        AuthoredField | None,
+        str,
+        str | None,
     ],
     ...,
 ]:
@@ -645,7 +694,8 @@ def _expected_occurrences(
             tuple[str | int, ...],
             tuple[int, ...],
             AuthoredValue,
-            AuthoredField | None,
+            str,
+            str | None,
         ]
     ] = []
     if type(value) is AuthoredMapping:
@@ -655,11 +705,20 @@ def _expected_occurrences(
             expected.extend(
                 _expected_occurrences(
                     field.value,
+                    profile,
                     path=field_path,
                     ordinal_path=field_ordinals,
                 )
             )
-            expected.append((field_path, field_ordinals, field.value, field))
+            expected.append(
+                (
+                    field_path,
+                    field_ordinals,
+                    field.value,
+                    field.classification,
+                    field.value_classification,
+                )
+            )
     elif type(value) is AuthoredSequence:
         for item in value.items:
             item_path = path + (item.ordinal,)
@@ -667,11 +726,35 @@ def _expected_occurrences(
             expected.extend(
                 _expected_occurrences(
                     item.value,
+                    profile,
                     path=item_path,
                     ordinal_path=item_ordinals,
                 )
             )
-            expected.append((item_path, item_ordinals, item.value, None))
+            policies = tuple(
+                policy
+                for policy in profile.sequence_occurrences
+                if len(policy.pattern) == len(item_path)
+                and all(
+                    expected == "*" or expected == actual
+                    for expected, actual in zip(policy.pattern, item_path, strict=True)
+                )
+            )
+            if len(policies) != 1:
+                raise _input_refusal(
+                    "authored sequence item has no exact occurrence policy",
+                    path=item_path,
+                )
+            policy = policies[0]
+            expected.append(
+                (
+                    item_path,
+                    item_ordinals,
+                    item.value,
+                    policy.classification,
+                    policy.value_classification,
+                )
+            )
     return tuple(expected)
 
 
@@ -693,7 +776,7 @@ def _validate_module_evidence(module: DeclaredModule, profile: _Profile) -> None
             "declared declarations differ from the authored root",
             module_id=module.module_id,
         )
-    expected_occurrences = _expected_occurrences(module.root)
+    expected_occurrences = _expected_occurrences(module.root, profile)
     if len(module.occurrences) != len(expected_occurrences):
         raise _input_refusal(
             "classified occurrences differ from the authored root",
@@ -702,18 +785,13 @@ def _validate_module_evidence(module: DeclaredModule, profile: _Profile) -> None
     for occurrence, expected in zip(
         module.occurrences, expected_occurrences, strict=True
     ):
-        path, ordinal_path, value, field = expected
+        path, ordinal_path, value, classification, value_classification = expected
         if (
             occurrence.path != path
             or occurrence.ordinal_path != ordinal_path
             or occurrence.value != value
-            or (
-                field is not None
-                and (
-                    occurrence.classification != field.classification
-                    or occurrence.value_classification != field.value_classification
-                )
-            )
+            or occurrence.classification != classification
+            or occurrence.value_classification != value_classification
         ):
             raise _input_refusal(
                 "classified occurrences differ from the authored root",

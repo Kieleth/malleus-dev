@@ -24,7 +24,6 @@ from malleus._contract_linkml_adapter import (
     AuthoredMapping,
     AuthoredScalar,
     AuthoredSequence,
-    AuthoredSequenceItem,
     AuthoredValue,
     ClassifiedOccurrence,
     DeclaredContractClosure,
@@ -140,6 +139,8 @@ def _replace_mapping_field(
     mapping: AuthoredMapping,
     name: str,
     value: AuthoredMapping | AuthoredScalar | AuthoredSequence | None,
+    *,
+    classification: str = "IDENTITY_ONLY",
 ) -> AuthoredMapping:
     fields_out: list[AuthoredField] = []
     replaced = False
@@ -155,7 +156,7 @@ def _replace_mapping_field(
             AuthoredField(
                 name=name,
                 ordinal=len(fields_out),
-                classification="IDENTITY_ONLY",
+                classification=classification,
                 value=value,
             )
         )
@@ -552,10 +553,9 @@ def test_full_explicit_adoption_marker_and_exact_equality_matrix(
     else:
         body = _replace_mapping_field(
             body,
-            "range",
-            AuthoredSequence(
-                (AuthoredSequenceItem(0, AuthoredScalar("STRING", "string", "string")),)
-            ),
+            "multivalued",
+            AuthoredScalar("BOOLEAN", "true", True),
+            classification="ENFORCED",
         )
     closure = _replace_declaration_body(
         closure, module_id=module_id, name="shared_value", body=body
@@ -763,8 +763,7 @@ def test_sequence_item_occurrence_policy_must_match_the_exact_adapter_evidence(
         {
             schema_id: _source(
                 schema_id,
-                "slots:\n  value: {}\n"
-                "classes:\n  Record:\n    slots:\n      - value\n",
+                "slots:\n  value: {}\nclasses:\n  Record:\n    slots:\n      - value\n",
             )
         },
         root=schema_id,
@@ -772,9 +771,7 @@ def test_sequence_item_occurrence_policy_must_match_the_exact_adapter_evidence(
     module = closure.modules[0]
     path = ("classes", "Record", "slots", 0)
     occurrences = tuple(
-        replace(occurrence, **{field: value})
-        if occurrence.path == path
-        else occurrence
+        replace(occurrence, **{field: value}) if occurrence.path == path else occurrence
         for occurrence in module.occurrences
     )
     forged = replace(closure, modules=(replace(module, occurrences=occurrences),))

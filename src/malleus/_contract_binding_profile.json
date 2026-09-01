@@ -35,7 +35,47 @@
   },
   "declared_input": {
     "support_profile": "malleus.linkml/private-v0",
-    "profile_sha256": "13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287"
+    "profile_sha256": "13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287",
+    "sequence_item_occurrences": [
+      {
+        "pattern": [
+          "imports",
+          "*"
+        ],
+        "classification": "IDENTITY_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "mixins",
+          "*"
+        ],
+        "classification": "IDENTITY_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "slots",
+          "*"
+        ],
+        "classification": "IDENTITY_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "exactly_one_of",
+          "*"
+        ],
+        "classification": "ENFORCED",
+        "value_classification": null
+      }
+    ]
   },
   "global_declaration_paths": [
     "types",
