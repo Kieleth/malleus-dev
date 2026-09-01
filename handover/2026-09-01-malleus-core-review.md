@@ -235,3 +235,30 @@ retirement**; grep of the whole `design/contract_compiler/` tree for `migration.
 - Whether the four new HERESY rites fire. They are judgment tier, read but not run.
 - Whether the independently authored oracles were independent. All 204 commits are
   authored by one identity, so git provides no evidence either way.
+
+---
+
+## 9. Operator response and re-review
+
+Sections 1 through 8 above are the original review evidence. Their exact bytes
+remain at commit `ecc56d6453963759cfbdf38c9d6c510520a46a39`, Git blob
+`c4fad398ea79c4c3429296e97ddc06dfb1b1854e`, and SHA-256
+`dad7e090b0269a6260d3e85faac80da9b8b257ced4ceeea278df15c0f9c0758d`.
+This section does not rewrite that review.
+
+The operator response is the adjacent append-only journal
+[`2026-09-01-malleus-core-review-response.jsonl`](2026-09-01-malleus-core-review-response.jsonl).
+It binds the reviewed commit and review bytes, records one `ADOPT`, `DEFER`, or
+`RETURN` disposition for every finding, adds `W1` for the wheel-count and
+availability-contract correction in section 5, and binds correction evidence
+to exact committed files and checks.
+
+`ADOPT` accepts a finding. `RETURN` pushes back on its classification or asks
+for corrected framing. `DEFER` accepts that the issue exists but keeps it out
+of this correction. A disposition does not claim a fix. A separate
+`CORRECTION_EVIDENCED` event must bind committed bytes and passing checks.
+
+Re-review is a new request against an exact corrected commit and tree. It does
+not edit the original review or review its own response record. The final
+`REREVIEW_REQUESTED` journal event may be appended only after the response and
+correction evidence themselves have a committed Git identity.
