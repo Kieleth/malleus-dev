@@ -132,10 +132,10 @@ def test_result_exposes_the_neutral_contract_before_fact_encoding() -> None:
 
     assert result.contract.declarations
     assert {declaration.kind for declaration in result.contract.declarations} >= {
-        "Class",
-        "Enum",
-        "Scalar",
-        "Slot",
+        "https://malleus.dev/contract-facts/Class",
+        "https://malleus.dev/contract-facts/Enum",
+        "https://malleus.dev/contract-facts/Scalar",
+        "https://malleus.dev/contract-facts/Slot",
     }
     assert {declaration.identifier for declaration in result.contract.declarations} == {
         fact.subject for fact in result.facts
@@ -203,7 +203,8 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
     assert set(profile) >= {
         "builtins",
         "defaults",
-        "field_classification",
+        "lowering_plan",
+        "node_shapes",
         "predicates",
         "structural_identities",
     }
@@ -247,19 +248,16 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
         locator="memory:default-profile",
         profile=default_profile,
     )
-    identity_only_maximum = compile_linkml_contract(
-        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-        locator="memory:identity-profile",
-        profile=identity_profile,
-    )
-
     assert without_maximum.canonical_facts != ordinary.canonical_facts
     assert not any(
         fact.predicate.endswith("/maximum") for fact in without_maximum.facts
     )
-    assert not any(
-        fact.predicate.endswith("/maximum") for fact in identity_only_maximum.facts
-    )
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:identity-profile",
+            profile=identity_profile,
+        )
     assert (
         without_maximum.implementation.profile_sha256
         == hashlib.sha256(
@@ -450,6 +448,33 @@ def test_profile_rejects_unknown_interpreter_operations() -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "shape,field",
+    (
+        ("schema", "id"),
+        ("type", "typeof"),
+        ("enum", "permissible_values"),
+        ("class", "slots"),
+        ("class", "attributes"),
+        ("class", "exactly_one_of"),
+    ),
+)
+def test_classification_controls_structural_lowering(shape: str, field: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["node_shapes"][shape]["fields"][field]["classification"] = "ANNOTATION_ONLY"
+    baseline = _compile("baseline.yaml").canonical_facts
+
+    try:
+        result = compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator=f"memory:annotation-{shape}-{field}",
+            profile=profile,
+        )
+    except ContractCompileError:
+        return
+    assert result.canonical_facts != baseline
+
+
 @pytest.mark.parametrize("location", ("root", "field"))
 def test_profile_refuses_unread_policy_members(location: str) -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
@@ -466,6 +491,77 @@ def test_profile_refuses_unread_policy_members(location: str) -> None:
             locator=f"memory:unread-profile-{location}",
             profile=profile,
         )
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    (
+        (("defaults", "slot", "required"), float("nan")),
+        (("defaults", "slot", "required"), "false"),
+        (("predicates", "type"), []),
+        (("kinds", "class"), []),
+        (("builtins", "float"), 3),
+        (("adapter",), "java"),
+        (("canonicalization",), "unknown"),
+        (("node_shapes", "class", "fields", "mixins", "max_items"), -1),
+    ),
+)
+def test_profile_refuses_invalid_semantic_values(
+    path: tuple[str, ...], value: object
+) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    target = profile
+    for member in path[:-1]:
+        target = target[member]
+    target[path[-1]] = value
+
+    expected = _compile("baseline.yaml").canonical_facts
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:invalid-profile-value",
+            profile=profile,
+        )
+    assert _compile("baseline.yaml").canonical_facts == expected
+
+
+@pytest.mark.parametrize("record", ("rule", "constraint", "identity", "lowering"))
+def test_profile_refuses_incomplete_operation_records(record: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if record == "rule":
+        profile["node_shapes"]["slot"]["rules"][0].pop("then_field")
+    elif record == "constraint":
+        profile["node_shapes"]["slot"]["constraints"][1].pop("range")
+    elif record == "identity":
+        profile["structural_identities"]["slot_use"]["members"] = ["class"]
+    else:
+        profile["lowering_plan"][0]["op"] = "unknown"
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator=f"memory:invalid-profile-{record}",
+            profile=profile,
+        )
+
+
+def test_absolute_urn_predicate_is_not_rewritten_as_a_local_term() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["predicates"]["required"] = {
+        "form": "ABSOLUTE",
+        "value": "urn:example:required",
+    }
+
+    result = compile_linkml_contract(
+        (SOURCE_ROOT / "explicit-defaults.yaml").read_bytes(),
+        locator="memory:absolute-urn-predicate",
+        profile=profile,
+    )
+
+    assert any(fact.predicate == "urn:example:required" for fact in result.facts)
+    assert not any(
+        fact.predicate.endswith("/urn:example:required") for fact in result.facts
+    )
 
 
 def test_bootstrap_is_private_and_excluded_from_the_distribution(
