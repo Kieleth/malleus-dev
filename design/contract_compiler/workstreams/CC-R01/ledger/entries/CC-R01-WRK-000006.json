@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/ruff format --check src/malleus/_contract_source.py tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/ruff check src/malleus/_contract_source.py tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "All 37 complete fixed tests passed after the executor was restored in the commit following corrected RED. The Git history guard proves these exact test bytes existed while production was absent before corrected GREEN. Exact-type guards also refuse mutable ResolverSelection subclasses and stateful ResolvedSource subclasses before they can affect retained identity. Scoped Ruff format and lint checks passed.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:08d184396e0bf7be32aa69ec48d6aea5d13de484599d95eb09163fa216fe431d",
+  "entry_id": "CC-R01-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:24036a6937b258a71746fcc930c5470d8dc9a1bef20a542e3d39dfec24a6045d",
+  "recorded_at": "2026-09-01T15:24:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Pass the corrected tests-before-production GREEN.",
+  "workstream_id": "CC-R01"
+}
