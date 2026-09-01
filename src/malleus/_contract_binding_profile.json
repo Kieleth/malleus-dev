@@ -53,27 +53,27 @@
   "trusted_builtins": [
     {
       "name": "string",
-      "identifier": "urn:malleus:contract-facts/String",
+      "identifier": "https://malleus.dev/contract-facts/String",
       "kind": "Scalar"
     },
     {
       "name": "integer",
-      "identifier": "urn:malleus:contract-facts/Integer",
+      "identifier": "https://malleus.dev/contract-facts/Integer",
       "kind": "Scalar"
     },
     {
       "name": "float",
-      "identifier": "urn:malleus:contract-facts/Float",
+      "identifier": "https://malleus.dev/contract-facts/Float",
       "kind": "Scalar"
     },
     {
       "name": "boolean",
-      "identifier": "urn:malleus:contract-facts/Boolean",
+      "identifier": "https://malleus.dev/contract-facts/Boolean",
       "kind": "Scalar"
     },
     {
       "name": "datetime",
-      "identifier": "urn:malleus:contract-facts/DateTime",
+      "identifier": "https://malleus.dev/contract-facts/DateTime",
       "kind": "Scalar"
     },
     {

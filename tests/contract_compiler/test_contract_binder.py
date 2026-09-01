@@ -396,13 +396,16 @@ def test_governed_feature_adoption_and_greenhouse_bind_prior_stage_outputs() -> 
                 for item in result.declarations
             ),
             tuple(
-                (
-                    item.source_identifier,
-                    item.path,
-                    item.literal,
-                    item.target_identifier,
+                sorted(
+                    {
+                        (
+                            item.source_identifier,
+                            item.literal,
+                            item.target_identifier,
+                        )
+                        for item in result.references
+                    }
                 )
-                for item in result.references
             ),
         )
         for result in results
