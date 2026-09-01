@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/ruff format --check src/malleus/_contract_source.py tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/ruff check src/malleus/_contract_source.py tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "All 25 fixed retained-source tests passed. The minimum executor retains exact opaque bytes, computes length and SHA-256, resolves every zero-based authored edge through one injected resolver, reads imports through one injected reader, preserves root and edge provenance, supports caller-selected presentation ordering, and returns a deeply immutable closure or typed atomic refusal. Scoped Ruff format and lint checks passed.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:f81f1d961df8eba27fa40ab146b77740fd91453f197b5991f9511c8ee13f5f51",
+  "entry_id": "CC-R01-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:282d90c8ac6961068a4e4ba2c83b4a4f4f9a5d76c8d9a03ea3898da04ebbc94a",
+  "recorded_at": "2026-09-01T15:11:09Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum syntax-neutral closure executor.",
+  "workstream_id": "CC-R01"
+}
