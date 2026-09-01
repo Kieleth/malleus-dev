@@ -1,0 +1,140 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 54788,
+      "path": "src/malleus/_contract_linkml_adapter.py",
+      "sha256": "sha256:4f0f95f6c379d68ead70158a7d832b0af27808d2add7ef6fa17c7517a3a27e88"
+    },
+    {
+      "byte_length": 93976,
+      "path": "src/malleus/_contract_compiler.py",
+      "sha256": "sha256:862d30739e106704d5aadc6d2a4bdba797a6ee9672bb7fb674260e14787ad127"
+    },
+    {
+      "byte_length": 18344,
+      "path": "src/malleus/_contract_compiler_profile.json",
+      "sha256": "sha256:13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287"
+    },
+    {
+      "byte_length": 32430,
+      "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "sha256": "sha256:276a07077d009a45c05ebb0cf99242a750447c689139c99987580509116e7cb7"
+    },
+    {
+      "byte_length": 39641,
+      "path": "tests/contract_compiler/test_linkml_adapter.py",
+      "sha256": "sha256:71f3700400025b1cad465c1abc22af8cd58895a05921aac82b092fb59f12b5b0"
+    }
+  ],
+  "base_commit": "5682fc43d7308d932a586086631bf0170ff1278f",
+  "checks": [
+    {
+      "check_id": "ccr02-authority-scope",
+      "method": "Inspect activation 5682fc4, exact owner and scopes, corrected RED history, sibling history, staged paths, and concurrent main changes before freezing evidence.",
+      "observed": "The candidate descends linearly from activation through RED e7361e3, corrected RED c5e9be0, sibling GREEN 3fd1920, and the authorized worker-ledger sideband. It changes only the five card artifacts, this report, and the exact CC-R02 worker ledger. Concurrent root commit bb56848 and unrelated research, design, and handover changes are excluded.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-tdd-history",
+      "method": "Run the corrected fixed adapter tests at c5e9be0 before production exists, then inspect the exact RED and GREEN commits and worker phase records.",
+      "observed": "At corrected RED c5e9be0, pytest stopped during collection with one ModuleNotFoundError for malleus._contract_linkml_adapter. RED commits e7361e3 and c5e9be0 touch only the fixed adapter test. Sibling GREEN 3fd1920 adds or changes exactly the five authorized production, profile, and test artifacts.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-private-parser-profile",
+      "method": "Parse valid modules and mutate root, shape, parser, classification, item, key, value, trusted-module, builtin, ordering, and support-profile policy records through the direct adapter.",
+      "observed": "The direct adapter executes one packaged private LinkML-v0 parser profile. Its parser-relevant projection is closed and locked to packaged authority; missing or unread policy refuses as INVALID_PROFILE before source coverage. Downstream defaults, predicates, constraints, and lowering remain separately validated by the existing compiler rather than being duplicated here.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-quiet-bell",
+      "method": "Parse every exact local Quiet Bell source, compare imports and declaration inventories with the independent oracle, inspect authored prefix, annotation, numeric, Boolean, and nested-reference evidence, then adapt the complete retained closure.",
+      "observed": "All local modules preserve exact retained bytes, source order, imports, declarations, annotations, numeric lexemes, explicit false values, and nested reference classifications. The complete closure refuses atomically at the exact second root import because authored import malleus has no retained module or edge; no partial declaration closure is returned.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-trusted-linkml-module",
+      "method": "Adapt the pinned linkml:types observation with its exact packaged bytes, then vary bytes, digest, import identity, module identity, builtin map, seed order, and injected profile trust coordinates.",
+      "observed": "Only module linkml:types with the profile-declared 7,296 bytes, exact SHA-256, empty imports, exact schema identity, seven-name builtin map, and seed order is trusted. A forged profile cannot bless arbitrary bytes or emit attacker-selected builtins, and trusted literal resolution to another module identity refuses atomically.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-greenhouse",
+      "method": "Parse all six governed Greenhouse variants through the new adapter and run the existing compiler fixtures after deleting its old raw parser.",
+      "observed": "Each Greenhouse variant retains a distinct authored root. Numeric-equivalent lexemes, explicit defaults, missing fields, presentation-only fields, reordered members, and semantic changes remain distinguishable at the declaration boundary. The existing compiler delegates to the same parser and preserves every governed Greenhouse canonical fact and digest expectation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-feature-and-refusal-cases",
+      "method": "Parse all 18 governed feature sources, including cases invalid only at later stages, plus the fixed malformed-source, rejected-member, moved-field, null-body, duplicate, tag, alias, encoding, and atomic multi-module refusal matrix.",
+      "observed": "Every feature source reaches declared evidence without premature binding, merge, adoption, inheritance, default, or fact decisions. Repeated imports, class slots, and mixins remain ordered evidence. Unsupported syntax or source members refuse once with the exact typed class and no partial output.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-occurrence-classification",
+      "method": "Inspect per-path AuthoredField and ClassifiedOccurrence values for enforced containers and authoritative scalar, sequence-item, and mapping-key references.",
+      "observed": "One occurrence represents each real source path. Containers retain ENFORCED classification while default_range, typeof, range, is_a, imports, mixins, slots, slot_usage keys, condition keys, and prefix keys or values retain their exact IDENTITY_ONLY role. Annotation-only values remain queryable evidence and no REJECTED occurrence is emitted.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-closure-integrity",
+      "method": "Cross-check parsed imports with ModuleObservation values and exact zero-based ResolvedImportEdge values; vary selection, edge type, ordinal type, edge order, root, module membership, reachability, and immutable tuple containers.",
+      "observed": "The adapter preserves SourceClosure module and edge order without a second sort. Every authored import has one exact edge under the same resolver selection, all modules are reachable from the exact root, Boolean or float ordinals refuse rather than aliasing zero, mutable containers refuse, and the first unauthored edge in prior-stage order identifies the atomic refusal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-decimal-stage-separation",
+      "method": "Parse an eight-character 1e100000 numeric lexeme, inspect retained authored evidence, and rerun the numeric-equivalent Greenhouse compiler control.",
+      "observed": "The adapter validates and retains 1e100000 as exactly eight authored characters without fixed-point expansion. D05 fixed-point canonicalization now occurs only in the existing later compiler lowering path, where governed Greenhouse numeric variants still converge to the same fact bytes. No new numeric cap was invented.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-parser-isolation",
+      "method": "Inspect compiler and adapter ASTs for parser definitions, imports, direct and attribute I/O calls, forbidden source or network modules, OntologyRegistry, and fallback paths.",
+      "observed": "The raw parser exists only in _contract_linkml_adapter.py. The compiler imports and calls it directly with no try-next or legacy fallback. The adapter reads only its exact adjacent profile and performs no source, resolver, filesystem-source, network, registry, binding, elaboration, or fact work.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-immutability-and-identity",
+      "method": "Repeat equal parses, recursively inspect returned dataclasses and containers, compare authored ordinals, profile digest, retained provenance, compiler executor digest, and adapter executor digest.",
+      "observed": "Equal exact input produces equal deeply immutable output. SourceClosure order and zero-based authored order are preserved. Each module binds exact retained provenance and profile digest; compiler results attest the compiler and adapter source executors separately so parser behavior cannot change behind a stable compiler-only digest.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-focused-tests",
+      "method": "Run the adapter, delegated Greenhouse compiler, and retained-source test modules at the sibling candidate boundary.",
+      "observed": "All 220 focused tests passed. The direct adapter module passed 87 tests, the delegated Greenhouse compiler passed 93 tests, and the retained-source boundary supplied the remaining 40 controls.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-regression",
+      "method": "Run all tests under tests/contract_compiler, changed-file Ruff check and format verification, and git diff checking on the sibling candidate.",
+      "observed": "All 371 contract-compiler tests passed. The four changed Python files were already formatted, scoped Ruff passed, and git diff checking found no whitespace errors.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-independent-audit",
+      "method": "Submit the exact adapter, compiler, profile, and tests to an independent read-only audit, add one hard regression for every reported defect class, and re-audit current bytes.",
+      "observed": "Audit exposed incomplete direct profile trust, parser-stage decimal expansion, compiler-only executor attestation, unreachable closure members, non-exact edge ordinals, a lexical extra-edge sort, and missing structured-parser profile guards. Each class gained a mechanical repair and fixed test. Final current-byte audit reported no remaining P0-P3 finding or scope breach.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-package-boundary",
+      "method": "Compare the worker card and exact sibling candidate with package configuration, wheel, sdist, installed-data, public API, image, and release surfaces.",
+      "observed": "PACKAGE NOT_APPLICABLE for this worker candidate. Root commit bb56848 separately records that the uncommitted adapter would enter the wheel and establishes the required post-candidate wheel-exclusion RED. That root-owned commit is deliberately outside this sibling candidate; the worker changes no package configuration or public export.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a private research adapter candidate, not a public Python API, plugin framework, wire format, compatibility promise, package, release, or general LinkML support claim.",
+    "The adapter emits retained per-module declarations and classified occurrences only. It owns no symbol binding, qualified lookup, global merge, adoption or retirement decision, inheritance, defaults, neutral facts, EffectiveContract, artifact, protocol event, ledger state, or graph projection.",
+    "The complete Quiet Bell closure intentionally remains refused because its authored malleus import has no retained source in the governed fixture. Local Quiet Bell module evidence is proven; compilation or source invention is not.",
+    "The Greenhouse compiler remains an earlier private fact-producing bootstrap used only to prove parser delegation and regression parity. Its fact output is not an R02 adapter output or a new public contract.",
+    "D05 fixed-point decimal emission can allocate output-proportional memory for very large accepted values. R02 removes parser-stage amplification; any later compiler resource policy remains separately deferred.",
+    "Source-archive treatment remains undecided. A root-owned post-candidate change must exclude the private adapter from the wheel and run the unified package and integration gate before completion.",
+    "Concurrent root commit bb56848 and pre-existing modified research plus untracked design and handover files are excluded from the reviewed sibling candidate and were not modified by this worker."
+  ],
+  "recorded_at": "2026-09-01T18:46:34Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R02"
+}
