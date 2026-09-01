@@ -6,9 +6,11 @@ import ast
 import hashlib
 import json
 from pathlib import Path
+import tomllib
 
 import pytest
 
+import malleus
 from malleus._contract_compiler import ContractCompileError, compile_linkml_contract
 
 
@@ -142,3 +144,11 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
     ):
         assert fixture_literal not in implementation
         assert fixture_literal not in policy
+
+
+def test_bootstrap_is_private_and_excluded_from_the_distribution() -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    included = project["tool"]["hatch"]["build"]["include"]
+
+    assert all("_contract_compiler" not in path for path in included)
+    assert "compile_linkml_contract" not in malleus.__all__
