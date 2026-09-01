@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Run .venv/bin/pytest -q tests/contract_compiler/test_linkml_adapter.py tests/contract_compiler/test_greenhouse_compiler.py tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "All 229 focused adapter, Greenhouse, and retained-source tests pass.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:b810f1c833ce14f1b3472c0734b9580ae1da6ed7f2a413954ffef79070bef24a",
+  "entry_id": "CC-R02-WRK-000017",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c564441c0253f9ac21ee3f567fdf62906757a18f69377bc0fb8e825b652b97cd",
+  "recorded_at": "2026-09-01T19:07:09Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 17,
+  "summary": "Pass the corrected retained-source adapter slice.",
+  "workstream_id": "CC-R02"
+}

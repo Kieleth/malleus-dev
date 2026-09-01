@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Run .venv/bin/pytest -q tests/contract_compiler and scoped Ruff, format, and diff checks.",
+    "observed": "All 380 contract-compiler tests pass; scoped Ruff, formatting, and diff checks pass.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:6f083e5e7ad7e97554147c09fa4d524c8d1a15dcd5c0869d3edcc842d14b0d34",
+  "entry_id": "CC-R02-WRK-000019",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:6bed5a09fe2498a96aa59d8743111e130f31c9597d8189aee5e92b8eceab3234",
+  "recorded_at": "2026-09-01T19:07:11Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 19,
+  "summary": "Pass the corrected compiler regression boundary.",
+  "workstream_id": "CC-R02"
+}

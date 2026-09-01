@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "reason": "The final audit exposed a caller-created profile-wrapper bypass, Python value-equality aliases in parser policy, and divergent parser versus lowering profiles. The original phase result is superseded by the forward repair sequence.",
+    "supersedes_entry_id": "CC-R02-WRK-000006"
+  },
+  "entry_hash": "sha256:b8e2046ff3a54035d7531baeafb30cda697275b60e0f08e1c3758bfeb61a10e3",
+  "entry_id": "CC-R02-WRK-000013",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:2492f3e36bc1c25ff9574697e053d52eb0ea5987252b579bdd68b31621538b9e",
+  "recorded_at": "2026-09-01T19:07:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 13,
+  "summary": "Supersede the original PACKAGE result after the profile-coherence audit.",
+  "workstream_id": "CC-R02"
+}

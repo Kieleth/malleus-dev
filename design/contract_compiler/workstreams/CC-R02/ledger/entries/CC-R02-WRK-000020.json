@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Recheck the private adapter package boundary against the existing root-owned wheel exclusion overlay.",
+    "observed": "The repair changes no package metadata or public API. Existing wheel exclusion remains the package authority.",
+    "phase": "PACKAGE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:fd59bb19e875abb411fca4e81bffade90683889f44a6b29493d52891ec4094bf",
+  "entry_id": "CC-R02-WRK-000020",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:6f083e5e7ad7e97554147c09fa4d524c8d1a15dcd5c0869d3edcc842d14b0d34",
+  "recorded_at": "2026-09-01T19:07:12Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 20,
+  "summary": "Preserve the corrected private package boundary.",
+  "workstream_id": "CC-R02"
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "Run the exact wrapper, recursive type-equality, and single-active-profile repair tests.",
+    "observed": "All 10 exact repair cases pass after the minimal production change.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c564441c0253f9ac21ee3f567fdf62906757a18f69377bc0fb8e825b652b97cd",
+  "entry_id": "CC-R02-WRK-000016",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:bca11a34e79cd3afb6d351788536aabcbfc3d39180fed1e4b6631e6d04eda2c5",
+  "recorded_at": "2026-09-01T19:07:08Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 16,
+  "summary": "Pass the profile-coherence repair.",
+  "workstream_id": "CC-R02"
+}
