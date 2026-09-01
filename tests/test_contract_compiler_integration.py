@@ -6477,3 +6477,68 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
         validate_integration(ROOT, manifest_path)
 
     _assert_code(error, "CC000_TDD_INCOMPLETE")
+
+
+def test_feature_oracle_reactivation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-014")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    states, _ = integration_module._workstream_states(_raw_overseer_state())
+
+    assert states["CC-012"] == states["CC-016"] == "COMPLETE"
+    assert states["CC-014"] == "ACTIVE"
+    assert card["authorization"]["class"] == "FORMAL"
+    assert [
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ] == list(row["depends_on"])
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["assignment"] == {
+        "owner_id": "worker:cc014-feature-oracles",
+        "state": "ASSIGNED",
+        "task_id": "/root/cc014_feature_oracles",
+    }
+
+    responsibility = card["responsibility"]
+    for exact in (
+        "Split the mixed explicit-false boundary into separate accepted and refused results.",
+        'minimal {"outcome":"REFUSE"}',
+        "SAME, DIFFERENT, and NOT_CLAIMED",
+        "explicitly experimental and fixture-local",
+        "never compiler input",
+    ):
+        assert exact in responsibility
+
+    transaction = tuple(
+        entry
+        for entry in _raw_overseer_state().entries
+        if 280 <= entry["sequence"] <= 282
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000280",
+        "OVR-000281",
+        "OVR-000282",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-014"]
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert activation["data"]["previous_state"] == "PAUSED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000280",
+        "OVR-000281",
+    ]
+    assert activation["previous_entry_hash"] == verification["entry_hash"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-014-reactivation.json")
+    assert report["workstream_id"] == "CC-014"
+    assert report["base_commit"] == "6bc61c7458469f9f70555d651c65d2736b723318"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any("test-only" in limitation for limitation in report["limitations"])

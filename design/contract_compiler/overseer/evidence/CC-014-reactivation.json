@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 26121,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:ff256f817411c22b3bb57f612eb4fb70e80f6381713a6ec4e2463b84d9949345"
+    },
+    {
+      "byte_length": 5217,
+      "path": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "sha256": "sha256:12c9c7bb756e12c222db8de3e1b57b9f7493accc896e6d4adbda2197d8521469"
+    },
+    {
+      "byte_length": 242113,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:67f5c87eab83aa755a847dd345e596259b4c520fddadad7670ea5a42ab604c20"
+    }
+  ],
+  "base_commit": "6bc61c7458469f9f70555d651c65d2736b723318",
+  "checks": [
+    {
+      "check_id": "cc014-reactivation-red",
+      "method": "Run the fixed reactivation guard before appending new authority.",
+      "observed": "The guard failed exactly because CC-014 remained PAUSED while the approved FORMAL card was prepared.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-operator-choices",
+      "method": "Bind the operator's direct approval of the proposed four choices to the exact card responsibility.",
+      "observed": "The card splits the mixed explicit-false case into accepted and refused results, permits only minimal REFUSE and SAME, DIFFERENT, or NOT_CLAIMED relations, and keeps experimental resolver, profile, configuration, media-type, and source-blob strings fixture-local.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-dependency-readiness",
+      "method": "Validate every direct dependency in program order against its current card digest, completion entry and hash, and first integrated authority commit.",
+      "observed": "All eight direct dependencies are COMPLETE and exactly bound. Quiet Bell and Greenhouse are complete, and Small Shop contributes process-readiness only.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-independent-boundary",
+      "method": "Compare assignment, scopes, candidate, worker ledger, inputs, adjacent oracle controls, and implementation paths.",
+      "observed": "The existing independent owner and three scopes are unchanged. Candidate remains NONE, worker ledger remains NOT_STARTED, and no oracle, compiler, runtime, corpus, package, or release byte is created by reactivation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-kiss-shapes",
+      "method": "Inspect the authorized private representation for unnecessary public or runtime machinery.",
+      "observed": "The representation has one minimal refusal object and three symbolic relations. It defines no public identifier, plugin, discovery, wire, compatibility, or runtime artifact contract.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This reactivation authorizes only independently hand-authored test-only oracle evidence. It creates no oracle content or compiler behavior.",
+    "Experimental fixture-local strings and JSON shapes are not public identifiers, compiler input, runtime artifact bytes, or a compatibility promise.",
+    "The assigned worker must derive expected values from feature inputs and accepted decisions without reading implementation output or sibling oracle values.",
+    "Corpus publication, checksums, compiler stages, runtime, package, and release work remain separate."
+  ],
+  "recorded_at": "2026-09-01T05:23:11Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-014"
+}

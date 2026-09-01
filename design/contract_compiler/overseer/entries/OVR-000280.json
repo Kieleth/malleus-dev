@@ -1,0 +1,79 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-014"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ff256f817411c22b3bb57f612eb4fb70e80f6381713a6ec4e2463b84d9949345",
+        "before_digest": "sha256:a343d903c27f8239294106fab7fe78bd384e3ccf9abf771093a1f691947c7b5b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:cea1354e8d7baad8f6622bdfeca09fb503f20784a2f320cd4a525aa801fb0b4d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-014-reactivation.json"
+      },
+      {
+        "after_digest": "sha256:12c9c7bb756e12c222db8de3e1b57b9f7493accc896e6d4adbda2197d8521469",
+        "before_digest": "sha256:7fe06186f329ba16dfca09f02f8056f4b96c7f968af1c79262f1e7701fd31b3e",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-014/manifest.json"
+      },
+      {
+        "after_digest": "sha256:67f5c87eab83aa755a847dd345e596259b4c520fddadad7670ea5a42ab604c20",
+        "before_digest": "sha256:24f031eaf47712c96492014f3f44fff0d792f72cd918285ab06dd461ffc88f33",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:624f8be7589596c4aa9c00832868bd46bb5585b5b57dac3298eebc9dc7f92c00",
+  "entry_id": "OVR-000280",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:bea7279514cc5cdbac141934cc42cd44ff6ec7e58a1c363b5a6a50c85bfb2701",
+  "recorded_at": "2026-09-01T05:23:41Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:cea1354e8d7baad8f6622bdfeca09fb503f20784a2f320cd4a525aa801fb0b4d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-014-reactivation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 280,
+  "subject": {
+    "id": "cc014-reactivation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Authorize the independent feature-case answer key with the approved private shapes.",
+  "why": "The operator approved the explicit-false split, minimal refusal and relation shapes, and fixture-local experimental strings. All direct dependencies are complete, so this content-free transaction may reactivate the existing assigned oracle scope without creating expected values or compiler authority."
+}

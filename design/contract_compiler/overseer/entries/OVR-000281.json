@@ -1,0 +1,53 @@
+{
+  "actor": {
+    "id": "cc014-reactivation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T05:23:42Z",
+    "claims": [
+      "The operator approved separate accepted and refused explicit-false cases.",
+      "The private oracle vocabulary is closed to ACCEPT, the minimal REFUSE object, SAME, DIFFERENT, NOT_CLAIMED, and explicitly experimental fixture-local coordinate strings.",
+      "All eight direct dependencies are complete and freshly bound in program order.",
+      "The exact assigned owner, three scopes, candidate NONE, worker ledger NOT_STARTED, and independent hand-authoring rule are retained.",
+      "No oracle, compiler, runtime, corpus, package, release, or public-format byte is created by this activation."
+    ],
+    "limitations": [
+      "This evidence authorizes only the private feature-case answer-key scope.",
+      "The test-only shapes carry no public, runtime, wire, compatibility, migration, or compiler-input meaning.",
+      "Formal compiler and source-boundary work remains unauthorized until this answer key completes and a separate activation binds the reviewed corpus."
+    ]
+  },
+  "entry_hash": "sha256:7680f0455972070cea92e9ec2c3646dfcdad1743deff7f02f2a71cf2dccca629",
+  "entry_id": "OVR-000281",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:624f8be7589596c4aa9c00832868bd46bb5585b5b57dac3298eebc9dc7f92c00",
+  "recorded_at": "2026-09-01T05:23:42Z",
+  "references": [
+    {
+      "digest": "sha256:cea1354e8d7baad8f6622bdfeca09fb503f20784a2f320cd4a525aa801fb0b4d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-014-reactivation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000280",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 281,
+  "subject": {
+    "id": "cc014-reactivation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the narrow feature-case answer-key reactivation.",
+  "why": "Formal reactivation requires retained proof of the approved private shapes, complete dependency closure, exact ownership, and absence of content or downstream authority."
+}
