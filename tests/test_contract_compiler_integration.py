@@ -5394,6 +5394,8 @@ def test_formal_activation_lists_incomplete_dependencies(
             "authorized_by": {"id": "operator", "type": "OPERATOR"},
             "dependency_bindings": [],
         }
+        card["candidate"] = {"state": "NONE"}
+        card["ledger"] = {"state": "NOT_STARTED"}
 
     _rewrite_card(path, manifest, "CC-R01", mutate)
 
@@ -5686,9 +5688,10 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 17
+    assert len(checked) == 18
     assert "CC-000" not in checked
     assert "CC-014" in checked
+    assert "CC-R01" in checked
 
 
 @pytest.mark.parametrize(
@@ -6096,7 +6099,7 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         workstream_id
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
-        and workstream_id not in {"CC-012", "CC-014", "CC-016"}
+        and workstream_id not in {"CC-012", "CC-014", "CC-016", "CC-R01"}
     }
 
 
@@ -6864,7 +6867,10 @@ def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
         manifest_path,
         manifest,
         "CC-R01",
-        lambda card: card.update(candidate=_syntactic_candidate(candidate_state)),
+        lambda card: card.update(
+            candidate=_syntactic_candidate(candidate_state),
+            ledger={"state": "NOT_STARTED"},
+        ),
     )
     monkeypatch.setattr(
         integration_module,
@@ -6882,7 +6888,13 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    manifest_path, _ = _copy_manifest_bundle(tmp_path)
+    manifest_path, manifest = _copy_manifest_bundle(tmp_path)
+    _rewrite_card(
+        manifest_path,
+        manifest,
+        "CC-R01",
+        lambda card: card.update(ledger={"state": "NOT_STARTED"}),
+    )
     original = integration_module._workstream_states
     monkeypatch.setattr(
         integration_module,
@@ -7184,9 +7196,7 @@ def test_retained_source_boundary_activation_is_exact() -> None:
     assert "complete immutable closure" in card["responsibility"]
     assert "without a partial result" in card["responsibility"]
     transaction = tuple(
-        entry
-        for entry in ledger_state.entries
-        if 286 <= entry["sequence"] <= 288
+        entry for entry in ledger_state.entries if 286 <= entry["sequence"] <= 288
     )
     assert tuple(entry["entry_id"] for entry in transaction) == (
         "OVR-000286",
@@ -7212,8 +7222,7 @@ def test_retained_source_boundary_activation_is_exact() -> None:
     assert all(
         not document["path"].startswith("src/malleus/")
         and "test_retained_source_boundary.py" not in document["path"]
-        and document["path"]
-        != "conformance/contract_compiler/v0/evidence/CC-R01.json"
+        and document["path"] != "conformance/contract_compiler/v0/evidence/CC-R01.json"
         for document in revision["data"]["documents"]
     )
     assert verification["actor"] == {
@@ -7308,21 +7317,21 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     assert card["ledger"] == {
         "entry_count": 20,
         "head_entry_id": "CC-R01-WRK-000020",
-        "head_hash": (
-            "sha256:5ee62ba931c7a03e1cb15f889fedc74ce8af899b60b28f1a25431a"
-            "312bccb64e"
-        ),
+        "head_hash": "sha256:5ee62ba931c7a03e1cb15f889fedc74ce8af899b60b28f1a25431a312bccb64e",
         "path": "workstreams/CC-R01/ledger",
         "state": "RECORDED",
     }
     worker_entries = [
         _read_json(path)
-        for path in sorted((CONTRACT / "workstreams/CC-R01/ledger/entries").glob("*.json"))
+        for path in sorted(
+            (CONTRACT / "workstreams/CC-R01/ledger/entries").glob("*.json")
+        )
     ]
     assert len(worker_entries) == 20
     assert any(
-        entry["data"]["phase"] == "PACKAGE"
-        and entry["data"]["result"] == "NOT_APPLICABLE"
+        entry["entry_type"] == "TDD_RESULT"
+        and entry["data"].get("phase") == "PACKAGE"
+        and entry["data"].get("result") == "NOT_APPLICABLE"
         for entry in worker_entries
     )
 
@@ -7332,9 +7341,10 @@ def test_retained_source_boundary_completion_is_exact() -> None:
         "/src/malleus/_contract_compiler_profile.json",
         "/src/malleus/_contract_source.py",
     ]
-    assert "/src/malleus/_contract_source.py" in project["tool"]["hatch"]["build"][
-        "include"
-    ]
+    assert (
+        "/src/malleus/_contract_source.py"
+        in project["tool"]["hatch"]["build"]["include"]
+    )
 
     corpus = _read_json(ROOT / "conformance/contract_kernel/v0/corpus.json")
     assert [corpus["cases"][0]["case_id"] for corpus in corpus["corpora"]] == [

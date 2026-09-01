@@ -1,0 +1,144 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 9474,
+      "path": "conformance/contract_compiler/v0/evidence/CC-R01.json",
+      "sha256": "sha256:67b39a464e8a73e98ab6b2929cc9ea230f9f5c9a149751eb1d6d9bff48cb3b20"
+    },
+    {
+      "byte_length": 12588,
+      "path": "src/malleus/_contract_source.py",
+      "sha256": "sha256:dd8861dedbd26c2aa33600865683563fb732a6d3c749f2817905824e0bc717d2"
+    },
+    {
+      "byte_length": 33946,
+      "path": "tests/contract_compiler/test_retained_source_boundary.py",
+      "sha256": "sha256:9f69ae6b4f57823e92e924704534cdd0644078085a2cf2460acddc45a04ab8b8"
+    },
+    {
+      "byte_length": 297,
+      "path": "design/contract_compiler/workstreams/CC-R01/ledger/head.json",
+      "sha256": "sha256:d3fc0269a4927408be96798993571d74e747c45f4168c966b4c75d13ff079cf9"
+    },
+    {
+      "byte_length": 6878,
+      "path": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "sha256": "sha256:97243edcd150eca06ad892a952ac6ecd87c6529909fce64e75bcc07b8c1b0226"
+    },
+    {
+      "byte_length": 26122,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:fec2c316d7ea6562363d85a730818e2e41c7e7b46c7bb1fc689424eaec5cba2e"
+    },
+    {
+      "byte_length": 9334,
+      "path": "pyproject.toml",
+      "sha256": "sha256:7eb414865f32da4c20c6cedbbfa490ed4754bdd0ca9af21b8ff757f5ed2096f3"
+    },
+    {
+      "byte_length": 31850,
+      "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "sha256": "sha256:fc6e134c36320cfcefc3b9b376f4e061c2e1cb6ea92fec3e592d6778cfac45c8"
+    },
+    {
+      "byte_length": 5628,
+      "path": "conformance/contract_kernel/v0/corpus.json",
+      "sha256": "sha256:6bb886ec743b3f0029692084da8208c9cbc02a41313d2b81b70c0f68a9868476"
+    },
+    {
+      "byte_length": 8447,
+      "path": "conformance/contract_kernel/v0/checksums.json",
+      "sha256": "sha256:222b77fa7ed7d8fdfe7235b2481b67c128c92c8856162f431e6432fd42d9ed30"
+    },
+    {
+      "byte_length": 7453,
+      "path": "docs/contract_compiler/conformance_protocol.md",
+      "sha256": "sha256:0c7f18805a7dc5c6166cd612957a61ba89f792e7cb928850ac06890526212a66"
+    },
+    {
+      "byte_length": 35078,
+      "path": "tests/contract_compiler/test_conformance_protocol.py",
+      "sha256": "sha256:4c4189c50fc06b599bffb6f8bd0371319a43392ced0a64e00184407b5d71656a"
+    },
+    {
+      "byte_length": 24654,
+      "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "sha256": "sha256:ed80858afa253a5b43e9f9e57f5c8289e23b1d38cc85e541a539b390b7a93abb"
+    },
+    {
+      "byte_length": 272313,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:861d98a58ffa3cf5d9520197f718015ab2a36b5211bc4e9eb4535487e457af1c"
+    }
+  ],
+  "base_commit": "89645c1ca314fa58ba03e711cbbb29de94cfc007",
+  "checks": [
+    {
+      "check_id": "ccr01-candidate-history",
+      "method": "Validate the exact linear candidate from activation dbc5eaee through 89645c1c, tree e5b19856, its two declared artifacts, and the separately attested evidence and worker-ledger sideband.",
+      "observed": "The candidate changes only the private retained-source executor, its fixed test, evidence, and immutable worker-ledger sideband. Base, head, tree, byte lengths, digests, and allowed scopes match exactly.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-worker-tdd",
+      "method": "Validate all twenty worker-ledger entries, hash continuity, ordered TDD phases, corrections, disproofs, explicit-stack repair, ordering guards, and final attestation.",
+      "observed": "Twenty entries form one valid chain ending at CC-R01-WRK-000020. Genuine RED precedes corrected GREEN; focused behavior, disproof, regression, and attestation phases pass. Worker PACKAGE remains NOT_APPLICABLE.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-retained-source-semantics",
+      "method": "Run the forty focused tests for exact opaque-byte retention, every authored import edge, duplicates, diamonds, cycles, observation conflicts, typed refusal, immutability, provenance, and no ambient I/O.",
+      "observed": "All forty tests pass. The syntax-neutral executor returns one complete immutable closure or one typed refusal, resolves every authored edge, and contains no frontend, transport, fixture, regex, or fallback policy.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-order-and-depth",
+      "method": "Exercise the zero-based authored ordinal, canonical default order, traversal order, caller sort keys, ordering-invariant membership and provenance, and a 1,201-module acyclic chain.",
+      "observed": "All order modes preserve exact retained membership and provenance while changing presentation only. The explicit stack completes the deep chain without inheriting the host Python recursion ceiling.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-independent-audit",
+      "method": "Submit the frozen candidate and its tests to independent read-only review, repair every reported behavior or test gap, and re-audit the exact final tree.",
+      "observed": "The audits exposed and closed recursion, edge-order, omitted-default, and source-observation gaps. The final exact-tree audit reports no remaining P0-P3 finding against the bounded retained-source responsibility.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-root-package-boundary",
+      "method": "Build isolated wheel and source archives, inspect their members, install the wheel cleanly, run public CLI smoke tests, and inspect public exports.",
+      "observed": "The private executor is absent from the wheel and public exports but retained in the source archive for reproducible development. The existing private compiler bootstrap remains excluded. Build, metadata, clean install, and CLI smoke tests pass.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-reviewed-corpus-publication",
+      "method": "Validate exact corpus membership and checksums for the reviewed Quiet Bell archive, feature-isolation suite, and neutral Greenhouse only.",
+      "observed": "The manifest publishes exactly three cases and thirty-seven checksum records, with exact source, oracle, requirements, and protocol-control bytes. Direct-input, traces, Small Shop, and unrelated files remain excluded.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-regression",
+      "method": "Run focused source, package, corpus, contract-compiler, ledger, integration, documentation, distribution, and clean-install checks in the pinned project environment.",
+      "observed": "The final test gate passed 1,944 tests with 2 skipped; all 285 contract-compiler tests passed; the 292-entry ledger and 72-workstream, 34-card, 4-selection integration registry validate; all 40 GraphRecipe tests passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-unselected-private-completion",
+      "method": "Require the candidate to remain private, eligible, and absent from selections while checking that no adapter, semantic compiler, public format, runtime protocol, or fixture policy is claimed.",
+      "observed": "The exact candidate is ELIGIBLE and unselected. Completion establishes the generic retained-source boundary and reviewed evidence corpus only; it does not make any fixture compile or publish a public executor API.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The executor is private research infrastructure, not a public Python API, wire format, compatibility promise, syntax adapter, resolver implementation, or import-reader implementation.",
+    "The worker candidate owns no syntax meaning, locator normalization, file or network access, fallback resolution, semantic compilation, policy selection, fixture meaning, package configuration, or release surface.",
+    "The root-owned package gate proves wheel exclusion and source-archive retention after the candidate. Worker PACKAGE correctly remains NOT_APPLICABLE.",
+    "The three listed corpora are exact reviewed evidence membership. Publication does not prove that the current compiler can consume Quiet Bell or any other listed source.",
+    "Resource ceilings other than removal of the host recursion boundary remain deferred. Caller ordering keys must be deterministic and mutually comparable.",
+    "Atomic refusal exposes no partial closure but cannot roll back side effects performed inside injected collaborators.",
+    "The integration test has pre-existing whole-file Ruff-format debt outside this completion change. New completion assertions pass Ruff lint and diff checking without reformatting unrelated history.",
+    "The candidate remains unselected. LinkML adaptation, neutral contract facts, semantic-transition machinery, public APIs, and release decisions remain separately governed."
+  ],
+  "recorded_at": "2026-09-01T16:14:28Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R01"
+}

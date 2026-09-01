@@ -1,0 +1,218 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-001",
+      "CC-010",
+      "CC-R01"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:eb370bd672a072186aa3da883aca1825923524118773279df2e806366a47d159",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000018.json"
+      },
+      {
+        "after_digest": "sha256:c36a126be2ae694c41abc784ffe331d10fd653137e81234dadfb52400c1c7545",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000019.json"
+      },
+      {
+        "after_digest": "sha256:2b306159b747cffabed5f79e014f29be312224441fae85b0ce442439bc5f2399",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000020.json"
+      },
+      {
+        "after_digest": "sha256:d3fc0269a4927408be96798993571d74e747c45f4168c966b4c75d13ff079cf9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/head.json"
+      },
+      {
+        "after_digest": "sha256:7eb414865f32da4c20c6cedbbfa490ed4754bdd0ca9af21b8ff757f5ed2096f3",
+        "before_digest": "sha256:60cf51240f1e97dda01970eea7fe510a2801b93232856eb44cf10aeedc682d04",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:fc6e134c36320cfcefc3b9b376f4e061c2e1cb6ea92fec3e592d6778cfac45c8",
+        "before_digest": "sha256:355de2598327c7c7991013522b175b4052ef6ef66ef3942dccd9ca008706e502",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py"
+      },
+      {
+        "after_digest": "sha256:ed80858afa253a5b43e9f9e57f5c8289e23b1d38cc85e541a539b390b7a93abb",
+        "before_digest": "sha256:de19fcbdcf4d464402927aedaee1b130f8da6de53b0394cb962eaf5aa1221d8b",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      },
+      {
+        "after_digest": "sha256:6bb886ec743b3f0029692084da8208c9cbc02a41313d2b81b70c0f68a9868476",
+        "before_digest": "sha256:7fa6d757a1571983dd195dec955cd87cd34487fe8da810d8156313dbbf5ad4eb",
+        "change": "MODIFIED",
+        "path": "conformance/contract_kernel/v0/corpus.json"
+      },
+      {
+        "after_digest": "sha256:222b77fa7ed7d8fdfe7235b2481b67c128c92c8856162f431e6432fd42d9ed30",
+        "before_digest": "sha256:55b0b2588f95245454a32292b531afd6d4b3719984358020c93ca0f06aeb3a9e",
+        "change": "MODIFIED",
+        "path": "conformance/contract_kernel/v0/checksums.json"
+      },
+      {
+        "after_digest": "sha256:0c7f18805a7dc5c6166cd612957a61ba89f792e7cb928850ac06890526212a66",
+        "before_digest": "sha256:e07c2c4b167f4d928727d180ac6ddaa6ca36d21031f127449ac132c3024dbdd6",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/conformance_protocol.md"
+      },
+      {
+        "after_digest": "sha256:4c4189c50fc06b599bffb6f8bd0371319a43392ced0a64e00184407b5d71656a",
+        "before_digest": "sha256:6690e2c68ffe96cea9a9effd4917d43b230372c6d4c6b012bb29a77dbce48b5a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_conformance_protocol.py"
+      },
+      {
+        "after_digest": "sha256:fec2c316d7ea6562363d85a730818e2e41c7e7b46c7bb1fc689424eaec5cba2e",
+        "before_digest": "sha256:5aa5edf969b2b06f16d606ac10384697522225e5229ed36ed049c5715915afd5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:97243edcd150eca06ad892a952ac6ecd87c6529909fce64e75bcc07b8c1b0226",
+        "before_digest": "sha256:f476c8531038494cce99d3ca929285b1b2665eb128f4932398f623173a6ae140",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:861d98a58ffa3cf5d9520197f718015ab2a36b5211bc4e9eb4535487e457af1c",
+        "before_digest": "sha256:21cce0454767bca867e85248d468aa57b26a26d45b52d6a4fc96cbbabb028141",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:f67e2ec9f289553d64ac8044eb2400b7b9c42ce90043af588d61e20781ca64ca",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R01-completion.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:5566ccb4961b9db692049006dbe5811bd2aef1cc7bf06cd7d68688653b40b28a",
+  "entry_id": "OVR-000290",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5291894b486f83413967c72bc719cfd1f826b9e13def23fa59c5d9efb153bd84",
+  "recorded_at": "2026-09-01T16:14:30Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R01/ledger/head.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "pyproject.toml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "conformance/contract_kernel/v0/corpus.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "conformance/contract_kernel/v0/checksums.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/conformance_protocol.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_conformance_protocol.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:f67e2ec9f289553d64ac8044eb2400b7b9c42ce90043af588d61e20781ca64ca",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R01-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000289",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0cdcd776d74f867b3068c10438c72632f5db064d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c6a2ad69928bde171a13b42952ef08c65fbf194d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "21f189a353d690033b2a5760c58aab9962f8d9fa",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "92eecc2c572f29caedfb3c4ff3db2f736d5e0f2b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6848d3d0c71f0b88a585274a24965284fc4ee715",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "105fcaade5a6db4c2642087a2a843ffb41a23db6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bc806db7126953bee1de53e785f8d45bc1fa2623",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 290,
+  "subject": {
+    "id": "ccr01-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind retained-source completion, corpus publication, and the root package boundary.",
+  "why": "This revision completes the worker-ledger tail, records the exact eligible private candidate, publishes one reviewed case in each fixed corpus, and binds the root-owned wheel exclusion with source-archive retention. Corpus listing remains evidence membership, not a claim that later compiler stages pass."
+}

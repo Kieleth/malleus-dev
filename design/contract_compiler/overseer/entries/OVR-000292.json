@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Implement one syntax-neutral retained-source closure executor with exact bytes and provenance, injected resolution and import reading, declared ordering, recursive closure, and typed atomic refusal.",
+      "Bind the exact eligible candidate, twenty-entry worker ledger, root-owned wheel and source-archive boundary, and reviewed three-corpus publication.",
+      "Keep the executor private and unselected while leaving the LinkML adapter, semantic compilation, public artifact, runtime cutover, and later compiler stages separately governed."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000291"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R01"
+  },
+  "entry_hash": "sha256:97e8d9c3d057dc3c1ed9a18866f60fae19b05c07a076058dc44ff19fde98d25d",
+  "entry_id": "OVR-000292",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d5237952b688dcc55f0ac521bfb44d654094557571b0ec729d773bdc96d636e2",
+  "recorded_at": "2026-09-01T16:14:32Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000291",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 292,
+  "subject": {
+    "id": "CC-R01",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the syntax-neutral retained-source boundary.",
+  "why": "OVR-000291 verifies the exact private candidate, append-only worker evidence, root package guard, reviewed corpus publication, completion chronology, regressions, and unselected scope required to close this bounded source-retention stage."
+}

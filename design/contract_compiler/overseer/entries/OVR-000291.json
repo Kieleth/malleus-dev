@@ -1,0 +1,117 @@
+{
+  "actor": {
+    "id": "ccr01-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T16:14:31Z",
+    "claims": [
+      "CC-R01 binds the exact dbc5eaee8493275b3d0c468b77f5567711507cd8..89645c1ca314fa58ba03e711cbbb29de94cfc007 eligible candidate at tree e5b198568fea8522e0a894458b4d98fb11b9f95e.",
+      "The private candidate contains exactly the retained-source executor, fixed boundary test, canonical PASS report, and immutable seventeen-entry candidate ledger prefix.",
+      "The assigned worker ledger contains twenty append-only entries and the active RED, GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST phases in order; worker PACKAGE is NOT_APPLICABLE.",
+      "Forty focused tests prove opaque-byte retention, every authored edge, duplicate and diamond identity, observation conflicts, exact cycle lineage, typed atomic refusal, deep immutability, no hidden I/O, and a 1,201-module explicit-stack closure.",
+      "Zero-based authored ordinals, canonical default order, traversal order, and caller sort keys are explicit. Ordering changes presentation only and preserves membership and provenance.",
+      "The separate root package gate excludes the private executor from wheels, retains it in the source archive for development, and adds no public export.",
+      "The strict corpus manifest publishes exactly one reviewed case for Quiet Bell, feature isolation, and neutral Greenhouse with thirty-seven exact checksum records.",
+      "Corpus publication records evidence membership and does not claim that the compiler currently consumes or accepts every listed source.",
+      "The exact card, integration row, twenty-entry ledger pointer, two bounded document revisions, immutable completion report, and completion transition are mechanically cross-bound.",
+      "The final local gate passes 1,944 tests with 2 skipped, all 285 contract-compiler tests, strict ledger and integration validation, and all 40 GraphRecipe tests.",
+      "The candidate remains ELIGIBLE, private, unselected, and separate from LinkML adaptation, neutral fact compilation, protocol-machine execution, and public release."
+    ],
+    "limitations": [
+      "The executor is not a public API, wire format, compatibility promise, syntax adapter, resolver implementation, or import-reader implementation.",
+      "No LinkML adapter, semantic compiler facts, public EffectiveContract artifact, selection, runtime protocol effect, accepted graph, projector, or release is created.",
+      "The corpus source and oracle tests validate governed evidence. They are not an end-to-end run of every future compiler stage.",
+      "The root package gate is external to the worker candidate and does not turn the worker PACKAGE phase into PASS.",
+      "Atomic refusal hides partial closure state but does not roll back side effects inside injected collaborators.",
+      "Resource ceilings other than removal of host recursion depth remain deferred."
+    ]
+  },
+  "entry_hash": "sha256:d5237952b688dcc55f0ac521bfb44d654094557571b0ec729d773bdc96d636e2",
+  "entry_id": "OVR-000291",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5566ccb4961b9db692049006dbe5811bd2aef1cc7bf06cd7d68688653b40b28a",
+  "recorded_at": "2026-09-01T16:14:31Z",
+  "references": [
+    {
+      "digest": "sha256:f67e2ec9f289553d64ac8044eb2400b7b9c42ce90043af588d61e20781ca64ca",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R01-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000289",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000290",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "89645c1ca314fa58ba03e711cbbb29de94cfc007",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0cdcd776d74f867b3068c10438c72632f5db064d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c6a2ad69928bde171a13b42952ef08c65fbf194d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "21f189a353d690033b2a5760c58aab9962f8d9fa",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "92eecc2c572f29caedfb3c4ff3db2f736d5e0f2b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6848d3d0c71f0b88a585274a24965284fc4ee715",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "105fcaade5a6db4c2642087a2a843ffb41a23db6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bc806db7126953bee1de53e785f8d45bc1fa2623",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3860fec2889c69c044c2e0366608a2d2e678027c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3a0fe61aeb66254ac6d16f0c446c1aa1b19cc204",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 291,
+  "subject": {
+    "id": "ccr01-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the retained-source boundary and its completion guards.",
+  "why": "Completion requires the exact eligible private candidate, validated twenty-entry worker chain, root-owned package boundary, reviewed corpus publication, strict governance chronology, clean regression evidence, and unchanged unselected boundary."
+}

@@ -1,0 +1,155 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R01"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:dd8861dedbd26c2aa33600865683563fb732a6d3c749f2817905824e0bc717d2",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_source.py"
+      },
+      {
+        "after_digest": "sha256:9f69ae6b4f57823e92e924704534cdd0644078085a2cf2460acddc45a04ab8b8",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/test_retained_source_boundary.py"
+      },
+      {
+        "after_digest": "sha256:67b39a464e8a73e98ab6b2929cc9ea230f9f5c9a149751eb1d6d9bff48cb3b20",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-R01.json"
+      },
+      {
+        "after_digest": "sha256:9d5814f3485c464124a9b98c3aa7c7267e3b4bab78280244351191deb6e147eb",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000001.json"
+      },
+      {
+        "after_digest": "sha256:7b88a2ced4b355c8826fa0a100f589232d7aff6e8387cf0dc3599fee00b1a55a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000002.json"
+      },
+      {
+        "after_digest": "sha256:6e679a179dff84559f3a6a581bd34b7690259a4ca3bac786a54ce61ba1f0373a",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000003.json"
+      },
+      {
+        "after_digest": "sha256:23ee0ad43a9ac0c52baa8b19737da1f560d6ee654a25f1bbf5fc91a79ab62f6d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000004.json"
+      },
+      {
+        "after_digest": "sha256:34eb3314a800142e32d6d746d64756d3893368ada0e68d0437de271a64d337bd",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000005.json"
+      },
+      {
+        "after_digest": "sha256:9a1922a98529dfe7148a0393ed0a851d676bb5188b4fd60e6bc2767e15fb336f",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000006.json"
+      },
+      {
+        "after_digest": "sha256:5c22adb028b0c9432c3981a26866b136700268422733286e7c97f49b904aa2b8",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000007.json"
+      },
+      {
+        "after_digest": "sha256:68bc5e720a8dd66f3cadec444aac927f29d039d984cb77debbe1f71aa5b5115e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000008.json"
+      },
+      {
+        "after_digest": "sha256:97e8d0c4686e375cbcfbb0802851ce2b13c48707e51f0c49fcb7463883a326e7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000009.json"
+      },
+      {
+        "after_digest": "sha256:530ac5a613c65c7d1ba5f852a6edd64ced61adc60682377b4a65108f0b6c6b23",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000010.json"
+      },
+      {
+        "after_digest": "sha256:faf7ebb77b000dc1141846a7abbae1d536cce1b5973e2dde56a4ec8ea4524815",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000011.json"
+      },
+      {
+        "after_digest": "sha256:9c88424523eb9516ebfcd2f9ce56835254ad55c89239c9b819b754f34d390f53",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000012.json"
+      },
+      {
+        "after_digest": "sha256:a8400521ecb90eb90a8c5c1f3756c0e6a5b544defea78c95034a15fdfae4cc66",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000013.json"
+      },
+      {
+        "after_digest": "sha256:06b9c253090cf82de27ad7107585b14ce23764e4a179bb3b87de4b0939bd3496",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000014.json"
+      },
+      {
+        "after_digest": "sha256:6d49547ef695683b616e33dfb20e65239371f47b4d2d21a7024e2399c229845d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000015.json"
+      },
+      {
+        "after_digest": "sha256:30764af4032d0852b33d7c65f18e3b5700c17898a5d911265fa73642b22bd8d5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000016.json"
+      },
+      {
+        "after_digest": "sha256:7c2cb403447b9b8745171d80ef20678bbbb2e65fbc7c1d597dc896c0d5da44d0",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R01/ledger/entries/CC-R01-WRK-000017.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:5291894b486f83413967c72bc719cfd1f826b9e13def23fa59c5d9efb153bd84",
+  "entry_id": "OVR-000289",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:892c7bb6c8226eb7365a531c91a6e7c858c38cf36a5b1e47ea3aed759776c33f",
+  "recorded_at": "2026-09-01T16:14:29Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_source.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_retained_source_boundary.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "conformance/contract_compiler/v0/evidence/CC-R01.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "89645c1ca314fa58ba03e711cbbb29de94cfc007",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 289,
+  "subject": {
+    "id": "ccr01-candidate-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the exact retained-source candidate and its worker-ledger prefix.",
+  "why": "The generic retained-source candidate is frozen at one exact commit and tree. This revision records its two implementation artifacts, canonical evidence report, and the first seventeen immutable worker-ledger entries present at that candidate boundary without granting package, selection, adapter, compiler, or public API authority."
+}
