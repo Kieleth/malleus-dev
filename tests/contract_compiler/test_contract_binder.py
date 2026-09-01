@@ -600,6 +600,36 @@ def test_forged_trusted_flag_cannot_remove_source_declarations() -> None:
     assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
 
 
+@pytest.mark.parametrize("mutation", ("edge", "root"))
+def test_forged_closure_topology_cannot_change_binding_authority(mutation: str) -> None:
+    closure = _owner_and_adopter()
+    if mutation == "edge":
+        edge = closure.source_closure.import_edges[0]
+        source_closure = replace(
+            closure.source_closure,
+            import_edges=(replace(edge, literal_import="not-authored"),),
+        )
+    else:
+        owner = next(
+            module
+            for module in closure.modules
+            if module.module_id == "https://example.test/owner"
+        )
+        source_closure = replace(
+            closure.source_closure,
+            root=replace(
+                closure.source_closure.root,
+                resolved_locator=owner.module_id,
+                source_sha256=owner.source.sha256,
+            ),
+        )
+    forged = replace(closure, source_closure=source_closure)
+
+    refusal = _reason(forged)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
 def test_diagnostic_order_ignores_import_module_and_declaration_order() -> None:
     root = "https://example.test/root"
     left = "https://example.test/left"
