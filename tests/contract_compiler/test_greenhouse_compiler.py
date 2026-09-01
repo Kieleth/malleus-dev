@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import ast
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tomllib
+import zipfile
 
 import pytest
 
@@ -15,13 +19,10 @@ from malleus._contract_compiler import ContractCompileError, compile_linkml_cont
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOT = (
-    ROOT / "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse"
-)
+SOURCE_ROOT = ROOT / "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse"
 ORACLE = json.loads(
     (
-        ROOT
-        / "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json"
+        ROOT / "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json"
     ).read_text(encoding="utf-8")
 )
 IMPLEMENTATION = ROOT / "src/malleus/_contract_compiler.py"
@@ -53,7 +54,10 @@ def test_greenhouse_compiles_to_the_independent_answer_key(name: str) -> None:
     expected = _expected_compilations()[name]
     result = _compile(name)
 
-    assert _fact_dicts(result) == tuple(ORACLE["baseline_facts"]) or name == "semantic-change.yaml"
+    assert (
+        _fact_dicts(result) == tuple(ORACLE["baseline_facts"])
+        or name == "semantic-change.yaml"
+    )
     if name == "semantic-change.yaml":
         baseline = set(
             json.dumps(fact, sort_keys=True) for fact in ORACLE["baseline_facts"]
@@ -91,8 +95,7 @@ def test_greenhouse_semantic_equivalence_and_real_delta_are_visible() -> None:
     changed = _compile("semantic-change.yaml")
     assert changed.canonical_facts != baseline.canonical_facts
     assert _fact_set(changed) - _fact_set(baseline) == {
-        tuple(sorted(fact.items()))
-        for fact in ORACLE["semantic_change"]["added_facts"]
+        tuple(sorted(fact.items())) for fact in ORACLE["semantic_change"]["added_facts"]
     }
     assert _fact_set(baseline) - _fact_set(changed) == {
         tuple(sorted(fact.items()))
@@ -112,8 +115,31 @@ def test_result_attests_the_exact_caller_supplied_source() -> None:
     assert result.implementation.linkml_runtime_version == "1.11.1"
     assert (
         result.implementation.support_profile
-        == "malleus.linkml/exact-location-v0"
+        == "malleus.linkml/greenhouse-bootstrap-v0"
     )
+    assert (
+        result.implementation.profile_sha256
+        == hashlib.sha256(PROFILE.read_bytes()).hexdigest()
+    )
+    assert (
+        result.implementation.executor_sha256
+        == hashlib.sha256(IMPLEMENTATION.read_bytes()).hexdigest()
+    )
+
+
+def test_result_exposes_the_neutral_contract_before_fact_encoding() -> None:
+    result = _compile("baseline.yaml")
+
+    assert result.contract.declarations
+    assert {declaration.kind for declaration in result.contract.declarations} >= {
+        "Class",
+        "Enum",
+        "Scalar",
+        "Slot",
+    }
+    assert {declaration.identifier for declaration in result.contract.declarations} == {
+        fact.subject for fact in result.facts
+    }
 
 
 def test_unknown_root_field_refuses_the_whole_source() -> None:
@@ -151,9 +177,7 @@ def test_unknown_root_field_refuses_the_whole_source() -> None:
         ),
     ),
 )
-def test_raw_profile_refuses_before_linkml_coercion(
-    name: str, source: bytes
-) -> None:
+def test_raw_profile_refuses_before_linkml_coercion(name: str, source: bytes) -> None:
     with pytest.raises(ContractCompileError):
         compile_linkml_contract(source, locator=f"memory:{name}")
 
@@ -197,9 +221,198 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
         assert fixture_literal not in policy
 
 
-def test_bootstrap_is_private_and_excluded_from_the_distribution() -> None:
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    included = project["tool"]["hatch"]["build"]["include"]
+def test_profile_classifications_and_defaults_are_executed() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    annotation_profile = deepcopy(profile)
+    annotation_profile["node_shapes"]["slot"]["fields"]["maximum_value"][
+        "classification"
+    ] = "ANNOTATION_ONLY"
+    default_profile = deepcopy(profile)
+    default_profile["defaults"]["class"]["abstract"] = True
 
-    assert all("_contract_compiler" not in path for path in included)
+    ordinary = _compile("baseline.yaml")
+    without_maximum = compile_linkml_contract(
+        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+        locator="memory:annotation-profile",
+        profile=annotation_profile,
+    )
+    abstract_by_default = compile_linkml_contract(
+        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+        locator="memory:default-profile",
+        profile=default_profile,
+    )
+
+    assert without_maximum.canonical_facts != ordinary.canonical_facts
+    assert not any(
+        fact.predicate.endswith("/maximum") for fact in without_maximum.facts
+    )
+    assert (
+        without_maximum.implementation.profile_sha256
+        == hashlib.sha256(
+            json.dumps(
+                annotation_profile,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+    )
+    assert abstract_by_default.canonical_facts != ordinary.canonical_facts
+    assert any(
+        fact.predicate.endswith("/abstract") and fact.object is True
+        for fact in abstract_by_default.facts
+    )
+
+
+@pytest.mark.parametrize(
+    "name,source",
+    (
+        (
+            "prefixes",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"name: greenhouse\n",
+                b"name: greenhouse\nprefixes:\n  ex: https://example.invalid/\n",
+            ),
+        ),
+        (
+            "adoption",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"    identifier: true\n",
+                b"    identifier: true\n    annotations:\n      adopts: true\n",
+            ),
+        ),
+        (
+            "slot-usage",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"    slots:\n      - specimen_id\n",
+                b"    slot_usage:\n      temperature:\n        required: true\n"
+                b"    slots:\n      - specimen_id\n",
+            ),
+        ),
+        (
+            "class-valued-range",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"    range: PlantState\n", b"    range: Sample\n"),
+        ),
+        (
+            "scalar-cycle",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"    typeof: float\n", b"    typeof: Celsius\n"),
+        ),
+        (
+            "scalar-inlined",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"    identifier: true\n",
+                b"    identifier: true\n    inlined: true\n",
+            ),
+        ),
+        (
+            "two-conditions",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"          state:\n            equals_string: HEALTHY\n",
+                b"          state:\n            equals_string: HEALTHY\n"
+                b"          temperature:\n            value_presence: PRESENT\n",
+            ),
+        ),
+        (
+            "namespace-collision",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"classes:\n  Sample:\n",
+                b"classes:\n  state:\n"
+                b"    description: Collides with the global state slot.\n"
+                b"  Sample:\n",
+            ),
+        ),
+        (
+            "inherited-slot",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"  Sample:\n    description: A greenhouse sample.\n",
+                b"  Sample:\n    description: A greenhouse sample.\n"
+                b"    slots:\n      - specimen_id\n",
+            ),
+        ),
+        (
+            "multiple-mixins",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"  Observation:\n",
+                b"  Auditable:\n    mixin: true\n  Observation:\n",
+            )
+            .replace(
+                b"    mixins:\n      - Traceable\n",
+                b"    mixins:\n      - Traceable\n      - Auditable\n",
+            ),
+        ),
+    ),
+)
+def test_greenhouse_bootstrap_refuses_unproved_linkml_branches(
+    name: str, source: bytes
+) -> None:
+    with pytest.raises(ContractCompileError):
+        compile_linkml_contract(source, locator=f"memory:{name}")
+
+
+def test_profile_rejects_unknown_interpreter_operations() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["node_shapes"]["slot"]["fields"]["maximum_value"]["classification"] = (
+        "MAGIC"
+    )
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:unknown-profile-operation",
+            profile=profile,
+        )
+
+
+def test_bootstrap_is_private_and_excluded_from_the_distribution(
+    tmp_path: Path,
+) -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    excluded = project["tool"]["hatch"]["build"]["exclude"]
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "build",
+            "--wheel",
+            "--no-isolation",
+            "--outdir",
+            str(tmp_path),
+            str(ROOT),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    wheels = tuple(tmp_path.glob("*.whl"))
+    assert len(wheels) == 1
+    with zipfile.ZipFile(wheels[0]) as archive:
+        members = set(archive.namelist())
+
+    assert "/src/malleus/_contract_compiler.py" in excluded
+    assert "/src/malleus/_contract_compiler_profile.json" in excluded
+    assert "malleus/_contract_compiler.py" not in members
+    assert "malleus/_contract_compiler_profile.json" not in members
     assert "compile_linkml_contract" not in malleus.__all__
