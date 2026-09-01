@@ -320,6 +320,21 @@ def _plain_profile(value: object) -> object:
     return value
 
 
+def _type_exact_equal(left: object, right: object) -> bool:
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, Mapping):
+        return set(left) == set(right) and all(
+            _type_exact_equal(left[key], right[key]) for key in left
+        )
+    if isinstance(left, list):
+        return len(left) == len(right) and all(
+            _type_exact_equal(left_item, right_item)
+            for left_item, right_item in zip(left, right, strict=True)
+        )
+    return left == right
+
+
 def _exact_profile_keys(
     value: Mapping[str, Any], expected: set[str], where: str
 ) -> None:
@@ -374,17 +389,20 @@ def _validate_adapter_profile(
         "builtins",
         "seed_primitives",
     ):
-        if root[member] != authority[member]:
+        if not _type_exact_equal(root[member], authority[member]):
             raise _refusal(
                 LinkMLRefusalReason.INVALID_PROFILE,
                 f"profile {member} differs from the private adapter authority",
             )
     ordering = _profile_mapping(root["source_ordering"], "source_ordering")
-    if ordering != {
-        "field_order": "PRESERVE_AUTHORED",
-        "module_order": "PRESERVE_SOURCE_CLOSURE",
-        "ordinal_base": 0,
-    }:
+    if not _type_exact_equal(
+        ordering,
+        {
+            "field_order": "PRESERVE_AUTHORED",
+            "module_order": "PRESERVE_SOURCE_CLOSURE",
+            "ordinal_base": 0,
+        },
+    ):
         raise _refusal(
             LinkMLRefusalReason.INVALID_PROFILE,
             "profile source ordering is not executable",
@@ -455,9 +473,9 @@ def _validate_adapter_profile(
                 f"profile shape {shape_name} is not closed",
             )
         for member in _ADAPTER_SHAPE_POLICY_KEYS:
-            if (member in shape) != (member in authority_shape) or shape.get(
-                member
-            ) != authority_shape.get(member):
+            if (member in shape) != (member in authority_shape) or not (
+                _type_exact_equal(shape.get(member), authority_shape.get(member))
+            ):
                 raise _refusal(
                     LinkMLRefusalReason.INVALID_PROFILE,
                     f"profile shape {shape_name} changes adapter policy {member}",
@@ -486,9 +504,9 @@ def _validate_adapter_profile(
                 f"packaged node_shapes.{shape_name}.fields.{field_name}",
             )
             for member in _ADAPTER_FIELD_POLICY_KEYS:
-                if (member in field) != (member in authority_field) or field.get(
-                    member
-                ) != authority_field.get(member):
+                if (member in field) != (member in authority_field) or not (
+                    _type_exact_equal(field.get(member), authority_field.get(member))
+                ):
                     raise _refusal(
                         LinkMLRefusalReason.INVALID_PROFILE,
                         f"profile field {shape_name}.{field_name} changes adapter "
@@ -567,10 +585,8 @@ def _validate_adapter_profile(
 
 
 def _load_adapter_profile(
-    injected: Mapping[str, object] | _AdapterProfile | None,
+    injected: Mapping[str, object] | None,
 ) -> _AdapterProfile:
-    if isinstance(injected, _AdapterProfile):
-        return injected
     try:
         authority_raw = _PROFILE_PATH.read_bytes()
         authority = _profile_mapping(json.loads(authority_raw), "packaged root")
@@ -1254,8 +1270,16 @@ def _parse_observation(
     *,
     profile: Mapping[str, object] | None,
 ) -> DeclaredModule:
-    module = _validate_observation(observation)
     active = _load_adapter_profile(profile)
+    return _parse_observation_active(observation, active=active)
+
+
+def _parse_observation_active(
+    observation: object,
+    *,
+    active: _AdapterProfile,
+) -> DeclaredModule:
+    module = _validate_observation(observation)
     trusted_id = str(
         _profile_mapping(active.data["trusted_module"], "trusted_module")["module_id"]
     )
@@ -1451,7 +1475,7 @@ def adapt_linkml_closure(
             path=("imports", mismatched_trusted.parent_import_ordinal),
         )
     declared = tuple(
-        _parse_observation(module, profile=active) for module in observations
+        _parse_observation_active(module, active=active) for module in observations
     )
     consumed: set[tuple[str, int]] = set()
     for module in declared:
