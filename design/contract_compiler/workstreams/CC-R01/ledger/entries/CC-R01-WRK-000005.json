@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/ruff format --check tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/ruff check tests/contract_compiler/test_retained_source_boundary.py && .venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "The complete fixed behavioral test module passed scoped Ruff and then stopped collection with exactly one ModuleNotFoundError for absent malleus._contract_source. The production module was deliberately absent. The fixed bytes cover exact retention, nested and diamond imports, zero-based duplicate edges, injected ordering, typed atomic refusals, identity conflicts, directed cycles, malformed collaborators, deep immutability, exact imports, no ambient I/O, and a Git history guard requiring these exact test bytes before corrected GREEN.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:24036a6937b258a71746fcc930c5470d8dc9a1bef20a542e3d39dfec24a6045d",
+  "entry_id": "CC-R01-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:48083da9bf58495238bc8e502649a3da19e9908fdf1829602ab18b1d3ad7dfcd",
+  "recorded_at": "2026-09-01T15:21:21Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Record the corrected complete tests-without-production RED.",
+  "workstream_id": "CC-R01"
+}

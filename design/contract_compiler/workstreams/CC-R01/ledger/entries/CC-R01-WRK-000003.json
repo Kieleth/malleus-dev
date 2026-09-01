@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The first RED proved only the missing private module and API import. It did not place the complete behavioral contract before production and therefore cannot remain the active RED result.",
+    "supersedes_entry_id": "CC-R01-WRK-000001"
+  },
+  "entry_hash": "sha256:56fc1a8bae626996bd7fbce16093b1127576d452328f18d05759b5361a501ab9",
+  "entry_id": "CC-R01-WRK-000003",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:f81f1d961df8eba27fa40ab146b77740fd91453f197b5991f9511c8ee13f5f51",
+  "recorded_at": "2026-09-01T15:21:19Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Supersede the API-only RED observation.",
+  "workstream_id": "CC-R01"
+}

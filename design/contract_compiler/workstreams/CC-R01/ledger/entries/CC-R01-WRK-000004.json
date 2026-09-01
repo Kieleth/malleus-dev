@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The first GREEN combined twenty-four newly authored behavioral tests with production and incorrectly called all twenty-five tests fixed. A corrected tests-before-production cycle replaces it.",
+    "supersedes_entry_id": "CC-R01-WRK-000002"
+  },
+  "entry_hash": "sha256:48083da9bf58495238bc8e502649a3da19e9908fdf1829602ab18b1d3ad7dfcd",
+  "entry_id": "CC-R01-WRK-000004",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:56fc1a8bae626996bd7fbce16093b1127576d452328f18d05759b5361a501ab9",
+  "recorded_at": "2026-09-01T15:21:20Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Supersede the combined behavioral-test GREEN observation.",
+  "workstream_id": "CC-R01"
+}

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import ast
 import builtins
-from dataclasses import FrozenInstanceError, fields, is_dataclass
+from dataclasses import FrozenInstanceError, dataclass, fields, is_dataclass
 from hashlib import sha256
 import inspect
 from pathlib import Path
 import socket
+import subprocess
 from typing import Any
 from urllib import request as url_request
 
@@ -34,6 +36,9 @@ from malleus._contract_source import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
+ACTIVATION_COMMIT = "dbc5eaee8493275b3d0c468b77f5567711507cd8"
+MODULE_PATH = "src/malleus/_contract_source.py"
+TEST_PATH = "tests/contract_compiler/test_retained_source_boundary.py"
 SELECTION = ResolverSelection(
     resolver_id="TEST_ONLY_MEMORY_RESOLVER",
     profile_version="TEST_ONLY_PROFILE_V0",
@@ -467,6 +472,33 @@ def test_nested_collaborator_refusals_keep_the_failed_request_and_lineage() -> N
     _assert_no_partial_result(reader_refusal)
 
 
+def test_unexpected_collaborator_errors_are_not_reclassified() -> None:
+    resolver_error = RuntimeError("resolver bug")
+
+    class BrokenResolver:
+        def resolve(self, request: RootRequest | ImportRequest) -> ResolvedSource:
+            del request
+            raise resolver_error
+
+    with pytest.raises(RuntimeError) as resolver_caught:
+        _build(BrokenResolver(), _MemoryImportReader({}))
+    assert resolver_caught.value is resolver_error
+
+    reader_error = RuntimeError("reader bug")
+
+    class BrokenReader:
+        def read_imports(self, source: RetainedSource) -> tuple[str, ...]:
+            del source
+            raise reader_error
+
+    with pytest.raises(RuntimeError) as reader_caught:
+        _build(
+            _MemoryResolver({"root": _source("module:root", b"root")}),
+            BrokenReader(),
+        )
+    assert reader_caught.value is reader_error
+
+
 def test_same_locator_with_different_bytes_refuses_the_whole_closure() -> None:
     resolver = _MemoryResolver(
         {
@@ -524,6 +556,30 @@ def test_same_locator_and_bytes_with_different_media_type_refuses() -> None:
     assert isinstance(refusal.request, ImportRequest)
     assert refusal.request.literal_import == "second"
     assert refusal.lineage == ("module:root", "module:shared")
+    _assert_no_partial_result(refusal)
+
+
+def test_source_conflict_precedes_cycle_classification() -> None:
+    resolver = _MemoryResolver(
+        {
+            "root": _source("module:root", b"root"),
+            "child": _source("module:child", b"child"),
+            "back": _source("module:root", b"changed"),
+        }
+    )
+    reader = _MemoryImportReader(
+        {
+            "module:root": ("child",),
+            "module:child": ("back",),
+        }
+    )
+
+    with pytest.raises(SourceBoundaryRefusal) as caught:
+        _build(resolver, reader)
+
+    refusal = caught.value
+    assert refusal.reason is RefusalReason.LOCATOR_CONTENT_CONFLICT
+    assert refusal.lineage == ("module:root", "module:child", "module:root")
     _assert_no_partial_result(refusal)
 
 
@@ -639,8 +695,10 @@ def test_every_directed_cycle_refuses_with_exact_locator_lineage(
     [
         object(),
         ResolvedSource("", b"root", "test/type"),
+        ResolvedSource(7, b"root", "test/type"),
         ResolvedSource("module:root", bytearray(b"root"), "test/type"),
         ResolvedSource("module:root", b"root", ""),
+        ResolvedSource("module:root", b"root", 7),
     ],
 )
 def test_malformed_resolver_results_refuse_atomically(result: Any) -> None:
@@ -657,6 +715,26 @@ def test_malformed_resolver_results_refuse_atomically(result: Any) -> None:
     assert refusal.request == RootRequest(requested_locator="root")
     assert refusal.lineage == ()
     _assert_no_partial_result(refusal)
+
+
+def test_resolver_result_subclasses_refuse_before_field_access() -> None:
+    class ExtendedResolvedSource(ResolvedSource):
+        pass
+
+    result = ExtendedResolvedSource("module:root", b"root", "test/type")
+
+    class ExtendedResultResolver:
+        def resolve(
+            self, request: RootRequest | ImportRequest
+        ) -> ExtendedResolvedSource:
+            del request
+            return result
+
+    with pytest.raises(SourceBoundaryRefusal) as caught:
+        _build(ExtendedResultResolver(), _MemoryImportReader({}))
+
+    assert caught.value.reason is RefusalReason.MALFORMED_RESOLVER_RESULT
+    _assert_no_partial_result(caught.value)
 
 
 @pytest.mark.parametrize("imports", [[], ("",), (b"child",)])
@@ -676,6 +754,69 @@ def test_malformed_import_reader_results_refuse_atomically(imports: Any) -> None
     assert refusal.request == RootRequest(requested_locator="root")
     assert refusal.lineage == ("module:root",)
     _assert_no_partial_result(refusal)
+
+
+@pytest.mark.parametrize(
+    ("requested_locator", "selection"),
+    [
+        ("", SELECTION),
+        (b"root", SELECTION),
+        (
+            "root",
+            ResolverSelection(
+                resolver_id="",
+                profile_version="TEST_ONLY_PROFILE_V0",
+                configuration_id="TEST_ONLY_CONFIGURATION_V0",
+            ),
+        ),
+        ("root", object()),
+    ],
+)
+def test_malformed_root_or_selection_refuses_before_resolution(
+    requested_locator: Any,
+    selection: Any,
+) -> None:
+    resolver = _MemoryResolver({"root": _source("module:root", b"root")})
+
+    with pytest.raises(SourceBoundaryRefusal) as caught:
+        build_source_closure(
+            requested_locator=requested_locator,
+            selection=selection,
+            resolver=resolver,
+            import_reader=_MemoryImportReader({}),
+        )
+
+    refusal = caught.value
+    assert refusal.reason is RefusalReason.MALFORMED_REQUEST
+    assert refusal.lineage == ()
+    assert resolver.requests == []
+    _assert_no_partial_result(refusal)
+
+
+def test_resolver_selection_subclasses_cannot_add_mutable_state() -> None:
+    @dataclass(frozen=True)
+    class ExtendedSelection(ResolverSelection):
+        mutable: list[str]
+
+    selection = ExtendedSelection(
+        resolver_id="TEST_ONLY_MEMORY_RESOLVER",
+        profile_version="TEST_ONLY_PROFILE_V0",
+        configuration_id="TEST_ONLY_CONFIGURATION_V0",
+        mutable=[],
+    )
+    resolver = _MemoryResolver({"root": _source("module:root", b"root")})
+
+    with pytest.raises(SourceBoundaryRefusal) as caught:
+        build_source_closure(
+            requested_locator="root",
+            selection=selection,
+            resolver=resolver,
+            import_reader=_MemoryImportReader({}),
+        )
+
+    assert caught.value.reason is RefusalReason.MALFORMED_REQUEST
+    assert resolver.requests == []
+    _assert_no_partial_result(caught.value)
 
 
 def test_successful_closure_is_deeply_immutable_and_repeatable() -> None:
@@ -739,4 +880,65 @@ def test_production_source_is_syntax_and_transport_neutral() -> None:
     assert all(
         line.strip() != "import re" and not line.strip().startswith("from re import ")
         for line in source.splitlines()
+    )
+
+
+def test_production_imports_are_an_exact_executor_allowlist() -> None:
+    source = (ROOT / MODULE_PATH).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imports = {
+        (node.module, tuple(alias.name for alias in node.names))
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+    }
+
+    assert not any(isinstance(node, ast.Import) for node in ast.walk(tree))
+    assert imports == {
+        ("__future__", ("annotations",)),
+        ("dataclasses", ("dataclass",)),
+        ("enum", ("Enum", "auto")),
+        ("hashlib", ("sha256",)),
+        ("typing", ("Any", "Protocol", "TypeAlias")),
+    }
+
+
+def _git(*arguments: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=ROOT,
+        check=check,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _commit_has(commit: str, path: str) -> bool:
+    return _git("cat-file", "-e", f"{commit}:{path}", check=False).returncode == 0
+
+
+def test_complete_fixed_test_bytes_precede_the_corrected_green_module() -> None:
+    commits = _git(
+        "rev-list",
+        "--reverse",
+        f"{ACTIVATION_COMMIT}..HEAD",
+        "--",
+        MODULE_PATH,
+        TEST_PATH,
+    ).stdout.splitlines()
+    current_test_blob = _git("rev-parse", f"HEAD:{TEST_PATH}").stdout.strip()
+
+    corrected_red_index = next(
+        index
+        for index, commit in enumerate(commits)
+        if _commit_has(commit, TEST_PATH)
+        and not _commit_has(commit, MODULE_PATH)
+        and _git("rev-parse", f"{commit}:{TEST_PATH}").stdout.strip()
+        == current_test_blob
+    )
+
+    assert any(
+        _commit_has(commit, MODULE_PATH)
+        and _git("rev-parse", f"{commit}:{TEST_PATH}").stdout.strip()
+        == current_test_blob
+        for commit in commits[corrected_red_index + 1 :]
     )
