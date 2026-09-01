@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The original DISPROOF result predated the 1,201-module regression and therefore did not disprove host recursion depth as hidden import-closure policy. The replacement includes the explicit-stack regression.",
+    "supersedes_entry_id": "CC-R01-WRK-000008"
+  },
+  "entry_hash": "sha256:11d228e385fb0950a7338d7c50212b224c314b241d0d2907a4ca4f2da8a9d2b3",
+  "entry_id": "CC-R01-WRK-000011",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:eeab5c413d07e53850e4a18fa0d9063caddf29f3197637f58fbc8bb45f34bad5",
+  "recorded_at": "2026-09-01T15:38:22Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 11,
+  "summary": "Supersede the recursion-limited disproof result.",
+  "workstream_id": "CC-R01"
+}

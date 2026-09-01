@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The original SLICE result proved module presentation order and closure membership, but its wording also claimed caller-selected ordering without mechanically asserting the resulting import-edge tuple order. The replacement adds those exact edge assertions.",
+    "supersedes_entry_id": "CC-R01-WRK-000007"
+  },
+  "entry_hash": "sha256:eeab5c413d07e53850e4a18fa0d9063caddf29f3197637f58fbc8bb45f34bad5",
+  "entry_id": "CC-R01-WRK-000010",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:2974a55d63d1ab42ad23ba0aad7542136802bf0e8afd66640b3af667f95c4416",
+  "recorded_at": "2026-09-01T15:38:21Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 10,
+  "summary": "Supersede the incomplete ordering slice claim.",
+  "workstream_id": "CC-R01"
+}

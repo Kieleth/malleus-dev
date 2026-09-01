@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py -k 'authorized_private_api or root_retains or nested_diamond or duplicate_authored or ordering_changes or successful_closure'",
+    "observed": "All 6 positive slice tests passed. They prove the exact private API, opaque root-byte attestation, separate root provenance, nested diamond traversal, one observation per exact locator after equality, every zero-based authored edge, exact module and import-edge tuple presentation for default canonical, traversal, and caller-supplied sort-key ordering, unchanged closure membership and provenance across ordering strategies, repeatability, and deep immutability.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4be411e7e0b79a678a023e200a0854f3e0857130c820bca5b861f29a3ee0e9b9",
+  "entry_id": "CC-R01-WRK-000012",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:11d228e385fb0950a7338d7c50212b224c314b241d0d2907a4ca4f2da8a9d2b3",
+  "recorded_at": "2026-09-01T15:38:23Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 12,
+  "summary": "Pass the retained-source slice with exact edge ordering.",
+  "workstream_id": "CC-R01"
+}

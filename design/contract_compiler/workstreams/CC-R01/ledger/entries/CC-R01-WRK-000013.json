@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py -k 'refusal or refuses or malformed or conflict or cycle or deep_acyclic or distinct or opaque or unexpected or subclass or injected or production or complete_fixed'",
+    "observed": "All 33 disproof cases passed with 6 deselected. In addition to the prior refusal, conflict, exact-lineage, collaborator-shape, identity, isolation, and history controls, a 1,201-module acyclic chain now completes through an explicit traversal stack. This removes CPython recursion depth as hidden closure policy while preserving depth-first observation and edge order.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:317c0f867553521a6c2f7b328e1bd7a252c892772415f2827a95233e3f4f2718",
+  "entry_id": "CC-R01-WRK-000013",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:4be411e7e0b79a678a023e200a0854f3e0857130c820bca5b861f29a3ee0e9b9",
+  "recorded_at": "2026-09-01T15:38:24Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 13,
+  "summary": "Pass the retained-source disproofs without a host recursion boundary.",
+  "workstream_id": "CC-R01"
+}
