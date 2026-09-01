@@ -299,6 +299,21 @@ def test_compiler_threads_one_active_profile_through_parser_and_lowering() -> No
         )
 
 
+def test_compiler_cannot_attest_one_profile_and_parse_with_another() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["node_shapes"]["schema"]["fields"]["description"]["parser"] = (
+        "nonempty_string"
+    )
+    source = b"id: https://example.org/profile\nname: Profile\ndescription: ''\n"
+
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            source,
+            locator="memory:mismatched-active-profile",
+            profile=profile,
+        )
+
+
 def test_non_enforced_rule_operand_refuses_the_profile() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     profile["node_shapes"]["slot"]["fields"]["required"]["classification"] = (
