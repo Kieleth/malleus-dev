@@ -20,8 +20,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 24,
-`sha256:029f41f569b07808ea629b6af2aef104e75c1b6132e81c898637070203f31991`
+revision 25,
+`sha256:f921b822a7db805dacd9a43112591acbd6815565f8f5613348051346f17d65a9`
 
 Shipped capability: none
 

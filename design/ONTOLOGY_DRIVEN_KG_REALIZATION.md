@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 24,
-`sha256:029f41f569b07808ea629b6af2aef104e75c1b6132e81c898637070203f31991`
+revision 25,
+`sha256:f921b822a7db805dacd9a43112591acbd6815565f8f5613348051346f17d65a9`
 
 Protocol-design evidence cutoff: 2026-08-27
 
@@ -1730,10 +1730,14 @@ governance topology on 2026-08-27:
    `OD-006` now supplies the closed three-role composition and `OD-013` the
    one-distribution topology; `CC-D16` still owns exact bundle fields and
    canonical bytes.
-7. `OD-012` selects the published LinkML 1.11.1 release, exact wheel and sdist
-   identities, the CPython 3.12.10 Linux x86_64 `cp312` reproducibility tuple,
-   pip 25.0.1, and the exact slim Bookworm OCI identities. CC-002 materializes
-   and attests those bytes; a future fork requires a new governed revision.
+7. `OD-012` selects the published LinkML 1.11.1 release and the CPython 3.12.10
+   Linux x86_64 `cp312` conformance tuple. Its current availability contract is
+   a hash-pinned Linux lock plus retained source and direct build inputs.
+   Missing locked transitive artifacts may be downloaded and must match their
+   hashes. The repository does not claim a complete offline cache. For compiler
+   dependencies, normal cross-platform package metadata pins only the direct
+   LinkML pair; unrelated runtime dependencies remain normally declared. The
+   prior offline experiment remains exact historical evidence.
 8. `OD-002` selects slot-only exact explicit adoption with a literal Boolean
    marker, authoritative imported owner, pre-normalization equality, and no
    order winner.
@@ -2158,8 +2162,59 @@ mfg:QuietBellArchiveFixturePublicationBoundary rdf:type mfg:Boundary ;
 
 cc:OD-012 rdf:type mfg:DecisionRecord ;
     mfg:decidedBy mfg:Author ;
-    mfg:decisionDate "2026-08-25" ;
-    mfg:selects mfg:LinkMLV1_11_1ReleaseCompilerBaselineR3 ;
+    mfg:decisionDate "2026-09-01" ;
+    mfg:selects mfg:LinkMLV1_11_1HashLockedCompilerBaselineR4 ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LinkMLV1_11_1HashLockedCompilerBaselineR4 rdf:type mfg:DesignObject ;
+    mfg:supersedes mfg:LinkMLV1_11_1ReleaseCompilerBaselineR3 ;
+    mfg:binds mfg:LinkMLV1_11_1ReleaseCoordinate ;
+    mfg:binds mfg:LinkMLV1_11_1ProvenanceCommit-a7ed3e4cbb19731f072d0d90b6d52f7d822569ee ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedWheelRetentionSet ;
+    mfg:binds mfg:LinkMLV1_11_1PublishedSdistRetentionSet ;
+    mfg:binds mfg:CPython3_12_10LinuxX86_64Cp312ReproducibilityTuple ;
+    mfg:binds mfg:OfficialPython3_12_10SlimBookwormLinuxAmd64PlatformProfile ;
+    mfg:binds mfg:RootSourceRetentionSeparateFromTransitiveBuildInputBoundary ;
+    mfg:binds mfg:FutureCleanUpstreamReplacementRequiresGovernedDecisionBoundary ;
+    mfg:binds mfg:FutureForkSeparateGovernedBaselineRevisionBoundary ;
+    mfg:binds mfg:PublishedReleaseWheelsRetainedNotRebuiltBoundary ;
+    mfg:binds mfg:ReproducibilityTupleNotRuntimeSupportPolicyBoundary ;
+    mfg:binds mfg:HashPinnedNetworkPermittedCompilerEnvironmentProfile ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:HashPinnedNetworkPermittedCompilerEnvironmentProfile
+    rdf:type mfg:SupportProfile ;
+    mfg:binds <https://malleus.dev/foundation-graph/compiler-environment-requirements-lock-sha256-ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b> ;
+    mfg:binds mfg:NormalPackageMetadataCarriesDirectLinkMLPinsNotLinuxClosureBoundary ;
+    mfg:binds mfg:FetchedCompilerDependencyMustMatchLockHashBoundary ;
+    mfg:binds mfg:HistoricalOfflineCompilerEnvironmentEvidenceOnlyBoundary ;
+    mfg:binds mfg:MissingLockedCompilerDependencyMayUseNetworkBoundary ;
+    mfg:binds mfg:RepositoryRetainedOfflineCompilerInstallNotClaimedBoundary ;
+    mfg:binds mfg:RetainedCompilerSourceAndDirectBuildInputsBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/foundation-graph/compiler-environment-requirements-lock-sha256-ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b>
+    rdf:type mfg:ArtifactIdentity .
+
+mfg:FetchedCompilerDependencyMustMatchLockHashBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:HistoricalOfflineCompilerEnvironmentEvidenceOnlyBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:MissingLockedCompilerDependencyMayUseNetworkBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:NormalPackageMetadataCarriesDirectLinkMLPinsNotLinuxClosureBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:RepositoryRetainedOfflineCompilerInstallNotClaimedBoundary
+    rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:RetainedCompilerSourceAndDirectBuildInputsBoundary rdf:type mfg:Boundary ;
     mfg:status mfg:AcceptedDesign .
 
 mfg:LinkMLV1_11_1ReleaseCompilerBaselineR3 rdf:type mfg:DesignObject ;

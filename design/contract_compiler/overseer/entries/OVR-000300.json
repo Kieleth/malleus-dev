@@ -1,0 +1,75 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-012"
+    ],
+    "consequences": [
+      "Historical R3 and CC-002 records remain immutable evidence of the completed offline experiment; they are not the current repository-availability guarantee.",
+      "The removed transitive wheelhouse is not restored. Git continues to retain its historical bytes.",
+      "Current conformance checks validate requirements.lock, retained source and direct inputs, and semantic replay without reading a repository wheelhouse.",
+      "Normal installation metadata carries the direct LinkML compatibility pair without copying the Linux-specific transitive compiler closure."
+    ],
+    "constraints": [
+      "The exact Linux conformance tuple remains CPython 3.12.10 on Linux x86_64 with cp312.",
+      "requirements.lock pins the complete selected Linux dependency closure by version and SHA-256.",
+      "Missing locked transitive artifacts may be downloaded, but every fetched artifact must match a hash in requirements.lock.",
+      "The repository retains source and direct build inputs but does not claim a complete offline installation cache.",
+      "For compiler dependencies, pyproject.toml pins linkml==1.11.1 and linkml-runtime==1.11.1 and does not mirror the Linux-specific transitive compiler closure."
+    ],
+    "decision_id": "OD-012",
+    "satisfies_workstreams": [],
+    "selected_option": "Hash-pinned Linux lock with network-permitted retrieval of missing transitive artifacts",
+    "state": "ACCEPTED",
+    "supersedes_entry_id": "OVR-000097"
+  },
+  "entry_hash": "sha256:dc0e133e7044acee1e2dda01610ddcc6293f4c26f1bd581e800ccde9dc6c2745",
+  "entry_id": "OVR-000300",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:353e2c215d574636543bd79bdaeb408400d2517c1f0284bcf5fb1ae61111cb6f",
+  "recorded_at": "2026-09-01T20:22:07Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-012-exact-compiler-baseline",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-012",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000097",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "conformance/contract_compiler/v0/evidence/CC-X01-environment-contract-correction.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ecc56d6453963759cfbdf38c9d6c510520a46a39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6241b3d316de6a1c1c1f6726d2d94d90e773b014",
+      "type": "COMMIT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 300,
+  "subject": {
+    "id": "OD-012",
+    "type": "DECISION"
+  },
+  "summary": "Replace the current offline-wheelhouse claim with a hash-locked, network-permitted compiler-environment contract.",
+  "why": "Retaining every transitive wheel in the repository blocked compiler work without strengthening semantic correctness. The exact lock still controls acceptable dependency bytes, while retained source and direct build inputs preserve the useful reproducibility evidence. This keeps the compiler environment strict where identity matters and removes an unnecessary offline-availability promise."
+}

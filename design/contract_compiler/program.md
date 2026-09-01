@@ -143,6 +143,15 @@ separate protocol, policy, and projection identities. The legacy writer remains
 sole authority until an atomic cutover removes it and activates the new sole
 writer. There is no dual write or fallback.
 
+Revision 25 supersedes only the current OD-012 dependency-availability policy.
+The exact Linux conformance environment keeps a hash-pinned lock plus retained
+source and direct build inputs. Missing locked transitive artifacts may be
+downloaded and must match their hashes. The repository does not claim a
+complete offline cache. For compiler dependencies, normal cross-platform
+package metadata pins only the direct LinkML compatibility pair; unrelated
+runtime dependencies remain normally declared. The earlier wheelhouse
+experiment and its exact evidence remain historical.
+
 The operator excluded migration feature development from this foundation block.
 `OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
 bridge or a new meaning for the old persisted identity field in v0. `OD-017`
@@ -355,7 +364,7 @@ decisions remain open.
 | CC-D09 | Close OD-009 promotion boundary | CC-D01, CC-D05 | Named evidence gate and namespace policy accepted |
 | CC-D10 | Close OD-010 endpoint and generic class-reference semantics | CC-D07 | Strong same-role and same-partition class references, Entity-only endpoints, Entity-or-Relation bearer, ordered candidate visibility, referentially closed temporal views, and exact refusal boundaries accepted |
 | CC-D11 | Close OD-011 import identity, order, cycle, resolver, and fallback policy | CC-X03 | Import observations, examples, counterexamples, and exact policy accepted |
-| CC-D12 | Close OD-012 exact compiler baseline | CC-X00 | Release coordinate and provenance, Python reproducibility tuple, published root wheel and root-sdist identities, exact transitive build and derivative inputs, deterministic double-build and double-transform profiles, payload and license identity boundary, derived-version and ownership policy, resolver and platform identities, v3 wheel-only runtime closure, offline acceptance suite, and future-replacement boundary selected without materializing bytes |
+| CC-D12 | Close OD-012 exact compiler baseline | CC-X00 | LinkML release coordinate and provenance, Python reproducibility tuple, retained source and direct build inputs, exact hash-pinned Linux lock, network-permitted retrieval of missing locked transitive artifacts, direct-only cross-platform LinkML metadata pins, historical offline evidence boundary, and future-replacement boundary accepted |
 | CC-D13 | Close OD-013 packaging topology | CC-D01 | Core and compiler installation and verification responsibilities accepted |
 | CC-D14 | Close OD-014 themed fixture and publication boundary | none | Working name, vocabulary boundary, authorship/license record, and public gate accepted |
 | CC-D15 | Close OD-001 consumer-bundle direction | none | Operator approves one bundle per consumer or explicitly defers it |
@@ -378,7 +387,7 @@ may proceed without deciding outcomes.
 |---|---|---|---|
 | CC-000 | Validated workstream and integration manifests, ledger schema, DAG and ownership checks | `design/contract_compiler/integration.schema.json`, `integration.json`, `workstreams/`, validation tests | none |
 | CC-001 | Sphinx with MyST, autodoc, doctest, strict links, rendered manifests | Docs configuration and docs CI | CC-000 |
-| CC-002 | Reproducible selected compiler environment | Materialized selected published root wheels and sdists, exact resolver artifact, unchanged deterministic ANTLR source-build proof, retained upstream `prefixcommons` derivative input, two byte-identical network-denied derived `0.1.12+malleus.1` wheels, payload and license identity proof, v3 derivation record, complete hash-pinned wheel-only runtime closure excluding test packages, retained wheelhouse, immutable OCI identities, platform verification, `pip check`, package and LinkML smokes, and clean offline-install attestation | CC-000, CC-D12 |
+| CC-002 | Reproducible selected compiler environment | Historical materialization evidence plus the current exact Linux `requirements.lock`, retained source and direct build inputs, immutable OCI identities, lock and input validation, semantic replay, package and LinkML smokes, and explicit refusal of any current complete-offline-cache claim | CC-000, CC-D12 |
 | CC-010 | Three-corpus protocol and independent oracle process | `conformance/contract_kernel/v0` manifests and checks | CC-000, CC-D02, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D11 |
 | CC-011 | Themed vertical source corpus | Themed source files only | CC-010, CC-D14, CC-018 |
 | CC-012 | Independently authored themed expected compilation artifacts | Themed source descriptors, import graph, declarations, bindings, elaboration, facts, and artifact oracle only | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011, CC-021, CC-022 |
@@ -586,8 +595,8 @@ The program is complete when all of the following are mechanically true:
    release records agree.
 7. Every incorporated upstream patch is reconstructable from retained source
    or patch artifacts, exact commits, ordered integration metadata, conflict
-   resolutions, locked build inputs, exact commands, retained wheels, and their
-   hashes.
+   resolutions, locked build inputs, exact commands, and exact artifact
+   hashes. Missing locked transitive artifacts may be fetched.
 8. Every public example is a projection of a tested fixture and uses only
    public APIs.
 

@@ -1985,7 +1985,6 @@ def test_steady_state_workflows_do_not_revalidate_retained_overseer_evidence() -
     assert [command.name for command in plan] == [
         "quality",
         "tests",
-        "compiler-tests",
         "ledger",
         "integration",
         "graph-recipe",
@@ -2356,7 +2355,7 @@ def test_cc002_integrated_candidate_binds_governed_checkpoint_lineage() -> None:
     } in selection_fact["references"]
 
 
-def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
+def test_od012_current_policy_supersedes_r3_without_erasing_history() -> None:
     state = load_ledger(OVERSEER)
     active_corrections = [
         entry for entry in state.entries if entry["entry_type"] == "CORRECTION"
@@ -2406,25 +2405,72 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         if entry["entry_type"] == "DECISION"
         and entry["data"]["decision_id"] == "OD-012"
     )
-    assert decision["entry_id"] == "OVR-000097"
+    assert decision["entry_id"] == "OVR-000300"
     assert decision["actor"] == {"id": "operator", "type": "OPERATOR"}
-    assert decision["data"]["supersedes_entry_id"] == "OVR-000081"
+    assert decision["data"]["supersedes_entry_id"] == "OVR-000097"
     assert decision["data"]["selected_option"] == (
-        "Internal provisional CC-002 use of one exact embedded CFGraph 0.2.1 wheel"
+        "Hash-pinned Linux lock with network-permitted retrieval of missing "
+        "transitive artifacts"
     )
-    assert decision["data"]["canonical_record_uris"] == []
-    assert decision["data"]["satisfies_workstreams"] == ["CC-002"]
+    assert decision["data"]["canonical_record_uris"] == [
+        "https://malleus.dev/contract-compiler/OD-012"
+    ]
+    assert decision["data"]["satisfies_workstreams"] == []
     assert {
         (reference["relation"], reference["type"], reference["target"])
         for reference in decision["references"]
     } >= {
-        ("EVIDENCES", "ENTRY", "OVR-000081"),
-        ("EVIDENCES", "ENTRY", "OVR-000093"),
-        ("EVIDENCES", "ENTRY", "OVR-000095"),
-        ("SATISFIES", "WORKSTREAM", "CC-002"),
+        ("EVIDENCES", "ENTRY", "OVR-000097"),
+        (
+            "AFFECTS",
+            "DOCUMENT",
+            "conformance/contract_compiler/v0/evidence/"
+            "CC-X01-environment-contract-correction.json",
+        ),
+        (
+            "EVIDENCES",
+            "COMMIT",
+            "6241b3d316de6a1c1c1f6726d2d94d90e773b014",
+        ),
+        (
+            "CANONICALIZES",
+            "CANONICAL_URI",
+            "https://malleus.dev/contract-compiler/OD-012",
+        ),
     }
 
-    exception_policy = canonical_json(decision["data"]).casefold()
+    current_policy = canonical_json(decision["data"]).casefold()
+    for required in (
+        "cpython 3.12.10 on linux x86_64 with cp312",
+        "requirements.lock pins the complete selected linux dependency closure",
+        "missing locked transitive artifacts may be downloaded",
+        "must match a hash in requirements.lock",
+        "does not claim a complete offline installation cache",
+        "linkml==1.11.1",
+        "linkml-runtime==1.11.1",
+        "does not mirror the linux-specific transitive compiler closure",
+        "historical r3 and cc-002 records remain immutable evidence",
+        "removed transitive wheelhouse is not restored",
+    ):
+        assert required in current_policy
+    for obsolete in (
+        "wheel-only offline closure",
+        "clean offline-install attestation",
+        "retained wheelhouse",
+    ):
+        assert obsolete not in current_policy
+
+    historical_decision = next(
+        entry for entry in state.entries if entry["entry_id"] == "OVR-000097"
+    )
+    assert historical_decision["data"]["supersedes_entry_id"] == "OVR-000081"
+    assert historical_decision["data"]["selected_option"] == (
+        "Internal provisional CC-002 use of one exact embedded CFGraph 0.2.1 wheel"
+    )
+    assert historical_decision["data"]["canonical_record_uris"] == []
+    assert historical_decision["data"]["satisfies_workstreams"] == ["CC-002"]
+
+    exception_policy = canonical_json(historical_decision["data"]).casefold()
     for required in (
         "cfgraph-0.2.1-py3-none-any.whl",
         "2256 bytes",
@@ -2663,7 +2709,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2681,13 +2727,13 @@ def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1875
+    assert len(canonical) == 1912
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 24",
+        "# Design graph revision: 25",
         "# Evidence cutoff: 2026-09-01",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -2704,7 +2750,7 @@ def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 24,",
+            "revision 25,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2715,10 +2761,10 @@ def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
     selects = URIRef(f"{mfg}selects")
     decision_date = URIRef(f"{mfg}decisionDate")
     assert set(canonical.objects(URIRef(f"{cc}OD-012"), decision_date)) == {
-        Literal("2026-08-25")
+        Literal("2026-09-01")
     }
     assert set(canonical.objects(URIRef(f"{cc}OD-012"), selects)) == {
-        URIRef(f"{mfg}LinkMLV1_11_1ReleaseCompilerBaselineR3")
+        URIRef(f"{mfg}LinkMLV1_11_1HashLockedCompilerBaselineR4")
     }
     accepted = {
         "OD-002": "ExactSlotOnlyExplicitAdoptionProfile",
@@ -3355,10 +3401,52 @@ def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
     ):
         assert (r3, binds, URIRef(f"{mfg}{selected}")) in canonical
 
+    r4 = URIRef(f"{mfg}LinkMLV1_11_1HashLockedCompilerBaselineR4")
+    assert (
+        r4,
+        URIRef(f"{mfg}supersedes"),
+        r3,
+    ) in canonical
+    assert {
+        str(value).removeprefix(mfg) for value in canonical.objects(r4, binds)
+    } >= {
+        "CPython3_12_10LinuxX86_64Cp312ReproducibilityTuple",
+        "HashPinnedNetworkPermittedCompilerEnvironmentProfile",
+        "LinkMLV1_11_1PublishedSdistRetentionSet",
+        "LinkMLV1_11_1PublishedWheelRetentionSet",
+        "LinkMLV1_11_1ReleaseCoordinate",
+        "RootSourceRetentionSeparateFromTransitiveBuildInputBoundary",
+    }
+    for historical_only in (
+        "Antlr4Python3Runtime4_9_3DeterministicWheelBuildProfile",
+        "Prefixcommons0_1_12Malleus1WheelDerivationProfile",
+        "FinalRuntimeClosureRemainsWheelOnlyBoundary",
+        "NetworkDeniedSourceBuildBoundary",
+        "CC002CompilerEnvironmentMaterializationAndAttestationBoundaryR3",
+    ):
+        assert (r4, binds, URIRef(f"{mfg}{historical_only}")) not in canonical
+
+    current_profile = URIRef(
+        f"{mfg}HashPinnedNetworkPermittedCompilerEnvironmentProfile"
+    )
+    assert {
+        str(value).removeprefix(mfg)
+        for value in canonical.objects(current_profile, binds)
+    } == {
+        "FetchedCompilerDependencyMustMatchLockHashBoundary",
+        "HistoricalOfflineCompilerEnvironmentEvidenceOnlyBoundary",
+        "MissingLockedCompilerDependencyMayUseNetworkBoundary",
+        "NormalPackageMetadataCarriesDirectLinkMLPinsNotLinuxClosureBoundary",
+        "RepositoryRetainedOfflineCompilerInstallNotClaimedBoundary",
+        "RetainedCompilerSourceAndDirectBuildInputsBoundary",
+        "compiler-environment-requirements-lock-sha256-"
+        "ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b",
+    }
+
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 402
+    assert len(statuses) == 410
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -3808,7 +3896,7 @@ def test_od007_protected_partition_contract_is_exact() -> None:
     d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
     for phrase in ("protected replay-derived governance partition", "epoch boundary"):
         assert phrase in d07
-    remaining = decisions.split("## Remaining decisions after revision 24", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 25", 1)[1]
     assert "| OD-007 |" not in remaining
 
 
@@ -4063,7 +4151,7 @@ def test_od010_contextual_reference_contract_is_exact() -> None:
         "referentially closed temporal views",
     ):
         assert phrase in d10
-    remaining = decisions.split("## Remaining decisions after revision 24", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 25", 1)[1]
     assert "| OD-010 |" not in remaining
 
     conformance = (

@@ -184,7 +184,38 @@ complete; `CC-D16` remains a separate exact-schema and byte-grammar workstream.
 
 ## OD-012: exact compiler baseline
 
-Decision state: ACCEPTED, release-first baseline R3, 2026-08-25
+Decision state: ACCEPTED, hash-locked network-permitted baseline R4, 2026-09-01
+
+The current guarantee is deliberately small:
+
+> For the exact Linux compiler conformance environment, Malleus retains a
+> hash-pinned lock plus source and direct build inputs. Missing transitive
+> packages may be downloaded and must match their hashes. Malleus no longer
+> claims installation from repository-retained bytes without network access.
+> For compiler dependencies, normal cross-platform package metadata pins only
+> the direct LinkML compatibility requirement.
+
+`requirements.lock` is the exact Linux conformance closure. It pins one
+accepted artifact hash for every selected distribution. A clean conformance
+run may fetch a missing artifact, but the fetched bytes must match that lock.
+`pyproject.toml` serves a different purpose: for the compiler it pins only the
+direct `linkml==1.11.1` and `linkml-runtime==1.11.1` compatibility
+requirements. It also declares Malleus's ordinary non-compiler runtime
+dependencies; it does not mirror the Linux-specific transitive compiler lock.
+
+The repository retains the selected LinkML source and direct wheels, the
+ANTLR source and build input, the upstream and derived PrefixCommons inputs,
+the locally produced direct wheels, and the historical acquisition and
+verification records. Those bytes are useful reproducibility evidence. They
+are not a promise that every locked transitive artifact is present locally.
+
+The R1 through R3 material below remains immutable historical evidence of the
+completed offline experiment. R4 supersedes only its current dependency
+availability policy. It does not erase the experiment, change the selected
+LinkML release or Linux tuple, or require the removed transitive wheelhouse to
+be restored.
+
+### Historical R1 through R3 experiment record
 
 The selected research baseline is the published LinkML `v1.11.1` release at
 provenance commit `a7ed3e4cbb19731f072d0d90b6d52f7d822569ee`. This selects
@@ -345,7 +376,7 @@ The reproducibility tuple is CPython 3.12.10, Linux x86_64, and `cp312`.
 It identifies one environment that must reproduce the compiler. It does not
 shrink Malleus's runtime or CI support matrix.
 
-The selected KISS lock profile uses pip 25.0.1 and its published
+The historical R3 lock profile used pip 25.0.1 and its published
 `pip-25.0.1-py3-none-any.whl`, SHA-256
 `c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f`.
 The final requirements manifest must pin every distribution and artifact hash,
@@ -375,12 +406,15 @@ separate governed baseline revision, exact source and artifact identities, and
 the same acceptance suite before an explicit switch.
 
 Canonical decision record:
-`https://malleus.dev/contract-compiler/OD-012`. Overseer record:
-[`OVR-000072`](overseer/entries/OVR-000072.json), replacing corrected R2 record
-[`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
-materialization remains pending.
+`https://malleus.dev/contract-compiler/OD-012`. Current overseer record:
+[`OVR-000300`](overseer/entries/OVR-000300.json), superseding the final
+historical R3 policy refinement in
+[`OVR-000097`](overseer/entries/OVR-000097.json). Earlier R3 decision evidence,
+including [`OVR-000072`](overseer/entries/OVR-000072.json), remains retained.
+`CC-D12` and the historical CC-002 experiment remain complete. R4 requires no
+new wheelhouse materialization.
 
-## Accepted directions in canonical graph revision 24
+## Accepted directions in canonical graph revision 25
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -1823,7 +1857,7 @@ explicit workstream card owns these four slices and their RED/GREEN evidence.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-017`.
 
-## Remaining decisions after revision 24
+## Remaining decisions after revision 25
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
