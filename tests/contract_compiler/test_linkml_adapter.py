@@ -1153,9 +1153,9 @@ def test_adapter_policy_comparison_is_type_exact(mutation: str) -> None:
     elif mutation == "min-fields-bool":
         profile["node_shapes"]["condition"]["min_fields"] = True
     else:
-        profile["node_shapes"]["adoption_annotations"]["fields"]["adopts"][
-            "values"
-        ] = [1]
+        profile["node_shapes"]["adoption_annotations"]["fields"]["adopts"]["values"] = [
+            1
+        ]
 
     with pytest.raises(LinkMLAdapterRefusal) as caught:
         parse_linkml_module(

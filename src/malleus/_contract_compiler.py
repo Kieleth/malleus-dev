@@ -2311,6 +2311,7 @@ def compile_linkml_contract(
         parsed = malleus._contract_linkml_adapter._parse_linkml_source(
             source,
             module_id=locator,
+            profile=active.data,
         )
         schema = parsed.plain
         contract = _LinkMLAdapter(schema, active).adapt()
