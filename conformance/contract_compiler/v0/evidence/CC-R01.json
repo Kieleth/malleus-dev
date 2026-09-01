@@ -1,0 +1,118 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 12588,
+      "path": "src/malleus/_contract_source.py",
+      "sha256": "sha256:dd8861dedbd26c2aa33600865683563fb732a6d3c749f2817905824e0bc717d2"
+    },
+    {
+      "byte_length": 33946,
+      "path": "tests/contract_compiler/test_retained_source_boundary.py",
+      "sha256": "sha256:9f69ae6b4f57823e92e924704534cdd0644078085a2cf2460acddc45a04ab8b8"
+    }
+  ],
+  "base_commit": "dbc5eaee8493275b3d0c468b77f5567711507cd8",
+  "checks": [
+    {
+      "check_id": "ccr01-authority-scope",
+      "method": "Inspect the activation commit, assigned owner, exact file scopes, current history union, and unrelated worktree changes before freezing evidence.",
+      "observed": "Activation is dbc5eaee8493275b3d0c468b77f5567711507cd8. The candidate changes only the owned runtime, fixed test, verification report, and append-only worker ledger. Pre-existing research, design, and handover changes remain untouched and excluded.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-tdd-history",
+      "method": "Inspect the append-only Git and worker-ledger sequence, including corrections, then mechanically verify the fixed tests-before-production coordinates.",
+      "observed": "The API-only RED and combined test/GREEN were superseded. Corrected RED 8a297ed has complete fixed test blob 38aa69c and no production module; corrected GREEN 16d11cc restores the module with identical tests. Later RED 3123140 exposes RecursionError before GREEN 57ff2db replaces recursion with a stack.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-private-executor-api",
+      "method": "Inspect the exact private module surface and invoke it only through one selected resolver, one injected import reader, and one explicit ordering strategy.",
+      "observed": "The runtime exposes immutable request, retained-source, provenance, observation, edge, closure, and typed-refusal values plus narrow resolver, reader, and ordering protocols. It has no fallback resolver, registry, frontend parser, public export, or adapter selection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-exact-retention",
+      "method": "Resolve opaque byte-bearing sources and compare retained bytes, byte length, engine-computed SHA-256, media type, locator, and resolver-selection provenance.",
+      "observed": "Exact returned bytes and media type are retained without decoding or normalization. The engine computes length and digest. Root request provenance is separate from import-edge provenance, and every retained source and edge binds the exact resolver selection.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-recursive-closure",
+      "method": "Build nested, duplicate-import, and diamond closures while recording resolver calls, reader calls, module observations, authored ordinals, and import edges.",
+      "observed": "Every authored edge is resolved, including a second edge to an already observed locator. Each equal locator is read once after byte and media equality. Duplicate and diamond edges remain distinct with zero-based authored ordinals and exact parent, literal, child, and resolver provenance.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-observation-consistency",
+      "method": "Vary exact locator, bytes, digest collision substitute, and media type across repeated resolver observations.",
+      "observed": "Same locator with different bytes refuses as LOCATOR_CONTENT_CONFLICT. Same locator and bytes with different media type refuses as LOCATOR_OBSERVATION_CONFLICT. Comparisons use bytes and media type directly. Distinct locators with identical bytes remain distinct modules.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-cycle-precedence",
+      "method": "Exercise self, two-node, and longer cycles, plus content and media conflicts on cycle-closing resolver answers.",
+      "observed": "Every directed cycle refuses with the exact repeated-locator lineage and failed import request. Resolver observation consistency completes before cycle detection, so changed bytes or media type refuse as observation conflicts rather than being masked by a cycle.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-ordering-policy",
+      "method": "Compare canonical, traversal, and caller-supplied sort-key results, including a direct production call with ordering omitted.",
+      "observed": "Omitting ordering selects canonical module and import-edge presentation. Traversal and caller sort keys produce their exact requested tuple order. All strategies retain identical module and edge membership, authored ordinals, bytes, media types, and provenance.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-atomic-refusal",
+      "method": "Inject collaborator refusals, malformed exact types and fields, unexpected exceptions, invalid root and resolver-selection values, conflicts, and cycles.",
+      "observed": "Known collaborator failures become typed refusals carrying only reason, failed request, and locator lineage. No refusal exposes partial sources, modules, edges, or closure. Unexpected collaborator exceptions remain unchanged. Exact-type checks reject mutable subclasses before field access.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-host-depth-independence",
+      "method": "Build an acyclic 1,201-module import chain, beyond the normal CPython recursion limit, and inspect the implementation for recursive visits.",
+      "observed": "The complete closure contains 1,201 modules and 1,200 edges. An explicit traversal stack preserves depth-first observation and edge order; no recursive visit remains and no raw RecursionError occurs.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-neutrality-isolation",
+      "method": "Parse production imports, scan production source for forbidden frontend, transport, fixture, and regex tokens, and replace ambient file and network entry points with failing probes.",
+      "observed": "Production uses only dataclasses, enum, hashlib, and typing plus future annotations. It contains no regex, syntax adapter, fixture token, path or network policy, and performs no ambient I/O. All source answers and import literals come from injected collaborators.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-focused-tests",
+      "method": "Run the complete retained-source boundary test module and scoped Ruff check and format verification.",
+      "observed": "The focused suite passed 40 tests. Ruff check and format verification passed for the runtime and fixed test, and git diff checking reported no whitespace errors.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-regression",
+      "method": "Run .venv/bin/python scripts/ci.py test at the frozen pre-evidence code and test boundary.",
+      "observed": "Quality passed; configured pytest passed 1,943 tests with 2 skipped; contract-compiler passed 284; overseer validated 288 entries; integration validated 72 workstreams, 34 cards, and 4 selections; GraphRecipe passed 40.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-independent-audit",
+      "method": "Submit the exact implementation and tests to an independent read-only audit, repair each reported class, and re-audit the frozen bytes.",
+      "observed": "Audit exposed the host recursion boundary, missing edge-order assertions, and untested omitted-ordering default. Each gained a hard regression. The final code and test audit cleared the explicit-stack behavior and all 40 focused tests with no remaining P0-P2 finding.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-package-boundary",
+      "method": "Compare the worker card and exact candidate with package configuration, wheel, sdist, installed-data, public API, image, and release surfaces.",
+      "observed": "PACKAGE NOT_APPLICABLE for this worker candidate. It owns research-local closure code, tests, evidence, and ledger only. It changes no package configuration or public export and does not prove wheel exclusion; that exclusion is a separate root-owned post-candidate gate.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The formal shared corpus is empty. This is an eligible generic candidate only, not three-corpus conformance, publication, integration, or CC-R01 completion.",
+    "The API is private research infrastructure, not a public Python API, wire format, compatibility promise, syntax adapter, resolver implementation, or import-reader implementation.",
+    "Resource ceilings other than removal of the host recursion boundary remain deferred. Callers own deterministic, mutually comparable ordering keys; unexpected key errors propagate unchanged.",
+    "The executor owns no syntax meaning, locator normalization, filesystem or network access, fallback resolution, semantic compilation, policy selection, fixture meaning, package configuration, or release surface.",
+    "A root-owned post-candidate package change must exclude the private module from wheels while retaining source-distribution development material. This report does not claim or prove that later change.",
+    "Pre-existing modified research files and untracked design and handover files remain unrelated, unmodified, and excluded from this candidate."
+  ],
+  "recorded_at": "2026-09-01T15:47:18Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R01"
+}
