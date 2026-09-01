@@ -150,15 +150,26 @@ class _ReferenceSite:
 
 
 @dataclass(frozen=True, slots=True)
+class _QualificationPath:
+    kind: str
+    pattern: tuple[str, ...]
+    identity: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class _Profile:
     profile_id: str
     digest: str
     separator: str
-    container_tokens: tuple[str, ...]
+    qualification_paths: tuple[_QualificationPath, ...]
+    input_support_profile: str
+    input_profile_sha256: str
     global_paths: tuple[str, ...]
     prefix_map_field: str
     trusted_module_id: str
     trusted_schema_id: str
+    trusted_byte_length: int
+    trusted_sha256: str
     builtins: tuple[_Builtin, ...]
     adoption: _AdoptionPolicy
     reference_sites: tuple[_ReferenceSite, ...]
@@ -286,6 +297,7 @@ def _load_profile() -> _Profile:
         {
             "adoption",
             "canonicalization",
+            "declared_input",
             "global_declaration_paths",
             "prefix_map_field",
             "profile_id",
@@ -306,7 +318,7 @@ def _load_profile() -> _Profile:
     qualification = _mapping(root["qualification"], "qualification")
     _exact_keys(
         qualification,
-        {"container_tokens", "operation", "separator"},
+        {"declaration_paths", "operation", "separator"},
         "qualification",
     )
     if qualification["operation"] != "delimiter_join":
@@ -315,8 +327,46 @@ def _load_profile() -> _Profile:
     if separator != "/":
         raise _profile_refusal("profile qualification separator is unsupported")
 
+    path_values = qualification["declaration_paths"]
+    if type(path_values) is not list or not path_values:
+        raise _profile_refusal("profile declaration_paths must be a nonempty array")
+    qualification_paths: list[_QualificationPath] = []
+    for index, value in enumerate(path_values):
+        spec = _mapping(value, f"declaration_paths[{index}]")
+        _exact_keys(
+            spec,
+            {"identity", "kind", "pattern"},
+            f"declaration_paths[{index}]",
+        )
+        kind = _string(spec["kind"], f"declaration_paths[{index}].kind")
+        pattern = _strings(spec["pattern"], f"declaration_paths[{index}].pattern")
+        identity = _strings(spec["identity"], f"declaration_paths[{index}].identity")
+        variables = {token for token in pattern if token.startswith("$")}
+        if (
+            kind not in _DECLARATION_KINDS
+            or "$name" not in variables
+            or not set(identity) <= variables
+        ):
+            raise _profile_refusal("profile declaration path is unsupported")
+        qualification_paths.append(
+            _QualificationPath(kind=kind, pattern=pattern, identity=identity)
+        )
+
+    declared_input = _mapping(root["declared_input"], "declared_input")
+    _exact_keys(
+        declared_input,
+        {"profile_sha256", "support_profile"},
+        "declared_input",
+    )
+
     trusted = _mapping(root["trusted_module"], "trusted_module")
-    _exact_keys(trusted, {"module_id", "schema_id"}, "trusted_module")
+    _exact_keys(
+        trusted,
+        {"byte_length", "module_id", "schema_id", "sha256"},
+        "trusted_module",
+    )
+    if type(trusted["byte_length"]) is not int or trusted["byte_length"] < 0:
+        raise _profile_refusal("profile trusted byte_length is malformed")
 
     builtin_values = root["trusted_builtins"]
     if type(builtin_values) is not list or not builtin_values:
@@ -411,13 +461,19 @@ def _load_profile() -> _Profile:
         profile_id=_string(root["profile_id"], "profile_id"),
         digest=f"sha256:{sha256(raw).hexdigest()}",
         separator=separator,
-        container_tokens=_strings(
-            qualification["container_tokens"], "qualification.container_tokens"
+        qualification_paths=tuple(qualification_paths),
+        input_support_profile=_string(
+            declared_input["support_profile"], "declared_input.support_profile"
+        ),
+        input_profile_sha256=_string(
+            declared_input["profile_sha256"], "declared_input.profile_sha256"
         ),
         global_paths=_strings(root["global_declaration_paths"], "global paths"),
         prefix_map_field=_string(root["prefix_map_field"], "prefix_map_field"),
         trusted_module_id=_string(trusted["module_id"], "trusted module_id"),
         trusted_schema_id=_string(trusted["schema_id"], "trusted schema_id"),
+        trusted_byte_length=trusted["byte_length"],
+        trusted_sha256=_string(trusted["sha256"], "trusted sha256"),
         builtins=tuple(builtins),
         adoption=adoption,
         reference_sites=tuple(sites),
@@ -477,16 +533,29 @@ def _validate_authored(value: object, path: tuple[str | int, ...] = ()) -> None:
 def _qualified_identifier(
     schema_id: str, declaration: DeclaredDeclaration, profile: _Profile
 ) -> str:
-    parts = tuple(
-        token for token in declaration.path if token not in profile.container_tokens
-    )
-    if not parts or parts[-1] != declaration.name:
-        raise _input_refusal(
-            "declaration path cannot be qualified",
-            source_identifier=declaration.identifier,
-            path=declaration.path,
+    for path_spec in profile.qualification_paths:
+        if path_spec.kind != declaration.kind or len(path_spec.pattern) != len(
+            declaration.path
+        ):
+            continue
+        variables: dict[str, str] = {}
+        matched = True
+        for expected, actual in zip(path_spec.pattern, declaration.path, strict=True):
+            if expected.startswith("$"):
+                prior = variables.setdefault(expected, actual)
+                matched = matched and prior == actual
+            else:
+                matched = matched and expected == actual
+        if not matched or variables.get("$name") != declaration.name:
+            continue
+        return profile.separator.join(
+            (schema_id, *(variables[token] for token in path_spec.identity))
         )
-    return profile.separator.join((schema_id, *parts))
+    raise _input_refusal(
+        "declaration path cannot be qualified",
+        source_identifier=declaration.identifier,
+        path=declaration.path,
+    )
 
 
 def _validate_source(source: object, module_id: str) -> None:
@@ -556,6 +625,55 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
         ):
             raise _input_refusal("declared module is malformed")
         declared_ids.add(module.module_id)
+        if (
+            module.support_profile != profile.input_support_profile
+            or module.profile_sha256 != profile.input_profile_sha256
+        ):
+            raise _input_refusal(
+                "declared module was produced under another adapter profile",
+                module_id=module.module_id,
+            )
+        if module.trusted:
+            expected_declarations = tuple(
+                (
+                    builtin.name,
+                    builtin.identifier,
+                    builtin.kind,
+                    index,
+                    ("trusted_builtins", builtin.name),
+                    AuthoredMapping(()),
+                )
+                for index, builtin in enumerate(profile.builtins)
+            )
+            observed_declarations = tuple(
+                (
+                    declaration.name,
+                    declaration.identifier,
+                    declaration.kind,
+                    declaration.ordinal,
+                    declaration.path,
+                    declaration.body,
+                )
+                for declaration in module.declarations
+            )
+            if (
+                module.module_id != profile.trusted_module_id
+                or module.schema_id != profile.trusted_schema_id
+                or module.source.byte_length != profile.trusted_byte_length
+                or module.source.sha256 != profile.trusted_sha256
+                or module.authored_imports
+                or module.root != AuthoredMapping(())
+                or observed_declarations != expected_declarations
+            ):
+                raise _input_refusal(
+                    "trusted module does not match the exact profile authority",
+                    module_id=module.module_id,
+                )
+        elif module.module_id == profile.trusted_module_id:
+            raise _input_refusal(
+                "trusted module identity cannot be treated as ordinary source",
+                module_id=module.module_id,
+            )
         observation = observations.get(module.module_id)
         if (
             observation is None

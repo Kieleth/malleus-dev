@@ -3,15 +3,39 @@
   "profile_id": "malleus.contract-binding/private-v0",
   "canonicalization": "malleus.canonical-json/compact-sorted-key-utf8-no-newline/v0",
   "qualification": {
-    "container_tokens": [
-      "types",
-      "enums",
-      "slots",
-      "classes",
-      "attributes"
+    "declaration_paths": [
+      {
+        "kind": "Scalar",
+        "pattern": ["types", "$name"],
+        "identity": ["$name"]
+      },
+      {
+        "kind": "Enum",
+        "pattern": ["enums", "$name"],
+        "identity": ["$name"]
+      },
+      {
+        "kind": "Slot",
+        "pattern": ["slots", "$name"],
+        "identity": ["$name"]
+      },
+      {
+        "kind": "Class",
+        "pattern": ["classes", "$name"],
+        "identity": ["$name"]
+      },
+      {
+        "kind": "Slot",
+        "pattern": ["classes", "$parent", "attributes", "$name"],
+        "identity": ["$parent", "$name"]
+      }
     ],
     "operation": "delimiter_join",
     "separator": "/"
+  },
+  "declared_input": {
+    "support_profile": "malleus.linkml/private-v0",
+    "profile_sha256": "13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287"
   },
   "global_declaration_paths": [
     "types",
@@ -22,7 +46,9 @@
   "prefix_map_field": "prefixes",
   "trusted_module": {
     "module_id": "linkml:types",
-    "schema_id": "https://w3id.org/linkml/types"
+    "schema_id": "https://w3id.org/linkml/types",
+    "byte_length": 7296,
+    "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
   },
   "trusted_builtins": [
     {
