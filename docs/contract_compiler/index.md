@@ -15,6 +15,29 @@ neutral outputs, and provenance. Sphinx must surface that contract without
 redefining it. Another adapter may replace LinkML only behind the same explicit
 neutral output contract.
 
+## Private Greenhouse bootstrap
+
+The first executable compiler seam is deliberately smaller than the formal
+compiler runway. It accepts retained source bytes plus an explicit locator and
+first adapts them into an explicit neutral contract, then encodes that contract
+as immutable canonical facts. Its LinkML shapes, field classifications,
+defaults, terms, constraints, lowering operations, and structural identity
+domains live in one closed machine-readable profile. Python validates and
+dispatches those operations. Another implementation can execute the same
+profile and neutral contract without importing Python policy or the legacy
+ontology registry.
+
+The bootstrap proves only the six neutral Greenhouse cases: explicit defaults,
+numeric lexical equivalence, presentation changes, source reordering, one real
+constraint change, and atomic refusal of an unknown root field. It does not
+claim recursive authored imports, the complete edge-case corpus, direct-fact
+parity, an `EffectiveContract`, a protocol-machine program, a reloadable
+artifact, complete dependency identity, packaging, or public API stability. It
+remains excluded from the
+wheel until the formal stages harden those boundaries and the promotion gate
+accepts them. A later implementation must replace or extend this seam directly,
+not add a fallback to the legacy registry.
+
 ## Local CI and compiler TDD
 
 Run the repository's complete local gate with one fixed command:

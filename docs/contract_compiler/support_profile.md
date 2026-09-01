@@ -11,6 +11,47 @@ implement and characterize the adapter. Public namespace placement, public
 adapter docstrings, stable public fact identifiers, and public documentation
 remain blocked on `CC-D09` and `OD-009`.
 
+The private Greenhouse bootstrap keeps executable policy in
+`src/malleus/_contract_compiler_profile.json`. That JSON is an internal
+research input, not a public artifact grammar. It declares the accepted source
+shapes and the small lowering plan that produces a frontend-neutral contract.
+The adjacent private Python module validates and executes those declarations
+from caller-supplied bytes and has no source resolver or legacy-registry
+fallback. Injected profiles and other frontend adapters remain future work,
+not a compatibility promise. Both files remain outside the built distribution
+until the full resolver, parser, binder, elaborator, validator, dependency
+identity, artifact, and promotion gates are satisfied.
+
+### Private lowering instruction set
+
+The JSON profile is the authority for this bootstrap's semantic choices. The
+Python module implements a closed eight-operation instruction set:
+
+| Operation | Exact effect |
+|---|---|
+| `validate_imports` | Accept only the declared retained import token. Never resolve a path or network resource. |
+| `validate_shared_namespace` | Refuse a declaration key repeated across any named source collection. |
+| `declare_direct_seed_scalars` | Declare each custom scalar and bind it directly to one declared trusted builtin. |
+| `declare_enums` | Declare each enum and emit its ordered set of permissible values. |
+| `declare_slots` | Declare global slots and class-local attributes, then apply profile defaults, rules, constraints, resolvers, and predicates. |
+| `declare_shallow_classes` | Declare classes and the bounded parent and mixin relations selected by the profile. Refuse unproved inherited semantics. |
+| `lower_slot_uses` | Create profile-identified slot-use declarations with profile-selected kinds, predicates, and structural identity roles. |
+| `lower_flat_exactly_one` | Create the one-level exactly-one group, alternatives, and conditions selected by the profile. All kinds, predicates, range spaces, and structural identity roles are operands. |
+
+The profile also declares the ASCII key parser, symbol join operation and
+separator, ordered range-resolution spaces, resolved kinds and predicates,
+field classifications, canonical defaults, and structural hash domains,
+prefixes, and member-role maps. An interpreter may contain dispatch and data
+structure code, but changing any of those choices requires changing the
+profile and therefore its digest. Unknown operations, operands, policy members,
+or non-executable combinations refuse before source coverage can hide them.
+
+This instruction set is internal evidence, not a public extension API. A future
+frontend adapter or injected profile must either execute this same neutral
+contract boundary or introduce a separately versioned, documented instruction
+set and conformance suite. Sphinx will surface that public developer contract
+only after the promotion decision.
+
 ## Why this is a subset
 
 Malleus needs the LinkML constructs used by its current semantics and governed

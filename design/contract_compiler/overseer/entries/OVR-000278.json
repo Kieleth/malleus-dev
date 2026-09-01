@@ -1,0 +1,57 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-003",
+      "OD-008",
+      "OD-009",
+      "CC-R02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:60cf51240f1e97dda01970eea7fe510a2801b93232856eb44cf10aeedc682d04",
+        "before_digest": "sha256:3a50a176434f5abd2db61cbb7039cf62c83f25ac3bb36a04cc60c071c86ba91c",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:4323c4c76fd241426d4c5f6a9f59c170344860a1f2c7f3e3fa4514bb084dbba2",
+        "before_digest": "sha256:d62c9a4dfcd3d90c4763798acbc1382a94191c17f517f1a511f71e30b7101b3b",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:5dc962b3c7971c9a1cb7f11861a6d87933abf6764e31772035af5e9ed17878b1",
+        "before_digest": "sha256:a85ca786bf288ecbe374b5b4c3db5c487d9a74acab6f8ba443334ad08a3b6c79",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/support_profile.md"
+      }
+    ]
+  },
+  "entry_hash": "sha256:dabfe7b46434c5a390dc63964209ad61ffd5315b38cf2750f94985eff1ea8036",
+  "entry_id": "OVR-000278",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2eadc8a6bb366abafabc8ae90c89337b9dc4d8a9d8565b4b29b3773232720352",
+  "recorded_at": "2026-09-01T04:11:03Z",
+  "references": [
+    {"relation": "DEFINES", "target": "pyproject.toml", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/contract_compiler/index.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/contract_compiler/support_profile.md", "type": "DOCUMENT"},
+    {"relation": "AFFECTS", "target": "OD-003", "type": "DECISION"},
+    {"relation": "AFFECTS", "target": "OD-008", "type": "DECISION"},
+    {"relation": "AFFECTS", "target": "OD-009", "type": "DECISION"},
+    {"relation": "AFFECTS", "target": "CC-R02", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 278,
+  "subject": {
+    "id": "contract-compiler-greenhouse-private-bootstrap",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private Greenhouse compiler bootstrap and distribution exclusion.",
+  "why": "This byte-binds the private source-to-neutral-contract seam, its closed internal instruction set, and its package exclusion without claiming formal compiler completion, a public adapter, a reloadable EffectiveContract artifact, or a shipped compatibility surface."
+}
