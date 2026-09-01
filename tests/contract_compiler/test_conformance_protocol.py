@@ -30,9 +30,7 @@ PROTOCOL_FILES = (
     "conformance/contract_kernel/v0/corpus.schema.json",
     "conformance/contract_kernel/v0/stage-matrix.json",
 )
-REQUIREMENTS_PATH = (
-    "conformance/contract_kernel/v0/requirements/scenarios.json"
-)
+REQUIREMENTS_PATH = "conformance/contract_kernel/v0/requirements/scenarios.json"
 LAYOUT = {
     "themed_vertical": {
         "root": "themed_fixture",
@@ -48,12 +46,8 @@ LAYOUT = {
     },
     "feature_isolation": {
         "root": "feature_cases",
-        "input_prefixes": [
-            "conformance/contract_kernel/v0/feature_cases/inputs"
-        ],
-        "oracle_prefixes": [
-            "conformance/contract_kernel/v0/feature_cases/oracle"
-        ],
+        "input_prefixes": ["conformance/contract_kernel/v0/feature_cases/inputs"],
+        "oracle_prefixes": ["conformance/contract_kernel/v0/feature_cases/oracle"],
     },
     "neutral_domain": {
         "root": "neutral_domain",
@@ -67,6 +61,80 @@ LAYOUT = {
         ],
     },
 }
+PUBLISHED_CASES = {
+    "themed_vertical": [
+        {
+            "case_id": "quiet-bell-archive",
+            "input_files": [
+                "conformance/contract_kernel/v0/themed_fixture/sources/modules/activity.yaml",
+                "conformance/contract_kernel/v0/themed_fixture/sources/modules/entities.yaml",
+                "conformance/contract_kernel/v0/themed_fixture/sources/modules/foundation.yaml",
+                "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.0/quiet_bell.yaml",
+                "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.1/quiet_bell.yaml",
+                "conformance/contract_kernel/v0/themed_fixture/sources/v1.1.0/quiet_bell.yaml",
+            ],
+            "oracle_files": [
+                "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json"
+            ],
+            "scenario_ids": ["linkml-support-profile"],
+        }
+    ],
+    "feature_isolation": [
+        {
+            "case_id": "feature-isolation-suite",
+            "input_files": [
+                "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/owner.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/redeclaration.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/adopter.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/owner.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/default_range_explicit.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/numeric_bounds_equivalent_lexemes.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_baseline.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_changed.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/positive/valid_explicit_false.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/attribute_slot_usage.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ab.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ba.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/default_range.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/explicit_false.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/numeric_bounds.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/parent_mixin_precedence.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/repeated_mixin.json",
+                "conformance/contract_kernel/v0/feature_cases/inputs/x01/simple_parity.json",
+            ],
+            "oracle_files": [
+                "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json"
+            ],
+            "scenario_ids": ["linkml-support-profile"],
+        }
+    ],
+    "neutral_domain": [
+        {
+            "case_id": "neutral-greenhouse",
+            "input_files": [
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml",
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml",
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml",
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml",
+                "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml",
+            ],
+            "oracle_files": [
+                "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json"
+            ],
+            "scenario_ids": [
+                "atomic-fact-contract",
+                "linkml-support-profile",
+            ],
+        }
+    ],
+}
+PUBLISHED_CORPUS_SHA256 = (
+    "sha256:6bb886ec743b3f0029692084da8208c9cbc02a41313d2b81b70c0f68a9868476"
+)
+PUBLISHED_CHECKSUMS_SHA256 = (
+    "sha256:222b77fa7ed7d8fdfe7235b2481b67c128c92c8856162f431e6432fd42d9ed30"
+)
 STAGE_TESTS = {
     "CC-R01": ["AT-001"],
     "CC-R02": ["AT-002"],
@@ -144,8 +212,10 @@ def _validate_schema(document: dict[str, Any], schema: dict[str, Any]) -> None:
 
 
 def _identifier(value: str, context: str) -> None:
-    if not value or not value.isascii() or any(
-        character not in IDENTIFIER_CHARACTERS for character in value
+    if (
+        not value
+        or not value.isascii()
+        or any(character not in IDENTIFIER_CHARACTERS for character in value)
     ):
         raise ProtocolError(f"{context}: invalid identifier {value!r}")
 
@@ -174,8 +244,10 @@ def _under_any(value: str, roots: list[str], context: str) -> None:
 def _digest(value: str, context: str) -> None:
     prefix = "sha256:"
     body = value.removeprefix(prefix)
-    if not value.startswith(prefix) or len(body) != 64 or any(
-        character not in HEX for character in body
+    if (
+        not value.startswith(prefix)
+        or len(body) != 64
+        or any(character not in HEX for character in body)
     ):
         raise ProtocolError(f"{context}: invalid SHA-256 digest")
 
@@ -211,14 +283,10 @@ def _members(corpus: dict[str, Any]) -> set[str]:
             for scenario_id in case["scenario_ids"]:
                 _identifier(scenario_id, f"{case['case_id']} scenario_id")
             for path in case["input_files"]:
-                _under_any(
-                    path, item["input_prefixes"], f"{case['case_id']} input"
-                )
+                _under_any(path, item["input_prefixes"], f"{case['case_id']} input")
                 paths.append(path)
             for path in case["oracle_files"]:
-                _under_any(
-                    path, item["oracle_prefixes"], f"{case['case_id']} oracle"
-                )
+                _under_any(path, item["oracle_prefixes"], f"{case['case_id']} oracle")
                 paths.append(path)
     if len(paths) != len(set(paths)):
         raise ProtocolError("normative membership contains a duplicate path")
@@ -251,7 +319,9 @@ def _validate_checksums(
             or not candidate.is_file()
             or not resolved.is_relative_to(repository.resolve())
         ):
-            raise ProtocolError(f"{path}: normative member is not a regular in-repo file")
+            raise ProtocolError(
+                f"{path}: normative member is not a regular in-repo file"
+            )
         source = candidate.read_bytes()
         if record["byte_length"] != len(source):
             raise ProtocolError(f"{path}: byte length mismatch")
@@ -339,8 +409,7 @@ def test_protocol_bootstrap_is_closed_empty_and_valid() -> None:
     assert [item["stage"] for item in matrix["stages"]] == list(STAGES)
     assert all(item["corpora"] == list(CORPUS_IDS) for item in matrix["stages"])
     assert {
-        item["stage"]: item["assigned_acceptance_tests"]
-        for item in matrix["stages"]
+        item["stage"]: item["assigned_acceptance_tests"] for item in matrix["stages"]
     } == STAGE_TESTS
     assert matrix["cumulative_rule"] == "EACH_STAGE_RERUNS_PRIOR_SLICES"
     assert matrix["whole_pipeline_obligations"] == [
@@ -352,13 +421,38 @@ def test_protocol_bootstrap_is_closed_empty_and_valid() -> None:
     _validate_checksums(REPOSITORY, corpus, checksums)
 
 
+def test_reviewed_corpus_publication_is_exact() -> None:
+    schema, corpus, _, checksums = _documents()
+
+    assert corpus["shared_requirements"]["state"] == "LISTED"
+    assert {
+        item["corpus_id"]: item["cases"] for item in corpus["corpora"]
+    } == PUBLISHED_CASES
+    assert len(checksums["files"]) == 37
+    assert (
+        "sha256:" + hashlib.sha256(CORPUS_PATH.read_bytes()).hexdigest()
+        == PUBLISHED_CORPUS_SHA256
+    )
+    assert (
+        "sha256:" + hashlib.sha256(CHECKSUMS_PATH.read_bytes()).hexdigest()
+        == PUBLISHED_CHECKSUMS_SHA256
+    )
+    listed_paths = {
+        path
+        for cases in PUBLISHED_CASES.values()
+        for case in cases
+        for field in ("input_files", "oracle_files")
+        for path in case[field]
+    }
+    assert all("/traces/" not in path for path in listed_paths)
+    assert all("/direct-input/" not in path for path in listed_paths)
+    _validate_requirements_member(REPOSITORY, schema, corpus)
+    _validate_checksums(REPOSITORY, corpus, checksums)
+
+
 def _all_keys(value: Any) -> list[str]:
     if isinstance(value, dict):
-        return [
-            key
-            for name, item in value.items()
-            for key in (name, *_all_keys(item))
-        ]
+        return [key for name, item in value.items() for key in (name, *_all_keys(item))]
     if isinstance(value, list):
         return [key for item in value for key in _all_keys(item)]
     return []
@@ -704,9 +798,7 @@ def test_membership_checksum_bijection_and_raw_byte_integrity(tmp_path: Path) ->
         target.write_bytes((REPOSITORY / path).read_bytes())
         controls.append(target)
     path = "conformance/contract_kernel/v0/feature_cases/inputs/case-1.json"
-    oracle_path = (
-        "conformance/contract_kernel/v0/feature_cases/oracle/case-1.json"
-    )
+    oracle_path = "conformance/contract_kernel/v0/feature_cases/oracle/case-1.json"
     requirements_path = tmp_path / REQUIREMENTS_PATH
     requirements_path.parent.mkdir(parents=True)
     requirements_path.write_bytes(
