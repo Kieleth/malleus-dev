@@ -595,7 +595,7 @@ def test_retained_source_and_adapter_regressions_feed_the_binder_unchanged() -> 
     assert result.declarations[0].path == ("classes", "Record")
 
 
-def test_binder_has_no_io_parser_fallback_regex_or_fixture_policy() -> None:
+def test_binder_has_only_its_adjacent_profile_io_and_no_parser_fallback() -> None:
     tree = ast.parse(BINDER.read_text(encoding="utf-8"))
     imported = {
         alias.name
@@ -617,7 +617,8 @@ def test_binder_has_no_io_parser_fallback_regex_or_fixture_policy() -> None:
     source = BINDER.read_text(encoding="utf-8")
 
     assert not {"re", "yaml", "linkml", "linkml_runtime"} & imported
-    assert not {"open", "read_bytes", "read_text", "resolve", "urlopen"} & calls
+    assert not {"open", "read_text", "resolve", "urlopen"} & calls
+    assert source.count("_PROFILE_PATH.read_bytes()") == 1
     assert "OntologyRegistry" not in source
     assert "Quiet Bell" not in source
     assert "Greenhouse" not in source
