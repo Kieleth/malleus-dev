@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "/Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q tests/contract_compiler && git diff --check && /Users/luis/Projects/malleus-dev/.venv/bin/ruff format --check src/malleus/_contract_linkml_adapter.py src/malleus/_contract_compiler.py tests/contract_compiler/test_linkml_adapter.py tests/contract_compiler/test_greenhouse_compiler.py && /Users/luis/Projects/malleus-dev/.venv/bin/ruff check src/malleus/_contract_linkml_adapter.py src/malleus/_contract_compiler.py tests/contract_compiler/test_linkml_adapter.py tests/contract_compiler/test_greenhouse_compiler.py",
+    "observed": "All 371 contract-compiler tests passed. Changed Python files were already formatted, scoped Ruff passed, and git diff checking found no whitespace errors.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:47399ac4b6d61e957cca46cdcaed8446047c564122dad8792ee40cb4511a54d7",
+  "entry_id": "CC-R02-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:a1159d5d6775e0b32e4386429e24617b66017569dc57e863fe7f2fc87eaa40a6",
+  "recorded_at": "2026-09-01T18:44:40Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the contract-compiler regression boundary.",
+  "workstream_id": "CC-R02"
+}

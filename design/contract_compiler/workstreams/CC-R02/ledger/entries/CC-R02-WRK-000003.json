@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "/Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q tests/contract_compiler/test_linkml_adapter.py tests/contract_compiler/test_greenhouse_compiler.py tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "All 220 adapter, delegated Greenhouse compiler, and retained-source boundary tests passed on sibling GREEN 3fd1920. Quiet Bell, Greenhouse, feature inputs, source closure, and parser isolation execute as one dependency-closed slice.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:f81f07e94dd3cb85e3de29a325f40ef885ce32b7c874f8a81b100c564c2ccffd",
+  "entry_id": "CC-R02-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:85e3c11fb02d9b0e2dc89ca8a4893973bd8b27f62c13bd2c352bbbff4ff2b201",
+  "recorded_at": "2026-09-01T18:44:38Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the retained-source to declared-module slice.",
+  "workstream_id": "CC-R02"
+}

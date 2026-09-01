@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [],
+    "command": "/Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q tests/contract_compiler/test_linkml_adapter.py && /Users/luis/Projects/malleus-dev/.venv/bin/python -m pytest -q tests/contract_compiler/test_greenhouse_compiler.py",
+    "observed": "All 87 direct adapter tests and all 93 delegated Greenhouse compiler tests passed. One private parser now returns immutable authored declarations and typed atomic refusals, while the earlier compiler delegates parsing without fallback.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:85e3c11fb02d9b0e2dc89ca8a4893973bd8b27f62c13bd2c352bbbff4ff2b201",
+  "entry_id": "CC-R02-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f77aa85f80e9ec01aeac3c9ef5f4c358705c40bcfaf1341f4c7790e895392879",
+  "recorded_at": "2026-09-01T18:44:37Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum retained LinkML declaration adapter.",
+  "workstream_id": "CC-R02"
+}
