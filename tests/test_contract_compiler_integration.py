@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tomllib
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
@@ -940,7 +941,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     assert workstream_states["CC-X03"] == "COMPLETE"
     assert "CC-X03" not in state.selections
     assert state.cards["CC-R01"]["authorization"]["class"] == "FORMAL"
-    assert workstream_states["CC-R01"] == "ACTIVE"
+    assert workstream_states["CC-R01"] == "COMPLETE"
 
     decisions = {
         "CC-D01": (),
@@ -7178,15 +7179,10 @@ def test_retained_source_boundary_activation_is_exact() -> None:
             "path": "conformance/contract_compiler/v0/evidence/CC-R01.json",
         },
     ]
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
     assert "syntax-neutral" in card["responsibility"]
     assert "same resolver" in card["responsibility"]
     assert "complete immutable closure" in card["responsibility"]
     assert "without a partial result" in card["responsibility"]
-    assert states["CC-R01"] == "ACTIVE"
-    assert "CC-R01" not in manifest["selections"]
-
     transaction = tuple(
         entry
         for entry in ledger_state.entries
@@ -7264,3 +7260,127 @@ def test_retained_source_boundary_activation_is_exact() -> None:
         )
     ]
     assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+
+
+def test_retained_source_boundary_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R01")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert states["CC-R01"] == "COMPLETE"
+    assert card["candidate"] == {
+        "artifacts": [
+            {
+                "byte_length": 12588,
+                "path": "src/malleus/_contract_source.py",
+                "sha256": (
+                    "sha256:dd8861dedbd26c2aa33600865683563fb732a6d3c749f2817905824"
+                    "e0bc717d2"
+                ),
+            },
+            {
+                "byte_length": 33946,
+                "path": "tests/contract_compiler/test_retained_source_boundary.py",
+                "sha256": (
+                    "sha256:9f69ae6b4f57823e92e924704534cdd0644078085a2cf2460acddc4"
+                    "5a04ab8b8"
+                ),
+            },
+        ],
+        "base_commit": "dbc5eaee8493275b3d0c468b77f5567711507cd8",
+        "evidence": [
+            {
+                "byte_length": 9474,
+                "path": "conformance/contract_compiler/v0/evidence/CC-R01.json",
+                "result": "PASS",
+                "sha256": (
+                    "sha256:67b39a464e8a73e98ab6b2929cc9ea230f9f5c9a149751eb1d6d9"
+                    "bff48cb3b20"
+                ),
+            }
+        ],
+        "head_commit": "89645c1ca314fa58ba03e711cbbb29de94cfc007",
+        "head_tree": "e5b198568fea8522e0a894458b4d98fb11b9f95e",
+        "state": "ELIGIBLE",
+    }
+    assert card["ledger"] == {
+        "entry_count": 20,
+        "head_entry_id": "CC-R01-WRK-000020",
+        "head_hash": (
+            "sha256:5ee62ba931c7a03e1cb15f889fedc74ce8af899b60b28f1a25431a"
+            "312bccb64e"
+        ),
+        "path": "workstreams/CC-R01/ledger",
+        "state": "RECORDED",
+    }
+    worker_entries = [
+        _read_json(path)
+        for path in sorted((CONTRACT / "workstreams/CC-R01/ledger/entries").glob("*.json"))
+    ]
+    assert len(worker_entries) == 20
+    assert any(
+        entry["data"]["phase"] == "PACKAGE"
+        and entry["data"]["result"] == "NOT_APPLICABLE"
+        for entry in worker_entries
+    )
+
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert project["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"] == [
+        "/src/malleus/_contract_compiler.py",
+        "/src/malleus/_contract_compiler_profile.json",
+        "/src/malleus/_contract_source.py",
+    ]
+    assert "/src/malleus/_contract_source.py" in project["tool"]["hatch"]["build"][
+        "include"
+    ]
+
+    corpus = _read_json(ROOT / "conformance/contract_kernel/v0/corpus.json")
+    assert [corpus["cases"][0]["case_id"] for corpus in corpus["corpora"]] == [
+        "quiet-bell-archive",
+        "feature-isolation-suite",
+        "neutral-greenhouse",
+    ]
+    checksums = _read_json(ROOT / "conformance/contract_kernel/v0/checksums.json")
+    assert len(checksums["files"]) == 37
+
+    completion = tuple(
+        entry for entry in ledger_state.entries if 289 <= entry["sequence"] <= 292
+    )
+    assert tuple(entry["entry_id"] for entry in completion) == (
+        "OVR-000289",
+        "OVR-000290",
+        "OVR-000291",
+        "OVR-000292",
+    )
+    assert tuple(entry["entry_type"] for entry in completion) == (
+        "DOCUMENT_REVISION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    candidate_revision, completion_revision, verification, completed = completion
+    assert len(candidate_revision["data"]["documents"]) == 20
+    assert len(completion_revision["data"]["documents"]) == 15
+    assert completed["data"]["previous_state"] == "ACTIVE"
+    assert completed["data"]["new_state"] == "COMPLETE"
+    assert completed["data"]["blockers"] == []
+    assert completed["data"]["evidence_entry_ids"] == ["OVR-000291"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R01-completion.json")
+    assert report["workstream_id"] == "CC-R01"
+    assert report["base_commit"] == "89645c1ca314fa58ba03e711cbbb29de94cfc007"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    chronology = [
+        datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+        for value in (
+            report["recorded_at"],
+            candidate_revision["recorded_at"],
+            completion_revision["recorded_at"],
+            verification["recorded_at"],
+            completed["recorded_at"],
+        )
+    ]
+    assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+    assert "CC-R01" not in manifest["selections"]
