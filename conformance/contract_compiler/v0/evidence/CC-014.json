@@ -6,9 +6,9 @@
       "sha256": "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd428017068"
     },
     {
-      "byte_length": 22080,
+      "byte_length": 23201,
       "path": "tests/contract_compiler/test_feature_case_oracles.py",
-      "sha256": "sha256:1a2d89cb6a70cfef03c9e3067610d1ffd85f86b478efaecc2d4125f74c6b35fe"
+      "sha256": "sha256:fddef4750654e75dd1b226bef6b7db6042f92b5d93bff2e4468e2c194d567e19"
     }
   ],
   "base_commit": "607706796bf157f10d2a911a57cff39a72876795",
@@ -51,20 +51,20 @@
     },
     {
       "check_id": "cc014-isolation-and-shapes",
-      "method": "Validate duplicate-key and nonfinite-number refusal, exact recursive JSON types and number lexemes, closed ACCEPT/refusal/relation unions, and static plus hidden producer isolation.",
-      "observed": "Boolean-number substitutions and integer-decimal lexical substitutions are rejected. Refusal is exactly {\"outcome\":\"REFUSE\"}; relations use only SAME, DIFFERENT, or NOT_CLAIMED. AST guards reject direct imports, importlib, runpy, __import__, eval, exec, import_module, pytest.importorskip, and pytest plugin bypasses. No compiler, LinkML execution, OntologyRegistry, Greenhouse, or Quiet Bell authority is consumed.",
+      "method": "Validate duplicate-key and nonfinite-number refusal, exact recursive JSON types and number lexemes, closed ACCEPT/refusal/relation unions, and static plus hidden producer isolation under an exact import allowlist.",
+      "observed": "Boolean-number substitutions and integer-decimal lexical substitutions are rejected. Refusal is exactly {\"outcome\":\"REFUSE\"}; relations use only SAME, DIFFERENT, or NOT_CLAIMED. The exact import allowlist validates both modules and imported names. Call guards reject __import__, eval, exec, import_module, pytest.importorskip, pytest.main plugin loading, and pytest_plugins assignment. No compiler, LinkML execution, OntologyRegistry, Greenhouse, or Quiet Bell authority is consumed.",
       "result": "PASS"
     },
     {
       "check_id": "cc014-green-and-disproof",
       "method": "Run the complete focused answer-key test and the isolated corruption plus hidden-producer subset.",
-      "observed": "The focused suite passed 16 tests. The disproof subset passed 9 tests with 7 deselected, rejecting configuration, outcome, projection, relation, provenance, nonclaim, JSON-type, numeric-lexeme, and forbidden-producer changes.",
+      "observed": "The repaired focused suite passed 19 tests. The disproof subset passed 12 tests with 7 deselected, rejecting configuration, outcome, projection, relation, provenance, nonclaim, JSON-type, numeric-lexeme, forbidden from-import, aliased builtins import, and pytest.main plugin-loading changes.",
       "result": "PASS"
     },
     {
       "check_id": "cc014-neighbors-and-regression",
       "method": "Run neighboring feature inputs, Quiet Bell and Greenhouse inputs/oracles, then the complete tests/contract_compiler directory.",
-      "observed": "All 67 neighboring oracle and input tests passed. The complete contract-compiler directory passed 239 tests.",
+      "observed": "All 67 neighboring oracle and input tests passed. The complete contract-compiler directory passed 242 tests after the producer-allowlist repair.",
       "result": "PASS"
     },
     {

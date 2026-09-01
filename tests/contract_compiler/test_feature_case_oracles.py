@@ -416,6 +416,17 @@ EXPECTED_NONCLAIMS = {
     "public_compatibility": "NOT_CLAIMED",
     "runtime_conformance": "NOT_CLAIMED",
 }
+ALLOWED_IMPORTS: dict[str, frozenset[str] | None] = {
+    "__future__": frozenset({"annotations"}),
+    "ast": None,
+    "copy": frozenset({"deepcopy"}),
+    "decimal": frozenset({"Decimal"}),
+    "hashlib": frozenset({"sha256"}),
+    "json": None,
+    "pathlib": frozenset({"Path"}),
+    "pytest": None,
+    "typing": frozenset({"Any", "Callable"}),
+}
 EXPECTED_ORACLE = {
     "configuration": CONFIGURATION,
     "groups": EXPECTED_GROUPS,
@@ -581,31 +592,23 @@ def test_provenance_and_nonclaims_are_exact() -> None:
     assert set(oracle["nonclaims"].values()) == {"NOT_CLAIMED"}
 
 
-def test_answer_key_has_no_forbidden_execution_dependency() -> None:
-    source = Path(__file__).read_text(encoding="utf-8")
+def _assert_no_producer_source(source: str) -> None:
     tree = ast.parse(source)
-    imports = {
-        alias.name
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Import)
-        for alias in node.names
-    } | {
-        node.module
-        for node in ast.walk(tree)
-        if isinstance(node, ast.ImportFrom) and node.module is not None
-    }
-    assert not (
-        imports
-        & {
-            "importlib",
-            "linkml",
-            "linkml_runtime",
-            "malleus._contract_compiler",
-            "malleus.registry",
-            "runpy",
-            "subprocess",
-        }
-    )
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                assert alias.asname is None
+                assert alias.name in ALLOWED_IMPORTS
+                assert ALLOWED_IMPORTS[alias.name] is None
+        elif isinstance(node, ast.ImportFrom):
+            assert node.level == 0
+            assert node.module in ALLOWED_IMPORTS
+            allowed_names = ALLOWED_IMPORTS[node.module]
+            assert allowed_names is not None
+            assert all(
+                alias.asname is None and alias.name in allowed_names
+                for alias in node.names
+            )
     forbidden_calls = {"__import__", "eval", "exec", "import_module", "importorskip"}
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
@@ -614,6 +617,11 @@ def test_answer_key_has_no_forbidden_execution_dependency() -> None:
             assert node.func.id not in forbidden_calls
         elif isinstance(node.func, ast.Attribute):
             assert node.func.attr not in forbidden_calls
+            assert not (
+                isinstance(node.func.value, ast.Name)
+                and node.func.value.id == "pytest"
+                and node.func.attr == "main"
+            )
     assert not any(
         isinstance(node, (ast.Assign, ast.AnnAssign))
         and any(
@@ -624,10 +632,28 @@ def test_answer_key_has_no_forbidden_execution_dependency() -> None:
         )
         for node in ast.walk(tree)
     )
+
+
+def test_answer_key_has_no_forbidden_execution_dependency() -> None:
+    source = Path(__file__).read_text(encoding="utf-8")
+    _assert_no_producer_source(source)
     oracle_text = ORACLE_PATH.read_text(encoding="utf-8")
     assert "greenhouse" not in oracle_text.lower()
     assert "quiet_bell" not in oracle_text.lower()
     assert "Ontology" + "Registry" not in source
+
+
+@pytest.mark.parametrize(
+    "source",
+    (
+        "from malleus import _contract_compiler\n",
+        "from builtins import __import__ as load\n",
+        "import pytest\npytest.main(['-p', 'producer_plugin'])\n",
+    ),
+)
+def test_hidden_producer_mutations_are_rejected(source: str) -> None:
+    with pytest.raises(AssertionError):
+        _assert_no_producer_source(source)
 
 
 def _mutate_configuration(value: dict[str, Any]) -> None:
