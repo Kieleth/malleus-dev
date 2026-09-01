@@ -2,9 +2,9 @@
   "algorithm": "sha256",
   "files": [
     {
-      "byte_length": 1739,
+      "byte_length": 5628,
       "path": "conformance/contract_kernel/v0/corpus.json",
-      "sha256": "sha256:7fa6d757a1571983dd195dec955cd87cd34487fe8da810d8156313dbbf5ad4eb"
+      "sha256": "sha256:6bb886ec743b3f0029692084da8208c9cbc02a41313d2b81b70c0f68a9868476"
     },
     {
       "byte_length": 10155,
@@ -12,9 +12,179 @@
       "sha256": "sha256:acf148db5f482fe78281268ceb7b3c23d9cc762c52d6bbb24a6f5647fc896eeb"
     },
     {
+      "byte_length": 142,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/owner.json",
+      "sha256": "sha256:9a59cd18d040be262b729609405bf6ac4e04c83426be7788286afd17c6b2cd11"
+    },
+    {
+      "byte_length": 210,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/redeclaration.json",
+      "sha256": "sha256:f6762a2754b75175e152b58492e61ce3f8ba54edf484cb9bff9fbb6cdd36744d"
+    },
+    {
+      "byte_length": 277,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/adopter.json",
+      "sha256": "sha256:1983347e771638c41dea08a1771bcea11cf155a552691393c1e816c588bf7232"
+    },
+    {
+      "byte_length": 192,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/owner.json",
+      "sha256": "sha256:b397043c3ab3b603ae59c3af4c68f9fe203af7fdd1eec891f3609a7dbe4801b5"
+    },
+    {
+      "byte_length": 177,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/default_range_explicit.json",
+      "sha256": "sha256:c4bd65697241cfa5f1e539ca204723c2c3feaf6bb5f216a1229b21287d588454"
+    },
+    {
+      "byte_length": 350,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/numeric_bounds_equivalent_lexemes.json",
+      "sha256": "sha256:7c96f5477ec81d6f300574e2874255f7f241b1362b695b8b75c4365216c66175"
+    },
+    {
+      "byte_length": 340,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_baseline.json",
+      "sha256": "sha256:9fab5e8553dddbc02b4816967d7a1d6d09452c26fe393aa561b6550e05239918"
+    },
+    {
+      "byte_length": 336,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_changed.json",
+      "sha256": "sha256:f8e59eb6eda21006ab1b95e55b41116376eb37f53db15556ad560488e2a79006"
+    },
+    {
+      "byte_length": 358,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/positive/valid_explicit_false.json",
+      "sha256": "sha256:1ebe5f0dc472c57ba8868aea8798fe8c870616e936617e6e452d899269d479ab"
+    },
+    {
+      "byte_length": 301,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/attribute_slot_usage.json",
+      "sha256": "sha256:3bb785cb41ca321076fc9e345f72e98e66fd456864904b2b74170fbb78e90bbd"
+    },
+    {
+      "byte_length": 345,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ab.json",
+      "sha256": "sha256:360a04667c2358ee9ea5a59ede7208fb1b8ddb5a97a3b5800cd24e4ae0fc71fc"
+    },
+    {
+      "byte_length": 345,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ba.json",
+      "sha256": "sha256:f5abfc71242cd22e14ed8a83073c908c569690ce0cb50811d1d39ef72c4b81aa"
+    },
+    {
+      "byte_length": 160,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/default_range.json",
+      "sha256": "sha256:114309aa47a174861e091d6ce4454f46a21982b9cdc01cb295d8bf26e4318866"
+    },
+    {
+      "byte_length": 317,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/explicit_false.json",
+      "sha256": "sha256:b6067d9ed6d57d5c2d59324990ed151975c66f826d4596bb7fb6d8dca0bc7a8c"
+    },
+    {
+      "byte_length": 341,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/numeric_bounds.json",
+      "sha256": "sha256:310927cfee843803cced8933ada89d678f3cef385c7a9393f8b882e6c6e0921b"
+    },
+    {
+      "byte_length": 378,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/parent_mixin_precedence.json",
+      "sha256": "sha256:058dba6e97e138ccdf75f0ae928f289b261f6cd21f89f6f0f9ceb464032f0d37"
+    },
+    {
+      "byte_length": 246,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/repeated_mixin.json",
+      "sha256": "sha256:0d39ee50aa8f475c1abdacbba395520014a5d95341734ee96b069598df6a3b1b"
+    },
+    {
+      "byte_length": 166,
+      "path": "conformance/contract_kernel/v0/feature_cases/inputs/x01/simple_parity.json",
+      "sha256": "sha256:88b64ac3d7bff49d8a04d7b9b428aa1fddb57311ffdece661c5b01e1ef64efbe"
+    },
+    {
+      "byte_length": 18972,
+      "path": "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json",
+      "sha256": "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd428017068"
+    },
+    {
+      "byte_length": 23304,
+      "path": "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
+      "sha256": "sha256:56bc2836a903ed4151d5e6ea728be0f1ee1fe84883a6a5305c44717a3fe16f82"
+    },
+    {
+      "byte_length": 1456,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+      "sha256": "sha256:3bb5b580021b2f5ca6c0113a3ef63d047ce2dcf63e846ffc6fa4fe03b87fee98"
+    },
+    {
+      "byte_length": 1900,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml",
+      "sha256": "sha256:f842338536f01b581618cf51eeca03668bcb8ff7861b36f872870889158201b5"
+    },
+    {
+      "byte_length": 1459,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml",
+      "sha256": "sha256:80145c298d708d955cb3ee521bf7953feed287d1b97aab28b348ad63cd8b3d3e"
+    },
+    {
+      "byte_length": 1477,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml",
+      "sha256": "sha256:c389a0add25ca17516663abf92d4370e0b29efe14b522250b2056bc221c45c65"
+    },
+    {
+      "byte_length": 1456,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml",
+      "sha256": "sha256:b909bee4789dce0c0b25e0987cfc0f0fe67569138e482f25a3cb804e1ce8b877"
+    },
+    {
+      "byte_length": 1456,
+      "path": "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml",
+      "sha256": "sha256:86d7ab9958d2bc0781a39807c428c837d18ef6c35b31470c0370d6d28359d404"
+    },
+    {
+      "byte_length": 5314,
+      "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
+      "sha256": "sha256:758d2e69fefcfd4c8476a0c04988fba1763e31a73b4f6865da4d071568f4b662"
+    },
+    {
       "byte_length": 1542,
       "path": "conformance/contract_kernel/v0/stage-matrix.json",
       "sha256": "sha256:5e5844e8d827a787c470910709265e2949ef68d62d7185092d756ce28ce8647b"
+    },
+    {
+      "byte_length": 18567,
+      "path": "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json",
+      "sha256": "sha256:cd7dbb8c4c8c81fb1d9d67e1423ba51e3bfa73b91d47a86f2381d1672f85e3e0"
+    },
+    {
+      "byte_length": 1821,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/activity.yaml",
+      "sha256": "sha256:66814b70e6756f8038afc9aa7b4344f07be509a08b952473cb410b1c59df9f54"
+    },
+    {
+      "byte_length": 1378,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/entities.yaml",
+      "sha256": "sha256:b9076cf744f59a1aefc5e2e5d347cb5e5f14481df5ba1e177ea19315a26c529f"
+    },
+    {
+      "byte_length": 1166,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/modules/foundation.yaml",
+      "sha256": "sha256:2fe7824e048e474fb33be09239cd249b9303d307327d9e5ce2d9eca8cc535948"
+    },
+    {
+      "byte_length": 845,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.0/quiet_bell.yaml",
+      "sha256": "sha256:2b93cf1a25439d3d7dcc67556429d72e9783373b7283794a10f99137ed6c5a7a"
+    },
+    {
+      "byte_length": 880,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.1/quiet_bell.yaml",
+      "sha256": "sha256:5a7b56c07301426c21d4dc68356549450ac0a0f2fd40c92cb9cf6033aa469f80"
+    },
+    {
+      "byte_length": 1081,
+      "path": "conformance/contract_kernel/v0/themed_fixture/sources/v1.1.0/quiet_bell.yaml",
+      "sha256": "sha256:faeeb2e7013400a5930793f42058464e727715aa7658f35a6340b791e059c698"
     }
   ],
   "protocol": "contract-kernel/v0",

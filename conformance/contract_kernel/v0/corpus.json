@@ -1,7 +1,25 @@
 {
   "corpora": [
     {
-      "cases": [],
+      "cases": [
+        {
+          "case_id": "quiet-bell-archive",
+          "input_files": [
+            "conformance/contract_kernel/v0/themed_fixture/sources/modules/activity.yaml",
+            "conformance/contract_kernel/v0/themed_fixture/sources/modules/entities.yaml",
+            "conformance/contract_kernel/v0/themed_fixture/sources/modules/foundation.yaml",
+            "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.0/quiet_bell.yaml",
+            "conformance/contract_kernel/v0/themed_fixture/sources/v1.0.1/quiet_bell.yaml",
+            "conformance/contract_kernel/v0/themed_fixture/sources/v1.1.0/quiet_bell.yaml"
+          ],
+          "oracle_files": [
+            "conformance/contract_kernel/v0/themed_fixture/oracle/quiet_bell.json"
+          ],
+          "scenario_ids": [
+            "linkml-support-profile"
+          ]
+        }
+      ],
       "corpus_id": "themed_vertical",
       "input_prefixes": [
         "conformance/contract_kernel/v0/themed_fixture/direct-input",
@@ -15,7 +33,37 @@
       "root": "themed_fixture"
     },
     {
-      "cases": [],
+      "cases": [
+        {
+          "case_id": "feature-isolation-suite",
+          "input_files": [
+            "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/owner.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/duplicate_conflict/redeclaration.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/adopter.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/explicit_adoption/owner.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/default_range_explicit.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/numeric_bounds_equivalent_lexemes.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_baseline.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/metamorphic/presentation_changed.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/positive/valid_explicit_false.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/attribute_slot_usage.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ab.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/conflicting_mixins_ba.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/default_range.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/explicit_false.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/numeric_bounds.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/parent_mixin_precedence.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/repeated_mixin.json",
+            "conformance/contract_kernel/v0/feature_cases/inputs/x01/simple_parity.json"
+          ],
+          "oracle_files": [
+            "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json"
+          ],
+          "scenario_ids": [
+            "linkml-support-profile"
+          ]
+        }
+      ],
       "corpus_id": "feature_isolation",
       "input_prefixes": [
         "conformance/contract_kernel/v0/feature_cases/inputs"
@@ -26,7 +74,26 @@
       "root": "feature_cases"
     },
     {
-      "cases": [],
+      "cases": [
+        {
+          "case_id": "neutral-greenhouse",
+          "input_files": [
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/baseline.yaml",
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/explicit-defaults.yaml",
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/numeric-equivalent.yaml",
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/presentation-only.yaml",
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/reordered.yaml",
+            "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse/semantic-change.yaml"
+          ],
+          "oracle_files": [
+            "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json"
+          ],
+          "scenario_ids": [
+            "atomic-fact-contract",
+            "linkml-support-profile"
+          ]
+        }
+      ],
       "corpus_id": "neutral_domain",
       "input_prefixes": [
         "conformance/contract_kernel/v0/neutral_domain/sources",
@@ -49,6 +116,6 @@
   "shared_requirements": {
     "path": "conformance/contract_kernel/v0/requirements/scenarios.json",
     "schema": "malleus.contract-kernel.scenarios/v0",
-    "state": "OPTIONAL_UNTIL_LISTED"
+    "state": "LISTED"
   }
 }

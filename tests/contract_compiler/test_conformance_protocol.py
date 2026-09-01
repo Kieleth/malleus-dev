@@ -30,7 +30,9 @@ PROTOCOL_FILES = (
     "conformance/contract_kernel/v0/corpus.schema.json",
     "conformance/contract_kernel/v0/stage-matrix.json",
 )
-REQUIREMENTS_PATH = "conformance/contract_kernel/v0/requirements/scenarios.json"
+REQUIREMENTS_PATH = (
+    "conformance/contract_kernel/v0/requirements/scenarios.json"
+)
 LAYOUT = {
     "themed_vertical": {
         "root": "themed_fixture",
@@ -46,8 +48,12 @@ LAYOUT = {
     },
     "feature_isolation": {
         "root": "feature_cases",
-        "input_prefixes": ["conformance/contract_kernel/v0/feature_cases/inputs"],
-        "oracle_prefixes": ["conformance/contract_kernel/v0/feature_cases/oracle"],
+        "input_prefixes": [
+            "conformance/contract_kernel/v0/feature_cases/inputs"
+        ],
+        "oracle_prefixes": [
+            "conformance/contract_kernel/v0/feature_cases/oracle"
+        ],
     },
     "neutral_domain": {
         "root": "neutral_domain",
@@ -212,10 +218,8 @@ def _validate_schema(document: dict[str, Any], schema: dict[str, Any]) -> None:
 
 
 def _identifier(value: str, context: str) -> None:
-    if (
-        not value
-        or not value.isascii()
-        or any(character not in IDENTIFIER_CHARACTERS for character in value)
+    if not value or not value.isascii() or any(
+        character not in IDENTIFIER_CHARACTERS for character in value
     ):
         raise ProtocolError(f"{context}: invalid identifier {value!r}")
 
@@ -244,10 +248,8 @@ def _under_any(value: str, roots: list[str], context: str) -> None:
 def _digest(value: str, context: str) -> None:
     prefix = "sha256:"
     body = value.removeprefix(prefix)
-    if (
-        not value.startswith(prefix)
-        or len(body) != 64
-        or any(character not in HEX for character in body)
+    if not value.startswith(prefix) or len(body) != 64 or any(
+        character not in HEX for character in body
     ):
         raise ProtocolError(f"{context}: invalid SHA-256 digest")
 
@@ -283,10 +285,14 @@ def _members(corpus: dict[str, Any]) -> set[str]:
             for scenario_id in case["scenario_ids"]:
                 _identifier(scenario_id, f"{case['case_id']} scenario_id")
             for path in case["input_files"]:
-                _under_any(path, item["input_prefixes"], f"{case['case_id']} input")
+                _under_any(
+                    path, item["input_prefixes"], f"{case['case_id']} input"
+                )
                 paths.append(path)
             for path in case["oracle_files"]:
-                _under_any(path, item["oracle_prefixes"], f"{case['case_id']} oracle")
+                _under_any(
+                    path, item["oracle_prefixes"], f"{case['case_id']} oracle"
+                )
                 paths.append(path)
     if len(paths) != len(set(paths)):
         raise ProtocolError("normative membership contains a duplicate path")
@@ -319,9 +325,7 @@ def _validate_checksums(
             or not candidate.is_file()
             or not resolved.is_relative_to(repository.resolve())
         ):
-            raise ProtocolError(
-                f"{path}: normative member is not a regular in-repo file"
-            )
+            raise ProtocolError(f"{path}: normative member is not a regular in-repo file")
         source = candidate.read_bytes()
         if record["byte_length"] != len(source):
             raise ProtocolError(f"{path}: byte length mismatch")
@@ -409,7 +413,8 @@ def test_protocol_bootstrap_is_closed_empty_and_valid() -> None:
     assert [item["stage"] for item in matrix["stages"]] == list(STAGES)
     assert all(item["corpora"] == list(CORPUS_IDS) for item in matrix["stages"])
     assert {
-        item["stage"]: item["assigned_acceptance_tests"] for item in matrix["stages"]
+        item["stage"]: item["assigned_acceptance_tests"]
+        for item in matrix["stages"]
     } == STAGE_TESTS
     assert matrix["cumulative_rule"] == "EACH_STAGE_RERUNS_PRIOR_SLICES"
     assert matrix["whole_pipeline_obligations"] == [
@@ -452,7 +457,11 @@ def test_reviewed_corpus_publication_is_exact() -> None:
 
 def _all_keys(value: Any) -> list[str]:
     if isinstance(value, dict):
-        return [key for name, item in value.items() for key in (name, *_all_keys(item))]
+        return [
+            key
+            for name, item in value.items()
+            for key in (name, *_all_keys(item))
+        ]
     if isinstance(value, list):
         return [key for item in value for key in _all_keys(item)]
     return []
@@ -798,7 +807,9 @@ def test_membership_checksum_bijection_and_raw_byte_integrity(tmp_path: Path) ->
         target.write_bytes((REPOSITORY / path).read_bytes())
         controls.append(target)
     path = "conformance/contract_kernel/v0/feature_cases/inputs/case-1.json"
-    oracle_path = "conformance/contract_kernel/v0/feature_cases/oracle/case-1.json"
+    oracle_path = (
+        "conformance/contract_kernel/v0/feature_cases/oracle/case-1.json"
+    )
     requirements_path = tmp_path / REQUIREMENTS_PATH
     requirements_path.parent.mkdir(parents=True)
     requirements_path.write_bytes(
@@ -816,6 +827,8 @@ def test_membership_checksum_bijection_and_raw_byte_integrity(tmp_path: Path) ->
 
     populated = copy.deepcopy(corpus)
     populated["shared_requirements"]["state"] = "LISTED"
+    for item in populated["corpora"]:
+        item["cases"] = []
     populated["corpora"][1]["cases"] = [
         {
             "case_id": "case-1",

@@ -23,10 +23,12 @@ pipeline while preserving independent counterexamples. Adding a fourth corpus
 changes the protocol and requires a new protocol version. Adding cases inside
 one of the three fixed roots does not.
 
-The bootstrap manifests are intentionally empty. `CC-010` does not invent
-source files, expected values, or scenarios for downstream owners. Empty roots
-mean “the contract is ready to receive reviewed members,” not “the stage
-passed.” A research stage cannot pass until its required cases are listed.
+The bootstrap manifests were intentionally empty. `CC-010` did not invent
+source files, expected values, or scenarios for downstream owners. The current
+publication contains one independently reviewed case in each fixed corpus:
+Quiet Bell, the feature-isolation suite, and the neutral Greenhouse. Listing a
+case records evidence membership; it does not claim that every compiler stage
+passes that case.
 
 ## Files and authority
 
@@ -89,11 +91,9 @@ and its exact artifact digests.
 ## Shared semantic requirements
 
 The one reserved shared member is
-`conformance/contract_kernel/v0/requirements/scenarios.json`. It remains absent
-and `OPTIONAL_UNTIL_LISTED` in the bootstrap. `CC-018` may create it under its
-own future card. Before the first corpus case is published, the integration
-owner changes its state to `LISTED`, adds its checksum, and verifies every case
-references a declared scenario.
+`conformance/contract_kernel/v0/requirements/scenarios.json`. `CC-018` created
+it under its own card. This publication sets its state to `LISTED`, binds its
+checksum, and verifies that every case references a declared scenario.
 
 Each scenario has a stable `scenario_id` and sorted requirements. Each
 requirement has a globally unique stable `requirement_id`, one exact kind from
