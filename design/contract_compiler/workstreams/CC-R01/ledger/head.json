@@ -1,0 +1,8 @@
+{
+  "canonicalization": "malleus-canonical-json-v1",
+  "entry_count": 1,
+  "head_entry_id": "CC-R01-WRK-000001",
+  "head_hash": "sha256:282d90c8ac6961068a4e4ba2c83b4a4f4f9a5d76c8d9a03ea3898da04ebbc94a",
+  "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+  "workstream_id": "CC-R01"
+}

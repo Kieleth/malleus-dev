@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py",
+    "observed": "Pytest exited 1 with exactly one failure. The authorized private test could not import malleus._contract_source and raised ModuleNotFoundError; no implementation file existed. Scoped Ruff format and lint checks passed.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:282d90c8ac6961068a4e4ba2c83b4a4f4f9a5d76c8d9a03ea3898da04ebbc94a",
+  "entry_id": "CC-R01-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-01T10:13:32Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the genuine missing source-boundary module RED.",
+  "workstream_id": "CC-R01"
+}
