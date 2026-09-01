@@ -409,6 +409,46 @@ def test_ordering_changes_only_tuple_presentation() -> None:
     assert frozenset(custom.import_edges) == frozenset(canonical.import_edges)
 
 
+def test_omitted_ordering_uses_canonical_module_and_edge_presentation() -> None:
+    common = _source("module:common", b"common")
+    closure = build_source_closure(
+        requested_locator="root",
+        selection=SELECTION,
+        resolver=_MemoryResolver(
+            {
+                "root": _source("module:root", b"root"),
+                "left": _source("module:left", b"left"),
+                "right": _source("module:right", b"right"),
+                "common": (common, common),
+            }
+        ),
+        import_reader=_MemoryImportReader(
+            {
+                "module:root": ("left", "right"),
+                "module:left": ("common",),
+                "module:right": ("common",),
+                "module:common": (),
+            }
+        ),
+    )
+
+    assert [module.module_id for module in closure.modules] == [
+        "module:common",
+        "module:left",
+        "module:right",
+        "module:root",
+    ]
+    assert [
+        (edge.parent_module_id, edge.parent_import_ordinal)
+        for edge in closure.import_edges
+    ] == [
+        ("module:left", 0),
+        ("module:right", 0),
+        ("module:root", 0),
+        ("module:root", 1),
+    ]
+
+
 def test_one_selected_resolver_refusal_has_no_fallback_or_partial_result() -> None:
     resolver = _MemoryResolver(
         {"root": _source("module:root", b"root")},
