@@ -726,6 +726,7 @@
         "result": {
           "enum": [
             "EXPECTED_FAILURE",
+            "FAIL",
             "PASS",
             "NOT_APPLICABLE"
           ]

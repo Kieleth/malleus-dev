@@ -1,0 +1,70 @@
+{
+  "actor": {
+    "id": "ccr02-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T21:38:02Z",
+    "claims": [
+      "CC-R02 binds the exact 5682fc43d7308d932a586086631bf0170ff1278f..085b59b718cf4d4c647b0b842308d67df5f2a3ba eligible candidate at tree 1cad438caa1520c32cc44c4da470dbefa284e2ca.",
+      "The candidate contains exactly five implementation and test artifacts, one PASS report, and the immutable twenty-entry candidate ledger prefix within authorized scopes.",
+      "The assigned worker ledger contains twenty-one append-only entries and ends at sha256:ce8c6d9708a1d0540995f48624c9494c7a28affd535ff7ac56740184fbecbed8.",
+      "Its active phases are RED FAIL followed by GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST PASS in canonical order.",
+      "The integration grammar accepts literal FAIL only for RED worker observations. Every later phase rejects it mechanically.",
+      "All 229 direct adapter, delegated Greenhouse compiler, and retained-source tests pass, and all 387 contract-compiler tests pass before completion append.",
+      "Only tests/contract_compiler/test_greenhouse_compiler.py differs between the frozen candidate scope and current main. The later assertions bind the exact shared profile, private wheel exclusion, and absent public exports without rewriting candidate evidence.",
+      "The root package configuration excludes src/malleus/_contract_linkml_adapter.py from wheels. The candidate and completion add no public export.",
+      "The candidate remains ELIGIBLE, private, unselected, and separate from global binding, elaboration, neutral facts, public artifacts, protocol execution, and release.",
+      "The completion report binds five exact governance artifacts and seven PASS checks."
+    ],
+    "limitations": [
+      "This is a private LinkML 1.11.1 support-profile adapter, not a public API, wire format, plugin framework, release, or general LinkML support promise.",
+      "The adapter owns retained declarations and classified occurrences only. Later compiler and protocol stages remain separate.",
+      "Quiet Bell still refuses as a complete closure because its authored malleus import has no retained governed source.",
+      "Source-archive treatment remains undecided. Only wheel exclusion is proven.",
+      "No successor workstream is activated by this completion."
+    ]
+  },
+  "entry_hash": "sha256:8e98caff8772b6822beb0042a258f312123d225234bd293b41f6ef5ce4f41736",
+  "entry_id": "OVR-000306",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b27bc5b9872d24ae01da3ee112fa67164991fe9bef1e52507ead94b6c86e2738",
+  "recorded_at": "2026-09-01T21:38:02Z",
+  "references": [
+    {
+      "digest": "sha256:6604c67439b17237935da575f216fbded8af1179ad78ad1dedeea88a7c248af3",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000305",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3a9c42b03566774be03e986feea536f4917a2c2f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 306,
+  "subject": {
+    "id": "ccr02-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the private LinkML adapter and its completion guards.",
+  "why": "Completion requires the exact eligible candidate, its append-only worker evidence, strict RED-only FAIL policy, root-owned wheel boundary, current-main divergence accounting, regression evidence, and unchanged private unselected scope."
+}

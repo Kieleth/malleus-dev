@@ -1,0 +1,111 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2b4737d7c1234f70c19e6b9a51af3bec578fa6ad4492edd78c9ad179b4f4583b",
+        "before_digest": "sha256:4df1b6bbd726568efc37792076b03761500d977826e0bef0713955f38ccface5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:c8806d866d2aa7315e8c2e0e280b0ff6d70b67c1e680c225e3cbf01900ea7f85",
+        "before_digest": "sha256:a66ba66459b0a22bfe29c95b4a157f8744530855d8ef7465aeaa2980fcc3245d",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:f12a6a4b48fe598b8ee57e9a6c98be00f992cd8c0b19950898fc814b111a0f80",
+        "before_digest": "sha256:8a487a36fb711df01dba9d6454e69dada42619100e98831c3086f3df0ec7c1d0",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:bb52d7776444ed9d108a08bdc644223cce6c3738d514f81e3a1b29e58eb80969",
+        "before_digest": "sha256:4365d6cacd8c40aed81018eec45f9dfca57c3271903609ee2f3b9e14e97d8d60",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:87627b6f37de9c5b6963fa67ac147f86995b6b525acb929287d7f8c94c91078a",
+        "before_digest": "sha256:371dca6ac5785190c6a742c4c08d0b3600c95128f59990965d4b52c889afc0a2",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:6604c67439b17237935da575f216fbded8af1179ad78ad1dedeea88a7c248af3",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R02-completion.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b27bc5b9872d24ae01da3ee112fa67164991fe9bef1e52507ead94b6c86e2738",
+  "entry_id": "OVR-000305",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b73a00914cbce05db1010b48be70a8830d471ebc4d526dc31051fb9ed437b7dc",
+  "recorded_at": "2026-09-01T21:38:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:6604c67439b17237935da575f216fbded8af1179ad78ad1dedeea88a7c248af3",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3a9c42b03566774be03e986feea536f4917a2c2f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 305,
+  "subject": {
+    "id": "ccr02-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private LinkML adapter candidate and completion guard.",
+  "why": "The frozen candidate and twenty-one-entry worker ledger satisfy the bounded private adapter contract. Literal FAIL is accepted only for RED observations, while every later phase remains strict. Current main preserves the candidate evidence and adds only the separately governed wheel and profile assertions."
+}

@@ -112,10 +112,52 @@
     ]
   },
   "candidate": {
-    "state": "NONE"
+    "artifacts": [
+      {
+        "byte_length": 55533,
+        "path": "src/malleus/_contract_linkml_adapter.py",
+        "sha256": "sha256:15031b57d438ea46a43138f1a9fddb9387ff9aa4ab6fae7617c08cba7dea9115"
+      },
+      {
+        "byte_length": 94009,
+        "path": "src/malleus/_contract_compiler.py",
+        "sha256": "sha256:2a6d925216feffadc4b5e214e24d647a9319b2fa50f44fee60bb533290db6276"
+      },
+      {
+        "byte_length": 18344,
+        "path": "src/malleus/_contract_compiler_profile.json",
+        "sha256": "sha256:13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287"
+      },
+      {
+        "byte_length": 33334,
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+        "sha256": "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
+      },
+      {
+        "byte_length": 41955,
+        "path": "tests/contract_compiler/test_linkml_adapter.py",
+        "sha256": "sha256:b0e332e169ac938fd28d78e31a9337e12938bb534d57f75db6abb26d06f20446"
+      }
+    ],
+    "base_commit": "5682fc43d7308d932a586086631bf0170ff1278f",
+    "evidence": [
+      {
+        "byte_length": 12701,
+        "path": "conformance/contract_compiler/v0/evidence/CC-R02.json",
+        "result": "PASS",
+        "sha256": "sha256:e2a2b0348ccf708845ae1357b08a8472341cc8b6ad7e16c6c71bf082bb3c4ce0"
+      }
+    ],
+    "head_commit": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+    "head_tree": "1cad438caa1520c32cc44c4da470dbefa284e2ca",
+    "state": "ELIGIBLE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 21,
+    "head_entry_id": "CC-R02-WRK-000021",
+    "head_hash": "sha256:ce8c6d9708a1d0540995f48624c9494c7a28affd535ff7ac56740184fbecbed8",
+    "path": "workstreams/CC-R02/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Implement one private LinkML 1.11.1 parser and support-profile adapter over retained ModuleObservation values and complete SourceClosure values. Emit immutable lossless per-module declarations, ordered authored imports, explicit field presence, raw scalar lexemes and annotations, and exact retained provenance, or one typed atomic refusal. Keep one machine-readable profile and move the existing Greenhouse bootstrap onto the same parser so there is no second parser or fallback. Own no resolver or I/O, qualified binding, global merge or adoption decision, inheritance or default elaboration, facts, artifact, protocol, package, public API, legacy OntologyRegistry behavior, or fixture meaning. After the worker candidate is frozen, the overseer must exclude src/malleus/_contract_linkml_adapter.py from the wheel and mechanically prove the built-wheel boundary; this remains outside worker ownership and worker PACKAGE remains NOT_APPLICABLE. Source-archive treatment remains separately undecided.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

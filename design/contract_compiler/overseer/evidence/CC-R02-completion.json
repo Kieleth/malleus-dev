@@ -1,0 +1,86 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23359,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:2b4737d7c1234f70c19e6b9a51af3bec578fa6ad4492edd78c9ad179b4f4583b"
+    },
+    {
+      "byte_length": 58206,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:c8806d866d2aa7315e8c2e0e280b0ff6d70b67c1e680c225e3cbf01900ea7f85"
+    },
+    {
+      "byte_length": 289285,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:f12a6a4b48fe598b8ee57e9a6c98be00f992cd8c0b19950898fc814b111a0f80"
+    },
+    {
+      "byte_length": 9000,
+      "path": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "sha256": "sha256:bb52d7776444ed9d108a08bdc644223cce6c3738d514f81e3a1b29e58eb80969"
+    },
+    {
+      "byte_length": 26634,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:87627b6f37de9c5b6963fa67ac147f86995b6b525acb929287d7f8c94c91078a"
+    }
+  ],
+  "base_commit": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+  "checks": [
+    {
+      "check_id": "ccr02-candidate-history",
+      "method": "Validate the exact 5682fc4..085b59b eligible candidate, tree 1cad438, its five implementation and test artifacts, and canonical verification report.",
+      "observed": "The candidate changes only authorized adapter scopes plus its immutable worker-ledger prefix. Base, head, tree, byte lengths, digests, and candidate evidence are exact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-worker-tdd",
+      "method": "Validate all twenty-one worker-ledger entries, corrections, hash continuity, active phase order, and exact result policy.",
+      "observed": "The active RED records literal FAIL, followed by GREEN, SLICE, DISPROOF, REGRESSION, PACKAGE, and ATTEST PASS results. FAIL is accepted only for RED and rejected for every later phase.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-private-adapter",
+      "method": "Run the direct adapter, delegated Greenhouse compiler, and retained-source tests against the current source tree.",
+      "observed": "All 229 focused tests pass. The private adapter preserves authored declarations and provenance, uses one exact profile, delegates no hidden I/O, and returns typed atomic refusals.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-contract-compiler-regression",
+      "method": "Run every test under tests/contract_compiler after binding the candidate and worker ledger.",
+      "observed": "All 387 contract-compiler tests pass before the governance completion entries are appended.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-current-main-divergence",
+      "method": "Compare every frozen candidate artifact with current main and inspect the one later changed path.",
+      "observed": "Only the Greenhouse test differs after 085b59b. Its current changes assert the exact shared profile, wheel exclusion, and absent public exports. Frozen candidate bytes and evidence remain unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-package-boundary",
+      "method": "Inspect current package configuration and the exact root-owned wheel guard introduced after candidate freeze.",
+      "observed": "The private adapter is excluded from wheels and public exports. This root-owned guard does not rewrite worker PACKAGE evidence or promote the adapter to a public API.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-unselected-completion",
+      "method": "Require an eligible private candidate, exact recorded worker ledger, COMPLETE workstream state, and absence from selections.",
+      "observed": "The bounded adapter stage is complete, private, eligible, and unselected. Later binding, elaboration, fact, artifact, protocol, and public API stages remain separate.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This completes a private LinkML 1.11.1 support-profile adapter, not a public Python API, wire format, plugin interface, release, or general LinkML compatibility claim.",
+    "The adapter retains per-module declarations and classified occurrences only. It owns no global binding, adoption, inheritance, defaults, neutral facts, EffectiveContract, protocol transition, ledger state, or graph projection.",
+    "The complete Quiet Bell closure still refuses because its authored malleus import has no retained source in the governed fixture. No source is invented.",
+    "The Greenhouse compiler remains a private bootstrap used to prove parser delegation. Its later root-owned package assertions are not part of the frozen worker candidate.",
+    "Source-archive treatment remains undecided. The proven package contract excludes the private adapter from wheels only.",
+    "The accepted FAIL spelling is confined to RED worker TDD observations. Every later phase remains strict.",
+    "The candidate remains unselected. No successor workstream is activated by this completion transaction."
+  ],
+  "recorded_at": "2026-09-01T21:38:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R02"
+}

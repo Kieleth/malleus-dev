@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Implement one private LinkML 1.11.1 parser and support-profile adapter over exact retained modules and closures, with immutable authored evidence and typed atomic refusal.",
+      "Bind the exact eligible candidate, twenty-one-entry worker ledger, RED-only FAIL policy, and root-owned wheel exclusion without rewriting frozen candidate evidence.",
+      "Keep the adapter private and unselected while leaving binding, elaboration, neutral facts, artifacts, protocol execution, packaging promotion, and public APIs separately governed."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000306"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R02"
+  },
+  "entry_hash": "sha256:5ef04b19f495e1df3f71cc68e09de4c9e013843fa4028bd276ed597f9da55e43",
+  "entry_id": "OVR-000307",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8e98caff8772b6822beb0042a258f312123d225234bd293b41f6ef5ce4f41736",
+  "recorded_at": "2026-09-01T21:38:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000306",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 307,
+  "subject": {
+    "id": "CC-R02",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the private retained-LinkML adapter boundary.",
+  "why": "OVR-000306 verifies the exact private candidate, append-only worker evidence, strict phase-result policy, current-main divergence, package guard, regression evidence, and unselected scope required to close this bounded adapter stage."
+}

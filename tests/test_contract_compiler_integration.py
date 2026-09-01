@@ -996,7 +996,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     assert workstream_states["CC-003"] == "PLANNED"
     assert "CC-003" not in state.selections
     assert state.cards["CC-R02"]["authorization"]["class"] == "FORMAL"
-    assert workstream_states["CC-R02"] == "ACTIVE"
+    assert workstream_states["CC-R02"] == "COMPLETE"
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -5725,10 +5725,11 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 18
+    assert len(checked) == 19
     assert "CC-000" not in checked
     assert "CC-014" in checked
     assert "CC-R01" in checked
+    assert "CC-R02" in checked
 
 
 @pytest.mark.parametrize(
@@ -6136,7 +6137,8 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         workstream_id
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
-        and workstream_id not in {"CC-012", "CC-014", "CC-016", "CC-R01"}
+        and workstream_id
+        not in {"CC-012", "CC-014", "CC-016", "CC-R01", "CC-R02"}
     }
 
 
@@ -6801,6 +6803,36 @@ def test_research_tdd_phases_must_follow_canonical_order() -> None:
     _assert_code(error, "CC000_TDD_ORDER")
 
 
+def test_research_red_phase_accepts_literal_fail_as_expected_failure() -> None:
+    results = _complete_tdd_results()
+    results[0]["result"] = "FAIL"
+
+    validate_tdd_gate("CC-R02", results)
+
+
+def test_legacy_red_phase_accepts_literal_fail_as_expected_failure() -> None:
+    results = _complete_tdd_results()
+    results[0]["result"] = "FAIL"
+
+    integration_module._validate_legacy_selected_tdd("CC-001", results)
+
+
+def test_worker_tdd_schema_accepts_literal_fail() -> None:
+    schema = _read_json(CONTRACT / "integration.schema.json")
+    validator = Draft202012Validator(
+        {"$ref": "#/$defs/workerTddData", "$defs": schema["$defs"]}
+    )
+    red = {
+        "artifacts": [],
+        "command": "pytest tests/example.py",
+        "observed": "The required behavior failed before implementation.",
+        "phase": "RED",
+        "result": "FAIL",
+    }
+
+    assert list(validator.iter_errors(red)) == []
+
+
 @pytest.mark.parametrize(
     ("phase", "wrong_result"),
     [
@@ -6808,14 +6840,20 @@ def test_research_tdd_phases_must_follow_canonical_order() -> None:
         ("RED", "NOT_APPLICABLE"),
         ("GREEN", "EXPECTED_FAILURE"),
         ("GREEN", "NOT_APPLICABLE"),
+        ("GREEN", "FAIL"),
         ("SLICE", "EXPECTED_FAILURE"),
         ("SLICE", "NOT_APPLICABLE"),
+        ("SLICE", "FAIL"),
         ("DISPROOF", "EXPECTED_FAILURE"),
         ("DISPROOF", "NOT_APPLICABLE"),
+        ("DISPROOF", "FAIL"),
         ("REGRESSION", "EXPECTED_FAILURE"),
         ("REGRESSION", "NOT_APPLICABLE"),
+        ("REGRESSION", "FAIL"),
+        ("PACKAGE", "FAIL"),
         ("ATTEST", "EXPECTED_FAILURE"),
         ("ATTEST", "NOT_APPLICABLE"),
+        ("ATTEST", "FAIL"),
     ],
 )
 def test_research_tdd_result_matrix_is_exact(
@@ -7492,12 +7530,12 @@ def test_linkml_adapter_activation_is_exact() -> None:
             "path": "conformance/contract_compiler/v0/evidence/CC-R02.json",
         },
     ]
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["candidate"]["state"] == "ELIGIBLE"
+    assert card["ledger"]["state"] == "RECORDED"
     assert "lossless per-module" in card["responsibility"]
     assert "one machine-readable profile" in card["responsibility"]
     assert "no second parser" in card["responsibility"]
-    assert states["CC-R02"] == "ACTIVE"
+    assert states["CC-R02"] == "COMPLETE"
     assert "CC-R02" not in manifest["selections"]
 
     transaction = tuple(
@@ -7635,3 +7673,167 @@ def test_linkml_adapter_wheel_exclusion_choice_is_bound() -> None:
         "sha256:ab6d09c67ca377b257d59eeaa0e0e24695f88f3c38147cccb1deb57ffc7b578d",
         "sha256:e6985510771a3b88d167fd9db477fde35bfd9c8e057787d75744df0501d30424",
     )
+
+
+def test_linkml_adapter_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R02")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert states["CC-R02"] == "COMPLETE"
+    assert card["candidate"] == {
+        "artifacts": [
+            {
+                "byte_length": 55533,
+                "path": "src/malleus/_contract_linkml_adapter.py",
+                "sha256": (
+                    "sha256:15031b57d438ea46a43138f1a9fddb9387ff9aa4ab6fae7617c08c"
+                    "ba7dea9115"
+                ),
+            },
+            {
+                "byte_length": 94009,
+                "path": "src/malleus/_contract_compiler.py",
+                "sha256": (
+                    "sha256:2a6d925216feffadc4b5e214e24d647a9319b2fa50f44fee60bb533"
+                    "290db6276"
+                ),
+            },
+            {
+                "byte_length": 18344,
+                "path": "src/malleus/_contract_compiler_profile.json",
+                "sha256": (
+                    "sha256:13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc"
+                    "4044302e287"
+                ),
+            },
+            {
+                "byte_length": 33334,
+                "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+                "sha256": (
+                    "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f"
+                    "4ed4ff4e9"
+                ),
+            },
+            {
+                "byte_length": 41955,
+                "path": "tests/contract_compiler/test_linkml_adapter.py",
+                "sha256": (
+                    "sha256:b0e332e169ac938fd28d78e31a9337e12938bb534d57f75db6abb26"
+                    "d06f20446"
+                ),
+            },
+        ],
+        "base_commit": "5682fc43d7308d932a586086631bf0170ff1278f",
+        "evidence": [
+            {
+                "byte_length": 12701,
+                "path": "conformance/contract_compiler/v0/evidence/CC-R02.json",
+                "result": "PASS",
+                "sha256": (
+                    "sha256:e2a2b0348ccf708845ae1357b08a8472341cc8b6ad7e16c6c71bf0"
+                    "82bb3c4ce0"
+                ),
+            }
+        ],
+        "head_commit": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+        "head_tree": "1cad438caa1520c32cc44c4da470dbefa284e2ca",
+        "state": "ELIGIBLE",
+    }
+    assert card["ledger"] == {
+        "entry_count": 21,
+        "head_entry_id": "CC-R02-WRK-000021",
+        "head_hash": (
+            "sha256:ce8c6d9708a1d0540995f48624c9494c7a28affd535ff7ac56740184fbecbed8"
+        ),
+        "path": "workstreams/CC-R02/ledger",
+        "state": "RECORDED",
+    }
+    worker_entries = [
+        _read_json(path)
+        for path in sorted(
+            (CONTRACT / "workstreams/CC-R02/ledger/entries").glob("*.json")
+        )
+    ]
+    active_results = integration_module._active_tdd_results(worker_entries)
+    assert [result["phase"] for result in active_results] == list(
+        integration_module.TDD_PHASES
+    )
+    assert active_results[0]["result"] == "FAIL"
+    assert all(result["result"] != "FAIL" for result in active_results[1:])
+
+    candidate_greenhouse = _git_bytes(
+        ROOT,
+        "show",
+        "085b59b718cf4d4c647b0b842308d67df5f2a3ba:"
+        "tests/contract_compiler/test_greenhouse_compiler.py",
+    )
+    current_greenhouse = (
+        ROOT / "tests/contract_compiler/test_greenhouse_compiler.py"
+    ).read_bytes()
+    assert len(candidate_greenhouse) == 33334
+    assert _digest(candidate_greenhouse) == (
+        "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
+    )
+    assert _digest(current_greenhouse) == (
+        "sha256:e5b0db86a4e6bd8ac330a56120a4ba2a880cb0b9621d649bad6f9324f26b01fc"
+    )
+    candidate_paths = [
+        artifact["path"] for artifact in card["candidate"]["artifacts"]
+    ] + [card["candidate"]["evidence"][0]["path"]]
+    later_changes = set(
+        _git(
+            ROOT,
+            "diff",
+            "--name-only",
+            "085b59b718cf4d4c647b0b842308d67df5f2a3ba..HEAD",
+            "--",
+            *candidate_paths,
+        ).splitlines()
+    )
+    assert later_changes == {"tests/contract_compiler/test_greenhouse_compiler.py"}
+
+    package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert (
+        "/src/malleus/_contract_linkml_adapter.py"
+        in package["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"]
+    )
+
+    completion = tuple(
+        entry for entry in ledger_state.entries if 305 <= entry["sequence"] <= 307
+    )
+    assert tuple(entry["entry_id"] for entry in completion) == (
+        "OVR-000305",
+        "OVR-000306",
+        "OVR-000307",
+    )
+    assert tuple(entry["entry_type"] for entry in completion) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completed = completion
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R02"]
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert completed["data"]["previous_state"] == "ACTIVE"
+    assert completed["data"]["new_state"] == "COMPLETE"
+    assert completed["data"]["blockers"] == []
+    assert completed["data"]["evidence_entry_ids"] == ["OVR-000306"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R02-completion.json")
+    assert report["workstream_id"] == "CC-R02"
+    assert report["base_commit"] == "085b59b718cf4d4c647b0b842308d67df5f2a3ba"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    chronology = [
+        datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+        for value in (
+            report["recorded_at"],
+            revision["recorded_at"],
+            verification["recorded_at"],
+            completed["recorded_at"],
+        )
+    ]
+    assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+    assert "CC-R02" not in manifest["selections"]

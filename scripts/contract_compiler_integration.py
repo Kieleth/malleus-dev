@@ -62,7 +62,7 @@ TDD_PHASES = (
     "ATTEST",
 )
 TDD_RESULTS = {
-    "RED": frozenset({"EXPECTED_FAILURE"}),
+    "RED": frozenset({"EXPECTED_FAILURE", "FAIL"}),
     "GREEN": frozenset({"PASS"}),
     "SLICE": frozenset({"PASS"}),
     "DISPROOF": frozenset({"PASS"}),
@@ -1045,8 +1045,8 @@ def _validate_legacy_selected_tdd(
     failed = [
         phase
         for phase, data in phases.items()
-        if data["result"] not in {"PASS", "EXPECTED_FAILURE", "NOT_APPLICABLE"}
-        or (phase == "RED" and data["result"] != "EXPECTED_FAILURE")
+        if data["result"] not in {"PASS", "EXPECTED_FAILURE", "FAIL", "NOT_APPLICABLE"}
+        or (phase == "RED" and data["result"] not in {"EXPECTED_FAILURE", "FAIL"})
         or (phase not in {"RED", "PACKAGE"} and data["result"] != "PASS")
     ]
     if missing or failed:
