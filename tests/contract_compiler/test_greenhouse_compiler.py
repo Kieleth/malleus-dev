@@ -229,6 +229,10 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
     annotation_profile["node_shapes"]["slot"]["fields"]["maximum_value"][
         "classification"
     ] = "ANNOTATION_ONLY"
+    identity_profile = deepcopy(profile)
+    identity_profile["node_shapes"]["slot"]["fields"]["maximum_value"][
+        "classification"
+    ] = "IDENTITY_ONLY"
     default_profile = deepcopy(profile)
     default_profile["defaults"]["class"]["abstract"] = True
 
@@ -243,10 +247,18 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
         locator="memory:default-profile",
         profile=default_profile,
     )
+    identity_only_maximum = compile_linkml_contract(
+        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+        locator="memory:identity-profile",
+        profile=identity_profile,
+    )
 
     assert without_maximum.canonical_facts != ordinary.canonical_facts
     assert not any(
         fact.predicate.endswith("/maximum") for fact in without_maximum.facts
+    )
+    assert not any(
+        fact.predicate.endswith("/maximum") for fact in identity_only_maximum.facts
     )
     assert (
         without_maximum.implementation.profile_sha256
@@ -319,6 +331,40 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
             ),
         ),
         (
+            "unsupported-builtin-range",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(b"    range: PlantState\n", b"    range: date\n"),
+        ),
+        (
+            "slot-level-constraint",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"    range: PlantState\n",
+                b"    range: PlantState\n    equals_string: HEALTHY\n",
+            ),
+        ),
+        (
+            "condition-required",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"            equals_string: HEALTHY\n",
+                b"            required: true\n",
+            ),
+        ),
+        (
+            "compound-condition",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"            equals_string: HEALTHY\n",
+                b"            equals_string: HEALTHY\n"
+                b"            value_presence: PRESENT\n",
+            ),
+        ),
+        (
             "two-conditions",
             (SOURCE_ROOT / "baseline.yaml")
             .read_bytes()
@@ -362,6 +408,25 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
                 b"    mixins:\n      - Traceable\n      - Auditable\n",
             ),
         ),
+        (
+            "semantic-parent",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"  Sample:\n    description: A greenhouse sample.\n",
+                b"  Sample:\n    description: A greenhouse sample.\n"
+                b"    mixins:\n      - Traceable\n",
+            ),
+        ),
+        (
+            "derived-mixin",
+            (SOURCE_ROOT / "baseline.yaml")
+            .read_bytes()
+            .replace(
+                b"    mixin: true\n",
+                b"    mixin: true\n    is_a: Sample\n",
+            ),
+        ),
     ),
 )
 def test_greenhouse_bootstrap_refuses_unproved_linkml_branches(
@@ -381,6 +446,24 @@ def test_profile_rejects_unknown_interpreter_operations() -> None:
         compile_linkml_contract(
             (SOURCE_ROOT / "baseline.yaml").read_bytes(),
             locator="memory:unknown-profile-operation",
+            profile=profile,
+        )
+
+
+@pytest.mark.parametrize("location", ("root", "field"))
+def test_profile_refuses_unread_policy_members(location: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if location == "root":
+        profile["unread_policy"] = True
+    else:
+        profile["node_shapes"]["slot"]["fields"]["maximum_value"]["unread_policy"] = (
+            True
+        )
+
+    with pytest.raises(ContractCompileError, match="profile"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator=f"memory:unread-profile-{location}",
             profile=profile,
         )
 
