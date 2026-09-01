@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr03-qualified-binder",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest tests/contract_compiler -q; run retained-source and adapter regressions; run changed-file Ruff, format, and diff checks",
+    "observed": "All 426 contract-compiler tests pass, including 134 retained-source and LinkML adapter regressions. Changed-file Ruff, format verification, and base-to-candidate diff checking pass.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c4c89292c1c2eda3aa1cc936720b6122c294e713285e739e9d38e67d2051af78",
+  "entry_id": "CC-R03-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:df078eba6c3730e9f540754e9f32adff34e6b9d6c567c17bae87a4d8bc0071d0",
+  "recorded_at": "2026-09-01T23:32:49Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the cumulative compiler regression boundary.",
+  "workstream_id": "CC-R03"
+}

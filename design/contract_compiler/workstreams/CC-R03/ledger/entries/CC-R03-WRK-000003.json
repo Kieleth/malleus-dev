@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr03-qualified-binder",
+  "data": {
+    "artifacts": [],
+    "command": "Compare cdda14c1ba442db0cd360259d4700686dee721b1..5b70d95b1eee28ebf52e068c8fa0233fb0ae2303 and run the fixed AST boundary guard.",
+    "observed": "The candidate changes only the private binder, adjacent binding profile, and binder tests. It adds no resolver or source I/O, parser, fallback, regex semantics, elaboration, facts, artifacts, protocol, runtime, graph, package, release, or public API behavior.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8e76398cd4820f1e5f090600bd5c509de5f2ab99d1d45903d3f1a4dbf41c70a8",
+  "entry_id": "CC-R03-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:b586f8209a1558e34122c9f7cc196b8455449efe1d41284db83d33d3161de4e4",
+  "recorded_at": "2026-09-01T23:32:47Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Verify the exact private binding slice.",
+  "workstream_id": "CC-R03"
+}

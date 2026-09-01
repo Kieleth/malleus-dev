@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr03-qualified-binder",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest tests/contract_compiler/test_contract_binder.py -q at the preserved RED commits",
+    "observed": "Initial RED stopped at ModuleNotFoundError for malleus._contract_binder. Later RED commits separately reproduced qualification and trust bypasses, governed-output drift, forged topology, seven recursion and internal-evidence failures, and two sequence-occurrence relabeling failures before their paired production repairs.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:9d265f1ab0c2bfc4de2a3146599221502d24ce4e1d04d3c657df26425cc2b4b5",
+  "entry_id": "CC-R03-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-01T23:32:45Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the qualified binder RED history.",
+  "workstream_id": "CC-R03"
+}

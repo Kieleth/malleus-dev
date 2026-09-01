@@ -1,0 +1,100 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 60386,
+      "path": "src/malleus/_contract_binder.py",
+      "sha256": "sha256:df7cceff66dde12929e3da3ce757f7fb16143677cc536d3680ccd9eabb77784d"
+    },
+    {
+      "byte_length": 4730,
+      "path": "src/malleus/_contract_binding_profile.json",
+      "sha256": "sha256:f9a840b15fae34060f8907d6b6724b4d9f3cf785f3613efe83b6ba59eb930a0f"
+    },
+    {
+      "byte_length": 34746,
+      "path": "tests/contract_compiler/test_contract_binder.py",
+      "sha256": "sha256:05f3c2885cadd1d247105ad08d731ba48b5d3550ca2497a045abef4271acdde6"
+    }
+  ],
+  "base_commit": "cdda14c1ba442db0cd360259d4700686dee721b1",
+  "checks": [
+    {
+      "check_id": "ccr03-authority-and-scope",
+      "method": "Inspect activation cdda14c1, the exact workstream card, base-to-candidate history, changed paths, and shared-tree status.",
+      "observed": "Candidate 5b70d95b1eee28ebf52e068c8fa0233fb0ae2303, tree 896f1a56ed1153b4a66a1603053dad292012f524, descends linearly from the activation base and changes only the private binder, its adjacent profile, and its fixed tests. The evidence and worker ledger are handoff sidebands. Unrelated research, design, and handover worktree files are excluded and untouched.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-tdd-history",
+      "method": "Inspect every commit from activation through the frozen candidate and replay the final focused tests.",
+      "observed": "History is RED a2d599e plus correction b30b5dc; GREEN 8d5759a; qualification/trust RED f0175df and GREEN 60b756a; governed-output RED fc7f5fb and GREEN 12704f6; topology RED 5620d9e and GREEN 1fc356a; profile guard 29e6098; recursion/evidence RED 374b494 and GREEN 05e1db3; sequence-relabel RED 98b23a3 and GREEN 5b70d95. The first RED stopped at ModuleNotFoundError for malleus._contract_binder. Audit REDs reproduced seven and two failures before repair.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-closed-binding-boundary",
+      "method": "Pass exact immutable DeclaredContractClosure values, mutable or malformed substitutes, and failing multi-module cases to the binder.",
+      "observed": "The binder returns one deeply immutable ContractBinding or one BindingRefusal with a closed reason and deterministically ordered diagnostics. No partial binding is exposed after refusal.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-qualification-and-resolution",
+      "method": "Qualify global and class-local declarations, resolve module and declaration reference sites, and exercise the exact trusted LinkML builtin set.",
+      "observed": "Identifiers derive from the authored schema ID and profile-declared paths. References resolve only inside the retained import closure or the exact seven trusted builtins. Unknown, ambiguous, wrong-kind, builtin-colliding, and qualified-identifier-colliding inputs refuse atomically.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-owner-and-adoption-policy",
+      "method": "Exercise independent owners, non-slot duplicates, positive slot adoption, and the full marker plus exact pre-default equality matrix.",
+      "observed": "Exactly one imported ancestor remains authoritative. Only a Slot with literal Boolean adopts:true and exact typed equality after removing description, the marker, and an empty annotations map is accepted. Absent, null, false, string-true, value, presence, type, cardinality, owner, and kind differences refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-evidence-and-topology-integrity",
+      "method": "Forge schema identity, declaration name, identifier, path, body, ordinal, occurrences, trusted flags, roots, edges, and sequence classifications; test a valid 1,201-module chain and a two-node cycle.",
+      "observed": "The binder compares declarations and occurrences with the retained authored tree, including exact profile-declared sequence-item classifications. It validates closure topology iteratively, accepts the deep acyclic chain without Python recursion, and refuses the cycle once as MALFORMED_INPUT.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-determinism",
+      "method": "Permute import, module, and declaration order for equivalent failing inputs and compare complete diagnostics.",
+      "observed": "Diagnostic values and ordering are invariant to the tested input permutations, including the selected representative for a qualified-identifier collision.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-stage-and-fixture-boundaries",
+      "method": "Run governed explicit-adoption and Greenhouse inputs, the Quiet Bell missing-import control, and inspect the binder AST and imports.",
+      "observed": "Governed prior-stage outputs feed the binder unchanged. Quiet Bell stops at source resolution before binder invocation. The binder performs no resolver or source I/O, parsing, LinkML calls, fallback, regex semantics, fixture-specific branching, elaboration, fact emission, or public API work; its sole file read is the adjacent exact profile.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-focused-and-cumulative-tests",
+      "method": "Run .venv/bin/python -m pytest tests/contract_compiler/test_contract_binder.py -q; the retained-source and LinkML adapter modules; then all tests/contract_compiler.",
+      "observed": "All 38 binder tests, 134 retained-source and adapter regressions, and 426 contract-compiler tests passed. Changed-file Ruff, format verification, and base-to-candidate diff checking also passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-independent-audit",
+      "method": "Submit exact candidate 5b70d95/tree 896f1a56 to independent read-only compiler-correctness review after each repair round.",
+      "observed": "The first audit found recursive cycle traversal, internally incoherent declared evidence, and an order-dependent collision representative. The second found unchecked sequence-item classifications and requested a direct cycle guard. Each defect received a separate RED and GREEN commit. Final audit reported no P0, P1, P2, or P3 findings.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-package-boundary",
+      "method": "Compare the private research candidate with package, release, public API, and integration surfaces.",
+      "observed": "PACKAGE is omitted as optional and not completion authority under the current research KISS policy. This candidate changes no package configuration, dependency, release, public export, selection, card, integration registry, or overseer state.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a private research binder candidate, not a public API, wire format, plugin system, package, release, or general LinkML compatibility promise.",
+    "It binds one exact private LinkML-v0 declaration profile. Other frontend adapters require their own declared evidence contract and binding profile; no adapter registry or fallback is introduced.",
+    "It owns qualification, reference resolution, authoritative ownership, and the accepted explicit slot-adoption exception only. Hierarchy, mixins, defaults, slot use, expressions, neutral facts, EffectiveContract, artifacts, protocol execution, change sets, runtime, and graph projection remain later boundaries.",
+    "Quiet Bell remains intentionally stopped before binding because its authored malleus import has no governed retained source.",
+    "The four exact sequence-item occurrence rules are explicit profile data because AuthoredSequenceItem does not itself retain classification. No implicit classification default is used.",
+    "The candidate remains unselected and not complete until the overseer independently binds this handoff through the normal integration transaction.",
+    "Pre-existing modified research files and untracked design and handover files are excluded from this candidate and were not modified by this worker."
+  ],
+  "recorded_at": "2026-09-01T23:32:44Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R03"
+}

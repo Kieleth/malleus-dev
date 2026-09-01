@@ -1,0 +1,30 @@
+{
+  "actor_id": "worker:ccr03-qualified-binder",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 60386,
+        "path": "src/malleus/_contract_binder.py",
+        "sha256": "sha256:df7cceff66dde12929e3da3ce757f7fb16143677cc536d3680ccd9eabb77784d"
+      },
+      {
+        "byte_length": 4730,
+        "path": "src/malleus/_contract_binding_profile.json",
+        "sha256": "sha256:f9a840b15fae34060f8907d6b6724b4d9f3cf785f3613efe83b6ba59eb930a0f"
+      }
+    ],
+    "command": ".venv/bin/python -m pytest tests/contract_compiler/test_contract_binder.py -q",
+    "observed": "All 38 fixed binder tests pass. The private binder returns one immutable qualified composition or one typed atomic refusal and the profile contains all stage-owned policy data.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:b586f8209a1558e34122c9f7cc196b8455449efe1d41284db83d33d3161de4e4",
+  "entry_id": "CC-R03-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:9d265f1ab0c2bfc4de2a3146599221502d24ce4e1d04d3c657df26425cc2b4b5",
+  "recorded_at": "2026-09-01T23:32:46Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the minimum private qualified binder.",
+  "workstream_id": "CC-R03"
+}

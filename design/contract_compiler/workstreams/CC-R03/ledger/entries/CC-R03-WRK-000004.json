@@ -1,0 +1,25 @@
+{
+  "actor_id": "worker:ccr03-qualified-binder",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 34746,
+        "path": "tests/contract_compiler/test_contract_binder.py",
+        "sha256": "sha256:05f3c2885cadd1d247105ad08d731ba48b5d3550ca2497a045abef4271acdde6"
+      }
+    ],
+    "command": "Run the adversarial qualification, adoption, topology, evidence-coherence, deep-chain, cycle, permutation, and sequence-relabel binder tests; submit the exact candidate to independent read-only audit.",
+    "observed": "The tests disprove fallback ownership, malformed adoption, ambient resolution, recursive topology dependence, forged internal evidence, order-dependent diagnostics, and relabeled sequence evidence. Repairs are guarded mechanically. Final independent audit of 5b70d95/tree 896f1a56 reported no P0, P1, P2, or P3 findings.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:df078eba6c3730e9f540754e9f32adff34e6b9d6c567c17bae87a4d8bc0071d0",
+  "entry_id": "CC-R03-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8e76398cd4820f1e5f090600bd5c509de5f2ab99d1d45903d3f1a4dbf41c70a8",
+  "recorded_at": "2026-09-01T23:32:48Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Disprove the binder bypass classes and close the audit.",
+  "workstream_id": "CC-R03"
+}
