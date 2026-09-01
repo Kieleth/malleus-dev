@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Run the focused feature oracle, 67 neighboring oracle/input controls, complete tests/contract_compiler, evidence verification, changed-file Ruff and format, and diff checks at candidate 81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb.",
+    "observed": "The repaired focused suite passed 21 tests, neighboring oracle/input controls passed 67, and the complete contract-compiler directory passed 244. Evidence verification confirmed 2 artifacts and 10 checks. Ruff, format, and diff checks passed.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4a4a451ef5cf9f93e1bfc868ea47183b09c56a51371ab41cb51c34d5512b86b1",
+  "entry_id": "CC-014-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:cb8b25b9e721acc0702df777570102cc6d852aaf7d5a524812989b885f1791d9",
+  "recorded_at": "2026-09-01T07:20:33Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Record passing feature-oracle regressions.",
+  "workstream_id": "CC-014"
+}

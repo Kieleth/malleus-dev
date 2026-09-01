@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/pytest -q tests/contract_compiler/test_feature_case_oracles.py -k 'corruption_controls or forbidden_execution_dependency or hidden_producer_mutations'",
+    "observed": "All 14 corruption and hidden-producer controls passed with 7 deselected. Two audits first exposed from-import, aliased builtins, direct and aliased pytest.main, and aliased pytest.importorskip bypasses in earlier broad GREEN claims. The repaired exact allowlist, direct pytest-attribute closure, and mutated-source controls now reject those paths plus configuration, outcome, projection, relation, provenance, nonclaim, Boolean-number, integer-decimal, dynamic import, and execution drift.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:cb8b25b9e721acc0702df777570102cc6d852aaf7d5a524812989b885f1791d9",
+  "entry_id": "CC-014-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:99ed9bb2005c7ea8cd4084a874586f458f9062d1c6eaf31beacbf0845c41a722",
+  "recorded_at": "2026-09-01T07:20:32Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Pass all feature-oracle semantic and isolation disproofs.",
+  "workstream_id": "CC-014"
+}

@@ -1,0 +1,35 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 7861,
+        "path": "conformance/contract_compiler/v0/evidence/CC-014.json",
+        "sha256": "sha256:74fc1b37886770a8d34a541a3dc6f37e1e0d72710c1dd9bf6b5a3ea3d6aeb7e9"
+      },
+      {
+        "byte_length": 18972,
+        "path": "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json",
+        "sha256": "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd428017068"
+      },
+      {
+        "byte_length": 23720,
+        "path": "tests/contract_compiler/test_feature_case_oracles.py",
+        "sha256": "sha256:4f217511d88b43cb8d50edc344bda8a99e4567bafb28f7e02f4fa349ebc9313c"
+      }
+    ],
+    "command": "Verify candidate 81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb, base 607706796bf157f10d2a911a57cff39a72876795, tree af33fc96eba5924912c9c4c3c6e6a5be36a2066e, exact owned scope, artifact bytes, evidence, both independent audits, changed-file Ruff, and diff checks.",
+    "observed": "All three frozen content paths match exact bytes. Two independent audits found and closed from-import, aliased builtins, direct and aliased pytest.main, and aliased pytest.importorskip guard defects; both final audits report no P0-P3. Focused, disproof, neighboring, complete contract-compiler, evidence, Ruff, format, and diff checks pass.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ad67b5c4835874fc15f7523d040bcedf48e575e01b5f9f906499b72cf6302285",
+  "entry_id": "CC-014-WRK-000007",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f83660fde248e2a937aa60f7d7e1882d04cc3ac32982414cfb8a9885dfccacad",
+  "recorded_at": "2026-09-01T07:35:44Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 7,
+  "summary": "Attest the frozen feature-answer-key candidate.",
+  "workstream_id": "CC-014"
+}

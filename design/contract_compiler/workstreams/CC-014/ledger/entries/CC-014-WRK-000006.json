@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Review the exact candidate against compiler, runtime, installed, public, corpus, package, image, selection, integration, and release surfaces.",
+    "observed": "NOT_APPLICABLE. The candidate contains private repository-local conformance evidence only and changes no implementation, dependency, distribution, installed data, public format, corpus membership, checksum, package, image, selection, integration, or release surface.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:f83660fde248e2a937aa60f7d7e1882d04cc3ac32982414cfb8a9885dfccacad",
+  "entry_id": "CC-014-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:4a4a451ef5cf9f93e1bfc868ea47183b09c56a51371ab41cb51c34d5512b86b1",
+  "recorded_at": "2026-09-01T07:20:34Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Record the private answer-key package boundary.",
+  "workstream_id": "CC-014"
+}

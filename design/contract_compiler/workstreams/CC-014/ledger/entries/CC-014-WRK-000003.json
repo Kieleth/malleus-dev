@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect the linear 607706796bf157f10d2a911a57cff39a72876795..81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb candidate, tree, exact diff, canonical report, and private fixture boundary.",
+    "observed": "The five-commit candidate ends at tree af33fc96eba5924912c9c4c3c6e6a5be36a2066e and changes exactly the three authorized content paths plus its append-only CC-014 worker ledger. No compiler, runtime, input, corpus, checksum, governance, package, or unrelated path is included.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:99ed9bb2005c7ea8cd4084a874586f458f9062d1c6eaf31beacbf0845c41a722",
+  "entry_id": "CC-014-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:c6be0f5c6b25dc4b4790df84d8a4b6d7c5248f244e2713fccc5bd4cba17657ba",
+  "recorded_at": "2026-09-01T07:20:31Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Pass the exact bounded feature-answer-key slice.",
+  "workstream_id": "CC-014"
+}
