@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python scripts/ci.py test",
+    "observed": "Quality passed; configured pytest passed 1,943 tests with 2 skipped; contract-compiler passed 284; overseer validated 288 entries; integration validated 72 workstreams, 34 cards, and 4 selections; GraphRecipe passed 40. The focused retained-source module separately passed all 40 tests.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:1267fae1822af665ed6099d66b534ca38c525a9d74a79b093b791bd85922f0aa",
+  "entry_id": "CC-R01-WRK-000018",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:ee7b0f0d56b8d26a31c2917ffd93e3ebccd960f3b9332540674f7f65f704d28c",
+  "recorded_at": "2026-09-01T15:48:59Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 18,
+  "summary": "Pass the repository regression gate.",
+  "workstream_id": "CC-R01"
+}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": "Review the CC-R01 worker card and exact candidate against package configuration, wheel, sdist, installed-data, public API, image, and release surfaces.",
+    "observed": "NOT_APPLICABLE. CC-R01 owns research-local closure code, tests, evidence, and ledger, with no package configuration, wheel, sdist, installed-data, public API, or release surface. Wheel exclusion is a separate root-owned post-candidate gate; this candidate does not prove it.",
+    "phase": "PACKAGE",
+    "result": "NOT_APPLICABLE"
+  },
+  "entry_hash": "sha256:13eb77d3f2b075661c3a7c52f7b2df8b32b10d7c3c7119e519044e0684b53ffb",
+  "entry_id": "CC-R01-WRK-000019",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:1267fae1822af665ed6099d66b534ca38c525a9d74a79b093b791bd85922f0aa",
+  "recorded_at": "2026-09-01T15:49:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 19,
+  "summary": "Record the root-owned package boundary.",
+  "workstream_id": "CC-R01"
+}

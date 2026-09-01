@@ -1,0 +1,35 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 9474,
+        "path": "conformance/contract_compiler/v0/evidence/CC-R01.json",
+        "sha256": "sha256:67b39a464e8a73e98ab6b2929cc9ea230f9f5c9a149751eb1d6d9bff48cb3b20"
+      },
+      {
+        "byte_length": 12588,
+        "path": "src/malleus/_contract_source.py",
+        "sha256": "sha256:dd8861dedbd26c2aa33600865683563fb732a6d3c749f2817905824e0bc717d2"
+      },
+      {
+        "byte_length": 33946,
+        "path": "tests/contract_compiler/test_retained_source_boundary.py",
+        "sha256": "sha256:9f69ae6b4f57823e92e924704534cdd0644078085a2cf2460acddc45a04ab8b8"
+      }
+    ],
+    "command": "Verify candidate 89645c1ca314fa58ba03e711cbbb29de94cfc007, tree e5b198568fea8522e0a894458b4d98fb11b9f95e, base dbc5eaee8493275b3d0c468b77f5567711507cd8, exact artifact bytes, verification snapshot, independent audit, scoped Ruff, regression results, and diff boundary.",
+    "observed": "All three frozen artifacts match exact current bytes and the report snapshot verifies. Independent audit cleared code and tests after each reported gap gained a hard regression. Scoped Ruff, 40 focused tests, full test CI, artifact hashing, and diff checks pass. The candidate remains generic and eligible only; empty-corpus completion is not claimed.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:5ee62ba931c7a03e1cb15f889fedc74ce8af899b60b28f1a25431a312bccb64e",
+  "entry_id": "CC-R01-WRK-000020",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:13eb77d3f2b075661c3a7c52f7b2df8b32b10d7c3c7119e519044e0684b53ffb",
+  "recorded_at": "2026-09-01T15:49:01Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 20,
+  "summary": "Attest the frozen retained-source candidate and its limits.",
+  "workstream_id": "CC-R01"
+}
