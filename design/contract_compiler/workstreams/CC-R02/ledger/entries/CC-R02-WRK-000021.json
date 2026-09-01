@@ -1,0 +1,50 @@
+{
+  "actor_id": "worker:ccr02-linkml-adapter",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 12701,
+        "path": "conformance/contract_compiler/v0/evidence/CC-R02.json",
+        "sha256": "sha256:e2a2b0348ccf708845ae1357b08a8472341cc8b6ad7e16c6c71bf082bb3c4ce0"
+      },
+      {
+        "byte_length": 55533,
+        "path": "src/malleus/_contract_linkml_adapter.py",
+        "sha256": "sha256:15031b57d438ea46a43138f1a9fddb9387ff9aa4ab6fae7617c08cba7dea9115"
+      },
+      {
+        "byte_length": 94009,
+        "path": "src/malleus/_contract_compiler.py",
+        "sha256": "sha256:2a6d925216feffadc4b5e214e24d647a9319b2fa50f44fee60bb533290db6276"
+      },
+      {
+        "byte_length": 18344,
+        "path": "src/malleus/_contract_compiler_profile.json",
+        "sha256": "sha256:13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287"
+      },
+      {
+        "byte_length": 33334,
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+        "sha256": "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
+      },
+      {
+        "byte_length": 41955,
+        "path": "tests/contract_compiler/test_linkml_adapter.py",
+        "sha256": "sha256:b0e332e169ac938fd28d78e31a9337e12938bb534d57f75db6abb26d06f20446"
+      }
+    ],
+    "command": "Verify corrected candidate 085b59b718cf4d4c647b0b842308d67df5f2a3ba, tree 1cad438caa1520c32cc44c4da470dbefa284e2ca, base 5682fc43d7308d932a586086631bf0170ff1278f, forward-only corrections, exact artifacts, focused and regression tests, report verification, Ruff, and diff boundary.",
+    "observed": "All six frozen artifacts match the corrected candidate bytes. The superseding report verifies, all 229 focused and 380 contract-compiler tests pass, and parser plus lowering execute one exact active profile. The candidate remains private; package selection and integration are separate root authority.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ce8c6d9708a1d0540995f48624c9494c7a28affd535ff7ac56740184fbecbed8",
+  "entry_id": "CC-R02-WRK-000021",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:fd59bb19e875abb411fca4e81bffade90683889f44a6b29493d52891ec4094bf",
+  "recorded_at": "2026-09-01T19:08:21Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 21,
+  "summary": "Attest the corrected retained LinkML adapter candidate.",
+  "workstream_id": "CC-R02"
+}
