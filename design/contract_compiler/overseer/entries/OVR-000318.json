@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Bind the exact eligible private candidate, its three artifacts, canonical PASS evidence, and six-entry worker ledger without rewriting worker history.",
+      "Complete qualification, closure-scoped reference resolution, trusted builtins, singular ownership, accepted explicit slot adoption, exact provenance, typed atomic refusal, and deterministic diagnostics.",
+      "Keep the binder private and unselected while leaving elaboration, neutral facts, EffectiveContract, artifacts, protocol execution, runtime, graph, packaging, release, and public APIs separately governed."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000317"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R03"
+  },
+  "entry_hash": "sha256:67b9f5e7f883d237de956bc3e963c4d5aa0fc5b1298d65976b9776205dce4ee7",
+  "entry_id": "OVR-000318",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:86d3c4570a70600c1f0441a66ed111bed65cb20eb50bc320f08c6040230db156",
+  "recorded_at": "2026-09-01T23:40:03Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000317",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-R03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 318,
+  "subject": {
+    "id": "CC-R03",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the private qualified-binding and explicit-composition stage.",
+  "why": "OVR-000317 verifies the exact private candidate, append-only worker evidence, behavior, audit, privacy, exclusions, and unselected scope required to close CC-R03."
+}

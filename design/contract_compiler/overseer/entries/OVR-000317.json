@@ -1,0 +1,63 @@
+{
+  "actor": {
+    "id": "ccr03-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T23:40:02Z",
+    "claims": [
+      "CC-R03 binds implementation candidate 5b70d95b1eee28ebf52e068c8fa0233fb0ae2303 at tree 896f1a56ed1153b4a66a1603053dad292012f524 and attested handoff 8be9fb97a060a0b8940e8b3ce87f8991e5e16de6 at tree bb3a108b67b09f9e1b81126a5077936faed1f177 from activation base cdda14c1ba442db0cd360259d4700686dee721b1.",
+      "The candidate contains exactly three authorized private artifacts and one exact PASS evidence report.",
+      "The assigned worker ledger contains six append-only entries and ends at sha256:5099f8a80ec4d0d6ffcef20be99d475560477240a3094930114dab17a4f41074.",
+      "Its active phases are RED EXPECTED_FAILURE followed by GREEN, SLICE, DISPROOF, REGRESSION, and ATTEST PASS. PACKAGE is omitted as optional and grants no package authority.",
+      "All 38 binder tests and all 426 contract-compiler tests pass; changed-file Ruff, format, and diff checks pass.",
+      "The independent exact-candidate audit reports no P0, P1, P2, or P3 finding after every discovered defect received a hard regression test.",
+      "The binder remains private, eligible, unselected, and separate from elaboration, neutral facts, EffectiveContract, artifacts, protocol execution, runtime, graph, packaging, release, and public APIs.",
+      "The completion report binds eight exact artifacts and seven PASS checks."
+    ],
+    "limitations": [
+      "This is a private research binder, not a public API, wire format, adapter registry, plugin system, package, release, or general LinkML support promise.",
+      "Elaboration, neutral facts, EffectiveContract, artifacts, protocol execution, semantic transitions, runtime, and graph projection remain later work.",
+      "Quiet Bell remains stopped before binding because its authored malleus import has no retained governed source.",
+      "PACKAGE is omitted and is not completion authority. Distribution work remains separately governed.",
+      "No successor workstream is activated by this completion."
+    ]
+  },
+  "entry_hash": "sha256:86d3c4570a70600c1f0441a66ed111bed65cb20eb50bc320f08c6040230db156",
+  "entry_id": "OVR-000317",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c4acd5d5a91fb26be89719471c1a04406539ee2929e99c3d0c3d479cd00e7eb6",
+  "recorded_at": "2026-09-01T23:40:02Z",
+  "references": [
+    {
+      "digest": "sha256:c1e594c114b9ea3e06598bf55618b38dc3976c59db3811f506b5ef2743735530",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R03-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000316",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5b70d95b1eee28ebf52e068c8fa0233fb0ae2303",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 317,
+  "subject": {
+    "id": "ccr03-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact private qualified-binder candidate.",
+  "why": "The exact candidate, worker chain, behavior, audit, privacy, exclusions, and unselected state satisfy the bounded CC-R03 contract without package or release authority."
+}

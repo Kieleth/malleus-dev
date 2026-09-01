@@ -1,0 +1,89 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R03"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:13435e72a8eeaa2cd1d333b98ad277ebe24c34116d600418b1e5f90a0f495d51",
+        "before_digest": "sha256:44018b9a56e88f0570a5ba44ffd2a97bb9eca4acc00d294e25ee8f5fb572ed62",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R03/manifest.json"
+      },
+      {
+        "after_digest": "sha256:1ef0e6bc6dd5367c6fc6a0f4c381014fa86ffae340a6cceffa9c61066295ac45",
+        "before_digest": "sha256:c3862750dc379428b61909dff1c0f432239e096d3457cfe69d1a5b810afbe44f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:e6b82ca6ca8d8d85e58d0352b4e516ec71f8dd76c28c19ce36a55cf39dba1056",
+        "before_digest": "sha256:532353f939321d207b61f87b2c3167fcfbcfd48fcad56ed7f8c3aeb3b70c0b72",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:c1e594c114b9ea3e06598bf55618b38dc3976c59db3811f506b5ef2743735530",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R03-completion.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c4acd5d5a91fb26be89719471c1a04406539ee2929e99c3d0c3d479cd00e7eb6",
+  "entry_id": "OVR-000316",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a68f5250141cdc1b468a80c0213c26a1496c22967ec8aafb4ca68f233c42b878",
+  "recorded_at": "2026-09-01T23:40:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R03/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:c1e594c114b9ea3e06598bf55618b38dc3976c59db3811f506b5ef2743735530",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R03-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5b70d95b1eee28ebf52e068c8fa0233fb0ae2303",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8be9fb97a060a0b8940e8b3ce87f8991e5e16de6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-R03",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 316,
+  "subject": {
+    "id": "ccr03-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private qualified-binder candidate and worker evidence.",
+  "why": "The exact audited candidate and six-entry worker ledger satisfy the bounded private binder contract. PACKAGE is omitted under the research policy and supplies no completion or distribution authority."
+}

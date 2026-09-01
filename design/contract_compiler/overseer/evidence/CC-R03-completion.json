@@ -1,0 +1,100 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8146,
+      "path": "conformance/contract_compiler/v0/evidence/CC-R03.json",
+      "sha256": "sha256:ce7e5735f0cb81af0f4a076b38b099ad84c6868524bc6a4603925200698efe28"
+    },
+    {
+      "byte_length": 60386,
+      "path": "src/malleus/_contract_binder.py",
+      "sha256": "sha256:df7cceff66dde12929e3da3ce757f7fb16143677cc536d3680ccd9eabb77784d"
+    },
+    {
+      "byte_length": 4730,
+      "path": "src/malleus/_contract_binding_profile.json",
+      "sha256": "sha256:f9a840b15fae34060f8907d6b6724b4d9f3cf785f3613efe83b6ba59eb930a0f"
+    },
+    {
+      "byte_length": 34746,
+      "path": "tests/contract_compiler/test_contract_binder.py",
+      "sha256": "sha256:05f3c2885cadd1d247105ad08d731ba48b5d3550ca2497a045abef4271acdde6"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-R03/ledger/head.json",
+      "sha256": "sha256:1f30fec38d0523f2208cb725ee618eb1b01972f8c7e825ee1a32782ead84c638"
+    },
+    {
+      "byte_length": 8519,
+      "path": "design/contract_compiler/workstreams/CC-R03/manifest.json",
+      "sha256": "sha256:13435e72a8eeaa2cd1d333b98ad277ebe24c34116d600418b1e5f90a0f495d51"
+    },
+    {
+      "byte_length": 26809,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:1ef0e6bc6dd5367c6fc6a0f4c381014fa86ffae340a6cceffa9c61066295ac45"
+    },
+    {
+      "byte_length": 300355,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:e6b82ca6ca8d8d85e58d0352b4e516ec71f8dd76c28c19ce36a55cf39dba1056"
+    }
+  ],
+  "base_commit": "8be9fb97a060a0b8940e8b3ce87f8991e5e16de6",
+  "checks": [
+    {
+      "check_id": "ccr03-completion-red",
+      "method": "Add and run the fixed completion guard before changing the card, registry, or overseer state.",
+      "observed": "The guard failed at the intended first boundary because CC-R03 remained ACTIVE with candidate NONE and worker ledger NOT_STARTED. No candidate or completion authority was inferred from the handoff.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-candidate-history",
+      "method": "Validate exact implementation candidate 5b70d95b1eee28ebf52e068c8fa0233fb0ae2303 at tree 896f1a56ed1153b4a66a1603053dad292012f524 and attested handoff 8be9fb97a060a0b8940e8b3ce87f8991e5e16de6 at tree bb3a108b67b09f9e1b81126a5077936faed1f177.",
+      "observed": "The linear implementation changes only the authorized private binder module, adjacent profile, and fixed binder tests. The handoff adds only canonical evidence and the worker-ledger sideband. Base, commits, trees, sizes, digests, and evidence are exact.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-worker-ledger",
+      "method": "Validate the six-entry worker ledger, hash continuity, exact phase order, and research PACKAGE policy.",
+      "observed": "RED EXPECTED_FAILURE is followed by GREEN, SLICE, DISPROOF, REGRESSION, and ATTEST PASS. PACKAGE is omitted as optional and confers no completion, distribution, or release authority. The chain ends at sha256:5099f8a80ec4d0d6ffcef20be99d475560477240a3094930114dab17a4f41074.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-private-binding-semantics",
+      "method": "Run the fixed binder tests for qualification, closure-scoped resolution, trusted builtins, singular ownership, explicit slot adoption, provenance, topology, typed atomic refusal, and deterministic diagnostics.",
+      "observed": "All 38 binder tests pass. The candidate returns one immutable ContractBinding or one closed BindingRefusal without partial output, ambient resolution, fallback, or order-dependent diagnostics.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-regression-and-audit",
+      "method": "Run every contract-compiler test, changed-file Ruff and format checks, diff checks, and inspect the final independent audit.",
+      "observed": "All 426 contract-compiler tests pass. The final independent audit reports no P0, P1, P2, or P3 findings after every discovered defect received a separate RED and GREEN repair.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-stage-boundaries",
+      "method": "Inspect source, AST, profile, package, public, runtime, ontology, corpus, integration, and selection surfaces.",
+      "observed": "The candidate owns only private qualification and composition policy. It adds no resolver I/O, parser, fallback, elaboration, facts, artifact, protocol, runtime, graph, package, version, release, public API, ontology, corpus, or fixture policy.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr03-unselected-completion",
+      "method": "Require an exact eligible candidate, recorded worker ledger, COMPLETE workstream state, private responsibility, and absence from selections.",
+      "observed": "The bounded binder stage is complete, private, eligible, and unselected. No successor workstream is activated.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This completes one private qualified-binding and explicit-composition stage, not a public API, wire format, adapter registry, plugin system, package, release, or general LinkML compatibility claim.",
+    "The binder owns qualification, reference resolution, singular ownership, and accepted explicit slot adoption only. Elaboration, neutral facts, EffectiveContract, artifacts, protocol execution, semantic transitions, runtime, and graph projection remain later boundaries.",
+    "Quiet Bell remains stopped before binding because its authored malleus import has no governed retained source. No source is invented.",
+    "The sequence-item occurrence rules are exact private profile data. No implicit default or fallback classification is introduced.",
+    "PACKAGE is omitted under the current research policy and is not completion authority. Distribution checks remain separately governed.",
+    "The candidate remains unselected. No successor workstream is activated by this completion."
+  ],
+  "recorded_at": "2026-09-01T23:40:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R03"
+}

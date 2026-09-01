@@ -7926,6 +7926,14 @@ def test_qualified_binder_activation_is_exact() -> None:
     card_path = CONTRACT / row["card"]["path"]
     card_source = card_path.read_bytes()
     card = _read_json(card_path)
+    activation_card = json.loads(
+        _git(
+            ROOT,
+            "show",
+            "cdda14c1ba442db0cd360259d4700686dee721b1:"
+            "design/contract_compiler/workstreams/CC-R03/manifest.json",
+        )
+    )
     assert row["card"] == {
         "byte_length": len(card_source),
         "path": "workstreams/CC-R03/manifest.json",
@@ -7942,8 +7950,8 @@ def test_qualified_binder_activation_is_exact() -> None:
         binding["workstream_id"]
         for binding in card["authorization"]["dependency_bindings"]
     ] == row["depends_on"]
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert activation_card["candidate"] == {"state": "NONE"}
+    assert activation_card["ledger"] == {"state": "NOT_STARTED"}
     assert card["scopes"] == [
         {"kind": "FILE", "path": "src/malleus/_contract_binder.py"},
         {
@@ -7985,7 +7993,7 @@ def test_qualified_binder_activation_is_exact() -> None:
 
     ledger_state = _raw_overseer_state()
     states, _ = integration_module._workstream_states(ledger_state)
-    assert states["CC-R03"] == "ACTIVE"
+    assert states["CC-R03"] == "COMPLETE"
     assert "CC-R03" not in manifest["selections"]
     transaction = tuple(
         entry for entry in ledger_state.entries if 313 <= entry["sequence"] <= 315
@@ -8026,3 +8034,115 @@ def test_qualified_binder_activation_is_exact() -> None:
     assert report["base_commit"] == "18068c4a33722e9f882de6335e6f3e74ddfa9931"
     assert report["workstream_id"] == "CC-R03"
     assert all(check["result"] == "PASS" for check in report["checks"])
+
+
+def test_qualified_binder_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R03")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert states["CC-R03"] == "COMPLETE"
+    assert card["candidate"] == {
+        "artifacts": [
+            {
+                "byte_length": 60386,
+                "path": "src/malleus/_contract_binder.py",
+                "sha256": (
+                    "sha256:df7cceff66dde12929e3da3ce757f7fb16143677cc536d3680ccd9e"
+                    "abb77784d"
+                ),
+            },
+            {
+                "byte_length": 4730,
+                "path": "src/malleus/_contract_binding_profile.json",
+                "sha256": (
+                    "sha256:f9a840b15fae34060f8907d6b6724b4d9f3cf785f3613efe83b6ba"
+                    "59eb930a0f"
+                ),
+            },
+            {
+                "byte_length": 34746,
+                "path": "tests/contract_compiler/test_contract_binder.py",
+                "sha256": (
+                    "sha256:05f3c2885cadd1d247105ad08d731ba48b5d3550ca2497a045abef4"
+                    "271acdde6"
+                ),
+            },
+        ],
+        "base_commit": "cdda14c1ba442db0cd360259d4700686dee721b1",
+        "evidence": [
+            {
+                "byte_length": 8146,
+                "path": "conformance/contract_compiler/v0/evidence/CC-R03.json",
+                "result": "PASS",
+                "sha256": (
+                    "sha256:ce7e5735f0cb81af0f4a076b38b099ad84c6868524bc6a460392520"
+                    "0698efe28"
+                ),
+            }
+        ],
+        "head_commit": "8be9fb97a060a0b8940e8b3ce87f8991e5e16de6",
+        "head_tree": "bb3a108b67b09f9e1b81126a5077936faed1f177",
+        "state": "ELIGIBLE",
+    }
+    assert card["ledger"] == {
+        "entry_count": 6,
+        "head_entry_id": "CC-R03-WRK-000006",
+        "head_hash": (
+            "sha256:5099f8a80ec4d0d6ffcef20be99d475560477240a3094930114dab17a4f41074"
+        ),
+        "path": "workstreams/CC-R03/ledger",
+        "state": "RECORDED",
+    }
+    worker_entries = [
+        _read_json(path)
+        for path in sorted(
+            (CONTRACT / "workstreams/CC-R03/ledger/entries").glob("*.json")
+        )
+    ]
+    assert [
+        entry["data"]["phase"]
+        for entry in worker_entries
+        if entry["entry_type"] == "TDD_RESULT"
+    ] == ["RED", "GREEN", "SLICE", "DISPROOF", "REGRESSION", "ATTEST"]
+    assert all(entry["data"]["phase"] != "PACKAGE" for entry in worker_entries)
+
+    completion = tuple(
+        entry for entry in ledger_state.entries if 316 <= entry["sequence"] <= 318
+    )
+    assert tuple(entry["entry_id"] for entry in completion) == (
+        "OVR-000316",
+        "OVR-000317",
+        "OVR-000318",
+    )
+    assert tuple(entry["entry_type"] for entry in completion) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completed = completion
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R03-completion.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R03/manifest.json": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "ccr03-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert completed["data"]["previous_state"] == "ACTIVE"
+    assert completed["data"]["new_state"] == "COMPLETE"
+    assert completed["data"]["blockers"] == []
+    assert completed["data"]["evidence_entry_ids"] == ["OVR-000317"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R03-completion.json")
+    assert report["base_commit"] == "8be9fb97a060a0b8940e8b3ce87f8991e5e16de6"
+    assert report["workstream_id"] == "CC-R03"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert "CC-R03" not in manifest["selections"]
