@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:cc014-feature-oracles",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/ruff format tests/contract_compiler/test_feature_case_oracles.py && .venv/bin/ruff check tests/contract_compiler/test_feature_case_oracles.py && .venv/bin/pytest -q tests/contract_compiler/test_feature_case_oracles.py",
+    "observed": "Ruff formatted the fixed test and passed. Pytest exited 1 with exactly 8 expected missing-oracle failures and 6 passing corruption controls. Every failure was either the empty oracle inventory or FileNotFoundError for the absent private feature_cases.json answer key.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:0cc3b0ba9896594d52a9660cee737dbee3e5cfcd575b19c2ba842ff60e95668b",
+  "entry_id": "CC-014-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-01T07:11:55Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the missing feature-answer-key RED.",
+  "workstream_id": "CC-014"
+}
