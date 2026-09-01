@@ -1,0 +1,160 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 14602,
+      "path": ".claude/skills/malleus-dev/SKILL.md",
+      "sha256": "sha256:76b4ff99f7b1260b34bc3630a505401d0e7d867871d67e1e85803334bc648de6"
+    },
+    {
+      "byte_length": 10809,
+      "path": ".claude/skills/malleus-inquisitor/SKILL.md",
+      "sha256": "sha256:1e5d8500b6f9327c28984ec4be44d871499b6fd049f5effc872f53d7a1e7f40e"
+    },
+    {
+      "byte_length": 119280,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:731248f701bb8fe0b005c3398fe37520d4b26a80b0ee4047a5674e18cedb29c6"
+    },
+    {
+      "byte_length": 96767,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:e417d53d4d86e0b18988c7c280560285cc70bd079b3ceb04ffb7153369fa6faa"
+    },
+    {
+      "byte_length": 326637,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4"
+    },
+    {
+      "byte_length": 31462,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:a9f29e56a5caaf3d77ffd9430a92fc2d5353b0f04490d766ea7bab19dda060f0"
+    },
+    {
+      "byte_length": 110951,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:f7f6315bf6931a6db3ed864dd5d23d9f5b48067ae65faa8592d9e32207cc1907"
+    },
+    {
+      "byte_length": 25730,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:de745cb9d4e6a00f30906e129cf62b7b46fdb78b9d59651527fed37de75dba5d"
+    },
+    {
+      "byte_length": 23339,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:57a50308ce5bf3b4ccd8ff7869276a8ee2c04a552eb65a24545ca3326a1c94e6"
+    },
+    {
+      "byte_length": 38822,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:45d011248e60bcc3824877ff94390c394bc3be9a89016651ab5d4b35fb8f1822"
+    },
+    {
+      "byte_length": 2169,
+      "path": "design/contract_compiler/workstreams/CC-D17/manifest.json",
+      "sha256": "sha256:b7e8374a49fe0c4925286299b2efa13650ed9812429e34cc80f85853f8d5cde2"
+    },
+    {
+      "byte_length": 22776,
+      "path": "docs/ASSENT_PROTOCOL.md",
+      "sha256": "sha256:3e547c7b1ead772ba7260cd0ff4a62449940da3f80a287cc38c08812c80cc337"
+    },
+    {
+      "byte_length": 21657,
+      "path": "docs/PRINCIPLES.md",
+      "sha256": "sha256:fa276857301f0a396b9cd93f3eb48bb4dfe6456b05e0f9400e3339c40e8e5a68"
+    },
+    {
+      "byte_length": 3303,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:bfd4309f2b5fe1230df1ca2f80c8efc921c0ca5355cbe7f7982d6208bb9dabb9"
+    },
+    {
+      "byte_length": 36384,
+      "path": "src/malleus/inquisition/rubric.yaml",
+      "sha256": "sha256:a5b5df6f40c1073548f817a034f06a2eed7329ebc96b45b82583febba8d94f1c"
+    },
+    {
+      "byte_length": 238623,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:862b1e4034dd471c268838fb1d243fceaf5c1cba5a0f5948e71448c274049cd3"
+    },
+    {
+      "byte_length": 250113,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:dc99ea49e823c26635c9c31878dc2412654cddccd95268c8627a3b5d3b6f68a5"
+    },
+    {
+      "byte_length": 74545,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:91e2d18ff2687487b1085d285c7d87e1e5762fab35d85b5a62f2f00986154d9e"
+    },
+    {
+      "byte_length": 81972,
+      "path": "tests/test_inquisition.py",
+      "sha256": "sha256:3e6952e9d6478460fd1285e483073c9d6bf4f5a942d475c225ebb0b40b940373"
+    }
+  ],
+  "base_commit": "5f185469832a1ec1653f0e9ace2de697f3c4726d",
+  "checks": [
+    {
+      "check_id": "ccd17-red-tdd",
+      "method": "Run the five new executor-only documentation, rubric, skill, program, integration, and graph guards before adding the accepted architecture.",
+      "observed": "Commit 7263db63ae15257396274123ce7ffed44adc865e records the RED guards. The focused run failed five times on the absent executor-only authority, generic-interpreter runway, and self-inquisition rule.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-authority-split",
+      "method": "Inspect the accepted decision, foundation graph, program, conformance trace, and zero-scope card for one exact authority split.",
+      "observed": "The neutral contract IR owns legal nouns and shapes; the protocol-machine program owns event and transition meaning; separately identified policy and projection programs own their concerns; the interpreter owns only generic execution.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-portability-and-no-escape",
+      "method": "Check the decision and conformance rules for cross-implementation replay, closed capabilities, and prohibited host-language authority.",
+      "observed": "A conforming interpreter must produce the exact poststate and receipt or unchanged state and typed refusal from the same identified inputs. Profile literals, unrestricted callbacks, host expressions, and arbitrary-code escape hatches are forbidden.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-graph",
+      "method": "Parse canonical foundation graph revision 22 and every Markdown Turtle projection, then inspect OD-015, statuses, and dependency acyclicity.",
+      "observed": "The canonical graph and all projections contain the same 1,792 triples with zero set differences. All 380 status subjects have one status. The 109-node, 109-edge dependsOn graph is acyclic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-runway",
+      "method": "Validate the strict integration manifest and inspect ownership of the machine program, generic interpreter, Assent hard cutover, and source-to-ABox handoff.",
+      "observed": "The 71-workstream DAG gives machine data to the existing compiler stage, generic execution to one new research stage, deletion of handwritten Assent transitions to the existing production cutover, and the neutral population/construction-plan receipt to the Small Shop vertical.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-self-inquisition",
+      "method": "Run the Malleus-self documentation, skill, and rubric guards against protocol authority hidden in an executor.",
+      "observed": "The maintainer skill states the executor-only law. The inquisitor requires a dedicated review rite covering identified protocol data, a generic executor, independent conformance, and no arbitrary-code escape hatch.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-kiss-boundary",
+      "method": "Inspect the governed diff for runtime, ontology, dependency, package, API, DSL, candidate, selection, or worker-ledger expansion.",
+      "observed": "The transaction changes architecture, documentation, graph projections, a zero-scope decision card, integration metadata, retained evidence, self-audit rules, and tests only. No Assent runtime or ontology code changes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd17-final-validation",
+      "method": "Run the fixed local CI. After sandbox DNS blocked external links and the isolated build dependency, rerun the documentation and package phases with network access.",
+      "observed": "Ruff passed; 1,930 tests passed with 2 skipped; 129 compiler, 40 GraphRecipe, and 55 Small Shop tests passed; ledger and integration passed; Sphinx HTML, doctest, and live links passed; sdist, wheel, twine, clean install, and CLI smoke passed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This closes architecture and dependency ownership only. It does not define final machine artifact bytes, a DSL, a public API, or a shipped interpreter.",
+    "Current Python Assent handlers still enforce review behavior. They remain comparison evidence until the independent Lean Review machine proof passes and the later hard cutover deletes them without fallback.",
+    "The PopulationPlan, GraphConstructionPlan, and CandidateValidationReceipt boundary is research-local design. It is not yet executable or a stable consumer contract.",
+    "The inquisitor rule is currently a mandatory review guard, not a syntax-aware detector over Python source.",
+    "An LLM may help author or correct ontology and machine inputs outside the deterministic kernel. It is not part of acceptance, replay, or compiler authority."
+  ],
+  "recorded_at": "2026-08-31T23:52:47Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D17"
+}

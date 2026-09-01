@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 21,
-`sha256:0fbfb892128c20f009c61e1077dc8c35b264580f3c083acaa3c64049e3f33c39`
+revision 22,
+`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -430,7 +430,7 @@ mfg:EffectiveContract rdf:type rdfs:Class ;
 
 mfg:AdmissionImplementation rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;
-    mfg:implements mfg:NormativeAdmissionProfile ;
+    mfg:implements mfg:ProtocolMachineInterpreterContract ;
     mfg:validatedBy mfg:AdmissionConformanceResult ;
     mfg:identifiedBy mfg:ImplementationArtifactHash ;
     mfg:status mfg:Candidate .
@@ -648,12 +648,74 @@ addressable rules and a conformance suite. Implementations identify the exact
 code that executed those rules. The effective contract hash binds the
 validated fact-set hash and normative-profile hash, not implementation bytes.
 
+`OD-015` closes the implementation-authority gap. `AdmissionRuleSet` is nested
+inside a strict `ProtocolMachineProgram`; the normative profile contains that
+program rather than leaving operational meaning in Python. The program owns
+events, payload shapes, preconditions, legal order, transitions, effects,
+atomicity, typed refusal identifiers, and exact references to any semantic
+policy it invokes. Projection-program identity remains in projection closure.
+A named capability contract is allowed; an unrestricted host-language callback
+is not.
+
+The interpreter is generic. Cross-implementation conformance asks whether two
+independent executors can load the same effective-contract artifact and produce
+the same accepted state or typed refusal. The current Python handlers are
+comparison evidence until the later no-fallback cutover; they are not the
+portable protocol authority.
+
 ```turtle
 mfg:NormativeAdmissionProfile rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;
-    mfg:composedOf mfg:AdmissionRuleSet ;
+    mfg:composedOf mfg:ProtocolMachineProgram ;
     mfg:identifiedBy mfg:NormativeAdmissionProfileHash ;
     mfg:status mfg:Candidate .
+
+mfg:ProtocolMachineProgram rdf:type rdfs:Class ;
+    rdfs:subClassOf mfg:DesignObject ;
+    mfg:composedOf mfg:AdmissionRuleSet ;
+    mfg:identifiedBy mfg:ProtocolMachineProgramHash ;
+    mfg:status mfg:Candidate .
+
+mfg:PolicyProgram rdf:type rdfs:Class ;
+    rdfs:subClassOf mfg:DesignObject ;
+    mfg:identifiedBy mfg:PolicyProgramHash ;
+    mfg:status mfg:Candidate .
+
+mfg:ProjectionProgram rdf:type rdfs:Class ;
+    rdfs:subClassOf mfg:DesignObject ;
+    mfg:identifiedBy mfg:ProjectionProgramHash ;
+    mfg:status mfg:Candidate .
+
+mfg:ProtocolMachineInterpreterContract rdf:type mfg:DesignObject ;
+    mfg:status mfg:AcceptedDesign .
+
+<https://malleus.dev/contract-compiler/OD-015> rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-08-31" ;
+    mfg:selects mfg:ExecutorOnlyProtocolMachineArchitecture ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ExecutorOnlyProtocolMachineArchitecture rdf:type mfg:DesignObject ;
+    mfg:binds mfg:StrictNeutralContractIRBoundary ;
+    mfg:binds mfg:StrictProtocolMachineIRBoundary ;
+    mfg:binds mfg:SeparateExactIdentityPolicyAndProjectionProgramsBoundary ;
+    mfg:binds mfg:GenericInterpreterNoProtocolAuthorityBoundary ;
+    mfg:binds mfg:NoArbitraryCodeEscapeHatchBoundary ;
+    mfg:binds mfg:CrossImplementationReplayParityBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:StrictNeutralContractIRBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:StrictProtocolMachineIRBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:SeparateExactIdentityPolicyAndProjectionProgramsBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:GenericInterpreterNoProtocolAuthorityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:NoArbitraryCodeEscapeHatchBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:CrossImplementationReplayParityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
 
 mfg:AdmissionConformanceResult rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:DesignObject ;

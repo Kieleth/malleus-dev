@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 21,
-`sha256:0fbfb892128c20f009c61e1077dc8c35b264580f3c083acaa3c64049e3f33c39`
+revision 22,
+`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
 
 Protocol-design evidence cutoff: 2026-08-27
 
@@ -709,6 +709,30 @@ output is retained as an observed input before plan compilation. The compiler
 never invokes those producers.
 
 Output: `GraphConstructionPlan` or a blocked result with typed gaps.
+
+### Research-local consumer handoff
+
+The Small Shop vertical must publish the neutral seam it exercises, not a
+fixture-shaped API. The research-local handoff contains three canonical data
+values:
+
+1. `PopulationPlan`, containing exact mapping, transformation, identity,
+   conflict, recipe, source-shape, and policy references, with no occurrence
+   values or proposed writes.
+2. `GraphConstructionPlan`, containing the exact contract, machine, population,
+   source, base, implementation, and realization identities plus ordered
+   `ProposedOperation` values and typed construction gaps.
+3. `CandidateValidationReceipt`, binding the candidate and plan; effective
+   contract and protocol-machine identities; selected policy and projection
+   references; retained source identities; declared base; ordered operations;
+   executor identity; ordered typed results or refusals; and result or output
+   digest.
+
+These shapes are frontend-neutral and contain no Small Shop or Malleus Code
+term. Small Shop is their first conformance fixture. The receipt is not a
+migration receipt, protocol-ledger event, accepted-KG identity, or future
+projection-closure record. This research boundary makes no stable public API
+claim; open graph-realization promotion decisions still apply.
 
 ### Phase 6: Stage and verify
 

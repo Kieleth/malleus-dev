@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 20
+## Accepted directions in canonical graph revision 22
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -400,12 +400,13 @@ materialization remains pending.
 | OD-011 | One explicitly selected resolver profile, strict Malleus by default | Resolver capabilities default deny; adapters perform no hidden I/O and no fallback profile is tried |
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
+| OD-015 | Protocol authority is an exact machine program executed by a generic interpreter | No DSL, public API, or shipped generic interpreter is claimed yet; current Python remains comparison evidence until hard cutover |
 
 The operator also excluded migration feature development from the foundation
 block. That is an execution-scope instruction, not approval to reuse an old
 wire field with new meaning.
 
-## Accepted compiler decisions through 2026-08-27
+## Accepted compiler decisions through 2026-08-31
 
 These choices are design authority. They do not implement a compiler, resolver,
 wire reader, package split, fixture, or publication.
@@ -1641,7 +1642,66 @@ source file, asset, public page, or publication.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-014`. `CC-D14` is complete.
 
-## Remaining decisions after revision 20
+### OD-015: executor-only protocol-machine architecture
+
+Decision state: ACCEPTED, 2026-08-31
+
+The operator selected one strict separation:
+
+```text
+ValidatedContractFactSet
+  = neutral contract IR for legal nouns and shapes
+
+NormativeAdmissionProfile
+  = strict protocol-machine program
+    + exact references to any required policy program
+    + declared typed capability contracts
+
+EffectiveContractArtifact
+  = content-addressed compiled facts and machine program
+
+AdmissionImplementation
+  = generic interpreter over the artifact, event, prestate, and declared inputs
+```
+
+The protocol-machine program owns event vocabulary, payload shapes,
+preconditions, legal order, transitions, effects, atomicity, and typed refusal
+identifiers. A policy program is a separate identified semantic input when it
+affects admission. A projection program is separately identified in projection
+closure and does not silently enter semantic graph identity. Diagnostic wording
+and serialization remain in the separate diagnostic profile.
+
+Python may implement generic lookup, subtype, equality, membership, uniqueness,
+ordering, transaction staging, rollback, canonical hashing, and declared typed
+capability invocation. It may not contain private protocol decisions keyed to a
+specific event, record, or field name. There is no unrestricted callback,
+dynamic host-language expression, or arbitrary-code escape hatch. A capability
+adapter is admitted only through a typed interface, exact implementation
+identity, declared effects and refusals, and conformance evidence.
+
+Execution is atomic. The exact artifact, prestate, event, and declared side
+inputs yield either one exact poststate plus receipt or unchanged state plus a
+typed refusal. The replacement test is behavioral and language-neutral: a
+second conforming interpreter must load the same artifact and produce the same
+result.
+
+The first proof uses Lean Review because its four records and three events
+exercise lookup, subtype checks, actor matching, uniqueness, atomic multi-record
+insertion, and passive disposition without an external capability. This first
+slice does not prove interpreter replaceability; that claim waits for a
+deliberately different implementation to pass the same conformance suite.
+
+This decision selects no human-authored DSL and makes no shipped capability
+claim. Current Python handlers remain regression evidence while the machine
+program and generic interpreter are built research-locally. Production Assent
+changes only through the later hard cutover, which deletes the replaced paths
+and provides no fallback. An LLM may help propose ontology or program source
+outside the trusted compiler, normal review, and deterministic replay boundary.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-015`. `CC-D17` is complete.
+
+## Remaining decisions after revision 22
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.

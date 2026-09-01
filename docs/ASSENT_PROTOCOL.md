@@ -11,6 +11,14 @@ do not claim the Assent profile may use structural admission alone. The schema,
 Python handlers, and JSONL envelope described here are the current reference
 implementation of this profile.
 
+The current Python handlers are regression evidence for the behavior already
+shipped, not protocol authority for the portable target. The accepted compiler
+direction moves event vocabulary, preconditions, transitions, effects,
+atomicity, and refusal identifiers into an exact protocol-machine program.
+A generic interpreter will execute that program. The handwritten handlers stay
+in place until independent Lean Review conformance proves parity and the later
+Assent cutover removes the old path without fallback.
+
 The assent schema is `ontology/assent.yaml`. It imports the minimal Malleus
 root ontology rather than expanding that root with protocol-specific concepts.
 

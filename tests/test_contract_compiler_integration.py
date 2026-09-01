@@ -119,6 +119,7 @@ GREENHOUSE_ACTIVATION_ENTRY = "OVR-000263"
 GREENHOUSE_CANDIDATE_BASE = "6969f193eb9e57f815bb73c38b7094a980e1642c"
 GREENHOUSE_CANDIDATE_COMMIT = "f654d215a5877061512f8125147fe0f8f6a26db3"
 GREENHOUSE_CANDIDATE_TREE = "760ca219e9b47ff7c70687b0dd4fe5caf7bbb00b"
+GREENHOUSE_COMPLETION_COMMIT = "5f185469832a1ec1653f0e9ace2de697f3c4726d"
 GREENHOUSE_CANDIDATE_PATHS = {
     "conformance/contract_compiler/v0/evidence/CC-016.json",
     "conformance/contract_kernel/v0/neutral_domain/oracle/greenhouse.json",
@@ -352,6 +353,16 @@ def _git(repository: Path, *arguments: str) -> str:
         text=True,
     )
     return result.stdout.strip()
+
+
+def _git_bytes(repository: Path, *arguments: str) -> bytes:
+    result = subprocess.run(
+        ["git", *arguments],
+        cwd=repository,
+        check=True,
+        capture_output=True,
+    )
+    return result.stdout
 
 
 def _commit(repository: Path, message: str) -> str:
@@ -714,15 +725,16 @@ def _overseer_prefix(sequence: int) -> SimpleNamespace:
     )
 
 
-def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_71_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 69
+    assert len(registry) == 71
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
     assert registry["CC-D06"] == ("CC-D05",)
     assert registry["CC-D08"] == ("CC-D02", "CC-D03", "CC-D05")
+    assert registry["CC-D17"] == ("CC-D05", "CC-D06")
     assert registry["CC-R01"] == (
         "CC-000",
         "CC-X03",
@@ -759,7 +771,9 @@ def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
         "CC-R05",
         "CC-R06",
         "CC-R07",
+        "CC-R10",
     )
+    assert registry["CC-R10"] == ("CC-R07", "CC-D17")
     assert registry["CC-R09"] == (
         "CC-R08",
         "CC-D07",
@@ -767,6 +781,7 @@ def test_program_registry_contains_the_exact_approved_69_workstreams() -> None:
         "CC-021",
         "CC-022",
     )
+    assert registry["CC-P21"] == ("CC-P12", "CC-P19", "CC-P20", "CC-R10")
     assert registry["CC-P52"] == ("CC-P45", "CC-P51", "CC-PUB01")
 
 
@@ -794,7 +809,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 69
+    assert len(state.workstreams) == 71
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -864,8 +879,9 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D11": ("CC-X03",),
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
+        "CC-D17": ("CC-D05", "CC-D06"),
     }
-    assert len(state.cards) == 32
+    assert len(state.cards) == 33
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -951,6 +967,20 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-R06 retains production admission TDD",
     ):
         assert phrase in d10_responsibility
+    d17_responsibility = state.cards["CC-D17"]["responsibility"]
+    for phrase in (
+        "closed typed canonical ProtocolMachineProgram",
+        "event vocabulary",
+        "typed refusals",
+        "projection programs separately identified",
+        "machine semantic identity separate from executor identity",
+        "arbitrary-code escape hatches",
+        "same poststate and receipt or unchanged state and typed refusal",
+        "Lean Review only as the first bounded future conformance slice",
+        "selects no DSL",
+        "no implementation",
+    ):
+        assert phrase in d17_responsibility
 
 
 def test_cc010_activation_boundary_is_exact() -> None:
@@ -1582,7 +1612,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
 def test_small_shop_input_completion_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
-    assert manifest["revision"] == 2
+    assert manifest["revision"] == 3
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     assert row["card"]["state"] == "PRESENT"
     path = CONTRACT / row["card"]["path"]
@@ -3524,7 +3554,11 @@ def test_greenhouse_completion_report_is_bounded() -> None:
         "design/contract_compiler/workstreams/CC-016/manifest.json",
     }
     for artifact in report["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = _git_bytes(
+            ROOT,
+            "show",
+            f"{GREENHOUSE_COMPLETION_COMMIT}:{artifact['path']}",
+        )
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
     checks = {check["check_id"]: check for check in report["checks"]}
@@ -5036,7 +5070,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 69 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 71 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])

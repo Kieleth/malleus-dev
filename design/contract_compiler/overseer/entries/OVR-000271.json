@@ -1,0 +1,73 @@
+{
+  "actor": {
+    "id": "ccd17-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-08-31T23:52:50Z",
+    "claims": [
+      "The validated contract fact set is the strict neutral contract IR. A separately identified protocol-machine program owns event vocabulary, payload shapes, preconditions, legal order, transitions, effects, atomicity, typed refusals, declared capabilities, and exact policy references.",
+      "Policy and projection programs retain separate exact identities. A conforming interpreter contains no profile-specific event, record, field, or refusal literal, no profile-specific branch, and no host-language expression, unrestricted callback, dynamic-import, or arbitrary-code authority path.",
+      "The same identified artifact, prestate, input event, and declared side inputs must produce the same poststate and receipt or unchanged state and typed refusal across conforming implementations. Lean Review is the first bounded future proof, not the protocol oracle.",
+      "Foundation graph revision 22 and all Markdown projections contain the same 1,792 triples with zero set differences. All 380 status subjects have one status and the 109-node, 109-edge dependsOn graph is acyclic.",
+      "The strict 71-workstream DAG assigns machine data to the compiler runway, generic execution to an independent research stage, deletion of handwritten Assent transitions to the existing hard cutover, and a neutral population/construction-plan receipt to the Small Shop vertical.",
+      "The maintainer skill, public principles, Assent documentation, compiler documentation, inquisitor skill, and rubric now treat executor-held protocol authority as a review failure.",
+      "The retained RED commit failed on the absent boundary. The focused architecture, graph, integration, documentation, skill, and rubric guards pass on the accepted bytes.",
+      "The transaction adds design authority, graph projection, a zero-scope card, strict integration metadata, retained evidence, review guards, and tests only. It changes no production Assent code, ontology schema, dependency, package, API, candidate, selection, or worker ledger."
+    ],
+    "limitations": [
+      "No final machine grammar, artifact bytes, public API, shipped interpreter, or second independent executor is implemented by this decision.",
+      "Current Python Assent handlers remain operational comparison evidence until the independent Lean Review proof and later no-fallback hard cutover.",
+      "The neutral PopulationPlan, GraphConstructionPlan, and CandidateValidationReceipt are research-local design boundaries, not executable or stable public contracts.",
+      "The self-inquisition rule is review-driven rather than a syntax-aware detector.",
+      "An LLM may assist authoring outside the deterministic kernel but has no acceptance, replay, or compiler authority."
+    ]
+  },
+  "entry_hash": "sha256:934da2d39b19159aa7a50236d3b4728a8ca053bbf66d713839517c13baa3f1e8",
+  "entry_id": "OVR-000271",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:da8098d79f6dcee0d05ce674553f480ca674910d43fdc082a423d2c4cb2af143",
+  "recorded_at": "2026-08-31T23:52:50Z",
+  "references": [
+    {
+      "digest": "sha256:72baf47c6b635712237bb4d594129c2afbb558e362dbc76a12a3b7deb4387c56",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D17.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000268",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000269",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000270",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-015",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D17",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 271,
+  "subject": {
+    "id": "CC-D17-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the executor-only protocol-machine architecture and runway split.",
+  "why": "The retained report binds the exact design, graph, integration, self-inquisition, documentation, and test bytes. Its checks establish the portable authority split, deterministic no-escape rule, graph parity, acyclic ownership runway, neutral consumer handoff, retained RED, and zero runtime scope."
+}

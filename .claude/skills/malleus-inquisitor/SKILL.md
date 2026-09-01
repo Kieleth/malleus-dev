@@ -116,7 +116,10 @@ before applying adopter-schema rules:
 1. Classify every changed deliverable and capability claim using the five
    roles above. Apply `protocol_role_is_explicit` and
    `optional_profile_stays_optional` across code, docs, skills, fixtures, and
-   tests.
+   tests. Apply `protocol_authority_is_data` to every machine-executed profile:
+   profile-specific event, record, field, transition, effect, and refusal
+   choices must come from identified artifacts rather than interpreter
+   branches.
 2. Check that core runtime code does not import research, conformance, or test
    trees, and that the root ontology imports no domain, research, conformance,
    or fixture ontology. Use syntax-aware Python and YAML parsing, not text

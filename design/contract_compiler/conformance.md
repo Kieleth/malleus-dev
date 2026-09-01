@@ -350,6 +350,30 @@ confidentiality, filtering, or ACL behavior. Cascade, reverse dependency,
 uncertainty propagation, interval-containment proof, repair, migration,
 deletion, diagnostics, and implementation remain outside D10.
 
+## OD-015 executor-only protocol-machine conformance boundary
+
+The neutral contract IR states legal nouns and shapes. One closed, typed,
+canonical `ProtocolMachineProgram` separately states event vocabulary, payload
+shapes, preconditions, legal order, transitions, effects, atomicity, typed
+refusal identifiers, declared capabilities, and exact semantic-policy
+references. Projection programs remain separate and enter projection closure
+rather than semantic graph identity.
+
+The generic interpreter accepts the exact effective-contract artifact,
+prestate, event, and declared side inputs. It returns either one exact poststate
+and receipt or unchanged state and a typed refusal. Unknown opcodes,
+capabilities, fields, or artifact grammar refuse before effects. No program may
+contain a host-language expression or unrestricted callback.
+
+The first bounded conformance slice is Lean Review. Independently hand-authored
+events and expected states cover the four review records and three review
+events, actor binding, subtype-aware target exclusion, one report per request,
+atomic report plus findings, one immutable disposition per finding, and passive
+`INVALIDATE`. Current `assent.py` behavior is comparison evidence only. An AST
+guard proves that the generic executor contains no review record or event
+literals. A deliberately different interpreter is still required before
+replaceability is claimed.
+
 ## OD-008 closed support-profile conformance boundary
 
 The LinkML v0 adapter profile classifies each exact source location as
@@ -410,6 +434,7 @@ regression obligation.
 | AT-007 | Canonical facts | Immutable D05 seed plus exact expression extension, class inheritance and mixin, global and qualified class-local Slot, complete reified SlotUse, enum, Scalar termination, applied defaults, and numeric normalization | Bare symbol, string Boolean, raw number, unknown member or predicate, wrong kind, seed subject, incomplete SlotUse, duplicate, contradiction, cycle, invalid bound or range, null outside enum body, array, nested object, noncanonical decimal, unsupported expression, member order, record order, presentation erasure | LinkML adapter, independent direct facts, and independent oracle yield identical metamodel-valid atomic facts and exact canonical bytes; all invalid whole sets refuse atomically |
 | AT-008 | Effective contract and closed composition | Complete P/D/G role closures, fixed conceptual v0 role tags and constructors, one composition, one accepted-temporal epoch, and standalone D-only structural graph | Missing, duplicate, extra, unknown, swapped, incomplete, ambient, equal-payload, unbound replacement, mixed-composition, independent-head, wrong-use, structural/full-path confusion, wrong fixed role tag, domain, version, or composition constructor | Exact domain-separated role and composition identities; delta matrix; new composition and epoch for any semantic role change; exact atomic refusal |
 | AT-008a | Protected replay-derived governance partition | One accepted graph lineage, single external bootstrap root, pre-event authority, ordinary write, authorized governance update, following-event visibility, same-contract policy update | Missing or ambiguous root, root graph mutation, same-event self-authorization, direct policy self-amendment, ordinary write directly mutates governance identity, wrong role or admission path, GovernanceContract semantic change under old epoch | Admission-path-only membership with no type/name/namespace/storage inference, no governance-specific head or query surface, exact pre-state/post-state queries, same epoch for policy instances under the same contract, new epoch boundary for contract change, atomic refusal |
+| AT-008b | Protocol machine and generic interpreter | Independently authored Lean Review program, events, prestates, expected poststates, and receipts | Unknown opcode or capability, malformed program, wrong actor or binding, duplicate report or disposition, partial finding batch, profile-specific executor literal, host-language callback | Same accepted state or typed refusal from the exact artifact and inputs; unchanged state on every refusal; no protocol authority in executor code; no replaceability claim from one implementation |
 | AT-009 | Artifact loader | Valid packaged artifact | Truncated, corrupt, unknown field, mutable nested value | Deep immutable reload equality and typed refusal without LinkML |
 | AT-010 | Record shape | Six valid records | Unknown property, missing required, wrong enum, wrong scalar | Ordered typed violations and selected legacy rendering |
 | AT-011 | Graph context | Generic class reference, Entity-only relation endpoint, Entity-or-Relation signal bearer, same role and partition, and referential closure | Missing or wrong type, mixin-only match, cross-role or cross-partition target, Event/Signal/Relation endpoint, missing or invalid bearer, duplicate global ID, incomplete temporal view, abstract root | Exact decisions, state digests, final records, and atomic refusal with no access-policy claim |

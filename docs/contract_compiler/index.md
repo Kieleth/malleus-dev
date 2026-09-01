@@ -45,12 +45,18 @@ DISPROOF, REGRESSION, PACKAGE, and ATTEST checks. The integration validator
 requires one active result per phase, in that exact order, before a `CC-R`
 candidate can become eligible, integrated, complete, or selected.
 
-Place each future `CC-R01` through `CC-R08` test module under
+Place each future research compiler and interpreter test module under
 `tests/contract_compiler/`. The fixed `compiler-tests` runner stage executes
 that directory after the configured full suite, so a new R stage enters both
 local and remote CI without changing `pyproject.toml`, a workflow, a marker, or
 a command registry. Keeping this research-local path out of the package-wide
 pytest configuration also avoids rebinding unrelated GraphRecipe identities.
+
+The accepted machine boundary keeps protocol meaning in the reloadable
+effective-contract artifact. Python is the first generic interpreter, not the
+authority for event names, state transitions, effects, or refusal identifiers.
+The Lean Review slice proves the interpreter boundary before the later Assent
+hard cutover removes handwritten transition paths.
 
 ```{toctree}
 :maxdepth: 1

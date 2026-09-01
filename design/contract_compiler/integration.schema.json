@@ -456,7 +456,7 @@
           "items": {
             "$ref": "#/$defs/workstreamId"
           },
-          "maxItems": 69,
+          "maxItems": 71,
           "type": "array",
           "uniqueItems": true
         },
@@ -464,8 +464,8 @@
           "items": {
             "$ref": "#/$defs/registryRow"
           },
-          "maxItems": 69,
-          "minItems": 69,
+          "maxItems": 71,
+          "minItems": 71,
           "type": "array"
         }
       },

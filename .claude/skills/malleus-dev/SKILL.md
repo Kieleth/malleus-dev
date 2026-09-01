@@ -119,6 +119,13 @@ contracts. Depend on protocol meaning, never on one implementation.
     couple into ontology, admission, assent, temporal projection, or KG
     semantics. A changed event-hash or signature grammar may require a new
     integrity profile or persisted-wire epoch, not a new semantic protocol.
+13. `EXECUTOR_ONLY`: Put profile-specific event, record, field, precondition,
+    transition, effect, atomicity, and refusal semantics in exact identified
+    artifacts. The executor implements only generic operations and declared
+    typed capabilities. A second conforming interpreter must consume the same
+    artifact and produce the same accepted state or typed refusal without
+    copying private branches from the first implementation. Never add an
+    unrestricted callback or arbitrary-code escape hatch.
 
 Unix modularity here is not dependency-injection theatre. A stage is
 replaceable only when a deliberately different implementation crosses the

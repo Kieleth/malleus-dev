@@ -1,0 +1,127 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-015",
+      "CC-D17",
+      "CC-R06",
+      "CC-R08",
+      "CC-R09",
+      "CC-R10",
+      "CC-P21"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:f7ac3f98651164256e293cfd0eca5f106b562423a543b0fa5a8048dbfac4ae0e",
+        "before_digest": "sha256:fa4c1d033528261d18d946663f4149bd956271b8257528e6ef1a190a898ee1ec",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:bb0e6cf3cfb8d11c3a8f5d64b78abb1a929cd3b1560dbe68bf55f7f38fd64c3c",
+        "before_digest": "sha256:e53aba0459e3096cc8cd44f8a56d5da968e0cac8f323cc2a8fed499ef452be73",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:2fe39e789f9e8e630f2a46db86d97cf46bf82a25bc2faecd162b640272d33353",
+        "before_digest": "sha256:b23cb2c75269008e0db1dc0263e916edf68f9bb5688987c8d43e7806b1077e30",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:862b1e4034dd471c268838fb1d243fceaf5c1cba5a0f5948e71448c274049cd3",
+        "before_digest": "sha256:f2cf0fd21c2063039d6f22707d090af52b8d97ffa0975fb118f5e90336f11963",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:dc99ea49e823c26635c9c31878dc2412654cddccd95268c8627a3b5d3b6f68a5",
+        "before_digest": "sha256:1d38bd275197da3f3d9de6ed89e92ac4159bd517c86d2d02afd6829040acd90b",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:91e2d18ff2687487b1085d285c7d87e1e5762fab35d85b5a62f2f00986154d9e",
+        "before_digest": "sha256:27a3847922891ad0d2ee31583825f255a42408c0ad8e344e6f1cec17b8a97686",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:3e6952e9d6478460fd1285e483073c9d6bf4f5a942d475c225ebb0b40b940373",
+        "before_digest": "sha256:511921e7bc0702ba3e0acc52fc2702c27fc01dd19f7c81e7c8111af9c10f9971",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:da8098d79f6dcee0d05ce674553f480ca674910d43fdc082a423d2c4cb2af143",
+  "entry_id": "OVR-000270",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6227b49109c048ae03a6d73ddf69db9203b1bdebea7cdb5a3b26d383a2596f14",
+  "recorded_at": "2026-08-31T23:52:49Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_inquisition.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000269",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-D17",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R09",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 270,
+  "subject": {
+    "id": "contract-compiler-od015-r22-guards",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the graph pointers and mechanical guards for foundation graph revision 22.",
+  "why": "The supplementary revision stays within the ledger schema's bounded document list while preserving exact byte history for every changed projection pointer and every test that prevents the compiler runway, graph authority, public documentation, or self-inquisition boundary from drifting."
+}

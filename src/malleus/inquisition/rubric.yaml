@@ -29,7 +29,7 @@
 # packaged file works and is reverted without warning by the next upgrade,
 # taking every severity you raised with it.
 
-version: 10
+version: 11
 
 config:
   # Tokens the inert_formula rite matches as substrings of slot names.
@@ -160,6 +160,20 @@ judgment:
       condemn profile-internal dependencies. It condemns an optional profile,
       default adapter, fixture, or derived artifact leaking into core APIs,
       unqualified success claims, or unrelated conformance gates.
+  - id: protocol_authority_is_data
+    question: >-
+      Could a second conforming interpreter load the same identified artifacts
+      and produce the same accepted state or typed refusal without copying
+      profile-specific event, record, field, transition, effect, or refusal
+      branches from the current implementation?
+    severity: HERESY
+    lesson: >-
+      Portable protocol meaning belongs in explicit contract facts,
+      protocol-machine programs, and exact policy or projection references.
+      An interpreter supplies generic evaluation, transactions, hashing, and
+      declared typed capabilities. A hidden host-language branch makes that
+      implementation protocol authority. An arbitrary-code escape hatch merely
+      hides the branch and is not a conforming extension boundary.
   - id: gate_integrity
     question: >-
       Is the registry constructor-required and enforced on EVERY write path:

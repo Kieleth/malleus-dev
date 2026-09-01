@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-015"
+    ],
+    "consequences": [
+      "The compiler runway must produce an exact protocol-machine program and effective-contract artifact before a generic interpreter can claim conformance.",
+      "Current Python protocol handlers remain comparison evidence until independent machine replay passes and the later Assent hard cutover deletes them without fallback.",
+      "The Small Shop vertical may publish neutral population and construction plans plus a generic validation receipt, but it cannot add domain or Malleus Code semantics to Core."
+    ],
+    "constraints": [
+      "The validated contract fact set is the strict neutral contract IR. A closed typed canonical protocol-machine program owns event vocabulary, payload shapes, preconditions, legal order, transitions, effects, atomicity, typed refusals, declared capabilities, and exact policy references.",
+      "Policy and projection programs remain separately identified. Machine semantic identity, executor identity, policy identity, and projection identity are distinct and bound where consumed.",
+      "A conforming interpreter contains no profile-specific event, record, field, or refusal literal and no profile-specific branch. It executes only the closed machine artifact through declared generic operations.",
+      "Capabilities are closed, typed, and identity-bound. Host-language expressions, unrestricted callbacks, dynamic imports, and arbitrary-code escape hatches cannot carry protocol authority.",
+      "The same exact artifact, prestate, input event, and declared side inputs produce the same exact poststate and receipt, or unchanged state and typed refusal, in every conforming implementation.",
+      "Lean Review is the first bounded conformance slice. This decision selects no DSL, public API, artifact bytes, runtime implementation, ontology YAML, package, dependency, candidate, selection, or worker ledger.",
+      "An LLM may assist ontology or program authoring outside the deterministic kernel. Acceptance, replay, and compiler authority remain model-free and deterministic."
+    ],
+    "decision_id": "OD-015",
+    "satisfies_workstreams": [
+      "CC-D17"
+    ],
+    "selected_option": "Protocol authority is exact data executed by a generic interpreter",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:c7898648f8f88fe4a3e2ba4c5fc1d9a823ea0ec95437ddeafe0b83eba9ead25d",
+  "entry_id": "OVR-000268",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:effccb950e99a7c17f3686a505b3342f1a507bb3bf991c14d66ba0d855235cb1",
+  "recorded_at": "2026-08-31T23:52:47Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-015-executor-only-protocol-machine-architecture",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-015",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000267",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D17",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 268,
+  "subject": {
+    "id": "OD-015",
+    "type": "DECISION"
+  },
+  "summary": "Make protocol authority exact data executed by a generic interpreter.",
+  "why": "A protocol is portable only when another conforming implementation can load the same identified contract, machine, policy, and projection artifacts and reproduce the same result. Profile-specific Python branches make Python the authority. This decision puts meaning in closed canonical data, keeps execution generic, and reserves implementation and deletion for independently tested later stages."
+}

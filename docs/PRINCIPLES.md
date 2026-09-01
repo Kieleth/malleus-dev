@@ -55,6 +55,33 @@ passes. For example, bypassing the semantic-history profile gives up Malleus
 claims about ledger authority, historical replay, and reconstruction of
 accepted state; it does not invalidate a conforming structural-admission use.
 
+## Protocol authority lives in identified artifacts
+
+Within any profile that claims portable machine execution, protocol authority
+lives in identified artifacts, not interpreter branches. Contract facts state
+the legal nouns and shapes. A strict protocol-machine program states event
+types, preconditions, transitions, effects, atomicity, and typed refusals.
+Policy and projection programs remain separate and are referenced by exact
+identity where used.
+
+Python is one reference executor. A second conforming interpreter in Rust,
+Java, or another language must be able to load the same artifacts and produce
+the same accepted state or typed refusal. If that result depends on finding a
+profile-specific event, record, or field name only in Python, Python still
+contains protocol authority.
+
+The executor may implement generic operations such as lookup, type and subtype
+checks, equality, ordering, transaction staging, discard of failed staged
+changes, canonical hashing, and invocation of declared typed capabilities. It
+receives no unrestricted callback or arbitrary-code escape hatch. A capability
+adapter has an explicit contract, identity, effects, refusal behavior, and
+conformance evidence.
+
+This is an accepted design boundary for the optional compiler-enabled and
+machine-executed profiles. It is not a claim that the generic interpreter or
+compiled machine artifact ships today, and it does not force adopters to claim
+those profiles.
+
 ## 1. Encoding is the step you cannot skip
 
 Between a source and a conclusion there has to be an identified, typed

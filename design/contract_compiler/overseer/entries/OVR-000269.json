@@ -1,0 +1,231 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-015",
+      "CC-D17",
+      "CC-R06",
+      "CC-R07",
+      "CC-R08",
+      "CC-R09",
+      "CC-R10",
+      "CC-P21"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:76b4ff99f7b1260b34bc3630a505401d0e7d867871d67e1e85803334bc648de6",
+        "before_digest": "sha256:1957a22f52123b5cdf797ce75503fca2690f307b922109ecdb6e2b3673aaa336",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:1e5d8500b6f9327c28984ec4be44d871499b6fd049f5effc872f53d7a1e7f40e",
+        "before_digest": "sha256:cb32e0114d8219407c5b07f94f2fb528b88f91f6babdb884b639a8d96cda42a6",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-inquisitor/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:731248f701bb8fe0b005c3398fe37520d4b26a80b0ee4047a5674e18cedb29c6",
+        "before_digest": "sha256:01b11e96fd935c220f3263d615b6c48cd3ee2bc3c9a4fb155c3fff749447db34",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:e417d53d4d86e0b18988c7c280560285cc70bd079b3ceb04ffb7153369fa6faa",
+        "before_digest": "sha256:a3bc87de033df798a321e310aa588c71b361726739aaad2d260fc4a9a88d6d86",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4",
+        "before_digest": "sha256:0fbfb892128c20f009c61e1077dc8c35b264580f3c083acaa3c64049e3f33c39",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:a9f29e56a5caaf3d77ffd9430a92fc2d5353b0f04490d766ea7bab19dda060f0",
+        "before_digest": "sha256:e7bea7e05b6d1d3e6b2a500b527c0971e4852760643d6bc2b51dfd0546953ff2",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/conformance.md"
+      },
+      {
+        "after_digest": "sha256:f7f6315bf6931a6db3ed864dd5d23d9f5b48067ae65faa8592d9e32207cc1907",
+        "before_digest": "sha256:633b03f2fc3235c5d0364292b2526eb246235f031a54c19eeec299d849f65108",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:de745cb9d4e6a00f30906e129cf62b7b46fdb78b9d59651527fed37de75dba5d",
+        "before_digest": "sha256:4010847220a0adac8866504e330b9171ad10a9eb8102a4183224c2410f8d5065",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:57a50308ce5bf3b4ccd8ff7869276a8ee2c04a552eb65a24545ca3326a1c94e6",
+        "before_digest": "sha256:2ce5893ab3ad044e1ca6718c48be688d8f1bbc7c54451204df73be844bd4b8eb",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:45d011248e60bcc3824877ff94390c394bc3be9a89016651ab5d4b35fb8f1822",
+        "before_digest": "sha256:10f93af71dd6452c7775eeaed8efd467ad6310ea02c172a9059521ddd5c0cbb5",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:b7e8374a49fe0c4925286299b2efa13650ed9812429e34cc80f85853f8d5cde2",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D17/manifest.json"
+      },
+      {
+        "after_digest": "sha256:72baf47c6b635712237bb4d594129c2afbb558e362dbc76a12a3b7deb4387c56",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D17.json"
+      },
+      {
+        "after_digest": "sha256:3e547c7b1ead772ba7260cd0ff4a62449940da3f80a287cc38c08812c80cc337",
+        "before_digest": "sha256:929002550614ae6c42305a1ee93ee00f6ec8816d2593495361676853e3bba56f",
+        "change": "MODIFIED",
+        "path": "docs/ASSENT_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:fa276857301f0a396b9cd93f3eb48bb4dfe6456b05e0f9400e3339c40e8e5a68",
+        "before_digest": "sha256:abb6e441e78c758e66f0a930874c710249ae25a1ce513100c4d0a17e4f2b19e4",
+        "change": "MODIFIED",
+        "path": "docs/PRINCIPLES.md"
+      },
+      {
+        "after_digest": "sha256:bfd4309f2b5fe1230df1ca2f80c8efc921c0ca5355cbe7f7982d6208bb9dabb9",
+        "before_digest": "sha256:77582a06a7085d573879c8614c314b270a670ca99643f23e6126ed6206a252d0",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:a5b5df6f40c1073548f817a034f06a2eed7329ebc96b45b82583febba8d94f1c",
+        "before_digest": "sha256:f0095f8e93dbff9d895cf6923851a5b2a24703b1eb349f4afade79440eb6e004",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/rubric.yaml"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6227b49109c048ae03a6d73ddf69db9203b1bdebea7cdb5a3b26d383a2596f14",
+  "entry_id": "OVR-000269",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c7898648f8f88fe4a3e2ba4c5fc1d9a823ea0ec95437ddeafe0b83eba9ead25d",
+  "recorded_at": "2026-08-31T23:52:48Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": ".claude/skills/malleus-dev/SKILL.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": ".claude/skills/malleus-inquisitor/SKILL.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/conformance.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-D17/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:72baf47c6b635712237bb4d594129c2afbb558e362dbc76a12a3b7deb4387c56",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-D17.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/ASSENT_PROTOCOL.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/PRINCIPLES.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/inquisition/rubric.yaml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-D17",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R06",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R09",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-P21",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 269,
+  "subject": {
+    "id": "contract-compiler-od015-r22-primary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the executor-only architecture and compiler runway in foundation graph revision 22.",
+  "why": "The primary revision binds the accepted decision, canonical graph, compiler stages, neutral source-to-ABox handoff, Assent boundary, maintainer and inquisitor rules, strict integration manifest, decision card, and retained evidence to one exact architecture."
+}

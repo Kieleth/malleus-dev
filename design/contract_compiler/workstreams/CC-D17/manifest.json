@@ -1,0 +1,40 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:7daccbd334fb5486c75be38104116ebac14768a5cd10b51e6ea0ea3ad0d8f356",
+        "completion_entry_hash": "sha256:0752fbe8c3e2326f428dd09d1b18c392f61487a2178f57880d5e263577ef0719",
+        "completion_entry_id": "OVR-000150",
+        "integrated_head": "2dd78cba39a3d25c685a8f35d275b723612d8fe8",
+        "workstream_id": "CC-D05"
+      },
+      {
+        "card_sha256": "sha256:0bd4ab014e972ea8b79a9d7ebe399af0a0c7a3652ecdbdb905ca00679f464adb",
+        "completion_entry_hash": "sha256:6367bdac344ce374d6d7d4b107c297d18c60bc0ab68413b9ca1b6c2cd42b9bac",
+        "completion_entry_id": "OVR-000156",
+        "integrated_head": "0c899eb1b312275298884cd19f28018273c92ebf",
+        "workstream_id": "CC-D06"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-015 with a closed typed canonical ProtocolMachineProgram that owns event vocabulary, payload shapes, preconditions, legal order, transitions, effects, atomicity, typed refusals, declared capability contracts, and exact policy references. Keep projection programs separately identified in projection closure, machine semantic identity separate from executor identity, and every interpreter free of profile-specific names, branches, host-language expressions, unrestricted callbacks, or arbitrary-code escape hatches. Require exact artifact, prestate, event, and declared side inputs to yield the same poststate and receipt or unchanged state and typed refusal in every conforming implementation. Use Lean Review only as the first bounded future conformance slice. This zero-scope decision selects no DSL and creates no implementation, ontology YAML, public API, artifact bytes, runtime cutover, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D17"
+}

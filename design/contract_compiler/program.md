@@ -15,7 +15,7 @@ schema-valid blocks under [`overseer/entries/`](overseer/entries/), governed by
 [`overseer/ledger.schema.json`](overseer/ledger.schema.json). The former
 handover ledger is a frozen pointer, not a second event store.
 
-CC-000 is the machine gate for parallel work. The complete 69-workstream DAG,
+CC-000 is the machine gate for parallel work. The complete 71-workstream DAG,
 reserved scopes, owner-separation rules, active card digests, ledger checkpoint,
 and selected results live in [`integration.json`](integration.json), validated
 against [`integration.schema.json`](integration.schema.json). Active cards under
@@ -62,9 +62,10 @@ retained sources + one explicitly selected resolver profile
   -> metamodel validation and canonical fact encoding
   -> ValidatedContractFactSet
        + NormativeAdmissionProfile
+           -> strict protocol-machine program
   -> EffectiveContract
   -> EffectiveContractArtifact
-  -> runtime views
+  -> runtime views + generic interpreter
        identity
        type system
        record shape validation
@@ -115,6 +116,14 @@ explicit resolver profile with strict
 Malleus defaults; one normal distribution including the compiler and LinkML;
 and the Quiet Bell Archive fixture/publication boundary. The exact rules and
 limitations are in [`decisions.md`](decisions.md).
+
+Revision 22 accepts `OD-015`: the validated fact set remains the strict neutral
+contract IR, the normative admission profile contains a strict
+protocol-machine program, and a generic interpreter executes that program.
+Policy and projection programs stay separate and are referenced by exact
+identity. No profile-specific event, record, or field name belongs in the
+interpreter, and there is no arbitrary-code escape hatch. The current Python
+handlers remain regression evidence until the later no-fallback Assent cutover.
 
 The operator excluded migration feature development from this foundation block.
 `OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
@@ -331,6 +340,7 @@ decisions remain open.
 | CC-D14 | Close OD-014 themed fixture and publication boundary | none | Working name, vocabulary boundary, authorship/license record, and public gate accepted |
 | CC-D15 | Close OD-001 consumer-bundle direction | none | Operator approves one bundle per consumer or explicitly defers it |
 | CC-D16 | Close exact consumer-bundle schema and canonical grammar | CC-D06, CC-D13, CC-D15 | Accepted fields, examples, counterexamples, and grammar, or a typed not-applicable record when OD-001 is deferred |
+| CC-D17 | Close OD-015 executor-only protocol-machine architecture | CC-D05, CC-D06 | Exact neutral-contract, protocol-machine, policy, projection, interpreter, capability, identity, conformance, and no-escape boundaries accepted without selecting a DSL or implementing runtime code |
 
 CC-D05 permits computed internal candidate fact and fact-set digests only.
 CC-D06 closes the three semantic roles and logical composition identity inputs;
@@ -403,13 +413,20 @@ Replay never invokes it. It has no dependency edge in this graph, and this progr
 | CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
 | CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
 | CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018, CC-021, CC-022 | Frontend, direct-fact input, and each independent oracle match exactly |
-| CC-R06 | Admission profile and effective contract | CC-R05, CC-D07, CC-D10, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces |
-| CC-R07 | Reloadable experimental artifact | CC-R06, CC-010, CC-012, CC-014, CC-016, CC-021, CC-022 | Deep immutability, corruption refusal, unknown grammar refusal, deterministic reload |
-| CC-R08 | Whole-pipeline conformance attestation | CC-R01, CC-R02, CC-R03, CC-R04, CC-R05, CC-R06, CC-R07 | All three corpora, prior slices, current bundled ontologies, mutation adequacy |
-| CC-R09 | Research-local Small Shop source-to-ABox vertical | CC-R08, CC-D07, CC-D10, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal |
+| CC-R06 | Strict protocol-machine program and effective contract | CC-R05, CC-D07, CC-D10, CC-D17, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces compile into one closed, identity-bound machine program with typed refusals and declared capabilities |
+| CC-R07 | Reloadable experimental effective-contract and machine artifact | CC-R06, CC-010, CC-012, CC-014, CC-016, CC-021, CC-022 | Deep immutability, corruption refusal, unknown grammar refusal, deterministic reload, and exact machine-program identity |
+| CC-R10 | Generic protocol-machine interpreter proof | CC-R07, CC-D17 | Independent lean-review conformance proves the same accepted state, typed refusal, ordering, and failure atomicity; the executor contains no profile-specific event, record, or field name and exposes no arbitrary-code escape hatch |
+| CC-R08 | Whole-pipeline conformance attestation | CC-R01, CC-R02, CC-R03, CC-R04, CC-R05, CC-R06, CC-R07, CC-R10 | All three corpora, prior slices, current bundled ontologies, mutation adequacy, and cross-implementation machine replay parity |
+| CC-R09 | Research-local neutral source-to-ABox planning boundary, proven by Small Shop | CC-R08, CC-D07, CC-D10, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal; publish a frontend-neutral PopulationPlan and GraphConstructionPlan artifact boundary plus a canonical generic validation receipt, with no stable public API claim |
 
 The first foundation block is complete only at CC-R08. Passing one stage does not
 authorize production use.
+
+CC-R06 owns the machine program as data. CC-R10 owns the generic interpreter as
+mechanism. The current Python Assent implementation is comparison evidence,
+never the oracle. The later CC-P21 cutover deletes replaced handwritten review
+dispatch and transition paths only after independent parity, rollback, and
+artifact-reload evidence passes; production has no fallback.
 
 ### Wave 2: production boundary and cutover
 
@@ -425,7 +442,7 @@ authorize production use.
 | CC-P13 | Prolog verifier cutover | CC-P11, CC-P12 | Existing verifier and isolation suites |
 | CC-P19 | Neutral projection and ledger protocols remove the concrete Accepted-to-Assent type cycle | CC-P10, CC-P11, CC-P12 | Concrete runtime import and type check are absent; protocol conformance tests pass |
 | CC-P20 | Accepted projection cutover | CC-P19 | Existing projection and graph-base suites |
-| CC-P21 | Assent cutover | CC-P12, CC-P19, CC-P20 | Existing decision, replay, and authorization suites |
+| CC-P21 | Assent hard cutover | CC-P12, CC-P19, CC-P20, CC-R10 | Existing decision, replay, and authorization suites plus deletion guards proving no handwritten protocol transition path or fallback remains |
 | CC-P22 | Orchestration and Protocol cutover | CC-P21 | Existing orchestration and protocol suites |
 | CC-P30 | Recon cutover | CC-P10, CC-W02, CC-P42 | Recon consumer suite and frozen typed hard-break outcome |
 | CC-P31 | OCR cutover | CC-P10, CC-W02 | OCR profile and evidence-integrity suites |

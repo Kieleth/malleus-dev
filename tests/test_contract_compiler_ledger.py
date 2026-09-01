@@ -2663,7 +2663,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2681,14 +2681,14 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1752
+    assert len(canonical) == 1792
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 21",
-        "# Evidence cutoff: 2026-08-28",
+        "# Design graph revision: 22",
+        "# Evidence cutoff: 2026-08-31",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
         "#",
@@ -2704,7 +2704,7 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 21,",
+            "revision 22,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2786,6 +2786,23 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     assert set(canonical.objects(architecture, status)) == {
         URIRef(f"{mfg}AcceptedDesign")
     }
+    composed_of = URIRef(f"{mfg}composedOf")
+    implements = URIRef(f"{mfg}implements")
+    assert set(
+        canonical.objects(URIRef(f"{mfg}NormativeAdmissionProfile"), composed_of)
+    ) == {URIRef(f"{mfg}ProtocolMachineProgram")}
+    assert set(
+        canonical.objects(URIRef(f"{mfg}ProtocolMachineProgram"), composed_of)
+    ) == {URIRef(f"{mfg}AdmissionRuleSet")}
+    assert set(
+        canonical.objects(URIRef(f"{mfg}AdmissionImplementation"), implements)
+    ) == {URIRef(f"{mfg}ProtocolMachineInterpreterContract")}
+    for node in ("ProtocolMachineProgram", "PolicyProgram", "ProjectionProgram"):
+        subject = URIRef(f"{mfg}{node}")
+        assert set(canonical.objects(subject, rdf_type)) == {
+            URIRef("http://www.w3.org/2000/01/rdf-schema#Class")
+        }
+        assert set(canonical.objects(subject, status)) == {URIRef(f"{mfg}Candidate")}
 
     okg_d013 = URIRef(f"{okg}OKG-D013")
     okg_fx001 = URIRef(f"{okg}OKG-FX001")
@@ -3225,7 +3242,7 @@ def test_revision_21_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 368
+    assert len(statuses) == 380
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -3635,7 +3652,7 @@ def test_od007_protected_partition_contract_is_exact() -> None:
     d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
     for phrase in ("protected replay-derived governance partition", "epoch boundary"):
         assert phrase in d07
-    remaining = decisions.split("## Remaining decisions after revision 20", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 22", 1)[1]
     assert "| OD-007 |" not in remaining
 
 
@@ -3890,7 +3907,7 @@ def test_od010_contextual_reference_contract_is_exact() -> None:
         "referentially closed temporal views",
     ):
         assert phrase in d10
-    remaining = decisions.split("## Remaining decisions after revision 20", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 22", 1)[1]
     assert "| OD-010 |" not in remaining
 
     conformance = (
