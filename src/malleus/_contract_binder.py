@@ -601,10 +601,19 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
             or type(observation.module_id) is not str
             or not observation.module_id
             or type(observation.authored_imports) is not tuple
+            or any(
+                type(item) is not str or not item
+                for item in observation.authored_imports
+            )
             or observation.module_id in observations
         ):
             raise _input_refusal("source closure module is malformed")
         _validate_source(observation.source, observation.module_id)
+        if observation.source.resolver_selection != source_closure.selection:
+            raise _input_refusal(
+                "retained module uses another resolver selection",
+                module_id=observation.module_id,
+            )
         observations[observation.module_id] = observation
 
     declared_ids: set[str] = set()
@@ -720,6 +729,26 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
 
     if declared_ids != set(observations):
         raise _input_refusal("declared and retained module sets differ")
+    root = source_closure.root
+    root_observation = observations.get(root.resolved_locator)
+    if (
+        type(root.requested_locator) is not str
+        or not root.requested_locator
+        or type(root.resolved_locator) is not str
+        or not root.resolved_locator
+        or root_observation is None
+        or root.source_sha256 != root_observation.source.sha256
+        or root.resolver_selection != source_closure.selection
+    ):
+        raise _input_refusal("source closure root does not match its retained module")
+
+    expected_edges = {
+        (module.module_id, ordinal): literal
+        for module in closure.modules
+        for ordinal, literal in enumerate(module.authored_imports)
+    }
+    observed_edges: dict[tuple[str, int], ResolvedImportEdge] = {}
+    children: dict[str, set[str]] = {module_id: set() for module_id in declared_ids}
     for edge in source_closure.import_edges:
         if (
             type(edge) is not ResolvedImportEdge
@@ -728,9 +757,43 @@ def _validate_input(closure: object, profile: _Profile) -> DeclaredContractClosu
             or type(edge.parent_import_ordinal) is not int
             or type(edge.literal_import) is not str
             or not edge.literal_import
+            or edge.resolver_selection != source_closure.selection
         ):
             raise _input_refusal("source import edge is malformed")
-        _validate_selection(edge.resolver_selection, "source import edge")
+        key = (edge.parent_module_id, edge.parent_import_ordinal)
+        if key in observed_edges or expected_edges.get(key) != edge.literal_import:
+            raise _input_refusal("source import edge differs from authored evidence")
+        observed_edges[key] = edge
+        children[edge.parent_module_id].add(edge.child_module_id)
+    if set(observed_edges) != set(expected_edges):
+        raise _input_refusal("source closure does not bind every authored import")
+
+    reachable: set[str] = set()
+    pending = [root.resolved_locator]
+    while pending:
+        module_id = pending.pop()
+        if module_id in reachable:
+            continue
+        reachable.add(module_id)
+        pending.extend(children[module_id])
+    if reachable != declared_ids:
+        raise _input_refusal("source closure contains a module outside the exact root")
+
+    active: set[str] = set()
+    completed: set[str] = set()
+
+    def visit(module_id: str) -> None:
+        if module_id in active:
+            raise _input_refusal("source closure contains an import cycle")
+        if module_id in completed:
+            return
+        active.add(module_id)
+        for child in children[module_id]:
+            visit(child)
+        active.remove(module_id)
+        completed.add(module_id)
+
+    visit(root.resolved_locator)
     return closure
 
 
