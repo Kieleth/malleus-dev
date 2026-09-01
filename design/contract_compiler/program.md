@@ -15,7 +15,7 @@ schema-valid blocks under [`overseer/entries/`](overseer/entries/), governed by
 [`overseer/ledger.schema.json`](overseer/ledger.schema.json). The former
 handover ledger is a frozen pointer, not a second event store.
 
-CC-000 is the machine gate for parallel work. The complete 72-workstream DAG,
+CC-000 is the machine gate for parallel work. The complete 73-workstream DAG,
 reserved scopes, owner-separation rules, active card digests, ledger checkpoint,
 and selected results live in [`integration.json`](integration.json), validated
 against [`integration.schema.json`](integration.schema.json). Active cards under
@@ -388,6 +388,7 @@ may proceed without deciding outcomes.
 | CC-000 | Validated workstream and integration manifests, ledger schema, DAG and ownership checks | `design/contract_compiler/integration.schema.json`, `integration.json`, `workstreams/`, validation tests | none |
 | CC-001 | Sphinx with MyST, autodoc, doctest, strict links, rendered manifests | Docs configuration and docs CI | CC-000 |
 | CC-002 | Reproducible selected compiler environment | Historical materialization evidence plus the current exact Linux `requirements.lock`, retained source and direct build inputs, immutable OCI identities, lock and input validation, semantic replay, package and LinkML smokes, and explicit refusal of any current complete-offline-cache claim | CC-000, CC-D12 |
+| CC-003 | Forward-only ontology-bound governance-ledger epoch | New governance ontology, legacy checkpoint bridge, current-state snapshot, combined projection, and atomic cutover evidence; exact implementation scopes are reserved only at activation | CC-000, CC-R08 |
 | CC-010 | Three-corpus protocol and independent oracle process | `conformance/contract_kernel/v0` manifests and checks | CC-000, CC-D02, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D11 |
 | CC-011 | Themed vertical source corpus | Themed source files only | CC-010, CC-D14, CC-018 |
 | CC-012 | Independently authored themed expected compilation artifacts | Themed source descriptors, import graph, declarations, bindings, elaboration, facts, and artifact oracle only | CC-010, CC-D02, CC-D03, CC-D05, CC-D06, CC-D08, CC-011, CC-021, CC-022 |

@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [
+      "CC-R08 is not PRESENT and COMPLETE. CC-003 has no implementation owner, scope, dependency bindings, or activation authority."
+    ],
+    "bootstrap": true,
+    "deliverables": [
+      "Define an immutable legacy governance checkpoint bridge, selecting the final legacy count, head, rule digests, commit, and tree only at cutover.",
+      "Define the governance ontology and separately identified protocol, policy, and projection programs, executed only through Core's generic compiler and interpreter.",
+      "Derive a deterministic current-state snapshot with legacy source entry IDs and one combined projection with explicit legacy, snapshot, and native provenance.",
+      "Prove projection equality and native append, then cut over atomically to one writer while retaining the legacy reader and mechanically killing dual write, fallback, and the old append path."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000298",
+      "OVR-000303"
+    ],
+    "new_state": "PLANNED",
+    "previous_state": "UNRECORDED",
+    "workstream_id": "CC-003"
+  },
+  "entry_hash": "sha256:b73a00914cbce05db1010b48be70a8830d471ebc4d526dc31051fb9ed437b7dc",
+  "entry_id": "OVR-000304",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fc9706adfa1553aef06c6f6be68b8781fb9897368cf1b29a92665c69b95edf08",
+  "recorded_at": "2026-09-01T20:46:12Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000298",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000303",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-003",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 304,
+  "subject": {
+    "id": "CC-003",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Plan the ontology-bound governance-ledger epoch without activating implementation.",
+  "why": "The accepted OD-017 transition now has one queryable workstream and one explicit blocker. Planning is recorded, but implementation remains impossible until the complete Core pipeline and generic interpreter pass CC-R08 and the overseer binds exact activation scopes and dependency evidence."
+}

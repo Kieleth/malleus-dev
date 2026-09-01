@@ -815,12 +815,13 @@ def _overseer_prefix(sequence: int) -> SimpleNamespace:
     )
 
 
-def test_program_registry_contains_the_exact_approved_72_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_73_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 72
+    assert len(registry) == 73
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
+    assert registry["CC-003"] == ("CC-000", "CC-R08")
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
     assert registry["CC-D06"] == ("CC-D05",)
     assert registry["CC-D08"] == ("CC-D02", "CC-D03", "CC-D05")
@@ -903,7 +904,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 72
+    assert len(state.workstreams) == 73
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -977,7 +978,23 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D17": ("CC-D05", "CC-D06"),
         "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 35
+    assert len(state.cards) == 36
+    cc003 = state.cards["CC-003"]
+    assert state.workstreams["CC-003"] == ("CC-000", "CC-R08")
+    assert cc003["assignment"] == {"state": "UNASSIGNED"}
+    assert cc003["authorization"] == {
+        "authorized_by": {"id": "operator", "type": "OPERATOR"},
+        "blockers": [
+            "CC-R08 must be PRESENT and COMPLETE, with exact dependency binding, "
+            "before CC-003 may activate."
+        ],
+        "class": "BLOCKED",
+    }
+    assert cc003["candidate"] == {"state": "NONE"}
+    assert cc003["ledger"] == {"state": "NOT_STARTED"}
+    assert cc003["scopes"] == []
+    assert workstream_states["CC-003"] == "PLANNED"
+    assert "CC-003" not in state.selections
     assert state.cards["CC-R02"]["authorization"]["class"] == "FORMAL"
     assert workstream_states["CC-R02"] == "ACTIVE"
     for workstream_id, dependencies in decisions.items():
@@ -1727,7 +1744,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
 def test_small_shop_input_completion_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
-    assert manifest["revision"] == 4
+    assert manifest["revision"] == 5
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     assert row["card"]["state"] == "PRESENT"
     path = CONTRACT / row["card"]["path"]
@@ -5191,7 +5208,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 72 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 73 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -7366,6 +7383,7 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     assert project["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"] == [
         "/src/malleus/_contract_compiler.py",
         "/src/malleus/_contract_compiler_profile.json",
+        "/src/malleus/_contract_linkml_adapter.py",
         "/src/malleus/_contract_source.py",
     ]
     assert (

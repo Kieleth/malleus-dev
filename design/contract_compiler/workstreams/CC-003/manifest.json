@@ -1,0 +1,25 @@
+{
+  "assignment": {
+    "state": "UNASSIGNED"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "blockers": [
+      "CC-R08 must be PRESENT and COMPLETE, with exact dependency binding, before CC-003 may activate."
+    ],
+    "class": "BLOCKED"
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Deliver OD-017 as one forward-only governance-ledger epoch transition with four ordered slices: define the immutable exact legacy checkpoint bridge; define the governance ontology and separately identified protocol, policy, and projection programs for Core's generic compiler and interpreter; derive a deterministic snapshot of accepted decisions, workstream states, open blockers, and their legacy source entry IDs plus one combined current-state projection with legacy, snapshot, and native provenance; then perform one atomic cutover that proves projection equality and native append, retains the legacy reader, disables the legacy writer, guards the frozen legacy bytes, and permits no dual write or fallback. Exclude translation of all legacy entries, OD-004 product-wire migration, generic MigrationReceipt changes, domain KG or KnowledgeChangeSet work, CC-R09, authentication, multi-writer support, public API or packaging, and generic compiler or interpreter implementation. A worker may own only newly reserved implementation artifacts; the overseer retains integration, legacy-ledger, and final cutover authority.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-003"
+}
