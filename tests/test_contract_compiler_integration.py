@@ -438,6 +438,72 @@ def _candidate(repository: Path, base: str, head: str) -> dict[str, Any]:
     }
 
 
+def _add_candidate_worker_ledger(
+    repository: Path,
+    candidate: dict[str, Any],
+    workstream_id: str,
+) -> tuple[dict[str, Any], integration_module.WorkerLedgerValidation]:
+    ledger = (
+        repository
+        / "design"
+        / "contract_compiler"
+        / "workstreams"
+        / workstream_id
+        / "ledger"
+    )
+    entries = ledger / "entries"
+    entries.mkdir(parents=True)
+    entry = {
+        "actor_id": f"worker:{workstream_id.lower()}",
+        "data": {
+            "artifacts": [],
+            "command": "pytest -q",
+            "observed": "One expected missing-implementation failure.",
+            "phase": "RED",
+            "result": "EXPECTED_FAILURE",
+        },
+        "entry_id": f"{workstream_id}-WRK-000001",
+        "entry_type": "TDD_RESULT",
+        "previous_entry_hash": "GENESIS",
+        "recorded_at": "2026-01-01T00:00:00Z",
+        "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+        "sequence": 1,
+        "summary": "Record RED.",
+        "workstream_id": workstream_id,
+    }
+    entry["entry_hash"] = integration_module.worker_entry_hash(entry)
+    entry_path = entries / f"{workstream_id}-WRK-000001.json"
+    _write_json(entry_path, entry)
+    head_static = {
+        "canonicalization": "malleus-canonical-json-v1",
+        "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+        "workstream_id": workstream_id,
+    }
+    _write_json(
+        ledger / "head.json",
+        {
+            **head_static,
+            "entry_count": 1,
+            "head_entry_id": entry["entry_id"],
+            "head_hash": entry["entry_hash"],
+        },
+    )
+    head = _commit(repository, "record candidate worker ledger")
+    updated = copy.deepcopy(candidate)
+    updated["head_commit"] = head
+    updated["head_tree"] = _git(repository, "rev-parse", f"{head}^{{tree}}")
+    prefix = f"design/contract_compiler/workstreams/{workstream_id}/ledger"
+    validation = integration_module.WorkerLedgerValidation(
+        workstream_id=workstream_id,
+        phase_results=(entry["data"],),
+        head_path=f"{prefix}/head.json",
+        head_static=head_static,
+        entry_sources={f"{prefix}/entries/{entry_path.name}": entry_path.read_bytes()},
+        entry_hashes=(entry["entry_hash"],),
+    )
+    return updated, validation
+
+
 def _clean_base_candidate(
     tmp_path: Path,
     *,
@@ -1410,8 +1476,8 @@ def test_input_workstream_activation_boundaries_are_exact(
                 "CC-013 inputs",
                 "no input source",
             ),
-            "BLOCKED",
-            "PAUSED",
+            "FORMAL",
+            "COMPLETE",
         ),
         (
             "CC-016",
@@ -1492,7 +1558,7 @@ def test_oracle_workstream_activation_boundaries_are_exact(
     assert card["scopes"] == scopes
     expected_lifecycle = {
         "CC-012": ("COMPLETE", "ELIGIBLE", "RECORDED"),
-        "CC-014": (workstream_state, "NONE", "NOT_STARTED"),
+        "CC-014": (workstream_state, "ELIGIBLE", "RECORDED"),
         "CC-016": (workstream_state, "ELIGIBLE", "RECORDED"),
     }[workstream_id]
     assert (
@@ -1764,13 +1830,19 @@ def test_small_shop_original_activation_remains_historically_exact() -> None:
         ),
     ),
 )
-def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
+def test_feature_oracle_prior_pause_remains_historical(
     workstream_id: str,
     old_blocker: str,
 ) -> None:
     manifest = _read_json(INTEGRATION)
     card_path = CONTRACT / _registry_row(manifest, workstream_id)["card"]["path"]
-    card = _read_json(card_path)
+    card = json.loads(
+        _git(
+            ROOT,
+            "show",
+            f"{SMALL_SHOP_ACTIVATION_COMMIT}:{card_path.relative_to(ROOT)}",
+        )
+    )
     prior = json.loads(
         _git(
             ROOT,
@@ -1778,7 +1850,7 @@ def test_oracle_controls_pause_without_rewriting_their_owned_semantics(
             f"{SMALL_SHOP_REANCHOR_BASE}:{card_path.relative_to(ROOT)}",
         )
     )
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    states, _ = integration_module._workstream_states(_overseer_prefix(212))
     anchor_gate = (
         "Resume only after CC-021 controlled Small Shop inputs and CC-022 "
         "independent Small Shop oracle are complete and fresh dependency bindings "
@@ -3669,7 +3741,7 @@ def test_greenhouse_completion_transaction_and_adjacent_state_are_exact() -> Non
         for earlier, later in zip(transaction_times, transaction_times[1:])
     )
 
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
+    states, _ = integration_module._workstream_states(_overseer_prefix(267))
     manifest = _read_json(INTEGRATION)
     card = _read_json(CONTRACT / _registry_row(manifest, "CC-016")["card"]["path"])
     assert states["CC-012"] == states["CC-016"] == "COMPLETE"
@@ -5274,8 +5346,35 @@ def test_dependency_cycle_is_rejected_before_drift_reporting(tmp_path: Path) -> 
     _assert_code(error, "CC000_DEPENDENCY_CYCLE")
 
 
-def test_formal_activation_lists_incomplete_dependencies(tmp_path: Path) -> None:
+def test_formal_activation_lists_incomplete_dependencies(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     path, manifest = _copy_manifest_bundle(tmp_path)
+    original_states = integration_module._workstream_states
+
+    def one_incomplete_dependency(ledger_state):
+        states, entries = original_states(ledger_state)
+        states["CC-014"] = "PAUSED"
+        return states, entries
+
+    monkeypatch.setattr(
+        integration_module,
+        "_workstream_states",
+        one_incomplete_dependency,
+    )
+    _rewrite_card(
+        path,
+        manifest,
+        "CC-014",
+        lambda card: card.update(
+            authorization={
+                "class": "BLOCKED",
+                "authorized_by": {"id": "operator", "type": "OPERATOR"},
+                "blockers": ["Synthetic incomplete-dependency control."],
+            }
+        ),
+    )
 
     def mutate(card: dict[str, Any]) -> None:
         card["assignment"] = {
@@ -5550,6 +5649,7 @@ def test_candidate_authority_uses_latest_active_not_complete_or_superseded() -> 
 
 def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> None:
     manifest = _read_json(INTEGRATION)
+    schema = _read_json(CONTRACT / "integration.schema.json")
     authorities = integration_module._latest_active_authority_entries(
         _raw_overseer_state()
     )
@@ -5562,6 +5662,12 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
             continue
         if card["workstream_id"] == "CC-000":
             continue
+        worker_ledger = integration_module._validate_worker_ledger(
+            CONTRACT,
+            card,
+            schema,
+            integration_module.PurePosixPath("design/contract_compiler"),
+        )
         validate_candidate_history(
             ROOT,
             card["candidate"],
@@ -5569,11 +5675,13 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
             workstream_id=card["workstream_id"],
             authority_entry=authorities[card["workstream_id"]],
             overseer_path="design/contract_compiler/overseer",
+            worker_ledger=worker_ledger,
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 16
+    assert len(checked) == 17
     assert "CC-000" not in checked
+    assert "CC-014" in checked
 
 
 @pytest.mark.parametrize(
@@ -5691,6 +5799,260 @@ def test_clean_base_accepts_exact_declared_candidate_delta(tmp_path: Path) -> No
     assert touched == ("allowed/result.txt", "evidence/checks.json")
 
 
+def test_clean_base_accepts_exact_own_worker_ledger_as_sideband(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-TEST",
+    )
+
+    touched = validate_candidate_history(
+        repository,
+        candidate,
+        allowed_scopes=ALLOWED_SCOPES,
+        workstream_id="CC-TEST",
+        authority_entry=authority,
+        overseer_path="governance",
+        enforce_clean_base=True,
+        worker_ledger=worker_ledger,
+    )
+
+    assert touched == (
+        "allowed/result.txt",
+        "design/contract_compiler/workstreams/CC-TEST/ledger/entries/"
+        "CC-TEST-WRK-000001.json",
+        "design/contract_compiler/workstreams/CC-TEST/ledger/head.json",
+        "evidence/checks.json",
+    )
+
+
+def test_candidate_cannot_use_another_workstream_ledger_as_sideband(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-OTHER",
+    )
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+            worker_ledger=worker_ledger,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_requires_workstream_id(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, _ = _clean_base_candidate(tmp_path)
+    candidate, _ = _add_candidate_worker_ledger(repository, candidate, "CC-TEST")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_requires_validated_ledger(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, _ = _add_candidate_worker_ledger(repository, candidate, "CC-TEST")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_refuses_unexpected_own_file(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-TEST",
+    )
+    unexpected = (
+        repository
+        / "design"
+        / "contract_compiler"
+        / "workstreams"
+        / "CC-TEST"
+        / "ledger"
+        / "notes.json"
+    )
+    _write_json(unexpected, {"not": "a worker-ledger entry"})
+    head = _commit(repository, "add undeclared worker-ledger file")
+    candidate["head_commit"] = head
+    candidate["head_tree"] = _git(repository, "rev-parse", f"{head}^{{tree}}")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+            worker_ledger=worker_ledger,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_refuses_added_then_deleted_entry(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-TEST",
+    )
+    removed = (
+        repository
+        / "design"
+        / "contract_compiler"
+        / "workstreams"
+        / "CC-TEST"
+        / "ledger"
+        / "entries"
+        / "CC-TEST-WRK-000002.json"
+    )
+    _write_json(removed, {"entry_id": "CC-TEST-WRK-000002"})
+    _commit(repository, "add unvalidated worker-ledger entry")
+    removed.unlink()
+    head = _commit(repository, "delete unvalidated worker-ledger entry")
+    candidate["head_commit"] = head
+    candidate["head_tree"] = _git(repository, "rev-parse", f"{head}^{{tree}}")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+            worker_ledger=worker_ledger,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_refuses_changed_prefix_entry(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-TEST",
+    )
+    entry_path = (
+        repository
+        / "design"
+        / "contract_compiler"
+        / "workstreams"
+        / "CC-TEST"
+        / "ledger"
+        / "entries"
+        / "CC-TEST-WRK-000001.json"
+    )
+    entry = _read_json(entry_path)
+    entry["summary"] = "Rewrite immutable RED."
+    entry["entry_hash"] = integration_module.worker_entry_hash(entry)
+    _write_json(entry_path, entry)
+    head = _commit(repository, "rewrite candidate worker-ledger entry")
+    candidate["head_commit"] = head
+    candidate["head_tree"] = _git(repository, "rev-parse", f"{head}^{{tree}}")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+            worker_ledger=worker_ledger,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
+def test_candidate_worker_ledger_sideband_refuses_changed_then_restored_entry(
+    tmp_path: Path,
+) -> None:
+    repository, candidate, authority = _clean_base_candidate(tmp_path)
+    candidate, worker_ledger = _add_candidate_worker_ledger(
+        repository,
+        candidate,
+        "CC-TEST",
+    )
+    relative = (
+        "design/contract_compiler/workstreams/CC-TEST/ledger/entries/"
+        "CC-TEST-WRK-000001.json"
+    )
+    entry_path = repository / relative
+    entry = _read_json(entry_path)
+    entry["summary"] = "Temporarily rewrite immutable RED."
+    entry["entry_hash"] = integration_module.worker_entry_hash(entry)
+    _write_json(entry_path, entry)
+    _commit(repository, "rewrite candidate worker-ledger entry")
+    _write_json(
+        entry_path,
+        json.loads(worker_ledger.entry_sources[relative].decode("utf-8")),
+    )
+    head = _commit(repository, "restore candidate worker-ledger entry")
+    candidate["head_commit"] = head
+    candidate["head_tree"] = _git(repository, "rev-parse", f"{head}^{{tree}}")
+
+    with pytest.raises(IntegrationValidationError) as error:
+        validate_candidate_history(
+            repository,
+            candidate,
+            allowed_scopes=ALLOWED_SCOPES,
+            workstream_id="CC-TEST",
+            authority_entry=authority,
+            overseer_path="governance",
+            enforce_clean_base=True,
+            worker_ledger=worker_ledger,
+        )
+
+    _assert_code(error, "CC000_SCOPE_VIOLATION")
+
+
 def test_clean_base_refuses_undeclared_candidate_helper(tmp_path: Path) -> None:
     repository, candidate, authority = _clean_base_candidate(
         tmp_path,
@@ -5727,7 +6089,7 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         workstream_id
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
-        and workstream_id not in {"CC-012", "CC-016"}
+        and workstream_id not in {"CC-012", "CC-014", "CC-016"}
     }
 
 
@@ -6161,10 +6523,24 @@ def test_selected_workstream_must_be_complete(
     monkeypatch.setattr(
         integration_module,
         "_validate_worker_ledger",
-        lambda *args, **kwargs: {
-            phase: {"result": "EXPECTED_FAILURE" if phase == "RED" else "PASS"}
-            for phase in integration_module.TDD_PHASES
-        },
+        lambda _bundle, card, _schema, _prefix: (
+            integration_module.WorkerLedgerValidation(
+                workstream_id=card["workstream_id"],
+                phase_results=tuple(
+                    {
+                        "phase": phase,
+                        "result": (
+                            "EXPECTED_FAILURE" if phase == "RED" else "PASS"
+                        ),
+                    }
+                    for phase in integration_module.TDD_PHASES
+                ),
+                head_path=None,
+                head_static={},
+                entry_sources={},
+                entry_hashes=(),
+            )
+        ),
     )
 
     with pytest.raises(IntegrationValidationError) as error:
@@ -6295,6 +6671,20 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-022"]["card_sha256"] = cc022_digest
 
     _rewrite_card(manifest_path, manifest, "CC-012", rebind_quiet_bell_oracle)
+
+    cc013_digest = _registry_row(manifest, "CC-013")["card"]["sha256"]
+
+    def rebind_feature_oracle(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        bindings["CC-010"]["card_sha256"] = cc010_digest
+        bindings["CC-013"]["card_sha256"] = cc013_digest
+        bindings["CC-021"]["card_sha256"] = cc021_digest
+        bindings["CC-022"]["card_sha256"] = cc022_digest
+
+    _rewrite_card(manifest_path, manifest, "CC-014", rebind_feature_oracle)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 
@@ -6483,17 +6873,12 @@ def test_feature_oracle_reactivation_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-014")
     card = _read_json(CONTRACT / row["card"]["path"])
-    states, _ = integration_module._workstream_states(_raw_overseer_state())
 
-    assert states["CC-012"] == states["CC-016"] == "COMPLETE"
-    assert states["CC-014"] == "ACTIVE"
     assert card["authorization"]["class"] == "FORMAL"
     assert [
         binding["workstream_id"]
         for binding in card["authorization"]["dependency_bindings"]
     ] == list(row["depends_on"])
-    assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
     assert card["assignment"] == {
         "owner_id": "worker:cc014-feature-oracles",
         "state": "ASSIGNED",
@@ -6525,20 +6910,180 @@ def test_feature_oracle_reactivation_is_exact() -> None:
         "VERIFIED_FACT",
         "WORKSTREAM_STATE",
     )
-    revision, verification, activation = transaction
+    revision, verification, activated = transaction
     assert revision["data"]["affected_ids"] == ["CC-000", "CC-014"]
     assert verification["data"]["as_of"] == verification["recorded_at"]
-    assert activation["data"]["previous_state"] == "PAUSED"
-    assert activation["data"]["new_state"] == "ACTIVE"
-    assert activation["data"]["blockers"] == []
-    assert activation["data"]["evidence_entry_ids"] == [
+    assert activated["data"]["previous_state"] == "PAUSED"
+    assert activated["data"]["new_state"] == "ACTIVE"
+    assert activated["data"]["blockers"] == []
+    assert activated["data"]["evidence_entry_ids"] == [
         "OVR-000280",
         "OVR-000281",
     ]
-    assert activation["previous_entry_hash"] == verification["entry_hash"]
+    assert activated["previous_entry_hash"] == verification["entry_hash"]
 
     report = _read_json(CONTRACT / "overseer/evidence/CC-014-reactivation.json")
     assert report["workstream_id"] == "CC-014"
     assert report["base_commit"] == "6bc61c7458469f9f70555d651c65d2736b723318"
     assert all(check["result"] == "PASS" for check in report["checks"])
     assert any("test-only" in limitation for limitation in report["limitations"])
+
+
+def test_feature_oracle_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-014")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert states["CC-012"] == states["CC-016"] == "COMPLETE"
+    assert states["CC-014"] == "COMPLETE"
+    assert card["candidate"] == {
+        "artifacts": [
+            {
+                "byte_length": 18972,
+                "path": (
+                    "conformance/contract_kernel/v0/feature_cases/oracle/"
+                    "feature_cases.json"
+                ),
+                "sha256": (
+                    "sha256:83e48b5581acd9b23f42229c707a92f3a3bcb4f5f795ae147c2bbbd"
+                    "428017068"
+                ),
+            },
+            {
+                "byte_length": 23720,
+                "path": "tests/contract_compiler/test_feature_case_oracles.py",
+                "sha256": (
+                    "sha256:4f217511d88b43cb8d50edc344bda8a99e4567bafb28f7e02f4fa3"
+                    "49ebc9313c"
+                ),
+            },
+        ],
+        "base_commit": "607706796bf157f10d2a911a57cff39a72876795",
+        "evidence": [
+            {
+                "byte_length": 7861,
+                "path": "conformance/contract_compiler/v0/evidence/CC-014.json",
+                "result": "PASS",
+                "sha256": (
+                    "sha256:74fc1b37886770a8d34a541a3dc6f37e1e0d72710c1dd9bf6b5a3e"
+                    "a3d6aeb7e9"
+                ),
+            }
+        ],
+        "head_commit": "81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb",
+        "head_tree": "af33fc96eba5924912c9c4c3c6e6a5be36a2066e",
+        "state": "ELIGIBLE",
+    }
+    assert card["ledger"] == {
+        "entry_count": 7,
+        "head_entry_id": "CC-014-WRK-000007",
+        "head_hash": (
+            "sha256:ad67b5c4835874fc15f7523d040bcedf48e575e01b5f9f906499b72cf6302285"
+        ),
+        "path": "workstreams/CC-014/ledger",
+        "state": "RECORDED",
+    }
+    authorities = integration_module._latest_active_authority_entries(ledger_state)
+    worker_ledger = integration_module._validate_worker_ledger(
+        CONTRACT,
+        card,
+        _read_json(CONTRACT / "integration.schema.json"),
+        integration_module.PurePosixPath("design/contract_compiler"),
+    )
+    touched = validate_candidate_history(
+        ROOT,
+        card["candidate"],
+        allowed_scopes=card["scopes"],
+        workstream_id="CC-014",
+        authority_entry=authorities["CC-014"],
+        overseer_path="design/contract_compiler/overseer",
+        enforce_clean_base=True,
+        worker_ledger=worker_ledger,
+    )
+    assert touched == (
+        "conformance/contract_compiler/v0/evidence/CC-014.json",
+        "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json",
+        "design/contract_compiler/workstreams/CC-014/ledger/entries/"
+        "CC-014-WRK-000001.json",
+        "design/contract_compiler/workstreams/CC-014/ledger/entries/"
+        "CC-014-WRK-000002.json",
+        "design/contract_compiler/workstreams/CC-014/ledger/head.json",
+        "tests/contract_compiler/test_feature_case_oracles.py",
+    )
+
+    oracle = _read_json(
+        ROOT
+        / "conformance/contract_kernel/v0/feature_cases/oracle/feature_cases.json"
+    )
+    assert len(oracle["groups"]) == 11
+    assert len(oracle["outcomes"]) == 18
+    assert sum(outcome == "ACCEPT" for outcome in oracle["outcomes"].values()) == 13
+    assert sum(
+        outcome == {"outcome": "REFUSE"}
+        for outcome in oracle["outcomes"].values()
+    ) == 5
+    assert len(oracle["projections"]) == 13
+    assert len(oracle["relations"]) == 4
+    assert oracle["outcomes"]["positive/valid_explicit_false.json"] == "ACCEPT"
+    assert oracle["outcomes"]["x01/explicit_false.json"] == {
+        "outcome": "REFUSE"
+    }
+
+    completion = tuple(
+        entry
+        for entry in ledger_state.entries
+        if 283 <= entry["sequence"] <= 285
+    )
+    assert tuple(entry["entry_id"] for entry in completion) == (
+        "OVR-000283",
+        "OVR-000284",
+        "OVR-000285",
+    )
+    assert tuple(entry["entry_type"] for entry in completion) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completed = completion
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-014"]
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert completed["data"]["previous_state"] == "ACTIVE"
+    assert completed["data"]["new_state"] == "COMPLETE"
+    assert completed["data"]["blockers"] == []
+    assert completed["data"]["evidence_entry_ids"] == ["OVR-000284"]
+    assert completed["data"]["deliverables"] == [
+        (
+            "Hand-author the private feature-case compilation and refusal answer "
+            "key only from exact feature sources and accepted decisions."
+        ),
+        (
+            "Bind the exact 6077067..81b987b eligible candidate, canonical report, "
+            "seven worker TDD phases, and both clean final audits."
+        ),
+        (
+            "Keep the candidate unselected and non-public and transfer only process "
+            "technique into separately activated compiler implementation."
+        ),
+    ]
+    assert completed["previous_entry_hash"] == verification["entry_hash"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-014-completion.json")
+    assert report["workstream_id"] == "CC-014"
+    assert report["base_commit"] == "81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any("tripwire" in limitation for limitation in report["limitations"])
+    chronology = [
+        datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+        for value in (
+            report["recorded_at"],
+            revision["recorded_at"],
+            verification["recorded_at"],
+            completed["recorded_at"],
+        )
+    ]
+    assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+    assert "CC-014" not in manifest["selections"]
+    r01 = _read_json(CONTRACT / _registry_row(manifest, "CC-R01")["card"]["path"])
+    assert r01["authorization"]["class"] == "BLOCKED"

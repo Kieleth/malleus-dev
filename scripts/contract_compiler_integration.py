@@ -89,6 +89,18 @@ class IntegrationState:
     selections: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class WorkerLedgerValidation:
+    """Validated worker-ledger state that may accompany one candidate."""
+
+    workstream_id: str
+    phase_results: tuple[dict[str, Any], ...]
+    head_path: str | None
+    head_static: Mapping[str, Any]
+    entry_sources: Mapping[str, bytes]
+    entry_hashes: tuple[str, ...]
+
+
 def _fail(code: str, message: str) -> None:
     raise IntegrationValidationError(f"[{code}] {message}")
 
@@ -287,6 +299,129 @@ def _scope_contains(scope: Mapping[str, str], path: str) -> bool:
 
 def _scopes_overlap(left: Mapping[str, str], right: Mapping[str, str]) -> bool:
     return _scope_contains(left, right["path"]) or _scope_contains(right, left["path"])
+
+
+def _is_worker_ledger_path(path: str, workstream_id: str | None) -> bool:
+    """Recognize only the owning workstream's exact ledger path grammar."""
+
+    if workstream_id is None:
+        return False
+    root = (
+        "design",
+        "contract_compiler",
+        "workstreams",
+        workstream_id,
+        "ledger",
+    )
+    parts = PurePosixPath(path).parts
+    if parts == (*root, "head.json"):
+        return True
+    if len(parts) != len(root) + 2 or parts[: len(root)] != root:
+        return False
+    if parts[-2] != "entries":
+        return False
+    filename = parts[-1]
+    prefix = f"{workstream_id}-WRK-"
+    if not filename.startswith(prefix) or not filename.endswith(".json"):
+        return False
+    sequence = filename[len(prefix) : -len(".json")]
+    return (
+        len(sequence) == 6
+        and sequence.isascii()
+        and sequence.isdigit()
+        and sequence != "000000"
+    )
+
+
+def _candidate_worker_ledger_sideband(
+    repository: Path,
+    base_commit: str,
+    head_commit: str,
+    touched: Sequence[str],
+    workstream_id: str | None,
+    worker_ledger: WorkerLedgerValidation | None,
+) -> frozenset[str]:
+    """Bind candidate ledger paths to an immutable validated current prefix."""
+
+    if (
+        workstream_id is None
+        or worker_ledger is None
+        or worker_ledger.workstream_id != workstream_id
+        or worker_ledger.head_path is None
+    ):
+        return frozenset()
+    shaped = {
+        path for path in touched if _is_worker_ledger_path(path, workstream_id)
+    }
+    if not shaped:
+        return frozenset()
+    head_source = _git(
+        repository,
+        "show",
+        f"{head_commit}:{worker_ledger.head_path}",
+        text=False,
+    )
+    if head_source.returncode:
+        return frozenset()
+    try:
+        candidate_head = json.loads(
+            head_source.stdout.decode("utf-8"),
+            object_pairs_hook=_unique_object,
+            parse_constant=_reject_constant,
+        )
+    except (IntegrationValidationError, UnicodeError, json.JSONDecodeError):
+        return frozenset()
+    if not isinstance(candidate_head, dict):
+        return frozenset()
+    variable_fields = {"entry_count", "head_entry_id", "head_hash"}
+    static_fields = {
+        key: value
+        for key, value in candidate_head.items()
+        if key not in variable_fields
+    }
+    entry_count = candidate_head.get("entry_count")
+    if (
+        static_fields != worker_ledger.head_static
+        or type(entry_count) is not int
+        or not 1 <= entry_count <= len(worker_ledger.entry_hashes)
+        or candidate_head.get("head_entry_id")
+        != f"{workstream_id}-WRK-{entry_count:06d}"
+        or candidate_head.get("head_hash")
+        != worker_ledger.entry_hashes[entry_count - 1]
+    ):
+        return frozenset()
+    prefix_sources = dict(list(worker_ledger.entry_sources.items())[:entry_count])
+    for path, current_source in prefix_sources.items():
+        candidate_source = _git(repository, "show", f"{head_commit}:{path}", text=False)
+        if candidate_source.returncode or candidate_source.stdout != current_source:
+            return frozenset()
+    admitted: set[str] = set()
+    for path in shaped:
+        base_source = _git(repository, "show", f"{base_commit}:{path}", text=False)
+        if not base_source.returncode:
+            continue
+        if path == worker_ledger.head_path:
+            admitted.add(path)
+            continue
+        current_source = prefix_sources.get(path)
+        candidate_source = _git(repository, "show", f"{head_commit}:{path}", text=False)
+        changes = _git(
+            repository,
+            "rev-list",
+            "--count",
+            f"{base_commit}..{head_commit}",
+            "--",
+            path,
+        )
+        if (
+            current_source is not None
+            and not candidate_source.returncode
+            and candidate_source.stdout == current_source
+            and not changes.returncode
+            and changes.stdout.strip() == "1"
+        ):
+            admitted.add(path)
+    return frozenset(admitted)
 
 
 def _git(
@@ -618,6 +753,7 @@ def validate_candidate_history(
     authority_entry: Mapping[str, Any] | None = None,
     overseer_path: str | None = None,
     enforce_clean_base: bool = False,
+    worker_ledger: WorkerLedgerValidation | None = None,
 ) -> tuple[str, ...]:
     """Validate exact commits and every path touched, including later deletions."""
     repository = repository.resolve()
@@ -685,10 +821,19 @@ def validate_candidate_history(
     if actual_tree.returncode or candidate.get("head_tree") != actual_tree.stdout.strip():
         _fail("CC000_CANDIDATE_TREE", "head_tree does not bind the candidate tree")
     touched = _touched_paths(repository, commits)
+    worker_ledger_sideband = _candidate_worker_ledger_sideband(
+        repository,
+        base,
+        head,
+        touched,
+        workstream_id,
+        worker_ledger,
+    )
     outside = [
         path
         for path in touched
-        if not any(_scope_contains(scope, path) for scope in allowed_scopes)
+        if path not in worker_ledger_sideband
+        and not any(_scope_contains(scope, path) for scope in allowed_scopes)
     ]
     if outside:
         _fail(
@@ -734,7 +879,8 @@ def validate_candidate_history(
                     "CC000_EVIDENCE_INVALID",
                     f"{path}: report artifacts do not equal candidate artifacts",
                 )
-    if enforce_clean_base and set(touched) != declared_paths:
+    declared_delta = set(touched) - worker_ledger_sideband
+    if enforce_clean_base and declared_delta != declared_paths:
         _fail(
             "CC000_CANDIDATE_DECLARATION",
             "candidate touched paths do not equal declared artifacts and evidence",
@@ -751,14 +897,22 @@ def _validate_worker_ledger(
     bundle: Path,
     card: dict[str, Any],
     schema: dict[str, Any],
-) -> tuple[dict[str, Any], ...]:
+    repository_prefix: PurePosixPath,
+) -> WorkerLedgerValidation:
     pointer = card["ledger"]
+    workstream_id = card["workstream_id"]
     if pointer["state"] == "NOT_STARTED":
-        return ()
+        return WorkerLedgerValidation(
+            workstream_id=workstream_id,
+            phase_results=(),
+            head_path=None,
+            head_static={},
+            entry_sources={},
+            entry_hashes=(),
+        )
     root = _bundle_path(bundle, pointer["path"], f"{card['workstream_id']} ledger")
     head = _read_json(root / "head.json")
     _validate_schema(head, schema, "workerLedgerHead", f"{root}/head.json")
-    workstream_id = card["workstream_id"]
     if head["workstream_id"] != workstream_id:
         _fail("CC000_WORKER_LEDGER", f"{workstream_id}: ledger head ID mismatch")
     paths = sorted((root / "entries").glob("*.json"))
@@ -768,6 +922,8 @@ def _validate_worker_ledger(
     prior_time: datetime | None = None
     entries: list[dict[str, Any]] = []
     entry_ids: set[str] = set()
+    entry_sources: dict[str, bytes] = {}
+    entry_hashes: list[str] = []
     owner = card["assignment"].get("owner_id")
     for sequence, path in enumerate(paths, start=1):
         entry = _read_json(path)
@@ -798,6 +954,11 @@ def _validate_worker_ledger(
                 )
         entries.append(entry)
         entry_ids.add(entry["entry_id"])
+        repository_path = str(
+            repository_prefix / pointer["path"] / "entries" / path.name
+        )
+        entry_sources[repository_path] = path.read_bytes()
+        entry_hashes.append(actual_hash)
     expected_pointer = {
         "entry_count": head["entry_count"],
         "head_entry_id": head["head_entry_id"],
@@ -808,7 +969,17 @@ def _validate_worker_ledger(
             _fail("CC000_WORKER_LEDGER", f"{workstream_id}: card {key} is stale")
     if not paths or head["head_entry_id"] != paths[-1].stem or head["head_hash"] != previous:
         _fail("CC000_WORKER_LEDGER", f"{workstream_id}: head is stale")
-    return _active_tdd_results(entries)
+    variable_fields = {"entry_count", "head_entry_id", "head_hash"}
+    return WorkerLedgerValidation(
+        workstream_id=workstream_id,
+        phase_results=_active_tdd_results(entries),
+        head_path=str(repository_prefix / pointer["path"] / "head.json"),
+        head_static={
+            key: value for key, value in head.items() if key not in variable_fields
+        },
+        entry_sources=entry_sources,
+        entry_hashes=tuple(entry_hashes),
+    )
 
 
 def _active_tdd_results(
@@ -1253,9 +1424,18 @@ def validate_integration(
     states, state_entries = _workstream_states(ledger_state)
     authority_entries = _latest_active_authority_entries(ledger_state)
 
+    ledger_prefix = PurePosixPath(anchor["path"]).parent
     phase_results: dict[str, tuple[dict[str, Any], ...]] = {}
+    worker_ledgers: dict[str, WorkerLedgerValidation] = {}
     for workstream_id, card in cards.items():
-        phase_results[workstream_id] = _validate_worker_ledger(bundle, card, schema)
+        worker_ledger = _validate_worker_ledger(
+            bundle,
+            card,
+            schema,
+            ledger_prefix,
+        )
+        worker_ledgers[workstream_id] = worker_ledger
+        phase_results[workstream_id] = worker_ledger.phase_results
         if card["authorization"]["class"] != "FORMAL":
             continue
         dependencies = supplied[workstream_id]
@@ -1368,6 +1548,7 @@ def validate_integration(
             authority_entry=authority_entry,
             overseer_path=anchor["path"],
             enforce_clean_base=True,
+            worker_ledger=worker_ledgers[workstream_id],
         )
 
     for workstream_id in selections:

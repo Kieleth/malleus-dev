@@ -1,0 +1,65 @@
+{
+  "actor": {
+    "id": "cc014-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T08:03:32Z",
+    "claims": [
+      "CC-014 is the exact linear 607706796bf157f10d2a911a57cff39a72876795..81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb five-commit candidate at tree af33fc96eba5924912c9c4c3c6e6a5be36a2066e.",
+      "Strict candidate validation admits only once-created entries byte-equal to the validated owning worker ledger and a head naming that exact prefix. Added-then-deleted, changed-then-restored, unvalidated, differently owned, and unexpected ledger paths refuse.",
+      "The eligible card and canonical report bind the same exact private feature-case answer key and fixed test. The canonical report is the sole PASS evidence pointer.",
+      "Eleven groups bind eighteen exact sources: thirteen ACCEPT with exact projections, five atomic REFUSE outcomes, one accepted and one refused explicit-false case, and exactly four requirement-backed comparisons.",
+      "The assigned worker ledger contains seven ordered TDD phases and binds the genuine RED, final GREEN, exact slice, producer disproofs, regressions, package boundary, and attestation.",
+      "All eight formal dependencies and required owner-separation edges remain exact. Earlier answer keys contribute process technique only and create no cross-control semantic dependency.",
+      "Two independent audits reproduced and closed producer-isolation bypasses. The final exact-tree audit reports no P0-P3 finding.",
+      "The exact candidate passes its focused, disproof, neighboring, compiler, evidence, changed-file Ruff and format, and diff gates. Completion governance passes 579 tests, strict ledger and integration validation, Ruff lint, and diff checks.",
+      "CC-014 remains ELIGIBLE, private, and unselected. No compiler, runtime, corpus publication, package, release, public format, selection, integration, or formal source-boundary authority is created by completion."
+    ],
+    "limitations": [
+      "The private JSON representation defines no public format, compatibility contract, runtime artifact, wire grammar, or stable public identifier.",
+      "The expected values prove the governed meaning of eighteen controlled feature sources, not current compiler or runtime conformance.",
+      "The producer AST check is a focused tripwire, not a complete information-flow proof or sandbox.",
+      "The owning worker-ledger sideband exception is path-exact and remains subject to the independent worker-ledger hash, ownership, sequence, time, card-pointer, and TDD validators.",
+      "The two modified integration files have pre-existing whole-file Ruff-format debt. Completion does not claim that gate or reformat unrelated historical code.",
+      "All executable compiler, resolver, runtime, package, selection, integration, and release behavior remains separately governed."
+    ]
+  },
+  "entry_hash": "sha256:1b7175666e7e8fd59e68b1abf7dd4a00a5f4fe2de9ba38884a8d2dd3d62aff74",
+  "entry_id": "OVR-000284",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9b396f6ab667f2149058b6bf9b9d564e634ed47ecd494418a1f6dd1245c1b0e1",
+  "recorded_at": "2026-09-01T08:03:32Z",
+  "references": [
+    {
+      "digest": "sha256:5f251be618a00abe42148b260dfd08b9cd6f3cf152d20a31857084c03b6938eb",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-014-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000283",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 284,
+  "subject": {
+    "id": "cc014-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded feature-case answer-key completion gate.",
+  "why": "Feature-case expectations may complete only after the exact independent candidate, report equality, semantic and refusal boundaries, worker TDD chain, formal dependencies, repaired producer guards, strict sideband admission, clean audits, regression gate, and unselected private boundary pass mechanically."
+}

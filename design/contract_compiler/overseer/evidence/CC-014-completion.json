@@ -1,0 +1,94 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 7861,
+      "path": "conformance/contract_compiler/v0/evidence/CC-014.json",
+      "sha256": "sha256:74fc1b37886770a8d34a541a3dc6f37e1e0d72710c1dd9bf6b5a3ea3d6aeb7e9"
+    },
+    {
+      "byte_length": 26121,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:4e2903a0098366ef1ab815fed3a27c69722cb3c4e617c6e9f17dc6df8863e5df"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-014/ledger/head.json",
+      "sha256": "sha256:c2f5394b972f6694119f60f66674ba0b1e6dae172e0c9a4a2a881877baa4c470"
+    },
+    {
+      "byte_length": 6328,
+      "path": "design/contract_compiler/workstreams/CC-014/manifest.json",
+      "sha256": "sha256:71f153f224b913a972f3507cfa7250759a76d322926b926cc182e6685f43d2be"
+    }
+  ],
+  "base_commit": "81b987b071dcce38a0d09eaddff9b6bfbf6ca5eb",
+  "checks": [
+    {
+      "check_id": "cc014-candidate-history",
+      "method": "Validate the linear five-commit candidate from activation floor 60770679 through 81b987b0, tree af33fc96, exact declared outputs, immutable prefix of the separately validated owning worker ledger, canonical PASS report, and clean-base authority floor.",
+      "observed": "The initial strict check refused because RED and GREEN also committed the worker ledger. The repair admits only entries created once, byte-equal to the validated immutable ledger, plus a head naming that exact prefix. Added-then-deleted, changed-then-restored, changed-byte, unvalidated, differently owned, and unexpected ledger paths refuse. Candidate declaration equality stays strict; CC-014 passes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-card-report-equality",
+      "method": "Require exact equality between the canonical report's two artifacts and the eligible card's artifact list, then recompute candidate and evidence lengths and SHA-256 values.",
+      "observed": "The card and report bind the same 18,972-byte private answer and 23,720-byte fixed test. The 7,861-byte canonical report is the sole PASS evidence pointer.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-semantic-boundary",
+      "method": "Verify all exact source descriptors, accepted projections, atomic refusals, explicit-false split, metamorphic relations, provenance, and nonclaims against OD-002, OD-003, OD-005, and OD-008.",
+      "observed": "All 18 sources are bound exactly. Thirteen ACCEPT with exact feature projections, five REFUSE atomically, explicit false remains separate accepted and refused outcomes, and only four requirement-backed groups carry comparisons.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-worker-tdd",
+      "method": "Validate the assigned worker's seven-entry hash chain, ordered TDD phases, genuine missing-answer RED, GREEN, exact slice, disproofs, regressions, package boundary, and attestation.",
+      "observed": "Seven chained phases pass. RED had eight expected failures and six controls; final GREEN has 21 passes; DISPROOF has 14 passes with seven deselected; PACKAGE is NOT_APPLICABLE.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-dependencies",
+      "method": "Validate all eight formal dependency bindings, feature input-oracle owner separation, the Quiet Bell then Greenhouse then edge-case schedule, and absence of cross-control semantic dependencies.",
+      "observed": "All eight direct dependencies remain complete and exactly bound. Earlier controls contribute process technique only. No sibling answer value, owner, selection, or DAG authority enters this candidate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-independent-audit",
+      "method": "Independently audit every outcome and projection, exact JSON types, producer tripwire, private scope, report equality, candidate tree, and both producer-guard repairs.",
+      "observed": "Two audits reproduced and closed from-import, aliased builtins, direct and aliased pytest.main, and aliased pytest.importorskip bypasses. Final exact-tree audit reports no P0-P3 finding.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-regression",
+      "method": "Reproduce the candidate's focused, disproof, neighboring, compiler, evidence, changed-file Ruff and format, and diff gates; then run the completion governance's strict ledger, integration, regression, lint, and diff gates.",
+      "observed": "At the candidate boundary, 21 focused, 14 disproof, 67 neighboring, and 244 compiler tests passed; its changed files passed Ruff and format. At completion, 579 governance tests, strict ledger and integration validation, Ruff lint, and diff checks passed. Whole-file format is not claimed for the two pre-existing integration files.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-unselected-completion",
+      "method": "Require the completed candidate to remain ELIGIBLE, private, and absent from selections while preserving the blocked formal source-boundary stage until its separate activation.",
+      "observed": "The candidate remains ELIGIBLE and unselected. No compiler stage, runtime, corpus publication, package, release, public format, or integration authority is created by completion.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "cc014-process-lessons",
+      "method": "Retain reusable answer-key technique without transferring fixture values, identifiers, helpers, interfaces, or semantic authority into implementation.",
+      "observed": "Retain process only: split mixed outcomes, compare only requirement-backed dimensions, preserve NOT_CLAIMED boundaries, validate exact JSON types, use strict source ownership, and treat AST isolation as a review tripwire rather than a sandbox.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The feature JSON is private fixture-local conformance evidence. It defines no public format, compatibility contract, runtime artifact, wire grammar, stable public identifier, or protocol invariant.",
+    "The expected projections prove the governed meaning of these eighteen controlled sources, not that any current compiler or runtime conforms.",
+    "Canonical fact bytes, logical artifact bytes, public diagnostic identifiers, and public EffectiveContract identity remain outside this workstream.",
+    "The AST producer guard is a focused regression tripwire over one fixed test, not a complete information-flow proof or sandbox. Independent ownership and review remain required.",
+    "Candidate history may carry only an immutable prefix of the exact owning workstream's separately validated ledger as sideband. This is not candidate output authority and does not admit deleted, rewritten, unvalidated, differently owned, or arbitrary metadata paths.",
+    "The two modified integration files contain pre-existing Ruff-format debt. Completion does not claim whole-file format conformance or perform unrelated formatter churn; current changes pass Ruff lint and diff checks.",
+    "This completion provides an independent answer key, not a compiler, LinkML adapter, resolver, runtime, protocol event, ledger, graph, projector, package, or release implementation.",
+    "Corpus publication, selection, public API, package, release, and every executable compiler stage remain deferred."
+  ],
+  "recorded_at": "2026-09-01T08:03:30Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-014"
+}

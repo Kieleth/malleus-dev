@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Hand-author the private feature-case compilation and refusal answer key only from exact feature sources and accepted decisions.",
+      "Bind the exact 6077067..81b987b eligible candidate, canonical report, seven worker TDD phases, and both clean final audits.",
+      "Keep the candidate unselected and non-public and transfer only process technique into separately activated compiler implementation."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000284"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-014"
+  },
+  "entry_hash": "sha256:295e4b5eb8c7b62e8be0de8a9f966a1a7f4103da763188aa914b0baf801b21b4",
+  "entry_id": "OVR-000285",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1b7175666e7e8fd59e68b1abf7dd4a00a5f4fe2de9ba38884a8d2dd3d62aff74",
+  "recorded_at": "2026-09-01T08:03:33Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000284",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-014",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 285,
+  "subject": {
+    "id": "CC-014",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the bounded feature-case answer-key workstream.",
+  "why": "OVR-000284 binds the exact eligible independently authored answer key, canonical report, immutable worker-ledger prefix admission, seven worker TDD phases, dependency closure, semantic refusal boundaries, repaired producer guards, process-only lessons, unselected private scope, and clean audits required for completion without compiler authority."
+}
