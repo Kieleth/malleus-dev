@@ -473,7 +473,7 @@ def test_explicit_false_is_distinct_from_missing_without_deciding_validity() -> 
         (
             "unknown-root",
             b"id: https://example.org/x\nname: x\ninstances: {}\n",
-            LinkMLRefusalReason.UNSUPPORTED_SOURCE,
+            LinkMLRefusalReason.REJECTED_SOURCE,
         ),
         (
             "duplicate-key",
@@ -493,7 +493,7 @@ def test_explicit_false_is_distinct_from_missing_without_deciding_validity() -> 
         (
             "retired-annotation",
             b"id: https://example.org/x\nname: x\nslots:\n  value:\n    annotations:\n      retires: true\n",
-            LinkMLRefusalReason.UNSUPPORTED_SOURCE,
+            LinkMLRefusalReason.REJECTED_SOURCE,
         ),
         (
             "alias",
