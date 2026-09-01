@@ -67,6 +67,10 @@ Issues = "https://github.com/kieleth/malleus-dev/issues"
 # Only the files explicitly listed below are packaged. Anything else present
 # in the working tree (local scratch files, experimental modules, notes) is
 # ignored by the build.
+exclude = [
+    "/src/malleus/_contract_compiler.py",
+    "/src/malleus/_contract_compiler_profile.json",
+]
 include = [
     "/src/malleus/__init__.py",
     "/src/malleus/ontology.py",
