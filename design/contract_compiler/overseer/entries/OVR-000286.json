@@ -1,0 +1,84 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R01"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:5aa5edf969b2b06f16d606ac10384697522225e5229ed36ed049c5715915afd5",
+        "before_digest": "sha256:4e2903a0098366ef1ab815fed3a27c69722cb3c4e617c6e9f17dc6df8863e5df",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:732123cf22e634e7a56339e5bd726d6bcd1b6700d32e0bd98e623851989f37c9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R01-activation.json"
+      },
+      {
+        "after_digest": "sha256:f476c8531038494cce99d3ca929285b1b2665eb128f4932398f623173a6ae140",
+        "before_digest": "sha256:a9c85b08754633696b29e1dc9db57d522e8ad5c193a05a2b449e9c262c6ffd2b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R01/manifest.json"
+      },
+      {
+        "after_digest": "sha256:21cce0454767bca867e85248d468aa57b26a26d45b52d6a4fc96cbbabb028141",
+        "before_digest": "sha256:d440696015f5bf018410faec5bee8328c212e51f5e70deba23dd64d560a564f2",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:d644d058a2c8bf2192e61dc24b2242667af8529c5b5066fa0aa352b193efe0d4",
+  "entry_id": "OVR-000286",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:295e4b5eb8c7b62e8be0de8a9f966a1a7f4103da763188aa914b0baf801b21b4",
+  "recorded_at": "2026-09-01T09:59:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:732123cf22e634e7a56339e5bd726d6bcd1b6700d32e0bd98e623851989f37c9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R01-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3afca71f59c563eb559109ca4007a68e02fbf0ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 286,
+  "subject": {
+    "id": "ccr01-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Activate the syntax-neutral retained-source boundary.",
+  "why": "The accepted resolver and import policy, all twelve completed prerequisites, one named worker, and an exact three-file implementation boundary are now available. This transaction binds them before any retained-source implementation byte or worker evidence exists."
+}

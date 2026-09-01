@@ -318,6 +318,11 @@ def _register_blocked_card(
         "owner_id": owner_id,
         "task_id": f"task:{workstream_id.lower()}",
     }
+    template["authorization"] = {
+        "authorized_by": {"id": "overseer", "type": "OVERSEER"},
+        "blockers": ["Synthetic ownership test."],
+        "class": "BLOCKED",
+    }
     template["scopes"] = [
         {
             "kind": "TREE",
@@ -934,7 +939,8 @@ def test_canonical_integration_manifest_is_valid() -> None:
     assert state.workstreams["CC-X03"] == ()
     assert workstream_states["CC-X03"] == "COMPLETE"
     assert "CC-X03" not in state.selections
-    assert state.cards["CC-R01"]["authorization"]["class"] == "BLOCKED"
+    assert state.cards["CC-R01"]["authorization"]["class"] == "FORMAL"
+    assert workstream_states["CC-R01"] == "ACTIVE"
 
     decisions = {
         "CC-D01": (),
@@ -6685,6 +6691,33 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-022"]["card_sha256"] = cc022_digest
 
     _rewrite_card(manifest_path, manifest, "CC-014", rebind_feature_oracle)
+    changed_dependency_digests = {
+        workstream_id: _registry_row(manifest, workstream_id)["card"]["sha256"]
+        for workstream_id in (
+            "CC-X03",
+            "CC-D11",
+            "CC-010",
+            "CC-011",
+            "CC-012",
+            "CC-013",
+            "CC-014",
+            "CC-015",
+            "CC-016",
+            "CC-021",
+            "CC-022",
+        )
+    }
+
+    def rebind_retained_source(card: dict[str, Any]) -> None:
+        bindings = {
+            binding["workstream_id"]: binding
+            for binding in card["authorization"]["dependency_bindings"]
+        }
+        for workstream_id, digest in changed_dependency_digests.items():
+            bindings[workstream_id]["card_sha256"] = digest
+        bindings["CC-X03"]["integrated_head"] = result_commit
+
+    _rewrite_card(manifest_path, manifest, "CC-R01", rebind_retained_source)
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 
@@ -7085,5 +7118,149 @@ def test_feature_oracle_completion_is_exact() -> None:
     ]
     assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
     assert "CC-014" not in manifest["selections"]
-    r01 = _read_json(CONTRACT / _registry_row(manifest, "CC-R01")["card"]["path"])
-    assert r01["authorization"]["class"] == "BLOCKED"
+    completion_manifest = json.loads(
+        _git(
+            ROOT,
+            "show",
+            "3afca71f59c563eb559109ca4007a68e02fbf0ba:"
+            "design/contract_compiler/integration.json",
+        )
+    )
+    completion_r01 = json.loads(
+        _git(
+            ROOT,
+            "show",
+            "3afca71f59c563eb559109ca4007a68e02fbf0ba:"
+            "design/contract_compiler/"
+            f"{_registry_row(completion_manifest, 'CC-R01')['card']['path']}",
+        )
+    )
+    assert completion_r01["authorization"]["class"] == "BLOCKED"
+
+
+def test_retained_source_boundary_activation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R01")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R01/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:ccr01-retained-source-boundary",
+        "state": "ASSIGNED",
+        "task_id": "/root/ccr01_retained_source_boundary",
+    }
+    assert card["authorization"]["authorized_by"] == {
+        "id": "operator",
+        "type": "OPERATOR",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert tuple(
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ) == tuple(row["depends_on"])
+    assert card["scopes"] == [
+        {"kind": "FILE", "path": "src/malleus/_contract_source.py"},
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_retained_source_boundary.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-R01.json",
+        },
+    ]
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert "syntax-neutral" in card["responsibility"]
+    assert "same resolver" in card["responsibility"]
+    assert "complete immutable closure" in card["responsibility"]
+    assert "without a partial result" in card["responsibility"]
+    assert states["CC-R01"] == "ACTIVE"
+    assert "CC-R01" not in manifest["selections"]
+
+    transaction = tuple(
+        entry
+        for entry in ledger_state.entries
+        if 286 <= entry["sequence"] <= 288
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000286",
+        "OVR-000287",
+        "OVR-000288",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R01"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R01-activation.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R01/manifest.json": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert all(
+        not document["path"].startswith("src/malleus/")
+        and "test_retained_source_boundary.py" not in document["path"]
+        and document["path"]
+        != "conformance/contract_compiler/v0/evidence/CC-R01.json"
+        for document in revision["data"]["documents"]
+    )
+    assert verification["actor"] == {
+        "id": "ccr01-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+    assert activation["data"] == {
+        "blockers": [],
+        "bootstrap": True,
+        "deliverables": [
+            (
+                "Write fixed tests before implementation for exact retention, "
+                "recursive imports, diamonds, identity countercases, cycles, typed "
+                "refusal, no fallback, and no hidden I/O."
+            ),
+            (
+                "Implement one syntax-neutral closure executor driven only by one "
+                "injected resolver and one injected ordered import reader."
+            ),
+            (
+                "Return a complete immutable closure or refuse atomically; create no "
+                "LinkML adapter, compiler facts, public API, package, selection, "
+                "runtime protocol, ledger, graph, or fixture-specific policy."
+            ),
+        ],
+        "evidence_entry_ids": ["OVR-000286", "OVR-000287"],
+        "new_state": "ACTIVE",
+        "previous_state": "PLANNED",
+        "workstream_id": "CC-R01",
+    }
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R01-activation.json")
+    assert report["base_commit"] == "3afca71f59c563eb559109ca4007a68e02fbf0ba"
+    assert report["workstream_id"] == "CC-R01"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    chronology = [
+        datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+        for value in (
+            report["recorded_at"],
+            revision["recorded_at"],
+            verification["recorded_at"],
+            activation["recorded_at"],
+        )
+    ]
+    assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))

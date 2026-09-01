@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "ccr01-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T09:59:02Z",
+    "claims": [
+      "All twelve direct dependencies are COMPLETE and exact in program order: CC-000 binds its integrated candidate head, while the other eleven bind the first commit containing their exact COMPLETE entry.",
+      "The card assigns one worker and exactly one private production module, one fixed retained-source test, and one canonical worker report.",
+      "The authorized executor boundary is syntax-neutral: one selected resolver and one injected ordered import reader will provide all external decisions and bytes.",
+      "Every authored import returns to the same resolver; no fallback resolver, locator normalization, syntax parser, file access, network access, semantic merge, or fixture policy enters the executor.",
+      "The authorized success result is one complete immutable closure. The authorized failure is typed and atomic and exposes no partial source or edge collection.",
+      "Candidate remains NONE, worker ledger remains NOT_STARTED, selections are unchanged, and activation creates no implementation, adapter, public API, package, or fixture byte.",
+      "The shared corpus remains empty, so the generic implementation may proceed but formal CC-R01 completion remains blocked on reviewed cases, requirements, and checksums."
+    ],
+    "limitations": [
+      "This verifies activation and boundary integrity only. It does not implement or complete the retained-source engine.",
+      "The assigned worker must produce a genuine missing-module RED before production GREEN and retain the ordered worker TDD chain.",
+      "LinkML adaptation, successful Quiet Bell compilation, semantic facts, public interfaces, packaging, selection, and release remain separate work."
+    ]
+  },
+  "entry_hash": "sha256:a599ba11937910c4ef6ad3258d118df120528e1bc834c0c359bdb44ad03ca330",
+  "entry_id": "OVR-000287",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d644d058a2c8bf2192e61dc24b2242667af8529c5b5066fa0aa352b193efe0d4",
+  "recorded_at": "2026-09-01T09:59:02Z",
+  "references": [
+    {
+      "digest": "sha256:732123cf22e634e7a56339e5bd726d6bcd1b6700d32e0bd98e623851989f37c9",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R01-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000286",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3afca71f59c563eb559109ca4007a68e02fbf0ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 287,
+  "subject": {
+    "id": "ccr01-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the exact retained-source activation boundary.",
+  "why": "Formal implementation starts only after dependency closure, executor and adapter responsibilities, exact scopes, genuine TDD, atomic refusal, and the remaining corpus blocker are explicit and mechanically guarded."
+}

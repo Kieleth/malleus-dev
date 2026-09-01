@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 26122,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:5aa5edf969b2b06f16d606ac10384697522225e5229ed36ed049c5715915afd5"
+    },
+    {
+      "byte_length": 5801,
+      "path": "design/contract_compiler/workstreams/CC-R01/manifest.json",
+      "sha256": "sha256:f476c8531038494cce99d3ca929285b1b2665eb128f4932398f623173a6ae140"
+    },
+    {
+      "byte_length": 267352,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:21cce0454767bca867e85248d468aa57b26a26d45b52d6a4fc96cbbabb028141"
+    }
+  ],
+  "base_commit": "3afca71f59c563eb559109ca4007a68e02fbf0ba",
+  "checks": [
+    {
+      "check_id": "ccr01-activation-red",
+      "method": "Add and run the fixed activation guard before changing the blocked card or overseer state.",
+      "observed": "The test failed at the first intended boundary: CC-R01 was still UNASSIGNED rather than assigned to the named retained-source worker. No implementation file existed or was created by RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-dependency-readiness",
+      "method": "Bind every dependency to its exact card, COMPLETE entry and hash, and required Git coordinate: CC-000's integrated candidate head, otherwise the first commit containing the COMPLETE entry; then validate strictly.",
+      "observed": "All twelve dependencies are COMPLETE and exact. CC-000 binds its integrated candidate head; the other eleven bind their first exact completion-entry commit. The newest is feature-answer completion 3afca71 at OVR-000285. Activation selects none.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-neutral-seam",
+      "method": "Compare the card responsibility and scopes with the accepted retained-source, import identity, resolver, ordering, fallback, and cycle policy.",
+      "observed": "The authorized syntax-neutral engine will receive one selected resolver and one injected ordered import reader, retain exact answers, send every import through the same resolver, and return a complete immutable closure or refuse without a partial result.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-scope-boundary",
+      "method": "Require exactly one private production module, one fixed test, and one canonical worker report; inspect the activation revision for implementation bytes.",
+      "observed": "The three exact worker scopes are authorized. Activation changes governance only and creates no production module, retained-source test, worker report, worker ledger, candidate, selection, adapter, public API, package, or fixture byte.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-tdd-boundary",
+      "method": "Bind the fixed TDD obligations for exact retention, nested and diamond imports, identity countercases, cycles, typed atomic refusals, one-resolver behavior, and no hidden I/O.",
+      "observed": "The active deliverables require tests before implementation and keep syntax parsing, locator normalization, file and network access, fallback selection, semantic compilation, and fixture meaning outside the executor.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr01-corpus-cut",
+      "method": "Inspect the governed corpus inventory and distinguish activation readiness from formal stage completion.",
+      "observed": "The generic seam is ready to implement. The shared corpus still lists zero cases, so this workstream may not reach COMPLETE or claim three-corpus conformance until reviewed cases, requirements, and checksums are published.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction activates one private generic execution seam. It does not implement source retention, recursive imports, compilation, a frontend adapter, runtime protocol behavior, or a public API.",
+    "The shared corpus is still empty. Implementation evidence may become an eligible candidate, but CC-R01 cannot be declared COMPLETE until reviewed corpus cases, requirements, and checksums are published.",
+    "A later LinkML adapter may supply a real ordered import reader and resolver, but neither adapter nor LinkML semantics is authorized here.",
+    "The existing exploratory source-boundary RED and the existing Quiet Bell missing-malleus refusal remain unchanged historical evidence.",
+    "No package, release, selection, semantic facts, ledger transition, knowledge graph, projector, fixture meaning, or alternative resolver fallback is created."
+  ],
+  "recorded_at": "2026-09-01T09:59:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R01"
+}
