@@ -121,10 +121,7 @@ def test_result_attests_the_exact_caller_supplied_source() -> None:
     assert result.source.sha256 == hashlib.sha256(source).hexdigest()
     assert result.facts_sha256 == hashlib.sha256(result.canonical_facts).hexdigest()
     assert result.implementation.linkml_runtime_version == "1.11.1"
-    assert (
-        result.implementation.support_profile
-        == "malleus.linkml/greenhouse-bootstrap-v0"
-    )
+    assert result.implementation.support_profile == "malleus.linkml/private-v0"
     assert (
         result.implementation.profile_sha256
         == hashlib.sha256(PROFILE.read_bytes()).hexdigest()
@@ -132,6 +129,12 @@ def test_result_attests_the_exact_caller_supplied_source() -> None:
     assert (
         result.implementation.executor_sha256
         == hashlib.sha256(IMPLEMENTATION.read_bytes()).hexdigest()
+    )
+    assert (
+        result.implementation.adapter_executor_sha256
+        == hashlib.sha256(
+            (ROOT / "src/malleus/_contract_linkml_adapter.py").read_bytes()
+        ).hexdigest()
     )
 
 
@@ -353,18 +356,36 @@ def test_derived_predicates_are_lowering_operands() -> None:
     )
 
 
+def test_bootstrap_accepts_supported_prefix_and_compound_condition_evidence() -> None:
+    baseline_source = (SOURCE_ROOT / "baseline.yaml").read_bytes()
+    baseline = _compile("baseline.yaml")
+    prefixed = compile_linkml_contract(
+        baseline_source.replace(
+            b"name: greenhouse\n",
+            b"name: greenhouse\nprefixes:\n  ex: https://example.invalid/\n",
+        ),
+        locator="memory:supported-prefix",
+    )
+    compound = compile_linkml_contract(
+        baseline_source.replace(
+            b"            equals_string: HEALTHY\n",
+            b"            equals_string: HEALTHY\n"
+            b"            value_presence: PRESENT\n",
+        ),
+        locator="memory:supported-compound-condition",
+    )
+
+    assert prefixed.canonical_facts == baseline.canonical_facts
+    assert compound.canonical_facts != baseline.canonical_facts
+    assert any(
+        fact.predicate.endswith("/valuePresence") and fact.object == "PRESENT"
+        for fact in compound.facts
+    )
+
+
 @pytest.mark.parametrize(
     "name,source",
     (
-        (
-            "prefixes",
-            (SOURCE_ROOT / "baseline.yaml")
-            .read_bytes()
-            .replace(
-                b"name: greenhouse\n",
-                b"name: greenhouse\nprefixes:\n  ex: https://example.invalid/\n",
-            ),
-        ),
         (
             "adoption",
             (SOURCE_ROOT / "baseline.yaml")
@@ -409,7 +430,7 @@ def test_derived_predicates_are_lowering_operands() -> None:
             "unsupported-builtin-range",
             (SOURCE_ROOT / "baseline.yaml")
             .read_bytes()
-            .replace(b"    range: PlantState\n", b"    range: date\n"),
+            .replace(b"    range: PlantState\n", b"    range: decimal\n"),
         ),
         (
             "slot-level-constraint",
@@ -427,16 +448,6 @@ def test_derived_predicates_are_lowering_operands() -> None:
             .replace(
                 b"            equals_string: HEALTHY\n",
                 b"            required: true\n",
-            ),
-        ),
-        (
-            "compound-condition",
-            (SOURCE_ROOT / "baseline.yaml")
-            .read_bytes()
-            .replace(
-                b"            equals_string: HEALTHY\n",
-                b"            equals_string: HEALTHY\n"
-                b"            value_presence: PRESENT\n",
             ),
         ),
         (
@@ -712,7 +723,7 @@ def test_profile_grammar_is_closed_before_source_coverage(case: str) -> None:
         )
     elif case == "condition-cardinality-gap":
         profile["node_shapes"]["alternative"]["fields"]["slot_conditions"][
-            "max_items"
+            "bootstrap_max_items"
         ] = 2
     elif case == "incompatible-schema-default":
         profile["node_shapes"]["slot"]["fields"]["required"]["schema_default"] = (

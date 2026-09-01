@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+from copy import deepcopy
 from dataclasses import FrozenInstanceError, fields, is_dataclass
 from hashlib import sha256
 from importlib.resources import files
@@ -179,6 +180,8 @@ def test_quiet_bell_modules_preserve_exact_source_imports_and_declarations(
     assert module.source.byte_length == source_record["byte_length"]
     assert module.source.sha256.removeprefix("sha256:") in source_record["source_blob"]
     assert module.authored_imports == expected_imports
+    assert module.support_profile == "malleus.linkml/private-v0"
+    assert module.profile_sha256 == sha256(PROFILE.read_bytes()).hexdigest()
     assert _declaration_inventory(module) == QUIET_ORACLE["declarations"][relative]
 
 
@@ -211,6 +214,120 @@ def test_quiet_bell_preserves_prefix_annotation_numeric_and_nested_evidence() ->
     assert slot_override.value == AuthoredScalar("STRING", "SEAL_REVIEW", "SEAL_REVIEW")
 
 
+def test_quiet_bell_separates_enforced_containers_from_reference_identity() -> None:
+    foundation = parse_linkml_module(_path_observation("modules/foundation.yaml"))
+    entities = parse_linkml_module(_path_observation("modules/entities.yaml"))
+    activity = parse_linkml_module(_path_observation("modules/activity.yaml"))
+
+    scalar_references = (
+        (foundation, ("default_range",)),
+        (foundation, ("types", "ArchiveShelfmark", "typeof")),
+        (foundation, ("slots", "shelfmark", "range")),
+        (
+            entities,
+            ("classes", "EvidenceFolio", "attributes", "locator", "range"),
+        ),
+        (
+            activity,
+            ("classes", "SealReviewEvent", "slot_usage", "event_type", "range"),
+        ),
+        (entities, ("classes", "ArchiveExaminer", "is_a")),
+    )
+    for module, path in scalar_references:
+        matches = [item for item in module.occurrences if item.path == path]
+        assert len(matches) == 1
+        assert matches[0].classification == "ENFORCED"
+        assert matches[0].value_classification == "IDENTITY_ONLY"
+
+    prefix = _occurrence(foundation, "prefixes", "quiet")
+    assert prefix.classification == "IDENTITY_ONLY"
+    assert prefix.value_classification == "IDENTITY_ONLY"
+
+    nested_references = (
+        (foundation, ("imports", 0)),
+        (entities, ("classes", "ArchiveExaminer", "mixins", 0)),
+        (entities, ("classes", "EvidenceLocator", "slots", 0)),
+        (
+            entities,
+            ("classes", "ArchiveExaminer", "slot_usage", "agent_type"),
+        ),
+        (
+            entities,
+            (
+                "classes",
+                "EvidenceLocator",
+                "exactly_one_of",
+                0,
+                "slot_conditions",
+                "shelfmark",
+            ),
+        ),
+    )
+    for module, path in nested_references:
+        occurrence = _occurrence(module, *path)
+        assert occurrence.classification == "IDENTITY_ONLY"
+        assert occurrence.value_classification is None
+
+    assert _occurrence(foundation, "imports").classification == "ENFORCED"
+    assert (
+        _occurrence(entities, "classes", "ArchiveExaminer", "slot_usage").classification
+        == "ENFORCED"
+    )
+
+
+def test_reference_key_syntax_is_profile_driven_and_defers_binding() -> None:
+    source = b"""\
+id: https://example.org/reference-keys
+name: reference_keys
+prefixes:
+  ext: https://example.net/schema/
+classes:
+  Record:
+    slot_usage:
+      ext:status:
+        required: true
+    exactly_one_of:
+      - slot_conditions:
+          ext:status:
+            value_presence: PRESENT
+"""
+
+    module = parse_linkml_module(_observation("reference-keys", source, ()))
+
+    assert (
+        _occurrence(
+            module,
+            "classes",
+            "Record",
+            "slot_usage",
+            "ext:status",
+        ).classification
+        == "IDENTITY_ONLY"
+    )
+    assert (
+        _occurrence(
+            module,
+            "classes",
+            "Record",
+            "exactly_one_of",
+            0,
+            "slot_conditions",
+            "ext:status",
+        ).classification
+        == "IDENTITY_ONLY"
+    )
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation(
+                "invalid-declaration-key",
+                source.replace(b"  Record:\n", b"  ext:Record:\n"),
+                (),
+            )
+        )
+    assert caught.value.reason is LinkMLRefusalReason.MALFORMED_SOURCE
+
+
 def test_quiet_bell_closure_refuses_only_after_local_modules_are_available() -> None:
     module_names = (
         "modules/activity.yaml",
@@ -218,11 +335,19 @@ def test_quiet_bell_closure_refuses_only_after_local_modules_are_available() -> 
         "modules/foundation.yaml",
         "v1.0.0/quiet_bell.yaml",
     )
-    modules = tuple(_path_observation(name) for name in module_names)
+    trusted_source = (
+        files("linkml_runtime.linkml_model.model.schema")
+        .joinpath("types.yaml")
+        .read_bytes()
+    )
+    modules = tuple(_path_observation(name) for name in module_names) + (
+        _observation("linkml:types", trusted_source, ()),
+    )
     edges = (
         _edge("modules/activity.yaml", 0, "foundation", "modules/foundation.yaml"),
         _edge("modules/activity.yaml", 1, "entities", "modules/entities.yaml"),
         _edge("modules/entities.yaml", 0, "foundation", "modules/foundation.yaml"),
+        _edge("modules/foundation.yaml", 0, "linkml:types", "linkml:types"),
         _edge(
             "v1.0.0/quiet_bell.yaml",
             0,
@@ -243,8 +368,8 @@ def test_quiet_bell_closure_refuses_only_after_local_modules_are_available() -> 
 
     assert caught.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
     assert caught.value.module_id == "modules/foundation.yaml"
-    assert caught.value.path == ("imports", 0)
-    assert "linkml:types" in str(caught.value)
+    assert caught.value.path == ("imports", 1)
+    assert "malleus" in str(caught.value)
     assert not hasattr(caught.value, "modules")
     assert not hasattr(caught.value, "partial")
 
@@ -305,7 +430,6 @@ def test_greenhouse_variants_parse_as_exact_neutral_authored_evidence(
         "Enum",
         "Scalar",
         "Slot",
-        "Attribute",
     }
 
 
@@ -334,7 +458,7 @@ def test_greenhouse_differences_are_not_normalized_by_the_parser_stage() -> None
             "temperature",
             "minimum_value",
         ).value.lexeme
-        == "-2.0e1"
+        == "-20.0"
     )
     assert (
         _occurrence(
@@ -343,7 +467,7 @@ def test_greenhouse_differences_are_not_normalized_by_the_parser_stage() -> None
             "temperature",
             "maximum_value",
         ).value.lexeme
-        == "6.0e1"
+        == "6e1"
     )
     assert (
         _occurrence(
@@ -510,6 +634,49 @@ def test_explicit_false_is_distinct_from_missing_without_deciding_validity() -> 
             b"\xff",
             LinkMLRefusalReason.MALFORMED_SOURCE,
         ),
+        (
+            "byte-order-mark",
+            b"\xef\xbb\xbfid: https://example.org/x\nname: x\n",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
+        (
+            "empty-document",
+            b"",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
+        (
+            "explicit-tag",
+            b"id: !!str https://example.org/x\nname: x\n",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
+        (
+            "non-string-key",
+            b"id: https://example.org/x\nname: x\n1: value\n",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
+        (
+            "invalid-number",
+            b"id: https://example.org/x\nname: x\nslots:\n  value:\n"
+            b"    minimum_value: +1\n",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
+        (
+            "unknown-nested-field",
+            b"id: https://example.org/x\nname: x\nclasses:\n  Record:\n"
+            b"    unknown_member: true\n",
+            LinkMLRefusalReason.REJECTED_SOURCE,
+        ),
+        (
+            "moved-accepted-field",
+            b"id: https://example.org/x\nname: x\nclasses:\n  Record:\n"
+            b"    required: true\n",
+            LinkMLRefusalReason.REJECTED_SOURCE,
+        ),
+        (
+            "null-declaration-body",
+            b"id: https://example.org/x\nname: x\nclasses:\n  Record:\n",
+            LinkMLRefusalReason.MALFORMED_SOURCE,
+        ),
     ),
 )
 def test_raw_source_refusals_are_closed_and_typed(
@@ -548,6 +715,177 @@ def test_observation_and_closure_cross_checks_refuse_atomically() -> None:
     assert closure_refusal.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
     assert not hasattr(closure_refusal.value, "modules")
 
+    foreign_selection = ResolverSelection(
+        resolver_id="TEST_ONLY_OTHER_RESOLVER",
+        profile_version=SELECTION.profile_version,
+        configuration_id=SELECTION.configuration_id,
+    )
+    foreign_bytes = b"id: https://example.org/foreign\nname: foreign\n"
+    foreign_source = RetainedSource(
+        resolved_locator="foreign",
+        source_bytes=foreign_bytes,
+        byte_length=len(foreign_bytes),
+        sha256="sha256:" + sha256(foreign_bytes).hexdigest(),
+        media_type="application/yaml",
+        resolver_selection=foreign_selection,
+    )
+    foreign = ModuleObservation("foreign", foreign_source, ())
+    foreign_closure = SourceClosure(
+        selection=SELECTION,
+        root=RootResolution(
+            requested_locator="request:foreign",
+            resolved_locator="foreign",
+            source_sha256=foreign_source.sha256,
+            resolver_selection=SELECTION,
+        ),
+        modules=(foreign,),
+        import_edges=(),
+    )
+    with pytest.raises(LinkMLAdapterRefusal) as selection_refusal:
+        adapt_linkml_closure(foreign_closure)
+    assert selection_refusal.value.reason is LinkMLRefusalReason.MALFORMED_OBSERVATION
+    assert not hasattr(selection_refusal.value, "modules")
+
+
+def test_closure_refuses_atomically_after_an_earlier_valid_module() -> None:
+    valid = _observation(
+        "valid",
+        b'id: https://example.org/valid\nname: valid\nimports: ["invalid"]\n',
+    )
+    invalid = _observation(
+        "invalid",
+        b"id: https://example.org/invalid\nname: invalid\ninstances: {}\n",
+        (),
+    )
+    edge = _edge("valid", 0, "invalid", "invalid")
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(_closure((valid, invalid), (edge,), root="valid"))
+
+    assert caught.value.reason is LinkMLRefusalReason.REJECTED_SOURCE
+    assert caught.value.module_id == "invalid"
+    assert not hasattr(caught.value, "modules")
+    assert not hasattr(caught.value, "partial")
+
+
+def test_closure_refuses_a_module_not_reachable_from_the_exact_root() -> None:
+    root = _observation("root", b"id: https://example.org/root\nname: root\n", ())
+    orphan = _observation(
+        "orphan", b"id: https://example.org/orphan\nname: orphan\n", ()
+    )
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(_closure((root, orphan), (), root="root"))
+
+    assert caught.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
+    assert caught.value.module_id == "orphan"
+    assert not hasattr(caught.value, "modules")
+
+
+@pytest.mark.parametrize("ordinal", (False, 0.0))
+def test_closure_refuses_non_exact_import_ordinals(ordinal: object) -> None:
+    root = _observation(
+        "root",
+        b'id: https://example.org/root\nname: root\nimports: ["child"]\n',
+    )
+    child = _observation("child", b"id: https://example.org/child\nname: child\n", ())
+    malformed = ResolvedImportEdge(
+        parent_module_id="root",
+        parent_import_ordinal=ordinal,  # type: ignore[arg-type]
+        literal_import="child",
+        child_module_id="child",
+        resolver_selection=SELECTION,
+    )
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(_closure((root, child), (malformed,), root="root"))
+
+    assert caught.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
+    assert not hasattr(caught.value, "modules")
+
+
+@pytest.mark.parametrize("member", ("modules", "import_edges"))
+def test_closure_refuses_mutable_member_containers(member: str) -> None:
+    root = _observation("root", b"id: https://example.org/root\nname: root\n", ())
+    closure = _closure((root,), (), root="root")
+    malformed = SourceClosure(
+        selection=closure.selection,
+        root=closure.root,
+        modules=list(closure.modules) if member == "modules" else closure.modules,  # type: ignore[arg-type]
+        import_edges=(
+            list(closure.import_edges)  # type: ignore[arg-type]
+            if member == "import_edges"
+            else closure.import_edges
+        ),
+    )
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(malformed)
+
+    assert caught.value.reason is LinkMLRefusalReason.MALFORMED_OBSERVATION
+
+
+def test_unauthored_edge_refusal_preserves_prior_stage_edge_order() -> None:
+    root = _observation("root", b"id: https://example.org/root\nname: root\n", ())
+    first = _edge("z-first", 7, "first", "root")
+    second = _edge("a-second", 2, "second", "root")
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(_closure((root,), (first, second), root="root"))
+
+    assert caught.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
+    assert caught.value.module_id == "z-first"
+    assert caught.value.path == ("imports", 7)
+
+
+def test_repeated_imports_and_class_slots_remain_authored_evidence() -> None:
+    source = b"""\
+id: https://example.org/repeats
+name: repeats
+imports:
+  - child
+  - child
+slots:
+  value: {}
+classes:
+  Record:
+    slots:
+      - value
+      - value
+"""
+
+    module = parse_linkml_module(_observation("repeats", source))
+
+    assert module.authored_imports == ("child", "child")
+    imports = _occurrence(module, "imports").value
+    slots = _occurrence(module, "classes", "Record", "slots").value
+    assert isinstance(imports, AuthoredSequence)
+    assert isinstance(slots, AuthoredSequence)
+    assert tuple(item.value.value for item in imports.items) == ("child", "child")
+    assert tuple(item.value.value for item in slots.items) == ("value", "value")
+
+
+def test_trusted_import_cannot_bless_bytes_under_another_module_identity() -> None:
+    root = _observation(
+        "root",
+        b'id: https://example.org/root\nname: root\nimports: ["linkml:types"]\n',
+    )
+    trusted_source = (
+        files("linkml_runtime.linkml_model.model.schema")
+        .joinpath("types.yaml")
+        .read_bytes()
+    )
+    wrong_identity = _observation("not-linkml-types", trusted_source, ())
+    edge = _edge("root", 0, "linkml:types", "not-linkml-types")
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        adapt_linkml_closure(_closure((root, wrong_identity), (edge,), root="root"))
+
+    assert caught.value.reason is LinkMLRefusalReason.CLOSURE_IMPORT_MISMATCH
+    assert caught.value.module_id == "root"
+    assert caught.value.path == ("imports", 0)
+    assert not hasattr(caught.value, "modules")
+
 
 def test_result_is_repeatable_deeply_immutable_and_preserves_zero_based_order() -> None:
     source = (
@@ -572,6 +910,23 @@ def test_result_is_repeatable_deeply_immutable_and_preserves_zero_based_order() 
     _assert_deeply_immutable(first)
     with pytest.raises(FrozenInstanceError):
         first.module_id = "changed"  # type: ignore[misc]
+
+
+def test_adapter_retains_large_decimal_exponent_without_fixed_point_expansion() -> None:
+    lexeme = "1e100000"
+    source = (
+        "id: https://example.org/large-number\n"
+        "name: large_number\n"
+        "slots:\n"
+        "  value:\n"
+        f"    minimum_value: {lexeme}\n"
+    ).encode()
+
+    module = parse_linkml_module(_observation("large-number", source, ()))
+    value = _occurrence(module, "slots", "value", "minimum_value").value
+
+    assert value == AuthoredScalar("NUMBER", lexeme, lexeme)
+    assert len(value.value) == len(lexeme)
 
 
 def test_profile_is_closed_machine_readable_and_domain_neutral() -> None:
@@ -605,9 +960,147 @@ def test_profile_is_closed_machine_readable_and_domain_neutral() -> None:
         profile["node_shapes"]["slot"]["fields"]["annotations"]["classification"]
         == "IDENTITY_ONLY"
     )
+    assert (
+        profile["node_shapes"]["schema"]["fields"]["default_range"][
+            "value_classification"
+        ]
+        == "IDENTITY_ONLY"
+    )
+    assert (
+        profile["node_shapes"]["class"]["fields"]["slot_usage"]["key_parser"]
+        == "reference"
+    )
+    assert (
+        profile["node_shapes"]["schema"]["fields"]["classes"]["key_parser"]
+        == "ascii_identifier"
+    )
     combined = ADAPTER.read_text(encoding="utf-8") + PROFILE.read_text(encoding="utf-8")
     for fixture_name in ("greenhouse", "Quiet Bell", "ArchiveExaminer", "PlantState"):
         assert fixture_name not in combined
+
+
+@pytest.mark.parametrize("mutation", ("missing-key-parser", "bad-value-classification"))
+def test_adapter_refuses_unexecutable_occurrence_policy(mutation: str) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if mutation == "missing-key-parser":
+        profile["node_shapes"]["class"]["fields"]["slot_usage"].pop("key_parser")
+    else:
+        profile["node_shapes"]["slot"]["fields"]["range"]["value_classification"] = (
+            "REJECTED"
+        )
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation(
+                "invalid-profile", b"id: https://example.org/x\nname: x\n", ()
+            ),
+            profile=profile,
+        )
+
+    assert caught.value.reason is LinkMLRefusalReason.INVALID_PROFILE
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "missing-support-profile",
+        "foreign-support-profile",
+        "foreign-namespace",
+        "foreign-trusted-import",
+        "forged-trusted-module",
+        "forged-builtin",
+        "reordered-seeds",
+        "extra-root-member",
+        "extra-shape",
+        "extra-shape-member",
+        "field-classification",
+        "field-parser",
+        "missing-item-shape",
+        "rejected-mapping-parser",
+    ),
+)
+def test_direct_adapter_refuses_profile_trust_or_closure_mutation(
+    mutation: str,
+) -> None:
+    profile = deepcopy(json.loads(PROFILE.read_text(encoding="utf-8")))
+    if mutation == "missing-support-profile":
+        profile.pop("support_profile")
+    elif mutation == "foreign-support-profile":
+        profile["support_profile"] = "attacker-controlled"
+    elif mutation == "foreign-namespace":
+        profile["namespace"] = "https://attacker.invalid/"
+    elif mutation == "foreign-trusted-import":
+        profile["trusted_import"] = "attacker:types"
+    elif mutation == "forged-trusted-module":
+        profile["trusted_module"] = {
+            "module_id": "attacker:types",
+            "schema_id": "https://attacker.invalid/types",
+            "byte_length": 12,
+            "sha256": "sha256:" + "0" * 64,
+        }
+    elif mutation == "forged-builtin":
+        profile["builtins"] = {
+            "attacker": {"form": "ABSOLUTE", "value": "urn:attacker:builtin"}
+        }
+        profile["seed_primitives"] = ["attacker"]
+    elif mutation == "reordered-seeds":
+        profile["seed_primitives"] = list(reversed(profile["seed_primitives"]))
+    elif mutation == "extra-root-member":
+        profile["unread"] = True
+    elif mutation == "extra-shape":
+        profile["node_shapes"]["attacker"] = {
+            "fields": {},
+            "label": "attacker",
+        }
+    elif mutation == "extra-shape-member":
+        profile["node_shapes"]["schema"]["unread"] = True
+    elif mutation == "field-classification":
+        profile["node_shapes"]["schema"]["fields"]["name"]["classification"] = (
+            "IDENTITY_ONLY"
+        )
+    elif mutation == "field-parser":
+        profile["node_shapes"]["schema"]["fields"]["name"]["parser"] = "string"
+    elif mutation == "missing-item-shape":
+        profile["node_shapes"]["schema"]["fields"]["classes"].pop("item_shape")
+    else:
+        profile["node_shapes"]["schema"]["fields"]["name"] = {
+            "classification": "REJECTED",
+            "parser": "mapping",
+        }
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation(
+                "invalid-profile", b"id: https://example.org/x\nname: x\n", ()
+            ),
+            profile=profile,
+        )
+
+    assert caught.value.reason is LinkMLRefusalReason.INVALID_PROFILE
+
+
+def test_mutated_profile_cannot_bless_arbitrary_trusted_module_bytes() -> None:
+    source = b"not LinkML\n"
+    profile = deepcopy(json.loads(PROFILE.read_text(encoding="utf-8")))
+    profile["trusted_import"] = "attacker:types"
+    profile["trusted_module"] = {
+        "module_id": "attacker:types",
+        "schema_id": "urn:attacker:schema",
+        "byte_length": len(source),
+        "sha256": "sha256:" + sha256(source).hexdigest(),
+    }
+    profile["builtins"] = {
+        "attacker": {"form": "ABSOLUTE", "value": "urn:attacker:builtin"}
+    }
+    profile["seed_primitives"] = ["attacker"]
+
+    with pytest.raises(LinkMLAdapterRefusal) as caught:
+        parse_linkml_module(
+            _observation("attacker:types", source, ()),
+            profile=profile,
+        )
+
+    assert caught.value.reason is LinkMLRefusalReason.INVALID_PROFILE
 
 
 def test_one_parser_is_shared_and_has_no_registry_or_source_io_fallback() -> None:
@@ -630,12 +1123,41 @@ def test_one_parser_is_shared_and_has_no_registry_or_source_io_fallback() -> Non
         for node in ast.walk(adapter_tree)
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
     }
+    path_reads = [
+        node
+        for node in ast.walk(adapter_tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr in {"read_bytes", "read_text"}
+    ]
+    adapter_direct_calls = {
+        node.func.id
+        for node in ast.walk(adapter_tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+    }
+    compiler_modules = {
+        node.module
+        for node in ast.walk(compiler_tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    }
+    adapter_modules = {
+        node.module
+        for node in ast.walk(adapter_tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    }
 
-    assert "malleus._contract_linkml_adapter" in compiler_imports
+    assert "malleus._contract_linkml_adapter" in compiler_imports | compiler_modules
     assert "malleus.ontology" not in compiler_imports | adapter_imports
     assert "OntologyRegistry" not in COMPILER.read_text(encoding="utf-8")
     assert "OntologyRegistry" not in ADAPTER.read_text(encoding="utf-8")
     assert not ({"open", "urlopen", "connect"} & adapter_calls)
+    assert not ({"open", "urlopen", "connect"} & adapter_direct_calls)
+    assert not (
+        {"http.client", "requests", "socket", "urllib.request"}
+        & (adapter_imports | adapter_modules)
+    )
+    assert len(path_reads) == 1
+    assert ast.unparse(path_reads[0].func.value) == "_PROFILE_PATH"
     assert not any(
         isinstance(node, (ast.ClassDef, ast.FunctionDef)) and node.name == "_RawParser"
         for node in ast.walk(compiler_tree)

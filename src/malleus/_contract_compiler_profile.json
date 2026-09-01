@@ -1,12 +1,23 @@
 {
   "schema": "malleus.contract-compiler.linkml-profile/v0",
   "adapter": "linkml",
-  "support_profile": "malleus.linkml/greenhouse-bootstrap-v0",
+  "support_profile": "malleus.linkml/private-v0",
   "linkml_version": "1.11.1",
   "linkml_runtime_version": "1.11.1",
   "canonicalization": "malleus.canonical-json/compact-sorted-key-utf8-no-newline/v0",
   "namespace": "https://malleus.dev/contract-facts/",
   "trusted_import": "linkml:types",
+  "source_ordering": {
+    "module_order": "PRESERVE_SOURCE_CLOSURE",
+    "ordinal_base": 0,
+    "field_order": "PRESERVE_AUTHORED"
+  },
+  "trusted_module": {
+    "module_id": "linkml:types",
+    "schema_id": "https://w3id.org/linkml/types",
+    "byte_length": 7296,
+    "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+  },
   "symbol_policy": {
     "identity": "urn:malleus:contract-symbol-policy:linkml-v0-slash-qualified:v0",
     "join_operation": "delimiter_join",
@@ -19,10 +30,15 @@
     "op": "ordered_spaces"
   },
   "builtins": {
+    "string": {"form": "LOCAL", "value": "String"},
+    "integer": {"form": "LOCAL", "value": "Integer"},
     "float": {"form": "LOCAL", "value": "Float"},
-    "string": {"form": "LOCAL", "value": "String"}
+    "boolean": {"form": "LOCAL", "value": "Boolean"},
+    "datetime": {"form": "LOCAL", "value": "DateTime"},
+    "date": {"form": "ABSOLUTE", "value": "https://w3id.org/linkml/types/date"},
+    "uri": {"form": "ABSOLUTE", "value": "https://w3id.org/linkml/types/uri"}
   },
-  "seed_primitives": ["float", "string"],
+  "seed_primitives": ["string", "integer", "float", "boolean", "datetime", "date", "uri"],
   "defaults": {
     "class": {"abstract": false, "mixin": false},
     "slot": {
@@ -74,28 +90,31 @@
         "version": {"classification": "ANNOTATION_ONLY", "parser": "string"},
         "title": {"classification": "ANNOTATION_ONLY", "parser": "string"},
         "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
-        "imports": {"classification": "ENFORCED", "parser": "string_list"},
-        "default_range": {"classification": "ENFORCED", "parser": "nonempty_string"},
-        "types": {"classification": "ENFORCED", "item_shape": "type", "parser": "named"},
-        "enums": {"classification": "ENFORCED", "item_shape": "enum", "parser": "named"},
-        "slots": {"classification": "ENFORCED", "item_shape": "slot", "parser": "named"},
-        "classes": {"classification": "ENFORCED", "item_shape": "class", "parser": "named"},
-        "prefixes": {"classification": "UNSUPPORTED", "parser": "mapping"}
+        "imports": {"classification": "ENFORCED", "item_classification": "IDENTITY_ONLY", "parser": "string_list"},
+        "default_range": {"classification": "ENFORCED", "parser": "nonempty_string", "value_classification": "IDENTITY_ONLY"},
+        "types": {"classification": "ENFORCED", "item_shape": "type", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
+        "enums": {"classification": "ENFORCED", "item_shape": "enum", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
+        "slots": {"classification": "ENFORCED", "item_shape": "slot", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
+        "classes": {"classification": "ENFORCED", "item_shape": "class", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
+        "prefixes": {"classification": "IDENTITY_ONLY", "identity_role": "prefix_map", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "prefixes", "value_classification": "IDENTITY_ONLY"}
       }
     },
     "type": {
       "fields": {
-        "typeof": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "typeof", "required": true, "resolver": "seed"},
+        "typeof": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "typeof", "required": true, "resolver": "seed", "value_classification": "IDENTITY_ONLY"},
+        "uri": {"classification": "ANNOTATION_ONLY", "parser": "string"},
         "description": {"classification": "ANNOTATION_ONLY", "parser": "string"}
       },
+      "declaration_kind": "Scalar",
       "kind": "scalar",
       "label": "type declaration"
     },
     "enum": {
       "fields": {
         "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
-        "permissible_values": {"classification": "ENFORCED", "item_shape": "permissible_value", "parser": "enum_values", "predicate": "enum_value"}
+        "permissible_values": {"classification": "ENFORCED", "item_shape": "permissible_value", "key_classification": "ENFORCED", "key_parser": "nonempty_string", "parser": "enum_values", "predicate": "enum_value"}
       },
+      "declaration_kind": "Enum",
       "kind": "enum",
       "label": "enum declaration"
     },
@@ -112,17 +131,18 @@
       ],
       "fields": {
         "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
-        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range"},
+        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range", "value_classification": "IDENTITY_ONLY"},
         "required": {"classification": "ENFORCED", "default": "slot.required", "parser": "boolean", "predicate": "required"},
         "multivalued": {"classification": "ENFORCED", "default": "slot.multivalued", "parser": "boolean", "predicate": "multivalued"},
         "identifier": {"classification": "ENFORCED", "default": "slot.identifier", "parser": "boolean", "predicate": "identifier"},
         "inlined": {"classification": "ENFORCED", "default": "slot.inlined", "parser": "boolean", "predicate": "inlined"},
         "minimum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "minimum_value"},
         "maximum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "maximum_value"},
-        "equals_string": {"classification": "UNSUPPORTED", "parser": "string"},
-        "value_presence": {"classification": "UNSUPPORTED", "parser": "nonempty_string"},
-        "annotations": {"classification": "UNSUPPORTED", "parser": "mapping"}
+        "equals_string": {"bootstrap": "REJECTED", "classification": "ENFORCED", "parser": "string", "predicate": "equals_string"},
+        "value_presence": {"bootstrap": "REJECTED", "classification": "ENFORCED", "parser": "nonempty_string", "predicate": "value_presence", "values": ["ABSENT", "PRESENT"]},
+        "annotations": {"bootstrap": "REJECTED", "classification": "IDENTITY_ONLY", "identity_role": "adoption_marker", "item_shape": "adoption_annotations", "parser": "adoption_annotations"}
       },
+      "declaration_kind": "Slot",
       "kind": "slot",
       "label": "slot declaration",
       "rules": [
@@ -137,16 +157,17 @@
       ],
       "fields": {
         "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
-        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range"},
+        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range", "value_classification": "IDENTITY_ONLY"},
         "required": {"classification": "ENFORCED", "default": "slot.required", "parser": "boolean", "predicate": "required"},
         "multivalued": {"classification": "ENFORCED", "default": "slot.multivalued", "parser": "boolean", "predicate": "multivalued"},
         "identifier": {"classification": "ENFORCED", "default": "slot.identifier", "parser": "boolean", "predicate": "identifier"},
         "inlined": {"classification": "ENFORCED", "default": "slot.inlined", "parser": "boolean", "predicate": "inlined"},
         "minimum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "minimum_value"},
         "maximum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "maximum_value"},
-        "equals_string": {"classification": "UNSUPPORTED", "parser": "string"},
-        "value_presence": {"classification": "UNSUPPORTED", "parser": "nonempty_string"}
+        "equals_string": {"bootstrap": "REJECTED", "classification": "ENFORCED", "parser": "string", "predicate": "equals_string"},
+        "value_presence": {"bootstrap": "REJECTED", "classification": "ENFORCED", "parser": "nonempty_string", "predicate": "value_presence", "values": ["ABSENT", "PRESENT"]}
       },
+      "declaration_kind": "Slot",
       "kind": "slot",
       "label": "local attribute",
       "rules": [
@@ -160,30 +181,64 @@
         "class_uri": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
         "abstract": {"classification": "ENFORCED", "default": "class.abstract", "parser": "boolean", "predicate": "abstract"},
         "mixin": {"classification": "ENFORCED", "default": "class.mixin", "parser": "boolean", "predicate": "is_mixin"},
-        "is_a": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "subclass_of", "resolver": "class"},
-        "mixins": {"classification": "ENFORCED", "max_items": 1, "parser": "string_list", "predicate": "uses_mixin", "resolver": "mixin_list"},
-        "slots": {"classification": "ENFORCED", "parser": "string_list"},
-        "attributes": {"classification": "ENFORCED", "item_shape": "attribute", "parser": "named"},
-        "exactly_one_of": {"classification": "ENFORCED", "item_shape": "alternative", "min_items": 1, "parser": "items"},
-        "slot_usage": {"classification": "UNSUPPORTED", "parser": "mapping"}
+        "is_a": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "subclass_of", "resolver": "class", "value_classification": "IDENTITY_ONLY"},
+        "mixins": {"bootstrap_max_items": 1, "classification": "ENFORCED", "item_classification": "IDENTITY_ONLY", "parser": "string_list", "predicate": "uses_mixin", "resolver": "mixin_list"},
+        "slots": {"classification": "ENFORCED", "item_classification": "IDENTITY_ONLY", "parser": "string_list"},
+        "attributes": {"classification": "ENFORCED", "item_shape": "attribute", "key_classification": "IDENTITY_ONLY", "key_parser": "ascii_identifier", "parser": "named"},
+        "exactly_one_of": {"classification": "ENFORCED", "item_classification": "ENFORCED", "item_shape": "alternative", "min_items": 1, "parser": "items"},
+        "slot_usage": {"bootstrap": "REJECTED", "classification": "ENFORCED", "item_shape": "slot_usage", "key_classification": "IDENTITY_ONLY", "key_parser": "reference", "parser": "named"}
       },
+      "declaration_kind": "Class",
       "kind": "class",
       "label": "class declaration"
     },
     "alternative": {
       "fields": {
-        "slot_conditions": {"classification": "ENFORCED", "item_shape": "condition", "max_items": 1, "min_items": 1, "parser": "named", "required": true}
+        "slot_conditions": {"bootstrap_max_items": 1, "classification": "ENFORCED", "item_shape": "condition", "key_classification": "IDENTITY_ONLY", "key_parser": "reference", "min_items": 1, "parser": "named", "required": true}
       },
       "label": "exactly one alternative"
     },
     "condition": {
       "fields": {
         "equals_string": {"classification": "ENFORCED", "member": "equalsString", "parser": "string", "predicate": "equals_string"},
-        "required": {"classification": "UNSUPPORTED", "parser": "boolean"},
+        "required": {"bootstrap": "REJECTED", "classification": "ENFORCED", "member": "required", "parser": "boolean", "predicate": "required"},
         "value_presence": {"classification": "ENFORCED", "member": "valuePresence", "parser": "nonempty_string", "predicate": "value_presence", "values": ["ABSENT", "PRESENT"]}
       },
       "kind": "slot_condition",
       "label": "slot condition",
+      "min_fields": 1
+    },
+    "slot_usage": {
+      "bootstrap": "DEFERRED",
+      "constraints": [
+        {"field": "inlined", "op": "equals", "value": false},
+        {"allowed_builtin_ranges": ["float"], "maximum": "maximum_value", "minimum": "minimum_value", "op": "ordered_bounds", "range": "range"}
+      ],
+      "fields": {
+        "description": {"classification": "ANNOTATION_ONLY", "parser": "string"},
+        "range": {"classification": "ENFORCED", "default": "slot.range", "parser": "nonempty_string", "predicate": "value_range", "resolver": "range", "schema_default": "default_range", "value_classification": "IDENTITY_ONLY"},
+        "required": {"classification": "ENFORCED", "default": "slot.required", "parser": "boolean", "predicate": "required"},
+        "multivalued": {"classification": "ENFORCED", "default": "slot.multivalued", "parser": "boolean", "predicate": "multivalued"},
+        "identifier": {"classification": "ENFORCED", "default": "slot.identifier", "parser": "boolean", "predicate": "identifier"},
+        "inlined": {"classification": "ENFORCED", "default": "slot.inlined", "parser": "boolean", "predicate": "inlined"},
+        "minimum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "minimum_value"},
+        "maximum_value": {"classification": "ENFORCED", "parser": "decimal", "predicate": "maximum_value"},
+        "equals_string": {"classification": "ENFORCED", "parser": "string", "predicate": "equals_string"},
+        "value_presence": {"classification": "ENFORCED", "parser": "nonempty_string", "predicate": "value_presence", "values": ["ABSENT", "PRESENT"]}
+      },
+      "kind": "slot",
+      "label": "slot usage",
+      "rules": [
+        {"applies_to": "slot_use", "if_field": "identifier", "if_value": true, "op": "implies", "refuse_explicit_conflict": true, "then_field": "required", "then_value": true}
+      ],
+      "use_identity": "slot_use"
+    },
+    "adoption_annotations": {
+      "bootstrap": "DEFERRED",
+      "fields": {
+        "adopts": {"classification": "IDENTITY_ONLY", "identity_role": "adoption_marker", "parser": "boolean", "required": true, "values": [true]}
+      },
+      "label": "adoption annotation",
       "max_fields": 1,
       "min_fields": 1
     }
