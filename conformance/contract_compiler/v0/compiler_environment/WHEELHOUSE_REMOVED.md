@@ -1,75 +1,69 @@
 # The wheelhouse was removed on 2026-09-01
 
-`wheelhouse/` held 90 built wheels, 33 MB, including Babel at 9.7 MB, Sphinx at
-3.7 MB and SQLAlchemy at 3.2 MB. It was removed from the index and the working
-tree by owner decision. This note is the reason and the repair list.
+Commit `ecc56d6453963759cfbdf38c9d6c510520a46a39` removed 82 built
+wheels, about 33 MB, from `wheelhouse/`. The original removal note and review
+said 90. Git records 82 deleted paths. The review response preserves and
+corrects that discrepancy instead of rewriting the original review.
 
-## Why
+## Current contract
 
-The environment was already solved without it. `requirements.lock`, in this
-directory, carries the exact pin the executor demands:
+For the exact Linux compiler conformance environment, Malleus retains a
+hash-pinned lock plus source and direct build inputs. Missing transitive
+packages may be downloaded and must match their hashes. Malleus no longer
+claims installation from repository-retained bytes without network access.
+Normal cross-platform package metadata pins only the direct LinkML
+compatibility requirement.
 
-```
-linkml==1.11.1 --hash=sha256:d1bbb97a8b1ea4a99b145007875733a5e5e89b3acfe3e9d1e369fa4a582990ed
-linkml-runtime==1.11.1 --hash=sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da
-```
+The two identities serve different jobs:
 
-`src/malleus/_contract_compiler.py` refuses any environment that is not exactly
-`1.11.1`. `pyproject.toml` declares `linkml>=1.10`. So the pin exists, with
-hashes, and is not wired to the dependency declaration. Vendoring 33 MB of
-binaries beside an unused lockfile is the wrong half of that problem to solve,
-and Sphinx and Babel binaries do not belong in the permanent history of a
-protocol library.
+- `pyproject.toml` pins the direct `linkml` and `linkml-runtime` compatibility
+  versions used by a normal Malleus installation.
+- `requirements.lock` pins the complete selected Linux dependency closure by
+  version and SHA-256 for exact conformance runs.
 
-Retained-input policy justifies keeping source roots. It does not extend to a
-full transitive binary closure of a documentation toolchain.
+A lock proves which bytes are acceptable. It does not prove those bytes are
+available offline. A clean conformance environment may fetch a missing locked
+package from the network, but the fetched artifact must match the recorded
+hash.
 
-## What was kept
+## Retained inputs
 
-- `roots/` — LinkML and linkml-runtime source tarballs, 3.7 MB. Retained input.
-- `build-inputs/` — 1.1 MB.
-- `requirements.lock`, `manifest.json`, `build-record.json`,
-  `derivation-record.json`, `resolution-report.json`, `verification.json`.
+The repository still retains and hash-checks:
 
-## What this breaks, and what to do about it
+- the LinkML and linkml-runtime source archives and direct wheels;
+- the selected pip and CFGraph direct wheels;
+- the ANTLR source and setuptools build input;
+- the upstream and locally derived PrefixCommons artifacts;
+- the locally built ANTLR wheel;
+- `requirements.lock` and the historical acquisition, derivation,
+  resolution, and verification records.
 
-Six tests fail, all in `tests/test_contract_compiler_divergence.py`:
+The old manifest and evidence remain immutable records of the completed
+offline experiment. Their `wheelhouse` sections are historical, not a current
+repository inventory and not the current availability guarantee.
 
-```
-test_retained_baseline_wheels_are_required_and_hash_checked
-test_historical_context_is_explicit_but_foreign_context_does_not_hide_semantic_change
-test_replay_is_byte_identical_and_matches_retained_observations
-test_check_detects_any_retained_observation_mutation
-test_cli_checks_retained_bytes_without_rewriting_them
-test_cli_cannot_import_ontology_registry_from_hostile_pythonpath
-```
+## Reconciliation
 
-Seven ledger entries under `design/contract_compiler/` pin wheel digests.
+The divergence runner now reads and validates `requirements.lock`, validates
+the retained direct and source inputs against `manifest.json`, and runs the
+same semantic replay without reading `wheelhouse/`. The compiler tests are
+collected by ordinary `pytest`; `scripts/ci.py` no longer invokes the same
+directory a second time.
 
-**These are not to be fixed by restoring the wheels.** The reconciliation is:
+The original CC-X01 evidence remains bound to its historical Git bytes. A new
+append-only correction report replaces only its environment-availability
+claim. The compiler decision ledger likewise supersedes the offline guarantee
+without altering the historical experiment.
 
-1. Rebind the CC-002 environment evidence to `requirements.lock` and its hashes
-   rather than to retained binaries. The lock is the reproducibility claim; the
-   wheels were a copy of what the lock already determines.
-2. Change the six tests to assert the lock and the source roots, not a wheelhouse.
-   `test_retained_baseline_wheels_are_required_and_hash_checked` should become a
-   test that the lock is present, hash-pinned, and matches the executor's pin.
-3. Record a ledger correction for the seven entries that pin wheel digests, in the
-   normal append-only way. Do not edit them in place.
+Do not restore the wheelhouse to satisfy an old assertion. Do not claim that a
+hash-pinned lock is an offline cache.
 
-## The change that should have been made instead
+## Git history
 
-Wire `requirements.lock` into `pyproject.toml` so `pip install -e ".[dev]"`
-reproduces the environment the executor requires. Today CI passes only because
-`1.11.1` happens to be the newest LinkML release, and it goes red on the next
-release with no code change.
+The removed bytes remain in Git history. Removing them from history would
+rewrite commit identities and invalidate evidence that binds those commits.
+That operation was not attempted and is outside this correction.
 
-## Context
-
-Full review: [`handover/2026-09-01-malleus-core-review.md`](../../../../handover/2026-09-01-malleus-core-review.md),
-sections 5 and 7.
-
-The 33 MB remains in git history. Removing it needs a rewrite, which changes every
-commit hash after the first wheel commit, breaks the two paper repositories that
-are worktrees of this object database, and invalidates every commit digest the
-overseer ledger pins. Not attempted.
+The source review is
+[`handover/2026-09-01-malleus-core-review.md`](../../../../handover/2026-09-01-malleus-core-review.md).
+Its machine-readable response ledger is stored beside it.

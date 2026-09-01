@@ -71,16 +71,6 @@ TEST = (
     QUALITY,
     Command("tests", (sys.executable, "-m", "pytest")),
     Command(
-        "compiler-tests",
-        (
-            sys.executable,
-            "-m",
-            "pytest",
-            "-q",
-            "tests/contract_compiler",
-        ),
-    ),
-    Command(
         "ledger",
         (sys.executable, "scripts/contract_compiler_ledger.py", "check"),
     ),

@@ -1,0 +1,94 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8040,
+      "path": "conformance/contract_compiler/v0/compiler_environment/requirements.lock",
+      "sha256": "sha256:ffe196f62df4b54eb01288ebdcef1c1c3c658eb73f4298e7254b84870457c12b"
+    },
+    {
+      "byte_length": 20510,
+      "path": "conformance/contract_compiler/v0/compiler_environment/manifest.json",
+      "sha256": "sha256:7b844887307cb3f2fe81c30732032fec43aa8a409cf9b6e57652a6cbbe66d8e7"
+    },
+    {
+      "byte_length": 37375,
+      "path": "scripts/contract_compiler_divergence.py",
+      "sha256": "sha256:76b4b782442795928faddc3d0145bb711e8c980886481deeeea22b9a434af365"
+    },
+    {
+      "byte_length": 16260,
+      "path": "tests/test_contract_compiler_divergence.py",
+      "sha256": "sha256:d24ec20734a992b5d84cdddad26529bdbb3745022c9c091adb7ef29d327148af"
+    },
+    {
+      "byte_length": 11346,
+      "path": "scripts/ci.py",
+      "sha256": "sha256:979cd3fac6a085055cd77bfa82399e799a0e337254c14700206ee86e8589d8cb"
+    },
+    {
+      "byte_length": 6359,
+      "path": "tests/contract_compiler/test_ci.py",
+      "sha256": "sha256:5da0c1e83e71df18c050bc0770a029d71b2fd79673cc167ee32b0a13454f1ff8"
+    },
+    {
+      "byte_length": 9162,
+      "path": "pyproject.toml",
+      "sha256": "sha256:d40940c7ea1ca137a4626619d56db9fe35fad8f7d7e33eee84ce1dade3988fbb"
+    },
+    {
+      "byte_length": 3074,
+      "path": "conformance/contract_compiler/v0/compiler_environment/WHEELHOUSE_REMOVED.md",
+      "sha256": "sha256:9356ba58fad8af4951dbb82edee31988d923817be108b4da7b85ce035ff67467"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "ccx01-current-lock-and-inputs",
+      "method": "Parse every lock line as one exact version plus one lowercase SHA-256, verify the retained lock record, and hash-check every artifact still present in roots, build-inputs, derivative-inputs, and built.",
+      "observed": "The lock contains 82 unique exact requirements. The selected LinkML 1.11.1 direct wheels and source archives match the historical semantic baseline. Missing, malformed, duplicate, unpinned, unhashed, or changed retained inputs refuse.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-historical-evidence-preserved",
+      "method": "Resolve every artifact in the original CC-X01 report from its exact final historical Git snapshot instead of comparing that immutable report with later source bytes.",
+      "observed": "All four historical artifact lengths and SHA-256 values match commit f9a09e24502fe8185fd06925e2a0bb92d8cc4e06. The original report was not edited.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx01-semantic-replay",
+      "method": "Run the full CC-X01 focused suite and replay the nine retained measurements through both engines.",
+      "observed": "All focused tests pass and fresh semantic observations equal the retained observations. No wheelhouse path is read.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "compiler-test-collection",
+      "method": "Collect ordinary pytest tests and inspect the fixed local CI plan.",
+      "observed": "Ordinary pytest collects tests/contract_compiler. The CI plan contains one tests command and no second compiler-tests command.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "direct-package-compatibility",
+      "method": "Parse pyproject.toml and compare its direct LinkML requirements with the selected compiler versions.",
+      "observed": "Normal package metadata pins linkml==1.11.1 and linkml-runtime==1.11.1. It does not reproduce the Linux transitive lock in cross-platform metadata.",
+      "result": "PASS"
+    }
+  ],
+  "corrects": {
+    "byte_length": 6191,
+    "path": "conformance/contract_compiler/v0/evidence/CC-X01.json",
+    "reason": "The wheelhouse was removed after the historical measurement. The semantic observations remain valid, but repository-retained offline availability is no longer a current guarantee.",
+    "scope": "environment availability only",
+    "sha256": "sha256:b2310af8d72ef9ba9e1aa0c715b0436d750b198902fdca2e4fe3ab5f6a56c1c3"
+  },
+  "historical_evidence_commit": "f9a09e24502fe8185fd06925e2a0bb92d8cc4e06",
+  "limitations": [
+    "This correction does not rewrite the historical manifest, verification records, or CC-X01 evidence. Their wheelhouse records describe the completed experiment, not the current repository inventory.",
+    "A hash-pinned lock proves acceptable identities, not offline availability. A fresh environment needs network access or an independent cache for any missing transitive package.",
+    "This correction does not claim a fresh Linux container installation. It preserves the selected Linux lock and changes only the repository-availability contract.",
+    "Normal package metadata pins direct LinkML compatibility only. The Linux-specific transitive closure stays in requirements.lock."
+  ],
+  "recorded_at": "2026-09-01T19:48:03Z",
+  "replacement_guarantee": "For the exact Linux compiler conformance environment, Malleus retains a hash-pinned lock plus source and direct build inputs. Missing transitive packages may be downloaded and must match their hashes. Malleus no longer claims installation from repository-retained bytes without network access. Normal cross-platform package metadata pins only the direct LinkML compatibility requirement.",
+  "schema": "malleus.contract-compiler.evidence-correction/v1",
+  "workstream_id": "CC-X01"
+}

@@ -25,8 +25,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "linkml>=1.10",
-    "linkml-runtime>=1.10",
+    "linkml==1.11.1",
+    "linkml-runtime==1.11.1",
     "networkx>=3.0",
     "pyyaml>=6.0",
     "tzdata==2026.3",
@@ -210,6 +210,7 @@ core-metadata-version = "2.4"
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = [
+    "tests/contract_compiler",
     "tests/test_contract_compiler_ledger.py",
     "tests/test_contract_compiler_integration.py",
     "tests/test_contract_compiler_environment.py",
@@ -232,14 +233,3 @@ testpaths = [
     "research/methodology_gedanken_e2e/tests",
 ]
 python_files = ["test_*.py"]
-
-[tool.ruff]
-extend-exclude = [
-    "src/malleus/conditions.py",
-    "src/malleus/evaluator.py",
-    "src/malleus/llm_client.py",
-    "src/malleus/runner.py",
-    "src/malleus/session.py",
-    "src/malleus/static_loader.py",
-    "src/malleus/tools.py",
-]

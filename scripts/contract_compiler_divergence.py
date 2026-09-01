@@ -31,6 +31,7 @@ ENVIRONMENT = (
     ROOT / "conformance" / "contract_compiler" / "v0" / "compiler_environment"
 )
 ENVIRONMENT_MANIFEST = ENVIRONMENT / "manifest.json"
+ENVIRONMENT_LOCK = ENVIRONMENT / "requirements.lock"
 ONTOLOGY_IMPLEMENTATION = ROOT / "src" / "malleus" / "ontology.py"
 
 BASELINE = {"linkml": "1.11.1", "linkml-runtime": "1.11.1"}
@@ -81,6 +82,16 @@ WHEEL_BINDINGS = {
         "filename": "linkml_runtime-1.11.1-py3-none-any.whl",
         "sha256": "sha256:b22c77d8fd920d0f4f43a6ece31393dc0b28bb47790f3e1c114210318c36b3da",
         "version": "1.11.1",
+    },
+}
+SOURCE_BINDINGS = {
+    "linkml": {
+        "filename": "linkml-1.11.1.tar.gz",
+        "sha256": "sha256:2f6774e13628270cadaeecda3313db0437ecc15cd44ee35c6c2655dbe31c8524",
+    },
+    "linkml-runtime": {
+        "filename": "linkml_runtime-1.11.1.tar.gz",
+        "sha256": "sha256:e71300b596c4f35aeccd9dca096806678402213dbdb2c5e8e68f507e21320754",
     },
 }
 _MISSING = object()
@@ -289,35 +300,105 @@ def load_cases(path: Path = CASES_PATH) -> dict[str, Any]:
     return document
 
 
-def retained_baseline(manifest: Any) -> tuple[BaselineWheel, BaselineWheel]:
+def locked_requirements(path: Path = ENVIRONMENT_LOCK) -> dict[str, dict[str, str]]:
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeError) as error:
+        raise DivergenceError(f"Cannot read compiler lock '{path}': {error}") from error
+
+    locked: dict[str, dict[str, str]] = {}
+    for line_number, line in enumerate(lines, start=1):
+        requirement, separator, digest = line.partition(" --hash=sha256:")
+        distribution, pin, version = requirement.partition("==")
+        if pin != "==" or not distribution or not version:
+            raise DivergenceError(f"lock line {line_number} must be exactly pinned")
+        if not separator or not digest:
+            raise DivergenceError(f"lock line {line_number} requires one sha256 hash")
+        name = distribution.casefold().replace("_", "-")
+        if name in locked:
+            raise DivergenceError(f"lock contains duplicate distribution {name!r}")
+        if len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+            raise DivergenceError(f"lock line {line_number} has an invalid sha256 hash")
+        locked[name] = {"sha256": "sha256:" + digest, "version": version}
+    return locked
+
+
+def _retained_artifact_records(
+    manifest: Mapping[str, Any],
+    environment: Path,
+) -> dict[str, dict[str, Any]]:
+    retained: dict[str, dict[str, Any]] = {}
+    for section, directory in (
+        ("roots", "roots"),
+        ("build_inputs", "build-inputs"),
+        ("derivative_inputs", "derivative-inputs"),
+        ("built", "built"),
+    ):
+        value = _require_mapping(manifest.get(section), f"CC-002 {section}")
+        artifacts = value.get("artifacts")
+        if not isinstance(artifacts, list):
+            raise DivergenceError(f"CC-002 {section} artifacts must be a list")
+        for index, item in enumerate(artifacts):
+            item = _require_mapping(item, f"CC-002 {section} artifact {index}")
+            for field in ("filename", "byte_length", "sha256"):
+                if field not in item:
+                    raise DivergenceError(f"CC-002 {section} artifact {index} requires {field}")
+            filename = _require_nonempty_text(
+                item["filename"], f"CC-002 {section} artifact {index} filename"
+            )
+            if filename in retained:
+                raise DivergenceError(f"retained artifact filename is duplicated: {filename}")
+            path = environment / directory / filename
+            try:
+                source = path.read_bytes()
+            except OSError as error:
+                raise DivergenceError(f"Cannot read retained artifact '{path}': {error}") from error
+            if item["byte_length"] != len(source) or item["sha256"] != _digest_bytes(source):
+                raise DivergenceError(f"retained artifact bytes differ: {filename}")
+            retained[filename] = dict(item)
+    return retained
+
+
+def retained_baseline(
+    manifest: Any,
+    environment: Path = ENVIRONMENT,
+) -> tuple[BaselineWheel, BaselineWheel]:
     root = _require_mapping(manifest, "CC-002 environment manifest")
     if "schema" not in root or root["schema"] != "malleus.cc002.compiler-environment/v4":
         raise DivergenceError("CC-002 environment manifest is not the retained v4 schema")
-    if "wheelhouse" not in root or not isinstance(root["wheelhouse"], dict):
-        raise DivergenceError("CC-002 environment manifest has no wheelhouse")
-    wheelhouse = root["wheelhouse"]
-    if "artifacts" not in wheelhouse or not isinstance(wheelhouse["artifacts"], list):
-        raise DivergenceError("CC-002 environment manifest has no wheelhouse artifacts")
+    lock_record = _require_mapping(root.get("lock"), "CC-002 lock record")
+    lock_path = environment / str(lock_record.get("filename", ""))
+    try:
+        lock_source = lock_path.read_bytes()
+    except OSError as error:
+        raise DivergenceError(f"Cannot read compiler lock '{lock_path}': {error}") from error
+    if (
+        lock_record.get("filename") != "requirements.lock"
+        or lock_record.get("byte_length") != len(lock_source)
+        or lock_record.get("sha256") != _digest_bytes(lock_source)
+    ):
+        raise DivergenceError("CC-002 lock record does not match requirements.lock")
+    locked = locked_requirements(lock_path)
+    retained = _retained_artifact_records(root, environment)
 
     selected: list[BaselineWheel] = []
     for distribution in ("linkml", "linkml-runtime"):
         expected = WHEEL_BINDINGS[distribution]
-        matches = [
-            item
-            for item in wheelhouse["artifacts"]
-            if isinstance(item, dict)
-            and "distribution" in item
-            and item["distribution"] == distribution
-        ]
-        if len(matches) != 1:
-            raise DivergenceError(f"CC-002 must retain exactly one {distribution} wheel")
-        item = matches[0]
-        for field in ("filename", "sha256", "version"):
-            if field not in item or item[field] != expected[field]:
-                raise DivergenceError(f"retained {distribution} {field} does not match CC-X01 baseline")
-        path = ENVIRONMENT / "wheelhouse" / expected["filename"]
+        if locked.get(distribution) != {
+            "sha256": expected["sha256"],
+            "version": expected["version"],
+        }:
+            raise DivergenceError(f"locked {distribution} does not match CC-X01 baseline")
+        item = retained.get(expected["filename"])
+        if item is None or item.get("sha256") != expected["sha256"]:
+            raise DivergenceError(f"retained {distribution} direct root does not match CC-X01 baseline")
+        source = SOURCE_BINDINGS[distribution]
+        source_item = retained.get(source["filename"])
+        if source_item is None or source_item.get("sha256") != source["sha256"]:
+            raise DivergenceError(f"retained {distribution} source root does not match CC-X01 baseline")
+        path = environment / "roots" / expected["filename"]
         if _digest_file(path) != expected["sha256"]:
-            raise DivergenceError(f"retained {distribution} wheel bytes do not match CC-X01 baseline")
+            raise DivergenceError(f"retained {distribution} direct root bytes do not match CC-X01 baseline")
         selected.append(
             BaselineWheel(
                 distribution=distribution,
