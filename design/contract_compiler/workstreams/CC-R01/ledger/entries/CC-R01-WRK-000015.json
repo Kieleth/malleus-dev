@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The active TDD sequence requires the corrected SLICE to precede DISPROOF. This correction supersedes the prior DISPROOF so both phases can be re-recorded in their governed order after the default-ordering regression.",
+    "supersedes_entry_id": "CC-R01-WRK-000013"
+  },
+  "entry_hash": "sha256:0ecd3f821fbf3f8a60ebdd9e943bdceac5dee8aa76126128dde4f4d1f6c908ac",
+  "entry_id": "CC-R01-WRK-000015",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:406b29f5af9800678fca36c2220e702e6b0998fd000b7927a57622a929ec05c2",
+  "recorded_at": "2026-09-01T15:40:44Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 15,
+  "summary": "Supersede DISPROOF to preserve corrected phase order.",
+  "workstream_id": "CC-R01"
+}

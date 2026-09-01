@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py -k 'authorized_private_api or root_retains or nested_diamond or duplicate_authored or ordering_changes or omitted_ordering or successful_closure'",
+    "observed": "All 7 positive slice tests passed with 33 deselected. A direct build_source_closure call that omits ordering now proves canonical module and import-edge presentation. Separate tests prove traversal and caller-supplied sort-key presentation while retaining identical member, authored-ordinal, and provenance sets.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:f2df1d14f17382516407de192c1742927a1a38bff8f8e1405efab7b2a2e5086c",
+  "entry_id": "CC-R01-WRK-000016",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:0ecd3f821fbf3f8a60ebdd9e943bdceac5dee8aa76126128dde4f4d1f6c908ac",
+  "recorded_at": "2026-09-01T15:40:45Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 16,
+  "summary": "Pass the slice with the canonical default mechanically locked.",
+  "workstream_id": "CC-R01"
+}

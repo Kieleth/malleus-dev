@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/test_retained_source_boundary.py -k 'refusal or refuses or malformed or conflict or cycle or deep_acyclic or distinct or opaque or unexpected or subclass or injected or production or complete_fixed'",
+    "observed": "All 33 disproof cases passed with 7 deselected. The explicit-stack chain, refusal, conflict, cycle-lineage, collaborator-shape, exact identity, ambient-I/O isolation, production-token, import-allowlist, and corrected-history controls remain green after locking the omitted-ordering default.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ee7b0f0d56b8d26a31c2917ffd93e3ebccd960f3b9332540674f7f65f704d28c",
+  "entry_id": "CC-R01-WRK-000017",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f2df1d14f17382516407de192c1742927a1a38bff8f8e1405efab7b2a2e5086c",
+  "recorded_at": "2026-09-01T15:40:46Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 17,
+  "summary": "Reconfirm disproofs after the canonical-default regression.",
+  "workstream_id": "CC-R01"
+}

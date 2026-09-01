@@ -1,0 +1,16 @@
+{
+  "actor_id": "worker:ccr01-retained-source-boundary",
+  "data": {
+    "reason": "The replacement SLICE still exercised canonical ordering through a helper that supplied it explicitly. It did not mechanically prove the production function's omitted-argument default. The next replacement calls the production function directly without ordering.",
+    "supersedes_entry_id": "CC-R01-WRK-000012"
+  },
+  "entry_hash": "sha256:406b29f5af9800678fca36c2220e702e6b0998fd000b7927a57622a929ec05c2",
+  "entry_id": "CC-R01-WRK-000014",
+  "entry_type": "CORRECTION",
+  "previous_entry_hash": "sha256:317c0f867553521a6c2f7b328e1bd7a252c892772415f2827a95233e3f4f2718",
+  "recorded_at": "2026-09-01T15:40:43Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 14,
+  "summary": "Supersede the slice that did not prove the canonical default.",
+  "workstream_id": "CC-R01"
+}
