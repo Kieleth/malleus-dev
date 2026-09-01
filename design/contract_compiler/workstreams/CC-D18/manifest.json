@@ -1,0 +1,40 @@
+{
+  "assignment": {
+    "owner_id": "overseer",
+    "state": "ASSIGNED",
+    "task_id": "/root"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:75f3533acf2412b4e5770f3718587fde668591ccded77a56d60f30b0a2ee5bd9",
+        "completion_entry_hash": "sha256:7ed32de82a3ad544778ee5d593390f84efe8eed4a95b018d38b2b171c2fd2c6b",
+        "completion_entry_id": "OVR-000172",
+        "integrated_head": "f8896dd67e96c82402dd6acd34be85fa8c836f1e",
+        "workstream_id": "CC-D10"
+      },
+      {
+        "card_sha256": "sha256:b7e8374a49fe0c4925286299b2efa13650ed9812429e34cc80f85853f8d5cde2",
+        "completion_entry_hash": "sha256:dea099e6042faf9ba56668edc25de9deda88aabba68ff6aafdba759a1570f653",
+        "completion_entry_id": "OVR-000272",
+        "integrated_head": "b75a7490c244ec93746a698a321d7b87ce7b2a43",
+        "workstream_id": "CC-D17"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Close OD-016 by selecting KnowledgeChangeSet as the one frontend-neutral immutable domain-state change unit. Bind each change set to its EffectiveContract, source and evidence closure, base ledger head and state identity, exact ordered primitive operations, valid time, supersession, operation-local dependencies, and digest. Require proposal, checks, review, decision, and application to reference the same immutable change-set identity. Keep one authoritative ordered ledger, one replay-derived accepted temporal graph, and no direct accepted-state mutation. Governed initialization starts from an empty graph plus a retained genesis change set. PopulationPlan, GraphConstructionPlan, and OperationDependencyPlan remain derivation inputs rather than another knowledge graph or state authority. Ensure persisted structural candidates remain non-governed and non-accepted until admission. A conforming ACCEPT decision event may carry atomic application. Treat ontology evolution as a future explicit cross-contract change or migration change set. This zero-scope decision creates no runtime or ontology implementation, public API, artifact bytes, candidate, selection, or worker ledger.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [],
+  "workstream_id": "CC-D18"
+}

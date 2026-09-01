@@ -1,0 +1,164 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-016",
+      "CC-D18",
+      "CC-R06",
+      "CC-R09",
+      "CC-P10",
+      "CC-P11",
+      "CC-P19",
+      "CC-P20",
+      "CC-P21",
+      "CC-P22"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c813f19fa53ae4ae4e9aa0440203bc0877a3f15be60638c59cd5f7a72139fccf",
+        "before_digest": "sha256:76b4ff99f7b1260b34bc3630a505401d0e7d867871d67e1e85803334bc648de6",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-dev/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:82e53d0b04a14fe9914551caa28e58c789c18a37d5b05276dcd0f6705b8123ee",
+        "before_digest": "sha256:1e5d8500b6f9327c28984ec4be44d871499b6fd049f5effc872f53d7a1e7f40e",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-inquisitor/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:a4c69beb3349e5f726fced1fc6d98e02f271c349edcdc5ca90373c3fab4858be",
+        "before_digest": "sha256:731248f701bb8fe0b005c3398fe37520d4b26a80b0ee4047a5674e18cedb29c6",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:cbc041a431d53f87e1f197ae44d1c0f4ffdb75a979597cb2711f1d0d52310c4e",
+        "before_digest": "sha256:e417d53d4d86e0b18988c7c280560285cc70bd079b3ceb04ffb7153369fa6faa",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a",
+        "before_digest": "sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:37e1135f9535f0072e821b2162ac3095ea9e9430b8f5694e6cf836fa0e404085",
+        "before_digest": "sha256:a15efd9a104af3beb4a373a96afa34810fa1724d6cdf86dec8ec77ac9cfa23a3",
+        "change": "MODIFIED",
+        "path": "design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md"
+      },
+      {
+        "after_digest": "sha256:fc98f2001a9ee9073c3592549948939624fd1d4e91cd5871efcf4f69931b6407",
+        "before_digest": "sha256:a9f29e56a5caaf3d77ffd9430a92fc2d5353b0f04490d766ea7bab19dda060f0",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/conformance.md"
+      },
+      {
+        "after_digest": "sha256:cbf74cbbc9b5978e6e06350e6342d02bfe98a4c6a30abba33ccc1d4720a81dbb",
+        "before_digest": "sha256:f7f6315bf6931a6db3ed864dd5d23d9f5b48067ae65faa8592d9e32207cc1907",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:a343d903c27f8239294106fab7fe78bd384e3ccf9abf771093a1f691947c7b5b",
+        "before_digest": "sha256:de745cb9d4e6a00f30906e129cf62b7b46fdb78b9d59651527fed37de75dba5d",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:55e0c18ca3b047dea94154295cfae4d3415c2e536b6bde792648538106309432",
+        "before_digest": "sha256:57a50308ce5bf3b4ccd8ff7869276a8ee2c04a552eb65a24545ca3326a1c94e6",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:12767121efc92a58773d2e7d7e399ac9a5c83b1d0ddf5e1a82c005bef897e091",
+        "before_digest": "sha256:45d011248e60bcc3824877ff94390c394bc3be9a89016651ab5d4b35fb8f1822",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:e471b45531289bf6f54d2339799c39867ceaa29b2733b2d0ad2678dc5c8c164b",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-D18/manifest.json"
+      },
+      {
+        "after_digest": "sha256:761f1583601c5fe80f374a76e88b0a88792ac109b2a9085806cf1ae7a43527d9",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-D18.json"
+      },
+      {
+        "after_digest": "sha256:5fb5e0c218cb672ce48ab3e3523543a9ced060ed3608fd49ecbbff296afe28d7",
+        "before_digest": "sha256:66a05615fcd1d5087f42b63c23c24d738fef837c2a1f2abdda2274043d2e7d26",
+        "change": "MODIFIED",
+        "path": "docs/ARCHITECTURE.md"
+      },
+      {
+        "after_digest": "sha256:597eb1f9cdf0562c3f7992c8a4a32cfcc9faa03359b129e970179c1a1f25de82",
+        "before_digest": "sha256:3e547c7b1ead772ba7260cd0ff4a62449940da3f80a287cc38c08812c80cc337",
+        "change": "MODIFIED",
+        "path": "docs/ASSENT_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:80e1de8754d7bda1e10ae0ed28526530a3ea5ec872aa450a9e30ef00a6b7a2c1",
+        "before_digest": "sha256:fa276857301f0a396b9cd93f3eb48bb4dfe6456b05e0f9400e3339c40e8e5a68",
+        "change": "MODIFIED",
+        "path": "docs/PRINCIPLES.md"
+      },
+      {
+        "after_digest": "sha256:100563bd4a378857bf26e87a531c11431ff0e6c754262a7eaba3264fc745bab1",
+        "before_digest": "sha256:76413025c07b868433d6998cd8c2fb527a490446b7dffd311df52b467eedf38b",
+        "change": "MODIFIED",
+        "path": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:62a12e1769cf81d8ccc0ea199eb6536d99b575a3bf14bed36733303d2bf8312c",
+        "before_digest": "sha256:912172a65014a48c055181518ef94dac05f96d9d3808888becde763605ec90fe",
+        "change": "MODIFIED",
+        "path": "docs/ADOPTION_GUIDE.md"
+      }
+    ]
+  },
+  "entry_hash": "sha256:8ec7337ed97ffdaf3ff1b4d456fbe6f98a978701dab07b4872b918558c1e3cbf",
+  "entry_id": "OVR-000274",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4ebc0ac0d6f1d5844ff3bca118ebca9c8fac846e1a7df91623dadb35ceaea107",
+  "recorded_at": "2026-09-01T01:06:08Z",
+  "references": [
+    {"relation": "DEFINES", "target": ".claude/skills/malleus-dev/SKILL.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": ".claude/skills/malleus-inquisitor/SKILL.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/PROTOCOL_FOUNDATION_GRAPH.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/conformance.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/decisions.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/integration.json", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/integration.schema.json", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/program.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/contract_compiler/workstreams/CC-D18/manifest.json", "type": "DOCUMENT"},
+    {"digest": "sha256:761f1583601c5fe80f374a76e88b0a88792ac109b2a9085806cf1ae7a43527d9", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-D18.json", "type": "EVIDENCE"},
+    {"relation": "DEFINES", "target": "docs/ARCHITECTURE.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/ASSENT_PROTOCOL.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/PRINCIPLES.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/ADOPTION_GUIDE.md", "type": "DOCUMENT"},
+    {"relation": "IMPLEMENTS", "target": "CC-D18", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-R09", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 274,
+  "subject": {
+    "id": "contract-compiler-od016-r23-primary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the single-ledger KnowledgeChangeSet architecture in foundation graph revision 23.",
+  "why": "The primary revision binds the operator decision, canonical graph, semantic-history target, compiler runway, strict integration manifest, zero-scope card, retained evidence, public protocol boundaries, and maintainer and inquisitor rules to one exact architecture. It keeps structural-only adoption valid while preventing any structural store or graph API from claiming accepted-state authority."
+}

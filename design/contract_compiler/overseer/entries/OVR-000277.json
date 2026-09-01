@@ -1,0 +1,46 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Accept KnowledgeChangeSet as the exact immutable state-change unit, one ordered ledger as authority, and the accepted temporal graph as replay-derived state.",
+      "Close genesis, lifecycle identity, atomic ACCEPT application, operation-local dependency, persisted structural candidate, direct-write, and future cross-contract migration boundaries.",
+      "Bind foundation graph revision 23, all projections, the 72-workstream dependency closure, zero-scope card, retained evidence, public guidance, self-review guard, and TDD tests without runtime or ontology implementation."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000273",
+      "OVR-000274",
+      "OVR-000275",
+      "OVR-000276"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-D18"
+  },
+  "entry_hash": "sha256:2eadc8a6bb366abafabc8ae90c89337b9dc4d8a9d8565b4b29b3773232720352",
+  "entry_id": "OVR-000277",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:18664a1163bb68bb2d4b944ac8864970c16d735c1455fb5416b8102f6cb21bf4",
+  "recorded_at": "2026-09-01T01:06:11Z",
+  "references": [
+    {"relation": "EVIDENCES", "target": "OVR-000273", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000274", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000275", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000276", "type": "ENTRY"},
+    {"relation": "SATISFIES", "target": "CC-D18", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "OD-016", "type": "DECISION"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 277,
+  "subject": {
+    "id": "CC-D18",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the single-ledger KnowledgeChangeSet architecture decision.",
+  "why": "The operator decision, canonical graph, dependency-closed runway, retained evidence, public guidance, and self-review guard close the state-authority seam without claiming a shipped change-set artifact, runtime cutover, public API, or ontology migration engine."
+}

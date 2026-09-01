@@ -289,7 +289,7 @@ def test_malleus_dev_skill_gates_research_and_projection_claims():
     closure = items["DERIVATION_CLOSURE"].lower()
     closure_commitments = (
         "accepted canonical graph-state identity",
-        "exact initial-base identity and digest",
+        "initial-empty-state identity and retained genesis change-set-set digest",
         "verified selected-prefix identity and checkpoint",
         "effective contract and composition",
         "reader identity",
@@ -303,6 +303,7 @@ def test_malleus_dev_skill_gates_research_and_projection_claims():
     assert re.search(r"graph-state identity identifies accepted semantic state", closure)
     assert re.search(r"output digest identifies the derived projection result", closure)
     assert "keep them distinct" in closure
+    assert "initial-base identity" not in closure
 
     authority = items["AUTHORITY"].lower()
     assert re.search(r"no independent governed write path", authority)

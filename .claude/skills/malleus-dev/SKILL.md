@@ -126,6 +126,15 @@ contracts. Depend on protocol meaning, never on one implementation.
     artifact and produce the same accepted state or typed refusal without
     copying private branches from the first implementation. Never add an
     unrestricted callback or arbitrary-code escape hatch.
+14. `SINGLE_LEDGER_CHANGE_SET`: Every persisted governed domain-state change
+    enters one authoritative ordered ledger as one immutable
+    `KnowledgeChangeSet`. Its ordered primitive operations and dependencies are
+    local to that change set. The accepted temporal graph is replay-derived
+    only, begins from an empty graph plus a retained genesis change set, and
+    has no independent write path. Persisted structural candidates remain
+    non-governed and non-accepted until ledger admission. Machine effects may
+    produce, validate, or admit change-set and receipt data, never mutate
+    accepted state directly.
 
 Unix modularity here is not dependency-injection theatre. A stage is
 replaceable only when a deliberately different implementation crosses the
@@ -144,10 +153,11 @@ projection, verify all of these:
 - `AUTHORITY`: It has no independent governed write path. If it does, define
   explicit reconciliation and stop treating it as a mere projection.
 - `DERIVATION_CLOSURE`: Bind the accepted canonical graph-state identity; exact
-  initial-base identity and digest; verified selected-prefix identity and
-  checkpoint; effective contract and composition; reader identity; projector
-  implementation and projection profile; interpretation profile; declared
-  side inputs; transaction-time and valid-time coordinates; and output digest.
+  initial-empty-state identity and retained genesis change-set-set digest;
+  verified selected-prefix identity and checkpoint; effective contract and
+  composition; reader identity; projector implementation and projection
+  profile; interpretation profile; declared side inputs; transaction-time and
+  valid-time coordinates; and output digest.
   The graph-state identity identifies accepted semantic state. The output
   digest identifies the derived projection result. Keep them distinct.
 - `REFUSAL`: Missing, stale, malformed, or unsupported closure input produces

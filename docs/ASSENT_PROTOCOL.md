@@ -275,6 +275,25 @@ and reconstructs all state from scratch. Callers may retain the expected event
 count and head hash outside the ledger to detect complete truncation or
 replacement.
 
+The accepted portable semantic-history target uses one immutable,
+frontend-neutral `KnowledgeChangeSet` for each domain-state change. Proposal,
+checks, review, decision, and application retain separate lifecycle meanings
+but all reference the same change-set identity. The profile has one
+authoritative ordered ledger; its accepted temporal graph is replay-derived,
+with no independent accepted-state write path. Governed replay begins from an
+empty graph plus a retained genesis change set or identified genesis set.
+ACCEPT and atomic application may share one verified ledger event, so a failed
+application rejects the whole event rather than leaving a recorded acceptance
+without its state change.
+
+The current Python runtime has not yet cut over to that generic artifact or
+genesis boundary. It uses `CandidateSubgraphArtifact`,
+`AcceptedGraphApplication`, and an externally supplied `GraphBaseArtifact`.
+Standalone structural candidates may be persisted or materialized, but they
+remain non-governed and non-accepted as Malleus knowledge. An adopter may omit
+the semantic-history profile, but then cannot claim its accepted-state,
+ledger-authority, or replay guarantees.
+
 One ledger is frozen to one ontology hash. Replaying across ontology upgrades
 requires an explicit migration into a new ledger.
 

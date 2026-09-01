@@ -20,8 +20,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 22,
-`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
+revision 23,
+`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
 
 Shipped capability: none
 
@@ -46,21 +46,26 @@ separation.
 
 ## 2. What “network” means in these experiments
 
-Three graphs must remain distinct:
+Three artifacts must remain distinct:
 
 1. `LogicalGraphContract`: legal record roles, properties, references,
    relation signatures, and construction operations derived from the effective
    contract.
-2. `ConstructionMemberGraph`: recipe members and explicit operation
-   dependencies assembled from terminal facts.
+2. `OperationDependencyPlan`: recipe members and explicit operation
+   dependencies assembled from terminal facts for one proposed change set.
 3. `GraphRealization`: the materialized Malleus graph. Entities, signals, and
    events are nodes. Relations are keyed directed edges.
+
+`OperationDependencyPlan` is not a knowledge graph, graph version, ledger,
+store, state authority, or domain identity. `GraphRealization` may be retained
+as a structural candidate, but it is not governed or accepted knowledge until
+the corresponding `KnowledgeChangeSet` is admitted through the protocol ledger.
 
 Every positive fixture freezes:
 
 1. Logical contract.
 2. Terminal construction facts.
-3. Construction-member dependency graph.
+3. Operation-dependency plan.
 4. Ordered `ProposedOperation.as_dict()` values.
 5. Public `KnowledgeGraph.snapshot()`.
 6. `KnowledgeGraph.canonical_operations()`.
@@ -107,6 +112,12 @@ conformance/graph_recipe/v0/
           input/
           expected/
 ```
+
+The literal `member-graph.json`, the `member-graph` CLI token, and historical
+"member graph" report wording below are retained v0 research wire labels for
+`OperationDependencyPlan` data, not another knowledge graph or state authority.
+They remain only so the bound experiment bytes stay reproducible. A successor
+wire or public API must use operation-dependency-plan terminology.
 
 Only relevant input files are present in a case. Every negative case contains
 complete changed artifacts and expected diagnostics. It does not inherit an
@@ -223,7 +234,7 @@ Tests: parsing, type binding, expansion, assembly, lowering, and staging.
 Input: `Person`, `Organization`, and concrete `WorksForRelation`. The source
 recipe intentionally declares its relation before both endpoint records.
 
-Expected member graph:
+Expected operation-dependency plan:
 
 ```text
 person-member       -> employment-member
@@ -450,7 +461,7 @@ Expected:
 1. Different source digests where exact bytes differ.
 2. Identical effective recipe identities.
 3. Identical normalized expansion for shared OTTR semantics.
-4. Identical logical member graph and operation sequence.
+4. Identical operation-dependency plan and operation sequence.
 5. Backend-specific physical representations that decode to one logical record
    set.
 
@@ -598,7 +609,8 @@ The existing Python 3.10 through 3.13 matrix runs the complete internal corpus:
 1. Profile acceptance and rejection.
 2. Canonicalization and deterministic identity.
 3. Terminal facts and lineage.
-4. Member-graph assembly and operation ordering.
+4. Operation-dependency-plan assembly and operation ordering. The current v0
+   runner retains `member-graph` only as its bound research wire label.
 5. `ProposedOperation` lowering.
 6. Isolated staging and materialization.
 7. Exact graph postconditions.

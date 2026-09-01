@@ -122,6 +122,18 @@ Some structural claims require several records at once. A relation may depend on
 
 This is a structural transaction boundary. It does not decide truth, epistemic acceptance, or action authorization. Stage 7b can record the exact writes in a `CandidateSubgraphArtifact` and couple an accepted protocol decision to a separate replay-derived graph projection. Direct structural materialization still has no protocol effect.
 
+Under the optional semantic-history profile, the accepted target packages the
+complete proposed state change as one immutable, frontend-neutral
+`KnowledgeChangeSet`. Every lifecycle event references that exact identity.
+The ledger, not the candidate store or materialized graph, is the state
+authority; the accepted temporal graph is replay-derived. Initial governed
+state is empty and its first knowledge arrives through retained genesis change
+set data. Directly persisted or materialized structural candidates remain
+non-governed and non-accepted as Malleus knowledge until admitted through that
+history. An adopter may omit semantic history and keep the structural
+guarantees in this document, but cannot then claim Malleus accepted-state
+provenance or reconstruction.
+
 ### 3. A constructed graph does not swap registries in place
 
 A current `KnowledgeGraph` keeps the `OntologyRegistry` it was constructed with;

@@ -9,6 +9,8 @@ authority, historical replay, and accepted-view reconstruction to the base
 protocol. An adopter may omit it and retain only the guarantees of the lower
 profiles it implements. The current JSONL ledger and NetworkX projector are a
 reference implementation of this profile, not universal storage requirements.
+An adopter that omits semantic history may retain structural candidates, but
+cannot call them governed or accepted Malleus knowledge.
 
 Evidence pass: 2026-08-28.
 
@@ -104,6 +106,48 @@ containing ledger. A selected-prefix checkpoint alone does not authenticate
 later tail records. "Externally anchored," "provable," and "tamper-proof" are
 not current core properties.
 
+## Accepted target after OD-016
+
+KnowledgeChangeSet is the one frontend-neutral immutable state-change artifact.
+The target has one authoritative ordered semantic and protocol history and one
+evolving temporal domain-KG projection. Every persisted growth or correction of
+accepted knowledge enters as one immutable change set through the ledger. The
+projector alone derives current and historical graph views from verified
+history.
+
+One change set binds the effective contract, retained source and evidence
+closure, base ledger head and accepted-state digest, ordered primitive
+operations, valid time, supersession, operation-local dependencies, and its
+canonical digest. Several primitive writes may therefore compose one atomic
+domain change without creating another graph or authoritative DAG.
+
+Proposal, checks, review, and decision cite the same immutable KnowledgeChangeSet
+identity. The ACCEPT decision event may contain the atomic application. Folding
+that verified event may call a materializer internally; this is projector
+implementation, not an independent accepted-state write path.
+
+The initial accepted domain state is the empty graph. A retained genesis change
+set, or a completely retained genesis set, supplies the first domain records.
+The current caller-supplied nonempty graph base is implementation evidence for a
+later cutover, not the target authority model.
+
+A persisted structural candidate remains non-governed and non-accepted. It may
+be inspected, tested, and retained independently, but becomes governed Malleus
+knowledge only through ledger admission. Machine effects may produce, validate,
+or admit exact change-set and receipt data. They must not mutate the accepted
+temporal graph directly.
+
+Ontology evolution eventually enters as an explicit cross-contract
+KnowledgeChangeSet or migration change set. Pinning one ontology hash or writing
+a separate migration receipt does not implement that boundary.
+
+| Current shipped mechanism | Accepted target |
+|---|---|
+| `CandidateSubgraphArtifact` and `AcceptedGraphApplication` | One shared `KnowledgeChangeSet` identity across the lifecycle |
+| Caller-supplied `accepted_graph_base` | Empty accepted graph plus retained genesis change set or set |
+| Replay materializes the verified application | Same, explicitly as the sole accepted-state projector path |
+| Detached structural materialization | Permitted only as non-governed and non-accepted candidate state |
+
 ## The log-primary model
 
 Jay Kreps's 2013 essay is the modern architectural synthesis that most directly
@@ -124,7 +168,7 @@ contract:
 
 ```text
 accepted_history(t) =
-  fold(projector, initial_base, verified_protocol_prefix(t), side_inputs)
+  fold(projector, empty_graph, verified_protocol_prefix(t), side_inputs)
 
 view(t, v) =
   resolve(accepted_history(t), interpretation_profile, valid_time=v)
@@ -490,8 +534,8 @@ mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:MaterializationHead .
 slkp:CompleteProjectionClosure mfg:binds mfg:AcceptedTemporalGraphVersionHash .
 slkp:CompleteProjectionClosure mfg:binds mfg:ProjectionImplementation .
 slkp:CompleteProjectionClosure mfg:binds mfg:ProjectionProfile .
-slkp:CompleteProjectionClosure mfg:binds slkp:SuppliedGraphBaseIdentity .
-slkp:CompleteProjectionClosure mfg:binds slkp:SuppliedGraphBaseDigest .
+slkp:CompleteProjectionClosure mfg:binds slkp:InitialEmptyStateIdentity .
+slkp:CompleteProjectionClosure mfg:binds slkp:GenesisKnowledgeChangeSetSetDigest .
 slkp:CompleteProjectionClosure mfg:binds slkp:ReaderIdentity .
 slkp:CompleteProjectionClosure mfg:binds slkp:InterpretationProfile .
 slkp:CompleteProjectionClosure mfg:binds slkp:DeclaredSideInputSetDigest .
@@ -514,10 +558,10 @@ do not declare ontology terms. The closure terms extend, rather than duplicate,
 the canonical Candidate
 `AcceptedTemporalGraphVersionHash`, `ProjectionImplementation`, and
 `ProjectionProfile` vocabulary. Their purpose is to make "this store is a
-materialized view" checkable by binding the exact base identity and digest,
-reader, projector, interpretation profile, side inputs, view coordinates, and
-output digest. No such closure object is implemented or promoted into the
-foundation graph.
+materialized view" checkable by binding the initial-empty-state identity,
+retained genesis change-set-set digest, reader, projector, interpretation
+profile, side inputs, view coordinates, and output digest. No such closure
+object is implemented or promoted into the foundation graph.
 
 ## Empirical program
 
@@ -534,9 +578,9 @@ That statement can be attacked with executable cases:
 
 1. Full replay and incremental replay produce the same graph and projection
    identity.
-2. A future closure manifest causes a missing graph base, ontology, reader,
-   projector, timezone database, or declared side input to refuse instead of
-   guessing.
+2. A future closure manifest causes a missing genesis change set, ontology,
+   reader, projector, timezone database, or declared side input to refuse
+   instead of guessing.
 3. Reordering, deleting from the middle, duplicating, or mutating a ledger event
    breaks envelope or chain validation unless the history is consistently
    rechained. Clean suffix removal leaves a valid prefix. Direct replay,

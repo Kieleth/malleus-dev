@@ -58,6 +58,14 @@ authority for event names, state transitions, effects, or refusal identifiers.
 The Lean Review slice proves the interpreter boundary before the later Assent
 hard cutover removes handwritten transition paths.
 
+The accepted downstream handoff is one frontend-neutral
+`KnowledgeChangeSet`, not a second graph or a Python mutation callback. Source
+population and operation-dependency plans are derivation inputs to that
+artifact. The ordered protocol ledger admits the exact change set, and an
+identified projector derives the accepted temporal graph by replay. This is a
+governed compiler target, not a claim that a public artifact class or generic
+runtime cutover ships today.
+
 ```{toctree}
 :maxdepth: 1
 

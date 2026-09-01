@@ -119,7 +119,9 @@ before applying adopter-schema rules:
    tests. Apply `protocol_authority_is_data` to every machine-executed profile:
    profile-specific event, record, field, transition, effect, and refusal
    choices must come from identified artifacts rather than interpreter
-   branches.
+   branches. Apply `single_ledger_knowledge_change` whenever governed domain
+   state or an accepted KG is claimed: every change must share one immutable
+   change-set identity, enter one ledger, and reach the KG only through replay.
 2. Check that core runtime code does not import research, conformance, or test
    trees, and that the root ontology imports no domain, research, conformance,
    or fixture ontology. Use syntax-aware Python and YAML parsing, not text

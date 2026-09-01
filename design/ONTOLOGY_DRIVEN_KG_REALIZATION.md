@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 22,
-`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
+revision 23,
+`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
 
 Protocol-design evidence cutoff: 2026-08-27
 
@@ -374,10 +374,10 @@ ledger application.
 | 2. Backend projection | State exactly what the NetworkX gate enforces and what remains an external admission check |
 | 3. Recipes | Compile self-contained `OrderContainsUnit`, fixed-arity `PaymentSettlementTwoInvoices`, correction-state, and packing-event topology under the narrowed OTTR profile |
 | 4. Population policy | Bind each source path, transformation, identity rule, recipe selection, evidence requirement, and collision behavior |
-| 5. Construction plan | Produce one content-addressed atomic plan with ordered operations and derivation traces for a selected source closure |
-| 6. Stage and verify | Refuse the whole plan on a missing unit, invalid endpoint, identity collision, unsupported event correlation, or failed evidence check |
-| 7. Decide and materialize | Apply only a candidate-bound `ACCEPT`; every other decision leaves the accepted graph unchanged |
-| 8. Attest | Bind source, contract, mapping, identity, recipe, implementation, plan, checks, decision, heads, and resulting graph identity |
+| 5. Construction plan | Produce one content-addressed operation-dependency plan with ordered operations and derivation traces for a selected source closure |
+| 6. Close and verify | Bind the plan, contract, source/evidence closure, base ledger/state, valid time, supersession, and operations into one immutable `KnowledgeChangeSet`; refuse the whole change set on a missing unit, invalid endpoint, identity collision, unsupported event correlation, or failed evidence check |
+| 7. Decide and project | Apply only a change-set-bound `ACCEPT` through ledger replay; every other decision leaves the accepted graph unchanged |
+| 8. Attest | Bind source, contract, mapping, identity, recipe, implementation, plans, change set, checks, decision, heads, and resulting graph identity |
 | 9. Evolve | Supersede the declared state of supplier order `B` at `e7`, retain the bounded `I2` update at `e9`, then test an ontology revision that introduces first-class `Shipment` records and partial shipments |
 
 #### Required RED boundaries
@@ -559,15 +559,25 @@ GraphConstructionPlan
       ConstructionProfile,
     )
 
+KnowledgeChangeSet
+  = close_change(
+      EffectiveContract,
+      SourceAndEvidenceClosure,
+      BaseLedgerAndAcceptedState,
+      GraphConstructionPlan,
+      OperationDependencyPlan,
+      ValidTimeAndSupersession,
+    )
+
 CandidateSubgraph
-  = stage(GraphConstructionPlan.proposed_operations)
+  = stage(KnowledgeChangeSet.ordered_operations)
 
 StructuralGraphRealization
   = structurally_materialize(CandidateSubgraph)
 
 GovernedAcceptedRealization
-  = decide_and_project(
-      CandidateSubgraph,
+  = record_and_project(
+      KnowledgeChangeSet,
       EpistemicPolicy,
       ProtocolLedger,
     )
@@ -578,10 +588,11 @@ No phase silently drops a source field, ontology fact, recipe member, proposed
 operation, or target capability mismatch.
 
 `StructuralGraphRealization` is the profile's sufficient structural output. It
-claims contract-bound construction and atomic admission, not truth or
-acceptance. `GovernedAcceptedRealization` is optional and exists only when the
-adopter also selects the Assent and semantic-history profiles. It adds the
-guarantees of those profiles without redefining the structural output.
+claims contract-bound construction, not truth or acceptance, and remains
+non-governed and non-accepted even when persisted. `GovernedAcceptedRealization`
+exists only when the adopter also selects the Assent and semantic-history
+profiles. It is derived by replay after ledger admission of the exact
+`KnowledgeChangeSet`; no structural materializer writes it directly.
 
 ### Phase 0: Resolve the effective contract
 
@@ -699,7 +710,8 @@ being misreported as materialized graphs. The plan binds:
 4. Mapping, transformation, identity, and source identities.
 5. Population-plan and realization-mode identities.
 6. Compiler and adapter implementation identities.
-7. Base graph digest and intended construction scope.
+7. Detached base-graph digest for structural work, or base ledger head and
+   accepted-state digest for a governed change set, plus intended scope.
 8. Ordered operations and their derivation traces.
 9. All gaps, exclusions, and warnings.
 
@@ -713,30 +725,30 @@ Output: `GraphConstructionPlan` or a blocked result with typed gaps.
 ### Research-local consumer handoff
 
 The Small Shop vertical must publish the neutral seam it exercises, not a
-fixture-shaped API. The research-local handoff contains three canonical data
-values:
+fixture-shaped API. The research-local handoff retains planning inputs but
+culminates in two canonical data values:
 
-1. `PopulationPlan`, containing exact mapping, transformation, identity,
-   conflict, recipe, source-shape, and policy references, with no occurrence
-   values or proposed writes.
-2. `GraphConstructionPlan`, containing the exact contract, machine, population,
-   source, base, implementation, and realization identities plus ordered
-   `ProposedOperation` values and typed construction gaps.
-3. `CandidateValidationReceipt`, binding the candidate and plan; effective
-   contract and protocol-machine identities; selected policy and projection
-   references; retained source identities; declared base; ordered operations;
-   executor identity; ordered typed results or refusals; and result or output
-   digest.
+1. `KnowledgeChangeSet`, binding the effective contract; source and evidence
+   closure; base ledger head and accepted-state digest; ordered primitive
+   operations; valid time; supersession; operation-local dependencies; and its
+   canonical digest.
+2. `CandidateValidationReceipt`, binding that change set, its retained planning
+   inputs, executor identity, ordered typed results or refusals, and result or
+   output digest.
 
-These shapes are frontend-neutral and contain no Small Shop or Malleus Code
-term. Small Shop is their first conformance fixture. The receipt is not a
-migration receipt, protocol-ledger event, accepted-KG identity, or future
-projection-closure record. This research boundary makes no stable public API
-claim; open graph-realization promotion decisions still apply.
+`PopulationPlan`, `GraphConstructionPlan`, and `OperationDependencyPlan` remain
+retained derivation inputs. They are not accepted state, domain identity, or an
+alternative consumer authority. These shapes are frontend-neutral and contain
+no Small Shop or Malleus Code term. Small Shop is their first conformance
+fixture. The receipt is not a migration receipt, protocol-ledger event,
+accepted-KG identity, or future projection-closure record. This research
+boundary makes no stable public API claim; open graph-realization promotion
+decisions still apply.
 
 ### Phase 6: Stage and verify
 
-The plan is converted to the existing `CandidateSubgraph` path. Structural
+The change set's ordered operations are converted to the existing
+`CandidateSubgraph` path. Structural
 refusals remain refusals. The compiler cannot filter or rewrite rejected
 operations after observing the gate. A new plan revision must preserve the
 failed attempt and its diagnostics.
@@ -753,9 +765,9 @@ selected, profile-specific monitor records and typed witnesses.
 
 Structural materialization produces a `StructuralGraphRealization` and makes no
 epistemic claim. If the Assent and semantic-history profiles are also selected,
-a candidate-bound `ACCEPT` may produce a `GovernedAcceptedRealization` through
-the existing protocol. `REJECT`, `DEFER`, and `CONTEST` leave that governed
-base graph unchanged.
+a change-set-bound `ACCEPT` may carry the atomic application in the same ledger
+event. The projector then derives `GovernedAcceptedRealization` by replay.
+`REJECT`, `DEFER`, and `CONTEST` leave accepted domain state unchanged.
 
 Output: a materialized structural snapshot, or, under the optional governance
 profiles, an accepted temporal graph version with exact protocol heads.
@@ -1006,6 +1018,7 @@ okg:StagedRealizationCandidate rdf:type rdfs:Class ;
 okg:GraphRealization rdf:type rdfs:Class ;
     rdfs:subClassOf mfg:GraphVersion ;
     mfg:derivedFrom okg:StagedRealizationCandidate ;
+    mfg:binds mfg:PersistedStructuralCandidateNonGovernedBoundary ;
     mfg:status mfg:Partial .
 
 okg:GraphRealizationAttestation rdf:type rdfs:Class ;
@@ -1613,8 +1626,9 @@ tests the boundary before defining a public API:
 3. `GE-020` assembles two nodes and one relation independently of recipe pattern
    order, with explicit local-reference dependencies and structural admission.
 4. Ten positive and negative cases freeze logical contracts, terminal facts,
-   member graphs, proposed operations, graph snapshots, lineage, diagnostics,
-   and semantic digests.
+   `OperationDependencyPlan` data, proposed operations, graph snapshots,
+   lineage, diagnostics, and semantic digests. Their retained v0 research wire
+   label is "member graph"; it does not denote another knowledge graph.
 5. Seven executable metamorphic obligations test repeated execution,
    formatting, safe prefix aliases, alpha renaming, and pattern permutation at
    the layers each transformation must preserve.

@@ -1,0 +1,107 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-016",
+      "CC-D18",
+      "CC-R06",
+      "CC-R09",
+      "CC-P10"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:36ec94355bfbbdc6e63cce255ee7e98e05521b5297ce36e12fdc4f38f5bcae65",
+        "before_digest": "sha256:f7ac3f98651164256e293cfd0eca5f106b562423a543b0fa5a8048dbfac4ae0e",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:e0400e55aa0bf575bd8b70d00d70f6cf4c5168202ac850c470f6e6977d0b489e",
+        "before_digest": "sha256:bb0e6cf3cfb8d11c3a8f5d64b78abb1a929cd3b1560dbe68bf55f7f38fd64c3c",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:2607bffd4c48aa2f94d05a3deabb6411b2ec37de2b86943f9981970f5ee5da00",
+        "before_digest": "sha256:2fe39e789f9e8e630f2a46db86d97cf46bf82a25bc2faecd162b640272d33353",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:d62c9a4dfcd3d90c4763798acbc1382a94191c17f517f1a511f71e30b7101b3b",
+        "before_digest": "sha256:bfd4309f2b5fe1230df1ca2f80c8efc921c0ca5355cbe7f7982d6208bb9dabb9",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:6509f1b8fce1aaee4af86f560222d8c38a98aad36abccf0ef42875fd4ceb5fed",
+        "before_digest": "sha256:a5b5df6f40c1073548f817a034f06a2eed7329ebc96b45b82583febba8d94f1c",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/rubric.yaml"
+      },
+      {
+        "after_digest": "sha256:24f031eaf47712c96492014f3f44fff0d792f72cd918285ab06dd461ffc88f33",
+        "before_digest": "sha256:862b1e4034dd471c268838fb1d243fceaf5c1cba5a0f5948e71448c274049cd3",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:930531cfbd0f2e3cdb630c8b7b554ed5cb824f072bb9b7c6f1c1029fd82a6522",
+        "before_digest": "sha256:dc99ea49e823c26635c9c31878dc2412654cddccd95268c8627a3b5d3b6f68a5",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:df1d241d3fab907b38ca666637535994a14f749207b6e3969d8c3a3a1ea0dfb4",
+        "before_digest": "sha256:3e6952e9d6478460fd1285e483073c9d6bf4f5a942d475c225ebb0b40b940373",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:9ed215646c7d828f897b904397899c45be1b9d0068781f4cd32fe776a79317bb",
+        "before_digest": "sha256:91e2d18ff2687487b1085d285c7d87e1e5762fab35d85b5a62f2f00986154d9e",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:cb2b504d45ddeea015633580e07977c1ca9ce15793d5021005a0121a42e9f89f",
+        "before_digest": "sha256:9dd508467f8555411c1593098af0e42da5c5f1b5291707ac3428025cb81d42fd",
+        "change": "MODIFIED",
+        "path": "tests/test_status.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:f45e5af850570b89e75f3578b00e9368e2c0fec9adbc6e26877d31154b23a268",
+  "entry_id": "OVR-000275",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8ec7337ed97ffdaf3ff1b4d456fbe6f98a978701dab07b4872b918558c1e3cbf",
+  "recorded_at": "2026-09-01T01:06:09Z",
+  "references": [
+    {"relation": "DEFINES", "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "docs/contract_compiler/index.md", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "src/malleus/inquisition/rubric.yaml", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_contract_compiler_integration.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_contract_compiler_ledger.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_inquisition.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_docs.py", "type": "DOCUMENT"},
+    {"relation": "DEFINES", "target": "tests/test_status.py", "type": "DOCUMENT"},
+    {"relation": "EVIDENCES", "target": "OVR-000274", "type": "ENTRY"},
+    {"relation": "AFFECTS", "target": "CC-D18", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-R06", "type": "WORKSTREAM"},
+    {"relation": "AFFECTS", "target": "CC-P10", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 275,
+  "subject": {
+    "id": "contract-compiler-od016-r23-guards",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind graph planning, public compiler guidance, and mechanical guards for revision 23.",
+  "why": "The supplementary revision stays within the ledger schema's bounded document list while preserving exact byte history for graph-planning terminology, the compiler handoff, the Malleus-self review rule, and every test that prevents a second state authority, unexplained graph base, or production bypass."
+}

@@ -41,6 +41,20 @@ definitions are in the
 | 4 | Domain rules | `LogicContract` + `PrologVerifier` | Your domain has invariants worth machine-checking ("a drug cannot strongly inhibit and strongly induce the same enzyme"). |
 | 5 | Decision records | Assent protocol, accepted-graph replay | You must prove later who accepted which change, under which policy, and what the graph said at any past moment. |
 
+Level 5 selects the optional semantic-history profile. Its accepted target uses
+one immutable `KnowledgeChangeSet` for each proposed domain-state change. All
+proposal, check, review, decision, and application events reference that same
+change-set identity. The one authoritative ordered ledger records those events,
+and a projector rebuilds the accepted temporal graph from them. Governed initial
+state is an empty graph plus a retained genesis change set, never an unexplained
+nonempty graph supplied from outside the history.
+
+This target does not make levels 1 through 4 invalid or incomplete. A project
+may persist and materialize structural candidates without selecting semantic
+history. Those results remain structurally checked, but they are non-governed
+and non-accepted as Malleus knowledge. Omitting this profile therefore gives up
+accepted-state provenance and replay claims, not the lower-level guarantees.
+
 The internal names for these levels live in `docs/IMPLEMENTATION_STATUS.md`
 (levels 2 through 5 are stages 2, 4, 5, and 6/7 there). You do not need the
 internal names to use the ladder.

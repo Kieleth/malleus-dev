@@ -1,0 +1,171 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 15269,
+      "path": ".claude/skills/malleus-dev/SKILL.md",
+      "sha256": "sha256:c813f19fa53ae4ae4e9aa0440203bc0877a3f15be60638c59cd5f7a72139fccf"
+    },
+    {
+      "byte_length": 11030,
+      "path": ".claude/skills/malleus-inquisitor/SKILL.md",
+      "sha256": "sha256:82e53d0b04a14fe9914551caa28e58c789c18a37d5b05276dcd0f6705b8123ee"
+    },
+    {
+      "byte_length": 18853,
+      "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "sha256": "sha256:36ec94355bfbbdc6e63cce255ee7e98e05521b5297ce36e12fdc4f38f5bcae65"
+    },
+    {
+      "byte_length": 21187,
+      "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "sha256": "sha256:e0400e55aa0bf575bd8b70d00d70f6cf4c5168202ac850c470f6e6977d0b489e"
+    },
+    {
+      "byte_length": 45020,
+      "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "sha256": "sha256:2607bffd4c48aa2f94d05a3deabb6411b2ec37de2b86943f9981970f5ee5da00"
+    },
+    {
+      "byte_length": 120081,
+      "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "sha256": "sha256:a4c69beb3349e5f726fced1fc6d98e02f271c349edcdc5ca90373c3fab4858be"
+    },
+    {
+      "byte_length": 101938,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "sha256": "sha256:cbc041a431d53f87e1f197ae44d1c0f4ffdb75a979597cb2711f1d0d52310c4e"
+    },
+    {
+      "byte_length": 337727,
+      "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "sha256": "sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a"
+    },
+    {
+      "byte_length": 41491,
+      "path": "design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md",
+      "sha256": "sha256:37e1135f9535f0072e821b2162ac3095ea9e9430b8f5694e6cf836fa0e404085"
+    },
+    {
+      "byte_length": 32135,
+      "path": "design/contract_compiler/conformance.md",
+      "sha256": "sha256:fc98f2001a9ee9073c3592549948939624fd1d4e91cd5871efcf4f69931b6407"
+    },
+    {
+      "byte_length": 114531,
+      "path": "design/contract_compiler/decisions.md",
+      "sha256": "sha256:cbf74cbbc9b5978e6e06350e6342d02bfe98a4c6a30abba33ccc1d4720a81dbb"
+    },
+    {
+      "byte_length": 26121,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:a343d903c27f8239294106fab7fe78bd384e3ccf9abf771093a1f691947c7b5b"
+    },
+    {
+      "byte_length": 23339,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:55e0c18ca3b047dea94154295cfae4d3415c2e536b6bde792648538106309432"
+    },
+    {
+      "byte_length": 40561,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:12767121efc92a58773d2e7d7e399ac9a5c83b1d0ddf5e1a82c005bef897e091"
+    },
+    {
+      "byte_length": 2413,
+      "path": "design/contract_compiler/workstreams/CC-D18/manifest.json",
+      "sha256": "sha256:e471b45531289bf6f54d2339799c39867ceaa29b2733b2d0ad2678dc5c8c164b"
+    },
+    {
+      "byte_length": 40221,
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "sha256:5fb5e0c218cb672ce48ab3e3523543a9ced060ed3608fd49ecbbff296afe28d7"
+    },
+    {
+      "byte_length": 23953,
+      "path": "docs/ASSENT_PROTOCOL.md",
+      "sha256": "sha256:597eb1f9cdf0562c3f7992c8a4a32cfcc9faa03359b129e970179c1a1f25de82"
+    },
+    {
+      "byte_length": 22799,
+      "path": "docs/PRINCIPLES.md",
+      "sha256": "sha256:80e1de8754d7bda1e10ae0ed28526530a3ea5ec872aa450a9e30ef00a6b7a2c1"
+    },
+    {
+      "byte_length": 37240,
+      "path": "src/malleus/inquisition/rubric.yaml",
+      "sha256": "sha256:6509f1b8fce1aaee4af86f560222d8c38a98aad36abccf0ef42875fd4ceb5fed"
+    },
+    {
+      "byte_length": 255502,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:930531cfbd0f2e3cdb630c8b7b554ed5cb824f072bb9b7c6f1c1029fd82a6522"
+    }
+  ],
+  "base_commit": "b75a7490c244ec93746a698a321d7b87ce7b2a43",
+  "checks": [
+    {
+      "check_id": "ccd18-red-tdd",
+      "method": "Run the new graph, registry, documentation, skill, and self-inquisition guards before adding the accepted boundary.",
+      "observed": "Commits 0f0d2ebea11399074e3f7871f4a0113be838538a and d4dc5cc2f16e5949954900126f3ca53badac550a retain the RED tests. They failed on the absent one-ledger change-set boundary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-state-authority",
+      "method": "Inspect the decision, canonical graph, semantic-log target, and compiler runway for exactly one state-change unit, one history, and one derived view.",
+      "observed": "KnowledgeChangeSet binds governed inputs and ordered primitive operations. The ledger alone admits it, while the accepted temporal graph is reconstructed by an identified projector.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-genesis-and-write-path",
+      "method": "Check initialization and all public write-path claims against the accepted authority model.",
+      "observed": "Governed replay starts from an empty graph and retained genesis change set. Direct graph materialization and persisted candidates remain non-governed and non-accepted, with no independent accepted-state write path.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-lifecycle-atomicity",
+      "method": "Inspect proposal, check, review, decision, and application bindings and the corrected ACCEPT-event boundary.",
+      "observed": "Every lifecycle event references the same immutable change-set identity. ACCEPT may carry the atomic application in one verified ledger event without collapsing the decision and application records.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-graph",
+      "method": "Parse all Markdown Turtle projections and canonical foundation graph revision 23, then inspect status uniqueness and dependency acyclicity.",
+      "observed": "All 29 Turtle blocks and canonical N-Triples contain the same 1,852 triples. All 395 status subjects have one status. The 109-node, 109-edge dependsOn graph is acyclic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-runway",
+      "method": "Inspect the strict integration manifest, decision card, and compiler program for dependency closure.",
+      "observed": "The 72-workstream registry has 34 present cards. Machine compilation and Small Shop realization consume the decision, and production KnowledgeGraph now depends on the KnowledgeChangeSet handoff.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-operation-plan-terminology",
+      "method": "Inspect current and planned GraphRecipe artifacts for names that could imply a second knowledge graph or state authority.",
+      "observed": "OperationDependencyPlan is the semantic term. Existing member-graph.json, member-graph CLI, and report wording are explicitly retained v0 research wire labels only and cannot name a successor wire or public API.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-public-boundary",
+      "method": "Run the focused public-document, skill, rubric, registry, and graph guards.",
+      "observed": "Nine focused guards passed. They distinguish the optional semantic-history profile, accepted target, current external-base runtime limitation, structural-only use, and Malleus-self deviation rule.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccd18-kiss-scope",
+      "method": "Inspect the governed diff for runtime, ontology, dependency, package, API, candidate, selection, or worker-ledger expansion.",
+      "observed": "The transaction changes design, documentation, canonical graph data, a zero-scope card, integration metadata, review rules, governance evidence, and tests only. It adds no runtime or ontology implementation.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The generic KnowledgeChangeSet artifact, compiler lowering, and runtime interpreter are accepted targets, not shipped public APIs.",
+    "Current Python accepted-graph replay still consumes a caller-supplied GraphBaseArtifact. It has not cut over to empty state plus retained genesis change sets.",
+    "No public wire grammar, stable adapter API, or alternate-language projector is implemented by this decision.",
+    "Cross-contract ontology change remains future work and cannot be claimed from the current single-ontology ledger hash.",
+    "Persisted structural candidates remain useful outside semantic history but cannot claim governed or accepted Malleus knowledge."
+  ],
+  "recorded_at": "2026-09-01T01:06:07Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-D18"
+}

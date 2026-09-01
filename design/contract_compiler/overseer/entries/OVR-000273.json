@@ -1,0 +1,64 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-016"
+    ],
+    "consequences": [
+      "The compiler runway must lower accepted source, population, and operation plans into one exact frontend-neutral KnowledgeChangeSet before governed domain-state admission.",
+      "The protocol machine may produce, validate, or admit exact change-set and receipt data, but only an identified projector folding verified ledger history may derive the accepted temporal graph.",
+      "Production KnowledgeGraph, staging, projection, Assent, and protocol cutovers inherit the KnowledgeChangeSet boundary through the Small Shop vertical dependency.",
+      "Persisted structural candidates remain independently useful but cannot claim governed or accepted Malleus knowledge without semantic-history admission."
+    ],
+    "constraints": [
+      "KnowledgeChangeSet is the one immutable frontend-neutral domain-state change unit and binds contract, source and evidence closure, base ledger and state identity, ordered operations, valid time, supersession, local dependencies, and digest.",
+      "Proposal, checks, review, decision, and application remain separate lifecycle records and reference the same immutable change-set identity.",
+      "There is one authoritative ordered semantic and protocol ledger and one replay-derived accepted temporal graph with no independent accepted-state write path.",
+      "Governed initial state is an empty graph plus a completely retained genesis change set or identified genesis set; a nonempty external base cannot be unexplained accepted knowledge.",
+      "PopulationPlan, GraphConstructionPlan, GraphRecipe expansion, and OperationDependencyPlan are derivation inputs, not another knowledge graph, ledger, state authority, or domain identity.",
+      "An ACCEPT decision event may carry failure-atomic application while preserving distinct decision and application records.",
+      "Ontology evolution later requires an explicit cross-contract KnowledgeChangeSet or migration change set.",
+      "This decision creates no runtime or ontology implementation, public wire grammar, stable API, candidate, selection, or worker ledger."
+    ],
+    "decision_id": "OD-016",
+    "satisfies_workstreams": [
+      "CC-D18"
+    ],
+    "selected_option": "One ledger admits immutable KnowledgeChangeSet values; accepted graphs are replay-only",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:4ebc0ac0d6f1d5844ff3bca118ebca9c8fac846e1a7df91623dadb35ceaea107",
+  "entry_id": "OVR-000273",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:dea099e6042faf9ba56668edc25de9deda88aabba68ff6aafdba759a1570f653",
+  "recorded_at": "2026-09-01T01:06:07Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-016-single-ledger-knowledge-change-architecture",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-016",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-D18",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 273,
+  "subject": {
+    "id": "OD-016",
+    "type": "DECISION"
+  },
+  "summary": "Make immutable KnowledgeChangeSet values the sole governed domain-state change unit.",
+  "why": "Graph planning, semantic history, and accepted projection previously met without one exact public state-change artifact. That gap allowed a plan, materializer, external graph base, or direct graph API to look like a second authority. The decision binds every governed change to one immutable unit admitted through one ledger and makes every accepted graph a replay-derived view, while preserving simpler structural-only adoption as an optional lower profile."
+}

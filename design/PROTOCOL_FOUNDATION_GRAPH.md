@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 22,
-`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
+revision 23,
+`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -751,6 +751,107 @@ mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:TemporalMetadataDigest .
 mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:SourceProtocolLedgerHead .
 mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:AcceptanceHead .
 mfg:AcceptedTemporalGraphVersionHash mfg:binds mfg:MaterializationHead .
+```
+
+### 4.2.1 One semantic change, one ledger, one derived graph
+
+`OD-016` closes the state-authority gap left between graph planning and
+protocol admission. `KnowledgeChangeSet` is the one public artifact name. A
+change set binds the exact effective contract, retained source and evidence
+closure, base ledger and accepted-state coordinates, ordered primitive
+operations, valid time, supersession, operation-local dependencies, and its
+canonical digest.
+
+There is one authoritative ordered semantic and protocol history. Proposal,
+checks, review, and decision all cite the same immutable change-set identity.
+The ACCEPT event may carry its failure-atomic application. The accepted
+temporal graph is one replay-derived view, never an independently writable
+store. Initial accepted domain state is an empty graph plus a retained genesis
+change set. An integrity or authority anchor may precede it only when that
+anchor contributes no domain records.
+
+GraphRecipe, `PopulationPlan`, `GraphConstructionPlan`, and
+`OperationDependencyPlan` are derivation inputs. The operation plan orders
+writes inside one proposed change set. It is not a knowledge graph, ledger,
+graph version, state authority, or domain identity. The older experimental
+`ConstructionMemberGraph` name is excluded because it implied another graph.
+
+Persisted structural candidates remain permitted, but are non-governed and
+non-accepted until ledger admission. Protocol-machine effects may produce,
+validate, or admit exact change-set and receipt data; they expose no accepted
+graph mutation capability. Cross-contract ontology evolution remains future
+work and must later enter as an explicit cross-contract change or migration
+change set.
+
+```turtle
+@prefix okg: <https://malleus.dev/ontology-kg-realization/> .
+
+<https://malleus.dev/contract-compiler/OD-016> rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-09-01" ;
+    mfg:selects mfg:SingleLedgerKnowledgeChangeSetArchitecture ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:SingleLedgerKnowledgeChangeSetArchitecture rdf:type mfg:DesignObject ;
+    mfg:binds mfg:OneAuthoritativeSemanticHistoryBoundary ;
+    mfg:binds mfg:ReplayDerivedAcceptedTemporalGraphOnlyBoundary ;
+    mfg:binds mfg:RetainedGenesisKnowledgeChangeSetBoundary ;
+    mfg:binds mfg:LifecycleSharedKnowledgeChangeSetIdentityBoundary ;
+    mfg:binds mfg:MachineEffectsAdmitKnowledgeChangeSetOnlyBoundary ;
+    mfg:binds mfg:NoIndependentAcceptedGraphMutationBoundary ;
+    mfg:binds mfg:TransitionLocalOperationDependencyPlanBoundary ;
+    mfg:binds mfg:PersistedStructuralCandidateNonGovernedBoundary ;
+    mfg:binds mfg:AtomicAcceptApplicationEventBoundary ;
+    mfg:binds mfg:CrossContractKnowledgeChangeSetMigrationFutureBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:OneAuthoritativeSemanticHistoryBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:ReplayDerivedAcceptedTemporalGraphOnlyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:RetainedGenesisKnowledgeChangeSetBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:LifecycleSharedKnowledgeChangeSetIdentityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:MachineEffectsAdmitKnowledgeChangeSetOnlyBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:NoIndependentAcceptedGraphMutationBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:TransitionLocalOperationDependencyPlanBoundary rdf:type mfg:Boundary ;
+    mfg:binds okg:PopulationPlan ;
+    mfg:binds okg:GraphConstructionPlan ;
+    mfg:binds okg:OperationDependencyPlan ;
+    mfg:status mfg:AcceptedDesign .
+mfg:PersistedStructuralCandidateNonGovernedBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:AtomicAcceptApplicationEventBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:CrossContractKnowledgeChangeSetMigrationFutureBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:KnowledgeChangeSet rdf:type rdfs:Class ;
+    rdfs:subClassOf mfg:DesignObject ;
+    mfg:governedBy mfg:EffectiveContract ;
+    mfg:identifiedBy mfg:KnowledgeChangeSetHash ;
+    mfg:status mfg:Candidate .
+
+mfg:KnowledgeChangeSetHash mfg:binds mfg:EffectiveContractHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetSourceEvidenceClosureHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetBaseLedgerHead .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetBaseStateHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetOrderedOperationManifestHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetValidTimeCoordinateHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetSupersessionHash .
+mfg:KnowledgeChangeSetHash mfg:binds mfg:KnowledgeChangeSetLocalDependencyHash .
+
+okg:OperationDependencyPlan rdf:type rdfs:Class ;
+    rdfs:subClassOf mfg:DesignObject ;
+    mfg:produces okg:ProposedOperationSequence ;
+    mfg:supersedes okg:ConstructionMemberGraph ;
+    mfg:status mfg:Candidate .
+
+okg:ConstructionMemberGraph rdf:type mfg:DesignObject ;
+    mfg:status mfg:Excluded .
 ```
 
 ### 4.3 Contract facts

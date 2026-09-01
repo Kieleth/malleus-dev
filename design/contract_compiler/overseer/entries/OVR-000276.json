@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "ccd18-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T01:06:10Z",
+    "claims": [
+      "KnowledgeChangeSet is the one immutable frontend-neutral domain-state change unit and binds exact contract, closure, prior state, ordered operation, temporal, supersession, dependency, and digest inputs.",
+      "One ordered semantic and protocol ledger is authoritative. One accepted temporal graph is derived by an identified projector replaying verified change sets, with no independent accepted-state write path.",
+      "Governed replay starts empty and receives its first domain records from a retained genesis change set or identified genesis set; current external-base runtime behavior remains an explicit implementation gap.",
+      "Proposal, checks, review, decision, and application cite the same change-set identity. ACCEPT may carry failure-atomic application without collapsing their distinct lifecycle records.",
+      "Foundation graph revision 23 and all Markdown projections contain the same 1,852 triples with zero set differences. All 395 status subjects have one status and the 109-node, 109-edge dependsOn graph is acyclic.",
+      "The strict 72-workstream DAG has 34 present cards and makes production KnowledgeGraph depend on the Small Shop KnowledgeChangeSet handoff. Population and operation plans remain derivation inputs.",
+      "Public guidance preserves optional lower profiles and labels persisted structural candidates non-governed and non-accepted until ledger admission.",
+      "The transaction adds design, documentation, canonical graph data, a zero-scope card, integration metadata, review rules, retained evidence, and tests only. It changes no runtime or ontology implementation."
+    ],
+    "limitations": [
+      "No generic KnowledgeChangeSet runtime artifact, compiler lowering, public wire grammar, stable API, or alternate-language projector is implemented.",
+      "Current Python accepted-graph replay still consumes a caller-supplied GraphBaseArtifact rather than empty state plus retained genesis change sets.",
+      "Cross-contract ontology migration remains future work.",
+      "The self-inquisition rule is review-driven rather than a syntax-aware detector."
+    ]
+  },
+  "entry_hash": "sha256:18664a1163bb68bb2d4b944ac8864970c16d735c1455fb5416b8102f6cb21bf4",
+  "entry_id": "OVR-000276",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f45e5af850570b89e75f3578b00e9368e2c0fec9adbc6e26877d31154b23a268",
+  "recorded_at": "2026-09-01T01:06:10Z",
+  "references": [
+    {"digest": "sha256:761f1583601c5fe80f374a76e88b0a88792ac109b2a9085806cf1ae7a43527d9", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-D18.json", "type": "EVIDENCE"},
+    {"relation": "EVIDENCES", "target": "OVR-000273", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000274", "type": "ENTRY"},
+    {"relation": "EVIDENCES", "target": "OVR-000275", "type": "ENTRY"},
+    {"relation": "CANONICALIZES", "target": "https://malleus.dev/contract-compiler/OD-016", "type": "CANONICAL_URI"},
+    {"relation": "AFFECTS", "target": "CC-D18", "type": "WORKSTREAM"}
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 276,
+  "subject": {
+    "id": "CC-D18-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the single-ledger KnowledgeChangeSet architecture and dependency closure.",
+  "why": "The retained report binds the exact decision, graph, semantic-history target, integration DAG, public boundaries, self-inquisition rule, and test bytes. Its checks establish one change-set unit, one ledger authority, replay-only accepted state, retained genesis, optional structural-only use, and zero runtime scope."
+}

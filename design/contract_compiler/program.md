@@ -15,7 +15,7 @@ schema-valid blocks under [`overseer/entries/`](overseer/entries/), governed by
 [`overseer/ledger.schema.json`](overseer/ledger.schema.json). The former
 handover ledger is a frozen pointer, not a second event store.
 
-CC-000 is the machine gate for parallel work. The complete 71-workstream DAG,
+CC-000 is the machine gate for parallel work. The complete 72-workstream DAG,
 reserved scopes, owner-separation rules, active card digests, ledger checkpoint,
 and selected results live in [`integration.json`](integration.json), validated
 against [`integration.schema.json`](integration.schema.json). Active cards under
@@ -124,6 +124,15 @@ Policy and projection programs stay separate and are referenced by exact
 identity. No profile-specific event, record, or field name belongs in the
 interpreter, and there is no arbitrary-code escape hatch. The current Python
 handlers remain regression evidence until the later no-fallback Assent cutover.
+
+Revision 23 accepts `OD-016`: `KnowledgeChangeSet` is the one frontend-neutral
+immutable state-change artifact. One authoritative ordered semantic and
+protocol history admits change sets, and one evolving temporal domain-KG
+projection is derived only by replay. Population and construction planning are
+derivation inputs, never a second graph or state authority. Persisted structural
+candidates remain non-governed and non-accepted until admitted through the
+ledger. The first accepted domain state starts from an empty graph and a
+retained genesis change set.
 
 The operator excluded migration feature development from this foundation block.
 `OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
@@ -341,6 +350,7 @@ decisions remain open.
 | CC-D15 | Close OD-001 consumer-bundle direction | none | Operator approves one bundle per consumer or explicitly defers it |
 | CC-D16 | Close exact consumer-bundle schema and canonical grammar | CC-D06, CC-D13, CC-D15 | Accepted fields, examples, counterexamples, and grammar, or a typed not-applicable record when OD-001 is deferred |
 | CC-D17 | Close OD-015 executor-only protocol-machine architecture | CC-D05, CC-D06 | Exact neutral-contract, protocol-machine, policy, projection, interpreter, capability, identity, conformance, and no-escape boundaries accepted without selecting a DSL or implementing runtime code |
+| CC-D18 | Close OD-016 single-ledger KnowledgeChangeSet architecture | CC-D10, CC-D17 | One immutable change-set identity, retained genesis, ordered operations, local dependencies, ledger-only accepted-state authority, replay-derived temporal KG, structural-candidate status, machine-effect restriction, and deferred cross-contract migration accepted without runtime or ontology implementation |
 
 CC-D05 permits computed internal candidate fact and fact-set digests only.
 CC-D06 closes the three semantic roles and logical composition identity inputs;
@@ -413,11 +423,11 @@ Replay never invokes it. It has no dependency edge in this graph, and this progr
 | CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
 | CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
 | CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018, CC-021, CC-022 | Frontend, direct-fact input, and each independent oracle match exactly |
-| CC-R06 | Strict protocol-machine program and effective contract | CC-R05, CC-D07, CC-D10, CC-D17, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces compile into one closed, identity-bound machine program with typed refusals and declared capabilities |
+| CC-R06 | Strict protocol-machine program and effective contract | CC-R05, CC-D07, CC-D10, CC-D17, CC-D18, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces compile into one closed, identity-bound machine program with typed refusals and declared capabilities; graph-related effects produce, validate, or admit exact change-set and receipt data and expose no accepted-graph mutation capability |
 | CC-R07 | Reloadable experimental effective-contract and machine artifact | CC-R06, CC-010, CC-012, CC-014, CC-016, CC-021, CC-022 | Deep immutability, corruption refusal, unknown grammar refusal, deterministic reload, and exact machine-program identity |
 | CC-R10 | Generic protocol-machine interpreter proof | CC-R07, CC-D17 | Independent lean-review conformance proves the same accepted state, typed refusal, ordering, and failure atomicity; the executor contains no profile-specific event, record, or field name and exposes no arbitrary-code escape hatch |
 | CC-R08 | Whole-pipeline conformance attestation | CC-R01, CC-R02, CC-R03, CC-R04, CC-R05, CC-R06, CC-R07, CC-R10 | All three corpora, prior slices, current bundled ontologies, mutation adequacy, and cross-implementation machine replay parity |
-| CC-R09 | Research-local neutral source-to-ABox planning boundary, proven by Small Shop | CC-R08, CC-D07, CC-D10, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal; publish a frontend-neutral PopulationPlan and GraphConstructionPlan artifact boundary plus a canonical generic validation receipt, with no stable public API claim |
+| CC-R09 | Research-local neutral source-to-ABox change-set boundary, proven by Small Shop | CC-R08, CC-D07, CC-D10, CC-D18, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal; publish a frontend-neutral KnowledgeChangeSet plus a canonical generic validation receipt, while PopulationPlan and operation-dependency plan remain derivation inputs, with no stable public API claim |
 
 The first foundation block is complete only at CC-R08. Passing one stage does not
 authorize production use.
@@ -436,14 +446,14 @@ artifact-reload evidence passes; production has no fallback.
 | CC-PKG01 | One-distribution compiler and runtime-path isolation boundary | CC-P01, CC-D13 | One normal installation includes compiler and LinkML; artifact-backed runtime probes block LinkML imports; compiler environment is exact and reproducible |
 | CC-W01 | New-epoch persisted-wire reader and writer | CC-PKG01, CC-D04 | Epoch is checked before semantic decode; stable typed refusal and its public diagnostic identifier are defined; no fallback or bridge is reachable |
 | CC-W02 | Frozen historic-wire hard-break proof | CC-W01, CC-X04 | Every frozen 0.11 and 0.13 top-level input receives the selected typed hard break without rewriting; embedded artifacts remain NOT_REACHED |
-| CC-P10 | KnowledgeGraph cutover | CC-P01, CC-W02 | Existing KG suite plus themed record and graph traces |
-| CC-P11 | Staging cutover | CC-P10 | Existing staging suite plus batch traces |
+| CC-P10 | KnowledgeGraph structural executor and view cutover | CC-P01, CC-W02, CC-R09 | Existing KG suite plus themed record and graph traces; no direct accepted-state authority or mutation path |
+| CC-P11 | Change-set operation staging cutover | CC-P10 | Existing staging suite plus one change set's ordered operations and operation-local dependency traces |
 | CC-P12 | Logic cutover | CC-P10 | Existing logic suite and fact identity checks |
 | CC-P13 | Prolog verifier cutover | CC-P11, CC-P12 | Existing verifier and isolation suites |
-| CC-P19 | Neutral projection and ledger protocols remove the concrete Accepted-to-Assent type cycle | CC-P10, CC-P11, CC-P12 | Concrete runtime import and type check are absent; protocol conformance tests pass |
-| CC-P20 | Accepted projection cutover | CC-P19 | Existing projection and graph-base suites |
-| CC-P21 | Assent hard cutover | CC-P12, CC-P19, CC-P20, CC-R10 | Existing decision, replay, and authorization suites plus deletion guards proving no handwritten protocol transition path or fallback remains |
-| CC-P22 | Orchestration and Protocol cutover | CC-P21 | Existing orchestration and protocol suites |
+| CC-P19 | Neutral ledger appender and accepted-change-set projector protocols remove the concrete Accepted-to-Assent type cycle | CC-P10, CC-P11, CC-P12 | Concrete runtime import and type check are absent; appender and projector conformance tests pass without an independent accepted-state writer |
+| CC-P20 | Accepted projection cutover | CC-P19 | Replay starts from an empty graph and retained genesis change set; full and incremental replay converge; the out-of-band accepted graph base is absent from the accepted path |
+| CC-P21 | Assent hard cutover | CC-P12, CC-P19, CC-P20, CC-R10 | Every lifecycle record binds the same immutable KnowledgeChangeSet identity; ACCEPT may carry atomic application; machine effects admit data only; deletion guards prove no handwritten transition, direct accepted-graph mutation, or fallback remains |
+| CC-P22 | Orchestration and Protocol cutover | CC-P21 | Existing orchestration and protocol suites plus a bypass guard proving every governed domain change enters the ledger before projection |
 | CC-P30 | Recon cutover | CC-P10, CC-W02, CC-P42 | Recon consumer suite and frozen typed hard-break outcome |
 | CC-P31 | OCR cutover | CC-P10, CC-W02 | OCR profile and evidence-integrity suites |
 | CC-P40 | Inquisition compiler and provenance cutover | CC-P01, CC-PKG01 | Source-side checks use compiler boundary only |

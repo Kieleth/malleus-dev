@@ -2670,7 +2670,7 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
         for token in MarkdownIt("commonmark").parse(path.read_text(encoding="utf-8"))
         if token.type == "fence" and token.info.strip() == "turtle"
     ]
-    assert len(blocks) == 28
+    assert len(blocks) == 29
     canonical_path = ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.ttl"
     source = canonical_path.read_bytes()
     body = [
@@ -2681,7 +2681,7 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1792
+    assert len(canonical) == 1852
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
@@ -3322,7 +3322,7 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 380
+    assert len(statuses) == 395
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -3403,6 +3403,12 @@ def test_knowledge_change_set_target_has_one_state_authority() -> None:
     assert "Three graphs must remain distinct" not in recipe
     assert "Three artifacts must remain distinct" in recipe
     assert "`OperationDependencyPlan` is not a knowledge graph" in recipe
+    assert "retained v0 research wire labels" in recipe
+    assert "`OperationDependencyPlan` data, not another knowledge graph" in recipe
+    assert "Member-graph assembly and operation ordering." not in recipe
+    assert "member graphs, proposed operations" not in (
+        ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+    ).read_text(encoding="utf-8")
 
 
 def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:

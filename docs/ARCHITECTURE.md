@@ -389,6 +389,20 @@ the Stage 4 structural candidate to the Stage 6 epistemic decision without
 collapsing their meanings. Projects that need only structural admission may
 stop before this layer.
 
+The accepted portable target uses one immutable, frontend-neutral
+`KnowledgeChangeSet` as the domain-state change unit. Proposal, checks, review,
+decision, and application all reference its exact identity. One authoritative
+ordered ledger records the lifecycle, and the accepted temporal graph is a
+replay-derived view. Its governed initial state is an empty graph plus a
+retained genesis change set or identified genesis set. There is no independent
+accepted-state write path. ACCEPT and atomic application may share one verified
+ledger event, provided that event retains the distinct decision and application
+records and validates them together before any derived graph swap.
+
+The current Python runtime predates that generic artifact. It represents the
+same narrow path with a `CandidateSubgraphArtifact`, an
+`AcceptedGraphApplication`, and a caller-supplied `GraphBaseArtifact`:
+
 ```text
 Externally supplied graph
   + GraphBaseArtifact
@@ -419,6 +433,12 @@ application replay both restage the exact writes against the reconstructed
 accepted graph and recompute all digests. A candidate-bound `ACCEPT` requires
 one application in the same event. Non-accepting verdicts require none. The
 graph is swapped only after the complete event validates.
+
+Direct candidate persistence or `materialize_into()` remains a structural
+facility. It may be useful without semantic history, but its result is
+non-governed and non-accepted as Malleus knowledge. The current external graph
+base and missing generic `KnowledgeChangeSet` therefore remain explicit
+limitations, not alternate accepted-state authorities.
 
 Six digest or head commitments remain distinct: `protocol_head_hash`,
 `acceptance_head`, `materialization_head`, `accepted_history_state_digest`,
@@ -463,7 +483,7 @@ bytes:
 
 ```text
 accepted_history(t) =
-  fold(projector, initial_base, verified_protocol_prefix(t), side_inputs)
+  fold(projector, empty_graph, verified_protocol_prefix(t), side_inputs)
 
 view(t, v) =
   resolve(accepted_history(t), interpretation_profile, valid_time=v)

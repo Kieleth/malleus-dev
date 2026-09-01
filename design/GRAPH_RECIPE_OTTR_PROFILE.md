@@ -20,8 +20,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 22,
-`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
+revision 23,
+`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
 
 Evidence:
 [`OTTR_SUFFICIENCY_AUDIT.md`](../research/ontology_driven_kg_realization/OTTR_SUFFICIENCY_AUDIT.md)
@@ -70,7 +70,7 @@ CompiledGraphRecipe
   + typed invocation arguments
   + expansion budget
   -> terminal Malleus construction facts
-  -> canonical operation-member graph
+  -> canonical operation-dependency plan
   -> ordered ProposedOperation values
 
 SourceMappingContract
@@ -85,11 +85,15 @@ PopulationPlan
   + source artifacts
   + backend projection
   -> GraphConstructionPlan
+  -> KnowledgeChangeSet proposal
   -> existing staging and assent path
 ```
 
 GraphRecipe owns topology expansion. It does not own the complete graph
-realization.
+realization. `PopulationPlan`, `GraphConstructionPlan`, and
+`OperationDependencyPlan` are derivation artifacts for one proposed
+`KnowledgeChangeSet`. None is a knowledge graph, graph version, ledger, store,
+state authority, or domain identity.
 
 ## 3. Normative references
 
@@ -174,7 +178,7 @@ may update these pins through a superseding decision.
 5. A property-only add-on may target a member anchored by exactly one `Record`
    in another invocation in the same plan. A member without exactly one
    plan-wide anchor is invalid.
-6. Terminal facts assemble into a member dependency graph. Dependencies must
+6. Terminal facts assemble into an operation-dependency plan. Dependencies must
    be acyclic and every referenced member must resolve. Every reference to a
    record created in the same plan requires `DependsOn`, including relation
    endpoints, signal bearers, and class-valued properties.
@@ -345,7 +349,7 @@ without changing semantic identity when the parsed recipe remains equivalent.
 
 The first-slice research runner uses a narrowed `GraphConstructionPlan`
 identity containing the logical-contract digest, sorted invocation digests,
-complete member graph, and ordered proposed operations. Mapping, transform,
+complete operation-dependency plan, and ordered proposed operations. Mapping, transform,
 conflict, source, and backend-projection identities enter later experiments.
 Until then, the first-slice digest is not the identity of the complete protocol
 plan described above.
@@ -474,9 +478,9 @@ okg:CompiledGraphRecipe
 okg:RecipeExpansionResult
     mfg:derivedFrom okg:CompiledGraphRecipe ;
     mfg:dependsOn okg:GraphRecipeInvocation ;
-    mfg:produces okg:ConstructionMemberGraph .
+    mfg:produces okg:OperationDependencyPlan .
 
-okg:ConstructionMemberGraph
+okg:OperationDependencyPlan
     mfg:dependsOn okg:MalleusConstructionBaseVocabulary ;
     mfg:produces okg:ProposedOperationSequence .
 

@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 22,
-`sha256:1f49f044246f5aa2455eb3d6d26aa0ada101c1e1b694053423dcf1e0b07e9ff4`
+revision 23,
+`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
 
 The 0.11.0 consolidation after that baseline adds precision-aware valid time,
 the accepted `OKG-D012` maintainer doctrine, explicit release guardrails, and
@@ -147,12 +147,20 @@ PopulationPlan
   + source artifacts
   + backend projection
   -> GraphConstructionPlan
+  -> OperationDependencyPlan
   -> ordered existing ProposedOperation values
-  -> isolated CandidateSubgraph
-  -> monitors and epistemic decision
-  -> accepted GraphRealization
+  + source/evidence closure + base ledger/state + valid time + supersession
+  -> KnowledgeChangeSet
+  -> isolated CandidateSubgraph structural validation
+  -> monitors, review, and epistemic decision in one ProtocolLedger
+  -> replay-derived accepted temporal KG
   -> GraphRealizationAttestation
 ```
+
+The plans are derivation artifacts for one change set, not additional knowledge
+graphs or state authorities. A persisted structural realization remains
+non-governed and non-accepted until its exact change set is admitted through the
+ledger.
 
 OTTR owns only finite typed topology expansion. It does not own mapping,
 transformation, identity, collision handling, provenance, ordering, atomicity,

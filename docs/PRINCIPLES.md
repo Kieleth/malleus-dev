@@ -240,23 +240,37 @@ and applied. Within that profile it is the authority for those protocol
 commitments. It is not factual truth about the domain, and projects that do not
 claim this profile need not use it.
 
+The accepted target makes one immutable, frontend-neutral
+`KnowledgeChangeSet` the unit of domain-state change. It binds the governing
+contract, source and evidence closure, prior ledger and state identity, ordered
+primitive operations, valid time, supersession, local operation dependencies,
+and its own digest. Every lifecycle event references the same immutable
+change-set identity. ACCEPT and atomic application may share one verified
+ledger event; this preserves distinct lifecycle records while making the state
+change failure-atomic.
+
 The complete projection contract Malleus is working toward requires identified
-inputs, initial state, projector, contract and interpretation profiles, side
-inputs, transaction prefix, and valid-time query. The proposed model is:
+inputs, projector, contract and interpretation profiles, side inputs,
+transaction prefix, and valid-time query. Governed history starts from an
+empty graph plus a retained genesis change set or identified genesis set. The
+proposed model is:
 
 ```text
 accepted_history(t) =
-  fold(projector, initial_base, verified_protocol_prefix(t), side_inputs)
+  fold(projector, empty_graph, verified_protocol_prefix(t), side_inputs)
 
 view(t, v) =
   resolve(accepted_history(t), interpretation_profile, valid_time=v)
 ```
 
 This is the log-primary lineage articulated by Kreps and Kleppmann, combined
-with Malleus's semantic and epistemic boundaries. If a store has an independent
-write path, it is another authority and needs reconciliation. A future closure
-manifest should refuse a missing replay input and localize divergence rather
-than guess. Core does not yet provide that generic mechanism.
+with Malleus's semantic and epistemic boundaries. There is one authoritative
+ordered ledger and one replay-derived accepted temporal graph. There is no
+independent accepted-state write path. A persisted structural candidate may be
+useful outside this profile, but it remains non-governed and non-accepted until
+the ledger admits its exact change set. A future closure manifest should refuse
+a missing replay input and localize divergence rather than guess. Core does not
+yet provide that generic mechanism.
 
 The current core supplies the JSONL protocol authority and an in-memory
 NetworkX accepted projection. It does not yet ship generic SQLite, central
@@ -269,6 +283,10 @@ authentic, independently retained expected head and event count. Historical
 ledger. A selected-prefix checkpoint alone remains valid after removal of a
 later tail and therefore does not authenticate that tail. Core retains no
 checkpoint itself, and the ledger is not externally witnessed or tamper-proof.
+The current projector also starts from a caller-supplied graph base rather than
+the accepted empty-plus-genesis boundary, and the runtime does not yet expose a
+generic `KnowledgeChangeSet` artifact. Those are implementation gaps against
+the accepted target, not licenses for a second state authority.
 
 Stronger integrity belongs behind a separate contract boundary. A witness can
 consume a committed protocol-ledger head and emit a signed or transparency-

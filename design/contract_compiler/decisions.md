@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 22
+## Accepted directions in canonical graph revision 23
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -401,12 +401,13 @@ materialization remains pending.
 | OD-013 | One future distribution with compiler and LinkML in the normal installation | This is a target topology, not a claim about current packaging or a LinkML-absent install |
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
 | OD-015 | Protocol authority is an exact machine program executed by a generic interpreter | No DSL, public API, or shipped generic interpreter is claimed yet; current Python remains comparison evidence until hard cutover |
+| OD-016 | One immutable `KnowledgeChangeSet` enters one ledger and is projected into one accepted temporal KG | Structural candidates may persist but remain explicitly non-governed and non-accepted; runtime cutover and cross-contract migration remain future work |
 
 The operator also excluded migration feature development from the foundation
 block. That is an execution-scope instruction, not approval to reuse an old
 wire field with new meaning.
 
-## Accepted compiler decisions through 2026-08-31
+## Accepted compiler decisions through 2026-09-01
 
 These choices are design authority. They do not implement a compiler, resolver,
 wire reader, package split, fixture, or publication.
@@ -1701,7 +1702,66 @@ outside the trusted compiler, normal review, and deterministic replay boundary.
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-015`. `CC-D17` is complete.
 
-## Remaining decisions after revision 22
+### OD-016: single-ledger knowledge-change architecture
+
+Decision state: ACCEPTED, 2026-09-01
+
+KnowledgeChangeSet is the one frontend-neutral immutable state-change artifact.
+There is one authoritative ordered semantic and protocol history and one
+evolving temporal domain-KG projection. The ledger is authority; the projector
+derives current and historical graph views by replay. No planner, compiler,
+materializer, repair tool, or caller has an independent accepted-state write
+path.
+
+One change set binds its exact effective-contract identity, retained source and
+evidence closure, base ledger head, base accepted-state digest, ordered primitive
+operation manifest, valid-time coordinates, supersession declarations,
+operation-local dependencies, and canonical change-set digest. Reordering
+operations or changing any bound semantic input changes its identity. Local
+operation dependencies compose several primitive writes into one atomic domain
+change; they do not form another knowledge graph or authoritative DAG.
+
+Proposal, checks, review, and decision remain ordered protocol events and carry
+the same immutable `KnowledgeChangeSet` identity. The ACCEPT decision event may
+contain the atomic application. This preserves failure atomicity without
+creating an independent application authority. Refusal may append protocol
+history but leaves accepted domain state unchanged.
+
+The initial accepted domain state is the empty graph. Its first domain-state
+contribution is a retained genesis change set, or a completely retained and
+identified genesis set. An external protocol-integrity or authority anchor may
+precede it only when that anchor contributes no unexplained domain records. An
+out-of-band nonempty accepted graph base is not part of the target architecture.
+
+Protocol-machine effects may produce, validate, or admit exact change-set and
+receipt data. They must not mutate the accepted temporal graph directly. The
+identified projector may materialize writes while folding a verified ledger
+event; that is replay implementation, not a second write authority.
+
+`PopulationPlan`, `GraphConstructionPlan`, GraphRecipe expansion, and the
+operation-dependency plan are derivation inputs. They are not graph versions,
+ledgers, stores, state authorities, or domain identities. OTTR expands reusable
+topology into operations inside a proposed change set and never writes a graph.
+
+A persisted structural candidate remains non-governed and non-accepted. This
+preserves modular use of Malleus's structural tools. It becomes governed Malleus
+knowledge only after admission through the authoritative ledger. Ephemeral
+scratch candidates remain permitted under the same rule.
+
+Ontology evolution later requires an explicit cross-contract
+`KnowledgeChangeSet` or migration change set binding source and target contract
+identities, mapping identity, affected records, and the new epoch boundary. The
+current single-ontology hash and separate migration receipt do not implement
+that behavior.
+
+This zero-scope decision creates no runtime or ontology implementation, public
+wire grammar, stable API, package change, or migration engine. It refines
+`OD-006`, `OD-007`, `OD-010`, and `OD-015` without superseding them.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-016`. `CC-D18` is complete.
+
+## Remaining decisions after revision 23
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.
