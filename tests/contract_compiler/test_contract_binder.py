@@ -276,7 +276,7 @@ def test_qualification_reference_resolution_and_trusted_builtins_are_exact() -> 
             ),
             child: _source(
                 child,
-                "slots:\n  child_value:\n    range: string\nclasses:\n  ChildRecord:\n",
+                "slots:\n  child_value:\n    range: string\nclasses:\n  ChildRecord: {}\n",
             ),
         },
         root=root,
@@ -410,8 +410,8 @@ def test_non_slot_duplicate_and_multiple_independent_owners_refuse() -> None:
     root = "https://example.test/root"
     duplicate_class = _declared(
         {
-            root: _source(root, "classes:\n  Record:\n", (parent,)),
-            parent: _source(parent, "classes:\n  Record:\n"),
+            root: _source(root, "classes:\n  Record: {}\n", (parent,)),
+            parent: _source(parent, "classes:\n  Record: {}\n"),
         },
         root=root,
     )
@@ -435,8 +435,8 @@ def test_collisions_unknown_ambiguous_and_wrong_kind_references_refuse() -> None
     child = "https://example.test/child"
     collision = _declared(
         {
-            root: _source(root, imports=(child,)),
-            child: _source(root, "classes:\n  Other:\n"),
+            root: _source(root, "classes:\n  Other: {}\n", (child,)),
+            child: _source(root, "classes:\n  Other: {}\n"),
         },
         root=root,
     )
@@ -459,9 +459,11 @@ def test_collisions_unknown_ambiguous_and_wrong_kind_references_refuse() -> None
                 "classes:\n  Root:\n    slots:\n      - value\n",
                 (left, right),
             ),
-            left: _source(left, "classes:\n  Left:\n    attributes:\n      value:\n"),
+            left: _source(
+                left, "classes:\n  Left:\n    attributes:\n      value: {}\n"
+            ),
             right: _source(
-                right, "classes:\n  Right:\n    attributes:\n      value:\n"
+                right, "classes:\n  Right:\n    attributes:\n      value: {}\n"
             ),
         },
         root=root,
@@ -472,7 +474,7 @@ def test_collisions_unknown_ambiguous_and_wrong_kind_references_refuse() -> None
         {
             root: _source(
                 root,
-                "slots:\n  NotAClass:\nclasses:\n  Record:\n    is_a: NotAClass\n",
+                "slots:\n  NotAClass: {}\nclasses:\n  Record:\n    is_a: NotAClass\n",
             )
         },
         root=root,
@@ -583,7 +585,7 @@ def test_quiet_bell_missing_import_refuses_before_binder(monkeypatch) -> None:
 def test_retained_source_and_adapter_regressions_feed_the_binder_unchanged() -> None:
     schema_id = "https://example.test/regression"
     declared = _declared(
-        {schema_id: _source(schema_id, "classes:\n  Record:\n")},
+        {schema_id: _source(schema_id, "classes:\n  Record: {}\n")},
         root=schema_id,
     )
 

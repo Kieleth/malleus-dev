@@ -1,0 +1,131 @@
+{
+  "schema": "malleus.contract-compiler.binding-profile/v0",
+  "profile_id": "malleus.contract-binding/private-v0",
+  "canonicalization": "malleus.canonical-json/compact-sorted-key-utf8-no-newline/v0",
+  "qualification": {
+    "container_tokens": [
+      "types",
+      "enums",
+      "slots",
+      "classes",
+      "attributes"
+    ],
+    "operation": "delimiter_join",
+    "separator": "/"
+  },
+  "global_declaration_paths": [
+    "types",
+    "enums",
+    "slots",
+    "classes"
+  ],
+  "prefix_map_field": "prefixes",
+  "trusted_module": {
+    "module_id": "linkml:types",
+    "schema_id": "https://w3id.org/linkml/types"
+  },
+  "trusted_builtins": [
+    {
+      "name": "string",
+      "identifier": "urn:malleus:contract-facts/String",
+      "kind": "Scalar"
+    },
+    {
+      "name": "integer",
+      "identifier": "urn:malleus:contract-facts/Integer",
+      "kind": "Scalar"
+    },
+    {
+      "name": "float",
+      "identifier": "urn:malleus:contract-facts/Float",
+      "kind": "Scalar"
+    },
+    {
+      "name": "boolean",
+      "identifier": "urn:malleus:contract-facts/Boolean",
+      "kind": "Scalar"
+    },
+    {
+      "name": "datetime",
+      "identifier": "urn:malleus:contract-facts/DateTime",
+      "kind": "Scalar"
+    },
+    {
+      "name": "date",
+      "identifier": "https://w3id.org/linkml/types/date",
+      "kind": "Scalar"
+    },
+    {
+      "name": "uri",
+      "identifier": "https://w3id.org/linkml/types/uri",
+      "kind": "Scalar"
+    }
+  ],
+  "adoption": {
+    "declaration_kind": "Slot",
+    "annotations_field": "annotations",
+    "marker_field": "adopts",
+    "marker_kind": "BOOLEAN",
+    "marker_lexeme": "true",
+    "marker_value": true,
+    "ignored_comparison_fields": [
+      "description"
+    ]
+  },
+  "reference_sites": [
+    {
+      "source_kind": "Module",
+      "selector": ["default_range"],
+      "extract": "SCALAR",
+      "target_kinds": ["Scalar", "Enum", "Class"]
+    },
+    {
+      "source_kind": "Scalar",
+      "selector": ["typeof"],
+      "extract": "SCALAR",
+      "target_kinds": ["Scalar"]
+    },
+    {
+      "source_kind": "Slot",
+      "selector": ["range"],
+      "extract": "SCALAR",
+      "target_kinds": ["Scalar", "Enum", "Class"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["is_a"],
+      "extract": "SCALAR",
+      "target_kinds": ["Class"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["mixins"],
+      "extract": "SEQUENCE",
+      "target_kinds": ["Class"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["slots"],
+      "extract": "SEQUENCE",
+      "target_kinds": ["Slot"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["slot_usage"],
+      "extract": "MAPPING_KEYS",
+      "target_kinds": ["Slot"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["slot_usage", "*", "range"],
+      "extract": "SCALAR",
+      "target_kinds": ["Scalar", "Enum", "Class"]
+    },
+    {
+      "source_kind": "Class",
+      "selector": ["exactly_one_of", "*", "slot_conditions"],
+      "extract": "MAPPING_KEYS",
+      "target_kinds": ["Slot"]
+    }
+  ]
+}
