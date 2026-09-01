@@ -494,6 +494,42 @@ def test_builtin_name_collision_refuses_instead_of_shadowing() -> None:
     assert refusal.reason is BindingRefusalReason.BUILTIN_COLLISION
 
 
+def test_qualification_does_not_treat_authored_names_as_profile_tokens() -> None:
+    schema_id = "https://example.test/container-names"
+    closure = _declared(
+        {
+            schema_id: _source(
+                schema_id,
+                "classes:\n  classes:\n    attributes:\n      attributes: {}\n",
+            )
+        },
+        root=schema_id,
+    )
+
+    result = bind_contract(closure)
+
+    assert {item.identifier for item in result.declarations if not item.trusted} == {
+        f"{schema_id}/classes",
+        f"{schema_id}/classes/attributes",
+    }
+
+
+def test_forged_trusted_flag_cannot_remove_source_declarations() -> None:
+    schema_id = "https://example.test/not-trusted"
+    closure = _declared(
+        {schema_id: _source(schema_id, "classes:\n  Record: {}\n")},
+        root=schema_id,
+    )
+    forged = replace(
+        closure,
+        modules=(replace(closure.modules[0], trusted=True),),
+    )
+
+    refusal = _reason(forged)
+
+    assert refusal.reason is BindingRefusalReason.MALFORMED_INPUT
+
+
 def test_diagnostic_order_ignores_import_module_and_declaration_order() -> None:
     root = "https://example.test/root"
     left = "https://example.test/left"
