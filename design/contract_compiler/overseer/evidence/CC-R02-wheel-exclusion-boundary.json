@@ -1,0 +1,65 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 26297,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:7e4709e0ab58090a50a770e75cf141f63c7565036395bf75b979d0b6a32c376b"
+    },
+    {
+      "byte_length": 7320,
+      "path": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "sha256": "sha256:4365d6cacd8c40aed81018eec45f9dfca57c3271903609ee2f3b9e14e97d8d60"
+    },
+    {
+      "byte_length": 281192,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:d8903115d0ab57cdbcdaf0e083ec6e1f5bc66a2dbcc3fe84449d53d269baaa61"
+    },
+    {
+      "byte_length": 9334,
+      "path": "pyproject.toml",
+      "sha256": "sha256:7eb414865f32da4c20c6cedbbfa490ed4754bdd0ca9af21b8ff757f5ed2096f3"
+    }
+  ],
+  "base_commit": "c5e9be07dc600dbcd2e1b742f515838acf0a3a3e",
+  "checks": [
+    {
+      "check_id": "ccr02-wheel-choice",
+      "method": "Bind the operator's exact exclude choice to the active private adapter boundary without inferring a source-archive decision.",
+      "observed": "The private LinkML adapter must be absent from the built wheel. Source-archive treatment remains a separate undecided boundary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-root-package-ownership",
+      "method": "Inspect the active worker card, integration ownership, and retained-source completion precedent.",
+      "observed": "The six worker scopes remain unchanged. The overseer owns pyproject.toml and performs package TDD only after the worker candidate is frozen; worker PACKAGE remains NOT_APPLICABLE.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-current-wheel-gap",
+      "method": "Inspect the exact wheel exclusion list and committed implementation state at the RED base commit.",
+      "observed": "The base contains the fixed adapter RED tests and no committed adapter implementation. The exact wheel exclusion list does not yet name the future private adapter, preserving a genuine post-candidate package RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-post-candidate-sequence",
+      "method": "Require root-owned RED, GREEN, archive inspection, clean-install, public-export, and CLI smoke checks after candidate freeze.",
+      "observed": "The package change cannot mask worker behavior or enter the worker candidate. Completion must bind the separate root package commits and exact built-wheel evidence.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr02-activation-immutability",
+      "method": "Rehash the original activation evidence and retain OVR-000293 through OVR-000295 unchanged.",
+      "observed": "The activation evidence remains sha256:ae0da647322dd6b6d2440ba643e77fd05985e11dd182f029e69c5adce6e1a200 and the original three entry hashes remain exact.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This binds a root-owned wheel obligation. It does not change package bytes, implement the adapter, freeze a worker candidate, or complete the workstream.",
+    "The source-archive treatment remains undecided and is not inferred from the wheel choice.",
+    "Public promotion, stable identifiers, public diagnostics, release, and general LinkML compatibility remain outside this transaction."
+  ],
+  "recorded_at": "2026-09-01T17:55:10Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R02"
+}

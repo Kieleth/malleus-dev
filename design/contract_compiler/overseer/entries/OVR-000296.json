@@ -1,0 +1,79 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7e4709e0ab58090a50a770e75cf141f63c7565036395bf75b979d0b6a32c376b",
+        "before_digest": "sha256:d952bc1d08abb6bf17e3fd2443a095b81b3e6736feed33513b670fb623cc647f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:70be103d4e0db91ce159f5beb72cc635027a4b2a62f35f4d5e5f5149abbe4e46",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R02-wheel-exclusion-boundary.json"
+      },
+      {
+        "after_digest": "sha256:4365d6cacd8c40aed81018eec45f9dfca57c3271903609ee2f3b9e14e97d8d60",
+        "before_digest": "sha256:5858cfff1e29a01b6f8de13ecfed7d18a887edb641ab02bf3ace8260b2fdac62",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:d8903115d0ab57cdbcdaf0e083ec6e1f5bc66a2dbcc3fe84449d53d269baaa61",
+        "before_digest": "sha256:6629bdfb3fd08a5dc028e14340a39bc1c34f66a1de29e4561341654834b1e1de",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:f3eb966b8a30676c2484ece9c0910c733c3b44ff9e7b6ad0592fe18ab03e192d",
+  "entry_id": "OVR-000296",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e6985510771a3b88d167fd9db477fde35bfd9c8e057787d75744df0501d30424",
+  "recorded_at": "2026-09-01T17:55:11Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:70be103d4e0db91ce159f5beb72cc635027a4b2a62f35f4d5e5f5149abbe4e46",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-wheel-exclusion-boundary.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 296,
+  "subject": {
+    "id": "ccr02-wheel-exclusion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private adapter wheel-exclusion obligation.",
+  "why": "The operator explicitly selected wheel exclusion after activation. Root must prove and apply that package boundary after the worker freezes its six-scope candidate, without widening worker ownership or deciding source-archive treatment."
+}

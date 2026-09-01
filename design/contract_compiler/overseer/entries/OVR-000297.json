@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "ccr02-wheel-boundary-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T17:55:12Z",
+    "claims": [
+      "The operator selected exclusion of the private LinkML adapter from the built wheel; no source-archive choice was made.",
+      "The active card now assigns that package obligation to the overseer after worker candidate freeze while preserving all six worker scopes and worker PACKAGE as NOT_APPLICABLE.",
+      "At the exact RED base commit, the adapter tests are committed, the adapter implementation is not committed, and the wheel exclusion list does not name the future adapter.",
+      "Root must add a failing archive guard, change the exact wheel exclusion list, inspect the built archive, and run clean-install, public-export, and CLI smoke checks before completion.",
+      "The original activation report and OVR-000293 through OVR-000295 remain byte-for-byte and hash-for-hash unchanged.",
+      "The workstream stays ACTIVE. This correction creates no implementation, package byte, candidate, selection, source-archive rule, public API, promotion, or release claim."
+    ],
+    "limitations": [
+      "This verifies the missing package obligation and ownership boundary only; it does not satisfy that obligation.",
+      "The package TDD must wait for a frozen worker candidate so root packaging cannot enter or mask worker behavior.",
+      "Source-archive treatment remains undecided."
+    ]
+  },
+  "entry_hash": "sha256:eac03f24c58e28066fbfe6f01d4002182c5f0cbebe16c654ad7bd785b63c18b4",
+  "entry_id": "OVR-000297",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f3eb966b8a30676c2484ece9c0910c733c3b44ff9e7b6ad0592fe18ab03e192d",
+  "recorded_at": "2026-09-01T17:55:12Z",
+  "references": [
+    {
+      "digest": "sha256:70be103d4e0db91ce159f5beb72cc635027a4b2a62f35f4d5e5f5149abbe4e46",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-wheel-exclusion-boundary.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000296",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c5e9be07dc600dbcd2e1b742f515838acf0a3a3e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 297,
+  "subject": {
+    "id": "ccr02-wheel-exclusion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the root-owned adapter wheel boundary.",
+  "why": "The explicit wheel-exclusion choice must be mechanically bound before candidate packaging, without widening worker scope or inventing a source-archive policy."
+}

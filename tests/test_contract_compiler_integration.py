@@ -7538,3 +7538,82 @@ def test_linkml_adapter_activation_is_exact() -> None:
         )
     ]
     assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+
+
+def test_linkml_adapter_wheel_exclusion_choice_is_bound() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R02")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R02/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert (
+        "After the worker candidate is frozen, the overseer must exclude "
+        "src/malleus/_contract_linkml_adapter.py from the wheel"
+        in card["responsibility"]
+    )
+    assert {scope["path"] for scope in card["scopes"]}.isdisjoint(
+        {
+            "pyproject.toml",
+            "tests/test_contract_compiler_integration.py",
+        }
+    )
+
+    ledger_state = _raw_overseer_state()
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 296 <= entry["sequence"] <= 297
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000296",
+        "OVR-000297",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+    )
+    revision, verification = transaction
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R02"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R02-wheel-exclusion-boundary.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R02/manifest.json": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "ccr02-wheel-boundary-verifier",
+        "type": "MECHANICAL",
+    }
+    assert verification["data"]["as_of"] == verification["recorded_at"]
+
+    report_path = (
+        CONTRACT / "overseer/evidence/CC-R02-wheel-exclusion-boundary.json"
+    )
+    report = _read_json(report_path)
+    assert report["base_commit"] == "c5e9be07dc600dbcd2e1b742f515838acf0a3a3e"
+    assert report["workstream_id"] == "CC-R02"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any(
+        "source-archive treatment remains undecided" in limitation
+        for limitation in report["limitations"]
+    )
+
+    activation = CONTRACT / "overseer/evidence/CC-R02-activation.json"
+    assert _digest(activation.read_bytes()) == (
+        "sha256:ae0da647322dd6b6d2440ba643e77fd05985e11dd182f029e69c5adce6e1a200"
+    )
+    assert tuple(
+        entry["entry_hash"] for entry in ledger_state.entries[292:295]
+    ) == (
+        "sha256:d9e87ecff76c12cd8f54051724d0b94210f2d763516d713cde1c3e0f201d0f9b",
+        "sha256:ab6d09c67ca377b257d59eeaa0e0e24695f88f3c38147cccb1deb57ffc7b578d",
+        "sha256:e6985510771a3b88d167fd9db477fde35bfd9c8e057787d75744df0501d30424",
+    )
