@@ -2663,14 +2663,14 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_24_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
         for token in MarkdownIt("commonmark").parse(path.read_text(encoding="utf-8"))
         if token.type == "fence" and token.info.strip() == "turtle"
     ]
-    assert len(blocks) == 29
+    assert len(blocks) == 30
     canonical_path = ROOT / "design" / "PROTOCOL_FOUNDATION_GRAPH.ttl"
     source = canonical_path.read_bytes()
     body = [
@@ -2681,13 +2681,13 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1852
+    assert len(canonical) == 1875
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 23",
+        "# Design graph revision: 24",
         "# Evidence cutoff: 2026-09-01",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -2704,7 +2704,7 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 23,",
+            "revision 24,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2759,6 +2759,16 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
         Literal("2026-09-01")
     }
     assert set(canonical.objects(od016, selects)) == {kcs_architecture}
+    od017 = URIRef(f"{cc}OD-017")
+    governance_epoch_architecture = URIRef(
+        f"{mfg}ForwardOnlyGovernanceLedgerEpochArchitecture"
+    )
+    assert set(canonical.objects(od017, decision_date)) == {
+        Literal("2026-09-01")
+    }
+    assert set(canonical.objects(od017, selects)) == {
+        governance_epoch_architecture
+    }
     rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     status = URIRef(f"{mfg}status")
     decided_by = URIRef(f"{mfg}decidedBy")
@@ -2794,6 +2804,16 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(od016, decided_by)) == {URIRef(f"{mfg}Author")}
     assert set(canonical.objects(od016, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(od017, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od017, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od017, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(governance_epoch_architecture, status)) == {
         URIRef(f"{mfg}AcceptedDesign")
     }
     assert set(canonical.objects(kcs_architecture, status)) == {
@@ -2888,8 +2908,16 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
         "NoCascadeRepairDeletionMigrationReadAccessOrImplementationBoundary": "Boundary",
         "GovernanceRepresentationAndReadPolicyRemainDeferredAfterOD010Boundary": "Boundary",
     }
+    od017_node_types = {
+        "ForwardOnlyGovernanceLedgerEpochArchitecture": "DesignObject",
+        "LegacyGovernanceLedgerFrozenCheckpointBoundary": "Boundary",
+        "CurrentGovernanceStateCarryForwardBoundary": "Boundary",
+        "HistoricalGovernanceTranslationDeferredBoundary": "Boundary",
+        "SingleGovernanceWriterAtomicCutoverBoundary": "Boundary",
+        "ExactGovernanceEpochIdentityBoundary": "Boundary",
+    }
     for node, node_type in (
-        od008_node_types | od007_node_types | od010_node_types
+        od008_node_types | od007_node_types | od010_node_types | od017_node_types
     ).items():
         subject = URIRef(f"{mfg}{node}")
         assert set(canonical.objects(subject, rdf_type)) == {
@@ -2909,6 +2937,14 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
         "ReplayNeverCallsOntologyBuilderCorrectorBoundary",
     }
     required_bindings = {
+        "ForwardOnlyGovernanceLedgerEpochArchitecture": {
+            "LegacyGovernanceLedgerFrozenCheckpointBoundary",
+            "CurrentGovernanceStateCarryForwardBoundary",
+            "HistoricalGovernanceTranslationDeferredBoundary",
+            "SingleGovernanceWriterAtomicCutoverBoundary",
+            "ExactGovernanceEpochIdentityBoundary",
+            "SeparateExactIdentityPolicyAndProjectionProgramsBoundary",
+        },
         "SingleLedgerKnowledgeChangeSetArchitecture": {
             "OneAuthoritativeSemanticHistoryBoundary",
             "ReplayDerivedAcceptedTemporalGraphOnlyBoundary",
@@ -3322,7 +3358,7 @@ def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 395
+    assert len(statuses) == 402
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -3772,7 +3808,7 @@ def test_od007_protected_partition_contract_is_exact() -> None:
     d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
     for phrase in ("protected replay-derived governance partition", "epoch boundary"):
         assert phrase in d07
-    remaining = decisions.split("## Remaining decisions after revision 23", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 24", 1)[1]
     assert "| OD-007 |" not in remaining
 
 
@@ -4027,7 +4063,7 @@ def test_od010_contextual_reference_contract_is_exact() -> None:
         "referentially closed temporal views",
     ):
         assert phrase in d10
-    remaining = decisions.split("## Remaining decisions after revision 23", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 24", 1)[1]
     assert "| OD-010 |" not in remaining
 
     conformance = (

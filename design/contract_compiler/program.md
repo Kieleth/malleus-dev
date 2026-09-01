@@ -134,9 +134,20 @@ candidates remain non-governed and non-accepted until admitted through the
 ledger. The first accepted domain state starts from an empty graph and a
 retained genesis change set.
 
+Revision 24 accepts `OD-017`: the overseer ledger moves forward into a separate
+ontology-bound epoch without rewriting its legacy history. The cutover freezes
+an exact legacy checkpoint, carries a deterministic current-state snapshot with
+source entry IDs, and defers full typed translation of historical entries.
+Every new entry binds exact ontology source and semantic identities plus
+separate protocol, policy, and projection identities. The legacy writer remains
+sole authority until an atomic cutover removes it and activates the new sole
+writer. There is no dual write or fallback.
+
 The operator excluded migration feature development from this foundation block.
 `OD-004` now selects a new wire epoch and typed hard break. It forbids a replay
-bridge or a new meaning for the old persisted identity field in v0.
+bridge or a new meaning for the old persisted identity field in v0. `OD-017`
+governs the separate overseer-ledger transition and does not weaken that product
+wire boundary.
 
 ## Corrections from independent review
 

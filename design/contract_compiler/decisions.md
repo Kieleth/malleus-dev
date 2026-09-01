@@ -380,7 +380,7 @@ Canonical decision record:
 [`OVR-000061`](overseer/entries/OVR-000061.json). `CC-D12` is complete; CC-002
 materialization remains pending.
 
-## Accepted directions in canonical graph revision 23
+## Accepted directions in canonical graph revision 24
 
 | ID | Accepted direction | Important limit |
 |---|---|---|
@@ -402,6 +402,7 @@ materialization remains pending.
 | OD-014 | Quiet Bell Archive is the public working name and themed vocabulary stays fixture-only | The accepted text/data attestation covers no visual asset and creates no publication |
 | OD-015 | Protocol authority is an exact machine program executed by a generic interpreter | No DSL, public API, or shipped generic interpreter is claimed yet; current Python remains comparison evidence until hard cutover |
 | OD-016 | One immutable `KnowledgeChangeSet` enters one ledger and is projected into one accepted temporal KG | Structural candidates may persist but remain explicitly non-governed and non-accepted; runtime cutover and cross-contract migration remain future work |
+| OD-017 | Move the governance ledger forward into a separate ontology-bound epoch | Preserve legacy history exactly, carry forward its current state, and permit only one writer before and after atomic cutover |
 
 The operator also excluded migration feature development from the foundation
 block. That is an execution-scope instruction, not approval to reuse an old
@@ -1761,7 +1762,68 @@ wire grammar, stable API, package change, or migration engine. It refines
 Canonical decision record:
 `https://malleus.dev/contract-compiler/OD-016`. `CC-D18` is complete.
 
-## Remaining decisions after revision 23
+### OD-017: forward-only governance-ledger epoch transition
+
+Decision state: ACCEPTED, 2026-09-01
+
+The current overseer ledger remains valid legacy evidence. Its entries carry a
+versioned JSON Schema label rather than a per-entry identity for the exact rules
+that governed them. The ledger separately records exact schema and validator
+digests and their document-revision change points, and Git retains those bytes.
+Individual entries do not bind the exact schema and validator identities that
+governed their append, so replay cannot select rule identities per interval
+without external reconstruction.
+
+The transition is forward-only. Existing entries are never rewritten or
+translated as part of the first cut. At activation, the legacy ledger is frozen
+at an exact entry count, head hash, schema digest, validator digest, Git commit,
+and tree. The new epoch starts in a separate physical ledger and its genesis
+anchors that complete checkpoint.
+
+The bridge carries a deterministic snapshot of current governance state, not a
+typed copy of every historical entry. The snapshot includes accepted decisions,
+workstream states, open blockers, and the legacy entry IDs from which each value
+was derived. Queries over current state can cross the epoch. Queries that need
+the full old event history continue to use the retained legacy reader. Full
+typed translation of that history is deferred until a concrete query requires
+it.
+
+Every new-epoch entry binds the exact governance ontology source digest and its
+semantic ontology hash. The epoch also binds separately identified protocol,
+policy, and projection programs. These identities answer different questions
+and must not be collapsed into one version string.
+
+Cutover is atomic. Until the replacement ledger, deterministic snapshot,
+combined current-state projection, and cutover checks are ready, the legacy
+ledger remains the sole writer. At activation, its final checkpoint is selected,
+the old append path is removed, and the ontology-bound ledger becomes the sole
+writer. There is no dual-write period and no fallback writer.
+
+Logical overseer IDs may continue across the boundary for operator usability,
+but the new ledger's envelope sequence and hash chain are local to the new
+epoch. Projected facts retain provenance labels that distinguish legacy events,
+snapshot-derived state, and native new-epoch events.
+
+This decision is separate from `OD-004`. `OD-004` governs the product record
+wire transition. `OD-017` governs the program's own overseer ledger. The
+existing generic `MigrationReceipt` does not fit this bridge because its legacy
+side is a JSON Schema and validator checkpoint, not an ontology hash. The
+transition therefore needs its own identity-bound bridge artifact.
+
+Implementation follows four dependency-ordered slices:
+
+1. define the exact legacy checkpoint and bridge contract;
+2. define the governance ontology and identity-bound protocol program;
+3. build the deterministic current-state snapshot and combined query projection;
+4. replace the writer atomically and prove the legacy append path is dead.
+
+This decision authorizes the direction only. Implementation begins when an
+explicit workstream card owns these four slices and their RED/GREEN evidence.
+
+Canonical decision record:
+`https://malleus.dev/contract-compiler/OD-017`.
+
+## Remaining decisions after revision 24
 
 These are closed in order, with examples and counterexamples, before their
 dependent workstream starts.

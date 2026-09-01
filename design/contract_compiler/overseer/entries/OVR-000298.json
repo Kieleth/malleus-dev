@@ -1,0 +1,71 @@
+{
+  "actor": {
+    "id": "operator",
+    "type": "OPERATOR"
+  },
+  "data": {
+    "canonical_record_uris": [
+      "https://malleus.dev/contract-compiler/OD-017"
+    ],
+    "consequences": [
+      "The legacy ledger remains the sole writer until the replacement ledger, deterministic current-state snapshot, combined projection, and atomic cutover checks are ready.",
+      "The first new-epoch view carries current governance state with legacy source entry IDs; full typed translation of historical entries is deferred.",
+      "Activation freezes an exact legacy checkpoint, removes the legacy append path, and starts one ontology-bound writer with no dual write or fallback."
+    ],
+    "constraints": [
+      "Existing overseer entries remain byte-for-byte unchanged and retain their current reader and Git provenance.",
+      "The transition bridge binds the final legacy entry count and head hash, exact schema and validator digests, and the Git commit and tree retaining those bytes.",
+      "Every native new-epoch entry binds the exact governance ontology source digest and semantic ontology hash; protocol, policy, and projection identities remain separate.",
+      "The current-state snapshot is deterministic and records the legacy source entry IDs for accepted decisions, workstream states, and open blockers.",
+      "Historical queries may use the retained legacy reader; no claim of complete typed historical translation is made.",
+      "The generic MigrationReceipt is not reused because the legacy side is a JSON Schema and validator checkpoint rather than an ontology hash.",
+      "This decision is separate from the OD-004 product-wire transition and does not weaken its hard-break boundary.",
+      "Implementation requires an explicit workstream owning the checkpoint contract, governance ontology and protocol program, state snapshot and combined projection, and atomic writer replacement."
+    ],
+    "decision_id": "OD-017",
+    "satisfies_workstreams": [],
+    "selected_option": "Preserve legacy history, carry current state forward, and cut over atomically to one ontology-bound writer",
+    "state": "ACCEPTED"
+  },
+  "entry_hash": "sha256:cb0569e08284c826bf0ac1ad26df2d2478fe0981bc5c6df6d39882d6cbb51c93",
+  "entry_id": "OVR-000298",
+  "entry_type": "DECISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:eac03f24c58e28066fbfe6f01d4002182c5f0cbebe16c654ad7bd785b63c18b4",
+  "recorded_at": "2026-09-01T20:03:56Z",
+  "references": [
+    {
+      "relation": "DECIDES",
+      "target": "design/contract_compiler/decisions.md#od-017-forward-only-governance-ledger-epoch-transition",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "CANONICALIZES",
+      "target": "https://malleus.dev/contract-compiler/OD-017",
+      "type": "CANONICAL_URI"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000007",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000009",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000297",
+      "type": "ENTRY"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 298,
+  "subject": {
+    "id": "OD-017",
+    "type": "DECISION"
+  },
+  "summary": "Move the governance ledger forward through one atomic ontology-bound epoch transition.",
+  "why": "The current overseer ledger retains schema and validator artifact digests, change points, and Git history, but its entries do not bind the exact rule identities governing each append or define executable interval selection. Rewriting all history would destroy the existing hash chain and force broad compatibility work. A forward-only cut preserves evidence, carries actionable current state with provenance, and makes every future entry identity-bound while keeping one write authority at all times."
+}

@@ -8,8 +8,8 @@ implementation snapshot. The intended release locator is `v0.11.0`; exact
 report, file, and checksum identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 23,
-`sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a`
+revision 24,
+`sha256:029f41f569b07808ea629b6af2aef104e75c1b6132e81c898637070203f31991`
 
 Authority: the canonical graph records author-accepted and candidate design
 states. It has no authority over shipped capability. This note does not change
@@ -852,6 +852,53 @@ okg:OperationDependencyPlan rdf:type rdfs:Class ;
 
 okg:ConstructionMemberGraph rdf:type mfg:DesignObject ;
     mfg:status mfg:Excluded .
+```
+
+### 4.2.2 Forward-only governance-ledger epoch
+
+`OD-017` applies the identity rules to the program's own overseer ledger. The
+legacy ledger remains immutable evidence. At cutover, a bridge anchors its exact
+head, count, schema and validator digests, Git commit, and tree. The new
+ontology-bound epoch starts in a separate ledger from that checkpoint.
+
+The bridge carries only a deterministic current-state snapshot with source
+entry IDs. Historical event queries continue through the retained legacy reader;
+full typed translation is deferred. Every native entry in the new epoch binds
+the exact ontology source digest and semantic ontology hash. Exact protocol,
+policy, and projection identities remain separate.
+
+There is one writer at all times. The legacy writer remains active until the
+new ledger, state snapshot, combined current-state projection, and cutover
+checks are ready. Activation freezes the final legacy checkpoint, removes the
+old append path, and starts the new sole writer atomically. `OD-004` remains the
+separate product-wire transition.
+
+```turtle
+<https://malleus.dev/contract-compiler/OD-017> rdf:type mfg:DecisionRecord ;
+    mfg:decidedBy mfg:Author ;
+    mfg:decisionDate "2026-09-01" ;
+    mfg:selects mfg:ForwardOnlyGovernanceLedgerEpochArchitecture ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:ForwardOnlyGovernanceLedgerEpochArchitecture rdf:type mfg:DesignObject ;
+    mfg:binds mfg:LegacyGovernanceLedgerFrozenCheckpointBoundary ;
+    mfg:binds mfg:CurrentGovernanceStateCarryForwardBoundary ;
+    mfg:binds mfg:HistoricalGovernanceTranslationDeferredBoundary ;
+    mfg:binds mfg:SingleGovernanceWriterAtomicCutoverBoundary ;
+    mfg:binds mfg:ExactGovernanceEpochIdentityBoundary ;
+    mfg:binds mfg:SeparateExactIdentityPolicyAndProjectionProgramsBoundary ;
+    mfg:status mfg:AcceptedDesign .
+
+mfg:LegacyGovernanceLedgerFrozenCheckpointBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:CurrentGovernanceStateCarryForwardBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:HistoricalGovernanceTranslationDeferredBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:SingleGovernanceWriterAtomicCutoverBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
+mfg:ExactGovernanceEpochIdentityBoundary rdf:type mfg:Boundary ;
+    mfg:status mfg:AcceptedDesign .
 ```
 
 ### 4.3 Contract facts

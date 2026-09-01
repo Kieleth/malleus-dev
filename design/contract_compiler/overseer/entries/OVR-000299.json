@@ -1,0 +1,133 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "OD-017"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ebe4e1e11eaf3c82be3246a9c87b08a50d7d55577ae96fd027b94f86f5f091a2",
+        "before_digest": "sha256:36ec94355bfbbdc6e63cce255ee7e98e05521b5297ce36e12fdc4f38f5bcae65",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:ef19cd792ea4eab56e61137068cc470114db7b31bee3bd8e2d49d6cfc6652a1d",
+        "before_digest": "sha256:e0400e55aa0bf575bd8b70d00d70f6cf4c5168202ac850c470f6e6977d0b489e",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:e51a1e00bf0e083f0acddb14c1ba3fcdd5f397b8a40750b993ae5d7f14fd3993",
+        "before_digest": "sha256:2607bffd4c48aa2f94d05a3deabb6411b2ec37de2b86943f9981970f5ee5da00",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:7bc11f9bded43e08ab3ded8f91f9fac217dcc76e7d90f2cf3e7e082e3a4d887a",
+        "before_digest": "sha256:a4c69beb3349e5f726fced1fc6d98e02f271c349edcdc5ca90373c3fab4858be",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:30bdac639cc5e6801b1769ae87a0b3c886cf3901d87c9c6a8cfe5d811c489cf2",
+        "before_digest": "sha256:cbc041a431d53f87e1f197ae44d1c0f4ffdb75a979597cb2711f1d0d52310c4e",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:029f41f569b07808ea629b6af2aef104e75c1b6132e81c898637070203f31991",
+        "before_digest": "sha256:4019f07fdebb5a9e10acd087ca5b940a578a79bdebf5112314720efcc498410a",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:6ec6a29e738c972e49271c2f4a0f4c3fddab81e5066ad3f700c72572ab80f4aa",
+        "before_digest": "sha256:cbf74cbbc9b5978e6e06350e6342d02bfe98a4c6a30abba33ccc1d4720a81dbb",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/decisions.md"
+      },
+      {
+        "after_digest": "sha256:b2c38631a54ab7e93e9c85f9a56cf9ac21f2545dc16b40249e691602ef5e06a3",
+        "before_digest": "sha256:12767121efc92a58773d2e7d7e399ac9a5c83b1d0ddf5e1a82c005bef897e091",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:0fe79ecc4c52b910ea0307a817f4d74bf33a8d883b9a797b786f7e8eefb718c4",
+        "before_digest": "sha256:930531cfbd0f2e3cdb630c8b7b554ed5cb824f072bb9b7c6f1c1029fd82a6522",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:353e2c215d574636543bd79bdaeb408400d2517c1f0284bcf5fb1ae61111cb6f",
+  "entry_id": "OVR-000299",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:cb0569e08284c826bf0ac1ad26df2d2478fe0981bc5c6df6d39882d6cbb51c93",
+  "recorded_at": "2026-09-01T20:03:57Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/decisions.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000298",
+      "type": "ENTRY"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 299,
+  "subject": {
+    "id": "contract-compiler-od017-r24",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind OD-017 and the forward-only governance epoch in foundation graph revision 24.",
+  "why": "The accepted direction must exist in the decision workbook, dependency program, canonical graph, every graph projection, and the mechanical parity guard before implementation planning can rely on it. This revision records those exact bytes while leaving the live legacy writer active until the later atomic cutover."
+}
