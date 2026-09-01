@@ -1,0 +1,122 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R01"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:500097cd58bc979cc9bc02095b2579af8c35dc4eb4b19144bd728a6507679dc7",
+        "before_digest": "sha256:b7bcb8b976c53a618f973ec50b27b6feb53e9c9eabb16905136e33b6b13e12eb",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md"
+      },
+      {
+        "after_digest": "sha256:e85beb2c499f7f8c136027e0daf2cf24cd904cecddce5d75c6c3ce04358bfe54",
+        "before_digest": "sha256:ba44bfe202559e5c21a6ef4fad3767d37f0c9f16b44450f0d2b3dfc2504ebe54",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_OTTR_PROFILE.md"
+      },
+      {
+        "after_digest": "sha256:f2108ebbbee66e6b73f2e1a8a4a879b41bf638c731673b61f4c61d97e2bf99fa",
+        "before_digest": "sha256:1ed150b94979113bb29c168a9590c16c6c23fd673c7a59728931c7daabd82693",
+        "change": "MODIFIED",
+        "path": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md"
+      },
+      {
+        "after_digest": "sha256:fa8eecf8834342ccae2a31d54f8909168280f97963b6240814767d574b03e6d6",
+        "before_digest": "sha256:90110182b6c68e8fb322469333d87b7a5cab7ebff0108f3ab30f83c32f0d8f9c",
+        "change": "MODIFIED",
+        "path": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md"
+      },
+      {
+        "after_digest": "sha256:32c80749f438dd6cbecf6c36047abdb7771403a6d239e39c0b7e38764cff39e3",
+        "before_digest": "sha256:e775207483d259fc8db3d78392534b322e27f43983e40b20c741fe34c8b49899",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.md"
+      },
+      {
+        "after_digest": "sha256:c2fff2c73e5aee95477ee26e1bf22fe1a17f6fd9da90dd4b85309b5dad3a3724",
+        "before_digest": "sha256:f921b822a7db805dacd9a43112591acbd6815565f8f5613348051346f17d65a9",
+        "change": "MODIFIED",
+        "path": "design/PROTOCOL_FOUNDATION_GRAPH.ttl"
+      },
+      {
+        "after_digest": "sha256:4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f",
+        "before_digest": "sha256:ed80858afa253a5b43e9f9e57f5c8289e23b1d38cc85e541a539b390b7a93abb",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json"
+      },
+      {
+        "after_digest": "sha256:f77d859e44bceb7422bd13235f111154668baeb16864482d4e093f58cf95f6ea",
+        "before_digest": "sha256:ecffea5981ae34e523da750813a79466830b5751c0fbd9227cd055db7ee6ea6c",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:bfaa64eaf6989f72e7ce49592e0af91c58c284d72b7aadc87aa165296a46d8e5",
+  "entry_id": "OVR-000302",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:14eb762f8c1a26b4fa1c898de89057801697b8d404262ef23213d76752218914",
+  "recorded_at": "2026-09-01T20:39:46Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_REALIZATION_SESSION_CHECKPOINT.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_OTTR_PROFILE.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/GRAPH_RECIPE_TDD_EXPERIMENTS.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/ONTOLOGY_DRIVEN_KG_REALIZATION.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/PROTOCOL_FOUNDATION_GRAPH.ttl",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_ledger.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000301",
+      "type": "ENTRY"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 302,
+  "subject": {
+    "id": "graph-recipe-status-boundary-rebind-r26",
+    "type": "DOCUMENT"
+  },
+  "summary": "Rebind the GraphRecipe report to the corrected package and status boundary.",
+  "why": "The compiler-environment correction changed three files that the research report identifies by exact bytes. Revision 26 records the new report identity, preserves its complete supersession chain, and adds a mechanical check that future report drift cannot leave the design graph silently stale."
+}

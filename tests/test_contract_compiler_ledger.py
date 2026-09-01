@@ -19,6 +19,7 @@ from jsonschema import FormatChecker
 from markdown_it import MarkdownIt
 from rdflib import Graph, Literal, URIRef
 from rdflib.exceptions import ParserError
+from rdflib.namespace import RDF
 from rdflib.plugins.parsers.notation3 import BadSyntax
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -2709,7 +2710,7 @@ def test_od012_current_policy_supersedes_r3_without_erasing_history() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_26_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2727,13 +2728,13 @@ def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
     projected = Graph().parse(data="\n".join(blocks), format="turtle")
     canonical = Graph().parse(data=source, format="nt")
     assert set(projected) == set(canonical)
-    assert len(canonical) == 1912
+    assert len(canonical) == 1920
 
     digest = hashlib.sha256(source).hexdigest()
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 25",
+        "# Design graph revision: 26",
         "# Evidence cutoff: 2026-09-01",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
@@ -2750,7 +2751,7 @@ def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 25,",
+            "revision 26,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -3426,6 +3427,73 @@ def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
     ):
         assert (r4, binds, URIRef(f"{mfg}{historical_only}")) not in canonical
 
+    report = URIRef(
+        "https://fixtures.malleus.dev/graph-recipe/v0/report/"
+        "first-slice-conformance"
+    )
+    old_report_identity = URIRef(
+        f"{okg}GraphRecipeFirstSliceConformanceReport-sha256-"
+        "6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8"
+    )
+    report_path = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "experiments"
+        / "graph_recipe"
+        / "FIRST_SLICE_CONFORMANCE_REPORT.json"
+    )
+    report_digest = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    assert report_digest == (
+        "4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f"
+    )
+    current_report_identity = URIRef(
+        f"{okg}GraphRecipeFirstSliceConformanceReport-sha256-{report_digest}"
+    )
+    assert set(canonical.objects(report, URIRef(f"{mfg}identifiedBy"))) == {
+        current_report_identity
+    }
+    assert set(
+        canonical.objects(current_report_identity, URIRef(f"{mfg}supersedes"))
+    ) == {old_report_identity}
+    report_chain = (
+        current_report_identity,
+        old_report_identity,
+        URIRef(
+            f"{okg}GraphRecipeFirstSliceConformanceReport-sha256-"
+            "9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0"
+        ),
+        URIRef(
+            f"{okg}GraphRecipeFirstSliceConformanceReport-sha256-"
+            "64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97"
+        ),
+        URIRef(
+            f"{okg}GraphRecipeFirstSliceConformanceReport-sha256-"
+            "41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0"
+        ),
+    )
+    for newer, older in zip(report_chain, report_chain[1:]):
+        assert set(canonical.objects(newer, URIRef(f"{mfg}supersedes"))) == {
+            older
+        }
+    for identity in report_chain:
+        assert (
+            identity,
+            RDF.type,
+            URIRef(f"{mfg}DesignObject"),
+        ) in canonical
+    refresh = URIRef(f"{okg}GraphRecipeReportStatusBoundaryRefreshObservation")
+    assert set(canonical.objects(refresh, binds)) == {
+        old_report_identity,
+        current_report_identity,
+    }
+    assert set(canonical.objects(refresh, URIRef(f"{mfg}produces"))) == {
+        current_report_identity
+    }
+    assert set(canonical.objects(refresh, URIRef(f"{mfg}dependsOn"))) == {
+        URIRef(f"{okg}GraphRecipeFirstSliceReportIdentityGuard")
+    }
+
     current_profile = URIRef(
         f"{mfg}HashPinnedNetworkPermittedCompilerEnvironmentProfile"
     )
@@ -3446,7 +3514,7 @@ def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
     statuses: dict[object, set[object]] = {}
     for subject, _, object_ in canonical.triples((None, status, None)):
         statuses.setdefault(subject, set()).add(object_)
-    assert len(statuses) == 410
+    assert len(statuses) == 411
     assert all(len(values) == 1 for values in statuses.values())
     realization = (
         ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
@@ -3460,8 +3528,8 @@ def test_revision_25_graph_is_generated_from_all_turtle_projections() -> None:
         for subject, _, object_ in canonical.triples((None, depends_on, None))
     }
     nodes = {node for edge in edges for node in edge}
-    assert len(nodes) == 109
-    assert len(edges) == 109
+    assert len(nodes) == 110
+    assert len(edges) == 110
     successors = {node: set() for node in nodes}
     indegree = {node: 0 for node in nodes}
     for dependent, prerequisite in edges:

@@ -1,6 +1,6 @@
 # Canonical Malleus protocol foundation design graph.
 #
-# Design graph revision: 25
+# Design graph revision: 26
 # Evidence cutoff: 2026-09-01
 # Authority: candidate and accepted design states recorded by author decisions.
 # Shipped capability remains controlled by src/malleus/status.py and tests.
@@ -9,7 +9,7 @@
 # Semantic changes create new object revisions and supersedes edges.
 
 <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DesignObject> .
-<https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> <https://malleus.dev/foundation-graph/identifiedBy> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8> .
+<https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> <https://malleus.dev/foundation-graph/identifiedBy> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f> .
 <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> <https://malleus.dev/foundation-graph/status> <https://malleus.dev/foundation-graph/Implemented> .
 <https://malleus.dev/contract-compiler/AD-001> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DecisionRecord> .
 <https://malleus.dev/contract-compiler/AD-001> <https://malleus.dev/foundation-graph/decidedBy> <https://malleus.dev/foundation-graph/Author> .
@@ -1522,6 +1522,8 @@
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceObservation> <https://malleus.dev/foundation-graph/produces> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceResult> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceObservation> <https://malleus.dev/foundation-graph/status> <https://malleus.dev/foundation-graph/Implemented> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DesignObject> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DesignObject> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f> <https://malleus.dev/foundation-graph/supersedes> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DesignObject> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97> <https://malleus.dev/foundation-graph/supersedes> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/DesignObject> .
@@ -1611,6 +1613,12 @@
 <https://malleus.dev/ontology-kg-realization/GraphRecipeReportReleaseBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/dependsOn> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceReportIdentityGuard> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeReportReleaseBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/produces> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeReportReleaseBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/status> <https://malleus.dev/foundation-graph/Implemented> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/Observation> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/binds> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/binds> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/dependsOn> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceReportIdentityGuard> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/produces> <https://malleus.dev/ontology-kg-realization/GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f> .
+<https://malleus.dev/ontology-kg-realization/GraphRecipeReportStatusBoundaryRefreshObservation> <https://malleus.dev/foundation-graph/status> <https://malleus.dev/foundation-graph/Implemented> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeRuffGate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://malleus.dev/foundation-graph/TestObligation> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeRuffGate> <https://malleus.dev/foundation-graph/status> <https://malleus.dev/foundation-graph/Implemented> .
 <https://malleus.dev/ontology-kg-realization/GraphRecipeRuffGate> <https://malleus.dev/foundation-graph/tests> <https://malleus.dev/ontology-kg-realization/GraphRecipeResearchRunner> .

@@ -24,8 +24,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 25,
-`sha256:f921b822a7db805dacd9a43112591acbd6815565f8f5613348051346f17d65a9`
+revision 26,
+`sha256:c2fff2c73e5aee95477ee26e1bf22fe1a17f6fd9da90dd4b85309b5dad3a3724`
 
 The 0.11.0 consolidation after that baseline adds precision-aware valid time,
 the accepted `OKG-D012` maintainer doctrine, explicit release guardrails, and
@@ -242,7 +242,7 @@ skips.
 The conformance report is
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
+`sha256:4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f`.
 Its checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 Each case receipt binds the selected manifest's exact source-byte identity.
@@ -261,10 +261,15 @@ A later bound-source refresh produced
 `sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
 which supersedes the retained
 `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`
-identity. The active release-boundary refresh binds the final declared sources,
-three relevant-core test files, current observations, and the public-snapshot
-privacy guard; its identity above supersedes
+identity. The retained release-boundary refresh binds the final declared
+sources, three relevant-core test files, current observations, and the
+public-snapshot privacy guard. It produced
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`,
+which supersedes
 `sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+The active status-boundary refresh changes only the three bound package and
+status files to their current bytes. Its identity above supersedes
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
 Both dedicated workflow steps run Ruff over the complete research-local
 GraphRecipe directory before running the 40-test slice.
 

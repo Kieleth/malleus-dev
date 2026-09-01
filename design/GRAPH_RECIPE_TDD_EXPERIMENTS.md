@@ -20,8 +20,8 @@ intended release locator is `v0.11.0`; exact report, file, and checksum
 identities are authoritative.
 
 Canonical design graph: [`PROTOCOL_FOUNDATION_GRAPH.ttl`](PROTOCOL_FOUNDATION_GRAPH.ttl),
-revision 25,
-`sha256:f921b822a7db805dacd9a43112591acbd6815565f8f5613348051346f17d65a9`
+revision 26,
+`sha256:c2fff2c73e5aee95477ee26e1bf22fe1a17f6fd9da90dd4b85309b5dad3a3724`
 
 Shipped capability: none
 
@@ -514,7 +514,7 @@ tests, the relevant core selection passed 257 tests with 2 skips, and the full
 configured suite recorded 807 passes with 2 skips. Exact evidence lives in
 [`FIRST_SLICE_CONFORMANCE_REPORT.json`](../research/ontology_driven_kg_realization/experiments/graph_recipe/FIRST_SLICE_CONFORMANCE_REPORT.json),
 identified by
-`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
+`sha256:4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f`.
 The checksum set is identified by
 `sha256:aa5c904f79363b68bab9d82a2b6b027748ffe25358ef3fead5c5ba7b3dc7a3f2`.
 
@@ -527,10 +527,15 @@ which supersedes
 A later bound-source refresh produced
 `sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`,
 which supersedes `sha256:64a16f2e5089325c433b14dfc683383aeb9592372da012a7ea13babba67a6a97`.
-The active release-boundary refresh adds the final ontology and status-document
-bytes, three relevant-core test sources, current observations, and the
-non-enumerating public-snapshot guard. Its identity above supersedes
+The retained release-boundary refresh adds the final ontology and
+status-document bytes, three relevant-core test sources, current observations,
+and the non-enumerating public-snapshot guard. It produced
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`,
+which supersedes
 `sha256:9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0`.
+The active status-boundary refresh changes only the three bound package and
+status files to their current bytes. Its identity above supersedes
+`sha256:6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8`.
 The checksum-set identity did not change.
 
 Each receipt's canonical identity covers its complete serialized value,
@@ -858,7 +863,7 @@ okg:GraphRecipeExperimentalLearning rdf:type mfg:DesignObject ;
 
 <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance>
     rdf:type mfg:DesignObject ;
-    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
+    mfg:identifiedBy okg:GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceConformanceReport-sha256-41b180b273ecc24e59af769736519c071707134beecf91ae60ce10a1092a1ae0
@@ -875,6 +880,10 @@ okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c
 okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8
     rdf:type mfg:DesignObject ;
     mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-9790502676caf7279ba42d85ede91c0326b5c99adb4e8f590dcbe8409a061eb0 .
+
+okg:GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f
+    rdf:type mfg:DesignObject ;
+    mfg:supersedes okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 .
 
 okg:GraphRecipeFirstSliceReportIdentityGuard rdf:type mfg:Invariant ;
     mfg:governs <https://fixtures.malleus.dev/graph-recipe/v0/report/first-slice-conformance> ;
@@ -904,6 +913,13 @@ okg:GraphRecipeReportReleaseBoundaryRefreshObservation rdf:type mfg:Observation 
     mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
     mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
     mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
+    mfg:status mfg:Implemented .
+
+okg:GraphRecipeReportStatusBoundaryRefreshObservation rdf:type mfg:Observation ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-6d41cd245234dc3b77bbbc5a5c16529d197aa9db2a03f1525c1b1602d17c82a8 ;
+    mfg:binds okg:GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f ;
+    mfg:dependsOn okg:GraphRecipeFirstSliceReportIdentityGuard ;
+    mfg:produces okg:GraphRecipeFirstSliceConformanceReport-sha256-4373f4d3907cd77e69290a9d45376d649036efb732bf9b9ed1c44c224170e81f ;
     mfg:status mfg:Implemented .
 
 okg:GraphRecipeFirstSliceChecksumSet rdf:type mfg:DesignObject ;

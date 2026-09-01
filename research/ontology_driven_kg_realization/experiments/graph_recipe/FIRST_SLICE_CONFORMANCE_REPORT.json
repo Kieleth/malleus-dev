@@ -9,10 +9,10 @@
       "src/malleus/staging.py": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609"
     },
     "package_boundary_sources": {
-      "docs/IMPLEMENTATION_STATUS.md": "sha256:f4b835bbd40d3d66268e5bb98a04ed5c9c8ffa56f1327667e5dab9ee14643054",
-      "pyproject.toml": "sha256:7eb414865f32da4c20c6cedbbfa490ed4754bdd0ca9af21b8ff757f5ed2096f3",
+      "docs/IMPLEMENTATION_STATUS.md": "sha256:82d862e1cad219f5d734ae30bd4cef24708bfdf2258b0ae0c1050749589b38e3",
+      "pyproject.toml": "sha256:d40940c7ea1ca137a4626619d56db9fe35fad8f7d7e33eee84ce1dade3988fbb",
       "src/malleus/__init__.py": "sha256:1833bfa37721d6e97d09cd6c3efd2ebed9be9ac1752dab244d75c91c63cb9fe8",
-      "src/malleus/status.py": "sha256:27b32b7fb766671f60b8719ae66dbda28a335e8492339bfa7dbe6335ab9e4210"
+      "src/malleus/status.py": "sha256:478efa108c9330283e0e30537b1f6ac8a30d67153831ee61e3c4e33178ddf7f0"
     },
     "relevant_core_test_sources": {
       "tests/test_kg.py": "sha256:3c5546215f84d371ffffcfb9ee560e316722783b5e2a7705fd0d1e206d35bf63",
