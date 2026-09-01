@@ -725,16 +725,17 @@ def _overseer_prefix(sequence: int) -> SimpleNamespace:
     )
 
 
-def test_program_registry_contains_the_exact_approved_71_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_72_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 71
+    assert len(registry) == 72
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-D05"] == ("CC-D01", "CC-D02", "CC-D03")
     assert registry["CC-D06"] == ("CC-D05",)
     assert registry["CC-D08"] == ("CC-D02", "CC-D03", "CC-D05")
     assert registry["CC-D17"] == ("CC-D05", "CC-D06")
+    assert registry["CC-D18"] == ("CC-D10", "CC-D17")
     assert registry["CC-R01"] == (
         "CC-000",
         "CC-X03",
@@ -778,9 +779,12 @@ def test_program_registry_contains_the_exact_approved_71_workstreams() -> None:
         "CC-R08",
         "CC-D07",
         "CC-D10",
+        "CC-D18",
         "CC-021",
         "CC-022",
     )
+    assert "CC-D18" in registry["CC-R06"]
+    assert registry["CC-P10"] == ("CC-P01", "CC-W02", "CC-R09")
     assert registry["CC-P21"] == ("CC-P12", "CC-P19", "CC-P20", "CC-R10")
     assert registry["CC-P52"] == ("CC-P45", "CC-P51", "CC-PUB01")
 
@@ -795,8 +799,8 @@ def test_research_runway_exposes_the_machine_and_realization_handoffs() -> None:
         "lean-review conformance",
         "no profile-specific event, record, or field name",
         "no arbitrary-code escape hatch",
-        "frontend-neutral PopulationPlan",
-        "GraphConstructionPlan artifact boundary",
+        "frontend-neutral KnowledgeChangeSet",
+        "PopulationPlan and operation-dependency plan remain derivation inputs",
         "canonical generic validation receipt",
         "no stable public API claim",
     ):
@@ -809,7 +813,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 71
+    assert len(state.workstreams) == 72
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -880,8 +884,9 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D13": ("CC-D01",),
         "CC-D14": (),
         "CC-D17": ("CC-D05", "CC-D06"),
+        "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 33
+    assert len(state.cards) == 34
     for workstream_id, dependencies in decisions.items():
         card = state.cards[workstream_id]
         assert card["assignment"] == {
@@ -981,6 +986,23 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "no implementation",
     ):
         assert phrase in d17_responsibility
+    d18_responsibility = state.cards["CC-D18"]["responsibility"]
+    for phrase in (
+        "KnowledgeChangeSet",
+        "one authoritative ordered ledger",
+        "replay-derived accepted temporal graph",
+        "empty graph",
+        "genesis change set",
+        "same immutable change-set identity",
+        "ordered primitive operations",
+        "operation-local dependencies",
+        "no direct accepted-state mutation",
+        "persisted structural candidates remain non-governed and non-accepted",
+        "cross-contract change",
+        "zero-scope decision",
+        "no runtime or ontology implementation",
+    ):
+        assert phrase in d18_responsibility
 
 
 def test_cc010_activation_boundary_is_exact() -> None:
@@ -1612,7 +1634,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
 def test_small_shop_input_completion_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
-    assert manifest["revision"] == 3
+    assert manifest["revision"] == 4
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     assert row["card"]["state"] == "PRESENT"
     path = CONTRACT / row["card"]["path"]
@@ -5070,7 +5092,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 71 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 72 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])

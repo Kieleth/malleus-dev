@@ -2663,7 +2663,7 @@ def test_ccd12_r3_exact_wheel_derivation_authority_is_active() -> None:
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
 
 
-def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
+def test_revision_23_graph_is_generated_from_all_turtle_projections() -> None:
     blocks = [
         token.content
         for path in FOUNDATION_PROJECTIONS
@@ -2687,8 +2687,8 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
     assert source.decode("utf-8").splitlines()[:9] == [
         "# Canonical Malleus protocol foundation design graph.",
         "#",
-        "# Design graph revision: 22",
-        "# Evidence cutoff: 2026-08-31",
+        "# Design graph revision: 23",
+        "# Evidence cutoff: 2026-09-01",
         "# Authority: candidate and accepted design states recorded by author decisions.",
         "# Shipped capability remains controlled by src/malleus/status.py and tests.",
         "#",
@@ -2704,7 +2704,7 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
         index = lines.index(marker)
         assert lines[index : index + 3] == [
             marker,
-            "revision 22,",
+            "revision 23,",
             f"`sha256:{digest}`",
         ]
     assert body == sorted(set(body))
@@ -2753,6 +2753,12 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
         Literal("2026-08-31")
     }
     assert set(canonical.objects(od015, selects)) == {architecture}
+    od016 = URIRef(f"{cc}OD-016")
+    kcs_architecture = URIRef(f"{mfg}SingleLedgerKnowledgeChangeSetArchitecture")
+    assert set(canonical.objects(od016, decision_date)) == {
+        Literal("2026-09-01")
+    }
+    assert set(canonical.objects(od016, selects)) == {kcs_architecture}
     rdf_type = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     status = URIRef(f"{mfg}status")
     decided_by = URIRef(f"{mfg}decidedBy")
@@ -2781,6 +2787,16 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
     }
     assert set(canonical.objects(od015, decided_by)) == {URIRef(f"{mfg}Author")}
     assert set(canonical.objects(od015, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(od016, rdf_type)) == {
+        URIRef(f"{mfg}DecisionRecord")
+    }
+    assert set(canonical.objects(od016, decided_by)) == {URIRef(f"{mfg}Author")}
+    assert set(canonical.objects(od016, status)) == {
+        URIRef(f"{mfg}AcceptedDesign")
+    }
+    assert set(canonical.objects(kcs_architecture, status)) == {
         URIRef(f"{mfg}AcceptedDesign")
     }
     assert set(canonical.objects(architecture, status)) == {
@@ -2893,6 +2909,18 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
         "ReplayNeverCallsOntologyBuilderCorrectorBoundary",
     }
     required_bindings = {
+        "SingleLedgerKnowledgeChangeSetArchitecture": {
+            "OneAuthoritativeSemanticHistoryBoundary",
+            "ReplayDerivedAcceptedTemporalGraphOnlyBoundary",
+            "RetainedGenesisKnowledgeChangeSetBoundary",
+            "LifecycleSharedKnowledgeChangeSetIdentityBoundary",
+            "MachineEffectsAdmitKnowledgeChangeSetOnlyBoundary",
+            "NoIndependentAcceptedGraphMutationBoundary",
+            "TransitionLocalOperationDependencyPlanBoundary",
+            "PersistedStructuralCandidateNonGovernedBoundary",
+            "AtomicAcceptApplicationEventBoundary",
+            "CrossContractKnowledgeChangeSetMigrationFutureBoundary",
+        },
         "ExecutorOnlyProtocolMachineArchitecture": {
             "StrictNeutralContractIRBoundary",
             "StrictProtocolMachineIRBoundary",
@@ -3065,6 +3093,58 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
             str(value).removeprefix(mfg)
             for value in canonical.objects(URIRef(f"{mfg}{selected}"), binds)
         } == expected
+
+    knowledge_change_set = URIRef(f"{mfg}KnowledgeChangeSet")
+    knowledge_change_set_hash = URIRef(f"{mfg}KnowledgeChangeSetHash")
+    identified_by = URIRef(f"{mfg}identifiedBy")
+    governed_by = URIRef(f"{mfg}governedBy")
+    assert set(canonical.objects(knowledge_change_set, rdf_type)) == {
+        URIRef("http://www.w3.org/2000/01/rdf-schema#Class")
+    }
+    assert set(canonical.objects(knowledge_change_set, status)) == {
+        URIRef(f"{mfg}Candidate")
+    }
+    assert set(canonical.objects(knowledge_change_set, identified_by)) == {
+        knowledge_change_set_hash
+    }
+    assert set(canonical.objects(knowledge_change_set, governed_by)) == {
+        URIRef(f"{mfg}EffectiveContract")
+    }
+    assert {
+        str(value).removeprefix(mfg)
+        for value in canonical.objects(knowledge_change_set_hash, binds)
+    } == {
+        "EffectiveContractHash",
+        "KnowledgeChangeSetSourceEvidenceClosureHash",
+        "KnowledgeChangeSetBaseLedgerHead",
+        "KnowledgeChangeSetBaseStateHash",
+        "KnowledgeChangeSetOrderedOperationManifestHash",
+        "KnowledgeChangeSetValidTimeCoordinateHash",
+        "KnowledgeChangeSetSupersessionHash",
+        "KnowledgeChangeSetLocalDependencyHash",
+    }
+
+    operation_plan = URIRef(f"{okg}OperationDependencyPlan")
+    construction_member_graph = URIRef(f"{okg}ConstructionMemberGraph")
+    supersedes = URIRef(f"{mfg}supersedes")
+    assert set(canonical.objects(operation_plan, status)) == {
+        URIRef(f"{mfg}Candidate")
+    }
+    assert set(canonical.objects(operation_plan, supersedes)) == {
+        construction_member_graph
+    }
+    assert set(canonical.objects(construction_member_graph, status)) == {
+        URIRef(f"{mfg}Excluded")
+    }
+    transition_plan_boundary = URIRef(
+        f"{mfg}TransitionLocalOperationDependencyPlanBoundary"
+    )
+    assert set(canonical.objects(transition_plan_boundary, binds)) == {
+        URIRef(f"{okg}PopulationPlan"),
+        URIRef(f"{okg}GraphConstructionPlan"),
+        operation_plan,
+    }
+    assert not any("SemanticTransition" in str(node) for node in canonical.all_nodes())
 
     identified_by = URIRef(f"{mfg}identifiedBy")
     metamodel_identities = {
@@ -3289,6 +3369,40 @@ def test_revision_22_graph_is_generated_from_all_turtle_projections() -> None:
         "Replay uses retained bytes and\nrecorded artifacts and never calls the skill.",
     ):
         assert exact in checkpoint
+
+
+def test_knowledge_change_set_target_has_one_state_authority() -> None:
+    decisions = (
+        ROOT / "design" / "contract_compiler" / "decisions.md"
+    ).read_text(encoding="utf-8")
+    program = (ROOT / "design" / "contract_compiler" / "program.md").read_text(
+        encoding="utf-8"
+    )
+    projection = (
+        ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md"
+    ).read_text(encoding="utf-8")
+    recipe = (ROOT / "design" / "GRAPH_RECIPE_TDD_EXPERIMENTS.md").read_text(
+        encoding="utf-8"
+    )
+    combined = " ".join((decisions + program + projection).split())
+
+    for phrase in (
+        "KnowledgeChangeSet is the one frontend-neutral immutable state-change artifact",
+        "one authoritative ordered semantic and protocol history",
+        "one evolving temporal domain-KG projection",
+        "initial accepted domain state is the empty graph",
+        "same immutable KnowledgeChangeSet identity",
+        "ACCEPT decision event may contain the atomic application",
+        "persisted structural candidate remains non-governed and non-accepted",
+        "cross-contract KnowledgeChangeSet or migration change set",
+        "machine effects may produce, validate, or admit exact change-set and receipt data",
+        "must not mutate the accepted temporal graph directly",
+    ):
+        assert phrase in combined
+
+    assert "Three graphs must remain distinct" not in recipe
+    assert "Three artifacts must remain distinct" in recipe
+    assert "`OperationDependencyPlan` is not a knowledge graph" in recipe
 
 
 def test_od005_seed_vocabulary_and_canonical_example_are_mechanical() -> None:
@@ -3652,7 +3766,7 @@ def test_od007_protected_partition_contract_is_exact() -> None:
     d07 = next(line.casefold() for line in program.splitlines() if line.startswith("| CC-D07 "))
     for phrase in ("protected replay-derived governance partition", "epoch boundary"):
         assert phrase in d07
-    remaining = decisions.split("## Remaining decisions after revision 22", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 23", 1)[1]
     assert "| OD-007 |" not in remaining
 
 
@@ -3907,7 +4021,7 @@ def test_od010_contextual_reference_contract_is_exact() -> None:
         "referentially closed temporal views",
     ):
         assert phrase in d10
-    remaining = decisions.split("## Remaining decisions after revision 22", 1)[1]
+    remaining = decisions.split("## Remaining decisions after revision 23", 1)[1]
     assert "| OD-010 |" not in remaining
 
     conformance = (
