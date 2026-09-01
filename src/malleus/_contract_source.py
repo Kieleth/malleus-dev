@@ -183,6 +183,15 @@ class TraversalOrdering:
         return 0
 
 
+@dataclass(slots=True)
+class _VisitFrame:
+    source: RetainedSource
+    request: SourceRequest
+    active: tuple[str, ...]
+    authored_imports: tuple[str, ...] | None = None
+    next_ordinal: int = 0
+
+
 def _refuse(
     reason: RefusalReason,
     request: SourceRequest,
@@ -281,36 +290,48 @@ class _ClosureBuilder:
         request: SourceRequest,
         active: tuple[str, ...],
     ) -> None:
-        locator = source.resolved_locator
-        lineage = active + (locator,)
-        if locator in active:
-            raise _refuse(RefusalReason.IMPORT_CYCLE, request, lineage)
-        if locator in self.observations:
-            return
-        try:
-            imports = self.import_reader.read_imports(source)
-        except CollaboratorRefusal as error:
-            raise _refuse(
-                RefusalReason.IMPORT_READER_REFUSED,
-                request,
-                lineage,
-            ) from error
-        if type(imports) is not tuple or any(
-            type(literal) is not str or not literal for literal in imports
-        ):
-            raise _refuse(
-                RefusalReason.MALFORMED_IMPORT_RESULT,
-                request,
-                lineage,
-            )
-        observation = ModuleObservation(
-            module_id=locator,
-            source=source,
-            authored_imports=imports,
-        )
-        self.observations[locator] = observation
-        self.observation_order.append(observation)
-        for ordinal, literal in enumerate(imports):
+        stack = [_VisitFrame(source=source, request=request, active=active)]
+        while stack:
+            frame = stack[-1]
+            locator = frame.source.resolved_locator
+            lineage = frame.active + (locator,)
+            imports = frame.authored_imports
+            if imports is None:
+                if locator in frame.active:
+                    raise _refuse(RefusalReason.IMPORT_CYCLE, frame.request, lineage)
+                if locator in self.observations:
+                    stack.pop()
+                    continue
+                try:
+                    imports = self.import_reader.read_imports(frame.source)
+                except CollaboratorRefusal as error:
+                    raise _refuse(
+                        RefusalReason.IMPORT_READER_REFUSED,
+                        frame.request,
+                        lineage,
+                    ) from error
+                if type(imports) is not tuple or any(
+                    type(literal) is not str or not literal for literal in imports
+                ):
+                    raise _refuse(
+                        RefusalReason.MALFORMED_IMPORT_RESULT,
+                        frame.request,
+                        lineage,
+                    )
+                observation = ModuleObservation(
+                    module_id=locator,
+                    source=frame.source,
+                    authored_imports=imports,
+                )
+                self.observations[locator] = observation
+                self.observation_order.append(observation)
+                frame.authored_imports = imports
+            if frame.next_ordinal == len(imports):
+                stack.pop()
+                continue
+            ordinal = frame.next_ordinal
+            frame.next_ordinal += 1
+            literal = imports[ordinal]
             child_request = ImportRequest(
                 parent_module_id=locator,
                 parent_import_ordinal=ordinal,
@@ -327,7 +348,13 @@ class _ClosureBuilder:
                     resolver_selection=self.selection,
                 )
             )
-            self.visit(child, child_request, lineage)
+            stack.append(
+                _VisitFrame(
+                    source=child,
+                    request=child_request,
+                    active=lineage,
+                )
+            )
 
     def build(self, requested_locator: str) -> SourceClosure:
         root_request = RootRequest(requested_locator=requested_locator)
