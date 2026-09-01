@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import ast
+from copy import deepcopy
 from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
 from hashlib import sha256
 from importlib.resources import files
+import json
 from pathlib import Path
 
 import pytest
@@ -762,3 +764,32 @@ def test_binder_has_only_its_adjacent_profile_io_and_no_parser_fallback() -> Non
     assert "Greenhouse" not in source
     assert "Small Shop" not in source
     assert PROFILE.is_file()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ("unknown-root", "separator", "marker", "builtin-collision", "extractor"),
+)
+def test_binding_profile_is_closed_and_type_exact(
+    mutation: str, tmp_path: Path, monkeypatch
+) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    if mutation == "unknown-root":
+        profile["fallback"] = True
+    elif mutation == "separator":
+        profile["qualification"]["separator"] = "#"
+    elif mutation == "marker":
+        profile["adoption"]["marker_value"] = 1
+    elif mutation == "builtin-collision":
+        profile["trusted_builtins"][1] = deepcopy(profile["trusted_builtins"][0])
+    else:
+        profile["reference_sites"][0]["extract"] = "CALLBACK"
+    mutated = tmp_path / "binding-profile.json"
+    mutated.write_text(json.dumps(profile), encoding="utf-8")
+    monkeypatch.setattr(binder_module, "_PROFILE_PATH", mutated)
+    schema_id = "https://example.test/profile-refusal"
+    closure = _declared({schema_id: _source(schema_id)}, root=schema_id)
+
+    refusal = _reason(closure)
+
+    assert refusal.reason is BindingRefusalReason.INVALID_PROFILE
