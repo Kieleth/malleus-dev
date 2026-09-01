@@ -168,6 +168,7 @@ core-metadata-version = "2.4"
 exclude = [
     "/src/malleus/_contract_compiler.py",
     "/src/malleus/_contract_compiler_profile.json",
+    "/src/malleus/_contract_linkml_adapter.py",
     "/src/malleus/_contract_source.py",
 ]
 
