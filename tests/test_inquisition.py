@@ -384,8 +384,22 @@ class TestRubricIsWellFormedAndFailsLoud:
         ):
             assert requirement in authority_text
 
+        change_set = rites["single_ledger_knowledge_change"]
+        assert change_set["severity"] == HERESY
+        change_set_text = (
+            f"{change_set['question']} {change_set['lesson']}".lower()
+        )
+        for requirement in (
+            "knowledgechangeset",
+            "one authoritative ordered ledger",
+            "replay-derived",
+            "no independent accepted-state write path",
+            "non-governed and non-accepted",
+        ):
+            assert requirement in change_set_text
+
     def test_rubric_version_records_protocol_boundary_instrument_change(self):
-        assert int(_rubric()["version"]) == 11
+        assert int(_rubric()["version"]) == 12
 
     def test_unparseable_rubric_refuses(self, tmp_path):
         path = tmp_path / "rubric.yaml"
@@ -1705,6 +1719,10 @@ class TestSkillsAreInstallable:
             "guarantees omitted",
             "compiler-enabled profile",
             "EXECUTOR_ONLY",
+            "SINGLE_LEDGER_CHANGE_SET",
+            "KnowledgeChangeSet",
+            "genesis change set",
+            "non-governed and non-accepted",
             "second conforming interpreter",
             "self-inquisition",
             "not repository or protocol conformance",
@@ -1723,6 +1741,7 @@ class TestSkillsAreInstallable:
             "protocol_role_is_explicit",
             "optional_profile_stays_optional",
             "protocol_authority_is_data",
+            "single_ledger_knowledge_change",
             "Never treat its purity seal as repository conformance",
             "Quiet Bell, Neutral Greenhouse, Small Shop, and CYP450",
             "Only a bounded, frozen test input, answer key, or scenario",

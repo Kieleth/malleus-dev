@@ -2102,6 +2102,30 @@ def test_portable_protocol_machine_keeps_authority_out_of_the_executor() -> None
     assert "not protocol authority" in normalized_assent
 
 
+def test_accepted_knowledge_has_one_ledger_and_replay_only_projection() -> None:
+    paths = (
+        DOCS / "ARCHITECTURE.md",
+        DOCS / "ASSENT_PROTOCOL.md",
+        DOCS / "KNOWLEDGE_GRAPH_PROTOCOL.md",
+        DOCS / "ADOPTION_GUIDE.md",
+        DOCS / "PRINCIPLES.md",
+    )
+    combined = " ".join(
+        " ".join(path.read_text(encoding="utf-8").split()) for path in paths
+    )
+
+    for phrase in (
+        "KnowledgeChangeSet",
+        "one authoritative ordered ledger",
+        "replay-derived accepted temporal graph",
+        "empty graph plus a retained genesis change set",
+        "no independent accepted-state write path",
+        "non-governed and non-accepted",
+        "ACCEPT and atomic application may share one verified ledger event",
+    ):
+        assert phrase in combined
+
+
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
     for path in (ROOT / "README.md", DOCS / "ADOPTION_GUIDE.md"):
         text = path.read_text(encoding="utf-8")
