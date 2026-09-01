@@ -856,6 +856,7 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
 ) -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     excluded = project["tool"]["hatch"]["build"]["exclude"]
+    included = project["tool"]["hatch"]["build"]["include"]
     wheel_excluded = project["tool"]["hatch"]["build"]["targets"]["wheel"][
         "exclude"
     ]
@@ -889,6 +890,7 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
 
     assert "/src/malleus/_contract_compiler.py" in excluded
     assert "/src/malleus/_contract_compiler_profile.json" in excluded
+    assert "/src/malleus/_contract_source.py" in included
     assert set(wheel_excluded) == {
         "/src/malleus/_contract_compiler.py",
         "/src/malleus/_contract_compiler_profile.json",
@@ -900,6 +902,10 @@ def test_bootstrap_is_private_and_excluded_from_the_distribution(
     assert not any(
         member.endswith("/src/malleus/_contract_compiler.py")
         or member.endswith("/src/malleus/_contract_compiler_profile.json")
+        for member in source_members
+    )
+    assert any(
+        member.endswith("/src/malleus/_contract_source.py")
         for member in source_members
     )
     assert "compile_linkml_contract" not in malleus.__all__
