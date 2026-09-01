@@ -1,0 +1,109 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 11336,
+      "path": "scripts/ci.py",
+      "sha256": "sha256:6bf5c61fad25e4e1d451a9f38ca6bf0402e23eda228755f958ca3b2e825ff093"
+    },
+    {
+      "byte_length": 6597,
+      "path": "tests/contract_compiler/test_ci.py",
+      "sha256": "sha256:8298602990371ad0c10d38651ccffa5a6de44a2502ab7bf10f0e899e56d51029"
+    },
+    {
+      "byte_length": 1239,
+      "path": ".github/workflows/tests.yml",
+      "sha256": "sha256:6f9d4f4830037348514808d91587a79e49dc94d3308b542228e6a385b618321b"
+    },
+    {
+      "byte_length": 58366,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:e2a3117f39869ba4315f7f5a9df804e4e9ab539c80fe850257c374b85c80328b"
+    },
+    {
+      "byte_length": 291599,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:c392c99ea72eb1d9b71d3b25efee1fb7ef9ba2807c36bfecc5c53ff7737499c1"
+    },
+    {
+      "byte_length": 31533,
+      "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "sha256": "sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3"
+    },
+    {
+      "byte_length": 42323,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:8bd1ecffb64bd56c06f8492aa24e234dc252c60d39f4bffed7c906e9948c8481"
+    },
+    {
+      "byte_length": 46302,
+      "path": "ROADMAP.md",
+      "sha256": "sha256:c6bbb46baf353daaf4283a50ea81fef4cff0a76560b2d4663c657044b0a22c13"
+    },
+    {
+      "byte_length": 8940,
+      "path": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "sha256": "sha256:8a75c34bcd3e5fe46b1beab7b28b361fc130f4cd307309ff68d1ca142d027439"
+    },
+    {
+      "byte_length": 26634,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:5b0bfaeea8aed67e45e07f4ab6a89d8827837b421c92e1960688278ccb9a2278"
+    }
+  ],
+  "base_commit": "2f3952b54e29aba0051d7c6b85fe35da88bf464b",
+  "checks": [
+    {
+      "check_id": "research-ci-plan",
+      "method": "Inspect and test the immutable command plans for all, test, docs, and package profiles.",
+      "observed": "The normal all profile runs quality, tests, governance, GraphRecipe, Small Shop, and documentation only. The three package commands exist solely in the explicit package profile.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "tests-workflow",
+      "method": "Parse both GitHub workflows and compare their exact delegated local-runner commands.",
+      "observed": "The tests workflow contains no package command. The release workflow still invokes the explicit package profile and retains distribution artifacts.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "optional-package-phase",
+      "method": "Validate a complete research TDD sequence with PACKAGE omitted, then exercise every accepted and refused PACKAGE result.",
+      "observed": "Research completion accepts omission of PACKAGE. If present, PACKAGE accepts only PASS or NOT_APPLICABLE, rejects FAIL and EXPECTED_FAILURE, and grants no package authority.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "greenhouse-privacy-guard",
+      "method": "Run the Greenhouse suite after removing distribution construction and archive inspection from its routine privacy test.",
+      "observed": "The suite retains private-module and absent-public-export guards without building a wheel or source archive.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "r02-behavior-and-evidence",
+      "method": "Revalidate the exact eligible R02 candidate, frozen worker ledger and report, current private source, and all contract-compiler tests.",
+      "observed": "All 388 contract-compiler tests pass. The exact adapter candidate, twenty-one-entry worker ledger, RED-only FAIL rule, private boundary, and unselected state remain unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "dependency-and-release-boundaries",
+      "method": "Inspect dependency locks, pyproject safety configuration, the release workflow, and modified research completion paths.",
+      "observed": "Exact locks, pyproject exclusions, and release packaging remain unchanged. None is used as active evidence or a completion gate for the private research stage.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "documented-deferral",
+      "method": "Cross-check the compiler program, roadmap, card, and integration row.",
+      "observed": "All surfaces state that package work is release-only, the distribution audit is deferred to CC-PKG02, PACKAGE is advisory, and R02 remains private and unselected.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "The full distribution audit is deferred to the planned CC-PKG02 release boundary. This correction does not prove current wheel or source-archive membership.",
+    "Existing pyproject exclusions remain passive safety configuration. They are not completion evidence or a public packaging contract for the private adapter.",
+    "The explicit package profile can still require network access for hash-pinned build dependencies when deliberately invoked.",
+    "The old OVR-000306 verification and OVR-000307 completion remain immutable history and require forward corrections; their package-dependent authority must not be used.",
+    "The adapter remains private, eligible, and unselected. This correction activates no successor workstream and creates no public API or release."
+  ],
+  "recorded_at": "2026-09-01T22:12:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R02"
+}

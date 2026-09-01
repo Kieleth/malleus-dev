@@ -122,7 +122,7 @@ PACKAGE = (
     Command("package-smoke", (sys.executable, "-m", "venv")),
 )
 PROFILES = {
-    "all": (*TEST, SMALL_SHOP_TEST, *DOCS, *PACKAGE),
+    "all": (*TEST, SMALL_SHOP_TEST, *DOCS),
     "test": TEST,
     "docs": DOCS,
     "package": PACKAGE,

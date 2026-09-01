@@ -1,0 +1,81 @@
+{
+  "actor": {
+    "id": "ccr02-research-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T22:12:04Z",
+    "claims": [
+      "CC-R02 binds the exact 5682fc43d7308d932a586086631bf0170ff1278f..085b59b718cf4d4c647b0b842308d67df5f2a3ba eligible candidate at tree 1cad438caa1520c32cc44c4da470dbefa284e2ca.",
+      "The candidate contains exactly five implementation and test artifacts, one PASS report, and the immutable twenty-entry candidate ledger prefix within authorized scopes.",
+      "The assigned worker ledger contains twenty-one append-only entries and ends at sha256:ce8c6d9708a1d0540995f48624c9494c7a28affd535ff7ac56740184fbecbed8.",
+      "Its RED observation is FAIL and every active later behavioral phase is PASS in canonical order. Literal FAIL remains valid only for RED.",
+      "PACKAGE is optional and advisory during the research runway. The retained PACKAGE PASS is an observation, not completion or distribution authority.",
+      "The private adapter behavior, exact candidate evidence, retained-source boundary, current-main divergence, and absence of a public export pass their mechanical checks.",
+      "Exact compiler dependency locks remain enforced. Normal all CI and the pull-request test workflow do not construct, inspect, or install distributions.",
+      "The explicit package profile and release workflow remain available for an actual distribution audit or release.",
+      "The candidate remains ELIGIBLE, private, unselected, and separate from global binding, elaboration, neutral facts, public artifacts, protocol execution, and release.",
+      "The replacement report binds ten exact artifacts and seven PASS checks."
+    ],
+    "limitations": [
+      "This is a private LinkML 1.11.1 support-profile adapter, not a public API, wire format, plugin framework, release, or general LinkML support promise.",
+      "The adapter owns retained declarations and classified occurrences only. Later compiler and protocol stages remain separate.",
+      "Quiet Bell still refuses as a complete closure because its authored malleus import has no retained governed source.",
+      "Wheel and source-archive construction, metadata, membership, clean-install, and publication checks are deferred to CC-PKG02 and release work.",
+      "Existing package exclusions are passive safety configuration and are not completion evidence.",
+      "No successor workstream is activated by this completion."
+    ]
+  },
+  "entry_hash": "sha256:170c48ccdc15d9610c236875d3e4438842df3963b0ca57ac801d89497096e32a",
+  "entry_id": "OVR-000311",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4470b3d89db2c5e3bdfed5716966a2cb36164b793bcd0c3242be242ebfcb77a1",
+  "recorded_at": "2026-09-01T22:12:04Z",
+  "references": [
+    {
+      "digest": "sha256:fa34565ddb9381a595be2b2baec087ac5f17138e8fc4a976eaed88f944ae1fa5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-research-completion-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000308",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000309",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000310",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 311,
+  "subject": {
+    "id": "ccr02-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify private adapter completion without a distribution gate.",
+  "why": "Research completion rests on behavior, exact evidence, privacy, retained sources, exact dependency locks, and unselected state. Distribution construction and publication are separate release concerns."
+}

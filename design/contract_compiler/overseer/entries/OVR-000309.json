@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-R02"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000307"
+  },
+  "entry_hash": "sha256:4b55710736a3574aef62b496d31aeb6a04e15fc593e4ba43f23550ae61f2562f",
+  "entry_id": "OVR-000309",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6e373b9d6e1c20b300dbd735948c1d2837cd52809ef4bead080b773012a2c6d7",
+  "recorded_at": "2026-09-01T22:12:02Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000307",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000308",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 309,
+  "subject": {
+    "id": "CC-R02",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the package-dependent R02 completion state.",
+  "why": "OVR-000307 depends on the superseded OVR-000306 verification. Removing that false package authority returns R02 to its prior ACTIVE state until a replacement behavior-based verification and completion are appended. The candidate, worker evidence, and implementation remain unchanged."
+}

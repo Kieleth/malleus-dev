@@ -1,0 +1,172 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R02",
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:6bf5c61fad25e4e1d451a9f38ca6bf0402e23eda228755f958ca3b2e825ff093",
+        "before_digest": "sha256:979cd3fac6a085055cd77bfa82399e799a0e337254c14700206ee86e8589d8cb",
+        "change": "MODIFIED",
+        "path": "scripts/ci.py"
+      },
+      {
+        "after_digest": "sha256:8298602990371ad0c10d38651ccffa5a6de44a2502ab7bf10f0e899e56d51029",
+        "before_digest": "sha256:5da0c1e83e71df18c050bc0770a029d71b2fd79673cc167ee32b0a13454f1ff8",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_ci.py"
+      },
+      {
+        "after_digest": "sha256:6f9d4f4830037348514808d91587a79e49dc94d3308b542228e6a385b618321b",
+        "before_digest": "sha256:98c55c46ab4853d7beca3dc659dfeae607872d56a28365367432e04760e7e127",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:e2a3117f39869ba4315f7f5a9df804e4e9ab539c80fe850257c374b85c80328b",
+        "before_digest": "sha256:c8806d866d2aa7315e8c2e0e280b0ff6d70b67c1e680c225e3cbf01900ea7f85",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:c392c99ea72eb1d9b71d3b25efee1fb7ef9ba2807c36bfecc5c53ff7737499c1",
+        "before_digest": "sha256:f12a6a4b48fe598b8ee57e9a6c98be00f992cd8c0b19950898fc814b111a0f80",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3",
+        "before_digest": "sha256:e5b0db86a4e6bd8ac330a56120a4ba2a880cb0b9621d649bad6f9324f26b01fc",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py"
+      },
+      {
+        "after_digest": "sha256:8bd1ecffb64bd56c06f8492aa24e234dc252c60d39f4bffed7c906e9948c8481",
+        "before_digest": "sha256:4d8ee158e458098bca2a2cdf2e62bbf8a62fa5fd35e63ecd6419529dcef41220",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:c6bbb46baf353daaf4283a50ea81fef4cff0a76560b2d4663c657044b0a22c13",
+        "before_digest": "sha256:6d8134e8b883c4d65157a70ff9646a76fd8bae43069998d5d2c0441b69a011d7",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:8a75c34bcd3e5fe46b1beab7b28b361fc130f4cd307309ff68d1ca142d027439",
+        "before_digest": "sha256:bb52d7776444ed9d108a08bdc644223cce6c3738d514f81e3a1b29e58eb80969",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R02/manifest.json"
+      },
+      {
+        "after_digest": "sha256:5b0bfaeea8aed67e45e07f4ab6a89d8827837b421c92e1960688278ccb9a2278",
+        "before_digest": "sha256:87627b6f37de9c5b6963fa67ac147f86995b6b525acb929287d7f8c94c91078a",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:fa34565ddb9381a595be2b2baec087ac5f17138e8fc4a976eaed88f944ae1fa5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R02-research-completion-correction.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:4470b3d89db2c5e3bdfed5716966a2cb36164b793bcd0c3242be242ebfcb77a1",
+  "entry_id": "OVR-000310",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4b55710736a3574aef62b496d31aeb6a04e15fc593e4ba43f23550ae61f2562f",
+  "recorded_at": "2026-09-01T22:12:03Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "scripts/ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_ci.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": ".github/workflows/tests.yml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "ROADMAP.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R02/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:fa34565ddb9381a595be2b2baec087ac5f17138e8fc4a976eaed88f944ae1fa5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R02-research-completion-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000308",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000309",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 310,
+  "subject": {
+    "id": "ccr02-research-completion-correction",
+    "type": "DOCUMENT"
+  },
+  "summary": "Remove package work from routine compiler research gates.",
+  "why": "Exact dependency locks remain. Normal local and pull-request CI now stop at behavior, governance, domain examples, and documentation; distribution construction moves to the explicit package profile and release workflow. R02 completion is rebound to behavior, exact evidence, privacy, and unselected state, while the full distribution audit remains planned at CC-PKG02."
+}

@@ -5239,7 +5239,6 @@ def test_workflows_delegate_to_the_fixed_local_runner_with_full_history(
         "python scripts/ci.py docs --require-clean",
     }
     if workflow == "tests.yml":
-        required.add("python scripts/ci.py package --require-clean")
         job = guarded[0]
         assert job["strategy"]["matrix"]["python-version"] == [
             "3.10",
@@ -5247,12 +5246,10 @@ def test_workflows_delegate_to_the_fixed_local_runner_with_full_history(
             "3.12",
             "3.13",
         ]
-        package_step = next(
-            step
+        assert all(
+            step.get("run") != "python scripts/ci.py package --require-clean"
             for step in job["steps"]
-            if step.get("run") == "python scripts/ci.py package --require-clean"
         )
-        assert "if" not in package_step
     else:
         required.add(
             "python scripts/ci.py package --artifacts /tmp/malleus-dist --require-clean"
@@ -6803,6 +6800,14 @@ def test_research_tdd_phases_must_follow_canonical_order() -> None:
     _assert_code(error, "CC000_TDD_ORDER")
 
 
+def test_research_tdd_package_phase_is_optional() -> None:
+    results = [
+        result for result in _complete_tdd_results() if result["phase"] != "PACKAGE"
+    ]
+
+    validate_tdd_gate("CC-R02", results)
+
+
 def test_research_red_phase_accepts_literal_fail_as_expected_failure() -> None:
     results = _complete_tdd_results()
     results[0]["result"] = "FAIL"
@@ -7602,6 +7607,14 @@ def test_linkml_adapter_wheel_exclusion_choice_is_bound() -> None:
     card_path = CONTRACT / row["card"]["path"]
     card_source = card_path.read_bytes()
     card = _read_json(card_path)
+    historical_card = json.loads(
+        _git(
+            ROOT,
+            "show",
+            "2f3952b54e29aba0051d7c6b85fe35da88bf464b:"
+            "design/contract_compiler/workstreams/CC-R02/manifest.json",
+        )
+    )
 
     assert row["card"] == {
         "byte_length": len(card_source),
@@ -7612,8 +7625,9 @@ def test_linkml_adapter_wheel_exclusion_choice_is_bound() -> None:
     assert (
         "After the worker candidate is frozen, the overseer must exclude "
         "src/malleus/_contract_linkml_adapter.py from the wheel"
-        in card["responsibility"]
+        in historical_card["responsibility"]
     )
+    assert "PACKAGE observations are optional and advisory" in card["responsibility"]
     assert {scope["path"] for scope in card["scopes"]}.isdisjoint(
         {
             "pyproject.toml",
@@ -7778,7 +7792,7 @@ def test_linkml_adapter_completion_is_exact() -> None:
         "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
     )
     assert _digest(current_greenhouse) == (
-        "sha256:e5b0db86a4e6bd8ac330a56120a4ba2a880cb0b9621d649bad6f9324f26b01fc"
+        "sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3"
     )
     candidate_paths = [
         artifact["path"] for artifact in card["candidate"]["artifacts"]
@@ -7836,4 +7850,53 @@ def test_linkml_adapter_completion_is_exact() -> None:
         )
     ]
     assert all(later > earlier for earlier, later in zip(chronology, chronology[1:]))
+    assert "CC-R02" not in manifest["selections"]
+
+
+def test_linkml_adapter_package_gate_is_forward_corrected() -> None:
+    manifest = _read_json(INTEGRATION)
+    card = _read_json(CONTRACT / _registry_row(manifest, "CC-R02")["card"]["path"])
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    superseded = integration_module.superseded_entries(ledger_state.entries)
+
+    assert states["CC-R02"] == "COMPLETE"
+    assert {"OVR-000306", "OVR-000307"} <= superseded
+    assert "PACKAGE observations are optional and advisory" in card["responsibility"]
+    assert "must exclude src/malleus/_contract_linkml_adapter.py" not in card[
+        "responsibility"
+    ]
+
+    correction = tuple(
+        entry for entry in ledger_state.entries if 308 <= entry["sequence"] <= 312
+    )
+    assert tuple(entry["entry_id"] for entry in correction) == (
+        "OVR-000308",
+        "OVR-000309",
+        "OVR-000310",
+        "OVR-000311",
+        "OVR-000312",
+    )
+    assert tuple(entry["entry_type"] for entry in correction) == (
+        "CORRECTION",
+        "CORRECTION",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    assert correction[0]["data"]["supersedes_entry_id"] == "OVR-000306"
+    assert correction[1]["data"]["supersedes_entry_id"] == "OVR-000307"
+    assert correction[-1]["data"]["previous_state"] == "ACTIVE"
+    assert correction[-1]["data"]["new_state"] == "COMPLETE"
+    assert correction[-1]["data"]["evidence_entry_ids"] == ["OVR-000311"]
+
+    report = _read_json(
+        CONTRACT / "overseer/evidence/CC-R02-research-completion-correction.json"
+    )
+    assert report["workstream_id"] == "CC-R02"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any(
+        "distribution audit" in limitation.lower()
+        for limitation in report["limitations"]
+    )
     assert "CC-R02" not in manifest["selections"]

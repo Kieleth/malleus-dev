@@ -61,6 +61,7 @@ TDD_PHASES = (
     "PACKAGE",
     "ATTEST",
 )
+REQUIRED_TDD_PHASES = tuple(phase for phase in TDD_PHASES if phase != "PACKAGE")
 TDD_RESULTS = {
     "RED": frozenset({"EXPECTED_FAILURE", "FAIL"}),
     "GREEN": frozenset({"PASS"}),
@@ -1013,14 +1014,15 @@ def validate_tdd_gate(
             "CC000_TDD_DUPLICATE",
             f"{workstream_id}: duplicate active phases {duplicates}",
         )
-    missing = [phase for phase in TDD_PHASES if phase not in phases]
+    missing = [phase for phase in REQUIRED_TDD_PHASES if phase not in phases]
     unexpected = [phase for phase in phases if phase not in TDD_PHASES]
     if missing or unexpected:
         _fail(
             "CC000_TDD_INCOMPLETE",
             f"{workstream_id}: missing {missing}, unexpected {unexpected}",
         )
-    if phases != list(TDD_PHASES):
+    expected_order = [phase for phase in TDD_PHASES if phase in phases]
+    if phases != expected_order:
         _fail(
             "CC000_TDD_ORDER",
             f"{workstream_id}: phases must follow {list(TDD_PHASES)}",

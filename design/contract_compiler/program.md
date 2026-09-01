@@ -512,10 +512,18 @@ Every implementation workstream must produce this evidence in order:
 4. **DISPROOF:** the assigned feature-isolation and neutral-domain cases pass.
 5. **REGRESSION:** all prior stage slices and affected existing consumer suites
    pass.
-6. **PACKAGE:** affected wheel, sdist, or docs boundaries are inspected where
-   relevant.
+6. **PACKAGE, optional:** a worker may record an advisory observation about a
+   wheel, sdist, or documentation boundary. This phase is not required for
+   research completion and confers no package, version, publication, or
+   release authority.
 7. **ATTEST:** the workstream manifest records exact commits, file digests,
    dependency lock, commands, results, and mutation inventory.
+
+The active research runway keeps exact dependency locks but does not build,
+install, or inspect distributions in the normal `all` CI profile. Distribution
+checks remain available only through the explicit `package` profile and the
+release workflow. The deferred release audit is owned by CC-PKG02; private
+research stages do not bump package versions or prove wheel membership.
 
 Snapshot equality alone is insufficient. Tests parse typed artifacts and assert
 semantic fields, stable diagnostic codes, ordered decisions, and digests.

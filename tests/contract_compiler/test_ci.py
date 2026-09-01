@@ -32,9 +32,6 @@ def test_default_ci_plan_covers_every_boundary_once() -> None:
         "docs-html",
         "docs-doctest",
         "docs-linkcheck",
-        "package-build",
-        "package-check",
-        "package-smoke",
     ]
     assert sum(command.argv[-1] == "pytest" for command in commands) == 1
     assert all(command.name != "compiler-tests" for command in commands)
@@ -59,14 +56,23 @@ def test_default_pytest_collects_the_compiler_tests_without_a_duplicate_ci_stage
     ]["testpaths"]
 
 
-def test_fixed_profiles_are_subsets_of_the_default_plan() -> None:
+def test_test_and_docs_profiles_are_subsets_of_the_default_plan() -> None:
     all_names = {command.name for command in ci.plan("all")}
 
-    for profile in ("test", "docs", "package"):
+    for profile in ("test", "docs"):
         commands = ci.plan(profile)
         assert commands
         assert {command.name for command in commands} < all_names
         assert all(command.name != "small-shop" for command in commands)
+
+
+def test_package_profile_is_explicit_and_release_only() -> None:
+    package_names = [command.name for command in ci.plan("package")]
+
+    assert package_names == ["package-build", "package-check", "package-smoke"]
+    assert set(package_names).isdisjoint(
+        command.name for command in ci.plan("all")
+    )
 
 
 def test_unknown_ci_profile_is_refused() -> None:

@@ -460,6 +460,27 @@ The bounded synthesis and candidate paper motivation are in
 **Verdict: retain as a measured research question. No core implementation or
 paper outcome claim is authorized.**
 
+### B5. Deferred distribution audit after the compiler research runway
+
+Status: `accepted_deferred`.
+
+Exact dependency locks remain mandatory during compiler research. Wheel
+membership, source-distribution contents, clean installation, package-version
+bumps, entry points, and release metadata do not gate each private research
+stage and do not run in normal local or pull-request CI. The explicit
+`python scripts/ci.py package` profile remains available for deliberate release
+work, and the release workflow retains that gate.
+
+Run one dependency-closed distribution audit at the existing CC-PKG02 release
+boundary, after the compiler and runtime topology is selected. That audit must
+bind wheel and sdist contents, corpus membership, public exports, entry points,
+clean installation, CLI smoke behavior, dependency metadata, and the package
+version. Until then, package observations in research worker ledgers are
+advisory evidence only and carry no package authority.
+
+**Verdict: defer the distribution audit to the release boundary. Keep exact
+locks now; stop rebuilding packages for every private compiler slice.**
+
 ---
 
 ## C. OCR evidence-integrity profile

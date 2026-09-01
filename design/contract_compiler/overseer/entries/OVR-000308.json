@@ -1,0 +1,40 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "ccr02-completion-verification",
+      "CC-R02"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000306"
+  },
+  "entry_hash": "sha256:6e373b9d6e1c20b300dbd735948c1d2837cd52809ef4bead080b773012a2c6d7",
+  "entry_id": "OVR-000308",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5ef04b19f495e1df3f71cc68e09de4c9e013843fa4028bd276ed597f9da55e43",
+  "recorded_at": "2026-09-01T22:12:01Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000306",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 308,
+  "subject": {
+    "id": "ccr02-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Correct the package-dependent R02 completion verification.",
+  "why": "OVR-000306 treated root wheel exclusion and package checks as required authority for a private research-stage completion. The operator has retained exact dependency locks but removed distribution construction, installation, versioning, and wheel membership from routine research completion. A replacement fact must verify behavior, exact evidence, privacy, and unselected state without claiming package authority."
+}

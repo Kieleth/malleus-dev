@@ -1,0 +1,49 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Implement one private LinkML 1.11.1 parser and support-profile adapter over exact retained modules and closures, with immutable authored evidence and typed atomic refusal.",
+      "Bind the exact eligible candidate, twenty-one-entry worker ledger, and RED-only FAIL policy without rewriting frozen candidate evidence.",
+      "Verify completion from behavior, exact evidence, retained-source closure, privacy, and unselected state; retain PACKAGE only as an optional advisory observation during research.",
+      "Keep exact dependency locks while deferring distribution construction and publication checks to CC-PKG02 and release work.",
+      "Leave binding, elaboration, neutral facts, artifacts, protocol execution, packaging promotion, and public APIs separately governed."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000311"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R02"
+  },
+  "entry_hash": "sha256:14e1b6e6adfe11f557074250006dc620be3ff3ff4a251cc053278f67f4080e07",
+  "entry_id": "OVR-000312",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:170c48ccdc15d9610c236875d3e4438842df3963b0ca57ac801d89497096e32a",
+  "recorded_at": "2026-09-01T22:12:05Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000311",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 312,
+  "subject": {
+    "id": "CC-R02",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the private retained-LinkML adapter boundary under the research policy.",
+  "why": "OVR-000311 verifies the exact private candidate, append-only worker evidence, strict phase-result policy, current-main divergence, retained-source behavior, privacy, and unselected scope. Package observations are advisory and confer no completion or distribution authority."
+}

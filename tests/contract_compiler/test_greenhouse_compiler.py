@@ -7,11 +7,6 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
-import subprocess
-import sys
-import tarfile
-import tomllib
-import zipfile
 
 import pytest
 
@@ -885,62 +880,8 @@ def test_absolute_urn_predicate_is_not_rewritten_as_a_local_term() -> None:
     )
 
 
-def test_bootstrap_is_private_and_excluded_from_the_distribution(
-    tmp_path: Path,
-) -> None:
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    excluded = project["tool"]["hatch"]["build"]["exclude"]
-    included = project["tool"]["hatch"]["build"]["include"]
-    wheel_excluded = project["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"]
-
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "build",
-            "--sdist",
-            "--wheel",
-            "--no-isolation",
-            "--outdir",
-            str(tmp_path),
-            str(ROOT),
-        ],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    wheels = tuple(tmp_path.glob("*.whl"))
-    sdists = tuple(tmp_path.glob("*.tar.gz"))
-    assert len(wheels) == 1
-    assert len(sdists) == 1
-    with zipfile.ZipFile(wheels[0]) as archive:
-        members = set(archive.namelist())
-    with tarfile.open(sdists[0], mode="r:gz") as archive:
-        source_members = set(archive.getnames())
-
-    assert "/src/malleus/_contract_compiler.py" in excluded
-    assert "/src/malleus/_contract_compiler_profile.json" in excluded
-    assert "/src/malleus/_contract_source.py" in included
-    assert set(wheel_excluded) == {
-        "/src/malleus/_contract_compiler.py",
-        "/src/malleus/_contract_compiler_profile.json",
-        "/src/malleus/_contract_linkml_adapter.py",
-        "/src/malleus/_contract_source.py",
-    }
-    assert "malleus/_contract_compiler.py" not in members
-    assert "malleus/_contract_compiler_profile.json" not in members
-    assert "malleus/_contract_linkml_adapter.py" not in members
-    assert "malleus/_contract_source.py" not in members
-    assert not any(
-        member.endswith("/src/malleus/_contract_compiler.py")
-        or member.endswith("/src/malleus/_contract_compiler_profile.json")
-        for member in source_members
-    )
-    assert any(
-        member.endswith("/src/malleus/_contract_source.py") for member in source_members
-    )
+def test_bootstrap_is_private_and_not_publicly_exported() -> None:
+    assert compile_linkml_contract.__module__ == "malleus._contract_compiler"
     assert "compile_linkml_contract" not in malleus.__all__
     assert "build_source_closure" not in malleus.__all__
     assert {

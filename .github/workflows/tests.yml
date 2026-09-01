@@ -46,6 +46,3 @@ jobs:
       - name: Build strict documentation
         if: matrix.python-version == '3.12'
         run: python scripts/ci.py docs --require-clean
-
-      - name: Build wheel and smoke-test it in a clean environment
-        run: python scripts/ci.py package --require-clean

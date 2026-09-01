@@ -838,9 +838,9 @@
     },
     {
       "card": {
-        "byte_length": 9000,
+        "byte_length": 8940,
         "path": "workstreams/CC-R02/manifest.json",
-        "sha256": "sha256:bb52d7776444ed9d108a08bdc644223cce6c3738d514f81e3a1b29e58eb80969",
+        "sha256": "sha256:8a75c34bcd3e5fe46b1beab7b28b361fc130f4cd307309ff68d1ca142d027439",
         "state": "PRESENT"
       },
       "depends_on": [
