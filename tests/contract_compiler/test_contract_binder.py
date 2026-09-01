@@ -50,6 +50,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BINDER = ROOT / "src/malleus/_contract_binder.py"
 PROFILE = ROOT / "src/malleus/_contract_binding_profile.json"
 QUIET = ROOT / "conformance/contract_kernel/v0/themed_fixture/sources"
+FEATURES = ROOT / "conformance/contract_kernel/v0/feature_cases/inputs"
+GREENHOUSE = ROOT / "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse"
 SELECTION = ResolverSelection(
     resolver_id="TEST_ONLY_CLOSED_RESOLVER",
     profile_version="TEST_ONLY_LINKML_V0",
@@ -299,7 +301,12 @@ def test_qualification_reference_resolution_and_trusted_builtins_are_exact() -> 
         (item.source_identifier, item.path, item.literal, item.target_identifier)
         for item in result.references
     } == {
-        (f"{root}/Count", ("typeof",), "integer", "urn:malleus:contract-facts/Integer"),
+        (
+            f"{root}/Count",
+            ("typeof",),
+            "integer",
+            "https://malleus.dev/contract-facts/Integer",
+        ),
         (f"{root}/local_value", ("range",), "Count", f"{root}/Count"),
         (f"{root}/RootRecord", ("is_a",), "ChildRecord", f"{child}/ChildRecord"),
         (
@@ -318,13 +325,13 @@ def test_qualification_reference_resolution_and_trusted_builtins_are_exact() -> 
             f"{child}/child_value",
             ("range",),
             "string",
-            "urn:malleus:contract-facts/String",
+            "https://malleus.dev/contract-facts/String",
         ),
     }
     integer = next(item for item in result.declarations if item.name == "integer")
     assert integer.trusted is True
     assert integer.module_id == "linkml:types"
-    assert integer.identifier == "urn:malleus:contract-facts/Integer"
+    assert integer.identifier == "https://malleus.dev/contract-facts/Integer"
 
 
 def test_literal_boolean_adoption_keeps_the_imported_owner() -> None:
@@ -341,6 +348,66 @@ def test_literal_boolean_adoption_keeps_the_imported_owner() -> None:
     assert result.adoptions[0].adopter_identifier == adopter
     assert result.adoptions[0].owner_identifier == owner
     assert result.adoptions[0].owner_module_id == "https://example.test/owner"
+
+
+def test_governed_feature_adoption_and_greenhouse_bind_prior_stage_outputs() -> None:
+    owner = "https://example.malleus.dev/cc013/adoption-owner"
+    adopter = "https://example.malleus.dev/cc013/adoption-subject"
+    feature = _declared(
+        {
+            adopter: (FEATURES / "explicit_adoption/adopter.json").read_bytes(),
+            owner: (FEATURES / "explicit_adoption/owner.json").read_bytes(),
+        },
+        root=adopter,
+    )
+
+    feature_result = bind_contract(feature)
+
+    assert feature_result.adoptions == (
+        binder_module.ExplicitAdoption(
+            adopter_identifier=f"{adopter}/shared_value",
+            adopter_module_id=adopter,
+            owner_identifier=f"{owner}/shared_value",
+            owner_module_id=owner,
+        ),
+    )
+
+    trusted_source = (
+        files("linkml_runtime")
+        .joinpath("linkml_model", "model", "schema", "types.yaml")
+        .read_bytes()
+    )
+    results = tuple(
+        bind_contract(
+            _declared(
+                {
+                    name: (GREENHOUSE / name).read_bytes(),
+                    "linkml:types": trusted_source,
+                },
+                root=name,
+            )
+        )
+        for name in ("baseline.yaml", "reordered.yaml")
+    )
+    projections = tuple(
+        (
+            tuple(
+                (item.identifier, item.authoritative_identifier, item.kind)
+                for item in result.declarations
+            ),
+            tuple(
+                (
+                    item.source_identifier,
+                    item.path,
+                    item.literal,
+                    item.target_identifier,
+                )
+                for item in result.references
+            ),
+        )
+        for result in results
+    )
+    assert projections[0] == projections[1]
 
 
 @pytest.mark.parametrize(
