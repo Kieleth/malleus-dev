@@ -73,6 +73,7 @@ exclude = [
 ]
 include = [
     "/src/malleus/__init__.py",
+    "/src/malleus/_contract_source.py",
     "/src/malleus/ontology.py",
     "/src/malleus/kg.py",
     "/src/malleus/protocol.py",
