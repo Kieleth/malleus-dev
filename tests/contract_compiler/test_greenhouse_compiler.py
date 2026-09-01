@@ -100,6 +100,22 @@ def test_greenhouse_semantic_equivalence_and_real_delta_are_visible() -> None:
     }
 
 
+def test_result_attests_the_exact_caller_supplied_source() -> None:
+    path = SOURCE_ROOT / "baseline.yaml"
+    source = path.read_bytes()
+    result = compile_linkml_contract(source, locator=path.as_uri())
+
+    assert result.source.locator == path.as_uri()
+    assert result.source.byte_length == len(source)
+    assert result.source.sha256 == hashlib.sha256(source).hexdigest()
+    assert result.facts_sha256 == hashlib.sha256(result.canonical_facts).hexdigest()
+    assert result.implementation.linkml_runtime_version == "1.11.1"
+    assert (
+        result.implementation.support_profile
+        == "malleus.linkml/exact-location-v0"
+    )
+
+
 def test_unknown_root_field_refuses_the_whole_source() -> None:
     source = (SOURCE_ROOT / "baseline.yaml").read_bytes() + b"instances: {}\n"
 
