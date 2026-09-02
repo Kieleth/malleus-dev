@@ -148,6 +148,8 @@ def test_frozen_fixture_and_private_program_data_are_explicit() -> None:
         "sha256:" + FROZEN_SHA256["input/manifest.json"]
     )
     assert mapping["selection_id"] == "RET-010"
+    assert mapping["selection"]["ordinal_base"] == 1
+    assert mapping["selection"]["record_order"] == "SOURCE_ORDER"
     assert mapping["valid_time"] == "2000-05-07T17:00:00Z"
     assert [item["ordinal"] for item in mapping["operations"]] == [0, 1, 2]
     assert [item["record_id"] for item in mapping["operations"]] == [
@@ -205,6 +207,47 @@ def test_mapping_has_one_closed_required_root_schema(
             mapping_path=changed,
         )
     assert refusal.value.reason is Ret010RefusalReason.MALFORMED_CONFIGURATION
+
+
+@pytest.mark.parametrize("mutation", ["unknown_root", "empty_root", "missing_paths"])
+def test_operation_bindings_cannot_skip_retained_values(
+    tmp_path: Path, mutation: str
+) -> None:
+    payload = _load(MAPPING)
+    payload["operations"][1]["properties"]["product_code"] = "Y"
+    binding = next(
+        item
+        for item in payload["operation_bindings"]
+        if item["input_path"] == ["lookup", "product_code"]
+    )
+    if mutation == "unknown_root":
+        binding["input_path"] = ["lookpu", "product_code"]
+    elif mutation == "empty_root":
+        binding["input_path"] = []
+    else:
+        binding["input_path"] = ["lookup", "missing"]
+        binding["operation_path"] = ["properties", "missing"]
+    mapping = tmp_path / "mapping.json"
+    _write_canonical(mapping, payload)
+    ledger = tmp_path / "semantic.jsonl"
+
+    with pytest.raises(Ret010Refusal) as refusal:
+        _run(ledger, mapping=mapping)
+    assert refusal.value.reason is Ret010RefusalReason.MALFORMED_CONFIGURATION
+    assert not ledger.exists()
+
+
+def test_unknown_source_record_order_refuses(tmp_path: Path) -> None:
+    payload = _load(MAPPING)
+    payload["selection"]["record_order"] = "UNDECLARED_ORDER"
+    mapping = tmp_path / "mapping.json"
+    _write_canonical(mapping, payload)
+    ledger = tmp_path / "semantic.jsonl"
+
+    with pytest.raises(Ret010Refusal) as refusal:
+        _run(ledger, mapping=mapping)
+    assert refusal.value.reason is Ret010RefusalReason.MALFORMED_CONFIGURATION
+    assert not ledger.exists()
 
 
 def test_source_to_ledger_to_query_vertical_matches_independent_oracle(
@@ -401,6 +444,103 @@ def test_reopen_module_command_and_fresh_genesis_are_deterministic(
     rebuilt = _run(ledger)
     assert rebuilt.receipt.canonical_bytes == first.receipt.canonical_bytes
     assert rebuilt.replay.graph.snapshot() == first.replay.graph.snapshot()
+
+
+def test_runtime_mapping_refuses_before_writing_any_history(tmp_path: Path) -> None:
+    payload = _load(MAPPING)
+    del payload["artifact_roles"]["source"]
+    mapping = tmp_path / "mapping.json"
+    _write_canonical(mapping, payload)
+    ledger = tmp_path / "semantic.jsonl"
+
+    for _ in range(2):
+        with pytest.raises(Ret010Refusal) as refusal:
+            _run(ledger, mapping=mapping)
+        assert refusal.value.reason is Ret010RefusalReason.MALFORMED_CONFIGURATION
+        assert not ledger.exists()
+
+
+def test_partial_jsonl_is_not_reported_as_a_completed_run(tmp_path: Path) -> None:
+    ledger = tmp_path / "semantic.jsonl"
+    _run(ledger)
+    lines = ledger.read_bytes().splitlines(keepends=True)
+    retained_change = next(
+        index
+        for index, line in enumerate(lines)
+        if json.loads(line)["event_type"] == "KNOWLEDGE_CHANGE_SET_RETAINED"
+    )
+    partial = b"".join(lines[:retained_change])
+    ledger.write_bytes(partial)
+
+    with pytest.raises(Ret010Refusal) as refusal:
+        _run(ledger)
+    assert refusal.value.reason is Ret010RefusalReason.INCOMPLETE_HISTORY
+    assert ledger.read_bytes() == partial
+
+
+def test_existing_ledger_must_be_the_exact_ret010_vertical(tmp_path: Path) -> None:
+    from tests.contract_compiler.pareto.test_knowledge_change_history import (
+        _anchored_history,
+        _base_payload,
+        _load_change,
+        _protocol_events,
+    )
+
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    change_set = _load_change(_base_payload(history, partial, source, evidence))
+    history.admit(
+        change_set=change_set,
+        machine_events=_protocol_events(change_set, before.machine_state.identity),
+        transaction_time="2026-09-01T00:00:00Z",
+        actor_id="actor:test",
+    )
+    ledger_before = history.path.read_bytes()
+
+    with pytest.raises(Ret010Refusal) as refusal:
+        _run(history.path)
+    assert refusal.value.reason is Ret010RefusalReason.INCOMPATIBLE_HISTORY
+    assert history.path.read_bytes() == ledger_before
+
+
+@pytest.mark.parametrize("failure", ["declared", "programmer"])
+def test_compiler_translation_does_not_mask_programmer_errors(
+    monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    from malleus._contract_pipeline import (
+        ElaborationRefusal,
+        ElaborationRefusalReason,
+    )
+
+    if failure == "declared":
+        error: Exception = ElaborationRefusal(
+            ElaborationRefusalReason.INVALID_FACT_SET,
+            "declared compiler refusal",
+        )
+    else:
+        error = RuntimeError("implementation defect")
+
+    def fail(_binding):
+        raise error
+
+    monkeypatch.setattr(ret010_module, "compile_binding", fail)
+    if failure == "programmer":
+        with pytest.raises(RuntimeError, match="implementation defect"):
+            load_ret010_vertical(
+                fixture_root=FIXTURE,
+                machine_path=MACHINE,
+                policy_path=POLICY,
+                mapping_path=MAPPING,
+            )
+    else:
+        with pytest.raises(Ret010Refusal) as refusal:
+            load_ret010_vertical(
+                fixture_root=FIXTURE,
+                machine_path=MACHINE,
+                policy_path=POLICY,
+                mapping_path=MAPPING,
+            )
+        assert refusal.value.reason is Ret010RefusalReason.CONTRACT_COMPILATION_FAILED
 
 
 def test_fixture_producer_uses_private_data_not_oracle_or_inline_output_magic() -> None:

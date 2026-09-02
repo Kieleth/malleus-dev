@@ -606,6 +606,70 @@ def test_genesis_change_is_retained_then_accepted_and_replayed_from_empty(
     assert tuple(copied_path.parent.iterdir()) == (copied_path,)
 
 
+def test_admit_requires_one_complete_accepted_lifecycle(tmp_path: Path) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    change_set = _load_change(_base_payload(history, partial, source, evidence))
+    proposal_only = _protocol_events(change_set, before.machine_state.identity)[:1]
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=change_set,
+            machine_events=proposal_only,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+
+
+@pytest.mark.parametrize("entrypoint", ["anchor", "admit"])
+def test_persistence_envelope_refusals_are_typed_and_atomic(
+    tmp_path: Path, entrypoint: str
+) -> None:
+    if entrypoint == "anchor":
+        history, _, _, _ = _history(tmp_path)
+        retained = b"retained bytes"
+
+        def invoke():
+            return history.append_anchor(
+                machine_event=_event(
+                    "ARTIFACT_REGISTERED",
+                    artifact_id="artifact-invalid-time",
+                    artifact_identity=_digest(retained),
+                ),
+                retained_bytes=retained,
+                media_type="application/octet-stream",
+                role="RETAINED_EVIDENCE",
+                transaction_time="not-a-time",
+                actor_id="actor:test",
+            )
+
+    else:
+        history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+        before = history.replay()
+        change_set = _load_change(_base_payload(history, partial, source, evidence))
+
+        def invoke():
+            return history.admit(
+                change_set=change_set,
+                machine_events=_protocol_events(
+                    change_set, before.machine_state.identity
+                ),
+                transaction_time="not-a-time",
+                actor_id="actor:test",
+            )
+
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        invoke()
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+
+
 @pytest.mark.parametrize("self_supersedes", [False, True])
 def test_change_set_ids_are_unique_and_cannot_self_supersede(
     tmp_path: Path, self_supersedes: bool
