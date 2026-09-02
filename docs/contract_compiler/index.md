@@ -116,12 +116,13 @@ an explicit `UNKNOWN` result and refuses the decision. Other adopters may use a
 different identified policy program within the accepted outcome and verdict
 rules.
 
-This remains a partial, private mechanism. It does not yet implement the full
-three-role contract composition, the public `KnowledgeChangeSet`, a semantic
-ledger, replay-derived accepted graph, the Assent no-fallback cutover, external
-capabilities, or cross-language parity. `ContractView` also still implements
-part of structural instance admission in Python. Those limits prevent the
-experiment from being mistaken for the finished protocol.
+At this milestone, this remained a partial, private mechanism. The next private
+slice connects it to a final-identity `KnowledgeChangeSet`, semantic history,
+and a replay-derived graph. The full three-role contract composition, Assent
+no-fallback cutover, external capabilities, and cross-language parity remain
+unimplemented. `ContractView` also still implements part of structural instance
+admission in Python. Those limits prevent the experiment from being mistaken
+for the finished protocol.
 
 Future frontends and interpreters extend these seams rather than adding hidden
 Python parameters. A frontend adapter emits the same neutral contract. A new
@@ -129,6 +130,61 @@ policy is a separately content-addressed `PolicyProgram`. A future named
 capability is an explicit profile reference with its own conformance contract.
 Another language may load the same canonical artifacts and is conforming only
 when it produces the same state or typed refusal.
+
+## Private source-to-history slice
+
+The third Pareto slice now proves one narrow end-to-end path with the frozen
+Small Shop `RET-010` input:
+
+```text
+retained source bytes
+  -> LinkML adapter
+  -> neutral contract representation
+  -> canonical contract facts and ContractView
+  -> identified machine, policy, and partial EffectiveContract
+  -> fixture-local source mapping
+  -> immutable KnowledgeChangeSet
+  -> one append-only JSONL semantic/protocol history
+  -> replay from an empty accepted graph
+  -> accepted Small Shop entities, relation, and canonical receipt
+```
+
+The machine and policy JSON own the protocol names, shapes, checks, transitions,
+effects, refusals, and verdict mapping used by this example. The mapping JSON
+owns the fixture-specific source selection, explicit one-based source ordinal,
+zero-based operation order, source-field bindings, record templates, and valid
+time. Python validates and executes those artifacts. The generic history layer
+contains no Small Shop names or values and receives no graph writer.
+
+The complete bootstrap is one atomic append. The history retains the exact
+contract, machine, policy, mapping, source bytes, source registrations,
+change-set bytes, and lifecycle events needed to reopen it. A completed run can
+therefore delete its disposable graph and rebuild the same accepted state and
+receipt from JSONL alone. The `ACCEPT` decision and application are one atomic
+ledger event, while proposal, checks, and decision remain separate protocol
+events bound to the same change-set identity.
+
+Run the private example with:
+
+```console
+python -m research.ontology_driven_kg_realization.experiments.small_shop.pareto.ret010 \
+  --ledger /path/to/history.jsonl
+```
+
+The result contains the exact contract, machine, policy, binding, source,
+change-set, ledger-head, and graph-state identities, plus a query view with
+sales order `O1`, inventory unit `X1`, and their `OrderContainsUnit` relation.
+Running the command again against the same ledger reopens retained bytes instead
+of consulting the ambient fixture or program files.
+
+This is a proof, not the public Malleus compiler. It covers one initial
+`CREATE_ENTITY` and `CREATE_RELATION` population, not corrections, update or
+delete operations, general mapping syntax, richer valid-time queries,
+GraphRecipe or OTTR, Prolog policies, external effects, Semantic Re-entry,
+legacy-ledger migration, package inclusion, or another-language interpreter.
+The mapping file is deliberately fixture-local. Generalizing it before another
+real consumer needs the seam would turn this bounded proof into a speculative
+DSL.
 
 ## Local CI and compiler TDD
 

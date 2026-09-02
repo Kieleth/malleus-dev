@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Milestone 1: implement the Small-Shop-needed elaboration subset, canonical neutral facts, reloadable experimental EffectiveContract, and artifact-backed contract view, with typed refusal for unsupported constructs.",
+      "Milestone 2: implement strict machine program data and a generic interpreter for registration, KnowledgeChangeSet proposal, check receipt, ACCEPT, REJECT, DEFER, and atomic admission without profile-specific authority or graph mutation.",
+      "Milestone 3: implement the final-identity KnowledgeChangeSet, replaceable producer boundary, fixture-local RET-010 adapter, empty-genesis ledger reopen and replay, query runner, and canonical receipt without legacy fallback or mixed identity."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000333"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R11"
+  },
+  "entry_hash": "sha256:2a65a5d333fe3aa7b663132c8752ea60f450ef2f27d046d6c5a8ec1cd24e11af",
+  "entry_id": "OVR-000334",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b25cf99236e0bd74663fd57e1faf81557f20cf3aba352f2e0c63f9c061c8fc44",
+  "recorded_at": "2026-09-02T06:40:02Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000333",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 334,
+  "subject": {
+    "id": "CC-R11",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the private Pareto compiler-to-ledger vertical.",
+  "why": "All three bounded milestones are implemented, their six-phase TDD history is recorded, the focused suite and independent audit pass, and the completion evidence keeps every public, production, correction, effect, Semantic Re-entry, package, and release claim excluded."
+}

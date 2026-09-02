@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:pareto-e2e",
+  "data": {
+    "artifacts": [],
+    "command": "Verify GREEN commit 48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf, tree f5809ad7bf65335b126bf311d50e01763897efde, the preserved RED sequence, artifact digests, focused results, audit verdict, and exclusions.",
+    "observed": "The exact committed vertical and retained tests match this six-phase history. The worker chain intentionally omits optional PACKAGE, keeps candidate state NONE, and makes no full-suite, package, wheel, release, public API, stable wire-format, cross-language, production cutover, GraphRecipe, OTTR, Prolog, correction, effect, or Semantic Re-entry claim.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4dc4a8343f2a73330a22a0bac2a070e00276b171bbbf559ad05f9ec1f0edef50",
+  "entry_id": "CC-R11-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8fe28f487b0672e428af90616f94da29179441fcc65cae638728bfdbf46d1a2d",
+  "recorded_at": "2026-09-02T06:20:05Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Attest the private Pareto vertical without release claims.",
+  "workstream_id": "CC-R11"
+}

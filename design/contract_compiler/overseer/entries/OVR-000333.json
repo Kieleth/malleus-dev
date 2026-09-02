@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccr11-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T06:40:01Z",
+    "claims": [
+      "The frozen Small Shop sources compile through the private LinkML adapter, neutral contract representation, canonical facts, immutable ContractView, and an identified partial EffectiveContract.",
+      "Canonical machine and policy artifacts own the measured event, check, transition, effect, refusal, and verdict behavior; the generic Python interpreter executes those artifacts without fixture vocabulary, arbitrary callbacks, ledger authority, or graph mutation access.",
+      "One closed immutable KnowledgeChangeSet binds the exact contract, base history and state, retained source and evidence closure, zero-based operations, valid time, local dependencies, supersession references, and its content identity.",
+      "One JSONL semantic/protocol history is the retained authority. Replay begins from an empty graph and reconstructs the accepted Small Shop state and canonical receipt without ambient fixture or program files.",
+      "The accepted view contains SalesOrder O1, InventoryUnit X1, and OrderContainsUnit contains:O1:X1; all 140 focused tests pass and final independent audit reports no P0 through P2 defect."
+    ],
+    "limitations": [
+      "This is private research-local evidence, not a public compiler API, stable wire format, package, release, production Assent cutover, or cross-language conformance result.",
+      "The current proof covers initial entity and relation creation plus structural current-state replay. It does not implement general mapping, correction, update, delete, public bitemporal queries, GraphRecipe, OTTR, Prolog, effects, observation, or Semantic Re-entry.",
+      "The full repository pytest suite and package checks were not completed for this milestone under the operator-selected Pareto gate."
+    ]
+  },
+  "entry_hash": "sha256:b25cf99236e0bd74663fd57e1faf81557f20cf3aba352f2e0c63f9c061c8fc44",
+  "entry_id": "OVR-000333",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9bbf05ad0ea14d47bb376141d4a54697280bd318b58d1438393fe4da946feecd",
+  "recorded_at": "2026-09-02T06:40:01Z",
+  "references": [
+    {
+      "digest": "sha256:0b2175d8b8a66c9e2148ab954bcc47358851693adaf5f672f6e6fad1d315ab7d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000332",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 333,
+  "subject": {
+    "id": "ccr11-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the private compiler-to-ledger vertical.",
+  "why": "The completion receipt and mechanical gates prove one real source-to-contract-to-change-set-to-history-to-query path while retaining the public, packaging, correction, effect, and Semantic Re-entry boundaries as explicit future work."
+}

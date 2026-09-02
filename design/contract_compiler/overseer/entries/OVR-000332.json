@@ -1,0 +1,178 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:29e2e21459509ef71344ecaef4ee3e7a5628107b780d818ec8591b26b511f9a9",
+        "before_digest": "sha256:ff75c6093237ab2c4515d0a8ed099fd45e46a4238ce616ba545e91f56e099e8e",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-R11.json"
+      },
+      {
+        "after_digest": "sha256:c7d71048efce2c3f242a5922ee8c50daf23b9048553538ca877c9a157dd624cc",
+        "before_digest": "sha256:3dbea53cf2b0b5c8c1ed3d8b5c1dc19d55532788c6ad20b08b18e371d08edd9d",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:0b2175d8b8a66c9e2148ab954bcc47358851693adaf5f672f6e6fad1d315ab7d",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-completion.json"
+      },
+      {
+        "after_digest": "sha256:43af747a2dc19d142cf5ea1654c45f2f01d9343fe604cfcc5776bdfda576c32e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R11/ledger/head.json"
+      },
+      {
+        "after_digest": "sha256:acb1328931ac2a6b7932842b052146cfbb630715e4c4107be6f9eec51a0d8860",
+        "before_digest": "sha256:0429b1035faa794258b6ab1a2ce7befedfae842bb05c4932624f57aada11251f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R11/manifest.json"
+      },
+      {
+        "after_digest": "sha256:f2f483897ccf8eae538a515ed85870bb6ae5c3686b1ef54c0a1e68d79f91df52",
+        "before_digest": "sha256:597eb1f9cdf0562c3f7992c8a4a32cfcc9faa03359b129e970179c1a1f25de82",
+        "change": "MODIFIED",
+        "path": "docs/ASSENT_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f",
+        "before_digest": "sha256:82d862e1cad219f5d734ae30bd4cef24708bfdf2258b0ae0c1050749589b38e3",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:f77ac00288b6b4a4b59e6f91957c532a6112656a7ae69a7e31b253d881180d79",
+        "before_digest": "sha256:06aa95ac16df7b6e243d9524798bedbb80edd308ac0b648aaac6637525e2c524",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json"
+      },
+      {
+        "after_digest": "sha256:066268becce21347a639a11ec7736f22f63fc084e3b3feb24c9b1a3e6fe8bf7b",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json"
+      },
+      {
+        "after_digest": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json"
+      },
+      {
+        "after_digest": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py"
+      },
+      {
+        "after_digest": "sha256:6e3d4af6a005bf517c4ad8e6902c4d2af9864013872e4faa2e112860bd1cf739",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py"
+      },
+      {
+        "after_digest": "sha256:c61b1c1b317ea091a35c2e31f2dea9be357d1146e5082a4d7be319b9712a9b50",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:da0aaf976808a6f0c1c5ae7c2edf3de40508e9fb2e42ea88bdc4921b6183d8a6",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:4b42d51e36a0a1b01da92787512cf2555854060d4fe82b68b8cac0d644f7bca7",
+        "before_digest": "sha256:60b7d6b8607381e3d13dbe7d53f4c50101bed8a687684e69fea7e15c88beb9f2",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:9bbf05ad0ea14d47bb376141d4a54697280bd318b58d1438393fe4da946feecd",
+  "entry_id": "OVR-000332",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a4f955ff7ad8354036b20a4761f197864d0886c2f04fe2a2df541dbb7af6ffaf",
+  "recorded_at": "2026-09-02T06:40:00Z",
+  "references": [
+    {
+      "digest": "sha256:0b2175d8b8a66c9e2148ab954bcc47358851693adaf5f672f6e6fad1d315ab7d",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000330",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000331",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "714e65e00cdea16c2e6d92b27ee69a151333dbd3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2f22dce44976d9460379d0adcb969298c57a2f91",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "88336df9fab9988d15dc0c158e2d29990fe5dc80",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ee2063db6a7448028a1f5283f8a2ab4b2c1c35d0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7283c8733f9831c05a9160d3a295784cda8bf68b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "584cbe4eba47a986c7db394740ccdf6230167518",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 332,
+  "subject": {
+    "id": "ccr11-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private source-to-history completion boundary.",
+  "why": "The third Pareto milestone now connects retained Small Shop source bytes, the neutral validated contract, declarative machine and policy, one final-identity KnowledgeChangeSet, one authoritative JSONL history, empty-graph replay, query output, and a canonical receipt. The revision records the exact TDD chain and limits without promoting the experiment into the public Assent runtime or package."
+}

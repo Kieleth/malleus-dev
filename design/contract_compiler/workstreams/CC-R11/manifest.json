@@ -94,7 +94,11 @@
     "state": "NONE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 6,
+    "head_entry_id": "CC-R11-WRK-000006",
+    "head_hash": "sha256:4dc4a8343f2a73330a22a0bac2a070e00276b171bbbf559ad05f9ec1f0edef50",
+    "path": "workstreams/CC-R11/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Deliver one explicitly experimental Pareto compiler-to-ledger vertical as three internal milestones, not three separate workstreams. Milestone 1 implements only Small-Shop-needed elaboration, canonical neutral facts, a reloadable experimental EffectiveContract, and an artifact-backed contract view, with every unsupported construct producing a typed refusal. Milestone 2 expresses a strict machine program as data and runs it through a generic interpreter for artifact and source registration, KnowledgeChangeSet proposal, check receipt, ACCEPT, REJECT, DEFER, and failure-atomic admission; the interpreter contains no profile-specific names or callbacks and receives no accepted-graph mutation capability. Milestone 3 implements the final-identity KnowledgeChangeSet, one replaceable producer boundary, one fixture-local RET-010 Small Shop adapter, and an empty-genesis ledger, reopen, replay, query runner, and canonical receipt. The new ledger epoch permits no legacy fallback or mixed KnowledgeChangeSet and candidate identity. This experimental proof does not complete or supersede CC-R04 through CC-R10, CC-R08, CC-R09, or the production wave, and makes no public, stable, cross-language, or production conformance claim. Re-entry, later Small Shop corrections, a general mapping DSL, GraphRecipe, or OTTR, Prolog or richer policy adapters, all-event migration, legacy deletion, historic migration, and packages or releases remain excluded and recorded as hardening or release roadmap work.",
   "schema": "malleus.contract-compiler.workstream-card/v1",

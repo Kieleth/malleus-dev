@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:pareto-e2e",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/pareto research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py; run changed-Python Ruff check and format check; run git diff --check",
+    "observed": "All 140 focused M1 through M3 tests passed in 10.13 seconds. Changed Python Ruff and format checks passed, and diff checking found no whitespace errors. The repository-wide suite was not completed under the Pareto gate, and package, wheel, and release checks were not run.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:8fe28f487b0672e428af90616f94da29179441fcc65cae638728bfdbf46d1a2d",
+  "entry_id": "CC-R11-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:8aea50d2d161d6d397e2cdf44374993df11edcb3df16b333717f650528dd735e",
+  "recorded_at": "2026-09-02T06:20:04Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the focused compiler regression boundary.",
+  "workstream_id": "CC-R11"
+}

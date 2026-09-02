@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:pareto-e2e",
+  "data": {
+    "artifacts": [],
+    "command": "Run the focused compiler tests before production repair at RED commits 6e34cddd45f82fed6154da58183af3def299cc3b, 8aa87f7cc462c6023bf4e79b02fdec5d5d95cd49, 7509e82a838a17994129873c856bdcc4c3500b2e, d8f7c102a59ea65ccee0238672dfc358b62cfffe, 3feb717eaa853272d98e0568bb77a7f80d782ed2, 1f23075ece06d4139cf3ef9afdc2a2f928c13d69, dd0e3fb77d55b0cbcda715d1716324ff8b197bc2, 714e65e00cdea16c2e6d92b27ee69a151333dbd3, 2f22dce44976d9460379d0adcb969298c57a2f91, 88336df9fab9988d15dc0c158e2d29990fe5dc80, ee2063db6a7448028a1f5283f8a2ab4b2c1c35d0, 7283c8733f9831c05a9160d3a295784cda8bf68b, and 584cbe4eba47a986c7db394740ccdf6230167518.",
+    "observed": "The preserved tests first proved the neutral validated-contract artifact absent, then proved the declarative protocol machine absent and closed its authority leaks, and finally proved KnowledgeChangeSet, atomic bootstrap, one-log replay, provenance closure, unique change-set identity, typed refusal, and self-contained reopen absent or bypassable before their paired production repairs.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:f22c358c82f452959f41d18685b4338b92d5c4e16caaa9a3c3b7fe1f5e262e65",
+  "entry_id": "CC-R11-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-02T06:20:00Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the three-milestone RED history.",
+  "workstream_id": "CC-R11"
+}

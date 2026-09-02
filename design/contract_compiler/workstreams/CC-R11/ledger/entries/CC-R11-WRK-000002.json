@@ -1,0 +1,75 @@
+{
+  "actor_id": "worker:pareto-e2e",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 66382,
+        "path": "src/malleus/_contract_compiler.py",
+        "sha256": "sha256:904eb338e2239c07282d017cf1ac0c342c650efffda5b5c4b471d665bc010f5c"
+      },
+      {
+        "byte_length": 1294,
+        "path": "src/malleus/_contract_pipeline/__init__.py",
+        "sha256": "sha256:902f02e00ae4e8a1a5ac19214249c0cd4abe119859a208eb12b96b99cd5adbbc"
+      },
+      {
+        "byte_length": 44807,
+        "path": "src/malleus/_contract_pipeline/elaborate.py",
+        "sha256": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140"
+      },
+      {
+        "byte_length": 8231,
+        "path": "src/malleus/_contract_pipeline/model.py",
+        "sha256": "sha256:73cf65899e630c9153ec196cccbace48dde7b899e99105ab187d3298b49e6799"
+      },
+      {
+        "byte_length": 50237,
+        "path": "src/malleus/_contract_pipeline/view.py",
+        "sha256": "sha256:ddedd47c33b9dd6bb893cbfe2b3903392d47b3b3bfc867d7ad5ed2ad782b29b4"
+      },
+      {
+        "byte_length": 48380,
+        "path": "src/malleus/_contract_pipeline/machine.py",
+        "sha256": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770"
+      },
+      {
+        "byte_length": 52724,
+        "path": "src/malleus/_contract_pipeline/knowledge.py",
+        "sha256": "sha256:c61b1c1b317ea091a35c2e31f2dea9be357d1146e5082a4d7be319b9712a9b50"
+      },
+      {
+        "byte_length": 4698,
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json",
+        "sha256": "sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb"
+      },
+      {
+        "byte_length": 6374,
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json",
+        "sha256": "sha256:066268becce21347a639a11ec7736f22f63fc084e3b3feb24c9b1a3e6fe8bf7b"
+      },
+      {
+        "byte_length": 528,
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json",
+        "sha256": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b"
+      },
+      {
+        "byte_length": 52189,
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py",
+        "sha256": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07"
+      }
+    ],
+    "command": ".venv/bin/python -m pytest -q tests/contract_compiler/pareto research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py",
+    "observed": "GREEN commits 5867437b5fac1fa8723530b11f5a65dc6dfef0f5, f904823097ff3571432223614cd4e80bbd0743bc, and 48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf implement the neutral contract, data-driven machine, and semantic history milestones. The final combined focused run passed 140 tests in 10.13 seconds.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:09797f65accf2371b7d540187aecb1837ff800773b61281ff042ff7aad54d4e9",
+  "entry_id": "CC-R11-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:f22c358c82f452959f41d18685b4338b92d5c4e16caaa9a3c3b7fe1f5e262e65",
+  "recorded_at": "2026-09-02T06:20:01Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the three private compiler milestones.",
+  "workstream_id": "CC-R11"
+}

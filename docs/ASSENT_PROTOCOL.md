@@ -294,6 +294,16 @@ remain non-governed and non-accepted as Malleus knowledge. An adopter may omit
 the semantic-history profile, but then cannot claim its accepted-state,
 ledger-authority, or replay guarantees.
 
+A separate private compiler experiment now proves the intended replacement on
+one frozen Small Shop case. It compiles retained ontology and source bytes into
+an immutable `KnowledgeChangeSet`, admits it through an identified declarative
+machine and policy, appends one semantic/protocol JSONL history, and rebuilds
+the accepted graph from an empty state by replay. The history retains enough
+bytes to reopen without the ambient fixture. This does not change the current
+public Assent runtime or expose a stable API. It is the executable evidence for
+the later hard cutover, not a compatibility promise or a second accepted-state
+authority. See `contract_compiler/index.md`.
+
 One ledger is frozen to one ontology hash. Replaying across ontology upgrades
 requires an explicit migration into a new ledger.
 

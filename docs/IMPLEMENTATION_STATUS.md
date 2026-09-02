@@ -6,6 +6,22 @@ Malleus package version `0.13.3` implements the
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 
+## Private compiler research
+
+One private Small Shop experiment now runs retained source bytes through the
+LinkML adapter, neutral contract facts, an identified declarative machine and
+policy, one immutable `KnowledgeChangeSet`, one append-only JSONL history, and
+replay from an empty accepted graph. The output is a canonical receipt and a
+queryable graph containing `O1`, `X1`, and their order-to-unit relation. The
+same ledger reopens without ambient fixture or program files.
+
+This does not advance the package stage above, replace the shipped Assent
+runtime, or expose a public compiler API. It proves the replacement seam on one
+controlled initial-population case. Corrections, general mapping syntax,
+external effects, Semantic Re-entry, cross-language parity, package inclusion,
+and release work remain outside the implemented research cut. See
+`contract_compiler/index.md`.
+
 ## Implemented
 
 - Stage 2: closed-world ontology and typed-graph validation

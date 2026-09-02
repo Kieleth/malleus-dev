@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:pareto-e2e",
+  "data": {
+    "artifacts": [],
+    "command": "Inspect git diff-tree path sets for GREEN commits 5867437b5fac1fa8723530b11f5a65dc6dfef0f5, f904823097ff3571432223614cd4e80bbd0743bc, and 48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf, then run the fixed AST and data-boundary guards.",
+    "observed": "Milestone 1 changes the private compiler pipeline, its tests, and one compiler page; Milestone 2 adds only the generic private machine module; Milestone 3 changes exactly knowledge.py and four fixture-local files. The slice adds no public API, legacy fallback, direct accepted-graph writer, effect execution, Semantic Re-entry, package, wheel, or release behavior. Candidate state remains NONE.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:17036fb6993eea09b75d494c20ec7cbaf9fe1cd86c84bc830aa6f8beaa54c277",
+  "entry_id": "CC-R11-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:09797f65accf2371b7d540187aecb1837ff800773b61281ff042ff7aad54d4e9",
+  "recorded_at": "2026-09-02T06:20:02Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Verify the bounded private vertical.",
+  "workstream_id": "CC-R11"
+}

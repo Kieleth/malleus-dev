@@ -5569,6 +5569,8 @@ def test_active_dependent_can_reuse_completed_dependency_scope(
             "class": "PLANNING_ONLY",
             "authorized_by": {"id": "overseer", "type": "OVERSEER"},
         }
+        card["candidate"] = {"state": "NONE"}
+        card["ledger"] = {"state": "NOT_STARTED"}
         card["scopes"] = []
 
     _rewrite_card(path, manifest, "CC-R11", pause_r11)
@@ -5578,6 +5580,7 @@ def test_active_dependent_can_reuse_completed_dependency_scope(
         states, entries = original_states(ledger_state)
         states["CC-R02"] = "COMPLETE"
         states["CC-R03"] = "ACTIVE"
+        states["CC-R11"] = "PLANNED"
         return states, entries
 
     monkeypatch.setattr(
@@ -5616,6 +5619,8 @@ def test_concurrent_cards_cannot_hold_overlapping_scopes(
             "class": "PLANNING_ONLY",
             "authorized_by": {"id": "overseer", "type": "OVERSEER"},
         }
+        card["candidate"] = {"state": "NONE"}
+        card["ledger"] = {"state": "NOT_STARTED"}
         card["scopes"] = []
 
     _rewrite_card(path, manifest, "CC-R11", pause_r11)
@@ -5625,6 +5630,7 @@ def test_concurrent_cards_cannot_hold_overlapping_scopes(
         states, entries = original_states(ledger_state)
         states["CC-R02"] = "ACTIVE"
         states["CC-R03"] = "ACTIVE"
+        states["CC-R11"] = "PLANNED"
         return states, entries
 
     monkeypatch.setattr(
@@ -8276,6 +8282,14 @@ def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
     card_path = CONTRACT / row["card"]["path"]
     card_source = card_path.read_bytes()
     card = _read_json(card_path)
+    activation_card = json.loads(
+        _git(
+            ROOT,
+            "show",
+            "1987c00aebcddfde648014ad7926df02b6f1e5e5:"
+            "design/contract_compiler/workstreams/CC-R11/manifest.json",
+        )
+    )
     assert row["card"] == {
         "byte_length": len(card_source),
         "path": "workstreams/CC-R11/manifest.json",
@@ -8293,7 +8307,17 @@ def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
         for binding in card["authorization"]["dependency_bindings"]
     ] == dependencies
     assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert activation_card["candidate"] == {"state": "NONE"}
+    assert activation_card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["ledger"] == {
+        "entry_count": 6,
+        "head_entry_id": "CC-R11-WRK-000006",
+        "head_hash": (
+            "sha256:4dc4a8343f2a73330a22a0bac2a070e00276b171bbbf559ad05f9ec1f0edef50"
+        ),
+        "path": "workstreams/CC-R11/ledger",
+        "state": "RECORDED",
+    }
     assert card["scopes"] == [
         {"kind": "TREE", "path": "src/malleus/_contract_pipeline"},
         {"kind": "FILE", "path": "src/malleus/_contract_compiler.py"},
@@ -8350,7 +8374,7 @@ def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
 
     ledger_state = _raw_overseer_state()
     states, _ = integration_module._workstream_states(ledger_state)
-    assert states["CC-R11"] == "ACTIVE"
+    assert states["CC-R11"] == "COMPLETE"
     assert "CC-R11" not in manifest["selections"]
     transaction = tuple(
         entry for entry in ledger_state.entries if 324 <= entry["sequence"] <= 326
@@ -8404,3 +8428,119 @@ def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
     assert "CC-R04 through CC-R10" in program
     assert "Pareto compiler-to-ledger vertical" in roadmap
     assert "does not complete or supersede" in roadmap
+
+
+def test_pareto_compiler_to_ledger_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R11")
+    card = _read_json(CONTRACT / row["card"]["path"])
+    ledger_root = CONTRACT / "workstreams/CC-R11/ledger"
+    entries = [
+        _read_json(path) for path in sorted((ledger_root / "entries").glob("*.json"))
+    ]
+    head = _read_json(ledger_root / "head.json")
+
+    assert len(entries) == 6
+    assert [entry["data"]["phase"] for entry in entries] == [
+        "RED",
+        "GREEN",
+        "SLICE",
+        "DISPROOF",
+        "REGRESSION",
+        "ATTEST",
+    ]
+    assert [entry["data"]["result"] for entry in entries] == [
+        "EXPECTED_FAILURE",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+    ]
+    assert all(entry["actor_id"] == "worker:pareto-e2e" for entry in entries)
+    assert all(entry["data"]["phase"] != "PACKAGE" for entry in entries)
+    previous = "GENESIS"
+    for entry in entries:
+        assert entry["previous_entry_hash"] == previous
+        assert entry["entry_hash"] == integration_module.worker_entry_hash(entry)
+        previous = entry["entry_hash"]
+    assert head == {
+        "canonicalization": "malleus-canonical-json-v1",
+        "entry_count": 6,
+        "head_entry_id": "CC-R11-WRK-000006",
+        "head_hash": entries[-1]["entry_hash"],
+        "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+        "workstream_id": "CC-R11",
+    }
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {
+        "entry_count": 6,
+        "head_entry_id": "CC-R11-WRK-000006",
+        "head_hash": entries[-1]["entry_hash"],
+        "path": "workstreams/CC-R11/ledger",
+        "state": "RECORDED",
+    }
+
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    assert states["CC-R11"] == "COMPLETE"
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 332 <= entry["sequence"] <= 334
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000332",
+        "OVR-000333",
+        "OVR-000334",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, completion = transaction
+    assert tuple(entry["subject"] for entry in transaction) == (
+        {"id": "ccr11-completion-boundary", "type": "DOCUMENT"},
+        {"id": "ccr11-completion-verification", "type": "EVIDENCE"},
+        {"id": "CC-R11", "type": "WORKSTREAM"},
+    )
+    expected_documents = {
+        "conformance/contract_compiler/v0/evidence/CC-R11.json",
+        "design/contract_compiler/integration.json",
+        "design/contract_compiler/overseer/evidence/CC-R11-completion.json",
+        "design/contract_compiler/workstreams/CC-R11/ledger/head.json",
+        "design/contract_compiler/workstreams/CC-R11/manifest.json",
+        "docs/ASSENT_PROTOCOL.md",
+        "docs/IMPLEMENTATION_STATUS.md",
+        "docs/contract_compiler/index.md",
+        "research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json",
+        "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json",
+        "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json",
+        "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py",
+        "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py",
+        "src/malleus/_contract_pipeline/knowledge.py",
+        "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+        "tests/test_contract_compiler_integration.py",
+    }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R11"]
+    assert {document["path"] for document in revision["data"]["documents"]} == (
+        expected_documents
+    )
+    assert verification["actor"] == {
+        "id": "ccr11-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert completion["data"]["previous_state"] == "ACTIVE"
+    assert completion["data"]["new_state"] == "COMPLETE"
+    assert completion["data"]["bootstrap"] is False
+    assert completion["data"]["blockers"] == []
+    assert completion["data"]["evidence_entry_ids"] == ["OVR-000333"]
+    assert verification["previous_entry_hash"] == revision["entry_hash"]
+    assert completion["previous_entry_hash"] == verification["entry_hash"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R11-completion.json")
+    assert report["workstream_id"] == "CC-R11"
+    assert report["base_commit"] == "48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    assert any("full" in item.lower() for item in report["limitations"])
+    assert any("package" in item.lower() for item in report["limitations"])
+    assert "CC-R11" not in manifest["selections"]

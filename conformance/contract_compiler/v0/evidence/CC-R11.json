@@ -1,9 +1,9 @@
 {
   "artifacts": [
     {
-      "byte_length": 7286,
+      "byte_length": 12463,
       "path": "docs/contract_compiler/index.md",
-      "sha256": "sha256:c5458765fe08e417c336057f02413fd6d6e5d4a10feb64f8360066f9bc804854"
+      "sha256": "sha256:f77ac00288b6b4a4b59e6f91957c532a6112656a7ae69a7e31b253d881180d79"
     },
     {
       "byte_length": 66382,
@@ -11,14 +11,19 @@
       "sha256": "sha256:904eb338e2239c07282d017cf1ac0c342c650efffda5b5c4b471d665bc010f5c"
     },
     {
-      "byte_length": 1294,
-      "path": "src/malleus/_contract_pipeline/__init__.py",
-      "sha256": "sha256:902f02e00ae4e8a1a5ac19214249c0cd4abe119859a208eb12b96b99cd5adbbc"
-    },
-    {
       "byte_length": 44807,
       "path": "src/malleus/_contract_pipeline/elaborate.py",
       "sha256": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140"
+    },
+    {
+      "byte_length": 52724,
+      "path": "src/malleus/_contract_pipeline/knowledge.py",
+      "sha256": "sha256:c61b1c1b317ea091a35c2e31f2dea9be357d1146e5082a4d7be319b9712a9b50"
+    },
+    {
+      "byte_length": 48380,
+      "path": "src/malleus/_contract_pipeline/machine.py",
+      "sha256": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770"
     },
     {
       "byte_length": 8231,
@@ -31,91 +36,115 @@
       "sha256": "sha256:ddedd47c33b9dd6bb893cbfe2b3903392d47b3b3bfc867d7ad5ed2ad782b29b4"
     },
     {
+      "byte_length": 4698,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json",
+      "sha256": "sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb"
+    },
+    {
+      "byte_length": 6374,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json",
+      "sha256": "sha256:066268becce21347a639a11ec7736f22f63fc084e3b3feb24c9b1a3e6fe8bf7b"
+    },
+    {
+      "byte_length": 528,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json",
+      "sha256": "sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b"
+    },
+    {
+      "byte_length": 52189,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py",
+      "sha256": "sha256:b8c558b9dc2ca63f274bbae0b46231d7322719421db29bbf6729dbc68e12cc07"
+    },
+    {
+      "byte_length": 52835,
+      "path": "tests/contract_compiler/pareto/test_protocol_machine.py",
+      "sha256": "sha256:c32317607d96863234d654ab8a19d4903a1d24f752b33dc0e97afe52c7b122e8"
+    },
+    {
       "byte_length": 24737,
       "path": "tests/contract_compiler/pareto/test_validated_contract.py",
       "sha256": "sha256:94ebe355b083a88615d40914be5dbfa2fbf59ff15bf987b33fbccdac0b307921"
     },
     {
-      "byte_length": 33056,
-      "path": "tests/contract_compiler/test_greenhouse_compiler.py",
-      "sha256": "sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c"
+      "byte_length": 34767,
+      "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+      "sha256": "sha256:da0aaf976808a6f0c1c5ae7c2edf3de40508e9fb2e42ea88bdc4921b6183d8a6"
+    },
+    {
+      "byte_length": 22230,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py",
+      "sha256": "sha256:6e3d4af6a005bf517c4ad8e6902c4d2af9864013872e4faa2e112860bd1cf739"
     }
   ],
-  "base_commit": "1987c00aebcddfde648014ad7926df02b6f1e5e5",
+  "base_commit": "85435d38eb75f9650dff6319ffa39a4d59d7c3a7",
   "checks": [
     {
-      "check_id": "ccr11-tdd-history",
-      "method": "Inspect the exact base, tests-only RED commits, GREEN commit, trees, and base-to-GREEN path set.",
-      "observed": "Base 1987c00aebcddfde648014ad7926df02b6f1e5e5 has tree 2c168f1d056022161de85d54a441f8420fe36fb4. RED 6e34cddd45f82fed6154da58183af3def299cc3b has tree e642d9fa8cd617684a3721af01577448360a529f. Corrected RED 8aa87f7cc462c6023bf4e79b02fdec5d5d95cd49 has tree 8988a8a91f5f9e24ca2f1f0f50bafaf7a8815208. GREEN 5867437b5fac1fa8723530b11f5a65dc6dfef0f5 has tree a64b1a50d10d65d6d1e01757468fbbd237821c76 and changes exactly the eight artifacts in this report.",
+      "check_id": "ccr11-three-milestone-tdd",
+      "method": "Inspect the preserved failing-test commits, milestone GREEN commits, exact file scopes, and independently audited repairs before accepting the vertical.",
+      "observed": "Milestone 1 compiles retained LinkML sources into canonical neutral facts and a reloadable ContractView. Milestone 2 loads an identified protocol machine and policy into a generic failure-atomic interpreter. Milestone 3 preserves six RED commits from 714e65e through 584cbe4 and lands exactly five GREEN files at 48e7ddfc9ecdbc2ea1d2696831c427e5bbb61fcf, tree f5809ad7bf65335b126bf311d50e01763897efde. The unrelated d578601 handover commit in that history is excluded from the GREEN scope.",
       "result": "PASS"
     },
     {
-      "check_id": "ccr11-compiler-path",
-      "method": "Compile the governed Small Shop and Greenhouse sources through retained source, LinkML adaptation, binding, elaboration, fact encoding, artifact loading, and structural queries.",
-      "observed": "One private path now implements ContractBinding to ElaboratedContract to sorted ContractFact values to ValidatedContractArtifact to ContractView. The Small Shop result includes its complete reachable foundation closure, inherited Entity and Relation slots, class and mixin edges, slot usage constraints, and enum values. Greenhouse retains its independent canonical facts digest sha256:4103a7cf5db383a1bf29f88bcf94e0057707ea94452f0a36a073b9bb95564db4.",
+      "check_id": "ccr11-source-to-contract",
+      "method": "Compile the frozen Small Shop ontology closure through the private LinkML adapter, neutral binder, elaborator, canonical facts, validated artifact, and immutable structural view.",
+      "observed": "The exact retained ontology bytes produce validated fact-set sha256:80730e44e1bc1efd878cd2723e3af950d409defb68a629deb8c55515c6336f6c. Artifact reload and structural queries do not require source files, LinkML, or OntologyRegistry, and unsupported contract constructs refuse rather than borrowing fallback meaning.",
       "result": "PASS"
     },
     {
-      "check_id": "ccr11-artifact-boundary",
-      "method": "Reload canonical artifact bytes after blocking source reads, LinkML parsing, and OntologyRegistry construction; tamper facts, bound identities, evidence, grammar, ordering, source closure, and trusted ownership.",
-      "observed": "Reload uses only artifact bytes. It verifies exact grammar, capability, metamodel, canonicalization, symbol policy, fact count and digest, semantic fact-set digest, evidence digest, one rooted reachable acyclic import closure, contiguous zero-based import ordinals, and nontrusted declaration ownership. Tampering refuses with a closed typed reason before exposing a view.",
+      "check_id": "ccr11-declarative-machine",
+      "method": "Load the canonical machine, policy, normative profile, and partial EffectiveContract, then execute accepted, rejected, deferred, malformed, and repeated event sequences.",
+      "observed": "Machine sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb and policy sha256:c0ec653fbcdaa3a21cc713a224ecd9c059569e1d37305d1217c1b605da96d60b own the measured vocabulary and behavior. The generic interpreter contains no fixture names, callbacks, I/O, ledger writer, or graph mutation capability and produces deterministic state or one typed failure-atomic refusal.",
       "result": "PASS"
     },
     {
-      "check_id": "ccr11-structural-view",
-      "method": "Query qualified and unambiguous local type, subtype, mixin, slot, constraint, and enum values, validate Small Shop instances, and pass the view to KnowledgeGraph structural validation.",
-      "observed": "ContractView is deeply immutable, uses qualified identifiers internally, refuses ambiguous local-name convenience, validates required, cardinality, range, enum, equality, and accepted flat expression controls, and drives the governed Small Shop KnowledgeGraph structural acceptance and refusal cases.",
+      "check_id": "ccr11-change-set-identity",
+      "method": "Round-trip and tamper every governed KnowledgeChangeSet field, operation order, dependency, temporal value, closure, base head, state digest, and public change-set ID.",
+      "observed": "The final private change-set shape is closed, immutable, canonical, and content-addressed. It binds full base ledger and state coordinates, exact contract and source/evidence closures, zero-based ordered operations, valid time, supersession references, and local dependencies. Missing, unknown, noncanonical, cyclic, duplicate-ID, and self-superseding values refuse before state changes.",
       "result": "PASS"
     },
     {
-      "check_id": "ccr11-identity-and-provenance",
-      "method": "Compare reordered sources, description-only edits, semantic edits, imported ownership, canonical bytes, and artifact evidence.",
-      "observed": "Equivalent semantic facts have byte-identical canonical order and identity. A description-only edit changes source attestation and artifact bytes while preserving the validated fact-set identity; a semantic constraint edit changes that identity. Explicit adoption emits the authoritative owner once, and disconnected or trusted source schemas cannot mint declaration authority.",
+      "check_id": "ccr11-one-history-replay",
+      "method": "Create a fresh history from an empty accepted graph, append its complete bootstrap atomically, admit one change set, discard the derived graph, and reopen using JSONL alone.",
+      "observed": "One 25-event JSONL is the only retained semantic/protocol authority. It retains exact contract, machine, policy, mapping, source, registration, change-set, and lifecycle bytes. Replay reconstructs graph-state sha256:4d7d44cc96376261aa2988a2ff957d51030fd4fe7f29fd4b99f5364fc49f3e3c and the same canonical receipt without ambient fixture or program files. Proposal, checks, and decision remain separate events bound to one change-set identity; ACCEPT and application are atomic.",
       "result": "PASS"
     },
     {
-      "check_id": "ccr11-no-legacy-fallback",
-      "method": "Inspect the compiler AST and exercise the public-shaped private convenience entry with canonical, copied canonical, and modified support-profile values.",
-      "observed": "The legacy _LinkMLAdapter class and its six semantic emit methods are deleted. The compiler routes through retained closure, adapter, binder, and elaborator without OntologyRegistry fallback. None or an exact canonical profile copy proceeds; an arbitrary modified Python mapping refuses as INVALID_PROFILE rather than changing semantics.",
+      "check_id": "ccr11-small-shop-result",
+      "method": "Run the private RET-010 adapter from frozen source bytes and compare its query projection with the separately authored oracle.",
+      "observed": "The accepted replay view contains SalesOrder O1, InventoryUnit X1 with product X, and OrderContainsUnit contains:O1:X1. The receipt binds contract sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17, history binding sha256:da5131f69e67628761bda781c8ab0af730cfddf4aaf97c9a52505667230b47a2, and KnowledgeChangeSet sha256:cc5ce1cf6f9521f5299fbc9a981f6dba6949afaabd3730b2f81037b51c5912af.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-refusal-preservation",
+      "method": "Exercise malformed source, mapping, bootstrap, identity, program, change set, lifecycle, ledger, and cross-domain history inputs while checking the external file and replayed graph before and after.",
+      "observed": "Invalid inputs return typed refusals and preserve the prior ledger and accepted projection. Bootstrap anchors use one JSONL transaction, a partially written lifecycle cannot report success, source and evidence roles cannot be swapped, programmer errors are not hidden as domain refusals, and no legacy candidate identity or graph-writer bypass exists.",
       "result": "PASS"
     },
     {
       "check_id": "ccr11-focused-validation",
-      "method": "Run the retained-source, LinkML adapter, contract binder, feature oracle, feature isolation, Greenhouse, and Pareto compiler modules, then changed-file Ruff and git diff checking.",
-      "observed": "All 314 focused tests passed in 6.89 seconds. Changed-file Ruff passed and git diff checking found no whitespace errors.",
+      "method": "Run .venv/bin/python -m pytest -q tests/contract_compiler/pareto research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py, changed-file Ruff check and format check, canonical JSON byte checks, and git diff checking.",
+      "observed": "All 140 focused M1 through M3 tests passed. Ruff and formatting passed for the changed Python boundary. The three program artifacts equal the declared compact sorted canonical JSON encoding, and git diff checking found no whitespace errors.",
       "result": "PASS"
     },
     {
       "check_id": "ccr11-independent-audit",
-      "method": "Submit current Milestone 1 code and tests to independent read-only review, repair each P1 defect class with an adversarial regression, and request a P0 through P2 closeout.",
-      "observed": "The audit found exact nested evidence and count validation gaps, mutable view state, ambiguous same-tail slot convenience, incomplete root and resolver evidence, an overbroad canonicalization description, and a disconnected or trusted source authority bypass. Every class received a mechanical guard and regression. Final closeout found no remaining P0, P1, or P2 issue in the audited Milestone 1 boundary.",
-      "result": "PASS"
-    },
-    {
-      "check_id": "ccr11-full-suite-rebind-boundary",
-      "method": "Run .venv/bin/python -m pytest -q on exact GREEN bytes before the overseer digest rebind.",
-      "observed": "The run completed with 2384 passed, 2 skipped, and 25 failed in 241.22 seconds. All failures are confined to ledger, integration, and Sphinx checks cascading from two deliberately stale strict bindings for the changed documentation and Greenhouse test. No behavioral compiler failure surfaced. The overseer owns the append-only document and integration rebind before the unified gate can pass.",
-      "result": "PASS"
-    },
-    {
-      "check_id": "ccr11-rebind-coordinates",
-      "method": "Compare current artifact digests with the two exact values reported by the failing governance and integration guards.",
-      "observed": "OVR-000278 expects docs/contract_compiler/index.md sha256:4323c4c76fd241426d4c5f6a9f59c170344860a1f2c7f3e3fa4514bb084dbba2; current is sha256:c5458765fe08e417c336057f02413fd6d6e5d4a10feb64f8360066f9bc804854. Integration expects test_greenhouse_compiler.py sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3; current is sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c.",
+      "method": "Submit each milestone and the final exact implementation to independent read-only P0 through P2 review, reproduce reported defects, add failing regressions, repair narrowly, and re-audit.",
+      "observed": "The audits found and closed identity, prestate, operand, provenance, atomicity, partial-history, cross-domain, ambient-reopen, and authority-bypass defects. Final regression review of the five-file GREEN reports no P0, P1, or P2 finding and independently confirms the 140-test result, atomic bootstrap, JSONL-only reopen, and absence of oracle reads, legacy fallback, graph persistence, or graph-writer paths.",
       "result": "PASS"
     }
   ],
   "limitations": [
-    "This is a private experimental validated-fact and structural-view boundary, not a public API, package, release, wire-format stability promise, or general LinkML compatibility claim.",
-    "The artifact is not an EffectiveContract. The actual EffectiveContract identity must also bind the normative admission machine delivered by the next compiler milestone.",
-    "This milestone does not define or execute a protocol machine, KnowledgeChangeSet, semantic ledger admission, accepted knowledge-graph projection, effect adapter, or Semantic Re-entry path.",
-    "The private producer materializes Boolean, DateTime, Float, Integer, and String seed primitives. LinkML date and uri lowering into explicit Scalar facts is deferred and must refuse until implemented and tested.",
-    "Unsupported declaration or expression constructs refuse with typed reasons. The accepted controls do not establish complete LinkML coverage.",
-    "Future frontend adapter or support-profile injection requires an explicit separately identified artifact behind the neutral binding contract. Arbitrary Python dictionaries cannot silently change compiler meaning.",
-    "Full pytest is intentionally not GREEN at this evidence boundary because the strict overseer document digest and integration digest have not yet been rebound to the committed GREEN bytes. The exact 25-failure governance cascade is recorded above.",
-    "Package, wheel, and release commands were not run for this private milestone.",
-    "Pre-existing modified research files and untracked design and handover files are excluded from this evidence and were not modified by this worker."
+    "This is a private research-local API and artifact set, not a public compiler, wire-format stability promise, general LinkML compatibility claim, package, or release.",
+    "The shipped Assent runtime still uses CandidateSubgraphArtifact, AcceptedGraphApplication, and GraphBaseArtifact. This experiment does not cut it over or create a second accepted-state authority.",
+    "The graph is a structural current-state replay for this initial population, not a public bitemporal query contract.",
+    "The measured operations create entities and relations. Update, delete, correction, and supersession behavior beyond closed reference validation remain future work.",
+    "The mapping is one fixture-local closed artifact, not a public mapping DSL. GraphRecipe, OTTR, Prolog, richer policy adapters, and general source population remain outside this cut.",
+    "Semantic Re-entry, external action effects, observation, and source-to-correction behavior are deliberately excluded.",
+    "No interpreter in another language or completed cross-language conformance result exists.",
+    "The repository-wide pytest run was not completed for Milestone 3. The focused boundary and independent audit are the selected Pareto completion evidence; package, wheel, and release commands were not run.",
+    "Pre-existing modified research files and untracked design and handover files are excluded from this evidence and were not modified by CC-R11."
   ],
-  "recorded_at": "2026-09-02T02:45:43Z",
+  "recorded_at": "2026-09-02T06:30:00Z",
   "schema": "malleus.contract-compiler.verification-report/v1",
   "workstream_id": "CC-R11"
 }
