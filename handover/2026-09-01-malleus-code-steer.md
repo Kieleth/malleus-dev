@@ -282,3 +282,91 @@ registry of who exists. State that in the pilot's handoff rather than around it.
 
 Runs 01 through 08 are sunk. They predate the two tiers and do not bear on this
 version. Written once, here, so nobody reaches for them later.
+
+---
+
+# Addendum 2, 2026-09-02: no to the widening
+
+Codex's correction is right about the fact and wrong about the fix.
+
+## The fact, verified
+
+`AuthorityGrant` is consumed by `AuthorizationDecision` (`authority_grant_id`,
+`authority_grant_hash`, `authorized_actor_id`, validity interval) and by
+`AuthorityAssessment`. `EpistemicDecision` carries no grant slot. The lab's
+`accepted_tier.py` emits `EPISTEMIC_DECIDED` and applies the graph, and emits no
+`AuthorizationDecision`. So a grant cannot bind to what the lab currently calls
+acceptance.
+
+## Why that is the lab's error and not core's gap
+
+`docs/ASSENT_PROTOCOL.md`, first sentence: "Malleus separates structural graph
+materialization, epistemic acceptance, and action authorization. These are
+different operations with different records and state machines."
+
+Accepting a deliverable is two of those, and the lab collapsed them into one.
+
+- **Epistemic**: the evidence shows the contract is met. TDD green, invariants hold,
+  acceptance tests pass. A belief about evidence. Policy-driven, monitor-driven,
+  and identity has no bearing on it. Whether the tests passed does not depend on
+  who is looking.
+- **Authorization**: given that belief, advance the frontier past this deliverable.
+  An act with consequences. This is what `AuthorityGrant` governs, and
+  `AuthorizationDecision` already requires `epistemic_decision_ids` as input. The
+  chain is native: believe first, then authorize under a grant.
+
+The owner's example maps onto it exactly. "TDD is working fine" is epistemic.
+"Continue to the next slice" is authorization under the sub-agent's grant.
+"Product approved" is authorization at the root under the human's grant. The grant
+tree lives entirely in the authorization layer, where core already put it.
+
+## Decision
+
+**No widening of the core contract. Two slots on `AuthorityGrant` and nothing
+else upstream:** a scope narrower than an action type, and whether the grantee may
+sub-delegate.
+
+Acceptance in the lab becomes two events, not one:
+
+1. `EPISTEMIC_DECIDED` over the deliverable's evidence. No grant. Unchanged in
+   meaning from today.
+2. `AUTHORIZATION_DECIDED` over a concrete `ActionProposal` that `code.yaml`
+   defines, `AdvanceDeliverableAction`, referencing the epistemic decision in
+   `epistemic_decision_ids`. The grant binds here. Core validates actor, grant,
+   interval; the new scope slot narrows it to the deliverable subtree.
+
+Everything else on Codex's list is lab-side and mostly reuse:
+
+| Codex asked for | What it is |
+|---|---|
+| grant enforcement for acceptance | emit the second event; core already validates grants on `AuthorizationDecision` |
+| parent-grant lineage and attenuation | the two upstream slots, then a walk the lab writes over the grant records |
+| replay refusal for wrong actor, scope, time, delegation | `verdict-scoped-authority-grant-validation` is implemented in core; scope and delegation need the two slots |
+| explicit mapping for TDD-step, deliverable, product | three `action_type` values on the concrete `ActionProposal`, in `code.yaml` |
+| product-pending projection | a query over `AuthorizationState`, which already has `PENDING`, `AUTHORIZED`, `BLOCKED`, `CLARIFICATION_REQUIRED` |
+| bootstrap grants and grant-aware `decide()` | `decide()` becomes two steps; bootstrap writes the grants |
+
+`ActionProposal` is abstract in `assent.yaml` with the note "Domain ontologies
+define concrete action payload types." That is the invitation core already
+extends. Accept it rather than growing `EpistemicDecision`.
+
+## What the widening would have cost
+
+Identity in the belief layer, so whether evidence is believed depends on who is
+looking, which the epistemic stage exists to make impossible. Grant fields on every
+adopter's epistemic decision. And a second authorization mechanism beside the one
+that exists, which is the pattern now found five times in three days across this
+estate.
+
+## The honest cost of this answer
+
+More lab work than "two slots and one refusal": acceptance is restructured from one
+event to two, and one concrete action class is defined. Less core work, and it is
+the design malleus is built on rather than a fork of it.
+
+## The bootstrap slice
+
+Still accepted. Do not materialize it through the free-string reviewer path, as
+Codex correctly declined to. Materialize it as the first two-event acceptance once
+the second event exists. Until then it is accepted in the handover and pending in
+the graph, and that gap is stated, not hidden.
