@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 from dataclasses import FrozenInstanceError
 from hashlib import sha256
 from importlib.resources import files
@@ -121,6 +122,33 @@ def _compile_feature(name: str):
     )
 
 
+def _canonical_bytes(value: object) -> bytes:
+    return json.dumps(
+        value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode()
+
+
+def _rebind_fact_payload(payload: dict[str, object]) -> bytes:
+    from malleus._contract_pipeline.view import _fact_set_digest
+
+    facts = sorted(payload["facts"], key=_canonical_bytes)
+    payload["facts"] = facts
+    payload["fact_count"] = len(facts)
+    facts_sha256 = "sha256:" + sha256(_canonical_bytes(facts)).hexdigest()
+    payload["facts_sha256"] = facts_sha256
+    payload["validated_fact_set_sha256"] = _fact_set_digest(
+        facts_sha256, payload["metamodel"]["id"]
+    )
+    payload["evidence_sha256"] = "sha256:" + sha256(
+        _canonical_bytes(payload["evidence"])
+    ).hexdigest()
+    return _canonical_bytes(payload)
+
+
 def test_small_shop_elaborates_inheritance_slot_usage_enum_and_neutral_facts() -> None:
     result = _compile_binding(_small_shop_binding())
     view = result.view
@@ -230,7 +258,7 @@ def test_defaults_explicit_false_bounds_and_mixin_conflict_are_mechanical() -> N
     assert use.multivalued is False
     assert use.identifier is False
     assert use.inlined is False
-    assert use.range == "string"
+    assert use.range == "https://malleus.dev/contract-facts/String"
 
     bounds = _compile_feature("x01/numeric_bounds.json")
     inherited = bounds.view.get_slot_constraint(
@@ -325,7 +353,7 @@ def test_validated_artifact_round_trip_needs_no_source_or_linkml(
     monkeypatch.setattr(OntologyRegistry, "__init__", forbidden)
     loaded = load_validated_contract_artifact(compiled.artifact.artifact_bytes)
 
-    assert loaded.content_hash == compiled.content_hash
+    assert loaded.content_hash() == compiled.content_hash
     assert loaded.artifact_bytes == compiled.artifact.artifact_bytes
     assert loaded.validate_instance(
         "https://malleus.dev/schema/small-shop-fulfilment/SalesOrder",
@@ -344,6 +372,26 @@ def test_validated_artifact_refuses_fact_and_bound_identity_tampering() -> None:
     )
 
     compiled = _compile_binding(_small_shop_binding())
+    for malformed in (b'{"grammar":NaN}', b'{"grammar":"\\ud800"}'):
+        with pytest.raises(ArtifactRefusal) as refusal:
+            load_validated_contract_artifact(malformed)
+        assert refusal.value.reason is ArtifactRefusalReason.MALFORMED_ARTIFACT
+
+    payload = json.loads(compiled.artifact.artifact_bytes)
+    payload["evidence"] = None
+    payload["evidence_sha256"] = "sha256:" + sha256(
+        _canonical_bytes(None)
+    ).hexdigest()
+    with pytest.raises(ArtifactRefusal) as refusal:
+        load_validated_contract_artifact(_canonical_bytes(payload))
+    assert refusal.value.reason is ArtifactRefusalReason.MALFORMED_ARTIFACT
+
+    payload = json.loads(compiled.artifact.artifact_bytes)
+    payload["fact_count"] = float(payload["fact_count"])
+    with pytest.raises(ArtifactRefusal) as refusal:
+        load_validated_contract_artifact(_canonical_bytes(payload))
+    assert refusal.value.reason is ArtifactRefusalReason.ARTIFACT_INTEGRITY_MISMATCH
+
     payload = json.loads(compiled.artifact.artifact_bytes)
     payload["facts"][0]["object"] = "tampered"
     tampered = json.dumps(
@@ -405,19 +453,200 @@ def test_contract_view_drives_small_shop_knowledge_graph_validation() -> None:
     assert wrong_enum.op_status is OpStatus.REJECTED
 
 
+def test_bare_slot_convenience_refuses_same_tail_ambiguity() -> None:
+    from malleus._contract_pipeline import load_validated_contract_artifact
+
+    compiled = _compile_binding(_small_shop_binding())
+    payload = json.loads(compiled.artifact.artifact_bytes)
+    shop = "https://malleus.dev/schema/small-shop-fulfilment"
+    class_id = f"{shop}/SalesOrder"
+    slot_id = f"{shop}/id"
+    vocabulary = "https://malleus.dev/contract-facts"
+    use_id = (
+        "urn:malleus:contract-structure:slot-use:v0:sha256:"
+        + sha256(
+            _canonical_bytes(
+                {
+                    "class": class_id,
+                    "domain": "malleus.contract-structure.slot-use/v0",
+                    "slot": slot_id,
+                }
+            )
+        ).hexdigest()
+    )
+    payload["facts"].extend(
+        [
+            {"object": f"{vocabulary}/Slot", "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "subject": slot_id},
+            {"object": f"{vocabulary}/String", "predicate": f"{vocabulary}/valueRange", "subject": slot_id},
+            {"object": False, "predicate": f"{vocabulary}/required", "subject": slot_id},
+            {"object": False, "predicate": f"{vocabulary}/multivalued", "subject": slot_id},
+            {"object": False, "predicate": f"{vocabulary}/identifier", "subject": slot_id},
+            {"object": False, "predicate": f"{vocabulary}/inlined", "subject": slot_id},
+            {"object": f"{vocabulary}/SlotUse", "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "subject": use_id},
+            {"object": class_id, "predicate": f"{vocabulary}/onClass", "subject": use_id},
+            {"object": slot_id, "predicate": f"{vocabulary}/usesSlot", "subject": use_id},
+            {"object": f"{vocabulary}/String", "predicate": f"{vocabulary}/valueRange", "subject": use_id},
+            {"object": False, "predicate": f"{vocabulary}/required", "subject": use_id},
+            {"object": False, "predicate": f"{vocabulary}/multivalued", "subject": use_id},
+            {"object": False, "predicate": f"{vocabulary}/identifier", "subject": use_id},
+            {"object": False, "predicate": f"{vocabulary}/inlined", "subject": use_id},
+        ]
+    )
+    view = load_validated_contract_artifact(_rebind_fact_payload(payload))
+
+    with pytest.raises(ValueError, match="Ambiguous slot: id"):
+        view.effective_slots("SalesOrder")
+
+
 def test_pipeline_values_are_frozen_and_missing_required_data_fails_loudly() -> None:
     result = _compile_binding(_small_shop_binding())
 
     with pytest.raises(FrozenInstanceError):
         result.elaborated.classes[0].abstract = True
+    with pytest.raises(AttributeError):
+        result.view._classes = {}
+    with pytest.raises(TypeError):
+        result.view._classes["X"] = result.view.get_type("SalesOrder")
+    sales_order = "https://malleus.dev/schema/small-shop-fulfilment/SalesOrder"
+    with pytest.raises(TypeError):
+        result.view._slot_uses[sales_order]["X"] = next(
+            iter(result.view._slot_uses[sales_order].values())
+        )
     assert result.view.validate_instance("SalesOrder", {})
+    errors = result.view.validate_instance(
+        "SalesOrder",
+        {"id": "O1", "order_number": []},
+    )
+    assert any("must be singular" in error for error in errors)
 
 
-def test_legacy_lowerer_is_not_a_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
-    def forbidden(*_args, **_kwargs):
-        raise AssertionError("legacy lowerer was invoked")
+def test_seed_primitive_cannot_be_redeclared_as_a_fact_subject() -> None:
+    from malleus._contract_pipeline.model import SEED_METAMODEL_ID
+    from malleus._contract_pipeline.view import _validate_fact_set
 
-    monkeypatch.setattr(compiler._LinkMLAdapter, "adapt", forbidden)
+    seed = "https://malleus.dev/contract-facts/String"
+    facts = (
+        compiler.ContractFact(
+            seed,
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "https://malleus.dev/contract-facts/Class",
+        ),
+        compiler.ContractFact(
+            seed, "https://malleus.dev/contract-facts/abstract", False
+        ),
+        compiler.ContractFact(
+            seed, "https://malleus.dev/contract-facts/isMixin", False
+        ),
+    )
+
+    from malleus._contract_pipeline import ArtifactRefusal, ArtifactRefusalReason
+
+    with pytest.raises(ArtifactRefusal) as refusal:
+        _validate_fact_set(facts, SEED_METAMODEL_ID)
+    assert refusal.value.reason is ArtifactRefusalReason.INVALID_FACT_SET
+
+
+def test_artifact_refuses_bare_declaration_subject_under_qualified_policy() -> None:
+    from malleus._contract_pipeline import (
+        ArtifactRefusal,
+        ArtifactRefusalReason,
+        load_validated_contract_artifact,
+    )
+
+    payload = json.loads(
+        _compile_binding(_small_shop_binding()).artifact.artifact_bytes
+    )
+    payload["facts"] = [
+        {
+            "object": False,
+            "predicate": "https://malleus.dev/contract-facts/abstract",
+            "subject": "X",
+        },
+        {
+            "object": False,
+            "predicate": "https://malleus.dev/contract-facts/isMixin",
+            "subject": "X",
+        },
+        {
+            "object": "https://malleus.dev/contract-facts/Class",
+            "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "subject": "X",
+        },
+    ]
+
+    with pytest.raises(ArtifactRefusal) as refusal:
+        load_validated_contract_artifact(_rebind_fact_payload(payload))
+    assert refusal.value.reason is ArtifactRefusalReason.INVALID_FACT_SET
+
+
+def test_artifact_evidence_must_be_one_rooted_import_closure() -> None:
+    from malleus._contract_pipeline import (
+        ArtifactRefusal,
+        ArtifactRefusalReason,
+        load_validated_contract_artifact,
+    )
+
+    payload = json.loads(
+        _compile_binding(_small_shop_binding()).artifact.artifact_bytes
+    )
+    source = dict(payload["evidence"]["sources"][0])
+    source.update(
+        {
+            "byte_length": 1,
+            "module_id": "unconnected",
+            "schema_id": "https://evil.example/schema",
+            "sha256": "sha256:" + sha256(b"x").hexdigest(),
+            "trusted": False,
+        }
+    )
+    payload["evidence"]["sources"].append(source)
+
+    with pytest.raises(ArtifactRefusal) as refusal:
+        load_validated_contract_artifact(_rebind_fact_payload(payload))
+    assert refusal.value.reason is ArtifactRefusalReason.MALFORMED_ARTIFACT
+
+
+def test_trusted_source_schema_cannot_author_declaration_facts() -> None:
+    from malleus._contract_pipeline import (
+        ArtifactRefusal,
+        ArtifactRefusalReason,
+        load_validated_contract_artifact,
+    )
+
+    payload = json.loads(
+        _compile_binding(_small_shop_binding()).artifact.artifact_bytes
+    )
+    foundation = next(
+        source
+        for source in payload["evidence"]["sources"]
+        if source["module_id"] == "malleus"
+    )
+    foundation["trusted"] = True
+
+    with pytest.raises(ArtifactRefusal) as refusal:
+        load_validated_contract_artifact(_rebind_fact_payload(payload))
+    assert refusal.value.reason is ArtifactRefusalReason.INVALID_FACT_SET
+
+
+def test_legacy_lowerer_is_absent_and_cannot_be_a_fallback() -> None:
+    implementation = Path(compiler.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(implementation)
+    definitions = {
+        node.name
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef))
+    }
+
+    assert not hasattr(compiler, "_LinkMLAdapter")
+    assert "_LinkMLAdapter" not in definitions
+    assert {
+        "_emit_classes",
+        "_emit_enums",
+        "_emit_expressions",
+        "_emit_slots",
+        "_emit_types",
+        "_emit_uses",
+    }.isdisjoint(definitions)
     path = GREENHOUSE / "baseline.yaml"
 
     result = compiler.compile_linkml_contract(path.read_bytes(), locator=path.as_uri())

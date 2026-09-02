@@ -316,7 +316,7 @@ def test_non_enforced_field_refuses_stale_fact_policy() -> None:
         "ANNOTATION_ONLY"
     )
 
-    with pytest.raises(ContractCompileError, match="predicate is unread"):
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
         compile_linkml_contract(
             (SOURCE_ROOT / "baseline.yaml").read_bytes(),
             locator="memory:non-enforced-default",
@@ -330,8 +330,9 @@ def test_condition_range_rule_reads_its_profile_operands() -> None:
         .read_bytes()
         .replace(b"    range: PlantState\n", b"    range: float\n")
     )
-    with pytest.raises(ContractCompileError, match="string or enum range"):
+    with pytest.raises(ContractCompileError, match="INVALID_EXPRESSION.*non-string range"):
         compile_linkml_contract(source, locator="memory:string-condition-on-float")
+
 
 def test_unidentified_derived_predicate_policy_is_refused() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
@@ -504,9 +505,74 @@ def test_bootstrap_accepts_supported_prefix_and_compound_condition_evidence() ->
         ),
     ),
 )
-def test_greenhouse_bootstrap_refuses_unproved_linkml_branches(
+def test_formal_pipeline_measures_promoted_and_refuses_unsupported_branches(
     name: str, source: bytes
 ) -> None:
+    promoted = {
+        "condition-required",
+        "derived-mixin",
+        "inherited-slot",
+        "multiple-mixins",
+        "semantic-parent",
+        "slot-level-constraint",
+        "slot-usage",
+        "two-conditions",
+    }
+    if name in promoted:
+        result = compile_linkml_contract(source, locator=f"memory:{name}")
+        schema = "https://example.malleus.dev/greenhouse"
+        vocabulary = "https://malleus.dev/contract-facts"
+        if name == "slot-usage":
+            assert result.view.get_slot_constraint(
+                f"{schema}/Observation", f"{schema}/temperature"
+            ).required is True
+        elif name == "slot-level-constraint":
+            assert result.view.get_slot_constraint(
+                f"{schema}/Observation", f"{schema}/state"
+            ).equals_string == "HEALTHY"
+        elif name == "condition-required":
+            conditions = {
+                fact.subject
+                for fact in result.facts
+                if fact.predicate == f"{vocabulary}/usesSlot"
+                and fact.object == f"{schema}/state"
+            }
+            assert any(
+                type(fact.object) is bool
+                and fact.object is True
+                and fact.subject in conditions
+                and fact.predicate == f"{vocabulary}/required"
+                for fact in result.facts
+            )
+        elif name == "two-conditions":
+            assert sum(
+                fact.predicate
+                == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                and fact.object == f"{vocabulary}/SlotCondition"
+                for fact in result.facts
+            ) == 3
+        elif name == "inherited-slot":
+            assert result.view.get_slot_constraint(
+                f"{schema}/Sample", f"{schema}/specimen_id"
+            ) is not None
+            assert result.view.get_slot_constraint(
+                f"{schema}/Observation", f"{schema}/specimen_id"
+            ) is not None
+        elif name == "multiple-mixins":
+            assert result.view.has_mixin(
+                f"{schema}/Observation", f"{schema}/Traceable"
+            )
+            assert result.view.has_mixin(
+                f"{schema}/Observation", f"{schema}/Auditable"
+            )
+        elif name == "semantic-parent":
+            assert result.view.has_mixin(f"{schema}/Sample", f"{schema}/Traceable")
+        else:
+            assert name == "derived-mixin"
+            assert result.view.is_subtype_of(
+                f"{schema}/Traceable", f"{schema}/Sample"
+            )
+        return
     with pytest.raises(ContractCompileError):
         compile_linkml_contract(source, locator=f"memory:{name}")
 
@@ -824,7 +890,7 @@ def test_generated_subject_cannot_alias_a_semantic_resource() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     profile["kinds"]["class"] = {"form": "ABSOLUTE", "value": generated}
 
-    with pytest.raises(ContractCompileError, match="aliases semantic resource"):
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
         compile_linkml_contract(
             (SOURCE_ROOT / "baseline.yaml").read_bytes(),
             locator="memory:generated-resource-alias",

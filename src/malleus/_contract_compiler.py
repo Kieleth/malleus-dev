@@ -12,14 +12,12 @@ from dataclasses import dataclass
 from decimal import Decimal
 from hashlib import sha256
 from importlib.metadata import PackageNotFoundError, version
+from importlib.resources import files
 import json
 from pathlib import Path
 from typing import Any, Mapping
 from unicodedata import category
 from urllib.parse import urlsplit
-
-import malleus._contract_linkml_adapter
-
 
 class ContractCompileError(ValueError):
     """The complete source cannot be compiled under the active profile."""
@@ -133,14 +131,6 @@ class _Profile:
     def default(self, reference: str) -> object:
         group, field = reference.split(".", 1)
         return self.mapping("defaults")[group][field]
-
-
-@dataclass(frozen=True, slots=True)
-class _Slot:
-    name: str
-    identifier: str
-    authored: Mapping[str, object]
-    shape: str
 
 
 def _canonical_json(value: object) -> bytes:
@@ -1552,9 +1542,6 @@ class _ContractBuilder:
         return NeutralContract(tuple(declarations))
 
 
-_MISSING = object()
-
-
 def _resolved_term(namespace: str, value: object) -> str:
     spec = _profile_mapping(value, "validated term")
     return (
@@ -1562,682 +1549,6 @@ def _resolved_term(namespace: str, value: object) -> str:
         if spec["form"] == "ABSOLUTE"
         else namespace + str(spec["value"])
     )
-
-
-class _LinkMLAdapter:
-    def __init__(self, schema: Mapping[str, object], profile: _Profile) -> None:
-        self.schema = schema
-        self.profile = profile
-        self._enforce_bootstrap_shape("schema", schema)
-        self.namespace = str(profile.data["namespace"])
-        self.builder = _ContractBuilder()
-        module_field = self._identity_field("schema", "module")
-        self.module = str(
-            self._read(
-                "schema",
-                schema,
-                module_field,
-                purpose="identity",
-                identity_role="module",
-            )
-        )
-        self.imports: tuple[str, ...] = ()
-        self.types: Mapping[str, Mapping[str, object]] = {}
-        self.enums: Mapping[str, Mapping[str, object]] = {}
-        self.slots: Mapping[str, Mapping[str, object]] = {}
-        self.classes: Mapping[str, Mapping[str, object]] = {}
-        self.local: dict[tuple[str, str], _Slot] = {}
-        self.uses: dict[str, Mapping[str, tuple[_Slot, Mapping[str, object]]]] = {}
-        self.slot_shape = ""
-        self.scalar_shape = ""
-        self.scalar_base_field = ""
-
-    def _enforce_bootstrap_shape(
-        self, shape_name: str, source: Mapping[str, object]
-    ) -> None:
-        shape = self.profile.shape(shape_name)
-        if shape.get("bootstrap") == "DEFERRED":
-            raise ContractCompileError(
-                f"shape {shape_name!r} is deferred beyond the bootstrap compiler"
-            )
-        for field, spec in self.profile.fields(shape_name).items():
-            if field not in source:
-                continue
-            if spec.get("bootstrap") == "REJECTED":
-                raise ContractCompileError(
-                    f"field {shape_name}.{field} is deferred beyond the bootstrap "
-                    "compiler"
-                )
-            value = source[field]
-            maximum = spec.get("bootstrap_max_items")
-            if maximum is not None and isinstance(value, (Mapping, tuple)):
-                if len(value) > maximum:
-                    raise ContractCompileError(
-                        f"field {shape_name}.{field} exceeds the bootstrap compiler"
-                    )
-            item_shape = spec.get("item_shape")
-            if item_shape is None:
-                continue
-            parser = spec["parser"]
-            if parser in {"named", "enum_values"}:
-                for item in value.values():
-                    self._enforce_bootstrap_shape(str(item_shape), item)
-            elif parser == "items":
-                for item in value:
-                    self._enforce_bootstrap_shape(str(item_shape), item)
-
-    def _identity_field(self, shape: str, role: str) -> str:
-        matches = [
-            field
-            for field, spec in self.profile.fields(shape).items()
-            if spec.get("identity_role") == role
-        ]
-        if len(matches) != 1:
-            raise ContractCompileError(
-                f"profile shape {shape!r} must declare one {role!r} identity"
-            )
-        return matches[0]
-
-    def _read(
-        self,
-        shape: str,
-        source: Mapping[str, object],
-        field: str,
-        *,
-        purpose: str = "semantic",
-        identity_role: str | None = None,
-        default: object = _MISSING,
-    ) -> object:
-        spec = self.profile.field(shape, field)
-        classification = spec["classification"]
-        if purpose == "identity":
-            if (
-                classification != "IDENTITY_ONLY"
-                or spec.get("identity_role") != identity_role
-            ):
-                raise ContractCompileError(
-                    f"profile field {shape}.{field} cannot serve identity role "
-                    f"{identity_role!r}"
-                )
-        elif purpose == "semantic":
-            if classification == "IDENTITY_ONLY":
-                if "identity_role" in spec:
-                    raise ContractCompileError(
-                        f"identity field {shape}.{field} cannot be read as semantics"
-                    )
-                return default
-            if classification != "ENFORCED":
-                return default
-        else:
-            raise ContractCompileError(f"unknown profile read purpose {purpose!r}")
-        if field in source:
-            if spec.get("bootstrap") == "REJECTED":
-                raise ContractCompileError(
-                    f"field {shape}.{field} is deferred beyond the bootstrap compiler"
-                )
-            value = source[field]
-            maximum = spec.get("bootstrap_max_items")
-            if maximum is not None and isinstance(value, (Mapping, tuple)):
-                if len(value) > maximum:
-                    raise ContractCompileError(
-                        f"field {shape}.{field} exceeds the bootstrap compiler"
-                    )
-            return value
-        return default
-
-    def _collection(self, name: str) -> Mapping[str, Mapping[str, object]]:
-        value = self._read("schema", self.schema, name, default={})
-        if not isinstance(value, Mapping):
-            raise ContractCompileError(f"parsed collection {name!r} is not a mapping")
-        return value
-
-    def _collection_shape(self, name: str) -> str:
-        return str(self.profile.field("schema", name)["item_shape"])
-
-    def _validate_imports(self, field: str) -> None:
-        trusted = self.profile.data["trusted_import"]
-        imports = tuple(self._read("schema", self.schema, field, default=()))
-        unsupported = [reference for reference in imports if reference != trusted]
-        if unsupported:
-            raise ContractCompileError(
-                f"bytes-only adapter cannot resolve import {unsupported[0]!r}"
-            )
-        self.imports = imports
-
-    def _validate_namespaces(self, collections: list[str]) -> None:
-        seen: set[str] = set()
-        for name in collections:
-            declarations = self._collection(name)
-            overlap = seen.intersection(declarations)
-            if overlap:
-                raise ContractCompileError(
-                    f"declaration namespace collision at {sorted(overlap)[0]!r}"
-                )
-            seen.update(declarations)
-
-    def _run_validate_imports(self, operation: Mapping[str, object]) -> None:
-        self._validate_imports(str(operation["field"]))
-
-    def _run_validate_namespace(self, operation: Mapping[str, object]) -> None:
-        self._validate_namespaces(list(operation["collections"]))
-
-    def _term(self, name: str) -> str:
-        return _resolved_term(self.namespace, self.profile.mapping("predicates")[name])
-
-    def _kind(self, name: str) -> tuple[str, str]:
-        spec = self.profile.mapping("kinds")[name]
-        return str(spec["value"]), _resolved_term(self.namespace, spec)
-
-    def _symbol(self, name: str) -> str:
-        return self._join(self.module, name)
-
-    def _join(self, *members: str) -> str:
-        policy = self.profile.mapping("symbol_policy")
-        if policy["join_operation"] != "delimiter_join":
-            raise ContractCompileError(
-                "profile symbol join operation is not executable"
-            )
-        return str(policy["separator"]).join(members)
-
-    def _declare(self, identifier: str, shape: str) -> None:
-        self._declare_kind(identifier, str(self.profile.shape(shape)["kind"]))
-
-    def _declare_kind(self, identifier: str, kind_name: str) -> None:
-        _, kind_iri = self._kind(kind_name)
-        self.builder.declare(identifier, kind_iri)
-
-    def _property(
-        self, identifier: str, predicate_name: str, object_: FactObject
-    ) -> None:
-        self.builder.add(identifier, self._term(predicate_name), object_)
-
-    def _builtin(self, reference: str) -> str | None:
-        if self.profile.data["trusted_import"] not in self.imports:
-            return None
-        builtins = self.profile.mapping("builtins")
-        if reference not in builtins:
-            return None
-        return _resolved_term(self.namespace, builtins[reference])
-
-    def _range(self, reference: str) -> str:
-        policy = self.profile.mapping("range_resolution")
-        if policy["op"] != "ordered_spaces":
-            raise ContractCompileError("profile range resolution is not executable")
-        builtin = self._builtin(reference)
-        if builtin is not None:
-            return builtin
-        for collection in policy["declaration_collections"]:
-            if reference in self._collection(str(collection)):
-                return self._symbol(reference)
-        raise ContractCompileError(f"unsupported range reference {reference!r}")
-
-    def _seed(self, reference: str) -> str:
-        if reference not in self.profile.data["seed_primitives"]:
-            raise ContractCompileError(
-                "custom scalar must directly name one supported seed primitive"
-            )
-        target = self._builtin(reference)
-        if target is None:
-            raise ContractCompileError(
-                f"seed primitive {reference!r} requires the trusted import"
-            )
-        return target
-
-    def _class(self, reference: str) -> str:
-        if reference not in self.classes:
-            raise ContractCompileError(f"unknown class reference {reference!r}")
-        return self._symbol(reference)
-
-    def _terminal_range(self, identifier: object) -> str:
-        value = str(identifier)
-        prefix = self._join(self.module, "")
-        if value.startswith(prefix):
-            name = value.removeprefix(prefix)
-            if name in self.types:
-                base = self._read(
-                    self.scalar_shape,
-                    self.types[name],
-                    self.scalar_base_field,
-                )
-                return self._seed(str(base))
-        return value
-
-    def _resolve(self, spec: Mapping[str, Any], value: object) -> object:
-        if spec["parser"] == "decimal":
-            return _canonical_decimal(str(value))
-        resolver = spec.get("resolver")
-        if resolver == "range":
-            return self._range(str(value))
-        if resolver == "seed":
-            return self._seed(str(value))
-        if resolver == "class":
-            return self._class(str(value))
-        if resolver == "mixin_list":
-            return tuple(self._class(str(item)) for item in value)
-        return value
-
-    def _apply_rules(
-        self,
-        shape_name: str,
-        authored: Mapping[str, object],
-        effective: dict[str, object],
-        context: str,
-    ) -> None:
-        for rule in self.profile.shape(shape_name).get("rules", ()):
-            if rule.get("applies_to") not in {None, context}:
-                continue
-            if effective.get(rule["if_field"]) != rule["if_value"]:
-                continue
-            target = str(rule["then_field"])
-            expected = rule["then_value"]
-            authored_target = self._read(shape_name, authored, target, default=_MISSING)
-            if (
-                rule["refuse_explicit_conflict"] is True
-                and authored_target is not _MISSING
-                and authored_target != expected
-            ):
-                raise ContractCompileError(
-                    f"explicit {target!r} conflicts with an active profile rule"
-                )
-            effective[target] = expected
-
-    def _apply_constraints(
-        self, shape_name: str, effective: Mapping[str, object]
-    ) -> None:
-        for constraint in self.profile.shape(shape_name).get("constraints", ()):
-            operation = constraint["op"]
-            if operation == "equals":
-                field = str(constraint["field"])
-                if effective.get(field) != constraint["value"]:
-                    raise ContractCompileError(
-                        f"{shape_name}.{field} is outside the active profile"
-                    )
-            if operation == "ordered_bounds":
-                minimum = str(constraint["minimum"])
-                maximum = str(constraint["maximum"])
-                present = minimum in effective or maximum in effective
-                allowed = {
-                    self._builtin(str(name))
-                    for name in constraint["allowed_builtin_ranges"]
-                }
-                terminal = self._terminal_range(effective[str(constraint["range"])])
-                if present and terminal not in allowed:
-                    raise ContractCompileError(
-                        "numeric bounds require a supported numeric range"
-                    )
-                if (
-                    minimum in effective
-                    and maximum in effective
-                    and Decimal(str(effective[minimum]))
-                    > Decimal(str(effective[maximum]))
-                ):
-                    raise ContractCompileError("minimum value exceeds maximum value")
-
-    def _effective(
-        self,
-        shape_name: str,
-        authored: Mapping[str, object],
-        *,
-        context: str,
-    ) -> dict[str, object]:
-        effective: dict[str, object] = {}
-        for field, spec in self.profile.fields(shape_name).items():
-            if spec["classification"] != "ENFORCED" or "predicate" not in spec:
-                continue
-            value = self._read(shape_name, authored, field, default=_MISSING)
-            if value is _MISSING and "schema_default" in spec:
-                value = self._read(
-                    "schema",
-                    self.schema,
-                    str(spec["schema_default"]),
-                    default=_MISSING,
-                )
-            if value is _MISSING and "default" in spec:
-                value = self.profile.default(str(spec["default"]))
-            if value is _MISSING:
-                continue
-            effective[field] = self._resolve(spec, value)
-        self._apply_rules(shape_name, authored, effective, context)
-        self._apply_constraints(shape_name, effective)
-        return effective
-
-    def _emit_effective(
-        self, identifier: str, shape_name: str, effective: Mapping[str, object]
-    ) -> None:
-        for field, value in effective.items():
-            spec = self.profile.field(shape_name, field)
-            if spec["classification"] != "ENFORCED":
-                raise ContractCompileError(
-                    f"non-enforced field {shape_name}.{field} reached fact emission"
-                )
-            predicate = str(spec["predicate"])
-            if isinstance(value, tuple):
-                for item in value:
-                    if type(item) is not str:
-                        raise ContractCompileError(
-                            f"field {shape_name}.{field} emitted a non-string sequence"
-                        )
-                    self._property(identifier, predicate, item)
-            else:
-                if type(value) not in {bool, str}:
-                    raise ContractCompileError(
-                        f"field {shape_name}.{field} emitted a non-scalar value"
-                    )
-                self._property(identifier, predicate, value)
-
-    def _slot(self, name: str) -> _Slot:
-        if name not in self.slots:
-            raise ContractCompileError(f"unknown slot reference {name!r}")
-        return _Slot(name, self._symbol(name), self.slots[name], self.slot_shape)
-
-    def _validate_class_edges(self, operation: Mapping[str, object]) -> None:
-        shape = str(operation["shape"])
-        parent_field = str(operation["parent_field"])
-        mixins_field = str(operation["mixins_field"])
-        mixin_field = str(operation["mixin_field"])
-        for body in self.classes.values():
-            parent_value = self._read(shape, body, parent_field, default=_MISSING)
-            if parent_value is not _MISSING:
-                parent_name = str(parent_value)
-                self._class(parent_name)
-                parent = self.classes[parent_name]
-                for field in operation["parent_semantic_fields"]:
-                    if (
-                        self._read(shape, parent, str(field), default=_MISSING)
-                        is not _MISSING
-                    ):
-                        raise ContractCompileError(
-                            "semantic parent is outside the active profile"
-                        )
-            mixins = self._read(shape, body, mixins_field, default=())
-            for mixin_name in mixins:
-                self._class(str(mixin_name))
-                mixin = self.classes[str(mixin_name)]
-                mixin_semantics = self._effective(shape, mixin, context="declaration")
-                if mixin_semantics[mixin_field] is not True:
-                    raise ContractCompileError(
-                        "mixin reference does not target a mixin"
-                    )
-                for field in operation["derived_mixin_forbidden_fields"]:
-                    if (
-                        self._read(shape, mixin, str(field), default=_MISSING)
-                        is not _MISSING
-                    ):
-                        raise ContractCompileError(
-                            "derived or semantic mixin is outside the active profile"
-                        )
-
-    def _emit_types(self, operation: Mapping[str, object]) -> None:
-        collection = str(operation["collection"])
-        shape = str(operation["shape"])
-        base_field = str(operation["base_field"])
-        self.types = self._collection(collection)
-        self.scalar_shape = shape
-        self.scalar_base_field = base_field
-        spec = self.profile.field(shape, base_field)
-        for name in sorted(self.types):
-            identifier = self._symbol(name)
-            self._declare(identifier, shape)
-            source = self._read(shape, self.types[name], base_field)
-            target = self._resolve(spec, source)
-            self._property(identifier, str(spec["predicate"]), str(target))
-
-    def _emit_enums(self, operation: Mapping[str, object]) -> None:
-        collection = str(operation["collection"])
-        shape = str(operation["shape"])
-        values_field = str(operation["values_field"])
-        self.enums = self._collection(collection)
-        spec = self.profile.field(shape, values_field)
-        for name in sorted(self.enums):
-            identifier = self._symbol(name)
-            self._declare(identifier, shape)
-            values = self._read(shape, self.enums[name], values_field, default={})
-            for value in sorted(values):
-                self._property(identifier, str(spec["predicate"]), value)
-
-    def _emit_slots(self, operation: Mapping[str, object]) -> None:
-        slot_shape = str(operation["slot_shape"])
-        attribute_shape = str(operation["attribute_shape"])
-        attribute_field = str(operation["attribute_field"])
-        slots_collection = str(operation["slots_collection"])
-        classes_collection = str(operation["classes_collection"])
-        class_shape = self._collection_shape(classes_collection)
-        self.slots = self._collection(slots_collection)
-        self.slot_shape = slot_shape
-        self.classes = self._collection(classes_collection)
-        for name in sorted(self.slots):
-            slot = self._slot(name)
-            self._declare(slot.identifier, slot.shape)
-            effective = self._effective(
-                slot.shape, slot.authored, context="declaration"
-            )
-            self._emit_effective(slot.identifier, slot.shape, effective)
-        for class_name, body in self.classes.items():
-            attributes = self._read(class_shape, body, attribute_field, default={})
-            for name, authored in attributes.items():
-                identifier = self._join(self._symbol(class_name), name)
-                slot = _Slot(name, identifier, authored, attribute_shape)
-                self.local[(class_name, name)] = slot
-                self._declare(identifier, slot.shape)
-                effective = self._effective(
-                    slot.shape, slot.authored, context="declaration"
-                )
-                self._emit_effective(identifier, slot.shape, effective)
-
-    def _emit_classes(self, operation: Mapping[str, object]) -> None:
-        shape = str(operation["shape"])
-        self.classes = self._collection(str(operation["collection"]))
-        self._validate_class_edges(operation)
-        for name in sorted(self.classes):
-            identifier = self._symbol(name)
-            self._declare(identifier, shape)
-            effective = self._effective(
-                shape, self.classes[name], context="declaration"
-            )
-            self._emit_effective(identifier, shape, effective)
-
-    def _structural(self, name: str, role_values: Mapping[str, object]) -> str:
-        profile = self.profile.mapping("structural_identities")[name]
-        roles = profile["member_roles"]
-        supplied = {**role_values, "domain": profile["domain"]}
-        if set(supplied) != set(roles):
-            raise RuntimeError(f"wrong structural roles for {name}")
-        members = {roles[role]: value for role, value in supplied.items()}
-        return str(profile["prefix"]) + sha256(_canonical_json(members)).hexdigest()
-
-    def _slot_use_id(self, class_id: str, slot: _Slot) -> str:
-        identity_name = str(self.profile.shape(slot.shape)["use_identity"])
-        return self._structural(
-            identity_name,
-            {
-                "class": class_id,
-                "slot": slot.identifier,
-            },
-        )
-
-    def _emit_uses(self, operation: Mapping[str, object]) -> None:
-        classes_collection = str(operation["classes_collection"])
-        slots_field = str(operation["slots_field"])
-        attributes_field = str(operation["attributes_field"])
-        kind = str(operation["kind"])
-        class_shape = self._collection_shape(classes_collection)
-        self.classes = self._collection(classes_collection)
-        result: dict[str, Mapping[str, tuple[_Slot, Mapping[str, object]]]] = {}
-        for class_name in sorted(self.classes):
-            body = self.classes[class_name]
-            uses: dict[str, tuple[_Slot, Mapping[str, object]]] = {}
-            slots = self._read(class_shape, body, slots_field, default=())
-            for name in slots:
-                slot = self._slot(str(name))
-                uses[slot.name] = (
-                    slot,
-                    self._effective(slot.shape, slot.authored, context="slot_use"),
-                )
-            attributes = self._read(class_shape, body, attributes_field, default={})
-            for name in attributes:
-                slot = self.local[(class_name, name)]
-                if name in uses:
-                    raise ContractCompileError(
-                        f"class {class_name!r} has an ambiguous slot {name!r}"
-                    )
-                uses[name] = (
-                    slot,
-                    self._effective(slot.shape, slot.authored, context="slot_use"),
-                )
-            result[class_name] = uses
-            class_id = self._symbol(class_name)
-            for slot, effective in uses.values():
-                identifier = self._slot_use_id(class_id, slot)
-                self._declare_kind(identifier, kind)
-                self._property(
-                    identifier, str(operation["on_class_predicate"]), class_id
-                )
-                self._property(
-                    identifier,
-                    str(operation["uses_slot_predicate"]),
-                    slot.identifier,
-                )
-                self._emit_effective(identifier, slot.shape, effective)
-        self.uses = result
-
-    def _condition_slot(
-        self,
-        reference: str,
-        uses: Mapping[str, tuple[_Slot, Mapping[str, object]]],
-    ) -> tuple[_Slot, Mapping[str, object]]:
-        if reference not in uses:
-            raise ContractCompileError(
-                f"condition references non-applicable slot {reference!r}"
-            )
-        return uses[reference]
-
-    def _validate_condition_range(
-        self,
-        condition: Mapping[str, object],
-        slot: Mapping[str, object],
-        operation: Mapping[str, object],
-    ) -> None:
-        if str(operation["condition_value_field"]) not in condition:
-            return
-        string_range = self._builtin(str(operation["string_builtin"]))
-        enum_ranges = {
-            self._symbol(name)
-            for name in self._collection(str(operation["enum_collection"]))
-        }
-        range_value = slot[str(operation["range_field"])]
-        if range_value != string_range and range_value not in enum_ranges:
-            raise ContractCompileError(
-                "equals_string condition requires a string or enum range"
-            )
-
-    def _emit_expressions(self, operation: Mapping[str, object]) -> None:
-        classes_collection = str(operation["classes_collection"])
-        alternatives_field = str(operation["alternatives_field"])
-        conditions_field = str(operation["conditions_field"])
-        condition_shape = str(operation["condition_shape"])
-        class_shape = self._collection_shape(classes_collection)
-        alternative_shape = str(
-            self.profile.field(class_shape, alternatives_field)["item_shape"]
-        )
-        self.classes = self._collection(classes_collection)
-        for class_name, body in self.classes.items():
-            alternatives = self._read(class_shape, body, alternatives_field, default=())
-            if not alternatives:
-                continue
-            prepared: list[tuple[str, str, Mapping[str, object]]] = []
-            for alternative in alternatives:
-                conditions = self._read(
-                    alternative_shape, alternative, conditions_field
-                )
-                reference, condition = next(iter(conditions.items()))
-                slot, slot_effective = self._condition_slot(
-                    reference, self.uses[class_name]
-                )
-                condition_effective = self._effective(
-                    condition_shape, condition, context="condition"
-                )
-                self._validate_condition_range(
-                    condition_effective, slot_effective, operation
-                )
-                semantic = {str(operation["condition_slot_member"]): slot.identifier}
-                for field, value in condition_effective.items():
-                    semantic[
-                        str(self.profile.field(condition_shape, field)["member"])
-                    ] = value
-                semantic_name = str(operation["semantic_identity"])
-                digest = self._structural(
-                    semantic_name,
-                    {
-                        "conditions": [semantic],
-                    },
-                )
-                prepared.append((digest, slot.identifier, condition_effective))
-            digests = [digest for digest, _, _ in prepared]
-            if len(digests) != len(set(digests)):
-                raise ContractCompileError("exactly_one_of repeats an alternative")
-            class_id = self._symbol(class_name)
-            group_name = str(operation["group_identity"])
-            group_id = self._structural(
-                group_name,
-                {
-                    "alternative_semantic_digests": sorted(digests),
-                    "class": class_id,
-                },
-            )
-            self._declare_kind(group_id, str(operation["group_kind"]))
-            self._property(
-                group_id, str(operation["group_on_class_predicate"]), class_id
-            )
-            for digest, slot_id, condition in prepared:
-                alternative_name = str(operation["alternative_identity"])
-                alternative_id = self._structural(
-                    alternative_name,
-                    {
-                        "alternative_semantic_digest": digest,
-                        "group": group_id,
-                    },
-                )
-                self._declare_kind(alternative_id, str(operation["alternative_kind"]))
-                self._property(
-                    alternative_id,
-                    str(operation["alternative_in_group_predicate"]),
-                    group_id,
-                )
-                condition_name = str(operation["condition_identity"])
-                condition_id = self._structural(
-                    condition_name,
-                    {
-                        "alternative": alternative_id,
-                        "slot": slot_id,
-                    },
-                )
-                self._declare(condition_id, condition_shape)
-                self._property(
-                    condition_id,
-                    str(operation["condition_in_alternative_predicate"]),
-                    alternative_id,
-                )
-                self._property(
-                    condition_id,
-                    str(operation["condition_uses_slot_predicate"]),
-                    slot_id,
-                )
-                self._emit_effective(condition_id, condition_shape, condition)
-
-    def adapt(self) -> NeutralContract:
-        handlers = {
-            "validate_imports": self._run_validate_imports,
-            "validate_shared_namespace": self._run_validate_namespace,
-            "declare_direct_seed_scalars": self._emit_types,
-            "declare_enums": self._emit_enums,
-            "declare_slots": self._emit_slots,
-            "declare_shallow_classes": self._emit_classes,
-            "lower_slot_uses": self._emit_uses,
-            "lower_flat_exactly_one": self._emit_expressions,
-        }
-        for operation in self.profile.data["lowering_plan"]:
-            handlers[str(operation["op"])](operation)
-        return self.builder.finish()
 
 
 def _encode_facts(
@@ -2295,55 +1606,122 @@ def _validate_versions(profile: _Profile) -> None:
             )
 
 
+@dataclass(frozen=True, slots=True)
+class _OneRootResolver:
+    """Resolve only caller bytes and the exact packaged LinkML type module."""
+
+    locator: str
+    source: bytes
+    trusted_literal: str
+    trusted_module_id: str
+    trusted_source: bytes
+
+    def resolve(self, request: object):
+        from malleus._contract_source import (
+            CollaboratorRefusal,
+            ImportRequest,
+            ResolvedSource,
+            RootRequest,
+        )
+
+        if type(request) is RootRequest and request.requested_locator == self.locator:
+            return ResolvedSource(self.locator, self.source, "application/yaml")
+        if (
+            type(request) is ImportRequest
+            and request.literal_import == self.trusted_literal
+        ):
+            return ResolvedSource(
+                self.trusted_module_id,
+                self.trusted_source,
+                "application/yaml",
+            )
+        literal = getattr(request, "literal_import", None)
+        raise CollaboratorRefusal(
+            f"one-root compiler cannot resolve import {literal!r}; "
+            "supply a retained SourceClosure"
+        )
+
+
+def _canonical_profile_only(profile: Mapping[str, object] | None) -> _Profile:
+    active = _load_profile(None)
+    if profile is None:
+        return active
+    try:
+        supplied = _canonical_json(_plain_json(profile))
+        authority = _canonical_json(json.loads(_PROFILE_PATH.read_bytes()))
+    except (OSError, TypeError, ValueError) as error:
+        raise ContractCompileError(f"INVALID_PROFILE: profile mapping is invalid: {error}") from error
+    if supplied != authority:
+        raise ContractCompileError(
+            "INVALID_PROFILE: Python mappings cannot inject compiler semantics; "
+            "use the exact packaged profile"
+        )
+    return active
+
+
+def _deepest_error(error: BaseException) -> str:
+    current = error
+    seen: set[int] = set()
+    while current.__cause__ is not None and id(current) not in seen:
+        seen.add(id(current))
+        current = current.__cause__
+    return str(current)
+
+
+def _compile_linkml_closure(closure: object):
+    """Compile one already retained import closure without resolving again."""
+
+    from malleus._contract_binder import bind_contract
+    from malleus._contract_linkml_adapter import adapt_linkml_closure
+    from malleus._contract_pipeline import compile_binding
+
+    return compile_binding(bind_contract(adapt_linkml_closure(closure)))
+
+
 def compile_linkml_contract(
     source: bytes,
     *,
     locator: str,
     profile: Mapping[str, object] | None = None,
-) -> ContractCompilation:
-    """Adapt exact LinkML bytes into declarations, then encode neutral facts."""
+) -> object:
+    """Compile one root plus the exact packaged LinkML type dependency."""
 
     if not isinstance(locator, str) or not locator:
         raise TypeError("locator must be a nonempty string")
-    active = _load_profile(profile)
+    if type(source) is not bytes:
+        raise TypeError("source must be exact bytes")
+    active = _canonical_profile_only(profile)
     try:
         _validate_versions(active)
-        parsed = malleus._contract_linkml_adapter._parse_linkml_source(
-            source,
-            module_id=locator,
-            profile=active.data,
+        from malleus._contract_linkml_adapter import LinkMLImportReader
+        from malleus._contract_source import ResolverSelection, build_source_closure
+
+        trusted = active.mapping("trusted_module")
+        trusted_source = (
+            files("linkml_runtime")
+            .joinpath("linkml_model", "model", "schema", "types.yaml")
+            .read_bytes()
         )
-        schema = parsed.plain
-        contract = _LinkMLAdapter(schema, active).adapt()
-        facts = _encode_facts(contract, active)
-        canonical = _canonical_json([fact.as_dict() for fact in facts])
+        closure = build_source_closure(
+            requested_locator=locator,
+            selection=ResolverSelection(
+                resolver_id="malleus.compiler.one-root-exact/v0",
+                profile_version=str(active.data["support_profile"]),
+                configuration_id="caller-bytes-plus-packaged-linkml-types/v0",
+            ),
+            resolver=_OneRootResolver(
+                locator=locator,
+                source=source,
+                trusted_literal=str(active.data["trusted_import"]),
+                trusted_module_id=str(trusted["module_id"]),
+                trusted_source=trusted_source,
+            ),
+            import_reader=LinkMLImportReader(),
+        )
+        return _compile_linkml_closure(closure)
     except ContractCompileError:
         raise
-    except malleus._contract_linkml_adapter.LinkMLAdapterRefusal as error:
-        raise ContractCompileError(str(error)) from error
     except (KeyError, RuntimeError, TypeError, ValueError) as error:
         raise ContractCompileError(
-            f"profile execution refused malformed state: {error}"
+            f"contract pipeline refused input: {_deepest_error(error)}"
         ) from error
-    return ContractCompilation(
-        contract=contract,
-        facts=facts,
-        canonical_facts=canonical,
-        facts_sha256=sha256(canonical).hexdigest(),
-        source=SourceAttestation(
-            locator=locator,
-            byte_length=len(source),
-            sha256=sha256(source).hexdigest(),
-        ),
-        implementation=CompilerImplementation(
-            adapter=str(active.data["adapter"]),
-            linkml_version=str(active.data["linkml_version"]),
-            linkml_runtime_version=str(active.data["linkml_runtime_version"]),
-            support_profile=str(active.data["support_profile"]),
-            profile_sha256=active.digest,
-            executor_sha256=sha256(Path(__file__).read_bytes()).hexdigest(),
-            adapter_executor_sha256=sha256(
-                Path(__file__).with_name("_contract_linkml_adapter.py").read_bytes()
-            ).hexdigest(),
-        ),
-    )
