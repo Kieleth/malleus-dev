@@ -1,0 +1,107 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 24690,
+      "path": "README.md",
+      "sha256": "sha256:810e4b1a46a3eb81af4d94033604fc5a486518ef4642011aa3f67d3f336073b7"
+    },
+    {
+      "byte_length": 17624,
+      "path": "docs/index.md",
+      "sha256": "sha256:3b5d9742801146261ef6e5b90d93f297ba37b3d79fbd15c4a339a478f9e29227"
+    },
+    {
+      "byte_length": 430,
+      "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/rebind_report.py",
+      "sha256": "sha256:f28f8fb3b3681d0d7727e7ff8e847f5081b5072145a8de95f199d5f772097103"
+    },
+    {
+      "byte_length": 31616,
+      "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py",
+      "sha256": "sha256:6d09cbcf2f580bf990d4dfc0baef13b104bc4ba8075d222c81ef073a60522906"
+    },
+    {
+      "byte_length": 2073,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json",
+      "sha256": "sha256:7ee4f2a4ed605b08c6c05ad60f82d08b1ded66a6f03cbf4da0e668e88f2a10bf"
+    },
+    {
+      "byte_length": 23054,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py",
+      "sha256": "sha256:44b12afe6ad4d1c94c198edcd038583f33794f5860f57dcbf972b073cca9a858"
+    },
+    {
+      "byte_length": 33499,
+      "path": "scripts/contract_compiler_ledger.py",
+      "sha256": "sha256:e83c51b3ce3ceb3a137f6463446d2de53ad50e9d98fdded4a0668580fc074622"
+    },
+    {
+      "byte_length": 209124,
+      "path": "tests/test_contract_compiler_environment.py",
+      "sha256": "sha256:9d974be0e10c340ebc6bc3e2509ab237a09e8f0bf93b320adef69595a340c9d3"
+    },
+    {
+      "byte_length": 315417,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:3bc13c4df179bf9691f42d73c3b6722b84f31d258aebc9e29975e804257cbea1"
+    },
+    {
+      "byte_length": 265236,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:3bea1d54502db3761aeef7196126629641f8da2ec508b05ffcb559e4178329d4"
+    },
+    {
+      "byte_length": 81665,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:d6a7b5b8f88aac4aed0927c4147c8ba855be2c3e7402b1ea45f8a351f8f2a57c"
+    }
+  ],
+  "base_commit": "480410dacb6f4c0a6ba2f9fc89d25d61d188c243",
+  "checks": [
+    {
+      "check_id": "public-ci-root-cause",
+      "method": "Inspect GitHub Actions run 33655464351 by Python version and reproduce its primary governance failure from a ref-only local clone.",
+      "observed": "The public run failed for six bounded reasons: one locally dangling governed candidate commit, one GraphRecipe report compared with mutable current documentation, two Python 3.10-only tomllib imports, one Python 3.11 pathlib test-helper interaction, one ambient Git identity dependency, and one Python 3.13 Sphinx wording difference. The ref-only clone reproduces the missing-commit refusal exactly.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "governed-commit-reachability",
+      "method": "Add a ledger guard that accepts a governed commit only when it is in HEAD ancestry or retained under an evidence/* tag, then exercise HEAD, dangling, ordinary-tag, and evidence-tag cases.",
+      "observed": "The guard first refused candidate 085b59b718cf4d4c647b0b842308d67df5f2a3ba as locally dangling. Local evidence tag evidence/cc-r02-candidate-v1 makes the exact candidate and its ancestry cloneable without changing current file bytes. Remote publication remains a required precondition of the next main push.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "dated-report-boundary",
+      "method": "Compare every GraphRecipe report-bound file identity with public repository commit 3ec7192df52107300eef69a4476b6fa70f84a2bb and rerun the report test.",
+      "observed": "All twenty bound identities match that public archive exactly. The test now validates those recorded bytes instead of mutable current files, and the obsolete live rebind path is replaced by a fail-closed tombstone. The dated report and foundation graph require no digest cascade.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "portable-test-repairs",
+      "method": "Apply the repository's existing tomli fallback, preserve the concrete pathlib object supplied to the fake environment builder, provide fixed test-only Git identity, and accept Sphinx's cross-version singular or plural failure wording.",
+      "observed": "The corrected focused tests pass under the configured Python 3.12 environment. The public Python 3.10 through 3.13 matrix remains pending until this exact change is pushed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "declared-compiler-environment",
+      "method": "Regenerate the Small Shop receipt with the project environment and compare the trusted LinkML module bytes with the pinned adapter profile.",
+      "observed": "The project environment uses Python 3.12.9, LinkML 1.11.1, and LinkML Runtime 1.11.1. Its trusted types.yaml is 7,296 bytes with sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00, matching the profile. The unrelated ambient Python contains LinkML Runtime 1.10.0 and is correctly refused rather than silently changing compiler meaning.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-evidence-pack",
+      "method": "Regenerate RET-010 from the exact fixture and contracts, compare the canonical receipt byte for byte, inspect the exact event sequence, and verify the public evidence links and limits.",
+      "observed": "The committed 2,073-byte receipt regenerates exactly. Its 25-event history contains four initial contract artifacts, eight source-artifact/source pairs, one retained KnowledgeChangeSet, one proposal, two supplied receipts, and one ACCEPT verdict. The documentation links the source attribution, ontology, neutral-fact excerpt, mapping, machine, policy, independent answer key, runner, tests, verification reports, receipt, graph result, reproduction command, and atomic source-drift refusal.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This evidence pack adds no compiler, protocol, mapping, check, ledger, graph, or runtime capability.",
+    "The receipt is a byte-exact research snapshot, not a supported API, stable schema, package feature, or compatibility promise. The 280 KB generated ledger remains reproducible output rather than a committed artifact.",
+    "The two check outcomes remain fixture-supplied. Executing and retaining their implementations is the next named technical closure, not part of this publication repair.",
+    "The evidence tag is local at the time of this report. Public reachability and the complete GitHub Python matrix must pass before the milestone is tagged or announced as official."
+  ],
+  "recorded_at": "2026-09-02T17:24:50Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

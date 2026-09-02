@@ -19,7 +19,6 @@ import subprocess
 import sys
 import sysconfig
 import tarfile
-import tomllib
 import types
 import venv
 import warnings
@@ -27,6 +26,11 @@ import zipfile
 import zlib
 from pathlib import Path
 from typing import Any
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised by Python 3.10 CI
+    import tomli as tomllib
 
 import pytest
 
@@ -737,7 +741,7 @@ def _execute_verifier_program(
             }
 
         def create(self, target):
-            (Path(target) / "bin").mkdir(parents=True)
+            (target / "bin").mkdir(parents=True)
 
     def fake_run(arguments, **options):
         command = list(arguments)

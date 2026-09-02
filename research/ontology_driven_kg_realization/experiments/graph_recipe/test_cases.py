@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 
 import pytest
 import yaml
@@ -44,6 +46,7 @@ CORPUS_ROOT = ROOT / "conformance" / "graph_recipe" / "v0"
 CORPUS = CORPUS_ROOT / "corpus.json"
 CHECKSUMS = CORPUS_ROOT / "checksums.json"
 REPORT = Path(__file__).with_name("FIRST_SLICE_CONFORMANCE_REPORT.json")
+REPORT_BOUND_BYTES_ARCHIVE_COMMIT = "3ec7192df52107300eef69a4476b6fa70f84a2bb"
 
 EXPECTED_CASES = {
     ("GE-000-ONTOLOGY-IS-NOT-POPULATION", "baseline"),
@@ -181,7 +184,7 @@ def test_digest_red_obligation_is_closed():
     assert pending == []
 
 
-def test_checksum_set_and_report_bind_the_current_executable_snapshot():
+def test_checksum_set_and_report_bind_the_recorded_executable_snapshot():
     checksums = _load_json(CHECKSUMS)
     assert checksums["algorithm"] == "source-bytes-sha256-v1"
     declared = {item["path"]: item for item in checksums["files"]}
@@ -214,11 +217,27 @@ def test_checksum_set_and_report_bind_the_current_executable_snapshot():
         if not isinstance(group, dict):
             continue
         for relative_path, expected_digest in group.items():
-            assert source_bytes_digest((ROOT / relative_path).read_bytes()) == expected_digest, (
-                f"{relative_path} drifted from its binding; rebind with "
-                f"research/ontology_driven_kg_realization/experiments/graph_recipe/"
-                f"rebind_report.py rather than editing a digest by hand"
-            )
+            # This later public commit archives every byte named by the dated
+            # report. It is not claimed as the report's execution commit.
+            archived = subprocess.run(
+                ["git", "show", f"{REPORT_BOUND_BYTES_ARCHIVE_COMMIT}:{relative_path}"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+            ).stdout
+            assert source_bytes_digest(archived) == expected_digest
+
+    report_before = REPORT.read_bytes()
+    retired_rebind = subprocess.run(
+        [sys.executable, Path(__file__).with_name("rebind_report.py")],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert retired_rebind.returncode == 2
+    assert "immutable dated snapshot" in retired_rebind.stderr
+    assert REPORT.read_bytes() == report_before
 
     receipt_identities = {
         (item["experiment_id"], item["case_id"]): item

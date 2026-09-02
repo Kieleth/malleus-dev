@@ -34,6 +34,7 @@ PARETO = Path(__file__).parent
 MACHINE = PARETO / "machine.json"
 POLICY = PARETO / "policy.json"
 MAPPING = PARETO / "mapping.json"
+RESEARCH_RECEIPT = PARETO / "ret-010-research-receipt.json"
 ORACLE = FIXTURE / "oracle/ret-000-ret-010.json"
 FROZEN_SHA256 = {
     "input/configuration/ret-010-selection.json": (
@@ -329,6 +330,34 @@ def test_source_to_ledger_to_query_vertical_matches_independent_oracle(
         result.replay.contract_view.content_hash()
     )
     assert tuple(ledger.parent.iterdir()) == (ledger,)
+
+
+def test_recorded_research_receipt_regenerates_from_the_exact_history(
+    tmp_path: Path,
+) -> None:
+    ledger = tmp_path / "semantic.jsonl"
+    result = _run(ledger)
+
+    assert RESEARCH_RECEIPT.read_bytes() == result.receipt.canonical_bytes + b"\n"
+    event_types = tuple(
+        json.loads(line)["event_type"] for line in ledger.read_bytes().splitlines()
+    )
+    assert event_types[:4] == ("ARTIFACT_REGISTERED",) * 4
+    assert (
+        event_types[4:20]
+        == (
+            "ARTIFACT_REGISTERED",
+            "SOURCE_REGISTERED",
+        )
+        * 8
+    )
+    assert event_types[20:] == (
+        "KNOWLEDGE_CHANGE_SET_RETAINED",
+        "CHANGE_PROPOSED",
+        "CHECK_RECORDED",
+        "CHECK_RECORDED",
+        "VERDICT_RECORDED",
+    )
 
 
 @pytest.mark.parametrize(

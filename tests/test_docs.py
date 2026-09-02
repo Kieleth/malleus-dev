@@ -11,6 +11,7 @@ import doctest
 import hashlib
 import importlib.util
 import inspect
+import json
 import os
 from pathlib import Path
 import pickle
@@ -1243,7 +1244,7 @@ def test_doctest_builder_executes_an_infrastructure_only_example(
             "doctest",
             ("sphinx.ext.doctest",),
             "# Broken doctest\n\n```{doctest}\n>>> 1 + 1\n3\n```\n",
-            "1 failures",
+            "1 failure",
         ),
         (
             "linkcheck",
@@ -2137,6 +2138,17 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         / "evidence"
         / "CC-R11-completion.json"
     ).read_text(encoding="utf-8")
+    receipt = json.loads(
+        (
+            ROOT
+            / "research"
+            / "ontology_driven_kg_realization"
+            / "experiments"
+            / "small_shop"
+            / "pareto"
+            / "ret-010-research-receipt.json"
+        ).read_text(encoding="utf-8")
+    )
     normalized = " ".join(index.split())
     normalized_readme = " ".join(readme.split())
 
@@ -2184,6 +2196,61 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "cross-language parity",
     ):
         assert boundary in normalized
+
+    for evidence_link in (
+        "input/manifest.json",
+        "input/sources/warehouse.jsonl",
+        "input/sources/inventory-units.csv",
+        "input/configuration/ret-010-selection.json",
+        "input/configuration/time-context.json",
+        "input/tbox/small-shop.yaml",
+        "pareto/mapping.json",
+        "pareto/machine.json",
+        "pareto/policy.json",
+        "oracle/ret-000-ret-010.json",
+        "pareto/ret010.py",
+        "pareto/test_vertical.py",
+        "CC-021.json",
+        "CC-022.json",
+        "CC-R11.json",
+        "ret-010-research-receipt.json",
+    ):
+        assert evidence_link in index
+
+    for evidence_claim in (
+        "Dirk Fahland's 2022 chapter",
+        "https://doi.org/10.1007/978-3-031-08848-3_9",
+        "These are three representative facts",
+        "The generated ledger is intentionally not checked in.",
+        "SOURCE_DIGEST_MISMATCH",
+        "before creating a ledger or partial graph",
+    ):
+        assert evidence_claim in normalized
+
+    assert receipt["validated_fact_set_sha256"] == (
+        "sha256:80730e44e1bc1efd878cd2723e3af950d409defb68a629deb8c55515c6336f6c"
+    )
+    assert receipt["contract_identity"] == (
+        "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17"
+    )
+    assert receipt["ledger_head"] == (
+        "sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad"
+    )
+    assert receipt["queries"] == {
+        "entities": [
+            {"id": "O1", "order_number": "O1", "type": "SalesOrder"},
+            {"id": "X1", "product_code": "X", "type": "InventoryUnit"},
+        ],
+        "relations": [
+            {
+                "key": "contains:O1:X1",
+                "relation_type": "ORDER_CONTAINS_UNIT",
+                "source_id": "O1",
+                "target_id": "X1",
+                "type": "OrderContainsUnit",
+            }
+        ],
+    }
 
     assert "crosses every boundary" not in index
     assert "Three fixture checks" not in index

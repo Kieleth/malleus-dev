@@ -70,12 +70,21 @@ In plain English, the parts have these separate jobs:
 
 ### Follow one fact through the system
 
-The source material is deliberately ordinary. One warehouse record says that
-packing event `e27` handled order `O1` and items including physical unit `X1`:
+The source material is deliberately ordinary. The warehouse scenario is a
+controlled transcription of event `e27` in Table 1 of Dirk Fahland's 2022
+chapter, [*Process Mining over Multiple Behavioral Dimensions with Event
+Knowledge Graphs*](https://doi.org/10.1007/978-3-031-08848-3_9). One warehouse
+record says that packing event `e27` handled order `O1` and items including
+physical unit `X1`:
 
 ```json
 {"activity":"Pack Shipment","actor":"R4","event_id":"e27","items":["X1","X2","Y1"],"order":"O1","time":"07-05 17:00"}
 ```
+
+A [fixture manifest](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/manifest.json)
+records that attribution. The JSONL encoding, separate inventory lookup,
+selected row, synthetic year, and UTC interpretation are Malleus fixture
+choices, not claims made by the source publication.
 
 A separate inventory lookup says what `X1` is:
 
@@ -133,6 +142,93 @@ validation run elsewhere in Python. Python also still owns mapping and time
 interpretation, machine opcode semantics, knowledge-change validation, and
 graph projection. Those are explicit limits, not hidden claims of a
 language-neutral compiler.
+
+### Inspect the evidence
+
+The prose above is only a guide. These are the exact committed inputs and
+checks behind it:
+
+| Stage | Exact bytes | What they establish |
+| --- | --- | --- |
+| Source | [manifest](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/manifest.json), [warehouse JSONL](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/warehouse.jsonl), [inventory CSV](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/sources/inventory-units.csv), [selection](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/ret-010-selection.json), [time context](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/configuration/time-context.json) | The cited source row, lookup value, selected occurrence, and explicit time interpretation. |
+| Domain meaning | [Small Shop ontology](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop.yaml) | The selected classes, slots, ranges, inheritance, and relation value. |
+| Executable contracts | [mapping](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json), [protocol machine](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json), [policy](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/policy.json) | The source selection and operations, legal event transitions, required receipts, and verdict mapping. |
+| Independent expectation | [hand-authored answer key](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/oracle/ret-000-ret-010.json) | The expected logical entities, relation, and valid time. It is not compiler input. |
+| Execution | [runner](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret010.py), [end-to-end tests](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py) | Compilation, admission, atomic refusal, replay, and oracle comparison. |
+| Verification | [input report](../conformance/contract_compiler/v0/evidence/CC-021.json), [answer-key report](../conformance/contract_compiler/v0/evidence/CC-022.json), [completion report](../conformance/contract_compiler/v0/evidence/CC-R11.json) | The independently recorded boundaries and exact file identities used by the completed experiment. |
+
+The compiler emits 735 canonical neutral facts for the retained ontology
+closure. These are three representative facts, shown without translating them
+back into LinkML:
+
+```json
+[
+  {"object":"https://malleus.dev/schema/Entity","predicate":"http://www.w3.org/2000/01/rdf-schema#subClassOf","subject":"https://malleus.dev/schema/small-shop-fulfilment/SalesOrder"},
+  {"object":"https://malleus.dev/schema/Relation","predicate":"http://www.w3.org/2000/01/rdf-schema#subClassOf","subject":"https://malleus.dev/schema/small-shop-fulfilment/OrderContainsUnit"},
+  {"object":"ORDER_CONTAINS_UNIT","predicate":"https://malleus.dev/contract-facts/enumValue","subject":"https://malleus.dev/schema/small-shop-fulfilment/ShopRelationKind"}
+]
+```
+
+The complete validated fact set has identity
+`sha256:80730e44e1bc1efd878cd2723e3af950d409defb68a629deb8c55515c6336f6c`.
+The composed contract has the different identity
+`sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17`
+because it also binds the selected machine, policy, and history contract. This
+is the distinction between the ontology-derived structural meaning and the
+whole executable agreement for this run.
+
+The generated ledger is intentionally not checked in. It is 280 KB because it
+retains source and compiled artifact bytes. Its readable lifecycle is:
+
+| Event numbers | Contents |
+| --- | --- |
+| 1-4 | Retain the validated contract, composed contract, history binding, and mapping. The composed contract contains the machine and policy bytes. |
+| 5-20 | For each of the eight exact source members, register its source artifact and then the retained source. |
+| 21 | Retain knowledge change `sha256:cc5ce1cf6f9521f5299fbc9a981f6dba6949afaabd3730b2f81037b51c5912af`. |
+| 22 | Propose that exact change. |
+| 23-24 | Record the two fixture-supplied `SATISFIED` check receipts. |
+| 25 | Record the `ACCEPT` verdict. The ledger head is `sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad`. |
+
+The [recorded canonical receipt](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json)
+is the compact evidence snapshot. It is an exact result of this private
+research experiment, not a supported API, stable schema, or compatibility
+promise. Its query result is:
+
+```json
+{
+  "entities": [
+    {"id": "O1", "order_number": "O1", "type": "SalesOrder"},
+    {"id": "X1", "product_code": "X", "type": "InventoryUnit"}
+  ],
+  "relations": [
+    {"key": "contains:O1:X1", "relation_type": "ORDER_CONTAINS_UNIT", "source_id": "O1", "target_id": "X1", "type": "OrderContainsUnit"}
+  ]
+}
+```
+
+Install the development dependencies, generate the complete history, and run
+the exact receipt check:
+
+```bash
+pip install -e '.[dev]'
+python -m research.ontology_driven_kg_realization.experiments.small_shop.pareto.ret010 --ledger build/small-shop-ret010.jsonl
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py::test_recorded_research_receipt_regenerates_from_the_exact_history
+```
+
+Running the module again reopens the same ledger and prints the same receipt.
+The test regenerates the result independently and compares its bytes exactly.
+
+### Try to break it
+
+The negative tests copy the fixture, alter one input, and run the same path. For
+example, appending one space to the warehouse source changes its digest. The
+run refuses with `SOURCE_DIGEST_MISMATCH` before creating a ledger or partial
+graph. Other cases cover a missing source, wrong selected event or item,
+ambiguous inventory lookup, and ambiguous source time:
+
+```bash
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py -k invalid_source_bundle
+```
 
 ### The delete-and-rebuild test
 

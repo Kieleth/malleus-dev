@@ -1,0 +1,89 @@
+{
+  "actor": {
+    "id": "ccr11-public-evidence-pack-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T17:33:46Z",
+    "claims": [
+      "The public evidence report verifies the exact bytes of 11 changed or created artifacts and records six bounded checks.",
+      "The broad affected suite passes 954 tests across the compiler environment, integration and governance ledgers, public documentation, GraphRecipe archive boundary, and full Small Shop vertical.",
+      "Changed Python files pass Ruff, the overseer ledger validates 339 entries, and the integration registry validates 74 workstreams, 38 cards, and 4 selections.",
+      "The 2,073-byte RET-010 research receipt regenerates byte for byte under Python 3.12.9 with LinkML and LinkML Runtime 1.11.1 and retains the exact 25-event ledger head and O1, X1, and contains:O1:X1 projection.",
+      "The former CC-R02 candidate commit is retained under local non-release evidence tag evidence/cc-r02-candidate-v1, while an ordinary tag is mechanically insufficient.",
+      "The GraphRecipe dated report remains immutable and its twenty recorded file identities resolve against a public archive commit without rebinding the report to current files."
+    ],
+    "limitations": [
+      "The evidence tag has not yet been pushed, so public cloneability is not claimed by this entry.",
+      "The GitHub Python 3.10 through 3.13 matrix has not yet run against these exact changes.",
+      "This verification repairs publication and portability. It adds no new compiler, protocol, mapping, ledger, graph, or runtime capability and is not a release claim."
+    ]
+  },
+  "entry_hash": "sha256:7a77f4d71230add3743e3620aa331249dc177acc660eaeef31687834eae00ba0",
+  "entry_id": "OVR-000340",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a5791267c5d5f29ee779a50e48a095a420208d165803b4e059e921e9aff87f08",
+  "recorded_at": "2026-09-02T17:33:46Z",
+  "references": [
+    {
+      "digest": "sha256:6d70fb48029719a61f3aef6425848d0e379f76aa0204df070f3a1d476d9ac692",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-public-evidence-pack.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000339",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000337",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000338",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "085b59b718cf4d4c647b0b842308d67df5f2a3ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 340,
+  "subject": {
+    "id": "ccr11-public-evidence-pack-local-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the local Small Shop evidence pack and clean-clone CI repairs before publication.",
+  "why": "The 954-test affected run closes the local evidence loop without overclaiming remote reproducibility. Public reachability and the cross-version GitHub matrix remain explicit next gates."
+}

@@ -27,6 +27,7 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.contract_compiler_ledger import (  # noqa: E402
     LedgerValidationError,
+    _commit_has_durable_reference,
     _superseded_entries,
     canonical_json,
     entry_hash,
@@ -6698,3 +6699,36 @@ def test_document_revision_path_cannot_escape_repository(tmp_path: Path) -> None
 
     with pytest.raises(LedgerValidationError, match="schema violation"):
         load_ledger(copied, repository=ROOT)
+
+
+def test_governed_commit_requires_history_or_an_evidence_tag(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+
+    def git(*arguments: str) -> str:
+        return subprocess.run(
+            ["git", *arguments],
+            cwd=repository,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+
+    git("init", "-b", "main")
+    git("config", "user.name", "Malleus tests")
+    git("config", "user.email", "tests@malleus.invalid")
+    (repository / "tracked.txt").write_text("tracked\n", encoding="utf-8")
+    git("add", "tracked.txt")
+    git("commit", "-m", "tracked")
+    head = git("rev-parse", "HEAD")
+    assert _commit_has_durable_reference(repository, head)
+
+    tree = git("rev-parse", "HEAD^{tree}")
+    dangling = git("commit-tree", tree, "-m", "evidence candidate")
+    assert not _commit_has_durable_reference(repository, dangling)
+
+    git("tag", "ordinary-tag", dangling)
+    assert not _commit_has_durable_reference(repository, dangling)
+
+    git("tag", "evidence/candidate-v1", dangling)
+    assert _commit_has_durable_reference(repository, dangling)

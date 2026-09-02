@@ -6,12 +6,16 @@ import json
 import shutil
 import subprocess
 import sys
-import tomllib
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised by Python 3.10 CI
+    import tomli as tomllib
 
 import pytest
 import yaml
@@ -6324,6 +6328,10 @@ def test_frozen_candidate_ignores_git_replacement_path_relocation(
     replacement_tree = _git(repository, "write-tree")
     replacement_commit = _git(
         repository,
+        "-c",
+        "user.name=Malleus tests",
+        "-c",
+        "user.email=tests@malleus.invalid",
         "commit-tree",
         replacement_tree,
         "-p",
@@ -6493,7 +6501,17 @@ def test_candidate_head_must_descend_from_base(tmp_path: Path) -> None:
     repository, base, head = _candidate_repository(tmp_path)
     candidate = _candidate(repository, base, head)
     tree = _git(repository, "rev-parse", f"{head}^{{tree}}")
-    orphan = _git(repository, "commit-tree", tree, "-m", "unrelated")
+    orphan = _git(
+        repository,
+        "-c",
+        "user.name=Malleus tests",
+        "-c",
+        "user.email=tests@malleus.invalid",
+        "commit-tree",
+        tree,
+        "-m",
+        "unrelated",
+    )
     candidate["head_commit"] = orphan
     candidate["head_tree"] = tree
 

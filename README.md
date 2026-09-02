@@ -22,6 +22,8 @@ receipt from retained history alone. The three graph records are deliberately
 simple. The achievement is making their path into accepted history explainable,
 testable, and replayable. This is working repository evidence, not yet a stable
 public compiler API or release.
+[Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
+graph result.](docs/index.md#inspect-the-evidence)
 
 ## Why this exists
 

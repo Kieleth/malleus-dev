@@ -1,0 +1,154 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-001",
+      "CC-R01",
+      "CC-R02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:810e4b1a46a3eb81af4d94033604fc5a486518ef4642011aa3f67d3f336073b7",
+        "before_digest": "sha256:7aae930d22caa37bac77efe40a9416d43b0588a389eba0f7260f94875f975e63",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:3b5d9742801146261ef6e5b90d93f297ba37b3d79fbd15c4a339a478f9e29227",
+        "before_digest": "sha256:5b36b30c466d499848ceca69ad0055c17ac1c0d3d5aadb6b315d3f2e7ee3cfa3",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:6d70fb48029719a61f3aef6425848d0e379f76aa0204df070f3a1d476d9ac692",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-public-evidence-pack.json"
+      },
+      {
+        "after_digest": "sha256:f28f8fb3b3681d0d7727e7ff8e847f5081b5072145a8de95f199d5f772097103",
+        "before_digest": "sha256:0b8ce769ef5b191b45240480507c76030262ffa08ef4954ddeead96aa1ce931d",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/rebind_report.py"
+      },
+      {
+        "after_digest": "sha256:6d09cbcf2f580bf990d4dfc0baef13b104bc4ba8075d222c81ef073a60522906",
+        "before_digest": "sha256:7ce18462634f2a89c7d4803fba680c929ae4808e46ed43d8a3ea1316252b13ee",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py"
+      },
+      {
+        "after_digest": "sha256:7ee4f2a4ed605b08c6c05ad60f82d08b1ded66a6f03cbf4da0e668e88f2a10bf",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json"
+      },
+      {
+        "after_digest": "sha256:44b12afe6ad4d1c94c198edcd038583f33794f5860f57dcbf972b073cca9a858",
+        "before_digest": "sha256:6e3d4af6a005bf517c4ad8e6902c4d2af9864013872e4faa2e112860bd1cf739",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py"
+      },
+      {
+        "after_digest": "sha256:e83c51b3ce3ceb3a137f6463446d2de53ad50e9d98fdded4a0668580fc074622",
+        "before_digest": "sha256:14c5baa76f2e179aeacbcc29ad5d80501d397e040e6fd11541c3a92140a80d97",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:9d974be0e10c340ebc6bc3e2509ab237a09e8f0bf93b320adef69595a340c9d3",
+        "before_digest": "sha256:7bbad1cfe341dcbad06cd6b574abceffaff0b6d114606956f28ce4b9e64c4935",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_environment.py"
+      },
+      {
+        "after_digest": "sha256:3bc13c4df179bf9691f42d73c3b6722b84f31d258aebc9e29975e804257cbea1",
+        "before_digest": "sha256:4b42d51e36a0a1b01da92787512cf2555854060d4fe82b68b8cac0d644f7bca7",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:3bea1d54502db3761aeef7196126629641f8da2ec508b05ffcb559e4178329d4",
+        "before_digest": "sha256:1c030857c7cf8c4ee49789877f13103c532d374466f1951ea96fb0dfde2b6036",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      },
+      {
+        "after_digest": "sha256:d6a7b5b8f88aac4aed0927c4147c8ba855be2c3e7402b1ea45f8a351f8f2a57c",
+        "before_digest": "sha256:e28b257cbe051d864a8d781504177ec92b413c75ae151f45fd490e5b8e2e389c",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:a5791267c5d5f29ee779a50e48a095a420208d165803b4e059e921e9aff87f08",
+  "entry_id": "OVR-000339",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3d6ca506a88d696545bb1445e3ec31119fc2607a19390e2be8e1e2cfda6db185",
+  "recorded_at": "2026-09-02T17:25:14Z",
+  "references": [
+    {
+      "digest": "sha256:6d70fb48029719a61f3aef6425848d0e379f76aa0204df070f3a1d476d9ac692",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-public-evidence-pack.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000337",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000338",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "README.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/index.md#inspect-the-evidence",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 339,
+  "subject": {
+    "id": "ccr11-public-evidence-pack",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish a reproducible Small Shop evidence trail and repair clean-clone CI portability.",
+  "why": "The first end-to-end milestone was understandable but its exact proof remained scattered, and public CI exposed six portability or evidence-retention faults. This revision links the source, ontology, neutral facts, contracts, independent expectation, ledger receipt, graph result, and refusal test in one newcomer path. It preserves the dated GraphRecipe report as immutable evidence, makes its exact archived bytes testable, retains a formerly dangling governed candidate under a non-release evidence tag, and repairs test-only Python, pathlib, Git, and Sphinx assumptions without changing protocol semantics."
+}

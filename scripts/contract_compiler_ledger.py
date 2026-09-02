@@ -230,6 +230,29 @@ def _repository_path(repository: Path, relative: str, context: str) -> Path:
     return path
 
 
+def _commit_has_durable_reference(repository: Path, commit: str) -> bool:
+    if (
+        subprocess.run(
+            ["git", "merge-base", "--is-ancestor", commit, "HEAD"],
+            cwd=repository,
+            capture_output=True,
+            check=False,
+        ).returncode
+        == 0
+    ):
+        return True
+    tags = subprocess.run(
+        ["git", "tag", "--contains", commit, "--format=%(refname:short)"],
+        cwd=repository,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    return tags.returncode == 0 and any(
+        tag.startswith("evidence/") for tag in tags.stdout.splitlines()
+    )
+
+
 def _validate_references(
     entries: Sequence[dict[str, Any]],
     repository: Path,
@@ -321,6 +344,11 @@ def _validate_references(
                 )
                 if result.returncode:
                     raise LedgerValidationError(f"{context}: commit does not resolve")
+                if not _commit_has_durable_reference(repository, target):
+                    raise LedgerValidationError(
+                        f"{context}: commit must be reachable from HEAD or an "
+                        "evidence/* tag"
+                    )
     return workstream_ids, decision_ids, canonical
 
 
