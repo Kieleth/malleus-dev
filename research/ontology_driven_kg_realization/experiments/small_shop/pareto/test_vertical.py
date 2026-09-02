@@ -161,6 +161,52 @@ def test_frozen_fixture_and_private_program_data_are_explicit() -> None:
     )
 
 
+@pytest.mark.parametrize("mutation", ["unknown", "missing"])
+def test_mapping_has_one_closed_required_root_schema(
+    tmp_path: Path, mutation: str
+) -> None:
+    payload = _load(MAPPING)
+    expected_fields = {
+        "actor_id",
+        "anchor_events",
+        "artifact_ids",
+        "artifact_roles",
+        "change_set",
+        "compiler",
+        "grammar",
+        "history_binding",
+        "input_manifest_sha256",
+        "inventory_lookup",
+        "operation_bindings",
+        "operations",
+        "policy_ref",
+        "protocol",
+        "publication_contract",
+        "selection",
+        "selection_id",
+        "source_artifact_id_prefix",
+        "time",
+        "transaction_time",
+        "valid_time",
+    }
+    assert set(payload) == expected_fields
+    if mutation == "unknown":
+        payload["unknown_semantic_switch"] = "ACCEPT"
+    else:
+        del payload["history_binding"]
+    changed = tmp_path / "mapping.json"
+    _write_canonical(changed, payload)
+
+    with pytest.raises(Ret010Refusal) as refusal:
+        load_ret010_vertical(
+            fixture_root=FIXTURE,
+            machine_path=MACHINE,
+            policy_path=POLICY,
+            mapping_path=changed,
+        )
+    assert refusal.value.reason is Ret010RefusalReason.MALFORMED_CONFIGURATION
+
+
 def test_source_to_ledger_to_query_vertical_matches_independent_oracle(
     tmp_path: Path,
 ) -> None:

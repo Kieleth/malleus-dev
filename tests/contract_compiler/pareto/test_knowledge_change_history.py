@@ -674,6 +674,7 @@ def test_change_set_ids_are_unique_and_cannot_self_supersede(
         "unregistered",
         "unretained_source",
         "unretained_evidence",
+        "role_swapped",
         "source_digest_mismatch",
         "evidence_digest_mismatch",
     ],
@@ -753,6 +754,11 @@ def test_refused_change_never_changes_ledger_or_replayed_graph(
         ]
         change_set = _load_change(payload)
         events = _protocol_events(change_set, before.machine_state.identity)
+    elif failure == "role_swapped":
+        payload["sources"] = [{"sha256": evidence, "source_id": "evidence-generic"}]
+        payload["evidence"] = [{"evidence_id": "source-generic", "sha256": source}]
+        change_set = _load_change(payload)
+        events = _protocol_events(change_set, before.machine_state.identity)
     elif failure == "source_digest_mismatch":
         payload["sources"][0]["sha256"] = "sha256:" + "8" * 64
         change_set = _load_change(payload)
@@ -801,6 +807,38 @@ def test_anchor_refuses_bytes_that_do_not_match_machine_identity(
     assert refusal.value.reason is KnowledgeChangeRefusalReason.RETAINED_BYTES_MISMATCH
     assert _ledger_bytes(history) == b""
     assert history.replay().graph.snapshot() == before.graph.snapshot()
+
+
+@pytest.mark.parametrize(
+    "role",
+    [
+        "VALIDATED_CONTRACT",
+        "PARTIAL_EFFECTIVE_CONTRACT",
+        "KNOWLEDGE_HISTORY_BINDING",
+    ],
+)
+def test_bootstrap_anchor_bytes_must_match_the_active_history(
+    tmp_path: Path, role: str
+) -> None:
+    history, _, _, _ = _history(tmp_path)
+    retained = b"self-hashed but unrelated bootstrap bytes"
+    event = _event(
+        "ARTIFACT_REGISTERED",
+        artifact_id=f"wrong:{role}",
+        artifact_identity=_digest(retained),
+    )
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.append_anchor(
+            machine_event=event,
+            retained_bytes=retained,
+            media_type="application/octet-stream",
+            role=role,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.IDENTITY_MISMATCH
+    assert _ledger_bytes(history) == b""
 
 
 def test_returned_graph_and_queries_are_disposable_replay_views(
