@@ -223,6 +223,7 @@ def _program_payload() -> dict[str, object]:
                         "check_policy_identity_field": "policy_identity",
                         "check_record_type": "CheckRecord",
                         "duplicate_refusal": "DUPLICATE_REQUIRED_CHECK_RECEIPT",
+                        "invalid_outcome_refusal": "UNACCEPTED_CHECK_OUTCOME",
                         "missing_refusal": "MISSING_REQUIRED_CHECK",
                         "opcode": "SELECT_POLICY_VERDICT",
                         "policy_mismatch_refusal": "POLICY_MISMATCH",
@@ -312,6 +313,20 @@ def _registration_program_payload() -> dict[str, object]:
     payload["indexes"] = {}
     payload["record_schemas"] = {
         "ArtifactRecord": payload["record_schemas"]["ArtifactRecord"]
+    }
+    return payload
+
+
+def _source_registration_program_payload() -> dict[str, object]:
+    payload = _program_payload()
+    payload["events"] = {
+        name: payload["events"][name]
+        for name in ("ARTIFACT_REGISTERED", "SOURCE_REGISTERED")
+    }
+    payload["indexes"] = {}
+    payload["record_schemas"] = {
+        name: payload["record_schemas"][name]
+        for name in ("ArtifactRecord", "SourceRecord")
     }
     return payload
 
@@ -511,6 +526,15 @@ def test_policy_check_output_names_its_outcome_operand() -> None:
     _program_refusal(payload, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
 
 
+def test_verdict_selection_names_its_invalid_outcome_refusal() -> None:
+    payload = _program_payload()
+    del payload["events"]["VERDICT_RECORDED"]["instructions"][2][
+        "invalid_outcome_refusal"
+    ]
+
+    _program_refusal(payload, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
+
+
 @pytest.mark.parametrize(
     ("path", "replacement"),
     [
@@ -645,6 +669,82 @@ def test_execute_and_replay_revalidate_contract_children_and_machine_state() -> 
             execute_event(effective, forged_state, event)
 
 
+def test_prestate_records_are_closed_and_globally_unique() -> None:
+    program = _load_program(_source_registration_program_payload())
+    profile = compose_normative_profile(
+        protocol_machine_program=program,
+        policy_programs={},
+        capability_refs=(),
+    )
+    effective = compose_partial_effective_contract(
+        validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
+        normative_profile=profile,
+    )
+    empty = MachineState.empty(effective.identity)
+    event = _event(
+        "ARTIFACT_REGISTERED",
+        artifact_id="new-artifact",
+        artifact_identity="sha256:" + "3" * 64,
+    )
+
+    def stored(record_type: str, record_id: str, fields: dict[str, object]):
+        return machine_module._StoredRecord(
+            record_type=record_type,
+            record_id=record_id,
+            fields=machine_module._freeze(fields),
+        )
+
+    valid_fields = {
+        "artifact_id": "artifact-a",
+        "artifact_identity": "sha256:" + "4" * 64,
+    }
+    malformed_records = (
+        (stored("UnknownRecord", "unknown", {}),),
+        (stored("ArtifactRecord", "artifact-a", {"artifact_id": "artifact-a"}),),
+        (
+            stored(
+                "ArtifactRecord",
+                "artifact-a",
+                {**valid_fields, "artifact_identity": "not-a-digest"},
+            ),
+        ),
+        (stored("ArtifactRecord", "different-id", valid_fields),),
+        (
+            machine_module._StoredRecord(
+                record_type="ArtifactRecord",
+                record_id="artifact-a",
+                fields=valid_fields,
+            ),
+        ),
+        (
+            stored(
+                "ArtifactRecord",
+                "shared-id",
+                {**valid_fields, "artifact_id": "shared-id"},
+            ),
+            stored(
+                "SourceRecord",
+                "shared-id",
+                {
+                    "artifact_id": "artifact-a",
+                    "source_id": "shared-id",
+                    "source_identity": "sha256:" + "5" * 64,
+                },
+            ),
+        ),
+    )
+    malformed_states = (
+        replace(empty, records=(object(),)),
+        *(
+            MachineState._build(effective.identity, records)
+            for records in malformed_records
+        ),
+    )
+    for state in malformed_states:
+        with pytest.raises(ValueError):
+            execute_event(effective, state, event)
+
+
 def test_required_check_ids_are_unique_independently_of_their_hashes() -> None:
     payload = _policy_payload()
     payload["required_checks"][1]["check_contract_id"] = CHECKS[0][0]
@@ -692,6 +792,18 @@ def test_verdict_values_are_closed() -> None:
     )
     assert invalid.receipt.refusal_code == "MALFORMED_EVENT"
     _assert_unchanged(invalid, empty)
+
+    invalid_shape = execute_event(
+        effective,
+        empty,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="invalid-shape",
+            artifact_identity={"not": "a string"},
+        ),
+    )
+    assert invalid_shape.receipt.refusal_code == "MALFORMED_EVENT"
+    _assert_unchanged(invalid_shape, empty)
 
     policy_payload = _policy_payload()
     policy_payload["outcome_verdicts"]["UNKNOWN"] = "CONTEST"
@@ -1130,6 +1242,34 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
     _assert_unchanged(invalid_outcome, one_check)
 
 
+def test_verdict_refuses_unmapped_outcome_from_an_alternate_recording_event() -> None:
+    machine_payload = _program_payload()
+    instructions = machine_payload["events"]["CHECK_RECORDED"]["instructions"]
+    machine_payload["events"]["CHECK_RECORDED"]["instructions"] = [
+        instructions[0],
+        instructions[2],
+        instructions[3],
+    ]
+    effective = _effective(machine_payload=machine_payload)
+    state = _proposal_state(effective)
+    state = _apply(effective, state, _check_event(0, "UNMAPPED"))
+    state = _apply(effective, state, _check_event(1, "SATISFIED"))
+
+    result = execute_event(
+        effective,
+        state,
+        _event(
+            "VERDICT_RECORDED",
+            decision_id="decision-a",
+            proposal_id="proposal-a",
+        ),
+    )
+
+    assert result.receipt.refusal_code == "UNACCEPTED_CHECK_OUTCOME"
+    _assert_unchanged(result, state)
+    assert result.state.get_record("DecisionRecord", "decision-a") is None
+
+
 def test_receipt_for_another_proposal_does_not_satisfy_required_coverage() -> None:
     effective = _effective()
     state = _proposal_state(effective)
@@ -1223,6 +1363,9 @@ def test_effects_are_staged_and_failure_rolls_back_the_whole_event() -> None:
 def test_unknown_or_malformed_event_refuses_without_state_change() -> None:
     effective = _effective()
     empty = MachineState.empty(effective.identity)
+    with pytest.raises(ValueError):
+        execute_event(effective, empty, "not-bytes")
+
     cases = (
         (_event("UNKNOWN_EVENT", value="x"), "UNKNOWN_EVENT"),
         (
