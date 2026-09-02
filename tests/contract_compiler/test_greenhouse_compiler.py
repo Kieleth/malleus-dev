@@ -231,7 +231,7 @@ def test_compiler_policy_is_machine_readable_and_domain_neutral() -> None:
         assert fixture_literal not in policy
 
 
-def test_profile_classifications_and_defaults_are_executed() -> None:
+def test_unidentified_profile_variants_are_refused() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     annotation_profile = deepcopy(profile)
     annotation_profile["node_shapes"]["class"]["fields"]["abstract"] = {
@@ -245,55 +245,31 @@ def test_profile_classifications_and_defaults_are_executed() -> None:
     default_profile = deepcopy(profile)
     default_profile["defaults"]["class"]["abstract"] = True
 
+    for changed in (annotation_profile, identity_profile, default_profile):
+        with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+            compile_linkml_contract(
+                (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+                locator="memory:unidentified-profile",
+                profile=changed,
+            )
+
     ordinary = _compile("baseline.yaml")
-    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
-        compile_linkml_contract(
-            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-            locator="memory:annotation-profile",
-            profile=annotation_profile,
-        )
-    abstract_by_default = compile_linkml_contract(
-        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-        locator="memory:default-profile",
-        profile=default_profile,
-    )
-    with pytest.raises(ContractCompileError, match="profile"):
-        compile_linkml_contract(
-            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-            locator="memory:identity-profile",
-            profile=identity_profile,
-        )
-    assert (
-        abstract_by_default.implementation.profile_sha256
-        == hashlib.sha256(
-            json.dumps(
-                default_profile,
-                ensure_ascii=False,
-                separators=(",", ":"),
-                sort_keys=True,
-            ).encode("utf-8")
-        ).hexdigest()
-    )
-    assert abstract_by_default.canonical_facts != ordinary.canonical_facts
-    assert any(
-        fact.predicate.endswith("/abstract") and fact.object is True
-        for fact in abstract_by_default.facts
-    )
+    assert ordinary.facts
 
 
-def test_compiler_threads_one_active_profile_through_parser_and_lowering() -> None:
+def test_canonical_profile_copy_is_accepted() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
-    profile["source_ordering"]["ordinal_base"] = False
 
-    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
-        compile_linkml_contract(
-            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-            locator="memory:aliased-parser-profile",
-            profile=profile,
-        )
+    result = compile_linkml_contract(
+        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+        locator="memory:canonical-profile-copy",
+        profile=profile,
+    )
+
+    assert result.canonical_facts == _compile("baseline.yaml").canonical_facts
 
 
-def test_compiler_cannot_attest_one_profile_and_parse_with_another() -> None:
+def test_noncanonical_profile_never_reaches_source_execution() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     profile["node_shapes"]["schema"]["fields"]["description"]["parser"] = (
         "nonempty_string"
@@ -304,6 +280,18 @@ def test_compiler_cannot_attest_one_profile_and_parse_with_another() -> None:
         compile_linkml_contract(
             source,
             locator="memory:mismatched-active-profile",
+            profile=profile,
+        )
+
+
+def test_compiler_threads_one_active_profile_through_parser_and_lowering() -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["source_ordering"]["ordinal_base"] = False
+
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:aliased-parser-profile",
             profile=profile,
         )
 
@@ -345,33 +333,16 @@ def test_condition_range_rule_reads_its_profile_operands() -> None:
     with pytest.raises(ContractCompileError, match="string or enum range"):
         compile_linkml_contract(source, locator="memory:string-condition-on-float")
 
-    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
-    profile["lowering_plan"][-1]["string_builtin"] = "float"
-    result = compile_linkml_contract(
-        source,
-        locator="memory:profile-selected-condition-range",
-        profile=profile,
-    )
-
-    assert result.facts
-
-
-def test_derived_predicates_are_lowering_operands() -> None:
+def test_unidentified_derived_predicate_policy_is_refused() -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     profile["lowering_plan"][-2]["on_class_predicate"] = "subclass_of"
 
-    result = compile_linkml_contract(
-        (SOURCE_ROOT / "baseline.yaml").read_bytes(),
-        locator="memory:profile-selected-derived-predicate",
-        profile=profile,
-    )
-
-    assert result.canonical_facts != _compile("baseline.yaml").canonical_facts
-    assert not any(
-        fact.predicate.endswith("/onClass")
-        and fact.subject.startswith("urn:malleus:contract-structure:slot-use:")
-        for fact in result.facts
-    )
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "baseline.yaml").read_bytes(),
+            locator="memory:profile-selected-derived-predicate",
+            profile=profile,
+        )
 
 
 def test_bootstrap_accepts_supported_prefix_and_compound_condition_evidence() -> None:
@@ -868,16 +839,12 @@ def test_absolute_urn_predicate_is_not_rewritten_as_a_local_term() -> None:
         "value": "urn:example:required",
     }
 
-    result = compile_linkml_contract(
-        (SOURCE_ROOT / "explicit-defaults.yaml").read_bytes(),
-        locator="memory:absolute-urn-predicate",
-        profile=profile,
-    )
-
-    assert any(fact.predicate == "urn:example:required" for fact in result.facts)
-    assert not any(
-        fact.predicate.endswith("/urn:example:required") for fact in result.facts
-    )
+    with pytest.raises(ContractCompileError, match="INVALID_PROFILE"):
+        compile_linkml_contract(
+            (SOURCE_ROOT / "explicit-defaults.yaml").read_bytes(),
+            locator="memory:absolute-urn-predicate",
+            profile=profile,
+        )
 
 
 def test_bootstrap_is_private_and_not_publicly_exported() -> None:
