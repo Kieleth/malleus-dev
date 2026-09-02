@@ -1,0 +1,66 @@
+{
+  "assignment": {
+    "owner_id": "worker:ccr12-scoped-authority-grant",
+    "state": "ASSIGNED",
+    "task_id": "/root/ccr12_scoped_authority_grant"
+  },
+  "authorization": {
+    "authorized_by": {
+      "id": "operator",
+      "type": "OPERATOR"
+    },
+    "class": "FORMAL",
+    "dependency_bindings": [
+      {
+        "card_sha256": "sha256:acb1328931ac2a6b7932842b052146cfbb630715e4c4107be6f9eec51a0d8860",
+        "completion_entry_hash": "sha256:2a65a5d333fe3aa7b663132c8752ea60f450ef2f27d046d6c5a8ec1cd24e11af",
+        "completion_entry_id": "OVR-000334",
+        "integrated_head": "c20387ab7d8825e6e8d73efdbf225774bc7ab0c9",
+        "workstream_id": "CC-R11"
+      }
+    ]
+  },
+  "candidate": {
+    "state": "NONE"
+  },
+  "ledger": {
+    "state": "NOT_STARTED"
+  },
+  "responsibility": "Add exactly two required commitments to the existing AuthorityGrant: a nonblank scope_record_id and a Boolean may_subdelegate, with no default, null, or wildcard interpretation. Both values enter the grant content hash. Core validates and retains these commitments; an identified domain authorization policy and its AuthorityAssessment decide whether an action is at the named scope root or a permitted descendant and whether a child grant is a valid attenuation. Keep EpistemicDecision unchanged and retain AuthorizationDecision plus AuthorityAssessment as the sole authorization path. Bump the Assent ontology from 0.10.0 to 0.11.0, publish its exact source and semantic identities, and update the current bundled declaration scan without rewriting the immutable CC-X02 evidence. Treat the ontology change as a hard identity break: old ledgers remain bound to their old ontology, while Malleus Code freezes its 84-event research ledger and rebuilds four desired deliverables from empty genesis under the combined new ontology. Create no parent-grant field, generic scope hierarchy, Core tree walker, alias, fallback, retroactive action insertion, historical ontology input, epoch bridge, mixed-ontology ledger, second authorization mechanism, or cross-ontology migration system.",
+  "schema": "malleus.contract-compiler.workstream-card/v1",
+  "scopes": [
+    {
+      "kind": "FILE",
+      "path": "ontology/assent.yaml"
+    },
+    {
+      "kind": "FILE",
+      "path": "src/malleus/assent.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_assent_ontology.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_protocol.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "docs/ASSENT_PROTOCOL.md"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+    },
+    {
+      "kind": "FILE",
+      "path": "tests/test_contract_compiler_duplicate_scan.py"
+    },
+    {
+      "kind": "FILE",
+      "path": "conformance/contract_compiler/v0/evidence/CC-R12.json"
+    }
+  ],
+  "workstream_id": "CC-R12"
+}

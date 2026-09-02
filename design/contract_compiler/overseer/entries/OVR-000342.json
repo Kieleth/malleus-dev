@@ -1,0 +1,55 @@
+{
+  "actor": {
+    "id": "ccr12-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T18:37:23Z",
+    "claims": [
+      "CC-R12 depends only on completed CC-R11 and binds its exact card, completion entry, entry hash, and integrated commit.",
+      "AuthorityGrant gains exactly required nonblank scope_record_id and required Boolean may_subdelegate commitments, and both values enter grant identity.",
+      "EpistemicDecision remains unchanged and AuthorizationDecision plus AuthorityAssessment remains the sole authorization path.",
+      "Core validates and retains the commitments; an identified domain authorization policy interprets scope ancestry and valid attenuation.",
+      "The Assent ontology identity change is a hard break. Existing Code history stays historical and the desired accepted state is rebuilt in a fresh empty-genesis epoch.",
+      "The live duplicate scan is refreshed during implementation while immutable CC-X02 evidence remains bound to its historical candidate commit.",
+      "The eight implementation scopes are exact. Candidate is NONE, worker ledger is NOT_STARTED, and no ontology or runtime implementation exists in this activation transaction."
+    ],
+    "limitations": [
+      "This verification activates CC-R12 but does not implement or complete it.",
+      "No universal scope tree, parent-grant link, Core tree walker, or generic cross-ontology migration is selected.",
+      "No public API, package, release, or downstream Code capability is claimed."
+    ]
+  },
+  "entry_hash": "sha256:e481f9987ac8784fe174dca25095cf9411d3673761cc6381dad9b726dd483739",
+  "entry_id": "OVR-000342",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:18bbdad21bc4dd3f9d2a57a003d1093a8bac5192b48a37c5273aa1e428eb44d5",
+  "recorded_at": "2026-09-02T18:37:23Z",
+  "references": [
+    {
+      "digest": "sha256:b69130e7be361bd0a10448962a5e0be1cd4feb81f57cf7898b42258e429cfb0e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R12-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000341",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 342,
+  "subject": {
+    "id": "ccr12-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the scoped authority-grant activation boundary.",
+  "why": "The activation report proves the exact two-field contract, the unchanged epistemic and authorization boundaries, dependency readiness, hard ontology-epoch impact, duplicate-scan treatment, and absence of implementation or promotion claims."
+}

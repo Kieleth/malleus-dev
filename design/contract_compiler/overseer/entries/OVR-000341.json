@@ -1,0 +1,121 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R12"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:8d5e06732b4979066f8d2699e1800b1d9b4822b4793da47475ccda2a43f02d32",
+        "before_digest": "sha256:7789a5f59568e21207e67b1f3e2487a643972deae53f012983bdc601ebf23f93",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:dac489ae8feb0cba6a50fade9dcadab660a81b8cae835e9e94766cb8fe9addd2",
+        "before_digest": "sha256:c7d71048efce2c3f242a5922ee8c50daf23b9048553538ca877c9a157dd624cc",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:07a2f01c1048fd962ee373800499ab152f419549b35c42fc5e5d50afef7036bd",
+        "before_digest": "sha256:efc7954f88f58e2f624d604c7af413f9fa652b4ddc5e9bc725be631c671a9478",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:b69130e7be361bd0a10448962a5e0be1cd4feb81f57cf7898b42258e429cfb0e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R12-activation.json"
+      },
+      {
+        "after_digest": "sha256:88a2f72949e6e3e7d0344c5edb888769ebc3f560260e5d54fa0e9273ba1ce2b6",
+        "before_digest": "sha256:1bb58c4105f318eeee3b68d29b9712174685e2671bc28c5b5b0a7d4deff43f8f",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:6091e77b09e1670a0d10992165b57d50403e4153c68d325a056a0e14a4e09c32",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R12/manifest.json"
+      },
+      {
+        "after_digest": "sha256:cea7387bc085a46fb43ea48849a72ea8b5ada27804011f1a33ddb8feb56f8654",
+        "before_digest": "sha256:3bc13c4df179bf9691f42d73c3b6722b84f31d258aebc9e29975e804257cbea1",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:18bbdad21bc4dd3f9d2a57a003d1093a8bac5192b48a37c5273aa1e428eb44d5",
+  "entry_id": "OVR-000341",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7a77f4d71230add3743e3620aa331249dc177acc660eaeef31687834eae00ba0",
+  "recorded_at": "2026-09-02T18:37:22Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "ROADMAP.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:b69130e7be361bd0a10448962a5e0be1cd4feb81f57cf7898b42258e429cfb0e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R12-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R12/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7a8aae0cd523db7412de234f090107dae12e5ea7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0d3a58c4a1e84f809b2792814ce3d11f8561aab5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 341,
+  "subject": {
+    "id": "ccr12-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the scoped authority-grant implementation boundary.",
+  "why": "Malleus Code exposed two missing commitments in the existing AuthorityGrant: the governed work scope and whether the grantee may delegate authority further. This revision activates one narrow Core change, preserves domain policy as the interpreter of scope ancestry and attenuation, and treats the ontology update as a hard fresh-epoch boundary instead of weakening historical identity checks."
+}

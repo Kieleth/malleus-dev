@@ -510,6 +510,38 @@ no second knowledge-change identity.
 **Verdict: finish one deterministic end-to-end proof first. Promote breadth,
 compatibility, and release claims only after the proof exposes what earns them.**
 
+### B7. Scoped authority grants after the first proof
+
+Status: `active_research`.
+
+The first downstream adopter exposed one narrow missing commitment. An
+`AuthorityGrant` already says who grants, who receives, which action types are
+permitted, and for how long. It does not say which record subtree the grant
+covers or whether the grantee may grant narrower authority to another actor.
+
+The approved Core cut adds exactly two required fields: `scope_record_id` and
+`may_subdelegate`. They are part of the grant's identity. Core retains and
+validates them. A domain authorization policy and `AuthorityAssessment` decide
+whether a concrete action lies at that root or below it and whether a child
+grant is narrower. Core does not invent a universal project hierarchy or a
+second authorization path, and `EpistemicDecision` remains unchanged.
+
+This is an ontology identity break. Existing ledgers remain attached to their
+old ontology. The Malleus Code research ledger remains frozen as evidence, and
+its desired current state will be rebuilt from empty genesis under the combined
+new Core and Code ontology. Generic cross-ontology migration, mixed-ontology
+history, epoch bridges, and automatic grant-tree interpretation remain deferred.
+
+The fresh ledger is the current implementation path, not a permanent ban on a
+same-physical-ledger transition. A future governed ontology-transition boundary
+may retain one physical ledger only if the immutable old prefix stays
+byte-identical, an explicit transition and identity boundary is appended before
+the first new-ontology event, and no reader ever reinterprets old bytes under the
+new ontology.
+
+**Verdict: implement the two commitments and the hard identity boundary. Leave
+general migration and hierarchy machinery on the roadmap.**
+
 ---
 
 ## C. OCR evidence-integrity profile

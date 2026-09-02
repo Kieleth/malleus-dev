@@ -444,6 +444,14 @@ declarative machine execution, one final-identity `KnowledgeChangeSet`, and
 empty-genesis ledger replay. It exists to expose one automated end-to-end
 protocol representation before exhaustive hardening.
 
+`CC-R12` is the first narrow adopter prerequisite after that proof. It adds two
+required, identity-bearing commitments to the existing `AuthorityGrant`:
+`scope_record_id` and `may_subdelegate`. Core retains and validates those values.
+An identified domain authorization policy and its `AuthorityAssessment` own the
+meaning of a domain-specific descendant relation and grant attenuation. This
+workstream does not put actor identity into epistemic acceptance and does not
+create another authorization mechanism.
+
 CC-R04 through CC-R10, CC-R08, CC-R09, and the production wave remain the
 queryable hardening and release path. CC-R11 does not complete or supersede any
 of them, does not create public, stable, cross-language, or production
@@ -459,6 +467,7 @@ change-set boundary, not part of this proof.
 | CC-R02 | LinkML parser adapter and support-profile classifier emitting lossless per-module declarations before any global merge | CC-002, CC-R01, CC-D03, CC-D08, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Duplicate key, unknown field, supported field, unsupported construct, explicit-presence and raw adoption evidence |
 | CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
 | CC-R11 | Pareto compiler-to-ledger vertical | CC-R03, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D17, CC-D18, CC-021, CC-022 | Small-Shop-needed elaboration, canonical facts, reloadable experimental EffectiveContract and contract view; strict machine data plus generic interpreter; final-identity KnowledgeChangeSet, replaceable producer, RET-010 adapter, empty-genesis reopen/replay/query, and canonical receipt |
+| CC-R12 | Scoped authority-grant commitments | CC-R11 | Required nonblank scope record and required subdelegation Boolean enter AuthorityGrant identity; valid registration and typed atomic refusal; current declaration scan; exact Assent source and semantic identities; fresh-epoch migration impact; no epistemic widening, generic scope hierarchy, tree walker, fallback, or second authorization path |
 | CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
 | CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018, CC-021, CC-022 | Frontend, direct-fact input, and each independent oracle match exactly |
 | CC-R06 | Strict protocol-machine program and effective contract | CC-R05, CC-D07, CC-D10, CC-D17, CC-D18, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces compile into one closed, identity-bound machine program with typed refusals and declared capabilities; graph-related effects produce, validate, or admit exact change-set and receipt data and expose no accepted-graph mutation capability |

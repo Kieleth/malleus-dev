@@ -1,0 +1,103 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 49633,
+      "path": "ROADMAP.md",
+      "sha256": "sha256:8d5e06732b4979066f8d2699e1800b1d9b4822b4793da47475ccda2a43f02d32"
+    },
+    {
+      "byte_length": 27627,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:dac489ae8feb0cba6a50fade9dcadab660a81b8cae835e9e94766cb8fe9addd2"
+    },
+    {
+      "byte_length": 23359,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:07a2f01c1048fd962ee373800499ab152f419549b35c42fc5e5d50afef7036bd"
+    },
+    {
+      "byte_length": 44576,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:88a2f72949e6e3e7d0344c5edb888769ebc3f560260e5d54fa0e9273ba1ce2b6"
+    },
+    {
+      "byte_length": 2884,
+      "path": "design/contract_compiler/workstreams/CC-R12/manifest.json",
+      "sha256": "sha256:6091e77b09e1670a0d10992165b57d50403e4153c68d325a056a0e14a4e09c32"
+    },
+    {
+      "byte_length": 4312,
+      "path": "conformance/contract_compiler/v0/evidence/CC-X02.json",
+      "sha256": "sha256:5ecfbab9dfa44d8c69cd1f0288484482230fa888957607fab096d5f3e4dec2bd"
+    },
+    {
+      "byte_length": 17709,
+      "path": "handover/2026-09-01-malleus-code-steer.md",
+      "sha256": "sha256:140daa0fe42967d86984b7f5cd7a7eddaf032f646b72810782b025ecc53e2099"
+    },
+    {
+      "byte_length": 47448,
+      "path": "ontology/assent.yaml",
+      "sha256": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd"
+    },
+    {
+      "byte_length": 321757,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:cea7387bc085a46fb43ea48849a72ea8b5ada27804011f1a33ddb8feb56f8654"
+    }
+  ],
+  "base_commit": "7a8aae0cd523db7412de234f090107dae12e5ea7",
+  "checks": [
+    {
+      "check_id": "ccr12-public-base",
+      "method": "Resolve the published Small Shop research milestone tag and bind the exact local base before activating follow-on work.",
+      "observed": "Annotated tag research/small-shop-compiler-ledger-kg-v1 resolves to commit 7a8aae0cd523db7412de234f090107dae12e5ea7 and tree b8b182447deea09186d6cfc9a75393ceb8851e7e. Its public GitHub Actions run 33665615744 passed before this activation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-dependency-readiness",
+      "method": "Bind the sole direct dependency to its exact card, COMPLETE ledger entry, entry hash, and integrated commit.",
+      "observed": "CC-R11 is COMPLETE at OVR-000334, hash sha256:2a65a5d333fe3aa7b663132c8752ea60f450ef2f27d046d6c5a8ec1cd24e11af, and integrated commit c20387ab7d8825e6e8d73efdbf225774bc7ab0c9. Its card hash is sha256:acb1328931ac2a6b7932842b052146cfbb630715e4c4107be6f9eec51a0d8860.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-exact-contract",
+      "method": "Compare the assigned responsibility with the operator-approved AuthorityGrant change and the existing epistemic and authorization paths.",
+      "observed": "The workstream adds only required nonblank scope_record_id and required Boolean may_subdelegate commitments to AuthorityGrant, places both values in grant identity, keeps EpistemicDecision unchanged, and retains AuthorizationDecision plus AuthorityAssessment as the sole authorization path.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-policy-boundary",
+      "method": "Separate Core data validation from domain-specific interpretation of scope ancestry and delegation attenuation.",
+      "observed": "Core owns exact field shape, retention, and identity. An identified domain authorization policy and its AuthorityAssessment own descendant-scope checks and valid attenuation. No parent-grant slot, universal hierarchy, or Core tree walker is authorized.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-epoch-boundary",
+      "method": "Trace the ontology-identity impact into the existing Malleus Code accepted-ledger dependency.",
+      "observed": "The Assent change is a hard ontology identity break. Code uses a fresh empty-genesis epoch and leaves its 84-event ledger historical. No mixed replay or migration is claimed now. A future same-physical-ledger design remains possible only if its old prefix stays byte-identical, an explicit ontology-transition and identity boundary precedes new-ontology events, and old bytes are never reinterpreted.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-duplicate-scan-plan",
+      "method": "Compare the two new declarations with the current bundled declaration scan and immutable CC-X02 evidence boundary.",
+      "observed": "Implementation must regenerate the live bundled scan from 523 to 525 declarations and from 232 to 234 Assent slots while preserving the duplicate groups. CC-X02 evidence stays byte-identical and its historical candidate must be verified at commit f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba rather than treated as the live scan.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-activation-only",
+      "method": "Inspect the assigned scopes, candidate state, worker ledger state, ontology bytes, and repository diff.",
+      "observed": "The named worker owns exactly eight implementation and evidence paths. Candidate is NONE and worker ledger is NOT_STARTED. The current Assent 0.10.0 source remains byte-identical at sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd. This transaction changes governance registration, activation evidence, and guards only.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction activates the scoped AuthorityGrant workstream. It does not change the ontology, runtime, protocol behavior, duplicate scan, package, or downstream Code repository.",
+    "The two commitments do not define a universal scope hierarchy or prove a unique parent-grant tree. Domain authorization policy remains responsible for those semantics.",
+    "Existing ledgers cannot be replayed under the new ontology identity. General historical migration and epoch bridging remain deferred.",
+    "No public stable API, release, or cross-language conformance claim is created by activation."
+  ],
+  "recorded_at": "2026-09-02T18:37:21Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R12"
+}

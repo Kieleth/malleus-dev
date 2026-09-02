@@ -830,10 +830,10 @@ def _overseer_prefix(sequence: int) -> SimpleNamespace:
     )
 
 
-def test_program_registry_contains_the_exact_approved_74_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_75_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 74
+    assert len(registry) == 75
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-003"] == ("CC-000", "CC-R08")
@@ -902,6 +902,7 @@ def test_program_registry_contains_the_exact_approved_74_workstreams() -> None:
         "CC-021",
         "CC-022",
     )
+    assert registry["CC-R12"] == ("CC-R11",)
     assert "CC-D18" in registry["CC-R06"]
     assert registry["CC-P10"] == ("CC-P01", "CC-W02", "CC-R09")
     assert registry["CC-P21"] == ("CC-P12", "CC-P19", "CC-P20", "CC-R10")
@@ -932,7 +933,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 74
+    assert len(state.workstreams) == 75
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -1006,7 +1007,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D17": ("CC-D05", "CC-D06"),
         "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 38
+    assert len(state.cards) == 39
     cc003 = state.cards["CC-003"]
     assert state.workstreams["CC-003"] == ("CC-000", "CC-R08")
     assert cc003["assignment"] == {"state": "UNASSIGNED"}
@@ -1772,7 +1773,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
 def test_small_shop_input_completion_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
-    assert manifest["revision"] == 6
+    assert manifest["revision"] == 7
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     assert row["card"]["state"] == "PRESENT"
     path = CONTRACT / row["card"]["path"]
@@ -5236,7 +5237,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 74 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 75 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -5578,6 +5579,7 @@ def test_active_dependent_can_reuse_completed_dependency_scope(
         card["scopes"] = []
 
     _rewrite_card(path, manifest, "CC-R11", pause_r11)
+    _rewrite_card(path, manifest, "CC-R12", pause_r11)
     original_states = integration_module._workstream_states
 
     def synthetic_states(ledger_state):
@@ -5585,6 +5587,7 @@ def test_active_dependent_can_reuse_completed_dependency_scope(
         states["CC-R02"] = "COMPLETE"
         states["CC-R03"] = "ACTIVE"
         states["CC-R11"] = "PLANNED"
+        states["CC-R12"] = "PLANNED"
         return states, entries
 
     monkeypatch.setattr(
@@ -6880,7 +6883,7 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
 
     _rewrite_card(manifest_path, manifest, "CC-R01", rebind_retained_source)
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11", "CC-R12"
     )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
@@ -7081,7 +7084,7 @@ def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
         ),
     )
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11", "CC-R12"
     )
     monkeypatch.setattr(
         integration_module,
@@ -7107,7 +7110,7 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
         lambda card: card.update(ledger={"state": "NOT_STARTED"}),
     )
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11", "CC-R12"
     )
     original = integration_module._workstream_states
     monkeypatch.setattr(
@@ -8446,6 +8449,157 @@ def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
     assert "CC-R04 through CC-R10" in program
     assert "Pareto compiler-to-ledger vertical" in roadmap
     assert "does not complete or supersede" in roadmap
+
+
+def test_scoped_authority_grant_activation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R12")
+    assert row["depends_on"] == ["CC-R11"]
+    assert row["card"]["state"] == "PRESENT"
+
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R12/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:ccr12-scoped-authority-grant",
+        "state": "ASSIGNED",
+        "task_id": "/root/ccr12_scoped_authority_grant",
+    }
+    assert card["authorization"] == {
+        "authorized_by": {"id": "operator", "type": "OPERATOR"},
+        "class": "FORMAL",
+        "dependency_bindings": [
+            {
+                "card_sha256": (
+                    "sha256:acb1328931ac2a6b7932842b052146cfbb630715e4c4107be6f9eec51a0d8860"
+                ),
+                "completion_entry_hash": (
+                    "sha256:2a65a5d333fe3aa7b663132c8752ea60f450ef2f27d046d6c5a8ec1cd24e11af"
+                ),
+                "completion_entry_id": "OVR-000334",
+                "integrated_head": "c20387ab7d8825e6e8d73efdbf225774bc7ab0c9",
+                "workstream_id": "CC-R11",
+            }
+        ],
+    }
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["scopes"] == [
+        {"kind": "FILE", "path": "ontology/assent.yaml"},
+        {"kind": "FILE", "path": "src/malleus/assent.py"},
+        {"kind": "FILE", "path": "tests/test_assent_ontology.py"},
+        {"kind": "FILE", "path": "tests/test_protocol.py"},
+        {"kind": "FILE", "path": "docs/ASSENT_PROTOCOL.md"},
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+        },
+        {
+            "kind": "FILE",
+            "path": "tests/test_contract_compiler_duplicate_scan.py",
+        },
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-R12.json",
+        },
+    ]
+    responsibility = card["responsibility"]
+    for required in (
+        "scope_record_id",
+        "may_subdelegate",
+        "content hash",
+        "AuthorityAssessment",
+        "EpistemicDecision unchanged",
+        "0.10.0 to 0.11.0",
+        "hard identity break",
+        "84-event research ledger",
+        "empty genesis",
+    ):
+        assert required in responsibility
+    for excluded in (
+        "no parent-grant field",
+        "generic scope hierarchy",
+        "Core tree walker",
+        "second authorization mechanism",
+        "cross-ontology migration system",
+    ):
+        assert excluded in responsibility
+
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    assert states["CC-R12"] == "ACTIVE"
+    assert "CC-R12" not in manifest["selections"]
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 341 <= entry["sequence"] <= 343
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000341",
+        "OVR-000342",
+        "OVR-000343",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "ROADMAP.md": "MODIFIED",
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/integration.schema.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R12-activation.json": (
+            "CREATED"
+        ),
+        "design/contract_compiler/program.md": "MODIFIED",
+        "design/contract_compiler/workstreams/CC-R12/manifest.json": "CREATED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "ccr12-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"] == {
+        "blockers": [],
+        "bootstrap": True,
+        "deliverables": [
+            "Add required scope_record_id and may_subdelegate commitments to AuthorityGrant without changing epistemic acceptance or creating another authorization path.",
+            "Publish the exact Assent source and semantic identities and the hard fresh-epoch impact while preserving prior ledgers as historical evidence.",
+            "Refresh the live bundled declaration scan while preserving the immutable CC-X02 candidate and evidence bytes at their recorded commit.",
+        ],
+        "evidence_entry_ids": ["OVR-000341", "OVR-000342"],
+        "new_state": "ACTIVE",
+        "previous_state": "PLANNED",
+        "workstream_id": "CC-R12",
+    }
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R12-activation.json")
+    assert report["base_commit"] == "7a8aae0cd523db7412de234f090107dae12e5ea7"
+    assert report["workstream_id"] == "CC-R12"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    milestone = next(
+        check for check in report["checks"] if check["check_id"] == "ccr12-public-base"
+    )
+    assert "research/small-shop-compiler-ledger-kg-v1" in milestone["observed"]
+    assert "7a8aae0cd523db7412de234f090107dae12e5ea7" in milestone["observed"]
+
+    program = PROGRAM.read_text(encoding="utf-8")
+    roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+    assert "CC-R12 | Scoped authority-grant commitments" in program
+    assert "scope_record_id` and `may_subdelegate" in program
+    assert "Scoped authority grants after the first proof" in roadmap
+    assert "Generic cross-ontology migration" in roadmap
+    assert "immutable old prefix stays\nbyte-identical" in roadmap
+    assert "explicit transition and identity boundary" in roadmap
+    assert "no reader ever reinterprets old bytes" in roadmap
 
 
 def test_pareto_compiler_to_ledger_completion_is_exact() -> None:
