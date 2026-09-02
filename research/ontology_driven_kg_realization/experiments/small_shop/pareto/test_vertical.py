@@ -446,9 +446,15 @@ def test_reopen_module_command_and_fresh_genesis_are_deterministic(
     assert rebuilt.replay.graph.snapshot() == first.replay.graph.snapshot()
 
 
-def test_runtime_mapping_refuses_before_writing_any_history(tmp_path: Path) -> None:
+@pytest.mark.parametrize("failure", ["missing_source", "invalid_late_role"])
+def test_runtime_mapping_refuses_before_writing_any_history(
+    tmp_path: Path, failure: str
+) -> None:
     payload = _load(MAPPING)
-    del payload["artifact_roles"]["source"]
+    if failure == "missing_source":
+        del payload["artifact_roles"]["source"]
+    else:
+        payload["artifact_roles"]["mapping"] = "INVALID_ROLE"
     mapping = tmp_path / "mapping.json"
     _write_canonical(mapping, payload)
     ledger = tmp_path / "semantic.jsonl"
@@ -476,6 +482,48 @@ def test_partial_jsonl_is_not_reported_as_a_completed_run(tmp_path: Path) -> Non
         _run(ledger)
     assert refusal.value.reason is Ret010RefusalReason.INCOMPLETE_HISTORY
     assert ledger.read_bytes() == partial
+
+
+def test_existing_ledger_reopens_without_fixture_or_program_files(
+    tmp_path: Path,
+) -> None:
+    fixture = tmp_path / "fixture"
+    shutil.copytree(FIXTURE / "input", fixture / "input")
+    programs = tmp_path / "programs"
+    programs.mkdir()
+    machine = programs / "machine.json"
+    policy = programs / "policy.json"
+    mapping = programs / "mapping.json"
+    for source, target in (
+        (MACHINE, machine),
+        (POLICY, policy),
+        (MAPPING, mapping),
+    ):
+        shutil.copyfile(source, target)
+    ledger = tmp_path / "semantic.jsonl"
+    first = run_ret010(
+        ledger,
+        fixture_root=fixture,
+        machine_path=machine,
+        policy_path=policy,
+        mapping_path=mapping,
+    )
+    ledger_bytes = ledger.read_bytes()
+    shutil.rmtree(fixture)
+    machine.unlink()
+    policy.unlink()
+    mapping.unlink()
+
+    reopened = run_ret010(
+        ledger,
+        fixture_root=fixture,
+        machine_path=machine,
+        policy_path=policy,
+        mapping_path=mapping,
+    )
+    assert reopened.receipt.canonical_bytes == first.receipt.canonical_bytes
+    assert reopened.replay.graph.snapshot() == first.replay.graph.snapshot()
+    assert ledger.read_bytes() == ledger_bytes
 
 
 def test_existing_ledger_must_be_the_exact_ret010_vertical(tmp_path: Path) -> None:
