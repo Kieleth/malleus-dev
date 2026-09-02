@@ -1,0 +1,30 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 47663,
+        "path": "ontology/assent.yaml",
+        "sha256": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234"
+      },
+      {
+        "byte_length": 152249,
+        "path": "src/malleus/assent.py",
+        "sha256": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662"
+      }
+    ],
+    "command": ".venv/bin/python -m pytest -q tests/test_assent_ontology.py::test_authority_grant_has_required_identity_bearing_scope_commitments tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_retains_explicit_non_delegating_scope tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_scope_commitments_refuse_atomically tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_scope_and_subdelegation_change_content_identity",
+    "observed": "GREEN 5e4ec73e2dd38ddfabfe62ae543719f6849a922e makes the same focused contract pass 10 tests. Assent 0.11.0 declares both required singular fields and the runtime adds only a nonblank scope guard.",
+    "phase": "GREEN",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4314e0a3c55e5b37534204e86bc8b6fd56b8e05fa92e36262f59cddbbac218ea",
+  "entry_id": "CC-R12-WRK-000002",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:694f20c276b1072479219d012766f760c5c632701b2c76424abd210bfe3b86dd",
+  "recorded_at": "2026-09-02T19:29:11Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 2,
+  "summary": "Pass the scoped AuthorityGrant contract.",
+  "workstream_id": "CC-R12"
+}

@@ -1,0 +1,103 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 25580,
+      "path": "docs/ASSENT_PROTOCOL.md",
+      "sha256": "sha256:4e7d73d955ca43c79ea4c9985c1dc288dd0410a5e9515d69b0a2578d54612d26"
+    },
+    {
+      "byte_length": 47663,
+      "path": "ontology/assent.yaml",
+      "sha256": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234"
+    },
+    {
+      "byte_length": 152249,
+      "path": "src/malleus/assent.py",
+      "sha256": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662"
+    },
+    {
+      "byte_length": 23640,
+      "path": "tests/test_assent_ontology.py",
+      "sha256": "sha256:eb529f2edf28a25a76c55120a3fc67810e81463dc4593e8dd6236af51c29c139"
+    },
+    {
+      "byte_length": 232798,
+      "path": "tests/test_protocol.py",
+      "sha256": "sha256:036d79c412fde234d6b6056d40de98abc4ca763928e7f972a4f7a1f99ce44d23"
+    },
+    {
+      "byte_length": 277629,
+      "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+      "sha256": "sha256:3070ad3c910451e022591545c664f12e838c585349cb3e06a54b2867cf893049"
+    },
+    {
+      "byte_length": 14839,
+      "path": "tests/test_contract_compiler_duplicate_scan.py",
+      "sha256": "sha256:eb5bf674aab4550f661f7dbe5fe4d53a2a713ad540d788d95d72401a0102e01b"
+    }
+  ],
+  "base_commit": "b5973770394e388b32928297d302da8c96b91152",
+  "checks": [
+    {
+      "check_id": "ccr12-tdd-history",
+      "method": "Run the focused scoped-grant tests before and after the two-field implementation, and inspect the exact commit and tree boundaries.",
+      "observed": "RED c8e9f5b67b9991e79f614479c4280c24bc3b8620, tree 4417a3e6d9495303695cbd062ca4e6f2b4402080, changed only two test files and produced nine intended failures plus one independent identity pass. GREEN 5e4ec73e2dd38ddfabfe62ae543719f6849a922e, tree 6d26e263431aeabc08926e465656e6bc3ea8761a, changed exactly the ontology, runtime, protocol guide, live declaration scan, and its historical-evidence test. The focused result became 10 passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-ontology-identities",
+      "method": "Hash the exact Assent 0.11.0 source and compute its supported semantic fingerprints through OntologyRegistry.",
+      "observed": "The 47,663-byte source is sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234. Semantic grammar 4 is sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54 and grammar 3 is sha256:d38a112ea3e01a7331c3aa10ad71800bb4d0eb3eabdb102368da5f94fe9b7fa9.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-required-commitments",
+      "method": "Load the ontology with LinkML SchemaView and OntologyRegistry, then append and replay a real nondelegating AuthorityGrant.",
+      "observed": "AuthorityGrant requires one singular string scope_record_id and one singular Boolean may_subdelegate with no default. Explicit false is accepted, retained as false, and replayed at the exact named scope. EpistemicDecision contains neither field and remains unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-refusal-atomicity",
+      "method": "Attempt grants with each commitment missing, null, or wrong-typed, plus a whitespace-only scope, and compare ledger bytes before and after every attempt.",
+      "observed": "All malformed grants raised ProtocolError and left the JSONL bytes unchanged. The runtime nonblank guard closes the semantic gap that a plain string shape does not cover.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-identity-and-policy-boundary",
+      "method": "Hold every other grant field fixed while changing scope_record_id or may_subdelegate, then inspect the runtime diff and authorization path.",
+      "observed": "Each change produces a different content_hash. Core adds no scope traversal, parent grant, wildcard, grant-tree evaluator, or new authorization event. The identified adopter authorization policy and AuthorityAssessment remain responsible for descendant and attenuation meaning.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-live-declaration-scan",
+      "method": "Regenerate and check the bundled declaration inventory from current packaged ontology sources.",
+      "observed": "The live canonical scan contains 525 declarations, including 234 Assent slots, while preserving the same four duplicate groups, nine duplicate occurrences, and zero cross-kind repeats. All 11 scan tests and check mode passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-historical-ccx02-boundary",
+      "method": "Compare the immutable CC-X02 evidence bytes with Git commit f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba and verify every artifact against bytes at that commit.",
+      "observed": "CC-X02.json remains byte-identical. Its original 523-declaration measurement, scanner, and test digests validate against the recorded historical commit rather than current Assent bytes. The live scan remains a separate current-state guard.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-affected-regression",
+      "method": "Run the complete Assent ontology and protocol modules, the complete declaration-scan module, changed-file Ruff, scan check mode, and git diff checking.",
+      "observed": "All 262 Assent ontology and protocol tests passed. All 11 declaration-scan tests passed. Ruff and diff checks passed. A repository-wide run reached 2,494 passed and 2 skipped; its 24 pre-completion failures all reported the intentionally changed ASSENT_PROTOCOL.md digest still awaiting the overseer document-revision transaction.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Core retains and validates the exact scope root and subdelegation flag. It does not know an adopter's descendant relation, decide attenuation, or evaluate a generic authority tree.",
+    "Assent 0.11.0 is a hard ontology-identity break. Existing ledgers remain evidence under their original ontology and cannot be read as current-schema bytes.",
+    "The current supported transition is a fresh empty-genesis ledger epoch. A same-file cross-ontology transition or generic migration bridge is deferred roadmap work and is not simulated by an alias, fallback, or accepted historical hash.",
+    "Malleus Code must freeze its prior 84-event research ledger, start its new combined ontology epoch from empty genesis, and re-propose and re-accept the four desired deliverables before authorization.",
+    "This cut adds no parent-grant field, wildcard scope, retroactive action insertion, second authorization mechanism, or epistemic-decision change.",
+    "PACKAGE is omitted as optional. The workstream changes no package metadata, dependency, wheel, release, or public distribution surface.",
+    "The full suite cannot become clean until the overseer records the intentional ASSENT_PROTOCOL.md revision. This worker does not own or append that overseer transaction.",
+    "Pre-existing modified research files and untracked design and handover files are excluded and were not modified by CC-R12."
+  ],
+  "recorded_at": "2026-09-02T19:29:02Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R12"
+}

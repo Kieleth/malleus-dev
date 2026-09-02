@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [],
+    "command": "Exercise missing, null, wrong-typed, whitespace, explicit-false, and identity-changing grant cases; inspect ProtocolLedger ontology handling and the authorization path.",
+    "observed": "Every malformed commitment refuses before append and preserves exact ledger bytes. Explicit false survives replay. Both fields alter content identity. Old ontology bytes are not admitted as current bytes, and Core neither interprets adopter descendants nor gains another authorization or epistemic mechanism.",
+    "phase": "DISPROOF",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:33209ec83c8b666d13b2a678d439f6db3091b1bcf738e7e1efd4dfccf02582c4",
+  "entry_id": "CC-R12-WRK-000004",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:4f8dd71a83543b796911f32c079e7d6f9c7f932edd864abc7c38d964acd8109a",
+  "recorded_at": "2026-09-02T19:29:13Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 4,
+  "summary": "Disprove malformed grants and hidden migration behavior.",
+  "workstream_id": "CC-R12"
+}

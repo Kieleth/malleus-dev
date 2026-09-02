@@ -1,0 +1,25 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 7220,
+        "path": "conformance/contract_compiler/v0/evidence/CC-R12.json",
+        "sha256": "sha256:5e0684d3ca93f796e2eb245004ff4694de5438bda867aed291b00d1f7524e1f6"
+      }
+    ],
+    "command": "Verify RED c8e9f5b/tree 4417a3e6, GREEN 5e4ec73/tree 6d26e263, exact artifacts, source and grammar identities, TDD results, hard-epoch impact, and exclusions.",
+    "observed": "CC-R12 evidence binds Assent source sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234, grammar-4 identity sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54, grammar-3 identity sha256:d38a112ea3e01a7331c3aa10ad71800bb4d0eb3eabdb102368da5f94fe9b7fa9, and the fresh empty-genesis epoch rule. Candidate remains NONE and optional PACKAGE is omitted.",
+    "phase": "ATTEST",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:c808e7348393be9d2efa6846d9f6f308c9875390d5130a0d81656077e43a8598",
+  "entry_id": "CC-R12-WRK-000006",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:ae92ab20e0f6c09b83d3a4c3988a6f855ba2cad5ff4076bf03f54616d1919e47",
+  "recorded_at": "2026-09-02T19:29:15Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 6,
+  "summary": "Attest the scoped grant cut without migration or release claims.",
+  "workstream_id": "CC-R12"
+}

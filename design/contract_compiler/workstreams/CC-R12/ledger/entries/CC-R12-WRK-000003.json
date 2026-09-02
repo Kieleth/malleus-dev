@@ -1,0 +1,35 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 25580,
+        "path": "docs/ASSENT_PROTOCOL.md",
+        "sha256": "sha256:4e7d73d955ca43c79ea4c9985c1dc288dd0410a5e9515d69b0a2578d54612d26"
+      },
+      {
+        "byte_length": 277629,
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+        "sha256": "sha256:3070ad3c910451e022591545c664f12e838c585349cb3e06a54b2867cf893049"
+      },
+      {
+        "byte_length": 14839,
+        "path": "tests/test_contract_compiler_duplicate_scan.py",
+        "sha256": "sha256:eb5bf674aab4550f661f7dbe5fe4d53a2a713ad540d788d95d72401a0102e01b"
+      }
+    ],
+    "command": "Inspect c8e9f5b..5e4ec73 paths and runtime diff; regenerate the live declaration scan; compare CC-X02 evidence with commit f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba.",
+    "observed": "The implementation adds exactly scope_record_id, may_subdelegate, and one whitespace guard. It adds no hierarchy, parent grant, wildcard, migration input, alias, fallback, epistemic field, or second authorization path. The current scan advances to 525 declarations and 234 Assent slots while immutable CC-X02 evidence remains byte-identical and verifies at its historical commit.",
+    "phase": "SLICE",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:4f8dd71a83543b796911f32c079e7d6f9c7f932edd864abc7c38d964acd8109a",
+  "entry_id": "CC-R12-WRK-000003",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:4314e0a3c55e5b37534204e86bc8b6fd56b8e05fa92e36262f59cddbbac218ea",
+  "recorded_at": "2026-09-02T19:29:12Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 3,
+  "summary": "Verify the KISS authorization slice and history boundary.",
+  "workstream_id": "CC-R12"
+}

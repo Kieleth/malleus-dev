@@ -1,0 +1,30 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [
+      {
+        "byte_length": 23640,
+        "path": "tests/test_assent_ontology.py",
+        "sha256": "sha256:eb529f2edf28a25a76c55120a3fc67810e81463dc4593e8dd6236af51c29c139"
+      },
+      {
+        "byte_length": 232798,
+        "path": "tests/test_protocol.py",
+        "sha256": "sha256:036d79c412fde234d6b6056d40de98abc4ca763928e7f972a4f7a1f99ce44d23"
+      }
+    ],
+    "command": ".venv/bin/python -m pytest -q tests/test_assent_ontology.py::test_authority_grant_has_required_identity_bearing_scope_commitments tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_retains_explicit_non_delegating_scope tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_scope_commitments_refuse_atomically tests/test_protocol.py::TestMonitorFailureAndAuthorization::test_authority_grant_scope_and_subdelegation_change_content_identity",
+    "observed": "At RED c8e9f5b67b9991e79f614479c4280c24bc3b8620 the focused contract produced nine intended failures and one independent content-identity pass. Assent was still 0.10.0 and the runtime rejected scope_record_id and may_subdelegate as unknown, so required-field, typed-refusal, nonblank, and replay behavior did not yet exist.",
+    "phase": "RED",
+    "result": "EXPECTED_FAILURE"
+  },
+  "entry_hash": "sha256:694f20c276b1072479219d012766f760c5c632701b2c76424abd210bfe3b86dd",
+  "entry_id": "CC-R12-WRK-000001",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "GENESIS",
+  "recorded_at": "2026-09-02T19:29:10Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 1,
+  "summary": "Record the scoped AuthorityGrant RED.",
+  "workstream_id": "CC-R12"
+}

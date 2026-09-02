@@ -1,0 +1,19 @@
+{
+  "actor_id": "worker:ccr12-scoped-authority-grant",
+  "data": {
+    "artifacts": [],
+    "command": ".venv/bin/python -m pytest -q tests/test_assent_ontology.py tests/test_protocol.py; .venv/bin/python -m pytest -q tests/test_contract_compiler_duplicate_scan.py; .venv/bin/python scripts/contract_compiler_duplicate_scan.py --check; run changed-file Ruff and git diff --check",
+    "observed": "The complete Assent ontology and protocol boundary passed 262 tests. The declaration scan passed 11 tests and check mode. Changed-file Ruff and diff checks passed. Full pytest additionally reached 2,494 passed and 2 skipped; its 24 pre-completion failures all reduce to the intentionally changed ASSENT_PROTOCOL.md digest awaiting the overseer document revision.",
+    "phase": "REGRESSION",
+    "result": "PASS"
+  },
+  "entry_hash": "sha256:ae92ab20e0f6c09b83d3a4c3988a6f855ba2cad5ff4076bf03f54616d1919e47",
+  "entry_id": "CC-R12-WRK-000005",
+  "entry_type": "TDD_RESULT",
+  "previous_entry_hash": "sha256:33209ec83c8b666d13b2a678d439f6db3091b1bcf738e7e1efd4dfccf02582c4",
+  "recorded_at": "2026-09-02T19:29:14Z",
+  "schema": "malleus.contract-compiler.worker-ledger-entry/v1",
+  "sequence": 5,
+  "summary": "Pass the affected regression boundary.",
+  "workstream_id": "CC-R12"
+}

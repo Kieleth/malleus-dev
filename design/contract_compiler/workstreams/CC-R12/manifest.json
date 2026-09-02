@@ -24,7 +24,11 @@
     "state": "NONE"
   },
   "ledger": {
-    "state": "NOT_STARTED"
+    "entry_count": 6,
+    "head_entry_id": "CC-R12-WRK-000006",
+    "head_hash": "sha256:c808e7348393be9d2efa6846d9f6f308c9875390d5130a0d81656077e43a8598",
+    "path": "workstreams/CC-R12/ledger",
+    "state": "RECORDED"
   },
   "responsibility": "Add exactly two required commitments to the existing AuthorityGrant: a nonblank scope_record_id and a Boolean may_subdelegate, with no default, null, or wildcard interpretation. Both values enter the grant content hash. Core validates and retains these commitments; an identified domain authorization policy and its AuthorityAssessment decide whether an action is at the named scope root or a permitted descendant and whether a child grant is a valid attenuation. Keep EpistemicDecision unchanged and retain AuthorizationDecision plus AuthorityAssessment as the sole authorization path. Bump the Assent ontology from 0.10.0 to 0.11.0, publish its exact source and semantic identities, and update the current bundled declaration scan without rewriting the immutable CC-X02 evidence. Treat the ontology change as a hard identity break: old ledgers remain bound to their old ontology, while Malleus Code freezes its 84-event research ledger and rebuilds four desired deliverables from empty genesis under the combined new ontology. Create no parent-grant field, generic scope hierarchy, Core tree walker, alias, fallback, retroactive action insertion, historical ontology input, epoch bridge, mixed-ontology ledger, second authorization mechanism, or cross-ontology migration system.",
   "schema": "malleus.contract-compiler.workstream-card/v1",
