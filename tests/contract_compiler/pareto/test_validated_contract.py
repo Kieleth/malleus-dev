@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 import malleus._contract_compiler as compiler
+import malleus._contract_linkml_adapter as linkml_adapter
 from malleus._contract_binder import BindingRefusal, BindingRefusalReason, bind_contract
 from malleus._contract_linkml_adapter import LinkMLImportReader, adapt_linkml_closure
 from malleus._contract_source import (
@@ -22,6 +23,7 @@ from malleus._contract_source import (
     build_source_closure,
 )
 from malleus.kg import KnowledgeGraph, OpStatus
+from malleus.ontology import OntologyRegistry
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -37,7 +39,7 @@ SMALL_SHOP = (
 GREENHOUSE = (
     ROOT / "conformance/contract_kernel/v0/neutral_domain/sources/greenhouse"
 )
-FEATURES = ROOT / "conformance/contract_kernel/v0/feature_cases/inputs/x01"
+FEATURES = ROOT / "conformance/contract_kernel/v0/feature_cases/inputs"
 SELECTION = ResolverSelection(
     resolver_id="TEST_ONLY_EXACT_MAPPING_RESOLVER",
     profile_version="TEST_ONLY_V0",
@@ -81,7 +83,11 @@ def _binding(sources: dict[str, bytes | tuple[str, bytes]], root: str):
     return bind_contract(adapt_linkml_closure(closure))
 
 
-def _small_shop_binding(*, description_variant: bool = False):
+def _small_shop_binding(
+    *,
+    description_variant: bool = False,
+    source: bytes | None = None,
+):
     source_name = (
         "small-shop-description-only.yaml"
         if description_variant
@@ -89,7 +95,7 @@ def _small_shop_binding(*, description_variant: bool = False):
     )
     return _binding(
         {
-            "small-shop": (SMALL_SHOP / source_name).read_bytes(),
+            "small-shop": source or (SMALL_SHOP / source_name).read_bytes(),
             "malleus": (ROOT / "ontology/malleus.yaml").read_bytes(),
             "linkml:types": _trusted_types(),
         },
@@ -104,25 +110,80 @@ def _compile_binding(binding):
 
 
 def _compile_feature(name: str):
-    return _compile_binding(_binding({name: (FEATURES / name).read_bytes()}, name))
+    return _compile_binding(
+        _binding(
+            {
+                name: (FEATURES / name).read_bytes(),
+                "linkml:types": _trusted_types(),
+            },
+            name,
+        )
+    )
 
 
 def test_small_shop_elaborates_inheritance_slot_usage_enum_and_neutral_facts() -> None:
     result = _compile_binding(_small_shop_binding())
     view = result.view
+    shop = "https://malleus.dev/schema/small-shop-fulfilment"
+    foundation = "https://malleus.dev/schema"
+    facts = set(result.facts)
+    rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+    subclass = "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+    vocabulary = "https://malleus.dev/contract-facts"
 
-    assert view.is_subtype_of("SalesOrder", "Entity")
-    assert view.is_subtype_of("OrderContainsUnit", "Relation")
-    assert view.has_mixin("SalesOrder", "Identifiable")
-    assert view.get_slot_constraint("SalesOrder", "order_number").required is True
-    relation_kind = view.get_slot_constraint(
-        "OrderContainsUnit", "relation_type"
+    assert view.is_subtype_of(f"{shop}/SalesOrder", f"{foundation}/Entity")
+    assert view.is_subtype_of(
+        f"{shop}/OrderContainsUnit", f"{foundation}/Relation"
     )
-    assert relation_kind.range == "ShopRelationKind"
+    assert view.has_mixin(f"{shop}/SalesOrder", f"{foundation}/Identifiable")
+    assert view.get_slot_constraint(
+        f"{shop}/SalesOrder", f"{shop}/order_number"
+    ).required is True
+    relation_kind = view.get_slot_constraint(
+        f"{shop}/OrderContainsUnit", f"{foundation}/relation_type"
+    )
+    assert relation_kind.range == f"{shop}/ShopRelationKind"
     assert relation_kind.equals_string == "ORDER_CONTAINS_UNIT"
-    assert view.get_enum_values("ShopRelationKind") == frozenset(
+    assert view.get_enum_values(f"{shop}/ShopRelationKind") == frozenset(
         {"ORDER_CONTAINS_UNIT"}
     )
+    assert compiler.ContractFact(
+        f"{shop}/SalesOrder", subclass, f"{foundation}/Entity"
+    ) in facts
+    assert compiler.ContractFact(
+        f"{shop}/ShopRelationKind", f"{vocabulary}/enumValue", "ORDER_CONTAINS_UNIT"
+    ) in facts
+    assert compiler.ContractFact(
+        f"{foundation}/Entity", rdf_type, f"{vocabulary}/Class"
+    ) in facts
+    assert any(
+        fact.predicate == f"{vocabulary}/usesSlot"
+        and fact.object == f"{foundation}/id"
+        for fact in facts
+    )
+    relation_type_use = next(
+        fact.subject
+        for fact in facts
+        if fact.predicate == f"{vocabulary}/onClass"
+        and fact.object == f"{shop}/OrderContainsUnit"
+        and compiler.ContractFact(
+            fact.subject,
+            f"{vocabulary}/usesSlot",
+            f"{foundation}/relation_type",
+        )
+        in facts
+    )
+    assert {
+        compiler.ContractFact(
+            relation_type_use,
+            f"{vocabulary}/valueRange",
+            f"{shop}/ShopRelationKind",
+        ),
+        compiler.ContractFact(
+            relation_type_use, f"{vocabulary}/equalsString", "ORDER_CONTAINS_UNIT"
+        ),
+        compiler.ContractFact(relation_type_use, f"{vocabulary}/required", True),
+    }.issubset(facts)
     assert result.facts == tuple(
         sorted(result.facts, key=lambda fact: result.fact_bytes(fact))
     )
@@ -143,6 +204,14 @@ def test_annotation_changes_source_attestation_not_semantic_contract_identity() 
     assert baseline.artifact.evidence != described.artifact.evidence
     assert baseline.artifact.artifact_bytes != described.artifact.artifact_bytes
 
+    changed_source = (SMALL_SHOP / "small-shop.yaml").read_bytes().replace(
+        b"        required: true\n",
+        b"        required: false\n",
+        1,
+    )
+    changed = _compile_binding(_small_shop_binding(source=changed_source))
+    assert changed.content_hash != baseline.content_hash
+
 
 def test_root_instances_refuses_atomically_before_elaboration() -> None:
     source = (SMALL_SHOP / "small-shop-root-instances.yaml").read_bytes()
@@ -152,25 +221,57 @@ def test_root_instances_refuses_atomically_before_elaboration() -> None:
 
 
 def test_defaults_explicit_false_bounds_and_mixin_conflict_are_mechanical() -> None:
-    explicit = _compile_feature("explicit_false.json")
-    use = explicit.view.get_slot_constraint("Thing", "value")
+    explicit = _compile_feature("positive/valid_explicit_false.json")
+    use = explicit.view.get_slot_constraint(
+        "https://example.malleus.dev/d08-explicit-false/Record",
+        "https://example.malleus.dev/d08-explicit-false/value",
+    )
     assert use.required is False
     assert use.multivalued is False
     assert use.identifier is False
     assert use.inlined is False
     assert use.range == "string"
 
-    bounds = _compile_feature("numeric_bounds.json")
-    inherited = bounds.view.get_slot_constraint("Child", "value")
+    bounds = _compile_feature("x01/numeric_bounds.json")
+    inherited = bounds.view.get_slot_constraint(
+        "https://example.org/cc-x01/numeric-bounds/Child",
+        "https://example.org/cc-x01/numeric-bounds/value",
+    )
     assert inherited.minimum_value == 10
     assert inherited.maximum_value == 90
 
     from malleus._contract_pipeline import ElaborationRefusal, ElaborationRefusalReason
 
-    for name in ("conflicting_mixins_ab.json", "conflicting_mixins_ba.json"):
+    for name in (
+        "x01/conflicting_mixins_ab.json",
+        "x01/conflicting_mixins_ba.json",
+    ):
         with pytest.raises(ElaborationRefusal) as refusal:
             _compile_feature(name)
         assert refusal.value.reason is ElaborationRefusalReason.MIXIN_CONFLICT
+
+    with pytest.raises(ElaborationRefusal):
+        _compile_feature("x01/explicit_false.json")
+
+
+def test_explicit_adoption_emits_the_authoritative_owner_once() -> None:
+    owner = "https://example.malleus.dev/cc013/adoption-owner"
+    adopter = "https://example.malleus.dev/cc013/adoption-subject"
+    result = _compile_binding(
+        _binding(
+            {
+                adopter: (FEATURES / "explicit_adoption/adopter.json").read_bytes(),
+                owner: (FEATURES / "explicit_adoption/owner.json").read_bytes(),
+            },
+            adopter,
+        )
+    )
+    owner_slot = f"{owner}/shared_value"
+    adopter_slot = f"{adopter}/shared_value"
+
+    assert sum(fact.subject == owner_slot for fact in result.facts) > 0
+    assert all(fact.subject != adopter_slot for fact in result.facts)
+    assert [slot.identifier for slot in result.elaborated.slots].count(owner_slot) == 1
 
 
 def test_greenhouse_uses_formal_pipeline_and_preserves_accepted_facts() -> None:
@@ -209,7 +310,33 @@ def test_imported_quiet_bell_missing_dependency_refuses_without_ambient_fallback
     assert refusal.value.reason is BindingRefusalReason.UNKNOWN_REFERENCE
 
 
-def test_validated_artifact_round_trip_needs_no_linkml_and_refuses_tampering() -> None:
+def test_validated_artifact_round_trip_needs_no_source_or_linkml(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from malleus._contract_pipeline import load_validated_contract_artifact
+
+    compiled = _compile_binding(_small_shop_binding())
+
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("artifact reload crossed the compiled boundary")
+
+    monkeypatch.setattr(Path, "read_bytes", forbidden)
+    monkeypatch.setattr(linkml_adapter, "_parse_linkml_source", forbidden)
+    monkeypatch.setattr(OntologyRegistry, "__init__", forbidden)
+    loaded = load_validated_contract_artifact(compiled.artifact.artifact_bytes)
+
+    assert loaded.content_hash == compiled.content_hash
+    assert loaded.artifact_bytes == compiled.artifact.artifact_bytes
+    assert loaded.validate_instance(
+        "https://malleus.dev/schema/small-shop-fulfilment/SalesOrder",
+        {
+            "https://malleus.dev/schema/id": "O1",
+            "https://malleus.dev/schema/small-shop-fulfilment/order_number": "O1",
+        },
+    ) == []
+
+
+def test_validated_artifact_refuses_fact_and_bound_identity_tampering() -> None:
     from malleus._contract_pipeline import (
         ArtifactRefusal,
         ArtifactRefusalReason,
@@ -217,13 +344,6 @@ def test_validated_artifact_round_trip_needs_no_linkml_and_refuses_tampering() -
     )
 
     compiled = _compile_binding(_small_shop_binding())
-    loaded = load_validated_contract_artifact(compiled.artifact.artifact_bytes)
-
-    assert loaded.content_hash == compiled.content_hash
-    assert loaded.validate_instance(
-        "SalesOrder", {"id": "O1", "order_number": "O1"}
-    ) == []
-
     payload = json.loads(compiled.artifact.artifact_bytes)
     payload["facts"][0]["object"] = "tampered"
     tampered = json.dumps(
@@ -241,6 +361,19 @@ def test_validated_artifact_round_trip_needs_no_linkml_and_refuses_tampering() -
     with pytest.raises(ArtifactRefusal) as refusal:
         load_validated_contract_artifact(unknown)
     assert refusal.value.reason is ArtifactRefusalReason.UNSUPPORTED_ARTIFACT_GRAMMAR
+
+    for identity in ("metamodel", "canonicalization", "symbol_policy"):
+        payload = json.loads(compiled.artifact.artifact_bytes)
+        payload[identity]["sha256"] = "sha256:" + "0" * 64
+        changed = json.dumps(
+            payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True
+        ).encode()
+        with pytest.raises(ArtifactRefusal) as refusal:
+            load_validated_contract_artifact(changed)
+        assert (
+            refusal.value.reason
+            is ArtifactRefusalReason.ARTIFACT_INTEGRITY_MISMATCH
+        )
 
 
 def test_contract_view_drives_small_shop_knowledge_graph_validation() -> None:
