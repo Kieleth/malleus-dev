@@ -1,0 +1,158 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c5458765fe08e417c336057f02413fd6d6e5d4a10feb64f8360066f9bc804854",
+        "before_digest": "sha256:4323c4c76fd241426d4c5f6a9f59c170344860a1f2c7f3e3fa4514bb084dbba2",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:ff75c6093237ab2c4515d0a8ed099fd45e46a4238ce616ba545e91f56e099e8e",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-R11.json"
+      },
+      {
+        "after_digest": "sha256:904eb338e2239c07282d017cf1ac0c342c650efffda5b5c4b471d665bc010f5c",
+        "before_digest": "sha256:2a6d925216feffadc4b5e214e24d647a9319b2fa50f44fee60bb533290db6276",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_compiler.py"
+      },
+      {
+        "after_digest": "sha256:902f02e00ae4e8a1a5ac19214249c0cd4abe119859a208eb12b96b99cd5adbbc",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/__init__.py"
+      },
+      {
+        "after_digest": "sha256:fb5863741a6d252eef628e81a65a77fe8b57aa8f9deb9ee396e9aab4957bf140",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/elaborate.py"
+      },
+      {
+        "after_digest": "sha256:73cf65899e630c9153ec196cccbace48dde7b899e99105ab187d3298b49e6799",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/model.py"
+      },
+      {
+        "after_digest": "sha256:ddedd47c33b9dd6bb893cbfe2b3903392d47b3b3bfc867d7ad5ed2ad782b29b4",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/view.py"
+      },
+      {
+        "after_digest": "sha256:94ebe355b083a88615d40914be5dbfa2fbf59ff15bf987b33fbccdac0b307921",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_validated_contract.py"
+      },
+      {
+        "after_digest": "sha256:60b7d6b8607381e3d13dbe7d53f4c50101bed8a687684e69fea7e15c88beb9f2",
+        "before_digest": "sha256:71d5d280ad3b89eed559fd4f58cf8a6062b2616e40d7ebfcd581f402fc7ab265",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c",
+        "before_digest": "sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:8195b6b700ff6d6fe74a393c1a1f09c0a5ef18573002a7c8029ce15cdb9f000e",
+  "entry_id": "OVR-000327",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4572e9bfa8ed9c16f250a8ea8c8d3bfe3eec0d8806559c5f0b5eb5ecc8b3305c",
+  "recorded_at": "2026-09-02T02:46:00Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "conformance/contract_compiler/v0/evidence/CC-R11.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_compiler.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_pipeline/__init__.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_pipeline/elaborate.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_pipeline/model.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_pipeline/view.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/pareto/test_validated_contract.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/test_greenhouse_compiler.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6e34cddd45f82fed6154da58183af3def299cc3b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8aa87f7cc462c6023bf4e79b02fdec5d5d95cd49",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5867437b5fac1fa8723530b11f5a65dc6dfef0f5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "09562e9f4f6671226b10e242ed898c9ee613ff90",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 327,
+  "subject": {
+    "id": "ccr11-milestone-1",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the validated-contract compiler milestone.",
+  "why": "The first Pareto milestone now routes retained ontology sources through the private LinkML adapter, neutral binder, semantic elaborator, canonical fact encoder, reloadable validated artifact, and immutable contract view. This revision records the exact TDD commits and replaces the two stale document digests without weakening the strict validator."
+}

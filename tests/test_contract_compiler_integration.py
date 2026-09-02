@@ -7895,7 +7895,7 @@ def test_linkml_adapter_completion_is_exact() -> None:
         "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
     )
     assert _digest(current_greenhouse) == (
-        "sha256:30f2e7ec658f303422ac71250fcb872523a9c09f714cbe0022cd624562eba7d3"
+        "sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c"
     )
     candidate_paths = [
         artifact["path"] for artifact in card["candidate"]["artifacts"]
@@ -7910,7 +7910,10 @@ def test_linkml_adapter_completion_is_exact() -> None:
             *candidate_paths,
         ).splitlines()
     )
-    assert later_changes == {"tests/contract_compiler/test_greenhouse_compiler.py"}
+    assert later_changes == {
+        "src/malleus/_contract_compiler.py",
+        "tests/contract_compiler/test_greenhouse_compiler.py",
+    }
 
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert (

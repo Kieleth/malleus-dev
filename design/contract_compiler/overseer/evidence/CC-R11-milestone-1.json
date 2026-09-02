@@ -1,0 +1,62 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 9781,
+      "path": "conformance/contract_compiler/v0/evidence/CC-R11.json",
+      "sha256": "sha256:ff75c6093237ab2c4515d0a8ed099fd45e46a4238ce616ba545e91f56e099e8e"
+    },
+    {
+      "byte_length": 5446,
+      "path": "design/contract_compiler/overseer/entries/OVR-000327.json",
+      "sha256": "sha256:2e63fda5aab2dd178e9ecd3c20a0f3c83ea3e32cd5a2577b3da5a5b520605284"
+    },
+    {
+      "byte_length": 309175,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:60b7d6b8607381e3d13dbe7d53f4c50101bed8a687684e69fea7e15c88beb9f2"
+    }
+  ],
+  "base_commit": "09562e9f4f6671226b10e242ed898c9ee613ff90",
+  "checks": [
+    {
+      "check_id": "ccr11-m1-owner-receipt",
+      "method": "Verify the exact worker receipt with the contract-compiler evidence validator.",
+      "observed": "The validator verified eight artifacts and ten recorded checks. The receipt binds the two RED commits, the GREEN implementation commit, the evidence commit, the final independent audit, and the explicit Milestone 1 limitations.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m1-forward-rebind",
+      "method": "Append one document revision from committed overseer head OVR-000326 and retain the strict digest validator.",
+      "observed": "OVR-000327 binds the exact ten changed or created paths, including the old and new digests for both stale guarded files. The ledger validates 327 entries at head sha256:8195b6b700ff6d6fe74a393c1a1f09c0a5ef18573002a7c8029ce15cdb9f000e.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m1-integration-guard",
+      "method": "Run the integration validator and the exact historical LinkML-adapter completion regression after updating its governed successor pointers.",
+      "observed": "The integration validator accepted 74 workstreams, 38 cards, and 4 selections. The historical adapter candidate remains byte-exact while the guard permits exactly the later compiler and Greenhouse test changes and no other candidate-path drift.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m1-full-suite",
+      "method": "Run .venv/bin/python -m pytest -q after the strict ledger and integration rebind.",
+      "observed": "The exact rebound tree completed with 2409 passed and 2 skipped in 346.54 seconds. No compiler, ledger, integration, documentation, or adjacent behavioral failure remained.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m1-boundary",
+      "method": "Compare the implemented bytes and owner receipt with the three-milestone Pareto contract.",
+      "observed": "Only Milestone 1 is implemented. It produces a source-independent ValidatedContractArtifact and immutable ContractView. It does not claim an EffectiveContract until an exact protocol-machine program is bound, and it does not implement a KnowledgeChangeSet, semantic ledger, accepted KG replay, package, release, or Semantic Re-entry path.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This verifies only the first of three internal Pareto milestones. CC-R11 remains ACTIVE.",
+    "The artifact and view are private experimental interfaces, not a stable public wire format or complete LinkML implementation.",
+    "The protocol-machine program and generic interpreter remain the next milestone; Python protocol handlers are not replaced by this evidence.",
+    "KnowledgeChangeSet production, empty-genesis semantic history, replay-derived accepted KG, and the one-command runner remain unimplemented.",
+    "Semantic Re-entry, richer Small Shop corrections, package, wheel, and release work remain outside this cut."
+  ],
+  "recorded_at": "2026-09-02T03:00:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

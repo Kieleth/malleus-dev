@@ -1,0 +1,50 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d33abc5a51a2cbeb02a9316cab8df8c5f194b408a4548a9c13ef72efae0f5ef7",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-milestone-1.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:82f2de87841ac2f8e686aea4141a1264f883d4b7ec9a84f7f5b3aa7ebb68eb0b",
+  "entry_id": "OVR-000328",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8195b6b700ff6d6fe74a393c1a1f09c0a5ef18573002a7c8029ce15cdb9f000e",
+  "recorded_at": "2026-09-02T03:00:01Z",
+  "references": [
+    {
+      "digest": "sha256:d33abc5a51a2cbeb02a9316cab8df8c5f194b408a4548a9c13ef72efae0f5ef7",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-milestone-1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000327",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 328,
+  "subject": {
+    "id": "ccr11-milestone-1-evidence",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the validated-contract milestone receipt.",
+  "why": "The immutable receipt records the exact TDD history, strict forward-only digest correction, integration guard, full repository result, and remaining boundary after the first Pareto milestone."
+}

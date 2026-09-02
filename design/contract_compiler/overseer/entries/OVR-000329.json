@@ -1,0 +1,68 @@
+{
+  "actor": {
+    "id": "ccr11-milestone-1-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T03:00:02Z",
+    "claims": [
+      "Retained Small Shop and Greenhouse ontology sources compile through the private LinkML adapter, neutral binder, semantic elaborator, canonical facts, validated artifact, and immutable contract view.",
+      "The artifact reloads and answers structural queries without LinkML, source files, OntologyRegistry, or the removed legacy semantic lowerer.",
+      "The strict overseer and integration digest guards remain active and now bind the governed successor bytes.",
+      "The full rebound repository suite passed with 2409 tests and 2 skips.",
+      "The output is a ValidatedContractArtifact, not yet an EffectiveContract, because the normative protocol-machine program is not yet bound."
+    ],
+    "limitations": [
+      "CC-R11 remains ACTIVE with its machine/interpreter and KnowledgeChangeSet-to-replay milestones incomplete.",
+      "The interfaces are private and experimental; no complete LinkML, cross-language, package, release, or production claim is made.",
+      "Semantic Re-entry and later Small Shop correction behavior remain excluded."
+    ]
+  },
+  "entry_hash": "sha256:5d28009ee9ec8100efbf6698c22b57ab7193dbf11624f80d5c82c684bb8c3601",
+  "entry_id": "OVR-000329",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:82f2de87841ac2f8e686aea4141a1264f883d4b7ec9a84f7f5b3aa7ebb68eb0b",
+  "recorded_at": "2026-09-02T03:00:02Z",
+  "references": [
+    {
+      "digest": "sha256:d33abc5a51a2cbeb02a9316cab8df8c5f194b408a4548a9c13ef72efae0f5ef7",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-milestone-1.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000327",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000328",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5867437b5fac1fa8723530b11f5a65dc6dfef0f5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "09562e9f4f6671226b10e242ed898c9ee613ff90",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 329,
+  "subject": {
+    "id": "ccr11-milestone-1-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the validated-contract compiler milestone.",
+  "why": "The receipt proves the source-to-neutral-contract boundary, its exact TDD and governance history, the clean repository result, and the remaining machine and semantic-history work without promoting the private experiment into a public standard."
+}
