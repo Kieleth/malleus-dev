@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import ast
-from dataclasses import FrozenInstanceError
 from hashlib import sha256
 import inspect
 import json
@@ -12,13 +11,15 @@ import pytest
 
 import malleus._contract_pipeline.machine as machine_module
 from malleus._contract_pipeline.machine import (
-    MachineProgram,
-    MachineProgramRefusal,
-    MachineProgramRefusalReason,
+    MachineArtifactRefusal,
+    MachineArtifactRefusalReason,
     MachineState,
     NormativeAdmissionProfile,
     PartialEffectiveContract,
     PolicyProgram,
+    ProtocolMachineProgram,
+    ProtocolMachineProgramRefusal,
+    ProtocolMachineProgramRefusalReason,
     compose_normative_profile,
     compose_partial_effective_contract,
     execute_event,
@@ -30,7 +31,7 @@ MACHINE_GRAMMAR = "malleus.protocol-machine/private-v0"
 POLICY_GRAMMAR = "malleus.policy-program/private-v0"
 PROFILE_GRAMMAR = "malleus.normative-admission-profile/private-v0"
 PARTIAL_EFFECTIVE_CONTRACT_GRAMMAR = "malleus.partial-effective-contract/private-v0"
-VALIDATED_CONTRACT_IDENTITY = "sha256:" + "1" * 64
+VALIDATED_FACT_SET_SHA256 = "sha256:" + "1" * 64
 POLICY_ID = "fixture-required-check-policy"
 POLICY_REF = "required-check-verdict"
 CHECKS = (
@@ -51,6 +52,19 @@ def _canonical(value: object) -> bytes:
 
 def _digest(value: bytes) -> str:
     return "sha256:" + sha256(value).hexdigest()
+
+
+def _replace_exact(value: object, replacements: dict[str, str]) -> object:
+    if isinstance(value, dict):
+        return {
+            replacements.get(key, key): _replace_exact(item, replacements)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_replace_exact(item, replacements) for item in value]
+    if isinstance(value, str):
+        return replacements.get(value, value)
+    return value
 
 
 def _record_schema(
@@ -119,6 +133,7 @@ def _program_payload() -> dict[str, object]:
                         "check_policy_identity_field": "policy_identity",
                         "check_record_type": "CheckRecord",
                         "duplicate_refusal": "DUPLICATE_REQUIRED_CHECK_RECEIPT",
+                        "invalid_outcome_refusal": "UNACCEPTED_CHECK_OUTCOME",
                         "opcode": "REQUIRE_POLICY_CHECK_OUTPUT",
                         "policy_mismatch_refusal": "POLICY_MISMATCH",
                         "policy_ref": POLICY_REF,
@@ -138,9 +153,9 @@ def _program_payload() -> dict[str, object]:
             "CHANGE_PROPOSED": {
                 "instructions": [
                     {
-                        "event_field": "base_state_identity",
-                        "opcode": "REQUIRE_STATE_IDENTITY",
-                        "refusal": "STALE_BASE_STATE",
+                        "event_field": "expected_machine_state_identity",
+                        "opcode": "REQUIRE_MACHINE_STATE_IDENTITY",
+                        "refusal": "STALE_MACHINE_STATE",
                     },
                     {
                         "opcode": "REQUIRE_PROFILE_POLICY",
@@ -239,7 +254,7 @@ def _program_payload() -> dict[str, object]:
                 {
                     "check_contract_id": "STRING",
                     "check_contract_identity": "DIGEST",
-                    "outcome": "CHECK_OUTCOME",
+                    "outcome": "STRING",
                     "policy_identity": "DIGEST",
                     "proposal_id": "STRING",
                     "receipt_id": "STRING",
@@ -257,8 +272,8 @@ def _program_payload() -> dict[str, object]:
             "ProposalRecord": _record_schema(
                 "proposal_id",
                 {
-                    "base_state_identity": "DIGEST",
-                    "change_identity": "DIGEST",
+                    "expected_machine_state_identity": "DIGEST",
+                    "knowledge_change_set_identity": "DIGEST",
                     "policy_id": "STRING",
                     "policy_identity": "DIGEST",
                     "proposal_id": "STRING",
@@ -298,8 +313,10 @@ def _policy_payload() -> dict[str, object]:
     }
 
 
-def _load_program(payload: dict[str, object] | None = None) -> MachineProgram:
-    return MachineProgram.from_bytes(_canonical(payload or _program_payload()))
+def _load_program(
+    payload: dict[str, object] | None = None,
+) -> ProtocolMachineProgram:
+    return ProtocolMachineProgram.from_bytes(_canonical(payload or _program_payload()))
 
 
 def _load_policy(payload: dict[str, object] | None = None) -> PolicyProgram:
@@ -311,7 +328,7 @@ def _profile(
     policy_payload: dict[str, object] | None = None,
 ) -> NormativeAdmissionProfile:
     return compose_normative_profile(
-        machine_program=_load_program(machine_payload),
+        protocol_machine_program=_load_program(machine_payload),
         policy_programs={POLICY_REF: _load_policy(policy_payload)},
         capability_refs=(),
     )
@@ -321,10 +338,10 @@ def _effective(
     machine_payload: dict[str, object] | None = None,
     policy_payload: dict[str, object] | None = None,
     *,
-    validated_contract_identity: str = VALIDATED_CONTRACT_IDENTITY,
+    validated_fact_set_sha256: str = VALIDATED_FACT_SET_SHA256,
 ) -> PartialEffectiveContract:
     return compose_partial_effective_contract(
-        validated_contract_identity=validated_contract_identity,
+        validated_fact_set_sha256=validated_fact_set_sha256,
         normative_profile=_profile(machine_payload, policy_payload),
     )
 
@@ -337,13 +354,14 @@ def _proposal_event(
     state: MachineState,
     *,
     proposal_id: str = "proposal-a",
+    policy_id: str = POLICY_ID,
     policy_identity: str | None = None,
 ) -> bytes:
     return _event(
         "CHANGE_PROPOSED",
-        base_state_identity=state.identity,
-        change_identity="sha256:" + "6" * 64,
-        policy_id=POLICY_ID,
+        expected_machine_state_identity=state.identity,
+        knowledge_change_set_identity="sha256:" + "6" * 64,
+        policy_id=policy_id,
         policy_identity=policy_identity or _load_policy().identity,
         proposal_id=proposal_id,
     )
@@ -382,6 +400,11 @@ def _apply(
     return result.state
 
 
+def _assert_unchanged(result, before: MachineState) -> None:
+    assert result.state.identity == before.identity
+    assert result.state.canonical_bytes == before.canonical_bytes
+
+
 def _proposal_state(effective: PartialEffectiveContract) -> MachineState:
     empty = MachineState.empty(effective.identity)
     return _apply(effective, empty, _proposal_event(empty))
@@ -389,9 +412,9 @@ def _proposal_state(effective: PartialEffectiveContract) -> MachineState:
 
 def _program_refusal(
     payload: dict[str, object],
-    reason: MachineProgramRefusalReason,
+    reason: ProtocolMachineProgramRefusalReason,
 ) -> None:
-    with pytest.raises(MachineProgramRefusal) as refusal:
+    with pytest.raises(ProtocolMachineProgramRefusal) as refusal:
         _load_program(payload)
     assert refusal.value.reason is reason
 
@@ -399,7 +422,7 @@ def _program_refusal(
 def test_machine_program_is_canonical_immutable_and_capability_free() -> None:
     payload = _program_payload()
     source = _canonical(payload)
-    program = MachineProgram.from_bytes(source)
+    program = ProtocolMachineProgram.from_bytes(source)
 
     assert program.canonical_bytes == source
     assert program.identity == _digest(source)
@@ -410,36 +433,40 @@ def test_machine_program_is_canonical_immutable_and_capability_free() -> None:
         "record_type": "DecisionRecord",
         "unique": True,
     }
-    with pytest.raises(FrozenInstanceError):
+    with pytest.raises(AttributeError):
         program.identity = "sha256:" + "0" * 64
     with pytest.raises(TypeError):
         program.data["events"]["EXTRA"] = {}
 
     noncanonical = json.dumps(payload, indent=2, sort_keys=True).encode("utf-8")
-    with pytest.raises(MachineProgramRefusal) as refusal:
-        MachineProgram.from_bytes(noncanonical)
-    assert refusal.value.reason is MachineProgramRefusalReason.NONCANONICAL_PROGRAM
+    with pytest.raises(ProtocolMachineProgramRefusal) as refusal:
+        ProtocolMachineProgram.from_bytes(noncanonical)
+    assert (
+        refusal.value.reason is ProtocolMachineProgramRefusalReason.NONCANONICAL_PROGRAM
+    )
 
 
 def test_closed_program_refuses_unknown_grammar_opcode_capability_and_escape() -> None:
     payload = _program_payload()
     payload["grammar"] = "unknown"
-    _program_refusal(payload, MachineProgramRefusalReason.UNSUPPORTED_GRAMMAR)
+    _program_refusal(payload, ProtocolMachineProgramRefusalReason.UNSUPPORTED_GRAMMAR)
 
     payload = _program_payload()
     payload["events"]["ARTIFACT_REGISTERED"]["instructions"][0]["opcode"] = (
         "UNKNOWN_OPCODE"
     )
-    _program_refusal(payload, MachineProgramRefusalReason.UNSUPPORTED_OPCODE)
+    _program_refusal(payload, ProtocolMachineProgramRefusalReason.UNSUPPORTED_OPCODE)
 
     payload = _program_payload()
     payload["capabilities"] = ["CALL_PYTHON"]
-    _program_refusal(payload, MachineProgramRefusalReason.UNSUPPORTED_CAPABILITY)
+    _program_refusal(
+        payload, ProtocolMachineProgramRefusalReason.UNSUPPORTED_CAPABILITY
+    )
 
     for field in ("callback", "python_expression", "profile"):
         payload = _program_payload()
         payload[field] = "forbidden"
-        _program_refusal(payload, MachineProgramRefusalReason.MALFORMED_PROGRAM)
+        _program_refusal(payload, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
 
 
 def test_profile_and_partial_contract_bind_all_normative_identities() -> None:
@@ -447,11 +474,11 @@ def test_profile_and_partial_contract_bind_all_normative_identities() -> None:
     policy = _load_policy()
     assert policy.canonical_bytes == _canonical(_policy_payload())
     assert policy.identity == _digest(policy.canonical_bytes)
-    with pytest.raises(FrozenInstanceError):
+    with pytest.raises(AttributeError):
         policy.identity = "sha256:" + "0" * 64
 
     profile = compose_normative_profile(
-        machine_program=program,
+        protocol_machine_program=program,
         policy_programs={POLICY_REF: policy},
         capability_refs=(),
     )
@@ -460,8 +487,8 @@ def test_profile_and_partial_contract_bind_all_normative_identities() -> None:
     assert profile_payload == {
         "capability_refs": [],
         "grammar": PROFILE_GRAMMAR,
-        "machine_program": json.loads(program.canonical_bytes),
-        "machine_program_identity": program.identity,
+        "protocol_machine_program": json.loads(program.canonical_bytes),
+        "protocol_machine_program_identity": program.identity,
         "policy_programs": [
             {
                 "policy_program": json.loads(policy.canonical_bytes),
@@ -475,28 +502,61 @@ def test_profile_and_partial_contract_bind_all_normative_identities() -> None:
     assert profile.capability_refs == ()
 
     effective = compose_partial_effective_contract(
-        validated_contract_identity=VALIDATED_CONTRACT_IDENTITY,
+        validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
         normative_profile=profile,
     )
     assert json.loads(effective.canonical_bytes) == {
         "grammar": PARTIAL_EFFECTIVE_CONTRACT_GRAMMAR,
         "normative_profile": profile_payload,
         "normative_profile_identity": profile.identity,
-        "validated_contract_identity": VALIDATED_CONTRACT_IDENTITY,
+        "validated_fact_set_sha256": VALIDATED_FACT_SET_SHA256,
     }
     assert effective.identity == _digest(effective.canonical_bytes)
     assert PartialEffectiveContract.from_bytes(effective.canonical_bytes) == effective
-    with pytest.raises(FrozenInstanceError):
+    with pytest.raises(AttributeError):
         effective.identity = "sha256:" + "0" * 64
 
     changed_policy_payload = _policy_payload()
-    changed_policy_payload["outcome_verdicts"]["VIOLATED"] = "DEFER"
+    changed_policy_payload["precedence"] = ["DEFER", "REJECT", "ACCEPT"]
     changed_policy = _effective(policy_payload=changed_policy_payload)
-    changed_contract = _effective(validated_contract_identity="sha256:" + "2" * 64)
+    changed_contract = _effective(validated_fact_set_sha256="sha256:" + "2" * 64)
     assert (
         len({effective.identity, changed_policy.identity, changed_contract.identity})
         == 3
     )
+
+
+def test_embedded_identity_tampering_and_unbound_policy_ref_refuse() -> None:
+    profile_payload = json.loads(_profile().canonical_bytes)
+    profile_payload["protocol_machine_program_identity"] = "sha256:" + "0" * 64
+    with pytest.raises(MachineArtifactRefusal) as machine_tamper:
+        NormativeAdmissionProfile.from_bytes(_canonical(profile_payload))
+    assert machine_tamper.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    profile_payload = json.loads(_profile().canonical_bytes)
+    profile_payload["policy_programs"][0]["policy_program_identity"] = (
+        "sha256:" + "0" * 64
+    )
+    with pytest.raises(MachineArtifactRefusal) as policy_tamper:
+        NormativeAdmissionProfile.from_bytes(_canonical(profile_payload))
+    assert policy_tamper.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    partial_payload = json.loads(_effective().canonical_bytes)
+    partial_payload["normative_profile_identity"] = "sha256:" + "0" * 64
+    with pytest.raises(MachineArtifactRefusal) as profile_tamper:
+        PartialEffectiveContract.from_bytes(_canonical(partial_payload))
+    assert profile_tamper.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    program_payload = _replace_exact(
+        _program_payload(), {POLICY_REF: "unbound-policy-ref"}
+    )
+    with pytest.raises(MachineArtifactRefusal) as unbound:
+        compose_normative_profile(
+            protocol_machine_program=_load_program(program_payload),
+            policy_programs={POLICY_REF: _load_policy()},
+            capability_refs=(),
+        )
+    assert unbound.value.reason is MachineArtifactRefusalReason.UNBOUND_POLICY_REFERENCE
 
 
 def test_generic_interpreter_has_no_profile_names_or_arbitrary_code_escape() -> None:
@@ -515,9 +575,43 @@ def test_generic_interpreter_has_no_profile_names_or_arbitrary_code_escape() -> 
         "DecisionRecord",
         "ProposalRecord",
         "SourceRecord",
+        "StoredObject",
         POLICY_ID,
         POLICY_REF,
+        "OBJECT_ID_EXISTS",
+        "OBJECT_RETAINED",
+        "artifact_id",
+        "artifact_identity",
+        "check-contract-a",
+        "check-contract-b",
+        "check_contract_id",
+        "check_contract_identity",
+        "decision_id",
+        "decision-by-proposal",
+        "expected_machine_state_identity",
+        "knowledge_change_set_identity",
+        "outcome",
+        "object_id",
+        "object_identity",
+        "pair_id",
+        "policy_id",
+        "policy_identity",
+        "proposal_id",
+        "receipt_id",
+        "source_id",
+        "source_identity",
+        "verdict",
+        "DUPLICATE_REQUIRED_CHECK_RECEIPT",
+        "GLOBAL_RECORD_ID_EXISTS",
+        "MISSING_REQUIRED_CHECK",
+        "POLICY_MISMATCH",
+        "STALE_MACHINE_STATE",
+        "TERMINAL_DECISION_EXISTS",
+        "UNACCEPTED_CHECK_OUTCOME",
+        "UNKNOWN_REFERENCE",
+        "UNREQUIRED_CHECK_RECEIPT",
     }
+    fixture_literals.update(identity for _, identity in CHECKS)
     string_literals = {
         node.value
         for node in ast.walk(tree)
@@ -551,6 +645,39 @@ def test_generic_interpreter_has_no_profile_names_or_arbitrary_code_escape() -> 
         assert forbidden not in inspect.signature(replay_events).parameters
 
 
+def test_registration_vocabulary_and_refusal_are_machine_data() -> None:
+    renamed = _replace_exact(
+        _program_payload(),
+        {
+            "ARTIFACT_REGISTERED": "OBJECT_RETAINED",
+            "ArtifactRecord": "StoredObject",
+            "artifact_id": "object_id",
+            "artifact_identity": "object_identity",
+        },
+    )
+    assert isinstance(renamed, dict)
+    renamed["events"]["OBJECT_RETAINED"]["instructions"][0]["refusal"] = (
+        "OBJECT_ID_EXISTS"
+    )
+    partial_contract = _effective(machine_payload=renamed)
+    empty = MachineState.empty(partial_contract.identity)
+    event = _event(
+        "OBJECT_RETAINED",
+        object_id="object-a",
+        object_identity="sha256:" + "3" * 64,
+    )
+    recorded = execute_event(partial_contract, empty, event)
+
+    assert recorded.receipt.outcome == "APPLIED"
+    assert recorded.state.get_record("StoredObject", "object-a") == {
+        "object_id": "object-a",
+        "object_identity": "sha256:" + "3" * 64,
+    }
+    duplicate = execute_event(partial_contract, recorded.state, event)
+    assert duplicate.receipt.refusal_code == "OBJECT_ID_EXISTS"
+    _assert_unchanged(duplicate, recorded.state)
+
+
 def test_artifact_source_and_global_record_identity_are_atomic() -> None:
     effective = _effective()
     empty = MachineState.empty(effective.identity)
@@ -570,7 +697,7 @@ def test_artifact_source_and_global_record_identity_are_atomic() -> None:
 
     duplicate = execute_event(effective, registered.state, artifact)
     assert duplicate.receipt.refusal_code == "GLOBAL_RECORD_ID_EXISTS"
-    assert duplicate.state is registered.state
+    _assert_unchanged(duplicate, registered.state)
 
     cross_type = execute_event(
         effective,
@@ -583,7 +710,7 @@ def test_artifact_source_and_global_record_identity_are_atomic() -> None:
         ),
     )
     assert cross_type.receipt.refusal_code == "GLOBAL_RECORD_ID_EXISTS"
-    assert cross_type.state is registered.state
+    _assert_unchanged(cross_type, registered.state)
     assert cross_type.state.get_record("SourceRecord", "shared-id") is None
 
     sourced = execute_event(
@@ -610,8 +737,8 @@ def test_future_change_is_opaque_and_proposal_pins_the_exact_policy() -> None:
     proposal_state = _apply(effective, empty, _proposal_event(empty))
 
     assert proposal_state.get_record("ProposalRecord", "proposal-a") == {
-        "base_state_identity": empty.identity,
-        "change_identity": "sha256:" + "6" * 64,
+        "expected_machine_state_identity": empty.identity,
+        "knowledge_change_set_identity": "sha256:" + "6" * 64,
         "policy_id": POLICY_ID,
         "policy_identity": _load_policy().identity,
         "proposal_id": "proposal-a",
@@ -628,22 +755,34 @@ def test_future_change_is_opaque_and_proposal_pins_the_exact_policy() -> None:
         ),
     )
     assert wrong_policy.receipt.refusal_code == "POLICY_MISMATCH"
-    assert wrong_policy.state is proposal_state
+    _assert_unchanged(wrong_policy, proposal_state)
+
+    wrong_policy_id = execute_event(
+        effective,
+        proposal_state,
+        _proposal_event(
+            proposal_state,
+            proposal_id="proposal-wrong-policy-id",
+            policy_id="wrong-policy-id",
+        ),
+    )
+    assert wrong_policy_id.receipt.refusal_code == "POLICY_MISMATCH"
+    _assert_unchanged(wrong_policy_id, proposal_state)
 
     stale = execute_event(
         effective,
         proposal_state,
         _event(
             "CHANGE_PROPOSED",
-            base_state_identity="sha256:" + "0" * 64,
-            change_identity="sha256:" + "7" * 64,
+            expected_machine_state_identity="sha256:" + "0" * 64,
+            knowledge_change_set_identity="sha256:" + "7" * 64,
             policy_id=POLICY_ID,
             policy_identity=_load_policy().identity,
             proposal_id="proposal-stale",
         ),
     )
-    assert stale.receipt.refusal_code == "STALE_BASE_STATE"
-    assert stale.state is proposal_state
+    assert stale.receipt.refusal_code == "STALE_MACHINE_STATE"
+    _assert_unchanged(stale, proposal_state)
 
 
 @pytest.mark.parametrize(
@@ -652,6 +791,7 @@ def test_future_change_is_opaque_and_proposal_pins_the_exact_policy() -> None:
         (("SATISFIED", "SATISFIED"), "ACCEPT"),
         (("SATISFIED", "VIOLATED"), "REJECT"),
         (("SATISFIED", "UNKNOWN"), "DEFER"),
+        (("VIOLATED", "UNKNOWN"), "REJECT"),
     ],
 )
 def test_verdict_comes_from_the_exact_policy_program(
@@ -694,7 +834,7 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
         ),
     )
     assert missing.receipt.refusal_code == "MISSING_REQUIRED_CHECK"
-    assert missing.state is missing_state
+    _assert_unchanged(missing, missing_state)
     assert missing.state.get_record("DecisionRecord", "decision-missing") is None
 
     proposal_state = _proposal_state(effective)
@@ -710,7 +850,7 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
         ),
     )
     assert extra.receipt.refusal_code == "UNREQUIRED_CHECK_RECEIPT"
-    assert extra.state is proposal_state
+    _assert_unchanged(extra, proposal_state)
 
     one_check = _apply(effective, proposal_state, _check_event(0, "SATISFIED"))
     duplicate = execute_event(
@@ -719,7 +859,7 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
         _check_event(0, "SATISFIED", receipt_id="receipt-duplicate"),
     )
     assert duplicate.receipt.refusal_code == "DUPLICATE_REQUIRED_CHECK_RECEIPT"
-    assert duplicate.state is one_check
+    _assert_unchanged(duplicate, one_check)
 
     mismatched = execute_event(
         effective,
@@ -731,7 +871,7 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
         ),
     )
     assert mismatched.receipt.refusal_code == "POLICY_MISMATCH"
-    assert mismatched.state is one_check
+    _assert_unchanged(mismatched, one_check)
 
     wrong_contract_identity = execute_event(
         effective,
@@ -743,7 +883,15 @@ def test_missing_extra_duplicate_and_policy_mismatched_checks_refuse() -> None:
         ),
     )
     assert wrong_contract_identity.receipt.refusal_code == "POLICY_MISMATCH"
-    assert wrong_contract_identity.state is one_check
+    _assert_unchanged(wrong_contract_identity, one_check)
+
+    invalid_outcome = execute_event(
+        effective,
+        one_check,
+        _check_event(1, "UNACCEPTED"),
+    )
+    assert invalid_outcome.receipt.refusal_code == "UNACCEPTED_CHECK_OUTCOME"
+    _assert_unchanged(invalid_outcome, one_check)
 
 
 def test_receipt_for_another_proposal_does_not_satisfy_required_coverage() -> None:
@@ -754,11 +902,12 @@ def test_receipt_for_another_proposal_does_not_satisfy_required_coverage() -> No
         state,
         _proposal_event(state, proposal_id="proposal-b"),
     )
-    state = _apply(
-        effective,
-        state,
-        _check_event(0, "SATISFIED", proposal_id="proposal-b"),
-    )
+    for index in range(len(CHECKS)):
+        state = _apply(
+            effective,
+            state,
+            _check_event(index, "SATISFIED", proposal_id="proposal-b"),
+        )
     result = execute_event(
         effective,
         state,
@@ -770,13 +919,13 @@ def test_receipt_for_another_proposal_does_not_satisfy_required_coverage() -> No
     )
 
     assert result.receipt.refusal_code == "MISSING_REQUIRED_CHECK"
-    assert result.state is state
+    _assert_unchanged(result, state)
     assert result.state.get_record("DecisionRecord", "decision-a") is None
 
 
 def test_policy_data_controls_verdict_and_terminal_decision_is_unique() -> None:
     policy_payload = _policy_payload()
-    policy_payload["outcome_verdicts"]["VIOLATED"] = "DEFER"
+    policy_payload["precedence"] = ["DEFER", "REJECT", "ACCEPT"]
     effective = _effective(policy_payload=policy_payload)
     policy_identity = _load_policy(policy_payload).identity
     empty = MachineState.empty(effective.identity)
@@ -785,7 +934,7 @@ def test_policy_data_controls_verdict_and_terminal_decision_is_unique() -> None:
         empty,
         _proposal_event(empty, policy_identity=policy_identity),
     )
-    for index, outcome in enumerate(("VIOLATED", "SATISFIED")):
+    for index, outcome in enumerate(("VIOLATED", "UNKNOWN")):
         state = _apply(
             effective,
             state,
@@ -812,7 +961,7 @@ def test_policy_data_controls_verdict_and_terminal_decision_is_unique() -> None:
         ),
     )
     assert second.receipt.refusal_code == "TERMINAL_DECISION_EXISTS"
-    assert second.state is decided
+    _assert_unchanged(second, decided)
     assert second.state.get_record("DecisionRecord", "decision-b") is None
 
 
@@ -831,8 +980,7 @@ def test_effects_are_staged_and_failure_rolls_back_the_whole_event() -> None:
 
     assert result.receipt.outcome == "REFUSED"
     assert result.receipt.refusal_code == "UNKNOWN_REFERENCE"
-    assert result.state is empty
-    assert result.state.canonical_bytes == empty.canonical_bytes
+    _assert_unchanged(result, empty)
     assert result.state.get_record("AtomicPairRecord", "pair-a") is None
 
 
@@ -870,7 +1018,7 @@ def test_unknown_or_malformed_event_refuses_without_state_change() -> None:
         result = execute_event(effective, empty, event_bytes)
         assert result.receipt.outcome == "REFUSED"
         assert result.receipt.refusal_code == refusal_code
-        assert result.state is empty
+        _assert_unchanged(result, empty)
 
 
 def test_replay_is_deterministic_from_empty_immutable_state() -> None:
@@ -892,8 +1040,8 @@ def test_replay_is_deterministic_from_empty_immutable_state() -> None:
     prefix = replay_events(effective, prefix_events)
     proposal = _event(
         "CHANGE_PROPOSED",
-        base_state_identity=prefix.state.identity,
-        change_identity="sha256:" + "6" * 64,
+        expected_machine_state_identity=prefix.state.identity,
+        knowledge_change_set_identity="sha256:" + "6" * 64,
         policy_id=POLICY_ID,
         policy_identity=_load_policy().identity,
         proposal_id="proposal-a",
