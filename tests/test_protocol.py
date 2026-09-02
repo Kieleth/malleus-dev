@@ -432,6 +432,8 @@ def setup_artifacts(
             grantor_actor_id="actor:system",
             grantee_actor_id="actor:executor",
             permitted_action_types=["TEST"],
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
         ) if include_grant else None
@@ -2885,9 +2887,107 @@ class TestMonitorFailureAndAuthorization:
                 grantor_actor_id="actor:someone-else",
                 grantee_actor_id="actor:system",
                 permitted_action_types=["TEST"],
+                scope_record_id="deliverable:root",
+                may_subdelegate=False,
                 grant_valid_from=time_at(1),
                 grant_valid_to=time_at(2),
             )
+
+    def test_authority_grant_retains_explicit_non_delegating_scope(self, ledger):
+        anchor(ledger)
+        grant = add_artifact(
+            ledger,
+            "artifact:grant:scoped",
+            "AUTHORITY_GRANT",
+            1,
+            record_type="AuthorityGrant",
+            grantor_actor_id="actor:system",
+            grantee_actor_id="actor:executor",
+            permitted_action_types=["TEST"],
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
+            grant_valid_from=time_at(1),
+            grant_valid_to=time_at(2),
+        )
+
+        recorded = ledger.replay().objects[grant["id"]]["record"]
+        assert recorded["scope_record_id"] == "deliverable:root"
+        assert recorded["may_subdelegate"] is False
+
+    @pytest.mark.parametrize(
+        "mutation,message",
+        [
+            (lambda value: value.pop("scope_record_id"), "Required slot 'scope_record_id' missing"),
+            (lambda value: value.update(scope_record_id=None), "Required slot 'scope_record_id' missing"),
+            (lambda value: value.update(scope_record_id=3), "scope_record_id' must be a string"),
+            (lambda value: value.update(scope_record_id=" \t"), "scope_record_id cannot be blank"),
+            (lambda value: value.pop("may_subdelegate"), "Required slot 'may_subdelegate' missing"),
+            (lambda value: value.update(may_subdelegate=None), "Required slot 'may_subdelegate' missing"),
+            (lambda value: value.update(may_subdelegate="false"), "may_subdelegate' must be a boolean"),
+        ],
+    )
+    def test_authority_grant_scope_commitments_refuse_atomically(
+        self, ledger, mutation, message
+    ):
+        anchor(ledger)
+        fields = {
+            "grantor_actor_id": "actor:system",
+            "grantee_actor_id": "actor:executor",
+            "permitted_action_types": ["TEST"],
+            "scope_record_id": "deliverable:root",
+            "may_subdelegate": False,
+            "grant_valid_from": time_at(1),
+            "grant_valid_to": time_at(2),
+        }
+        mutation(fields)
+        before = ledger.path.read_bytes()
+        with pytest.raises(ProtocolError) as raised:
+            add_artifact(
+                ledger,
+                "artifact:grant:invalid",
+                "AUTHORITY_GRANT",
+                1,
+                record_type="AuthorityGrant",
+                **fields,
+            )
+        assert message in str(raised.value)
+        assert ledger.path.read_bytes() == before
+
+    def test_authority_grant_scope_and_subdelegation_change_content_identity(self):
+        common = {
+            "event_id": "event:grant",
+            "generated_at": time_at(1),
+            "actor_id": "actor:system",
+            "role": "registrar",
+            "id": "artifact:grant",
+            "artifact_kind": "AUTHORITY_GRANT",
+            "artifact_version": "1",
+            "artifact_hash": ARTIFACT_BODY,
+            "grantor_actor_id": "actor:system",
+            "grantee_actor_id": "actor:executor",
+            "permitted_action_types": ["TEST"],
+            "grant_valid_from": time_at(1),
+            "grant_valid_to": time_at(2),
+        }
+        root = make_record(
+            "AuthorityGrant",
+            **common,
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
+        )
+        child = make_record(
+            "AuthorityGrant",
+            **common,
+            scope_record_id="deliverable:child",
+            may_subdelegate=False,
+        )
+        delegating = make_record(
+            "AuthorityGrant",
+            **common,
+            scope_record_id="deliverable:root",
+            may_subdelegate=True,
+        )
+        assert len({root["content_hash"], child["content_hash"], delegating["content_hash"]}) == 3
 
     def test_monitor_failure_is_separate_and_forces_unknown(self, ledger):
         anchor(ledger)
@@ -3463,6 +3563,8 @@ class TestMonitorFailureAndAuthorization:
             grantor_actor_id="actor:system",
             grantee_actor_id="actor:executor",
             permitted_action_types=["TEST"],
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
         )
@@ -3525,6 +3627,8 @@ class TestMonitorFailureAndAuthorization:
             grantor_actor_id="actor:system",
             grantee_actor_id="actor:executor",
             permitted_action_types=["TEST"],
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
         )
@@ -3733,6 +3837,8 @@ class TestMonitorFailureAndAuthorization:
             grantor_actor_id="actor:system",
             grantee_actor_id="actor:executor",
             permitted_action_types=["TEST"],
+            scope_record_id="deliverable:root",
+            may_subdelegate=False,
             grant_valid_from=time_at(5),
             grant_valid_to=time_at(20),
         )

@@ -363,6 +363,24 @@ def test_stage_seven_c_authorization_contract_is_typed_and_action_bound():
     assert decision_slots["triggered_assessment_ids"].multivalued
 
 
+def test_authority_grant_has_required_identity_bearing_scope_commitments():
+    schema_view = SchemaView(str(ASSENT_SCHEMA))
+    assert str(schema_view.schema.version) == "0.11.0"
+
+    registry = OntologyRegistry(ASSENT_SCHEMA)
+    grant = registry.effective_slots("AuthorityGrant")
+    assert grant["scope_record_id"].required
+    assert grant["scope_record_id"].range == "string"
+    assert grant["scope_record_id"].multivalued is not True
+    assert grant["may_subdelegate"].required
+    assert grant["may_subdelegate"].range == "boolean"
+    assert grant["may_subdelegate"].multivalued is not True
+
+    epistemic = registry.effective_slots("EpistemicDecision")
+    assert "scope_record_id" not in epistemic
+    assert "may_subdelegate" not in epistemic
+
+
 def test_stage_seven_b_graph_records_are_separate_typed_categories():
     registry = OntologyRegistry(ASSENT_SCHEMA)
     assert registry.is_subtype_of("GraphBaseArtifact", "ProtocolArtifact")
