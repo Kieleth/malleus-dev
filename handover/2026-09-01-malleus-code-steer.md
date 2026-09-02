@@ -189,3 +189,96 @@ Do not build a second ledger. The core overseer already did, and it is the reaso
 that found the same reinvention in the contract-compiler overseer. The pattern is
 identical across three codebases: a small good idea, a large careful apparatus, and
 the apparatus aimed slightly away from the idea.
+
+---
+
+# Addendum, 2026-09-02: bootstrap accepted, acceptance authority decided
+
+## Bootstrap slice
+
+Accepted. Verified independently: `frontier.py` on `CandidateSubgraph` against
+`AcceptedGraphView`, `accepted.jsonl` beside `ledger.jsonl`,
+`test_fresh_project_enters_the_two_tier_frontier_loop_once`, the skill at 182 lines
+with the method as its headings, 472 passed.
+
+## Acceptance authority
+
+Not a choice between self-accept and another actor. **Acceptance authority is a
+tree of grants, recorded in the graph, walked by `decide()`.**
+
+Malleus already has the primitive. `AuthorityGrant` in `assent.yaml` carries
+`grantor_actor_id`, `grantee_actor_id`, `permitted_action_types`,
+`grant_valid_from`, `grant_valid_to`, and core implements
+`verdict-scoped-authority-grant-validation`. The lab's `accepted_tier.py::decide()`
+takes `reviewer_actor_id` as a free string and consults no grant. That is the
+defect to fix, and it is a reuse, not a design.
+
+### The model
+
+Each grant names who granted, to whom, what they may accept, over which part of
+the work, and whether they may grant further down. Authority attenuates: a grantee
+never holds more than its grantor gave. At any one level the builder is not the
+acceptor; a level below, the same actor may accept its own steps if its grant says
+so. The root grant, product acceptance, is held by the human and cannot be
+delegated.
+
+```
+human   grants  <top-agent>   accept: DELIVERABLE   scope: <project>   may sub-delegate: yes
+<top>   grants  <sub-agent>   accept: TDD_STEP      scope: <deliverable>   may sub-delegate: no
+human   retains               accept: PRODUCT       scope: <project>   may sub-delegate: no
+```
+
+Every acceptance in the accepted tier names the grant it was made under. A reader
+walks the tree.
+
+### Two slots `AuthorityGrant` lacks, both required
+
+1. **Scope narrower than an action type.** Today a grant says "may ACCEPT." It must
+   be able to say "may accept this deliverable and its descendants." One slot, a
+   record id, on the existing class.
+2. **Whether the grantee may sub-delegate.** Attenuation needs a boolean on the
+   grant. One slot.
+
+These belong in core `assent.yaml`, not in `code.yaml`, because the OCR profile's
+mandate B3 needs the same two. Raise them upstream as one change; do not fork the
+class locally.
+
+### What `decide()` must do
+
+Refuse any verdict whose actor holds no grant covering that verdict, that scope,
+and that time. Record the grant id on the decision. A self-acceptance is legitimate
+exactly when the actor's grant covers that level, and is refused everywhere else.
+No unmarked self-accept survives.
+
+### For the single-agent pilot
+
+At bootstrap, write the grants:
+
+```
+human    grants  agent-1  accept: TDD_STEP, DELIVERABLE   scope: project   may sub-delegate: no
+human    retains          accept: PRODUCT                 scope: project
+```
+
+The agent accepts its own deliverables under a grant that says it may. The graph
+shows `PRODUCT: pending`. The second-agent continuation test starts from that
+state. This is the honest single-agent configuration, written down instead of
+assumed.
+
+### Standing limit
+
+`protocol-actor-registration` is pending in core, so grantor and grantee are
+strings. The tree can be recorded and walked. It cannot yet be checked against a
+registry of who exists. State that in the pilot's handoff rather than around it.
+
+## Sequence, confirmed
+
+1. Bootstrap accepted, above.
+2. Grants: two slots upstream, `decide()` consults `AuthorityGrant`, bootstrap
+   writes the pilot's grants. If this grows past that, stop and say so.
+3. One fresh pilot, under the default skill, brief as a desired outcome.
+4. Second agent, repository and graph only. The measure is whether it knows what
+   to do next and why. Nothing else is measured.
+5. That run is the acceptance evidence for the default skill.
+
+Runs 01 through 08 are sunk. They predate the two tiers and do not bear on this
+version. Written once, here, so nobody reaches for them later.
