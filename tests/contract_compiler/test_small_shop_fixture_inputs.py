@@ -28,6 +28,7 @@ REPORT = ROOT / "conformance" / "contract_compiler" / "v0" / "evidence" / "CC-02
 TEST_PATH = Path(__file__).resolve()
 BASE_COMMIT = "f6b2bf96ae04351ec7ce29c080e57b58a8b7cea6"
 BASE_COMMIT_TIME = datetime(2026, 8, 29, 5, 40, 57, tzinfo=timezone.utc)
+CANDIDATE_COMMIT = "39f41544ff47c60663d1eed7b4ec8959165f37e4"
 AUTHORIZATION_ENTRY = "design/contract_compiler/overseer/entries/OVR-000219.json"
 PROVISIONAL_ATTEMPT = "9b2afa8327bac1dd18ddca281e10f736cb1337fc"
 INPUT_PREFIX = (
@@ -644,13 +645,25 @@ def test_cc021_verification_report_binds_exact_scope_and_claims() -> None:
     assert report["schema"] == "malleus.contract-compiler.verification-report/v1"
     assert report["workstream_id"] == "CC-021"
     assert report["base_commit"] == BASE_COMMIT
-    assert datetime.fromisoformat(report["recorded_at"]) > BASE_COMMIT_TIME
+    recorded_at = report["recorded_at"]
+    assert recorded_at.endswith("Z")
+    assert (
+        datetime.fromisoformat(recorded_at[:-1] + "+00:00")
+        > BASE_COMMIT_TIME
+    )
     assert set(artifact_paths) == expected_artifacts
     assert REPORT.resolve() not in artifact_paths
     for path, artifact in artifact_paths.items():
+        artifact_bytes = (
+            _bytes_at(CANDIDATE_COMMIT, artifact["path"])
+            if path == TEST_PATH
+            else path.read_bytes()
+        )
         assert set(artifact) == {"path", "byte_length", "sha256"}
-        assert artifact["byte_length"] == len(path.read_bytes())
-        assert artifact["sha256"] == _digest(path)
+        assert artifact["byte_length"] == len(artifact_bytes)
+        assert artifact["sha256"] == (
+            "sha256:" + hashlib.sha256(artifact_bytes).hexdigest()
+        )
 
     checks = report["checks"]
     assert {check["check_id"] for check in checks} == {
