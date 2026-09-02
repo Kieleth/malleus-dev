@@ -435,6 +435,22 @@ It supplies exact attested candidate bytes to normal review
 and protocol handling. The deterministic compiler never invokes it.
 Replay never invokes it. It has no dependency edge in this graph, and this program authorizes no skill implementation.
 
+### Pareto experimental cut
+
+`CC-R11`, the Pareto compiler-to-ledger vertical, is one operator-authorized
+experimental proof with three internal milestones. It takes only the
+Small-Shop-needed path from the completed binder through a reloadable contract,
+declarative machine execution, one final-identity `KnowledgeChangeSet`, and
+empty-genesis ledger replay. It exists to expose one automated end-to-end
+protocol representation before exhaustive hardening.
+
+CC-R04 through CC-R10, CC-R08, CC-R09, and the production wave remain the
+queryable hardening and release path. CC-R11 does not complete or supersede any
+of them, does not create public, stable, cross-language, or production
+conformance, and does not permit a legacy fallback or mixed change identity in
+its new ledger epoch. Re-entry remains a future producer against the same
+change-set boundary, not part of this proof.
+
 ### Wave 1: research-local compiler proof
 
 | ID | Deliverable | Depends on | Mandatory AT slice |
@@ -442,6 +458,7 @@ Replay never invokes it. It has no dependency edge in this graph, and this progr
 | CC-R01 | Controlled retained-source and recursive import boundary | CC-000, CC-X03, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Nested import, diamond, missing import, network refusal, no try-next profile, every import ordinal and edge, same-locator/different-bytes refusal, different-locator/same-bytes distinction, directed-cycle lineage refusal, deterministic byte observations |
 | CC-R02 | LinkML parser adapter and support-profile classifier emitting lossless per-module declarations before any global merge | CC-002, CC-R01, CC-D03, CC-D08, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Duplicate key, unknown field, supported field, unsupported construct, explicit-presence and raw adoption evidence |
 | CC-R03 | Qualified binder and explicit composition result over per-module declarations | CC-R02, CC-D02, CC-D05, CC-D06, CC-D11, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Collision, explicit adoption, ambiguous name, deterministic diagnostics |
+| CC-R11 | Pareto compiler-to-ledger vertical | CC-R03, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D17, CC-D18, CC-021, CC-022 | Small-Shop-needed elaboration, canonical facts, reloadable experimental EffectiveContract and contract view; strict machine data plus generic interpreter; final-identity KnowledgeChangeSet, replaceable producer, RET-010 adapter, empty-genesis reopen/replay/query, and canonical receipt |
 | CC-R04 | Hierarchy, mixin, slot, and expression elaboration | CC-R03, CC-D03, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-021, CC-022 | Baseline, conflicting mixins, bounds, missing range, flat expression, nested refusal |
 | CC-R05 | Canonical neutral facts and validated fact set | CC-R04, CC-D05, CC-D06, CC-D08, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-017, CC-018, CC-021, CC-022 | Frontend, direct-fact input, and each independent oracle match exactly |
 | CC-R06 | Strict protocol-machine program and effective contract | CC-R05, CC-D07, CC-D10, CC-D17, CC-D18, CC-010, CC-011, CC-012, CC-013, CC-014, CC-015, CC-016, CC-019, CC-020, CC-021, CC-022 | Valid and invalid records plus contextual operation traces compile into one closed, identity-bound machine program with typed refusals and declared capabilities; graph-related effects produce, validate, or admit exact change-set and receipt data and expose no accepted-graph mutation capability |
@@ -450,8 +467,8 @@ Replay never invokes it. It has no dependency edge in this graph, and this progr
 | CC-R08 | Whole-pipeline conformance attestation | CC-R01, CC-R02, CC-R03, CC-R04, CC-R05, CC-R06, CC-R07, CC-R10 | All three corpora, prior slices, current bundled ontologies, mutation adequacy, and cross-implementation machine replay parity |
 | CC-R09 | Research-local neutral source-to-ABox change-set boundary, proven by Small Shop | CC-R08, CC-D07, CC-D10, CC-D18, CC-021, CC-022 | Retained occurrence through mapping, transformation, identity, recipe, ordered ProposedOperations, candidate, evidence, review, ProtocolLedger, accepted temporal KG, replay receipt, and private research journal; publish a frontend-neutral KnowledgeChangeSet plus a canonical generic validation receipt, while PopulationPlan and operation-dependency plan remain derivation inputs, with no stable public API claim |
 
-The first foundation block is complete only at CC-R08. Passing one stage does not
-authorize production use.
+The first hardened foundation block is complete only at CC-R08. Passing CC-R11
+or any other single stage does not authorize production use.
 
 CC-R06 owns the machine program as data. CC-R10 owns the generic interpreter as
 mechanism. The current Python Assent implementation is comparison evidence,

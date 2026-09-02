@@ -481,6 +481,35 @@ advisory evidence only and carry no package authority.
 **Verdict: defer the distribution audit to the release boundary. Keep exact
 locks now; stop rebuilding packages for every private compiler slice.**
 
+### B6. Hardening after the Pareto compiler-to-ledger vertical
+
+Status: `accepted_deferred`.
+
+The active program contains one experimental Pareto compiler-to-ledger vertical
+to prove that Malleus can compile, compose, run, persist, reopen, replay, and
+query one honest Small Shop protocol slice. The deferred work here is the final
+20 percent needed to broaden or promote that proof.
+The vertical does not complete or supersede the broad compiler stages,
+whole-pipeline attestation,
+source-to-ABox research boundary, or production cutover.
+
+Deferred hardening includes exhaustive Quiet Bell, Greenhouse, and edge-case
+coverage; the full hierarchy, expression, fact, artifact, and interpreter
+matrices; cross-language parity; a general mapping DSL, GraphRecipe, and OTTR
+lowering; Prolog and richer policy adapters; migration of all events; deletion
+of legacy mechanisms; historic-ledger and cross-contract migration; incremental
+and alternative projection backends; later Small Shop corrections; and Semantic
+Re-entry. Package membership, installation, version, and release checks remain
+at the release boundary in B5.
+
+The retained design constraint for future Re-entry is narrow: it may become a
+replaceable producer of the same final-identity `KnowledgeChangeSet` or an
+`ActionProposal`. It receives no direct accepted-graph write path and creates
+no second knowledge-change identity.
+
+**Verdict: finish one deterministic end-to-end proof first. Promote breadth,
+compatibility, and release claims only after the proof exposes what earns them.**
+
 ---
 
 ## C. OCR evidence-integrity profile

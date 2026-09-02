@@ -826,10 +826,10 @@ def _overseer_prefix(sequence: int) -> SimpleNamespace:
     )
 
 
-def test_program_registry_contains_the_exact_approved_73_workstreams() -> None:
+def test_program_registry_contains_the_exact_approved_74_workstreams() -> None:
     registry = load_program_registry(PROGRAM)
 
-    assert len(registry) == 73
+    assert len(registry) == 74
     assert registry["CC-000"] == ()
     assert registry["CC-001"] == ("CC-000",)
     assert registry["CC-003"] == ("CC-000", "CC-R08")
@@ -885,6 +885,19 @@ def test_program_registry_contains_the_exact_approved_73_workstreams() -> None:
         "CC-021",
         "CC-022",
     )
+    assert registry["CC-R11"] == (
+        "CC-R03",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D07",
+        "CC-D08",
+        "CC-D10",
+        "CC-D17",
+        "CC-D18",
+        "CC-021",
+        "CC-022",
+    )
     assert "CC-D18" in registry["CC-R06"]
     assert registry["CC-P10"] == ("CC-P01", "CC-W02", "CC-R09")
     assert registry["CC-P21"] == ("CC-P12", "CC-P19", "CC-P20", "CC-R10")
@@ -915,7 +928,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
     ledger = load_overseer_ledger(CONTRACT / "overseer", repository=ROOT)
     workstream_states, _ = integration_module._workstream_states(ledger)
 
-    assert len(state.workstreams) == 73
+    assert len(state.workstreams) == 74
     assert state.cards["CC-000"]["authorization"]["class"] == "FORMAL"
     assert x03["assignment"] == {
         "owner_id": "worker:ccx03-red",
@@ -989,7 +1002,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D17": ("CC-D05", "CC-D06"),
         "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 37
+    assert len(state.cards) == 38
     cc003 = state.cards["CC-003"]
     assert state.workstreams["CC-003"] == ("CC-000", "CC-R08")
     assert cc003["assignment"] == {"state": "UNASSIGNED"}
@@ -1755,7 +1768,7 @@ def test_oracle_workstream_activation_transaction_is_exact() -> None:
 def test_small_shop_input_completion_boundary_is_exact() -> None:
     manifest = _read_json(INTEGRATION)
     row = _registry_row(manifest, "CC-021")
-    assert manifest["revision"] == 5
+    assert manifest["revision"] == 6
     assert manifest["selections"] == ["CC-000", "CC-001", "CC-X00", "CC-002"]
     assert row["card"]["state"] == "PRESENT"
     path = CONTRACT / row["card"]["path"]
@@ -5219,7 +5232,7 @@ def test_direct_cli_entry_point_validates_the_draft() -> None:
     )
 
     assert result.returncode == 0, result.stderr
-    assert f"validated 73 workstreams, {present_cards} cards," in result.stdout
+    assert f"validated 74 workstreams, {present_cards} cards," in result.stdout
 
 
 @pytest.mark.parametrize("workflow", ["tests.yml", "release.yml"])
@@ -5528,23 +5541,96 @@ def test_non_overseer_card_cannot_claim_reserved_scope(tmp_path: Path) -> None:
     _assert_code(error, "CC000_SCOPE_RESERVED")
 
 
-def test_concurrent_cards_cannot_hold_overlapping_scopes(tmp_path: Path) -> None:
+def test_active_dependent_can_reuse_completed_dependency_scope(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     path, manifest = _copy_manifest_bundle(tmp_path)
-    x03 = _read_json(_card_path(path, _registry_row(manifest, "CC-X03")))
+    r02 = _read_json(_card_path(path, _registry_row(manifest, "CC-R02")))
 
     def mutate(card: dict[str, Any]) -> None:
         card["assignment"] = {
             "state": "ASSIGNED",
-            "owner_id": "worker:synthetic-r01",
-            "task_id": "task:synthetic-r01",
+            "owner_id": "worker:synthetic-r03",
+            "task_id": "task:synthetic-r03",
         }
         card["authorization"] = {
             "class": "EXPLORATION_ONLY",
             "authorized_by": {"id": "overseer", "type": "OVERSEER"},
         }
-        card["scopes"] = copy.deepcopy(x03["scopes"])
+        card["candidate"] = {"state": "NONE"}
+        card["ledger"] = {"state": "NOT_STARTED"}
+        card["scopes"] = copy.deepcopy(r02["scopes"])
 
-    _rewrite_card(path, manifest, "CC-R01", mutate)
+    _rewrite_card(path, manifest, "CC-R03", mutate)
+
+    def pause_r11(card: dict[str, Any]) -> None:
+        card["assignment"] = {"state": "UNASSIGNED"}
+        card["authorization"] = {
+            "class": "PLANNING_ONLY",
+            "authorized_by": {"id": "overseer", "type": "OVERSEER"},
+        }
+        card["scopes"] = []
+
+    _rewrite_card(path, manifest, "CC-R11", pause_r11)
+    original_states = integration_module._workstream_states
+
+    def synthetic_states(ledger_state):
+        states, entries = original_states(ledger_state)
+        states["CC-R02"] = "COMPLETE"
+        states["CC-R03"] = "ACTIVE"
+        return states, entries
+
+    monkeypatch.setattr(
+        integration_module, "load_ledger", lambda *_args, **_kwargs: _raw_overseer_state()
+    )
+    monkeypatch.setattr(integration_module, "_workstream_states", synthetic_states)
+
+    validate_integration(ROOT, path)
+
+
+def test_concurrent_cards_cannot_hold_overlapping_scopes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path, manifest = _copy_manifest_bundle(tmp_path)
+    r02 = _read_json(_card_path(path, _registry_row(manifest, "CC-R02")))
+
+    def mutate(card: dict[str, Any]) -> None:
+        card["assignment"] = {
+            "state": "ASSIGNED",
+            "owner_id": "worker:synthetic-r03",
+            "task_id": "task:synthetic-r03",
+        }
+        card["authorization"] = {
+            "class": "EXPLORATION_ONLY",
+            "authorized_by": {"id": "overseer", "type": "OVERSEER"},
+        }
+        card["candidate"] = {"state": "NONE"}
+        card["ledger"] = {"state": "NOT_STARTED"}
+        card["scopes"] = copy.deepcopy(r02["scopes"])
+
+    _rewrite_card(path, manifest, "CC-R03", mutate)
+
+    def pause_r11(card: dict[str, Any]) -> None:
+        card["assignment"] = {"state": "UNASSIGNED"}
+        card["authorization"] = {
+            "class": "PLANNING_ONLY",
+            "authorized_by": {"id": "overseer", "type": "OVERSEER"},
+        }
+        card["scopes"] = []
+
+    _rewrite_card(path, manifest, "CC-R11", pause_r11)
+    original_states = integration_module._workstream_states
+
+    def synthetic_states(ledger_state):
+        states, entries = original_states(ledger_state)
+        states["CC-R02"] = "ACTIVE"
+        states["CC-R03"] = "ACTIVE"
+        return states, entries
+
+    monkeypatch.setattr(
+        integration_module, "load_ledger", lambda *_args, **_kwargs: _raw_overseer_state()
+    )
+    monkeypatch.setattr(integration_module, "_workstream_states", synthetic_states)
 
     with pytest.raises(IntegrationValidationError) as error:
         validate_integration(ROOT, path)
@@ -6770,7 +6856,7 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
 
     _rewrite_card(manifest_path, manifest, "CC-R01", rebind_retained_source)
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
     )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
@@ -6971,7 +7057,7 @@ def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
         ),
     )
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
     )
     monkeypatch.setattr(
         integration_module,
@@ -6997,7 +7083,7 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
         lambda card: card.update(ledger={"state": "NOT_STARTED"}),
     )
     _rebind_current_dependency_chain(
-        manifest_path, manifest, "CC-R02", "CC-R03"
+        manifest_path, manifest, "CC-R02", "CC-R03", "CC-R11"
     )
     original = integration_module._workstream_states
     monkeypatch.setattr(
@@ -8163,3 +8249,155 @@ def test_qualified_binder_completion_is_exact() -> None:
     assert report["workstream_id"] == "CC-R03"
     assert all(check["result"] == "PASS" for check in report["checks"])
     assert "CC-R03" not in manifest["selections"]
+
+
+def test_pareto_compiler_to_ledger_activation_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R11")
+    dependencies = [
+        "CC-R03",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D07",
+        "CC-D08",
+        "CC-D10",
+        "CC-D17",
+        "CC-D18",
+        "CC-021",
+        "CC-022",
+    ]
+    assert row["depends_on"] == dependencies
+    assert row["card"]["state"] == "PRESENT"
+
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R11/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["assignment"] == {
+        "owner_id": "worker:pareto-e2e",
+        "state": "ASSIGNED",
+        "task_id": "/root/pareto_e2e_worker",
+    }
+    assert card["authorization"]["class"] == "FORMAL"
+    assert [
+        binding["workstream_id"]
+        for binding in card["authorization"]["dependency_bindings"]
+    ] == dependencies
+    assert card["candidate"] == {"state": "NONE"}
+    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["scopes"] == [
+        {"kind": "TREE", "path": "src/malleus/_contract_pipeline"},
+        {"kind": "FILE", "path": "src/malleus/_contract_compiler.py"},
+        {
+            "kind": "FILE",
+            "path": "tests/contract_compiler/test_greenhouse_compiler.py",
+        },
+        {"kind": "TREE", "path": "tests/contract_compiler/pareto"},
+        {
+            "kind": "TREE",
+            "path": (
+                "research/ontology_driven_kg_realization/experiments/"
+                "small_shop/pareto"
+            ),
+        },
+        {"kind": "FILE", "path": "docs/contract_compiler/index.md"},
+        {"kind": "FILE", "path": "docs/ASSENT_PROTOCOL.md"},
+        {"kind": "FILE", "path": "docs/IMPLEMENTATION_STATUS.md"},
+        {
+            "kind": "FILE",
+            "path": "conformance/contract_compiler/v0/evidence/CC-R11.json",
+        },
+    ]
+    responsibility = card["responsibility"]
+    for required in (
+        "Small-Shop-needed elaboration",
+        "canonical neutral facts",
+        "reloadable experimental EffectiveContract",
+        "strict machine program as data",
+        "generic interpreter",
+        "final-identity KnowledgeChangeSet",
+        "replaceable producer",
+        "empty-genesis ledger",
+        "reopen",
+        "replay",
+        "canonical receipt",
+        "three internal milestones",
+    ):
+        assert required in responsibility
+    for excluded in (
+        "does not complete or supersede",
+        "public, stable, cross-language, or production conformance",
+        "Re-entry",
+        "later Small Shop corrections",
+        "general mapping DSL, GraphRecipe, or OTTR",
+        "Prolog or richer policy adapters",
+        "all-event migration",
+        "legacy deletion",
+        "historic migration",
+        "packages or releases",
+        "legacy fallback or mixed KnowledgeChangeSet and candidate identity",
+    ):
+        assert excluded in responsibility
+
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    assert states["CC-R11"] == "ACTIVE"
+    assert "CC-R11" not in manifest["selections"]
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 324 <= entry["sequence"] <= 326
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000324",
+        "OVR-000325",
+        "OVR-000326",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    revision, verification, activation = transaction
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == {
+        "ROADMAP.md": "MODIFIED",
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/integration.schema.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R11-activation.json": (
+            "CREATED"
+        ),
+        "design/contract_compiler/program.md": "MODIFIED",
+        "design/contract_compiler/workstreams/CC-R11/manifest.json": "CREATED",
+        "scripts/contract_compiler_integration.py": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+    }
+    assert verification["actor"] == {
+        "id": "ccr11-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert activation["data"]["previous_state"] == "PLANNED"
+    assert activation["data"]["new_state"] == "ACTIVE"
+    assert activation["data"]["blockers"] == []
+    assert activation["data"]["evidence_entry_ids"] == [
+        "OVR-000324",
+        "OVR-000325",
+    ]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R11-activation.json")
+    assert report["base_commit"] == "85435d38eb75f9650dff6319ffa39a4d59d7c3a7"
+    assert report["workstream_id"] == "CC-R11"
+    assert all(check["result"] == "PASS" for check in report["checks"])
+
+    program = PROGRAM.read_text(encoding="utf-8")
+    roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+    assert "CC-R11 | Pareto compiler-to-ledger vertical" in program
+    assert "CC-R04 through CC-R10" in program
+    assert "Pareto compiler-to-ledger vertical" in roadmap
+    assert "does not complete or supersede" in roadmap

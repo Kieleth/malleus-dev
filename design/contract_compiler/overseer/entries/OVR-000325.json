@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "ccr11-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-01T23:59:02Z",
+    "claims": [
+      "CC-R11 binds exactly eleven COMPLETE dependencies in program order to their current card digests, active completion entries and hashes, and first containing commits.",
+      "One experimental workstream owns three internal milestones from Small-Shop-needed compiler elaboration through final ledger replay and receipt.",
+      "The strict machine program is data and the generic interpreter has no profile-specific names, callbacks, arbitrary code, or accepted-graph mutation capability.",
+      "The new empty-genesis ledger epoch uses the final KnowledgeChangeSet identity and permits no legacy fallback or mixed candidate identity.",
+      "A ledger-ACTIVE dependent may reuse a scope released by a COMPLETE dependency, while reserved scopes and two-ACTIVE-card overlap refusal remain enforced.",
+      "Broad compiler, conformance, source-to-ABox, production, Re-entry, mapping, policy, migration, deletion, package, and release work remains explicit and unclaimed.",
+      "The nine worker scopes are exact. Candidate is NONE, worker ledger is NOT_STARTED, selection is absent, and no vertical implementation exists."
+    ],
+    "limitations": [
+      "This verification activates CC-R11 but does not implement or complete it.",
+      "The proof is experimental and creates no public, stable, cross-language, package, release, or production authority.",
+      "CC-R04 through CC-R10, CC-R08, CC-R09, and the production wave remain incomplete and unsuperseded.",
+      "Re-entry is excluded and retained only as a future producer against the same no-direct-write change-set boundary."
+    ]
+  },
+  "entry_hash": "sha256:41445d3771f0580f08462376d34c118a5e210381a1e9b7b71eab593f87b3cd38",
+  "entry_id": "OVR-000325",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6f493d6259ef12da1e57d0bea7f3a1807dc4128504371ddf0d38ca50b28437ab",
+  "recorded_at": "2026-09-01T23:59:02Z",
+  "references": [
+    {
+      "digest": "sha256:60c10dfb4c964cdce971284896ebedbb5a94385b7b9cfbe507889ef6a637a77e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000324",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 325,
+  "subject": {
+    "id": "ccr11-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the experimental Pareto vertical activation boundary.",
+  "why": "The report proves dependency readiness, the three-milestone Pareto cut, final identity and executor restrictions, the state-based scope handoff, exact worker scopes, retained roadmap debt, and the absence of implementation or promotion claims."
+}

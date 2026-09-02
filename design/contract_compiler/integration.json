@@ -277,7 +277,7 @@
       }
     }
   ],
-  "revision": 5,
+  "revision": 6,
   "schema": "malleus.contract-compiler.integration/v1",
   "selections": [
     "CC-000",
@@ -885,6 +885,28 @@
         "CC-022"
       ],
       "workstream_id": "CC-R03"
+    },
+    {
+      "card": {
+        "byte_length": 6927,
+        "path": "workstreams/CC-R11/manifest.json",
+        "sha256": "sha256:0429b1035faa794258b6ab1a2ce7befedfae842bb05c4932624f57aada11251f",
+        "state": "PRESENT"
+      },
+      "depends_on": [
+        "CC-R03",
+        "CC-D03",
+        "CC-D05",
+        "CC-D06",
+        "CC-D07",
+        "CC-D08",
+        "CC-D10",
+        "CC-D17",
+        "CC-D18",
+        "CC-021",
+        "CC-022"
+      ],
+      "workstream_id": "CC-R11"
     },
     {
       "card": {

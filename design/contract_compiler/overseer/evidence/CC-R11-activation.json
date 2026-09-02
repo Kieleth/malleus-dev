@@ -1,0 +1,94 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 47851,
+      "path": "ROADMAP.md",
+      "sha256": "sha256:7789a5f59568e21207e67b1f3e2487a643972deae53f012983bdc601ebf23f93"
+    },
+    {
+      "byte_length": 27308,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:3dbea53cf2b0b5c8c1ed3d8b5c1dc19d55532788c6ad20b08b18e371d08edd9d"
+    },
+    {
+      "byte_length": 23359,
+      "path": "design/contract_compiler/integration.schema.json",
+      "sha256": "sha256:efc7954f88f58e2f624d604c7af413f9fa652b4ddc5e9bc725be631c671a9478"
+    },
+    {
+      "byte_length": 43663,
+      "path": "design/contract_compiler/program.md",
+      "sha256": "sha256:1bb58c4105f318eeee3b68d29b9712174685e2671bc28c5b5b0a7d4deff43f8f"
+    },
+    {
+      "byte_length": 6927,
+      "path": "design/contract_compiler/workstreams/CC-R11/manifest.json",
+      "sha256": "sha256:0429b1035faa794258b6ab1a2ce7befedfae842bb05c4932624f57aada11251f"
+    },
+    {
+      "byte_length": 58339,
+      "path": "scripts/contract_compiler_integration.py",
+      "sha256": "sha256:39845b12311cbe0d906e7f80e50d7b7ddf57f2ac53084ba2630ca2f3f184b7de"
+    },
+    {
+      "byte_length": 309115,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:71d5d280ad3b89eed559fd4f58cf8a6062b2616e40d7ebfcd581f402fc7ab265"
+    }
+  ],
+  "base_commit": "85435d38eb75f9650dff6319ffa39a4d59d7c3a7",
+  "checks": [
+    {
+      "check_id": "ccr11-activation-red",
+      "method": "Add and run the exact Pareto activation guard before creating the card or changing overseer state.",
+      "observed": "The guard failed at the intended first boundary because CC-R11 was absent. No compiler, machine, KnowledgeChangeSet, adapter, ledger, runner, or receipt implementation was created by RED.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-dependency-readiness",
+      "method": "Bind all eleven direct dependencies in program order to their current cards, active COMPLETE entries and hashes, and first containing Git commits.",
+      "observed": "CC-R03, CC-D03, CC-D05, CC-D06, CC-D07, CC-D08, CC-D10, CC-D17, CC-D18, CC-021, and CC-022 are COMPLETE and exactly bound. CC-R03 binds OVR-000323 at activation base 85435d38.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-pareto-boundary",
+      "method": "Compare the card with the accepted neutral-contract, machine-program, KnowledgeChangeSet, Small Shop RET-010, ledger, replay, and projection boundaries.",
+      "observed": "One experimental workstream owns three internal milestones: the Small-Shop-needed compiler and artifact view, strict machine data and generic interpreter, then final-identity KnowledgeChangeSet through empty-genesis reopen, replay, query, and receipt.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-identity-and-executor-cut",
+      "method": "Inspect the machine and ledger contract for profile callbacks, graph mutation, legacy fallback, and competing knowledge-change identity.",
+      "observed": "The generic interpreter has no profile-specific names or callbacks and no accepted-graph mutation capability. The new ledger epoch permits only the final KnowledgeChangeSet identity and refuses legacy fallback or mixed candidate identity.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-scope-handoff",
+      "method": "TDD the scope validator so actual ledger state controls exclusive ownership, while reserved scopes and two-ACTIVE-card overlap refusal remain unchanged.",
+      "observed": "A ledger-ACTIVE dependent may reuse an exact scope released by its COMPLETE dependency. Two ledger-ACTIVE cards with overlapping scopes still refuse with CC000_SCOPE_OVERLAP. Reserved overseer scopes, dependency bindings, and candidate history remain enforced.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-roadmap-cut",
+      "method": "Inspect the program and roadmap for the broad hardening, production, Re-entry, mapping, policy, migration, deletion, package, and release work left outside the experimental proof.",
+      "observed": "CC-R04 through CC-R10, CC-R08, CC-R09, and the production wave remain queryable. The roadmap retains Re-entry, later Small Shop corrections, general mapping and topology lowering, richer policy adapters, migrations, deletion, packages, and releases.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-activation-only",
+      "method": "Inspect assignment, scopes, candidate, worker ledger, selection, implementation paths, and repository status.",
+      "observed": "The worker is assigned the exact nine implementation scopes. Candidate is NONE, worker ledger is NOT_STARTED, selection is absent, and this transaction changes governance, documentation, tests, and the narrow scope-handoff validator only. No vertical implementation exists.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction activates one experimental Pareto compiler-to-ledger vertical. It does not implement or complete any of its three internal milestones.",
+    "CC-R04 through CC-R10, CC-R08, CC-R09, and every production workstream remain incomplete and are not superseded.",
+    "No public, stable, cross-language, package, release, or production conformance claim is created.",
+    "Re-entry and later Small Shop corrections remain excluded, but the final KnowledgeChangeSet and no-direct-graph-write boundaries are retained for them.",
+    "General mapping DSL, GraphRecipe, OTTR, Prolog, richer policy adapters, all-event migration, legacy deletion, historic migration, packages, and releases remain roadmap work."
+  ],
+  "recorded_at": "2026-09-01T23:59:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

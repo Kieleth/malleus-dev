@@ -1382,10 +1382,26 @@ def validate_integration(
         card_digests[workstream_id] = reference["sha256"]
         card_paths[workstream_id] = reference["path"]
 
+    anchor = manifest["authority"]["overseer_ledger"]
+    ledger_root = _bundle_path(repository, anchor["path"], "overseer ledger")
+    ledger_state = load_ledger(ledger_root, repository=repository)
+    if anchor["entry_count"] > len(ledger_state.entries):
+        _fail("CC000_LEDGER_ANCHOR", "overseer checkpoint is beyond the ledger head")
+    checkpoint = ledger_state.entries[anchor["entry_count"] - 1]
+    expected_checkpoint = {
+        "head_entry_id": checkpoint["entry_id"],
+        "head_hash": checkpoint["entry_hash"],
+    }
+    for field, expected in expected_checkpoint.items():
+        if anchor[field] != expected:
+            _fail("CC000_LEDGER_ANCHOR", f"overseer checkpoint {field} is stale")
+    states, state_entries = _workstream_states(ledger_state)
+    authority_entries = _latest_active_authority_entries(ledger_state)
+
     active = {
         workstream_id: card
         for workstream_id, card in cards.items()
-        if card["authorization"]["class"] in {"FORMAL", "EXPLORATION_ONLY"}
+        if states.get(workstream_id) == "ACTIVE"
     }
     active_ids = sorted(active)
     for index, left_id in enumerate(active_ids):
@@ -1409,22 +1425,6 @@ def validate_integration(
                 "CC000_OWNER_SEPARATION",
                 f"{left_id} and {right_id} must have different owners",
             )
-
-    anchor = manifest["authority"]["overseer_ledger"]
-    ledger_root = _bundle_path(repository, anchor["path"], "overseer ledger")
-    ledger_state = load_ledger(ledger_root, repository=repository)
-    if anchor["entry_count"] > len(ledger_state.entries):
-        _fail("CC000_LEDGER_ANCHOR", "overseer checkpoint is beyond the ledger head")
-    checkpoint = ledger_state.entries[anchor["entry_count"] - 1]
-    expected_checkpoint = {
-        "head_entry_id": checkpoint["entry_id"],
-        "head_hash": checkpoint["entry_hash"],
-    }
-    for field, expected in expected_checkpoint.items():
-        if anchor[field] != expected:
-            _fail("CC000_LEDGER_ANCHOR", f"overseer checkpoint {field} is stale")
-    states, state_entries = _workstream_states(ledger_state)
-    authority_entries = _latest_active_authority_entries(ledger_state)
 
     ledger_prefix = PurePosixPath(anchor["path"]).parent
     phase_results: dict[str, tuple[dict[str, Any], ...]] = {}

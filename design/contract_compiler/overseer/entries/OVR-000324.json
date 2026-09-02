@@ -1,0 +1,127 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7789a5f59568e21207e67b1f3e2487a643972deae53f012983bdc601ebf23f93",
+        "before_digest": "sha256:c6bbb46baf353daaf4283a50ea81fef4cff0a76560b2d4663c657044b0a22c13",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:3dbea53cf2b0b5c8c1ed3d8b5c1dc19d55532788c6ad20b08b18e371d08edd9d",
+        "before_digest": "sha256:b1bcdf75fd5cd34400e4b8d2fe6a31f55e2b48b3988f41e32df5daebb4bd497c",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:efc7954f88f58e2f624d604c7af413f9fa652b4ddc5e9bc725be631c671a9478",
+        "before_digest": "sha256:2b4737d7c1234f70c19e6b9a51af3bec578fa6ad4492edd78c9ad179b4f4583b",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.schema.json"
+      },
+      {
+        "after_digest": "sha256:60c10dfb4c964cdce971284896ebedbb5a94385b7b9cfbe507889ef6a637a77e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-activation.json"
+      },
+      {
+        "after_digest": "sha256:1bb58c4105f318eeee3b68d29b9712174685e2671bc28c5b5b0a7d4deff43f8f",
+        "before_digest": "sha256:8bd1ecffb64bd56c06f8492aa24e234dc252c60d39f4bffed7c906e9948c8481",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/program.md"
+      },
+      {
+        "after_digest": "sha256:0429b1035faa794258b6ab1a2ce7befedfae842bb05c4932624f57aada11251f",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R11/manifest.json"
+      },
+      {
+        "after_digest": "sha256:39845b12311cbe0d906e7f80e50d7b7ddf57f2ac53084ba2630ca2f3f184b7de",
+        "before_digest": "sha256:e2a3117f39869ba4315f7f5a9df804e4e9ab539c80fe850257c374b85c80328b",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:71d5d280ad3b89eed559fd4f58cf8a6062b2616e40d7ebfcd581f402fc7ab265",
+        "before_digest": "sha256:4f8418b4f6ba4354c3c0a2abf880cd1931fa912a46f777e67a0071475a5aa7d4",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6f493d6259ef12da1e57d0bea7f3a1807dc4128504371ddf0d38ca50b28437ab",
+  "entry_id": "OVR-000324",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5d820f12be651ab28cbb85f67bc8fec714b56e95452d9d793faad9fd84e4a7e8",
+  "recorded_at": "2026-09-01T23:59:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "ROADMAP.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/integration.schema.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:60c10dfb4c964cdce971284896ebedbb5a94385b7b9cfbe507889ef6a637a77e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/program.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "design/contract_compiler/workstreams/CC-R11/manifest.json",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "scripts/contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_contract_compiler_integration.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "85435d38eb75f9650dff6319ffa39a4d59d7c3a7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 324,
+  "subject": {
+    "id": "ccr11-activation-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the experimental Pareto compiler-to-ledger vertical.",
+  "why": "The completed binder, accepted machine and change-set architecture, and frozen RET-010 inputs and oracle now support one narrow automated proof. This revision schedules that proof, preserves broad hardening as roadmap work, and corrects scope ownership to follow actual ledger state without weakening concurrent or reserved-scope guards."
+}
