@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+from dataclasses import replace
 from hashlib import sha256
 import inspect
 import json
@@ -67,6 +68,17 @@ def _replace_exact(value: object, replacements: dict[str, str]) -> object:
     return value
 
 
+def _replace_path(root: object, path: tuple[object, ...], value: object) -> None:
+    target = root
+    for part in path[:-1]:
+        target = target[part]
+    target[path[-1]] = value
+
+
+def _operand(event: str, instruction: int, name: str) -> tuple[object, ...]:
+    return ("events", event, "instructions", instruction, name)
+
+
 def _record_schema(
     id_field: str,
     fields: dict[str, str],
@@ -129,6 +141,7 @@ def _program_payload() -> dict[str, object]:
                     {
                         "check_contract_id_field": "check_contract_id",
                         "check_contract_identity_field": "check_contract_identity",
+                        "check_outcome_field": "outcome",
                         "check_owner_field": "proposal_id",
                         "check_policy_identity_field": "policy_identity",
                         "check_record_type": "CheckRecord",
@@ -289,6 +302,28 @@ def _program_payload() -> dict[str, object]:
             ),
         },
     }
+
+
+def _registration_program_payload() -> dict[str, object]:
+    payload = _program_payload()
+    payload["events"] = {
+        "ARTIFACT_REGISTERED": payload["events"]["ARTIFACT_REGISTERED"]
+    }
+    payload["indexes"] = {}
+    payload["record_schemas"] = {
+        "ArtifactRecord": payload["record_schemas"]["ArtifactRecord"]
+    }
+    return payload
+
+
+def _policy_pinning_program_payload() -> dict[str, object]:
+    payload = _program_payload()
+    payload["events"] = {"CHANGE_PROPOSED": payload["events"]["CHANGE_PROPOSED"]}
+    payload["indexes"] = {}
+    payload["record_schemas"] = {
+        "ProposalRecord": payload["record_schemas"]["ProposalRecord"]
+    }
+    return payload
 
 
 def _policy_payload() -> dict[str, object]:
@@ -467,6 +502,207 @@ def test_closed_program_refuses_unknown_grammar_opcode_capability_and_escape() -
         payload = _program_payload()
         payload[field] = "forbidden"
         _program_refusal(payload, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
+
+
+def test_policy_check_output_names_its_outcome_operand() -> None:
+    payload = _program_payload()
+    del payload["events"]["CHECK_RECORDED"]["instructions"][1]["check_outcome_field"]
+
+    _program_refusal(payload, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
+
+
+@pytest.mark.parametrize(
+    ("path", "replacement"),
+    [
+        (_operand("ARTIFACT_REGISTERED", 0, "id_field"), "absent_field"),
+        (_operand("ARTIFACT_REGISTERED", 1, "record_type"), "SourceRecord"),
+        (_operand("SOURCE_REGISTERED", 0, "event_field"), "absent_field"),
+        (_operand("SOURCE_REGISTERED", 0, "record_type"), "AbsentRecord"),
+        (_operand("CHANGE_PROPOSED", 0, "event_field"), "absent_field"),
+        (_operand("CHANGE_PROPOSED", 1, "policy_id_field"), "absent_field"),
+        (
+            _operand("CHANGE_PROPOSED", 1, "policy_identity_field"),
+            "absent_field",
+        ),
+        (_operand("VERDICT_RECORDED", 1, "index"), "absent-index"),
+        (_operand("VERDICT_RECORDED", 1, "event_field"), "absent_field"),
+        (_operand("CHECK_RECORDED", 1, "check_contract_id_field"), "absent_field"),
+        (
+            _operand("CHECK_RECORDED", 1, "check_contract_identity_field"),
+            "absent_field",
+        ),
+        (_operand("CHECK_RECORDED", 1, "check_outcome_field"), "absent_field"),
+        (_operand("CHECK_RECORDED", 1, "check_owner_field"), "absent_field"),
+        (
+            _operand("CHECK_RECORDED", 1, "check_policy_identity_field"),
+            "absent_field",
+        ),
+        (_operand("CHECK_RECORDED", 1, "check_record_type"), "SourceRecord"),
+        (_operand("CHECK_RECORDED", 1, "proposal_id_field"), "absent_field"),
+        (
+            _operand("CHECK_RECORDED", 1, "proposal_policy_identity_field"),
+            "absent_field",
+        ),
+        (_operand("CHECK_RECORDED", 1, "proposal_record_type"), "SourceRecord"),
+        (_operand("VERDICT_RECORDED", 2, "check_outcome_field"), "absent_field"),
+        (_operand("VERDICT_RECORDED", 2, "target_field"), "absent_field"),
+        (("indexes", "decision-by-proposal", "field"), "absent_field"),
+    ],
+)
+def test_program_resolves_every_opcode_operand_at_load(
+    path: tuple[object, ...], replacement: str
+) -> None:
+    control = _program_payload()
+    assert _load_program(control).canonical_bytes == _canonical(control)
+    mutated = _program_payload()
+    _replace_path(mutated, path, replacement)
+
+    _program_refusal(mutated, ProtocolMachineProgramRefusalReason.MALFORMED_PROGRAM)
+
+
+def test_content_addressed_children_are_revalidated_before_composition() -> None:
+    registration_program = _load_program(_registration_program_payload())
+    forged_programs = (
+        replace(registration_program, identity="sha256:" + "0" * 64),
+        replace(registration_program, canonical_bytes=b"{}"),
+    )
+    for forged_program in forged_programs:
+        with pytest.raises(MachineArtifactRefusal) as refusal:
+            compose_normative_profile(
+                protocol_machine_program=forged_program,
+                policy_programs={},
+                capability_refs=(),
+            )
+        assert refusal.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    policy_program = _load_program(_policy_pinning_program_payload())
+    policy = _load_policy()
+    forged_policies = (
+        replace(policy, identity="sha256:" + "0" * 64),
+        replace(policy, canonical_bytes=b"{}"),
+    )
+    for forged_policy in forged_policies:
+        with pytest.raises(MachineArtifactRefusal) as refusal:
+            compose_normative_profile(
+                protocol_machine_program=policy_program,
+                policy_programs={POLICY_REF: forged_policy},
+                capability_refs=(),
+            )
+        assert refusal.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    profile = compose_normative_profile(
+        protocol_machine_program=registration_program,
+        policy_programs={},
+        capability_refs=(),
+    )
+    forged_profiles = (
+        replace(profile, identity="sha256:" + "0" * 64),
+        replace(profile, canonical_bytes=b"{}"),
+    )
+    for forged_profile in forged_profiles:
+        with pytest.raises(MachineArtifactRefusal) as refusal:
+            compose_partial_effective_contract(
+                validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
+                normative_profile=forged_profile,
+            )
+        assert refusal.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+
+def test_execute_and_replay_revalidate_contract_children_and_machine_state() -> None:
+    program = _load_program(_registration_program_payload())
+    profile = compose_normative_profile(
+        protocol_machine_program=program,
+        policy_programs={},
+        capability_refs=(),
+    )
+    effective = compose_partial_effective_contract(
+        validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
+        normative_profile=profile,
+    )
+    empty = MachineState.empty(effective.identity)
+    event = _event(
+        "ARTIFACT_REGISTERED",
+        artifact_id="artifact-a",
+        artifact_identity="sha256:" + "3" * 64,
+    )
+
+    forged_program = replace(program, identity="sha256:" + "0" * 64)
+    forged_profile = replace(profile, protocol_machine_program=forged_program)
+    forged_contract = replace(effective, normative_profile=forged_profile)
+    for run in (
+        lambda: execute_event(forged_contract, empty, event),
+        lambda: replay_events(forged_contract, (event,)),
+    ):
+        with pytest.raises(MachineArtifactRefusal) as refusal:
+            run()
+        assert refusal.value.reason is MachineArtifactRefusalReason.IDENTITY_MISMATCH
+
+    for forged_state in (
+        replace(empty, identity="sha256:" + "0" * 64),
+        replace(empty, canonical_bytes=b"{}"),
+    ):
+        with pytest.raises(ValueError):
+            execute_event(effective, forged_state, event)
+
+
+def test_required_check_ids_are_unique_independently_of_their_hashes() -> None:
+    payload = _policy_payload()
+    payload["required_checks"][1]["check_contract_id"] = CHECKS[0][0]
+
+    with pytest.raises(MachineArtifactRefusal) as refusal:
+        _load_policy(payload)
+    assert refusal.value.reason is MachineArtifactRefusalReason.MALFORMED_ARTIFACT
+
+
+def test_verdict_values_are_closed() -> None:
+    program_payload = _registration_program_payload()
+    program_payload["record_schemas"]["ArtifactRecord"]["fields"][
+        "artifact_identity"
+    ] = "VERDICT"
+    profile = compose_normative_profile(
+        protocol_machine_program=_load_program(program_payload),
+        policy_programs={},
+        capability_refs=(),
+    )
+    effective = compose_partial_effective_contract(
+        validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
+        normative_profile=profile,
+    )
+    empty = MachineState.empty(effective.identity)
+
+    contest = execute_event(
+        effective,
+        empty,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="contest-record",
+            artifact_identity="CONTEST",
+        ),
+    )
+    assert contest.receipt.outcome == "APPLIED"
+
+    invalid = execute_event(
+        effective,
+        empty,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="invalid-record",
+            artifact_identity="BANANA",
+        ),
+    )
+    assert invalid.receipt.refusal_code == "MALFORMED_EVENT"
+    _assert_unchanged(invalid, empty)
+
+    policy_payload = _policy_payload()
+    policy_payload["outcome_verdicts"]["UNKNOWN"] = "CONTEST"
+    policy_payload["precedence"] = ["REJECT", "CONTEST", "ACCEPT"]
+    assert _load_policy(policy_payload).outcome_verdicts["UNKNOWN"] == "CONTEST"
+
+    policy_payload["outcome_verdicts"]["UNKNOWN"] = "BANANA"
+    policy_payload["precedence"] = ["REJECT", "BANANA", "ACCEPT"]
+    with pytest.raises(MachineArtifactRefusal) as refusal:
+        _load_policy(policy_payload)
+    assert refusal.value.reason is MachineArtifactRefusalReason.MALFORMED_ARTIFACT
 
 
 def test_profile_and_partial_contract_bind_all_normative_identities() -> None:
