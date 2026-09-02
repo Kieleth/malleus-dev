@@ -699,6 +699,13 @@ def test_prestate_records_are_closed_and_globally_unique() -> None:
         "artifact_identity": "sha256:" + "4" * 64,
     }
     malformed_records = (
+        (
+            machine_module._StoredRecord(
+                record_type=[],
+                record_id=[],
+                fields=machine_module._freeze({}),
+            ),
+        ),
         (stored("UnknownRecord", "unknown", {}),),
         (stored("ArtifactRecord", "artifact-a", {"artifact_id": "artifact-a"}),),
         (
@@ -743,6 +750,51 @@ def test_prestate_records_are_closed_and_globally_unique() -> None:
     for state in malformed_states:
         with pytest.raises(ValueError):
             execute_event(effective, state, event)
+
+
+def test_applied_state_does_not_retain_caller_owned_mapping_proxy_data() -> None:
+    program = _load_program(_registration_program_payload())
+    profile = compose_normative_profile(
+        protocol_machine_program=program,
+        policy_programs={},
+        capability_refs=(),
+    )
+    effective = compose_partial_effective_contract(
+        validated_fact_set_sha256=VALIDATED_FACT_SET_SHA256,
+        normative_profile=profile,
+    )
+    backing = {
+        "artifact_id": "old-artifact",
+        "artifact_identity": "sha256:" + "4" * 64,
+    }
+    record = machine_module._StoredRecord(
+        record_type="ArtifactRecord",
+        record_id="old-artifact",
+        fields=machine_module.MappingProxyType(backing),
+    )
+    state = MachineState._build(effective.identity, (record,))
+
+    result = execute_event(
+        effective,
+        state,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="new-artifact",
+            artifact_identity="sha256:" + "5" * 64,
+        ),
+    )
+    assert result.receipt.outcome == "APPLIED"
+    identity = result.state.identity
+    canonical_bytes = result.state.canonical_bytes
+
+    backing["artifact_identity"] = "sha256:" + "9" * 64
+
+    assert result.state.identity == identity
+    assert result.state.canonical_bytes == canonical_bytes
+    assert result.state.get_record("ArtifactRecord", "old-artifact") == {
+        "artifact_id": "old-artifact",
+        "artifact_identity": "sha256:" + "4" * 64,
+    }
 
 
 def test_required_check_ids_are_unique_independently_of_their_hashes() -> None:
