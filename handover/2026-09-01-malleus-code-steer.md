@@ -33,12 +33,16 @@ are the owner's. The sequencing is dependency order, not time.
 
 ## Why, grounded
 
-**The lab does not use malleus.** Zero imports from `malleus.*` in `src/`. `code.yaml`
-imports the root ontology, which is right. Everything under it, about 2,500 lines,
-reimplements the ledger, canonical JSON, exact-field checks and atomic writes.
-`_exact_fields` and `_unique_object` in `store.py` are near-verbatim copies of
-`malleus/ledger.py`. This is the third hand-rolled malleus ledger found in the
-estate today, and none of the three recorded why.
+**Correction, 2026-09-02.** The steer as first written said the lab had zero
+imports from `malleus.*`. That was a grep error on the reviewer's side: the filter
+excluded every path containing `malleus_code_lab`, which is all of them. The lab
+imports malleus in twelve modules; `store.py` alone imports six names from
+`malleus.ledger`. What remains true and narrower: `_exact_fields` and
+`_unique_object` in `store.py` duplicate functions that `malleus/ledger.py` already
+exports, beside imports of that same module. Partial reuse with local copies, not
+a parallel implementation. The "third hand-rolled ledger" claim is withdrawn for
+this lab; it stands for the core overseer scripts, which were checked separately
+and do not import malleus at all.
 
 **The graph is 1 percent intention.** Of 2,690 entries: 3 `Intent`, 11
 `SoftwareChangeHypothesis`, 35 `Deliverable`. Against 305
@@ -164,7 +168,7 @@ the staged tier and decide at the following boundary whether it needs a gate. Th
 last seven runs each added a gate the moment a gap appeared. That is the loop this
 steer exists to break.
 
-Do not build a second ledger. There are already three.
+Do not build a second ledger. The core overseer already did, and it is the reason that rig cannot answer the question its program is about.
 
 ---
 
