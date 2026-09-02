@@ -2152,27 +2152,33 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     for claim in (
         "The first real Malleus compiler-to-ledger-to-knowledge-graph path is complete.",
         "Working research milestone",
+        "the first scoped, research-only end-to-end slice passes its completion gate",
         "crosses the selected source-to-history-to-graph boundaries",
+        "Anyone could write those records by hand. That is not the achievement.",
+        "The graph is the current view produced from that history, not a second source of truth.",
+        "No LLM is needed to compile, decide, or replay this path.",
         "one immutable `KnowledgeChangeSet`",
-        "One JSONL ledger",
-        "This run records 25 immutable semantic and protocol events.",
+        "One JSONL history records 20 bootstrap retention and registration events",
+        "two fixture-supplied check receipts, and the final verdict. That is 25 events.",
         "reconstructs the same graph and byte-identical receipt",
         'SalesOrder("O1", order_number="O1")',
         'InventoryUnit("X1", product_code="X")',
         'OrderContainsUnit("contains:O1:X1", O1 -> X1)',
-        "The generic history layer has no Small Shop vocabulary",
-        "Some structural contract admission still lives in Python",
+        "The fixture supplies their outcomes",
+        "Python also still owns mapping and time interpretation",
+        '"from the ledger alone" means replay does not reread the ambient fixture',
+        "does not yet demonstrate a second frontend or language",
         "optional semantic-history profile",
-        "Two required fixture checks and a strict three-outcome verdict mapping.",
         "140 focused passing tests",
     ):
         assert claim in normalized
 
     for boundary in (
         "not yet a stable public API",
-        "It does not mean the general Malleus compiler is finished.",
+        "This does not mean the general Malleus compiler is finished.",
         "not a release gate",
         "general mapping contract",
+        "executed and retained check implementations",
         "update and correction behavior",
         "Semantic Re-entry",
         "cross-language parity",
@@ -2197,6 +2203,26 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     )
     assert milestone_link in normalized_readme
     assert "not yet a stable public compiler API or release" in normalized_readme
+    for current_readme_claim in (
+        "warehouse record plus a separate inventory lookup",
+        "graph-to-Prolog fact compiler",
+        "Quick start: structural validation",
+        "The fingerprint grammar is reported separately",
+        "Lexical forms such as `uri`, `date`, and `curie` are not yet validated",
+        "2 means bad usage or a broken instrument",
+        "python scripts/ci.py all",
+    ):
+        assert current_readme_claim in normalized_readme
+
+    for stale_readme_claim in (
+        "one Small Shop record",
+        "Generated-schema parity is neither tested nor enforced in 0.11",
+        "Fingerprint-format changes fail closed",
+        "Two examples ship with the library",
+        "the six principles the rites defend",
+        "2 means the instrument itself is broken",
+    ):
+        assert stale_readme_claim not in readme
 
 
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:

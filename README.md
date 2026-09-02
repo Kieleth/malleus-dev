@@ -9,27 +9,53 @@ implementation and the opinion that words have power.
 
 ## Current research milestone
 
+A knowledge graph can say that order `O1` contains inventory unit `X1`. Those
+three records alone cannot say which source bytes, ontology, and mapping
+produced them, which recorded check results and decision admitted them, or how
+to rebuild them after the graph is deleted.
+
 [The first real Malleus compiler-to-ledger-to-knowledge-graph path is
 complete.](docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof)
-The public walkthrough follows one Small Shop record from source bytes through
-an explicit contract and decision history into a replayed graph. It also states
-the boundary plainly: this is working repository evidence, not yet a stable
+The Small Shop proof takes a warehouse record plus a separate inventory lookup
+through the selected research chain, then reconstructs the same graph and
+receipt from retained history alone. The three graph records are deliberately
+simple. The achievement is making their path into accepted history explainable,
+testable, and replayable. This is working repository evidence, not yet a stable
 public compiler API or release.
 
 ## Why this exists
 
-I believe words have power. The closer we work with them, the more carefully we pin down what they mean and how they relate, the closer we get to something a machine can use without guessing. An ontology is that pinning-down, made explicit and machine-readable. Borges and Le Guin understood this long before software did: to name something precisely is to begin controlling it.
+I believe words have power. The closer we work with them, the more carefully we
+pin down what they mean and how they relate, the closer we get to something a
+machine can use without guessing. An ontology is that pinning-down, made
+explicit and machine-readable. Borges and Le Guin understood this long before
+software did: to name something precisely is to begin controlling it.
 
-The practical bet: if you define your domain once, in an ontology, you can propagate that definition through every layer of a system. LinkML can project a schema into JSON Schema, Pydantic, SQL DDL, OWL, SHACL, TypeScript, and other targets. Generated-schema parity is neither tested nor enforced in 0.11. `OntologyRegistry` is authoritative for the structural union used by `ValidTime`, and `ValidTime.from_value` is authoritative for lexical and cross-field temporal semantics. Treat a generated artifact as an equivalent validator only after a conformance test proves it preserves the relevant constraints.
+The practical problem is drift. An ontology says one thing, application code
+quietly assumes another, a policy makes a third choice, and the stored graph
+remembers none of the reasoning. Malleus does not pretend the ontology is the
+whole program. In the selected architecture, the ontology owns the legal
+vocabulary and shapes; source mappings, state transitions, checks, policy, and
+projection belong in separate artifacts whose exact versions are named and
+hashed. Evidence, a proposed change, a decision, and accepted state remain
+different things. The current reference implementation has not completed every
+one of those separations.
 
-When that actually happens across a codebase, something unexpectedly useful shows up. Components stop drifting apart. The frontend and backend stop disagreeing about what a "Drug" is. A new contributor learns one vocabulary instead of five. Whole classes of bugs (the ones caused by definitions sliding between modules) just stop existing. Adding a new concept becomes one change in one file, flowing outward through whatever code generators you've wired up.
+The bet is not that one YAML file magically generates a correct system. The
+rule is simpler: if a decision changes meaning, it should live in explicit,
+versioned and hashed data or be named as an implementation gap. A conforming
+part should name the meaning it consumed, refuse what it does not understand,
+and leave the evidence its claimed profile requires. Python, LinkML, Prolog,
+JSONL, and NetworkX are the current reference tools. They are not the
+definition of Malleus.
 
 That's Malleus: portable protocol invariants, optional profiles, and reference
 tools for keeping declared meaning honest. The bundled typed-graph stack is one
 way to adopt those invariants, not the definition of the protocol. See the
 [protocol boundary taxonomy](docs/PRINCIPLES.md#protocol-boundary-taxonomy).
 
-Current package boundary: `0.13.3`, `stage-8c-executable-provenance-and-effect-closure`. See
+For maintainers, the current machine-checked package boundary is `0.13.3`,
+`stage-8c-executable-provenance-and-effect-closure`. See
 [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for implemented
 and explicitly pending capabilities. Code can inspect the same boundary through
 `malleus.IMPLEMENTATION_STATUS`.
@@ -57,7 +83,10 @@ optional profiles they claim.
 pip install malleus-dev
 ```
 
-The Python package contains the logic compiler and verifier. Executing logic checks also requires a `swipl` executable on `PATH`; absence fails explicitly at check time.
+The released Python package contains the graph-to-Prolog fact compiler and
+verifier. That is distinct from the research-only ontology-to-contract compiler
+in the milestone above. Executing Prolog checks also requires a `swipl`
+executable on `PATH`; absence fails explicitly at check time.
 
 Recon's core recording and export code ships with Malleus. Install its optional
 dependency set for the interactive graph view:
@@ -66,7 +95,10 @@ dependency set for the interactive graph view:
 pip install 'malleus-dev[recon]'
 ```
 
-## Quick start
+## Quick start: structural validation
+
+This is the lowest-level bundled typed-graph profile. It demonstrates isolated
+structural staging and materialization, not ledger-backed semantic acceptance.
 
 ```python
 from malleus import (
@@ -119,7 +151,13 @@ result = reg.check_compatibility(foreign_hash, foreign_fingerprint)
 # "identical" | "superset" | "subset" | "divergent"
 ```
 
-Within one fingerprint format, adding represented types, enum values, or slots makes the newer fingerprint a strict superset of the older one. Fingerprint-format changes fail closed: version 3 and version 4 carry different format facts and compare as `divergent`, even when the schema change would otherwise be additive. Peers can tag every write with the hash they used, but the set-relation label is input to caller policy, not an automatic accept decision.
+Adding represented types, enum values, or slots makes the newer structural
+fingerprint a strict superset of the older one. The fingerprint grammar is
+reported separately by `fingerprint_grammar()` as `same`, `older`, `newer`, or
+`unknown`; its marker is not treated as a schema fact during structural
+comparison. Peers can tag every write with the hash they used, but both the
+structural relation and grammar relation are inputs to caller policy, not an
+automatic accept decision.
 
 This matters in fleets running rolling updates. An application can combine the
 label with validation and its own policy to hold data an older node does not
@@ -130,7 +168,8 @@ Required facts are deliberately absent from the default fingerprint. Relaxing a 
 
 ## Domain extensions
 
-Two examples ship with the library. Write your own the same way:
+Several domain ontologies ship with the library. A minimal extension follows
+the same pattern:
 
 ```yaml
 # your_domain.yaml
@@ -175,7 +214,11 @@ slots:
     range: YourEnum
 ```
 
-Relations use concrete classes with explicit source and target ranges. Malleus rejects unknown properties, missing required fields, malformed values, duplicate identifiers, mismatched predicates, and invalid endpoint types before graph mutation.
+Relations use concrete classes with explicit source and target ranges. Malleus
+rejects unknown properties, missing required fields, wrong base types,
+closed-enum violations, duplicate identifiers, mismatched predicates, and
+invalid endpoint types before graph mutation. Lexical forms such as `uri`,
+`date`, and `curie` are not yet validated beyond their declared base kind.
 
 ## Pinned Prolog verification
 
@@ -256,6 +299,11 @@ proposal's domain; those checks remain outside Stage 6.
 
 ## Accepted graph and bitemporal replay
 
+This section describes the released `0.13.3` path. It uses
+`GraphBaseArtifact` and `CandidateSubgraphArtifact`. The research milestone
+uses a private `KnowledgeChangeSet` path and does not silently replace this
+public API.
+
 Stage 7b makes the proposed graph mutation replayable and binds it to assent.
 A `GraphBaseArtifact` commits an externally supplied base graph. A
 `CandidateSubgraphArtifact` stores ordered writes, precision-aware valid-time
@@ -320,7 +368,7 @@ loading, logic engine, distributed convergence), see
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Adoption guides:
-- [docs/PRINCIPLES.md](docs/PRINCIPLES.md): what malleus claims and what it does not, the six principles the rites defend, and the future work that is reserved rather than asserted
+- [docs/PRINCIPLES.md](docs/PRINCIPLES.md): what malleus claims and what it does not, the principles the rites defend, and the future work that is reserved rather than asserted
 - [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md): start here. How to adopt malleus from any project and keep it alive, written for a human and their coding assistant together
 - [.codex/README.md](.codex/README.md): mandatory machine registration, launch tests, and fail-closed rules for repository-backed Codex MCP servers and MCP-dependent skills
 - [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md): the current machine-checked capability boundary
@@ -389,8 +437,8 @@ Three tiers:
   `required` drift that `check_compatibility` cannot see), are the type-slots
   constrained, are relation endpoints narrowed, are Signals genuinely derived,
   are formula-shaped slots backed by an executor. Exit 0 grants the purity
-  seal, 1 records heresies, 2 means the instrument itself is broken and nothing
-  was judged.
+  seal, 1 records heresies, and 2 means bad usage or a broken instrument;
+  nothing was judged.
   Severities are data: copy `rubric.yaml`, tune it, and pass
   `--rubric PATH`. Every run prints the rubric it used and how many rites
   were disabled, because a seal is only as wide as the rubric that granted it.
@@ -415,9 +463,23 @@ grown rubric and skills back down. Re-run the installer after upgrading.
 
 ## Tests
 
+Install the development dependencies once:
+
 ```bash
 pip install -e '.[dev]'
-pytest tests/ -v
+```
+
+Then run the complete repository gate, including the research compiler and
+Small Shop proof:
+
+```bash
+python scripts/ci.py all
+```
+
+To run the configured pytest suite without the other CI checks:
+
+```bash
+pytest -v
 ```
 
 ## License

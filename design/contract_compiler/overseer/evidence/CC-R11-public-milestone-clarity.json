@@ -1,0 +1,72 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 24559,
+      "path": "README.md",
+      "sha256": "sha256:7aae930d22caa37bac77efe40a9416d43b0588a389eba0f7260f94875f975e63"
+    },
+    {
+      "byte_length": 8245,
+      "path": "design/contract_compiler/overseer/evidence/CC-R11-completion.json",
+      "sha256": "sha256:0b2175d8b8a66c9e2148ab954bcc47358851693adaf5f672f6e6fad1d315ab7d"
+    },
+    {
+      "byte_length": 3975,
+      "path": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone.json",
+      "sha256": "sha256:4a60813201f451abfd26c749efbac8e055dc152069b80ab79f2a0b403a925ee5"
+    },
+    {
+      "byte_length": 10880,
+      "path": "docs/index.md",
+      "sha256": "sha256:5b36b30c466d499848ceca69ad0055c17ac1c0d3d5aadb6b315d3f2e7ee3cfa3"
+    },
+    {
+      "byte_length": 79460,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:e28b257cbe051d864a8d781504177ec92b413c75ae151f45fd490e5b8e2e389c"
+    },
+    {
+      "byte_length": 14585,
+      "path": "tests/test_status.py",
+      "sha256": "sha256:2ae24612af995d24dad831a4db74486297e9f11a4f8bd46315fec6778285b2f3"
+    }
+  ],
+  "base_commit": "c76d94de930b4d60e917b93992a2556b4754fdb1",
+  "checks": [
+    {
+      "check_id": "readme-current-boundary-audit",
+      "method": "Compare every user-facing README capability statement with the current package, tests, changelog, implementation status, and research boundary.",
+      "observed": "The README now reports fingerprint grammar separately from structural compatibility, states the open lexical-validation boundary, gives the complete inquisitor exit-code meaning, removes stale guide and example counts, distinguishes the released graph-to-Prolog compiler from the research-only ontology-to-contract compiler, labels structural validation separately from governed history, and names the complete repository CI command after its development dependency setup.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-newcomer-explanation",
+      "method": "Read the milestone without relying on internal workstream codes and ask whether it explains the problem, result, work performed, reusable protocol, fixture choices, and current limits in that order.",
+      "observed": "The page now begins with the question a bare graph cannot answer, distinguishes the trivial three-record output from the provenance and replay proof, explains the seven component jobs in plain language, follows exact Small Shop source values, and presents Small Shop as a proving ground rather than protocol vocabulary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-implementation-grounding",
+      "method": "Trace each public claim through the frozen fixture, research runner, independent oracle, completion evidence, and replay tests.",
+      "observed": "The revised page accurately records the warehouse row and inventory lookup, exact three graph records, controlled-input and ontology-dependency boundary, 20 bootstrap plus 5 lifecycle occurrences, fixture-supplied rather than executed check receipts, empty prior accepted graph, candidate replay semantics, remaining Python authority, exact ambient-file deletion test, and unproven future frontend seam.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-revision-gate",
+      "method": "Run the public wording guard, README status guard, relevant fingerprint, lexical, and inquisitor behavior tests, complete documentation and status suites, strict Sphinx HTML/doctest/linkcheck, changed-file Ruff, ledger and integration validation, evidence verification, and diff checking.",
+      "observed": "All selected behavioral, documentation, governance, formatting, and live-link checks pass. Independent factual, README-staleness, and newcomer-clarity audits report no remaining material finding.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This transaction improves and corrects public documentation. It adds no compiler, protocol, ledger, graph, package, or runtime capability.",
+    "The compiler proof remains research-only and fixture-local. It is not a stable API, installed command, public wire format, release, or hosted-site deployment.",
+    "The Small Shop slice supplies two SATISFIED check receipts. It does not execute the check implementations or retain them as independently identified artifacts.",
+    "Python still owns source mapping and time interpretation, machine opcode semantics, knowledge-change validation, and graph projection. No second frontend or language proves interchangeability.",
+    "The proof remains one create-only initial-population case without general mapping, correction, update, deletion, external effects, Semantic Re-entry, or public bitemporal querying.",
+    "The full repository and package suites remain outside the prior Pareto completion claim. This documentation revision runs its focused documentation and directly affected behavior gates without widening that historical claim."
+  ],
+  "recorded_at": "2026-09-02T16:08:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

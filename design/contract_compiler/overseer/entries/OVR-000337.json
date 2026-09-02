@@ -1,0 +1,105 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:7aae930d22caa37bac77efe40a9416d43b0588a389eba0f7260f94875f975e63",
+        "before_digest": "sha256:99f3aa2184e757a643dcc279dbedc5195d22a173f594a79f49eb75bdb362a17c",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:d912cf86393b2256c35161c3a2bba14d9a977e3bfeab14a5a8c6f7376e25d998",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone-clarity.json"
+      },
+      {
+        "after_digest": "sha256:5b36b30c466d499848ceca69ad0055c17ac1c0d3d5aadb6b315d3f2e7ee3cfa3",
+        "before_digest": "sha256:b69bb5f930b06923e1dfc7999b8aa0d9daac6cceed6f5f5e71e92381ed62be75",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:e28b257cbe051d864a8d781504177ec92b413c75ae151f45fd490e5b8e2e389c",
+        "before_digest": "sha256:6c7b3ee7d6df7d82a7588f630137730358c2f4459e7a501c0c1dd53edf227128",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:2ae24612af995d24dad831a4db74486297e9f11a4f8bd46315fec6778285b2f3",
+        "before_digest": "sha256:e06fc4c1fd2af1439fff33262f871ee540710b7b5cf460d8d59b755653d43f01",
+        "change": "MODIFIED",
+        "path": "tests/test_status.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c6e548947ed6bd9f4ec9397e6f6be64788859f506221c76c1605c20bed714501",
+  "entry_id": "OVR-000337",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4c74d58fea74404c0e436e3830a7d721aaf48bf89ac70c62242964867a3b56c6",
+  "recorded_at": "2026-09-02T16:08:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "README.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_status.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:d912cf86393b2256c35161c3a2bba14d9a977e3bfeab14a5a8c6f7376e25d998",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone-clarity.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000335",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000336",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 337,
+  "subject": {
+    "id": "ccr11-public-milestone-clarity",
+    "type": "DOCUMENT"
+  },
+  "summary": "Explain why the compiler-to-ledger-to-knowledge-graph proof matters and correct stale README boundaries.",
+  "why": "The first publication stated the milestone accurately but led with machinery rather than the problem it solves. The revised page distinguishes the trivial three-record result from the provenance and replay proof, explains the exact work in plain language, exposes supplied-check and Python-runtime limits, separates the fixture from the protocol, and repairs six stale or misleading README claims found by direct code and test inspection."
+}

@@ -193,9 +193,12 @@ def test_status_document_names_current_version_and_boundary():
 
 
 def test_readme_names_current_version_and_boundary():
-    document = (ROOT / "README.md").read_text(encoding="utf-8")
+    document = " ".join(
+        (ROOT / "README.md").read_text(encoding="utf-8").split()
+    )
     assert (
-        f"Current package boundary: `{IMPLEMENTATION_STATUS.package_version}`, "
+        "For maintainers, the current machine-checked package boundary is "
+        f"`{IMPLEMENTATION_STATUS.package_version}`, "
         f"`{IMPLEMENTATION_STATUS.boundary}`"
     ) in document
 

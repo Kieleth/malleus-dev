@@ -1,0 +1,68 @@
+{
+  "actor": {
+    "id": "ccr11-public-milestone-clarity-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T16:08:02Z",
+    "claims": [
+      "The public milestone now begins with the user question a bare three-record graph cannot answer: which source, mapping, ontology constraint, recorded check results, and policy produced its accepted state, and whether retained history can rebuild it.",
+      "The page makes the three Small Shop graph records deliberately ordinary and identifies the actual result as an explainable, failure-atomic, delete-and-rebuild path across the selected compiler, history, and projection boundaries.",
+      "The explanation matches the executable slice: exact source values, one controlled initial knowledge change, 20 bootstrap events plus 5 lifecycle occurrences, an empty prior accepted graph, candidate replay before ledger replacement, and a byte-identical reopened receipt.",
+      "The page explicitly says the two SATISFIED check receipts are fixture-supplied, the check implementations are neither executed nor retained, Python retains named semantic responsibilities, and second-frontend or cross-language parity is unproven.",
+      "The README now matches current fingerprint comparison, lexical validation, inquisitor exit codes, guide counts, compiler names, structural-versus-governed examples, and repository test commands."
+    ],
+    "limitations": [
+      "This verification covers public explanation and the directly affected behavior boundaries. It does not add or promote runtime capability.",
+      "The published example remains research-only, fixture-local, create-only, Python-executed, and outside the released package API.",
+      "The full repository and package suites remain outside the prior milestone's accepted completion boundary."
+    ]
+  },
+  "entry_hash": "sha256:3d6ca506a88d696545bb1445e3ec31119fc2607a19390e2be8e1e2cfda6db185",
+  "entry_id": "OVR-000338",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c6e548947ed6bd9f4ec9397e6f6be64788859f506221c76c1605c20bed714501",
+  "recorded_at": "2026-09-02T16:08:02Z",
+  "references": [
+    {
+      "digest": "sha256:d912cf86393b2256c35161c3a2bba14d9a977e3bfeab14a5a8c6f7376e25d998",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone-clarity.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000337",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000333",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000334",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 338,
+  "subject": {
+    "id": "ccr11-public-milestone-clarity-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the corrected README and newcomer explanation of the compiler milestone.",
+  "why": "A public milestone is useful only if a newcomer can understand why it matters and every simplification remains true. Independent code, factual, and voice audits now agree with mechanical documentation guards on the corrected boundary."
+}
