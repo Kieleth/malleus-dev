@@ -321,9 +321,10 @@ def _protocol_events(
     *,
     outcomes: tuple[str, str] = ("SATISFIED", "SATISFIED"),
     proposed_identity: str | None = None,
+    identifier_suffix: str = "",
 ) -> tuple[bytes, ...]:
     policy = _load_policy()
-    proposal_id = "proposal-generic-1"
+    proposal_id = f"proposal-generic-1{identifier_suffix}"
     proposal = _event(
         "CHANGE_PROPOSED",
         expected_machine_state_identity=machine_state_identity,
@@ -340,7 +341,7 @@ def _protocol_events(
             outcome=outcome,
             policy_identity=policy.identity,
             proposal_id=proposal_id,
-            receipt_id=f"receipt-generic-{index}",
+            receipt_id=f"receipt-generic-{index}{identifier_suffix}",
         )
         for index, ((check_id, check_identity), outcome) in enumerate(
             zip(CHECKS, outcomes, strict=True)
@@ -348,7 +349,7 @@ def _protocol_events(
     )
     decision = _event(
         "VERDICT_RECORDED",
-        decision_id="decision-generic-1",
+        decision_id=f"decision-generic-1{identifier_suffix}",
         proposal_id=proposal_id,
     )
     return (proposal, *checks, decision)
@@ -571,6 +572,57 @@ def test_genesis_change_is_retained_then_accepted_and_replayed_from_empty(
     assert copied.graph.snapshot() == admitted.graph.snapshot()
     assert copied.machine_state.identity == admitted.machine_state.identity
     assert tuple(copied_path.parent.iterdir()) == (copied_path,)
+
+
+@pytest.mark.parametrize("self_supersedes", [False, True])
+def test_change_set_ids_are_unique_and_cannot_self_supersede(
+    tmp_path: Path, self_supersedes: bool
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    first = _load_change(_base_payload(history, partial, source, evidence))
+    history.admit(
+        change_set=first,
+        machine_events=_protocol_events(first, before.machine_state.identity),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    before_second = history.replay()
+    payload = _base_payload(history, partial, source, evidence)
+    payload["operations"] = [
+        {
+            "depends_on": [],
+            "operation_id": "operation-left-2",
+            "operation_type": "CREATE_ENTITY",
+            "ordinal": 0,
+            "properties": {"label": "left-2"},
+            "record_id": "left-2",
+            "record_type": "LeftObject",
+        }
+    ]
+    if self_supersedes:
+        payload["supersedes"] = [first.change_set_id]
+    second = _load_change(payload)
+    assert second.change_set_id == first.change_set_id
+    assert second.identity != first.identity
+
+    ledger_before = _ledger_bytes(history)
+    graph_before = before_second.graph.snapshot()
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=second,
+            machine_events=_protocol_events(
+                second,
+                before_second.machine_state.identity,
+                identifier_suffix="-second",
+            ),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.IDENTITY_MISMATCH
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == graph_before
 
 
 @pytest.mark.parametrize(
