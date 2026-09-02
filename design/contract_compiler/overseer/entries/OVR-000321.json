@@ -1,0 +1,23 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"affected_ids": ["CC-R03"], "documents": [
+    {"after_digest": "sha256:ce7e5735f0cb81af0f4a076b38b099ad84c6868524bc6a4603925200698efe28", "change": "CREATED", "path": "conformance/contract_compiler/v0/evidence/CC-R03.json"},
+    {"after_digest": "sha256:a62b8d4b46e023b4dbc714dac4552952e14152f78724550887c4df16b7280b69", "before_digest": "sha256:13435e72a8eeaa2cd1d333b98ad277ebe24c34116d600418b1e5f90a0f495d51", "change": "MODIFIED", "path": "design/contract_compiler/workstreams/CC-R03/manifest.json"},
+    {"after_digest": "sha256:b1bcdf75fd5cd34400e4b8d2fe6a31f55e2b48b3988f41e32df5daebb4bd497c", "before_digest": "sha256:1ef0e6bc6dd5367c6fc6a0f4c381014fa86ffae340a6cceffa9c61066295ac45", "change": "MODIFIED", "path": "design/contract_compiler/integration.json"},
+    {"after_digest": "sha256:4f8418b4f6ba4354c3c0a2abf880cd1931fa912a46f777e67a0071475a5aa7d4", "before_digest": "sha256:e6b82ca6ca8d8d85e58d0352b4e516ec71f8dd76c28c19ce36a55cf39dba1056", "change": "MODIFIED", "path": "tests/test_contract_compiler_integration.py"},
+    {"after_digest": "sha256:1c030857c7cf8c4ee49789877f13103c532d374466f1951ea96fb0dfde2b6036", "before_digest": "sha256:f77d859e44bceb7422bd13235f111154668baeb16864482d4e093f58cf95f6ea", "change": "MODIFIED", "path": "tests/test_contract_compiler_ledger.py"},
+    {"after_digest": "sha256:947e3293bb002505d1b8b8c4279700918f5b7b22afa31ced795252def23262df", "change": "CREATED", "path": "design/contract_compiler/overseer/evidence/CC-R03-completion-chronology-correction.json"}
+  ]},
+  "entry_hash": "sha256:b1747941000c69adb0171f8fe84172c4526f73dd91d824114b8550bd2b06d98f",
+  "entry_id": "OVR-000321",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:3b3e81b26d22bb35ce5a98e61d24618b552150df69b1c2433da9c3ca95767ce0",
+  "recorded_at": "2026-09-01T23:50:03Z",
+  "references": [{"relation": "DEFINES", "target": "conformance/contract_compiler/v0/evidence/CC-R03.json", "type": "DOCUMENT"}, {"relation": "DEFINES", "target": "design/contract_compiler/workstreams/CC-R03/manifest.json", "type": "DOCUMENT"}, {"relation": "DEFINES", "target": "design/contract_compiler/integration.json", "type": "DOCUMENT"}, {"relation": "DEFINES", "target": "tests/test_contract_compiler_integration.py", "type": "DOCUMENT"}, {"relation": "DEFINES", "target": "tests/test_contract_compiler_ledger.py", "type": "DOCUMENT"}, {"digest": "sha256:947e3293bb002505d1b8b8c4279700918f5b7b22afa31ced795252def23262df", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-R03-completion-chronology-correction.json", "type": "EVIDENCE"}, {"relation": "EVIDENCES", "target": "OVR-000319", "type": "ENTRY"}, {"relation": "EVIDENCES", "target": "OVR-000320", "type": "ENTRY"}, {"relation": "AFFECTS", "target": "CC-R03", "type": "WORKSTREAM"}],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 321,
+  "subject": {"id": "ccr03-completion-chronology-correction", "type": "DOCUMENT"},
+  "summary": "Record exact R03 candidate-evidence provenance and chronology guards.",
+  "why": "Completion authority must follow exact evidence provenance. This revision records the retained candidate report before replacement verification and hardens the generic chronology, registry, authority-floor, legacy-boundary, and dependency-mutation guards."
+}

@@ -6179,6 +6179,24 @@ def test_verified_facts_do_not_claim_future_artifact_bytes() -> None:
                 )
 
 
+def test_r03_completion_correction_restores_exact_evidence_chronology() -> None:
+    state = load_ledger(OVERSEER)
+    entries = {entry["entry_id"]: entry for entry in state.entries}
+
+    assert entries["OVR-000319"]["data"]["supersedes_entry_id"] == "OVR-000317"
+    assert entries["OVR-000320"]["data"]["supersedes_entry_id"] == "OVR-000318"
+    revision = entries["OVR-000321"]
+    provenance = {
+        document["path"]: document["after_digest"]
+        for document in revision["data"]["documents"]
+    }
+    assert provenance["conformance/contract_compiler/v0/evidence/CC-R03.json"] == (
+        "sha256:ce7e5735f0cb81af0f4a076b38b099ad84c6868524bc6a4603925200698efe28"
+    )
+    assert entries["OVR-000322"]["subject"] == entries["OVR-000317"]["subject"]
+    assert entries["OVR-000323"]["data"]["evidence_entry_ids"] == ["OVR-000322"]
+
+
 def test_overseer_ledger_and_projection_are_current() -> None:
     state = load_ledger(OVERSEER)
 

@@ -323,6 +323,17 @@ def _rebind_current_dependency_card_digests(
     _rewrite_card(manifest_path, manifest, workstream_id, rebind)
 
 
+def _rebind_current_dependency_chain(
+    manifest_path: Path,
+    manifest: dict[str, Any],
+    *workstream_ids: str,
+) -> None:
+    for workstream_id in workstream_ids:
+        _rebind_current_dependency_card_digests(
+            manifest_path, manifest, workstream_id
+        )
+
+
 def _register_blocked_card(
     manifest_path: Path,
     manifest: dict[str, Any],
@@ -978,7 +989,7 @@ def test_canonical_integration_manifest_is_valid() -> None:
         "CC-D17": ("CC-D05", "CC-D06"),
         "CC-D18": ("CC-D10", "CC-D17"),
     }
-    assert len(state.cards) == 36
+    assert len(state.cards) == 37
     cc003 = state.cards["CC-003"]
     assert state.workstreams["CC-003"] == ("CC-000", "CC-R08")
     assert cc003["assignment"] == {"state": "UNASSIGNED"}
@@ -5722,7 +5733,7 @@ def test_existing_nonbootstrap_candidates_satisfy_generic_authority_floor() -> N
         )
         checked.append(card["workstream_id"])
 
-    assert len(checked) == 19
+    assert len(checked) == 20
     assert "CC-000" not in checked
     assert "CC-014" in checked
     assert "CC-R01" in checked
@@ -6135,7 +6146,7 @@ def test_exact_prefix_240_candidates_are_the_only_legacy_set() -> None:
         for workstream_id, card in cards.items()
         if card["candidate"]["state"] in {"ELIGIBLE", "INTEGRATED"}
         and workstream_id
-        not in {"CC-012", "CC-014", "CC-016", "CC-R01", "CC-R02"}
+        not in {"CC-012", "CC-014", "CC-016", "CC-R01", "CC-R02", "CC-R03"}
     }
 
 
@@ -6758,7 +6769,9 @@ def test_selected_workstream_must_be_formally_authorized(tmp_path: Path) -> None
         bindings["CC-X03"]["integrated_head"] = result_commit
 
     _rewrite_card(manifest_path, manifest, "CC-R01", rebind_retained_source)
-    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
+    _rebind_current_dependency_chain(
+        manifest_path, manifest, "CC-R02", "CC-R03"
+    )
     manifest["selections"] = ["CC-X03"]
     _write_json(manifest_path, manifest)
 
@@ -6957,7 +6970,9 @@ def test_research_candidate_cannot_reach_an_integration_gate_before_tdd(
             ledger={"state": "NOT_STARTED"},
         ),
     )
-    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
+    _rebind_current_dependency_chain(
+        manifest_path, manifest, "CC-R02", "CC-R03"
+    )
     monkeypatch.setattr(
         integration_module,
         "load_ledger",
@@ -6981,7 +6996,9 @@ def test_research_workstream_cannot_be_complete_before_tdd_gate(
         "CC-R01",
         lambda card: card.update(ledger={"state": "NOT_STARTED"}),
     )
-    _rebind_current_dependency_card_digests(manifest_path, manifest, "CC-R02")
+    _rebind_current_dependency_chain(
+        manifest_path, manifest, "CC-R02", "CC-R03"
+    )
     original = integration_module._workstream_states
     monkeypatch.setattr(
         integration_module,

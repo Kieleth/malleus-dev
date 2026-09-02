@@ -1,0 +1,16 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"affected_subject_ids": ["CC-R03"], "replacement_required": true, "supersedes_entry_id": "OVR-000318"},
+  "entry_hash": "sha256:3b3e81b26d22bb35ce5a98e61d24618b552150df69b1c2433da9c3ca95767ce0",
+  "entry_id": "OVR-000320",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6d93aee1bbbf3a5c81de1224a97b27c0051061f5f4bcd59d2e28ebb4b1bd94bf",
+  "recorded_at": "2026-09-01T23:50:02Z",
+  "references": [{"relation": "SUPERSEDES", "target": "OVR-000318", "type": "ENTRY"}, {"relation": "EVIDENCES", "target": "OVR-000319", "type": "ENTRY"}, {"relation": "AFFECTS", "target": "CC-R03", "type": "WORKSTREAM"}],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 320,
+  "subject": {"id": "CC-R03", "type": "WORKSTREAM"},
+  "summary": "Correct the R03 completion state dependent on premature verification.",
+  "why": "OVR-000318 depended on superseded OVR-000317. The correction restores ACTIVE until exact evidence provenance and replacement verification are recorded."
+}

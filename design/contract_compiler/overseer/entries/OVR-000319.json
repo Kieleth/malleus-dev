@@ -1,0 +1,16 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"affected_subject_ids": ["ccr03-completion-verification", "CC-R03"], "replacement_required": true, "supersedes_entry_id": "OVR-000317"},
+  "entry_hash": "sha256:6d93aee1bbbf3a5c81de1224a97b27c0051061f5f4bcd59d2e28ebb4b1bd94bf",
+  "entry_id": "OVR-000319",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:67b9f5e7f883d237de956bc3e963c4d5aa0fc5b1298d65976b9776205dce4ee7",
+  "recorded_at": "2026-09-01T23:50:01Z",
+  "references": [{"relation": "SUPERSEDES", "target": "OVR-000317", "type": "ENTRY"}, {"relation": "AFFECTS", "target": "CC-R03", "type": "WORKSTREAM"}],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 319,
+  "subject": {"id": "ccr03-completion-verification", "type": "EVIDENCE"},
+  "summary": "Correct the premature R03 completion verification.",
+  "why": "OVR-000317 cited the retained candidate evidence before an active DOCUMENT_REVISION recorded its exact bytes. The implementation evidence remains valid, but its governance chronology requires a forward replacement."
+}

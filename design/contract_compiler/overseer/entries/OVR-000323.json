@@ -1,0 +1,16 @@
+{
+  "actor": {"id": "overseer", "type": "OVERSEER"},
+  "data": {"blockers": [], "bootstrap": false, "deliverables": ["Produce one immutable qualified binding/composition result or one typed atomic refusal from an immutable DeclaredContractClosure.", "Resolve exact declarations and references with trusted builtins and accepted explicit adoption while preserving provenance and deterministic diagnostics.", "Bind the exact private eligible candidate, six-entry worker ledger, and correctly ordered evidence provenance.", "Keep the candidate private and unselected; activate no successor."], "evidence_entry_ids": ["OVR-000322"], "new_state": "COMPLETE", "previous_state": "ACTIVE", "workstream_id": "CC-R03"},
+  "entry_hash": "sha256:5d820f12be651ab28cbb85f67bc8fec714b56e95452d9d793faad9fd84e4a7e8",
+  "entry_id": "OVR-000323",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c26934058481aa185883b3d7e3c7934dd6c482bc9594cc8746f8be8afcd93b5e",
+  "recorded_at": "2026-09-01T23:50:05Z",
+  "references": [{"relation": "EVIDENCES", "target": "OVR-000322", "type": "ENTRY"}, {"relation": "SATISFIES", "target": "CC-R03", "type": "WORKSTREAM"}],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 323,
+  "subject": {"id": "CC-R03", "type": "WORKSTREAM"},
+  "summary": "Complete the private qualified-binding boundary after chronology correction.",
+  "why": "OVR-000322 verifies the exact candidate after its evidence and artifacts received prior exact DOCUMENT_REVISION provenance."
+}

@@ -1,0 +1,57 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 8146,
+      "path": "conformance/contract_compiler/v0/evidence/CC-R03.json",
+      "sha256": "sha256:ce7e5735f0cb81af0f4a076b38b099ad84c6868524bc6a4603925200698efe28"
+    },
+    {
+      "byte_length": 8617,
+      "path": "design/contract_compiler/workstreams/CC-R03/manifest.json",
+      "sha256": "sha256:a62b8d4b46e023b4dbc714dac4552952e14152f78724550887c4df16b7280b69"
+    },
+    {
+      "byte_length": 26809,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:b1bcdf75fd5cd34400e4b8d2fe6a31f55e2b48b3988f41e32df5daebb4bd497c"
+    },
+    {
+      "byte_length": 300699,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:4f8418b4f6ba4354c3c0a2abf880cd1931fa912a46f777e67a0071475a5aa7d4"
+    },
+    {
+      "byte_length": 264041,
+      "path": "tests/test_contract_compiler_ledger.py",
+      "sha256": "sha256:1c030857c7cf8c4ee49789877f13103c532d374466f1951ea96fb0dfde2b6036"
+    }
+  ],
+  "base_commit": "389028de93cc709eda6479f75677758c90b6558f",
+  "checks": [
+    {
+      "check_id": "candidate-evidence-provenance",
+      "method": "Bind the exact retained CC-R03 candidate report in a DOCUMENT_REVISION before replacement verification.",
+      "observed": "The report digest and byte length are recorded before the replacement VERIFIED_FACT cites it or its artifacts.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "chronology-class-guard",
+      "method": "Run the generic active-fact chronology guard and the exact R03 correction regression.",
+      "observed": "Every active verified fact cites evidence and artifacts with prior exact provenance; OVR-000319 through OVR-000323 are mechanically pinned.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "integration-assumptions",
+      "method": "Validate the current card registry, candidate authority floor, legacy boundary, and downstream mutation fixtures.",
+      "observed": "Thirty-seven cards and twenty governed candidates validate; CC-R03 is current, and CC-R02 mutations rebind the direct CC-R03 dependency.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This correction changes governance chronology and regression guards only. It does not change binder implementation, candidate evidence bytes, packaging, selection, or public API.",
+    "CC-R03 remains private, eligible, unselected, and complete. No successor is activated."
+  ],
+  "recorded_at": "2026-09-01T23:50:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R03"
+}

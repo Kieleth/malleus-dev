@@ -1,0 +1,16 @@
+{
+  "actor": {"id": "ccr03-completion-verifier", "type": "MECHANICAL"},
+  "data": {"as_of": "2026-09-01T23:50:04Z", "claims": ["CC-R03 binds the exact private eligible candidate at 8be9fb97a060a0b8940e8b3ce87f8991e5e16de6 and tree bb3a108b67b09f9e1b81126a5077936faed1f177.", "The exact candidate report and every cited artifact have prior DOCUMENT_REVISION provenance before this fact.", "The six-entry worker ledger ends at sha256:5099f8a80ec4d0d6ffcef20be99d475560477240a3094930114dab17a4f41074.", "The binder behavior, typed atomic refusals, deterministic diagnostics, privacy, unselected state, and cumulative R01/R02 regressions pass.", "PACKAGE is omitted and confers no completion or distribution authority."], "limitations": ["The binder remains private, eligible, and unselected.", "No package, public API, runtime, graph, or successor authority is claimed."]},
+  "entry_hash": "sha256:c26934058481aa185883b3d7e3c7934dd6c482bc9594cc8746f8be8afcd93b5e",
+  "entry_id": "OVR-000322",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b1747941000c69adb0171f8fe84172c4526f73dd91d824114b8550bd2b06d98f",
+  "recorded_at": "2026-09-01T23:50:04Z",
+  "references": [{"digest": "sha256:947e3293bb002505d1b8b8c4279700918f5b7b22afa31ced795252def23262df", "relation": "EVIDENCES", "target": "design/contract_compiler/overseer/evidence/CC-R03-completion-chronology-correction.json", "type": "EVIDENCE"}, {"relation": "EVIDENCES", "target": "OVR-000319", "type": "ENTRY"}, {"relation": "EVIDENCES", "target": "OVR-000320", "type": "ENTRY"}, {"relation": "EVIDENCES", "target": "OVR-000321", "type": "ENTRY"}, {"relation": "EVIDENCES", "target": "8be9fb97a060a0b8940e8b3ce87f8991e5e16de6", "type": "COMMIT"}, {"relation": "AFFECTS", "target": "CC-R03", "type": "WORKSTREAM"}],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 322,
+  "subject": {"id": "ccr03-completion-verification", "type": "EVIDENCE"},
+  "summary": "Verify R03 completion after exact evidence provenance.",
+  "why": "The same exact private candidate is now supported by correctly ordered provenance, behavior evidence, privacy, and unselected scope."
+}
