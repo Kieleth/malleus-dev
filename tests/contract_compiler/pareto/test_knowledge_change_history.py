@@ -168,7 +168,7 @@ def _anchor(
     assert result.machine_receipt.outcome == "APPLIED"
 
 
-def _anchored_history(tmp_path: Path):
+def _anchored_history(tmp_path: Path, *, omit_bootstrap_role: str | None = None):
     history, compiled, partial, binding = _history(tmp_path)
     contract_bytes = partial.canonical_bytes
     source_bytes = b"generic retained source\n"
@@ -233,14 +233,16 @@ def _anchored_history(tmp_path: Path):
         ),
     )
     for event, retained, role in anchors:
-        _anchor(history, event, retained, role)
+        if role != omit_bootstrap_role:
+            _anchor(history, event, retained, role)
     replay = history.replay()
     assert replay.retained_bytes("source-generic") == source_bytes
     assert replay.retained_bytes("evidence-generic") == evidence_bytes
     raw_ledger = history.path.read_bytes()
     assert b64encode(source_bytes) in raw_ledger
     assert b64encode(evidence_bytes) in raw_ledger
-    assert b64encode(compiled.artifact.artifact_bytes) in raw_ledger
+    if omit_bootstrap_role != "VALIDATED_CONTRACT":
+        assert b64encode(compiled.artifact.artifact_bytes) in raw_ledger
     assert tuple(history.path.parent.iterdir()) == (history.path,)
     return (
         history,
@@ -250,6 +252,36 @@ def _anchored_history(tmp_path: Path):
         source_identity,
         evidence_identity,
     )
+
+
+@pytest.mark.parametrize(
+    "missing_role",
+    [
+        "VALIDATED_CONTRACT",
+        "PARTIAL_EFFECTIVE_CONTRACT",
+        "KNOWLEDGE_HISTORY_BINDING",
+    ],
+)
+def test_admission_requires_complete_jsonl_bootstrap(
+    tmp_path: Path, missing_role: str
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(
+        tmp_path, omit_bootstrap_role=missing_role
+    )
+    before = history.replay()
+    change_set = _load_change(_base_payload(history, partial, source, evidence))
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=change_set,
+            machine_events=_protocol_events(change_set, before.machine_state.identity),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
 
 
 def _base_payload(
