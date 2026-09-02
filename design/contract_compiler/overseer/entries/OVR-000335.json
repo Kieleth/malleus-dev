@@ -1,0 +1,94 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:99f3aa2184e757a643dcc279dbedc5195d22a173f594a79f49eb75bdb362a17c",
+        "before_digest": "sha256:566763195107ea4568c61b9fecda5e4169ef893f51feb48b36a258351c1b807f",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:4a60813201f451abfd26c749efbac8e055dc152069b80ab79f2a0b403a925ee5",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone.json"
+      },
+      {
+        "after_digest": "sha256:b69bb5f930b06923e1dfc7999b8aa0d9daac6cceed6f5f5e71e92381ed62be75",
+        "before_digest": "sha256:ff8f941c24d67fcc5dc5050d0d8e4ab08c4488ee384aeb940b151fcbb4d1c912",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:6c7b3ee7d6df7d82a7588f630137730358c2f4459e7a501c0c1dd53edf227128",
+        "before_digest": "sha256:9ed215646c7d828f897b904397899c45be1b9d0068781f4cd32fe776a79317bb",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:b32af1e17a5c1112987198eee393e5c217e7acf143030184939c1e7232b3cab6",
+  "entry_id": "OVR-000335",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2a65a5d333fe3aa7b663132c8752ea60f450ef2f27d046d6c5a8ec1cd24e11af",
+  "recorded_at": "2026-09-02T14:58:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "README.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "docs/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_docs.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:4a60813201f451abfd26c749efbac8e055dc152069b80ab79f2a0b403a925ee5",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-public-milestone.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000333",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000334",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 335,
+  "subject": {
+    "id": "ccr11-public-milestone",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the first compiler-to-ledger-to-knowledge-graph proof in plain English.",
+  "why": "The completed Small Shop vertical is strong enough to be publicly discoverable as a bounded research milestone. The existing Sphinx landing page now explains the input, compiled contract, immutable knowledge change, one retained history, replayed graph, reusable boundaries, fixture choices, and exact limits without widening the public guide corpus or implying a release."
+}

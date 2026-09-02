@@ -2126,6 +2126,79 @@ def test_accepted_knowledge_has_one_ledger_and_replay_only_projection() -> None:
         assert phrase in combined
 
 
+def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
+    index = (DOCS / "index.md").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    evidence = (
+        ROOT
+        / "design"
+        / "contract_compiler"
+        / "overseer"
+        / "evidence"
+        / "CC-R11-completion.json"
+    ).read_text(encoding="utf-8")
+    normalized = " ".join(index.split())
+    normalized_readme = " ".join(readme.split())
+
+    for exact_source_value in (
+        '"event_id":"e27"',
+        '"items":["X1","X2","Y1"]',
+        '"order":"O1"',
+        "inventory_unit_id,product_code",
+        "X1,X",
+    ):
+        assert exact_source_value in index
+
+    for claim in (
+        "The first real Malleus compiler-to-ledger-to-knowledge-graph path is complete.",
+        "Working research milestone",
+        "crosses the selected source-to-history-to-graph boundaries",
+        "one immutable `KnowledgeChangeSet`",
+        "One JSONL ledger",
+        "This run records 25 immutable semantic and protocol events.",
+        "reconstructs the same graph and byte-identical receipt",
+        'SalesOrder("O1", order_number="O1")',
+        'InventoryUnit("X1", product_code="X")',
+        'OrderContainsUnit("contains:O1:X1", O1 -> X1)',
+        "The generic history layer has no Small Shop vocabulary",
+        "Some structural contract admission still lives in Python",
+        "optional semantic-history profile",
+        "Two required fixture checks and a strict three-outcome verdict mapping.",
+        "140 focused passing tests",
+    ):
+        assert claim in normalized
+
+    for boundary in (
+        "not yet a stable public API",
+        "It does not mean the general Malleus compiler is finished.",
+        "not a release gate",
+        "general mapping contract",
+        "update and correction behavior",
+        "Semantic Re-entry",
+        "cross-language parity",
+    ):
+        assert boundary in normalized
+
+    assert "crosses every boundary" not in index
+    assert "Three fixture checks" not in index
+
+    normalized_evidence = " ".join(evidence.split())
+    for evidence_claim in (
+        "The first run writes 25 semantic/protocol events",
+        "projects O1, X1, and contains:O1:X1.",
+        "Final audit reports CLEAN with no P0, P1, or P2 defect.",
+        "The full repository pytest run was not completed",
+        "not a public or stable compiler API",
+    ):
+        assert evidence_claim in normalized_evidence
+
+    milestone_link = (
+        "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
+    )
+    assert milestone_link in normalized_readme
+    assert "not yet a stable public compiler API or release" in normalized_readme
+
+
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
     for path in (ROOT / "README.md", DOCS / "ADOPTION_GUIDE.md"):
         text = path.read_text(encoding="utf-8")

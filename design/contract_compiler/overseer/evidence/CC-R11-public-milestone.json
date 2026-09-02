@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 23093,
+      "path": "README.md",
+      "sha256": "sha256:99f3aa2184e757a643dcc279dbedc5195d22a173f594a79f49eb75bdb362a17c"
+    },
+    {
+      "byte_length": 8245,
+      "path": "design/contract_compiler/overseer/evidence/CC-R11-completion.json",
+      "sha256": "sha256:0b2175d8b8a66c9e2148ab954bcc47358851693adaf5f672f6e6fad1d315ab7d"
+    },
+    {
+      "byte_length": 7498,
+      "path": "docs/index.md",
+      "sha256": "sha256:b69bb5f930b06923e1dfc7999b8aa0d9daac6cceed6f5f5e71e92381ed62be75"
+    },
+    {
+      "byte_length": 78082,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:6c7b3ee7d6df7d82a7588f630137730358c2f4459e7a501c0c1dd53edf227128"
+    }
+  ],
+  "base_commit": "c20387ab7d8825e6e8d73efdbf225774bc7ab0c9",
+  "checks": [
+    {
+      "check_id": "public-milestone-source-grounding",
+      "method": "Compare the public Small Shop input, selected graph, replay, test count, and limitations with the frozen fixture, independent oracle, and governed completion receipt.",
+      "observed": "The landing page uses the exact e27 warehouse row and X1-to-X lookup, reports only SalesOrder O1, InventoryUnit X1, and contains:O1:X1, and preserves the completion receipt's 25-event replay and 140-test boundary without turning the oracle into compiler input.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-protocol-boundary",
+      "method": "Inspect the public explanation and run its mechanical wording guard.",
+      "observed": "The page separates the selected reusable Malleus boundaries from Small Shop choices, identifies semantic history as optional, names the exact two-check and three-outcome fixture policy, keeps Python's remaining structural admission explicit, and labels the path as working research rather than a stable API, format, package feature, release, or finished general compiler.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-discoverability",
+      "method": "Inspect the Sphinx root and repository README and verify the exact internal anchor.",
+      "observed": "The complete walkthrough is the existing Sphinx landing page and the README links directly to its milestone section. No new guide, public-source allowlist, package manifest, or deployment claim was introduced.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "public-milestone-documentation-gate",
+      "method": "Run tests/test_docs.py, strict Sphinx HTML, doctest, and linkcheck through scripts/ci.py docs, changed-file Ruff, overseer-ledger and integration validation, evidence verification, and git diff checking.",
+      "observed": "All selected documentation, source-purity, public-example, governance, and formatting checks pass. Site deployment, the full repository suite, and package construction remain outside this documentation-only transaction.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This publishes a repository and Sphinx explanation of completed research evidence. It does not deploy a hosted site or create a release.",
+    "The executable compiler path remains research-local and private. No stable public API, installed command, wire-format contract, package feature, or general LinkML compatibility claim is added.",
+    "The proof covers one frozen Small Shop initial-population case. General mapping, broad ontology support, correction, update, delete, effects, observation, public bitemporal queries, Semantic Re-entry, and cross-language parity remain open.",
+    "The compiler workstream remains complete at its prior boundary. This documentation transaction does not reopen it, alter its candidate, change package metadata, or claim a new runtime capability.",
+    "The full repository suite and package checks remain excluded under the accepted Pareto research gate."
+  ],
+  "recorded_at": "2026-09-02T14:58:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

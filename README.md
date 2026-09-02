@@ -7,6 +7,15 @@
 A protocol for typed, fail-closed semantic change, with a Python reference
 implementation and the opinion that words have power.
 
+## Current research milestone
+
+[The first real Malleus compiler-to-ledger-to-knowledge-graph path is
+complete.](docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof)
+The public walkthrough follows one Small Shop record from source bytes through
+an explicit contract and decision history into a replayed graph. It also states
+the boundary plainly: this is working repository evidence, not yet a stable
+public compiler API or release.
+
 ## Why this exists
 
 I believe words have power. The closer we work with them, the more carefully we pin down what they mean and how they relate, the closer we get to something a machine can use without guessing. An ontology is that pinning-down, made explicit and machine-readable. Borges and Le Guin understood this long before software did: to name something precisely is to begin controlling it.
