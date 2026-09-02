@@ -82,6 +82,54 @@ that need unimplemented constructs must refuse rather than guess or borrow
 ambient semantics. Public API promotion and packaging remain separate governed
 work.
 
+## Private protocol-machine slice
+
+The next private slice makes one protocol machine reloadable and executable as
+data. It keeps four identities separate:
+
+```text
+ValidatedContractFactSet
+  + ProtocolMachineProgram
+  + PolicyProgram
+  -> NormativeAdmissionProfile
+  -> PartialEffectiveContract
+```
+
+`ProtocolMachineProgram` declares record shapes, events, ordered instructions,
+unique indexes, effects, and typed refusal identifiers. `PolicyProgram`
+separately declares the exact required checks, their identities, outcome-to-
+verdict controls, and precedence. The normative profile binds the machine and
+policy identities. The partial effective-contract identity binds that profile
+to the exact validated fact-set hash from the preceding compiler slice.
+
+Python now supplies one generic interpreter for this measured event and verdict
+boundary. It validates the complete instruction-reference closure before
+execution, stages every effect, and returns either the complete next state or a
+typed refusal with unchanged state. It contains no fixture event, record,
+field, check, policy, index, or refusal names. It accepts no callbacks, arbitrary
+code, I/O capabilities, ledger writer, or graph mutation capability.
+
+The strict example policy used by the conformance fixture is not a universal
+Malleus default. Its explicit `SATISFIED`, `VIOLATED`, and `UNKNOWN` outputs map
+to `ACCEPT`, `REJECT`, and `DEFER`. A missing required check is different from
+an explicit `UNKNOWN` result and refuses the decision. Other adopters may use a
+different identified policy program within the accepted outcome and verdict
+rules.
+
+This remains a partial, private mechanism. It does not yet implement the full
+three-role contract composition, the public `KnowledgeChangeSet`, a semantic
+ledger, replay-derived accepted graph, the Assent no-fallback cutover, external
+capabilities, or cross-language parity. `ContractView` also still implements
+part of structural instance admission in Python. Those limits prevent the
+experiment from being mistaken for the finished protocol.
+
+Future frontends and interpreters extend these seams rather than adding hidden
+Python parameters. A frontend adapter emits the same neutral contract. A new
+policy is a separately content-addressed `PolicyProgram`. A future named
+capability is an explicit profile reference with its own conformance contract.
+Another language may load the same canonical artifacts and is conforming only
+when it produces the same state or typed refusal.
+
 ## Local CI and compiler TDD
 
 Run the repository's complete local gate with one fixed command:
@@ -92,18 +140,18 @@ python scripts/ci.py
 
 The default `all` profile runs Ruff over the governed Python boundaries, the
 full configured pytest suite, the overseer-ledger and integration validators,
-the GraphRecipe conformance slice, strict Sphinx HTML, doctest, and linkcheck
-builds, then a real package build, metadata check, clean-environment install,
-and console-script smoke tests. It reads no command from a card, manifest, or
+the GraphRecipe and Small Shop conformance slices, and strict Sphinx HTML,
+doctest, and linkcheck builds. It reads no command from a card, manifest, or
 ledger. A governance record is evidence, never executable CI input.
 
-The same runner exposes fixed `test`, `docs`, and `package` profiles so the
-Python-version matrix can share work without repeating the full suite. GitHub
-Actions calls these profiles with `--require-clean`. Local runs tolerate
-pre-existing edits but mechanically refuse any tracked or untracked change
-caused by a check. A future local merge hook or merge
-queue must call this runner rather than copy its commands. No hook installer is
-part of this scaffold.
+The same runner exposes fixed `test`, `docs`, and explicit `package` profiles.
+Package construction, metadata checking, clean installation, and console smoke
+tests run only under `package`; normal research work does not pay that cost.
+GitHub Actions calls the selected profiles with `--require-clean`. Local runs
+tolerate pre-existing edits but mechanically refuse any tracked or untracked
+change caused by a check. A future local merge hook or merge queue must call
+this runner rather than copy its commands. No hook installer is part of this
+scaffold.
 
 Compiler work keeps the failing RED observation in its immutable worker ledger
 and commit history. Live CI does not keep a deliberately failing test on the

@@ -1,0 +1,58 @@
+{
+  "actor": {
+    "id": "ccr11-milestone-2-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T04:00:02Z",
+    "claims": [
+      "A canonical protocol-machine program now owns the measured record, event, instruction, transition, effect, and refusal vocabulary.",
+      "A separately identified policy program owns exact required checks, outcome controls, and precedence; missing checks refuse rather than becoming implicit UNKNOWN results.",
+      "The normative profile binds machine and policy identities, and the private partial effective contract binds that profile to the exact validated fact-set hash.",
+      "The generic Python interpreter validates complete operand and identity closure, stages effects atomically, refuses hostile artifacts and prestates deliberately, and replays deterministically without fixture vocabulary, callbacks, I/O, or graph access.",
+      "All 66 focused M1 and M2 tests passed and final independent review found no P0 through P2 issue in the declared private boundary."
+    ],
+    "limitations": [
+      "CC-R11 remains ACTIVE because the public KnowledgeChangeSet, empty-genesis history, replay-derived Small Shop graph, and runner are not implemented.",
+      "This is not the full three-role EffectiveContract composition, public API, Assent cutover, or cross-language parity proof.",
+      "The full repository pytest run was deliberately interrupted after 806 passes and no failures because its runtime exceeded the Pareto gate; package and release checks were excluded."
+    ]
+  },
+  "entry_hash": "sha256:a4f955ff7ad8354036b20a4761f197864d0886c2f04fe2a2df541dbb7af6ffaf",
+  "entry_id": "OVR-000331",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a27de40a57446e608f5a5a98fc54c2559ad98e842284ab9d5e2a32c6bbec36ef",
+  "recorded_at": "2026-09-02T04:00:02Z",
+  "references": [
+    {
+      "digest": "sha256:259b47716048ec6713aa43a24774693df553c4fdad5dc8fbce8cadf9f1083d8f",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-milestone-2.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000330",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f904823097ff3571432223614cd4e80bbd0743bc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 331,
+  "subject": {
+    "id": "ccr11-milestone-2-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the private protocol-machine milestone.",
+  "why": "The evidence establishes that machine and policy meaning are explicit, identified data and that Python is only the generic interpreter for this measured slice, while preserving the remaining public change-set, history, projection, and portability work as explicit debt."
+}

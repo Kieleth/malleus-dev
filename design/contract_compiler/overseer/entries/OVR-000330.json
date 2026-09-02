@@ -1,0 +1,106 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:06aa95ac16df7b6e243d9524798bedbb80edd308ac0b648aaac6637525e2c524",
+        "before_digest": "sha256:c5458765fe08e417c336057f02413fd6d6e5d4a10feb64f8360066f9bc804854",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:259b47716048ec6713aa43a24774693df553c4fdad5dc8fbce8cadf9f1083d8f",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-milestone-2.json"
+      },
+      {
+        "after_digest": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/machine.py"
+      },
+      {
+        "after_digest": "sha256:c32317607d96863234d654ab8a19d4903a1d24f752b33dc0e97afe52c7b122e8",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_protocol_machine.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:a27de40a57446e608f5a5a98fc54c2559ad98e842284ab9d5e2a32c6bbec36ef",
+  "entry_id": "OVR-000330",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:5d28009ee9ec8100efbf6698c22b57ab7193dbf11624f80d5c82c684bb8c3601",
+  "recorded_at": "2026-09-02T04:00:01Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "docs/contract_compiler/index.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "digest": "sha256:259b47716048ec6713aa43a24774693df553c4fdad5dc8fbce8cadf9f1083d8f",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-milestone-2.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "src/malleus/_contract_pipeline/machine.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/contract_compiler/pareto/test_protocol_machine.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7509e82a838a17994129873c856bdcc4c3500b2e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d8f7c102a59ea65ccee0238672dfc358b62cfffe",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3feb717eaa853272d98e0568bb77a7f80d782ed2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1f23075ece06d4139cf3ef9afdc2a2f928c13d69",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "dd0e3fb77d55b0cbcda715d1716324ff8b197bc2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f904823097ff3571432223614cd4e80bbd0743bc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 330,
+  "subject": {
+    "id": "ccr11-milestone-2",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private protocol-machine milestone.",
+  "why": "The second Pareto milestone moves the measured event, check, verdict, transition, effect, and refusal authority into exact machine and policy artifacts. Python is now a closed generic interpreter for that private boundary, while the documentation and evidence keep the remaining Assent, graph, KnowledgeChangeSet, and cross-language gaps explicit."
+}

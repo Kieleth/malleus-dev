@@ -1,0 +1,81 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 9798,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:06aa95ac16df7b6e243d9524798bedbb80edd308ac0b648aaac6637525e2c524"
+    },
+    {
+      "byte_length": 48380,
+      "path": "src/malleus/_contract_pipeline/machine.py",
+      "sha256": "sha256:a6d1044a0f0d9e8ee50ca7157f4a636745ee1b718b5ca2ee65fdff9c3a6f1770"
+    },
+    {
+      "byte_length": 52835,
+      "path": "tests/contract_compiler/pareto/test_protocol_machine.py",
+      "sha256": "sha256:c32317607d96863234d654ab8a19d4903a1d24f752b33dc0e97afe52c7b122e8"
+    }
+  ],
+  "base_commit": "f7238664023f8c9ebe2e49293aff4300af401a72",
+  "checks": [
+    {
+      "check_id": "ccr11-m2-tdd-history",
+      "method": "Inspect the exact test-only RED sequence and the one-file GREEN commit.",
+      "observed": "Initial RED 7509e82 tree bee4274 and corrected RED d8f7c10 tree d06b939 define the missing module boundary. Incremental test-only commits 3feb717 tree e605af8, 1f23075 tree 0c64555, and dd0e3fb tree e910674 mechanically capture each audit defect before repair. GREEN f904823 tree 29dbb60 changes only the private machine module.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-identity-boundary",
+      "method": "Round-trip, tamper, and independently vary the protocol-machine, policy, normative-profile, validated fact-set, and partial effective-contract identities.",
+      "observed": "The private partial effective contract binds the exact validated fact-set hash and normative-profile hash. The profile separately binds the closed protocol-machine program and policy-program identities. Source-bearing artifact identity and implementation bytes do not replace semantic identity.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-executor-only",
+      "method": "Inspect production literals and capabilities, mutate fixture vocabulary and refusals, and replay the same event sequence twice.",
+      "observed": "The interpreter contains no fixture event, record, field, check, policy, index, or refusal values and accepts no callbacks, arbitrary code, I/O, ledger, KnowledgeChangeSet object, or graph capability. Machine and policy data control behavior, and replay is deterministic.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-closed-refusal-and-atomicity",
+      "method": "Exercise invalid instruction operands, forged artifacts and prestates, ambiguous checks, malformed events, policy mismatches, missing coverage, invalid outcomes, duplicate decisions, cross-type IDs, and staged postcondition failure.",
+      "observed": "Every hostile input is rejected during artifact loading or returns one typed failure-atomic refusal. No raw KeyError, StopIteration, TypeError, malformed prestate retention, hidden record deletion, or caller-owned mutation survives. Refusal preserves the exact canonical prestate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-focused-validation",
+      "method": "Run the M1 validated-contract and M2 protocol-machine test modules, changed-file Ruff, formatting, and diff checks.",
+      "observed": "All 66 focused tests passed in 6.42 seconds. Changed-file Ruff and diff checking passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-independent-audit",
+      "method": "Repeat read-only P0 through P2 review after each GREEN repair and reproduce every defect outside the worker test suite before accepting a correction.",
+      "observed": "The final independent audit found no remaining P0, P1, or P2 issue in the declared private machine boundary. It explicitly cleared identity closure, operand closure, prestate validation, immutability, policy coverage, verdict closure, atomicity, genericity, replay, and no-I/O boundaries.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-sphinx",
+      "method": "Run the fixed docs profile with strict HTML, doctest, and network-enabled link checking after the forward ledger rebind.",
+      "observed": "All three Sphinx builders passed. The compiler page now documents the machine, policy, profile, partial-contract identities, extension seams, explicit limitations, and the corrected non-package default CI boundary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-m2-pareto-gate",
+      "method": "Apply the operator-selected fast behavioral gate and record, rather than hide, the cost of the repository-wide run.",
+      "observed": "The selected 66-test gate and independent audit passed. A repository-wide pytest attempt reached 806 passing tests and 32 percent with no failure, then was deliberately interrupted after 893.78 seconds because the governance-heavy gate was blocking iteration. Full-suite performance is retained as CI debt, not represented as a completed check.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is one private partial EffectiveContract mechanism, not the full three-role composition or a public compatibility promise.",
+    "The existing Assent runtime and its handwritten handlers remain unchanged; no no-fallback cutover is claimed.",
+    "No public KnowledgeChangeSet, semantic ledger, replay-derived accepted graph, projector, effect adapter, or Semantic Re-entry path is implemented.",
+    "ContractView still owns part of structural instance-admission semantics in Python.",
+    "The repository-wide pytest run was intentionally not completed under the Pareto gate; it reached 806 passes with no failure before interruption. The focused boundary and independent audit are the completion evidence for this milestone.",
+    "Package, wheel, and release commands were not run."
+  ],
+  "recorded_at": "2026-09-02T04:00:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}
