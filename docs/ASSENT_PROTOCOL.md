@@ -242,6 +242,14 @@ The grantor must be the actor that records the grant. This authenticates the
 ledger attribution only. Whether that grantor is itself entitled to delegate
 authority remains an external trust-root and policy question.
 
+Every `AuthorityGrant` also names one exact adopter record in
+`scope_record_id` and explicitly states `may_subdelegate` as `true` or `false`.
+Neither field has a default. Both fields are part of the grant's content hash.
+Core requires the scope identifier to be nonblank and retains both values, but
+does not infer a scope hierarchy, walk a grant tree, or decide what counts as a
+descendant. The identified authorization policy and its `AuthorityAssessment`
+own those adopter-specific scope and attenuation decisions.
+
 Authorization remains a record. Stage 7c validates recorded authority outputs;
 it does not execute authority monitors, determine policy legitimacy or grantor
 trust, or execute the action.
@@ -304,8 +312,14 @@ public Assent runtime or expose a stable API. It is the executable evidence for
 the later hard cutover, not a compatibility promise or a second accepted-state
 authority. See `contract_compiler/index.md`.
 
-One ledger is frozen to one ontology hash. Replaying across ontology upgrades
-requires an explicit migration into a new ledger.
+Assent ontology `0.11.0` adds the required scope and subdelegation commitments
+to `AuthorityGrant`. This changes ontology identity. A ledger written under an
+older ontology remains evidence under that ontology; it is not reinterpreted
+as `0.11.0`. The current supported path is to freeze the old ledger and start a
+fresh epoch from an empty accepted graph and a fully retained genesis sequence.
+A future governed same-file ontology transition may bridge epochs, but it is
+not implemented and must not be simulated by treating old bytes as current
+schema bytes.
 
 The first event is `EXTERNAL_SNAPSHOT_ANCHORED`. It binds a digest and record
 count for an external accepted snapshot, but does not import or reinterpret its

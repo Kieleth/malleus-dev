@@ -459,6 +459,10 @@ class ProtocolLedger:
                 f"event {event['event_id']}: AuthorityGrant grantor must be the generating actor"
             )
         if artifact_type == "AuthorityGrant":
+            if not artifact["scope_record_id"].strip():
+                raise ProtocolError(
+                    f"event {event['event_id']}: AuthorityGrant scope_record_id cannot be blank"
+                )
             _canonical_unique(
                 artifact["permitted_action_types"],
                 f"event {event['event_id']} permitted_action_types",

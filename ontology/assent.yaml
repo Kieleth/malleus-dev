@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/assent
 name: malleus_assent
-version: 0.10.0
+version: 0.11.0
 title: Malleus Assent Protocol Ontology
 description: >-
   Structurally enforced records for proposed knowledge, monitoring,
@@ -600,6 +600,8 @@ classes:
       - grantor_actor_id
       - grantee_actor_id
       - permitted_action_types
+      - scope_record_id
+      - may_subdelegate
       - grant_valid_from
       - grant_valid_to
     slot_usage:
@@ -610,6 +612,10 @@ classes:
       grantee_actor_id:
         required: true
       permitted_action_types:
+        required: true
+      scope_record_id:
+        required: true
+      may_subdelegate:
         required: true
       grant_valid_from:
         required: true
@@ -2009,6 +2015,10 @@ slots:
   permitted_action_types:
     range: string
     multivalued: true
+  scope_record_id:
+    range: string
+  may_subdelegate:
+    range: boolean
   grant_valid_from:
     range: datetime
   grant_valid_to:

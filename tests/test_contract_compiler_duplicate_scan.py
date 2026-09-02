@@ -27,14 +27,15 @@ SCAN = (
     / "bundled_declaration_scan.json"
 )
 EVIDENCE = ROOT / "conformance" / "contract_compiler" / "v0" / "evidence" / "CC-X02.json"
+HISTORICAL_EVIDENCE_COMMIT = "f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba"
 
 MODULES = {
     "ontology/assent.yaml": {
         "id": "https://malleus.dev/schema/assent",
         "name": "malleus_assent",
-        "version": "0.10.0",
+        "version": "0.11.0",
         "imports": ["linkml:types", "malleus"],
-        "declaration_counts": {"types": 0, "enums": 17, "slots": 232, "classes": 47},
+        "declaration_counts": {"types": 0, "enums": 17, "slots": 234, "classes": 47},
     },
     "ontology/domains/attack.yaml": {
         "id": "https://malleus.dev/schema/attack",
@@ -147,6 +148,17 @@ def _read_json(path: Path) -> dict:
     return value
 
 
+def _historical_bytes(path: str) -> bytes:
+    completed = subprocess.run(
+        ["git", "show", f"{HISTORICAL_EVIDENCE_COMMIT}:{path}"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    assert completed.returncode == 0, completed.stderr.decode("utf-8", errors="replace")
+    return completed.stdout
+
+
 def _digest(source: bytes) -> str:
     return "sha256:" + hashlib.sha256(source).hexdigest()
 
@@ -210,7 +222,7 @@ def test_scan_has_exact_packaged_modules_and_source_identities():
         }
 
 
-def test_all_523_declarations_are_raw_lossless_and_canonically_ordered():
+def test_all_525_declarations_are_raw_lossless_and_canonically_ordered():
     document = _read_json(SCAN)
     expected_raw = {}
     for relative in MODULES:
@@ -220,7 +232,7 @@ def test_all_523_declarations_are_raw_lossless_and_canonically_ordered():
                 expected_raw[(kind, symbol, relative)] = definition
 
     declarations = document["declarations"]
-    assert len(declarations) == len(expected_raw) == 523
+    assert len(declarations) == len(expected_raw) == 525
     assert [
         (KINDS.index(item["kind"]), item["symbol"], item["module"]["path"])
         for item in declarations
@@ -260,7 +272,7 @@ def test_duplicate_groups_are_complete_same_kind_observations_only():
     assert document["cross_kind_repeats"] == []
     assert document["summary"] == {
         "module_count": 6,
-        "declaration_count": 523,
+        "declaration_count": 525,
         "duplicate_group_count": 4,
         "duplicate_occurrence_count": 9,
         "adopts_value_occurrence_count": 3,
@@ -407,8 +419,12 @@ def test_scan_contains_no_policy_or_classification_fields():
         assert FORBIDDEN_POLICY_KEYS.isdisjoint(mapping)
 
 
-def test_evidence_binds_only_the_measurement_and_implementation_bytes():
-    evidence = _read_json(EVIDENCE)
+def test_evidence_binds_only_the_historical_measurement_and_implementation_bytes():
+    historical_evidence = _historical_bytes(
+        "conformance/contract_compiler/v0/evidence/CC-X02.json"
+    )
+    assert EVIDENCE.read_bytes() == historical_evidence
+    evidence = json.loads(historical_evidence)
     assert set(evidence) == {
         "schema",
         "workstream_id",
@@ -430,6 +446,6 @@ def test_evidence_binds_only_the_measurement_and_implementation_bytes():
     assert all(item["result"] == "PASS" for item in evidence["checks"])
     assert evidence["limitations"]
     for artifact in evidence["artifacts"]:
-        source = (ROOT / artifact["path"]).read_bytes()
+        source = _historical_bytes(artifact["path"])
         assert artifact["byte_length"] == len(source)
         assert artifact["sha256"] == _digest(source)
