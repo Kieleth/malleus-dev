@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R12"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:140daa0fe42967d86984b7f5cd7a7eddaf032f646b72810782b025ecc53e2099",
+        "change": "CREATED",
+        "path": "handover/2026-09-01-malleus-code-steer.md"
+      },
+      {
+        "after_digest": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd",
+        "change": "CREATED",
+        "path": "ontology/assent.yaml"
+      }
+    ]
+  },
+  "entry_hash": "sha256:68a0ca48bc9758c3edba012e893cece31a98fecbffdc056c8415ae57378831ed",
+  "entry_id": "OVR-000344",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:83a35d7b36ba3e717e7d1685bae6a76d019762ccd7145b4a3964501659dfc8df",
+  "recorded_at": "2026-09-02T19:35:40Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "handover/2026-09-01-malleus-code-steer.md",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "ontology/assent.yaml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0d3a58c4a1e84f809b2792814ce3d11f8561aab5",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 344,
+  "subject": {
+    "id": "ccr12-code-handover-registration",
+    "type": "DOCUMENT"
+  },
+  "summary": "Register the exact CC-R12 activation sources before replacement activation.",
+  "why": "The committed activation verification relied on the Malleus Code steering handover and the preimplementation Assent ontology without prior exact ledger provenance. This append-only revision records both source versions before replacement activation authority is issued."
+}

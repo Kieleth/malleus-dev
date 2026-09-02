@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": true,
+    "deliverables": [
+      "Add required scope_record_id and may_subdelegate commitments to AuthorityGrant without changing epistemic acceptance or creating another authorization path.",
+      "Publish the exact Assent source and semantic identities and the hard fresh-epoch impact while preserving prior ledgers as historical evidence.",
+      "Refresh the live bundled declaration scan while preserving the immutable CC-X02 candidate and evidence bytes at their recorded commit."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000341",
+      "OVR-000344",
+      "OVR-000347"
+    ],
+    "new_state": "ACTIVE",
+    "previous_state": "PLANNED",
+    "workstream_id": "CC-R12"
+  },
+  "entry_hash": "sha256:8ae3f910db6e7988758a58e435b4bbce484fe89f02f879dac7966ac88668c497",
+  "entry_id": "OVR-000348",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:906c095420c347735a4d57b2c0ffc24c1468cfc1aca7b6b22d639e0f8d39c80e",
+  "recorded_at": "2026-09-02T19:35:44Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000341",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000344",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000347",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 348,
+  "subject": {
+    "id": "CC-R12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Activate CC-R12 after correcting handover provenance.",
+  "why": "OVR-000346 requires replacement state authority. OVR-000344 records the exact steering handover before OVR-000347 re-verifies the unchanged narrow activation contract, so implementation authority can be restored without rewriting committed history."
+}

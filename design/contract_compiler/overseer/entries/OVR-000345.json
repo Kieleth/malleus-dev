@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "ccr12-activation-verification",
+      "CC-R12"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000342"
+  },
+  "entry_hash": "sha256:1f0c2a78b27519bdefabd997172362e4065471afd7781612f5b618b1a20083d1",
+  "entry_id": "OVR-000345",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:68a0ca48bc9758c3edba012e893cece31a98fecbffdc056c8415ae57378831ed",
+  "recorded_at": "2026-09-02T19:35:41Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000342",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000344",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 345,
+  "subject": {
+    "id": "ccr12-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Correct the premature CC-R12 activation verification.",
+  "why": "OVR-000342 verified activation before the exact Malleus Code steering handover bytes had ledger provenance. The implementation boundary remains valid, but its activation fact requires a forward replacement after OVR-000344."
+}

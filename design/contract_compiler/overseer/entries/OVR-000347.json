@@ -1,0 +1,71 @@
+{
+  "actor": {
+    "id": "ccr12-activation-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T19:35:43Z",
+    "claims": [
+      "OVR-000344 registers handover/2026-09-01-malleus-code-steer.md at sha256:140daa0fe42967d86984b7f5cd7a7eddaf032f646b72810782b025ecc53e2099 and the preimplementation ontology/assent.yaml at sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd before this replacement activation fact.",
+      "CC-R12 depends only on completed CC-R11 and binds its exact card, completion entry, entry hash, and integrated commit.",
+      "AuthorityGrant gains exactly required nonblank scope_record_id and required Boolean may_subdelegate commitments, and both values enter grant identity.",
+      "EpistemicDecision remains unchanged and AuthorizationDecision plus AuthorityAssessment remains the sole authorization path.",
+      "Core validates and retains the commitments; an identified domain authorization policy interprets scope ancestry and valid attenuation.",
+      "The Assent ontology identity change is a hard break. Existing Code history stays historical and the desired accepted state is rebuilt in a fresh empty-genesis epoch.",
+      "The live duplicate scan is refreshed during implementation while immutable CC-X02 evidence remains bound to its historical candidate commit.",
+      "The eight implementation scopes are exact. The activation boundary created candidate NONE and a NOT_STARTED worker ledger without changing ontology or runtime implementation."
+    ],
+    "limitations": [
+      "This replacement verifies the activation boundary but does not by itself verify or complete the later implementation.",
+      "No universal scope tree, parent-grant link, Core tree walker, or generic cross-ontology migration is selected.",
+      "No public API, package, release, or downstream Code capability is claimed."
+    ]
+  },
+  "entry_hash": "sha256:906c095420c347735a4d57b2c0ffc24c1468cfc1aca7b6b22d639e0f8d39c80e",
+  "entry_id": "OVR-000347",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e3f12aea082f0e7329f9a9b2a32066d9fed66b4f269bf2336fb95f42c20958c2",
+  "recorded_at": "2026-09-02T19:35:43Z",
+  "references": [
+    {
+      "digest": "sha256:b69130e7be361bd0a10448962a5e0be1cd4feb81f57cf7898b42258e429cfb0e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R12-activation.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000341",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000344",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000345",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000346",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 347,
+  "subject": {
+    "id": "ccr12-activation-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Replace CC-R12 activation verification after exact source registration.",
+  "why": "OVR-000345 requires a replacement for OVR-000342. The unchanged activation report now follows exact ledger provenance for the steering handover and preimplementation Assent ontology, while the original narrow implementation boundary and exclusions remain intact."
+}

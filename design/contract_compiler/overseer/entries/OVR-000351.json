@@ -1,0 +1,47 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "blockers": [],
+    "bootstrap": false,
+    "deliverables": [
+      "Add required scope_record_id and may_subdelegate commitments to AuthorityGrant without changing epistemic acceptance or creating another authorization path.",
+      "Publish the exact Assent source and semantic identities and the hard fresh-epoch impact while preserving prior ledgers as historical evidence.",
+      "Refresh the live bundled declaration scan while preserving the immutable CC-X02 candidate and evidence bytes at their recorded commit."
+    ],
+    "evidence_entry_ids": [
+      "OVR-000350"
+    ],
+    "new_state": "COMPLETE",
+    "previous_state": "ACTIVE",
+    "workstream_id": "CC-R12"
+  },
+  "entry_hash": "sha256:2df9b030fd1308e65a54191f860559fcb63c6f4911510991d012cc72cc6ab40b",
+  "entry_id": "OVR-000351",
+  "entry_type": "WORKSTREAM_STATE",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:785d393b0578b1ad671178be43b4bdd8b5e7b4cf221658927143152c9e60a9a5",
+  "recorded_at": "2026-09-02T19:35:47Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000350",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "SATISFIES",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 351,
+  "subject": {
+    "id": "CC-R12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Complete the scoped authority-grant commitments after chronology repair.",
+  "why": "OVR-000350 verifies the exact two-field grant contract, identities, refusal behavior, historical evidence boundary, worker TDD chain, fresh-epoch consequence, and corrected activation provenance. Completion adds no hierarchy engine, migration, package claim, selection, or successor activation."
+}

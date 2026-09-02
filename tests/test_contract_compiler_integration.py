@@ -8489,7 +8489,7 @@ def test_scoped_authority_grant_activation_is_exact() -> None:
         ],
     }
     assert card["candidate"] == {"state": "NONE"}
-    assert card["ledger"] == {"state": "NOT_STARTED"}
+    assert card["ledger"]["state"] == "RECORDED"
     assert card["scopes"] == [
         {"kind": "FILE", "path": "ontology/assent.yaml"},
         {"kind": "FILE", "path": "src/malleus/assent.py"},
@@ -8533,7 +8533,7 @@ def test_scoped_authority_grant_activation_is_exact() -> None:
 
     ledger_state = _raw_overseer_state()
     states, _ = integration_module._workstream_states(ledger_state)
-    assert states["CC-R12"] == "ACTIVE"
+    assert states["CC-R12"] == "COMPLETE"
     assert "CC-R12" not in manifest["selections"]
     transaction = tuple(
         entry for entry in ledger_state.entries if 341 <= entry["sequence"] <= 343
@@ -8600,6 +8600,225 @@ def test_scoped_authority_grant_activation_is_exact() -> None:
     assert "immutable old prefix stays\nbyte-identical" in roadmap
     assert "explicit transition and identity boundary" in roadmap
     assert "no reader ever reinterprets old bytes" in roadmap
+
+
+def test_scoped_authority_grant_completion_is_exact() -> None:
+    manifest = _read_json(INTEGRATION)
+    row = _registry_row(manifest, "CC-R12")
+    card_path = CONTRACT / row["card"]["path"]
+    card_source = card_path.read_bytes()
+    card = _read_json(card_path)
+    ledger_root = CONTRACT / "workstreams/CC-R12/ledger"
+    entries = [
+        _read_json(path) for path in sorted((ledger_root / "entries").glob("*.json"))
+    ]
+    head = _read_json(ledger_root / "head.json")
+
+    assert row["card"] == {
+        "byte_length": len(card_source),
+        "path": "workstreams/CC-R12/manifest.json",
+        "sha256": _digest(card_source),
+        "state": "PRESENT",
+    }
+    assert card["candidate"] == {"state": "NONE"}
+    assert len(entries) == 6
+    assert [entry["data"]["phase"] for entry in entries] == [
+        "RED",
+        "GREEN",
+        "SLICE",
+        "DISPROOF",
+        "REGRESSION",
+        "ATTEST",
+    ]
+    assert [entry["data"]["result"] for entry in entries] == [
+        "EXPECTED_FAILURE",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+    ]
+    assert all(
+        entry["actor_id"] == "worker:ccr12-scoped-authority-grant" for entry in entries
+    )
+    assert all(entry["data"]["phase"] != "PACKAGE" for entry in entries)
+    previous = "GENESIS"
+    for entry in entries:
+        assert entry["previous_entry_hash"] == previous
+        assert entry["entry_hash"] == integration_module.worker_entry_hash(entry)
+        previous = entry["entry_hash"]
+    assert head == {
+        "canonicalization": "malleus-canonical-json-v1",
+        "entry_count": 6,
+        "head_entry_id": "CC-R12-WRK-000006",
+        "head_hash": entries[-1]["entry_hash"],
+        "schema": "malleus.contract-compiler.worker-ledger-head/v1",
+        "workstream_id": "CC-R12",
+    }
+    assert card["ledger"] == {
+        "entry_count": 6,
+        "head_entry_id": "CC-R12-WRK-000006",
+        "head_hash": entries[-1]["entry_hash"],
+        "path": "workstreams/CC-R12/ledger",
+        "state": "RECORDED",
+    }
+
+    ledger_state = _raw_overseer_state()
+    states, _ = integration_module._workstream_states(ledger_state)
+    assert states["CC-R12"] == "COMPLETE"
+    transaction = tuple(
+        entry for entry in ledger_state.entries if 344 <= entry["sequence"] <= 351
+    )
+    assert tuple(entry["entry_id"] for entry in transaction) == (
+        "OVR-000344",
+        "OVR-000345",
+        "OVR-000346",
+        "OVR-000347",
+        "OVR-000348",
+        "OVR-000349",
+        "OVR-000350",
+        "OVR-000351",
+    )
+    assert tuple(entry["entry_type"] for entry in transaction) == (
+        "DOCUMENT_REVISION",
+        "CORRECTION",
+        "CORRECTION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+        "DOCUMENT_REVISION",
+        "VERIFIED_FACT",
+        "WORKSTREAM_STATE",
+    )
+    (
+        handover_revision,
+        verification_correction,
+        activation_correction,
+        replacement_verification,
+        replacement_activation,
+        revision,
+        verification,
+        completion,
+    ) = transaction
+    assert tuple(entry["subject"] for entry in transaction) == (
+        {"id": "ccr12-code-handover-registration", "type": "DOCUMENT"},
+        {"id": "ccr12-activation-verification", "type": "EVIDENCE"},
+        {"id": "CC-R12", "type": "WORKSTREAM"},
+        {"id": "ccr12-activation-verification", "type": "EVIDENCE"},
+        {"id": "CC-R12", "type": "WORKSTREAM"},
+        {"id": "ccr12-completion-boundary", "type": "DOCUMENT"},
+        {"id": "ccr12-completion-verification", "type": "EVIDENCE"},
+        {"id": "CC-R12", "type": "WORKSTREAM"},
+    )
+    assert handover_revision["data"] == {
+        "affected_ids": ["CC-R12"],
+        "documents": [
+            {
+                "after_digest": "sha256:140daa0fe42967d86984b7f5cd7a7eddaf032f646b72810782b025ecc53e2099",
+                "change": "CREATED",
+                "path": "handover/2026-09-01-malleus-code-steer.md",
+            },
+            {
+                "after_digest": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd",
+                "change": "CREATED",
+                "path": "ontology/assent.yaml",
+            }
+        ],
+    }
+    assert verification_correction["data"] == {
+        "affected_subject_ids": ["ccr12-activation-verification", "CC-R12"],
+        "replacement_required": True,
+        "supersedes_entry_id": "OVR-000342",
+    }
+    assert activation_correction["data"] == {
+        "affected_subject_ids": ["CC-R12"],
+        "replacement_required": True,
+        "supersedes_entry_id": "OVR-000343",
+    }
+    assert replacement_verification["actor"] == {
+        "id": "ccr12-activation-verifier",
+        "type": "MECHANICAL",
+    }
+    assert replacement_activation["data"] == {
+        "blockers": [],
+        "bootstrap": True,
+        "deliverables": [
+            "Add required scope_record_id and may_subdelegate commitments to AuthorityGrant without changing epistemic acceptance or creating another authorization path.",
+            "Publish the exact Assent source and semantic identities and the hard fresh-epoch impact while preserving prior ledgers as historical evidence.",
+            "Refresh the live bundled declaration scan while preserving the immutable CC-X02 candidate and evidence bytes at their recorded commit.",
+        ],
+        "evidence_entry_ids": ["OVR-000341", "OVR-000344", "OVR-000347"],
+        "new_state": "ACTIVE",
+        "previous_state": "PLANNED",
+        "workstream_id": "CC-R12",
+    }
+    expected_documents = {
+        "conformance/contract_compiler/v0/bundled_declaration_scan.json": "MODIFIED",
+        "conformance/contract_compiler/v0/evidence/CC-R12.json": "CREATED",
+        "design/contract_compiler/integration.json": "MODIFIED",
+        "design/contract_compiler/overseer/evidence/CC-R12-completion.json": (
+            "CREATED"
+        ),
+        "design/contract_compiler/workstreams/CC-R12/ledger/head.json": "CREATED",
+        "design/contract_compiler/workstreams/CC-R12/manifest.json": "MODIFIED",
+        "docs/ASSENT_PROTOCOL.md": "MODIFIED",
+        "ontology/assent.yaml": "MODIFIED",
+        "src/malleus/assent.py": "MODIFIED",
+        "tests/test_assent_ontology.py": "MODIFIED",
+        "tests/test_contract_compiler_duplicate_scan.py": "MODIFIED",
+        "tests/test_contract_compiler_integration.py": "MODIFIED",
+        "tests/test_protocol.py": "MODIFIED",
+    }
+    assert revision["data"]["affected_ids"] == ["CC-000", "CC-R12"]
+    assert {
+        document["path"]: document["change"]
+        for document in revision["data"]["documents"]
+    } == expected_documents
+    assert verification["actor"] == {
+        "id": "ccr12-completion-verifier",
+        "type": "MECHANICAL",
+    }
+    assert completion["data"] == {
+        "blockers": [],
+        "bootstrap": False,
+        "deliverables": [
+            "Add required scope_record_id and may_subdelegate commitments to AuthorityGrant without changing epistemic acceptance or creating another authorization path.",
+            "Publish the exact Assent source and semantic identities and the hard fresh-epoch impact while preserving prior ledgers as historical evidence.",
+            "Refresh the live bundled declaration scan while preserving the immutable CC-X02 candidate and evidence bytes at their recorded commit.",
+        ],
+        "evidence_entry_ids": ["OVR-000350"],
+        "new_state": "COMPLETE",
+        "previous_state": "ACTIVE",
+        "workstream_id": "CC-R12",
+    }
+    committed_activation = next(
+        entry for entry in ledger_state.entries if entry["entry_id"] == "OVR-000343"
+    )
+    assert handover_revision["previous_entry_hash"] == committed_activation["entry_hash"]
+    for previous, current in zip(transaction[:-1], transaction[1:], strict=True):
+        assert current["previous_entry_hash"] == previous["entry_hash"]
+
+    report = _read_json(CONTRACT / "overseer/evidence/CC-R12-completion.json")
+    assert report["workstream_id"] == "CC-R12"
+    assert report["base_commit"] == ("1f587ee354304ef58084bb12c9a829d696eca834")
+    assert all(check["result"] == "PASS" for check in report["checks"])
+    claims = " ".join(verification["data"]["claims"])
+    for identity in (
+        "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+        "sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54",
+        "sha256:d38a112ea3e01a7331c3aa10ad71800bb4d0eb3eabdb102368da5f94fe9b7fa9",
+    ):
+        assert identity in claims
+    assert any("same-file" in item.lower() for item in report["limitations"])
+    assert any("package" in item.lower() for item in report["limitations"])
+    chronology = next(
+        check
+        for check in report["checks"]
+        if check["check_id"] == "ccr12-activation-chronology-repair"
+    )
+    assert chronology["result"] == "PASS"
+    for entry_id in ("OVR-000342", "OVR-000343", "OVR-000344", "OVR-000351"):
+        assert entry_id in chronology["observed"]
+    assert "CC-R12" not in manifest["selections"]
 
 
 def test_pareto_compiler_to_ledger_completion_is_exact() -> None:

@@ -1,0 +1,83 @@
+{
+  "actor": {
+    "id": "ccr12-completion-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T19:35:46Z",
+    "claims": [
+      "The committed activation chronology defect is repaired append-only: the exact steering handover is registered, OVR-000342 and OVR-000343 are superseded, and replacement verification and ACTIVE state precede completion.",
+      "AuthorityGrant now requires exact nonblank scope_record_id and exact Boolean may_subdelegate commitments with no default, null, or wildcard interpretation; explicit false is retained and both values enter grant identity.",
+      "Malformed commitments refuse before append and preserve ledger bytes; existing actor, action-type, validity, assessment, and authorization checks remain active.",
+      "EpistemicDecision is unchanged. Core adds no scope hierarchy, parent grant, tree walker, attenuation evaluator, fallback, or second authorization path; adopter policy and AuthorityAssessment interpret domain scope and delegation.",
+      "Assent 0.11.0 source is sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234; semantic grammar 4 is sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54 and grammar 3 is sha256:d38a112ea3e01a7331c3aa10ad71800bb4d0eb3eabdb102368da5f94fe9b7fa9.",
+      "The live declaration scan has 525 declarations and 234 Assent slots while preserving the four duplicate groups, nine duplicate occurrences, and zero cross-kind repeats; immutable CC-X02 evidence remains bound to f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba.",
+      "The six-entry worker ledger ends at CC-R12-WRK-000006 / sha256:c808e7348393be9d2efa6846d9f6f308c9875390d5130a0d81656077e43a8598 with RED followed by five passing required phases; candidate remains NONE and PACKAGE is omitted.",
+      "Existing ledgers remain historical under their original ontology. The supported downstream path is a fresh empty-genesis epoch; same-file ontology transition and general migration remain roadmap work.",
+      "The scoped chronology, implementation, integration, ledger, evidence, Ruff, and diff checks pass with no selection or successor activation."
+    ],
+    "limitations": [
+      "Core stores scope and subdelegation commitments but does not interpret an adopter's hierarchy or attenuation rules.",
+      "This cut does not migrate or reinterpret an existing ontology-bound ledger and does not implement a same-file transition.",
+      "Malleus Code still owns its concrete action subtype, authorization policy, fresh epoch, and four forward acceptance and authorization lifecycles.",
+      "No package, wheel, dependency, release, public distribution, final full-CI, or cross-language claim is made by this entry."
+    ]
+  },
+  "entry_hash": "sha256:785d393b0578b1ad671178be43b4bdd8b5e7b4cf221658927143152c9e60a9a5",
+  "entry_id": "OVR-000350",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7edc46f4f0d94a32939ae5242946f29932bbb5a4ebff277e43058f58c739fef6",
+  "recorded_at": "2026-09-02T19:35:46Z",
+  "references": [
+    {
+      "digest": "sha256:3226492f77e330bb476111cd4c7f0cf3ab187279cca524668ed90f11cfe2ef8e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R12-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000345",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000346",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000347",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000348",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000349",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1f587ee354304ef58084bb12c9a829d696eca834",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 350,
+  "subject": {
+    "id": "ccr12-completion-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the scoped authority-grant commitments after chronology repair.",
+  "why": "The completion report and exact worker chain prove the required identity-bearing commitments, typed atomic refusals, unchanged epistemic and authorization split, exact ontology identities, live-versus-historical declaration treatment, hard fresh-epoch boundary, and corrected activation provenance."
+}

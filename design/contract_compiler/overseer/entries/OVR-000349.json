@@ -1,0 +1,141 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R12"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:3070ad3c910451e022591545c664f12e838c585349cb3e06a54b2867cf893049",
+        "before_digest": "sha256:c85b1e36272f1291bce72c9cd437fb183468de63f947c9728b51a8b8a778de91",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json"
+      },
+      {
+        "after_digest": "sha256:5e0684d3ca93f796e2eb245004ff4694de5438bda867aed291b00d1f7524e1f6",
+        "change": "CREATED",
+        "path": "conformance/contract_compiler/v0/evidence/CC-R12.json"
+      },
+      {
+        "after_digest": "sha256:5e96124aad9a3a3aaebb73c182fe7c5f0dd76976229ff7cf0b63061dee4c3b35",
+        "before_digest": "sha256:dac489ae8feb0cba6a50fade9dcadab660a81b8cae835e9e94766cb8fe9addd2",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/integration.json"
+      },
+      {
+        "after_digest": "sha256:3226492f77e330bb476111cd4c7f0cf3ab187279cca524668ed90f11cfe2ef8e",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R12-completion.json"
+      },
+      {
+        "after_digest": "sha256:66cfd1f2a5cea8a37c236ea1189a324dd41fc33a326950a85e9259ac60fc15b8",
+        "change": "CREATED",
+        "path": "design/contract_compiler/workstreams/CC-R12/ledger/head.json"
+      },
+      {
+        "after_digest": "sha256:f9da3c69b0167d1cc99119d06199153d80f9aced8f22d512fc2b06f9dd0581cc",
+        "before_digest": "sha256:6091e77b09e1670a0d10992165b57d50403e4153c68d325a056a0e14a4e09c32",
+        "change": "MODIFIED",
+        "path": "design/contract_compiler/workstreams/CC-R12/manifest.json"
+      },
+      {
+        "after_digest": "sha256:4e7d73d955ca43c79ea4c9985c1dc288dd0410a5e9515d69b0a2578d54612d26",
+        "before_digest": "sha256:f2f483897ccf8eae538a515ed85870bb6ae5c3686b1ef54c0a1e68d79f91df52",
+        "change": "MODIFIED",
+        "path": "docs/ASSENT_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+        "before_digest": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd",
+        "change": "MODIFIED",
+        "path": "ontology/assent.yaml"
+      },
+      {
+        "after_digest": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662",
+        "before_digest": "sha256:7b12202f9dcdffd220e23fe5a365a6789b7934bc53d0a638b36e779d3816cf21",
+        "change": "MODIFIED",
+        "path": "src/malleus/assent.py"
+      },
+      {
+        "after_digest": "sha256:eb529f2edf28a25a76c55120a3fc67810e81463dc4593e8dd6236af51c29c139",
+        "before_digest": "sha256:dd9b14d9937edc92346a3f77b02c9281bcac8dbd16b6de4e84ab05c7104955f4",
+        "change": "MODIFIED",
+        "path": "tests/test_assent_ontology.py"
+      },
+      {
+        "after_digest": "sha256:eb5bf674aab4550f661f7dbe5fe4d53a2a713ad540d788d95d72401a0102e01b",
+        "before_digest": "sha256:e5b1a3005b6e0d377e522265f9180c1aac6a74038c885bcd1e64708876f43283",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_duplicate_scan.py"
+      },
+      {
+        "after_digest": "sha256:697f1b769c623baedf1c67be92623bc1dddbfc1bce29da49f2f925ac2da7b8e5",
+        "before_digest": "sha256:cea7387bc085a46fb43ea48849a72ea8b5ada27804011f1a33ddb8feb56f8654",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:036d79c412fde234d6b6056d40de98abc4ca763928e7f972a4f7a1f99ce44d23",
+        "before_digest": "sha256:1e9d2262a9c2c3a8b58533c647d212e79e646c1bfe9007fcc7e7f6bcfb99e453",
+        "change": "MODIFIED",
+        "path": "tests/test_protocol.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:7edc46f4f0d94a32939ae5242946f29932bbb5a4ebff277e43058f58c739fef6",
+  "entry_id": "OVR-000349",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8ae3f910db6e7988758a58e435b4bbce484fe89f02f879dac7966ac88668c497",
+  "recorded_at": "2026-09-02T19:35:45Z",
+  "references": [
+    {
+      "digest": "sha256:3226492f77e330bb476111cd4c7f0cf3ab187279cca524668ed90f11cfe2ef8e",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R12-completion.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000348",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c8e9f5b67b9991e79f614479c4280c24bc3b8620",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5e4ec73e2dd38ddfabfe62ae543719f6849a922e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1f587ee354304ef58084bb12c9a829d696eca834",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 349,
+  "subject": {
+    "id": "ccr12-completion-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the scoped authority-grant completion boundary after chronology repair.",
+  "why": "The exact two-field AuthorityGrant change, source and semantic identities, live declaration scan, immutable historical measurement boundary, six-phase worker ledger, and fresh-epoch consequence are now recorded after corrected activation authority. This revision preserves the deferred same-file migration, adopter policy, package, and release boundaries."
+}

@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_subject_ids": [
+      "CC-R12"
+    ],
+    "replacement_required": true,
+    "supersedes_entry_id": "OVR-000343"
+  },
+  "entry_hash": "sha256:e3f12aea082f0e7329f9a9b2a32066d9fed66b4f269bf2336fb95f42c20958c2",
+  "entry_id": "OVR-000346",
+  "entry_type": "CORRECTION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1f0c2a78b27519bdefabd997172362e4065471afd7781612f5b618b1a20083d1",
+  "recorded_at": "2026-09-02T19:35:42Z",
+  "references": [
+    {
+      "relation": "SUPERSEDES",
+      "target": "OVR-000343",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000345",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R12",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 346,
+  "subject": {
+    "id": "CC-R12",
+    "type": "WORKSTREAM"
+  },
+  "summary": "Correct the CC-R12 activation dependent on premature verification.",
+  "why": "OVR-000343 depends on superseded OVR-000342. This correction restores the projected PLANNED state until a replacement verified fact follows the exact handover registration and a replacement ACTIVE entry cites that fact."
+}

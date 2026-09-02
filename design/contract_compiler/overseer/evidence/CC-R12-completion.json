@@ -1,0 +1,140 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 277629,
+      "path": "conformance/contract_compiler/v0/bundled_declaration_scan.json",
+      "sha256": "sha256:3070ad3c910451e022591545c664f12e838c585349cb3e06a54b2867cf893049"
+    },
+    {
+      "byte_length": 7220,
+      "path": "conformance/contract_compiler/v0/evidence/CC-R12.json",
+      "sha256": "sha256:5e0684d3ca93f796e2eb245004ff4694de5438bda867aed291b00d1f7524e1f6"
+    },
+    {
+      "byte_length": 27627,
+      "path": "design/contract_compiler/integration.json",
+      "sha256": "sha256:5e96124aad9a3a3aaebb73c182fe7c5f0dd76976229ff7cf0b63061dee4c3b35"
+    },
+    {
+      "byte_length": 296,
+      "path": "design/contract_compiler/workstreams/CC-R12/ledger/head.json",
+      "sha256": "sha256:66cfd1f2a5cea8a37c236ea1189a324dd41fc33a326950a85e9259ac60fc15b8"
+    },
+    {
+      "byte_length": 3078,
+      "path": "design/contract_compiler/workstreams/CC-R12/manifest.json",
+      "sha256": "sha256:f9da3c69b0167d1cc99119d06199153d80f9aced8f22d512fc2b06f9dd0581cc"
+    },
+    {
+      "byte_length": 25580,
+      "path": "docs/ASSENT_PROTOCOL.md",
+      "sha256": "sha256:4e7d73d955ca43c79ea4c9985c1dc288dd0410a5e9515d69b0a2578d54612d26"
+    },
+    {
+      "byte_length": 17709,
+      "path": "handover/2026-09-01-malleus-code-steer.md",
+      "sha256": "sha256:140daa0fe42967d86984b7f5cd7a7eddaf032f646b72810782b025ecc53e2099"
+    },
+    {
+      "byte_length": 47663,
+      "path": "ontology/assent.yaml",
+      "sha256": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234"
+    },
+    {
+      "byte_length": 152249,
+      "path": "src/malleus/assent.py",
+      "sha256": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662"
+    },
+    {
+      "byte_length": 23640,
+      "path": "tests/test_assent_ontology.py",
+      "sha256": "sha256:eb529f2edf28a25a76c55120a3fc67810e81463dc4593e8dd6236af51c29c139"
+    },
+    {
+      "byte_length": 14839,
+      "path": "tests/test_contract_compiler_duplicate_scan.py",
+      "sha256": "sha256:eb5bf674aab4550f661f7dbe5fe4d53a2a713ad540d788d95d72401a0102e01b"
+    },
+    {
+      "byte_length": 330845,
+      "path": "tests/test_contract_compiler_integration.py",
+      "sha256": "sha256:697f1b769c623baedf1c67be92623bc1dddbfc1bce29da49f2f925ac2da7b8e5"
+    },
+    {
+      "byte_length": 232798,
+      "path": "tests/test_protocol.py",
+      "sha256": "sha256:036d79c412fde234d6b6056d40de98abc4ca763928e7f972a4f7a1f99ce44d23"
+    }
+  ],
+  "base_commit": "1f587ee354304ef58084bb12c9a829d696eca834",
+  "checks": [
+    {
+      "check_id": "ccr12-exact-worker-history",
+      "method": "Inspect the activation, RED, GREEN, evidence, tree, and path boundaries before completing the workstream.",
+      "observed": "Activation b5973770394e388b32928297d302da8c96b91152 is followed by test-only RED c8e9f5b67b9991e79f614479c4280c24bc3b8620 at tree 4417a3e6d9495303695cbd062ca4e6f2b4402080, minimum GREEN 5e4ec73e2dd38ddfabfe62ae543719f6849a922e at tree 6d26e263431aeabc08926e465656e6bc3ea8761a, and evidence commit 1f587ee354304ef58084bb12c9a829d696eca834 at tree 375f9288b075f5261bfd7b75efd75c77d88c35ac. The worker changed only its eight authorized paths plus its ledger sideband and manifest pointer.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-worker-tdd",
+      "method": "Validate the worker ledger owner, chain, pointer, active TDD phases, results, and optional-package policy.",
+      "observed": "Six ordered entries record RED EXPECTED_FAILURE followed by GREEN, SLICE, DISPROOF, REGRESSION, and ATTEST PASS. The chain ends at CC-R12-WRK-000006 / sha256:c808e7348393be9d2efa6846d9f6f308c9875390d5130a0d81656077e43a8598. Candidate remains NONE, ledger state is RECORDED, and optional PACKAGE is omitted.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-exact-identities",
+      "method": "Verify the final Assent source bytes, version, and every supported OntologyRegistry semantic fingerprint.",
+      "observed": "Assent 0.11.0 is 47,663 bytes at sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234. Its semantic grammar-4 identity is sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54 and grammar-3 identity is sha256:d38a112ea3e01a7331c3aa10ad71800bb4d0eb3eabdb102368da5f94fe9b7fa9.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-scoped-grant-behavior",
+      "method": "Exercise required-field validation, explicit false, replay, content identity, and failure atomicity for the two new AuthorityGrant commitments.",
+      "observed": "scope_record_id is required and nonblank; may_subdelegate is a required Boolean with no default. Explicit false is accepted and retained. Changing either value changes the grant content hash. Missing, null, wrong-typed, and whitespace-only values refuse before append and preserve exact ledger bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-authorization-boundary",
+      "method": "Inspect the ontology and runtime diff together with the existing epistemic and authorization tests.",
+      "observed": "EpistemicDecision is unchanged. Core retains the two commitments but adds no descendant traversal, parent grant, wildcard, attenuation evaluator, or second authorization event. An identified adopter AuthorizationPolicy and its AuthorityAssessment remain the sole interpreters of domain scope and delegation.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-declaration-history",
+      "method": "Check the regenerated live declaration scan and separately verify immutable CC-X02 evidence at its historical commit.",
+      "observed": "The live scan contains 525 declarations and 234 Assent slots with the same four duplicate groups, nine duplicate occurrences, and zero cross-kind repeats. CC-X02.json remains byte-identical and its 523-declaration artifacts verify at f3a19ec8a4cbe1508643a14b76d44b14f7cbcfba rather than against current ontology bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-fresh-epoch-boundary",
+      "method": "Compare the completed behavior with the accepted hard-break and deferred same-file migration policy.",
+      "observed": "Existing ledgers stay bound to their original ontology and cannot be reopened as current-schema bytes. The supported downstream path starts a fresh empty-genesis epoch under the combined new ontology and rebuilds desired state through normal proposals. A governed same-file ontology transition remains roadmap work and no alias, fallback, bridge, or mixed replay was added.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-activation-chronology-repair",
+      "method": "Audit every source path consumed by the committed activation evidence, preserve OVR-000342 and OVR-000343 unchanged, and repair their missing document provenance through append-only correction and replacement.",
+      "observed": "Activation evidence cited unregistered steering-handover and preimplementation Assent bytes. OVR-000344 registers both exact artifacts. OVR-000345 supersedes OVR-000342; OVR-000346 supersedes OVR-000343; OVR-000347 verifies the registered sources; OVR-000348 restores ACTIVE; OVR-000349 through OVR-000351 complete the work. Committed bytes remain unchanged.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr12-completion-governance",
+      "method": "Run the exact chronology and completion test, the integration and ledger checkers, both CC-R12 evidence verifiers, changed-file Ruff, and git diff checking against the corrected eight-entry suffix.",
+      "observed": "The scoped chronology and completion guard, integration validation, overseer ledger validation and rendering, evidence-byte checks, Ruff, and diff checks pass. The workstream projects COMPLETE with candidate NONE, a six-entry worker ledger, no selection, and no successor activation. Authoritative final full CI is deliberately not claimed by this report until it completes against the final transaction bytes.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "Core records the exact scope root and subdelegation commitment. It does not define an adopter's hierarchy, evaluate descendants, or decide grant attenuation.",
+    "This completion does not change epistemic acceptance or create a second authorization path. AuthorityAssessment plus AuthorizationDecision remain the authorization mechanism.",
+    "Existing ontology-bound ledgers are historical evidence. This cut does not migrate, reinterpret, alias, or mix them with the new ontology epoch.",
+    "A same-file ontology transition and general migration bridge remain deferred roadmap work. The current supported path is a fresh empty-genesis ledger.",
+    "Malleus Code must still define its concrete action subtype and authorization policy, then rebuild and authorize its four desired deliverables in its new epoch.",
+    "Candidate remains NONE and the workstream is unselected. Completion creates no separate promotion bundle.",
+    "Package, wheel, dependency, release, and public distribution checks remain at the deferred release boundary and confer no authority here.",
+    "The worker's pre-completion full run reached 2,494 passed and 2 skipped; its 24 expected failures were governance-digest checks that required an overseer completion revision. Final full-CI confirmation remains a post-transaction gate and is not claimed here.",
+    "Pre-existing modified research files and untracked design and handover files remain outside CC-R12 and were not modified."
+  ],
+  "recorded_at": "2026-09-02T19:35:44Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R12"
+}
