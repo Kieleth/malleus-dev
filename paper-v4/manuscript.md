@@ -2,7 +2,7 @@
 
 Version: 0.9.0 working draft
 
-Status: lean engineering draft. The source and selected text-layer reading are frozen. The ontology rerun, model population, ledger replay, four queries, and scoring remain in progress. No document graph or query result is claimed yet.
+Status: lean engineering draft. The source, selected text-layer reading, and compiled model-proposed ontology are frozen. Model population, ledger replay, four queries, and scoring remain in progress. No document graph or query result is claimed yet.
 
 ## Abstract
 
@@ -119,7 +119,7 @@ The experiment uses five identity groups:
 
 1. Source PDF: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
-3. Selected ontology: [RESULT].
+3. Selected ontology: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 4. Ledger head and replay receipt: [RESULT].
 5. Query binding: [RESULT].
 
@@ -127,9 +127,9 @@ The selected reader is `pypdf==6.16.2`, called with strict parsing and default t
 
 ### 5.2 Ontology and population
 
-Ontology attempts and compiler diagnostics: [RESULT]
+The fresh ontology session produced one proposal. It compiled on the first attempt into 1,401 validated facts, so no compiler diagnostic was returned to the model. The selected ontology digest is `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 
-Compiled ontology digest and evaluator acceptance event: [RESULT]
+One event by `actor:paper-v4-evaluator` accepted that exact digest for population. The event records authorization to continue, not an adequacy judgment. No reviewer, hand repair, restart, or alternate ontology contributed to the result.
 
 Population attempts, structural diagnostics, and locator completeness: [RESULT]
 
@@ -189,13 +189,13 @@ The graph-only query test covers a deliberately narrow interface. Even if it rep
 
 Malleus treats generated structure as a candidate state transition, not as knowledge merely because a model emitted it. The ontology defines legal meaning, the change set fixes one proposed transition, a recorded decision controls ledger admission, replay reconstructs the graph, and fixed queries inspect only accepted state.
 
-The completed reading stage fixes one source and one source-located text layer. The remaining run will show, including failures, whether fresh model sessions can supply a compilable ontology and population that survive this boundary and answer four questions from replayed graph state. The paper's claim will stop at that observed result.
+The completed reading and ontology stages fix one source, one source-located text layer, and one unedited model proposal that passed compilation. The remaining run will show, including failures, whether a fresh model session can supply a population that survives this boundary and answers four questions from replayed graph state. The paper's claim will stop at that observed result.
 
 ## Appendix A. Reproduction coordinates
 
 1. Source PDF digest: frozen above.
 2. Selected reading digest: frozen above.
-3. Selected ontology digest: [RESULT].
+3. Selected ontology digest: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 4. Ledger head and replay receipt: [RESULT].
 5. Query binding digest: [RESULT].
 

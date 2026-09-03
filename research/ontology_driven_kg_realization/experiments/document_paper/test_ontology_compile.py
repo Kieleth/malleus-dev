@@ -108,6 +108,30 @@ def test_compiles_imported_malleus_to_canonical_retained_outputs() -> None:
     assert load_validated_contract_artifact(first.validated_contract_bytes)
 
 
+def test_paper_v4_acceptance_event_binds_the_compilable_ontology() -> None:
+    run = ROOT / "paper-v4/experiment/ontology-run"
+    ontology = (run / "ontology.yaml").read_bytes()
+    event_source = (run / "acceptance.jsonl").read_bytes()
+
+    assert event_source.count(b"\n") == 1
+    event = json.loads(event_source)
+    assert event == {
+        "actor_id": "actor:paper-v4-evaluator",
+        "decision": "ACCEPT_FOR_POPULATION",
+        "event_type": "ONTOLOGY_DECISION",
+        "ontology_sha256": _digest(ontology),
+        "ordinal": 1,
+        "schema": "malleus.paper-v4.ontology-decision/v1",
+    }
+
+    inputs = _inputs(ontology)
+    copied_malleus = (run / "inputs/malleus.yaml").read_bytes()
+    inputs["malleus"] = _source("malleus", copied_malleus)
+    receipt = json.loads(compile_exact_ontology(**inputs).receipt_bytes)
+    assert receipt["status"] == "ACCEPTED"
+    assert receipt["root"]["source_sha256"] == event["ontology_sha256"]
+
+
 def test_input_digest_drift_refuses_before_compilation() -> None:
     inputs = _inputs()
     inputs["root"] = ExactSource(

@@ -1121,3 +1121,17 @@ Source: coordination from the Malleus Core task after its publication gate.
 Observation: Core published annotated research tag `research/small-shop-correction-replay-v1` at commit `e94f45c74475948dfebdc89247bfb070de0b778d`, tree `60f393403728aa25a256909618a94aba344d690b`, after local and remote gates. This coordinate arrived after D5 fixed the document experiment on Core `1611944`.
 
 Impact: The tag is not adopted as a paper experiment identity and does not replace the document baseline. It may be reconsidered only through a later author decision.
+
+### E-0073, fresh ontology compiles on its first attempt
+
+Date: 2026-09-02
+
+Sources: input freeze commit `3be6feb`, `paper-v4/experiment/ontology-run/task.md`, its five copied model-visible inputs, `ontology.yaml`, `acceptance.jsonl`, and the paper-local exact ontology compiler.
+
+Observation: A contextless `gpt-5.6-sol` session at high reasoning returned one ontology proposal from only the declared task and inputs. The proposal compiled on its first attempt into 1,401 validated facts. The compiler returned no diagnostic to the session. The selected ontology digest is `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`. One canonical event by `actor:paper-v4-evaluator` records `ACCEPT_FOR_POPULATION` against that exact digest.
+
+Boundary: The event authorizes the population stage. It does not assert semantic adequacy. No reviewer, answer key, hand repair, alternate ontology, or best-of selection contributed to the proposal or acceptance.
+
+Error and guard: An initial post-run validation command accessed a nonexistent `ExactSource.sha256` attribute after compilation and raised `AttributeError`; it did not change either retained artifact. A focused test now recomputes the ontology digest from bytes, requires exactly one canonical acceptance record with the fixed actor and decision, recompiles against the copied Malleus input, and binds the accepted receipt to the recorded digest. The ontology compiler file passes eight focused tests.
+
+Impact: D2 with D6 is complete. Query authors may now bind the four questions to ontology types before any population session sees the task.

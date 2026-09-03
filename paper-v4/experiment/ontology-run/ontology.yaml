@@ -1,0 +1,238 @@
+id: https://malleus.dev/schema/paper-four-domain
+name: paper_four_domain
+version: 0.1.0
+description: >-
+  Proposed minimal domain ontology for representing observation acquisition,
+  regional microseismicity, bounded quantities, and causal hypotheses.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  paper_four: https://malleus.dev/schema/paper-four-domain/
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  DomainRelationType:
+    permissible_values:
+      DATA_ACQUISITION:
+      SPATIAL_ASSOCIATION:
+      QUANTITY_CHARACTERIZATION:
+      EXPLAINS:
+
+  QuantityStatus:
+    permissible_values:
+      REPORTED_OBSERVATION:
+      CALCULATED_ESTIMATE:
+
+  HypothesisStatus:
+    permissible_values:
+      PREFERRED:
+
+classes:
+  ObservingSystem:
+    is_a: Entity
+    slots:
+      - name
+      - instrument_kind
+    slot_usage:
+      name:
+        required: true
+
+  Campaign:
+    is_a: Entity
+    slots:
+      - name
+    slot_usage:
+      name:
+        required: true
+
+  Region:
+    is_a: Entity
+    slots:
+      - name
+    slot_usage:
+      name:
+        required: true
+
+  EarthquakePopulation:
+    is_a: Entity
+    slots:
+      - name
+    slot_usage:
+      name:
+        required: true
+
+  PrimaryMeltPopulation:
+    is_a: Entity
+    slots:
+      - name
+    slot_usage:
+      name:
+        required: true
+
+  BoundedQuantity:
+    is_a: Entity
+    slots:
+      - quantity_kind
+      - lower_value
+      - upper_value
+      - unit
+      - quantity_status
+
+  MechanismHypothesis:
+    is_a: Entity
+    slots:
+      - initiating_condition
+      - transformation
+      - physical_effect
+      - stress_context
+      - outcome
+      - hypothesis_status
+    slot_usage:
+      hypothesis_status:
+        range: HypothesisStatus
+        required: true
+        equals_string: PREFERRED
+
+  DataAcquisitionRelation:
+    is_a: Relation
+    slots:
+      - instrument_count
+      - data_kind
+    slot_usage:
+      relation_type:
+        range: DomainRelationType
+        required: true
+        equals_string: DATA_ACQUISITION
+      source_id:
+        range: Campaign
+        required: true
+      target_id:
+        range: ObservingSystem
+        required: true
+
+  SpatialAssociationRelation:
+    is_a: Relation
+    slots:
+      - relative_position
+    slot_usage:
+      relation_type:
+        range: DomainRelationType
+        required: true
+        equals_string: SPATIAL_ASSOCIATION
+      source_id:
+        range: Entity
+        required: true
+      target_id:
+        range: Region
+        required: true
+
+  QuantityCharacterizationRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DomainRelationType
+        required: true
+        equals_string: QUANTITY_CHARACTERIZATION
+      source_id:
+        range: BoundedQuantity
+        required: true
+      target_id:
+        range: Entity
+        required: true
+
+  HypothesisExplainsRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: DomainRelationType
+        required: true
+        equals_string: EXPLAINS
+      source_id:
+        range: MechanismHypothesis
+        required: true
+      target_id:
+        range: EarthquakePopulation
+        required: true
+
+slots:
+  instrument_kind:
+    range: string
+    required: true
+    description: Kind of instrument composing an observing system.
+
+  instrument_count:
+    range: integer
+    required: true
+    minimum_value: 0
+    description: Number of instruments deployed for an acquisition.
+
+  data_kind:
+    range: string
+    required: true
+    description: Kind of data acquired during a campaign.
+
+  relative_position:
+    range: string
+    required: true
+    description: Position of a subject relative to a named region or its axis.
+
+  quantity_kind:
+    range: string
+    required: true
+    description: Physical or compositional property represented by a bounded quantity.
+
+  lower_value:
+    range: float
+    required: true
+    description: Lower bound of a quantitative range.
+
+  upper_value:
+    range: float
+    required: true
+    description: Upper bound of a quantitative range.
+
+  unit:
+    range: string
+    required: true
+    description: Unit applying to both bounds of a quantitative range.
+
+  quantity_status:
+    range: QuantityStatus
+    required: true
+    description: Whether the bounded quantity is reported or calculated.
+
+  initiating_condition:
+    range: string
+    required: true
+    description: Initial condition in a proposed causal mechanism.
+
+  transformation:
+    range: string
+    required: true
+    description: Process acting on the initiating condition.
+
+  physical_effect:
+    range: string
+    required: true
+    description: Physical change produced by the transformation.
+
+  stress_context:
+    range: string
+    required: true
+    description: Stress condition under which the physical effect acts.
+
+  outcome:
+    range: string
+    required: true
+    description: Proposed outcome of the causal mechanism.
+
+  hypothesis_status:
+    range: HypothesisStatus
+    required: true
+    description: Authors' preference status for a hypothesis.
