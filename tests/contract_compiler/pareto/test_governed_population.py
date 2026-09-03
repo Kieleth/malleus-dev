@@ -661,7 +661,9 @@ def test_no_domain_change_ignores_an_unused_change_set_id_collision(
 
     prepared = _prepare(history, plan, NEUTRAL_PROFILE_DATA)
 
-    assert prepared.compilation.status is population.PopulationPlanStatus.NO_DOMAIN_CHANGE
+    assert (
+        prepared.compilation.status is population.PopulationPlanStatus.NO_DOMAIN_CHANGE
+    )
     assert prepared.change_set is None
     retained_ids = {member.record_id for member in history.replay().retained_inputs}
     assert plan_id in retained_ids
