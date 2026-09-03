@@ -1,0 +1,120 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11",
+      "CC-021",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:e6a8336cd2165c1507ed493839871fe7de58bc9474020039657d1429aac7a763",
+        "before_digest": "sha256:5fb5e0c218cb672ce48ab3e3523543a9ced060ed3608fd49ecbbff296afe28d7",
+        "change": "MODIFIED",
+        "path": "docs/ARCHITECTURE.md"
+      },
+      {
+        "after_digest": "sha256:4ef61cc285ea77d4c273fc46c406e2b4fd6f582c42d239cac9119c3608735327",
+        "before_digest": "sha256:4e7d73d955ca43c79ea4c9985c1dc288dd0410a5e9515d69b0a2578d54612d26",
+        "change": "MODIFIED",
+        "path": "docs/ASSENT_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:1886bc631671b01d31d7ff5f9e80abe5bd8d562d86057c6250e7a82c15c698c2",
+        "before_digest": "sha256:100563bd4a378857bf26e87a531c11431ff0e6c754262a7eaba3264fc745bab1",
+        "change": "MODIFIED",
+        "path": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:8e096b9f4cc624271093cbebafdd32289bff5ef85c1debc6770b0ce1bbffd788",
+        "before_digest": "sha256:80e1de8754d7bda1e10ae0ed28526530a3ea5ec872aa450a9e30ef00a6b7a2c1",
+        "change": "MODIFIED",
+        "path": "docs/PRINCIPLES.md"
+      },
+      {
+        "after_digest": "sha256:74eebdc5bcece4fbae82975f989e99d28c41067dc6b5ffb16fb23c9f356ec11b",
+        "change": "CREATED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:5f0b336b6f78214b47acfbda40209fa8b508be83a818dba71a9a0b9c22d7a1b6",
+        "before_digest": "sha256:f0f050e4eb889a281758c91f8f3c332dd6fc839bc9c866a9e490043753202c70",
+        "change": "MODIFIED",
+        "path": "docs/conf.py"
+      },
+      {
+        "after_digest": "sha256:a0d50f22b1af9488589dedd0d60dcba3ea35a484216ba8bf92aaf2e44a963906",
+        "before_digest": "sha256:5cdee63688ac0100eb1c575f733fa09a4768b29f66fd6e6a2210a814b82906d0",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:d718cc1325ed16867942be5d0518f9b92f23755357b7bc91ab1d5b1911d6c970",
+        "before_digest": "sha256:c86de12c5ab16fdb14bcec7627f4a5259ac648bf522d9f5ab3d0ee3ae0b3458f",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:d9e661acc7e9d571e7d495886918cd2ffc2ad95780f5702bd516b9120c8612fe",
+  "entry_id": "OVR-000361",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2e2c38aaa78e6f3e291bd8a5b4f22bbcc0d6a9e7280afb84e1d8eefca2822df3",
+  "recorded_at": "2026-09-03T06:10:03Z",
+  "references": [
+    {
+      "digest": "sha256:d65956a5518ef0f76b35073b548ea0f573f8c028083a264d9f6b9c5ab1541f86",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-showcase.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3e599b5ce3a9f8a21b8b53379938d1c6244aac39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000359",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000360",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 361,
+  "subject": {
+    "id": "ccr11-small-shop-showcase-publication",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the Small Shop end-to-end walkthrough and boundaries.",
+  "why": "A public milestone is useful only when a reader can follow real source rows through ontology compilation, semantic changes, decisions, ledger history, replayed graph state, queries, provenance, and exact evidence. This revision exposes that path in plain language while keeping fixture-specific mapping, query, and evidence code private and clearly labeled."
+}

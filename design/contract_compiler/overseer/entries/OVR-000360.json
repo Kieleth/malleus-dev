@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11",
+      "CC-021",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:98dd530aa249763be24ff16a0ff4848c0821dc0150bf09ef2ee5a3f19e66b956",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/tbox/small-shop-settlement.yaml"
+      },
+      {
+        "after_digest": "sha256:d74b3a2c201bf083069383fe31797f8d848050279d5877bbf864ae316dfc16e6",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/oracle/shop-payment-settlement.json"
+      },
+      {
+        "after_digest": "sha256:d65956a5518ef0f76b35073b548ea0f573f8c028083a264d9f6b9c5ab1541f86",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-showcase.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:2e2c38aaa78e6f3e291bd8a5b4f22bbcc0d6a9e7280afb84e1d8eefca2822df3",
+  "entry_id": "OVR-000360",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:898d97177819b35c8e2f5379f67f3ecaca5728dc58e0472fbe1605850f005aa0",
+  "recorded_at": "2026-09-03T06:10:02Z",
+  "references": [
+    {
+      "digest": "sha256:d65956a5518ef0f76b35073b548ea0f573f8c028083a264d9f6b9c5ab1541f86",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-showcase.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b8a666fe0b30bf3aa6346d94c9ca12889b044985",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000359",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 360,
+  "subject": {
+    "id": "ccr11-small-shop-showcase-technical-evidence-part-2",
+    "type": "DOCUMENT"
+  },
+  "summary": "Complete the Small Shop technical evidence binding.",
+  "why": "The ledger schema limits one revision to twenty files. This continuation binds the remaining settlement ontology and answer-key controls plus the immutable verification report, while preserving one logical technical milestone and the same narrow authority boundary."
+}
