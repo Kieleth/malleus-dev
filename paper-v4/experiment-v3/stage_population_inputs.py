@@ -33,6 +33,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.multimod
     population_brief_sections,
     recipe_document,
     render_population_brief,
+    run_namespaces,
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.ontology_compile import (  # noqa: E402
     ExactSource,
@@ -81,19 +82,19 @@ def main() -> int:
     constructible = (*entities, *relations)
     extra = contract_only_types(ontology, constructible)
     domain = domain_iri(ontology)
+    names = run_namespaces(run_id)
     result = compile_exact_ontology(
-        root=_source(f"paper-v4:v3-{run_id}", ontology_path),
+        root=_source(names["root_locator"], ontology_path),
         malleus=_source("malleus", MALLEUS),
         linkml_types=_source("linkml:types", LINKML),
     )
     contract = derive_compiled_logical_contract(
         result.compilation,
         record_type_iris=tuple(domain + name for name in (*constructible, *extra)),
-        contract_id=f"https://malleus.dev/contracts/paper-v4/experiment-v3/{run_id}",
+        contract_id=names["contract_id"],
     )
     recipes = recipe_document(
-        ontology, contract, constructible,
-        recipe_namespace=f"https://malleus.dev/paper-v4/experiment-v3/{run_id}/recipe/",
+        ontology, contract, constructible, recipe_namespace=names["recipe_namespace"]
     )
     sections = population_brief_sections(
         ontology, contract, entities, relations,

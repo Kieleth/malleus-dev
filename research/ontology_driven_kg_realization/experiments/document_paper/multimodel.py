@@ -512,18 +512,34 @@ def _read_exact(root: Path, manifest: RunManifest, role: str) -> bytes:
     return source
 
 
-def recipe_profile(manifest: RunManifest) -> PopulationRecipeProfile:
+def recipe_profile(
+    constructible: Sequence[str], *, recipe_namespace: str, member_namespace: str
+) -> PopulationRecipeProfile:
+    """The one population-to-recipe profile every stage of a run must share."""
+
     return PopulationRecipeProfile(
         population_schema="malleus.paper-v4.population/v2",
         selected_reading_schema="malleus.paper-v4.text-layer-reading/v1",
         provenance_schema="malleus.paper-v4.population-provenance/v2",
         graph_recipe_profile_iri="https://malleus.dev/graph-recipe/profile/v0",
-        recipe_namespace=manifest.recipe_namespace,
-        member_namespace=manifest.member_namespace,
+        recipe_namespace=recipe_namespace,
+        member_namespace=member_namespace,
         record_type_templates=tuple(
-            (name, name + _TEMPLATE_VERSION) for name in manifest.constructible
+            (name, name + _TEMPLATE_VERSION) for name in constructible
         ),
     )
+
+
+def run_namespaces(run_id: str) -> dict[str, str]:
+    """Contract id and namespaces every v3 run derives from its id."""
+
+    base = f"https://malleus.dev/paper-v4/experiment-v3/{run_id}"
+    return {
+        "root_locator": f"paper-v4:v3-{run_id}",
+        "contract_id": f"https://malleus.dev/contracts/paper-v4/experiment-v3/{run_id}",
+        "recipe_namespace": f"{base}/recipe/",
+        "member_namespace": f"{base}/population/member/",
+    }
 
 
 def configuration(
@@ -540,7 +556,11 @@ def configuration(
         generic_recipe_sha256=manifest.sha256["recipes"],
         ontology_acceptance_sha256=manifest.sha256["acceptance"],
         protocol_machine_sha256=manifest.sha256["machine"],
-        population_recipe_profile=recipe_profile(manifest),
+        population_recipe_profile=recipe_profile(
+            manifest.constructible,
+            recipe_namespace=manifest.recipe_namespace,
+            member_namespace=manifest.member_namespace,
+        ),
         record_type_iris=tuple(
             domain + name
             for name in (*manifest.constructible, *manifest.contract_only_types)
@@ -677,16 +697,24 @@ if __name__ == "__main__":  # pragma: no cover
 
 
 __all__ = [
+    "ACCEPTANCE_SCHEMA",
+    "BEGIN_ONTOLOGY",
+    "END_ONTOLOGY",
     "MANIFEST_SCHEMA",
     "MultimodelRefusal",
     "RunManifest",
+    "acceptance_event",
     "binding_closure",
     "compile_manifest_ontology",
     "contract_only_types",
     "derive_run_artifacts",
     "domain_iri",
+    "extract_delimited",
     "load_ontology",
     "population_brief_sections",
     "recipe_document",
+    "recipe_profile",
+    "render_population_brief",
     "run_manifest_experiment",
+    "run_namespaces",
 ]

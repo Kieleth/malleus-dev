@@ -17,6 +17,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from research.ontology_driven_kg_realization.experiments.document_paper.multimodel import (  # noqa: E402
     MANIFEST_SCHEMA,
     RunManifest,
+    run_namespaces,
 )
 
 V2 = "paper-v4/experiment-v2"
@@ -57,10 +58,7 @@ def main() -> int:
     manifest = {
         "schema": MANIFEST_SCHEMA,
         "run_id": run_id,
-        "root_locator": f"paper-v4:v3-{run_id}",
-        "contract_id": f"https://malleus.dev/contracts/paper-v4/experiment-v3/{run_id}",
-        "recipe_namespace": f"https://malleus.dev/paper-v4/experiment-v3/{run_id}/recipe/",
-        "member_namespace": f"https://malleus.dev/paper-v4/experiment-v3/{run_id}/population/member/",
+        **run_namespaces(run_id),
         "entity_types": inputs["constructible"]["entity_types"],
         "relation_types": inputs["constructible"]["relation_types"],
         "contract_only_types": inputs["constructible"]["contract_only_types"],
