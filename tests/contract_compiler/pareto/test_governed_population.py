@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping
 from copy import deepcopy
 from hashlib import sha256
 import json
@@ -721,6 +722,61 @@ def test_retention_event_identifier_permutation_refuses_before_any_write(
         is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
     )
     assert _ledger_bytes(history) == ledger_before
+
+
+def test_stateful_retention_mapping_cannot_change_after_preflight(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    profile_id = "profile:state-version"
+    plan_id = "plan:neutral:1"
+    profile_bytes = _canonical(NEUTRAL_PROFILE_DATA)
+    plan_bytes = _canonical(plan)
+    valid = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    substituted = {
+        profile_id: _artifact_event(plan_id, profile_bytes),
+        plan_id: _artifact_event(profile_id, plan_bytes),
+    }
+
+    class StatefulEvents(Mapping[str, bytes]):
+        def __init__(self) -> None:
+            self.reads = {key: 0 for key in valid}
+
+        def __getitem__(self, key: str) -> bytes:
+            self.reads[key] += 1
+            return valid[key] if self.reads[key] == 2 else substituted[key]
+
+        def __iter__(self) -> Iterator[str]:
+            return iter(valid)
+
+        def __len__(self) -> int:
+            return len(valid)
+
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=StatefulEvents(),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
+    assert _ledger_bytes(history) == ledger_before
+    retained_ids = {member.record_id for member in history.replay().retained_inputs}
+    assert profile_id not in retained_ids
+    assert plan_id not in retained_ids
 
 
 def test_no_domain_change_retains_evidence_without_composing_a_change_set(
