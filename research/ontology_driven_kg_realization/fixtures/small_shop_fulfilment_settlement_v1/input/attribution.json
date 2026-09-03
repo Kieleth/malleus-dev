@@ -1,0 +1,47 @@
+{
+  "doi": "10.1007/978-3-031-08848-3_9",
+  "excluded_claims": [
+    "ABSOLUTE_OR_CALENDAR_TIME",
+    "ACCEPTED_KNOWLEDGE_OR_PROTOCOL_OUTCOME",
+    "EVENT_GRAPH_NODE",
+    "GENERIC_FAN_OUT_OR_CARDINALITY",
+    "INVOICE_VALUE",
+    "NATIVE_SETTLEMENT_EDGE",
+    "PAYMENT_VALUE"
+  ],
+  "fixture_defined_semantics": [
+    {
+      "relation_type": "PAYMENT_SETTLES_INVOICE",
+      "source_id": "P1",
+      "target_id": "I1"
+    },
+    {
+      "relation_type": "PAYMENT_SETTLES_INVOICE",
+      "source_id": "P1",
+      "target_id": "I2"
+    }
+  ],
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-payment-settlement-v1",
+  "interpretation_authority": "FIXTURE_DECLARATION_NOT_SOURCE_NATIVE_RELATION",
+  "published_source_claims": [
+    {
+      "invoice_id": "I1"
+    },
+    {
+      "invoice_id": "I2"
+    },
+    {
+      "cooccurring_entity_ids": [
+        "P1",
+        "I1",
+        "I2"
+      ],
+      "event_id": "e30"
+    }
+  ],
+  "schema": "malleus.small-shop.source-attribution/v1",
+  "source_locator": "Table 1",
+  "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+  "work_title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs"
+}

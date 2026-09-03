@@ -1,0 +1,21 @@
+{
+  "event_id": "e30",
+  "invoice_ids": [
+    "I1",
+    "I2"
+  ],
+  "invoice_record_ordinals": [
+    0,
+    1
+  ],
+  "invoice_source_member": "sources/invoices.csv",
+  "ordinal_base": 0,
+  "payment_id": "P1",
+  "payment_record_ordinal": 0,
+  "payment_source_member": "sources/payments.jsonl",
+  "record_order": "SOURCE_ORDER",
+  "schema": "malleus.small-shop.settlement-selection/v1",
+  "selection_id": "SHOP-PAYMENT-SETTLEMENT",
+  "settlement_semantics": "FIXTURE_DEFINED_DIRECTED_PAYMENT_TO_INVOICE",
+  "temporal_semantics": "ORDER_ONLY"
+}

@@ -1,0 +1,47 @@
+id: https://malleus.dev/schema/small-shop-fulfilment-settlement
+name: small_shop_fulfilment_settlement
+version: 0.1.0
+title: Small Shop Payment Settlement TBox
+description: Additive payment-settlement vocabulary for the OKG-FX001 fixture.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  shop: https://malleus.dev/schema/small-shop-fulfilment/
+  shopc: https://malleus.dev/schema/small-shop-fulfilment-correction/
+  shops: https://malleus.dev/schema/small-shop-fulfilment-settlement/
+imports:
+  - small-shop-correction
+slots:
+  invoice_number:
+    range: string
+  payment_number:
+    range: string
+classes:
+  Invoice:
+    is_a: Entity
+    slots:
+      - invoice_number
+    slot_usage:
+      invoice_number:
+        required: true
+  Payment:
+    is_a: Entity
+    slots:
+      - payment_number
+    slot_usage:
+      payment_number:
+        required: true
+  PaymentSettlesInvoiceRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: string
+        required: true
+        equals_string: PAYMENT_SETTLES_INVOICE
+      source_id:
+        range: Payment
+        required: true
+      target_id:
+        range: Invoice
+        required: true
