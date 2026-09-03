@@ -23,6 +23,8 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _event,
     _ledger_bytes,
     _protocol_events,
+    _record_change,
+    _admit_record_change,
 )
 from tests.contract_compiler.pareto.test_population_plan import (
     PROFILE_BYTES,
@@ -252,6 +254,28 @@ def test_prepared_neutral_change_admits_reopens_and_matches_direct_graph(
     assert reopened.change_sets == admitted.change_sets
 
 
+def test_preparation_accepts_a_shipped_profile_value(tmp_path: Path) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["history_profile"]["sha256"] = population.STATE_VERSION_PROFILE.identity
+
+    prepared = population.prepare_population_change(
+        history=history,
+        plan=plan,
+        profile=population.STATE_VERSION_PROFILE,
+        retention_events=_retention_events(plan, STATE_VERSION_PROFILE_DATA),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    assert prepared.profile is population.STATE_VERSION_PROFILE
+    assert prepared.change_set is not None
+
+
 def test_preparation_retains_profile_plan_and_gaps_in_one_ordered_batch(
     tmp_path: Path,
 ) -> None:
@@ -370,6 +394,38 @@ def test_duplicate_plan_id_refuses_before_any_second_write(tmp_path: Path) -> No
 
     assert (
         refusal.value.reason is population.PopulationPlanRefusalReason.DUPLICATE_PLAN_ID
+    )
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_duplicate_change_set_id_refuses_before_retaining_the_plan(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    legacy = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change:plan:neutral:1",
+        record_id="left-legacy",
+        label="legacy",
+        order="legacy-1",
+    )
+    _admit_record_change(history, legacy, suffix="-legacy-change-id")
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _prepare(history, plan, NEUTRAL_PROFILE_DATA)
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.DUPLICATE_CHANGE_SET_ID
     )
     assert _ledger_bytes(history) == ledger_before
 
