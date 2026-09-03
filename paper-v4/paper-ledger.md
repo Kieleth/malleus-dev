@@ -1305,3 +1305,15 @@ Gate: The focused active paper harness passed 107 tests in 4.18 seconds with byt
 Boundary: The byte comparison used the retained Python 3.12.9 project environment, not a newly installed environment. Exact observed top-level versions are recorded in Appendix A, but `pyproject.toml` does not freeze every transitive dependency. This is the final focused paper-local gate for this boundary, not the arXiv bundle gate or a package release.
 
 Impact: The executed vertical and lean manuscript are ready for an isolated paper commit. A complete paper-specific transitive lock plus arXiv source and render inspection remain open.
+
+### E-0085, question-independent ontology compiles after one structural correction
+
+Date: 2026-09-03
+
+Sources: D-0018; input-freeze commit `f5d8a83`; `paper-v4/experiment-v2/ontology-run/task.md`; its input manifest and four copied Malleus files; private selected reading `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`; both returned ontology attempts; the first compiler refusal; and the accepted compilation receipt.
+
+Observation: A new context-free Codex subagent with no inherited turns received only the declared question-independent ontology task and five inputs. It did not receive the competency questions, an answer key, earlier ontology, Recon output, paper documents, source code, tests, or network access. Attempt one proposed a broad mid-ocean-ridge geodynamics vocabulary and was refused because the supported LinkML profile rejects root field `default_prefix`. The exact canonical diagnostic was returned to the same session. Attempt two removed only that line. Its ontology bytes are `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed` and compile into 4,146 validated facts at validated-fact-set identity `sha256:bc178b7c9125d5edefd43df45f1a2949e815b17da27668308b0ae728f3f6f4ad`. The accepted contract bytes are `sha256:292f8777ea24ad06de82c70bd87f1c049eb457fd34b742e2d5db12dd0e6233ae`; the compile receipt is `sha256:d4595bf34eeed2aaa743e18703eadee7324c89bc2f257c88379405279ea62c69`.
+
+Boundary: The compiler establishes structural validity only. The proposal is broader than the old question-shaped ontology, and no human edited its domain semantics. It is not evidence for minimality, adequacy, or a general Malleus ontology builder. One canonical acceptance event authorizes the next stage against this digest without judging meaning.
+
+Impact: Bind the frozen questions to this ontology through a paper-owned query surface, prepare ontology-specific value-generic recipes, and freeze both before a fresh population session. Missing question semantics must remain visible as query or review results; they do not authorize ontology repair.

@@ -60,7 +60,7 @@ The experiment freezes exactly five identity groups:
 
 1. Source PDF digest: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
-3. Selected ontology digest: pending corrected run.
+3. Selected ontology digest: `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed`.
 4. Ledger head plus replay receipt: pending corrected run.
 5. Adopter query binding digest: pending corrected run and excluded from the KnowledgeChangeSet evidence closure.
 
@@ -83,7 +83,7 @@ The retired answer key remains sealed historical material and leaves the active 
 
 1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, forward-merged with exact Core `f9052b4`. The PDF and private files are ignored.
 2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
-3. **Ontology, pending corrected run.** Freeze a question-independent ontology task, retain its exact model-visible inputs, run one fresh session, return compiler diagnostics at most twice, and record one acceptance event for the compiled digest. Do not call this a general Malleus ontology builder or claim minimality.
+3. **Ontology, complete.** A question-independent fresh session received the selected reading plus generic Malleus ontology inputs, but no competency questions or question-derived semantic checklist. Attempt one was refused because `default_prefix` is outside the supported LinkML profile. The exact diagnostic was returned once; attempt two removed only that field and compiled into 4,146 validated facts. One event accepts its digest for population. This is one document-domain proposal, not a general builder or minimality result.
 4. **Query binding, pending corrected run.** Bind the four questions to an adopter-owned surface after ontology compilation and before population. Keep the binding outside admission evidence and replay identity. An unbindable question is a result, not authorization to repair the ontology.
 5. **Population, pending corrected run.** Give a different fresh session the corrected ontology, selected reading, ontology-specific generic recipes, and four questions. Permit one structural retry, no content repair, and no fallback.
 6. **Commitment, pending corrected run.** Compile provenance, derive both checks, compose one change without query evidence, admit atomically, and retain exact refusal outcomes.
