@@ -1,0 +1,68 @@
+{
+  "schema": "malleus.paper-v4.population-acquisition/v3",
+  "run_id": "claude-sonnet-5",
+  "status": "STRUCTURALLY_ACCEPTED",
+  "input_manifest": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/input-manifest.json",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "sonnet",
+    "model_family": "Claude Sonnet 5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "spawn_message": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/spawn-message.md",
+    "observed_usage": {
+      "subagent_tokens": 171291,
+      "tool_uses": 14,
+      "duration_ms": 395148
+    }
+  },
+  "declared_input_count": 5,
+  "query_binding_visible": false,
+  "content_review_performed": false,
+  "human_repair": false,
+  "fallback_population": false,
+  "model_refusal": false,
+  "structural_diagnostic_returns": 0,
+  "structural_retries": 0,
+  "attempts": [
+    {
+      "ordinal": 1,
+      "population_path": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/population.json",
+      "retained_copy": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/population-attempt-01.json",
+      "population_sha256": "sha256:b85bd76aa5ffe21e63e3986ae64c905934c29a88656669f80813352b5a0f2996",
+      "envelope_status": "PROPOSAL",
+      "compiler_status": "ACCEPTED",
+      "record_count": 2,
+      "entity_count": 2,
+      "relation_count": 0,
+      "operation_count": 2,
+      "record_types": ["RidgeSegment", "GeologicalProcess"],
+      "reading_blocks_cited": ["page:1:block:005", "page:5:block:002"]
+    }
+  ],
+  "producer_access_report": {
+    "requested_after_output": true,
+    "files_read": [
+      "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/task.md",
+      "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/ontology.yaml",
+      "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/generic-recipes.stottr",
+      "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/competency-questions.json",
+      "private/paper-v4-text-layer/selected-reading.json"
+    ],
+    "directory_listings": [
+      "population-run/ (names only; exposes spawn-message.md and input-manifest.json names, not contents)",
+      "population-run/inputs/ (names only)"
+    ],
+    "scratch_files_outside_repository": [
+      "a pretty-printed copy of selected-reading.json in the session scratchpad, same content, to read past the harness long-line limit"
+    ],
+    "network": false,
+    "repository_writes": ["population-run/population.json"],
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox"
+  },
+  "producer_self_report_after_output": {
+    "kind": "POST_HOC_SELF_REPORT_NOT_EVIDENCE",
+    "prompt": "state which task rules led to omitting SeismicEvent, RockSample, SeismicInstrument and every relation; do not revise",
+    "summary": "Depths and CO2 concentrations appear in the prose only as ranges over populations of events or samples, while the selected ontology types carry one exact value per event or sample, so any single value would be invented. Instruments appear only in aggregate and the brief forbids representing a network as one instrument or inventing an individual. Every constructible relation needs a SeismicEvent or RockSample endpoint, so none could be emitted; ProcessCausesEventRelation was additionally withheld because the ontology cannot carry the authors' hypothesis qualifier."
+  }
+}
