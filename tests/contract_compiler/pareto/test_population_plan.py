@@ -64,6 +64,15 @@ P1_SYMBOLS = frozenset(
         "compile_population_plan",
     }
 )
+P2_SYMBOLS = frozenset(
+    {
+        "DomainHistoryProfile",
+        "PopulationPreparation",
+        "SOURCE_ASSERTION_PROFILE",
+        "STATE_VERSION_PROFILE",
+        "prepare_population_change",
+    }
+)
 P1_REASONS = frozenset(
     {
         "ABSENT_PATH",
@@ -500,8 +509,8 @@ def _mutate(plan: dict[str, object], case: str) -> None:
 def test_population_p1_surface_is_private_and_dependency_neutral() -> None:
     population = _population()
 
-    assert set(population.__all__) == P1_SYMBOLS
-    assert all(not hasattr(malleus, name) for name in P1_SYMBOLS)
+    assert set(population.__all__) == P1_SYMBOLS | P2_SYMBOLS
+    assert all(not hasattr(malleus, name) for name in P1_SYMBOLS | P2_SYMBOLS)
     assert {member.value for member in population.PopulationPlanStatus} == {
         "CHANGE_SET",
         "NO_DOMAIN_CHANGE",
