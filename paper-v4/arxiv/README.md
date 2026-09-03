@@ -50,9 +50,12 @@ test "$(shasum -a 256 "$malleus_paper_scratch/run/semantic-ledger.jsonl" | cut -
 
 ## Reproduce the two further producer runs
 
-From the same environment and checkout, each further run is reproduced by the manifest driver with the transaction time retained beside its manifest. Both output paths must be absent.
+From the same environment and checkout, each further run is reproduced by the manifest driver with the transaction time retained beside its manifest. Each run manifest names the selected reading at the ignored path `private/paper-v4-text-layer/selected-reading.json`, so the reading produced above is copied there first. Both output paths must be absent.
 
 ```sh
+mkdir -p "$malleus_paper_root/private/paper-v4-text-layer"
+cp "$malleus_paper_scratch/selected-reading.json" "$malleus_paper_root/private/paper-v4-text-layer/selected-reading.json"
+
 for run in claude-sonnet-5 claude-opus-5; do
   run_dir="$malleus_paper_root/paper-v4/experiment-v3/runs/$run"
   scratch="$malleus_paper_root/private/paper-v4-v3-$run-reproduction"
