@@ -17,7 +17,7 @@ from typing import Any, Callable, Mapping, Sequence
 from unittest.mock import patch
 
 from malleus.kg import KnowledgeGraph
-from malleus.ledger import LedgerError, canonical_json
+from malleus.ledger import LedgerError, canonical_json, content_digest
 from malleus.ontology import OntologyRegistry
 from research.ontology_driven_kg_realization.experiments.document_paper.native_query import (
     NativeQueryRefusal,
@@ -82,6 +82,17 @@ def _array(value: object, subject: str) -> list[Any]:
     return value
 
 
+def _sha256(value: object, subject: str) -> str:
+    if (
+        type(value) is not str
+        or not value.startswith("sha256:")
+        or len(value) != 71
+        or any(character not in "0123456789abcdef" for character in value[7:])
+    ):
+        _refuse(f"{subject} must be a lowercase sha256 digest")
+    return value
+
+
 def _canonical_object(source: bytes, subject: str) -> dict[str, Any]:
     if type(source) is not bytes:
         raise TypeError(f"{subject} source must be bytes")
@@ -109,9 +120,13 @@ def _exact_file(path: Path, source: bytes, subject: str) -> None:
 def _snapshot_records(receipt: Mapping[str, Any]) -> dict[str, list[dict[str, Any]]]:
     if "graph_state_digest" not in receipt:
         _refuse("receipt.graph_state_digest is required")
-    digest = receipt["graph_state_digest"]
-    if not isinstance(digest, str) or not digest.startswith("sha256:"):
-        _refuse("receipt.graph_state_digest must be a sha256 digest")
+    _sha256(receipt["graph_state_digest"], "receipt.graph_state_digest")
+    if "validated_fact_set_sha256" not in receipt:
+        _refuse("receipt.validated_fact_set_sha256 is required")
+    _sha256(
+        receipt["validated_fact_set_sha256"],
+        "receipt.validated_fact_set_sha256",
+    )
     queries = _object(receipt.get("queries"), "receipt.queries")
     if set(queries) != {"entities", "relations"}:
         _refuse("receipt.queries must contain exactly entities and relations")
@@ -233,7 +248,9 @@ def run_query_replay(
         graph = KnowledgeGraph.from_records(registry, _snapshot_records(receipt))
     except (OSError, ValueError) as error:
         raise QueryReplayRefusal(f"cannot rehydrate receipt graph: {error}") from error
-    observed_digest = graph.state_digest()
+    snapshot = graph.snapshot()
+    snapshot["ontology_hash"] = receipt["validated_fact_set_sha256"]
+    observed_digest = content_digest(snapshot)
     if observed_digest != receipt["graph_state_digest"]:
         _refuse(
             "receipt graph state digest differs after typed rehydration: "

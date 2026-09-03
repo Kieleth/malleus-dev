@@ -11,7 +11,7 @@ from typing import Any, Callable
 import pytest
 
 from malleus.kg import KnowledgeGraph, OpStatus
-from malleus.ledger import canonical_json
+from malleus.ledger import canonical_json, content_digest
 from malleus.ontology import OntologyRegistry
 from research.ontology_driven_kg_realization.experiments.document_paper import (
     query_replay as subject,
@@ -135,15 +135,23 @@ def inputs(tmp_path: Path) -> dict[str, Any]:
     }
 
 
-def _receipt(graph: KnowledgeGraph) -> bytes:
+def _receipt(
+    graph: KnowledgeGraph,
+    *,
+    validated_fact_set_sha256: str | None = None,
+) -> bytes:
     snapshot = graph.snapshot()
+    contract_hash = validated_fact_set_sha256 or snapshot["ontology_hash"]
+    digest_snapshot = dict(snapshot)
+    digest_snapshot["ontology_hash"] = contract_hash
     return _canonical(
         {
-            "graph_state_digest": graph.state_digest(),
+            "graph_state_digest": content_digest(digest_snapshot),
             "queries": {
                 "entities": snapshot["nodes"],
                 "relations": snapshot["relations"],
             },
+            "validated_fact_set_sha256": contract_hash,
         }
     )
 
@@ -202,6 +210,42 @@ def test_state_digest_drift_refuses_before_query(inputs) -> None:
     with pytest.raises(
         QueryReplayRefusal, match="digest differs after typed rehydration"
     ):
+        _run(inputs, _canonical(receipt))
+
+
+def test_receipt_contract_hash_reproduces_contract_view_graph_identity(inputs) -> None:
+    contract_hash = "sha256:" + "a" * 64
+    receipt = _receipt(
+        inputs["graph"],
+        validated_fact_set_sha256=contract_hash,
+    )
+
+    result = _run(inputs, receipt)
+
+    expected = json.loads(receipt)["graph_state_digest"]
+    assert contract_hash != inputs["graph"].snapshot()["ontology_hash"]
+    assert result["graph_state_digest"] == expected
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    (
+        ("missing", "validated_fact_set_sha256 is required"),
+        ("malformed", "must be a lowercase sha256 digest"),
+    ),
+)
+def test_receipt_requires_exact_validated_fact_set_identity(
+    inputs,
+    mutation: str,
+    message: str,
+) -> None:
+    receipt = json.loads(_receipt(inputs["graph"]))
+    if mutation == "missing":
+        del receipt["validated_fact_set_sha256"]
+    else:
+        receipt["validated_fact_set_sha256"] = "sha256:not-a-digest"
+
+    with pytest.raises(QueryReplayRefusal, match=message):
         _run(inputs, _canonical(receipt))
 
 
