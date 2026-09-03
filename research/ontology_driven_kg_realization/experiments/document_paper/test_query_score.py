@@ -16,6 +16,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.query_sc
     ScoringInputRefusal,
     candidate_from_query_result,
     score_query_result,
+    write_score_result,
 )
 
 
@@ -161,3 +162,11 @@ def test_empty_answers_keep_bound_cases_and_forbidden_attempts_refuse() -> None:
     query_result["forbidden_attempts"]["file_read"] = 1
     with pytest.raises(ScoringInputRefusal, match="must be zero"):
         candidate_from_query_result(_canonical(query_result))
+
+
+def test_score_writer_never_overwrites(tmp_path) -> None:
+    output = tmp_path / "score.json"
+    write_score_result(output, b"first")
+    with pytest.raises(ScoringInputRefusal, match="already exists"):
+        write_score_result(output, b"second")
+    assert output.read_bytes() == b"first"

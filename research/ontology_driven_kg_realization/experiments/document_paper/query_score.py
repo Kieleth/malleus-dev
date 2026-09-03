@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import argparse
 from copy import deepcopy
 from hashlib import sha256
 import json
-from typing import Any, Mapping
+from pathlib import Path
+from typing import Any, Mapping, Sequence
 
 from malleus.ledger import LedgerError, canonical_json
 
@@ -298,3 +300,41 @@ def score_query_result(query_result_source: bytes, oracle_source: bytes) -> byte
             "questions": questions,
         }
     return canonical_json(result).encode("utf-8")
+
+
+def write_score_result(path: Path, source: bytes) -> None:
+    """Write one score result without replacing an existing artifact."""
+
+    if not isinstance(path, Path) or type(source) is not bytes:
+        raise TypeError("score result requires one Path and exact bytes")
+    try:
+        with path.open("xb") as stream:
+            stream.write(source)
+    except FileExistsError as error:
+        raise ScoringInputRefusal(f"score result already exists at {path}") from error
+    except OSError as error:
+        raise ScoringInputRefusal(
+            f"cannot write score result {path}: {error}"
+        ) from error
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--query-result", required=True, type=Path)
+    parser.add_argument("--oracle", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
+    result = score_query_result(
+        args.query_result.read_bytes(),
+        args.oracle.read_bytes(),
+    )
+    write_score_result(args.output, result)
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
