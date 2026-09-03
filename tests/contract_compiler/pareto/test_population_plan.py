@@ -660,6 +660,8 @@ slots:
   label:
     range: string
 classes:
+  BareObject:
+    is_a: Entity
   Object:
     is_a: Entity
     slots:
@@ -745,6 +747,22 @@ def test_self_relation_dependency_is_unique() -> None:
     result = _compile(plan, contract_pair)
 
     assert result.operations[1].depends_on == ("operation:plan:neutral:1:0",)
+
+
+def test_population_plan_refuses_null_properties_even_when_contract_has_no_slots() -> None:
+    population = _population()
+    compiled, partial = _self_link_contract()
+    plan = _plan(partial.identity)
+    plan["records"] = {
+        "entities": [{"type": "BareObject", "id": "bare-1", "properties": None}],
+        "relations": [],
+    }
+    plan["derivations"] = []
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, (compiled, partial))
+
+    assert refusal.value.reason is population.PopulationPlanRefusalReason.MALFORMED_PLAN
 
 
 def test_supersession_copies_records_and_deduplicates_creator_changes(
@@ -853,6 +871,78 @@ def test_supersession_copies_records_and_deduplicates_creator_changes(
     assert governed.record_history["right-old"].superseded_by == "right-new"
     assert governed.record_history["left-old-1"].superseded_by == "left-new-1"
     assert governed.record_history["left-old-2"].superseded_by == "left-new-2"
+
+
+def test_population_plan_refuses_supersession_that_orphans_active_relation(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    history, compiled, partial, _, _, _ = _anchored_history(tmp_path)
+    replay = _admit_operations(
+        history,
+        change_set_id="change:linked-base",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-old",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-old",
+                properties={"label": "old"},
+                depends_on=(),
+            ),
+            KnowledgeOperation(
+                ordinal=1,
+                operation_id="operation:right-base",
+                operation_type="CREATE_ENTITY",
+                record_type="RightObject",
+                record_id="right-base",
+                properties={"label": "right"},
+                depends_on=(),
+            ),
+            KnowledgeOperation(
+                ordinal=2,
+                operation_id="operation:link-old",
+                operation_type="CREATE_RELATION",
+                record_type="ObjectLink",
+                record_id="link-old",
+                properties={"relation_type": "LINKS"},
+                depends_on=("operation:left-old", "operation:right-base"),
+                source_id="left-old",
+                target_id="right-base",
+            ),
+        ),
+        order="base-1",
+    )
+    plan = _plan(partial.identity)
+    plan["records"] = {
+        "entities": [
+            {
+                "type": "LeftObject",
+                "id": "left-new",
+                "properties": {"label": "new"},
+            }
+        ],
+        "relations": [],
+    }
+    plan["derivations"] = [
+        {
+            "record_id": "left-new",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "row:1:left",
+        }
+    ]
+    plan["supersessions"] = [
+        {"record_id": "left-new", "supersedes_record_id": "left-old"}
+    ]
+
+    with pytest.raises(ValueError, match="Source entity 'left-old' does not exist"):
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
 
 
 def test_zero_records_returns_no_domain_change_with_complete_closures(
