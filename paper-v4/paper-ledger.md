@@ -1387,3 +1387,19 @@ Boundary: The v2 transaction value itself is not chosen at this entry. It will b
 Verification: 29 runner and frozen-publication tests pass. Ruff and `git diff --check` pass.
 
 Impact: The corrected history will not carry a fabricated old timestamp or a nondeterministic runtime timestamp.
+
+### E-0090, first v2 population proposal compiles unchanged
+
+Date: 2026-09-03
+
+Sources: input-freeze commit `c6b7986`; context-free producer task `population_v2_producer`; `paper-v4/experiment-v2/population-run/population.json`; its acquisition record; the exact v2 ontology, recipes, reading, profile, and compiler; and the explicit v2 driver tests.
+
+Observation: A new subagent with `fork_turns` set to `none` received only the five declared model-visible files and owned only `population.json`. It returned the success schema at `sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964`. The frozen envelope accepted its 13 opaque sequential record ids. Exact compilation against the accepted ontology coordinate and private selected reading succeeded on the first attempt, producing 13 ordered operations at plan identity `sha256:fa1194aa705c36ff6ef06bc3d7bcadbeb4297d44c95a3558e5946fb97dbc09e6` and 47 provenance assertions. No structural diagnostic was returned.
+
+Boundary: No one reviewed or changed the proposal's domain meaning before this result. There was no population retry, human repair, evaluator-authored fact, fallback, query result, or answer comparison. The proposal contains seven entity records and six relation records. Their relevance and source support remain for the separately frozen post-query inspection.
+
+Driver freeze: The explicit v2 driver binds this exact population, the accepted ontology locator and bytes, copied LinkML types, copied protocol machine, accepted ontology event, recipes, source and reading identities, and the complete population profile. It verifies the frozen compilation coordinate before build. The query binding is digest-checked before build but is passed only to source-free replay querying, never to population compilation, change-set evidence, ledger admission, or replay identity. The command requires repository, reading, private-run, result, and transaction-time arguments. Missing arguments exit with status 2 instead of the prior silent no-op.
+
+Verification: 26 acquisition, coordinate, driver, recipe, ordering, query-failure, and CLI tests pass. Ruff and `git diff --check` pass. A query refusal test proves that a valid build bundle remains intact while no query-result file is created.
+
+Impact: The producer's first result is frozen without semantic selection. The next step is one exact build, disposal, reopen, replay, and query invocation. The ledger and result directories do not exist at this entry.
