@@ -1,6 +1,6 @@
-# Population redesign: assertions, coverage, no questions in production. TDD plan.
+# Core: the population adapter, assertions, coverage census. TDD plan.
 
-From the overseer session, decided by Luis in chat on 2026-09-03 (late). Executor: the Codex paper thread. Build slowly, test first, one slice at a time; the overseer verifies each slice on disk before the next starts. This work is research-local: it touches the paper harness and nothing under `src/malleus`. Core is not involved until the result is promoted (see the last section).
+From the overseer session, decided by Luis in chat on 2026-09-03 (late). Executor: Core. This is requirement R1's adapter from `handover/2026-09-03-core-requirements.md`, built first and test first, one slice at a time; the overseer verifies each slice on disk before the next starts. It sits inside Core's own Pareto order as step 3 (the narrow public API, population side) and step 6 (typed gaps), plus two things that order did not have: the assertion as the unit of capture, and a coverage census. Steps 1 and 2 of Core's order (the governance entry, the profile artifact) stay Core's and are not blocked by this. Core's objection stands: no paper artifact is a Core fixture. The paper's frozen runs are the overseer's downstream check, run by the overseer, after Core reports green.
 
 ## The discovery, in five lines
 
@@ -13,7 +13,7 @@ Across three producers the populations cited 4, 3 and 3 of 186 reading blocks an
 3. Competency questions never enter ontology or population. They enter only the evaluation loop, when the evaluator binds queries against the accepted ontology after population is frozen.
 4. The constructible set is every concrete type of the accepted ontology. No binding closure before population. Recipes are optional; the plain path is records to operations.
 5. Human ratification samples blocks; the graph is not shrunk to make review cheap.
-6. The brief is retired. The only producer instruction beyond isolation is the skill (Core R5). Until R5 ships, the harness carries a machine-readable population document schema that the skill will later point at; no prose brief is written.
+6. The brief is retired. The only producer instruction beyond isolation is the skill (R5). The population document schema built here is what the skill will point at; no prose brief is written anywhere.
 
 ## The population document, draft for the executor to test into shape
 
@@ -71,32 +71,36 @@ Derived, never declared except for `nothing_assertable`:
 | NOTHING_ASSERTABLE | declared by the producer |
 | UNTOUCHED | none of the above |
 
-The census output is one JSON document: per-block state, totals, gap counts by kind, and the digest of the population it was computed from. It is retained beside the results and reported per run. Applied to the three frozen runs it must show the RCA symptom mechanically: v2 four asserted and the rest untouched.
+The census output is one JSON document: per-block state, totals, gap counts by kind, and the digest of the population it was computed from. It is retained as an evidence artifact beside the proposal. When the overseer later lifts the three frozen paper runs into the document, the census must show the RCA symptom mechanically: v2 four asserted and the rest untouched. That is the overseer's check.
 
 ## The adapter
 
 Input: the population document above, the reading, the accepted ontology. Output: governed operations in the change set's own grammar (record type, record id, properties, endpoints, ordinal, operation id, depends_on, optional supersedes_record_id), plus retained evidence artifacts (the population document, the assertions with their block digests, the gaps, the census), plus typed refusals. It adds order, dependency, digests and refusals. It adds no meaning.
 
-Downstream it calls what exists at Core `f9052b4`: the private change-set composer, admission, reopen, replay, and the graph query surface, exactly as `multimodel.py` does today. No Core code changes.
+Downstream it calls what exists at the current head: the private change-set composer, admission, reopen, replay, and the graph query surface. Those seams are not changed by this work.
 
 ## TDD slices, in order
 
 Each slice: a failing test committed first (`RED:` commit), then the implementation (`GREEN:` commit), then a refactor if needed. Slices are small, under two hundred lines of implementation. After each slice, report the test output and the commit; the overseer verifies on disk before the next slice.
 
 - S1. Population document validation. Tests: schema fields closed; verbatim statement containment; modality enum; formalized_by integrity; orphan record refused; gap required on unformalised assertion; signals and events refused with the typed reason. Fixture: hand-written population for block 1:005 with five assertions, following the example above.
-- S2. Coverage census. Tests: the four states on a synthetic reading; totals; the three frozen runs reproduce their known block counts (4, 3, 3 asserted) when their populations are lifted into the v3 document with one assertion per cited block.
-- S3. Records to operations. Tests: family order and endpoint dependencies; typed refusals for unknown type, enum violation, dangling endpoint, missing required property; the v2 population, lifted into the v3 document, replays to the same graph state digest as the frozen v2 result (`graph_state_digest` in its query result). Byte identity of operation ids is not required; graph state equality is.
+- S2. Coverage census. Tests: the four states on the neutral fixture; totals; gap counts by kind; the census digest binds the population digest it was computed from.
+- S3. Records to operations. Tests: family order and endpoint dependencies; typed refusals for unknown type, enum violation, dangling endpoint, missing required property; and the agreement property that makes this Core's own test rather than the paper's: for any valid population document, the graph built by `KnowledgeGraph.from_records` from its record families equals the graph replayed from the operations the adapter emits, admitted through the governed path. The direct path and the governed path must agree on what a record is.
 - S4. Evidence closure. Tests: the population document, assertion sidecar, gaps and census are retained as evidence artifacts on the proposal and are absent from the domain graph; a run with gaps still admits.
 - S5. Constructible set is every concrete type. Tests: a population using a type outside any binding admits; the binding validator still refuses a binding naming a type absent from the ontology.
 - S6. Binding after population. Tests: the run driver refuses a binding whose digest predates the population freeze; queries run against the replayed graph as before; a run with an empty binding still produces a census and a replay receipt.
-- S7. Reporting. `summarize_runs.py` gains the census columns. Tests on the frozen runs.
+- S7. CLI. One command that takes a population document, a reading and an ontology and writes operations, evidence artifacts and the census, refusing with the typed envelope on any defect. Tests on the neutral fixture.
 
-Not in scope here: the skill text (Core R5), packs (Core R3), profiles (Core R2), Event admission (Core R6), any change under `src/malleus`.
+Not in scope here: the skill text (R5), packs (R3), the profile artifact (R2, Core's own step 2, which may run in parallel), Event admission (R6), same-ledger migration, any mapping language.
 
 ## Where to work
 
-Branch `paper-v4-multimodel` in this repository, which holds the manifest-driven harness and its eight fidelity tests. Create a Codex worktree from that local branch; do not touch the overseer's worktree at `.claude/worktrees/paper-v4-multimodel`. Keep the fidelity tests green throughout; the v2 reference manifest and the three frozen runs are immutable fixtures. Use the hash-locked environment from `paper-v4/environment/`.
+Core's own checkout on `main`, in the package, under a module Core names (a `malleus.population` module is the obvious shape; Core decides). Public symbols, typed refusals, tests beside them. The private change-set composer, admission, reopen and replay at the current head are the downstream seams; no change to them is required by any slice here. Leave room for the profile binding from R2 (a change-set version bump), but do not depend on it.
 
-## Relation to Core R1
+## Fixtures
 
-This adapter, once green and verified, is the research prototype of the reference adapter named in `handover/2026-09-03-core-requirements.md` R1. Promotion into the package is Core's decision after the overseer hands it over with its tests; nothing here presumes it.
+Core authors one neutral fixture: a small reading of a few blocks in the reading schema the text-layer extractor produces, a small ontology that imports root only, and a hand-written population document against them, including at least one assertion with no formalization and one declared nothing-assertable block. The Small Shop fixture may serve as a second fixture for the records path. No paper file enters Core's tests. The overseer will separately lift the three frozen paper runs into the new document and run them through the shipped adapter as an external check; that check is the overseer's, not Core's.
+
+## Reporting
+
+After each slice: commit and tree, the test output, the public symbols added, one sentence on what the slice does not do. The overseer verifies on disk before the next slice starts. The governance ledger records the accept-with-corrections entry Core asked for before slice S1; that entry is Core's to write.
