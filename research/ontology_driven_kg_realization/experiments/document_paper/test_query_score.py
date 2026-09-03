@@ -154,6 +154,21 @@ def test_scorer_uses_d1_rebound_oracle_not_retired_v1_coordinate() -> None:
     assert subject.FROZEN_ORACLE_SHA256 != RETIRED_V1_ORACLE_SHA256
 
 
+def test_committed_score_records_no_numeric_result_for_schema_mismatch() -> None:
+    result = json.loads((ROOT / "paper-v4/experiment/results/score.json").read_bytes())
+    assert result == {
+        "inputs": {
+            "oracle_sha256": REBOUND_V2_ORACLE_SHA256,
+            "query_binding_sha256": subject.FROZEN_QUERY_BINDING_SHA256,
+            "query_result_sha256": subject.FROZEN_QUERY_RESULT_SHA256,
+        },
+        "questions": [],
+        "schema": subject.SCORE_SCHEMA,
+        "score": None,
+        "status": "UNSCORABLE_ORACLE_SCHEMA_MISMATCH",
+    }
+
+
 def test_exact_four_of_four_uses_binding_and_retains_duplicates(
     frozen: bytes, monkeypatch: pytest.MonkeyPatch
 ) -> None:
