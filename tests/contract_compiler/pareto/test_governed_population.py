@@ -12,8 +12,6 @@ import pytest
 from malleus import KnowledgeGraph
 from malleus._contract_pipeline import population
 from malleus._contract_pipeline.knowledge import (
-    KnowledgeChangeRefusal,
-    KnowledgeChangeRefusalReason,
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
 )
@@ -581,7 +579,7 @@ def test_invalid_later_retention_event_rolls_back_the_whole_anchor_batch(
     )
     ledger_before = _ledger_bytes(history)
 
-    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
         population.prepare_population_change(
             history=history,
             plan=plan,
@@ -591,7 +589,10 @@ def test_invalid_later_retention_event_rolls_back_the_whole_anchor_batch(
             actor_id="actor:test",
         )
 
-    assert refusal.value.reason is KnowledgeChangeRefusalReason.RETAINED_BYTES_MISMATCH
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
     assert _ledger_bytes(history) == ledger_before
     retained_ids = {member.record_id for member in history.replay().retained_inputs}
     assert "profile:state-version" not in retained_ids
