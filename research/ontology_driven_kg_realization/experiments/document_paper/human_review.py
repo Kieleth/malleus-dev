@@ -20,6 +20,8 @@ REVIEW_SCHEMA = "malleus.paper-v4.source-grounded-review/v1"
 QUERY_RESULT_SCHEMA = "malleus.paper-v4.query-replay/v1"
 PENDING_STAGE_IDENTITY = "PENDING_UNTIL_STAGE_FREEZE"
 _PROTOCOL_STATUS = "FROZEN_BEFORE_V2_QUERY_OUTPUT"
+# The preliminary reviewer is a model session; the human ratifier is always Luis.
+PRELIMINARY_EVALUATOR_KINDS = ("CODEX_PRELIMINARY", "CLAUDE_PRELIMINARY")
 _FROZEN_MANIFEST_STATUS = "FROZEN_FOR_REVIEW"
 _REVIEW_STATUSES = {
     "BLANK",
@@ -268,11 +270,11 @@ def _protocol(source: bytes) -> dict[str, Any]:
         "review protocol.authorship",
     )
     if (
-        authorship["preliminary_evaluator_kind"] != "CODEX_PRELIMINARY"
+        authorship["preliminary_evaluator_kind"] not in PRELIMINARY_EVALUATOR_KINDS
         or authorship["ratifier_evaluator_kind"] != "HUMAN_AUTHOR"
         or authorship["ratifier_actor_id"] != "actor:luis"
     ):
-        _refuse("review protocol must distinguish Codex from the human ratifier")
+        _refuse("review protocol must distinguish the model reviewer from the human ratifier")
     _text(authorship["ratifier_actor_id"], "review protocol ratifier actor")
 
     review_materials = _string_array(
