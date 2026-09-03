@@ -12,6 +12,8 @@ import pytest
 from malleus import KnowledgeGraph
 from malleus._contract_pipeline import population
 from malleus._contract_pipeline.knowledge import (
+    KnowledgeChangeRefusal,
+    KnowledgeChangeRefusalReason,
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
 )
@@ -533,6 +535,47 @@ def test_retention_event_set_is_closed_and_refuses_before_write(
     assert _ledger_bytes(history) == ledger_before
 
 
+def test_invalid_later_retention_event_rolls_back_the_whole_anchor_batch(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "missing type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+    events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    events["plan:neutral:1"] = _artifact_event(
+        "plan:neutral:1", b"different plan bytes\n"
+    )
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=events,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.RETAINED_BYTES_MISMATCH
+    assert _ledger_bytes(history) == ledger_before
+    retained_ids = {member.record_id for member in history.replay().retained_inputs}
+    assert "profile:state-version" not in retained_ids
+    assert "plan:neutral:1" not in retained_ids
+    assert "plan:neutral:1:gaps" not in retained_ids
+
+
 def test_no_domain_change_retains_evidence_without_composing_a_change_set(
     tmp_path: Path,
 ) -> None:
@@ -581,6 +624,48 @@ def test_no_domain_change_retains_evidence_without_composing_a_change_set(
         json.loads(line)["event_type"] != "KNOWLEDGE_CHANGE_SET_RETAINED"
         for line in history.path.read_text().splitlines()
     )
+
+
+def test_no_domain_change_ignores_an_unused_change_set_id_collision(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan_id = "plan:gaps-only:collision"
+    legacy = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id=f"change:{plan_id}",
+        record_id="left-existing",
+        label="existing",
+        order="existing-1",
+    )
+    _admit_record_change(history, legacy, suffix="-gaps-only-change-id")
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["plan_id"] = plan_id
+    plan["records"] = {"entities": [], "relations": []}
+    plan["derivations"] = []
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "the source statement has no contract type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+
+    prepared = _prepare(history, plan, NEUTRAL_PROFILE_DATA)
+
+    assert prepared.compilation.status is population.PopulationPlanStatus.NO_DOMAIN_CHANGE
+    assert prepared.change_set is None
+    retained_ids = {member.record_id for member in history.replay().retained_inputs}
+    assert plan_id in retained_ids
+    assert f"{plan_id}:gaps" in retained_ids
 
 
 def test_reused_historical_record_refuses_before_retaining_the_next_plan(
