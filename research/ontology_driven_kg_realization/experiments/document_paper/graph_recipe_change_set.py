@@ -7,6 +7,7 @@ from hashlib import sha256
 
 from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeSet,
+    KnowledgeOperation,
     KnowledgeValidTime,
 )
 from malleus.ledger import GENESIS, canonical_json
@@ -207,6 +208,25 @@ def _operations(plan: AssemblyPlan) -> list[dict[str, object]]:
     return result
 
 
+def assembly_plan_to_operations(plan: AssemblyPlan) -> tuple[KnowledgeOperation, ...]:
+    """Lower one aligned create-only plan for the private history composer."""
+
+    return tuple(
+        KnowledgeOperation(
+            ordinal=item["ordinal"],
+            operation_id=item["operation_id"],
+            operation_type=item["operation_type"],
+            record_type=item["record_type"],
+            record_id=item["record_id"],
+            properties=item["properties"],
+            depends_on=tuple(item["depends_on"]),
+            source_id=item.get("source_id"),
+            target_id=item.get("target_id"),
+        )
+        for item in _operations(plan)
+    )
+
+
 def assembly_plan_to_change_set(
     plan: AssemblyPlan,
     *,
@@ -267,6 +287,7 @@ __all__ = [
     "GraphRecipeChangeSetError",
     "HistoryBaseCoordinates",
     "RetainedReference",
+    "assembly_plan_to_operations",
     "assembly_plan_to_change_set",
     "canonical_assembly_plan_bytes",
 ]

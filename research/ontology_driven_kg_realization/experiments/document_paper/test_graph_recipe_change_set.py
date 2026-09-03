@@ -30,6 +30,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.graph_re
     HistoryBaseCoordinates,
     RetainedReference,
     assembly_plan_to_change_set,
+    assembly_plan_to_operations,
     canonical_assembly_plan_bytes,
 )
 from research.ontology_driven_kg_realization.experiments.graph_recipe.assembly import (
@@ -426,6 +427,7 @@ def test_ge020_mapping_is_deterministic_and_preserves_plan_semantics() -> None:
     second = assembly_plan_to_change_set(plan, **arguments)
 
     assert first.canonical_bytes == second.canonical_bytes
+    assert assembly_plan_to_operations(plan) == first.operations
     assert first.identity == second.identity
     assert first.contract_identity == arguments["contract_identity"]
     assert first.base_ledger_head == base.ledger_head
