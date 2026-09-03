@@ -109,11 +109,11 @@ def domain_prefix(ontology: dict[str, Any]) -> str:
         if (value if type(value) is str else (value or {}).get("prefix_reference"))
         == expansion
     ]
-    if len(matches) != 1:
+    if len(matches) > 1:
         raise MultimodelRefusal(
-            f"ontology must declare exactly one prefix for {expansion}, found {matches}"
+            f"ontology declares several prefixes for {expansion}: {matches}"
         )
-    return matches[0]
+    return matches[0] if matches else "domain"
 
 
 def class_chain(ontology: dict[str, Any], name: str) -> list[str]:
@@ -313,16 +313,34 @@ def population_brief_sections(
     logical_contract: Any,
     entities: Sequence[str],
     relations: Sequence[str],
+    *,
+    root_ontology: dict[str, Any] | None = None,
 ) -> str:
-    """The two constructible-type lists of the population brief."""
+    """The two constructible-type lists of the population brief.
+
+    A required property whose enum is declared only in the imported root
+    ontology gets one extra line naming its permissible values, because the
+    population producer does not receive the root file.
+    """
 
     lines = ["## Constructible entity types", ""]
+    root_enum_lines: list[str] = []
     for name in entities:
         record = logical_contract.record_for_symbol(name)
-        props = ", ".join(
-            f"`{slot}`" for slot in population_properties(ontology, record, name)
-        )
-        lines.append(f"- `{name}`: {props}")
+        props = population_properties(ontology, record, name)
+        lines.append(f"- `{name}`: " + ", ".join(f"`{slot}`" for slot in props))
+        for slot in props:
+            if slot in (ontology.get("slots") or {}) or slot_range(ontology, name, slot):
+                continue
+            root_slots = (root_ontology or {}).get("slots") or {}
+            root_enums = (root_ontology or {}).get("enums") or {}
+            rng = (root_slots.get(slot) or {}).get("range")
+            if rng in root_enums:
+                values = ", ".join(f"`{v}`" for v in root_enums[rng]["permissible_values"])
+                line = f"- `{slot}` is the imported Malleus root slot; its permissible values are {values}."
+                if line not in root_enum_lines:
+                    root_enum_lines.append(line)
+    lines += root_enum_lines
     lines += ["", "## Constructible relation types", ""]
     for name in relations:
         source = _endpoint_text(ontology, entities, slot_range(ontology, name, "source_id"))
@@ -385,10 +403,18 @@ def render_population_brief(
     ontology_sha256: str,
     reading_path: str,
     sections: str,
+    write_tool: str = "`apply_patch`",
 ) -> bytes:
-    """The v2 population brief with only its ontology-specific parts replaced."""
+    """The v2 population brief with only its ontology-specific parts replaced.
 
-    lines = template.splitlines()
+    ``write_tool`` names the harness facility that creates ``population.json``;
+    the v2 producer had ``apply_patch``, a Claude Code producer has the Write tool.
+    """
+
+    lines = [
+        line.replace("Use `apply_patch` to create it.", f"Use {write_tool} to create it.")
+        for line in template.splitlines()
+    ]
     fixed = [line for line in lines if line.startswith("Every enum-valued property")]
     if len(fixed) != 1:
         raise MultimodelRefusal("template must carry exactly one enum-value paragraph")
@@ -553,13 +579,15 @@ def derive_run_artifacts(root: Path, manifest: RunManifest) -> dict[str, bytes]:
     """Recipes and brief sections implied by the manifest's ontology and types."""
 
     ontology, _, _, contract = compile_manifest_ontology(root, manifest)
+    root_ontology = yaml.safe_load(_read_exact(root, manifest, "malleus"))
     return {
         "recipes": recipe_document(
             ontology, contract, manifest.constructible,
             recipe_namespace=manifest.recipe_namespace,
         ),
         "brief_sections": population_brief_sections(
-            ontology, contract, manifest.entity_types, manifest.relation_types
+            ontology, contract, manifest.entity_types, manifest.relation_types,
+            root_ontology=root_ontology,
         ).encode("utf-8"),
     }
 

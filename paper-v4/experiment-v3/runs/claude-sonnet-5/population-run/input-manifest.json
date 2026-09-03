@@ -1,0 +1,62 @@
+{
+  "schema": "malleus.paper-v4.population-input-manifest/v2",
+  "frozen_at": "2026-09-03T15:35:55Z",
+  "status": "FROZEN_BEFORE_POPULATION_ACQUISITION",
+  "attempt_policy": {
+    "maximum_structural_retries": 1,
+    "semantic_repair": "FORBIDDEN",
+    "fallback_population": "FORBIDDEN"
+  },
+  "session_policy": {
+    "fresh_context": true,
+    "network_access": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "read_scope": "DECLARED_FILES_ONLY",
+    "write_scope": "POPULATION_JSON_ONLY"
+  },
+  "files": [
+    {
+      "role": "TASK",
+      "locator": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/task.md",
+      "sha256": "sha256:e53a3d8fa5878cc343117b57c5ca845fe28f9af07458735e8983f17630ef94cf"
+    },
+    {
+      "role": "SELECTED_ONTOLOGY",
+      "locator": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/ontology.yaml",
+      "sha256": "sha256:7fad8b9e9480781dd2207725d9c8d9906742c61988f1acbfa7883c2a55a16015"
+    },
+    {
+      "role": "GENERIC_RECIPES",
+      "locator": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/generic-recipes.stottr",
+      "sha256": "sha256:5cadcaf770d648f8613da31784557447b5293a0e77e9e6858e4d67727f193794"
+    },
+    {
+      "role": "COMPETENCY_QUESTIONS",
+      "locator": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/inputs/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    {
+      "role": "SELECTED_READING",
+      "locator": "/Users/luis/Projects/malleus-dev/.claude/worktrees/paper-v4-multimodel/private/paper-v4-text-layer/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+    }
+  ],
+  "success_schema": "malleus.paper-v4.population/v2",
+  "refusal_schema": "malleus.paper-v4.population-refusal/v2",
+  "constructible": {
+    "entity_types": [
+      "SeismicInstrument",
+      "SeismicEvent",
+      "RidgeSegment",
+      "RockSample",
+      "GeologicalProcess"
+    ],
+    "relation_types": [
+      "InstrumentDetectedEventRelation",
+      "EventLocatedBeneathSegmentRelation",
+      "SampleCollectedFromSegmentRelation",
+      "ProcessCausesEventRelation"
+    ],
+    "contract_only_types": []
+  }
+}
