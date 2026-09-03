@@ -195,7 +195,7 @@ Blue Brain Nexus validates RDF metadata with SHACL on resource creation and upda
 
 ## 6. Limitations
 
-One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. The ontology producer was one model session, not a general Malleus ontology builder. Its proposal was broad, structurally valid, and incomplete for three questions. Compilation cannot establish fitness for the questions.
+One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. The producer comparison is one session per producer; it shows what each produced once under this protocol, not what each produces typically. The ontology producer was one model session, not a general Malleus ontology builder. Its proposal was broad, structurally valid, and incomplete for three questions. Compilation cannot establish fitness for the questions.
 
 The population producer saw the questions, so the experiment does not test open-ended graph construction. Conversely, it could not add missing ontology semantics. The query binding consists of direct typed cases, not Cypher, SPARQL, Prolog, arbitrary traversal, or natural-language query generation.
 
