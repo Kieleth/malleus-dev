@@ -1,0 +1,36 @@
+{
+  "accepted_claims": [
+    {
+      "event_id": "e4",
+      "product_code": "Y",
+      "quantity": 1,
+      "supplier_order_id": "B"
+    },
+    {
+      "event_id": "e7",
+      "product_code": "Y",
+      "quantity": 2,
+      "supplier_order_id": "B"
+    },
+    {
+      "earlier_event_id": "e4",
+      "later_event_id": "e7",
+      "relation": "SUPERSEDES"
+    }
+  ],
+  "doi": "10.1007/978-3-031-08848-3_9",
+  "excluded_claims": [
+    "ABSOLUTE_OR_CALENDAR_TIME",
+    "ACTOR_IDENTITY",
+    "DEMAND_OR_SUPPLY_GAP",
+    "ACTION_OR_EFFECT",
+    "INVOICE_VALUE",
+    "EVENT_GRAPH_NODE"
+  ],
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-supplier-order-correction-v1",
+  "schema": "malleus.small-shop.source-attribution/v1",
+  "source_locator": "Table 1",
+  "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+  "work_title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs"
+}

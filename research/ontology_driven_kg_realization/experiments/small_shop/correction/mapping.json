@@ -1,0 +1,146 @@
+{
+  "changes": [
+    {
+      "change_set_id": "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4",
+      "kind": "INITIAL_DOMAIN_STATE",
+      "operations": [
+        {
+          "depends_on": [],
+          "operation_id": "operation:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4",
+          "operation_type": "CREATE_ENTITY",
+          "ordinal": 0,
+          "properties": {
+            "ordered_quantity": 1,
+            "product_code": "Y",
+            "source_occurrence_id": "e4",
+            "supplier_order_id": "B"
+          },
+          "record_id": "supplier-order-state:B:e4",
+          "record_type": "SupplierOrderState"
+        }
+      ],
+      "source_record_ordinal": 0,
+      "supersedes": [],
+      "valid_time": {
+        "kind": "ORDER_ONLY",
+        "value": "e4"
+      }
+    },
+    {
+      "change_set_id": "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7",
+      "kind": "CORRECTION",
+      "operations": [
+        {
+          "depends_on": [],
+          "operation_id": "operation:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7",
+          "operation_type": "CREATE_ENTITY",
+          "ordinal": 0,
+          "properties": {
+            "ordered_quantity": 2,
+            "product_code": "Y",
+            "source_occurrence_id": "e7",
+            "supplier_order_id": "B"
+          },
+          "record_id": "supplier-order-state:B:e7",
+          "record_type": "SupplierOrderState",
+          "supersedes_record_id": "supplier-order-state:B:e4"
+        }
+      ],
+      "source_record_ordinal": 1,
+      "supersedes": [
+        "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4"
+      ],
+      "valid_time": {
+        "kind": "ORDER_ONLY",
+        "value": "e7"
+      }
+    }
+  ],
+  "compiler": {
+    "configuration_id": "SHOP_SUPPLIER_ORDER_CORRECTION_NO_AMBIENT_IO",
+    "profile_version": "PRIVATE_V0",
+    "requested_locator": "small-shop-correction",
+    "resolver_id": "SHOP_SUPPLIER_ORDER_CORRECTION_EXACT_RESOLVER",
+    "sources": [
+      {
+        "kind": "FIXTURE_MEMBER",
+        "locator": "small-shop-correction",
+        "media_type": "application/yaml",
+        "path": "tbox/small-shop-correction.yaml"
+      },
+      {
+        "kind": "REPOSITORY_PATH",
+        "locator": "small-shop",
+        "media_type": "application/yaml",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment/input/tbox/small-shop.yaml"
+      },
+      {
+        "kind": "REPOSITORY_PATH",
+        "locator": "malleus",
+        "media_type": "application/yaml",
+        "path": "ontology/malleus.yaml"
+      },
+      {
+        "kind": "PACKAGE_RESOURCE",
+        "locator": "linkml:types",
+        "media_type": "application/yaml",
+        "package": "linkml_runtime",
+        "path": [
+          "linkml_model",
+          "model",
+          "schema",
+          "types.yaml"
+        ]
+      }
+    ]
+  },
+  "fixture_id": "OKG-FX001",
+  "grammar": "malleus.small-shop.supplier-order-correction-mapping/private-v0",
+  "history_base": {
+    "required_case": "RET-010",
+    "required_record_ids": [
+      "O1",
+      "X1",
+      "contains:O1:X1"
+    ]
+  },
+  "input_manifest_sha256": "sha256:3ae5281e505882ba14fab159ff85e7f433ba79a6936c1113a5f0e54a1cc8ad13",
+  "input_set_id": "shop-supplier-order-correction-v1",
+  "publication_contract": "PRIVATE_FIXTURE_LOCAL_NO_PUBLIC_ABOX_FORMAT",
+  "selection_member": "configuration/shop-supplier-order-correction-selection.json",
+  "source": {
+    "member": "sources/supplier-order-history.jsonl",
+    "ordinal_base": 0,
+    "record_order": "SOURCE_ORDER"
+  },
+  "state_bindings": [
+    {
+      "source_field": "supplier_order_id",
+      "target_path": [
+        "properties",
+        "supplier_order_id"
+      ]
+    },
+    {
+      "source_field": "product_code",
+      "target_path": [
+        "properties",
+        "product_code"
+      ]
+    },
+    {
+      "source_field": "quantity",
+      "target_path": [
+        "properties",
+        "ordered_quantity"
+      ]
+    },
+    {
+      "source_field": "event_id",
+      "target_path": [
+        "properties",
+        "source_occurrence_id"
+      ]
+    }
+  ]
+}

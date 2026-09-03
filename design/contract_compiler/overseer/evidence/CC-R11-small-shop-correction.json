@@ -1,0 +1,162 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 59396,
+      "path": "src/malleus/_contract_pipeline/knowledge.py",
+      "sha256": "sha256:f14c9055d74fe3127d1408d4dfc13ce9f57890f7c97d4023d171099bb0cc5c34"
+    },
+    {
+      "byte_length": 51768,
+      "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+      "sha256": "sha256:e6f51f541110a64590db2dbba6e79f77e889422889dfcbea3867572ceccf3f1c"
+    },
+    {
+      "byte_length": 1920,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/manifest.json",
+      "sha256": "sha256:3ae5281e505882ba14fab159ff85e7f433ba79a6936c1113a5f0e54a1cc8ad13"
+    },
+    {
+      "byte_length": 1597,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/oracle/shop-supplier-order-correction.json",
+      "sha256": "sha256:b08b4b02a82d7b64c8f49481bdd3ceffb4b255e085378544808a5c4958843518"
+    },
+    {
+      "byte_length": 86189,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.py",
+      "sha256": "sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe"
+    },
+    {
+      "byte_length": 3483,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.json",
+      "sha256": "sha256:414db35b85dd0931be75e27e80001046a8f457dda332425c9f42d244cd0bd160"
+    },
+    {
+      "byte_length": 24962,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py",
+      "sha256": "sha256:f8465c380248b0fbacb48b2a38841a028ff8a816f86d223e57b6d5cb77976746"
+    },
+    {
+      "byte_length": 16354,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_fixture.py",
+      "sha256": "sha256:4fdab99c96f846ce838cef42cc6485ff984beaa03cea798e96c46defae1cb095"
+    },
+    {
+      "byte_length": 4878,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json",
+      "sha256": "sha256:825c8d998ec311c93426dd7b787fff732eec09b7a9e0805fdfc2f7b215faf375"
+    },
+    {
+      "byte_length": 4058,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json",
+      "sha256": "sha256:77bcc53ef39b301a940ee051c1afd6d3e08e90ba6e8bd344a7ba14ff6f101795"
+    },
+    {
+      "byte_length": 522,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/policy.json",
+      "sha256": "sha256:57972777e8132ecd4c0430da659c92312e89a80f36779722276e804b4b92850f"
+    },
+    {
+      "byte_length": 339,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/source-mapping-conformance.json",
+      "sha256": "sha256:d98a26162b65c6f517788cc0cc5a0c1492f81918cc61d1674cfac06cc19c82a9"
+    },
+    {
+      "byte_length": 343,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/structural-conformance.json",
+      "sha256": "sha256:47e59912feaa8584c52a3b3914754b61a0cd5caad6724cef7a910c19c8673fde"
+    },
+    {
+      "byte_length": 2908,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/receipt.json",
+      "sha256": "sha256:c764c8eba79a533b3162ec3f383dab15c330127f4248df96b9bafeebe3b69aea"
+    },
+    {
+      "byte_length": 500,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/graph.json",
+      "sha256": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645"
+    },
+    {
+      "byte_length": 9434,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/explanation.json",
+      "sha256": "sha256:62937ffa1b0cf94865e4a1b5a797b0de57c2308c6c8e20b506c3fd798d1ff7eb"
+    },
+    {
+      "byte_length": 25289,
+      "path": "README.md",
+      "sha256": "sha256:3c735b5f159616bb3fa4c739216bd723f1b70279c6175c775cc4fe87ffbf4545"
+    },
+    {
+      "byte_length": 27469,
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "sha256": "sha256:f720aa6b3701892459108df6ebabaa8b916fe5c0601eb0febc0f6e715ab8902a"
+    },
+    {
+      "byte_length": 26154,
+      "path": "docs/index.md",
+      "sha256": "sha256:5cdee63688ac0100eb1c575f733fa09a4768b29f66fd6e6a2210a814b82906d0"
+    },
+    {
+      "byte_length": 85385,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:c86de12c5ab16fdb14bcec7627f4a5259ac648bf522d9f5ab3d0ee3ae0b3458f"
+    }
+  ],
+  "base_commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+  "checks": [
+    {
+      "check_id": "ccr11-correction-follow-on-boundary",
+      "method": "Compare the exact technical and publication path sets with the completed CC-R11 contract and frozen RET-010 bytes.",
+      "observed": "This is bounded follow-on evidence for a Small Shop correction, not an amended CC-R11 completion. It changes no workstream state, decision, candidate, program, integration dependency, roadmap, or RET-010 fixture byte.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-source-to-history",
+      "method": "Run the controlled source through the retained contract, mapping, checks, three KnowledgeChangeSets, one append-only history, reopen, and replay from empty accepted state.",
+      "observed": "The run records supplier order B for product Y at quantity 1 from e4, then quantity 2 from e7 as its explicit replacement. It retains both source and protocol receipts, keeps both versions in record history, and derives only e7 into the current graph. The 58-entry ledger ends at sha256:01d1ea5ab6276fe878a71fa67922bdf10f032d9dd3c6dc22f9f15cc2faf1c4aa; the graph digest is sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-identities",
+      "method": "Verify the exact fixture manifest, independent oracle, runner, retained receipt, compiled fact set, EffectiveContract, ledger, and graph identities.",
+      "observed": "run.py is sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe. The canonical fact set is sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e and the EffectiveContract is sha256:5710e7464c0b737c6275bbf662bf797c920f0eb3d169341dde5734a5eab3669a. All 20 report artifacts match their current bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-conformance",
+      "method": "Run the combined compiler-history-fixture seam, the targeted adversarial set, and the correction-local tests.",
+      "observed": "The combined seam passed 208 tests, the targeted attacks passed 20 tests, and the correction-local boundary passed 43 tests. Changed-file Ruff and diff checks passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-independent-audit",
+      "method": "Submit the bounded runtime, fixture, receipts, and tests to independent P0 through P2 review after repairs.",
+      "observed": "The final audit found no P0, P1, or P2 issue in the bounded correction runtime. The remaining P3 limits are recorded without widening this milestone.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-publication",
+      "method": "Check the README, implementation status, documentation index, Small Shop charter, and documentation guards against the retained evidence.",
+      "observed": "The public-facing text explains the exact B/Y e4 to e7 correction, retained history, replay-derived current graph, independent oracle, identities, reproduction path, private status, and exclusions without claiming general or shipped protocol support.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-correction-historic-wire-separation",
+      "method": "Separate the correction regression evidence from the pre-existing stale Assent historic-wire reader measurement.",
+      "observed": "Five historic-wire failures remain separate evidence about a stale Assent reader. They are not caused by this correction slice and are not represented as passing. No repository-wide or package gate is claimed.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "No selected generic law couples KnowledgeChangeSet.supersedes with operation.supersedes_record_id. This fixture aligns both values but claims neither general coupling nor independence.",
+    "Some fixture metadata, including manifest and selection schemas, fixture and input identifiers, publication label, and history_base, is retained but annotation-only. It must be classified, enforced, or pruned before any public mapping or profile claim.",
+    "The private 2,275-line fixture adapter contains protocol ceremony and duplication. It remains private; a generic composer should be extracted only after a second real consumer exposes the shared boundary.",
+    "Full graph snapshots per accepted change do not scale. Delta and prefix replay remain future work.",
+    "The retained executor identity binds only the run.py entrypoint bytes, not the imported Core, RET-010, Python, or environment dependency closure.",
+    "Existing-output symlinks refuse, but atomic no-follow race hardening remains future security work.",
+    "This evidence claims no general mapping grammar, as-of or bitemporal query, action or effect path, Semantic Re-entry, invoice or payment flow, Event nodes, public API, package, release, or cross-language conformance.",
+    "The full repository suite and package checks were not completed. Five separate historic-wire failures remain stale Assent reader evidence and are not claimed GREEN."
+  ],
+  "recorded_at": "2026-09-02T23:16:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

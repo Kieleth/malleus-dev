@@ -1,0 +1,48 @@
+{
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-supplier-order-correction-v1",
+  "limitations": [
+    "Only supplier order B, product Y, and source occurrences e4 and e7 are in scope.",
+    "The publication establishes event order but no accepted timestamps, so valid time is ORDER_ONLY.",
+    "These members contain inputs only and make no compiler, protocol, or runtime result claim.",
+    "The frozen RET-010 bundle remains a separate unchanged prerequisite."
+  ],
+  "members": [
+    {
+      "byte_length": 926,
+      "media_type": "application/json",
+      "path": "attribution.json",
+      "role": "SOURCE_ATTRIBUTION",
+      "sha256": "sha256:5c0bec7e8c3783903db211128b810c3b6dea262a95d7b7cd9cd4cf571775b942"
+    },
+    {
+      "byte_length": 447,
+      "media_type": "application/json",
+      "path": "configuration/shop-supplier-order-correction-selection.json",
+      "role": "SCENARIO_SELECTION",
+      "sha256": "sha256:7f99da452836bac16fccbebca0cb43b995cdfc192d5364203a1ff319832987a2"
+    },
+    {
+      "byte_length": 148,
+      "media_type": "application/x-ndjson",
+      "path": "sources/supplier-order-history.jsonl",
+      "role": "SOURCE_OCCURRENCE_TRANSCRIPTION",
+      "sha256": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081"
+    },
+    {
+      "byte_length": 1009,
+      "media_type": "application/yaml",
+      "path": "tbox/small-shop-correction.yaml",
+      "role": "LINKML_TBOX_EXTENSION",
+      "sha256": "sha256:54e4e170d704056008296c91d1398b024d3a3c3897aba2640599375bf6f42b62"
+    }
+  ],
+  "schema": "malleus.small-shop.input-set/v1",
+  "source_attribution": {
+    "attribution_member": "attribution.json",
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "source_locator": "Table 1",
+    "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+    "work_title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs"
+  }
+}

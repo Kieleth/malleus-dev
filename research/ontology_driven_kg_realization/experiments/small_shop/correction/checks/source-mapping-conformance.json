@@ -1,0 +1,1 @@
+{"algorithm":"SOURCE_MAPPING_CONFORMS_TO_CHANGE_SET","check_contract_id":"source-mapping-conformance","executor":{"artifact_id":"artifact:small-shop-proof:check-entrypoint","sha256":"sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe"},"grammar":"malleus.check-contract/private-v0","outcomes":["SATISFIED","VIOLATED"]}

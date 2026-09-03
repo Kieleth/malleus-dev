@@ -14,12 +14,14 @@ import pytest
 
 import malleus._contract_pipeline.knowledge as knowledge_module
 from malleus._contract_pipeline.knowledge import (
+    KnowledgeAnchorInput,
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
     KnowledgeChangeRefusal,
     KnowledgeChangeRefusalReason,
     KnowledgeChangeSet,
 )
+from malleus._contract_pipeline.machine import execute_event
 from malleus.ledger import GENESIS, JsonlLedger
 from tests.contract_compiler.pareto.test_protocol_machine import (
     CHECKS,
@@ -395,6 +397,69 @@ def _ledger_bytes(history: KnowledgeChangeHistory) -> bytes:
     return history.path.read_bytes() if history.path.exists() else b""
 
 
+def _evidence_anchor(record_id: str, content: bytes) -> KnowledgeAnchorInput:
+    return KnowledgeAnchorInput(
+        machine_event=_event(
+            "ARTIFACT_REGISTERED",
+            artifact_id=record_id,
+            artifact_identity=_digest(content),
+        ),
+        retained_bytes=content,
+        media_type="application/json",
+        role="RETAINED_EVIDENCE",
+    )
+
+
+def _record_change(
+    history: KnowledgeChangeHistory,
+    partial,
+    source_identity: str,
+    evidence_identity: str,
+    *,
+    change_set_id: str,
+    record_id: str,
+    label: str,
+    order: str,
+    valid_time_kind: str = "ORDER_ONLY",
+    supersedes_record_id: str | None = None,
+) -> KnowledgeChangeSet:
+    payload = _base_payload(history, partial, source_identity, evidence_identity)
+    payload["change_set_id"] = change_set_id
+    operation = {
+        "depends_on": [],
+        "operation_id": f"operation:{record_id}",
+        "operation_type": "CREATE_ENTITY",
+        "ordinal": 0,
+        "properties": {"label": label},
+        "record_id": record_id,
+        "record_type": "LeftObject",
+    }
+    if supersedes_record_id is not None:
+        operation["supersedes_record_id"] = supersedes_record_id
+    payload["operations"] = [operation]
+    payload["valid_time"] = {"kind": valid_time_kind, "value": order}
+    return _load_change(payload)
+
+
+def _admit_record_change(
+    history: KnowledgeChangeHistory,
+    change: KnowledgeChangeSet,
+    *,
+    suffix: str,
+):
+    before = history.replay()
+    return history.admit(
+        change_set=change,
+        machine_events=_protocol_events(
+            change,
+            before.machine_state.identity,
+            identifier_suffix=suffix,
+        ),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+
 def test_change_set_is_closed_canonical_immutable_and_content_addressed(
     tmp_path: Path,
 ) -> None:
@@ -604,6 +669,437 @@ def test_genesis_change_is_retained_then_accepted_and_replayed_from_empty(
     assert copied.graph.snapshot() == admitted.graph.snapshot()
     assert copied.machine_state.identity == admitted.machine_state.identity
     assert tuple(copied_path.parent.iterdir()) == (copied_path,)
+
+
+def test_later_record_closes_prior_record_and_replay_answers_both_orders(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="event-1",
+    )
+    first_replay = _admit_record_change(history, first, suffix="-version-1")
+    second = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-2",
+        record_id="left-version-2",
+        label="after",
+        order="event-2",
+        supersedes_record_id="left-version-1",
+    )
+
+    current = _admit_record_change(history, second, suffix="-version-2")
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+
+    assert first_replay.graph.query("LeftObject") == [
+        {"id": "left-version-1", "label": "before", "type": "LeftObject"}
+    ]
+    assert current.graph.query("LeftObject") == [
+        {"id": "left-version-2", "label": "after", "type": "LeftObject"}
+    ]
+    assert current.graph_at_change(first.change_set_id).snapshot() == (
+        first_replay.graph.snapshot()
+    )
+    assert current.graph_at_change(second.change_set_id).snapshot() == (
+        current.graph.snapshot()
+    )
+    assert reopened.graph.snapshot() == current.graph.snapshot()
+    assert reopened.graph_at_change(first.change_set_id).snapshot() == (
+        first_replay.graph.snapshot()
+    )
+
+    prior = current.record_history["left-version-1"]
+    replacement = current.record_history["left-version-2"]
+    assert prior.valid_from == first.valid_time
+    assert prior.valid_to == second.valid_time
+    assert prior.supersedes_record_id is None
+    assert prior.superseded_by == "left-version-2"
+    assert replacement.valid_from == second.valid_time
+    assert replacement.valid_to is None
+    assert replacement.supersedes_record_id == "left-version-1"
+    assert replacement.superseded_by is None
+
+    with pytest.raises(KeyError, match="unknown accepted change"):
+        current.graph_at_change("change-absent")
+    with pytest.raises(TypeError):
+        current.record_history["left-version-1"] = replacement
+
+
+@pytest.mark.parametrize("failure", ["unknown", "self", "fork", "reuse"])
+def test_record_supersession_refuses_atomically(
+    tmp_path: Path, failure: str
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="event-1",
+    )
+    _admit_record_change(history, first, suffix="-version-1")
+    if failure == "fork":
+        second = _record_change(
+            history,
+            partial,
+            source,
+            evidence,
+            change_set_id="change-version-2",
+            record_id="left-version-2",
+            label="after",
+            order="event-2",
+            supersedes_record_id="left-version-1",
+        )
+        _admit_record_change(history, second, suffix="-version-2")
+
+    target = {
+        "unknown": "left-absent",
+        "self": "left-version-3",
+        "fork": "left-version-1",
+        "reuse": None,
+    }[failure]
+    candidate = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-3",
+        record_id="left-version-1" if failure == "reuse" else "left-version-3",
+        label="candidate",
+        order="event-3",
+        supersedes_record_id=target,
+    )
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _admit_record_change(history, candidate, suffix="-version-3")
+
+    assert refusal.value.reason in {
+        KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
+        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+    }
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+    assert history.replay().record_history == before.record_history
+
+
+@pytest.mark.parametrize(
+    "replacement_time",
+    ["2026-09-01T00:00:00Z", "2026-08-31T23:59:59Z"],
+)
+def test_instant_replacement_must_follow_prior_valid_time(
+    tmp_path: Path, replacement_time: str
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="2026-09-02T00:00:00Z",
+        valid_time_kind="INSTANT",
+    )
+    _admit_record_change(history, first, suffix="-version-1")
+    earlier = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-2",
+        record_id="left-version-2",
+        label="earlier",
+        order=replacement_time,
+        valid_time_kind="INSTANT",
+        supersedes_record_id="left-version-1",
+    )
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _admit_record_change(history, earlier, suffix="-version-2")
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+
+
+@pytest.mark.parametrize(
+    ("initial_kind", "initial_value", "replacement_kind", "replacement_value"),
+    [
+        ("INSTANT", "2026-09-01T00:00:00Z", "ORDER_ONLY", "event-2"),
+        ("ORDER_ONLY", "event-1", "INSTANT", "2026-09-02T00:00:00Z"),
+    ],
+)
+def test_record_replacement_cannot_mix_valid_time_kinds(
+    tmp_path: Path,
+    initial_kind: str,
+    initial_value: str,
+    replacement_kind: str,
+    replacement_value: str,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order=initial_value,
+        valid_time_kind=initial_kind,
+    )
+    _admit_record_change(history, first, suffix="-version-1")
+    mixed = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-2",
+        record_id="left-version-2",
+        label="after",
+        order=replacement_value,
+        valid_time_kind=replacement_kind,
+        supersedes_record_id="left-version-1",
+    )
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _admit_record_change(history, mixed, suffix="-version-2")
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert "valid-time kind differs" in refusal.value.detail
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+    assert history.replay().record_history == before.record_history
+
+
+def test_record_supersession_cannot_change_record_type(tmp_path: Path) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="event-1",
+    )
+    _admit_record_change(history, first, suffix="-version-1")
+    payload = _base_payload(history, partial, source, evidence)
+    payload["change_set_id"] = "change-version-2"
+    payload["operations"] = [
+        {
+            "depends_on": [],
+            "operation_id": "operation:right-version-2",
+            "operation_type": "CREATE_ENTITY",
+            "ordinal": 0,
+            "properties": {"label": "after"},
+            "record_id": "right-version-2",
+            "record_type": "RightObject",
+            "supersedes_record_id": "left-version-1",
+        }
+    ]
+    payload["valid_time"] = {"kind": "ORDER_ONLY", "value": "event-2"}
+    candidate = _load_change(payload)
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _admit_record_change(history, candidate, suffix="-version-2")
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+
+
+def test_entity_and_its_relation_can_be_replaced_together(tmp_path: Path) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _load_change(_base_payload(history, partial, source, evidence))
+    before_first = history.replay()
+    history.admit(
+        change_set=first,
+        machine_events=_protocol_events(first, before_first.machine_state.identity),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    payload = _base_payload(history, partial, source, evidence)
+    payload["change_set_id"] = "change-generic-2"
+    payload["operations"] = [
+        {
+            "depends_on": [],
+            "operation_id": "operation-left-2",
+            "operation_type": "CREATE_ENTITY",
+            "ordinal": 0,
+            "properties": {"label": "left-2"},
+            "record_id": "left-2",
+            "record_type": "LeftObject",
+            "supersedes_record_id": "left-1",
+        },
+        {
+            "depends_on": ["operation-left-2"],
+            "operation_id": "operation-link-2",
+            "operation_type": "CREATE_RELATION",
+            "ordinal": 1,
+            "properties": {"relation_type": "LINKS"},
+            "record_id": "link:left-2:right-1",
+            "record_type": "ObjectLink",
+            "source_id": "left-2",
+            "supersedes_record_id": "link:left-1:right-1",
+            "target_id": "right-1",
+        },
+    ]
+    payload["valid_time"] = {
+        "kind": "INSTANT",
+        "value": "2026-09-02T00:00:00Z",
+    }
+    replacement = _load_change(payload)
+
+    replay = _admit_record_change(history, replacement, suffix="-replacement")
+
+    assert replay.graph.query("LeftObject") == [
+        {"id": "left-2", "label": "left-2", "type": "LeftObject"}
+    ]
+    assert replay.graph.query_relations("ObjectLink") == [
+        {
+            "key": "link:left-2:right-1",
+            "relation_type": "LINKS",
+            "source_id": "left-2",
+            "target_id": "right-1",
+            "type": "ObjectLink",
+        }
+    ]
+
+
+def test_historical_graph_results_are_defensive_copies(tmp_path: Path) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="event-1",
+    )
+    replay = _admit_record_change(history, first, suffix="-version-1")
+    expected = replay.graph_at_change(first.change_set_id).snapshot()
+
+    caller_copy = replay.graph_at_change(first.change_set_id)
+    assert caller_copy.create_entity(
+        "RightObject", "caller-only", {"label": "caller-only"}
+    ).op_status.value == "COMMITTED"
+
+    assert replay.graph_at_change(first.change_set_id).snapshot() == expected
+
+
+def test_admit_with_anchors_commits_receipts_and_change_in_one_batch(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    receipt = _evidence_anchor("receipt-evidence", b'{"outcome":"SATISFIED"}')
+    after_anchor = execute_event(
+        partial, before.machine_state, receipt.machine_event
+    ).state
+    change = _load_change(_base_payload(history, partial, source, evidence))
+
+    replay = history.admit_with_anchors(
+        anchors=(receipt,),
+        change_set=change,
+        machine_events=_protocol_events(change, after_anchor.identity),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    assert replay.change_sets == (change,)
+    assert replay.retained_bytes("receipt-evidence") == receipt.retained_bytes
+
+
+def test_admit_with_anchors_refuses_the_whole_batch_when_admission_is_incomplete(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    receipt = _evidence_anchor("receipt-evidence", b'{"outcome":"SATISFIED"}')
+    after_anchor = execute_event(
+        partial, before.machine_state, receipt.machine_event
+    ).state
+    change = _load_change(_base_payload(history, partial, source, evidence))
+    proposal_only = _protocol_events(change, after_anchor.identity)[:1]
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.admit_with_anchors(
+            anchors=(receipt,),
+            change_set=change,
+            machine_events=proposal_only,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.INCOMPLETE_ADMISSION
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+    with pytest.raises(KeyError, match="unknown retained record"):
+        history.replay().retained_bytes("receipt-evidence")
+
+
+def test_entity_replacement_with_live_relation_refuses_atomically(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before_first = history.replay()
+    first = _load_change(_base_payload(history, partial, source, evidence))
+    history.admit(
+        change_set=first,
+        machine_events=_protocol_events(first, before_first.machine_state.identity),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    replacement = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-generic-2",
+        record_id="left-2",
+        label="left-2",
+        order="2026-09-02T00:00:00Z",
+        valid_time_kind="INSTANT",
+        supersedes_record_id="left-1",
+    )
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _admit_record_change(history, replacement, suffix="-version-2")
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL
+    assert "does not exist" in refusal.value.detail
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+    assert history.replay().record_history == before.record_history
 
 
 def test_admit_requires_one_complete_accepted_lifecycle(tmp_path: Path) -> None:

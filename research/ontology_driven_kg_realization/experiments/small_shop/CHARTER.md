@@ -68,6 +68,11 @@ Represent the supplier-order `B` correction from `1Y` at `e4` to `2Y` at `e7`.
 Then represent the bounded `I2` correction at `e9` without inventing an invoice
 value absent from the source. The temporal binding must name what is superseded.
 
+A versioned sibling proof now completes only the supplier-order half: it
+retains controlled `e4` and `e7` bytes, accepts both states through one
+history, and projects `e7` as current while preserving `e4` as superseded.
+The `I2` correction is still absent, so RET-030 as a whole is not complete.
+
 ### RET-040, Event-to-Entity RED
 
 The `e27` packing occurrence correlates an Event with `O1`, `X1`, `X2`, `Y1`,

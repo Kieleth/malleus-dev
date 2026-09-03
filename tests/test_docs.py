@@ -2149,6 +2149,25 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
             / "ret-010-research-receipt.json"
         ).read_text(encoding="utf-8")
     )
+    correction_root = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "experiments"
+        / "small_shop"
+        / "correction"
+    )
+    correction_receipt = json.loads(
+        (correction_root / "evidence" / "receipt.json").read_text(encoding="utf-8")
+    )
+    correction_graph = json.loads(
+        (correction_root / "evidence" / "graph.json").read_text(encoding="utf-8")
+    )
+    correction_explanation = json.loads(
+        (correction_root / "evidence" / "explanation.json").read_text(
+            encoding="utf-8"
+        )
+    )
     normalized = " ".join(index.split())
     normalized_readme = " ".join(readme.split())
 
@@ -2227,6 +2246,42 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     ):
         assert evidence_claim in normalized
 
+    for correction_claim in (
+        "Correct one fact without rewriting the past",
+        '"event_id":"e4","product_code":"Y","quantity":1',
+        '"event_id":"e7","product_code":"Y","quantity":2',
+        "accepts three knowledge changes into one 58-event history",
+        "A structurally legal substitution of quantity `999` for source quantity `1` refuses.",
+        "form one failure-atomic ledger batch for each change",
+        "The answer key stays independent.",
+        "exact fixture entrypoint bytes",
+        "passes 208 focused tests",
+        "does not provide a general mapping language or a general valid-time query",
+        "A portable executor closure remains future work.",
+        "has not yet selected a general law",
+    ):
+        assert correction_claim in normalized
+
+    for correction_link in (
+        "small_shop_fulfilment_correction_v1/input/manifest.json",
+        "input/sources/supplier-order-history.jsonl",
+        "input/configuration/shop-supplier-order-correction-selection.json",
+        "input/tbox/small-shop-correction.yaml",
+        "correction/mapping.json",
+        "correction/machine.json",
+        "correction/policy.json",
+        "correction/run.json",
+        "checks/source-mapping-conformance.json",
+        "checks/structural-conformance.json",
+        "correction/run.py",
+        "oracle/shop-supplier-order-correction.json",
+        "evidence/receipt.json",
+        "evidence/graph.json",
+        "evidence/explanation.json",
+        "correction/test_correction_vertical.py",
+    ):
+        assert correction_link in index
+
     assert receipt["validated_fact_set_sha256"] == (
         "sha256:80730e44e1bc1efd878cd2723e3af950d409defb68a629deb8c55515c6336f6c"
     )
@@ -2251,6 +2306,42 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
             }
         ],
     }
+
+    assert correction_receipt["contract_identity"] == (
+        "sha256:5710e7464c0b737c6275bbf662bf797c920f0eb3d169341dde5734a5eab3669a"
+    )
+    assert correction_receipt["validated_fact_set_sha256"] == (
+        "sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e"
+    )
+    assert correction_receipt["ledger_event_count"] == 58
+    assert correction_receipt["ledger_head"] == (
+        "sha256:01d1ea5ab6276fe878a71fa67922bdf10f032d9dd3c6dc22f9f15cc2faf1c4aa"
+    )
+    assert correction_receipt["graph_state_digest"] == (
+        "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645"
+    )
+    assert [node["id"] for node in correction_graph["nodes"]] == [
+        "O1",
+        "X1",
+        "supplier-order-state:B:e7",
+    ]
+    history_by_id = {
+        record["record_id"]: record
+        for record in correction_explanation["history"]["records"]
+    }
+    assert history_by_id["supplier-order-state:B:e4"]["superseded_by"] == (
+        "supplier-order-state:B:e7"
+    )
+    assert history_by_id["supplier-order-state:B:e7"]["supersedes_record_id"] == (
+        "supplier-order-state:B:e4"
+    )
+    assert not (correction_root / "checks" / "source-integrity.json").exists()
+    entrypoint_digest = "sha256:" + hashlib.sha256(
+        (correction_root / "run.py").read_bytes()
+    ).hexdigest()
+    for check_path in (correction_root / "checks").glob("*.json"):
+        check = json.loads(check_path.read_text(encoding="utf-8"))
+        assert check["executor"]["sha256"] == entrypoint_digest
 
     assert "crosses every boundary" not in index
     assert "Three fixture checks" not in index

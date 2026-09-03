@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from base64 import b64decode, b64encode
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from enum import Enum, auto
 from hashlib import sha256
@@ -83,6 +83,7 @@ _ENTITY_OPERATION_FIELDS = frozenset(
 _RELATION_OPERATION_FIELDS = _ENTITY_OPERATION_FIELDS | frozenset(
     {"source_id", "target_id"}
 )
+_SUPERSESSION_FIELD = "supersedes_record_id"
 _ANCHOR_FIELDS = frozenset(
     {
         "machine_payload",
@@ -252,10 +253,11 @@ def _exact(value: Mapping[str, object], fields: frozenset[str], detail: str) -> 
         raise ValueError(detail)
 
 
-def _aware_time(value: str) -> None:
+def _aware_time(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None or parsed.utcoffset() is None:
         raise ValueError("instant valid time must carry a timezone")
+    return parsed
 
 
 @dataclass(frozen=True, slots=True)
@@ -275,6 +277,7 @@ class KnowledgeOperation:
     depends_on: tuple[str, ...]
     source_id: str | None = None
     target_id: str | None = None
+    supersedes_record_id: str | None = None
 
 
 def _closures(
@@ -301,16 +304,20 @@ def _closures(
 def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
     value = _object(raw, "operation must be an object")
     operation_type = _text(value.get("operation_type"), "operation type is required")
-    fields = (
+    required_fields = (
         _ENTITY_OPERATION_FIELDS
         if operation_type == "CREATE_ENTITY"
         else _RELATION_OPERATION_FIELDS
         if operation_type == "CREATE_RELATION"
         else frozenset()
     )
-    if not fields:
+    if not required_fields:
         raise ValueError("operation type is unsupported")
-    _exact(value, fields, "operation fields are not closed")
+    if set(value) not in (
+        required_fields,
+        required_fields | frozenset({_SUPERSESSION_FIELD}),
+    ):
+        raise ValueError("operation fields are not closed")
     ordinal = value["ordinal"]
     if type(ordinal) is not int or ordinal != expected_ordinal:
         raise ValueError("operation ordinals must be contiguous and zero-based")
@@ -330,6 +337,11 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
     if operation_type == "CREATE_RELATION":
         source_id = _text(value["source_id"], "relation source ID is required")
         target_id = _text(value["target_id"], "relation target ID is required")
+    supersedes_record_id = (
+        _text(value[_SUPERSESSION_FIELD], "superseded record ID is required")
+        if _SUPERSESSION_FIELD in value
+        else None
+    )
     return KnowledgeOperation(
         ordinal=ordinal,
         operation_id=_text(value["operation_id"], "operation ID is required"),
@@ -340,6 +352,7 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
         depends_on=dependencies,
         source_id=source_id,
         target_id=target_id,
+        supersedes_record_id=supersedes_record_id,
     )
 
 
@@ -500,6 +513,16 @@ class KnowledgeChangeSet:
                 KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
                 str(error),
             ) from error
+
+
+@dataclass(frozen=True, slots=True)
+class KnowledgeRecordHistory:
+    operation: KnowledgeOperation
+    change_set_id: str
+    valid_from: KnowledgeValidTime
+    valid_to: KnowledgeValidTime | None
+    supersedes_record_id: str | None
+    superseded_by: str | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -671,6 +694,8 @@ class KnowledgeHistoryReplay:
     change_sets: tuple[KnowledgeChangeSet, ...]
     _retained: Mapping[str, KnowledgeRetainedInput]
     _machine_receipts: tuple[MachineReceipt, ...]
+    _record_history: Mapping[str, KnowledgeRecordHistory]
+    _graphs_by_change: Mapping[str, KnowledgeGraph]
 
     @property
     def retained_inputs(self) -> tuple[KnowledgeRetainedInput, ...]:
@@ -681,6 +706,17 @@ class KnowledgeHistoryReplay:
             return bytes(self._retained[record_id].content)
         except KeyError as error:
             raise KeyError(f"unknown retained record: {record_id}") from error
+
+    @property
+    def record_history(self) -> Mapping[str, KnowledgeRecordHistory]:
+        return MappingProxyType(dict(self._record_history))
+
+    def graph_at_change(self, change_set_id: str) -> KnowledgeGraph:
+        try:
+            graph = self._graphs_by_change[change_set_id]
+        except KeyError as error:
+            raise KeyError(f"unknown accepted change: {change_set_id}") from error
+        return graph.state_projection()
 
 
 def _decode_b64(value: object, detail: str) -> bytes:
@@ -1021,6 +1057,51 @@ class KnowledgeChangeHistory:
         transaction_time: str,
         actor_id: str,
     ) -> KnowledgeHistoryReplay:
+        return self._admit(
+            anchors=(),
+            change_set=change_set,
+            machine_events=machine_events,
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+        )
+
+    def admit_with_anchors(
+        self,
+        *,
+        anchors: tuple[KnowledgeAnchorInput, ...],
+        change_set: KnowledgeChangeSet,
+        machine_events: tuple[bytes, ...],
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Retain protocol artifacts and admit one change in one ledger batch.
+
+        The change-set event precedes these anchors, so every source and
+        evidence member named by the change must already be retained. These
+        anchors support later protocol events, such as executed-check receipts.
+        """
+        if not isinstance(anchors, tuple) or not anchors:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                "an ordered nonempty anchor tuple is required",
+            )
+        return self._admit(
+            anchors=anchors,
+            change_set=change_set,
+            machine_events=machine_events,
+            transaction_time=transaction_time,
+            actor_id=actor_id,
+        )
+
+    def _admit(
+        self,
+        *,
+        anchors: tuple[KnowledgeAnchorInput, ...],
+        change_set: KnowledgeChangeSet,
+        machine_events: tuple[bytes, ...],
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
         change = _validated_change(change_set)
         if not isinstance(machine_events, tuple) or not machine_events:
             raise _refuse(
@@ -1042,6 +1123,14 @@ class KnowledgeChangeHistory:
                 "transaction_time": transaction_time,
             }
         ]
+        entries.extend(
+            self._anchor_entry(
+                anchor=anchor,
+                transaction_time=transaction_time,
+                actor_id=actor_id,
+            )
+            for anchor in anchors
+        )
         for index, machine_event in enumerate(machine_events):
             event_type, payload = _event_object(machine_event)
             entries.append(
@@ -1097,6 +1186,8 @@ class KnowledgeChangeHistory:
         proposal_changes: dict[str, str] = {}
         machine_receipts: list[MachineReceipt] = []
         accepted_changes: list[KnowledgeChangeSet] = []
+        record_history: dict[str, KnowledgeRecordHistory] = {}
+        graphs_by_change: dict[str, KnowledgeGraph] = {}
         bootstrap_roles: set[str] = set()
 
         for event in events:
@@ -1263,9 +1354,14 @@ class KnowledgeChangeHistory:
                         f"terminal policy verdict is {verdict}",
                     )
                 change = changes[change_identity]
-                projection = self._apply_change(projection, change)
+                projection, record_history = self._apply_change(
+                    projection,
+                    record_history,
+                    change,
+                )
                 applied_ids.add(change.change_set_id)
                 accepted_changes.append(change)
+                graphs_by_change[change.change_set_id] = projection.state_projection()
                 acceptance_head = event["event_hash"]
                 materialization_head = content_digest(
                     {
@@ -1301,6 +1397,8 @@ class KnowledgeChangeHistory:
             change_sets=tuple(accepted_changes),
             _retained=MappingProxyType(dict(retained)),
             _machine_receipts=tuple(machine_receipts),
+            _record_history=MappingProxyType(dict(record_history)),
+            _graphs_by_change=MappingProxyType(dict(graphs_by_change)),
         )
 
     def _validate_change_base(
@@ -1366,10 +1464,76 @@ class KnowledgeChangeHistory:
 
     @staticmethod
     def _apply_change(
-        before: KnowledgeGraph, change: KnowledgeChangeSet
-    ) -> KnowledgeGraph:
-        staged = before.state_projection()
+        before: KnowledgeGraph,
+        before_history: Mapping[str, KnowledgeRecordHistory],
+        change: KnowledgeChangeSet,
+    ) -> tuple[KnowledgeGraph, dict[str, KnowledgeRecordHistory]]:
+        history = dict(before_history)
         for operation in change.operations:
+            if operation.record_id in history:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                    f"record ID already exists in history: {operation.record_id}",
+                )
+            prior_id = operation.supersedes_record_id
+            if prior_id == operation.record_id:
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                    f"record {operation.record_id} cannot supersede itself",
+                )
+            if prior_id is not None:
+                if prior_id not in before_history:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.UNKNOWN_SUPERSESSION,
+                        f"unknown superseded record: {prior_id}",
+                    )
+                prior = history[prior_id]
+                if prior.superseded_by is not None:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                        f"record supersession forks prior record: {prior_id}",
+                    )
+                if (
+                    prior.operation.operation_type != operation.operation_type
+                    or prior.operation.record_type != operation.record_type
+                ):
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                        f"record supersession type differs from prior record: {prior_id}",
+                    )
+                if prior.valid_from.kind != change.valid_time.kind:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                        f"record replacement valid-time kind differs from prior record: {prior_id}",
+                    )
+                if (
+                    prior.valid_from.kind == "INSTANT"
+                    and _aware_time(change.valid_time.value)
+                    <= _aware_time(prior.valid_from.value)
+                ):
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
+                        f"record replacement contradicts prior valid time: {prior_id}",
+                    )
+                history[prior_id] = replace(
+                    prior,
+                    valid_to=change.valid_time,
+                    superseded_by=operation.record_id,
+                )
+            history[operation.record_id] = KnowledgeRecordHistory(
+                operation=operation,
+                change_set_id=change.change_set_id,
+                valid_from=change.valid_time,
+                valid_to=None,
+                supersedes_record_id=prior_id,
+                superseded_by=None,
+            )
+
+        staged = KnowledgeGraph(before.registry)
+        for member in history.values():
+            if member.superseded_by is not None:
+                continue
+            operation = member.operation
             if operation.operation_type == "CREATE_ENTITY":
                 result = staged.create_entity(
                     operation.record_type,
@@ -1391,7 +1555,7 @@ class KnowledgeChangeHistory:
                     KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                     result.rejection_reason or "structural operation refused",
                 )
-        return staged
+        return staged, history
 
 
 __all__ = [
@@ -1405,6 +1569,7 @@ __all__ = [
     "KnowledgeHistoryReceipt",
     "KnowledgeHistoryReplay",
     "KnowledgeOperation",
+    "KnowledgeRecordHistory",
     "KnowledgeRetainedInput",
     "KnowledgeValidTime",
 ]

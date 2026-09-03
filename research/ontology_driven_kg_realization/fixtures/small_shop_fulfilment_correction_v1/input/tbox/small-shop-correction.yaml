@@ -1,0 +1,37 @@
+id: https://malleus.dev/schema/small-shop-fulfilment-correction
+name: small_shop_fulfilment_correction
+version: 0.1.0
+title: Small Shop Supplier Order Correction TBox
+description: Additive supplier-order state vocabulary for the OKG-FX001 correction fixture.
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  shop: https://malleus.dev/schema/small-shop-fulfilment/
+  shopc: https://malleus.dev/schema/small-shop-fulfilment-correction/
+imports:
+  - small-shop
+slots:
+  supplier_order_id:
+    range: string
+  ordered_quantity:
+    range: integer
+  source_occurrence_id:
+    range: string
+classes:
+  SupplierOrderState:
+    is_a: Entity
+    slots:
+      - supplier_order_id
+      - product_code
+      - ordered_quantity
+      - source_occurrence_id
+    slot_usage:
+      supplier_order_id:
+        required: true
+      product_code:
+        required: true
+      ordered_quantity:
+        required: true
+      source_occurrence_id:
+        required: true

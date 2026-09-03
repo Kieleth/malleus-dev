@@ -1,0 +1,98 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-001",
+      "CC-R11",
+      "CC-021",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:3c735b5f159616bb3fa4c739216bd723f1b70279c6175c775cc4fe87ffbf4545",
+        "before_digest": "sha256:810e4b1a46a3eb81af4d94033604fc5a486518ef4642011aa3f67d3f336073b7",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:0437b4c5e042191103db869d7f99fe95d5718ae1df8950c843a257f689258d35",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-correction.json"
+      },
+      {
+        "after_digest": "sha256:f720aa6b3701892459108df6ebabaa8b916fe5c0601eb0febc0f6e715ab8902a",
+        "before_digest": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:5cdee63688ac0100eb1c575f733fa09a4768b29f66fd6e6a2210a814b82906d0",
+        "before_digest": "sha256:3b5d9742801146261ef6e5b90d93f297ba37b3d79fbd15c4a339a478f9e29227",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:7b1375f57e5e35181278e5c131f1d48d97000b0244ac38e1d7f7398a2a3f8a30",
+        "before_digest": "sha256:6c7d3d2410d6e1bf3b86463348a63195f6991102a8e95bd3d474eb314e63a138",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/CHARTER.md"
+      },
+      {
+        "after_digest": "sha256:c86de12c5ab16fdb14bcec7627f4a5259ac648bf522d9f5ab3d0ee3ae0b3458f",
+        "before_digest": "sha256:d6a7b5b8f88aac4aed0927c4147c8ba855be2c3e7402b1ea45f8a351f8f2a57c",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:d7ad304f0ca8303f53c5f764902d8e2c1553047d48936f0b87a0530aed09b5ce",
+  "entry_id": "OVR-000353",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d19221de8f3554ef7383df4ed818ed4a0ed1a06e0b3a07baab8c19e26c36f697",
+  "recorded_at": "2026-09-02T23:17:01Z",
+  "references": [
+    {
+      "digest": "sha256:0437b4c5e042191103db869d7f99fe95d5718ae1df8950c843a257f689258d35",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000352",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 353,
+  "subject": {
+    "id": "ccr11-small-shop-correction-publication",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the bounded Small Shop correction evidence and limits.",
+  "why": "The correction is useful only if a reader can trace source bytes, independent oracle, explicit mapping and policy, retained receipts, replayed graph, identities, commands, and unsupported boundaries. This revision publishes that trace without promoting the private fixture adapter into a general protocol surface."
+}

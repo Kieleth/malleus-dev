@@ -15,11 +15,18 @@ replay from an empty accepted graph. The output is a canonical receipt and a
 queryable graph containing `O1`, `X1`, and their order-to-unit relation. The
 same ledger reopens without ambient fixture or program files.
 
+A separate bounded run now adds supplier-order state `B/Y/1` at source
+occurrence `e4`, then `B/Y/2` at `e7` as its explicit replacement. It executes
+and retains exact source-and-mapping plus structural check receipts, preserves
+both versions in record history, and derives only the `e7` version into the
+current graph. Its answer key remains outside execution.
+
 This does not advance the package stage above, replace the shipped Assent
 runtime, or expose a public compiler API. It proves the replacement seam on one
-controlled initial-population case. Corrections, general mapping syntax,
-external effects, Semantic Re-entry, cross-language parity, package inclusion,
-and release work remain outside the implemented research cut. See
+controlled initial-population case and one controlled record correction.
+General correction semantics, mapping syntax, external effects, Semantic
+Re-entry, cross-language parity, package inclusion, and release work remain
+outside the implemented research cut. See
 `contract_compiler/index.md`.
 
 ## Implemented

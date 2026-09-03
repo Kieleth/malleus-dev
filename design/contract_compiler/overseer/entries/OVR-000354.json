@@ -1,0 +1,82 @@
+{
+  "actor": {
+    "id": "ccr11-small-shop-correction-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-02T23:17:02Z",
+    "claims": [
+      "This is follow-on evidence for completed CC-R11, not an amended completion. OVR-000352 and OVR-000353 change no workstream state, decision, candidate, program, integration dependency, or roadmap.",
+      "The controlled Small Shop run records supplier order B for product Y at quantity 1 from occurrence e4, then quantity 2 from e7 as its explicit replacement. It retains both record versions and derives only e7 into the current graph.",
+      "All governed domain state enters one 58-entry append-only semantic and protocol history whose head is sha256:01d1ea5ab6276fe878a71fa67922bdf10f032d9dd3c6dc22f9f15cc2faf1c4aa. Reopen and replay from empty accepted state produce graph sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645.",
+      "The canonical fact set is sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e and the EffectiveContract is sha256:5710e7464c0b737c6275bbf662bf797c920f0eb3d169341dde5734a5eab3669a. The retained runner identity is sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe.",
+      "The six controlled fixture files, including the manifest and independent oracle, plus the mapping, machine, policy, two check contracts, run receipt, graph, explanation, generic KnowledgeChangeSet delta, and tests match the exact digests bound by OVR-000352 and the evidence report.",
+      "The combined compiler-history-fixture seam passed 208 tests, targeted attacks passed 20 tests, and correction-local validation passed 43 tests. Changed-file Ruff and diff checks passed.",
+      "Independent audit found no P0, P1, or P2 issue in the bounded correction runtime. The known P3 and unsupported boundaries remain explicit.",
+      "The frozen RET-010 fixture and result remain byte-identical and authoritative for their original O1/X1 slice. This correction is a separate versioned fixture and adds no hidden rewrite.",
+      "Five historic-wire failures remain separate stale Assent reader evidence. They are neither caused by this correction nor represented as passing."
+    ],
+    "limitations": [
+      "No selected generic law couples KnowledgeChangeSet.supersedes with operation.supersedes_record_id; this fixture aligns them without claiming general coupling or independence.",
+      "Retained annotation-only fixture metadata must be classified, enforced, or pruned before any public mapping or profile claim.",
+      "The private 2,275-line fixture adapter retains protocol ceremony and duplication; generic composition waits for a second consumer.",
+      "Full graph snapshots per accepted change do not scale; delta and prefix replay remain future work.",
+      "Runner identity covers only run.py entrypoint bytes, not imported Core, RET-010, Python, or environment dependency closure.",
+      "Existing-output symlinks refuse, but atomic no-follow race hardening remains future security work.",
+      "No general mapping grammar, as-of or bitemporal query, action or effect path, Semantic Re-entry, invoice or payment flow, Event nodes, public API, package, release, or cross-language conformance is claimed.",
+      "The full repository suite and package checks were not completed; the five separate historic-wire failures remain non-GREEN evidence."
+    ]
+  },
+  "entry_hash": "sha256:1a56b019219dc7e5d3b50ae737a00d6b25b7018e4e4e06aafd5d965f673033b9",
+  "entry_id": "OVR-000354",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d7ad304f0ca8303f53c5f764902d8e2c1553047d48936f0b87a0530aed09b5ce",
+  "recorded_at": "2026-09-02T23:17:02Z",
+  "references": [
+    {
+      "digest": "sha256:0437b4c5e042191103db869d7f99fe95d5718ae1df8950c843a257f689258d35",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-correction.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000352",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000353",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 354,
+  "subject": {
+    "id": "ccr11-small-shop-correction-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the bounded Small Shop correction follow-on evidence.",
+  "why": "The exact sources, contracts, transition identities, retained receipts, one-history replay, independent oracle, current graph, tests, audit, publication, and limits jointly support the narrow B/Y e4 to e7 correction claim without widening Malleus into an unproved general implementation."
+}

@@ -1,0 +1,148 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11",
+      "CC-021",
+      "CC-022"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d98a26162b65c6f517788cc0cc5a0c1492f81918cc61d1674cfac06cc19c82a9",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/source-mapping-conformance.json"
+      },
+      {
+        "after_digest": "sha256:47e59912feaa8584c52a3b3914754b61a0cd5caad6724cef7a910c19c8673fde",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/structural-conformance.json"
+      },
+      {
+        "after_digest": "sha256:62937ffa1b0cf94865e4a1b5a797b0de57c2308c6c8e20b506c3fd798d1ff7eb",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/explanation.json"
+      },
+      {
+        "after_digest": "sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/graph.json"
+      },
+      {
+        "after_digest": "sha256:c764c8eba79a533b3162ec3f383dab15c330127f4248df96b9bafeebe3b69aea",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/receipt.json"
+      },
+      {
+        "after_digest": "sha256:825c8d998ec311c93426dd7b787fff732eec09b7a9e0805fdfc2f7b215faf375",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json"
+      },
+      {
+        "after_digest": "sha256:77bcc53ef39b301a940ee051c1afd6d3e08e90ba6e8bd344a7ba14ff6f101795",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json"
+      },
+      {
+        "after_digest": "sha256:57972777e8132ecd4c0430da659c92312e89a80f36779722276e804b4b92850f",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/policy.json"
+      },
+      {
+        "after_digest": "sha256:414db35b85dd0931be75e27e80001046a8f457dda332425c9f42d244cd0bd160",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.json"
+      },
+      {
+        "after_digest": "sha256:29902a7e7249efcad89637a0c3bea5cb6a2b17adeed85b4abf2bfcaf29114dbe",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/run.py"
+      },
+      {
+        "after_digest": "sha256:f8465c380248b0fbacb48b2a38841a028ff8a816f86d223e57b6d5cb77976746",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py"
+      },
+      {
+        "after_digest": "sha256:4fdab99c96f846ce838cef42cc6485ff984beaa03cea798e96c46defae1cb095",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_fixture.py"
+      },
+      {
+        "after_digest": "sha256:5c0bec7e8c3783903db211128b810c3b6dea262a95d7b7cd9cd4cf571775b942",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/attribution.json"
+      },
+      {
+        "after_digest": "sha256:7f99da452836bac16fccbebca0cb43b995cdfc192d5364203a1ff319832987a2",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/configuration/shop-supplier-order-correction-selection.json"
+      },
+      {
+        "after_digest": "sha256:3ae5281e505882ba14fab159ff85e7f433ba79a6936c1113a5f0e54a1cc8ad13",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/manifest.json"
+      },
+      {
+        "after_digest": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl"
+      },
+      {
+        "after_digest": "sha256:54e4e170d704056008296c91d1398b024d3a3c3897aba2640599375bf6f42b62",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/tbox/small-shop-correction.yaml"
+      },
+      {
+        "after_digest": "sha256:b08b4b02a82d7b64c8f49481bdd3ceffb4b255e085378544808a5c4958843518",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/oracle/shop-supplier-order-correction.json"
+      },
+      {
+        "after_digest": "sha256:f14c9055d74fe3127d1408d4dfc13ce9f57890f7c97d4023d171099bb0cc5c34",
+        "before_digest": "sha256:c61b1c1b317ea091a35c2e31f2dea9be357d1146e5082a4d7be319b9712a9b50",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:e6f51f541110a64590db2dbba6e79f77e889422889dfcbea3867572ceccf3f1c",
+        "before_digest": "sha256:da0aaf976808a6f0c1c5ae7c2edf3de40508e9fb2e42ea88bdc4921b6183d8a6",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:d19221de8f3554ef7383df4ed818ed4a0ed1a06e0b3a07baab8c19e26c36f697",
+  "entry_id": "OVR-000352",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2df9b030fd1308e65a54191f860559fcb63c6f4911510991d012cc72cc6ab40b",
+  "recorded_at": "2026-09-02T23:17:00Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 352,
+  "subject": {
+    "id": "ccr11-small-shop-correction-technical-evidence",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the bounded Small Shop correction technical evidence.",
+  "why": "The completed private compiler vertical now has one bounded follow-on correction that retains B/Y at e4 as quantity 1, records e7 as quantity 2 and its replacement, and derives the current graph only by replaying one retained history. This revision binds the exact generic delta, fixture, mapping, checks, run, receipts, oracle, and tests without changing workstream state or authority."
+}
