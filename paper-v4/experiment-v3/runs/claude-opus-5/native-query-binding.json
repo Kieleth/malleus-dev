@@ -1,0 +1,223 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v1",
+  "status": "FROZEN_BEFORE_POPULATION",
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicStation",
+          "relation_record_type": "DeployedInRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "DEPLOYED_IN"
+          },
+          "target_record_type": "SeismicDeployment",
+          "output_fields": {
+            "source": [
+              "latitude",
+              "longitude",
+              "station_data_state"
+            ],
+            "relation": [],
+            "target": [
+              "station_count",
+              "mean_station_spacing",
+              "recording_duration"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicityDepthSummary",
+          "relation_record_type": "SummarizesSeismicityDepthRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "SUMMARIZES_SEISMICITY_DEPTH"
+          },
+          "target_record_type": "SpreadingSegment",
+          "output_fields": {
+            "source": [
+              "maximum_hypocentral_depth",
+              "depth_datum",
+              "supporting_event_count"
+            ],
+            "relation": [],
+            "target": [
+              "axial_length",
+              "trend_azimuth",
+              "full_spreading_rate",
+              "accretion_mode"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "SpreadingSegment",
+          "relation_record_type": "HostsSeismicityRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "HOSTS_SEISMICITY"
+          },
+          "target_record_type": "Earthquake",
+          "output_fields": {
+            "source": [
+              "axial_length",
+              "trend_azimuth",
+              "full_spreading_rate",
+              "accretion_mode"
+            ],
+            "relation": [],
+            "target": [
+              "latitude",
+              "longitude",
+              "hypocentral_depth",
+              "depth_datum",
+              "depth_uncertainty",
+              "epicentral_uncertainty",
+              "azimuthal_station_gap",
+              "travel_time_residual",
+              "satisfied_criteria_count"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicityDepthSummary",
+          "relation_record_type": "SummarizesSeismicityDepthRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "SUMMARIZES_SEISMICITY_DEPTH"
+          },
+          "target_record_type": "SpreadingSegment",
+          "output_fields": {
+            "source": [
+              "maximum_hypocentral_depth",
+              "depth_datum",
+              "supporting_event_count"
+            ],
+            "relation": [],
+            "target": [
+              "axial_length",
+              "trend_azimuth",
+              "full_spreading_rate",
+              "accretion_mode"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "ChemicalConcentration",
+          "relation_record_type": "CharacterizesMeltRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "CHARACTERIZES_MELT"
+          },
+          "target_record_type": "MeltPhase",
+          "output_fields": {
+            "source": [
+              "analyte_symbol",
+              "analyte_kind",
+              "concentration_value",
+              "concentration_unit",
+              "determination_mode"
+            ],
+            "relation": [],
+            "target": [
+              "melt_stage"
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "ChemicalConcentration",
+          "relation_record_type": "EstimatedFromRatioRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "ESTIMATED_FROM_RATIO"
+          },
+          "target_record_type": "ElementRatioProxy",
+          "output_fields": {
+            "source": [
+              "analyte_symbol",
+              "analyte_kind",
+              "concentration_value",
+              "concentration_unit",
+              "determination_mode"
+            ],
+            "relation": [],
+            "target": [
+              "numerator_symbol",
+              "denominator_symbol",
+              "ratio_value",
+              "ratio_uncertainty"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "MeltPhase",
+          "relation_record_type": "SaturatesAtRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "SATURATES_AT"
+          },
+          "target_record_type": "VolatileSaturationCondition",
+          "output_fields": {
+            "source": [
+              "melt_stage"
+            ],
+            "relation": [],
+            "target": [
+              "analyte_symbol",
+              "pressure",
+              "temperature"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "MeltPhase",
+          "relation_record_type": "GeneratedBeneathRelation",
+          "relation_type": {
+            "enum": "GeodynamicRelationType",
+            "value": "GENERATED_BENEATH"
+          },
+          "target_record_type": "SpreadingSegment",
+          "output_fields": {
+            "source": [
+              "melt_stage"
+            ],
+            "relation": [],
+            "target": [
+              "axial_length",
+              "trend_azimuth",
+              "full_spreading_rate",
+              "accretion_mode"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
