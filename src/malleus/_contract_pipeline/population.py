@@ -6,10 +6,14 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from hashlib import sha256
 import json
 from types import MappingProxyType
 
 from malleus._contract_pipeline.knowledge import (
+    KnowledgeAnchorInput,
+    KnowledgeChangeHistory,
+    KnowledgeChangeSet,
     KnowledgeHistoryReplay,
     KnowledgeOperation,
     KnowledgeValidTime,
@@ -20,12 +24,17 @@ from malleus.kg import KnowledgeGraph, RECORD_FAMILIES
 
 
 __all__ = (
+    "DomainHistoryProfile",
     "PopulationBaseState",
     "PopulationPlanCompilation",
     "PopulationPlanRefusal",
     "PopulationPlanRefusalReason",
     "PopulationPlanStatus",
+    "PopulationPreparation",
+    "SOURCE_ASSERTION_PROFILE",
+    "STATE_VERSION_PROFILE",
     "compile_population_plan",
+    "prepare_population_change",
 )
 
 _GRAMMAR = "malleus.population-plan/private-v0"
@@ -54,6 +63,17 @@ _OPERATION_TYPES = (
     ("relations", "CREATE_RELATION"),
 )
 _OPERATION_TYPE_BY_FAMILY = MappingProxyType(dict(_OPERATION_TYPES))
+_PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v0"
+_PROFILE_FIELDS = frozenset(
+    {"grammar", "grounding", "origin", "profile_id", "semantic_unit"}
+)
+_PROFILE_ORIGINS = frozenset(
+    {"EMPTY", "HISTORICAL_RECONSTRUCTION", "PARTIAL_IMPORT", "SNAPSHOT"}
+)
+_PROFILE_SEMANTIC_UNITS = frozenset(
+    {"ASSERTION", "COMMITMENT", "COMPOSITION", "OCCURRENCE", "STATE_VERSION"}
+)
+_POPULATION_EVIDENCE_ROLES = frozenset({"RETAINED_EVIDENCE", "VALIDATED_CONTRACT"})
 _GAP_KINDS = frozenset(
     {
         "AGGREGATE_ONLY",
@@ -74,6 +94,9 @@ class PopulationPlanStatus(str, Enum):
 class PopulationPlanRefusalReason(str, Enum):
     ABSENT_PATH = "ABSENT_PATH"
     DANGLING_ENDPOINT = "DANGLING_ENDPOINT"
+    DUPLICATE_ARTIFACT_ID = "DUPLICATE_ARTIFACT_ID"
+    DUPLICATE_CHANGE_SET_ID = "DUPLICATE_CHANGE_SET_ID"
+    DUPLICATE_PLAN_ID = "DUPLICATE_PLAN_ID"
     DUPLICATE_RECORD_ID = "DUPLICATE_RECORD_ID"
     FAMILY_NOT_ADMITTED = "FAMILY_NOT_ADMITTED"
     FIELDS_NOT_CLOSED = "FIELDS_NOT_CLOSED"
@@ -82,19 +105,25 @@ class PopulationPlanRefusalReason(str, Enum):
     MALFORMED_IDENTITY = "MALFORMED_IDENTITY"
     MALFORMED_PLAN = "MALFORMED_PLAN"
     MALFORMED_PROFILE_REFERENCE = "MALFORMED_PROFILE_REFERENCE"
+    MALFORMED_RETENTION_EVENT = "MALFORMED_RETENTION_EVENT"
     MALFORMED_SUPERSESSION = "MALFORMED_SUPERSESSION"
     SOURCES_REQUIRED = "SOURCES_REQUIRED"
     SUPERSESSION_FORK = "SUPERSESSION_FORK"
     SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
     SUPERSESSION_VALID_TIME_MISMATCH = "SUPERSESSION_VALID_TIME_MISMATCH"
     UNDERIVED_FIELD = "UNDERIVED_FIELD"
+    UNKNOWN_ORIGIN = "UNKNOWN_ORIGIN"
     UNKNOWN_FAMILY = "UNKNOWN_FAMILY"
     UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
     UNKNOWN_RECORD = "UNKNOWN_RECORD"
     UNKNOWN_SUPERSESSION = "UNKNOWN_SUPERSESSION"
+    UNKNOWN_SEMANTIC_UNIT = "UNKNOWN_SEMANTIC_UNIT"
     UNLISTED_SOURCE = "UNLISTED_SOURCE"
+    UNRETAINED_EVIDENCE = "UNRETAINED_EVIDENCE"
+    UNRETAINED_SOURCE = "UNRETAINED_SOURCE"
     UNSUPPORTED_GRAMMAR = "UNSUPPORTED_GRAMMAR"
     UNSUPPORTED_VALID_TIME = "UNSUPPORTED_VALID_TIME"
+    GROUNDING_REQUIRED = "GROUNDING_REQUIRED"
 
 
 class PopulationPlanRefusal(ValueError):
@@ -209,6 +238,16 @@ class PopulationPlanCompilation:
     supersedes: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class PopulationPreparation:
+    """One compiled plan after its evidence is retained and its change composed."""
+
+    profile: DomainHistoryProfile
+    compilation: PopulationPlanCompilation
+    change_set: KnowledgeChangeSet | None
+    retention_replay: KnowledgeHistoryReplay
+
+
 def _object(
     value: object, reason: PopulationPlanRefusalReason, detail: str
 ) -> dict[str, object]:
@@ -250,7 +289,12 @@ def _is_digest(value: object) -> bool:
     )
 
 
-def _canonical(value: object) -> bytes:
+def _canonical(
+    value: object,
+    *,
+    reason: PopulationPlanRefusalReason = PopulationPlanRefusalReason.MALFORMED_PLAN,
+    detail: str = "plan is not canonical JSON data",
+) -> bytes:
     try:
         return json.dumps(
             value,
@@ -260,10 +304,156 @@ def _canonical(value: object) -> bytes:
             sort_keys=True,
         ).encode("utf-8")
     except (TypeError, UnicodeError, ValueError) as error:
-        raise _refuse(
-            PopulationPlanRefusalReason.MALFORMED_PLAN,
-            "plan is not canonical JSON data",
-        ) from error
+        raise _refuse(reason, detail) from error
+
+
+def _digest(source: bytes) -> str:
+    return _DIGEST_PREFIX + sha256(source).hexdigest()
+
+
+@dataclass(frozen=True, slots=True)
+class DomainHistoryProfile:
+    """Canonical minimal statement of one adopter's domain-history semantics."""
+
+    canonical_bytes: bytes
+    identity: str
+    data: Mapping[str, object]
+    profile_id: str
+    semantic_unit: str
+    origin: str
+    grounding: Mapping[str, object]
+
+    @classmethod
+    def from_data(cls, value: object) -> DomainHistoryProfile:
+        if isinstance(value, cls):
+            try:
+                decoded = json.loads(value.canonical_bytes)
+            except (json.JSONDecodeError, TypeError, UnicodeDecodeError) as error:
+                raise _refuse(
+                    PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                    "domain-history profile bytes are not valid JSON",
+                ) from error
+            rebuilt = cls.from_data(decoded)
+            if rebuilt != value:
+                raise _refuse(
+                    PopulationPlanRefusalReason.IDENTITY_MISMATCH,
+                    "domain-history profile fields do not match its bytes",
+                )
+            return rebuilt
+        supplied = _object(
+            value,
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            "domain-history profile must be an object",
+        )
+        canonical = _canonical(
+            supplied,
+            reason=PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            detail="domain-history profile is not canonical JSON data",
+        )
+        root = _object(
+            json.loads(canonical),
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            "domain-history profile must be an object",
+        )
+        if (
+            _canonical(
+                root,
+                reason=PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                detail="domain-history profile is not canonical JSON data",
+            )
+            != canonical
+        ):
+            raise _refuse(
+                PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                "domain-history profile has ambiguous JSON object keys",
+            )
+        _exact(
+            root,
+            _PROFILE_FIELDS,
+            PopulationPlanRefusalReason.FIELDS_NOT_CLOSED,
+            "domain-history profile fields are not closed",
+        )
+        if root["grammar"] != _PROFILE_GRAMMAR:
+            raise _refuse(
+                PopulationPlanRefusalReason.UNSUPPORTED_GRAMMAR,
+                "domain-history profile grammar is unsupported",
+            )
+        profile_id = _text(
+            root["profile_id"],
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            "domain-history profile ID is required",
+        )
+        semantic_unit = _text(
+            root["semantic_unit"],
+            PopulationPlanRefusalReason.UNKNOWN_SEMANTIC_UNIT,
+            "domain-history semantic unit is required",
+        )
+        if semantic_unit not in _PROFILE_SEMANTIC_UNITS:
+            raise _refuse(
+                PopulationPlanRefusalReason.UNKNOWN_SEMANTIC_UNIT,
+                f"unknown domain-history semantic unit: {semantic_unit}",
+            )
+        origin = _text(
+            root["origin"],
+            PopulationPlanRefusalReason.UNKNOWN_ORIGIN,
+            "domain-history origin is required",
+        )
+        if origin not in _PROFILE_ORIGINS:
+            raise _refuse(
+                PopulationPlanRefusalReason.UNKNOWN_ORIGIN,
+                f"unknown domain-history origin: {origin}",
+            )
+        grounding = _object(
+            root["grounding"],
+            PopulationPlanRefusalReason.GROUNDING_REQUIRED,
+            "domain-history grounding must be an object",
+        )
+        if not grounding:
+            raise _refuse(
+                PopulationPlanRefusalReason.GROUNDING_REQUIRED,
+                "domain-history grounding must not be empty",
+            )
+        frozen = _freeze(root)
+        assert isinstance(frozen, Mapping)
+        frozen_grounding = frozen["grounding"]
+        assert isinstance(frozen_grounding, Mapping)
+        return cls(
+            canonical_bytes=canonical,
+            identity=_digest(canonical),
+            data=frozen,
+            profile_id=profile_id,
+            semantic_unit=semantic_unit,
+            origin=origin,
+            grounding=frozen_grounding,
+        )
+
+
+SOURCE_ASSERTION_PROFILE = DomainHistoryProfile.from_data(
+    {
+        "grammar": _PROFILE_GRAMMAR,
+        "grounding": {
+            "note": "minimal artifact: identity and unit only; full fields per P6",
+            "taxonomy": (
+                "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications"
+            ),
+        },
+        "origin": "EMPTY",
+        "profile_id": "source-assertion",
+        "semantic_unit": "ASSERTION",
+    }
+)
+STATE_VERSION_PROFILE = DomainHistoryProfile.from_data(
+    {
+        "grammar": _PROFILE_GRAMMAR,
+        "grounding": {
+            "note": "minimal artifact: identity and unit only; full fields per P6",
+            "taxonomy": "temporal database versioning; Small Shop walkthrough",
+        },
+        "origin": "EMPTY",
+        "profile_id": "state-version",
+        "semantic_unit": "STATE_VERSION",
+    }
+)
 
 
 def _validate_contract(
@@ -863,4 +1053,181 @@ def compile_population_plan(
         operations=tuple(operations),
         valid_time=valid_time,
         supersedes=tuple(change_supersedes),
+    )
+
+
+def prepare_population_change(
+    *,
+    history: KnowledgeChangeHistory,
+    plan: object,
+    profile: object,
+    retention_events: Mapping[str, bytes],
+    transaction_time: str,
+    actor_id: str,
+) -> PopulationPreparation:
+    """Retain a compiled plan's evidence and compose its governed change.
+
+    Source and adapter evidence must already be retained. The caller supplies
+    the selected protocol machine's exact retention event bytes. Admission
+    stays separate because its protocol events bind the newly composed change
+    identity.
+    """
+
+    if not isinstance(history, KnowledgeChangeHistory):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_PLAN,
+            "a knowledge-change history is required",
+        )
+    before = history.replay()
+    retained = {member.record_id: member for member in before.retained_inputs}
+    if isinstance(plan, dict):
+        proposed_plan_id = plan.get("plan_id")
+        if isinstance(proposed_plan_id, str) and proposed_plan_id:
+            if proposed_plan_id in retained:
+                raise _refuse(
+                    PopulationPlanRefusalReason.DUPLICATE_PLAN_ID,
+                    f"plan ID is already retained: {proposed_plan_id}",
+                )
+
+    compiled_profile = DomainHistoryProfile.from_data(profile)
+    compilation = compile_population_plan(
+        plan,
+        partial_contract=history.partial_contract,
+        contract_view=history.contract_view,
+        base_state=PopulationBaseState.from_replay(before),
+    )
+    root = json.loads(compilation.canonical_plan_bytes)
+    assert isinstance(root, dict)
+    plan_id = compilation.plan_id
+    if compilation.status is PopulationPlanStatus.CHANGE_SET:
+        change_set_id = f"change:{plan_id}"
+        if any(change.change_set_id == change_set_id for change in before.change_sets):
+            raise _refuse(
+                PopulationPlanRefusalReason.DUPLICATE_CHANGE_SET_ID,
+                f"change-set ID is already retained: {change_set_id}",
+            )
+
+    profile_reference = root["history_profile"]
+    assert isinstance(profile_reference, dict)
+    if (
+        profile_reference["profile_id"] != compiled_profile.profile_id
+        or profile_reference["sha256"] != compiled_profile.identity
+    ):
+        raise _refuse(
+            PopulationPlanRefusalReason.IDENTITY_MISMATCH,
+            "plan and domain-history profile disagree",
+        )
+
+    def require_retained(
+        references: object,
+        *,
+        id_field: str,
+        roles: frozenset[str],
+        missing_reason: PopulationPlanRefusalReason,
+        label: str,
+    ) -> None:
+        assert isinstance(references, list)
+        for reference in references:
+            assert isinstance(reference, dict)
+            record_id = reference[id_field]
+            declared_identity = reference["sha256"]
+            assert isinstance(record_id, str)
+            member = retained.get(record_id)
+            if member is None or member.role not in roles:
+                raise _refuse(
+                    missing_reason,
+                    f"{label} is not retained with an accepted role: {record_id}",
+                )
+            if member.identity != declared_identity:
+                raise _refuse(
+                    PopulationPlanRefusalReason.IDENTITY_MISMATCH,
+                    f"{label} digest differs from retained bytes: {record_id}",
+                )
+
+    require_retained(
+        root["sources"],
+        id_field="source_id",
+        roles=frozenset({"RETAINED_SOURCE"}),
+        missing_reason=PopulationPlanRefusalReason.UNRETAINED_SOURCE,
+        label="source",
+    )
+    require_retained(
+        root["evidence"],
+        id_field="evidence_id",
+        roles=_POPULATION_EVIDENCE_ROLES,
+        missing_reason=PopulationPlanRefusalReason.UNRETAINED_EVIDENCE,
+        label="evidence",
+    )
+
+    artifacts: list[tuple[str, bytes]] = []
+    profile_record_id = f"profile:{compiled_profile.profile_id}"
+    retained_profile = retained.get(profile_record_id)
+    if retained_profile is None:
+        artifacts.append((profile_record_id, compiled_profile.canonical_bytes))
+    elif (
+        retained_profile.role != "RETAINED_EVIDENCE"
+        or retained_profile.identity != compiled_profile.identity
+    ):
+        raise _refuse(
+            PopulationPlanRefusalReason.IDENTITY_MISMATCH,
+            f"retained domain-history profile differs: {profile_record_id}",
+        )
+
+    artifacts.append((plan_id, compilation.canonical_plan_bytes))
+    gaps = root["gaps"]
+    assert isinstance(gaps, list)
+    if gaps:
+        gaps_id = f"{plan_id}:gaps"
+        if gaps_id in retained:
+            raise _refuse(
+                PopulationPlanRefusalReason.DUPLICATE_ARTIFACT_ID,
+                f"generated gaps artifact ID is already retained: {gaps_id}",
+            )
+        artifacts.append((gaps_id, _canonical({"gaps": gaps, "plan_id": plan_id})))
+
+    if (
+        not isinstance(retention_events, Mapping)
+        or set(retention_events) != {record_id for record_id, _ in artifacts}
+        or any(type(event) is not bytes for event in retention_events.values())
+    ):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention events must exactly cover the artifacts to retain",
+        )
+
+    history.append_anchors(
+        anchors=tuple(
+            KnowledgeAnchorInput(
+                machine_event=retention_events[record_id],
+                retained_bytes=content,
+                media_type="application/json",
+                role="RETAINED_EVIDENCE",
+            )
+            for record_id, content in artifacts
+        ),
+        transaction_time=transaction_time,
+        actor_id=actor_id,
+    )
+    retention_replay = history.replay()
+    if compilation.status is PopulationPlanStatus.NO_DOMAIN_CHANGE:
+        return PopulationPreparation(
+            profile=compiled_profile,
+            compilation=compilation,
+            change_set=None,
+            retention_replay=retention_replay,
+        )
+
+    change_set = history.compose_change_set(
+        change_set_id=f"change:{plan_id}",
+        source_record_ids=compilation.source_record_ids,
+        evidence_record_ids=compilation.evidence_record_ids,
+        operations=compilation.operations,
+        valid_time=compilation.valid_time,
+        supersedes=compilation.supersedes,
+    )
+    return PopulationPreparation(
+        profile=compiled_profile,
+        compilation=compilation,
+        change_set=change_set,
+        retention_replay=retention_replay,
     )
