@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-import argparse
+from dataclasses import dataclass
 from hashlib import sha256
-from importlib.resources import files
 from pathlib import Path
-from typing import Sequence
 
-from .experiment_run import PaperExperimentRun, run_paper_experiment
+from .experiment_run import (
+    PaperExperimentConfiguration,
+    PaperExperimentRun,
+    run_paper_experiment,
+)
 from .ontology_compile import ExactSource
 
 
-_EXPERIMENT = Path("paper-v4/experiment")
 _LEDGER = "semantic-ledger.jsonl"
 _RESULTS = {
     "experiment-result.json": "result_bytes",
@@ -24,6 +25,25 @@ _RESULTS = {
 
 class FrozenExperimentRefusal(ValueError):
     """The exact run inputs or exclusive publication target are unavailable."""
+
+
+@dataclass(frozen=True, slots=True)
+class FrozenExperimentPaths:
+    """Every file consumed by one exact knowledge build."""
+
+    selected_ontology: Path
+    malleus_import: Path
+    linkml_types: Path
+    selected_reading: Path
+    population: Path
+    generic_recipes: Path
+    ontology_acceptance: Path
+    protocol_machine: Path
+
+    def __post_init__(self) -> None:
+        for field in self.__dataclass_fields__:
+            if not isinstance(getattr(self, field), Path):
+                raise TypeError(f"{field} must be a Path")
 
 
 def _digest(source: bytes) -> str:
@@ -41,19 +61,6 @@ def _read(path: Path, label: str) -> bytes:
 
 def _source(locator: str, source: bytes) -> ExactSource:
     return ExactSource(locator, source, _digest(source))
-
-
-def _linkml_types() -> bytes:
-    try:
-        return (
-            files("linkml_runtime")
-            .joinpath("linkml_model", "model", "schema", "types.yaml")
-            .read_bytes()
-        )
-    except (ImportError, OSError) as error:
-        raise FrozenExperimentRefusal(
-            "cannot read the declared linkml_runtime types.yaml resource"
-        ) from error
 
 
 def _publish(results_dir: Path, run: PaperExperimentRun) -> None:
@@ -97,7 +104,8 @@ def _publish(results_dir: Path, run: PaperExperimentRun) -> None:
 def run_frozen_experiment(
     repository_root: Path,
     *,
-    selected_reading: Path,
+    configuration: PaperExperimentConfiguration,
+    inputs: FrozenExperimentPaths,
     private_run_dir: Path,
     results_dir: Path,
 ) -> PaperExperimentRun:
@@ -105,7 +113,6 @@ def run_frozen_experiment(
 
     for value, label in (
         (repository_root, "repository_root"),
-        (selected_reading, "selected_reading"),
         (private_run_dir, "private_run_dir"),
         (results_dir, "results_dir"),
     ):
@@ -119,6 +126,10 @@ def run_frozen_experiment(
         raise FrozenExperimentRefusal(
             f"results directory already exists: {results_dir}"
         )
+    if type(configuration) is not PaperExperimentConfiguration:
+        raise TypeError("configuration must be one PaperExperimentConfiguration")
+    if type(inputs) is not FrozenExperimentPaths:
+        raise TypeError("inputs must be one FrozenExperimentPaths")
     private_root = (repository_root / "private").resolve()
     try:
         private_run_dir.resolve().relative_to(private_root)
@@ -131,24 +142,14 @@ def run_frozen_experiment(
             f"private run parent does not exist: {private_run_dir.parent}"
         )
 
-    experiment = repository_root / _EXPERIMENT
-    ontology = _read(experiment / "ontology-run/ontology.yaml", "selected ontology")
-    malleus = _read(
-        experiment / "ontology-run/inputs/malleus.yaml",
-        "retained Malleus import",
-    )
-    linkml_types = _linkml_types()
-    reading = _read(selected_reading, "selected reading")
-    population = _read(
-        experiment / "population-run/population.json",
-        "population proposal",
-    )
-    recipes = _read(experiment / "generic-recipes.stottr", "generic recipes")
-    queries = _read(experiment / "native-query-binding.json", "query binding")
-    acceptance = _read(
-        experiment / "ontology-run/acceptance.jsonl",
-        "ontology acceptance",
-    )
+    ontology = _read(inputs.selected_ontology, "selected ontology")
+    malleus = _read(inputs.malleus_import, "retained Malleus import")
+    linkml_types = _read(inputs.linkml_types, "LinkML types import")
+    reading = _read(inputs.selected_reading, "selected reading")
+    population = _read(inputs.population, "population proposal")
+    recipes = _read(inputs.generic_recipes, "generic recipes")
+    acceptance = _read(inputs.ontology_acceptance, "ontology acceptance")
+    machine = _read(inputs.protocol_machine, "protocol machine")
 
     try:
         private_run_dir.mkdir()
@@ -158,38 +159,22 @@ def run_frozen_experiment(
         ) from error
     run = run_paper_experiment(
         private_run_dir / _LEDGER,
-        selected_ontology=_source("paper-v4:marine-ontology", ontology),
-        malleus_import=_source("malleus", malleus),
-        linkml_types=_source("linkml:types", linkml_types),
+        configuration=configuration,
+        selected_ontology=_source(configuration.ontology_locator, ontology),
+        malleus_import=_source(configuration.malleus_import_locator, malleus),
+        linkml_types=_source(configuration.linkml_types_locator, linkml_types),
         selected_reading_bytes=reading,
         population_bytes=population,
         generic_recipe_bytes=recipes,
-        query_binding_bytes=queries,
         ontology_acceptance_bytes=acceptance,
+        protocol_machine_bytes=machine,
     )
     _publish(results_dir, run)
     return run
 
 
-def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repository-root", required=True, type=Path)
-    parser.add_argument("--reading", required=True, type=Path)
-    parser.add_argument("--private-run", required=True, type=Path)
-    parser.add_argument("--results", required=True, type=Path)
-    return parser
-
-
-def main(argv: Sequence[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
-    run_frozen_experiment(
-        args.repository_root,
-        selected_reading=args.reading,
-        private_run_dir=args.private_run,
-        results_dir=args.results,
-    )
-    return 0
-
-
-if __name__ == "__main__":  # pragma: no cover
-    raise SystemExit(main())
+__all__ = [
+    "FrozenExperimentPaths",
+    "FrozenExperimentRefusal",
+    "run_frozen_experiment",
+]

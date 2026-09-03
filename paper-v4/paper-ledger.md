@@ -1317,3 +1317,17 @@ Observation: A new context-free Codex subagent with no inherited turns received 
 Boundary: The compiler establishes structural validity only. The proposal is broader than the old question-shaped ontology, and no human edited its domain semantics. It is not evidence for minimality, adequacy, or a general Malleus ontology builder. One canonical acceptance event authorizes the next stage against this digest without judging meaning.
 
 Impact: Bind the frozen questions to this ontology through a paper-owned query surface, prepare ontology-specific value-generic recipes, and freeze both before a fresh population session. Missing question semantics must remain visible as query or review results; they do not authorize ontology repair.
+
+### E-0086, query ownership and source-grounded review method frozen
+
+Date: 2026-09-03
+
+Sources: D-0018; the automated-score RCA; `experiment_run.py`; `frozen_experiment.py`; `human_review.py`; `paper-v4/evaluation-v2/`; and 57 focused harness tests.
+
+Observation: The failed v1 scorer exposed two separate contract errors. The paper had no typed composition from replay-derived query rows to its legacy answer objects, and its evaluation inputs contradicted the intended independent inspection boundary. The author rejected both a Core-owned evaluation contract and a paper-local exact-match adapter. The corrected build runner therefore accepts no query bytes, retains no query artifact in its change-set evidence, and emits no query coordinate in its knowledge-build result. Every build coordinate and path is now explicit. A hard test fixes the complete admitted evidence-key closure, so a renamed query or adapter artifact cannot silently enter accepted history.
+
+Review freeze: Before any corrected query result existed, the paper froze source-grounded review protocol `sha256:04cf6bc131d018acc541d0ee9812b18c1a3d40b58b4bc003536598e2d4621d43`. It fixes only the source, selected reading, question set, judgment labels, evidence surface, and authorship order. Corrected ontology, ledger, receipt, query-binding, and query-result coordinates remain pending until those stages exist. The validator checks identities, row coverage, block membership, labels, and authorship state. It never selects a judgment. Codex may record a preliminary inspection, but only Luis can create paper evidence by ratifying or editing it.
+
+Open reproduction defect: Removing the implicit v1 runner also removed its command-line entry point. The current manuscript still names that old module command, which now exits without performing a run. A new explicit v2 driver and a regression test for observable outputs are required before any reproduction or publication claim.
+
+Impact: Automated scoring and answer-oracle consumption leave the selected path. Querying is an adopter-owned read over replayed state. Evaluation is a separately frozen, source-grounded record with honest human authorship.

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
+import ast
+from dataclasses import MISSING, fields, replace
 from hashlib import sha256
+import inspect
 import json
 from pathlib import Path
 
@@ -18,10 +20,14 @@ from research.ontology_driven_kg_realization.experiments.document_paper import (
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.experiment_run import (
     ExperimentRunError,
+    PaperExperimentConfiguration,
     run_paper_experiment,
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.population_compile import (
     PopulationCompilation,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.query_replay import (
+    run_query_replay,
 )
 from research.ontology_driven_kg_realization.experiments.graph_recipe.assembly import (
     AssemblyPlan,
@@ -33,6 +39,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.test_pop
     ONTOLOGY,
     ONTOLOGY_DIGEST,
     READING,
+    RECORD_TYPES,
     RECIPES,
     _bytes,
     _located,
@@ -46,6 +53,10 @@ ROOT = Path(__file__).resolve().parents[4]
 RUN = ROOT / "paper-v4" / "experiment"
 MALLEUS = (RUN / "ontology-run" / "inputs" / "malleus.yaml").read_bytes()
 QUERIES = (RUN / "native-query-binding.json").read_bytes()
+MACHINE = (
+    ROOT
+    / "research/ontology_driven_kg_realization/experiments/small_shop/pareto/machine.json"
+).read_bytes()
 SOURCE_DIGEST = (
     "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9"
 )
@@ -88,6 +99,39 @@ def _acceptance(ontology_digest: str = ONTOLOGY_DIGEST) -> bytes:
             }
         ).encode("utf-8")
         + b"\n"
+    )
+
+
+def _configuration(
+    *,
+    ontology: bytes = ONTOLOGY,
+    reading: bytes | None = None,
+    population: bytes | None = None,
+    recipes: bytes = RECIPES,
+    acceptance: bytes | None = None,
+    machine: bytes = MACHINE,
+) -> PaperExperimentConfiguration:
+    reading_bytes = _reading() if reading is None else reading
+    population_bytes = _bytes(_full_population()) if population is None else population
+    acceptance_bytes = (
+        _acceptance(_digest(ontology)) if acceptance is None else acceptance
+    )
+    return PaperExperimentConfiguration(
+        result_schema="malleus.paper-v4.knowledge-build-result/v2",
+        source_sha256=SOURCE_DIGEST,
+        ontology_sha256=_digest(ontology),
+        reading_sha256=_digest(reading_bytes),
+        malleus_import_sha256=_digest(MALLEUS),
+        linkml_types_sha256=_digest(_trusted_types()),
+        population_sha256=_digest(population_bytes),
+        generic_recipe_sha256=_digest(recipes),
+        ontology_acceptance_sha256=_digest(acceptance_bytes),
+        protocol_machine_sha256=_digest(machine),
+        record_type_iris=RECORD_TYPES,
+        contract_id="https://malleus.dev/contracts/paper-four-fiction",
+        ontology_locator="paper-v4:fiction-ontology",
+        malleus_import_locator="malleus",
+        linkml_types_locator="linkml:types",
     )
 
 
@@ -214,40 +258,39 @@ def _full_population() -> dict[str, object]:
     return population
 
 
-@pytest.fixture(autouse=True)
-def _bind_fiction_reading(monkeypatch: pytest.MonkeyPatch) -> None:
-    d4_inputs = dict(experiment_module._D4_INPUTS)
-    d4_inputs["reading"] = _digest(_reading())
-    monkeypatch.setattr(
-        experiment_module,
-        "_D4_INPUTS",
-        d4_inputs,
-    )
-
-
 def _run(
     path: Path,
     *,
     ontology: bytes = ONTOLOGY,
     population: bytes | None = None,
     reading: bytes | None = None,
-    queries: bytes = QUERIES,
     acceptance: bytes | None = None,
+    machine: bytes = MACHINE,
+    configuration: PaperExperimentConfiguration | None = None,
 ):
     reading_bytes = _reading() if reading is None else reading
     population_bytes = _bytes(_full_population()) if population is None else population
+    acceptance_bytes = (
+        _acceptance(_digest(ontology)) if acceptance is None else acceptance
+    )
+    configured = configuration or _configuration(
+        ontology=ontology,
+        reading=reading_bytes,
+        population=population_bytes,
+        acceptance=acceptance_bytes,
+        machine=machine,
+    )
     return run_paper_experiment(
         path,
-        selected_ontology=_source("paper-v4:fiction-ontology", ontology),
-        malleus_import=_source("malleus", MALLEUS),
-        linkml_types=_source("linkml:types", _trusted_types()),
+        configuration=configured,
+        selected_ontology=_source(configured.ontology_locator, ontology),
+        malleus_import=_source(configured.malleus_import_locator, MALLEUS),
+        linkml_types=_source(configured.linkml_types_locator, _trusted_types()),
         selected_reading_bytes=reading_bytes,
         population_bytes=population_bytes,
         generic_recipe_bytes=RECIPES,
-        query_binding_bytes=queries,
-        ontology_acceptance_bytes=(
-            _acceptance(_digest(ontology)) if acceptance is None else acceptance
-        ),
+        ontology_acceptance_bytes=acceptance_bytes,
+        protocol_machine_bytes=machine,
     )
 
 
@@ -271,11 +314,10 @@ def test_run_is_deterministic_and_reopens_from_ledger_only(tmp_path: Path) -> No
         "entity_count": 8,
         "ledger_head": KnowledgeChangeHistory.reopen(first_path).replay().ledger_head,
         "ontology_sha256": ONTOLOGY_DIGEST,
-        "query_binding_sha256": _digest(QUERIES),
         "reading_sha256": _digest(_reading()),
         "relation_count": 6,
         "replay_receipt_sha256": _digest(first.replay_receipt_bytes),
-        "schema": "malleus.paper-v4.experiment-result/v1",
+        "schema": "malleus.paper-v4.knowledge-build-result/v2",
         "source_sha256": SOURCE_DIGEST,
     }
     replay = KnowledgeChangeHistory.reopen(first_path).replay()
@@ -302,7 +344,8 @@ def test_check_events_are_derived_from_retained_receipts(tmp_path: Path) -> None
         _acceptance()
     )
     assert replay.retained_bytes("evidence:paper-v4:generic-recipes") == RECIPES
-    assert replay.retained_bytes("evidence:paper-v4:query-binding") == QUERIES
+    with pytest.raises(KeyError, match="unknown retained record"):
+        replay.retained_bytes("evidence:paper-v4:query-binding")
     assert replay.retained_bytes("evidence:paper-v4:assembly-plan") == (
         run.canonical_plan_bytes
     )
@@ -359,10 +402,119 @@ def test_satisfied_receipt_requires_a_verifier_result() -> None:
         experiment_module._make_check(object())
 
 
-def test_companion_consistent_d4_input_mutations_refuse_before_compile(
+def test_configuration_has_no_defaulted_coordinates() -> None:
+    assert all(
+        field.default is MISSING and field.default_factory is MISSING
+        for field in fields(PaperExperimentConfiguration)
+    )
+    assert set(_configuration().input_identities()) == {
+        "acceptance",
+        "linkml",
+        "malleus",
+        "machine",
+        "ontology",
+        "population",
+        "reading",
+        "recipes",
+    }
+
+
+def test_every_knowledge_build_coordinate_is_required() -> None:
+    configuration = _configuration()
+    inputs = {
+        "acceptance": _acceptance(),
+        "linkml": _trusted_types(),
+        "malleus": MALLEUS,
+        "machine": MACHINE,
+        "ontology": ONTOLOGY,
+        "population": _bytes(_full_population()),
+        "reading": _reading(),
+        "recipes": RECIPES,
+    }
+    for role in inputs:
+        missing = dict(inputs)
+        del missing[role]
+        with pytest.raises(ExperimentRunError, match=role):
+            experiment_module._require_build_inputs(configuration, missing)
+
+        drifted = dict(inputs)
+        drifted[role] += b"\n"
+        with pytest.raises(ExperimentRunError, match=role):
+            experiment_module._require_build_inputs(configuration, drifted)
+
+
+def test_query_surface_has_no_live_admission_path() -> None:
+    signature = inspect.signature(run_paper_experiment)
+    assert "query_binding_bytes" not in signature.parameters
+    tree = ast.parse(inspect.getsource(experiment_module))
+    referenced_names = {
+        node.id for node in ast.walk(tree) if isinstance(node, ast.Name)
+    }
+    assert "load_query_binding" not in referenced_names
+    assert "query_binding_bytes" not in referenced_names
+    assert "_D4_INPUTS" not in referenced_names
+
+
+def test_admitted_evidence_closure_is_exactly_query_neutral(tmp_path: Path) -> None:
+    ledger = tmp_path / "semantic.jsonl"
+    _run(ledger)
+    change = KnowledgeChangeHistory.reopen(ledger).replay().change_sets[0]
+
+    assert {record_id for record_id, _ in change.evidence} == {
+        "evidence:paper-v4:assembly-plan",
+        "evidence:paper-v4:check-contract:source-locator-integrity",
+        "evidence:paper-v4:check-contract:structural-conformance",
+        "evidence:paper-v4:check-result:source-locator-integrity",
+        "evidence:paper-v4:check-result:structural-conformance",
+        "evidence:paper-v4:generic-recipes",
+        "evidence:paper-v4:linkml-types",
+        "evidence:paper-v4:malleus-import",
+        "evidence:paper-v4:ontology-source",
+        "evidence:paper-v4:ontology-acceptance",
+        "evidence:paper-v4:ontology-compilation-receipt",
+        "evidence:paper-v4:population",
+        "evidence:paper-v4:population-provenance",
+    }
+
+
+def test_replacement_query_binding_cannot_change_admitted_history(
+    tmp_path: Path,
+) -> None:
+    ledger = tmp_path / "semantic.jsonl"
+    run = _run(ledger)
+    admitted_bytes = ledger.read_bytes()
+    admitted_change = KnowledgeChangeHistory.reopen(ledger).replay().change_sets[0]
+
+    replacement = json.loads(QUERIES)
+    replacement["queries"][3]["cases"][0]["output_fields"]["source"].reverse()
+    replacement_bytes = canonical_json(replacement).encode("utf-8")
+    assert _digest(replacement_bytes) != _digest(QUERIES)
+
+    query_inputs = {
+        "receipt_source": run.replay_receipt_bytes,
+        "ontology_path": RUN / "population-run/inputs/ontology.yaml",
+        "ontology_source": ONTOLOGY,
+        "malleus_path": RUN / "ontology-run/inputs/malleus.yaml",
+        "malleus_source": MALLEUS,
+    }
+    first_result = json.loads(run_query_replay(binding_source=QUERIES, **query_inputs))
+    second_result = json.loads(
+        run_query_replay(binding_source=replacement_bytes, **query_inputs)
+    )
+
+    assert first_result["inputs"]["query_binding_sha256"] == _digest(QUERIES)
+    assert second_result["inputs"]["query_binding_sha256"] == _digest(replacement_bytes)
+    assert ledger.read_bytes() == admitted_bytes
+    reopened = KnowledgeChangeHistory.reopen(ledger).replay()
+    assert reopened.change_sets[0].identity == admitted_change.identity
+    assert all("query" not in record_id for record_id, _ in admitted_change.evidence)
+
+
+def test_exact_knowledge_build_input_mutations_refuse_before_compile(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    configured = _configuration()
     ontology = ONTOLOGY + b"\n# companion-consistent ontology drift\n"
     ontology_population = _full_population()
     ontology_population["ontology_sha256"] = _digest(ontology)
@@ -375,11 +527,14 @@ def test_companion_consistent_d4_input_mutations_refuse_before_compile(
     reading = canonical_json(reading_data).encode("utf-8") + b"\n"
     reading_population = _full_population()
     reading_population["reading_sha256"] = _digest(reading)
+    population = _bytes({**_full_population(), "schema": "drift"})
 
     cases = (
         ("ontology", {"ontology": ontology, "population": _bytes(ontology_population)}),
         ("reading", {"reading": reading, "population": _bytes(reading_population)}),
-        ("queries", {"queries": QUERIES + b"\n"}),
+        ("population", {"population": population}),
+        ("acceptance", {"acceptance": _acceptance() + b"\n"}),
+        ("machine", {"machine": MACHINE + b"\n"}),
     )
     monkeypatch.setattr(
         experiment_module,
@@ -388,8 +543,8 @@ def test_companion_consistent_d4_input_mutations_refuse_before_compile(
     )
     for name, arguments in cases:
         ledger = tmp_path / f"{name}.jsonl"
-        with pytest.raises(ExperimentRunError, match="D4 input drift"):
-            _run(ledger, **arguments)
+        with pytest.raises(ExperimentRunError, match="knowledge-build input drift"):
+            _run(ledger, configuration=configured, **arguments)
         assert not ledger.exists()
 
 
@@ -637,13 +792,9 @@ def test_plan_alignment_mutation_cannot_create_check_or_ledger(
 
 def test_selected_reading_source_digest_drift_refuses_before_ledger(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     ledger = tmp_path / "source-drift.jsonl"
     reading = _reading("sha256:" + "f" * 64)
-    d4_inputs = dict(experiment_module._D4_INPUTS)
-    d4_inputs["reading"] = _digest(reading)
-    monkeypatch.setattr(experiment_module, "_D4_INPUTS", d4_inputs)
-    with pytest.raises(ExperimentRunError, match="fixed PDF source"):
+    with pytest.raises(ExperimentRunError, match="configured source identity"):
         _run(ledger, reading=reading)
     assert not ledger.exists()

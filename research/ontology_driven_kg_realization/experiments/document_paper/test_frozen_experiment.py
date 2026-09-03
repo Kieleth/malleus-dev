@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from dataclasses import MISSING, fields
+from hashlib import sha256
+import inspect
 from pathlib import Path
 
 import pytest
@@ -10,32 +13,60 @@ from research.ontology_driven_kg_realization.experiments.document_paper import (
     frozen_experiment as frozen_module,
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.experiment_run import (
+    PaperExperimentConfiguration,
     PaperExperimentRun,
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.frozen_experiment import (
+    FrozenExperimentPaths,
     FrozenExperimentRefusal,
-    main,
     run_frozen_experiment,
 )
 
 
-def _fixture(root: Path) -> Path:
-    experiment = root / "paper-v4/experiment"
-    for relative, source in {
-        "ontology-run/ontology.yaml": b"ontology",
-        "ontology-run/inputs/malleus.yaml": b"malleus",
-        "population-run/population.json": b"population",
-        "generic-recipes.stottr": b"recipes",
-        "native-query-binding.json": b"queries",
-        "ontology-run/acceptance.jsonl": b"acceptance",
+def _digest(source: bytes) -> str:
+    return "sha256:" + sha256(source).hexdigest()
+
+
+def _fixture(root: Path) -> FrozenExperimentPaths:
+    input_root = root / "inputs"
+    (root / "private").mkdir()
+    (root / "paper-v4/experiment").mkdir(parents=True)
+    paths = {}
+    for role, source in {
+        "selected_ontology": b"ontology",
+        "malleus_import": b"malleus",
+        "linkml_types": b"linkml",
+        "selected_reading": b"reading",
+        "population": b"population",
+        "generic_recipes": b"recipes",
+        "ontology_acceptance": b"acceptance",
+        "protocol_machine": b"machine",
     }.items():
-        path = experiment / relative
+        path = input_root / role
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(source)
-    reading = root / "private/selected-reading.json"
-    reading.parent.mkdir()
-    reading.write_bytes(b"reading")
-    return reading
+        paths[role] = path
+    return FrozenExperimentPaths(**paths)
+
+
+def _configuration(inputs: FrozenExperimentPaths) -> PaperExperimentConfiguration:
+    return PaperExperimentConfiguration(
+        result_schema="fiction.knowledge-build-result/v2",
+        source_sha256="sha256:" + "1" * 64,
+        ontology_sha256=_digest(inputs.selected_ontology.read_bytes()),
+        reading_sha256=_digest(inputs.selected_reading.read_bytes()),
+        malleus_import_sha256=_digest(inputs.malleus_import.read_bytes()),
+        linkml_types_sha256=_digest(inputs.linkml_types.read_bytes()),
+        population_sha256=_digest(inputs.population.read_bytes()),
+        generic_recipe_sha256=_digest(inputs.generic_recipes.read_bytes()),
+        ontology_acceptance_sha256=_digest(inputs.ontology_acceptance.read_bytes()),
+        protocol_machine_sha256=_digest(inputs.protocol_machine.read_bytes()),
+        record_type_iris=("https://example.test/FictionRecord",),
+        contract_id="https://example.test/contract",
+        ontology_locator="fiction:ontology",
+        malleus_import_locator="malleus",
+        linkml_types_locator="linkml:types",
+    )
 
 
 def _result() -> PaperExperimentRun:
@@ -46,7 +77,8 @@ def test_run_reads_declared_inputs_and_publishes_exact_bundle(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    reading = _fixture(tmp_path)
+    inputs = _fixture(tmp_path)
+    configuration = _configuration(inputs)
     observed = {}
 
     def run(ledger_path: Path, **inputs: object) -> PaperExperimentRun:
@@ -54,7 +86,6 @@ def test_run_reads_declared_inputs_and_publishes_exact_bundle(
         ledger_path.write_bytes(b"private ledger")
         return _result()
 
-    monkeypatch.setattr(frozen_module, "_linkml_types", lambda: b"linkml")
     monkeypatch.setattr(frozen_module, "run_paper_experiment", run)
     private_run = tmp_path / "private/run"
     results = tmp_path / "paper-v4/experiment/results"
@@ -62,7 +93,8 @@ def test_run_reads_declared_inputs_and_publishes_exact_bundle(
     assert (
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=configuration,
+            inputs=inputs,
             private_run_dir=private_run,
             results_dir=results,
         )
@@ -77,7 +109,7 @@ def test_run_reads_declared_inputs_and_publishes_exact_bundle(
     }
     assert observed["selected_reading_bytes"] == b"reading"
     for role, locator, source in (
-        ("selected_ontology", "paper-v4:marine-ontology", b"ontology"),
+        ("selected_ontology", "fiction:ontology", b"ontology"),
         ("malleus_import", "malleus", b"malleus"),
         ("linkml_types", "linkml:types", b"linkml"),
     ):
@@ -87,8 +119,10 @@ def test_run_reads_declared_inputs_and_publishes_exact_bundle(
         assert exact.expected_sha256 == frozen_module._digest(source)
     assert observed["population_bytes"] == b"population"
     assert observed["generic_recipe_bytes"] == b"recipes"
-    assert observed["query_binding_bytes"] == b"queries"
     assert observed["ontology_acceptance_bytes"] == b"acceptance"
+    assert observed["protocol_machine_bytes"] == b"machine"
+    assert observed["configuration"] is configuration
+    assert "query_binding_bytes" not in observed
 
 
 @pytest.mark.parametrize("existing", ("private", "results"))
@@ -97,7 +131,7 @@ def test_run_never_overwrites_an_existing_target(
     monkeypatch: pytest.MonkeyPatch,
     existing: str,
 ) -> None:
-    reading = _fixture(tmp_path)
+    inputs = _fixture(tmp_path)
     private_run = tmp_path / "private/run"
     results = tmp_path / "paper-v4/experiment/results"
     target = private_run if existing == "private" else results
@@ -113,7 +147,8 @@ def test_run_never_overwrites_an_existing_target(
     with pytest.raises(FrozenExperimentRefusal, match="already exists"):
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=_configuration(inputs),
+            inputs=inputs,
             private_run_dir=private_run,
             results_dir=results,
         )
@@ -124,9 +159,8 @@ def test_failed_run_publishes_no_result_bundle(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    reading = _fixture(tmp_path)
+    inputs = _fixture(tmp_path)
     results = tmp_path / "paper-v4/experiment/results"
-    monkeypatch.setattr(frozen_module, "_linkml_types", lambda: b"linkml")
 
     def refuse(*args: object, **kwargs: object) -> PaperExperimentRun:
         raise ValueError("compiler refusal")
@@ -135,7 +169,8 @@ def test_failed_run_publishes_no_result_bundle(
     with pytest.raises(ValueError, match="compiler refusal"):
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=_configuration(inputs),
+            inputs=inputs,
             private_run_dir=tmp_path / "private/run",
             results_dir=results,
         )
@@ -145,13 +180,14 @@ def test_failed_run_publishes_no_result_bundle(
 def test_run_refuses_a_source_bearing_ledger_outside_private(
     tmp_path: Path,
 ) -> None:
-    reading = _fixture(tmp_path)
+    inputs = _fixture(tmp_path)
     public_run = tmp_path / "paper-v4/experiment/public-run"
 
     with pytest.raises(FrozenExperimentRefusal, match="must remain beneath"):
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=_configuration(inputs),
+            inputs=inputs,
             private_run_dir=public_run,
             results_dir=tmp_path / "paper-v4/experiment/results",
         )
@@ -162,7 +198,7 @@ def test_result_target_created_during_run_is_not_replaced(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    reading = _fixture(tmp_path)
+    inputs = _fixture(tmp_path)
     results = tmp_path / "paper-v4/experiment/results"
 
     def race(ledger_path: Path, **inputs: object) -> PaperExperimentRun:
@@ -171,12 +207,12 @@ def test_result_target_created_during_run_is_not_replaced(
         (results / "sentinel").write_bytes(b"keep")
         return _result()
 
-    monkeypatch.setattr(frozen_module, "_linkml_types", lambda: b"linkml")
     monkeypatch.setattr(frozen_module, "run_paper_experiment", race)
     with pytest.raises(FrozenExperimentRefusal, match="already exists"):
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=_configuration(inputs),
+            inputs=inputs,
             private_run_dir=tmp_path / "private/run",
             results_dir=results,
         )
@@ -188,47 +224,29 @@ def test_result_target_created_during_run_is_not_replaced(
 def test_missing_declared_input_is_typed_and_creates_no_run(
     tmp_path: Path,
 ) -> None:
-    reading = _fixture(tmp_path)
-    (tmp_path / "paper-v4/experiment/population-run/population.json").unlink()
+    inputs = _fixture(tmp_path)
+    configuration = _configuration(inputs)
+    inputs.population.unlink()
     private_run = tmp_path / "private/run"
 
     with pytest.raises(FrozenExperimentRefusal, match="population proposal"):
         run_frozen_experiment(
             tmp_path,
-            selected_reading=reading,
+            configuration=configuration,
+            inputs=inputs,
             private_run_dir=private_run,
             results_dir=tmp_path / "paper-v4/experiment/results",
         )
     assert not private_run.exists()
 
 
-def test_cli_forwards_all_paths(monkeypatch: pytest.MonkeyPatch) -> None:
-    observed = {}
-
-    def run(repository_root: Path, **paths: Path) -> PaperExperimentRun:
-        observed["repository_root"] = repository_root
-        observed.update(paths)
-        return _result()
-
-    monkeypatch.setattr(frozen_module, "run_frozen_experiment", run)
-    assert (
-        main(
-            [
-                "--repository-root",
-                "/repo",
-                "--reading",
-                "/repo/private/reading.json",
-                "--private-run",
-                "/repo/private/run",
-                "--results",
-                "/repo/paper-v4/experiment/results",
-            ]
-        )
-        == 0
+def test_paths_have_no_defaults_and_legacy_query_path_is_dead() -> None:
+    assert all(
+        field.default is MISSING and field.default_factory is MISSING
+        for field in fields(FrozenExperimentPaths)
     )
-    assert observed == {
-        "repository_root": Path("/repo"),
-        "selected_reading": Path("/repo/private/reading.json"),
-        "private_run_dir": Path("/repo/private/run"),
-        "results_dir": Path("/repo/paper-v4/experiment/results"),
-    }
+    signature = inspect.signature(run_frozen_experiment)
+    assert "selected_reading" not in signature.parameters
+    source = inspect.getsource(frozen_module)
+    assert "native-query-binding" not in source
+    assert "query_binding_bytes" not in source

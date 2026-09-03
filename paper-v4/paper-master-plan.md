@@ -88,7 +88,7 @@ The retired answer key remains sealed historical material and leaves the active 
 5. **Population, pending corrected run.** Give a different fresh session the corrected ontology, selected reading, ontology-specific generic recipes, and four questions. Permit one structural retry, no content repair, and no fallback.
 6. **Commitment, pending corrected run.** Compile provenance, derive both checks, compose one change without query evidence, admit atomically, and retain exact refusal outcomes.
 7. **Replay and query, pending corrected run.** Dispose, reopen, replay, and query through the frozen adopter surface with the existing Python-level isolation counters.
-8. **Source-grounded inspection, pending corrected run.** Freeze the inspection method before query results exist. Codex prepares the evidence trace and preliminary findings without claiming human status. An identified human reviews the exact rows against independently selected source blocks and ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
+8. **Source-grounded inspection, method frozen and run pending.** The protocol was frozen before corrected query output. Codex prepares the evidence trace and preliminary findings without claiming human status. An identified human reviews the exact rows against independently selected source blocks and ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
 
 ### Fresh-session rules
 

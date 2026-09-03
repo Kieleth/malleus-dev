@@ -32,13 +32,10 @@ from .document_run import (
     run_document_history,
 )
 from .graph_recipe_change_set import canonical_assembly_plan_bytes
-from .native_query import load_query_binding
 from .ontology_compile import ExactSource, compile_exact_ontology
 from .population_compile import compile_population
 
 
-_MACHINE = Path(__file__).resolve().parents[1] / "small_shop/pareto/machine.json"
-_DOMAIN = "https://malleus.dev/schema/paper-four-domain/"
 _XSD = "http://www.w3.org/2001/XMLSchema#"
 _FACT_ORDER = {
     "Record": 0,
@@ -47,14 +44,6 @@ _FACT_ORDER = {
     "RelationTarget": 3,
     "DependsOn": 4,
 }
-_RECORD_TYPES = tuple(
-    _DOMAIN + name
-    for name in """ObservingSystem Campaign Region EarthquakePopulation
-    PrimaryMeltPopulation BoundedQuantity MechanismHypothesis DataAcquisitionRelation
-    SpatialAssociationRelation QuantityCharacterizationRelation
-    HypothesisExplainsRelation""".split()
-)
-_SOURCE = "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9"
 _POLICY_ID = "paper-v4-two-check-policy"
 _ACTOR_ID = "actor:paper-v4-evaluator"
 _PROPOSAL_ID = "proposal:paper-v4:population"
@@ -70,17 +59,95 @@ _EVIDENCE_IDS = {
     "acceptance": "evidence:paper-v4:ontology-acceptance",
     "population": "evidence:paper-v4:population",
     "recipes": "evidence:paper-v4:generic-recipes",
-    "queries": "evidence:paper-v4:query-binding",
-}
-_D4_INPUTS = {
-    "ontology": "sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941",
-    "queries": "sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9",
-    "reading": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
 }
 
 
 class ExperimentRunError(ValueError):
     """The closed paper experiment cannot be admitted as requested."""
+
+
+def _require_sha256(value: object, label: str) -> str:
+    if (
+        type(value) is not str
+        or not value.startswith("sha256:")
+        or len(value) != 71
+        or any(character not in "0123456789abcdef" for character in value[7:])
+    ):
+        raise ExperimentRunError(f"{label} must be one lowercase sha256 digest")
+    return value
+
+
+def _require_nonblank(value: object, label: str) -> str:
+    if type(value) is not str or not value.strip():
+        raise ExperimentRunError(f"{label} must be nonblank text")
+    return value
+
+
+@dataclass(frozen=True, slots=True)
+class PaperExperimentConfiguration:
+    """Every external coordinate required to build one document history."""
+
+    result_schema: str
+    source_sha256: str
+    ontology_sha256: str
+    reading_sha256: str
+    malleus_import_sha256: str
+    linkml_types_sha256: str
+    population_sha256: str
+    generic_recipe_sha256: str
+    ontology_acceptance_sha256: str
+    protocol_machine_sha256: str
+    record_type_iris: tuple[str, ...]
+    contract_id: str
+    ontology_locator: str
+    malleus_import_locator: str
+    linkml_types_locator: str
+
+    def __post_init__(self) -> None:
+        for field in (
+            "result_schema",
+            "contract_id",
+            "ontology_locator",
+            "malleus_import_locator",
+            "linkml_types_locator",
+        ):
+            _require_nonblank(getattr(self, field), field)
+        for field in (
+            "source_sha256",
+            "ontology_sha256",
+            "reading_sha256",
+            "malleus_import_sha256",
+            "linkml_types_sha256",
+            "population_sha256",
+            "generic_recipe_sha256",
+            "ontology_acceptance_sha256",
+            "protocol_machine_sha256",
+        ):
+            _require_sha256(getattr(self, field), field)
+        if (
+            type(self.record_type_iris) is not tuple
+            or not self.record_type_iris
+            or any(
+                type(value) is not str or not value.strip()
+                for value in self.record_type_iris
+            )
+            or len(self.record_type_iris) != len(set(self.record_type_iris))
+        ):
+            raise ExperimentRunError(
+                "record_type_iris must be one nonempty tuple of unique IRIs"
+            )
+
+    def input_identities(self) -> dict[str, str]:
+        return {
+            "acceptance": self.ontology_acceptance_sha256,
+            "linkml": self.linkml_types_sha256,
+            "malleus": self.malleus_import_sha256,
+            "machine": self.protocol_machine_sha256,
+            "ontology": self.ontology_sha256,
+            "population": self.population_sha256,
+            "reading": self.reading_sha256,
+            "recipes": self.generic_recipe_sha256,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,15 +198,23 @@ def _strict_json(source: bytes, label: str, *, newline: bool = False) -> dict[st
     return value
 
 
-def _require_d4_inputs(inputs: dict[str, bytes]) -> None:
+def _require_build_inputs(
+    configuration: PaperExperimentConfiguration,
+    inputs: dict[str, bytes],
+) -> None:
+    if type(configuration) is not PaperExperimentConfiguration:
+        raise TypeError("configuration must be one PaperExperimentConfiguration")
+    if any(type(source) is not bytes for source in inputs.values()):
+        raise ExperimentRunError("knowledge-build inputs must be exact bytes")
+    expected = configuration.input_identities()
     observed = {name: _digest(source) for name, source in inputs.items()}
     drift = sorted(
         name
-        for name in set(observed) | set(_D4_INPUTS)
-        if observed.get(name) != _D4_INPUTS.get(name)
+        for name in set(observed) | set(expected)
+        if observed.get(name) != expected.get(name)
     )
     if drift:
-        raise ExperimentRunError(f"D4 input drift: {drift}")
+        raise ExperimentRunError(f"knowledge-build input drift: {drift}")
 
 
 def _acceptance(source: bytes, ontology_identity: str) -> None:
@@ -440,7 +515,7 @@ def _verify_structure(
     require_plan_contract_alignment(plan, contract, compilation)
     return _Verification(
         "structural-conformance",
-        "ASSEMBLY_PLAN_ALIGNS_WITH_THE_VALIDATED_11_TYPE_CONTRACT",
+        "ASSEMBLY_PLAN_ALIGNS_WITH_THE_VALIDATED_SELECTED_TYPE_CONTRACT",
         inputs,
     )
 
@@ -570,30 +645,39 @@ def _protocol_events(
 def run_paper_experiment(
     ledger_path: str | Path,
     *,
+    configuration: PaperExperimentConfiguration,
     selected_ontology: ExactSource,
     malleus_import: ExactSource,
     linkml_types: ExactSource,
     selected_reading_bytes: bytes,
     population_bytes: bytes,
     generic_recipe_bytes: bytes,
-    query_binding_bytes: bytes,
     ontology_acceptance_bytes: bytes,
+    protocol_machine_bytes: bytes,
 ) -> PaperExperimentRun:
-    """Compile and admit the fixed paper run without querying or scoring it."""
+    """Compile and admit one exact knowledge build without querying it."""
 
     path = Path(ledger_path)
     if path.exists():
         raise ExperimentRunError("ledger_path must be new")
-    _require_d4_inputs(
+    _require_build_inputs(
+        configuration,
         {
+            "acceptance": ontology_acceptance_bytes,
+            "linkml": linkml_types.source_bytes,
+            "malleus": malleus_import.source_bytes,
+            "machine": protocol_machine_bytes,
             "ontology": selected_ontology.source_bytes,
-            "queries": query_binding_bytes,
+            "population": population_bytes,
             "reading": selected_reading_bytes,
-        }
+            "recipes": generic_recipe_bytes,
+        },
     )
     reading = _strict_json(selected_reading_bytes, "selected reading", newline=True)
-    if reading.get("source_sha256") != _SOURCE:
-        raise ExperimentRunError("selected reading does not bind the fixed PDF source")
+    if reading.get("source_sha256") != configuration.source_sha256:
+        raise ExperimentRunError(
+            "selected reading does not bind the configured source identity"
+        )
     ontology_identity = _digest(selected_ontology.source_bytes)
     _acceptance(ontology_acceptance_bytes, ontology_identity)
 
@@ -604,10 +688,9 @@ def run_paper_experiment(
     )
     contract = derive_compiled_logical_contract(
         ontology.compilation,
-        record_type_iris=_RECORD_TYPES,
-        contract_id="https://malleus.dev/contracts/paper-four-document",
+        record_type_iris=configuration.record_type_iris,
+        contract_id=configuration.contract_id,
     )
-    load_query_binding(query_binding_bytes)
     population = compile_population(
         population_bytes,
         compiled_ontology=ontology.compilation,
@@ -633,7 +716,6 @@ def run_paper_experiment(
             ("acceptance", ontology_acceptance_bytes, "application/jsonl"),
             ("population", population_bytes, "application/json"),
             ("recipes", generic_recipe_bytes, "text/plain"),
-            ("queries", query_binding_bytes, "application/json"),
         )
     ]
     evidence.extend(
@@ -681,7 +763,7 @@ def run_paper_experiment(
     )
 
     policy = _policy(checks)
-    machine = ProtocolMachineProgram.from_bytes(_MACHINE.read_bytes())
+    machine = ProtocolMachineProgram.from_bytes(protocol_machine_bytes)
     profile = compose_normative_profile(
         protocol_machine_program=machine,
         policy_programs={"required-check-verdict": policy},
@@ -725,12 +807,11 @@ def run_paper_experiment(
             "entity_count": entities,
             "ledger_head": run.replay.ledger_head,
             "ontology_sha256": ontology_identity,
-            "query_binding_sha256": _digest(query_binding_bytes),
             "reading_sha256": _digest(selected_reading_bytes),
             "relation_count": relations,
             "replay_receipt_sha256": run.replay.receipt.identity,
-            "schema": "malleus.paper-v4.experiment-result/v1",
-            "source_sha256": _SOURCE,
+            "schema": configuration.result_schema,
+            "source_sha256": configuration.source_sha256,
         }
     )
     return PaperExperimentRun(
@@ -739,3 +820,11 @@ def run_paper_experiment(
         run.replay.receipt.canonical_bytes,
         result,
     )
+
+
+__all__ = [
+    "ExperimentRunError",
+    "PaperExperimentConfiguration",
+    "PaperExperimentRun",
+    "run_paper_experiment",
+]

@@ -1,0 +1,91 @@
+{
+  "schema": "malleus.paper-v4.source-grounded-review-protocol/v1",
+  "status": "FROZEN_BEFORE_V2_QUERY_OUTPUT",
+  "purpose": [
+    "SOURCE_SUPPORT",
+    "QUESTION_RESPONSIVENESS"
+  ],
+  "evidence_surface": {
+    "authoritative": "SELECTED_READING_TEXT_LAYER",
+    "locator_kind": "SELECTED_READING_BLOCK_ID",
+    "source_pdf_role": "OPTIONAL_PROJECTION_FIDELITY_CROSS_CHECK_ONLY"
+  },
+  "fixed_identities": {
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "competency_questions_sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+  },
+  "review_input_manifest": {
+    "schema": "malleus.paper-v4.source-grounded-review-inputs/v1",
+    "pending_status": "PENDING_UNTIL_STAGE_FREEZE",
+    "frozen_status": "FROZEN_FOR_REVIEW",
+    "stage_identity_template": {
+      "selected_ontology_sha256": "PENDING_UNTIL_STAGE_FREEZE",
+      "ledger_head": "PENDING_UNTIL_STAGE_FREEZE",
+      "replay_receipt_sha256": "PENDING_UNTIL_STAGE_FREEZE",
+      "query_binding_sha256": "PENDING_UNTIL_STAGE_FREEZE",
+      "query_result_sha256": "PENDING_UNTIL_STAGE_FREEZE"
+    }
+  },
+  "question_ids": [
+    "CQ-01",
+    "CQ-02",
+    "CQ-03",
+    "CQ-04"
+  ],
+  "judgments": {
+    "source_support": [
+      "SUPPORTED",
+      "PARTIAL",
+      "UNSUPPORTED",
+      "NOT_EVALUABLE"
+    ],
+    "question_responsiveness": [
+      "RESPONSIVE",
+      "PARTIAL",
+      "NOT_RESPONSIVE",
+      "NOT_EVALUABLE"
+    ]
+  },
+  "authorship": {
+    "preliminary_evaluator_kind": "CODEX_PRELIMINARY",
+    "ratifier_evaluator_kind": "HUMAN_AUTHOR",
+    "ratifier_actor_id": "actor:luis"
+  },
+  "review_materials": [
+    "selected_reading",
+    "competency_questions",
+    "query_binding",
+    "query_result"
+  ],
+  "validator_materials": [
+    "review_input_manifest",
+    "selected_ontology",
+    "replay_receipt"
+  ],
+  "withheld_materials": [
+    "answer_oracle",
+    "canonical_answer",
+    "automated_score",
+    "score_result",
+    "model_transcripts",
+    "population_proposal",
+    "population_provenance",
+    "manuscript_results",
+    "paper_ledger_results"
+  ],
+  "forbidden_record_fields": [
+    "accuracy",
+    "answer",
+    "answer_key",
+    "answers",
+    "automated_score",
+    "canonical_answer",
+    "correctness",
+    "exact_match",
+    "numeric_score",
+    "oracle",
+    "oracle_sha256",
+    "score"
+  ]
+}
