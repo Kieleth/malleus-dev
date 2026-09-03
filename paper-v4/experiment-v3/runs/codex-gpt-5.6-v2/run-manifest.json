@@ -1,0 +1,59 @@
+{
+  "schema": "malleus.paper-v4.multimodel-run-manifest/v1",
+  "run_id": "codex-gpt-5.6-v2",
+  "root_locator": "paper-v4:mid-ocean-ridge-geodynamics",
+  "contract_id": "https://malleus.dev/contracts/paper-v4/experiment-v2",
+  "recipe_namespace": "https://malleus.dev/paper-v4/experiment-v2/recipe/",
+  "member_namespace": "https://malleus.dev/paper-v4/experiment-v2/population/member/",
+  "entity_types": [
+    "ObservationMethod",
+    "Instrument",
+    "GeologicFeature",
+    "SeismicPhenomenon",
+    "QuantitativeObservation",
+    "GeologicMaterial",
+    "ChemicalConstituent",
+    "GeologicProcess",
+    "CategoricalObservation"
+  ],
+  "relation_types": [
+    "MethodUsesInstrumentRelation",
+    "FeaturePartOfRelation",
+    "SeismicPhenomenonOccursAtRelation",
+    "ObservationCharacterizesRelation",
+    "ObservationConcernsConstituentRelation",
+    "MaterialOccursAtRelation",
+    "ProcessActsOnMaterialRelation",
+    "ProcessReleasesConstituentRelation",
+    "ProcessCausesProcessRelation",
+    "ProcessTriggersSeismicPhenomenonRelation"
+  ],
+  "contract_only_types": [
+    "GeoscienceObject",
+    "DomainObservation"
+  ],
+  "paths": {
+    "source": "paper-v4/source/yu-et-al-2025-mid-atlantic-ridge.pdf",
+    "ontology": "paper-v4/experiment-v2/ontology-run/ontology-02.yaml",
+    "malleus": "paper-v4/experiment-v2/ontology-run/inputs/malleus.yaml",
+    "linkml": "paper-v4/experiment-v2/run-inputs/linkml-types.yaml",
+    "reading": "private/paper-v4-text-layer/selected-reading.json",
+    "population": "paper-v4/experiment-v2/population-run/population.json",
+    "recipes": "paper-v4/experiment-v2/generic-recipes.stottr",
+    "acceptance": "paper-v4/experiment-v2/ontology-run/acceptance.jsonl",
+    "machine": "paper-v4/experiment-v2/run-inputs/protocol-machine.json",
+    "binding": "paper-v4/experiment-v2/native-query-binding.json"
+  },
+  "sha256": {
+    "source": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "ontology": "sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed",
+    "malleus": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+    "linkml": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
+    "reading": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "population": "sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964",
+    "recipes": "sha256:7324dbe955a7f0395d878c4e6198704a4fa11c296b79a66c8a30729ab4fbb968",
+    "acceptance": "sha256:5e5120648765083a64d8ec6143c53e80bf856963ac2256b6500f48d5d80903e4",
+    "machine": "sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb",
+    "binding": "sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1"
+  }
+}
