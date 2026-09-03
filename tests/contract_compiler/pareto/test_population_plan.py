@@ -297,6 +297,45 @@ def _single_left_base(tmp_path: Path, valid_time: KnowledgeValidTime):
     return history, compiled, partial, replay
 
 
+def _superseded_left_base(tmp_path: Path):
+    history, compiled, partial, _, _, _ = _anchored_history(tmp_path)
+    _admit_operations(
+        history,
+        change_set_id="change:left-retired",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-retired",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-retired",
+                properties={"label": "retired"},
+                depends_on=(),
+            ),
+        ),
+        order="base-1",
+    )
+    replay = _admit_operations(
+        history,
+        change_set_id="change:left-current",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-current",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-current",
+                properties={"label": "current"},
+                depends_on=(),
+                supersedes_record_id="left-retired",
+            ),
+        ),
+        order="base-2",
+        supersedes=("change:left-retired",),
+    )
+    return history, compiled, partial, replay
+
+
 def _single_replacement_plan(
     contract_identity: str,
     *,
@@ -1061,41 +1100,7 @@ def test_population_plan_refuses_reusing_an_inactive_historical_record_id(
     tmp_path: Path,
 ) -> None:
     population = _population()
-    history, compiled, partial, _, _, _ = _anchored_history(tmp_path)
-    _admit_operations(
-        history,
-        change_set_id="change:left-retired",
-        operations=(
-            KnowledgeOperation(
-                ordinal=0,
-                operation_id="operation:left-retired",
-                operation_type="CREATE_ENTITY",
-                record_type="LeftObject",
-                record_id="left-retired",
-                properties={"label": "retired"},
-                depends_on=(),
-            ),
-        ),
-        order="base-1",
-    )
-    replay = _admit_operations(
-        history,
-        change_set_id="change:left-current",
-        operations=(
-            KnowledgeOperation(
-                ordinal=0,
-                operation_id="operation:left-current",
-                operation_type="CREATE_ENTITY",
-                record_type="LeftObject",
-                record_id="left-current",
-                properties={"label": "current"},
-                depends_on=(),
-                supersedes_record_id="left-retired",
-            ),
-        ),
-        order="base-2",
-        supersedes=("change:left-retired",),
-    )
+    _, compiled, partial, replay = _superseded_left_base(tmp_path)
     plan = _single_replacement_plan(
         partial.identity,
         record_id="left-retired",
@@ -1114,6 +1119,31 @@ def test_population_plan_refuses_reusing_an_inactive_historical_record_id(
     assert (
         refusal.value.reason
         is population.PopulationPlanRefusalReason.DUPLICATE_RECORD_ID
+    )
+
+
+def test_population_plan_refuses_superseding_an_inactive_record_as_a_fork(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    _, compiled, partial, replay = _superseded_left_base(tmp_path)
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-3"),
+    )
+    plan["supersessions"][0]["supersedes_record_id"] = "left-retired"
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason is population.PopulationPlanRefusalReason.SUPERSESSION_FORK
     )
 
 
@@ -1397,6 +1427,38 @@ def test_compiler_surfaces_structural_contract_refusal_unchanged(
 
     with pytest.raises(ValueError) as compiled_refusal:
         _compile(plan, contract_pair)
+
+    assert type(compiled_refusal.value) is type(direct.value)
+    assert str(compiled_refusal.value) == str(direct.value)
+
+
+@pytest.mark.parametrize("defect", ["missing-type", "unknown-type"])
+def test_supersession_surfaces_structural_contract_refusal_unchanged(
+    tmp_path: Path, defect: str
+) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-2"),
+    )
+    if defect == "missing-type":
+        del plan["records"]["entities"][0]["type"]
+    else:
+        plan["records"]["entities"][0]["type"] = "Nope"
+
+    with pytest.raises(ValueError) as direct:
+        KnowledgeGraph.from_records(compiled.view, plan["records"])
+    with pytest.raises(ValueError) as compiled_refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
 
     assert type(compiled_refusal.value) is type(direct.value)
     assert str(compiled_refusal.value) == str(direct.value)
