@@ -263,6 +263,7 @@ def _range_iri(
     selected: set[str],
     enums: set[str],
     scalar_terminals: dict[str, str],
+    allow_entity_root: bool = False,
 ) -> str:
     if range_id in _SEED_RANGES:
         return _SEED_RANGES[range_id]
@@ -271,7 +272,9 @@ def _range_iri(
     if range_id in enums:
         return range_id
     if range_id in classes:
-        if range_id not in selected:
+        if range_id not in selected and not (
+            allow_entity_root and range_id == FOUNDATION + "Entity"
+        ):
             raise _failure(
                 subject,
                 "Class-valued slot range is outside the frozen record selection.",
@@ -289,6 +292,7 @@ def _project_slots(
     view: ContractView,
     type_iri: str,
     *,
+    role: str,
     selected: set[str],
     classes: set[str],
     enums: set[str],
@@ -299,6 +303,7 @@ def _project_slots(
     projected = []
     for position, (slot_iri, constraint) in enumerate(sorted(effective.items())):
         subject = f"{type_iri} {slot_iri}"
+        runtime_symbol = _suffix(slot_iri, kind="property")
         if constraint.value_presence is not None:
             raise _failure(
                 subject,
@@ -319,6 +324,10 @@ def _project_slots(
                         selected=selected,
                         enums=enums,
                         scalar_terminals=scalar_terminals,
+                        allow_entity_root=(
+                            role == "RELATION"
+                            and runtime_symbol in {"source_id", "target_id"}
+                        ),
                     ),
                     multivalued=constraint.multivalued,
                     inlined=constraint.inlined,
@@ -437,6 +446,7 @@ def derive_compiled_logical_contract(
         slots = _project_slots(
             view,
             type_iri,
+            role=role,
             selected=selected_set,
             classes=classes,
             enums=enums,

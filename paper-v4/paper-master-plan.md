@@ -4,7 +4,7 @@ Version: 0.9.0
 
 Date: 2026-09-02
 
-Status: active. D5 isolation, D1 reading, D2 with D6 ontology compilation and acceptance, and the type-based query binding are complete. Generic recipes and D3 population are next. No document graph or query result is claimed yet.
+Status: active. D5 isolation, D1 reading, D2 with D6 ontology compilation and acceptance, the type-based query binding, and generic recipes are complete. D3 population is next. No document graph or query result is claimed yet.
 
 ## Objective
 
@@ -86,7 +86,7 @@ The answer key remains evaluator-only. D1 changed only its locators. The answer 
 3. **Ontology, complete.** A fresh session received the selected reading, four questions, supported ontology task, and retained copies of every model-visible Malleus input. Its first proposal compiled without a diagnostic return. No human edited or repaired it. One evaluator event records its digest and actor id for population, without an adequacy judgment.
 4. **Query binding, complete.** The four native queries are frozen as typed source-relation-target cases with enum-constrained relation kinds and projected output fields. Matching returns zero or more rows; neither the binding nor executor requires a graph size or singleton result. The binding contains no document answer, numeric value, source text, locator, record identifier, entity count, relation count, or topology closure.
 5. **Population.** A different fresh session receives only the selected ontology, selected reading, generic recipe library, four questions, and task instructions. It returns one machine-readable population file, with a selected-reading block locator for each value. One retry may receive structural compiler diagnostics only. There is no content review, evaluator-authored population, or fallback. A refusal, malformed result, or poor score is the result.
-6. **Commitment.** The generic recipes expand the population into ordered operations. Each operation and property retains its source locator. Malleus compiles a change set, runs the declared checks, records the decision, and appends only a complete accepted transaction.
+6. **Commitment.** The generic recipes expand the population into ordered operations. A canonical provenance map associates each record and property with its reading locator and recipe emission. Its digest enters the change set's evidence closure; locators are not inline change-set fields. Malleus compiles the change set, runs the declared checks, records the decision, and appends only a complete accepted transaction.
 7. **Replay and query.** Delete the derived graph, reopen the ledger, replay it, and compare the canonical replay receipt and graph state. Run the four bound queries in a process that can see the replayed graph and query binding, but not the PDF, reading, model transcripts, answer key, network, or any embedding index. Score the outputs separately against the sealed key.
 
 ### Fresh-session rules
@@ -158,7 +158,7 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Freeze the generic recipe library, then run D3.
+1. Run D3 with the frozen generic recipe library.
 2. Compile, decide, admit, delete, replay, query, and score.
 3. Fill result fields, cut the manuscript to target, and build the arXiv bundle.
 

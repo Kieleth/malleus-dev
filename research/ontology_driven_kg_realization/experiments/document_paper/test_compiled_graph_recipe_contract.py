@@ -39,6 +39,23 @@ RECORDS = tuple(
     DOMAIN + "/" + name
     for name in ("MeasuredSubject", "Observation", "ObservationAtSite")
 )
+PAPER_DOMAIN = "https://malleus.dev/schema/paper-four-domain"
+PAPER_RECORDS = tuple(
+    PAPER_DOMAIN + "/" + name
+    for name in (
+        "ObservingSystem",
+        "Campaign",
+        "Region",
+        "EarthquakePopulation",
+        "PrimaryMeltPopulation",
+        "BoundedQuantity",
+        "MechanismHypothesis",
+        "DataAcquisitionRelation",
+        "SpatialAssociationRelation",
+        "QuantityCharacterizationRelation",
+        "HypothesisExplainsRelation",
+    )
+)
 
 
 SOURCE = b"""\
@@ -109,6 +126,14 @@ slots:
     required: true
     inlined: true
 """
+
+BROAD_PROPERTY_SOURCE = SOURCE.replace(
+    b"      - inline_subject\n",
+    b"      - inline_subject\n      - broad_reference\n",
+).replace(
+    b"\nslots:\n  observed_at:\n",
+    b"\nslots:\n  broad_reference:\n    range: Entity\n  observed_at:\n",
+)
 
 
 def _compiled(source: bytes = SOURCE):
@@ -194,6 +219,36 @@ def test_projects_enum_and_imported_timestamp_without_source_registry(
     }
     assert contract.symbol_bindings.derivation == "compiled-frontend-neutral-ir"
     assert {item.iri for item in contract.symbol_bindings.types} == set(RECORDS)
+
+
+def test_paper_ontology_projects_imported_entity_endpoint_ranges() -> None:
+    ontology = (
+        ROOT / "paper-v4/experiment/ontology-run/ontology.yaml"
+    ).read_bytes()
+    paper_contract = derive_compiled_logical_contract(
+        _compiled(ontology),
+        record_type_iris=PAPER_RECORDS,
+        contract_id="https://malleus.dev/contracts/paper-four-domain",
+    )
+
+    spatial = paper_contract.record_for_iri(
+        PAPER_DOMAIN + "/SpatialAssociationRelation"
+    )
+    quantity = paper_contract.record_for_iri(
+        PAPER_DOMAIN + "/QuantityCharacterizationRelation"
+    )
+    assert spatial.endpoint_constraints.source == FOUNDATION + "/Entity"
+    assert quantity.endpoint_constraints.target == FOUNDATION + "/Entity"
+    assert FOUNDATION + "/Entity" not in paper_contract.constructible_record_types
+
+
+def test_unselected_class_range_remains_forbidden_for_ordinary_properties() -> None:
+    with pytest.raises(GraphRecipeFailure, match="outside the frozen record selection"):
+        derive_compiled_logical_contract(
+            _compiled(BROAD_PROPERTY_SOURCE),
+            record_type_iris=RECORDS,
+            contract_id=CONTRACT_ID,
+        )
 
 
 def test_contract_digest_is_exact_and_independent_of_selection_order(

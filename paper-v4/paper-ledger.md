@@ -1149,3 +1149,19 @@ Guard: Three focused tests validate the binding against the selected ontology, r
 Learning: `OntologyRegistry` resolves relative import-map entries against the ontology file directory, not the process working directory. An initial validation probe passed a workspace-relative retained-input path and refused after duplicating the directory prefix. The active guard uses the exact absolute retained-input path.
 
 Impact: Query authorship is frozen before D3. Population size, identities, values, and topology remain open to the fresh model session.
+
+### E-0075, generic recipe library reaches one arbitrary valid plan
+
+Date: 2026-09-02
+
+Sources: `paper-v4/experiment/generic-recipes.stottr`, the selected compiled ontology, the compiled-IR GraphRecipe adapter, and focused tests.
+
+Observation: The retained library defines the five terminal declarations and eight generic templates: named entity, observing system, bounded quantity, mechanism hypothesis, and four relation shapes. Constants are limited to ontology record types, property IRIs, operation kinds, and the five ontology-fixed enum values. Record ids, names, counts, bounds, units, relative positions, and mechanism text remain invocation variables. Thirteen arbitrary fictional invocations exercised every template, assembled into one aligned plan, and materialized atomically.
+
+Infrastructure refusal and guard: The first full selected-ontology projection refused `QuantityCharacterizationRelation.target_id`, then would have refused `SpatialAssociationRelation.source_id`, because both legally range over the imported abstract `Entity` root rather than one selected concrete type. The paper-local adapter now permits that root only for positional relation endpoints. It remains nonconstructible, and an unselected class range on an ordinary property still refuses. Two focused tests preserve both sides of the rule.
+
+Recipe-profile refusal and guard: The first arbitrary invocation run showed that the restricted stOTTR profile can lower float terms but does not accept `xsd:float` as a parameter declaration. The two numeric recipe parameters are now mandatory untyped terms; the selected ontology still enforces float values during plan staging. The every-template test preserves this path.
+
+Provenance boundary: Neither `AssemblyPlan` nor the private `KnowledgeChangeSet` stores locators inline. D3 must produce a canonical provenance map from population record and property assertions to reading blocks and recipe emissions. The change set will bind that map through its evidence closure. The manuscript and plan no longer claim inline operation locators.
+
+Impact: The construction vocabulary is frozen without document facts. D3 may now ask a fresh model session to supply the population and locators.
