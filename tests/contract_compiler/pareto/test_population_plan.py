@@ -501,11 +501,16 @@ def test_population_plan_refuses_contract_and_view_mismatch(contract_pair) -> No
 
 
 @pytest.mark.parametrize(
-    "source_id",
-    ["evidence-generic", "plan:neutral:1", "profile:state-version"],
+    ("source_id", "with_gap"),
+    [
+        ("evidence-generic", False),
+        ("plan:neutral:1", False),
+        ("profile:state-version", False),
+        ("plan:neutral:1:gaps", True),
+    ],
 )
 def test_population_plan_refuses_source_and_evidence_closure_id_collision(
-    contract_pair, source_id: str
+    contract_pair, source_id: str, with_gap: bool
 ) -> None:
     population = _population()
     _, partial = contract_pair
@@ -513,6 +518,15 @@ def test_population_plan_refuses_source_and_evidence_closure_id_collision(
     plan["sources"][0]["source_id"] = source_id
     for derivation in plan["derivations"]:
         derivation["source_id"] = source_id
+    if with_gap:
+        plan["gaps"] = [
+            {
+                "kind": "TYPE_ABSENT",
+                "statement": "a source statement has no contract type",
+                "source_id": source_id,
+                "locator": "row:0",
+            }
+        ]
 
     with pytest.raises(population.PopulationPlanRefusal) as refusal:
         _compile(plan, contract_pair)
