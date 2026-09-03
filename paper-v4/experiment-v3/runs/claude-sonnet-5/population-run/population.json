@@ -1,0 +1,33 @@
+{
+  "schema": "malleus.paper-v4.population/v2",
+  "ontology_sha256": "sha256:7fad8b9e9480781dd2207725d9c8d9906742c61988f1acbfa7883c2a55a16015",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+  "records": [
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:001",
+      "record_type": "RidgeSegment",
+      "record_block_id": "page:1:block:005",
+      "properties": {
+        "segment_class": {
+          "value": "RIDGE_SEGMENT",
+          "block_id": "page:1:block:005"
+        },
+        "spreading_rate": {
+          "value": 32,
+          "block_id": "page:2:block:005"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:002",
+      "record_type": "GeologicalProcess",
+      "record_block_id": "page:5:block:002",
+      "properties": {
+        "process_kind": {
+          "value": "VOLATILE_DEGASSING",
+          "block_id": "page:5:block:002"
+        }
+      }
+    }
+  ]
+}

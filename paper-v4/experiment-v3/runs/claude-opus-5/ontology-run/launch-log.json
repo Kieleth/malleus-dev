@@ -1,0 +1,24 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v1",
+  "launches": [
+    {
+      "ordinal": 1,
+      "outcome": "HARNESS_FAILURE_NO_OUTPUT",
+      "detail": "Agent terminated before producing any message: API error HTTP 529 Overloaded (server-side), request id req_011CegkyusKciNzG61T5awfx, model sent to the API claude-opus-5.",
+      "model_output": "ABSENT",
+      "counts_as_attempt": false
+    },
+    {
+      "ordinal": 2,
+      "outcome": "HARNESS_FAILURE_NO_OUTPUT",
+      "detail": "Agent terminated before producing any message: API error HTTP 529 Overloaded (server-side), request id req_011CegmFnTn4FSAMAcy7dnBQ, model sent to the API claude-opus-5.",
+      "model_output": "ABSENT",
+      "counts_as_attempt": false
+    },
+    {
+      "ordinal": 3,
+      "outcome": "PENDING",
+      "detail": "Fresh session re-dispatched with the identical spawn message."
+    }
+  ]
+}
