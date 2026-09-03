@@ -78,6 +78,8 @@ Decision: the one-shot adequacy review stage is removed. No rubric, no reviewer 
 
 Whether the ontology was adequate is measured, not judged: a schema with one count slot where the source has two returns one number for CQ-01 and mismatches the key. That mismatch, with its locator, is the result.
 
+One check survives D4 because it is what makes the graph load-bearing: the query process receives only the replayed graph and the query binding. Not the reading, not the proposal files, not the ledger, not the oracle. Implement it as one isolation test, not as a projection-package format with its own identities.
+
 Retire: `ontology-review-task.md`, `ontology-review-precommit.json`, `ontology-review-output-schema.json`, `ontology-review-input-manifest.json`, the adequacy receipts and their tests, and the review-input package under `document_paper/ontology_review_inputs.py` if nothing else uses it. Keep the files, stop citing them.
 
 Why: the adequacy reviewer is not a Malleus mechanism. It was added by the experiment, its rubric was written by the experimenter, and it produced both the refusal and the hand repair. Malleus governs commitment with a compiler, typed checks and recorded decisions. The competency questions already exist to judge semantic adequacy. Removing the reviewer deletes one stage, one rubric, one model session and the largest remaining risk of ending with no graph.
