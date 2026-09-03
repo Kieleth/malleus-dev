@@ -27,6 +27,12 @@ from research.ontology_driven_kg_realization.experiments.document_paper.query_sc
 
 ONTOLOGY_DIGEST = "sha256:" + "1" * 64
 ROOT = Path(__file__).resolve().parents[4]
+RETIRED_V1_ORACLE_SHA256 = (
+    "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571"
+)
+REBOUND_V2_ORACLE_SHA256 = (
+    "sha256:6f1564887aa908ac2cd0ff9f06e823ccf936ca18d24595252a0c04a6c0cc09b4"
+)
 
 
 def _canonical(value: object) -> bytes:
@@ -141,6 +147,11 @@ def _freeze_score(
 def test_committed_query_result_matches_frozen_production_identity() -> None:
     source = (ROOT / "paper-v4/experiment/results/query-result.json").read_bytes()
     assert _digest(source) == subject.FROZEN_QUERY_RESULT_SHA256
+
+
+def test_scorer_uses_d1_rebound_oracle_not_retired_v1_coordinate() -> None:
+    assert subject.FROZEN_ORACLE_SHA256 == REBOUND_V2_ORACLE_SHA256
+    assert subject.FROZEN_ORACLE_SHA256 != RETIRED_V1_ORACLE_SHA256
 
 
 def test_exact_four_of_four_uses_binding_and_retains_duplicates(
