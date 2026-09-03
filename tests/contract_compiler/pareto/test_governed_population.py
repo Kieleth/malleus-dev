@@ -199,6 +199,29 @@ def test_minimal_profile_rebuilds_a_directly_constructed_mutable_value() -> None
         rebuilt.grounding["note"] = "changed"
 
 
+@pytest.mark.parametrize("canonical_bytes", [b"not-json", b'{"grammar":'])
+def test_minimal_profile_wraps_malformed_instance_bytes(
+    canonical_bytes: bytes,
+) -> None:
+    forged = population.DomainHistoryProfile(
+        canonical_bytes=canonical_bytes,
+        identity=_digest(canonical_bytes),
+        data=STATE_VERSION_PROFILE_DATA,
+        profile_id="state-version",
+        semantic_unit="STATE_VERSION",
+        origin="EMPTY",
+        grounding=STATE_VERSION_PROFILE_DATA["grounding"],
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.DomainHistoryProfile.from_data(forged)
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE
+    )
+
+
 @pytest.mark.parametrize(
     ("mutation", "reason"),
     [
