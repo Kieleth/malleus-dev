@@ -164,6 +164,39 @@ def test_minimal_profiles_are_canonical_immutable_and_content_addressed(
         compiled.identity = "sha256:" + "0" * 64
 
 
+def test_minimal_profile_exposes_the_exact_value_bound_by_its_bytes() -> None:
+    value = deepcopy(STATE_VERSION_PROFILE_DATA)
+    value["grounding"] = {1: "integer key is canonicalized"}
+
+    compiled = population.DomainHistoryProfile.from_data(value)
+
+    assert compiled.data == json.loads(compiled.canonical_bytes)
+    assert compiled.grounding == {"1": "integer key is canonicalized"}
+    with pytest.raises(TypeError):
+        compiled.grounding["1"] = "changed"
+
+
+def test_minimal_profile_rebuilds_a_directly_constructed_mutable_value() -> None:
+    canonical_bytes = _canonical(STATE_VERSION_PROFILE_DATA)
+    mutable_data = deepcopy(STATE_VERSION_PROFILE_DATA)
+    forged = population.DomainHistoryProfile(
+        canonical_bytes=canonical_bytes,
+        identity=_digest(canonical_bytes),
+        data=mutable_data,
+        profile_id="state-version",
+        semantic_unit="STATE_VERSION",
+        origin="EMPTY",
+        grounding=mutable_data["grounding"],
+    )
+
+    rebuilt = population.DomainHistoryProfile.from_data(forged)
+
+    assert rebuilt == forged
+    assert rebuilt is not forged
+    with pytest.raises(TypeError):
+        rebuilt.grounding["note"] = "changed"
+
+
 @pytest.mark.parametrize(
     ("mutation", "reason"),
     [
@@ -272,7 +305,8 @@ def test_preparation_accepts_a_shipped_profile_value(tmp_path: Path) -> None:
         actor_id="actor:test",
     )
 
-    assert prepared.profile is population.STATE_VERSION_PROFILE
+    assert prepared.profile == population.STATE_VERSION_PROFILE
+    assert prepared.profile is not population.STATE_VERSION_PROFILE
     assert prepared.change_set is not None
 
 
