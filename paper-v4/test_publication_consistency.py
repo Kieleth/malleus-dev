@@ -15,7 +15,8 @@ README = PAPER / "arxiv/README.md"
 QUERY_RESULT = PAPER / "experiment-v2/results/query-result.json"
 BUILD_RESULT = PAPER / "experiment-v2/results/experiment-result.json"
 COMPILE_RECEIPT = PAPER / "experiment-v2/ontology-run/compilation/compile-receipt.json"
-REPRODUCER_COMMIT = "8e818103e6867e326544123a30abe756bdd45117"
+REPRODUCER_TAG = "paper-v4-multimodel-v1"
+V3_RUNS = PAPER / "experiment-v3/runs"
 
 
 def _text(path: Path) -> str:
@@ -43,15 +44,17 @@ def test_publication_claims_match_frozen_v2_results() -> None:
 
     for publication in (MANUSCRIPT, TEX):
         body = _text(publication)
-        assert "4,146-fact validated import closure" in body
+        assert "holds 4,146 facts" in body
         assert "seven entities and six relations" in body
-        assert "Eighteen prerequisite anchors plus a five-event atomic admission batch" in body
-        assert REPRODUCER_COMMIT in body
+        assert "Eighteen anchor events retaining the contract, sources and evidence, plus a five-event atomic admission batch" in body
+        assert REPRODUCER_TAG in body
         for stale in (
             "UNSCORABLE_ORACLE_SCHEMA_MISMATCH",
             "Admission produced a 23-event history",
             "24-event history",
             "eight entities and six relations",
+            "8e818103e6867e326544123a30abe756bdd45117",
+            "4,146-fact validated import closure",
         ):
             assert stale not in body
 
@@ -67,9 +70,30 @@ def test_arxiv_citations_and_reproduction_coordinate_are_closed() -> None:
     }
 
     assert citations == keys
-    assert REPRODUCER_COMMIT in _text(README)
+    assert REPRODUCER_TAG in _text(README)
     for path in (MANUSCRIPT, TEX, README):
         body = _text(path)
         assert "TODO" not in body
         assert "TBD" not in body
         assert "PLACEHOLDER" not in body
+
+
+def test_publication_claims_match_frozen_v3_producer_results() -> None:
+    expected = {
+        "claude-sonnet-5": ("1,738", "8 / 8", "0, 0, 0, 0"),
+        "claude-opus-5": ("3,869", "20 / 18", "0, 0, 0, 1"),
+    }
+    for run_id, (facts, classes, rows) in expected.items():
+        run = V3_RUNS / run_id
+        query = json.loads((run / "results/query-result.json").read_bytes())
+        ontology = json.loads((run / "ontology-run/acquisition-record.json").read_bytes())
+        assert [len(item["rows"]) for item in query["queries"]] == [
+            int(value) for value in rows.split(", ")
+        ]
+        assert sum(query["forbidden_attempts"].values()) == 0
+        assert f"{ontology['attempts'][-1]['fact_count']:,}" == facts
+        for publication in (MANUSCRIPT, TEX):
+            body = _text(publication)
+            assert facts in body
+            assert classes in body
+            assert rows in body
