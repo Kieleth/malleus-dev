@@ -1,10 +1,10 @@
 # Malleus paper master plan
 
-Version: 1.0.0
+Version: 1.1.0
 
-Date: 2026-09-02
+Date: 2026-09-03
 
-Status: active. The experiment, reconciled lean manuscript, byte-exact retained-environment reproduction, 107-test focused gate, and lint gate are complete. The strict scorer returned `UNSCORABLE_ORACLE_SCHEMA_MISMATCH` with a null score, not 0/4. A complete paper-specific transitive environment lock and the arXiv bundle remain.
+Status: active correction under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. A versioned run now restarts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection followed by identified human ratification.
 
 ## Objective
 
@@ -19,7 +19,7 @@ A reader should leave with four answers:
 
 ## Working claim
 
-For one fixed document and four questions, a fresh model proposes an ontology and a source-located population. Malleus compiles the ontology, validates the proposed change, records the decision, admits accepted events atomically, rebuilds a graph by replay, and returns typed rows for the questions from that graph.
+For one fixed document, a fresh model proposes an ontology without seeing the evaluation questions. A separate fresh model later proposes a source-located population with those questions visible. Malleus compiles the ontology, validates the proposed change, records the decision, admits accepted events atomically, and rebuilds a graph by replay. An adopter-owned query surface returns typed rows from that replayed graph, and an identified evaluator inspects them against exact source blocks.
 
 If the isolated query process opens no source text and no embedding index, the paper may report that bounded observation for this run. It will not claim that Malleus replaces RAG, answers arbitrary questions, or establishes source truth.
 
@@ -30,12 +30,12 @@ The paper contains one worked document:
 - Yu et al., *Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge*, Nature Communications, 2025.
 - One publisher PDF, 11 pages, retained locally and identified by SHA-256.
 - One selected text-layer reading produced by one pinned Python dependency.
-- One fresh-session ontology proposal, with compiler diagnostics returned at most twice.
+- One fresh-session ontology proposal from the selected reading without competency questions or question-derived semantic instructions, with compiler diagnostics returned at most twice.
 - One recorded evaluator acceptance event carrying the compiled ontology digest and evaluator actor id.
-- One query binding fixed before population against ontology record types, relation types, and enum values. It does not fix graph size or answer values.
+- One adopter-owned query binding fixed after ontology compilation and before population. It does not fix graph size or answer values and does not enter knowledge-state identity.
 - One fresh-session population proposal, with one block locator per value and at most one structural retry.
 - One generic construction recipe library. A recipe may encode construction form and types, never an answer value.
-- One typed change, ledger admission, disposal and replay of the derived in-memory graph, four queries, and one strict score attempt.
+- One typed change, ledger admission, disposal and replay of the derived in-memory graph, four queries, one source-grounded inspection, and one identified human ratification.
 
 The published Small Shop correction fixture is an implementation baseline, not a second empirical case. Its research milestone is annotated tag `research/small-shop-correction-replay-v1`, tag object `449ba25964a88ead86cc1aec337be1631cad9471`, at commit `e94f45c74475948dfebdc89247bfb070de0b778d`. The document experiment is pinned to later Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`.
 
@@ -46,7 +46,7 @@ Excluded:
 - Best-of-run selection or fallback after a poor result.
 - A general PDF ingestion product.
 - A retrieval comparison or general anti-embedding claim.
-- Cypher, SPARQL, Prolog, Semantic Re-entry, temporal correction, actions, effects, invoices, and payment.
+- Cypher, SPARQL, question-answering Prolog, Semantic Re-entry, temporal correction, actions, effects, invoices, and payment.
 - A stable public compiler, mapping grammar, or wire-format promise.
 - Cross-language conformance.
 
@@ -60,9 +60,9 @@ The experiment freezes exactly five identity groups:
 
 1. Source PDF digest: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
-3. Selected ontology digest: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
-4. Ledger head `sha256:a069c3ded48b3da1c6f022bab8601b16173ac90c64c812a4c74435b3085e43b6` plus replay receipt `sha256:6fccc6048d3444b9cbe4ea2bdca3101a7642a4e036a852d26e8fa21fbe03fb29`.
-5. Query binding digest: `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
+3. Selected ontology digest: pending corrected run.
+4. Ledger head plus replay receipt: pending corrected run.
+5. Adopter query binding digest: pending corrected run and excluded from the KnowledgeChangeSet evidence closure.
 
 Source manifests, transcripts, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
 
@@ -77,18 +77,18 @@ The four questions were fixed before the new run:
 3. What earthquake-depth and calculated primary-melt CO2 ranges are reported, with units and epistemic status?
 4. What causal mechanism do the authors prefer, represented as a hypothesis rather than established fact?
 
-The answer key remains evaluator-only. D1 v2 rebound its locators and reading metadata while preserving the ordered `question_id` plus `answer` projection byte for byte. Its legacy answer schema does not match the D6 typed query-row schema, so the frozen scorer cannot compare them without a post hoc adapter.
+The retired answer key remains sealed historical material and leaves the active evaluation path. The four question texts and their declared semantics remain frozen. Evaluation uses independently selected source blocks and narrative judgments, not a canonical expected-answer object.
 
 ### Sequence
 
 1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, forward-merged with exact Core `f9052b4`. The PDF and private files are ignored.
 2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
-3. **Ontology, complete.** A fresh session received the selected reading, four questions, supported ontology task, and retained copies of every model-visible Malleus input. Its first proposal compiled without a diagnostic return. No human edited or repaired it. One evaluator event records its digest and actor id for population, without an adequacy judgment.
-4. **Query binding, complete.** The four native queries are frozen as typed source-relation-target cases with enum-constrained relation kinds and projected output fields. Matching returns zero or more rows; neither the binding nor executor requires a graph size or singleton result. The binding contains no document answer, numeric value, source text, locator, record identifier, entity count, relation count, or topology closure.
-5. **Population, complete.** A different fresh session received only the selected ontology, selected reading, generic recipe library, four questions, and task instructions. Its first proposal compiled without a retry: 14 records, comprising eight entities and six relations, with 51 located assertions over seven reading blocks. There was no content review, evaluator-authored population, or fallback.
-6. **Commitment, complete.** The generic recipes expanded the population into ordered operations. A canonical provenance map associates each record and property with its reading locator and recipe emission. Its digest enters the change set's evidence closure; locators are not inline change-set fields. The orchestrator mechanically verified source and locator integrity plus structural conformance before producing two `SATISFIED` receipts. The runner wrote 19 bootstrap anchors, comprising 18 artifact registrations and one source registration. Atomic admission then appended a five-event suffix: retained change set, proposal, two check events, and the policy-derived `ACCEPT` verdict. The complete ledger has 24 events.
-7. **Replay and query, complete.** The runner disposed of the derived in-memory graph, reopened the source-bearing ledger, replayed it, and reproduced the receipt and graph state. This was not deletion of an external graph database. A separate query process received a source-free replay receipt containing the graph snapshot, the selected ontology and retained Malleus import needed to validate it, and the frozen query binding. It did not receive the PDF, selected reading, model transcripts, or answer key. Python-level guards recorded zero file-read, network, and embedding-import attempts. The four queries returned row counts `[1, 1, 2, 1]`.
-8. **Scoring, complete.** The query result and scorer structure were frozen before evaluator-only scoring. An identity preflight first refused a stale v1 oracle coordinate. The evidence-backed D1 v2 correction preserved the ordered answer projection byte for byte and rebound only reading and locator metadata. With all three exact inputs bound, the scorer found that the v2 oracle preserves the older answer-object schema while D6 emits binding-shaped typed rows. No precommitted total adapter exists. It therefore returned `UNSCORABLE_ORACLE_SCHEMA_MISMATCH` with `score: null`. This is not a score of 0/4.
+3. **Ontology, pending corrected run.** Freeze a question-independent ontology task, retain its exact model-visible inputs, run one fresh session, return compiler diagnostics at most twice, and record one acceptance event for the compiled digest. Do not call this a general Malleus ontology builder or claim minimality.
+4. **Query binding, pending corrected run.** Bind the four questions to an adopter-owned surface after ontology compilation and before population. Keep the binding outside admission evidence and replay identity. An unbindable question is a result, not authorization to repair the ontology.
+5. **Population, pending corrected run.** Give a different fresh session the corrected ontology, selected reading, ontology-specific generic recipes, and four questions. Permit one structural retry, no content repair, and no fallback.
+6. **Commitment, pending corrected run.** Compile provenance, derive both checks, compose one change without query evidence, admit atomically, and retain exact refusal outcomes.
+7. **Replay and query, pending corrected run.** Dispose, reopen, replay, and query through the frozen adopter surface with the existing Python-level isolation counters.
+8. **Source-grounded inspection, pending corrected run.** Freeze the inspection method before query results exist. Codex prepares the evidence trace and preliminary findings without claiming human status. An identified human reviews the exact rows against independently selected source blocks and ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
 
 ### Fresh-session rules
 
@@ -114,10 +114,10 @@ Report exact observations, not statistical generalizations:
 - population structural outcome, retry count, and locator completeness;
 - accepted record and relation counts, plus natural and synthetic refusal counts;
 - ledger head, replay receipt equality, and graph equality after in-memory disposal, reopen, and replay;
-- four query outputs and the strict scoring outcome, including a typed unscorable result if the frozen schemas do not align;
+- four query outputs and per-question source-grounded inspection findings;
 - attempted query-time source reads, network calls, and embedding operations.
 
-The ontology is supported here only by structural population success and the returned query rows. The unavailable strict score prevents an answer-level adequacy claim. No evaluator rubric supplies one.
+The ontology is supported here only by compilation, structural population success, returned query rows, and the limits exposed by source-grounded inspection. No evaluator rubric, exact-match oracle, or aggregate score supplies an adequacy claim.
 
 ## Implementation constraints
 
@@ -125,15 +125,13 @@ The rebound Core baseline provides the private history and a pure domain-neutral
 
 Required fields fail loudly. The runner cannot synthesize a source digest, locator, type, relation endpoint, prior state, or answer when it is absent. Replacing an experimental mechanism removes its old active path. The retired OCR, recovery ontology, reviewer, fixed-closure query, and answer-encoding recipe remain under `paper-v4/retired/` for history and are excluded from tests and claims.
 
-## Execution result
+## Historical execution result and corrected-run status
 
-The fresh ontology and population both compiled on their first attempt. The model-authored population contains 14 records, 51 located assertions, and complete locator coverage over seven reading blocks. The two pre-admission checks were derived from retained inputs rather than asserted by the caller. After 19 source and evidence anchors, atomic admission appended a five-event suffix. Both checks were satisfied, the policy computed `ACCEPT`, and replay projected eight entities and six relations from the resulting 24-event history.
+The frozen v1 ontology and population both compiled on their first attempt. That run remains exact historical evidence, including its 14 records, 51 located assertions, 24-event history, replay equality, returned rows, and failed scorer. It is no longer the selected experiment because its ontology prompt was conditioned on the four questions.
 
-The run produced zero natural refusals. Focused mutations cover the five predeclared synthetic refusal classes: source identity, locator closure, type or endpoint conformance, stale prior state, and atomic grouped application.
+The corrected v2 run begins after the unchanged selected reading. Its outputs and refusals are pending.
 
-After the first in-memory projection was discarded, ledger reopen and replay reproduced the retained receipt and graph state. The four type-bound queries returned one, one, two, and one rows respectively. Python-level query guards recorded zero source-file reads, network calls, and embedding imports. These counters describe the instrumented Python process, not an operating-system sandbox.
-
-The strict score is unavailable. The frozen D1 v2 oracle and D6 query result use incompatible answer shapes, and no adapter was fixed before seeing the result. The retained score status is `UNSCORABLE_ORACLE_SCHEMA_MISMATCH` with a null score. The paper reports the returned rows and this evaluation failure; it does not turn the failure into 0/4 or claim exact answer agreement.
+The corrected run will report replay equality, exact query rows, guarded access counters, and source-grounded inspection. The frozen null score remains part of the v1 failure history and will not enter the selected result.
 
 ## Retained artifacts
 
@@ -170,8 +168,10 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Freeze a complete paper-specific transitive environment lock.
-2. Build and inspect the arXiv bundle, then perform the author review.
+1. Complete the corrected v2 run from question-independent ontology acquisition through source-grounded inspection.
+2. Obtain identified human ratification of the inspection record.
+3. Freeze a complete paper-specific transitive environment lock.
+4. Build and inspect the arXiv bundle, then perform the author review.
 
 ## Submission gate
 
@@ -183,13 +183,14 @@ Submit only when:
 - the initial in-memory graph is disposed, and reopen plus replay reproduces its state;
 - the source-free query package and Python-level access guards match the bounded isolation claim;
 - every reported answer comes from the replayed graph;
-- the oracle schema mismatch and null score are reported without an exact-match claim;
+- the frozen scorer failure is historical only, and the selected result uses source-grounded human review without a numeric score;
 - exact commands reproduce the retained result from declared dependencies;
 - related work and nonclaims match the evidence;
 - the manuscript is internally consistent and approximately 3,500 words.
 
 ## Plan changelog
 
+- 1.1.0, 2026-09-03: Applied D-0018. Preserved the completed question-conditioned run as history, selected a versioned rerun from ontology acquisition, removed competency questions and derived semantic targets from ontology construction, placed adopter query surfaces after replay identity, withdrew automated exact-match scoring, and selected source-grounded inspection with explicit human ratification.
 - 1.0.0, 2026-09-02: Applied D-0017. Rebound the isolated paper branch to exact Core `f9052b4`, accepted the published Small Shop correction tag as bounded research evidence, and accepted the later private composer as a private implementation seam. Preserved the PDF exclusion, five identities, frozen model inputs, and claim boundary.
 - 0.9.0, 2026-09-02: Applied author decisions D1 through D6. Moved to a pinned PDF text-layer reading, clean Core worktree, five-identity budget, fresh model-authored population, compiler-only ontology gate, one evaluator acceptance event, type-based query binding, and no fallback. Retired raster OCR, hand recovery, adequacy review, fixed graph closure, and answer-encoding recipes. D1 completed at the selected-reading digest above.
 - 0.8.0, 2026-09-02: Selected a hand-authored recovery ontology after a one-shot adequacy review and froze a fixed-closure query binding. Superseded by 0.9.0.

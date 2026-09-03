@@ -298,6 +298,14 @@ Decision: Supersede D-0014 only as to its Core coordinate. Keep the work isolate
 
 Source: Author decision via Malleus Core coordination, 2026-09-02
 
+### D-0018
+
+Status: accepted
+
+Decision: Preserve the completed question-conditioned document run at commit `746a48b430a881fb683056330438562185e2fabb` as immutable historical evidence and create a versioned corrected run from ontology acquisition. The corrected ontology session receives the selected reading and generic Malleus ontology-construction constraints, but no competency questions, answer key, question-derived semantic checklist, or instruction to produce a question-sufficient ontology. The four frozen questions enter only after ontology compilation, for adopter-owned query binding, population, and source-grounded evaluation. Query surfaces are replaceable descendants of replayed graph state and do not enter the KnowledgeChangeSet evidence closure, ledger identity, or replay identity. Retire automated exact-match scoring and active oracle consumption. Evaluate returned graph rows through a separately frozen source-grounded inspection method with no numeric score, no answer-key comparison, and no graph repair. Codex may prepare a preliminary evidence inspection, but only an identified human may ratify the final record as human-reviewed. Core owns the replay-derived knowledge graph and its general read seams; the paper owns its questions, adapters, evaluation method, and schemas. Do not add Cypher or another query engine unless the existing Core read seam proves insufficient.
+
+Source: Author architecture correction and boundary-2 selection via direct paper instruction and Malleus Core coordination, 2026-09-03.
+
 ## Raw findings
 
 ### E-0001, request boundary
