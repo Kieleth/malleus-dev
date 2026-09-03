@@ -5,19 +5,27 @@ from __future__ import annotations
 from copy import deepcopy
 from hashlib import sha256
 import json
+from pathlib import Path
 
 import pytest
 
 from malleus.ledger import canonical_json
+from research.ontology_driven_kg_realization.experiments.document_paper import (
+    query_score as subject,
+)
 from research.ontology_driven_kg_realization.experiments.document_paper.query_score import (
     CANDIDATE_SCHEMA,
     ORACLE_SCHEMA,
     QUERY_RESULT_SCHEMA,
     ScoringInputRefusal,
     candidate_from_query_result,
+    main,
     score_query_result,
     write_score_result,
 )
+
+
+ONTOLOGY_DIGEST = "sha256:" + "1" * 64
 
 
 def _canonical(value: object) -> bytes:
@@ -28,38 +36,79 @@ def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
 
 
-def _row(index: int, *, name: str | None = None) -> dict[str, object]:
+def _binding() -> bytes:
+    case = {
+        "ordinal": 1,
+        "source_record_type": "FictionalSource",
+        "relation_record_type": "FictionalRelation",
+        "relation_type": {"enum": "FictionalRelationType", "value": "CONNECTS"},
+        "target_record_type": "FictionalTarget",
+        "output_fields": {
+            "source": ["value"],
+            "relation": ["kind"],
+            "target": ["name"],
+        },
+    }
+    queries = []
+    for index in range(1, 5):
+        cases = [deepcopy(case)]
+        if index == 3:
+            second = deepcopy(case)
+            second["ordinal"] = 2
+            cases.append(second)
+        queries.append(
+            {
+                "id": f"NQ-CQ-0{index}",
+                "question_id": f"CQ-0{index}",
+                "cases": cases,
+            }
+        )
+    return _canonical(
+        {
+            "schema": "malleus.paper-v4.native-query-binding/v1",
+            "status": "FROZEN_BEFORE_POPULATION",
+            "queries": queries,
+        }
+    )
+
+
+def _row(index: int, *, ordinal: int = 1, value: object | None = None) -> dict:
     return {
-        "case_ordinal": 1,
-        "source": {"name": name or f"Source {index}"},
-        "relation": {"relation_type": "CONNECTS"},
+        "case_ordinal": ordinal,
+        "source": {"value": f"Source {index}" if value is None else value},
+        "relation": {"kind": "CONNECTS"},
         "target": {"name": "Target"},
         "witness": {
-            "relation_id": f"relation:{index}",
+            "relation_id": f"relation:{index}:{ordinal}",
             "source_id": f"source:{index}",
             "target_id": "target:1",
         },
     }
 
 
-def _query_result() -> bytes:
+def _query_result(binding: bytes, *, value: object | None = None) -> bytes:
+    queries = []
+    for index in range(1, 5):
+        rows = [_row(2, value=value), _row(1, value=value)]
+        if index == 1:
+            rows.append(_row(1, value=value))
+        queries.append(
+            {
+                "query_id": f"NQ-CQ-0{index}",
+                "question_id": f"CQ-0{index}",
+                "rows": rows,
+            }
+        )
     return _canonical(
         {
             "schema": QUERY_RESULT_SCHEMA,
             "inputs": {
-                "ontology_sha256": "sha256:" + "1" * 64,
-                "query_binding_sha256": "sha256:" + "2" * 64,
+                "ontology_sha256": ONTOLOGY_DIGEST,
+                "query_binding_sha256": _digest(binding),
                 "replay_receipt_sha256": "sha256:" + "3" * 64,
             },
             "graph_state_digest": "sha256:" + "4" * 64,
-            "queries": [
-                {
-                    "query_id": f"NQ-CQ-0{index}",
-                    "question_id": f"CQ-0{index}",
-                    "rows": [_row(2), _row(1), _row(1)],
-                }
-                for index in range(1, 5)
-            ],
+            "queries": queries,
             "forbidden_attempts": {
                 "embedding_import": 0,
                 "file_read": 0,
@@ -73,31 +122,57 @@ def _oracle(candidate: dict[str, object]) -> bytes:
     return _canonical({"schema": ORACLE_SCHEMA, "candidate": candidate})
 
 
-def test_exact_four_of_four_strips_witnesses_and_retains_duplicates() -> None:
-    query_result = _query_result()
-    candidate = candidate_from_query_result(query_result)
-    assert candidate["schema"] == CANDIDATE_SCHEMA
+@pytest.fixture
+def frozen(monkeypatch: pytest.MonkeyPatch) -> bytes:
+    binding = _binding()
+    monkeypatch.setattr(subject, "FROZEN_QUERY_BINDING_SHA256", _digest(binding))
+    monkeypatch.setattr(subject, "FROZEN_ONTOLOGY_SHA256", ONTOLOGY_DIGEST)
+    return binding
+
+
+def _freeze_score(
+    monkeypatch: pytest.MonkeyPatch, query_result: bytes, oracle: bytes
+) -> None:
+    monkeypatch.setattr(subject, "FROZEN_QUERY_RESULT_SHA256", _digest(query_result))
+    monkeypatch.setattr(subject, "FROZEN_ORACLE_SHA256", _digest(oracle))
+
+
+def test_exact_four_of_four_uses_binding_and_retains_duplicates(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    candidate = candidate_from_query_result(query_result, frozen)
     rows = candidate["questions"][0]["cases"][0]["rows"]
-    assert len(rows) == 3
-    assert rows[0] == rows[1]
+    assert candidate["schema"] == CANDIDATE_SCHEMA
+    assert len(rows) == 3 and rows[0] == rows[1]
     assert set(rows[0]) == {"source", "relation", "target"}
+    assert [case["case_ordinal"] for case in candidate["questions"][2]["cases"]] == [
+        1,
+        2,
+    ]
+    assert candidate["questions"][2]["cases"][1]["rows"] == []
 
     oracle = _oracle(candidate)
-    result = json.loads(score_query_result(query_result, oracle))
-    assert result["status"] == "SCORED"
+    _freeze_score(monkeypatch, query_result, oracle)
+    result = json.loads(score_query_result(query_result, oracle, frozen))
     assert result["score"] == {"exact_questions": 4, "total_questions": 4}
     assert result["inputs"] == {
         "oracle_sha256": _digest(oracle),
+        "query_binding_sha256": _digest(frozen),
         "query_result_sha256": _digest(query_result),
     }
 
 
-def test_one_question_mismatch_scores_three_of_four() -> None:
-    query_result = _query_result()
-    expected = deepcopy(candidate_from_query_result(query_result))
-    expected["questions"][2]["cases"][0]["rows"][0]["source"]["name"] = "Other"
+def test_one_question_mismatch_scores_three_of_four(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    expected = deepcopy(candidate_from_query_result(query_result, frozen))
+    expected["questions"][2]["cases"][0]["rows"][0]["source"]["value"] = "Other"
+    oracle = _oracle(expected)
+    _freeze_score(monkeypatch, query_result, oracle)
 
-    result = json.loads(score_query_result(query_result, _oracle(expected)))
+    result = json.loads(score_query_result(query_result, oracle, frozen))
     assert result["score"] == {"exact_questions": 3, "total_questions": 4}
     assert [item["exact"] for item in result["questions"]] == [
         True,
@@ -107,61 +182,208 @@ def test_one_question_mismatch_scores_three_of_four() -> None:
     ]
 
 
-def test_old_style_oracle_is_typed_unscorable() -> None:
-    query_result = _query_result()
-    old_oracle = (
-        json.dumps(
-            {
-                "schema": "malleus.paper-v4.answer-oracle/v1",
-                "answers": [
-                    {"question_id": "CQ-01", "answer": {"prose": "not parsed"}}
-                ],
-            },
-            indent=2,
-        ).encode("utf-8")
-        + b"\n"
+@pytest.mark.parametrize(("observed", "expected"), [(1, 1.0), (True, 1)])
+def test_json_types_do_not_compare_equal(
+    frozen: bytes,
+    monkeypatch: pytest.MonkeyPatch,
+    observed: object,
+    expected: object,
+) -> None:
+    query_result = _query_result(frozen, value=observed)
+    wanted = deepcopy(candidate_from_query_result(query_result, frozen))
+    wanted["questions"][0]["cases"][0]["rows"][0]["source"]["value"] = expected
+    wanted["questions"][0]["cases"][0]["rows"].sort(key=canonical_json)
+    oracle = _oracle(wanted)
+    _freeze_score(monkeypatch, query_result, oracle)
+
+    result = json.loads(score_query_result(query_result, oracle, frozen))
+    assert result["score"] == {"exact_questions": 3, "total_questions": 4}
+    assert result["questions"][0]["exact"] is False
+
+
+def test_old_exact_oracle_shape_is_unscorable_after_identity_checks(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    old_oracle = _canonical(
+        {
+            "schema": "malleus.paper-v4.answer-oracle/v1",
+            "answers": [{"question_id": "CQ-01", "answer": {"prose": "not parsed"}}],
+        }
     )
+    _freeze_score(monkeypatch, query_result, old_oracle)
 
-    result = json.loads(score_query_result(query_result, old_oracle))
-    assert result == {
-        "schema": "malleus.paper-v4.query-score/v1",
-        "status": "UNSCORABLE_ORACLE_SCHEMA_MISMATCH",
-        "inputs": {
-            "oracle_sha256": _digest(old_oracle),
-            "query_result_sha256": _digest(query_result),
-        },
-        "score": None,
-        "questions": [],
-    }
+    result = json.loads(score_query_result(query_result, old_oracle, frozen))
+    assert result["status"] == "UNSCORABLE_ORACLE_SCHEMA_MISMATCH"
+    assert result["score"] is None
 
 
-def test_malformed_candidate_raises_typed_refusal() -> None:
-    query_result = json.loads(_query_result())
+def test_fabricated_binding_refuses(frozen: bytes) -> None:
+    fabricated = json.loads(frozen)
+    fabricated["queries"][0]["cases"][0]["output_fields"]["source"].append("answer")
+    with pytest.raises(ScoringInputRefusal, match="binding digest differs"):
+        candidate_from_query_result(_query_result(frozen), _canonical(fabricated))
+
+
+def test_extra_candidate_role_field_refuses(frozen: bytes) -> None:
+    query_result = json.loads(_query_result(frozen))
+    query_result["queries"][0]["rows"][0]["source"]["answer"] = "fabricated"
+    with pytest.raises(ScoringInputRefusal, match="must contain exactly"):
+        candidate_from_query_result(_canonical(query_result), frozen)
+
+
+def test_oracle_missing_case_or_extra_role_is_unscorable(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    wanted = deepcopy(candidate_from_query_result(query_result, frozen))
+    wanted["questions"][2]["cases"].pop()
+    oracle = _oracle(wanted)
+    _freeze_score(monkeypatch, query_result, oracle)
+    result = json.loads(score_query_result(query_result, oracle, frozen))
+    assert result["status"] == "UNSCORABLE_ORACLE_SCHEMA_MISMATCH"
+
+    wanted = deepcopy(candidate_from_query_result(query_result, frozen))
+    wanted["questions"][0]["cases"][0]["rows"][0]["source"]["answer"] = "extra"
+    oracle = _oracle(wanted)
+    _freeze_score(monkeypatch, query_result, oracle)
+    result = json.loads(score_query_result(query_result, oracle, frozen))
+    assert result["status"] == "UNSCORABLE_ORACLE_SCHEMA_MISMATCH"
+
+
+@pytest.mark.parametrize("ordinal", [True, 1.0])
+def test_oracle_case_ordinal_requires_exact_integer(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch, ordinal: object
+) -> None:
+    query_result = _query_result(frozen)
+    wanted = deepcopy(candidate_from_query_result(query_result, frozen))
+    wanted["questions"][0]["cases"][0]["case_ordinal"] = ordinal
+    oracle = _oracle(wanted)
+    _freeze_score(monkeypatch, query_result, oracle)
+    result = json.loads(score_query_result(query_result, oracle, frozen))
+    assert result["status"] == "UNSCORABLE_ORACLE_SCHEMA_MISMATCH"
+
+
+def test_oracle_digest_drift_refuses(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    oracle = _oracle(candidate_from_query_result(query_result, frozen))
+    _freeze_score(monkeypatch, query_result, oracle)
+    with pytest.raises(ScoringInputRefusal, match="oracle digest differs"):
+        score_query_result(query_result, oracle + b"\n", frozen)
+
+
+def test_query_result_pending_refuses(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    query_result = _query_result(frozen)
+    oracle = _oracle(candidate_from_query_result(query_result, frozen))
+    monkeypatch.setattr(subject, "FROZEN_QUERY_RESULT_SHA256", None)
+    monkeypatch.setattr(subject, "FROZEN_ORACLE_SHA256", _digest(oracle))
+    with pytest.raises(ScoringInputRefusal, match="query result digest is PENDING"):
+        score_query_result(query_result, oracle, frozen)
+
+
+def test_malformed_candidate_and_result_binding_drift_refuse(frozen: bytes) -> None:
+    query_result = json.loads(_query_result(frozen))
     del query_result["queries"][0]["rows"][0]["target"]
+    with pytest.raises(ScoringInputRefusal, match="must contain exactly"):
+        candidate_from_query_result(_canonical(query_result), frozen)
 
-    with pytest.raises(ScoringInputRefusal, match="must contain exactly") as error:
-        score_query_result(_canonical(query_result), _oracle({}))
-    assert error.value.status == "SCORING_INPUT_REFUSAL"
+    query_result = json.loads(_query_result(frozen))
+    query_result["inputs"]["query_binding_sha256"] = "sha256:" + "9" * 64
+    with pytest.raises(ScoringInputRefusal, match="supplied binding"):
+        candidate_from_query_result(_canonical(query_result), frozen)
 
 
-def test_empty_answers_keep_bound_cases_and_forbidden_attempts_refuse() -> None:
-    query_result = json.loads(_query_result())
-    for query in query_result["queries"]:
-        query["rows"] = []
-    candidate = candidate_from_query_result(_canonical(query_result))
-    assert [
-        [case["case_ordinal"] for case in question["cases"]]
-        for question in candidate["questions"]
-    ] == [[1], [1], [1, 2], [1]]
-    assert all(
-        not case["rows"]
-        for question in candidate["questions"]
-        for case in question["cases"]
-    )
+@pytest.mark.parametrize("failure", ["pending", "invalid"])
+def test_cli_does_not_read_oracle_before_query_preflight(
+    frozen: bytes,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    failure: str,
+) -> None:
+    binding_path = tmp_path / "binding.json"
+    result_path = tmp_path / "query-result.json"
+    oracle_path = tmp_path / "oracle.json"
+    output_path = tmp_path / "score.json"
+    query_result = _query_result(frozen)
+    if failure == "invalid":
+        value = json.loads(query_result)
+        del value["queries"][0]["rows"][0]["target"]
+        query_result = _canonical(value)
+        monkeypatch.setattr(
+            subject, "FROZEN_QUERY_RESULT_SHA256", _digest(query_result)
+        )
+    else:
+        monkeypatch.setattr(subject, "FROZEN_QUERY_RESULT_SHA256", None)
+    binding_path.write_bytes(frozen)
+    result_path.write_bytes(query_result)
+    oracle_path.write_bytes(b"fictional oracle must remain unread")
 
-    query_result["forbidden_attempts"]["file_read"] = 1
-    with pytest.raises(ScoringInputRefusal, match="must be zero"):
-        candidate_from_query_result(_canonical(query_result))
+    reads = []
+    read_bytes = Path.read_bytes
+
+    def spy(path: Path) -> bytes:
+        reads.append(path)
+        return read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", spy)
+    with pytest.raises(ScoringInputRefusal):
+        main(
+            [
+                "--binding",
+                str(binding_path),
+                "--query-result",
+                str(result_path),
+                "--oracle",
+                str(oracle_path),
+                "--output",
+                str(output_path),
+            ]
+        )
+    assert oracle_path not in reads
+    assert not output_path.exists()
+
+
+def test_cli_read_errors_are_typed_and_name_role_and_path(
+    frozen: bytes, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    binding_path = tmp_path / "binding.json"
+    result_path = tmp_path / "query-result.json"
+    missing_oracle = tmp_path / "missing-oracle.json"
+    output_path = tmp_path / "score.json"
+    argv = [
+        "--binding",
+        str(binding_path),
+        "--query-result",
+        str(result_path),
+        "--oracle",
+        str(missing_oracle),
+        "--output",
+        str(output_path),
+    ]
+    query_result = _query_result(frozen)
+
+    with pytest.raises(
+        ScoringInputRefusal, match=f"cannot read query binding at {binding_path}"
+    ):
+        main(argv)
+    binding_path.write_bytes(frozen)
+
+    with pytest.raises(
+        ScoringInputRefusal, match=f"cannot read query result at {result_path}"
+    ):
+        main(argv)
+    result_path.write_bytes(query_result)
+    monkeypatch.setattr(subject, "FROZEN_QUERY_RESULT_SHA256", _digest(query_result))
+
+    with pytest.raises(
+        ScoringInputRefusal,
+        match=f"cannot read oracle at {missing_oracle}",
+    ):
+        main(argv)
 
 
 def test_score_writer_never_overwrites(tmp_path) -> None:
