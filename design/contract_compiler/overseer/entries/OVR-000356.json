@@ -1,0 +1,45 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:9f5e95a013410f93812cdfd2037b6243749b59aaf8b7cef33688385674b99b16",
+        "before_digest": "sha256:697f1b769c623baedf1c67be92623bc1dddbfc1bce29da49f2f925ac2da7b8e5",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:8878c87c183a5a81ca12fb75d7618c238685ad23e88d0abba78016a57cc0ffbc",
+  "entry_id": "OVR-000356",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1f5892bb13e9e7f742e59ef802eb14a6650d576adc98d2c53538f9b8c9b7f5dc",
+  "recorded_at": "2026-09-03T03:30:03Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e6eb4ebdc167eddd3fdd5698746d6a914a8bff19",
+      "type": "COMMIT"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 356,
+  "subject": {
+    "id": "detached-candidate-history-test-repair",
+    "type": "DOCUMENT"
+  },
+  "summary": "Make candidate-history tests independent of the source branch name.",
+  "why": "The clean publication checkout is detached. A synthetic candidate helper returned to a branch named main after exercising old commits, so four otherwise valid authority tests failed when that local branch did not exist. The helper now records the cloned source commit and returns to that exact commit. This changes no candidate-authority rule or production behavior."
+}

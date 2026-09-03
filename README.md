@@ -25,6 +25,14 @@ public compiler API or release.
 [Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
 graph result.](docs/index.md#inspect-the-evidence)
 
+The follow-on proof asks what happens when a source changes. Supplier order
+`B` says `1` unit of product `Y` at source occurrence `e4`, then `2` at `e7`.
+Malleus keeps both accepted states in one immutable history, marks the first as
+superseded, and projects only the `e7` state into the current graph. It also
+executes and retains the exact source-and-mapping and structural check receipts
+used for each change. This remains a private research runner, but its
+[sources, contracts, history, current graph, and limits are all inspectable](docs/index.md#correct-one-fact-without-rewriting-the-past).
+
 ## Why this exists
 
 I believe words have power. The closer we work with them, the more carefully we

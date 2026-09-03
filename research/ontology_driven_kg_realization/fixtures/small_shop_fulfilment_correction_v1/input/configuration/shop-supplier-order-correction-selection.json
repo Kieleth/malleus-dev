@@ -1,0 +1,17 @@
+{
+  "correction": {
+    "event_id": "e7",
+    "source_record_ordinal": 1,
+    "supersedes_event_id": "e4"
+  },
+  "initial": {
+    "event_id": "e4",
+    "source_record_ordinal": 0
+  },
+  "ordinal_base": 0,
+  "record_order": "SOURCE_ORDER",
+  "schema": "malleus.small-shop.correction-selection/v1",
+  "selection_id": "SHOP-SUPPLIER-ORDER-CORRECTION",
+  "source_member": "sources/supplier-order-history.jsonl",
+  "temporal_semantics": "ORDER_ONLY"
+}

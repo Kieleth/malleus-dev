@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 64765,
+      "path": "src/malleus/_contract_pipeline/knowledge.py",
+      "sha256": "sha256:172b4c6f0d93b5fc184d83e9a003341382cc36eefd9cd98b48f253abd7f22915"
+    },
+    {
+      "byte_length": 64713,
+      "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+      "sha256": "sha256:00710ab76772a6ca6bc9d842a37328b62bdf61719d4d295044042506e191b42f"
+    },
+    {
+      "byte_length": 13954,
+      "path": "docs/contract_compiler/index.md",
+      "sha256": "sha256:c78c228456264fb5a6ba584778f2610d2d36305e800cff46df574d7587265a11"
+    },
+    {
+      "byte_length": 27977,
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "sha256": "sha256:2b19143ac90c756840c3b375a10a9daca000f87498e8357b72ba94285386029b"
+    }
+  ],
+  "base_commit": "e94f45c74475948dfebdc89247bfb070de0b778d",
+  "checks": [
+    {
+      "check_id": "ccr11-private-composer-boundary",
+      "method": "Inspect the exact implementation and public package namespaces, then compare responsibilities with the existing admission and replay paths.",
+      "observed": "KnowledgeChangeHistory has one private compose_change_set method with six required keyword-only inputs. It returns a KnowledgeChangeSet, writes no ledger event, mutates no graph, and is absent from both public package namespaces. Source parsing, domain mapping, policy, protocol event construction, admission, and replay remain separate.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-private-composer-identity",
+      "method": "Compose against an independently assembled payload and vary explicit IDs, ordered closures, operations, valid time, and supersession.",
+      "observed": "The helper replays once, resolves only retained source and accepted evidence roles, preserves caller order, binds the current contract plus all five ledger and accepted-state coordinates, and round-trips through the strict canonical KnowledgeChangeSet parser. The composed bytes equal the independently assembled bytes.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-private-composer-lifecycle",
+      "method": "Exercise malformed and wrong-role inputs, an intervening ledger event, and a two-change correction with both change-set and operation-level supersession.",
+      "observed": "Malformed inputs and unsupported operations refuse through existing typed reasons. Missing or wrong-role retained inputs refuse as UNRETAINED_INPUT. A stale composition refuses atomically. A second change binds non-genesis acceptance and materialization heads, admits, and reopens with exact graph, record-history, change-set, and receipt parity.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-private-composer-tdd",
+      "method": "Write the composer behavior tests before production, run the focused history suite, rerun the frozen Small Shop population and correction seams, and check changed Python formatting and lint.",
+      "observed": "The RED run produced 15 expected missing-method failures. GREEN has 18 new composer selections and 80 total history tests passing. The unchanged Small Shop population and correction seams pass 71 tests against the checkout. Ruff format, Ruff check, and diff check pass.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-private-composer-independent-audit",
+      "method": "Submit the exact implementation, tests, and documentation diff to independent P0 through P3 review, repair all findings, and re-audit.",
+      "observed": "The first audit found one P2 coverage gap and three P3 gaps. Tests added post-acceptance coordinate and supersession coverage, the second accepted evidence role, and actual class-level privacy; documentation corrected the return type. The final audit found no P0 through P3 issue.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is private research code, not a public API, package export, or stable public wire contract.",
+    "The composer does not parse source bytes, choose domain records or time semantics, lower GraphRecipe, run checks or policy, build protocol events, admit changes, or project accepted state.",
+    "The current private KnowledgeChangeSet grammar supports only CREATE_ENTITY and CREATE_RELATION operations. General update, delete, and correction semantics remain future work.",
+    "The frozen Small Shop runners still assemble their own change sets so their published executor and evidence identities remain unchanged.",
+    "No Semantic Re-entry, external effect, general mapping grammar, another-language interpreter, or cross-language conformance is claimed.",
+    "The final repository-wide CI gate is separate from this scoped verification report."
+  ],
+  "recorded_at": "2026-09-03T04:16:04Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

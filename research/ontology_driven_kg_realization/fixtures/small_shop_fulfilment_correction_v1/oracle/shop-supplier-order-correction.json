@@ -1,0 +1,62 @@
+{
+  "case_id": "SHOP-SUPPLIER-ORDER-CORRECTION",
+  "excluded_claims": [
+    "ACTIONS_OR_EXTERNAL_EFFECTS",
+    "DEMAND_OR_SUPPLY_GAP",
+    "EVENT_NODE_REPRESENTATION",
+    "INVOICE_OR_PAYMENT_CORRECTION",
+    "SEMANTIC_REENTRY"
+  ],
+  "expected_current_fixture_state_key": "B@e7",
+  "expected_states": [
+    {
+      "attributes": {
+        "ordered_quantity": 1,
+        "product_code": "Y",
+        "source_occurrence_id": "e4",
+        "supplier_order_id": "B"
+      },
+      "class": "SupplierOrderState",
+      "fixture_state_key": "B@e4",
+      "valid_time": {
+        "kind": "ORDER_ONLY",
+        "value": "e4"
+      }
+    },
+    {
+      "attributes": {
+        "ordered_quantity": 2,
+        "product_code": "Y",
+        "source_occurrence_id": "e7",
+        "supplier_order_id": "B"
+      },
+      "class": "SupplierOrderState",
+      "fixture_state_key": "B@e7",
+      "valid_time": {
+        "kind": "ORDER_ONLY",
+        "value": "e7"
+      }
+    }
+  ],
+  "expected_supersession": {
+    "earlier_fixture_state_key": "B@e4",
+    "later_fixture_state_key": "B@e7"
+  },
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-supplier-order-correction-v1",
+  "metadata": {
+    "artifact_class": "PRIVATE_FIXTURE_LOCAL_TEST_EVIDENCE",
+    "authorship": "INDEPENDENTLY_HAND_AUTHORED",
+    "compiler_input": false,
+    "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+    "wire_format": "PRIVATE_UNSTABLE_NO_PUBLIC_SCHEMA"
+  },
+  "preservation": {
+    "baseline_ret010_record_ids": [
+      "O1",
+      "X1",
+      "contains:O1:X1"
+    ],
+    "expected_effect": "UNCHANGED"
+  }
+}

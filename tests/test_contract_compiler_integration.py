@@ -664,6 +664,7 @@ def _quiet_bell_history_candidate(
     )
     _git(repository, "config", "user.name", "CC-000 Test")
     _git(repository, "config", "user.email", "cc000@example.invalid")
+    source_head = _git(repository, "rev-parse", "HEAD")
     _git(repository, "checkout", "--detach", base_commit)
 
     authority_relative = (
@@ -740,7 +741,7 @@ def _quiet_bell_history_candidate(
         "head_tree": _git(repository, "rev-parse", f"{head_commit}^{{tree}}"),
         "state": "ELIGIBLE",
     }
-    _git(repository, "checkout", "--detach", "main")
+    _git(repository, "checkout", "--detach", source_head)
     return repository, candidate
 
 

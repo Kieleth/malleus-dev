@@ -1,0 +1,80 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 282,
+      "path": "conformance/contract_compiler/v0/historic_wire/project.json",
+      "sha256": "sha256:0808d77254479bfedc7b67790182644db22f71c29b90bd61f0356bb232deeb21"
+    },
+    {
+      "byte_length": 802,
+      "path": "conformance/contract_compiler/v0/historic_wire/recon-ledger.jsonl",
+      "sha256": "sha256:c3720e2031a51d9f27b22ef0cd4b19438858fa062423d97382b66e3e38ab264e"
+    },
+    {
+      "byte_length": 118,
+      "path": "conformance/contract_compiler/v0/historic_wire/graph-snapshot.json",
+      "sha256": "sha256:8b33574f3ce5fbd67450d414c5e10a4272e1f8abd647104ddd07f7c794b592a6"
+    },
+    {
+      "byte_length": 4073,
+      "path": "conformance/contract_compiler/v0/historic_wire/protocol-ledger.jsonl",
+      "sha256": "sha256:821565b78c3d3c8c744e03781eed8129a7e37a5033aaa97aa01e556d34b5469f"
+    },
+    {
+      "byte_length": 3272,
+      "path": "conformance/contract_compiler/v0/historic_wire/corpus.json",
+      "sha256": "sha256:57fdcf335e5dcdd06c0e99e732cb75e929fa4211e39fa82d41b11f2551900a35"
+    },
+    {
+      "byte_length": 5848,
+      "path": "conformance/contract_compiler/v0/historic_wire/observations.json",
+      "sha256": "sha256:ee9b2f11438a15ad3d4243addd250b03afb0769f71fb2ff13b43d7c1d3b03ada"
+    },
+    {
+      "byte_length": 37033,
+      "path": "scripts/contract_compiler_historic_wire.py",
+      "sha256": "sha256:fedce3245745292a7d733609130be7b73e1da8b5fb493f55f44f644f69eb33b6"
+    },
+    {
+      "byte_length": 19249,
+      "path": "tests/test_contract_compiler_historic_wire.py",
+      "sha256": "sha256:e95f589a22e1652b9a8643a3246efab3359a847db9286a703eabcf6861eb1843"
+    }
+  ],
+  "base_commit": "92ae0af8cb65a46aba0431372e3573a5642c2622",
+  "checks": [
+    {
+      "check_id": "ccx04-reader-source-remeasurement",
+      "method": "Compare all ten reader implementation and ontology files at current HEAD byte for byte with commit 5e4ec73e2dd38ddfabfe62ae543719f6849a922e, tree 6d26e263431aeabc08926e465656e6bc3ea8761a.",
+      "observed": "All ten files match. accepted.py changed earlier at 388b610; assent.py and ontology/assent.yaml changed at 5e4ec73. The other seven bound inputs remain unchanged from the prior measurement.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-fresh-raw-observations",
+      "method": "Render the five historic-wire subjects twice under the remeasured reader and compare their semantic outcomes with the retained prior observation.",
+      "observed": "The raw outcomes are unchanged: two Recon acceptances, one graph refusal, and two protocol artifacts not reached after the enclosing protocol-ledger refusal. Only the reader provenance block changed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-input-preservation",
+      "method": "Compare all four frozen input lengths and SHA-256 digests before and after the fresh measurement and retain the original CC-X04 evidence reports unchanged.",
+      "observed": "All four input files and corpus.json retain their exact prior bytes. The original CC-X04 worker and completion reports remain intact as historical evidence.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccx04-focused-remeasurement",
+      "method": "Run the focused historic-wire suite, retained-observation checker, evidence-byte verifier, scoped Ruff, ledger and integration validators, and diff check.",
+      "observed": "All 25 focused tests passed. Retained observations matched a fresh render, all eight evidence artifacts verified, and the containing overseer revision records the remaining repository governance and static gates.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a fresh measurement of current reader behavior, not a compatibility decision, migration, reader implementation, or release claim.",
+    "The reader coordinate names the first commit containing this exact ten-file source set. Current bytes are checked mechanically against that source set before observation.",
+    "The same five raw outcomes persisted across the source changes. That observation does not claim future behavior will remain unchanged.",
+    "Any later change to one of the ten bound reader inputs requires another fresh forward-only measurement."
+  ],
+  "recorded_at": "2026-09-03T03:10:35Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-X04"
+}

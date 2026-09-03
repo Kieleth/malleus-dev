@@ -246,6 +246,113 @@ This proves deterministic derivation under the named inputs and policy. It does
 not prove that the warehouse statement is true in the world. Evidence,
 acceptance, and truth remain different claims.
 
+### Correct one fact without rewriting the past
+
+The initial proof creates a graph. The next question is harder: what should
+happen when a source later says something different?
+
+If software overwrites `1` with `2`, it can show the selected latest value but
+the path that produced it is gone. If it merely stores both values, the graph
+appears to claim that both are current. The bounded correction proof does
+neither. It keeps the earlier state in the history, records exactly what
+replaced it, and derives a current graph containing only the replacement.
+
+The controlled source contains two rows from the Small Shop example:
+
+```json
+{"event_id":"e4","product_code":"Y","quantity":1,"supplier_order_id":"B"}
+{"event_id":"e7","product_code":"Y","quantity":2,"supplier_order_id":"B"}
+```
+
+These are controlled transcriptions of supplier order `B` in Table 1 of the
+same [Fahland chapter](https://doi.org/10.1007/978-3-031-08848-3_9). The
+publication establishes their order, not timestamps, so the fixture preserves
+only `e4` before `e7`. It does not invent dates.
+
+The run starts from an empty graph and accepts three knowledge changes into one
+58-event history:
+
+1. Create the existing `O1`, `X1`, and `OrderContainsUnit(O1, X1)` baseline.
+2. Record supplier order `B`, product `Y`, quantity `1`, from `e4`.
+3. Record supplier order `B`, product `Y`, quantity `2`, from `e7`, explicitly
+   superseding the `e4` record.
+
+The current graph is therefore:
+
+```text
+SalesOrder("O1", order_number="O1")
+InventoryUnit("X1", product_code="X")
+OrderContainsUnit("contains:O1:X1", O1 -> X1)
+SupplierOrderState("supplier-order-state:B:e7", B, Y, quantity=2)
+```
+
+The old `B@e4` state has not disappeared. The history records that it began at
+`e4`, ended at `e7`, and was replaced by `B@e7`. A query for the graph
+immediately after the accepted `e4` change returns quantity `1`; the current
+graph returns quantity `2`.
+
+This run closes a gap in the first proof. For every proposed change, an exact
+source-and-mapping check reloads the retained source row and mapping, derives
+the expected operation, valid-time label, and supersession, then compares that
+result with the sealed knowledge change. A structurally legal substitution of
+quantity `999` for source quantity `1` refuses. A separate structural check
+proves that the exact operations apply to the prior accepted state. Both checks
+name the digest of the exact Python executor that ran them, and their canonical
+receipts are retained before the policy can accept the change.
+
+Receipt retention, proposal, checks, verdict, and graph application form one
+failure-atomic ledger batch for each change. If any later step refuses, neither
+the receipts nor a partial change remains in the history. Reopening the JSONL
+history regenerates the same receipt, explanation, and graph bytes without
+reading the ambient source, mapping, machine, policy, or check files.
+
+The answer key stays independent. It states by hand that `B@e4` is replaced by
+`B@e7` and that `O1`, `X1`, and their relation remain unchanged. Runtime does
+not read it. Tests compare the completed replay with it afterward.
+
+Run the complete bounded proof with one command:
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.correction.run --output build/small-shop-correction
+```
+
+The command writes `history.jsonl`, `receipt.json`, `graph.json`, and
+`explanation.json`. The generated history is intentionally not checked in;
+the three smaller canonical evidence files are.
+
+| Stage | Exact bytes | What they establish |
+| --- | --- | --- |
+| Source | [manifest](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/manifest.json), [e4/e7 JSONL](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl), [selection](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/configuration/shop-supplier-order-correction-selection.json) | Exact source bytes, source order, zero-based row selection, and bounded attribution. |
+| Domain meaning | [ontology extension](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/tbox/small-shop-correction.yaml) | The typed `SupplierOrderState` shape added to the existing Small Shop vocabulary. |
+| Executable contracts | [mapping](../research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json), [machine](../research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json), [policy](../research/ontology_driven_kg_realization/experiments/small_shop/correction/policy.json), [run program](../research/ontology_driven_kg_realization/experiments/small_shop/correction/run.json) | Exact source selection, operations, lifecycle, required checks, and verdict rule. |
+| Executed checks | [source-and-mapping contract](../research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/source-mapping-conformance.json), [structural contract](../research/ontology_driven_kg_realization/experiments/small_shop/correction/checks/structural-conformance.json), [executor](../research/ontology_driven_kg_realization/experiments/small_shop/correction/run.py) | The named check semantics and exact fixture entrypoint bytes used to produce retained receipts. |
+| Independent expectation | [hand-authored answer key](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/oracle/shop-supplier-order-correction.json) | Expected current state, history, supersession, and preserved baseline. It is never execution input. |
+| Recorded result | [receipt](../research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/receipt.json), [current graph](../research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/graph.json), [explanation](../research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence/explanation.json), [tests](../research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py) | The exact replay result, its provenance chain, and the positive and refusal cases. |
+
+The compiled ontology fact set has identity
+`sha256:0af9eb01495af3c7ed063cb8ca340b63b475eb72feeb2f81fe9be48720fd515e`.
+The whole effective contract, including machine and policy, has identity
+`sha256:5710e7464c0b737c6275bbf662bf797c920f0eb3d169341dde5734a5eab3669a`.
+The 58-event ledger ends at
+`sha256:01d1ea5ab6276fe878a71fa67922bdf10f032d9dd3c6dc22f9f15cc2faf1c4aa`.
+The current graph has digest
+`sha256:52652ddb7425562e36cd7f430a3c483b761067320a4eba30b8195fabcebe1645`.
+
+This is still a research-local proof, not a stable public interface. The
+fixture runner contains substantial low-level protocol assembly that should
+become a generic composer only after another consumer proves the right seam.
+The run does not provide a general mapping language or a general valid-time
+query. Its graph-at-change result means the state immediately after one
+accepted change. It also excludes Semantic Re-entry, demand reasoning,
+actions, effects, invoice correction, and Event-node projection. Full graph
+snapshots per accepted change are adequate for this small proof but need a
+delta or prefix-replay strategy before large histories. The retained executor
+identity covers the fixture entrypoint, not the imported Core, RET-010, Python,
+or environment dependency closure. A portable executor closure remains future
+work. This fixture aligns transition-level and record-level supersession, but
+Malleus has not yet selected a general law saying whether those two relations
+must always align.
+
 ### Small Shop is the proving ground, not the protocol
 
 This example selects Malleus's optional semantic-history profile. The reusable
@@ -264,6 +371,13 @@ The generic machine and history code does not know what an order, inventory
 unit, or warehouse event is. Those words and values live in the fixture's
 ontology and versioned, hashed artifacts.
 
+The correction support follows the same boundary. Generic history code knows
+only that one typed record may replace another compatible typed record under
+one shared valid-time kind. This fixture separately binds its `ORDER_ONLY`
+labels to source order. `SupplierOrderState`, `B`, `Y`, `e4`, `e7`, and their
+source mapping remain fixture data. Another adopter can use the same history
+rule with different nouns, sources, checks, mappings, and graph shape.
+
 Another domain supplies its own ontology, sources, mapping, checks, policy, and
 representation. A future frontend can replace LinkML only if conformance proves
 that it produces the same neutral meaning. This slice designs that seam but
@@ -273,16 +387,21 @@ provenance demonstrated here.
 
 ### What this proves, and what it does not
 
-The recorded completion gate contains 140 focused passing tests, strict Sphinx
+The recorded initial-population completion gate contains 140 focused passing tests, strict Sphinx
 HTML, doctest, and link checking, and an independent clean audit. It proves that
 the selected pieces compose for one initial, create-only population case. It
 also proves tested refusals are atomic and that the derived graph is disposable.
 
+The follow-on correction seam passes 208 focused tests across the frozen
+initial proof, correction inputs and answer key, generic record history, exact
+source-and-mapping checks, atomic refusal, and reopen. It proves one bounded
+record correction without changing the frozen initial fixture bytes.
+
 This was a focused research gate, not a release gate. The full repository and
 package suites were deliberately outside the milestone. Still missing are a
 supported public compiler API and command, a general mapping contract, broad
-ontology support, executed and retained check implementations, update and
-correction behavior, external effects and observation, public bitemporal
+ontology support, a supported interface for executed and retained check implementations,
+general update and correction behavior, external effects and observation, public bitemporal
 queries, Semantic Re-entry, and a second-language interpreter proving
 cross-language parity.
 
