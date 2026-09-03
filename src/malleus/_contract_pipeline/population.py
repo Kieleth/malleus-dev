@@ -49,6 +49,11 @@ _ROOT_FIELDS = frozenset(
 )
 _PUBLIC_FAMILIES = frozenset(family for family, _ in RECORD_FAMILIES)
 _ADMITTED_FAMILIES = ("entities", "relations")
+_OPERATION_TYPES = (
+    ("entities", "CREATE_ENTITY"),
+    ("relations", "CREATE_RELATION"),
+)
+_OPERATION_TYPE_BY_FAMILY = MappingProxyType(dict(_OPERATION_TYPES))
 _GAP_KINDS = frozenset(
     {
         "AGGREGATE_ONLY",
@@ -79,6 +84,9 @@ class PopulationPlanRefusalReason(str, Enum):
     MALFORMED_PROFILE_REFERENCE = "MALFORMED_PROFILE_REFERENCE"
     MALFORMED_SUPERSESSION = "MALFORMED_SUPERSESSION"
     SOURCES_REQUIRED = "SOURCES_REQUIRED"
+    SUPERSESSION_FORK = "SUPERSESSION_FORK"
+    SUPERSESSION_TYPE_MISMATCH = "SUPERSESSION_TYPE_MISMATCH"
+    SUPERSESSION_VALID_TIME_MISMATCH = "SUPERSESSION_VALID_TIME_MISMATCH"
     UNDERIVED_FIELD = "UNDERIVED_FIELD"
     UNKNOWN_FAMILY = "UNKNOWN_FAMILY"
     UNKNOWN_GAP_KIND = "UNKNOWN_GAP_KIND"
@@ -121,26 +129,31 @@ class _BaseRecord:
     family: str
     record: Mapping[str, object]
     change_set_id: str
+    operation_type: str
+    record_type: str
+    valid_from: KnowledgeValidTime
 
 
 @dataclass(frozen=True, slots=True)
 class PopulationBaseState:
-    """Immutable active graph records paired with their creating changes."""
+    """Immutable active records and the complete historical ID namespace."""
 
     _members: tuple[_BaseRecord, ...]
+    _historical_record_ids: frozenset[str]
 
     @classmethod
     def empty(cls) -> PopulationBaseState:
-        return cls(())
+        return cls((), frozenset())
 
     @classmethod
     def from_replay(cls, replay: KnowledgeHistoryReplay) -> PopulationBaseState:
         if not isinstance(replay, KnowledgeHistoryReplay):
             raise TypeError("a knowledge-history replay is required")
         records = replay.graph.export_records()
+        history = replay.record_history
         active_history = {
             record_id: member
-            for record_id, member in replay.record_history.items()
+            for record_id, member in history.items()
             if member.superseded_by is None
         }
         exported = {
@@ -156,9 +169,13 @@ class PopulationBaseState:
                     family=family,
                     record=_freeze(record),
                     change_set_id=active_history[record_id].change_set_id,
+                    operation_type=active_history[record_id].operation.operation_type,
+                    record_type=active_history[record_id].operation.record_type,
+                    valid_from=active_history[record_id].valid_from,
                 )
                 for record_id, (family, record) in exported.items()
-            )
+            ),
+            frozenset(history),
         )
 
     def _records(self) -> dict[str, list[dict[str, object]]]:
@@ -175,6 +192,9 @@ class PopulationBaseState:
         return {
             str(member.record["id"]): member.change_set_id for member in self._members
         }
+
+    def _by_id(self) -> dict[str, _BaseRecord]:
+        return {str(member.record["id"]): member for member in self._members}
 
 
 @dataclass(frozen=True, slots=True)
@@ -313,6 +333,13 @@ def _references(
     return tuple(references)
 
 
+def _aware_time(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("instant valid time must carry a timezone")
+    return parsed
+
+
 def _valid_time(raw: object) -> KnowledgeValidTime:
     reason = PopulationPlanRefusalReason.UNSUPPORTED_VALID_TIME
     value = _object(raw, reason, "valid time must be an object")
@@ -328,11 +355,9 @@ def _valid_time(raw: object) -> KnowledgeValidTime:
         raise _refuse(reason, f"unsupported valid-time kind: {kind}")
     if kind == "INSTANT":
         try:
-            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            _aware_time(text)
         except ValueError as error:
             raise _refuse(reason, "instant valid time is malformed") from error
-        if parsed.tzinfo is None or parsed.utcoffset() is None:
-            raise _refuse(reason, "instant valid time must carry a timezone")
     return KnowledgeValidTime(kind, text)
 
 
@@ -485,6 +510,7 @@ def compile_population_plan(
             )
 
     by_id: dict[str, dict[str, object]] = {}
+    family_by_id: dict[str, str] = {}
     for family in _ADMITTED_FAMILIES:
         for raw_record in records.get(family, []):
             if not isinstance(raw_record, dict):
@@ -522,7 +548,17 @@ def compile_population_plan(
                     f"duplicate record ID: {record_id}",
                 )
             by_id[record_id] = raw_record
+            family_by_id[record_id] = family
 
+    duplicate_historical_ids = set(by_id) & base_state._historical_record_ids
+    if duplicate_historical_ids:
+        duplicate_id = sorted(duplicate_historical_ids)[0]
+        raise _refuse(
+            PopulationPlanRefusalReason.DUPLICATE_RECORD_ID,
+            f"record ID already exists in history: {duplicate_id}",
+        )
+
+    base_by_id = base_state._by_id()
     base_changes = base_state._changes()
     for relation in records.get("relations", []):
         assert isinstance(relation, dict)
@@ -574,12 +610,24 @@ def compile_population_plan(
             "superseded record ID is required",
         )
         superseded_by_record[record_id] = prior_id
+    prior_ids: set[str] = set()
     for prior_id in superseded_by_record.values():
-        if prior_id not in base_changes:
+        if prior_id not in base_by_id:
+            if prior_id in base_state._historical_record_ids:
+                raise _refuse(
+                    PopulationPlanRefusalReason.SUPERSESSION_FORK,
+                    f"record supersession forks prior record: {prior_id}",
+                )
             raise _refuse(
                 PopulationPlanRefusalReason.UNKNOWN_SUPERSESSION,
                 f"unknown superseded record: {prior_id}",
             )
+        if prior_id in prior_ids:
+            raise _refuse(
+                PopulationPlanRefusalReason.SUPERSESSION_FORK,
+                f"record supersession forks prior record: {prior_id}",
+            )
+        prior_ids.add(prior_id)
 
     KnowledgeGraph.from_records(
         contract_view,
@@ -589,6 +637,18 @@ def compile_population_plan(
             excluded_base_record_ids=frozenset(superseded_by_record.values()),
         ),
     )
+    for record_id, prior_id in superseded_by_record.items():
+        prior = base_by_id[prior_id]
+        planned_type = by_id[record_id]["type"]
+        planned_operation_type = _OPERATION_TYPE_BY_FAMILY[family_by_id[record_id]]
+        if (
+            prior.operation_type != planned_operation_type
+            or prior.record_type != planned_type
+        ):
+            raise _refuse(
+                PopulationPlanRefusalReason.SUPERSESSION_TYPE_MISMATCH,
+                f"record supersession type differs from prior record: {prior_id}",
+            )
 
     derived: set[tuple[str, tuple[str, ...]]] = set()
     derivations = _array(
@@ -716,6 +776,20 @@ def compile_population_plan(
         )
 
     valid_time = _valid_time(root["valid_time"])
+    for prior_id in superseded_by_record.values():
+        prior_time = base_by_id[prior_id].valid_from
+        if prior_time.kind != valid_time.kind:
+            raise _refuse(
+                PopulationPlanRefusalReason.SUPERSESSION_VALID_TIME_MISMATCH,
+                f"replacement valid-time kind differs from prior record: {prior_id}",
+            )
+        if prior_time.kind == "INSTANT" and _aware_time(
+            valid_time.value
+        ) <= _aware_time(prior_time.value):
+            raise _refuse(
+                PopulationPlanRefusalReason.SUPERSESSION_VALID_TIME_MISMATCH,
+                f"replacement contradicts prior valid time: {prior_id}",
+            )
     canonical_plan_bytes = _canonical(root)
     evidence_ids = (
         f"profile:{profile_id}",
@@ -743,10 +817,7 @@ def compile_population_plan(
 
     operation_by_record: dict[str, str] = {}
     operations: list[KnowledgeOperation] = []
-    for family, operation_type in (
-        ("entities", "CREATE_ENTITY"),
-        ("relations", "CREATE_RELATION"),
-    ):
+    for family, operation_type in _OPERATION_TYPES:
         for record in records.get(family, []):
             assert isinstance(record, dict)
             record_id = record["id"]
