@@ -599,6 +599,129 @@ def test_invalid_later_retention_event_rolls_back_the_whole_anchor_batch(
     assert "plan:neutral:1:gaps" not in retained_ids
 
 
+@pytest.mark.parametrize("artifact", ["profile", "plan", "gaps"])
+def test_retention_event_identifier_substitution_refuses_before_any_write(
+    tmp_path: Path,
+    artifact: str,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "missing type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+    expected = {
+        "profile": ("profile:state-version", _canonical(NEUTRAL_PROFILE_DATA)),
+        "plan": ("plan:neutral:1", _canonical(plan)),
+        "gaps": ("plan:neutral:1:gaps", _gaps_bytes(plan)),
+    }
+    events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    expected_id, content = expected[artifact]
+    events[expected_id] = _artifact_event(f"misbound:{artifact}", content)
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=events,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_no_domain_change_refuses_a_misbound_plan_event_without_writing(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["records"] = {"entities": [], "relations": []}
+    plan["derivations"] = []
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "missing type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+    events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    events["plan:neutral:1"] = _artifact_event(
+        "misbound:no-domain-change-plan", _canonical(plan)
+    )
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=events,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_retention_event_identifier_permutation_refuses_before_any_write(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    profile_id = "profile:state-version"
+    plan_id = "plan:neutral:1"
+    profile_bytes = _canonical(NEUTRAL_PROFILE_DATA)
+    plan_bytes = _canonical(plan)
+    events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    events[profile_id] = _artifact_event(plan_id, profile_bytes)
+    events[plan_id] = _artifact_event(profile_id, plan_bytes)
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=events,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
+    assert _ledger_bytes(history) == ledger_before
+
+
 def test_no_domain_change_retains_evidence_without_composing_a_change_set(
     tmp_path: Path,
 ) -> None:
