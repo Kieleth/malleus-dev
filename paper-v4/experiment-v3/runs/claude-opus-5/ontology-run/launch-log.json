@@ -17,8 +17,15 @@
     },
     {
       "ordinal": 3,
+      "outcome": "HARNESS_FAILURE_NO_OUTPUT",
+      "detail": "Agent terminated before producing any message: API error HTTP 529 Overloaded (server-side), request id req_011CegmYkvysTvbaVVB9114J, model sent to the API claude-opus-5.",
+      "model_output": "ABSENT",
+      "counts_as_attempt": false
+    },
+    {
+      "ordinal": 4,
       "outcome": "PENDING",
-      "detail": "Fresh session re-dispatched with the identical spawn message."
+      "detail": "Fresh session re-dispatched with the identical spawn message after a ten-minute pause."
     }
   ]
 }
