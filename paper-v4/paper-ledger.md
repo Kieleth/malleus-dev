@@ -1353,3 +1353,21 @@ Verification: 66 combined population, runner, frozen-path, recipe, and query-bin
 Core boundary: The existing replay receipt and `KnowledgeGraph` read methods support all frozen cases. No missing Core seam or Core capability request exists at this boundary.
 
 Impact: Query binding and generic construction are frozen before any v2 population exists. The next fresh session may see the questions, ontology, selected reading, recipes, and population grammar, but it may not see this binding, an answer key, prior population, manuscript, ledger, or earlier model transcript.
+
+### E-0088, v2 population acquisition inputs frozen
+
+Date: 2026-09-03
+
+Sources: D-0018; `paper-v4/experiment-v2/population-run/task.md`; its input manifest and three public input copies; private selected reading `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`; `population_acquisition.py`; and focused tests.
+
+Observation: The model-visible task is 6,036 bytes at `sha256:00cca7d26cd37260fd3bf056f55e96f6562cad25f9d1c951d2fac43f916825c2`. Its declared read set contains only the task, selected ontology, generic recipe library, four frozen questions, and selected reading. The ontology, recipe, and question copies match their frozen sources byte for byte. The task forbids network access, delegation, other repository files, prior paper artifacts, query binding, and answer material. It permits one output file and no other write.
+
+Population boundary: The producer must use opaque ordered ids with no answer-bearing text. Names may denote records but may not carry a count, location, direction, relationship, causal clause, epistemic qualifier, or any fact lacking a typed property or relation. The task explicitly forbids substituting an observation method for a campaign, one instrument for a network, invented individuals for an aggregate count, or unqualified causal edges for a proposed mechanism. A sparse graph is allowed. A model refusal is a terminal negative result, not input to ontology compilation or a reason to retry.
+
+Mechanical guard: A new structural classifier distinguishes a valid proposal envelope from a terminal model refusal before compilation. It refuses malformed JSON, unknown schemas, malformed refusal objects, and any record id outside the exact ordered `urn:malleus:paper-v4:v2:record:NNN` sequence. The later ontology compiler remains responsible for values, fields, locators, types, and endpoints. Domain meaning is not reviewed or repaired at this stage.
+
+Coordinate correction: A read-only driver audit found that the first recipe conformance test recompiled the accepted ontology under a different root locator. Its validated facts were unchanged, but its contract and compile-receipt bytes differed. The test now uses the accepted locator `paper-v4:mid-ocean-ridge-geodynamics` and byte-compares both recompilation outputs to the frozen accepted contract `sha256:292f8777ea24ad06de82c70bd87f1c049eb457fd34b742e2d5db12dd0e6233ae` and receipt `sha256:d4595bf34eeed2aaa743e18703eadee7324c89bc2f257c88379405279ea62c69`.
+
+Verification: 17 acquisition-freeze, classifier, recipe, and exact-coordinate tests pass. Ruff and `git diff --check` pass. No v2 population output exists at this entry.
+
+Impact: The input boundary is frozen before the new context-free producer runs. Any structural defect may be returned once to the same session. A semantic omission or poor result is retained unchanged and receives no fallback.

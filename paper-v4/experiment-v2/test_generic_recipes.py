@@ -36,6 +36,7 @@ LIBRARY = ROOT / "paper-v4/experiment-v2/generic-recipes.stottr"
 DOMAIN = "https://malleus.dev/domains/mid-ocean-ridge-geodynamics/"
 RECIPE = "https://malleus.dev/paper-v4/experiment-v2/recipe/"
 PROFILE = "https://malleus.dev/graph-recipe/profile/v0"
+ROOT_LOCATOR = "paper-v4:mid-ocean-ridge-geodynamics"
 
 ENTITY_TYPES = (
     "ObservationMethod",
@@ -86,7 +87,7 @@ def _source(locator: str, source: bytes) -> ExactSource:
     return ExactSource(locator, source, _digest(source))
 
 
-def _compilation():
+def _exact_compilation():
     ontology = (RUN / "ontology-02.yaml").read_bytes()
     malleus = (RUN / "inputs/malleus.yaml").read_bytes()
     linkml_types = (
@@ -95,10 +96,14 @@ def _compilation():
         .read_bytes()
     )
     return compile_exact_ontology(
-        root=_source("paper-v4:v2-marine-ontology", ontology),
+        root=_source(ROOT_LOCATOR, ontology),
         malleus=_source("malleus", malleus),
         linkml_types=_source("linkml:types", linkml_types),
-    ).compilation
+    )
+
+
+def _compilation():
+    return _exact_compilation().compilation
 
 
 def _registry() -> OntologyRegistry:
@@ -392,6 +397,15 @@ def test_library_contains_no_document_answers_or_population_identity() -> None:
         "record-id:",
     ):
         assert forbidden not in lowered
+
+
+def test_recipe_contract_recompiles_the_exact_accepted_ontology_coordinate() -> None:
+    result = _exact_compilation()
+
+    assert result.validated_contract_bytes == (
+        RUN / "compilation/validated-contract.json"
+    ).read_bytes()
+    assert result.receipt_bytes == (RUN / "compilation/compile-receipt.json").read_bytes()
 
 
 def test_all_recipes_compile_and_form_one_valid_fictional_plan() -> None:
