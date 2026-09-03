@@ -1,0 +1,40 @@
+{
+  "schema": "malleus.paper-v4.environment-verification/v1",
+  "status": "PASS",
+  "completed_at": "2026-09-03T09:43:30Z",
+  "environment": {
+    "python": "3.12.9",
+    "implementation": "CPython",
+    "cache_tag": "cpython-312",
+    "machine": "arm64",
+    "operating_system": "macOS 15.7.9",
+    "pip": "26.0.1",
+    "isolated_venv": true,
+    "package_count": 89,
+    "hashed_install_succeeded": true
+  },
+  "reading": {
+    "block_count": 186,
+    "page_count": 11,
+    "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "reproduction": {
+    "transaction_time": "2026-09-03T09:11:42Z",
+    "public_results_byte_equal": true,
+    "private_ledger_byte_equal": true,
+    "private_ledger_sha256": "sha256:df5327be6abfabfb49342a0663185d81b8a8056211108ca759ea7cac2901e828",
+    "result_sha256": {
+      "experiment-result.json": "sha256:bd0361d7fb01554db87723f725ce01eeeb42739bf556c5f8717c52245408c9bc",
+      "population-plan.json": "sha256:fa1194aa705c36ff6ef06bc3d7bcadbeb4297d44c95a3558e5946fb97dbc09e6",
+      "population-provenance.json": "sha256:2d4ce493d7d757e648cc782ff835e555554bfae73c9876a85170e74948ce5b03",
+      "query-result.json": "sha256:78cc2c8dc42dc10a4f46d41c95e7c751134460bc1147619e067a8f5822b0be7a",
+      "replay-receipt.json": "sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796"
+    }
+  },
+  "focused_gate": {
+    "passed": 184,
+    "failed": 0,
+    "duration_seconds": 7.02
+  },
+  "boundary": "The verification created a new virtual environment from the identified local CPython binary, installed only the hashed lock, ran checked-out code through PYTHONPATH, reproduced the exact retained bytes, and ran the complete document-paper plus active v2 paper-local tests. It did not reproduce the operating system or interpreter binary."
+}

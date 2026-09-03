@@ -1,0 +1,11 @@
+# Install the runtime and focused paper gate. Run the checked-out source through
+# PYTHONPATH=.:src so the lock never embeds a machine-local editable path.
+pip==26.0.1
+hatchling==1.31.0
+linkml==1.11.1
+linkml-runtime==1.11.1
+networkx==3.6.1
+pypdf==6.16.2
+pytest==9.1.1
+PyYAML==6.0.3
+tzdata==2026.3

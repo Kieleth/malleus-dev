@@ -4,7 +4,7 @@ Version: 1.1.0
 
 Date: 2026-09-03
 
-Status: corrected run complete through Codex preliminary inspection under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification remains pending.
+Status: corrected run complete through Codex preliminary inspection and clean environment reproduction under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification and arXiv bundle inspection remain pending.
 
 ## Objective
 
@@ -64,7 +64,7 @@ The experiment freezes exactly five identity groups:
 4. Ledger head `sha256:7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b` plus replay receipt `sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796`.
 5. Adopter query binding digest: `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`, excluded from the KnowledgeChangeSet evidence closure.
 
-Source manifests, transcripts, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
+Source manifests, acquisition records, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
 
 ## Experiment
 
@@ -89,10 +89,11 @@ The retired answer key remains sealed historical material and leaves the active 
 6. **Commitment, complete.** Compiled 47 provenance assertions, derived both checks, composed one 13-operation change without query evidence, and admitted it atomically to a 23-event history after both checks were satisfied.
 7. **Replay and query, complete.** The runner disposed the live objects, reopened the ledger, reproduced the graph, protocol state, and receipt, then queried the receipt-derived graph through the frozen adopter surface. The four row counts are `[0, 2, 4, 0]`; all guarded source-file, network, and embedding-import attempts are zero.
 8. **Source-grounded inspection, preliminary complete and human ratification pending.** The protocol was frozen before corrected query output. A separate fresh Codex session inspected the exact rows against the selected reading without ontology, population, provenance, replay receipt, oracle, score, manuscript, or paper-ledger access. Its preliminary labels are `NOT_EVALUABLE/NOT_RESPONSIVE`, `SUPPORTED/PARTIAL`, `SUPPORTED/RESPONSIVE`, and `NOT_EVALUABLE/NOT_RESPONSIVE` for CQ1 through CQ4. These labels are not paper evidence until Luis independently reviews the rows and source blocks, then ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
+9. **Environment reproduction, complete.** A platform-specific lock fixes 89 distributions for CPython 3.12 on macOS arm64 and requires archive hashes. A new virtual environment installed only that lock, then reproduced the selected reading, all five public result files, and the private ledger byte for byte from the exact checkout. The complete document-paper and active v2 paper-local gate passed 184 tests. The lock identifies but does not vendor the interpreter or operating system; the ignored PDF and source checkout remain required inputs.
 
 ### Fresh-session rules
 
-Ontology and population stages use new sessions with no earlier paper conversation. Each receives only its declared inputs. The session may write only the requested output. Network access is disabled. The exact model-visible files are copied into one retained input directory before the run. Observable model and service coordinates are recorded once; unobservable provider settings are named as limitations.
+Ontology and population stages use new sessions with no earlier paper conversation. Each receives a declared input set and is instructed to access only those files, make no network call or delegation, and write only the requested output. This is a task boundary over a shared workspace and tool surface, not an operating-system sandbox. The exact model-visible files are copied into one retained input directory before the run. Observable producer and task coordinates are recorded; unobservable provider settings are named as limitations.
 
 ### Negative cases
 
@@ -142,6 +143,7 @@ Public repository material:
 - four competency questions;
 - pinned dependency configuration and text-layer extractor;
 - selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, Codex preliminary review record, ratification guide, and focused tests;
+- platform-specific input constraints, hash-checked transitive lock, clean-verification record, and guard tests;
 - concise reproduction instructions and claim-to-artifact index.
 
 Private or evaluator-only material:
@@ -150,7 +152,7 @@ Private or evaluator-only material:
 - selected reading text;
 - source-bearing semantic ledger;
 - sealed historical answer key and rebound locators, plus the retired typed score result;
-- provider transcripts when redistribution is inappropriate.
+- private source-review material needed for human ratification.
 
 ## Manuscript shape
 
@@ -168,9 +170,8 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Obtain identified human ratification of the inspection record.
-2. Freeze a complete paper-specific transitive environment lock.
-3. Build and inspect the arXiv bundle, then perform the author review.
+1. Build and inspect the arXiv bundle.
+2. Obtain identified human ratification of the inspection record and perform the final author review.
 
 ## Submission gate
 

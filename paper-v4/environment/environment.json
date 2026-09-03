@@ -1,0 +1,49 @@
+{
+  "schema": "malleus.paper-v4.environment/v1",
+  "status": "FROZEN_AND_CLEAN_VERIFIED",
+  "core": {
+    "commit": "f9052b4783100203318d4a21a0236f3851218af1",
+    "tree": "39a1ab48b913abc26f975873792c639ee690e811"
+  },
+  "target": {
+    "python": "3.12.9",
+    "python_build": "Anaconda, Inc.; Feb 6 2025; Clang 14.0.6",
+    "implementation": "CPython",
+    "cache_tag": "cpython-312",
+    "operating_system": "macOS",
+    "operating_system_version": "15.7.9",
+    "darwin": "24.6.0",
+    "machine": "arm64",
+    "resolver": "uv 0.11.2",
+    "installer": "pip 26.0.1"
+  },
+  "resolution": {
+    "python_platform": "aarch64-apple-darwin",
+    "python_version": "3.12",
+    "exclude_newer": "2026-09-03T09:11:42Z",
+    "package_count": 89,
+    "archive_hashes_required": true,
+    "requirements_in_sha256": "sha256:4c6eee755717731e217576cf5e901c181dab4c32fd849060ebe72ebf584e6d02",
+    "retained_versions_sha256": "sha256:0aac78a7349c6662cb05736f325cb92adfda96a32c3ddd48a8e9f2787efdd1e9",
+    "lock_sha256": "sha256:80161cf50e9748d8abd7bac6d0a8bc1c949957d8784a6e001da999f7e17451a0"
+  },
+  "source_execution": {
+    "installation": "python -m pip install --require-hashes -r paper-v4/environment/requirements-cp312-macos-arm64.lock",
+    "source_path": "PYTHONPATH=.:src",
+    "reason": "Run the checked-out paper code without embedding a machine-local editable path in the lock."
+  },
+  "excluded_as_unneeded": [
+    "anthropic",
+    "malleus-code-lab",
+    "openai",
+    "pytest-cov",
+    "ruff",
+    "twine"
+  ],
+  "limitations": [
+    "The interpreter binary and operating system are identified but not vendored.",
+    "The lock permits the resolver-listed archives for each pinned release rather than naming one wheel per package.",
+    "The document experiment imports private research source that the distributable package excludes, so reproduction requires the exact checkout on PYTHONPATH.",
+    "The ignored publisher PDF remains a required reproduction input."
+  ]
+}
