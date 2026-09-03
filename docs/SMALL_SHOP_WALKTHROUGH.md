@@ -97,6 +97,29 @@ produce this fixed sequence:
 | 4 | `change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4` | `B`, product `Y`, quantity `1`, occurrence `e4` |
 | 5 | `change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7` | `B`, product `Y`, quantity `2`, occurrence `e7`, superseding the `e4` record |
 
+### What `genesis` means here
+
+`genesis` is a fixture name, not a formal `KnowledgeChangeSet` role. The first
+change is recognizable because it is the first accepted population over an
+empty graph. Its ledger base already contains 49 contract, protocol, and source
+events, and it is not a complete seed snapshot: the invoices and the initial
+`B@e4` supplier-order state enter through later changes in test-ladder order.
+
+Small Shop therefore selects a domain graph model and a fixture-specific
+state-versioning pattern, not a reusable Small Shop ledger vocabulary. Its
+mappings use labels such as `INITIAL_DOMAIN_STATE`, `CORRECTION`, and
+`FIXTURE_ORCHESTRATED_EXISTING_BASE`, but those labels remain mapping metadata.
+They are not carried into or interpreted by Core's generic change-set format.
+Core sees typed entity and relation creation, valid time, dependencies, and
+explicit supersession.
+
+Another adopter must choose whether its domain history is made of state
+versions, business events, claims, REA commitments, or another model, then bind
+that choice through its ontology, mappings, identities, time, and supersession
+rules. Core supplies the generic history laws; it does not choose the domain
+change semantics. A content-addressed domain-history profile remains future
+work if a real consumer needs portable, queryable change categories.
+
 Each change's source closure is bundle-wide: eight baseline members, six
 settlement members, or five correction members. The retained check receipt's
 `selected_records` field is the narrower row-level trace used to recompute that

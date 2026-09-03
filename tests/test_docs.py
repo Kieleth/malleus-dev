@@ -2427,6 +2427,12 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     for claim in (
         "Only the ontology closure is compiled into neutral contract facts.",
         "five immutable `KnowledgeChangeSet` values",
+        "`genesis` is a fixture name, not a formal `KnowledgeChangeSet` role.",
+        "it is not a complete seed snapshot",
+        "a fixture-specific state-versioning pattern, not a reusable Small Shop ledger vocabulary",
+        "They are not carried into or interpreted by Core's generic change-set format.",
+        "Core supplies the generic history laws; it does not choose the domain change semantics.",
+        "A content-addressed domain-history profile remains future work",
         "Each change's source closure is bundle-wide",
         "`selected_records` identifies the rows used by the mapping",
         "All 19 fixture source members",
