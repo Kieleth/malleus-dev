@@ -1183,3 +1183,117 @@ Recipe-profile refusal and guard: The first arbitrary invocation run showed that
 Provenance boundary: Neither `AssemblyPlan` nor the private `KnowledgeChangeSet` stores locators inline. D3 must produce a canonical provenance map from population record and property assertions to reading blocks and recipe emissions. The change set will bind that map through its evidence closure. The manuscript and plan no longer claim inline operation locators.
 
 Impact: The construction vocabulary is frozen without document facts. D3 may now ask a fresh model session to supply the population and locators.
+
+### E-0076, fresh population succeeds on its first attempt
+
+Date: 2026-09-02
+
+Sources: `paper-v4/experiment/population-run/population.json`, `paper-v4/experiment/results/population-plan.json`, `paper-v4/experiment/results/population-provenance.json`, and the active population compiler and tests.
+
+Observation: A fresh population session returned one proposal, and the proposal compiled unchanged. No structural diagnostic or retry was needed, and the session did not refuse. The population contains 14 records: eight entities and six relations. Its provenance map contains 51 located assertions over seven selected-reading blocks. Every population-supplied record, property value, and relation endpoint has a selected-reading block locator. Ontology-fixed recipe constants and dependency emissions are not source-located population claims.
+
+Boundary: This is structural and provenance success, not an evaluator adequacy judgment. No human-authored population, fallback, content review, or alternate candidate entered the run.
+
+Impact: D3 is complete. The first and only population proposal proceeds to the declared checks and commitment boundary.
+
+### E-0077, orchestrator derives both pre-admission checks
+
+Date: 2026-09-02
+
+Sources: `research/ontology_driven_kg_realization/experiments/document_paper/experiment_run.py` and `test_experiment_run.py`.
+
+Observation: The paper-local orchestrator recompiles the exact selected ontology and population, then performs two verifications before it can construct check events. `source-locator-integrity` joins every population assertion to the selected reading, provenance record, plan member, emission id, expansion path, emitted fact, operation value, and relation endpoint. `structural-conformance` checks the plan against the compiled contract and ontology. Each verification produces a retained check contract and a result receipt that binds its exact inputs. Only a completed verification can produce `SATISFIED`; callers cannot supply that outcome. The policy requires both receipts and computes `ACCEPT` only when both are satisfied.
+
+Guard: Focused mutations cover source identity, locator membership, provenance semantics and lineage, plan identity, JSON value type, plan-to-contract alignment, stale prior state, unsupported operations, and failed grouped application. No failed pre-admission case retains a check result in history or creates the ledger; provenance and source failures construct no check result. Admission failures cannot leave a partial append.
+
+Impact: The two accepted check outcomes are mechanically derived experiment evidence, not fixture-supplied verdicts. This remains a paper-local orchestrator, not a public check framework or stable API.
+
+### E-0078, one accepted change replays to the same graph
+
+Date: 2026-09-02
+
+Sources: private `paper-v4-run/semantic-ledger.jsonl`, `paper-v4/experiment/results/experiment-result.json`, and `paper-v4/experiment/results/replay-receipt.json`.
+
+Observation: The runner first wrote 19 bootstrap anchors: 18 `ARTIFACT_REGISTERED` events and one `SOURCE_REGISTERED` event. Atomic admission then appended a five-event suffix comprising `KNOWLEDGE_CHANGE_SET_RETAINED`, `CHANGE_PROPOSED`, two `CHECK_RECORDED` events, and `VERDICT_RECORDED`. Both checks were `SATISFIED`, and the declared policy derived `ACCEPT`. The resulting 24-event source-bearing history projects eight entities and six relations. Its ledger head is `sha256:a069c3ded48b3da1c6f022bab8601b16173ac90c64c812a4c74435b3085e43b6`. The canonical replay receipt is `sha256:6fccc6048d3444b9cbe4ea2bdca3101a7642a4e036a852d26e8fa21fbe03fb29`; its graph-state digest is `sha256:e6ea3a3b5db5a7361dc87d955d89591097b7b8052d7a93fdce7b77c3db22f12a`.
+
+Replay: The runner discarded the first derived in-memory graph object, disposed of the history object, reopened the private ledger from disk, and replayed it. Reopen reproduced the same ledger head, canonical receipt, graph digest, eight entities, and six relations. No external graph database was created or deleted.
+
+Impact: The fourth manuscript identity group is resolved by the ledger head and replay receipt above. The graph-state digest remains a receipt field and raw evidence coordinate; it is not a sixth manuscript identity group.
+
+### E-0079, query rehydration fails once and gains a contract-identity guard
+
+Date: 2026-09-02
+
+Sources: the first source-free query attempt, `query_replay.py`, and `test_query_replay.py`.
+
+Failure: The first query attempt refused because the graph digest after typed rehydration differed from the replay receipt. Entity and relation records were unchanged. The mismatch came from the ontology coordinate inside the canonical graph snapshot: `KnowledgeGraph.from_records` used the selected ontology registry identity, while private replay had bound the graph state to the compiled validated-fact-set identity.
+
+Root cause: The source-free replay receipt carried the validated-fact-set coordinate, but the first query rehydrator neither required nor restored it before recomputing graph identity. Comparing the two canonical digests therefore mixed two legitimate but different ontology coordinates.
+
+Fix and guard: Query rehydration now requires a lowercase `validated_fact_set_sha256` in the receipt, reconstructs a typed graph from the source-free snapshot, restores that contract coordinate in the canonical snapshot used for identity, and then compares the result with the receipt's graph-state digest. Hard tests refuse a missing or malformed contract coordinate and any real graph-state mutation. A focused test reproduces the contract-view identity case.
+
+Impact: The retained query result was generated only after this repair. The fix reconstructs replay's identity semantics; it does not waive graph equality or substitute an answer.
+
+### E-0080, four queries run over source-free replay state
+
+Date: 2026-09-02
+
+Source: `paper-v4/experiment/results/query-result.json` at `sha256:0782f2892d242ec7c48bd243b4bfce67df89f990f7c1e30af75af2f0d8fa6909`.
+
+Observation: The four frozen type-based queries returned row counts `[1, 1, 2, 1]` in question order. The result binds the selected ontology, query binding, replay receipt, and graph-state digest. The query invocation received the source-free replay receipt with its graph snapshot, the selected ontology, the retained Malleus import needed for ontology validation, and the frozen query binding. It did not receive the PDF, selected reading, source-bearing ledger, model transcripts, or answer oracle.
+
+Isolation observation: Python-level guards were active around query execution. Recorded counters are `file_read: 0`, `network: 0`, and `embedding_import: 0`. These counters support the bounded observation that this run queried replayed typed state without consulting document text or an embedding index. They do not establish an operating-system sandbox or a general replacement for retrieval-augmented generation.
+
+Impact: Query execution is complete. The query-result digest is retained internal evidence, not a sixth manuscript identity group.
+
+### E-0081, stale oracle coordinate refuses before scoring
+
+Date: 2026-09-02
+
+Sources: E-0070, the retired evaluator-only v1 oracle, the corrected evaluator-only D1 v2 oracle, `query_score.py`, and `test_query_score.py`.
+
+Failure: The first scoring attempt refused at the oracle identity guard because the scorer still named `sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571`. That coordinate belongs to the unrebound v1 oracle. It does not contain the selected-reading coordinate or D1 value-to-block locators.
+
+Evidence-backed correction: E-0070 recorded the locator-rebinding requirement before population, query execution, and result inspection. The corrected D1 v2 oracle binds selected reading `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17` and contains 22 value locators; all 22 resolve to its 186-block reading. The v1 and v2 ordered semantic projections are byte-identical. The projection is canonical JSON of `[{'question_id': entry['question_id'], 'answer': entry['answer']} for entry in oracle['answers']]`; it is 889 bytes at `sha256:f02daa92b21574acd54d3196a983243ce5a7c920e5b4101f798c1b02e2a857ec`. The complete corrected private oracle is `sha256:6f1564887aa908ac2cd0ff9f06e823ccf936ca18d24595252a0c04a6c0cc09b4`.
+
+Guard: The scorer now requires the exact D1 v2 coordinate and has a hard test that excludes the retired v1 coordinate. The correction changes locator and reading metadata, not the four frozen answer objects. It occurred after the query result was committed, but its content is mechanically constrained by the pre-result E-0070 record and byte equality above.
+
+Impact: The refusal prevented scoring against the wrong private artifact. The oracle remains evaluator-only and is not promoted into the five manuscript identity groups.
+
+### E-0082, strict scoring is typed unscorable, not zero
+
+Date: 2026-09-02
+
+Source: `paper-v4/experiment/results/score.json` at `sha256:40ab6ce26591233b810d96c34b2624a3a50c6aa5b8d4f38429fd7a9a62cd8eb0`.
+
+Observation: The scorer accepted the exact frozen query result `sha256:0782f2892d242ec7c48bd243b4bfce67df89f990f7c1e30af75af2f0d8fa6909`, query binding `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`, and D1 v2 oracle `sha256:6f1564887aa908ac2cd0ff9f06e823ccf936ca18d24595252a0c04a6c0cc09b4`. The oracle uses the legacy four answer-object shape, while D6 query output uses cases and typed source, relation, and target rows derived from the frozen binding. No total adapter between these shapes was fixed before the result.
+
+Result: `status` is `UNSCORABLE_ORACLE_SCHEMA_MISMATCH`, `score` is null, and the per-question result array is empty. This is not 0/4. No post hoc normalization, prose parser, partial-field score, or answer-value recipe was added.
+
+Impact: Scoring is complete as a negative evaluation result. The manuscript may report the exact query rows and the schema failure, but it cannot claim exact answer match or ontology adequacy from the oracle.
+
+### E-0083, focused active harness passes after typed scoring
+
+Date: 2026-09-02
+
+Source: retained project-venv test run at branch commit `b4e0d24` after document admission, query-result freeze, oracle-coordinate correction, and typed scoring.
+
+Observation: The focused active paper harness passed 107 tests. The run covered reading and ontology guards, generic recipes, model-authored population compilation and provenance, orchestrated checks, atomic admission, reopen and replay, source-free graph rehydration, query binding and execution, strict input identities, the D1 v2 oracle coordinate, and the typed unscorable result.
+
+Boundary: This is the focused active engineering result, not the final clean publication gate. Manuscript reconciliation, a final reproduction run, and the arXiv bundle remain open.
+
+Impact: The executed document vertical is mechanically covered through query output. The final paper gate must include the corrected oracle-coordinate and typed-score tests as well as manuscript and bundle checks.
+
+### E-0084, retained-environment reproduction and focused paper gate pass
+
+Date: 2026-09-02
+
+Sources: a new ignored run under `private/paper-v4-reproduction-01/`; the six committed files under `paper-v4/experiment/results/`; the retained private `paper-v4-run/semantic-ledger.jsonl`; the active paper test suite; and the current manuscript, plan, and ledger diff.
+
+Observation: The public reading command regenerated 186 blocks across 11 pages at selected-reading identity `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`. A new frozen run, replay query, and strict score then regenerated all six committed result files byte for byte. The regenerated private semantic ledger also matched the retained ledger byte for byte at file digest `sha256:5779039b218a00cdc278c317f34cd7ec4b1e07997999ed8126411a7d99d253c9`.
+
+Gate: The focused active paper harness passed 107 tests in 4.18 seconds with bytecode and pytest cache writes disabled. Ruff passed the active paper experiment and document-run modules. `git diff --check`, the five-identity scan, ignored-PDF and ignored-private checks, result-digest checks, and a primary-source citation audit also passed. The reconciled manuscript is 3,602 words.
+
+Boundary: The byte comparison used the retained Python 3.12.9 project environment, not a newly installed environment. Exact observed top-level versions are recorded in Appendix A, but `pyproject.toml` does not freeze every transitive dependency. This is the final focused paper-local gate for this boundary, not the arXiv bundle gate or a package release.
+
+Impact: The executed vertical and lean manuscript are ready for an isolated paper commit. A complete paper-specific transitive lock plus arXiv source and render inspection remain open.
