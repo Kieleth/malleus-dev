@@ -33,7 +33,7 @@ from .document_run import (
 )
 from .graph_recipe_change_set import canonical_assembly_plan_bytes
 from .ontology_compile import ExactSource, compile_exact_ontology
-from .population_compile import compile_population
+from .population_compile import PopulationRecipeProfile, compile_population
 
 
 _XSD = "http://www.w3.org/2001/XMLSchema#"
@@ -97,6 +97,7 @@ class PaperExperimentConfiguration:
     generic_recipe_sha256: str
     ontology_acceptance_sha256: str
     protocol_machine_sha256: str
+    population_recipe_profile: PopulationRecipeProfile
     record_type_iris: tuple[str, ...]
     contract_id: str
     ontology_locator: str
@@ -104,6 +105,10 @@ class PaperExperimentConfiguration:
     linkml_types_locator: str
 
     def __post_init__(self) -> None:
+        if type(self.population_recipe_profile) is not PopulationRecipeProfile:
+            raise TypeError(
+                "population_recipe_profile must be one PopulationRecipeProfile"
+            )
         for field in (
             "result_schema",
             "contract_id",
@@ -295,6 +300,7 @@ def _verify_source_provenance(
     provenance_bytes: bytes,
     plan: Any,
     contract: Any,
+    provenance_schema: str,
 ) -> _Verification:
     population = json.loads(population_bytes)
     provenance = _strict_json(provenance_bytes, "population provenance")
@@ -302,7 +308,7 @@ def _verify_source_provenance(
     if (
         set(provenance)
         != {"assertions", "ontology_sha256", "plan_sha256", "reading_sha256", "schema"}
-        or provenance["schema"] != "malleus.paper-v4.population-provenance/v1"
+        or provenance["schema"] != provenance_schema
         or population["reading_sha256"] != reading_identity
         or provenance["reading_sha256"] != reading_identity
         or provenance["ontology_sha256"] != population["ontology_sha256"]
@@ -697,6 +703,7 @@ def run_paper_experiment(
         logical_contract=contract,
         generic_recipe_bytes=generic_recipe_bytes,
         selected_reading_bytes=selected_reading_bytes,
+        recipe_profile=configuration.population_recipe_profile,
     )
     plan_bytes = canonical_assembly_plan_bytes(population.plan)
     entities = sum(
@@ -737,6 +744,7 @@ def run_paper_experiment(
             population.provenance_map_bytes,
             population.plan,
             contract,
+            configuration.population_recipe_profile.provenance_schema,
         )
     )
     structure_check = _make_check(

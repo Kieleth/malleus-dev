@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -17,6 +18,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.ontology
 )
 from research.ontology_driven_kg_realization.experiments.document_paper.population_compile import (
     PopulationCompileRefusal,
+    PopulationRecipeProfile,
     compile_population,
 )
 from tests.contract_compiler.pareto.test_validated_contract import _trusted_types
@@ -74,6 +76,31 @@ RECORD_TYPES = tuple(
         "HypothesisExplainsRelation",
     )
 )
+V1_PROFILE_FIELDS = {
+    "population_schema": "malleus.paper-v4.population/v1",
+    "selected_reading_schema": "malleus.paper-v4.text-layer-reading/v1",
+    "provenance_schema": "malleus.paper-v4.population-provenance/v1",
+    "graph_recipe_profile_iri": "https://malleus.dev/graph-recipe/profile/v0",
+    "recipe_namespace": "https://malleus.dev/paper-v4/recipe/",
+    "member_namespace": "https://malleus.dev/paper-v4/population/member/",
+    "record_type_templates": (
+        ("Campaign", "NamedEntity-1.0.0"),
+        ("Region", "NamedEntity-1.0.0"),
+        ("EarthquakePopulation", "NamedEntity-1.0.0"),
+        ("PrimaryMeltPopulation", "NamedEntity-1.0.0"),
+        ("ObservingSystem", "ObservingSystem-1.0.0"),
+        ("BoundedQuantity", "BoundedQuantity-1.0.0"),
+        ("MechanismHypothesis", "MechanismHypothesis-1.0.0"),
+        ("DataAcquisitionRelation", "DataAcquisitionRelation-1.0.0"),
+        ("SpatialAssociationRelation", "SpatialAssociationRelation-1.0.0"),
+        (
+            "QuantityCharacterizationRelation",
+            "QuantityCharacterizationRelation-1.0.0",
+        ),
+        ("HypothesisExplainsRelation", "HypothesisExplainsRelation-1.0.0"),
+    ),
+}
+V1_PROFILE = PopulationRecipeProfile(**V1_PROFILE_FIELDS)
 
 
 def _digest(source: bytes) -> str:
@@ -157,7 +184,14 @@ def _bytes(population: dict[str, object]) -> bytes:
     ).encode("utf-8")
 
 
-def _compile(compiler_inputs, population=None, *, recipes=RECIPES, reading=READING):
+def _compile(
+    compiler_inputs,
+    population=None,
+    *,
+    recipes=RECIPES,
+    reading=READING,
+    recipe_profile=V1_PROFILE,
+):
     compilation, contract = compiler_inputs
     return compile_population(
         _bytes(_population() if population is None else population),
@@ -165,11 +199,201 @@ def _compile(compiler_inputs, population=None, *, recipes=RECIPES, reading=READI
         logical_contract=contract,
         generic_recipe_bytes=recipes,
         selected_reading_bytes=reading,
+        recipe_profile=recipe_profile,
     )
 
 
 def _codes(error: PopulationCompileRefusal) -> set[str]:
     return {item.code for item in error.diagnostics}
+
+
+@pytest.mark.parametrize("field", tuple(V1_PROFILE_FIELDS))
+def test_population_recipe_profile_has_no_implicit_field(field: str) -> None:
+    fields = dict(V1_PROFILE_FIELDS)
+    del fields[field]
+
+    with pytest.raises(TypeError, match=field):
+        PopulationRecipeProfile(**fields)
+
+
+def test_population_recipe_profile_rejects_duplicate_record_type_mapping() -> None:
+    fields = dict(V1_PROFILE_FIELDS)
+    fields["record_type_templates"] = V1_PROFILE.record_type_templates + (
+        ("Campaign", "OtherTemplate-1.0.0"),
+    )
+
+    with pytest.raises(ValueError, match="duplicate record types: Campaign"):
+        PopulationRecipeProfile(**fields)
+
+
+def test_population_recipe_profile_rejects_unmapped_population_type(
+    compiler_inputs,
+) -> None:
+    fields = dict(V1_PROFILE_FIELDS)
+    fields["record_type_templates"] = tuple(
+        mapping
+        for mapping in V1_PROFILE.record_type_templates
+        if mapping[0] != "Campaign"
+    )
+
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        _compile(
+            compiler_inputs,
+            recipe_profile=PopulationRecipeProfile(**fields),
+        )
+    assert _codes(refusal.value) == {"POPULATION_RECORD_TYPE_UNMAPPED"}
+
+
+def test_population_recipe_profile_rejects_unknown_contract_mapping(
+    compiler_inputs,
+) -> None:
+    fields = dict(V1_PROFILE_FIELDS)
+    fields["record_type_templates"] = V1_PROFILE.record_type_templates + (
+        ("ImaginedType", "ImaginedType-1.0.0"),
+    )
+
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        _compile(
+            compiler_inputs,
+            recipe_profile=PopulationRecipeProfile(**fields),
+        )
+    assert _codes(refusal.value) == {"POPULATION_PROFILE_RECORD_TYPE_UNKNOWN"}
+
+
+def test_population_recipe_profile_rejects_abstract_contract_mapping(
+    compiler_inputs,
+) -> None:
+    compilation, contract = compiler_inputs
+    campaign = contract.record_for_symbol("Campaign")
+    abstract_campaign = replace(campaign, abstract=True, legal_operation_kind=None)
+    record_types = tuple(
+        abstract_campaign if record == campaign else record
+        for record in contract.record_types
+    )
+    abstract_contract = replace(
+        contract,
+        record_types=record_types,
+        constructible_record_types=tuple(
+            record.type_iri for record in record_types if not record.abstract
+        ),
+    )
+
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        compile_population(
+            _bytes(_population()),
+            compiled_ontology=compilation,
+            logical_contract=abstract_contract,
+            generic_recipe_bytes=RECIPES,
+            selected_reading_bytes=READING,
+            recipe_profile=V1_PROFILE,
+        )
+    assert _codes(refusal.value) == {
+        "POPULATION_PROFILE_RECORD_TYPE_NONCONSTRUCTIBLE"
+    }
+
+
+def test_population_recipe_profile_rejects_unknown_template_mapping(
+    compiler_inputs,
+) -> None:
+    fields = dict(V1_PROFILE_FIELDS)
+    fields["record_type_templates"] = tuple(
+        (record_type, "MissingTemplate-1.0.0")
+        if record_type == "Campaign"
+        else (record_type, template)
+        for record_type, template in V1_PROFILE.record_type_templates
+    )
+
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        _compile(
+            compiler_inputs,
+            recipe_profile=PopulationRecipeProfile(**fields),
+        )
+    assert _codes(refusal.value) == {"POPULATION_PROFILE_TEMPLATE_UNKNOWN"}
+
+
+def test_population_schema_profile_field_is_enforced(compiler_inputs) -> None:
+    schema = "example.population/v2"
+    profile = replace(V1_PROFILE, population_schema=schema)
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        _compile(compiler_inputs, recipe_profile=profile)
+    assert _codes(refusal.value) == {"POPULATION_SCHEMA_INVALID"}
+
+    population = _population()
+    population["schema"] = schema
+    assert _compile(compiler_inputs, population, recipe_profile=profile).plan.operations
+
+
+def test_selected_reading_schema_profile_field_is_enforced(
+    compiler_inputs,
+) -> None:
+    schema = "example.reading/v2"
+    profile = replace(V1_PROFILE, selected_reading_schema=schema)
+    with pytest.raises(PopulationCompileRefusal) as refusal:
+        _compile(compiler_inputs, recipe_profile=profile)
+    assert _codes(refusal.value) == {"POPULATION_READING_INVALID"}
+
+    reading = json.loads(READING)
+    reading["schema"] = schema
+    reading_bytes = _bytes(reading) + b"\n"
+    population = _population()
+    population["reading_sha256"] = _digest(reading_bytes)
+    assert _compile(
+        compiler_inputs,
+        population,
+        reading=reading_bytes,
+        recipe_profile=profile,
+    ).plan.operations
+
+
+def test_provenance_schema_profile_field_controls_output(compiler_inputs) -> None:
+    schema = "example.provenance/v2"
+    result = _compile(
+        compiler_inputs,
+        recipe_profile=replace(V1_PROFILE, provenance_schema=schema),
+    )
+    assert json.loads(result.provenance_map_bytes)["schema"] == schema
+
+
+def test_graph_recipe_profile_field_controls_plan_identity(compiler_inputs) -> None:
+    baseline = _compile(compiler_inputs)
+    changed = _compile(
+        compiler_inputs,
+        recipe_profile=replace(
+            V1_PROFILE,
+            graph_recipe_profile_iri="https://example.test/profile/v2",
+        ),
+    )
+    assert changed.plan.plan_digest != baseline.plan.plan_digest
+
+
+def test_recipe_namespace_profile_field_selects_template_roots(
+    compiler_inputs,
+) -> None:
+    namespace = "https://example.test/recipe/"
+    recipes = RECIPES.replace(
+        b"https://malleus.dev/paper-v4/recipe/",
+        namespace.encode("utf-8"),
+    )
+    result = _compile(
+        compiler_inputs,
+        recipes=recipes,
+        recipe_profile=replace(V1_PROFILE, recipe_namespace=namespace),
+    )
+    assert result.plan.operations
+
+
+def test_member_namespace_profile_field_controls_member_identity(
+    compiler_inputs,
+) -> None:
+    namespace = "https://example.test/member/"
+    result = _compile(
+        compiler_inputs,
+        recipe_profile=replace(V1_PROFILE, member_namespace=namespace),
+    )
+    assert all(
+        member.member.startswith(namespace)
+        for member in result.plan.members
+    )
 
 
 def test_valid_multi_record_population_compiles_deterministically(
@@ -257,6 +481,7 @@ def test_population_digests_bind_compiled_ontology_and_exact_reading(
             logical_contract=contract,
             generic_recipe_bytes=RECIPES,
             selected_reading_bytes=READING,
+            recipe_profile=V1_PROFILE,
         )
     assert _codes(ontology_mismatch.value) == {"POPULATION_DIGEST_MISMATCH"}
 
@@ -296,7 +521,7 @@ def test_every_population_locator_must_resolve(compiler_inputs, location) -> Non
 @pytest.mark.parametrize(
     ("mutation", "code"),
     (
-        ("type", "POPULATION_RECORD_TYPE_UNKNOWN"),
+        ("type", "POPULATION_RECORD_TYPE_UNMAPPED"),
         ("missing-property", "POPULATION_FIELDS_INVALID"),
         ("extra-property", "POPULATION_FIELDS_INVALID"),
     ),
@@ -404,6 +629,7 @@ def test_strict_json_and_recipe_or_assembly_failures_remain_typed(
             logical_contract=contract,
             generic_recipe_bytes=RECIPES,
             selected_reading_bytes=READING,
+            recipe_profile=V1_PROFILE,
         )
     assert _codes(json_refusal.value) == {"POPULATION_JSON_INVALID"}
 

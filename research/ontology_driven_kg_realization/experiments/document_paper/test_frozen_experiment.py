@@ -21,6 +21,9 @@ from research.ontology_driven_kg_realization.experiments.document_paper.frozen_e
     FrozenExperimentRefusal,
     run_frozen_experiment,
 )
+from research.ontology_driven_kg_realization.experiments.document_paper.population_compile import (
+    PopulationRecipeProfile,
+)
 
 
 def _digest(source: bytes) -> str:
@@ -61,6 +64,15 @@ def _configuration(inputs: FrozenExperimentPaths) -> PaperExperimentConfiguratio
         generic_recipe_sha256=_digest(inputs.generic_recipes.read_bytes()),
         ontology_acceptance_sha256=_digest(inputs.ontology_acceptance.read_bytes()),
         protocol_machine_sha256=_digest(inputs.protocol_machine.read_bytes()),
+        population_recipe_profile=PopulationRecipeProfile(
+            population_schema="fiction.population/v2",
+            selected_reading_schema="fiction.reading/v2",
+            provenance_schema="fiction.provenance/v2",
+            graph_recipe_profile_iri="https://example.test/profile/v2",
+            recipe_namespace="https://example.test/recipe/",
+            member_namespace="https://example.test/member/",
+            record_type_templates=(("FictionRecord", "FictionRecord-1.0.0"),),
+        ),
         record_type_iris=("https://example.test/FictionRecord",),
         contract_id="https://example.test/contract",
         ontology_locator="fiction:ontology",

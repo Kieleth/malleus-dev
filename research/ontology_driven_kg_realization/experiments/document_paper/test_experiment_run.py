@@ -41,6 +41,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.test_pop
     READING,
     RECORD_TYPES,
     RECIPES,
+    V1_PROFILE,
     _bytes,
     _located,
     _population,
@@ -127,6 +128,7 @@ def _configuration(
         generic_recipe_sha256=_digest(recipes),
         ontology_acceptance_sha256=_digest(acceptance_bytes),
         protocol_machine_sha256=_digest(machine),
+        population_recipe_profile=V1_PROFILE,
         record_type_iris=RECORD_TYPES,
         contract_id="https://malleus.dev/contracts/paper-four-fiction",
         ontology_locator="paper-v4:fiction-ontology",
@@ -417,6 +419,20 @@ def test_configuration_has_no_defaulted_coordinates() -> None:
         "reading",
         "recipes",
     }
+    with pytest.raises(TypeError, match="population_recipe_profile"):
+        replace(_configuration(), population_recipe_profile=object())
+
+
+def test_full_run_honors_non_v1_provenance_schema(tmp_path: Path) -> None:
+    profile = replace(V1_PROFILE, provenance_schema="fiction.provenance/v2")
+    configuration = replace(
+        _configuration(),
+        population_recipe_profile=profile,
+    )
+
+    run = _run(tmp_path / "semantic.jsonl", configuration=configuration)
+
+    assert json.loads(run.provenance_bytes)["schema"] == "fiction.provenance/v2"
 
 
 def test_every_knowledge_build_coordinate_is_required() -> None:

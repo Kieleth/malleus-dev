@@ -1331,3 +1331,25 @@ Review freeze: Before any corrected query result existed, the paper froze source
 Open reproduction defect: Removing the implicit v1 runner also removed its command-line entry point. The current manuscript still names that old module command, which now exits without performing a run. A new explicit v2 driver and a regression test for observable outputs are required before any reproduction or publication claim.
 
 Impact: Automated scoring and answer-oracle consumption leave the selected path. Querying is an adopter-owned read over replayed state. Evaluation is a separately frozen, source-grounded record with honest human authorship.
+
+### E-0087, v2 construction profile, recipes, and query binding frozen
+
+Date: 2026-09-03
+
+Sources: D-0018; `population_compile.py`; `experiment_run.py`; `paper-v4/experiment-v2/generic-recipes.stottr`; `paper-v4/experiment-v2/native-query-binding.json`; their focused tests; and the accepted v2 ontology.
+
+Observation: The v1 population compiler embedded its schemas, namespaces, and record-to-template mapping. Reusing it for the question-independent ontology would therefore have made a v2 run depend on hidden v1 choices. Population compilation now requires one immutable `PopulationRecipeProfile`. It names the population, reading, and provenance schemas, graph-recipe profile, recipe and member namespaces, and the complete concrete record-to-template mapping. There is no production fallback. The complete experiment requires the profile explicitly and verifies the configured provenance schema rather than a v1 constant.
+
+Audit corrections: A real non-v1 end-to-end test exposed one hidden v1 provenance check, which is removed. Two proposed profile fields were also removed. XML Schema term typing remains one coherent compiler choice, and the invocation namespace is private because changing it cannot affect a retained successful-run identity. Focused tests now exercise each effective adopter choice independently and refuse unknown, abstract, nonconstructible, duplicate, or untemplated mappings.
+
+Natural construction refusal: The first logical-contract selection omitted the two abstract endpoint-range classes `GeoscienceObject` and `DomainObservation`. Contract derivation refused because a class-valued slot range was outside the selected record set. The corrected selection retains both as abstract, nonconstructible contract types. A hard test proves they cannot be mapped to population recipes.
+
+Frozen artifacts: The nineteen generic templates are 9 entity constructors and 10 relation constructors at `sha256:7324dbe955a7f0395d878c4e6198704a4fa11c296b79a66c8a30729ab4fbb968`. They contain ontology-fixed types and relation enums but no document value, population record id, source locator, answer, or graph size. An arbitrary 21-operation fixture expands, stages, and materializes against the compiled ontology. The paper-owned query binding is `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`. It contains 1, 2, 4, and 6 direct typed cases for the four frozen questions and fixes no document value, record id, locator, count, cardinality, or closure.
+
+Expressibility boundary before population: CQ1 can bind a method to instruments but the ontology has no campaign, observing-system or network record, acquisition relation, or instrument-count quantity. CQ2 can bind seismic occurrence to a feature and feature membership to a larger feature, but has no relative-position predicate for "beneath" the ridge axis. CQ3 is representable through quantitative observations and their target relations. CQ4 can bind process components and observations, but has no hypothesis wrapper, epistemic or author-preference property, or typed direction of motion. These are empirical limits of the unconditioned proposal. They are not repaired before population.
+
+Verification: 66 combined population, runner, frozen-path, recipe, and query-binding tests pass. Ruff and `git diff --check` pass.
+
+Core boundary: The existing replay receipt and `KnowledgeGraph` read methods support all frozen cases. No missing Core seam or Core capability request exists at this boundary.
+
+Impact: Query binding and generic construction are frozen before any v2 population exists. The next fresh session may see the questions, ontology, selected reading, recipes, and population grammar, but it may not see this binding, an answer key, prior population, manuscript, ledger, or earlier model transcript.

@@ -1,0 +1,256 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v1",
+  "status": "FROZEN_BEFORE_POPULATION",
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "ObservationMethod",
+          "relation_record_type": "MethodUsesInstrumentRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "METHOD_USES_INSTRUMENT"
+          },
+          "target_record_type": "Instrument",
+          "output_fields": {
+            "source": ["name", "observation_method_kind"],
+            "relation": [],
+            "target": ["name", "instrument_kind"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicPhenomenon",
+          "relation_record_type": "SeismicPhenomenonOccursAtRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "SEISMIC_PHENOMENON_OCCURS_AT"
+          },
+          "target_record_type": "GeologicFeature",
+          "output_fields": {
+            "source": ["name", "seismic_phenomenon_kind"],
+            "relation": [],
+            "target": ["name", "geologic_feature_kind"]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "GeologicFeature",
+          "relation_record_type": "FeaturePartOfRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "FEATURE_PART_OF"
+          },
+          "target_record_type": "GeologicFeature",
+          "output_fields": {
+            "source": ["name", "geologic_feature_kind"],
+            "relation": [],
+            "target": ["name", "geologic_feature_kind"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "QuantitativeObservation",
+          "relation_record_type": "ObservationCharacterizesRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "OBSERVATION_CHARACTERIZES"
+          },
+          "target_record_type": "SeismicPhenomenon",
+          "output_fields": {
+            "source": [
+              "name",
+              "quantity_kind",
+              "lower_numeric_value",
+              "upper_numeric_value",
+              "measurement_unit",
+              "observation_basis"
+            ],
+            "relation": [],
+            "target": ["name", "seismic_phenomenon_kind"]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "QuantitativeObservation",
+          "relation_record_type": "ObservationCharacterizesRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "OBSERVATION_CHARACTERIZES"
+          },
+          "target_record_type": "GeologicMaterial",
+          "output_fields": {
+            "source": [
+              "name",
+              "quantity_kind",
+              "lower_numeric_value",
+              "upper_numeric_value",
+              "measurement_unit",
+              "observation_basis"
+            ],
+            "relation": [],
+            "target": ["name", "geologic_material_kind"]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "QuantitativeObservation",
+          "relation_record_type": "ObservationConcernsConstituentRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "OBSERVATION_CONCERNS_CONSTITUENT"
+          },
+          "target_record_type": "ChemicalConstituent",
+          "output_fields": {
+            "source": [
+              "name",
+              "quantity_kind",
+              "lower_numeric_value",
+              "upper_numeric_value",
+              "measurement_unit",
+              "observation_basis"
+            ],
+            "relation": [],
+            "target": ["name", "chemical_formula"]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "GeologicMaterial",
+          "relation_record_type": "MaterialOccursAtRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "MATERIAL_OCCURS_AT"
+          },
+          "target_record_type": "GeologicFeature",
+          "output_fields": {
+            "source": ["name", "geologic_material_kind"],
+            "relation": [],
+            "target": ["name", "geologic_feature_kind"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "GeologicProcess",
+          "relation_record_type": "ProcessActsOnMaterialRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "PROCESS_ACTS_ON_MATERIAL"
+          },
+          "target_record_type": "GeologicMaterial",
+          "output_fields": {
+            "source": ["name", "geologic_process_kind"],
+            "relation": [],
+            "target": ["name", "geologic_material_kind"]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "GeologicProcess",
+          "relation_record_type": "ProcessReleasesConstituentRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "PROCESS_RELEASES_CONSTITUENT"
+          },
+          "target_record_type": "ChemicalConstituent",
+          "output_fields": {
+            "source": ["name", "geologic_process_kind"],
+            "relation": [],
+            "target": ["name", "chemical_formula"]
+          }
+        },
+        {
+          "ordinal": 3,
+          "source_record_type": "GeologicProcess",
+          "relation_record_type": "ProcessCausesProcessRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "PROCESS_CAUSES_PROCESS"
+          },
+          "target_record_type": "GeologicProcess",
+          "output_fields": {
+            "source": ["name", "geologic_process_kind"],
+            "relation": [],
+            "target": ["name", "geologic_process_kind"]
+          }
+        },
+        {
+          "ordinal": 4,
+          "source_record_type": "GeologicProcess",
+          "relation_record_type": "ProcessTriggersSeismicPhenomenonRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "PROCESS_TRIGGERS_SEISMIC_PHENOMENON"
+          },
+          "target_record_type": "SeismicPhenomenon",
+          "output_fields": {
+            "source": ["name", "geologic_process_kind"],
+            "relation": [],
+            "target": ["name", "seismic_phenomenon_kind"]
+          }
+        },
+        {
+          "ordinal": 5,
+          "source_record_type": "CategoricalObservation",
+          "relation_record_type": "ObservationCharacterizesRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "OBSERVATION_CHARACTERIZES"
+          },
+          "target_record_type": "GeologicProcess",
+          "output_fields": {
+            "source": [
+              "name",
+              "categorical_observation_kind",
+              "categorical_observation_value",
+              "observation_basis"
+            ],
+            "relation": [],
+            "target": ["name", "geologic_process_kind"]
+          }
+        },
+        {
+          "ordinal": 6,
+          "source_record_type": "CategoricalObservation",
+          "relation_record_type": "ObservationCharacterizesRelation",
+          "relation_type": {
+            "enum": "GeoscienceRelationType",
+            "value": "OBSERVATION_CHARACTERIZES"
+          },
+          "target_record_type": "GeologicFeature",
+          "output_fields": {
+            "source": [
+              "name",
+              "categorical_observation_kind",
+              "categorical_observation_value",
+              "observation_basis"
+            ],
+            "relation": [],
+            "target": ["name", "geologic_feature_kind"]
+          }
+        }
+      ]
+    }
+  ]
+}

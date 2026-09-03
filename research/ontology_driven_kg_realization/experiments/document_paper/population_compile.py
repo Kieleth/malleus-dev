@@ -26,34 +26,10 @@ from ..graph_recipe.stottr import (
 from .compiled_graph_recipe_contract import require_plan_contract_alignment
 
 
-_SCHEMA = "malleus.paper-v4.population/v1"
-_READING_SCHEMA = "malleus.paper-v4.text-layer-reading/v1"
-_PROVENANCE_SCHEMA = "malleus.paper-v4.population-provenance/v1"
-_PROFILE = "https://malleus.dev/graph-recipe/profile/v0"
-_RECIPE = "https://malleus.dev/paper-v4/recipe/"
-_MEMBER = "https://malleus.dev/paper-v4/population/member/"
-_INVOCATION = "https://malleus.dev/paper-v4/population/invocation/"
-_XSD = "http://www.w3.org/2001/XMLSchema#"
-
-
-_TEMPLATES = dict.fromkeys(
-    ("Campaign", "Region", "EarthquakePopulation", "PrimaryMeltPopulation"),
-    "NamedEntity-1.0.0",
+_INTERNAL_INVOCATION_NAMESPACE = (
+    "https://malleus.dev/paper-v4/population/invocation/"
 )
-_TEMPLATES.update(
-    {
-        name: name + "-1.0.0"
-        for name in (
-            "ObservingSystem",
-            "BoundedQuantity",
-            "MechanismHypothesis",
-            "DataAcquisitionRelation",
-            "SpatialAssociationRelation",
-            "QuantityCharacterizationRelation",
-            "HypothesisExplainsRelation",
-        )
-    }
-)
+_XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema#"
 
 
 class PopulationCompileRefusal(GraphRecipeFailure):
@@ -66,6 +42,60 @@ class PopulationCompilation:
 
     plan: AssemblyPlan
     provenance_map_bytes: bytes
+
+
+@dataclass(frozen=True, slots=True)
+class PopulationRecipeProfile:
+    """All adopter-owned population and recipe binding choices."""
+
+    population_schema: str
+    selected_reading_schema: str
+    provenance_schema: str
+    graph_recipe_profile_iri: str
+    recipe_namespace: str
+    member_namespace: str
+    record_type_templates: tuple[tuple[str, str], ...]
+
+    def __post_init__(self) -> None:
+        fields = (
+            "population_schema",
+            "selected_reading_schema",
+            "provenance_schema",
+            "graph_recipe_profile_iri",
+            "recipe_namespace",
+            "member_namespace",
+        )
+        for field in fields:
+            value = getattr(self, field)
+            if type(value) is not str or not value.strip():
+                raise ValueError(f"{field} must be nonblank text")
+        mappings = self.record_type_templates
+        if type(mappings) is not tuple or not mappings:
+            raise ValueError("record_type_templates must be a nonempty tuple")
+        record_types = []
+        for index, mapping in enumerate(mappings):
+            if type(mapping) is not tuple or len(mapping) != 2:
+                raise ValueError(
+                    f"record_type_templates[{index}] must be a two-item tuple"
+                )
+            record_type, template_name = mapping
+            if type(record_type) is not str or not record_type.strip():
+                raise ValueError(
+                    f"record_type_templates[{index}].record_type must be nonblank text"
+                )
+            if type(template_name) is not str or not template_name.strip():
+                raise ValueError(
+                    f"record_type_templates[{index}].template_name must be nonblank text"
+                )
+            record_types.append(record_type)
+        duplicates = sorted(
+            {item for item in record_types if record_types.count(item) > 1}
+        )
+        if duplicates:
+            raise ValueError(
+                "record_type_templates contains duplicate record types: "
+                + ", ".join(duplicates)
+            )
 
 
 def _fail(code: str, subject: str, message: str, **evidence: Any) -> None:
@@ -150,7 +180,9 @@ def _load(source: bytes) -> dict[str, Any]:
     )
 
 
-def _reading(source: object) -> tuple[str, frozenset[str]]:
+def _reading(
+    source: object, *, selected_reading_schema: str
+) -> tuple[str, frozenset[str]]:
     if type(source) is not bytes:
         _fail(
             "POPULATION_INPUT_INVALID",
@@ -183,11 +215,11 @@ def _reading(source: object) -> tuple[str, frozenset[str]]:
         },
         "selected_reading",
     )
-    if reading["schema"] != _READING_SCHEMA:
+    if reading["schema"] != selected_reading_schema:
         _fail(
             "POPULATION_READING_INVALID",
             "selected_reading.schema",
-            "Selected reading schema is not D1 v1.",
+            "Selected reading schema does not match the population recipe profile.",
         )
     pages = reading["pages"]
     if type(pages) is not list or not pages or reading["page_count"] != len(pages):
@@ -264,6 +296,7 @@ def _validate_records(
     blocks: frozenset[str],
     compilation: ValidatedContractCompilation,
     contract: LogicalGraphContract,
+    templates: dict[str, str],
 ) -> tuple[dict[str, Any], ...]:
     if type(raw) is not list or not raw:
         _fail(
@@ -284,12 +317,12 @@ def _validate_records(
                 missing_fields=["record_type"],
             )
         record_type = _text(value["record_type"], f"{subject}.record_type")
-        if record_type not in _TEMPLATES:
+        if record_type not in templates:
             _fail(
-                "POPULATION_RECORD_TYPE_UNKNOWN",
+                "POPULATION_RECORD_TYPE_UNMAPPED",
                 f"{subject}.record_type",
-                "Record type is outside the selected D3 vocabulary.",
-                allowed_record_types=sorted(_TEMPLATES),
+                "Record type has no template in the population recipe profile.",
+                mapped_record_types=sorted(templates),
             )
         try:
             record_contract = contract.record_for_symbol(record_type)
@@ -437,7 +470,9 @@ def _term(value: bool | int | float | str) -> RecipeTerm:
     if type(value) is int:
         return RecipeTerm.integer(value)
     if type(value) is float:
-        return RecipeTerm.literal(json.dumps(value, allow_nan=False), _XSD + "float")
+        return RecipeTerm.literal(
+            json.dumps(value, allow_nan=False), _XSD_NAMESPACE + "float"
+        )
     return RecipeTerm.literal(value)
 
 
@@ -517,6 +552,7 @@ def compile_population(
     logical_contract: LogicalGraphContract,
     generic_recipe_bytes: bytes,
     selected_reading_bytes: bytes,
+    recipe_profile: PopulationRecipeProfile,
 ) -> PopulationCompilation:
     """Validate, expand, assemble, and align one exact population."""
 
@@ -536,6 +572,12 @@ def compile_population(
             "logical_contract",
             "Input must be one exact LogicalGraphContract.",
         )
+    if type(recipe_profile) is not PopulationRecipeProfile:
+        _fail(
+            "POPULATION_INPUT_INVALID",
+            "recipe_profile",
+            "Input must be one exact PopulationRecipeProfile.",
+        )
     if type(generic_recipe_bytes) is not bytes or not generic_recipe_bytes:
         _fail(
             "POPULATION_INPUT_INVALID",
@@ -546,11 +588,40 @@ def compile_population(
         "sha256:" + compiled_ontology.source.sha256,
         "compiled_ontology.source.sha256",
     )
-    reading_digest, selected_reading_block_ids = _reading(selected_reading_bytes)
+    templates = dict(recipe_profile.record_type_templates)
+    for record_type in templates:
+        try:
+            record_contract = logical_contract.record_for_symbol(record_type)
+        except GraphRecipeFailure:
+            _fail(
+                "POPULATION_PROFILE_RECORD_TYPE_UNKNOWN",
+                f"recipe_profile.record_type_templates.{record_type}",
+                "Mapped record type is absent from the logical contract.",
+            )
+        if (
+            record_contract.abstract
+            or record_contract.type_iri
+            not in logical_contract.constructible_record_types
+        ):
+            _fail(
+                "POPULATION_PROFILE_RECORD_TYPE_NONCONSTRUCTIBLE",
+                f"recipe_profile.record_type_templates.{record_type}",
+                "Mapped record type cannot produce a logical-contract operation.",
+                abstract=record_contract.abstract,
+                record_type_iri=record_contract.type_iri,
+            )
+    reading_digest, selected_reading_block_ids = _reading(
+        selected_reading_bytes,
+        selected_reading_schema=recipe_profile.selected_reading_schema,
+    )
 
     population = _load(population_bytes)
-    if population["schema"] != _SCHEMA:
-        _fail("POPULATION_SCHEMA_INVALID", "population.schema", "Schema is not D3 v1.")
+    if population["schema"] != recipe_profile.population_schema:
+        _fail(
+            "POPULATION_SCHEMA_INVALID",
+            "population.schema",
+            "Population schema does not match the population recipe profile.",
+        )
     for field, expected in (
         ("ontology_sha256", ontology_digest),
         ("reading_sha256", reading_digest),
@@ -568,35 +639,53 @@ def compile_population(
         selected_reading_block_ids,
         compiled_ontology,
         logical_contract,
+        templates,
     )
     members = {
-        record["record_id"]: _iri(_MEMBER, record["record_id"]) for record in records
+        record["record_id"]: _iri(
+            recipe_profile.member_namespace, record["record_id"]
+        )
+        for record in records
     }
 
     try:
         document = parse_stottr(generic_recipe_bytes, "paper-v4:generic-recipes")
+        declared_templates = {template.template_iri for template in document.templates}
+        unknown_templates = sorted(
+            recipe_profile.recipe_namespace + template
+            for template in templates.values()
+            if recipe_profile.recipe_namespace + template not in declared_templates
+        )
+        if unknown_templates:
+            _fail(
+                "POPULATION_PROFILE_TEMPLATE_UNKNOWN",
+                "recipe_profile.record_type_templates",
+                "Mapped recipe template is absent from the recipe document.",
+                unknown_template_iris=unknown_templates,
+            )
         recipes = {}
         all_emissions = []
         invocation_digests = []
         provenance = []
         for record in records:
-            template = _TEMPLATES[record["record_type"]]
-            root = _RECIPE + template
+            template = templates[record["record_type"]]
+            root = recipe_profile.recipe_namespace + template
             if root not in recipes:
                 recipes[root] = compile_graph_recipe(
                     (document,),
                     root_template=root,
                     contract_digest=logical_contract.contract_digest,
-                    profile_id=_PROFILE,
-                    expansion_profile_id=_PROFILE,
+                    profile_id=recipe_profile.graph_recipe_profile_iri,
+                    expansion_profile_id=recipe_profile.graph_recipe_profile_iri,
                 )
             recipe = recipes[root]
             contract_record = logical_contract.record_for_symbol(record["record_type"])
+            parameters = tuple(item.name for item in recipe.template(root).parameters)
             arguments = {
                 "member": RecipeTerm.iri(members[record["record_id"]]),
                 "recordId": RecipeTerm.literal(record["record_id"]),
             }
-            if template == "NamedEntity-1.0.0":
+            if "recordType" in parameters:
                 arguments["recordType"] = RecipeTerm.iri(contract_record.type_iri)
             for name in _required_population_properties(contract_record):
                 arguments[_camel(name)] = _term(record["properties"][name][0])
@@ -605,7 +694,6 @@ def compile_population(
                     endpoint_id = record[role]["record_id"]
                     arguments[role + "Member"] = RecipeTerm.iri(members[endpoint_id])
                     arguments[role + "Id"] = RecipeTerm.literal(endpoint_id)
-            parameters = tuple(item.name for item in recipe.template(root).parameters)
             if set(arguments) != set(parameters) or len(arguments) != len(parameters):
                 _fail(
                     "POPULATION_RECIPE_BINDING_INVALID",
@@ -616,7 +704,9 @@ def compile_population(
                 )
             expansion = expand_invocation(
                 recipe,
-                invocation_id=_iri(_INVOCATION, record["record_id"]),
+                invocation_id=_iri(
+                    _INTERNAL_INVOCATION_NAMESPACE, record["record_id"]
+                ),
                 arguments={name: arguments[name] for name in parameters},
             )
             all_emissions.extend(expansion.emissions)
@@ -642,10 +732,15 @@ def compile_population(
             "ontology_sha256": ontology_digest,
             "plan_sha256": plan.plan_digest,
             "reading_sha256": reading_digest,
-            "schema": _PROVENANCE_SCHEMA,
+            "schema": recipe_profile.provenance_schema,
         }
     ).encode("utf-8")
     return PopulationCompilation(plan, provenance_bytes)
 
 
-__all__ = ["PopulationCompilation", "PopulationCompileRefusal", "compile_population"]
+__all__ = [
+    "PopulationCompilation",
+    "PopulationCompileRefusal",
+    "PopulationRecipeProfile",
+    "compile_population",
+]

@@ -62,7 +62,7 @@ The experiment freezes exactly five identity groups:
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
 3. Selected ontology digest: `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed`.
 4. Ledger head plus replay receipt: pending corrected run.
-5. Adopter query binding digest: pending corrected run and excluded from the KnowledgeChangeSet evidence closure.
+5. Adopter query binding digest: `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`, excluded from the KnowledgeChangeSet evidence closure.
 
 Source manifests, transcripts, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
 
@@ -84,7 +84,7 @@ The retired answer key remains sealed historical material and leaves the active 
 1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, forward-merged with exact Core `f9052b4`. The PDF and private files are ignored.
 2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
 3. **Ontology, complete.** A question-independent fresh session received the selected reading plus generic Malleus ontology inputs, but no competency questions or question-derived semantic checklist. Attempt one was refused because `default_prefix` is outside the supported LinkML profile. The exact diagnostic was returned once; attempt two removed only that field and compiled into 4,146 validated facts. One event accepts its digest for population. This is one document-domain proposal, not a general builder or minimality result.
-4. **Query binding, pending corrected run.** Bind the four questions to an adopter-owned surface after ontology compilation and before population. Keep the binding outside admission evidence and replay identity. An unbindable question is a result, not authorization to repair the ontology.
+4. **Query binding and recipes, complete.** The paper-owned binding fixes only ontology record types, relation types, enum values, and projected properties. It fixes no record id, answer value, locator, cardinality, or graph closure, and remains outside admission evidence and replay identity. Nineteen ontology-specific construction templates compile and materialize an arbitrary valid graph without document values.
 5. **Population, pending corrected run.** Give a different fresh session the corrected ontology, selected reading, ontology-specific generic recipes, and four questions. Permit one structural retry, no content repair, and no fallback.
 6. **Commitment, pending corrected run.** Compile provenance, derive both checks, compose one change without query evidence, admit atomically, and retain exact refusal outcomes.
 7. **Replay and query, pending corrected run.** Dispose, reopen, replay, and query through the frozen adopter surface with the existing Python-level isolation counters.
@@ -141,7 +141,7 @@ Public repository material:
 - source manifest, URL, license, and digest, but not the PDF;
 - four competency questions;
 - pinned dependency configuration and text-layer extractor;
-- selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, typed score result, and focused tests;
+- selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, source-grounded review record, and focused tests;
 - concise reproduction instructions and claim-to-artifact index.
 
 Private or evaluator-only material:
@@ -149,7 +149,7 @@ Private or evaluator-only material:
 - source PDF;
 - selected reading text;
 - source-bearing semantic ledger;
-- sealed answer key and rebound locators;
+- sealed historical answer key and rebound locators, plus the retired typed score result;
 - provider transcripts when redistribution is inappropriate.
 
 ## Manuscript shape
