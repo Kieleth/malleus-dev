@@ -1423,3 +1423,17 @@ Reproduction: A second invocation into new ignored directories, using the same e
 Boundary: No score, oracle, source reading, source locator, population file, or manuscript was passed into the guarded query region. The Python guard cannot rule out lower-level or preexisting access outside that region. Query binding remains absent from build evidence and all accepted-state identities.
 
 Impact: Admission, disposal, reopen, replay, and source-free adopter queries are complete. The exact rows are now frozen for independent source-grounded inspection. They have not yet been rated or ratified by a human.
+
+### E-0092, exact review inputs frozen after query output
+
+Date: 2026-09-03
+
+Sources: pre-output review protocol `sha256:04cf6bc131d018acc541d0ee9812b18c1a3d40b58b4bc003536598e2d4621d43`; `paper-v4/evaluation-v2/review-input-manifest.json`; the selected ontology; replay receipt; query binding; query result; and 21 review-protocol and input-freeze tests.
+
+Observation: The post-query manifest is `sha256:181e1447a9b7d56e816816d1105f5084114e287e90d5547423fefd1d74568e28`. It fills the five stage coordinates that the protocol deliberately left pending: ontology `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed`, ledger head `sha256:7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b`, replay receipt `sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796`, query binding `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`, and query result `sha256:78cc2c8dc42dc10a4f46d41c95e7c751134460bc1147619e067a8f5822b0be7a`.
+
+Boundary: The review method, judgment labels, question set, source identity, and reading identity remain byte-unchanged from their pre-query freeze. The inspector may see only the review task and protocol, this manifest, blank record, selected reading, competency questions, query binding, and query result. The selected ontology and replay receipt are validator inputs, not evidence for the inspector. Oracle, canonical answers, scores, model transcripts, population, provenance, manuscript results, and result-bearing ledger entries remain withheld.
+
+Verification: The manifest resolves every stage digest to the exact retained artifact, its ledger head to the replay receipt, and the query's three input coordinates to the manifest. The selected result set contains no score file.
+
+Impact: Preliminary inspection may begin without changing the method after seeing the rows. It remains Codex-authored work and cannot become paper evidence until Luis reviews and ratifies or edits it.
