@@ -1,0 +1,20 @@
+{
+  "schema": "malleus.paper-v4.producer-record/v1",
+  "run_id": "codex-gpt-5.6-v2",
+  "role": "REFERENCE_RUN",
+  "producer": {
+    "harness": "Codex Desktop 0.150.0-alpha.8, fresh subagent, fork_turns none",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "ultra",
+    "evidence": "turn_context records of the ontology (2026-09-03T00:58 UTC) and population (2026-09-03T07:42 UTC) subagent rollouts under ~/.codex/sessions"
+  },
+  "stages": {
+    "ontology": "paper-v4/experiment-v2/ontology-run/acquisition-record.json",
+    "population": "paper-v4/experiment-v2/population-run/acquisition-record.json"
+  },
+  "unobservable": [
+    "provider system instructions",
+    "sampling parameters not exposed by the task interface",
+    "service nondeterminism"
+  ]
+}
