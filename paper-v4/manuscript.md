@@ -2,7 +2,7 @@
 
 Version: 0.9.0 working draft
 
-Status: lean engineering draft. The source, selected text-layer reading, and compiled model-proposed ontology are frozen. Model population, ledger replay, four queries, and scoring remain in progress. No document graph or query result is claimed yet.
+Status: lean engineering draft. The source, selected text-layer reading, compiled model-proposed ontology, and type-only query binding are frozen. Model population, ledger replay, query execution, and scoring remain in progress. No document graph or query result is claimed yet.
 
 ## Abstract
 
@@ -121,7 +121,7 @@ The experiment uses five identity groups:
 2. Selected reading: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
 3. Selected ontology: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 4. Ledger head and replay receipt: [RESULT].
-5. Query binding: [RESULT].
+5. Query binding: `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
 
 The selected reader is `pypdf==6.16.2`, called with strict parsing and default text extraction. Two independent in-memory builds produced equal bytes. The final projection contains 186 blocks across 11 pages and none of the `CO,` corruption found in the retired reading. The sealed answers were unchanged when their locators were rebound.
 
@@ -130,6 +130,8 @@ The selected reader is `pypdf==6.16.2`, called with strict parsing and default t
 The fresh ontology session produced one proposal. It compiled on the first attempt into 1,401 validated facts, so no compiler diagnostic was returned to the model. The selected ontology digest is `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 
 One event by `actor:paper-v4-evaluator` accepted that exact digest for population. The event records authorization to continue, not an adequacy judgment. No reviewer, hand repair, restart, or alternate ontology contributed to the result.
+
+The query binding represents each question as one or two typed source-relation-target cases. It fixes record types, the ontology enum value for each relation, and projected output fields. It fixes no record identifier, answer value, graph size, singleton result, or graph closure. Its digest is `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
 
 Population attempts, structural diagnostics, and locator completeness: [RESULT]
 
@@ -197,7 +199,7 @@ The completed reading and ontology stages fix one source, one source-located tex
 2. Selected reading digest: frozen above.
 3. Selected ontology digest: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 4. Ledger head and replay receipt: [RESULT].
-5. Query binding digest: [RESULT].
+5. Query binding digest: `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
 
 Reproduction command and declared environment: [RESULT]
 

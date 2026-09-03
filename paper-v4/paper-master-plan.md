@@ -4,7 +4,7 @@ Version: 0.9.0
 
 Date: 2026-09-02
 
-Status: active. D5 isolation, D1 reading, and D2 with D6 ontology compilation and acceptance are complete. Type-based query binding is next. No document graph or query result is claimed yet.
+Status: active. D5 isolation, D1 reading, D2 with D6 ontology compilation and acceptance, and the type-based query binding are complete. Generic recipes and D3 population are next. No document graph or query result is claimed yet.
 
 ## Objective
 
@@ -62,7 +62,7 @@ The experiment freezes exactly five identity groups:
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
 3. Selected ontology digest: `sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941`.
 4. Ledger head plus replay receipt: pending admission and replay.
-5. Query binding digest: pending the type-based query freeze.
+5. Query binding digest: `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
 
 Source manifests, transcripts, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
 
@@ -84,7 +84,7 @@ The answer key remains evaluator-only. D1 changed only its locators. The answer 
 1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, created from clean Core `1611944`. The PDF and private files are ignored.
 2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
 3. **Ontology, complete.** A fresh session received the selected reading, four questions, supported ontology task, and retained copies of every model-visible Malleus input. Its first proposal compiled without a diagnostic return. No human edited or repaired it. One evaluator event records its digest and actor id for population, without an adequacy judgment.
-4. **Query binding, next.** Before population, bind the four queries to ontology record types, relation types, enum values, joins, and output fields. The binding must not name document answers, numeric values, source text, locators, entity counts, relation counts, or an exact graph closure.
+4. **Query binding, complete.** The four native queries are frozen as typed source-relation-target cases with enum-constrained relation kinds and projected output fields. Matching returns zero or more rows; neither the binding nor executor requires a graph size or singleton result. The binding contains no document answer, numeric value, source text, locator, record identifier, entity count, relation count, or topology closure.
 5. **Population.** A different fresh session receives only the selected ontology, selected reading, generic recipe library, four questions, and task instructions. It returns one machine-readable population file, with a selected-reading block locator for each value. One retry may receive structural compiler diagnostics only. There is no content review, evaluator-authored population, or fallback. A refusal, malformed result, or poor score is the result.
 6. **Commitment.** The generic recipes expand the population into ordered operations. Each operation and property retains its source locator. Malleus compiles a change set, runs the declared checks, records the decision, and appends only a complete accepted transaction.
 7. **Replay and query.** Delete the derived graph, reopen the ledger, replay it, and compare the canonical replay receipt and graph state. Run the four bound queries in a process that can see the replayed graph and query binding, but not the PDF, reading, model transcripts, answer key, network, or any embedding index. Score the outputs separately against the sealed key.
@@ -158,10 +158,9 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Freeze the type-based queries.
-2. Audit the recipe library for genericity, then run D3.
-3. Compile, decide, admit, delete, replay, query, and score.
-4. Fill result fields, cut the manuscript to target, and build the arXiv bundle.
+1. Freeze the generic recipe library, then run D3.
+2. Compile, decide, admit, delete, replay, query, and score.
+3. Fill result fields, cut the manuscript to target, and build the arXiv bundle.
 
 ## Submission gate
 

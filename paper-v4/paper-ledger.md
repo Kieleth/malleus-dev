@@ -1135,3 +1135,17 @@ Boundary: The event authorizes the population stage. It does not assert semantic
 Error and guard: An initial post-run validation command accessed a nonexistent `ExactSource.sha256` attribute after compilation and raised `AttributeError`; it did not change either retained artifact. A focused test now recomputes the ontology digest from bytes, requires exactly one canonical acceptance record with the fixed actor and decision, recompiles against the copied Malleus input, and binds the accepted receipt to the recorded digest. The ontology compiler file passes eight focused tests.
 
 Impact: D2 with D6 is complete. Query authors may now bind the four questions to ontology types before any population session sees the task.
+
+### E-0074, type-only query binding frozen before population
+
+Date: 2026-09-02
+
+Sources: `paper-v4/experiment/native-query-binding.json`, the replaced `native_query.py`, the selected ontology, and `paper-v4/experiment/test_native_query_binding.py`.
+
+Observation: The four questions reduce to typed source-relation-target cases. The binding names only query and question ids, source, relation, and target record types, relation enum types and values, case order, and projected ontology fields. It contains no record identifier, document answer, numeric answer, source phrase, locator, entity or relation count, singleton requirement, causal topology, or graph closure. The executor returns every matching row in stable order and reads only relations plus their endpoint nodes. The binding digest is `sha256:115009ff737600d63eb9761bfc11f69ee62cd11f41d60682772556f5fa56c6d9`.
+
+Guard: Three focused tests validate the binding against the selected ontology, reject extra selectors and invalid types, enum values, endpoint directions, or output fields, propagate fictional graph values through multiple matching rows, and block file and network access during query execution. This directly prevents the retired fixed-closure and hidden-answer error class.
+
+Learning: `OntologyRegistry` resolves relative import-map entries against the ontology file directory, not the process working directory. An initial validation probe passed a workspace-relative retained-input path and refused after duplicating the directory prefix. The active guard uses the exact absolute retained-input path.
+
+Impact: Query authorship is frozen before D3. Population size, identities, values, and topology remain open to the fresh model session.
