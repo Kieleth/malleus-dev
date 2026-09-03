@@ -1,0 +1,41 @@
+{
+  "schema": "malleus.paper-v4.preliminary-review-execution/v1",
+  "run_id": "claude-opus-5",
+  "reviewer": {
+    "kind": "CLAUDE_PRELIMINARY",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "sonnet",
+    "model_family": "Claude Sonnet 5",
+    "actor_id": "actor:claude-opus-5-preliminary-reviewer",
+    "spawn_message": "paper-v4/experiment-v3/runs/claude-opus-5/evaluation/spawn-message.md",
+    "observed_usage": {
+      "subagent_tokens": 136868,
+      "tool_uses": 18,
+      "duration_ms": 197196
+    }
+  },
+  "record": "paper-v4/experiment-v3/runs/claude-opus-5/evaluation/review-record.preliminary.md",
+  "validator": "validate_human_review accepted the record with require_human_ratification=False",
+  "reviewer_access_report": {
+    "requested_after_output": true,
+    "files_read": [
+      "evaluation/review-task.md",
+      "evaluation/review-protocol.json",
+      "evaluation/review-input-manifest.json",
+      "evaluation/review-record.blank.md",
+      "private/paper-v4-text-layer/selected-reading.json",
+      "population-run/inputs/competency-questions.json",
+      "native-query-binding.json",
+      "results/query-result.json"
+    ],
+    "network": false,
+    "repository_writes": [
+      "evaluation/review-record.preliminary.md"
+    ],
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "scratch_files_outside_repository": [
+      "a pretty-printed copy of selected-reading.json in the session scratchpad, content-identical, to page through it"
+    ]
+  },
+  "evidence_status": "PRELIMINARY_NOT_EVIDENCE_UNTIL_HUMAN_RATIFICATION"
+}

@@ -1,12 +1,12 @@
 # Malleus: An Executable Commitment Boundary for Model-Proposed Knowledge Graphs
 
-Version: 1.1.0 working draft
+Version: 1.2.0 working draft
 
-Status: lean engineering draft. The selected knowledge-build and query run is complete and reproduced byte for byte. Source-grounded human review is pending, so answer quality is not yet claimed.
+Status: lean engineering draft. The selected knowledge-build and query run and two further producer runs are complete and reproduced byte for byte. Source-grounded human review is pending for all three, so answer quality is not yet claimed.
 
 ## Abstract
 
-Language models can propose structured claims from documents, but generation alone does not make those claims accepted system state. We present Malleus as an executable commitment boundary for model-proposed knowledge graphs. A fresh model session proposes a domain ontology without seeing the evaluation questions. Deterministic components compile it. A second fresh session proposes source-located population records after the questions are introduced. Generic construction templates lower those records into an immutable change set; checks and a recorded decision govern atomic ledger admission; replay reconstructs the graph; and an adopter-owned query surface reads only replayed state. We execute this path on one marine-seismology paper. The ontology compiled after one structural correction into a validated import closure of 4,146 facts. The first population proposal compiled into 13 operations with 47 located assertions, producing seven entities and six relations in a 23-event history. Disposal, reopen, and replay reproduced the graph and receipt. Four type-bound queries returned 0, 2, 4, and 0 rows, with zero guarded file, network, or embedding-package import attempts. One query covers its requested typed structure, one weakens a requested spatial relation, and two return nothing. Human source review remains pending. The demonstrated claim is narrow: generated structure can cross a source-bound, replayable commitment protocol, and this fixed query path used no embedding index.
+Language models can propose structured claims from documents, but generation alone does not make those claims accepted system state. We present Malleus as an executable commitment boundary for model-proposed knowledge graphs. A fresh model session proposes a domain ontology without seeing the evaluation questions. Deterministic components compile it. A second fresh session proposes source-located population records after the questions are introduced. Generic construction templates lower those records into an immutable change set; checks and a recorded decision govern atomic ledger admission; replay reconstructs the graph; and an application-side query surface reads only replayed state. We execute this path on one marine-seismology paper. The ontology, 15 entity and 33 relation classes with 16 enums, compiled after one structural correction. The first population proposal compiled into 13 operations with 47 located assertions, producing seven entities and six relations in a 23-event history. Disposal, reopen, and replay reproduced the graph and receipt. Four type-bound queries returned 0, 2, 4, and 0 rows, with zero guarded file, network, or embedding-package import attempts. One query covers its requested typed structure, one weakens a requested spatial relation, and two return nothing. Repeating the protocol unchanged with two other fresh producers, Claude Sonnet 5 and Claude Opus 5, returned 0, 0, 0, 0 and 0, 0, 0, 1 rows: both proposed single-valued fields where the source reports ranges and neither required a name, so the proposed ontology, not the pipeline, decided what could be answered. Human source review remains pending. The demonstrated claim is narrow: generated structure can cross a source-bound, replayable commitment protocol, and this fixed query path used no embedding index.
 
 ## 1. Problem and contribution
 
@@ -22,7 +22,7 @@ The paper makes three bounded contributions:
 
 1. It states a compact protocol separating model proposal, deterministic compilation, recorded acceptance, immutable change, ledger admission, replay, and query.
 2. It connects an ontology and finite construction grammar to a typed change set with per-value source locators and atomic admission.
-3. It reports one complete document run, including compiler refusal, incomplete query coverage, replay equality, and guarded query execution.
+3. It reports one complete document run, including compiler refusal, incomplete query coverage, replay equality, and guarded query execution, and repeats the run unchanged with two other proposal producers.
 
 The paper does not claim that Malleus discovers true knowledge, induces generally adequate ontologies, answers arbitrary questions, or replaces retrieval-augmented generation. It reports an engineering property of one identified execution. Separate source-grounded human-author review of the query rows is still pending.
 
@@ -42,7 +42,7 @@ PDF bytes
   -> fresh, question-visible population proposal
   -> typed change set, checks, decision, and atomic admission
   -> disposal, ledger reopen, and replay
-  -> adopter-owned reads over the replay-derived graph
+  -> application-side reads over the replay-derived graph
   -> source-grounded human review under a separately frozen protocol
 ```
 
@@ -66,13 +66,13 @@ Nineteen templates in a restricted syntax derived from OTTR provide nine entity 
 
 The population producer is another new session. Its declared read set contains the selected ontology, selected reading, generic recipes, four questions, and a closed population grammar. The task forbids access to the query binding, earlier population, manuscript, ledger, model transcripts, or answer material. Each output id must be opaque and sequential. Names may denote records but may not smuggle counts, locations, causal clauses, epistemic qualifiers, or relationships that the ontology cannot type. One structural retry is allowed; a refusal or semantically sparse graph remains the result. There is no evaluator-authored fallback.
 
-The population compiler validates the envelope, types, required fields, endpoints, locator membership, and complete mapping for the selected population profile. It expands accepted records into an ordered construction plan and deterministic provenance. Required population information has no default. Missing source coordinates, locators, types, or endpoints cause a typed refusal. The later runner separately refuses stale history coordinates or a missing transaction time.
+The population compiler validates the outer structure, types, required fields, endpoints, locator membership, and complete mapping for the selected population profile. It expands accepted records into an ordered construction plan and deterministic provenance. Required population information has no default. Missing source coordinates, locators, types, or endpoints cause a typed refusal. The later runner separately refuses stale history coordinates or a missing transaction time.
 
 ### 2.4 Commitment, replay, and query
 
-The runner derives two checks: source-locator integrity and structural conformance. The private domain-neutral composer then binds explicit sources and evidence, ordered operations, valid time, the active contract, and current history coordinates into one change set. It does not parse the document, select domain meaning, run policy, admit events, or replay state. Transaction time enters separately at admission. A recorded verdict controls atomic admission of the retained change set and its protocol events. Compiler failure, a non-accepting verdict, stale prior state, or failed application leaves that admission batch unapplied.
+The runner derives two checks: source-locator integrity and structural conformance. The private change-set composer then binds explicit sources and evidence, ordered operations, valid time, the active contract, and current history coordinates into one change set. It does not parse the document, select domain meaning, run policy, admit events, or replay state. Transaction time enters separately at admission. A recorded verdict controls atomic admission of the retained change set and its protocol events. Compiler failure, a non-accepting verdict, stale prior state, or failed application leaves that admission batch unapplied.
 
-After admission, the runner records the live graph, machine state, and receipt, discards those in-memory objects, reopens the file-backed ledger, and replays it. Equality of graph, machine state, and canonical receipt is checked. Here, disposal means loss of the derived in-memory projection, not deletion of an external graph database. Replay still depends on the identified Malleus implementation; the ledger is not self-executing.
+After admission, the runner records the live graph, protocol state, and receipt, discards those in-memory objects, reopens the file-backed ledger, and replays it. Equality of graph, protocol state, and canonical receipt is checked. Here, disposal means loss of the derived in-memory projection, not deletion of an external graph database. Replay still depends on the identified Malleus implementation; the ledger is not self-executing.
 
 The paper-owned query adapter receives the replay receipt, selected ontology, retained Malleus ontology input, and frozen binding. It receives no source reading, population file, provenance map, answer material, or manuscript. During the query region, Python guards count file opens, socket and name-resolution calls, and imports of named embedding or vector packages. These are interpreter-level observations, not an operating-system sandbox.
 
@@ -95,14 +95,14 @@ The ontology session did not see these questions. The population session did, be
 
 Before population, the binding exposed the following expressibility limits:
 
-| Question | Expressible in the selected ontology | Missing semantics |
-| --- | --- | --- |
-| CQ1 | Method uses instrument | Campaign, observing network, acquisition, instrument count |
-| CQ2 | Seismic phenomenon occurs at feature; feature part of feature | Relative position such as beneath an axis |
-| CQ3 | Quantitative observation, target, constituent, and estimate status | None required by the frozen binding |
-| CQ4 | Process components and observations | Hypothesis, author preference, epistemic status, direction of motion |
+| Question | Expressible in the selected ontology | Missing semantics | Populated |
+| --- | --- | --- | --- |
+| CQ1 | Method uses instrument | Campaign, observing network, acquisition, instrument count | no |
+| CQ2 | Seismic phenomenon occurs at feature; feature part of feature | Relative position such as beneath an axis | yes |
+| CQ3 | Quantitative observation, target, constituent, and estimate status | None required by the frozen binding | yes |
+| CQ4 | Process components and observations | Hypothesis, author preference, epistemic status, direction of motion | no |
 
-These gaps were recorded and left unchanged.
+These gaps were recorded and left unchanged. The last column is read from the population after the fact: the session created no method, instrument or process record, so CQ1 and CQ4 are population limits as much as ontology limits.
 
 Fresh-session inputs were copied and digest-frozen before each model run. Both tasks forbade network use and extra repository reads. The ontology task forbade file writes; the population task allowed only `population.json` and also forbade delegation. This was a declared session boundary over a shared workspace and tool surface; the experiment does not claim that an operating-system sandbox enforced it. Observable producer kind, task name, visible files, retry count, and diagnostics are retained. Provider internals that the experiment cannot observe are not inferred.
 
@@ -114,23 +114,23 @@ The published Small Shop correction fixture supplies component evidence that ord
 
 ### 4.1 Frozen identities
 
-The selected run uses exactly five manuscript identity groups:
+The selected run uses exactly five manuscript identities:
 
 1. Source PDF: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
 3. Selected ontology: `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed`.
 4. Ledger head `sha256:7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b` plus replay receipt `sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796`.
-5. Adopter query binding: `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`.
+5. Application-side query binding: `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`.
 
-The fifth group is not accepted-state evidence. Diagnostics, tests, population, and result files remain retained artifacts without becoming extra manuscript identity chains.
+The fifth identity is not accepted-state evidence. Diagnostics, tests, population, and result files remain retained artifacts without becoming extra manuscript identity chains.
 
 ### 4.2 Ontology, population, and admission
 
-Ontology attempt one was refused because the root field `default_prefix` is outside the supported LinkML profile. The exact compiler diagnostic was returned once. Attempt two removed only that field and compiled into a deterministic 4,146-fact validated import closure containing LinkML types, Malleus, and the proposed domain root. No semantic edit or question input intervened.
+Ontology attempt one was refused because the root field `default_prefix` is outside the supported LinkML profile. The exact compiler diagnostic was returned once. Attempt two removed only that field and compiled into 15 entity classes, 33 relation classes and 16 enums; the validated import closure, which also carries the LinkML types and the Malleus root, holds 4,146 facts. No semantic edit or question input intervened.
 
 The nineteen value-generic templates compiled against this ontology. The separate population session returned a valid proposal on its first attempt, so no structural retry occurred. It contained 13 records and compiled unchanged into 13 ordered operations with 47 provenance assertions over four reading blocks. Seven operations create entities and six create relations. Both source-locator and structural checks were `SATISFIED`; policy produced `ACCEPT`.
 
-Eighteen prerequisite anchors plus a five-event atomic admission batch produced the 23-event history. The admitted graph contains seven entities and six relations. After the live graph and protocol objects were discarded, ledger reopen and replay reproduced the graph state, machine state, and receipt.
+Eighteen anchor events retaining the contract, sources and evidence, plus a five-event atomic admission batch, produced the 23-event history. The admitted graph contains seven entities and six relations. After the live graph and protocol objects were discarded, ledger reopen and replay reproduced the graph state, protocol state, and receipt.
 
 ### 4.3 Query output
 
@@ -143,11 +143,31 @@ The query binding contains 1, 2, 4, and 6 direct one-hop cases for CQ1 through C
 | CQ3 | 4 | Observed depth 10 to 20 km; calculated primary-melt CO2 concentration 0.4 to 3.0 wt%; constituent and material-location links |
 | CQ4 | 0 | No process or hypothesis row |
 
-These are raw replay-derived rows, not reviewed answers. CQ2 encodes neither the deep qualifier nor that events are beneath the axis. The ontology lacks complete semantics for CQ1, CQ2, and CQ4. The sparse model population also left partially expressible cases unrealized in CQ1 and CQ4. Because both ontology and population were frozen as produced, the empty rows expose an end-to-end coverage limit without isolating one cause. They are not false successes and were not repaired after query execution. CQ3 returns the requested range values, units, targets, and observed or calculated status, but its source support still awaits separate human-author review.
+These are raw replay-derived rows, not reviewed answers. CQ2 encodes neither the deep qualifier nor that events are beneath the axis. The ontology lacks complete semantics for CQ1, CQ2, and CQ4. The sparse model population also left partially expressible cases unrealized in CQ1 and CQ4. The two causes separate cleanly. CQ1 lacks campaign, network and count in the ontology, and the population also created no method or instrument record. CQ4's causal chain is expressible through process relations, and the population created no process record, so that empty row is a population limit, not an ontology limit. Given 186 blocks and 48 classes, the fresh session wrote 13 records from four blocks. The rows are not false successes and were not repaired after query execution. CQ3 returns the requested range values, units, targets, and observed or calculated status, but its source support still awaits separate human-author review.
 
 The guarded query region recorded zero file-read attempts, zero network attempts, and zero imports of the named embedding or vector packages. It received the replay receipt, selected ontology inputs, loaded Malleus implementation, and binding. For this fixed execution, the graph was queried without an embedding index. This says nothing about unseen questions, semantic similarity, other retrieval implementations, or operating-system-level isolation.
 
+For contrast, the earlier run whose ontology session did see the four questions, retained at commit `746a48b` and not selected, returned rows for every question, 1, 1, 2 and 1, from a 14-record population. Its population also differed, so this is an end-to-end contrast, not an ontology-only ablation. It is the reason Section 1 treats question conditioning as a confound rather than a convenience.
+
 A second invocation into new ignored directories, using transaction time `2026-09-03T09:11:42Z`, reproduced the semantic ledger and all five public result files byte for byte. The source-grounded review protocol had been frozen before query output, and its exact input manifest was bound afterward. A separate fresh Codex session then prepared preliminary support and responsiveness judgments for all four questions. That record is explicitly nonhuman and cannot serve as paper evidence. Human-author ratification is pending, so we report no final support judgment and make no answer-correctness claim.
+
+### 4.4 Two other proposal producers
+
+The protocol was run twice more with nothing changed but the producer. Each run used the byte-identical ontology brief and the same five inputs, a fresh session with no inherited context, compiler diagnostics returned at most twice, one recorded acceptance event, a type-only binding authored against the accepted ontology, recipes and population brief derived mechanically from that ontology and binding, a fresh population session under the same rules, and the same build, admission, replay and guarded query path. The harness that runs a producer from one manifest was first pointed at the v2 artifacts and reproduced the v2 recipes, brief, acceptance event, five result files and private ledger byte for byte. The v2 producer was gpt-5.6-sol at reasoning effort ultra under Codex; the two new producers were Claude Sonnet 5 and Claude Opus 5 under Claude Code at the harness default effort, which the experiment cannot pin or observe.
+
+| Producer | Ontology attempts | Entity / relation classes | Enums | Facts | Binding cases | Population records | Graph | Rows CQ1 to CQ4 |
+| --- | ---: | --- | ---: | ---: | --- | ---: | --- | --- |
+| gpt-5.6, selected run | 2 | 15 / 33 | 16 | 4,146 | 1, 2, 4, 6 | 13 | 7 entities, 6 relations | 0, 2, 4, 0 |
+| Claude Sonnet 5 | 1 | 8 / 8 | 8 | 1,738 | 1, 1, 2, 1 | 2 | 2 entities, 0 relations | 0, 0, 0, 0 |
+| Claude Opus 5 | 2 | 20 / 18 | 16 | 3,869 | 1, 2, 3, 2 | 6 | 5 entities, 1 relation | 0, 0, 0, 1 |
+
+Every run admitted atomically, produced a 23-event history, reproduced its graph and receipt after disposal and replay, and recorded zero guarded file, network or embedding-import attempts. Two of the three ontology sessions hit the same compiler boundary on their first attempt, the unsupported root field `default_prefix`, and both removed only that field when the diagnostic was returned. The Opus session also failed to launch three times on server-side overload before producing anything; those launches are logged and are not attempts.
+
+The differences are in the proposed ontologies. Sonnet proposed eight entity and eight relation classes; Opus proposed twenty and eighteen, with an explicit depth datum, unit, determination mode and an abstract subsection root. Neither required the root `name` slot, so neither can name a ridge subsection; the selected v2 ontology required it. Both gave depth and concentration as one value per event or sample, while the source reports them as ranges over populations, and the population brief forbids inventing a value; so neither population contains an earthquake, a sample or a concentration. The v2 ontology carried lower and upper bounds on one observation record, which is why it alone answers CQ3. Neither Claude ontology has a process or hypothesis class with a typed relation to seismicity, so neither can answer CQ4 as asked. Opus's one row states the saturation condition of a pre-eruptive melt in CO2 at 0.7 GPa and 1250 °C, which is the mechanism's premise, not the authors' claim that it triggers the earthquakes. Asked afterwards, without reopening any file, why records were omitted, both population sessions named these rules; the replies are retained as self-reports, not evidence.
+
+Preliminary source-grounded review, by a fresh Claude session under the method of Section 2.4, labelled every Sonnet question and the first three Opus questions not evaluable and not responsive on zero rows, and labelled the single Opus row supported on its content and not responsive to the question. Human-author ratification is pending for both runs, as for the selected run.
+
+The finding is narrow. The pipeline behaved identically across producers. What varied was whether the proposed vocabulary could hold what the source says, and that was decided before any fact was proposed. A commitment boundary makes this visible: the two near-empty graphs are refusals to invent, recorded as such, not silent gaps.
 
 ## 5. Related work
 
@@ -181,7 +201,7 @@ The population producer saw the questions, so the experiment does not test open-
 
 An accepted change is conformant under identified checks and a recorded decision. It may still be incomplete, misleading, or false. Per-value locators aid inspection but do not authenticate the publisher, model provider, evaluator, runtime host, or storage owner. Human source review is pending, so even the nonempty rows are not yet evidence of answer support.
 
-The reading comes from a PDF text layer and may retain spacing or ligature artifacts. Figures and tables were excluded. Replay is file-backed and in-process, not a distributed durability result. The access guards observe selected Python entry points only. The run does not test Semantic Re-entry, temporal correction, effects, actions, or autonomous knowledge revision. The paper-specific dependency lock is limited to CPython 3.12 on macOS arm64. It identifies but does not vendor the interpreter or operating system, and reproduction still requires the ignored publisher PDF and the exact checkout because the research seam is not in the distributable package.
+The reading comes from a PDF text layer and may retain spacing or ligature artifacts. Figures and tables were excluded. Replay is file-backed and in-process, not a distributed durability result. The access guards observe selected Python entry points only. The run does not test Semantic Re-entry, temporal correction, effects, actions, or autonomous knowledge revision. The ledger here is a generic commitment history parameterized by the accepted ontology. It carries no domain event vocabulary: each run holds one change over empty state, the first population is an ordinary change set rather than a typed seed, and the private path admits only entity and relation creation. A domain semantic ledger in the sense of event-centred accounting models, which fixes how both initial state and later transitions are represented, is not demonstrated. The paper-specific dependency lock is limited to CPython 3.12 on macOS arm64. It identifies but does not vendor the interpreter or operating system, and reproduction still requires the ignored publisher PDF and the exact checkout because the research seam is not in the distributable package.
 
 ## 7. Conclusion
 
@@ -191,7 +211,7 @@ The same run preserved its limits. Two questions returned no rows, and the CQ2 r
 
 ## Appendix A. Reproduction
 
-Core commit `f9052b4` defines the implementation baseline. The executable paper snapshot is commit `8e818103e6867e326544123a30abe756bdd45117`, tree `455e91e3110d1789fb3db8c8a902bc2e87c4eb04`; it contains the v2 experiment, frozen artifacts, driver, and dependency lock, though not this later prose revision. Run the commands below from that paper snapshot. The PDF must exist at the ignored path named by `paper-v4/source/source-manifest.json`. The commands require CPython 3.12.9 on macOS arm64. They create a fresh environment, install only the hash-checked lock, and run the private research seam from the exact checkout. Both output paths must be absent before execution. This working draft does not claim that the paper snapshot is publicly reachable; submission requires a published tag or archive for it.
+Core commit `f9052b4` defines the implementation baseline. The executable paper snapshot is the commit tagged `paper-v4-multimodel-v1`, which contains the v2 experiment, the two further producer runs, this prose revision, the drivers, and the dependency lock. Run the commands below from that snapshot. The PDF must exist at the ignored path named by `paper-v4/source/source-manifest.json`. The commands require CPython 3.12.9 on macOS arm64. They create a fresh environment, install only the hash-checked lock, and run the private research seam from the exact checkout. Both output paths must be absent before execution. The further producer runs use the manifest driver, `research/ontology_driven_kg_realization/experiments/document_paper/multimodel.py`, with each run's `run-manifest.json` and the transaction time retained beside it.
 
 ```sh
 malleus_paper_root="$PWD"
