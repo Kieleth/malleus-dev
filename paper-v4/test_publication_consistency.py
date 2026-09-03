@@ -15,7 +15,7 @@ README = PAPER / "arxiv/README.md"
 QUERY_RESULT = PAPER / "experiment-v2/results/query-result.json"
 BUILD_RESULT = PAPER / "experiment-v2/results/experiment-result.json"
 COMPILE_RECEIPT = PAPER / "experiment-v2/ontology-run/compilation/compile-receipt.json"
-REPRODUCER_TAG = "paper-v4-multimodel-v1"
+REPRODUCER_TAG = "paper-v4-multimodel-v2"
 V3_RUNS = PAPER / "experiment-v3/runs"
 
 

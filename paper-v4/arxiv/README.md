@@ -13,7 +13,7 @@ The resulting `main.pdf` is a build artifact and must not be committed here.
 
 ## Reproduce the experiment
 
-Run these commands from the repository root at the commit tagged `paper-v4-multimodel-v1`. That coordinate contains the v2 experiment, the two further producer runs, the environment lock, and the drivers. It is based on Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The paper coordinate is outside the five experiment identities.
+Run these commands from the repository root at the commit tagged `paper-v4-multimodel-v2`. That coordinate contains the v2 experiment, the two further producer runs, their human ratification records, the environment lock, and the drivers. It is based on Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The paper coordinate is outside the five experiment identities.
 
 The ignored publisher PDF must already exist at the path named by `paper-v4/source/source-manifest.json`. The commands require CPython 3.12.9 on macOS arm64. Both output paths must be absent.
 
