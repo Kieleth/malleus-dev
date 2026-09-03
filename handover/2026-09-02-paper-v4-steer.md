@@ -2,7 +2,7 @@
 
 Author decisions taken by Luis in chat with the overseer session on the evening of 2026-09-02, after a read of the "Draft lean Malleus arXiv paper" thread, `paper-v4/`, `private/paper-v4-ocr`, and a run of the experiment suite (121 passed under `.venv`). They supersede plan decision D-0010 and the plan 0.2.0 evaluation choices they contradict. Record them in `paper-ledger.md` as D-0011 to D-0014 with source "Author decision via overseer session, 2026-09-02", bump the plan, and update the manuscript status line.
 
-Four decisions are closed. One, D3, is open. Do not proceed on D3.
+All five decisions are closed. D3 was closed after D1, D2, D4 and D5, in the same session.
 
 ## D1 Reading layer: PDF text layer, not raster OCR
 
@@ -53,18 +53,23 @@ Decision: the experiment runs against a clean checkout of Core `1611944` in its 
 - The PDF is never committed. Manifest, URL and digest are enough; the plan already says so. Add `paper-v4/source/*.pdf` and `__pycache__/` to the ignore rules.
 - Keep ignoring the Core thread's Small Shop temporal-correction delegations, as E-0064 already does.
 
-## D3 OPEN: who writes the population
+## D3 Population: the model writes the facts, no fallback
 
-Who proposes the 15 entities and 20 relations that enter the graph? The author has not decided. Two options are on the table:
+Decision: a fresh model session, given the selected ontology and the selected reading, proposes the facts that enter the graph, with a block locator per value. Malleus compiles, refuses what is malformed, admits the rest, replays, and the four queries run. The exact-match score against the sealed oracle is the result, whatever it is.
 
-- (a) A fresh model session, given the selected ontology and the selected reading, proposes the facts with a block locator per value. Malleus compiles, refuses what is malformed, admits the rest, replays, and the four queries run. The exact-match score against the sealed oracle is the result, whatever it is.
-- (b) Evaluator-authored population, as decided in the thread at 19:56 PDT.
+Evaluator-authored population, as chosen in the thread at 19:56 PDT, is withdrawn. There is no fallback to it. If the model's population fails structurally or scores badly, that is the paper's result, reported as such.
 
-Until the author decides: build nothing past the recipe library. Do not author population facts.
+Why: the thesis is that a model's reading of a document can be captured in a governed graph and retrieved without embeddings. Facts written by the party holding the answer key cannot fail on content and therefore test nothing about that thesis. Small Shop already covers the plumbing-only case.
+
+What changes:
+
+- One population task brief for a fresh session: inputs are the selected ontology, the selected reading, the recipe library and the competency questions. Output is one machine-readable population file, each value carrying a block locator. Same fresh-session rules as the ontology stage. Retry policy: structural compiler diagnostics only, one retry, no adequacy review at this stage.
+- The recipe library (`document-control-recipes.stottr`) may stay as the construction vocabulary the model populates against, if it is generic. Any recipe that encodes an answer value is retired.
+- Refusals during population are the negative cases. Synthetic mutations are added only for error classes the run did not produce naturally, and only from the list already in the plan.
 
 ## Order
 
-D5, then D1, then D2, then D3 once decided, then queries, then fill the result fields, then cut the manuscript.
+D5, then D1, then D2, then D3, then queries, then fill the result fields, then cut the manuscript.
 
 ## Verified facts behind this steer
 
