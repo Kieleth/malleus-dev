@@ -143,6 +143,7 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
 9. Grounding is a standing order in the skill and a machine-checkable `grounding` block on packs and root-extending classes, enforced by a `pack-grounding` rite.
 10. A `DomainHistoryProfile` is a separate adopter-owned contract, shipped as grounded reference profiles; the paper runs under `source-assertion`, Small Shop under `state-version`; Event materialization is Core's `object-event` track and does not gate the paper.
 11. Requirements flow: Core touches Core and receives requirements with reproducers; the paper thread executes and files requirements through the overseer; the overseer verifies every Core deliverable on disk before the paper thread consumes it. Handovers: `handover/2026-09-03-core-requirements.md`, `handover/2026-09-03-paper-executor-plan.md`.
+12. Population (after the coverage RCA, `handover/2026-09-03-population-redesign-tdd.md`): the unit of capture is the assertion, a verbatim clause with block, modality and attribution, and typed records are its formalizations; the objective is coverage of the reading measured by a per-block census (asserted, unformalised, nothing assertable, untouched), never "smallest"; competency questions enter only the evaluation loop after population is frozen; the constructible set is every concrete type of the accepted ontology; ratification samples blocks. Built research-locally first, test first, as the prototype of Core R1's reference adapter.
 
 ## Open
 
