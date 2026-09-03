@@ -2,7 +2,7 @@
 
 From the overseer session. Decided by Luis in chat on 2026-09-03. Your proposed cut is approved with four amendments, below. Role restated: the paper thread executes; it touches no Core code; it files Core requirements with minimal reproducers through the overseer, never to Core directly; the overseer verifies every Core deliverable on disk before you consume it.
 
-Design record: `design/KNOWLEDGE_PACKS.md` on main. Core's requirement list: `handover/2026-09-03-core-requirements.md`, being revised after Core's review; the population adapter is being built by Core under `handover/2026-09-03-core-population-adapter-tdd.md`. Two population decisions taken after this plan was written and binding on the rerun: competency questions never enter population either, they enter only the evaluation loop; and the constructible set is every concrete type of the accepted ontology, so no binding closure before population.
+Design record: `design/KNOWLEDGE_PACKS.md` on main. Core's live instruction: `handover/2026-09-03-core-population-v2.md` (neutral population plan, governed integration, public facade and CLI, document-assertion adapter, then the remaining requirements in order). `handover/2026-09-03-core-requirements.md` stays the requirement list. Two population decisions taken after this plan was written and binding on the rerun: competency questions never enter population either, they enter only the evaluation loop; and the constructible set is every concrete type of the accepted ontology, so no binding closure before population.
 
 ## The approved cut
 
@@ -11,7 +11,7 @@ Approved: a pre-ontology domain-history profile; `source-assertion` history for 
 Amended:
 
 1. The profile is not a form the author fills. Malleus ships grounded reference profiles (`source-assertion`, `state-version`, `object-event`; `commitment-exchange` documented). The paper selects `source-assertion`.
-2. The paper does not need the Event seam. Under `source-assertion`, claims are entities from the `research` pack, supersession is record-level and already exists, retraction is a superseding claim with modality NEGATED. The one Core seam the loop needs is replay across an ontology supersession (Core R4). Event materialization is Small Shop's `object-event` track. Do not couple the paper to it.
+2. The paper does not need the Event seam. Under `source-assertion`, assertions are capture evidence in the ledger, not graph records (ruling of 2026-09-03 late, `handover/2026-09-03-core-population-v2.md`), supersession is record-level and already exists, retraction is a superseding assertion with modality NEGATED and a superseding record where one was formalized. The one Core seam the loop needs is replay across an ontology supersession (Core R4). Event materialization is Small Shop's `object-event` track. Do not couple the paper to it.
 3. Reopen only after Core's R1 to R5 exist and are verified. A rerun before that would need a hand-written brief again, and we would be measuring the brief.
 4. SOSA/SSN grounds the `research` pack's Observation. It is not a fourth pack and not a paper-local schema.
 
@@ -41,6 +41,8 @@ E6. Manuscript 1.3 plan, prose only, no results. The domain-history profile beco
 E7. Rerun the matrix. Per run, report: ontology attempts and diagnostics; packs and profile selected by the session; gaps declared, by kind; revision rounds and what each added; population records and relations; graph counts; ledger events including supersessions; rows per question; guard attempts; reproduction. Then bind queries, run, review, hand to Luis.
 
 E8. Manuscript 1.3 results, then the same gates as 1.2.0: publication guard, fidelity tests, clean-checkout reproduction, PDF with zero warnings, tag.
+
+E9. Harness isolation checks, moved here from Core on 2026-09-03 (late) because a digest cannot prove precedence and Core does not own the experiment: the run driver refuses a query binding whose digest predates the population freeze; a run with an empty binding still produces a census and a replay receipt; queries run only against the replayed graph. These are tests in the paper harness, beside the fidelity tests.
 
 ## Rules that do not bend
 

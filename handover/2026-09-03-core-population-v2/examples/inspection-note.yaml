@@ -1,0 +1,54 @@
+id: https://example.malleus.dev/inspection-note
+name: inspection_note
+default_range: string
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  note: https://example.malleus.dev/inspection-note/
+imports:
+  - linkml:types
+  - malleus
+enums:
+  InspectionRelationKind:
+    permissible_values:
+      INSPECTION_OF:
+slots:
+  inspected_on:
+    range: string
+  vibration_mm_s:
+    range: float
+classes:
+  Asset:
+    is_a: Entity
+    slots:
+      - name
+    slot_usage:
+      name:
+        required: true
+  Inspection:
+    is_a: Entity
+    slots:
+      - inspected_on
+    slot_usage:
+      inspected_on:
+        required: true
+  VibrationReading:
+    is_a: Entity
+    slots:
+      - vibration_mm_s
+    slot_usage:
+      vibration_mm_s:
+        required: true
+  InspectionOfRelation:
+    is_a: Relation
+    slot_usage:
+      relation_type:
+        range: InspectionRelationKind
+        required: true
+        equals_string: INSPECTION_OF
+      source_id:
+        range: Inspection
+        required: true
+      target_id:
+        range: Asset
+        required: true

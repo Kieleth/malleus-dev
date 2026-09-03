@@ -1,0 +1,124 @@
+{
+  "adapter": {
+    "adapter_id": "document-assertion",
+    "version": "0"
+  },
+  "contract_identity": "sha256:0a9a02ced1581c30bbcf0daafcb2af7e5cfff8ff3bec7d206c00bcad9c456a02",
+  "derivations": [
+    {
+      "locator": "asr:001",
+      "path": [
+        "properties",
+        "name"
+      ],
+      "record_id": "asset:P-7",
+      "source_id": "source:inspection-note"
+    },
+    {
+      "locator": "asr:001",
+      "path": [
+        "properties",
+        "inspected_on"
+      ],
+      "record_id": "inspection:P-7:2026-03-02",
+      "source_id": "source:inspection-note"
+    },
+    {
+      "locator": "asr:001",
+      "path": [
+        "properties",
+        "relation_type"
+      ],
+      "record_id": "inspection-of:P-7:2026-03-02",
+      "source_id": "source:inspection-note"
+    },
+    {
+      "locator": "asr:001",
+      "path": [
+        "source_id"
+      ],
+      "record_id": "inspection-of:P-7:2026-03-02",
+      "source_id": "source:inspection-note"
+    },
+    {
+      "locator": "asr:001",
+      "path": [
+        "target_id"
+      ],
+      "record_id": "inspection-of:P-7:2026-03-02",
+      "source_id": "source:inspection-note"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "capture:inspection-note",
+      "sha256": "sha256:44b1936e98870f6e74801f1bf701f5a9823f3309791b6a42297d10ec05902a0f"
+    }
+  ],
+  "gaps": [
+    {
+      "kind": "INTERVAL_NOT_EXPRESSIBLE",
+      "locator": "asr:002",
+      "source_id": "source:inspection-note",
+      "statement": "VibrationReading.vibration_mm_s is a single float; the source states a range"
+    },
+    {
+      "kind": "TYPE_ABSENT",
+      "locator": "asr:003",
+      "source_id": "source:inspection-note",
+      "statement": "no type for a suspected fault"
+    },
+    {
+      "kind": "MODALITY_NOT_EXPRESSIBLE",
+      "locator": "asr:003",
+      "source_id": "source:inspection-note",
+      "statement": "no slot carries HYPOTHESISED on any record"
+    }
+  ],
+  "grammar": "malleus.population-plan/private-v0",
+  "history_profile": {
+    "profile_id": "source-assertion",
+    "sha256": "sha256:1a24e12fc35b8a88dad634f4b19387cb451a3bfbe35cf7b9021159310a142f3c"
+  },
+  "plan_id": "plan:inspection-note:1",
+  "records": {
+    "entities": [
+      {
+        "id": "asset:P-7",
+        "properties": {
+          "name": "P-7"
+        },
+        "type": "Asset"
+      },
+      {
+        "id": "inspection:P-7:2026-03-02",
+        "properties": {
+          "inspected_on": "2026-03-02"
+        },
+        "type": "Inspection"
+      }
+    ],
+    "relations": [
+      {
+        "id": "inspection-of:P-7:2026-03-02",
+        "properties": {
+          "relation_type": "INSPECTION_OF"
+        },
+        "source_id": "inspection:P-7:2026-03-02",
+        "target_id": "asset:P-7",
+        "type": "InspectionOfRelation"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "sha256": "sha256:bb53392a52103dd6cc82e220cf85a4580d8da6f1140c8a43b07719aaaa27ca48",
+      "source_id": "source:inspection-note"
+    }
+  ],
+  "supersessions": [],
+  "valid_time": {
+    "kind": "INSTANT",
+    "value": "2026-03-02T00:00:00Z"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "base_acceptance_head": "sha256:130df0365f96457bdc190ff0c56bb55ac86aac99d55ea60396393a12d2133ced",
+  "base_accepted_state_digest": "sha256:4e9dd147de37bb504ebcd7935425ade2614485b7292d74704e981493b5e31dea",
+  "base_ledger_event_count": 13,
+  "base_ledger_head": "sha256:5f60b702942b9b7e21bb7b2fa0d8c4133ec691d368ef0d373e269ab5145c5225",
+  "base_materialization_head": "sha256:8b5a94aa66ff0724aab38f9b8a1cb8bdfb2f1a0fa480ac62234684a77997dce3",
+  "change_set_id": "change:plan:shop:B:e7",
+  "contract_identity": "sha256:01470c0b41aa26720fb33c82fd65d3d00a5c26354db85b527fa6d7a79dc9beb2",
+  "contract_kind": "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0",
+  "evidence": [
+    {
+      "evidence_id": "profile:state-version",
+      "sha256": "sha256:a6a12681534884f17f233aaa2bde382d730e2496c17216aa3b3ae8c24c9a1da8"
+    },
+    {
+      "evidence_id": "plan:shop:B:e7",
+      "sha256": "sha256:5aaf2835fbc058930bef24aea348a544d0375ca4edbccbf647e3e6dbc5ad9d67"
+    }
+  ],
+  "grammar": "malleus.knowledge-change-set/private-v0",
+  "operations": [
+    {
+      "depends_on": [],
+      "operation_id": "operation:plan:shop:B:e7:0",
+      "operation_type": "CREATE_ENTITY",
+      "ordinal": 0,
+      "properties": {
+        "ordered_quantity": 2,
+        "product_code": "Y",
+        "source_occurrence_id": "e7",
+        "supplier_order_id": "B"
+      },
+      "record_id": "supplier-order-state:B:e7",
+      "record_type": "SupplierOrderState",
+      "supersedes_record_id": "supplier-order-state:B:e4"
+    }
+  ],
+  "sources": [
+    {
+      "sha256": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081",
+      "source_id": "source:supplier-order-history"
+    }
+  ],
+  "supersedes": [
+    "change:plan:shop:B:e4"
+  ],
+  "valid_time": {
+    "kind": "ORDER_ONLY",
+    "value": "e7"
+  }
+}

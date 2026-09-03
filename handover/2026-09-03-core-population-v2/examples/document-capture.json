@@ -1,0 +1,86 @@
+{
+  "assertions": [
+    {
+      "block": "page:1:block:001",
+      "formalized_by": [
+        {
+          "path": [
+            "properties",
+            "name"
+          ],
+          "record_id": "asset:P-7"
+        },
+        {
+          "path": [
+            "properties",
+            "inspected_on"
+          ],
+          "record_id": "inspection:P-7:2026-03-02"
+        },
+        {
+          "path": [
+            "properties",
+            "relation_type"
+          ],
+          "record_id": "inspection-of:P-7:2026-03-02"
+        },
+        {
+          "path": [
+            "source_id"
+          ],
+          "record_id": "inspection-of:P-7:2026-03-02"
+        },
+        {
+          "path": [
+            "target_id"
+          ],
+          "record_id": "inspection-of:P-7:2026-03-02"
+        }
+      ],
+      "gaps": [],
+      "id": "asr:001",
+      "modality": "STATED",
+      "statement": "Pump P-7 was inspected on 2026-03-02."
+    },
+    {
+      "block": "page:1:block:001",
+      "formalized_by": [],
+      "gaps": [
+        {
+          "kind": "INTERVAL_NOT_EXPRESSIBLE",
+          "statement": "VibrationReading.vibration_mm_s is a single float; the source states a range"
+        }
+      ],
+      "id": "asr:002",
+      "modality": "MEASURED",
+      "statement": "Vibration measured between 4.1 and 4.6 mm/s."
+    },
+    {
+      "block": "page:1:block:002",
+      "formalized_by": [],
+      "gaps": [
+        {
+          "kind": "TYPE_ABSENT",
+          "statement": "no type for a suspected fault"
+        },
+        {
+          "kind": "MODALITY_NOT_EXPRESSIBLE",
+          "statement": "no slot carries HYPOTHESISED on any record"
+        }
+      ],
+      "id": "asr:003",
+      "modality": "HYPOTHESISED",
+      "statement": "The technician suspects bearing wear."
+    }
+  ],
+  "attribution": {
+    "author": "maintenance technician",
+    "date": "2026-03-02",
+    "source_id": "source:inspection-note"
+  },
+  "nothing_assertable": [
+    "page:1:block:003"
+  ],
+  "reading_sha256": "sha256:bb53392a52103dd6cc82e220cf85a4580d8da6f1140c8a43b07719aaaa27ca48",
+  "schema": "malleus.document-capture/private-v0"
+}

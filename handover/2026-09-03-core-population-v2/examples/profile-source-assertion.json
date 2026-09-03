@@ -1,0 +1,10 @@
+{
+  "grammar": "malleus.domain-history-profile/private-v0",
+  "grounding": {
+    "note": "minimal artifact: identity and unit only; full fields per P6",
+    "taxonomy": "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications"
+  },
+  "origin": "EMPTY",
+  "profile_id": "source-assertion",
+  "semantic_unit": "ASSERTION"
+}

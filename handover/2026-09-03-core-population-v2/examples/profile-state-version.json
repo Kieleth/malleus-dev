@@ -1,0 +1,10 @@
+{
+  "grammar": "malleus.domain-history-profile/private-v0",
+  "grounding": {
+    "note": "minimal artifact: identity and unit only; full fields per P6",
+    "taxonomy": "temporal database versioning; Small Shop walkthrough"
+  },
+  "origin": "EMPTY",
+  "profile_id": "state-version",
+  "semantic_unit": "STATE_VERSION"
+}

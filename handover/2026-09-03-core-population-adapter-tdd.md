@@ -1,5 +1,7 @@
 # Core: the population adapter, assertions, coverage census. TDD plan.
 
+SUPERSEDED on 2026-09-03 (late) by `handover/2026-09-03-core-population-v2.md`, after Core's evaluation at commit 3b35476 found this document promoted the paper's document adapter into Core's population contract. Kept for the record. Do not build from it.
+
 From the overseer session, decided by Luis in chat on 2026-09-03 (late). Executor: Core. This is requirement R1's adapter from `handover/2026-09-03-core-requirements.md`, built first and test first, one slice at a time; the overseer verifies each slice on disk before the next starts. It sits inside Core's own Pareto order as step 3 (the narrow public API, population side) and step 6 (typed gaps), plus two things that order did not have: the assertion as the unit of capture, and a coverage census. Steps 1 and 2 of Core's order (the governance entry, the profile artifact) stay Core's and are not blocked by this. Core's objection stands: no paper artifact is a Core fixture. The paper's frozen runs are the overseer's downstream check, run by the overseer, after Core reports green.
 
 ## The discovery, in five lines
