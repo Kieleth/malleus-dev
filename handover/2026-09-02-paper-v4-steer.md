@@ -1,8 +1,8 @@
 # Paper v4 steer, 2026-09-02
 
-Author decisions taken by Luis in chat with the overseer session on the evening of 2026-09-02, after a read of the "Draft lean Malleus arXiv paper" thread, `paper-v4/`, `private/paper-v4-ocr`, and a run of the experiment suite (121 passed under `.venv`). They supersede plan decision D-0010 and the plan 0.2.0 evaluation choices they contradict. Record them in `paper-ledger.md` as D-0011 to D-0014 with source "Author decision via overseer session, 2026-09-02", bump the plan, and update the manuscript status line.
+Author decisions taken by Luis in chat with the overseer session on the evening of 2026-09-02, after a read of the "Draft lean Malleus arXiv paper" thread, `paper-v4/`, `private/paper-v4-ocr`, and a run of the experiment suite (121 passed under `.venv`). They supersede plan decision D-0010 and the plan 0.2.0 evaluation choices they contradict. Record them in `paper-ledger.md` as D-0011 to D-0016 with source "Author decision via overseer session, 2026-09-02", bump the plan, and update the manuscript status line.
 
-All five decisions are closed. D3 was closed after D1, D2, D4 and D5, in the same session.
+All six decisions are closed. D3 and D6 were closed after D1, D2, D4 and D5, in the same session. D6 replaces the review loop in D2; read D2 in the light of D6.
 
 ## D1 Reading layer: PDF text layer, not raster OCR
 
@@ -17,13 +17,13 @@ What changes:
 - Retire the OCR precommit, execution receipt, verification, bundle, alignment guard and their tests from the experiment. Keep the retained files under `private/` untouched. Do not delete, do not cite.
 - Rendering, Tesseract and trained data leave the dependency set.
 
-## D2 Ontology acceptance: the protocol's loop, not a hand repair
+## D2 Ontology acceptance: no hand repair
 
-Decision: the ontology run is re-executed on the text-layer reading, since the refused run was built on corrupted text. Same task brief, same fresh-session rules, same one-shot adequacy review. If the review refuses, return its diagnostic (failed criteria plus witness rows) to the same session once, as a typed `DEFER`. The session supersedes its proposal. One more one-shot review. Then stop, whatever the outcome. Report both rounds.
+Decision: the ontology run is re-executed on the text-layer reading, since the refused run was built on corrupted text. Same task brief, same fresh-session rules. Compiler diagnostics are returned to the session up to twice, as already precommitted. The compiled ontology is then accepted for population under D6; there is no adequacy review and no supersession round.
 
 The hand-authored recovery ontology (`controlled-ontology-recovery.yaml`, its precommit, compilation, review and receipt) is retired. Not deleted, not used, not cited as the paper's ontology. The Tesseract-era refused run is retained as history and gets at most one sentence in limitations.
 
-Why: refusal with a diagnostic followed by supersession is what the Malleus protocol is for. Forbidding that loop and then editing the schema by hand, however many precommits wrap it, reads as post-hoc repair. Running the protocol's own loop is both leaner and on thesis.
+Why: editing the schema by hand and presenting it as a control, however many precommits wrap it, reads as post-hoc repair. The earlier draft of this steer replaced the hand repair with a DEFER-and-supersede round; D6 removes the reviewer that round would have answered to, so the round goes with it.
 
 ## D4 Ceremony budget: five identities
 
@@ -67,9 +67,28 @@ What changes:
 - The recipe library (`document-control-recipes.stottr`) may stay as the construction vocabulary the model populates against, if it is generic. Any recipe that encodes an answer value is retired.
 - Refusals during population are the negative cases. Synthetic mutations are added only for error classes the run did not produce naturally, and only from the list already in the plan.
 
+## D6 No LLM adequacy reviewer: the compiler is the gate, the questions are the judge
+
+Decision: the one-shot adequacy review stage is removed. No rubric, no reviewer session, no `SELECTED` or `REFUSED_ADEQUACY` outcome. The stages become:
+
+1. The fresh session proposes the ontology. Compiler diagnostics returned up to twice.
+2. The compiled ontology is accepted for population by one recorded evaluator decision event carrying the ontology digest and the evaluator actor id. One ledger event, nothing else.
+3. Queries are bound before population to the ontology's record types, relation types and enum values only. The binding must not pin a graph closure. The current binding fixes an exact 15-entity, 20-relation closure; a model-populated graph cannot have its size decided in advance. Rebind.
+4. Population under D3, ledger, replay, four queries, score against the sealed oracle.
+
+Whether the ontology was adequate is measured, not judged: a schema with one count slot where the source has two returns one number for CQ-01 and mismatches the key. That mismatch, with its locator, is the result.
+
+Retire: `ontology-review-task.md`, `ontology-review-precommit.json`, `ontology-review-output-schema.json`, `ontology-review-input-manifest.json`, the adequacy receipts and their tests, and the review-input package under `document_paper/ontology_review_inputs.py` if nothing else uses it. Keep the files, stop citing them.
+
+Why: the adequacy reviewer is not a Malleus mechanism. It was added by the experiment, its rubric was written by the experimenter, and it produced both the refusal and the hand repair. Malleus governs commitment with a compiler, typed checks and recorded decisions. The competency questions already exist to judge semantic adequacy. Removing the reviewer deletes one stage, one rubric, one model session and the largest remaining risk of ending with no graph.
+
+## Framing
+
+The paper is an engineering paper about a commitment boundary, demonstrated on one document with four questions. Title and abstract say that. Prior art is conceded as the related-work section already does: SPIRES for LLM extraction into LinkML-typed knowledge bases, OntoLogX for validate-before-persist, Nexus for append-only replayed projections. What this paper adds is the explicit executable boundary with proposal, recorded decision, ledger and replay as separate identified steps, and a model on both sides of it. "No embedding index" stays a bounded observation about the tested path, never the headline.
+
 ## Order
 
-D5, then D1, then D2, then D3, then queries, then fill the result fields, then cut the manuscript.
+D5, then D1, then D2 with D6, then D3, then queries, then fill the result fields, then cut the manuscript.
 
 ## Verified facts behind this steer
 
