@@ -4,7 +4,7 @@ Version: 1.1.0
 
 Date: 2026-09-03
 
-Status: corrected run complete through Codex preliminary inspection and clean environment reproduction under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification and arXiv bundle inspection remain pending.
+Status: corrected run complete through Codex preliminary inspection, clean environment reproduction, and arXiv source plus rendered-PDF inspection under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification, public reachability of the exact paper snapshot, and final author review remain pending.
 
 ## Objective
 
@@ -90,6 +90,7 @@ The retired answer key remains sealed historical material and leaves the active 
 7. **Replay and query, complete.** The runner disposed the live objects, reopened the ledger, reproduced the graph, protocol state, and receipt, then queried the receipt-derived graph through the frozen adopter surface. The four row counts are `[0, 2, 4, 0]`; all guarded source-file, network, and embedding-import attempts are zero.
 8. **Source-grounded inspection, preliminary complete and human ratification pending.** The protocol was frozen before corrected query output. A separate fresh Codex session inspected the exact rows against the selected reading without ontology, population, provenance, replay receipt, oracle, score, manuscript, or paper-ledger access. Its preliminary labels are `NOT_EVALUABLE/NOT_RESPONSIVE`, `SUPPORTED/PARTIAL`, `SUPPORTED/RESPONSIVE`, and `NOT_EVALUABLE/NOT_RESPONSIVE` for CQ1 through CQ4. These labels are not paper evidence until Luis independently reviews the rows and source blocks, then ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
 9. **Environment reproduction, complete.** A platform-specific lock fixes 89 distributions for CPython 3.12 on macOS arm64 and requires archive hashes. A new virtual environment installed only that lock, then reproduced the selected reading, all five public result files, and the private ledger byte for byte from the exact checkout. The complete document-paper and active v2 paper-local gate passed 184 tests. The lock identifies but does not vendor the interpreter or operating system; the ignored PDF and source checkout remain required inputs.
+10. **arXiv bundle, complete.** The lean LaTeX source compiles without warnings, undefined citations, or box overflow into an eight-page PDF with embedded fonts. The final render is `sha256:6b243bafd7331a896a2571b1bcdc24fcf46163014fd72e06c86efae26ca8b25a`, and every page passed visual inspection. A publication-consistency guard binds duplicated manuscript and LaTeX claims to the frozen v2 result files. The final clean paper-local gate passes 189 tests.
 
 ### Fresh-session rules
 
@@ -144,6 +145,7 @@ Public repository material:
 - pinned dependency configuration and text-layer extractor;
 - selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, Codex preliminary review record, ratification guide, and focused tests;
 - platform-specific input constraints, hash-checked transitive lock, clean-verification record, and guard tests;
+- lean arXiv LaTeX source, verified bibliography, build instructions, and publication-consistency guard;
 - concise reproduction instructions and claim-to-artifact index.
 
 Private or evaluator-only material:
@@ -170,8 +172,9 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Build and inspect the arXiv bundle.
-2. Obtain identified human ratification of the inspection record and perform the final author review.
+1. Obtain identified human ratification of the inspection record.
+2. Publish the exact paper reproducer through an immutable tag or archive with a reachable URL.
+3. Perform the final author review and submit the arXiv bundle.
 
 ## Submission gate
 
@@ -185,6 +188,7 @@ Submit only when:
 - every reported answer comes from the replayed graph;
 - the frozen scorer failure is historical only, and the selected result uses source-grounded human review without a numeric score;
 - exact commands reproduce the retained result from declared dependencies;
+- the exact paper reproducer is reachable through a published immutable tag or archive;
 - related work and nonclaims match the evidence;
 - the manuscript is internally consistent and approximately 3,500 words.
 
