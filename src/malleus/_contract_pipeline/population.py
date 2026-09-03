@@ -311,6 +311,73 @@ def _digest(source: bytes) -> str:
     return _DIGEST_PREFIX + sha256(source).hexdigest()
 
 
+def _verify_retention_event(
+    *,
+    history: KnowledgeChangeHistory,
+    expected_record_id: str,
+    retained_bytes: bytes,
+    machine_event: bytes,
+) -> None:
+    try:
+        event = json.loads(machine_event)
+    except (json.JSONDecodeError, TypeError, UnicodeDecodeError) as error:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention event is not valid JSON",
+        ) from error
+    if not isinstance(event, dict) or set(event) != {"event_type", "payload"}:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention event fields are not closed",
+        )
+    if (
+        _canonical(
+            event,
+            reason=PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            detail="retention event is not canonical JSON data",
+        )
+        != machine_event
+    ):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention event bytes are not canonical",
+        )
+    event_type = event["event_type"]
+    payload = event["payload"]
+    if not isinstance(event_type, str) or not isinstance(payload, dict):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention event type and payload are required",
+        )
+    bindings = history.binding.data["retention_events"]
+    assert isinstance(bindings, Mapping)
+    binding = bindings.get(event_type)
+    if not isinstance(binding, Mapping):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            f"event is not an active retention event: {event_type}",
+        )
+    record_id_field = binding["record_id_field"]
+    identity_field = binding["identity_field"]
+    assert isinstance(record_id_field, str)
+    assert isinstance(identity_field, str)
+    if record_id_field not in payload or identity_field not in payload:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention event lacks its bound record ID or identity",
+        )
+    if payload[record_id_field] != expected_record_id:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            f"retention event names the wrong record: {expected_record_id}",
+        )
+    if payload[identity_field] != _digest(retained_bytes):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            f"retention event names the wrong bytes: {expected_record_id}",
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class DomainHistoryProfile:
     """Canonical minimal statement of one adopter's domain-history semantics."""
@@ -1185,20 +1252,38 @@ def prepare_population_change(
             )
         artifacts.append((gaps_id, _canonical({"gaps": gaps, "plan_id": plan_id})))
 
-    if (
-        not isinstance(retention_events, Mapping)
-        or set(retention_events) != {record_id for record_id, _ in artifacts}
-        or any(type(event) is not bytes for event in retention_events.values())
+    if not isinstance(retention_events, Mapping):
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention events must exactly cover the artifacts to retain",
+        )
+    try:
+        event_snapshot = dict(retention_events.items())
+    except (KeyError, RuntimeError, TypeError, ValueError) as error:
+        raise _refuse(
+            PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
+            "retention events could not be read as one stable snapshot",
+        ) from error
+    if set(event_snapshot) != {record_id for record_id, _ in artifacts} or any(
+        type(event) is not bytes for event in event_snapshot.values()
     ):
         raise _refuse(
             PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT,
             "retention events must exactly cover the artifacts to retain",
         )
 
+    for record_id, content in artifacts:
+        _verify_retention_event(
+            history=history,
+            expected_record_id=record_id,
+            retained_bytes=content,
+            machine_event=event_snapshot[record_id],
+        )
+
     history.append_anchors(
         anchors=tuple(
             KnowledgeAnchorInput(
-                machine_event=retention_events[record_id],
+                machine_event=event_snapshot[record_id],
                 retained_bytes=content,
                 media_type="application/json",
                 role="RETAINED_EVIDENCE",
