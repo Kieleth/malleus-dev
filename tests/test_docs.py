@@ -30,6 +30,11 @@ from myst_parser.parsers.directives import (
 from myst_parser.parsers.mdit import create_md_parser
 import pytest
 
+from malleus._contract_pipeline.knowledge import (
+    KnowledgeChangeRefusal,
+    KnowledgeChangeRefusalReason,
+    KnowledgeChangeSet,
+)
 from scripts.contract_compiler_integration import IntegrationState
 
 try:
@@ -2430,9 +2435,12 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "`genesis` is a fixture name, not a formal `KnowledgeChangeSet` role.",
         "it is not a complete seed snapshot",
         "a fixture-specific state-versioning pattern, not a reusable Small Shop ledger vocabulary",
-        "They are not carried into or interpreted by Core's generic change-set format.",
+        "They are retained inside the bound mapping artifacts",
+        "not carried as typed change-role fields into, or interpreted by, Core's generic change-set format.",
         "Core supplies the generic history laws; it does not choose the domain change semantics.",
-        "A content-addressed domain-history profile remains future work",
+        "This executable showcase proves only its state-versioning choice",
+        "Making change categories portable and queryable would require a separately identified domain-level contract.",
+        "This showcase does not define one.",
         "Each change's source closure is bundle-wide",
         "`selected_records` identifies the rows used by the mapping",
         "All 19 fixture source members",
@@ -2554,7 +2562,8 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "meaning": "STAGED_ADMISSION_NOT_LIVE_OBSERVATION",
     }
 
-    change_ids = [item["change_set_id"] for item in explanation["accepted_changes"]]
+    accepted_changes = explanation["accepted_changes"]
+    change_ids = [item["change_set_id"] for item in accepted_changes]
     assert change_ids == [
         "change:RET-010:genesis",
         "change:SHOP-PAYMENT-SETTLEMENT:invoice-base",
@@ -2562,6 +2571,77 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4",
         "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7",
     ]
+    first = accepted_changes[0]
+    assert first["ordinal"] == 0
+    assert first["base_coordinates"] == {
+        "acceptance_head": "GENESIS",
+        "accepted_state_digest": (
+            "sha256:45b604f659a3b41674815d950de9145deb9ab990677013c7062ab46ed417fd9e"
+        ),
+        "ledger_event_count": 49,
+        "ledger_head": (
+            "sha256:907dfa8af3c6968d3e1882d6dd41858c87b397e9fa309b9a5f9aa2cc4e96d3cf"
+        ),
+        "materialization_head": "GENESIS",
+    }
+    assert [item["record_type"] for item in accepted_changes[1]["operations"]] == [
+        "Invoice",
+        "Invoice",
+    ]
+    assert accepted_changes[3]["operations"][0]["record_id"] == (
+        "supplier-order-state:B:e4"
+    )
+    assert all("kind" not in item and "role" not in item for item in accepted_changes)
+
+    correction_mapping = json.loads(
+        (
+            ROOT
+            / "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json"
+        ).read_text(encoding="utf-8")
+    )
+    settlement_mapping = json.loads(
+        (showcase / "settlement-mapping.json").read_text(encoding="utf-8")
+    )
+    assert [item["kind"] for item in correction_mapping["changes"]] == [
+        "INITIAL_DOMAIN_STATE",
+        "CORRECTION",
+    ]
+    assert [item["kind"] for item in settlement_mapping["stages"]] == [
+        "FIXTURE_ORCHESTRATED_EXISTING_BASE",
+        "FIXED_TWO_INVOICE_SETTLEMENT",
+    ]
+
+    provenance = next(
+        item
+        for item in queries["answers"]
+        if item["command"] == "record-change-provenance"
+    )
+    change_value = provenance["result"]["change"]["value"]
+    canonical_change = json.dumps(
+        change_value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    parsed_change = KnowledgeChangeSet.from_bytes(canonical_change)
+    assert parsed_change.change_set_id == change_value["change_set_id"]
+    assert "kind" not in parsed_change.data and "role" not in parsed_change.data
+    for field in ("kind", "role"):
+        malformed = dict(change_value)
+        malformed[field] = "GENESIS"
+        with pytest.raises(KnowledgeChangeRefusal) as caught:
+            KnowledgeChangeSet.from_bytes(
+                json.dumps(
+                    malformed,
+                    allow_nan=False,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ).encode("utf-8")
+            )
+        assert caught.value.reason is KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET
+
     source_ids = set(receipt["source_identities"])
     sources_by_prefix = {
         prefix: {item for item in source_ids if item.startswith(prefix + ":")}

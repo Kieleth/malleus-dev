@@ -109,16 +109,20 @@ Small Shop therefore selects a domain graph model and a fixture-specific
 state-versioning pattern, not a reusable Small Shop ledger vocabulary. Its
 mappings use labels such as `INITIAL_DOMAIN_STATE`, `CORRECTION`, and
 `FIXTURE_ORCHESTRATED_EXISTING_BASE`, but those labels remain mapping metadata.
-They are not carried into or interpreted by Core's generic change-set format.
-Core sees typed entity and relation creation, valid time, dependencies, and
-explicit supersession.
+They are retained inside the bound mapping artifacts, but are not carried as
+typed change-role fields into, or interpreted by, Core's generic change-set
+format. Core sees typed entity and relation creation, valid time, dependencies,
+and explicit supersession.
 
 Another adopter must choose whether its domain history is made of state
 versions, business events, claims, REA commitments, or another model, then bind
 that choice through its ontology, mappings, identities, time, and supersession
 rules. Core supplies the generic history laws; it does not choose the domain
-change semantics. A content-addressed domain-history profile remains future
-work if a real consumer needs portable, queryable change categories.
+change semantics. This executable showcase proves only its state-versioning
+choice; other models may require another conforming history implementation or
+future Core seams. Making change categories portable and queryable would
+require a separately identified domain-level contract. This showcase does not
+define one.
 
 Each change's source closure is bundle-wide: eight baseline members, six
 settlement members, or five correction members. The retained check receipt's
