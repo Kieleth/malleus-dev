@@ -1,0 +1,78 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-X04"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ee9b2f11438a15ad3d4243addd250b03afb0769f71fb2ff13b43d7c1d3b03ada",
+        "before_digest": "sha256:33040720a53a36696508c13f3bc8706b3516647ecd880801b6e4d6567eef9157",
+        "change": "MODIFIED",
+        "path": "conformance/contract_compiler/v0/historic_wire/observations.json"
+      },
+      {
+        "after_digest": "sha256:fedce3245745292a7d733609130be7b73e1da8b5fb493f55f44f644f69eb33b6",
+        "before_digest": "sha256:e6bb56464e93d302a65f3d6a3f35f74799acf2aca7e0c0dc7aaf4177e73a439a",
+        "change": "MODIFIED",
+        "path": "scripts/contract_compiler_historic_wire.py"
+      },
+      {
+        "after_digest": "sha256:e95f589a22e1652b9a8643a3246efab3359a847db9286a703eabcf6861eb1843",
+        "before_digest": "sha256:e090660aaf88859d51f9b5184ed3dd524cb5684fd9dc8574709cb5b94605530f",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_historic_wire.py"
+      },
+      {
+        "after_digest": "sha256:cf0240e06b76152c2474c51068ce9716123b3fad6ebde4a6a4fa67c667640075",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-X04-reader-remeasurement.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1f5892bb13e9e7f742e59ef802eb14a6650d576adc98d2c53538f9b8c9b7f5dc",
+  "entry_id": "OVR-000355",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1a56b019219dc7e5d3b50ae737a00d6b25b7018e4e4e06aafd5d965f673033b9",
+  "recorded_at": "2026-09-03T03:12:15Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-X04",
+      "type": "WORKSTREAM"
+    },
+    {
+      "digest": "sha256:cf0240e06b76152c2474c51068ce9716123b3fad6ebde4a6a4fa67c667640075",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-X04-reader-remeasurement.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "388b610ef1d8bfb135db5f981d3acac6641e5d78",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5e4ec73e2dd38ddfabfe62ae543719f6849a922e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000117",
+      "type": "ENTRY"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 355,
+  "subject": {
+    "id": "ccx04-current-reader-remeasurement",
+    "type": "DOCUMENT"
+  },
+  "summary": "Remeasure the historic-wire corpus under the current bound reader sources.",
+  "why": "The immutable historic inputs did not change, but accepted projection checkpoints, scoped AuthorityGrant validation, and the Assent ontology changed three of the ten source files bound by the current-reader measurement. This forward-only revision records their exact later source set and unchanged raw outcomes without rewriting the original reports or selecting compatibility policy."
+}

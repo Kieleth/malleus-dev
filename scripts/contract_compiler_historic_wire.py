@@ -141,8 +141,8 @@ SUBJECTS = [
     },
 ]
 READER = {
-    "commit": "7178bd06e83cb5850afea5af6747e53c03730eec",
-    "tree": "e218f60b6cf2abbe11372965b7feed31b0677183",
+    "commit": "5e4ec73e2dd38ddfabfe62ae543719f6849a922e",
+    "tree": "6d26e263431aeabc08926e465656e6bc3ea8761a",
     "implementations": [
         {
             "path": "src/malleus/recon/store.py",
@@ -154,11 +154,11 @@ READER = {
         },
         {
             "path": "src/malleus/assent.py",
-            "sha256": "sha256:7b12202f9dcdffd220e23fe5a365a6789b7934bc53d0a638b36e779d3816cf21",
+            "sha256": "sha256:c2087b2eae8c067b86fa11761223d9539289d75059859396f52c12da27af6662",
         },
         {
             "path": "src/malleus/accepted.py",
-            "sha256": "sha256:dbb0bb88ad7e226211501afaff4466153b7f9632b1ba023f4f0ebb6947eb1d62",
+            "sha256": "sha256:b249f866817f4e223ecf38c9a1b12ed1d50a5967debf6f218110ba7e4d1248a1",
         },
         {
             "path": "src/malleus/ledger.py",
@@ -178,7 +178,7 @@ READER = {
         },
         {
             "path": "ontology/assent.yaml",
-            "sha256": "sha256:6ba910e6787e7fbff90ca5dc4afaeda5e92ea033b6808c82ea4de77c179232bd",
+            "sha256": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
         },
         {
             "path": "ontology/domains/recon.yaml",

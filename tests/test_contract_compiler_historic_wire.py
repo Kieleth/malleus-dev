@@ -23,7 +23,12 @@ CORPUS = (
 MANIFEST = CORPUS / "corpus.json"
 OBSERVATIONS = CORPUS / "observations.json"
 EVIDENCE = (
-    ROOT / "conformance" / "contract_compiler" / "v0" / "evidence" / "CC-X04.json"
+    ROOT
+    / "design"
+    / "contract_compiler"
+    / "overseer"
+    / "evidence"
+    / "CC-X04-reader-remeasurement.json"
 )
 
 RELEASES = [
@@ -240,8 +245,8 @@ def test_current_reader_observations_are_raw_and_cover_every_subject():
         "reader",
         "observations",
     }
-    assert document["reader"]["commit"] == "7178bd06e83cb5850afea5af6747e53c03730eec"
-    assert document["reader"]["tree"] == "e218f60b6cf2abbe11372965b7feed31b0677183"
+    assert document["reader"]["commit"] == "5e4ec73e2dd38ddfabfe62ae543719f6849a922e"
+    assert document["reader"]["tree"] == "6d26e263431aeabc08926e465656e6bc3ea8761a"
     assert [item["subject_id"] for item in document["observations"]] == SUBJECTS
     for mapping in _walk(document):
         assert not FORBIDDEN_POLICY_KEYS & set(mapping)
