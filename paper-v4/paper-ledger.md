@@ -1403,3 +1403,23 @@ Driver freeze: The explicit v2 driver binds this exact population, the accepted 
 Verification: 26 acquisition, coordinate, driver, recipe, ordering, query-failure, and CLI tests pass. Ruff and `git diff --check` pass. A query refusal test proves that a valid build bundle remains intact while no query-result file is created.
 
 Impact: The producer's first result is frozen without semantic selection. The next step is one exact build, disposal, reopen, replay, and query invocation. The ledger and result directories do not exist at this entry.
+
+### E-0091, v2 admission, replay, and adopter queries complete
+
+Date: 2026-09-03
+
+Sources: driver-freeze commit `eb63c93`; the private `paper-v4-v2-run/semantic-ledger.jsonl`; the five files under `paper-v4/experiment-v2/results/`; an independent private reproduction; and 52 focused build, replay, query, CLI, and result-freeze tests.
+
+Execution: The exact driver ran with explicit transaction time `2026-09-03T09:11:42Z`. Population compilation produced 13 operations and 47 source-located assertions over four selected-reading blocks. Source-locator integrity and structural conformance were both derived as `SATISFIED`; the policy computed `ACCEPT`. Seventeen artifact anchors, one source anchor, one retained change set, and four protocol events produce one 23-event history. Its private file digest is `sha256:df5327be6abfabfb49342a0663185d81b8a8056211108ca759ea7cac2901e828`; its head is `sha256:7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b`.
+
+Replay: The admitted live objects were discarded. Reopen and ledger-only replay reproduced the graph snapshot, machine state, and canonical receipt. The receipt is `sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796` and binds the same ledger head, 4,146-fact contract, and graph-state digest `sha256:d692b8e96e291801832fcaebf4aa56dcf845851e79b94894c0f479384d69ebd3`. The replayed graph contains seven entities and six relations.
+
+Query: The paper-owned adapter received only the replay receipt, selected ontology and retained Malleus import, plus binding `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`. It returned row counts `[0, 2, 4, 0]` for CQ1 through CQ4. The two CQ2 rows cover seismic occurrence at a feature and feature membership; the four CQ3 rows cover two quantitative characterizations, constituent concern, and material location. CQ1 and CQ4 return no rows. This matches the pre-population expressibility boundary without repairing the ontology or population. The result is `sha256:78cc2c8dc42dc10a4f46d41c95e7c751134460bc1147619e067a8f5822b0be7a`.
+
+Isolation observation: During the in-process query region, guarded file reads, socket or name-resolution calls, and imports of the named embedding or vector packages were each zero. This is a narrow execution observation, not an operating-system sandbox or a general comparison with embedding retrieval.
+
+Reproduction: A second invocation into new ignored directories, using the same explicit transaction time, reproduced the semantic ledger and all five result files byte for byte. The public result digests are build result `sha256:bd0361d7fb01554db87723f725ce01eeeb42739bf556c5f8717c52245408c9bc`, plan `sha256:fa1194aa705c36ff6ef06bc3d7bcadbeb4297d44c95a3558e5946fb97dbc09e6`, provenance `sha256:2d4ce493d7d757e648cc782ff835e555554bfae73c9876a85170e74948ce5b03`, query result as above, and replay receipt as above.
+
+Boundary: No score, oracle, source reading, source locator, population file, or manuscript was passed into the guarded query region. The Python guard cannot rule out lower-level or preexisting access outside that region. Query binding remains absent from build evidence and all accepted-state identities.
+
+Impact: Admission, disposal, reopen, replay, and source-free adopter queries are complete. The exact rows are now frozen for independent source-grounded inspection. They have not yet been rated or ratified by a human.

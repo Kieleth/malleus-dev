@@ -61,7 +61,7 @@ The experiment freezes exactly five identity groups:
 1. Source PDF digest: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
 3. Selected ontology digest: `sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed`.
-4. Ledger head plus replay receipt: pending corrected run.
+4. Ledger head `sha256:7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b` plus replay receipt `sha256:1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796`.
 5. Adopter query binding digest: `sha256:922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1`, excluded from the KnowledgeChangeSet evidence closure.
 
 Source manifests, transcripts, diagnostics, tests, and copied model inputs remain retained evidence. They are not promoted into additional manuscript identity chains.
@@ -86,8 +86,8 @@ The retired answer key remains sealed historical material and leaves the active 
 3. **Ontology, complete.** A question-independent fresh session received the selected reading plus generic Malleus ontology inputs, but no competency questions or question-derived semantic checklist. Attempt one was refused because `default_prefix` is outside the supported LinkML profile. The exact diagnostic was returned once; attempt two removed only that field and compiled into 4,146 validated facts. One event accepts its digest for population. This is one document-domain proposal, not a general builder or minimality result.
 4. **Query binding and recipes, complete.** The paper-owned binding fixes only ontology record types, relation types, enum values, and projected properties. It fixes no record id, answer value, locator, cardinality, or graph closure, and remains outside admission evidence and replay identity. Nineteen ontology-specific construction templates compile and materialize an arbitrary valid graph without document values.
 5. **Population, complete.** A different fresh session received only the corrected ontology, selected reading, ontology-specific generic recipes, four questions, and the closed task. Its first proposal passed the frozen envelope and ontology compiler without a retry. No human repair, content review, or fallback occurred.
-6. **Commitment, driver frozen and execution pending.** Compile provenance, derive both checks, compose one change without query evidence, admit atomically, and retain exact refusal outcomes.
-7. **Replay and query, pending corrected run.** Dispose, reopen, replay, and query through the frozen adopter surface with the existing Python-level isolation counters.
+6. **Commitment, complete.** Compiled 47 provenance assertions, derived both checks, composed one 13-operation change without query evidence, and admitted it atomically to a 23-event history after both checks were satisfied.
+7. **Replay and query, complete.** The runner disposed the live objects, reopened the ledger, reproduced the graph, protocol state, and receipt, then queried the receipt-derived graph through the frozen adopter surface. The four row counts are `[0, 2, 4, 0]`; all guarded source-file, network, and embedding-import attempts are zero.
 8. **Source-grounded inspection, method frozen and run pending.** The protocol was frozen before corrected query output. Codex prepares the evidence trace and preliminary findings without claiming human status. An identified human reviews the exact rows against independently selected source blocks and ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
 
 ### Fresh-session rules
@@ -129,9 +129,9 @@ Required fields fail loudly. The runner cannot synthesize a source digest, locat
 
 The frozen v1 ontology and population both compiled on their first attempt. That run remains exact historical evidence, including its 14 records, 51 located assertions, 24-event history, replay equality, returned rows, and failed scorer. It is no longer the selected experiment because its ontology prompt was conditioned on the four questions.
 
-The corrected v2 population is frozen at `sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964`. It contains 13 records and compiles on its first attempt into 13 operations with 47 located assertions. This is a structural result, not content review. Admission, replay, query, and source-grounded inspection remain pending.
+The corrected v2 population is frozen at `sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964`. It contains 13 records and compiles on its first attempt into 13 operations with 47 located assertions. Both admission checks were satisfied, and the accepted history replays to seven entities and six relations. The four frozen query row counts are `[0, 2, 4, 0]`; the empty CQ1 and CQ4 rows preserve the unconditioned ontology's missing semantics. Source-grounded inspection remains pending.
 
-The corrected run will report replay equality, exact query rows, guarded access counters, and source-grounded inspection. The frozen null score remains part of the v1 failure history and will not enter the selected result.
+The corrected run reports replay equality, exact query rows, and zero guarded access attempts. The frozen null score remains part of the v1 failure history and does not enter the selected result. Source-grounded inspection and human ratification remain open.
 
 ## Retained artifacts
 
@@ -168,7 +168,7 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Complete the corrected v2 run from question-independent ontology acquisition through source-grounded inspection.
+1. Complete the corrected v2 source-grounded preliminary inspection.
 2. Obtain identified human ratification of the inspection record.
 3. Freeze a complete paper-specific transitive environment lock.
 4. Build and inspect the arXiv bundle, then perform the author review.
