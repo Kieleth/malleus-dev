@@ -91,6 +91,23 @@ A new rite, `pack-grounding`, refuses a pack without a grounding block, a ground
 
 Why this is a rule and not advice: the three producers did not lack skill, they lacked a reflex. Each built a competent private vocabulary in minutes. The reflex the skill installs is to look first, borrow second, invent last, and leave a trail either way.
 
+## Domain-history profiles
+
+Decided 2026-09-03, after the Core and paper threads independently reached the same object. Packs give a project its nouns. They do not say what a change means. That is a second, adopter-owned contract, and it is the "which semantic ledger" decision Luis makes in domain projects (REA in Colibri). Core's proposed `CompleteProjectionClosure` (`design/SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md`) answers a different question, how one exact history became one exact graph, and the two must not merge.
+
+A `DomainHistoryProfile` freezes, and only freezes: the semantic unit of a change (assertion, occurrence, state version, commitment, or a declared composition); origin semantics (empty start, snapshot, partial import, historical reconstruction) and the genesis boundary and completeness scope; which time is which (domain time, assertion time, transaction time); what addition, correction, retraction and real-world transition mean; which ontology types play Entity, Event, Claim and State roles; the projection rule family. One physical ledger remains; the profile adds meaning, not a second authority. The change set's evidence closure binds a profile id; projection closure references it.
+
+Malleus ships profiles the way it ships packs: grounded, optional, replaceable.
+
+| Profile | Semantic unit | Grounding |
+| --- | --- | --- |
+| `source-assertion` | a dated, attributed claim from an identified source; correction and retraction are superseding claims | Micropublications (Clark, Ciccarese, Goble 2014); SEPIO; nanopublications |
+| `state-version` | a versioned state record; later versions supersede earlier ones | what Small Shop implements today; temporal database versioning |
+| `object-event` | immutable domain events with qualified event-to-object relations; state is derived | OCEL 2.0 |
+| `commitment-exchange` | economic resources, events, agents, commitments | REA (McCarthy 1982). Documented, not shipped until a second consumer exists |
+
+Consequences already visible: the paper's document experiment is `source-assertion`, under which claims are entities from the `research` pack, record-level supersession already exists in the governed path, and no Event materialization is needed. Small Shop is `state-version` and now says so. `object-event` needs Event materialization and event-to-object correlation in the governed path, which is Core's own track and not on the paper's critical path.
+
 ## Typed gaps
 
 The population producer gets a third output beside records and total refusal: a list of gap declarations. Each names a source block, a question id or none, a kind, and one sentence.
@@ -124,6 +141,8 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
 7. The skill owns modelling, the library owns the interface, the experimenter owns isolation only; briefs are retired.
 8. Never prime a session with the questions.
 9. Grounding is a standing order in the skill and a machine-checkable `grounding` block on packs and root-extending classes, enforced by a `pack-grounding` rite.
+10. A `DomainHistoryProfile` is a separate adopter-owned contract, shipped as grounded reference profiles; the paper runs under `source-assertion`, Small Shop under `state-version`; Event materialization is Core's `object-event` track and does not gate the paper.
+11. Requirements flow: Core touches Core and receives requirements with reproducers; the paper thread executes and files requirements through the overseer; the overseer verifies every Core deliverable on disk before the paper thread consumes it. Handovers: `handover/2026-09-03-core-requirements.md`, `handover/2026-09-03-paper-executor-plan.md`.
 
 ## Open
 
