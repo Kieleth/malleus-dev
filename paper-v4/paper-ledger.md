@@ -1437,3 +1437,17 @@ Boundary: The review method, judgment labels, question set, source identity, and
 Verification: The manifest resolves every stage digest to the exact retained artifact, its ledger head to the replay receipt, and the query's three input coordinates to the manifest. The selected result set contains no score file.
 
 Impact: Preliminary inspection may begin without changing the method after seeing the rows. It remains Codex-authored work and cannot become paper evidence until Luis reviews and ratifies or edits it.
+
+### E-0093, blind Codex preliminary inspection complete
+
+Date: 2026-09-03
+
+Sources: `paper-v4/evaluation-v2/review-task.md`; review protocol `sha256:04cf6bc131d018acc541d0ee9812b18c1a3d40b58b4bc003536598e2d4621d43`; review input manifest `sha256:181e1447a9b7d56e816816d1105f5084114e287e90d5547423fefd1d74568e28`; private selected reading; frozen competency questions, query binding, and query result; and `paper-v4/evaluation-v2/review-record.preliminary.md` at `sha256:4ccab912c693d0f751276d45ad58d9536c4ce75552d337b39b3fab6ddc97e574`.
+
+Execution: A fresh Codex subagent with no inherited paper turns was instructed to open only the review task, protocol, manifest, blank record, selected reading, competency questions, query binding, and query result. Its post-run provenance report listed exactly those eight files. It reported no access to or reliance on the ontology, replay receipt, oracle, canonical answer, score, population, provenance, manuscript, paper ledger, prior result summary, external source, or source PDF. This is a declared and reported session boundary, not an operating-system file sandbox.
+
+Preliminary findings: CQ1 received `NOT_EVALUABLE` source support and `NOT_RESPONSIVE` question responsiveness because the query returned no rows despite source blocks describing the network, campaign, and instrument count. CQ2 received `SUPPORTED/PARTIAL`: its two rows are source-supported and reach RC2 through the ridge axis, but they omit the deep qualifier and weaken “beneath” to occurrence at the axis. CQ3 received `SUPPORTED/RESPONSIVE`: four rows expose both reported ranges, units, estimate status, subjects, constituent, and RC2 association. CQ4 received `NOT_EVALUABLE/NOT_RESPONSIVE` because no causal or epistemic row was returned despite source blocks stating the preferred mechanism.
+
+Mechanical boundary: The existing validator resolves the review record through the exact frozen manifest to every returned row and every cited selected-reading block. It accepts the record only as `PRELIMINARY_COMPLETE`. With `require_human_ratification=True`, it refuses the same bytes with `human ratification is required for paper evidence`. A result-specific regression freezes the record digest, labels, full row coverage, locator closure, and refusal boundary. Twenty-three focused review tests pass; Ruff and `git diff --check` pass.
+
+Impact: The preliminary record is a prepared inspection, not human evidence and not an aggregate score. `paper-v4/evaluation-v2/ratification-guide.md` gives Luis the exact review order and forward path. Only a distinct `HUMAN_RATIFIED` record accepted by the validator may support the manuscript's final source-grounded evaluation claims.

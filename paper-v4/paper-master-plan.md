@@ -4,7 +4,7 @@ Version: 1.1.0
 
 Date: 2026-09-03
 
-Status: active correction under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. A versioned run now restarts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection followed by identified human ratification.
+Status: corrected run complete through Codex preliminary inspection under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification remains pending.
 
 ## Objective
 
@@ -88,7 +88,7 @@ The retired answer key remains sealed historical material and leaves the active 
 5. **Population, complete.** A different fresh session received only the corrected ontology, selected reading, ontology-specific generic recipes, four questions, and the closed task. Its first proposal passed the frozen envelope and ontology compiler without a retry. No human repair, content review, or fallback occurred.
 6. **Commitment, complete.** Compiled 47 provenance assertions, derived both checks, composed one 13-operation change without query evidence, and admitted it atomically to a 23-event history after both checks were satisfied.
 7. **Replay and query, complete.** The runner disposed the live objects, reopened the ledger, reproduced the graph, protocol state, and receipt, then queried the receipt-derived graph through the frozen adopter surface. The four row counts are `[0, 2, 4, 0]`; all guarded source-file, network, and embedding-import attempts are zero.
-8. **Source-grounded inspection, method frozen and run pending.** The protocol was frozen before corrected query output. Codex prepares the evidence trace and preliminary findings without claiming human status. An identified human reviews the exact rows against independently selected source blocks and ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
+8. **Source-grounded inspection, preliminary complete and human ratification pending.** The protocol was frozen before corrected query output. A separate fresh Codex session inspected the exact rows against the selected reading without ontology, population, provenance, replay receipt, oracle, score, manuscript, or paper-ledger access. Its preliminary labels are `NOT_EVALUABLE/NOT_RESPONSIVE`, `SUPPORTED/PARTIAL`, `SUPPORTED/RESPONSIVE`, and `NOT_EVALUABLE/NOT_RESPONSIVE` for CQ1 through CQ4. These labels are not paper evidence until Luis independently reviews the rows and source blocks, then ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
 
 ### Fresh-session rules
 
@@ -129,9 +129,9 @@ Required fields fail loudly. The runner cannot synthesize a source digest, locat
 
 The frozen v1 ontology and population both compiled on their first attempt. That run remains exact historical evidence, including its 14 records, 51 located assertions, 24-event history, replay equality, returned rows, and failed scorer. It is no longer the selected experiment because its ontology prompt was conditioned on the four questions.
 
-The corrected v2 population is frozen at `sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964`. It contains 13 records and compiles on its first attempt into 13 operations with 47 located assertions. Both admission checks were satisfied, and the accepted history replays to seven entities and six relations. The four frozen query row counts are `[0, 2, 4, 0]`; the empty CQ1 and CQ4 rows preserve the unconditioned ontology's missing semantics. Source-grounded inspection remains pending.
+The corrected v2 population is frozen at `sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964`. It contains 13 records and compiles on its first attempt into 13 operations with 47 located assertions. Both admission checks were satisfied, and the accepted history replays to seven entities and six relations. The four frozen query row counts are `[0, 2, 4, 0]`; the empty CQ1 and CQ4 rows preserve the unconditioned ontology's missing semantics. Codex completed a source-grounded preliminary inspection, but human ratification remains pending.
 
-The corrected run reports replay equality, exact query rows, and zero guarded access attempts. The frozen null score remains part of the v1 failure history and does not enter the selected result. Source-grounded inspection and human ratification remain open.
+The corrected run reports replay equality, exact query rows, and zero guarded access attempts. The frozen null score remains part of the v1 failure history and does not enter the selected result. The preliminary inspection remains explicitly nonhuman and cannot support a final evaluation claim until ratification.
 
 ## Retained artifacts
 
@@ -141,7 +141,7 @@ Public repository material:
 - source manifest, URL, license, and digest, but not the PDF;
 - four competency questions;
 - pinned dependency configuration and text-layer extractor;
-- selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, source-grounded review record, and focused tests;
+- selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, Codex preliminary review record, ratification guide, and focused tests;
 - concise reproduction instructions and claim-to-artifact index.
 
 Private or evaluator-only material:
@@ -168,10 +168,9 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Complete the corrected v2 source-grounded preliminary inspection.
-2. Obtain identified human ratification of the inspection record.
-3. Freeze a complete paper-specific transitive environment lock.
-4. Build and inspect the arXiv bundle, then perform the author review.
+1. Obtain identified human ratification of the inspection record.
+2. Freeze a complete paper-specific transitive environment lock.
+3. Build and inspect the arXiv bundle, then perform the author review.
 
 ## Submission gate
 
