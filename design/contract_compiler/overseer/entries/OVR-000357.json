@@ -1,0 +1,69 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:172b4c6f0d93b5fc184d83e9a003341382cc36eefd9cd98b48f253abd7f22915",
+        "before_digest": "sha256:f14c9055d74fe3127d1408d4dfc13ce9f57890f7c97d4023d171099bb0cc5c34",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:00710ab76772a6ca6bc9d842a37328b62bdf61719d4d295044042506e191b42f",
+        "before_digest": "sha256:e6f51f541110a64590db2dbba6e79f77e889422889dfcbea3867572ceccf3f1c",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      },
+      {
+        "after_digest": "sha256:c78c228456264fb5a6ba584778f2610d2d36305e800cff46df574d7587265a11",
+        "before_digest": "sha256:f77ac00288b6b4a4b59e6f91957c532a6112656a7ae69a7e31b253d881180d79",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:2b19143ac90c756840c3b375a10a9daca000f87498e8357b72ba94285386029b",
+        "before_digest": "sha256:f720aa6b3701892459108df6ebabaa8b916fe5c0601eb0febc0f6e715ab8902a",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:47874da59670c9c6e77119c4a74f43911def8b6de87ab6ef0102a4b9d9ff19be",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-kcs-composer.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:9d53206c8791d3b4f6f648caed4721b827e09e0569b556d3f1cb2e0dedcb1225",
+  "entry_id": "OVR-000357",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:8878c87c183a5a81ca12fb75d7618c238685ad23e88d0abba78016a57cc0ffbc",
+  "recorded_at": "2026-09-03T04:20:00Z",
+  "references": [
+    {
+      "digest": "sha256:47874da59670c9c6e77119c4a74f43911def8b6de87ab6ef0102a4b9d9ff19be",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-kcs-composer.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 357,
+  "subject": {
+    "id": "ccr11-private-kcs-composer",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the private domain-neutral KnowledgeChangeSet composer.",
+  "why": "The completed source-to-history proof and its correction repeated the same identity-sensitive change-set assembly. This bounded follow-on extracts only that earned mechanical seam while leaving domain mapping, policy, protocol events, admission, replay, and public promotion separate."
+}

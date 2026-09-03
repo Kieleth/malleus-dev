@@ -1,0 +1,59 @@
+{
+  "actor": {
+    "id": "ccr11-private-composer-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-03T04:20:01Z",
+    "claims": [
+      "This is bounded follow-on evidence for completed CC-R11. It changes no workstream state, decision, candidate, program, integration dependency, or roadmap.",
+      "KnowledgeChangeHistory now has one private compose_change_set method with six required keyword-only inputs. It writes neither ledger nor graph and is absent from the public malleus and malleus._contract_pipeline namespaces.",
+      "Composition binds the current contract identity plus exact ledger head and count, acceptance head, materialization head, and accepted-state digest. It resolves ordered source and evidence closures only from retained records with accepted roles and preserves operation and supersession order.",
+      "Strict KnowledgeChangeSet parsing remains the final construction gate. Malformed values and unsupported operations retain existing typed refusals; missing or wrong-role retained inputs refuse as UNRETAINED_INPUT.",
+      "The two-change proof composes against non-genesis acceptance and materialization heads, retains both change-set and operation-level supersession, admits atomically, and reopens with exact graph, history, change-set, and receipt parity.",
+      "The TDD run observed 15 expected missing-method failures before production. The final history suite passes 80 tests, the unchanged Small Shop population and correction seams pass 71 tests, and changed-file Ruff, formatting, and diff checks pass.",
+      "Independent review found one P2 and three P3 test or documentation gaps. All were repaired, and final review found no P0 through P3 issue.",
+      "Documentation states the private boundary and exclusions without promoting a public compiler, mapping language, or wire contract."
+    ],
+    "limitations": [
+      "This helper is private research code, not a public API, package export, or stable public wire contract.",
+      "It does not parse sources, choose domain meaning, lower recipes, run checks or policy, construct protocol events, admit changes, or project accepted state.",
+      "The current private grammar supports only CREATE_ENTITY and CREATE_RELATION operations.",
+      "Frozen Small Shop runners remain unchanged and retain their published identities.",
+      "No Semantic Re-entry, external effect, general mapping grammar, package, release, another-language interpreter, or cross-language conformance claim is made.",
+      "The repository-wide CI and remote publication gates remain separate from this scoped verification."
+    ]
+  },
+  "entry_hash": "sha256:3ca2c3d6f75fe41bc531f75923bbc90059eb334d82906c9dae6ea7e69ef89690",
+  "entry_id": "OVR-000358",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:9d53206c8791d3b4f6f648caed4721b827e09e0569b556d3f1cb2e0dedcb1225",
+  "recorded_at": "2026-09-03T04:20:01Z",
+  "references": [
+    {
+      "digest": "sha256:47874da59670c9c6e77119c4a74f43911def8b6de87ab6ef0102a4b9d9ff19be",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-kcs-composer.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000357",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 358,
+  "subject": {
+    "id": "ccr11-private-kcs-composer-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the private domain-neutral KnowledgeChangeSet composer.",
+  "why": "The exact implementation, TDD evidence, two-change correction proof, retained-input guards, atomic stale refusal, replay parity, documentation, and independent audit support this narrow boilerplate-removal claim without assigning domain or protocol authority to Python."
+}

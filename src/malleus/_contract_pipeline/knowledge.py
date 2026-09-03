@@ -1049,6 +1049,134 @@ class KnowledgeChangeHistory:
             actor_id=actor_id,
         )[0]
 
+    def compose_change_set(
+        self,
+        *,
+        change_set_id: str,
+        source_record_ids: tuple[str, ...],
+        evidence_record_ids: tuple[str, ...],
+        operations: tuple[KnowledgeOperation, ...],
+        valid_time: KnowledgeValidTime,
+        supersedes: tuple[str, ...],
+    ) -> KnowledgeChangeSet:
+        """Compose one private change set against the exact current history."""
+
+        if not isinstance(change_set_id, str) or not change_set_id:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                "change-set ID is required",
+            )
+        tuple_inputs = (
+            (source_record_ids, "source record IDs"),
+            (evidence_record_ids, "evidence record IDs"),
+            (operations, "operations"),
+            (supersedes, "supersession references"),
+        )
+        for values, label in tuple_inputs:
+            if not isinstance(values, tuple):
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                    f"{label} must be an ordered tuple",
+                )
+        for values, label in (
+            (source_record_ids, "source record ID"),
+            (evidence_record_ids, "evidence record ID"),
+            (supersedes, "supersession reference"),
+        ):
+            if any(not isinstance(value, str) or not value for value in values):
+                raise _refuse(
+                    KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                    f"{label} must be a nonempty string",
+                )
+        if any(
+            not isinstance(operation, KnowledgeOperation) for operation in operations
+        ):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                "operations must contain only KnowledgeOperation values",
+            )
+        if not isinstance(valid_time, KnowledgeValidTime):
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+                "valid time must be a KnowledgeValidTime value",
+            )
+
+        replay = self.replay()
+
+        def closure(
+            record_ids: tuple[str, ...],
+            *,
+            roles: frozenset[str],
+            id_field: str,
+            label: str,
+        ) -> list[dict[str, str]]:
+            members: list[dict[str, str]] = []
+            for record_id in record_ids:
+                retained = replay._retained.get(record_id)
+                if retained is None or retained.role not in roles:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+                        f"{label} {record_id} is not retained with an accepted role",
+                    )
+                members.append({id_field: record_id, "sha256": retained.identity})
+            return members
+
+        operation_payloads: list[dict[str, object]] = []
+        for operation in operations:
+            payload: dict[str, object] = {
+                "depends_on": list(operation.depends_on),
+                "operation_id": operation.operation_id,
+                "operation_type": operation.operation_type,
+                "ordinal": operation.ordinal,
+                "properties": _thaw(operation.properties),
+                "record_id": operation.record_id,
+                "record_type": operation.record_type,
+            }
+            if (
+                operation.operation_type == "CREATE_RELATION"
+                or operation.source_id is not None
+                or operation.target_id is not None
+            ):
+                payload["source_id"] = operation.source_id
+                payload["target_id"] = operation.target_id
+            if operation.supersedes_record_id is not None:
+                payload[_SUPERSESSION_FIELD] = operation.supersedes_record_id
+            operation_payloads.append(payload)
+
+        return KnowledgeChangeSet.from_bytes(
+            _canonical(
+                {
+                    "base_acceptance_head": replay.acceptance_head,
+                    "base_accepted_state_digest": replay.graph.state_digest(),
+                    "base_ledger_event_count": replay.ledger_event_count,
+                    "base_ledger_head": replay.ledger_head,
+                    "base_materialization_head": replay.materialization_head,
+                    "change_set_id": change_set_id,
+                    "contract_identity": self.partial_contract.identity,
+                    "contract_kind": _CONTRACT_KIND,
+                    "evidence": closure(
+                        evidence_record_ids,
+                        roles=_EVIDENCE_ROLES,
+                        id_field="evidence_id",
+                        label="evidence",
+                    ),
+                    "grammar": _CHANGE_GRAMMAR,
+                    "operations": operation_payloads,
+                    "sources": closure(
+                        source_record_ids,
+                        roles=frozenset({"RETAINED_SOURCE"}),
+                        id_field="source_id",
+                        label="source",
+                    ),
+                    "supersedes": list(supersedes),
+                    "valid_time": {
+                        "kind": valid_time.kind,
+                        "value": valid_time.value,
+                    },
+                }
+            )
+        )
+
     def admit(
         self,
         *,
@@ -1506,11 +1634,9 @@ class KnowledgeChangeHistory:
                         KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                         f"record replacement valid-time kind differs from prior record: {prior_id}",
                     )
-                if (
-                    prior.valid_from.kind == "INSTANT"
-                    and _aware_time(change.valid_time.value)
-                    <= _aware_time(prior.valid_from.value)
-                ):
+                if prior.valid_from.kind == "INSTANT" and _aware_time(
+                    change.valid_time.value
+                ) <= _aware_time(prior.valid_from.value):
                     raise _refuse(
                         KnowledgeChangeRefusalReason.STRUCTURAL_REFUSAL,
                         f"record replacement contradicts prior valid time: {prior_id}",

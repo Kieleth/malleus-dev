@@ -186,6 +186,31 @@ The mapping file is deliberately fixture-local. Generalizing it before another
 real consumer needs the seam would turn this bounded proof into a speculative
 DSL.
 
+## Private change-set composer
+
+The Small Shop population and correction proofs repeated one mechanical step:
+assembling a `KnowledgeChangeSet` from the current history coordinates and
+already retained inputs. A private helper now owns only that repetition. Given
+an explicit change-set ID, retained source record IDs, retained evidence record
+IDs, ordered operations, valid time, and superseded change-set IDs, it returns
+the canonical immutable change set. Every input is required, including an empty
+supersession list.
+
+The helper resolves source and evidence hashes from the current ledger, binds
+the exact contract and base-state coordinates, and refuses missing or
+wrong-role records. It is pure: composing a change changes neither the ledger
+nor the accepted graph. Admission remains a separate call, and replay remains
+the only way to derive accepted state. If history advances between composition
+and admission, admission refuses the stale change without mutation.
+
+This removes boilerplate, not responsibility. Domain adapters still parse
+source bytes and choose record IDs, properties, operations, valid-time meaning,
+and supersession. Checks and policy still decide whether the proposed change is
+acceptable. Protocol events still record that lifecycle. The helper is private
+research code, is not exported by `malleus`, and is not a stable public wire or
+application API. Public promotion requires another independent consumer and a
+separately governed compatibility contract.
+
 ## Local CI and compiler TDD
 
 Run the repository's complete local gate with one fixed command:

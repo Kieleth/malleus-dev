@@ -20,6 +20,8 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeRefusal,
     KnowledgeChangeRefusalReason,
     KnowledgeChangeSet,
+    KnowledgeOperation,
+    KnowledgeValidTime,
 )
 from malleus._contract_pipeline.machine import execute_event
 from malleus.ledger import GENESIS, JsonlLedger
@@ -397,6 +399,28 @@ def _ledger_bytes(history: KnowledgeChangeHistory) -> bytes:
     return history.path.read_bytes() if history.path.exists() else b""
 
 
+def _compose(
+    history: KnowledgeChangeHistory,
+    partial,
+    source_identity: str,
+    evidence_identity: str,
+    **replacements: object,
+) -> KnowledgeChangeSet:
+    manual = _load_change(
+        _base_payload(history, partial, source_identity, evidence_identity)
+    )
+    values = {
+        "change_set_id": manual.change_set_id,
+        "source_record_ids": ("source-generic",),
+        "evidence_record_ids": ("evidence-generic",),
+        "operations": manual.operations,
+        "valid_time": manual.valid_time,
+        "supersedes": manual.supersedes,
+    }
+    values.update(replacements)
+    return history.compose_change_set(**values)
+
+
 def _evidence_anchor(record_id: str, content: bytes) -> KnowledgeAnchorInput:
     return KnowledgeAnchorInput(
         machine_event=_event(
@@ -481,6 +505,377 @@ def test_change_set_is_closed_canonical_immutable_and_content_addressed(
         change_set.identity = "sha256:" + "0" * 64
     with pytest.raises(TypeError):
         change_set.data["extra"] = True
+
+
+def test_history_composes_exact_current_change_without_writing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    expected = _load_change(_base_payload(history, partial, source, evidence))
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+    replay_calls = 0
+    replay = history.replay
+
+    def counted_replay():
+        nonlocal replay_calls
+        replay_calls += 1
+        return replay()
+
+    monkeypatch.setattr(history, "replay", counted_replay)
+
+    composed = history.compose_change_set(
+        change_set_id=expected.change_set_id,
+        source_record_ids=("source-generic",),
+        evidence_record_ids=("evidence-generic",),
+        operations=expected.operations,
+        valid_time=expected.valid_time,
+        supersedes=expected.supersedes,
+    )
+
+    assert composed.canonical_bytes == expected.canonical_bytes
+    assert composed == expected
+    assert replay_calls == 1
+    assert _ledger_bytes(history) == ledger_before
+    assert replay().graph.snapshot() == before.graph.snapshot()
+    assert replay().machine_state.identity == before.machine_state.identity
+
+
+@pytest.mark.parametrize(
+    ("replacement", "reason"),
+    [
+        (
+            {"source_record_ids": ("source-absent",)},
+            KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+        ),
+        (
+            {"source_record_ids": ("evidence-generic",)},
+            KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+        ),
+        (
+            {"evidence_record_ids": ("evidence-absent",)},
+            KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+        ),
+        (
+            {"evidence_record_ids": ("source-generic",)},
+            KnowledgeChangeRefusalReason.UNRETAINED_INPUT,
+        ),
+        (
+            {"source_record_ids": ["source-generic"]},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"source_record_ids": (1,)},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"operations": []},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"operations": (object(),)},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"valid_time": "event-1"},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"supersedes": ["change-before"]},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+        (
+            {"supersedes": (1,)},
+            KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET,
+        ),
+    ],
+)
+def test_history_composer_refuses_bad_closures_and_shapes(
+    tmp_path: Path,
+    replacement: dict[str, object],
+    reason: KnowledgeChangeRefusalReason,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _compose(history, partial, source, evidence, **replacement)
+
+    assert refusal.value.reason is reason
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_history_composer_preserves_explicit_order_and_identity_inputs(
+    tmp_path: Path,
+) -> None:
+    history, compiled, partial, _, source, evidence = _anchored_history(tmp_path)
+    second_source = b"second retained source\n"
+    second_evidence = b"second retained evidence\n"
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="source-artifact-2",
+            artifact_identity=_digest(second_source),
+        ),
+        second_source,
+        "SOURCE_ARTIFACT",
+    )
+    _anchor(
+        history,
+        _event(
+            "SOURCE_REGISTERED",
+            artifact_id="source-artifact-2",
+            source_id="source-generic-2",
+            source_identity=_digest(second_source),
+        ),
+        second_source,
+        "RETAINED_SOURCE",
+    )
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="evidence-generic-2",
+            artifact_identity=_digest(second_evidence),
+        ),
+        second_evidence,
+        "RETAINED_EVIDENCE",
+    )
+    baseline = _compose(history, partial, source, evidence)
+    reordered = tuple(
+        replace(operation, ordinal=index)
+        for index, operation in enumerate(
+            (baseline.operations[1], baseline.operations[0], baseline.operations[2])
+        )
+    )
+
+    variants = (
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            change_set_id="change-generic-2",
+        ),
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            operations=reordered,
+        ),
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            valid_time=KnowledgeValidTime("ORDER_ONLY", "event-1"),
+        ),
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            supersedes=("change-before",),
+        ),
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            source_record_ids=("source-generic-2", "source-generic"),
+            evidence_record_ids=(
+                "evidence-generic-2",
+                "validated-contract-artifact",
+                "evidence-generic",
+            ),
+        ),
+    )
+
+    assert all(candidate.identity != baseline.identity for candidate in variants)
+    assert variants[1].operations == reordered
+    assert variants[3].supersedes == ("change-before",)
+    assert variants[4].sources == (
+        ("source-generic-2", _digest(second_source)),
+        ("source-generic", source),
+    )
+    assert variants[4].evidence == (
+        ("evidence-generic-2", _digest(second_evidence)),
+        (
+            "validated-contract-artifact",
+            _digest(compiled.artifact.artifact_bytes),
+        ),
+        ("evidence-generic", evidence),
+    )
+
+
+def test_history_composer_routes_invalid_operations_through_strict_parser(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    invalid = KnowledgeOperation(
+        ordinal=0,
+        operation_id="operation-invalid",
+        operation_type="UNKNOWN",
+        record_type="LeftObject",
+        record_id="left-invalid",
+        properties={"label": "invalid"},
+        depends_on=(),
+    )
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        _compose(
+            history,
+            partial,
+            source,
+            evidence,
+            operations=(invalid,),
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET
+
+
+def test_composed_change_goes_stale_after_an_intervening_event(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    composed = _compose(history, partial, source, evidence)
+    later = b'{"outcome":"SATISFIED","receipt":"later"}'
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="evidence-later",
+            artifact_identity=_digest(later),
+        ),
+        later,
+        "RETAINED_EVIDENCE",
+    )
+    before = history.replay()
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.admit(
+            change_set=composed,
+            machine_events=_protocol_events(
+                composed, before.machine_state.identity, identifier_suffix="-stale"
+            ),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.STALE_BASE
+    assert _ledger_bytes(history) == ledger_before
+    assert history.replay().graph.snapshot() == before.graph.snapshot()
+
+
+def test_composed_change_admits_and_reopens_with_exact_parity(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    before = history.replay()
+    composed = _compose(history, partial, source, evidence)
+
+    admitted = history.admit(
+        change_set=composed,
+        machine_events=_protocol_events(composed, before.machine_state.identity),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+
+    assert admitted.change_sets == (composed,)
+    assert reopened.change_sets == admitted.change_sets
+    assert reopened.graph.snapshot() == admitted.graph.snapshot()
+    assert reopened.receipt.canonical_bytes == admitted.receipt.canonical_bytes
+
+
+def test_composer_binds_and_replays_a_superseding_second_change(
+    tmp_path: Path,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    first = _record_change(
+        history,
+        partial,
+        source,
+        evidence,
+        change_set_id="change-version-1",
+        record_id="left-version-1",
+        label="before",
+        order="event-1",
+    )
+    _admit_record_change(history, first, suffix="-version-1")
+    base = history.replay()
+    assert base.acceptance_head != GENESIS
+    assert base.materialization_head != GENESIS
+    operation = KnowledgeOperation(
+        ordinal=0,
+        operation_id="operation:left-version-2",
+        operation_type="CREATE_ENTITY",
+        record_type="LeftObject",
+        record_id="left-version-2",
+        properties={"label": "after"},
+        depends_on=(),
+        supersedes_record_id="left-version-1",
+    )
+
+    second = history.compose_change_set(
+        change_set_id="change-version-2",
+        source_record_ids=("source-generic",),
+        evidence_record_ids=("evidence-generic",),
+        operations=(operation,),
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "event-2"),
+        supersedes=(first.change_set_id,),
+    )
+    expected = {
+        "base_acceptance_head": base.acceptance_head,
+        "base_accepted_state_digest": base.graph.state_digest(),
+        "base_ledger_event_count": base.ledger_event_count,
+        "base_ledger_head": base.ledger_head,
+        "base_materialization_head": base.materialization_head,
+        "change_set_id": "change-version-2",
+        "contract_identity": partial.identity,
+        "contract_kind": CONTRACT_KIND,
+        "evidence": [{"evidence_id": "evidence-generic", "sha256": evidence}],
+        "grammar": KCS_GRAMMAR,
+        "operations": [
+            {
+                "depends_on": [],
+                "operation_id": "operation:left-version-2",
+                "operation_type": "CREATE_ENTITY",
+                "ordinal": 0,
+                "properties": {"label": "after"},
+                "record_id": "left-version-2",
+                "record_type": "LeftObject",
+                "supersedes_record_id": "left-version-1",
+            }
+        ],
+        "sources": [{"sha256": source, "source_id": "source-generic"}],
+        "supersedes": [first.change_set_id],
+        "valid_time": {"kind": "ORDER_ONLY", "value": "event-2"},
+    }
+    assert second.canonical_bytes == _canonical(expected)
+
+    admitted = _admit_record_change(history, second, suffix="-version-2")
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+
+    assert admitted.change_sets == (first, second)
+    assert reopened.change_sets == admitted.change_sets
+    assert reopened.graph.snapshot() == admitted.graph.snapshot()
+    assert reopened.record_history == admitted.record_history
+    assert reopened.receipt.canonical_bytes == admitted.receipt.canonical_bytes
+
+
+def test_history_composer_remains_private() -> None:
+    import malleus
+    import malleus._contract_pipeline as contract_pipeline
+
+    assert "compose_change_set" not in knowledge_module.__all__
+    assert not hasattr(malleus, "compose_change_set")
+    assert not hasattr(contract_pipeline, "compose_change_set")
+    assert not hasattr(malleus, "KnowledgeChangeHistory")
+    assert not hasattr(contract_pipeline, "KnowledgeChangeHistory")
 
 
 @pytest.mark.parametrize(
@@ -736,9 +1131,7 @@ def test_later_record_closes_prior_record_and_replay_answers_both_orders(
 
 
 @pytest.mark.parametrize("failure", ["unknown", "self", "fork", "reuse"])
-def test_record_supersession_refuses_atomically(
-    tmp_path: Path, failure: str
-) -> None:
+def test_record_supersession_refuses_atomically(tmp_path: Path, failure: str) -> None:
     history, _, partial, _, source, evidence = _anchored_history(tmp_path)
     first = _record_change(
         history,
@@ -1006,9 +1399,12 @@ def test_historical_graph_results_are_defensive_copies(tmp_path: Path) -> None:
     expected = replay.graph_at_change(first.change_set_id).snapshot()
 
     caller_copy = replay.graph_at_change(first.change_set_id)
-    assert caller_copy.create_entity(
-        "RightObject", "caller-only", {"label": "caller-only"}
-    ).op_status.value == "COMMITTED"
+    assert (
+        caller_copy.create_entity(
+            "RightObject", "caller-only", {"label": "caller-only"}
+        ).op_status.value
+        == "COMMITTED"
+    )
 
     assert replay.graph_at_change(first.change_set_id).snapshot() == expected
 
