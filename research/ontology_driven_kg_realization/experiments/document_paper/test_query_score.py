@@ -26,6 +26,7 @@ from research.ontology_driven_kg_realization.experiments.document_paper.query_sc
 
 
 ONTOLOGY_DIGEST = "sha256:" + "1" * 64
+ROOT = Path(__file__).resolve().parents[4]
 
 
 def _canonical(value: object) -> bytes:
@@ -135,6 +136,11 @@ def _freeze_score(
 ) -> None:
     monkeypatch.setattr(subject, "FROZEN_QUERY_RESULT_SHA256", _digest(query_result))
     monkeypatch.setattr(subject, "FROZEN_ORACLE_SHA256", _digest(oracle))
+
+
+def test_committed_query_result_matches_frozen_production_identity() -> None:
+    source = (ROOT / "paper-v4/experiment/results/query-result.json").read_bytes()
+    assert _digest(source) == subject.FROZEN_QUERY_RESULT_SHA256
 
 
 def test_exact_four_of_four_uses_binding_and_retains_duplicates(
