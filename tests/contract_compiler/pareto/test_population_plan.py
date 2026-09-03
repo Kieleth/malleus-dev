@@ -500,6 +500,29 @@ def test_population_plan_refuses_contract_and_view_mismatch(contract_pair) -> No
     )
 
 
+@pytest.mark.parametrize(
+    "source_id",
+    ["evidence-generic", "plan:neutral:1", "profile:state-version"],
+)
+def test_population_plan_refuses_source_and_evidence_closure_id_collision(
+    contract_pair, source_id: str
+) -> None:
+    population = _population()
+    _, partial = contract_pair
+    plan = _plan(partial.identity)
+    plan["sources"][0]["source_id"] = source_id
+    for derivation in plan["derivations"]:
+        derivation["source_id"] = source_id
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, contract_pair)
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_EVIDENCE_REFERENCE
+    )
+
+
 @pytest.mark.parametrize("plan", [None, [], "not a plan"])
 def test_population_plan_refuses_non_mapping_root(contract_pair, plan: object) -> None:
     population = _population()
@@ -749,7 +772,9 @@ def test_self_relation_dependency_is_unique() -> None:
     assert result.operations[1].depends_on == ("operation:plan:neutral:1:0",)
 
 
-def test_population_plan_refuses_null_properties_even_when_contract_has_no_slots() -> None:
+def test_population_plan_refuses_null_properties_even_when_contract_has_no_slots() -> (
+    None
+):
     population = _population()
     compiled, partial = _self_link_contract()
     plan = _plan(partial.identity)
