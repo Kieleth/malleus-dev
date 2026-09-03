@@ -78,6 +78,9 @@ P1_REASONS = frozenset(
         "MALFORMED_PROFILE_REFERENCE",
         "MALFORMED_SUPERSESSION",
         "SOURCES_REQUIRED",
+        "SUPERSESSION_FORK",
+        "SUPERSESSION_TYPE_MISMATCH",
+        "SUPERSESSION_VALID_TIME_MISMATCH",
         "UNDERIVED_FIELD",
         "UNKNOWN_FAMILY",
         "UNKNOWN_GAP_KIND",
@@ -225,13 +228,30 @@ def _admit_operations(
     order: str,
     supersedes: tuple[str, ...] = (),
 ):
+    return _admit_operations_at(
+        history,
+        change_set_id=change_set_id,
+        operations=operations,
+        valid_time=KnowledgeValidTime("ORDER_ONLY", order),
+        supersedes=supersedes,
+    )
+
+
+def _admit_operations_at(
+    history,
+    *,
+    change_set_id: str,
+    operations: tuple[KnowledgeOperation, ...],
+    valid_time: KnowledgeValidTime,
+    supersedes: tuple[str, ...] = (),
+):
     before = history.replay()
     change = history.compose_change_set(
         change_set_id=change_set_id,
         source_record_ids=("source-generic",),
         evidence_record_ids=("evidence-generic",),
         operations=operations,
-        valid_time=KnowledgeValidTime("ORDER_ONLY", order),
+        valid_time=valid_time,
         supersedes=supersedes,
     )
     return history.admit(
@@ -254,6 +274,60 @@ def _remove_derivation(
         for derivation in plan["derivations"]
         if not (derivation["record_id"] == record_id and derivation["path"] == path)
     ]
+
+
+def _single_left_base(tmp_path: Path, valid_time: KnowledgeValidTime):
+    history, compiled, partial, _, _, _ = _anchored_history(tmp_path)
+    replay = _admit_operations_at(
+        history,
+        change_set_id="change:left-old",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-old",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-old",
+                properties={"label": "old"},
+                depends_on=(),
+            ),
+        ),
+        valid_time=valid_time,
+    )
+    return history, compiled, partial, replay
+
+
+def _single_replacement_plan(
+    contract_identity: str,
+    *,
+    record_id: str,
+    record_type: str,
+    valid_time: KnowledgeValidTime,
+) -> dict[str, object]:
+    plan = _plan(contract_identity)
+    plan["records"] = {
+        "entities": [
+            {
+                "type": record_type,
+                "id": record_id,
+                "properties": {"label": "new"},
+            }
+        ],
+        "relations": [],
+    }
+    plan["derivations"] = [
+        {
+            "record_id": record_id,
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "row:1:label",
+        }
+    ]
+    plan["supersessions"] = [
+        {"record_id": record_id, "supersedes_record_id": "left-old"}
+    ]
+    plan["valid_time"] = {"kind": valid_time.kind, "value": valid_time.value}
+    return plan
 
 
 def _mutate(plan: dict[str, object], case: str) -> None:
@@ -910,6 +984,299 @@ def test_supersession_copies_records_and_deduplicates_creator_changes(
     assert governed.record_history["right-old"].superseded_by == "right-new"
     assert governed.record_history["left-old-1"].superseded_by == "left-new-1"
     assert governed.record_history["left-old-2"].superseded_by == "left-new-2"
+
+
+def test_population_plan_refuses_two_replacements_of_one_active_record(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new-1",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-2"),
+    )
+    plan["records"]["entities"].append(
+        {
+            "type": "LeftObject",
+            "id": "left-new-2",
+            "properties": {"label": "new two"},
+        }
+    )
+    plan["derivations"].append(
+        {
+            "record_id": "left-new-2",
+            "path": ["properties", "label"],
+            "source_id": "source-generic",
+            "locator": "row:2:label",
+        }
+    )
+    plan["supersessions"].append(
+        {"record_id": "left-new-2", "supersedes_record_id": "left-old"}
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason is population.PopulationPlanRefusalReason.SUPERSESSION_FORK
+    )
+
+
+def test_population_plan_refuses_reusing_the_superseded_record_id(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-old",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-2"),
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.DUPLICATE_RECORD_ID
+    )
+
+
+def test_population_plan_refuses_reusing_an_inactive_historical_record_id(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    history, compiled, partial, _, _, _ = _anchored_history(tmp_path)
+    _admit_operations(
+        history,
+        change_set_id="change:left-retired",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-retired",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-retired",
+                properties={"label": "retired"},
+                depends_on=(),
+            ),
+        ),
+        order="base-1",
+    )
+    replay = _admit_operations(
+        history,
+        change_set_id="change:left-current",
+        operations=(
+            KnowledgeOperation(
+                ordinal=0,
+                operation_id="operation:left-current",
+                operation_type="CREATE_ENTITY",
+                record_type="LeftObject",
+                record_id="left-current",
+                properties={"label": "current"},
+                depends_on=(),
+                supersedes_record_id="left-retired",
+            ),
+        ),
+        order="base-2",
+        supersedes=("change:left-retired",),
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-retired",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-3"),
+    )
+    plan["supersessions"][0]["supersedes_record_id"] = "left-current"
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.DUPLICATE_RECORD_ID
+    )
+
+
+def test_population_plan_refuses_cross_type_supersession(tmp_path: Path) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="right-new",
+        record_type="RightObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", "base-2"),
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.SUPERSESSION_TYPE_MISMATCH
+    )
+
+
+def test_population_plan_refuses_cross_family_supersession(tmp_path: Path) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _plan(partial.identity)
+    plan["supersessions"] = [
+        {"record_id": "link:left-1:right-1", "supersedes_record_id": "left-old"}
+    ]
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.SUPERSESSION_TYPE_MISMATCH
+    )
+
+
+@pytest.mark.parametrize(
+    ("base_time", "replacement_time"),
+    [
+        (
+            KnowledgeValidTime("ORDER_ONLY", "base-1"),
+            KnowledgeValidTime("INSTANT", "2026-03-03T00:00:00Z"),
+        ),
+        (
+            KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z"),
+            KnowledgeValidTime("ORDER_ONLY", "base-2"),
+        ),
+        (
+            KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z"),
+            KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z"),
+        ),
+        (
+            KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z"),
+            KnowledgeValidTime("INSTANT", "2026-03-01T19:00:00-05:00"),
+        ),
+        (
+            KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z"),
+            KnowledgeValidTime("INSTANT", "2026-03-01T00:00:00Z"),
+        ),
+    ],
+)
+def test_population_plan_refuses_incompatible_supersession_time(
+    tmp_path: Path,
+    base_time: KnowledgeValidTime,
+    replacement_time: KnowledgeValidTime,
+) -> None:
+    population = _population()
+    _, compiled, partial, replay = _single_left_base(tmp_path, base_time)
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new",
+        record_type="LeftObject",
+        valid_time=replacement_time,
+    )
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(
+            plan,
+            (compiled, partial),
+            base_state=population.PopulationBaseState.from_replay(replay),
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.SUPERSESSION_VALID_TIME_MISMATCH
+    )
+
+
+def test_population_plan_accepts_strictly_later_instant_supersession(
+    tmp_path: Path,
+) -> None:
+    population = _population()
+    history, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("INSTANT", "2026-03-02T00:00:00Z")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("INSTANT", "2026-03-03T00:00:00Z"),
+    )
+
+    result = _compile(
+        plan,
+        (compiled, partial),
+        base_state=population.PopulationBaseState.from_replay(replay),
+    )
+
+    assert result.status is population.PopulationPlanStatus.CHANGE_SET
+    admitted = _admit_operations_at(
+        history,
+        change_set_id="change:left-new",
+        operations=result.operations,
+        valid_time=result.valid_time,
+        supersedes=result.supersedes,
+    )
+    assert {row["id"] for row in admitted.graph.query("LeftObject")} == {"left-new"}
+
+
+@pytest.mark.parametrize("replacement_order", ["base-1", "before-base-1"])
+def test_population_plan_does_not_invent_order_for_order_only_supersession(
+    tmp_path: Path, replacement_order: str
+) -> None:
+    population = _population()
+    history, compiled, partial, replay = _single_left_base(
+        tmp_path, KnowledgeValidTime("ORDER_ONLY", "base-1")
+    )
+    plan = _single_replacement_plan(
+        partial.identity,
+        record_id="left-new",
+        record_type="LeftObject",
+        valid_time=KnowledgeValidTime("ORDER_ONLY", replacement_order),
+    )
+
+    result = _compile(
+        plan,
+        (compiled, partial),
+        base_state=population.PopulationBaseState.from_replay(replay),
+    )
+    admitted = _admit_operations(
+        history,
+        change_set_id="change:left-new",
+        operations=result.operations,
+        order=replacement_order,
+        supersedes=result.supersedes,
+    )
+
+    assert {row["id"] for row in admitted.graph.query("LeftObject")} == {"left-new"}
 
 
 def test_population_plan_refuses_supersession_that_orphans_active_relation(
