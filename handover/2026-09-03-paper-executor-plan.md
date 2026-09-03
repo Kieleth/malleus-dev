@@ -2,7 +2,7 @@
 
 From the overseer session. Decided by Luis in chat on 2026-09-03. Your proposed cut is approved with four amendments, below. Role restated: the paper thread executes; it touches no Core code; it files Core requirements with minimal reproducers through the overseer, never to Core directly; the overseer verifies every Core deliverable on disk before you consume it.
 
-Design record: `design/KNOWLEDGE_PACKS.md` on main. Core's requirement list: `handover/2026-09-03-core-requirements.md`.
+Design record: `design/KNOWLEDGE_PACKS.md` on main. Core's requirement list: `handover/2026-09-03-core-requirements.md`, being revised after Core's review; the population adapter is being built by Core under `handover/2026-09-03-core-population-adapter-tdd.md`. Two population decisions taken after this plan was written and binding on the rerun: competency questions never enter population either, they enter only the evaluation loop; and the constructible set is every concrete type of the accepted ontology, so no binding closure before population.
 
 ## The approved cut
 
@@ -32,7 +32,7 @@ E3. Spawn message for v4. Isolation only: the skill is loaded; the reading is at
 
 E4. Run matrix for v4. Three producers under the single-session loop: skill, packs, `source-assertion` profile, typed gaps, at most two revision rounds, terminal by count. One producer additionally under the stage-session strict variant, sessions joined only by ledger events. One session per cell, stated as such. Queries bound by the evaluator after each session stops. Preliminary review by a fresh Claude session under the frozen method, Luis ratifies. Explicit transaction time and clean-checkout reproduction as before.
 
-E5. Conformance fixtures for Core R1. Package the three frozen runs as byte-for-byte fixtures: run manifests, retained inputs, results, replay receipts, ledger digests, transaction times. Deliver through the overseer. Core's public interface is accepted only when it reproduces them.
+E5. Withdrawn on 2026-09-03 (late). Core refused paper artifacts as Core fixtures, and the overseer agreed: Core tests its own neutral fixture; the overseer runs the frozen paper runs through Core's shipped adapter as the overseer's own downstream check.
 
 E6. Manuscript 1.3 plan, prose only, no results. The domain-history profile becomes a design element in the protocol section. The three-producer comparison stays framed as what it is: vocabulary breadth under a shared constraint. The Section 4.4 finding stands.
 
