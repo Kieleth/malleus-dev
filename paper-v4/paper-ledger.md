@@ -1,10 +1,10 @@
 # Malleus paper ledger
 
-Ledger version: 0.9.0
+Ledger version: 1.0.0
 
 Opened: 2026-09-02
 
-Plan tracked: `paper-master-plan.md` version 0.9.0
+Plan tracked: `paper-master-plan.md` version 1.0.0
 
 ## Operating rule
 
@@ -103,6 +103,16 @@ Plan version: 0.9.0
 Change: Applied D-0011 through D-0016. Replaced raster OCR with a pinned PDF text-layer reading, retired hand repair and LLM adequacy review, limited the experiment to five identities, isolated it on Core 1611944, made a fresh model session the sole population producer, and rebound queries to ontology types rather than a fixed graph closure.
 
 Reason: The retained OCR corrupted CO2 in question-critical text, the reviewer and hand repair introduced an experimenter-mediated result, the existing query binding fixed the graph before model population, and the shared checkout did not preserve the claimed Core baseline.
+
+### PV-0010
+
+Date: 2026-09-02
+
+Plan version: 1.0.0
+
+Change: Superseded only the Core coordinate in D-0014. Rebound the isolated paper branch to Core `f9052b4783100203318d4a21a0236f3851218af1`, admitted the published Small Shop correction tag as bounded component evidence, and admitted the later private KnowledgeChangeSet composer as a private implementation seam. Isolation, the ignored PDF, five paper identities, model inputs, and experiment order remain unchanged.
+
+Reason: Luis explicitly approved the rebind after Core passed its local and remote publication gates. The newer baseline contains the completed correction evidence and a domain-neutral private composer needed by a second real consumer, without creating a public API or stable wire claim.
 
 ## Author decisions already expressed
 
@@ -279,6 +289,14 @@ Status: accepted
 Decision: Remove the ontology adequacy rubric and reviewer. The compiler is the ontology gate. Record one evaluator acceptance event with ontology digest and actor id. Bind queries only to record types, relation types, and enum values. Run queries against replayed graph state, then score separately against the sealed oracle.
 
 Source: Author decision via overseer session, 2026-09-02
+
+### D-0017
+
+Status: accepted
+
+Decision: Supersede D-0014 only as to its Core coordinate. Keep the work isolated on `codex/paper-v4-lean`, but rebind it to Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The paper may consume and cite research tag `research/small-shop-correction-replay-v1` and the later private KnowledgeChangeSet composer, with no package-release, public-API, stable-wire, or general correction claim.
+
+Source: Author decision via Malleus Core coordination, 2026-09-02
 
 ## Raw findings
 

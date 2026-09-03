@@ -1,6 +1,6 @@
 # Malleus: An Executable Commitment Boundary for Model-Proposed Knowledge Graphs
 
-Version: 0.9.0 working draft
+Version: 1.0.0 working draft
 
 Status: lean engineering draft. The source, selected text-layer reading, compiled model-proposed ontology, and type-only query binding are frozen. Model population, ledger replay, query execution, and scoring remain in progress. No document graph or query result is claimed yet.
 
@@ -90,7 +90,7 @@ The query process receives only replayed graph state and the frozen query bindin
 
 ## 4. Implementation and experiment
 
-The experiment runs in an isolated worktree created from Malleus Core commit `1611944eb8856dbd4f25c2ea8bddbecdb970a3a3`, tree `657ba6ce1be83064d104803ad5dad644d65b4352`. The relevant implementation includes a research ontology compiler, a restricted stOTTR-derived construction grammar, a bridge from recipe plans to change sets, append-only admission, replay, and native graph filters. These seams are research-local. The paper does not present them as a stable public API or general mapping language.
+The experiment runs in an isolated branch bound to Malleus Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The implementation includes a research ontology compiler, a restricted stOTTR-derived construction grammar, a paper-local bridge from recipe plans, a private domain-neutral change-set composer, append-only admission, replay, and native graph filters. The composer only binds explicit inputs to current history coordinates; it does not parse, judge, admit, or replay. These seams are private or research-local, not a stable public API or general mapping language.
 
 The worked source is Yu et al., *Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge*, published in Nature Communications in 2025, DOI `10.1038/s41467-024-55792-9`. The publisher PDF has 11 pages and 6,921,046 bytes. The case uses prose only; figures, tables, open-ended synthesis, and specialist reinterpretation are excluded.
 
@@ -109,7 +109,7 @@ The primary measures are the number and type of ontology compiler returns; popul
 
 Natural refusals from ontology or population run count as negative cases. Synthetic mutations are added only for planned classes not observed naturally: source digest drift, missing or unknown locator, illegal type or endpoint, stale prior state, and failed grouped application. Each discovered error class gets a mechanical guard and focused test.
 
-An existing Small Shop fixture supplies component evidence that the compiler, change-set bridge, accepted history, and replay can be composed. It is not a second document evaluation and does not supply any answer or fallback for this case.
+The published research milestone `research/small-shop-correction-replay-v1`, annotated tag object `449ba25964a88ead86cc1aec337be1631cad9471` at commit `e94f45c74475948dfebdc89247bfb070de0b778d`, supplies component evidence for three ordered changes, supersession, accepted history, and replay. It is not a package release, a second document evaluation, or an answer source for this case.
 
 ## 5. Results
 

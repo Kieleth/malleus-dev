@@ -1,6 +1,6 @@
 # Malleus paper master plan
 
-Version: 0.9.0
+Version: 1.0.0
 
 Date: 2026-09-02
 
@@ -37,7 +37,7 @@ The paper contains one worked document:
 - One generic construction recipe library. A recipe may encode construction form and types, never an answer value.
 - One typed change, ledger admission, deletion, replay, four queries, and exact-match score.
 
-The Small Shop fixture is an implementation baseline, not a second empirical case. The paper experiment remains pinned to Core commit `1611944eb8856dbd4f25c2ea8bddbecdb970a3a3`, tree `657ba6ce1be83064d104803ad5dad644d65b4352`.
+The published Small Shop correction fixture is an implementation baseline, not a second empirical case. Its research milestone is annotated tag `research/small-shop-correction-replay-v1`, tag object `449ba25964a88ead86cc1aec337be1631cad9471`, at commit `e94f45c74475948dfebdc89247bfb070de0b778d`. The document experiment is pinned to later Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`.
 
 Excluded:
 
@@ -81,7 +81,7 @@ The answer key remains evaluator-only. D1 changed only its locators. The answer 
 
 ### Sequence
 
-1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, created from clean Core `1611944`. The PDF and private files are ignored.
+1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, forward-merged with exact Core `f9052b4`. The PDF and private files are ignored.
 2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
 3. **Ontology, complete.** A fresh session received the selected reading, four questions, supported ontology task, and retained copies of every model-visible Malleus input. Its first proposal compiled without a diagnostic return. No human edited or repaired it. One evaluator event records its digest and actor id for population, without an adequacy judgment.
 4. **Query binding, complete.** The four native queries are frozen as typed source-relation-target cases with enum-constrained relation kinds and projected output fields. Matching returns zero or more rows; neither the binding nor executor requires a graph size or singleton result. The binding contains no document answer, numeric value, source text, locator, record identifier, entity count, relation count, or topology closure.
@@ -120,7 +120,7 @@ The ontology is adequate only to the degree measured by population success and q
 
 ## Implementation constraints
 
-No additional Core feature is required. The paper-local code may use the research compiler, generic GraphRecipe bridge, private `KnowledgeChangeSet` and history seam, replay, and native graph queries present at Core `1611944`. It must not claim those research-local seams as stable public APIs.
+The rebound Core baseline provides the private history and a pure domain-neutral KnowledgeChangeSet composer. The composer binds explicit sources, evidence, operations, valid time, and supersession to current history coordinates. It does not parse sources, choose domain semantics, run checks, admit, replay, or expose a public API. GraphRecipe lowering, document validation, queries, and the experiment runner remain paper-local.
 
 Required fields fail loudly. The runner cannot synthesize a source digest, locator, type, relation endpoint, prior state, or answer when it is absent. Replacing an experimental mechanism removes its old active path. The retired OCR, recovery ontology, reviewer, fixed-closure query, and answer-encoding recipe remain under `paper-v4/retired/` for history and are excluded from tests and claims.
 
@@ -178,6 +178,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.0.0, 2026-09-02: Applied D-0017. Rebound the isolated paper branch to exact Core `f9052b4`, accepted the published Small Shop correction tag as bounded research evidence, and accepted the later private composer as a private implementation seam. Preserved the PDF exclusion, five identities, frozen model inputs, and claim boundary.
 - 0.9.0, 2026-09-02: Applied author decisions D1 through D6. Moved to a pinned PDF text-layer reading, clean Core worktree, five-identity budget, fresh model-authored population, compiler-only ontology gate, one evaluator acceptance event, type-based query binding, and no fallback. Retired raster OCR, hand recovery, adequacy review, fixed graph closure, and answer-encoding recipes. D1 completed at the selected-reading digest above.
 - 0.8.0, 2026-09-02: Selected a hand-authored recovery ontology after a one-shot adequacy review and froze a fixed-closure query binding. Superseded by 0.9.0.
 - 0.7.0, 2026-09-02: Retained the Tesseract-era ontology proposal and adequacy refusal, then opened a recovery control. Superseded by 0.9.0.
