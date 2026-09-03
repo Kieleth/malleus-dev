@@ -10,6 +10,11 @@ profiles they need, replace implementations behind the same contracts, or stop
 before semantic history entirely. Start with the
 [protocol boundary taxonomy](protocol-boundary-taxonomy) for those boundaries.
 
+For the current five-change demonstration, read the
+[Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md). It extends the
+historical milestones below with settlement, one ledger, replay-derived current
+state, named queries, and exact change-level provenance.
+
 ## First compiler-to-ledger-to-knowledge-graph proof
 
 > **Status:** Working research milestone, 2 September 2026.
@@ -414,6 +419,7 @@ See the [technical compiler notes](contract_compiler/index.md) and
 :maxdepth: 2
 
 ADOPTION_GUIDE
+SMALL_SHOP_WALKTHROUGH
 ARCHITECTURE
 ASSENT_PLAN
 ASSENT_PROTOCOL

@@ -283,10 +283,12 @@ authentic, independently retained expected head and event count. Historical
 ledger. A selected-prefix checkpoint alone remains valid after removal of a
 later tail and therefore does not authenticate that tail. Core retains no
 checkpoint itself, and the ledger is not externally witnessed or tamper-proof.
-The current projector also starts from a caller-supplied graph base rather than
-the accepted empty-plus-genesis boundary, and the runtime does not yet expose a
-generic `KnowledgeChangeSet` artifact. Those are implementation gaps against
-the accepted target, not licenses for a second state authority.
+The current public Assent projector also starts from a caller-supplied graph
+base rather than the accepted empty-plus-genesis boundary, and it does not yet
+expose a generic `KnowledgeChangeSet` artifact. A private compiler pipeline now
+proves both boundaries for controlled research cases. The missing public
+cutover remains an implementation gap against the accepted target, not a
+license for a second state authority.
 
 Stronger integrity belongs behind a separate contract boundary. A witness can
 consume a committed protocol-ledger head and emit a signed or transparency-

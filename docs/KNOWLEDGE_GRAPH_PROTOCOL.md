@@ -198,10 +198,12 @@ must preserve the same runtime gate and refusal semantics.
 
 ### 6. The bound runtime contract governs admission semantics
 
-The current runtime uses `OntologyRegistry` for admission. The accepted
-contract-compiler design replaces that syntax-bound path with a
-frontend-neutral `EffectiveContract`; it is not implemented yet. A reloadable
-`EffectiveContractArtifact` representation remains Candidate work.
+The current public graph API uses `OntologyRegistry` for admission. The
+accepted contract-compiler design replaces that syntax-bound path with a
+frontend-neutral `EffectiveContract`. A private compiler pipeline now composes
+and reloads that contract for controlled research cases, but it is not yet a
+public graph API or compatibility promise. Public promotion remains Candidate
+work.
 Use the registry for runtime introspection rather than duplicating vocabulary
 and endpoint rules in application code. Generated typed wrappers may improve
 authoring safety, but they are not the current Malleus API or authority.

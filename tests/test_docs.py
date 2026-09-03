@@ -104,6 +104,7 @@ PUBLIC_GUIDES = {
     "PRINCIPLES.md",
     "RECIPES.md",
     "RECON_CONTRACT.md",
+    "SMALL_SHOP_WALKTHROUGH.md",
 }
 INTERNAL_CONTRACT_COMPILER_DOC_SOURCES = {
     "contract_compiler/index.md",
@@ -2381,6 +2382,286 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "2 means the instrument itself is broken",
     ):
         assert stale_readme_claim not in readme
+
+
+def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
+    guide = (DOCS / "SMALL_SHOP_WALKTHROUGH.md").read_text(encoding="utf-8")
+    normalized = " ".join(guide.split())
+    index = (DOCS / "index.md").read_text(encoding="utf-8")
+    showcase = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "experiments"
+        / "small_shop"
+        / "showcase"
+    )
+    evidence_paths = {
+        name: showcase / "evidence" / name
+        for name in ("explanation.json", "graph.json", "queries.json", "receipt.json")
+    }
+    evidence_bytes = {name: path.read_bytes() for name, path in evidence_paths.items()}
+    evidence = {name: json.loads(source) for name, source in evidence_bytes.items()}
+    explanation = evidence["explanation.json"]
+    graph = evidence["graph.json"]
+    queries = evidence["queries.json"]
+    receipt = evidence["receipt.json"]
+    program = json.loads((showcase / "run.json").read_text(encoding="utf-8"))
+
+    assert "SMALL_SHOP_WALKTHROUGH.md" in PUBLIC_GUIDES
+    assert "[Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md)" in index
+    root_toctree = index.split("```{toctree}", 1)[1].split("```", 1)[0]
+    assert "SMALL_SHOP_WALKTHROUGH" in root_toctree.splitlines()
+
+    for source_value in (
+        '"event_id":"e27"',
+        '"items":["X1","X2","Y1"]',
+        "inventory_unit_id,product_code",
+        '"event_id":"e4","product_code":"Y","quantity":1',
+        '"event_id":"e7","product_code":"Y","quantity":2',
+        "invoice_id",
+        '"event_id":"e30","invoice_ids":["I1","I2"],"payment_id":"P1"',
+    ):
+        assert source_value in guide
+
+    for claim in (
+        "Only the ontology closure is compiled into neutral contract facts.",
+        "five immutable `KnowledgeChangeSet` values",
+        "Each change's source closure is bundle-wide",
+        "`selected_records` identifies the rows used by the mapping",
+        "All 19 fixture source members",
+        "staged admission of pre-provisioned sources, not live observation",
+        "`PREPROVISIONED_BOOTSTRAP`",
+        "Source, mapping, or graph-shape drift refuses before mutation.",
+        "replay from the ledger alone, not recompilation from the ledger alone",
+        "ABox mapping is fixture-specific Python, not a public population compiler.",
+        "`CHANGE_LEVEL_NOT_PER_OPERATION_CAUSALITY`",
+        "does not yet identify the query program or its dependency closure",
+        "Operation-level causality",
+        "arbitrary transaction-prefix queries",
+        "Cypher",
+        "generic collection fan-out",
+        "scoring and evaluation",
+        "effects",
+        "Semantic Re-entry",
+        "Meaning and decisions are explicit.",
+        "deterministic replay rebuilds it from the ledger",
+    ):
+        assert claim in normalized
+    assert (
+        "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9" in guide
+    )
+    assert "`P1`, `I1`, and `I2` co-occur" in normalized
+    assert "not asserted as a source-native direction by the chapter" in normalized
+
+    coordinates = explanation["coordinates"]
+    assert coordinates == {
+        "contract": {
+            "effective_contract_identity": (
+                "sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3"
+            ),
+            "fact_count": 1040,
+            "facts_identity": (
+                "sha256:88becf08c17ff132d872ac57fabd66f935fa44e9544c7f846a850d0148c71fa3"
+            ),
+            "validated_contract_artifact_id": (
+                "artifact:small-shop-showcase:validated-contract"
+            ),
+            "validated_contract_artifact_identity": (
+                "sha256:680fa39a5305462acbac24609e2896bec8082c1069093f893363c8583526d27e"
+            ),
+            "validated_fact_set_identity": (
+                "sha256:f34a1e660d1b592c1d46681e4ca77f3744ee3d090ed040404c60a23391d079ef"
+            ),
+        },
+        "graph": {
+            "current_record_count": 9,
+            "ontology_identity": (
+                "sha256:f34a1e660d1b592c1d46681e4ca77f3744ee3d090ed040404c60a23391d079ef"
+            ),
+            "state_digest": (
+                "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+            ),
+        },
+        "history": {
+            "acceptance_head": (
+                "sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e"
+            ),
+            "binding_identity": (
+                "sha256:da5131f69e67628761bda781c8ab0af730cfddf4aaf97c9a52505667230b47a2"
+            ),
+            "event_count": 74,
+            "ledger_head": (
+                "sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e"
+            ),
+            "materialization_head": (
+                "sha256:f82106a444c86f65fa62daac8e27adc11754aaf6b415b2ad432040cd5cce218d"
+            ),
+            "receipt_identity": (
+                "sha256:edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4"
+            ),
+        },
+    }
+    for value in (
+        coordinates["contract"]["effective_contract_identity"],
+        coordinates["history"]["ledger_head"],
+        coordinates["history"]["materialization_head"],
+        coordinates["history"]["receipt_identity"],
+        coordinates["graph"]["state_digest"],
+        explanation["run_program"]["identity"],
+    ):
+        assert value in guide
+
+    assert {
+        name: hashlib.sha256(source).hexdigest()
+        for name, source in evidence_bytes.items()
+    } == {
+        "explanation.json": (
+            "2f529922b1b88f4f0f43feed3dcdf71b578e2fa2b0ad37fb295013d61341f4b9"
+        ),
+        "graph.json": (
+            "b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+        ),
+        "queries.json": (
+            "e5dc8bb1be295ef9ebeae9582689d4f876036859b2739447dc60188f9bb8ba5c"
+        ),
+        "receipt.json": (
+            "edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4"
+        ),
+    }
+    assert coordinates["history"]["receipt_identity"] == (
+        "sha256:" + hashlib.sha256(evidence_bytes["receipt.json"]).hexdigest()
+    )
+    assert receipt["contract_identity"] == coordinates["contract"][
+        "effective_contract_identity"
+    ]
+    assert receipt["ledger_head"] == coordinates["history"]["ledger_head"]
+    assert receipt["graph_state_digest"] == coordinates["graph"]["state_digest"]
+    assert explanation["run_program"]["identity"] == (
+        "sha256:766581ea6ca384cb325a05f235978bdbe849e8970304fe089b7a0509594a4835"
+    )
+    assert explanation["run_program"]["decisions"] == program["decisions"]
+    assert explanation["run_program"]["limitations"] == program["limitations"]
+    assert program["decisions"]["source_arrival_model"] == {
+        "choice": "PREPROVISIONED_BOOTSTRAP",
+        "deferred": "STAGE_WISE_SOURCE_REGISTRATION_AND_OBSERVATION",
+        "meaning": "STAGED_ADMISSION_NOT_LIVE_OBSERVATION",
+    }
+
+    change_ids = [item["change_set_id"] for item in explanation["accepted_changes"]]
+    assert change_ids == [
+        "change:RET-010:genesis",
+        "change:SHOP-PAYMENT-SETTLEMENT:invoice-base",
+        "change:SHOP-PAYMENT-SETTLEMENT:P1:e30",
+        "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4",
+        "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7",
+    ]
+    source_ids = set(receipt["source_identities"])
+    sources_by_prefix = {
+        prefix: {item for item in source_ids if item.startswith(prefix + ":")}
+        for prefix in ("ret010", "settlement", "correction")
+    }
+    assert {prefix: len(items) for prefix, items in sources_by_prefix.items()} == {
+        "ret010": 8,
+        "settlement": 6,
+        "correction": 5,
+    }
+    expected_prefixes = ("ret010", "settlement", "settlement", "correction", "correction")
+    for change, prefix in zip(
+        explanation["accepted_changes"], expected_prefixes, strict=True
+    ):
+        assert set(change["source_record_ids"]) == sources_by_prefix[prefix]
+
+    records = {item["id"]: item for item in graph["nodes"]}
+    records.update({item["key"]: item for item in graph["relations"]})
+    assert set(records) == {
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "invoice:I1",
+        "invoice:I2",
+        "payment:P1",
+        "relation:P1:I1",
+        "relation:P1:I2",
+        "supplier-order-state:B:e7",
+    }
+    assert records["contains:O1:X1"]["target_id"] == "X1"
+    assert records["supplier-order-state:B:e7"]["ordered_quantity"] == 2
+    assert [
+        (item["source_id"], item["target_id"])
+        for item in graph["relations"]
+        if item["type"] == "PaymentSettlesInvoiceRelation"
+    ] == [("payment:P1", "invoice:I1"), ("payment:P1", "invoice:I2")]
+
+    answers = queries["answers"]
+    order = next(item for item in answers if item["command"] == "order-contents")
+    payment = next(
+        item for item in answers if item["command"] == "payment-settlements"
+    )
+    history = next(
+        item for item in answers if item["command"] == "supplier-order-history"
+    )
+    provenance = next(
+        item
+        for item in answers
+        if item["command"] == "record-change-provenance"
+        and item["result"]["record"]["id"] == "relation:P1:I1"
+    )
+    assert order["result"]["contents"][0]["unit"]["id"] == "X1"
+    assert [
+        item["invoice"]["invoice_number"]
+        for item in payment["result"]["settlements"]
+    ] == ["I1", "I2"]
+    assert [
+        item["record"]["ordered_quantity"] for item in history["result"]["states"]
+    ] == [1, 2]
+    assert provenance["result"]["provenance_scope"] == (
+        "CHANGE_LEVEL_NOT_PER_OPERATION_CAUSALITY"
+    )
+    assert provenance["result"]["change"]["value"]["change_set_id"] == (
+        "change:SHOP-PAYMENT-SETTLEMENT:P1:e30"
+    )
+    assert len(provenance["result"]["change_source_closure"]) == 6
+    assert len(provenance["result"]["change_evidence_closure"]) == 7
+
+    settlement = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "fixtures"
+        / "small_shop_fulfilment_settlement_v1"
+        / "input"
+    )
+    attribution = json.loads(
+        (settlement / "attribution.json").read_text(encoding="utf-8")
+    )
+    selection = json.loads(
+        (
+            settlement
+            / "configuration"
+            / "shop-payment-settlement-selection.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert attribution["published_source_claims"][-1] == {
+        "cooccurring_entity_ids": ["P1", "I1", "I2"],
+        "event_id": "e30",
+    }
+    assert attribution["interpretation_authority"] == (
+        "FIXTURE_DECLARATION_NOT_SOURCE_NATIVE_RELATION"
+    )
+    assert selection["settlement_semantics"] == (
+        "FIXTURE_DEFINED_DIRECTED_PAYMENT_TO_INVOICE"
+    )
+
+    for command in (
+        "showcase.run --output build/small-shop-showcase",
+        "showcase.query --history build/small-shop-showcase/history.jsonl order-contents O1",
+        "showcase.query --history build/small-shop-showcase/history.jsonl payment-settlements P1",
+        "showcase.query --history build/small-shop-showcase/history.jsonl supplier-order-history B",
+        "showcase.query --history build/small-shop-showcase/history.jsonl record-change-provenance relation:P1:I1",
+        "showcase.evidence --output build/small-shop-showcase-evidence",
+    ):
+        assert command in guide
 
 
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
