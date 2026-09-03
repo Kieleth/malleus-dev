@@ -1371,3 +1371,19 @@ Coordinate correction: A read-only driver audit found that the first recipe conf
 Verification: 17 acquisition-freeze, classifier, recipe, and exact-coordinate tests pass. Ruff and `git diff --check` pass. No v2 population output exists at this entry.
 
 Impact: The input boundary is frozen before the new context-free producer runs. Any structural defect may be returned once to the same session. A semantic omission or poor result is retained unchanged and receives no fallback.
+
+### E-0089, transaction time becomes an explicit experiment coordinate
+
+Date: 2026-09-03
+
+Sources: the read-only v2 driver map; `experiment_run.py`; and its configuration and complete-history tests.
+
+Observation: The paper runner hard-coded transaction time `2026-09-02T00:00:00Z`. Reusing it for the corrected run would place every v2 anchor and admitted event before the experiment occurred. Selecting wall-clock time at execution would instead make byte-identical reproduction impossible.
+
+Correction: `PaperExperimentConfiguration` now requires one explicit timezone-aware ISO 8601 transaction time, validates it at construction, and passes it to the complete history run. There is no default. A hard test substitutes a different valid value and proves that every ledger event uses exactly that coordinate. Invalid text refuses before compilation.
+
+Boundary: The v2 transaction value itself is not chosen at this entry. It will be frozen with the explicit v2 driver after the model population exists and before admission. Existing unversioned internal proposal and evidence ids remain safe only because each experiment uses a new isolated ledger. They are not claimed as a public namespace.
+
+Verification: 29 runner and frozen-publication tests pass. Ruff and `git diff --check` pass.
+
+Impact: The corrected history will not carry a fabricated old timestamp or a nondeterministic runtime timestamp.

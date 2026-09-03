@@ -75,6 +75,7 @@ def _configuration(inputs: FrozenExperimentPaths) -> PaperExperimentConfiguratio
         ),
         record_type_iris=("https://example.test/FictionRecord",),
         contract_id="https://example.test/contract",
+        transaction_time="2026-09-02T00:00:00Z",
         ontology_locator="fiction:ontology",
         malleus_import_locator="malleus",
         linkml_types_locator="linkml:types",

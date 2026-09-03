@@ -131,6 +131,7 @@ def _configuration(
         population_recipe_profile=V1_PROFILE,
         record_type_iris=RECORD_TYPES,
         contract_id="https://malleus.dev/contracts/paper-four-fiction",
+        transaction_time="2026-09-02T00:00:00Z",
         ontology_locator="paper-v4:fiction-ontology",
         malleus_import_locator="malleus",
         linkml_types_locator="linkml:types",
@@ -421,6 +422,27 @@ def test_configuration_has_no_defaulted_coordinates() -> None:
     }
     with pytest.raises(TypeError, match="population_recipe_profile"):
         replace(_configuration(), population_recipe_profile=object())
+    with pytest.raises(ExperimentRunError, match="transaction_time is invalid"):
+        replace(_configuration(), transaction_time="not-a-time")
+
+
+def test_configured_transaction_time_controls_the_complete_history(
+    tmp_path: Path,
+) -> None:
+    transaction_time = "2026-09-03T09:00:00Z"
+    ledger = tmp_path / "semantic.jsonl"
+
+    _run(
+        ledger,
+        configuration=replace(
+            _configuration(),
+            transaction_time=transaction_time,
+        ),
+    )
+
+    assert {
+        json.loads(line)["transaction_time"] for line in ledger.read_bytes().splitlines()
+    } == {transaction_time}
 
 
 def test_full_run_honors_non_v1_provenance_schema(tmp_path: Path) -> None:

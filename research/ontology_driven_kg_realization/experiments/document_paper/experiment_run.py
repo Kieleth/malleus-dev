@@ -20,7 +20,7 @@ from malleus._contract_pipeline.machine import (
     compose_partial_effective_contract,
 )
 from malleus.kg import OpType
-from malleus.ledger import canonical_json
+from malleus.ledger import LedgerError, aware_datetime, canonical_json
 
 from .compiled_graph_recipe_contract import (
     derive_compiled_logical_contract,
@@ -100,6 +100,7 @@ class PaperExperimentConfiguration:
     population_recipe_profile: PopulationRecipeProfile
     record_type_iris: tuple[str, ...]
     contract_id: str
+    transaction_time: str
     ontology_locator: str
     malleus_import_locator: str
     linkml_types_locator: str
@@ -112,11 +113,16 @@ class PaperExperimentConfiguration:
         for field in (
             "result_schema",
             "contract_id",
+            "transaction_time",
             "ontology_locator",
             "malleus_import_locator",
             "linkml_types_locator",
         ):
             _require_nonblank(getattr(self, field), field)
+        try:
+            aware_datetime(self.transaction_time, "transaction_time")
+        except LedgerError as error:
+            raise ExperimentRunError(str(error)) from error
         for field in (
             "source_sha256",
             "ontology_sha256",
@@ -797,7 +803,7 @@ def run_paper_experiment(
         plan_evidence_id=_PLAN_ID,
         change_set_id="change:paper-v4:population",
         valid_time=KnowledgeValidTime("ORDER_ONLY", "population-1"),
-        transaction_time="2026-09-02T00:00:00Z",
+        transaction_time=configuration.transaction_time,
         actor_id=_ACTOR_ID,
         protocol_events=_protocol_events(policy, checks),
     )
