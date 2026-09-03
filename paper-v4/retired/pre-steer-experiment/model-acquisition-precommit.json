@@ -1,0 +1,91 @@
+{
+  "schema": "malleus.paper-v4.model-acquisition-precommit/v1",
+  "frozen_at": "2026-09-02T22:13:08Z",
+  "status": "FROZEN_BEFORE_MODEL_ACQUISITION",
+  "stage": "ONTOLOGY_PROPOSAL",
+  "session": {
+    "kind": "NEW_CODEX_TASK",
+    "prior_conversation": "NONE",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "service_date": "2026-09-02",
+    "environment": "PROJECT_WORKTREE_FROM_WORKING_TREE",
+    "repository_base_commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+    "repository_base_branch": "main"
+  },
+  "prompt": {
+    "path": "paper-v4/experiment/model-acquisition-prompt.md",
+    "sha256": "sha256:0074edf85922fb6d3a7c4b7140cfbe819c6a15e7b9f5cd0d7838b1f55f9dfc10"
+  },
+  "task_contract": {
+    "path": "paper-v4/experiment/model-ontology-task.md",
+    "sha256": "sha256:39bd95ce2fd48aa559f6c5796be4dde7f72d866f366587729045b2bc2af628cf"
+  },
+  "allowed_inputs": [
+    {
+      "path": ".claude/skills/malleus-acolyte/SKILL.md",
+      "sha256": "sha256:2e2273b1638a91b792a9b7aab27c5430d6e85d531fa150e86cbc8d505ccace08"
+    },
+    {
+      "path": "docs/ADOPTION_GUIDE.md",
+      "sha256": "sha256:62a12e1769cf81d8ccc0ea199eb6536d99b575a3bf14bed36733303d2bf8312c"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "sha256": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f"
+    },
+    {
+      "path": "ontology/malleus.yaml",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "path": "paper-v4/experiment/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    {
+      "path": "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json",
+      "sha256": "sha256:0537411117e73b2611ade5088978ba7c8d8a4467d5b51b0c8941bc47f0d41261"
+    },
+    {
+      "path": "paper-v4/experiment/selected-reading-manifest.json",
+      "sha256": "sha256:74399ce57cbe512157c0afdea4bbca946bc2693a3ead69cdfc82b3d6f292c35c"
+    }
+  ],
+  "tool_policy": {
+    "file_reads": "ALLOWLIST_ONLY",
+    "file_writes": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "shell": "READ_ONLY_HASH_AND_FILE_INSPECTION_OF_ALLOWLIST",
+    "subtasks": "FORBIDDEN"
+  },
+  "output": {
+    "encoding": "UTF-8",
+    "start_delimiter": "BEGIN_ONTOLOGY_YAML",
+    "end_delimiter": "END_ONTOLOGY_YAML",
+    "documents": 1,
+    "commentary_outside_delimiters": "FORBIDDEN"
+  },
+  "correction_policy": {
+    "structural_compiler_retries_after_initial_proposal": 2,
+    "same_session_required": true,
+    "restart": "FORBIDDEN",
+    "best_of_session_selection": "FORBIDDEN",
+    "hidden_adequacy_review_attempts": 1,
+    "hidden_review_feedback": "FORBIDDEN",
+    "retry_after_hidden_review": "FORBIDDEN"
+  },
+  "hidden_from_producer": [
+    "answer oracle",
+    "oracle locator binding",
+    "ontology adequacy rubric",
+    "support adjudication guide",
+    "earlier paper attempts",
+    "Recon domain record"
+  ],
+  "unobservable_or_unfixed": [
+    "provider system prompt",
+    "provider implementation details",
+    "sampling parameters not exposed by Codex task creation",
+    "host scheduling and nondeterminism"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "relation:yu-2025:has-claim:cq-02",
+  "source_id": "work:yu-et-al-2025-mid-atlantic-ridge",
+  "target_id": "claim:yu-2025:cq-02",
+  "relation_type": "HAS_CLAIM",
+  "review_state": "REVIEWED",
+  "assertion_status": "SOURCE_EXPLICIT",
+  "confidence": 1.0,
+  "basis": "Publisher PDF page index 2 (1-based), anchored to the Results prose listing the regional seismic observations.",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ]
+}

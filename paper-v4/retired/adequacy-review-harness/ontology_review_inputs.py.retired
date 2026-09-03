@@ -1,0 +1,1112 @@
+"""Build the sealed, mechanical inputs for the ontology adequacy review.
+
+This module decides review eligibility, not ontology adequacy.  It recompiles
+the exact candidate, checks every retained boundary, projects the compiled
+domain through GraphRecipe, and publishes no output unless the complete input
+closure passes.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from enum import Enum
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import shutil
+import tempfile
+from typing import Any, Mapping
+
+from research.ontology_driven_kg_realization.experiments.document_paper.compiled_graph_recipe_contract import (
+    derive_compiled_logical_contract,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.ontology_compile import (
+    ExactSource,
+    compile_exact_ontology,
+)
+
+
+_DIGEST_PREFIX = "sha256:"
+_HEX = frozenset("0123456789abcdef")
+_ROOT_LOCATOR = "paper-v4-domain"
+_CONTRACT_ID = "https://malleus.dev/contracts/paper-v4-domain-proposal"
+PAPER_DOMAIN = "https://malleus.dev/schema/paper-v4-domain-proposal/"
+PAPER_RECORD_TYPE_IRIS = (
+    PAPER_DOMAIN + "ObservationNetwork",
+    PAPER_DOMAIN + "Campaign",
+    PAPER_DOMAIN + "RidgeSection",
+    PAPER_DOMAIN + "QuantifiedSubject",
+    PAPER_DOMAIN + "EarthquakePopulation",
+    PAPER_DOMAIN + "MeltPopulation",
+    PAPER_DOMAIN + "QuantitativeRange",
+    PAPER_DOMAIN + "CausalHypothesis",
+    PAPER_DOMAIN + "MechanismElement",
+    PAPER_DOMAIN + "DataAcquisitionRelation",
+    PAPER_DOMAIN + "SpatialAssociationRelation",
+    PAPER_DOMAIN + "QuantitySubjectRelation",
+    PAPER_DOMAIN + "HypothesisComponentRelation",
+    PAPER_DOMAIN + "CausalLinkRelation",
+    PAPER_DOMAIN + "HypothesisTargetRelation",
+)
+
+SCHEMA_INVENTORY_FILENAME = "schema-inventory.json"
+REVIEW_ELIGIBILITY_FILENAME = "review-eligibility.json"
+
+_INPUT_ROLES = (
+    "candidate",
+    "malleus",
+    "linkml_types",
+    "compile_precommit",
+    "validated_contract",
+    "compiler_receipt",
+    "model_acquisition_receipt",
+    "task_contract",
+    "questions",
+    "answer_oracle",
+    "adequacy_rubric",
+    "locator_binding",
+    "support_guide",
+    "selected_reading",
+    "selected_reading_manifest",
+    "bound_support_blocks",
+)
+_QUESTION_IDS = ("CQ-01", "CQ-02", "CQ-03", "CQ-04")
+_CRITERION_IDS = ("OA-01", "OA-02", "OA-03", "OA-04", "OA-05", "OA-06")
+_FOUNDATION_ENTITY = "https://malleus.dev/schema/Entity"
+_FOUNDATION_RELATION = "https://malleus.dev/schema/Relation"
+_POSITIONAL_SYMBOLS = frozenset({"id", "source_id", "target_id"})
+
+
+class ReviewInputStage(str, Enum):
+    """One deterministic review-input boundary."""
+
+    INPUT = "INPUT"
+    COMPILATION = "COMPILATION"
+    ACQUISITION = "ACQUISITION"
+    SELECTION = "SELECTION"
+    TASK_CONTRACT = "TASK_CONTRACT"
+    EVIDENCE = "EVIDENCE"
+    PUBLICATION = "PUBLICATION"
+
+
+class ReviewInputReason(str, Enum):
+    """Stable refusal classes for the review-input generator."""
+
+    MALFORMED_INPUT = "MALFORMED_INPUT"
+    SHA256_MISMATCH = "SHA256_MISMATCH"
+    COMPILED_ARTIFACT_DRIFT = "COMPILED_ARTIFACT_DRIFT"
+    ACQUISITION_CONTRACT_FAILED = "ACQUISITION_CONTRACT_FAILED"
+    CLASS_SELECTION_DRIFT = "CLASS_SELECTION_DRIFT"
+    TASK_CONTRACT_FAILED = "TASK_CONTRACT_FAILED"
+    EVIDENCE_CLOSURE_FAILED = "EVIDENCE_CLOSURE_FAILED"
+    OUTPUT_EXISTS = "OUTPUT_EXISTS"
+    PUBLICATION_FAILED = "PUBLICATION_FAILED"
+
+
+class OntologyReviewInputRefusal(ValueError):
+    """Typed fail-closed result from the deterministic generator."""
+
+    def __init__(
+        self,
+        stage: ReviewInputStage,
+        reason: ReviewInputReason,
+        detail: str,
+    ) -> None:
+        self.stage = stage
+        self.reason = reason
+        self.detail = detail
+        super().__init__(f"{stage.value}:{reason.value}: {detail}")
+
+
+@dataclass(frozen=True, slots=True)
+class ExactReviewInput:
+    """Exact bytes and their precommitted lowercase SHA-256 identity."""
+
+    source_bytes: bytes
+    expected_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class OntologyReviewPackage:
+    """The two canonical artifacts admitted to the one-shot review."""
+
+    schema_inventory_bytes: bytes
+    review_eligibility_bytes: bytes
+
+
+def _canonical_json(value: object) -> bytes:
+    return json.dumps(
+        value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+def _digest(source: bytes) -> str:
+    return _DIGEST_PREFIX + sha256(source).hexdigest()
+
+
+def _valid_digest(value: object) -> bool:
+    return (
+        type(value) is str
+        and value.startswith(_DIGEST_PREFIX)
+        and len(value) == 71
+        and all(character in _HEX for character in value[7:])
+    )
+
+
+def _refuse(
+    stage: ReviewInputStage,
+    reason: ReviewInputReason,
+    detail: str,
+) -> None:
+    raise OntologyReviewInputRefusal(stage, reason, detail)
+
+
+def _verify_inputs(
+    inputs: Mapping[str, ExactReviewInput],
+) -> dict[str, ExactReviewInput]:
+    if not isinstance(inputs, Mapping):
+        _refuse(
+            ReviewInputStage.INPUT,
+            ReviewInputReason.MALFORMED_INPUT,
+            "inputs must be a mapping",
+        )
+    missing = sorted(set(_INPUT_ROLES) - set(inputs))
+    unknown = sorted(set(inputs) - set(_INPUT_ROLES))
+    if missing or unknown:
+        _refuse(
+            ReviewInputStage.INPUT,
+            ReviewInputReason.MALFORMED_INPUT,
+            f"input closure mismatch: missing={missing}, unknown={unknown}",
+        )
+    verified: dict[str, ExactReviewInput] = {}
+    for role in _INPUT_ROLES:
+        source = inputs[role]
+        if type(source) is not ExactReviewInput:
+            _refuse(
+                ReviewInputStage.INPUT,
+                ReviewInputReason.MALFORMED_INPUT,
+                f"{role} must be one ExactReviewInput",
+            )
+        if type(source.source_bytes) is not bytes or not source.source_bytes:
+            _refuse(
+                ReviewInputStage.INPUT,
+                ReviewInputReason.MALFORMED_INPUT,
+                f"{role} source_bytes must be nonempty exact bytes",
+            )
+        if not _valid_digest(source.expected_sha256):
+            _refuse(
+                ReviewInputStage.INPUT,
+                ReviewInputReason.MALFORMED_INPUT,
+                f"{role} expected_sha256 is not a lowercase SHA-256 digest",
+            )
+        observed = _digest(source.source_bytes)
+        if observed != source.expected_sha256:
+            _refuse(
+                ReviewInputStage.INPUT,
+                ReviewInputReason.SHA256_MISMATCH,
+                f"{role} expected {source.expected_sha256}, observed {observed}",
+            )
+        verified[role] = source
+    return verified
+
+
+def _object_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key {key!r}")
+        result[key] = value
+    return result
+
+
+def _json_object(
+    source: ExactReviewInput,
+    role: str,
+    *,
+    stage: ReviewInputStage,
+) -> dict[str, Any]:
+    try:
+        value = json.loads(
+            source.source_bytes.decode("utf-8"),
+            object_pairs_hook=_object_pairs,
+        )
+    except (UnicodeError, json.JSONDecodeError, ValueError) as error:
+        _refuse(
+            stage,
+            ReviewInputReason.MALFORMED_INPUT,
+            f"{role} is not strict UTF-8 JSON: {error}",
+        )
+    if type(value) is not dict:
+        _refuse(
+            stage,
+            ReviewInputReason.MALFORMED_INPUT,
+            f"{role} must contain one JSON object",
+        )
+    return value
+
+
+def _require(value: Mapping[str, Any], key: str, expected: object, role: str) -> None:
+    if value.get(key) != expected:
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            f"{role}.{key} must equal {expected!r}",
+        )
+
+
+def _require_digest_field(value: object, path: str) -> str:
+    if not _valid_digest(value):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            f"{path} must be a lowercase SHA-256 digest",
+        )
+    return value
+
+
+def _compile_and_compare(inputs: Mapping[str, ExactReviewInput]):
+    compiled = compile_exact_ontology(
+        root=ExactSource(
+            _ROOT_LOCATOR,
+            inputs["candidate"].source_bytes,
+            inputs["candidate"].expected_sha256,
+        ),
+        malleus=ExactSource(
+            "malleus",
+            inputs["malleus"].source_bytes,
+            inputs["malleus"].expected_sha256,
+        ),
+        linkml_types=ExactSource(
+            "linkml:types",
+            inputs["linkml_types"].source_bytes,
+            inputs["linkml_types"].expected_sha256,
+        ),
+    )
+    if compiled.validated_contract_bytes != inputs["validated_contract"].source_bytes:
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "recompiled validated-contract bytes differ from the retained artifact",
+        )
+    if compiled.receipt_bytes != inputs["compiler_receipt"].source_bytes:
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "recompiled compiler receipt differs from the retained receipt",
+        )
+    precommit = _json_object(
+        inputs["compile_precommit"],
+        "compile_precommit",
+        stage=ReviewInputStage.COMPILATION,
+    )
+    expected_selection = {
+        "resolver_id": "MALLEUS_PAPER_V4_EXACT_MEMORY_RESOLVER",
+        "profile_version": "MALLEUS_PAPER_V4_EXACT_MEMORY_RESOLVER_V0",
+        "configuration_id": (
+            "sha256:ca51a7bfeca316fcaf2a3b26484d9063297ab2922a52f99204b859cf8518dc8d"
+        ),
+        "allowed_locators": ["paper-v4-domain", "malleus", "linkml:types"],
+        "unknown_locator": "REFUSE",
+    }
+    if (
+        precommit.get("schema") != "malleus.paper-v4.ontology-compile-precommit/v1"
+        or precommit.get("status")
+        != "FROZEN_BEFORE_CORRECTED_OFFICIAL_RETAINED_COMPILE"
+        or precommit.get("resolver_selection") != expected_selection
+    ):
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "compile precommit is not the corrected exact-memory-resolver run",
+        )
+    receipt = _json_object(
+        inputs["compiler_receipt"],
+        "compiler_receipt",
+        stage=ReviewInputStage.COMPILATION,
+    )
+    expected_receipt_selection = {
+        key: expected_selection[key]
+        for key in ("configuration_id", "profile_version", "resolver_id")
+    }
+    if receipt.get("resolver_selection") != expected_receipt_selection:
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "compiler receipt resolver identity differs from corrected precommit",
+        )
+    outputs = precommit.get("outputs")
+    if not isinstance(outputs, dict) or outputs.get("directory") != (
+        "paper-v4/experiment/ontology-compilation-02"
+    ):
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "compile precommit does not name ontology-compilation-02",
+        )
+    success = precommit.get("success")
+    artifact = compiled.compilation.artifact
+    expected_success = {
+        "expected_validated_fact_set_sha256": artifact.validated_fact_set_sha256,
+        "expected_fact_count": artifact.fact_count,
+        "expected_validated_contract_sha256": inputs[
+            "validated_contract"
+        ].expected_sha256,
+        "expected_receipt_sha256": inputs["compiler_receipt"].expected_sha256,
+    }
+    if not isinstance(success, dict) or any(
+        success.get(key) != expected for key, expected in expected_success.items()
+    ):
+        _refuse(
+            ReviewInputStage.COMPILATION,
+            ReviewInputReason.COMPILED_ARTIFACT_DRIFT,
+            "corrected compile precommit does not bind the retained result",
+        )
+    return compiled
+
+
+def _validate_acquisition(
+    inputs: Mapping[str, ExactReviewInput],
+    compilation: Any,
+) -> None:
+    receipt = _json_object(
+        inputs["model_acquisition_receipt"],
+        "model_acquisition_receipt",
+        stage=ReviewInputStage.ACQUISITION,
+    )
+
+    def fail(detail: str) -> None:
+        _refuse(
+            ReviewInputStage.ACQUISITION,
+            ReviewInputReason.ACQUISITION_CONTRACT_FAILED,
+            detail,
+        )
+
+    attempts = receipt.get("attempts")
+    trace = receipt.get("trace_audit")
+    session = receipt.get("session")
+    if receipt.get("schema") != "malleus.paper-v4.model-acquisition-receipt/v1":
+        fail("unexpected acquisition receipt schema")
+    if not isinstance(attempts, list) or not 1 <= len(attempts) <= 3:
+        fail("acquisition must retain one initial attempt and at most two corrections")
+    if not isinstance(trace, dict) or not isinstance(session, dict):
+        fail("acquisition receipt lacks session or trace audit")
+    if receipt.get("status") != f"CANDIDATE_{len(attempts):02}_COMPILED":
+        fail("acquisition status does not identify the final compiled attempt")
+    if not isinstance(session.get("task_id"), str) or not session["task_id"]:
+        fail("acquisition session lacks a task identity")
+    for index, attempt in enumerate(attempts, start=1):
+        if not isinstance(attempt, dict) or attempt.get("attempt") != index:
+            fail("acquisition attempts must be numbered consecutively from one")
+        response = attempt.get("response")
+        candidate = attempt.get("extracted_candidate")
+        compiler = attempt.get("compiler")
+        if not all(isinstance(item, dict) for item in (response, candidate, compiler)):
+            fail(f"attempt {index} lacks response, candidate, or compiler facts")
+        if response.get("delimiter_contract") != "PASS":
+            fail(f"attempt {index} failed the output delimiter contract")
+        if candidate.get("manual_repairs") != 0:
+            fail(f"attempt {index} contains a manual candidate repair")
+        if index < len(attempts) and compiler.get("status") != "REFUSED":
+            fail("only the final retained attempt may be compiler-accepted")
+    final = attempts[-1]
+    final_candidate = final["extracted_candidate"]
+    final_compiler = final["compiler"]
+    if final_candidate.get("sha256") != inputs["candidate"].expected_sha256:
+        fail("final extracted candidate identity differs from the exact input")
+    if final_candidate.get("byte_length") != len(inputs["candidate"].source_bytes):
+        fail("final extracted candidate byte length differs from the exact input")
+    artifact = compilation.compilation.artifact
+    expected_compiler = {
+        "status": "ACCEPTED",
+        "official_run": 2,
+        "precommit_sha256": inputs["compile_precommit"].expected_sha256,
+        "fact_count": artifact.fact_count,
+        "validated_fact_set_sha256": artifact.validated_fact_set_sha256,
+        "validated_contract_sha256": inputs["validated_contract"].expected_sha256,
+        "receipt_sha256": inputs["compiler_receipt"].expected_sha256,
+    }
+    for key, expected in expected_compiler.items():
+        if final_compiler.get(key) != expected:
+            fail(f"final compiler fact {key!r} differs from retained compilation")
+    expected_trace = {
+        "input_identity_check": "PASS",
+        "allowed_input_count": 7,
+        "task_contract_read": True,
+        "only_allowed_repository_paths_read": True,
+        "network_used": False,
+        "file_writes": False,
+        "subtasks": False,
+        "prior_conversation": "NONE",
+        "correction_feedback_count": len(attempts) - 1,
+        "correction_feedback_kind": "EXACT_COMPILER_DIAGNOSTIC_ONLY",
+    }
+    for key, expected in expected_trace.items():
+        if trace.get(key) != expected:
+            fail(f"trace audit fact {key!r} must equal {expected!r}")
+    if receipt.get("adequacy_review") != {"status": "NOT_RUN"}:
+        fail("hidden adequacy review must not have run before eligibility")
+
+
+def _domain_selection(compilation: Any):
+    actual = tuple(
+        sorted(
+            item.identifier
+            for item in compilation.compilation.elaborated.classes
+            if item.identifier.startswith(PAPER_DOMAIN)
+        )
+    )
+    expected = tuple(sorted(PAPER_RECORD_TYPE_IRIS))
+    if len(PAPER_RECORD_TYPE_IRIS) != 15 or len(set(PAPER_RECORD_TYPE_IRIS)) != 15:
+        _refuse(
+            ReviewInputStage.SELECTION,
+            ReviewInputReason.CLASS_SELECTION_DRIFT,
+            "frozen paper record selection must contain 15 unique IRIs",
+        )
+    if actual != expected:
+        _refuse(
+            ReviewInputStage.SELECTION,
+            ReviewInputReason.CLASS_SELECTION_DRIFT,
+            f"compiled domain class closure differs: expected={expected}, observed={actual}",
+        )
+    return derive_compiled_logical_contract(
+        compilation.compilation,
+        record_type_iris=PAPER_RECORD_TYPE_IRIS,
+        contract_id=_CONTRACT_ID,
+    )
+
+
+def _validate_task_contract(compilation: Any, logical_contract: Any) -> None:
+    elaborated = compilation.compilation.elaborated
+    view = compilation.compilation.view
+    classes = {item.identifier for item in elaborated.classes}
+    enums = {item.identifier for item in elaborated.enums}
+    scalars = {item.identifier for item in elaborated.scalars}
+    scalar_terminals = {
+        "https://malleus.dev/contract-facts/String",
+        "https://malleus.dev/contract-facts/Integer",
+        "https://malleus.dev/contract-facts/Float",
+        "https://malleus.dev/contract-facts/Boolean",
+        "https://malleus.dev/contract-facts/DateTime",
+    }
+
+    def fail(detail: str) -> None:
+        _refuse(
+            ReviewInputStage.TASK_CONTRACT,
+            ReviewInputReason.TASK_CONTRACT_FAILED,
+            detail,
+        )
+
+    for type_iri in PAPER_RECORD_TYPE_IRIS:
+        role_matches = (
+            view.is_subtype_of(type_iri, _FOUNDATION_ENTITY),
+            view.is_subtype_of(type_iri, _FOUNDATION_RELATION),
+        )
+        if sum(role_matches) != 1:
+            fail(f"{type_iri} must inherit exactly one Entity or Relation role")
+        for slot_iri, constraints in view.effective_slots(type_iri).items():
+            if not slot_iri.startswith(PAPER_DOMAIN):
+                continue
+            if not constraints.required:
+                fail(f"domain field {slot_iri} is optional on {type_iri}")
+            if constraints.multivalued or constraints.inlined:
+                fail(f"domain field {slot_iri} is not scalar and non-inlined")
+            if constraints.range_id in classes or constraints.range_id not in (
+                enums | scalars | scalar_terminals
+            ):
+                fail(f"domain field {slot_iri} lacks a supported scalar range")
+
+    selected = set(PAPER_RECORD_TYPE_IRIS)
+    for record in logical_contract.record_types:
+        required_topology = (
+            slot
+            for slot in record.required_properties
+            if slot.runtime_symbol not in _POSITIONAL_SYMBOLS
+        )
+        for slot in required_topology:
+            constraints = slot.constraints
+            if constraints.multivalued or constraints.inlined:
+                fail(
+                    f"required topology field {slot.property_iri} is not profile-scalar"
+                )
+            if constraints.range in selected:
+                fail(f"required topology field {slot.property_iri} has a class range")
+        optional_domain = [
+            slot.property_iri
+            for slot in record.optional_properties
+            if slot.property_iri.startswith(PAPER_DOMAIN)
+        ]
+        if optional_domain:
+            fail(f"domain topology fields cannot be optional: {optional_domain}")
+        if record.role != "RELATION":
+            continue
+        by_symbol = {slot.runtime_symbol: slot for slot in record.required_properties}
+        if not {"source_id", "target_id", "relation_type"} <= set(by_symbol):
+            fail(f"relation {record.type_iri} lacks required positional fields")
+        source = by_symbol["source_id"].constraints
+        target = by_symbol["target_id"].constraints
+        relation_type = by_symbol["relation_type"].constraints
+        if source.range not in selected or target.range not in selected:
+            fail(
+                f"relation {record.type_iri} endpoints are not explicitly domain-typed"
+            )
+        if source.range == _FOUNDATION_ENTITY or target.range == _FOUNDATION_ENTITY:
+            fail(f"relation {record.type_iri} uses a bare Entity endpoint")
+        if relation_type.range not in enums or relation_type.equals_string is None:
+            fail(f"relation {record.type_iri} lacks a fixed enumerated relation_type")
+        if not view.is_valid_enum_value(
+            relation_type.range,
+            relation_type.equals_string,
+        ):
+            fail(f"relation {record.type_iri} fixes an invalid relation_type value")
+
+
+def _page_blocks(value: Mapping[str, Any], *, with_text: bool) -> list[dict[str, Any]]:
+    pages = value.get("pages")
+    if not isinstance(pages, list):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "selected reading pages must be an array",
+        )
+    flattened: list[dict[str, Any]] = []
+    for page_number, page in enumerate(pages, start=1):
+        if not isinstance(page, dict) or page.get("page") != page_number:
+            _refuse(
+                ReviewInputStage.EVIDENCE,
+                ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                "selected reading pages must be consecutive and one-based",
+            )
+        blocks = page.get("blocks")
+        if not isinstance(blocks, list) or (
+            "block_count" in page and page.get("block_count") != len(blocks)
+        ):
+            _refuse(
+                ReviewInputStage.EVIDENCE,
+                ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                f"page {page_number} block_count differs from its block array",
+            )
+        for ordinal, block in enumerate(blocks, start=1):
+            expected_id = f"page:{page_number}:block:{ordinal:03}"
+            if not isinstance(block, dict) or block.get("id") != expected_id:
+                _refuse(
+                    ReviewInputStage.EVIDENCE,
+                    ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                    f"block sequence differs at {expected_id}",
+                )
+            if block.get("ordinal") != ordinal:
+                _refuse(
+                    ReviewInputStage.EVIDENCE,
+                    ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                    f"block ordinal differs at {expected_id}",
+                )
+            metadata = {
+                "byte_length": block.get("byte_length"),
+                "id": block.get("id"),
+                "ordinal": block.get("ordinal"),
+                "sha256": block.get("sha256"),
+            }
+            if not _valid_digest(metadata["sha256"]):
+                _refuse(
+                    ReviewInputStage.EVIDENCE,
+                    ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                    f"block digest is malformed at {expected_id}",
+                )
+            if with_text:
+                text = block.get("text")
+                if not isinstance(text, str):
+                    _refuse(
+                        ReviewInputStage.EVIDENCE,
+                        ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                        f"private block text is missing at {expected_id}",
+                    )
+                encoded = text.encode("utf-8")
+                if metadata["byte_length"] != len(encoded) or metadata[
+                    "sha256"
+                ] != _digest(encoded):
+                    _refuse(
+                        ReviewInputStage.EVIDENCE,
+                        ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                        f"private block bytes differ from metadata at {expected_id}",
+                    )
+            flattened.append(block)
+    if value.get("block_count") != len(flattened):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "selected reading block_count differs from the page closure",
+        )
+    return flattened
+
+
+def _validate_evidence(inputs: Mapping[str, ExactReviewInput]) -> tuple[str, ...]:
+    questions = _json_object(
+        inputs["questions"], "questions", stage=ReviewInputStage.EVIDENCE
+    )
+    oracle = _json_object(
+        inputs["answer_oracle"], "answer_oracle", stage=ReviewInputStage.EVIDENCE
+    )
+    rubric = _json_object(
+        inputs["adequacy_rubric"], "adequacy_rubric", stage=ReviewInputStage.EVIDENCE
+    )
+    locator = _json_object(
+        inputs["locator_binding"], "locator_binding", stage=ReviewInputStage.EVIDENCE
+    )
+    support = _json_object(
+        inputs["support_guide"], "support_guide", stage=ReviewInputStage.EVIDENCE
+    )
+    reading = _json_object(
+        inputs["selected_reading"], "selected_reading", stage=ReviewInputStage.EVIDENCE
+    )
+    manifest = _json_object(
+        inputs["selected_reading_manifest"],
+        "selected_reading_manifest",
+        stage=ReviewInputStage.EVIDENCE,
+    )
+    bound = _json_object(
+        inputs["bound_support_blocks"],
+        "bound_support_blocks",
+        stage=ReviewInputStage.EVIDENCE,
+    )
+
+    _require(
+        questions, "schema", "malleus.paper-v4.competency-questions/v1", "questions"
+    )
+    _require(questions, "status", "FROZEN_BEFORE_MODEL_ACQUISITION", "questions")
+    question_ids = tuple(item.get("id") for item in questions.get("questions", ()))
+    if question_ids != _QUESTION_IDS:
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "competency-question identity or order differs from the frozen set",
+        )
+    source_sha256 = _require_digest_field(
+        questions.get("source_sha256"), "questions.source_sha256"
+    )
+
+    _require(oracle, "schema", "malleus.paper-v4.answer-oracle/v1", "answer_oracle")
+    _require(oracle, "status", "SEALED_BEFORE_MODEL_ACQUISITION", "answer_oracle")
+    if (
+        tuple(item.get("question_id") for item in oracle.get("answers", ()))
+        != _QUESTION_IDS
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "answer oracle does not cover the exact frozen question set",
+        )
+    if oracle.get("source_sha256") != source_sha256:
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "answer oracle and question set name different source bytes",
+        )
+
+    _require(
+        rubric,
+        "schema",
+        "malleus.paper-v4.ontology-adequacy-rubric/v1",
+        "adequacy_rubric",
+    )
+    _require(rubric, "status", "SEALED_BEFORE_MODEL_ACQUISITION", "adequacy_rubric")
+    if tuple(item.get("id") for item in rubric.get("criteria", ())) != _CRITERION_IDS:
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "adequacy rubric does not contain the exact six sealed criteria",
+        )
+    if (
+        rubric.get("scoring") != "ALL_CRITERIA_MUST_PASS"
+        or rubric.get("feedback") != "NONE"
+        or rubric.get("retry_after_review") != "FORBIDDEN"
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "adequacy rubric weakens the one-shot review policy",
+        )
+
+    _require(
+        locator,
+        "schema",
+        "malleus.paper-v4.oracle-locator-binding/v1",
+        "locator_binding",
+    )
+    _require(locator, "status", "SEALED_BEFORE_MODEL_ACQUISITION", "locator_binding")
+    if (
+        locator.get("source_sha256") != source_sha256
+        or locator.get("answer_oracle_sha256")
+        != inputs["answer_oracle"].expected_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "locator binding is not bound to the exact source and answer oracle",
+        )
+
+    _require(
+        support,
+        "schema",
+        "malleus.paper-v4.support-adjudication-guide/v1",
+        "support_guide",
+    )
+    _require(support, "status", "SEALED_BEFORE_MODEL_ACQUISITION", "support_guide")
+    if (
+        support.get("source_sha256") != source_sha256
+        or support.get("question_set_sha256") != inputs["questions"].expected_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "support guide is not bound to the source and question set",
+        )
+
+    _require(
+        reading, "schema", "malleus.paper-v4.selected-reading/v1", "selected_reading"
+    )
+    _require(
+        manifest,
+        "schema",
+        "malleus.paper-v4.selected-reading-manifest/v1",
+        "selected_reading_manifest",
+    )
+    if (
+        reading.get("source_sha256") != source_sha256
+        or manifest.get("source_sha256") != source_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "selected readings are not bound to the competency-question source",
+        )
+    private_ref = manifest.get("private_reading")
+    if (
+        not isinstance(private_ref, dict)
+        or private_ref.get("sha256") != inputs["selected_reading"].expected_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "public manifest does not bind the exact private selected reading",
+        )
+    locator_reading = locator.get("selected_reading")
+    if not isinstance(locator_reading, dict) or (
+        locator_reading.get("private_sha256")
+        != inputs["selected_reading"].expected_sha256
+        or locator_reading.get("manifest_sha256")
+        != inputs["selected_reading_manifest"].expected_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "locator binding names different selected-reading artifacts",
+        )
+
+    private_blocks = _page_blocks(reading, with_text=True)
+    public_blocks = _page_blocks(manifest, with_text=False)
+    private_by_id = {item["id"]: item for item in private_blocks}
+    public_by_id = {item["id"]: item for item in public_blocks}
+    if len(private_by_id) != len(private_blocks) or len(public_by_id) != len(
+        public_blocks
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "selected reading repeats a block identifier",
+        )
+    if set(private_by_id) != set(public_by_id):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "private reading and public manifest have different block closures",
+        )
+    metadata_keys = ("byte_length", "id", "ordinal", "sha256")
+    for block_id in sorted(private_by_id):
+        private_metadata = {
+            key: private_by_id[block_id].get(key) for key in metadata_keys
+        }
+        public_metadata = {
+            key: public_by_id[block_id].get(key) for key in metadata_keys
+        }
+        if private_metadata != public_metadata:
+            _refuse(
+                ReviewInputStage.EVIDENCE,
+                ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                f"private/public block metadata differs at {block_id}",
+            )
+
+    _require(
+        bound,
+        "schema",
+        "malleus.paper-v4.bound-support-blocks/v1",
+        "bound_support_blocks",
+    )
+    bound_source = bound.get("source")
+    if not isinstance(bound_source, dict) or (
+        bound_source.get("selected_reading_sha256")
+        != inputs["selected_reading"].expected_sha256
+        or bound_source.get("manifest_sha256")
+        != inputs["selected_reading_manifest"].expected_sha256
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "bound support blocks name different selected-reading artifacts",
+        )
+    bindings = locator.get("bindings")
+    if (
+        not isinstance(bindings, list)
+        or tuple(item.get("question_id") for item in bindings) != _QUESTION_IDS
+    ):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "locator bindings do not cover the exact frozen question set",
+        )
+    allowed_pairs = {
+        (block.get("id"), block.get("sha256"))
+        for binding in bindings
+        for block in binding.get("blocks", ())
+        if isinstance(block, dict)
+    }
+    bound_blocks = bound.get("blocks")
+    if not isinstance(bound_blocks, list):
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "bound support blocks must contain an array",
+        )
+    bound_pairs = {(item.get("id"), item.get("sha256")) for item in bound_blocks}
+    if len(bound_pairs) != len(bound_blocks) or bound_pairs != allowed_pairs:
+        _refuse(
+            ReviewInputStage.EVIDENCE,
+            ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+            "bound support blocks are not the exact locator-binding subset",
+        )
+    for block in bound_blocks:
+        block_id = block.get("id")
+        if block_id not in private_by_id or block != private_by_id[block_id]:
+            _refuse(
+                ReviewInputStage.EVIDENCE,
+                ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                f"bound support block differs from private reading at {block_id}",
+            )
+        public_metadata = {key: block.get(key) for key in metadata_keys}
+        if public_metadata != public_by_id[block_id]:
+            _refuse(
+                ReviewInputStage.EVIDENCE,
+                ReviewInputReason.EVIDENCE_CLOSURE_FAILED,
+                f"bound support block metadata differs from manifest at {block_id}",
+            )
+    return tuple(sorted(item[0] for item in allowed_pairs))
+
+
+def _constraint_dict(constraints: Any) -> dict[str, object]:
+    return {
+        "equals_string": constraints.equals_string,
+        "identifier": constraints.identifier,
+        "inlined": constraints.inlined,
+        "maximum": constraints.maximum,
+        "minimum": constraints.minimum,
+        "multivalued": constraints.multivalued,
+        "range": constraints.range_id,
+        "required": constraints.required,
+        "value_presence": constraints.value_presence,
+    }
+
+
+def _schema_inventory(compilation: Any, logical_contract: Any) -> dict[str, object]:
+    view = compilation.compilation.view
+    elaborated = compilation.compilation.elaborated
+    selected = set(PAPER_RECORD_TYPE_IRIS)
+    referenced_enums = {
+        constraints.range_id
+        for type_iri in PAPER_RECORD_TYPE_IRIS
+        for constraints in view.effective_slots(type_iri).values()
+        if view.has_enum(constraints.range_id)
+    }
+    classes = []
+    for type_iri in sorted(PAPER_RECORD_TYPE_IRIS):
+        definition = view.get_type(type_iri)
+        classes.append(
+            {
+                "abstract": definition.abstract,
+                "effective_slots": [
+                    {
+                        "iri": slot_iri,
+                        "origin": (
+                            "DOMAIN"
+                            if slot_iri.startswith(PAPER_DOMAIN)
+                            else "IMPORTED"
+                        ),
+                        **_constraint_dict(constraints),
+                    }
+                    for slot_iri, constraints in sorted(
+                        view.effective_slots(type_iri).items()
+                    )
+                ],
+                "iri": type_iri,
+                "is_mixin": definition.is_mixin,
+                "mixins": list(definition.mixins),
+                "origin": "DOMAIN" if type_iri in selected else "IMPORTED",
+                "parent": definition.parent,
+            }
+        )
+    enum_values = {item.identifier: item.values for item in elaborated.enums}
+    artifact = compilation.compilation.artifact
+    return {
+        "candidate_sha256": artifact.evidence.root.source_sha256,
+        "compiled": {
+            "fact_count": artifact.fact_count,
+            "facts_sha256": artifact.facts_sha256,
+            "validated_contract_sha256": _digest(compilation.validated_contract_bytes),
+            "validated_fact_set_sha256": artifact.validated_fact_set_sha256,
+        },
+        "compiled_classes": classes,
+        "compiled_enums": [
+            {"iri": iri, "values": list(enum_values[iri])}
+            for iri in sorted(referenced_enums)
+        ],
+        "logical_contract": {
+            "constructible_record_types": list(
+                logical_contract.constructible_record_types
+            ),
+            "contract_digest": logical_contract.contract_digest,
+            "contract_id": logical_contract.contract_id,
+            "record_types": [item.as_dict() for item in logical_contract.record_types],
+            "registry_hash": logical_contract.registry_hash,
+            "schema_version": logical_contract.schema_version,
+            "symbol_bindings": logical_contract.symbol_bindings.as_dict(),
+        },
+        "record_type_selection": list(PAPER_RECORD_TYPE_IRIS),
+        "schema": "malleus.paper-v4.schema-inventory/v1",
+    }
+
+
+def build_ontology_review_package(
+    inputs: Mapping[str, ExactReviewInput],
+) -> OntologyReviewPackage:
+    """Build the review inputs only after every mechanical guard passes."""
+
+    verified = _verify_inputs(inputs)
+    compilation = _compile_and_compare(verified)
+    _validate_acquisition(verified, compilation)
+    logical_contract = _domain_selection(compilation)
+    _validate_task_contract(compilation, logical_contract)
+    bound_block_ids = _validate_evidence(verified)
+
+    inventory_bytes = _canonical_json(_schema_inventory(compilation, logical_contract))
+    artifact = compilation.compilation.artifact
+    eligibility = {
+        "bound_support_block_ids": list(bound_block_ids),
+        "candidate_sha256": verified["candidate"].expected_sha256,
+        "checks": [
+            {"id": "EXACT_INPUT_HASHES", "verdict": "PASS"},
+            {"id": "BYTE_IDENTICAL_RECOMPILATION", "verdict": "PASS"},
+            {"id": "SESSION_RETRY_DELIMITERS", "verdict": "PASS"},
+            {"id": "FIFTEEN_CLASS_SELECTION_CLOSURE", "verdict": "PASS"},
+            {"id": "TASK_CONTRACT_STRUCTURE", "verdict": "PASS"},
+            {"id": "GRAPH_RECIPE_PROFILE_FIT", "verdict": "PASS"},
+            {"id": "BOUND_BLOCK_CLOSURE", "verdict": "PASS"},
+        ],
+        "compiled_contract_identity": artifact.validated_fact_set_sha256,
+        "input_identities": [
+            {"role": role, "sha256": verified[role].expected_sha256}
+            for role in _INPUT_ROLES
+        ],
+        "review_boundary": {
+            "adequacy_scored": False,
+            "feedback": "NONE",
+            "review_attempts": 1,
+        },
+        "schema": "malleus.paper-v4.review-eligibility/v1",
+        "schema_inventory_sha256": _digest(inventory_bytes),
+        "verdict": "PASS",
+    }
+    return OntologyReviewPackage(
+        schema_inventory_bytes=inventory_bytes,
+        review_eligibility_bytes=_canonical_json(eligibility),
+    )
+
+
+def _write_exclusive(path: Path, source: bytes) -> None:
+    with path.open("xb") as stream:
+        stream.write(source)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def publish_ontology_review_package(
+    package: OntologyReviewPackage,
+    output_directory: Path,
+) -> Path:
+    """Atomically publish both artifacts and refuse every overwrite."""
+
+    if type(package) is not OntologyReviewPackage or not isinstance(
+        output_directory, Path
+    ):
+        _refuse(
+            ReviewInputStage.PUBLICATION,
+            ReviewInputReason.MALFORMED_INPUT,
+            "publication requires OntologyReviewPackage and Path inputs",
+        )
+    if output_directory.exists() or output_directory.is_symlink():
+        _refuse(
+            ReviewInputStage.PUBLICATION,
+            ReviewInputReason.OUTPUT_EXISTS,
+            f"output directory already exists: {output_directory}",
+        )
+    parent = output_directory.parent
+    if not parent.is_dir() or parent.is_symlink():
+        _refuse(
+            ReviewInputStage.PUBLICATION,
+            ReviewInputReason.MALFORMED_INPUT,
+            f"output parent must be an existing non-symlink directory: {parent}",
+        )
+    staged = Path(tempfile.mkdtemp(prefix=f".{output_directory.name}.", dir=parent))
+    try:
+        _write_exclusive(
+            staged / SCHEMA_INVENTORY_FILENAME, package.schema_inventory_bytes
+        )
+        _write_exclusive(
+            staged / REVIEW_ELIGIBILITY_FILENAME,
+            package.review_eligibility_bytes,
+        )
+        if output_directory.exists() or output_directory.is_symlink():
+            _refuse(
+                ReviewInputStage.PUBLICATION,
+                ReviewInputReason.OUTPUT_EXISTS,
+                f"output directory appeared during publication: {output_directory}",
+            )
+        staged.rename(output_directory)
+    except OntologyReviewInputRefusal:
+        shutil.rmtree(staged, ignore_errors=True)
+        raise
+    except OSError as error:
+        shutil.rmtree(staged, ignore_errors=True)
+        reason = (
+            ReviewInputReason.OUTPUT_EXISTS
+            if output_directory.exists() or output_directory.is_symlink()
+            else ReviewInputReason.PUBLICATION_FAILED
+        )
+        _refuse(ReviewInputStage.PUBLICATION, reason, str(error))
+    return output_directory
+
+
+__all__ = [
+    "PAPER_DOMAIN",
+    "PAPER_RECORD_TYPE_IRIS",
+    "REVIEW_ELIGIBILITY_FILENAME",
+    "SCHEMA_INVENTORY_FILENAME",
+    "ExactReviewInput",
+    "OntologyReviewInputRefusal",
+    "OntologyReviewPackage",
+    "ReviewInputReason",
+    "ReviewInputStage",
+    "build_ontology_review_package",
+    "publish_ontology_review_package",
+]

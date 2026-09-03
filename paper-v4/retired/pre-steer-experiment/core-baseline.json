@@ -1,0 +1,20 @@
+{
+  "schema": "malleus.paper-v4.core-baseline/v1",
+  "repository": {
+    "commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+    "tree": "657ba6ce1be83064d104803ad5dad644d65b4352"
+  },
+  "assent_ontology": {
+    "path": "ontology/assent.yaml",
+    "version": "0.11.0",
+    "byte_length": 47663,
+    "source_sha256": "sha256:90830170573b52d7c73debb83c89bb278087607880675964e670d68fd7a1e234",
+    "semantic_grammar": 4,
+    "semantic_identity": "sha256:e62fcea2c480e62176346bdc6fa10ae9954418b1d3a8ee6409f0fac104b6ba54"
+  },
+  "paper_ledger_epoch": {
+    "initial_head": "GENESIS",
+    "initial_event_count": 0,
+    "prior_ledger_reuse": "FORBIDDEN"
+  }
+}

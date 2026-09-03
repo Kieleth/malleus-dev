@@ -1,0 +1,602 @@
+"""Focused checks for the paper-local OCR emitter."""
+
+from __future__ import annotations
+
+from dataclasses import replace
+from hashlib import sha256
+import json
+from pathlib import Path
+import shutil
+import struct
+import subprocess
+import zlib
+
+import pytest
+
+from malleus import __version__ as MALLEUS_VERSION
+from malleus.ocr import Bundle, canonical_digest, profile_registry, verify_bundle
+from research.ontology_driven_kg_realization.experiments.document_paper import (
+    ocr_emitter,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.ocr_emitter import (
+    OCREmitterError,
+    emit,
+)
+
+
+ROOT = Path(__file__).resolve().parents[4]
+
+
+def _digest(value: bytes) -> str:
+    return "sha256:" + sha256(value).hexdigest()
+
+
+def _png(width: int = 2, height: int = 3) -> bytes:
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+        )
+
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    scanlines = b"\x00\x00\x00\x00\x00\x00\x00" * height
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", ihdr)
+        + chunk(b"IDAT", zlib.compress(scanlines))
+        + chunk(b"IEND", b"")
+    )
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2) + "\n")
+
+
+def _executable(path: Path, source: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(source)
+    path.chmod(0o755)
+
+
+def _fixture(tmp_path: Path) -> tuple[Path, Path, dict[str, Path]]:
+    root = tmp_path / "repo"
+    root.mkdir()
+    shutil.copytree(ROOT / "ontology", root / "ontology")
+    source_bytes = b"%PDF-1.4\nstrict fake paper bytes\n"
+    source_path = root / "paper-v4/source/paper.pdf"
+    source_path.parent.mkdir(parents=True)
+    source_path.write_bytes(source_bytes)
+
+    png_hex = _png().hex()
+    renderer = root / "tools/pdftoppm"
+    _executable(
+        renderer,
+        f"""#!/usr/bin/env python3
+import pathlib
+import sys
+
+if sys.argv[1:] == ["-v"]:
+    sys.stderr.write("pdftoppm version TEST-1.0\\n")
+    raise SystemExit(0)
+pathlib.Path(sys.argv[-1] + ".png").write_bytes(bytes.fromhex("{png_hex}"))
+""",
+    )
+    reader = root / "tools/tesseract"
+    _executable(
+        reader,
+        """#!/usr/bin/env python3
+import pathlib
+import sys
+
+if sys.argv[1:] == ["--version"]:
+    sys.stdout.write("tesseract TEST-2.0\\n")
+    raise SystemExit(0)
+if (pathlib.Path(__file__).parent / "fail.flag").exists():
+    sys.stderr.write("forced reader failure\\n")
+    raise SystemExit(7)
+if (pathlib.Path(__file__).parent / "empty.flag").exists():
+    raise SystemExit(0)
+sys.stdout.buffer.write(("OCR-CONTENT-" + pathlib.Path(sys.argv[1]).stem + "\\n").encode())
+""",
+    )
+    traineddata = root / "tools/tessdata/eng.traineddata"
+    traineddata.parent.mkdir()
+    traineddata.write_bytes(b"exact fake traineddata")
+
+    source_id = "source:test-paper"
+    source_digest = _digest(source_bytes)
+    source_manifest = {
+        "schema": "malleus.paper-v4.source-freeze/v1",
+        "source_id": source_id,
+        "title": "Fixture",
+        "authors": ["Fixture Author"],
+        "journal": "Fixture Journal",
+        "publication_date": "2026-09-02",
+        "doi": "10.0000/fixture",
+        "landing_url": "https://example.test/fixture",
+        "source_url": "https://example.test/fixture.pdf",
+        "license": {
+            "identifier": "TEST",
+            "url": "https://example.test/license",
+            "full_text_redistribution": "TEST_ONLY",
+            "derived_full_text_publication": "REQUIRES_SEPARATE_RIGHTS_REVIEW",
+        },
+        "artifact": {
+            "path": "paper-v4/source/paper.pdf",
+            "media_type": "application/pdf",
+            "byte_length": len(source_bytes),
+            "sha256": source_digest,
+            "pdf_version": "1.4",
+            "page_count": 11,
+            "encrypted": False,
+            "javascript": False,
+        },
+        "acquisition": {
+            "date": "2026-09-02",
+            "method": "TEST_FIXTURE",
+            "visual_inspection": "TEST_FIXTURE",
+        },
+    }
+    _write_json(root / "paper-v4/source/source-manifest.json", source_manifest)
+    ontology = (root / "ontology/domains/ocr.yaml").read_bytes()
+    config = {
+        "schema": "malleus.paper-v4.ocr-precommit/v1",
+        "frozen_at": "2026-09-02T21:21:52Z",
+        "status": "FROZEN_BEFORE_RETAINED_READING",
+        "source": {
+            "manifest": "paper-v4/source/source-manifest.json",
+            "source_id": source_id,
+            "path": "paper-v4/source/paper.pdf",
+            "media_type": "application/pdf",
+            "byte_length": len(source_bytes),
+            "sha256": source_digest,
+            "page_count": 11,
+        },
+        "malleus_ocr": {
+            "malleus_version": MALLEUS_VERSION,
+            "profile": "malleus.ocr.evidence_integrity",
+            "profile_version": "v0",
+            "document_version": 1,
+            "ontology_version": "0.1.0",
+            "ontology_path": "ontology/domains/ocr.yaml",
+            "ontology_sha256": _digest(ontology),
+            "registry_content_hash": "sha256:" + profile_registry().content_hash(),
+        },
+        "source_class": {
+            "id": "source-class:test-article-pdf-v1",
+            "required_units": [f"page:{page}" for page in range(1, 12)],
+            "metric_families": {
+                "page_coverage": {"denominator": "declared_units", "threshold": 1.0}
+            },
+            "temporal_policy": "STATIC_DOCUMENT_ORDER_ONLY",
+            "inventory_basis": "test fixture",
+            "frozen_at": "2026-09-02T21:21:52Z",
+        },
+        "renderer": {
+            "id": "renderer:test-png-300dpi",
+            "executable": str(renderer),
+            "version_contains": "pdftoppm version TEST-1.0",
+            "binary_sha256": _digest(renderer.read_bytes()),
+            "format": "png",
+            "dpi": 300,
+            "page_box": "media_box",
+            "single_page_arguments": ["-singlefile", "-r", "300", "-png"],
+        },
+        "reader": {
+            "id": "reader:test-eng",
+            "executable": str(reader),
+            "version_contains": "tesseract TEST-2.0",
+            "binary_sha256": _digest(reader.read_bytes()),
+            "traineddata_path": str(traineddata),
+            "traineddata_sha256": _digest(traineddata.read_bytes()),
+            "language": "eng",
+            "arguments": [
+                "stdout",
+                "-l",
+                "eng",
+                "--oem",
+                "1",
+                "--psm",
+                "3",
+                "--dpi",
+                "300",
+                "--loglevel",
+                "ERROR",
+            ],
+            "confidence_policy": "OMIT_UNCALIBRATED_CONFIDENCE",
+            "empty_page_policy": "REFUSE_KNOWN_NONBLANK_ARTICLE_PAGE",
+        },
+        "selector": {
+            "profile": "w3c-web-annotation+iiif",
+            "type": "FragmentSelector",
+            "conforms_to": "http://www.w3.org/TR/media-frags/",
+            "scope": "FULL_RENDERED_PAGE",
+            "coordinate_system": "pixel",
+        },
+        "selection": {
+            "cardinality": "ONE_MACHINE_HYPOTHESIS_PER_PAGE",
+            "reason": "sole completed page-specific raster reading",
+            "human_verified": False,
+        },
+        "policies": {
+            "data_handling": {
+                "id": "policy:data-handling:test",
+                "classification": "test",
+                "processing": "local binaries only",
+                "provider_retention": "none",
+                "credentials": "forbidden",
+                "raw_responses": "private",
+                "rasters": "private",
+                "public_export": "digests only",
+                "full_text_export": "requires review",
+            },
+            "hostile_content": {
+                "id": "policy:hostile-content:test",
+                "document_role": "untrusted data",
+                "instruction_effect": "none",
+                "tool_effect": "none",
+                "policy_effect": "none",
+                "ontology_effect": "proposal only",
+            },
+        },
+        "retention": {
+            "private_root": "private/run",
+            "public_bundle": "paper-v4/experiment/ocr-bundle.json",
+            "public_verification": "paper-v4/experiment/ocr-verification.json",
+            "page_rasters": "private",
+            "page_requests": "private",
+            "page_responses": "private",
+            "selected_reading": "private",
+            "bundle_text_bytes": "digest_only",
+        },
+        "execution": {
+            "network": "forbidden",
+            "embedded_pdf_text_layer": "forbidden",
+            "pdftotext": "forbidden",
+            "preprocessing": "none",
+            "retries": 0,
+            "final_output_on_partial_failure": "forbidden",
+            "reproducibility_status": "TEST_EXACT_BINARIES",
+        },
+    }
+    precommit = root / "paper-v4/experiment/ocr-precommit.json"
+    _write_json(precommit, config)
+    return (
+        root,
+        precommit,
+        {
+            "private": root / "private/run",
+            "bundle": root / "paper-v4/experiment/ocr-bundle.json",
+            "verification": root / "paper-v4/experiment/ocr-verification.json",
+            "source": source_path,
+            "renderer": renderer,
+            "reader": reader,
+        },
+    )
+
+
+def _assert_no_final_outputs(paths: dict[str, Path]) -> None:
+    for name in ("private", "bundle", "verification"):
+        assert not paths[name].exists(), name
+
+
+def test_success_emits_eleven_aligned_chains_and_invokes_only_frozen_tools(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    config = json.loads(precommit.read_bytes())
+    commands: list[tuple[str, ...]] = []
+    run = subprocess.run
+
+    def audited(command, **kwargs):
+        commands.append(tuple(command))
+        return run(command, **kwargs)
+
+    monkeypatch.setattr(ocr_emitter.subprocess, "run", audited)
+    result = emit(root, precommit)
+
+    assert result.bundle_path == paths["bundle"]
+    assert result.verification_path == paths["verification"]
+    assert result.private_root == paths["private"]
+    bundle = Bundle.from_document(json.loads(paths["bundle"].read_bytes()))
+    verification = json.loads(paths["verification"].read_bytes())
+    checked = verify_bundle(bundle)
+    assert checked.conforms and checked.account.complete
+    assert len(bundle.rasters) == len(bundle.regions) == len(bundle.attempts) == 11
+    assert len(bundle.hypotheses) == len(bundle.selections) == 11
+    assert verification["result"]["strict_alignment"] == "PASS"
+    assert verification["publication_boundary"]["public_text"] == "DIGEST_ONLY"
+    assert b"OCR-CONTENT" not in paths["bundle"].read_bytes()
+    assert b"OCR-CONTENT" not in paths["verification"].read_bytes()
+    assert len(verification["sidecars"]) == 11
+    for sidecars in verification["sidecars"]:
+        for label in ("raster", "request", "response", "selected"):
+            retained = root / sidecars[label]["path"]
+            assert retained.is_file()
+            assert _digest(retained.read_bytes()) == sidecars[label]["sha256"]
+    sidecar_closure = canonical_digest(verification["sidecars"])
+    assert bundle.transport_metadata["retained_sidecars_sha256"] == sidecar_closure
+    assert bundle.id == f"bundle:paper-v4:{sidecar_closure.removeprefix('sha256:')}"
+    assert len(commands) == 24
+    assert {Path(command[0]) for command in commands} == {
+        paths["renderer"],
+        paths["reader"],
+    }
+    renderer_commands = [
+        command for command in commands if Path(command[0]) == paths["renderer"]
+    ]
+    assert renderer_commands[0] == (str(paths["renderer"]), "-v")
+    render_commands = renderer_commands[1:]
+    assert len(render_commands) == 11
+    for page, command in enumerate(render_commands, 1):
+        prefix = command[-1]
+        assert command == (
+            str(paths["renderer"]),
+            "-f",
+            str(page),
+            "-l",
+            str(page),
+            *config["renderer"]["single_page_arguments"],
+            str(paths["source"]),
+            prefix,
+        )
+        assert Path(prefix).parent.name == "rasters"
+        assert Path(prefix).name == f"page-{page:03d}"
+    all_reader_commands = [
+        command for command in commands if Path(command[0]) == paths["reader"]
+    ]
+    assert all_reader_commands[0] == (str(paths["reader"]), "--version")
+    reader_commands = all_reader_commands[1:]
+    assert len(reader_commands) == 11
+    for page, command in enumerate(reader_commands, 1):
+        raster = f"{render_commands[page - 1][-1]}.png"
+        assert command == (
+            str(paths["reader"]),
+            raster,
+            *config["reader"]["arguments"],
+            "--tessdata-dir",
+            str(Path(config["reader"]["traineddata_path"]).parent),
+        )
+        assert Path(command[1]).suffix == ".png"
+        assert Path(command[1]) != paths["source"]
+
+
+def test_source_tamper_refuses_without_final_outputs(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["source"].write_bytes(paths["source"].read_bytes() + b"tamper")
+    with pytest.raises(OCREmitterError, match="source hash drift"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_tool_drift_refuses_without_final_outputs(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["renderer"].write_text(paths["renderer"].read_text() + "\n# drift\n")
+    with pytest.raises(OCREmitterError, match="binary hash drift"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_empty_ocr_refuses_without_final_outputs(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    (paths["reader"].parent / "empty.flag").touch()
+    with pytest.raises(OCREmitterError, match="empty OCR response"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_reader_failure_leaves_no_final_outputs(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    (paths["reader"].parent / "fail.flag").touch()
+    with pytest.raises(OCREmitterError, match="failed with exit 7"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_existing_output_is_never_overwritten(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    sentinel = b"existing public result"
+    paths["bundle"].write_bytes(sentinel)
+    with pytest.raises(OCREmitterError, match="refusing to overwrite"):
+        emit(root, precommit)
+    assert paths["bundle"].read_bytes() == sentinel
+    assert not paths["private"].exists()
+    assert not paths["verification"].exists()
+
+
+def test_malformed_language_binding_refuses_without_index_error(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    config = json.loads(precommit.read_bytes())
+    config["reader"]["arguments"] = ["stdout", "-l"]
+    _write_json(precommit, config)
+    with pytest.raises(OCREmitterError, match="do not bind reader.language"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+@pytest.mark.parametrize("field", ["profile", "profile_version", "document_version"])
+@pytest.mark.parametrize("mode", ["missing", "changed"])
+def test_emitted_profile_identity_must_equal_the_precommit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    mode: str,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    document = Bundle.document
+
+    def drifted(bundle):
+        value = document(bundle)
+        if mode == "missing":
+            value.pop(field)
+        else:
+            value[field] = 999 if field == "document_version" else "drifted"
+        return value
+
+    monkeypatch.setattr(Bundle, "document", drifted)
+    message = "key mismatch" if mode == "missing" else "identity drifts from precommit"
+    with pytest.raises(OCREmitterError, match=message):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+@pytest.mark.parametrize("failed_output", ["bundle", "verification"])
+def test_publication_rename_failure_rolls_back_every_final_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failed_output: str,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    replace_path = Path.replace
+    injected = False
+
+    def fail_once(source: Path, target: Path):
+        nonlocal injected
+        if Path(target) == paths[failed_output] and not injected:
+            injected = True
+            raise OSError("injected publication failure")
+        return replace_path(source, target)
+
+    monkeypatch.setattr(Path, "replace", fail_once)
+    with pytest.raises(OCREmitterError, match="publication failed and was rolled back"):
+        emit(root, precommit)
+    assert injected
+    _assert_no_final_outputs(paths)
+
+
+@pytest.mark.parametrize(
+    ("case", "message"),
+    [
+        ("confidence", "bundle hypotheses drifts"),
+        ("reader_identity", "bundle attempts drifts"),
+        ("source_class", "bundle source_class drifts"),
+        ("transport", "bundle transport_metadata drifts"),
+    ],
+)
+def test_frozen_bundle_fields_are_checked_beyond_the_public_profile(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    case: str,
+    message: str,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    build = ocr_emitter._build_bundle
+
+    def drifted(config, artifacts, version):
+        bundle = build(config, artifacts, version)
+        if case == "confidence":
+            hypotheses = list(bundle.hypotheses)
+            hypotheses[0] = replace(hypotheses[0], confidence=0.5)
+            bundle = replace(bundle, hypotheses=tuple(hypotheses))
+        elif case == "reader_identity":
+            attempts = list(bundle.attempts)
+            attempts[0] = replace(attempts[0], config_identity={"reader_id": "drift"})
+            bundle = replace(bundle, attempts=tuple(attempts))
+        elif case == "source_class":
+            bundle = replace(
+                bundle,
+                source_class=replace(bundle.source_class, id="source-class:drift"),
+            )
+        else:
+            bundle = replace(bundle, transport_metadata={"adapter": "drift"})
+        assert verify_bundle(bundle).conforms
+        return bundle
+
+    monkeypatch.setattr(ocr_emitter, "_build_bundle", drifted)
+    with pytest.raises(OCREmitterError, match=message):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+@pytest.mark.parametrize(
+    ("case", "message"),
+    [
+        ("locator", "sidecar path or locator drift"),
+        ("stage_path", "sidecar path or locator drift"),
+        ("request_identity", "request identity drift"),
+        ("dimensions", "PNG dimensions drift"),
+    ],
+)
+def test_sidecars_must_match_their_configured_locator_and_stage_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    case: str,
+    message: str,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    render = ocr_emitter._render_and_read
+
+    def drifted(*args, **kwargs):
+        artifacts = list(render(*args, **kwargs))
+        if case == "locator":
+            artifacts[0] = replace(artifacts[0], raster_locator="private/wrong.png")
+        elif case == "stage_path":
+            artifacts[0] = replace(artifacts[0], raster_path=artifacts[1].raster_path)
+        elif case == "request_identity":
+            request = json.loads(artifacts[0].request_path.read_bytes())
+            request["reader"]["id"] = "reader:drift"
+            request_bytes = (
+                json.dumps(
+                    request,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode()
+                + b"\n"
+            )
+            artifacts[0].request_path.write_bytes(request_bytes)
+            artifacts[0] = replace(artifacts[0], request_sha256=_digest(request_bytes))
+        else:
+            artifacts[0] = replace(artifacts[0], width=artifacts[0].width + 1)
+        return tuple(artifacts)
+
+    monkeypatch.setattr(ocr_emitter, "_render_and_read", drifted)
+    with pytest.raises(OCREmitterError, match=message):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_cross_region_attempt_refuses_without_final_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    build = ocr_emitter._build_bundle
+
+    def misaligned(config, artifacts, version):
+        bundle = build(config, artifacts, version)
+        attempts = list(bundle.attempts)
+        attempts[0] = replace(attempts[0], region_id=bundle.regions[1].id)
+        broken = replace(bundle, attempts=tuple(attempts))
+        assert verify_bundle(broken).conforms
+        return broken
+
+    monkeypatch.setattr(ocr_emitter, "_build_bundle", misaligned)
+    with pytest.raises(OCREmitterError, match="bundle attempts drifts"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)
+
+
+def test_cross_region_selection_refuses_without_final_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    build = ocr_emitter._build_bundle
+
+    def misaligned(config, artifacts, version):
+        bundle = build(config, artifacts, version)
+        selections = list(bundle.selections)
+        selections[0] = replace(selections[0], region_id=bundle.regions[1].id)
+        broken = replace(bundle, selections=tuple(selections))
+        assert verify_bundle(broken).conforms
+        return broken
+
+    monkeypatch.setattr(ocr_emitter, "_build_bundle", misaligned)
+    with pytest.raises(OCREmitterError, match="bundle selections drifts"):
+        emit(root, precommit)
+    _assert_no_final_outputs(paths)

@@ -1,0 +1,78 @@
+{
+  "schema": "malleus.paper-v4.ontology-recovery-precommit/v1",
+  "frozen_at": "2026-09-02T23:00:54Z",
+  "status": "FROZEN_AFTER_PRIMARY_REFUSAL_BEFORE_CONTROLLED_RECOVERY",
+  "classification": {
+    "run": "POST_PRIMARY_CONTROL",
+    "primary_run_changed": false,
+    "primary_review_retry": false,
+    "primary_result": "REFUSED_ADEQUACY",
+    "claim_exclusion": "The recovery cannot be counted as a successful fresh-session ontology proposal or used to change the primary RQ1 result."
+  },
+  "source_candidate": {
+    "path": "paper-v4/experiment/model-ontology-proposal.yaml",
+    "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df",
+    "version": "0.1.0"
+  },
+  "triggering_review": {
+    "result_path": "private/paper-v4-evaluation/ontology-adequacy-result.json",
+    "result_sha256": "sha256:b0efcf5019c16ebaef82d18e65c1021b3925a4b0000147360c2aa42eb6988f5c",
+    "receipt_path": "paper-v4/experiment/ontology-adequacy-receipt.json",
+    "receipt_sha256": "sha256:2d1fe605eed6ea53f12e94f3e281e8eb61865bd286aa0ca4c8125bb821a20e69",
+    "failure_class": "UNDISTINGUISHED_INSTRUMENT_COUNTS"
+  },
+  "author": "actor:paper-investigator-codex",
+  "allowed_semantic_changes": [
+    {
+      "operation": "RENAME_SLOT",
+      "class": "ObservationNetwork",
+      "from": "instrument_count",
+      "to": "deployed_instrument_count",
+      "range": "integer",
+      "required": true,
+      "minimum_value": 1
+    },
+    {
+      "operation": "ADD_SLOT",
+      "class": "ObservationNetwork",
+      "name": "usable_instrument_count",
+      "range": "integer",
+      "required": true,
+      "minimum_value": 1
+    },
+    {
+      "operation": "BUMP_SCHEMA_VERSION",
+      "from": "0.1.0",
+      "to": "0.1.1"
+    }
+  ],
+  "forbidden_changes": [
+    "class addition or removal",
+    "enum addition, removal, or value change",
+    "relation signature change",
+    "constraint change outside the two instrument-count slots",
+    "source-specific schema constant",
+    "change to the original candidate bytes",
+    "change to questions, oracle, locator binding, rubric, or support guide"
+  ],
+  "output": {
+    "ontology_path": "paper-v4/experiment/controlled-ontology-recovery.yaml",
+    "compilation_directory": "paper-v4/experiment/ontology-recovery-compilation",
+    "overwrite": "REFUSE",
+    "partial_publication": "FORBIDDEN"
+  },
+  "compiler": {
+    "harness_path": "research/ontology_driven_kg_realization/experiments/document_paper/ontology_compile.py",
+    "harness_sha256": "sha256:0bd0b85d28f888a32bccff23197627f3bece2271d799ce8e4ded6ca2702775b7",
+    "malleus_sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+    "linkml_types_sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
+    "interpreter": ".venv/bin/python"
+  },
+  "selection": {
+    "reviewer": "NEW_INDEPENDENT_ONE_SHOT_REVIEWER",
+    "review_attempts": 1,
+    "feedback": "FORBIDDEN",
+    "retry": "FORBIDDEN",
+    "population_before_selection": "FORBIDDEN"
+  }
+}

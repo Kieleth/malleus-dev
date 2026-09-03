@@ -1,0 +1,80 @@
+{
+  "schema": "malleus.paper-v4.ocr-execution-receipt/v1",
+  "executed_at": "2026-09-02T21:54:01Z",
+  "status": "PASS",
+  "run_class": "OFFICIAL_RETAINED_RUN_1",
+  "exploratory_probe_is_evidence": false,
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "research.ontology_driven_kg_realization.experiments.document_paper.ocr_emitter",
+    "/Users/luis/Projects/malleus-dev",
+    "/Users/luis/Projects/malleus-dev/paper-v4/experiment/ocr-precommit.json"
+  ],
+  "exit_code": 0,
+  "inputs": {
+    "precommit_sha256": "sha256:68580e74a1107af8b0de033f664fb5053d7c1ffd3ec14c53508d06c79f36fbda",
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "source_byte_length": 6921046,
+    "emitter_sha256": "sha256:082e781046c9c8f560eb867b3537aa4f279cdc2262993ecd512e040d68cf9470",
+    "emitter_tests_sha256": "sha256:e19c38da68d2e2fa80790b4e80a22afdc766d7ba95deda408adc618b10757e4a"
+  },
+  "outputs": {
+    "bundle_path": "paper-v4/experiment/ocr-bundle.json",
+    "bundle_sha256": "sha256:46894b087d09d1a58f7ecac4fa135a6fdfdd80fd4b38078856022dcd44993f1d",
+    "bundle_id": "bundle:paper-v4:aa8ef9e5b924e03e44ca33d3e3616b24ed92535b8a4956dee7e46c26fee47315",
+    "verification_path": "paper-v4/experiment/ocr-verification.json",
+    "verification_sha256": "sha256:23fdb70aa763129a29c9f4144a9e5200153f0d1f791366f522152297ed2a05dd",
+    "retained_sidecar_root": "private/paper-v4-ocr/yu-2025-tesseract-v1",
+    "retained_sidecar_closure_sha256": "sha256:aa8ef9e5b924e03e44ca33d3e3616b24ed92535b8a4956dee7e46c26fee47315",
+    "retained_sidecar_files": 44,
+    "retained_sidecar_bytes": 20133925,
+    "selected_text_bytes": 63005,
+    "selected_text_words": 9683,
+    "public_ocr_text": false
+  },
+  "account": {
+    "source_class_records": 1,
+    "bundle_records": 1,
+    "bundle_members": 56,
+    "source_representations": 1,
+    "rasters": 11,
+    "regions": 11,
+    "attempts": 11,
+    "hypotheses": 11,
+    "corrections": 0,
+    "selections": 11,
+    "required_units": 11,
+    "read_units": 11,
+    "failed_units": 0,
+    "unattempted_units": 0,
+    "page_coverage": 1.0,
+    "page_coverage_threshold": 1.0,
+    "coverage_verdict": "MET",
+    "strict_alignment": "PASS"
+  },
+  "independent_verifier": {
+    "command": [
+      ".venv/bin/malleus-ocr",
+      "paper-v4/experiment/ocr-bundle.json"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "sha256:b6f40e0ddaaa1bb760ae7aae88a38323cd23d59af6f06f9afd77f3ab096ceed7",
+    "stdout_bytes": 828,
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0
+  },
+  "verification_gate": {
+    "tests": 177,
+    "test_result": "PASS",
+    "ruff": "PASS",
+    "format": "PASS",
+    "independent_hostile_review": "PASS"
+  },
+  "limits": [
+    "AUDIT_ONLY does not establish transcription accuracy or source truth",
+    "publication rollback covers handled rename errors, not process death or host failure",
+    "runtime identity is pinned to exact local binaries; clean-container reproduction remains pending",
+    "derived OCR text remains private pending separate rights review"
+  ]
+}

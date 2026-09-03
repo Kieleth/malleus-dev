@@ -1,0 +1,25 @@
+{
+  "schema": "malleus.paper-v4.evaluation-commitments/v1",
+  "frozen_at": "2026-09-02T21:27:52Z",
+  "status": "FROZEN_BEFORE_MODEL_ACQUISITION",
+  "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+  "question_set": {
+    "path": "paper-v4/experiment/competency-questions.json",
+    "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92",
+    "visibility": "MODEL_VISIBLE"
+  },
+  "answer_oracle": {
+    "sealed_path": "private/paper-v4-evaluation/answer-oracle.json",
+    "sha256": "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571",
+    "visibility": "SEALED_FROM_PROPOSAL_PRODUCER",
+    "locator_binding": "PENDING_RETAINED_OCR_BLOCKS"
+  },
+  "ontology_adequacy_rubric": {
+    "sealed_path": "private/paper-v4-evaluation/ontology-adequacy-rubric.json",
+    "sha256": "sha256:f73c86e2635afa78661acffc1cc5b8aeca6924d446d4a52e44fc7ac739936a10",
+    "visibility": "SEALED_FROM_PROPOSAL_PRODUCER",
+    "reviewer_id": "reviewer:codex-paper-evaluator-v1",
+    "review_feedback": "FORBIDDEN",
+    "review_retry": "FORBIDDEN"
+  }
+}

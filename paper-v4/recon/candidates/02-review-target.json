@@ -1,0 +1,11 @@
+{
+  "id": "paper-v4:yu-2025-domain",
+  "label": "Yu et al. (2025) domain investigation",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ],
+  "scope": "Four frozen competency questions about the observing system, RC2 event location, reported depth and estimated primary-melt CO2 ranges, and the authors' preferred causal hypothesis.",
+  "cutoff_date": "2026-09-02",
+  "review_method": "Bounded claim extraction from one inspected publisher PDF using 1-based PDF page indices and phrase anchors."
+}

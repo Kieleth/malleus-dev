@@ -1,0 +1,84 @@
+{
+  "schema": "malleus.paper-v4.bridge-verification/v1",
+  "date": "2026-09-02",
+  "core_baseline": {
+    "manifest": "paper-v4/experiment/core-baseline.json",
+    "manifest_sha256": "sha256:89f9506756d8da746a12fd61f3f38d5e426e235b0ca15c4533f21989c234889e",
+    "commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3"
+  },
+  "implementation": {
+    "adapter": {
+      "path": "research/ontology_driven_kg_realization/experiments/document_paper/graph_recipe_change_set.py",
+      "sha256": "sha256:13220aea0e5a7764c75193bc2f103447ecbda26db8f0e9f1117c234e35c885b8"
+    },
+    "tests": {
+      "path": "research/ontology_driven_kg_realization/experiments/document_paper/test_graph_recipe_change_set.py",
+      "sha256": "sha256:8f024abb1c4a520e5f765504693cb144c282a792d2df625b4ec18ba4816cabf9"
+    }
+  },
+  "verified_claims": {
+    "mapping": "DETERMINISTIC_GE020_TWO_ENTITY_ONE_RELATION",
+    "member_operation_alignment": "SELF_DIGESTED_SWAP_REFUSED",
+    "accepted_replay": "REOPENED_GRAPH_AND_RECEIPT_EQUAL",
+    "atomic_refusals": [
+      "STALE_BASE",
+      "STRUCTURAL_REFUSAL"
+    ],
+    "unsupported_operations": [
+      "CREATE_SIGNAL",
+      "CREATE_EVENT"
+    ],
+    "accepted_path": "NO_DIRECT_STAGE_AND_MATERIALIZE"
+  },
+  "verification": {
+    "environment": {
+      "python": "3.12.9",
+      "linkml": "1.11.1",
+      "linkml_runtime": "1.11.1",
+      "pytest": "9.1.1",
+      "ruff": "0.11.9"
+    },
+    "pytest": {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "targets": [
+        "paper-v4/experiment/test_core_baseline.py",
+        "paper-v4/experiment/test_source_freeze.py",
+        "paper-v4/experiment/test_bridge_freeze.py",
+        "research/ontology_driven_kg_realization/experiments/document_paper/test_graph_recipe_change_set.py",
+        "tests/contract_compiler/pareto/test_knowledge_change_history.py",
+        "research/ontology_driven_kg_realization/experiments/graph_recipe/test_cases.py"
+      ],
+      "collected": 100,
+      "passed": 100,
+      "duration_seconds": 8.08,
+      "status": "PASS"
+    },
+    "ruff": {
+      "command": [
+        ".venv/bin/ruff",
+        "check"
+      ],
+      "targets": [
+        "research/ontology_driven_kg_realization/experiments/document_paper/graph_recipe_change_set.py",
+        "research/ontology_driven_kg_realization/experiments/document_paper/test_graph_recipe_change_set.py",
+        "paper-v4/experiment/test_core_baseline.py",
+        "paper-v4/experiment/test_source_freeze.py",
+        "paper-v4/experiment/test_bridge_freeze.py"
+      ],
+      "status": "PASS"
+    }
+  },
+  "limits": [
+    "COMPONENT_BRIDGE_ONLY",
+    "RESEARCH_LOCAL_API",
+    "NOT_A_CLEAN_ENVIRONMENT_RECEIPT",
+    "NO_SAME_ONTOLOGY_CONTINUITY_EVIDENCE",
+    "NO_DOCUMENT_SPECIFIC_LOCATOR_MAP_YET",
+    "NO_ACTUAL_PDF_DERIVED_GRAPH_YET"
+  ]
+}

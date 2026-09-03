@@ -1,0 +1,13 @@
+{
+  "id": "claim:yu-2025:cq-04",
+  "label": "CQ-04 preferred causal hypothesis",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ],
+  "notes": [
+    "Source locator: publisher PDF page index 5 (1-based); phrase anchor: Discussion prose marking the fourth possibility as preferred and explaining the trigger chain."
+  ],
+  "statement": "The authors' preferred hypothesis is that CO2 degassing from ascending melt causes volume change and pressure increase under extensional stress, produces locally high strain rates, and thereby triggers deep mantle earthquakes beneath the RC2 ridge axis.",
+  "claim_kind": "authors_preferred_hypothesis"
+}

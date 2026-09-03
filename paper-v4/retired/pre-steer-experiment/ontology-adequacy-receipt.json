@@ -1,0 +1,50 @@
+{
+  "schema": "malleus.paper-v4.ontology-adequacy-receipt/v1",
+  "completed_at": "2026-09-02T22:59:08Z",
+  "status": "REFUSED_ADEQUACY",
+  "review_precommit": {
+    "path": "paper-v4/experiment/ontology-review-precommit.json",
+    "sha256": "sha256:ec790c389b3f3f4aeb34d5c629ba8867801cd40f747a274763768f91f103d49c"
+  },
+  "reviewer": {
+    "reviewer_id": "reviewer:codex-paper-evaluator-v1",
+    "task": "/root/adequacy_review",
+    "session_id": "01a06450-ea03-7321-8b21-bb7e560a1966",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "attempt": 1,
+    "attempts_allowed": 1,
+    "feedback": "NONE",
+    "retry": "NONE"
+  },
+  "capture": {
+    "provider_output_byte_length": 30956,
+    "provider_output_sha256": "sha256:0f3a787cde5b1aa2aeb36d6e322bf18af80c01d41e7fc806b861e9b30fc7a864",
+    "retained_raw_path": "private/paper-v4-evaluation/ontology-adequacy-review-raw.txt",
+    "retained_raw_byte_length": 30957,
+    "retained_raw_sha256": "sha256:afc6e960a599f0aa9e0f4f245cd602e0785545a0e109c6649ddd6eb101fc88b3",
+    "capture_transform": "APPEND_ONE_TERMINAL_LF",
+    "result_path": "private/paper-v4-evaluation/ontology-adequacy-result.json",
+    "result_byte_length": 30919,
+    "result_sha256": "sha256:b0efcf5019c16ebaef82d18e65c1021b3925a4b0000147360c2aa42eb6988f5c"
+  },
+  "candidate_sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df",
+  "compiled_contract_identity": "sha256:8b1aca802746ab7fe487af92a286e1242ae105adda9665ba68388688838ffce2",
+  "eligibility": "PASS",
+  "criteria": {
+    "OA-01": "PASS",
+    "OA-02": "PASS",
+    "OA-03": "FAIL",
+    "OA-04": "PASS",
+    "OA-05": "FAIL",
+    "OA-06": "PASS"
+  },
+  "witness_count": 32,
+  "failed_witness_count": 1,
+  "unsupported_witness_count": 0,
+  "unresolved_count": 1,
+  "failure_class": "UNDISTINGUISHED_INSTRUMENT_COUNTS",
+  "failure": "ObservationNetwork exposes one instrument_count property, so deployed count 19 and usable count 17 cannot remain separate queryable assertions.",
+  "population_authorization": "DENIED",
+  "selected_ontology_sha256": null
+}

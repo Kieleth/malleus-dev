@@ -1,0 +1,26 @@
+{
+  "id": "work:yu-et-al-2025-mid-atlantic-ridge",
+  "label": "Yu et al. (2025)",
+  "title": "Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge",
+  "authors": [
+    "Zhiteng Yu",
+    "Satish C. Singh",
+    "Cédric Hamelin",
+    "Léa Grenet",
+    "Marcia Maia",
+    "Anne Briais",
+    "Lorenzo Petracchini",
+    "Daniele Brunelli"
+  ],
+  "venue": "Nature Communications",
+  "identifiers": [
+    "doi:10.1038/s41467-024-55792-9"
+  ],
+  "priority_date": "2025-01-10",
+  "priority_date_basis": "Publisher publication date",
+  "publication_status": "PEER_REVIEWED",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "claim:yu-2025:cq-02",
+  "label": "CQ-02 RC2 event location",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ],
+  "notes": [
+    "Source locator: publisher PDF page index 2 (1-based); phrase anchor: Results prose listing the three regional seismic observations."
+  ],
+  "statement": "The deep microseismicity occurred beneath the RC2 ridge axis.",
+  "claim_kind": "reported_spatial_observation"
+}

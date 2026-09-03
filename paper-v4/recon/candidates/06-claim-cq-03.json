@@ -1,0 +1,13 @@
+{
+  "id": "claim:yu-2025:cq-03",
+  "label": "CQ-03 depth and CO2 ranges",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ],
+  "notes": [
+    "Source locator: publisher PDF page indices 1 and 5 (1-based); phrase anchors: Abstract depth range and Discussion calculated RC2 primary-melt CO2 range."
+  ],
+  "statement": "The study reports earthquakes at depths of 10 to 20 km and calculates 0.4 to 3.0 wt% CO2 for RC2 primary melt.",
+  "claim_kind": "reported_observation_and_calculated_estimate"
+}

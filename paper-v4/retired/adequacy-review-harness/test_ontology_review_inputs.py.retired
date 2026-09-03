@@ -1,0 +1,263 @@
+"""Hard checks for the sealed ontology-review input generator."""
+
+from __future__ import annotations
+
+from hashlib import sha256
+from importlib.resources import files
+import json
+from pathlib import Path
+
+import pytest
+
+from research.ontology_driven_kg_realization.experiments.document_paper import (
+    ontology_review_inputs as review_module,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.ontology_review_inputs import (
+    PAPER_DOMAIN,
+    PAPER_RECORD_TYPE_IRIS,
+    REVIEW_ELIGIBILITY_FILENAME,
+    SCHEMA_INVENTORY_FILENAME,
+    ExactReviewInput,
+    OntologyReviewInputRefusal,
+    ReviewInputReason,
+    ReviewInputStage,
+    build_ontology_review_package,
+    publish_ontology_review_package,
+)
+
+
+ROOT = Path(__file__).resolve().parents[4]
+
+
+PATHS = {
+    "candidate": "paper-v4/experiment/model-ontology-proposal.yaml",
+    "malleus": "ontology/malleus.yaml",
+    "compile_precommit": "paper-v4/experiment/ontology-compile-precommit-02.json",
+    "validated_contract": (
+        "paper-v4/experiment/ontology-compilation-02/validated-contract.json"
+    ),
+    "compiler_receipt": (
+        "paper-v4/experiment/ontology-compilation-02/compile-receipt.json"
+    ),
+    "model_acquisition_receipt": ("paper-v4/experiment/model-acquisition-receipt.json"),
+    "task_contract": "paper-v4/experiment/model-ontology-task.md",
+    "questions": "paper-v4/experiment/competency-questions.json",
+    "answer_oracle": "private/paper-v4-evaluation/answer-oracle.json",
+    "adequacy_rubric": ("private/paper-v4-evaluation/ontology-adequacy-rubric.json"),
+    "locator_binding": ("private/paper-v4-evaluation/oracle-locator-binding.json"),
+    "support_guide": ("private/paper-v4-evaluation/support-adjudication-guide.json"),
+    "selected_reading": (
+        "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json"
+    ),
+    "selected_reading_manifest": ("paper-v4/experiment/selected-reading-manifest.json"),
+    "bound_support_blocks": ("private/paper-v4-evaluation/bound-support-blocks.json"),
+}
+
+
+def _digest(source: bytes) -> str:
+    return "sha256:" + sha256(source).hexdigest()
+
+
+def _exact(source: bytes) -> ExactReviewInput:
+    return ExactReviewInput(source, _digest(source))
+
+
+def _inputs() -> dict[str, ExactReviewInput]:
+    result = {role: _exact((ROOT / path).read_bytes()) for role, path in PATHS.items()}
+    linkml_types = (
+        files("linkml_runtime")
+        .joinpath("linkml_model", "model", "schema", "types.yaml")
+        .read_bytes()
+    )
+    result["linkml_types"] = _exact(linkml_types)
+    return result
+
+
+def _canonical_json(value: object) -> bytes:
+    return json.dumps(
+        value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+@pytest.fixture(scope="module")
+def valid_inputs() -> dict[str, ExactReviewInput]:
+    return _inputs()
+
+
+@pytest.fixture(scope="module")
+def package(valid_inputs):
+    return build_ontology_review_package(valid_inputs)
+
+
+def test_builds_canonical_inventory_and_pass_eligibility(package) -> None:
+    inventory = json.loads(package.schema_inventory_bytes)
+    eligibility = json.loads(package.review_eligibility_bytes)
+
+    assert _canonical_json(inventory) == package.schema_inventory_bytes
+    assert _canonical_json(eligibility) == package.review_eligibility_bytes
+    assert eligibility["verdict"] == "PASS"
+    assert eligibility["review_boundary"]["adequacy_scored"] is False
+    assert eligibility["schema_inventory_sha256"] == _digest(
+        package.schema_inventory_bytes
+    )
+    assert inventory["record_type_selection"] == list(PAPER_RECORD_TYPE_IRIS)
+    assert len(inventory["compiled_classes"]) == 15
+    assert len(inventory["logical_contract"]["record_types"]) == 15
+
+    observation = next(
+        item
+        for item in inventory["compiled_classes"]
+        if item["iri"] == PAPER_DOMAIN + "ObservationNetwork"
+    )
+    created_at = next(
+        item
+        for item in observation["effective_slots"]
+        if item["iri"] == "https://malleus.dev/schema/created_at"
+    )
+    assert created_at["origin"] == "IMPORTED"
+    assert created_at["required"] is False
+
+
+def test_frozen_selection_is_exact_closed_and_contains_quantified_subject() -> None:
+    assert len(PAPER_RECORD_TYPE_IRIS) == 15
+    assert len(set(PAPER_RECORD_TYPE_IRIS)) == 15
+    assert PAPER_DOMAIN + "QuantifiedSubject" in PAPER_RECORD_TYPE_IRIS
+    assert set(PAPER_RECORD_TYPE_IRIS) == {
+        PAPER_DOMAIN + name
+        for name in (
+            "ObservationNetwork",
+            "Campaign",
+            "RidgeSection",
+            "QuantifiedSubject",
+            "EarthquakePopulation",
+            "MeltPopulation",
+            "QuantitativeRange",
+            "CausalHypothesis",
+            "MechanismElement",
+            "DataAcquisitionRelation",
+            "SpatialAssociationRelation",
+            "QuantitySubjectRelation",
+            "HypothesisComponentRelation",
+            "CausalLinkRelation",
+            "HypothesisTargetRelation",
+        )
+    }
+
+
+def test_candidate_byte_drift_refuses_before_compilation(valid_inputs) -> None:
+    inputs = dict(valid_inputs)
+    exact = inputs["candidate"]
+    inputs["candidate"] = ExactReviewInput(
+        exact.source_bytes + b"\n",
+        exact.expected_sha256,
+    )
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        build_ontology_review_package(inputs)
+
+    assert caught.value.stage is ReviewInputStage.INPUT
+    assert caught.value.reason is ReviewInputReason.SHA256_MISMATCH
+
+
+def test_retained_validated_contract_byte_drift_refuses(valid_inputs) -> None:
+    inputs = dict(valid_inputs)
+    drifted = inputs["validated_contract"].source_bytes + b"\n"
+    inputs["validated_contract"] = _exact(drifted)
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        build_ontology_review_package(inputs)
+
+    assert caught.value.stage is ReviewInputStage.COMPILATION
+    assert caught.value.reason is ReviewInputReason.COMPILED_ARTIFACT_DRIFT
+
+
+def test_first_compile_precommit_is_ineligible_even_with_identical_outputs(
+    valid_inputs,
+) -> None:
+    inputs = dict(valid_inputs)
+    inputs["compile_precommit"] = _exact(
+        (ROOT / "paper-v4/experiment/ontology-compile-precommit.json").read_bytes()
+    )
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        build_ontology_review_package(inputs)
+
+    assert caught.value.stage is ReviewInputStage.COMPILATION
+    assert caught.value.reason is ReviewInputReason.COMPILED_ARTIFACT_DRIFT
+
+
+def test_frozen_class_selection_constant_drift_refuses(
+    valid_inputs,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        review_module,
+        "PAPER_RECORD_TYPE_IRIS",
+        PAPER_RECORD_TYPE_IRIS[:-1],
+    )
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        build_ontology_review_package(valid_inputs)
+
+    assert caught.value.stage is ReviewInputStage.SELECTION
+    assert caught.value.reason is ReviewInputReason.CLASS_SELECTION_DRIFT
+
+
+def test_bound_block_metadata_mismatch_refuses(valid_inputs) -> None:
+    inputs = dict(valid_inputs)
+    bound = json.loads(inputs["bound_support_blocks"].source_bytes)
+    bound["blocks"][0]["byte_length"] += 1
+    inputs["bound_support_blocks"] = _exact(_canonical_json(bound))
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        build_ontology_review_package(inputs)
+
+    assert caught.value.stage is ReviewInputStage.EVIDENCE
+    assert caught.value.reason is ReviewInputReason.EVIDENCE_CLOSURE_FAILED
+    assert "differs from private reading" in caught.value.detail
+
+
+def test_failed_second_staged_write_leaves_no_partial_publication(
+    package,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "review-inputs"
+    real_write = review_module._write_exclusive
+
+    def fail_second(path: Path, source: bytes) -> None:
+        if path.name == REVIEW_ELIGIBILITY_FILENAME:
+            raise OSError("injected second-write failure")
+        real_write(path, source)
+
+    monkeypatch.setattr(review_module, "_write_exclusive", fail_second)
+
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        publish_ontology_review_package(package, destination)
+
+    assert caught.value.stage is ReviewInputStage.PUBLICATION
+    assert caught.value.reason is ReviewInputReason.PUBLICATION_FAILED
+    assert not destination.exists()
+    assert not any(tmp_path.glob(".review-inputs.*"))
+
+
+def test_publication_is_exact_and_refuses_overwrite(package, tmp_path: Path) -> None:
+    destination = publish_ontology_review_package(package, tmp_path / "review-inputs")
+
+    assert {item.name for item in destination.iterdir()} == {
+        SCHEMA_INVENTORY_FILENAME,
+        REVIEW_ELIGIBILITY_FILENAME,
+    }
+    assert (destination / SCHEMA_INVENTORY_FILENAME).read_bytes() == (
+        package.schema_inventory_bytes
+    )
+    assert (destination / REVIEW_ELIGIBILITY_FILENAME).read_bytes() == (
+        package.review_eligibility_bytes
+    )
+    with pytest.raises(OntologyReviewInputRefusal) as caught:
+        publish_ontology_review_package(package, destination)
+    assert caught.value.reason is ReviewInputReason.OUTPUT_EXISTS

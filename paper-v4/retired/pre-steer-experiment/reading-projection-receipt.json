@@ -1,0 +1,48 @@
+{
+  "schema": "malleus.paper-v4.reading-projection-receipt/v1",
+  "executed_at": "2026-09-02T22:07:28Z",
+  "status": "PASS",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "research.ontology_driven_kg_realization.experiments.document_paper.reading_projection",
+    "/Users/luis/Projects/malleus-dev",
+    "/Users/luis/Projects/malleus-dev/paper-v4/experiment/reading-projection-precommit.json"
+  ],
+  "exit_code": 0,
+  "implementation": {
+    "source_sha256": "sha256:6a5c4867fb03191b61135fba32c1a73a6fcf4e22a9b56e0adb33475a625c3428",
+    "tests_sha256": "sha256:7ce5bcd997336ad40da20807cd5947d96f668ccb6bed044aa09ee71d4ff1299d"
+  },
+  "inputs": {
+    "projection_precommit_sha256": "sha256:47319b17cc2e37aab7593b08cc668405badf0caf4b610b8a268335c9fb1c9ee6",
+    "ocr_precommit_sha256": "sha256:68580e74a1107af8b0de033f664fb5053d7c1ffd3ec14c53508d06c79f36fbda",
+    "ocr_bundle_sha256": "sha256:46894b087d09d1a58f7ecac4fa135a6fdfdd80fd4b38078856022dcd44993f1d",
+    "ocr_verification_sha256": "sha256:23fdb70aa763129a29c9f4144a9e5200153f0d1f791366f522152297ed2a05dd",
+    "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9"
+  },
+  "outputs": {
+    "private_reading_path": "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json",
+    "private_reading_sha256": "sha256:0537411117e73b2611ade5088978ba7c8d8a4467d5b51b0c8941bc47f0d41261",
+    "private_reading_bytes": 111920,
+    "public_manifest_path": "paper-v4/experiment/selected-reading-manifest.json",
+    "public_manifest_sha256": "sha256:74399ce57cbe512157c0afdea4bbca946bc2693a3ead69cdfc82b3d6f292c35c",
+    "public_manifest_bytes": 45472,
+    "pages": 11,
+    "blocks": 301,
+    "public_text": false
+  },
+  "verification_gate": {
+    "focused_tests": 14,
+    "combined_ocr_projection_tests": 191,
+    "ruff": "PASS",
+    "format": "PASS",
+    "hostile_review_then_repair": "PASS"
+  },
+  "limits": [
+    "blocks are a deterministic text projection, not a semantic segmentation",
+    "raw selected page bytes remain the reading authority",
+    "handled publication errors roll back; process or host failure is outside this claim",
+    "private block text is withheld from public artifacts pending rights review"
+  ]
+}

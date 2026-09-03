@@ -70,6 +70,9 @@ Thumbs.db
 /research/malleus_library_protocol_recon.*/
 /MALLEUS_INQUISITION*.md
 
+# Paper source bytes remain local. The manifest and digest are the retained reference.
+/paper-v4/source/*.pdf
+
 # Personal recon exercises. A recon project is one person's working notes on a
 # body of literature: a ledger, its records, and generated artifacts. It is not
 # repository content and it does not belong in this history. Ignored until

@@ -1,0 +1,60 @@
+{
+  "schema": "malleus.paper-v4.bridge-verification/v2",
+  "date": "2026-09-02",
+  "status": "FROZEN",
+  "supersedes": {
+    "path": "paper-v4/experiment/bridge-verification.json",
+    "sha256": "sha256:1978aa7b71de9f9b8aa729c9687b1ae01ec0fc088b5a493b2a058115b6aa39fe",
+    "reason": "STYLE_ONLY_BYTE_REBIND"
+  },
+  "core_baseline": {
+    "manifest": "paper-v4/experiment/core-baseline.json",
+    "manifest_sha256": "sha256:89f9506756d8da746a12fd61f3f38d5e426e235b0ca15c4533f21989c234889e",
+    "commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+    "role": "HISTORICAL_BRIDGE_VERIFICATION_BASELINE"
+  },
+  "implementation": {
+    "adapter": {
+      "path": "research/ontology_driven_kg_realization/experiments/document_paper/graph_recipe_change_set.py",
+      "sha256": "sha256:efe6a575642bc24cbba55cd61e6436d4050a94a7813b5f6a86dec003bc99037f"
+    },
+    "tests": {
+      "path": "research/ontology_driven_kg_realization/experiments/document_paper/test_graph_recipe_change_set.py",
+      "sha256": "sha256:14b43c06b40d55e45b8d5dfb7e0ead3ea4455f7e3a4ef35d5b68b3636fbe82ad"
+    }
+  },
+  "verified_claims": {
+    "mapping": "DETERMINISTIC_GE020_TWO_ENTITY_ONE_RELATION",
+    "member_operation_alignment": "SELF_DIGESTED_SWAP_REFUSED",
+    "accepted_replay": "REOPENED_GRAPH_AND_RECEIPT_EQUAL",
+    "atomic_refusals": [
+      "STALE_BASE",
+      "STRUCTURAL_REFUSAL"
+    ],
+    "unsupported_operations": [
+      "CREATE_SIGNAL",
+      "CREATE_EVENT"
+    ],
+    "accepted_path": "NO_DIRECT_STAGE_AND_MATERIALIZE"
+  },
+  "verification": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "research/ontology_driven_kg_realization/experiments/document_paper/test_graph_recipe_change_set.py"
+    ],
+    "collected": 10,
+    "passed": 10,
+    "status": "PASS"
+  },
+  "limits": [
+    "COMPONENT_BRIDGE_ONLY",
+    "RESEARCH_LOCAL_API",
+    "NOT_A_CLEAN_ENVIRONMENT_RECEIPT",
+    "NO_SAME_ONTOLOGY_CONTINUITY_EVIDENCE",
+    "NO_DOCUMENT_SPECIFIC_LOCATOR_MAP_YET",
+    "NO_ACTUAL_PDF_DERIVED_GRAPH_YET"
+  ]
+}

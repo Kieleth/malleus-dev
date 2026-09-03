@@ -1,0 +1,52 @@
+{
+  "schema": "malleus.paper-v4.ontology-recovery-adequacy-receipt/v1",
+  "completed_at": "2026-09-02T23:15:41Z",
+  "classification": "POST_PRIMARY_CONTROL",
+  "primary_result_changed": false,
+  "status": "SELECTED_CONTROL",
+  "review_precommit": {
+    "path": "paper-v4/experiment/ontology-recovery-review-precommit.json",
+    "sha256": "sha256:7d20563238d2de4a08e3db2a26127ce285598cc336eaf4bff70ac2811cf96a7d"
+  },
+  "reviewer": {
+    "reviewer_id": "reviewer:codex-paper-recovery-evaluator-v1",
+    "task": "/root/recovery_adequacy_review",
+    "session_id": "01a06463-594d-7d21-8b66-6dbd526a12f2",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "attempt": 1,
+    "attempts_allowed": 1,
+    "feedback": "NONE",
+    "repair": "NONE",
+    "retry": "NONE"
+  },
+  "capture": {
+    "provider_output_byte_length": 34726,
+    "provider_output_sha256": "sha256:d14cf727d220bd72834d12071865f4d6044aa64b11da57791f1284eec21fa6e2",
+    "retained_raw_path": "private/paper-v4-evaluation/ontology-recovery-adequacy-review-raw.txt",
+    "retained_raw_byte_length": 34727,
+    "retained_raw_sha256": "sha256:9449e97892eb35c4d7a116e931674e3afe5fa26a80918a7ed84eb464ee54d87b",
+    "capture_transform": "APPEND_ONE_TERMINAL_LF",
+    "result_path": "private/paper-v4-evaluation/ontology-recovery-adequacy-result.json",
+    "result_byte_length": 34671,
+    "result_sha256": "sha256:fbd6b609a854619b3931933932f39687f4e9fe2861076cfc1941c9631a92ce4c"
+  },
+  "candidate_sha256": "sha256:29fca9e9325c9d14e5070bcb4274c8704f9d1aaa058799e5a81f27cb5a5a99e9",
+  "compiled_contract_identity": "sha256:c7b71d094fd8ea2bb7a9e368c581475891f110538caebeaceedca9d7532b3332",
+  "eligibility": "PASS",
+  "criteria": {
+    "OA-01": "PASS",
+    "OA-02": "PASS",
+    "OA-03": "PASS",
+    "OA-04": "PASS",
+    "OA-05": "PASS",
+    "OA-06": "PASS"
+  },
+  "witness_count": 39,
+  "failed_witness_count": 0,
+  "unsupported_witness_count": 0,
+  "unresolved_count": 0,
+  "population_authorization": "AUTHORIZED_POST_PRIMARY_CONTROL",
+  "selected_ontology_sha256": "sha256:29fca9e9325c9d14e5070bcb4274c8704f9d1aaa058799e5a81f27cb5a5a99e9",
+  "primary_result": "REFUSED_ADEQUACY"
+}
