@@ -1,0 +1,10 @@
+{
+  "contract": "malleus.fixture.control_response.v1",
+  "note": "Retained fixture response. No recognition engine was invoked.",
+  "outcome": "READING",
+  "production_ocr": false,
+  "reader_id": "malleus.fixture.control_reader@1",
+  "reader_kind": "deterministic_control_reader",
+  "region_id": "fixture:region-control:region:a",
+  "text": "REGION A\nALPHA 123\nLEFT BOX"
+}

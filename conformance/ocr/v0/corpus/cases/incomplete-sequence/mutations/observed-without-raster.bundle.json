@@ -1,0 +1,153 @@
+{
+  "bundle": {
+    "attempts": [
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:incomplete-sequence:attempt:page-1-body",
+        "region_id": "fixture:incomplete-sequence:region:page-1-body",
+        "request_digest": "sha256:809d8ee6c8f31108feb107f5b8fa68708df35a0ddbc79ba43fbba9be34ddc9e7",
+        "response_digest": "sha256:11417cdd7d0ce7aadd43841d2515143a2542effdb0c66c6d1679215f5d88e9fe",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      },
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:incomplete-sequence:attempt:page-3-body",
+        "region_id": "fixture:incomplete-sequence:region:page-3-body",
+        "request_digest": "sha256:a1a48e8029716ef1084b7d26ff7b28084d9babad4a0e5a705dc42f04603dd732",
+        "response_digest": "sha256:83cb9af8f47f0b4825c691e5a4125d5c473a84101b61c79aa189b9f45a41b3db",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      }
+    ],
+    "corrections": [],
+    "data_handling_policy_id": "policy:fixture:local-self-authored",
+    "hostile_content_policy_id": "policy:fixture:text-is-untrusted-data",
+    "hypotheses": [
+      {
+        "attempt_id": "fixture:incomplete-sequence:attempt:page-1-body",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:incomplete-sequence:hypothesis:page-1-body:machine",
+        "region_id": "fixture:incomplete-sequence:region:page-1-body",
+        "text_digest": "sha256:59e57fb1c0f281664c62a13759b2fb3859d77607f8a8af205480e8ece1ce57e7"
+      },
+      {
+        "attempt_id": "fixture:incomplete-sequence:attempt:page-3-body",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:incomplete-sequence:hypothesis:page-3-body:machine",
+        "region_id": "fixture:incomplete-sequence:region:page-3-body",
+        "text_digest": "sha256:ea1b6b0ff32bbea7bd5d128f2818101958136adf25b3a4337d853e0c7354a038"
+      }
+    ],
+    "id": "fixture:incomplete-sequence:bundle",
+    "kind": "FINISHED_READING",
+    "observed_units": [
+      "page:1",
+      "page:2",
+      "page:3"
+    ],
+    "rasters": [
+      {
+        "digest": "sha256:e7659f7d6484963b6ea6e515b2e4d127be7496633f6f24c0984f3612aa20f41a",
+        "id": "fixture:incomplete-sequence:raster:page-1",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.1bc9c9eebfde0b77d74860f9eb48eb66;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "source_id": "fixture:incomplete-sequence:source",
+        "unit": "page:1"
+      },
+      {
+        "digest": "sha256:e37e8488b6b7e4f73e0baa5fd04aa945aaf99ba3a2e0cbc80df51a6dbab3e275",
+        "id": "fixture:incomplete-sequence:raster:page-3",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.b656e514d6611c4348ca92ef9bab55ab;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "source_id": "fixture:incomplete-sequence:source",
+        "unit": "page:3"
+      }
+    ],
+    "regions": [
+      {
+        "id": "fixture:incomplete-sequence:region:page-1-body",
+        "raster_id": "fixture:incomplete-sequence:raster:page-1",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=100,350,800,810"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      },
+      {
+        "id": "fixture:incomplete-sequence:region:page-3-body",
+        "raster_id": "fixture:incomplete-sequence:raster:page-3",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=100,350,800,810"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      }
+    ],
+    "selections": [
+      {
+        "candidate_ids": [
+          "fixture:incomplete-sequence:hypothesis:page-1-body:machine"
+        ],
+        "human_verified": false,
+        "id": "fixture:incomplete-sequence:selection:page-1-body",
+        "reason": "single deterministic control reading",
+        "region_id": "fixture:incomplete-sequence:region:page-1-body",
+        "selected_id": "fixture:incomplete-sequence:hypothesis:page-1-body:machine"
+      },
+      {
+        "candidate_ids": [
+          "fixture:incomplete-sequence:hypothesis:page-3-body:machine"
+        ],
+        "human_verified": false,
+        "id": "fixture:incomplete-sequence:selection:page-3-body",
+        "reason": "single deterministic control reading",
+        "region_id": "fixture:incomplete-sequence:region:page-3-body",
+        "selected_id": "fixture:incomplete-sequence:hypothesis:page-3-body:machine"
+      }
+    ],
+    "source_class": {
+      "frozen_at": "2026-09-02T00:00:00+00:00",
+      "id": "fixture:incomplete-sequence:source-class",
+      "inventory_basis": "fixture_declared_before_reading",
+      "metric_families": {
+        "coverage": {
+          "denominator": "declared_units",
+          "threshold": 1.0
+        }
+      },
+      "required_units": [
+        "page:1",
+        "page:2",
+        "page:3"
+      ],
+      "temporal_policy": "self_authored_fixture_has_no_source_time_claim"
+    },
+    "sources": [
+      {
+        "byte_length": 94154,
+        "digest": "sha256:3c26c2dff77fc3a95bacc5b31373ef053683a2736a74142d662015c5e9f21f7e",
+        "id": "fixture:incomplete-sequence:source",
+        "locator": "conformance/ocr/v0/corpus/cases/incomplete-sequence/source/incomplete-sequence.pdf",
+        "media_type": "application/pdf"
+      }
+    ],
+    "transport_metadata": {
+      "fixture_corpus": "malleus.ocr.fixture_corpus.v1",
+      "network_access": false
+    }
+  },
+  "document_version": 1,
+  "profile": "malleus.ocr.evidence_integrity",
+  "profile_version": "v0"
+}

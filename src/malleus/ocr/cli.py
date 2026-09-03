@@ -80,8 +80,19 @@ def _report(result: VerificationResult, stream) -> int:
         print(f"  never checked: {never}", file=stream)
         print(f"  check failed:  {failed}", file=stream)
         return REFUSED
-    print(f"COMPLETE. {result.bundle_id} accounts for every declared unit and meets "
-          "the thresholds its source class froze before ingest.", file=stream)
+    print(
+        f"COMPLETE BY DECLARED THRESHOLDS. {result.bundle_id} meets every coverage "
+        "threshold its source class froze before ingest.",
+        file=stream,
+    )
+    if account.unaccounted:
+        never = ", ".join(account.units_with(DISPOSITION_NOT_CHECKED)) or "none"
+        failed = ", ".join(account.units_with(DISPOSITION_CHECK_FAILED)) or "none"
+        print("  Some declared units remain unaccounted for under that threshold.", file=stream)
+        print(f"  never checked: {never}", file=stream)
+        print(f"  check failed:  {failed}", file=stream)
+    else:
+        print("  Every declared unit is accounted for.", file=stream)
     return CONFORMS
 
 

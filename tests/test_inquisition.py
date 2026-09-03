@@ -1158,6 +1158,7 @@ class TestNoPrivateMaterialCanReachARelease:
     }
     SDIST_ALLOWED_ROOTS = (
         ".claude/skills/",
+        "conformance/ocr/v0/corpus/",
         "docs/",
         "ontology/",
         "prolog/",
@@ -1165,6 +1166,14 @@ class TestNoPrivateMaterialCanReachARelease:
         "tests/",
     )
     WHEEL_SHARED_ROOTS = ("docs", "ontology", "prolog", "skills")
+
+    def _ocr_fixture_sources(self):
+        corpus = self.ROOT / "conformance" / "ocr" / "v0" / "corpus"
+        return {
+            path.relative_to(self.ROOT).as_posix()
+            for path in corpus.rglob("*")
+            if path.is_file() and "__pycache__" not in path.parts
+        } | {"docs/OCR_FIXTURE_CORPUS.md", "tests/test_ocr_corpus.py"}
 
     def _build(self, tmp_path):
         import subprocess
@@ -1264,6 +1273,7 @@ class TestNoPrivateMaterialCanReachARelease:
         assert skill_files
         for artifact in self._build(tmp_path):
             members = self._members(artifact)
+            fixture_sources = self._ocr_fixture_sources()
             unexpected = self._unexpected_members(artifact, members)
             assert not unexpected, (
                 f"{artifact.name} carries files outside allowed roots: "
@@ -1271,12 +1281,21 @@ class TestNoPrivateMaterialCanReachARelease:
                 "A release artifact is irrevocable once published."
             )
             if artifact.suffix != ".whl":
+                missing_fixtures = sorted(fixture_sources - set(members))
+                assert not missing_fixtures, (
+                    f"{artifact.name} omits OCR fixture sources: {missing_fixtures[:10]}"
+                )
                 untracked = self._untracked_sdist_members(members)
                 assert not untracked, (
                     f"{artifact.name} carries untracked source files: {untracked[:10]}. "
                     "Build and publish from one committed source identity."
                 )
             if artifact.suffix == ".whl":
+                leaked_fixtures = sorted(fixture_sources & set(members))
+                assert not leaked_fixtures, (
+                    f"{artifact.name} carries development-only OCR fixtures: "
+                    f"{leaked_fixtures[:10]}"
+                )
                 missing = [
                     path
                     for path in skill_files

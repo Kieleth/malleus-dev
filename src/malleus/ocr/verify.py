@@ -438,15 +438,20 @@ def verify_bundle(
     # may never be an integrity value.
     for kind, items in (("sources", bundle.sources), ("rasters", bundle.rasters)):
         for item in items:
-            if not DIGEST.fullmatch(item.digest):
+            if not isinstance(item.digest, str) or not DIGEST.fullmatch(item.digest):
                 add("OCR-D001", item.id, f"{kind} digest {item.digest!r}")
     for attempt in bundle.attempts:
         for label, value in (("request", attempt.request_digest),
                              ("response", attempt.response_digest)):
-            if value is not None and not DIGEST.fullmatch(value):
+            if value is not None and (
+                not isinstance(value, str) or not DIGEST.fullmatch(value)
+            ):
                 add("OCR-D001", attempt.id, f"{label} digest {value!r}")
     for hypothesis in bundle.hypotheses:
-        if not DIGEST.fullmatch(hypothesis.text_digest):
+        if (
+            not isinstance(hypothesis.text_digest, str)
+            or not DIGEST.fullmatch(hypothesis.text_digest)
+        ):
             add("OCR-D001", hypothesis.id, f"text digest {hypothesis.text_digest!r}")
 
     # C6: credentials never enter the bundle, detected rather than trusted.
@@ -490,6 +495,15 @@ def verify_bundle(
             continue
         if hypothesis.attempt_id and hypothesis.attempt_id not in attempts:
             add("OCR-D003", hypothesis.id, f"unknown attempt {hypothesis.attempt_id!r}")
+        if hypothesis.attempt_id in attempts:
+            attempt = attempts[hypothesis.attempt_id]
+            if attempt.region_id != hypothesis.region_id:
+                add(
+                    "OCR-D003",
+                    hypothesis.id,
+                    f"attempt {attempt.id!r} belongs to region {attempt.region_id!r}, "
+                    f"not hypothesis region {hypothesis.region_id!r}",
+                )
         if hypothesis.correction_id and hypothesis.correction_id not in corrections:
             add("OCR-D003", hypothesis.id, f"unknown correction {hypothesis.correction_id!r}")
 
@@ -522,6 +536,15 @@ def verify_bundle(
         for candidate in selection.candidate_ids:
             if candidate not in hypotheses:
                 add("OCR-D011", selection.id, f"unknown candidate {candidate!r}")
+        for hypothesis_id in dict.fromkeys((*selection.candidate_ids, selection.selected_id)):
+            hypothesis = hypotheses.get(hypothesis_id)
+            if hypothesis is not None and hypothesis.region_id != selection.region_id:
+                add(
+                    "OCR-D003",
+                    selection.id,
+                    f"hypothesis {hypothesis.id!r} belongs to region "
+                    f"{hypothesis.region_id!r}, not selection region {selection.region_id!r}",
+                )
         if selection.human_verified and not (
             selection.selected_id in corrected or selection.selected_id in reviewed_hypotheses
         ):
@@ -534,7 +557,10 @@ def verify_bundle(
     # without also accepting the case it exists to refuse. So it lives here,
     # beside the check, rather than in a slot description nothing performs.
     for attempt in bundle.attempts:
-        stated = bool(attempt.unavailable_reason and attempt.unavailable_reason.strip())
+        stated = bool(
+            isinstance(attempt.unavailable_reason, str)
+            and attempt.unavailable_reason.strip()
+        )
         if attempt.status == "UNAVAILABLE" and not stated:
             add("OCR-D015", attempt.id,
                 "status is UNAVAILABLE and no unavailable_reason is given")
@@ -599,7 +625,7 @@ def verify_bundle(
     # does that. Citing a decision beside a check that does not perform it is
     # how C3 came to look discharged.
     source_class = bundle.source_class
-    if not source_class.frozen_at.strip():
+    if isinstance(source_class.frozen_at, str) and not source_class.frozen_at.strip():
         add("OCR-D009", source_class.id, "no frozen_at recorded")
     if not source_class.metric_families:
         add("OCR-D012", source_class.id, "coverage metric families empty")
@@ -693,7 +719,13 @@ def account_for(bundle: Bundle, registry: OntologyRegistry | None = None) -> Acc
     units = tuple(units)
     accounted = sum(1 for u in units if u.accounted)
     metrics = []
-    for family, declaration in sorted(bundle.source_class.metric_families.items()):
+    declarations = bundle.source_class.metric_families
+    if not isinstance(declarations, Mapping):
+        return Account(bundle.kind, units, ())
+    for family, declaration in sorted(declarations.items()):
+        if not isinstance(declaration, Mapping):
+            metrics.append(MetricResult(family, "", None, None, "UNMEASURED"))
+            continue
         denominator = str(declaration.get("denominator", ""))
         threshold = declaration.get("threshold")
         if denominator not in DENOMINATORS or not isinstance(threshold, (int, float)):

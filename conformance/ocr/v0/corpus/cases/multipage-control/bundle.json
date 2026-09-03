@@ -1,0 +1,177 @@
+{
+  "bundle": {
+    "attempts": [
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:multipage-control:attempt:page-1-body",
+        "region_id": "fixture:multipage-control:region:page-1-body",
+        "request_digest": "sha256:c64bda9a58dae758d19ecf658e765b65612ed6331ed0806b61d0108ec8f77adf",
+        "response_digest": "sha256:aed5931d59e10f5f54eaad21e3d9849f31e1d2a12ea1f6ac786e3b66ca36d6da",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      },
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:multipage-control:attempt:page-2-blank",
+        "region_id": "fixture:multipage-control:region:page-2-blank",
+        "request_digest": "sha256:08896436661553917092978d23c36e65efbf26f7e94de46efa68f16edf763e21",
+        "response_digest": "sha256:32507760307017acf9a87f769d00e9a6dd8cbe90cb9cd74a3d2c745594c593fc",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      }
+    ],
+    "corrections": [
+      {
+        "corrected_text_digest": "sha256:6c414cb9883b01646125757b88391ee334309b7cb35cebbaf39a8db83c220f45",
+        "id": "fixture:multipage-control:correction:page-1-body",
+        "predecessor_id": null,
+        "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-1-body:machine",
+        "reviewer_id": "fixture:reviewer:human-control",
+        "verdict": "CORRECTED"
+      },
+      {
+        "corrected_text_digest": null,
+        "id": "fixture:multipage-control:correction:page-2-blank",
+        "predecessor_id": null,
+        "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-2-blank:machine",
+        "reviewer_id": "fixture:reviewer:human-control",
+        "verdict": "VERIFIED_BLANK"
+      }
+    ],
+    "data_handling_policy_id": "policy:fixture:local-self-authored",
+    "hostile_content_policy_id": "policy:fixture:text-is-untrusted-data",
+    "hypotheses": [
+      {
+        "attempt_id": "fixture:multipage-control:attempt:page-1-body",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:multipage-control:hypothesis:page-1-body:machine",
+        "region_id": "fixture:multipage-control:region:page-1-body",
+        "text_digest": "sha256:0c199edd968ff9bad8a23d3046f3f2e3adbe6b8307a6a8d3aa752597a9fd014a"
+      },
+      {
+        "attempt_id": "fixture:multipage-control:attempt:page-2-blank",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:multipage-control:hypothesis:page-2-blank:machine",
+        "region_id": "fixture:multipage-control:region:page-2-blank",
+        "text_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "attempt_id": null,
+        "confidence": null,
+        "correction_id": "fixture:multipage-control:correction:page-1-body",
+        "id": "fixture:multipage-control:hypothesis:page-1-body:corrected",
+        "region_id": "fixture:multipage-control:region:page-1-body",
+        "text_digest": "sha256:6c414cb9883b01646125757b88391ee334309b7cb35cebbaf39a8db83c220f45"
+      }
+    ],
+    "id": "fixture:multipage-control:bundle",
+    "kind": "FINISHED_READING",
+    "observed_units": [
+      "page:1",
+      "page:2"
+    ],
+    "rasters": [
+      {
+        "digest": "sha256:5922a14e936bed3f4d5e27859e34c23a05dd929d1e95241c75831fa9d86b756c",
+        "id": "fixture:multipage-control:raster:page-1",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=1;image=0;xobject=FormXob.ac1b85dd40b1d0af0da2e314cf000f45;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "source_id": "fixture:multipage-control:source",
+        "unit": "page:1"
+      },
+      {
+        "digest": "sha256:445fea0a79155489910ec726be6f41b84afe6123ea4c7a2a944e274a920cf92d",
+        "id": "fixture:multipage-control:raster:page-2",
+        "render_contract": "fixture-pdf-image-xobject:v1;page=2;image=0;xobject=FormXob.7161e305db6dbc9273f868089764df2c;extractor=pypdf-6.16.2;source_colorspace=DeviceRGB;output_mode=RGB;png=pillow-12.3.0",
+        "source_id": "fixture:multipage-control:source",
+        "unit": "page:2"
+      }
+    ],
+    "regions": [
+      {
+        "id": "fixture:multipage-control:region:page-1-body",
+        "raster_id": "fixture:multipage-control:raster:page-1",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=140,650,720,410"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      },
+      {
+        "id": "fixture:multipage-control:region:page-2-blank",
+        "raster_id": "fixture:multipage-control:raster:page-2",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=0,0,1000,1400"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      }
+    ],
+    "selections": [
+      {
+        "candidate_ids": [
+          "fixture:multipage-control:hypothesis:page-1-body:machine",
+          "fixture:multipage-control:hypothesis:page-1-body:corrected"
+        ],
+        "human_verified": true,
+        "id": "fixture:multipage-control:selection:page-1-body",
+        "reason": "human correction resolves the intentionally ambiguous token",
+        "region_id": "fixture:multipage-control:region:page-1-body",
+        "selected_id": "fixture:multipage-control:hypothesis:page-1-body:corrected"
+      },
+      {
+        "candidate_ids": [
+          "fixture:multipage-control:hypothesis:page-2-blank:machine"
+        ],
+        "human_verified": true,
+        "id": "fixture:multipage-control:selection:page-2-blank",
+        "reason": "human review confirms the retained empty response",
+        "region_id": "fixture:multipage-control:region:page-2-blank",
+        "selected_id": "fixture:multipage-control:hypothesis:page-2-blank:machine"
+      }
+    ],
+    "source_class": {
+      "frozen_at": "2026-09-02T00:00:00+00:00",
+      "id": "fixture:multipage-control:source-class",
+      "inventory_basis": "fixture_declared_before_reading",
+      "metric_families": {
+        "coverage": {
+          "denominator": "declared_units",
+          "threshold": 1.0
+        }
+      },
+      "required_units": [
+        "page:1",
+        "page:2"
+      ],
+      "temporal_policy": "self_authored_fixture_has_no_source_time_claim"
+    },
+    "sources": [
+      {
+        "byte_length": 53602,
+        "digest": "sha256:032a790649177a4e64454eacdae0b1b66912c72335e366ac64cdf3631fd5155d",
+        "id": "fixture:multipage-control:source",
+        "locator": "conformance/ocr/v0/corpus/cases/multipage-control/source/multipage-control.pdf",
+        "media_type": "application/pdf"
+      }
+    ],
+    "transport_metadata": {
+      "fixture_corpus": "malleus.ocr.fixture_corpus.v1",
+      "network_access": false
+    }
+  },
+  "document_version": 1,
+  "profile": "malleus.ocr.evidence_integrity",
+  "profile_version": "v0"
+}

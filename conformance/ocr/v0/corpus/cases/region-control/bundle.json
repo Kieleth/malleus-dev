@@ -1,0 +1,142 @@
+{
+  "bundle": {
+    "attempts": [
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:region-control:attempt:a",
+        "region_id": "fixture:region-control:region:a",
+        "request_digest": "sha256:2494e4fb313205f441440e401ec5bd4ef42cfdbc3396c6bf72503f2644c49d01",
+        "response_digest": "sha256:02b1bc6051028f3429f6bf7e26e342ca0c6e60ff525758a0810aa3dff30971ce",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      },
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:region-control:attempt:b",
+        "region_id": "fixture:region-control:region:b",
+        "request_digest": "sha256:40dcbd06501f54604c640e49f50a21bf45042a37f15a9f0d229b1a6eedafcf78",
+        "response_digest": "sha256:797c430a715c1da07fa4850856f4be1186513f013b74ded9662a24764f8b454a",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      }
+    ],
+    "corrections": [],
+    "data_handling_policy_id": "policy:fixture:local-self-authored",
+    "hostile_content_policy_id": "policy:fixture:text-is-untrusted-data",
+    "hypotheses": [
+      {
+        "attempt_id": "fixture:region-control:attempt:a",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:region-control:hypothesis:a:machine",
+        "region_id": "fixture:region-control:region:a",
+        "text_digest": "sha256:f93511c96ce37149eaca3661fe4f98876547763c55cb3d49626e5e812524df03"
+      },
+      {
+        "attempt_id": "fixture:region-control:attempt:b",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:region-control:hypothesis:b:machine",
+        "region_id": "fixture:region-control:region:b",
+        "text_digest": "sha256:f0eb0b9c454fbb620bd3e98133db93a33cb91996406b19f80cfce6f5046c0a09"
+      }
+    ],
+    "id": "fixture:region-control:bundle",
+    "kind": "FINISHED_READING",
+    "observed_units": [
+      "image:1"
+    ],
+    "rasters": [
+      {
+        "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+        "id": "fixture:region-control:raster:image-1",
+        "render_contract": "fixture-retained-raster:v1",
+        "source_id": "fixture:region-control:source",
+        "unit": "image:1"
+      }
+    ],
+    "regions": [
+      {
+        "id": "fixture:region-control:region:a",
+        "raster_id": "fixture:region-control:raster:image-1",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=80,180,500,420"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      },
+      {
+        "id": "fixture:region-control:region:b",
+        "raster_id": "fixture:region-control:raster:image-1",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=620,180,500,420"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      }
+    ],
+    "selections": [
+      {
+        "candidate_ids": [
+          "fixture:region-control:hypothesis:a:machine"
+        ],
+        "human_verified": false,
+        "id": "fixture:region-control:selection:a",
+        "reason": "single deterministic control reading",
+        "region_id": "fixture:region-control:region:a",
+        "selected_id": "fixture:region-control:hypothesis:a:machine"
+      },
+      {
+        "candidate_ids": [
+          "fixture:region-control:hypothesis:b:machine"
+        ],
+        "human_verified": false,
+        "id": "fixture:region-control:selection:b",
+        "reason": "single deterministic control reading",
+        "region_id": "fixture:region-control:region:b",
+        "selected_id": "fixture:region-control:hypothesis:b:machine"
+      }
+    ],
+    "source_class": {
+      "frozen_at": "2026-09-02T00:00:00+00:00",
+      "id": "fixture:region-control:source-class",
+      "inventory_basis": "fixture_declared_before_reading",
+      "metric_families": {
+        "coverage": {
+          "denominator": "declared_units",
+          "threshold": 1.0
+        }
+      },
+      "required_units": [
+        "image:1"
+      ],
+      "temporal_policy": "self_authored_fixture_has_no_source_time_claim"
+    },
+    "sources": [
+      {
+        "byte_length": 49810,
+        "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+        "id": "fixture:region-control:source",
+        "locator": "conformance/ocr/v0/corpus/cases/region-control/source/region-control.png",
+        "media_type": "image/png"
+      }
+    ],
+    "transport_metadata": {
+      "fixture_corpus": "malleus.ocr.fixture_corpus.v1",
+      "network_access": false
+    }
+  },
+  "document_version": 1,
+  "profile": "malleus.ocr.evidence_integrity",
+  "profile_version": "v0"
+}

@@ -1,0 +1,31 @@
+{
+  "account": {
+    "complete": true,
+    "kind": "FINISHED_READING",
+    "metrics": [
+      {
+        "denominator": "declared_units",
+        "family": "coverage",
+        "threshold": 1.0,
+        "value": 1.0,
+        "verdict": "MET"
+      }
+    ],
+    "units": [
+      {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ",
+        "unit": "page:1"
+      },
+      {
+        "disposition": "ACCOUNTED",
+        "outcome": "VERIFIED_BLANK",
+        "unit": "page:2"
+      }
+    ]
+  },
+  "bundle_id": "fixture:multipage-control:bundle",
+  "capability": "AUDIT_ONLY",
+  "conforms": true,
+  "diagnostics": []
+}
