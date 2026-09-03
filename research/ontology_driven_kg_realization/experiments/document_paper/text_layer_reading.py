@@ -20,6 +20,7 @@ except ImportError as error:  # pragma: no cover - exercised by environment setu
 READING_SCHEMA = "malleus.paper-v4.text-layer-reading/v1"
 PINNED_PYPDF_VERSION = "6.16.2"
 _BLANK = re.compile(r"^[ \t]*$")
+_SENTENCE_END = re.compile(r"[.!?][)\]\"']*$")
 
 
 class TextLayerReadingError(ValueError):
@@ -90,10 +91,24 @@ def _source_path(repo_root: Path, locator: Any) -> Path:
 
 def _blocks(text: str, page: int) -> list[dict[str, Any]]:
     normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    groups: list[list[str]] = []
+    current: list[str] = []
+    for line in normalized.split("\n"):
+        if _BLANK.fullmatch(line):
+            if current:
+                groups.append(current)
+                current = []
+            continue
+        current.append(line)
+        if _SENTENCE_END.search(line.rstrip()):
+            groups.append(current)
+            current = []
+    if current:
+        groups.append(current)
+
     blocks = []
-    lines = (line for line in normalized.split("\n") if not _BLANK.fullmatch(line))
-    for ordinal, line in enumerate(lines, start=1):
-        payload = (line + "\n").encode("utf-8")
+    for ordinal, lines in enumerate(groups, start=1):
+        payload = ("\n".join(lines) + "\n").encode("utf-8")
         blocks.append(
             {
                 "id": f"page:{page}:block:{ordinal:03d}",
@@ -168,8 +183,8 @@ def build_reading(repo_root: Path, source_manifest_path: Path) -> bytes:
             "projection": {
                 "line_endings": "CRLF_AND_CR_TO_LF",
                 "blank_line": "ZERO_OR_MORE_SPACE_OR_TAB_CHARACTERS",
-                "block_rule": "EACH_NONBLANK_EXTRACTED_LINE",
-                "block_text": "EXTRACTED_LINE_WITH_ONE_TERMINAL_LF",
+                "block_rule": "WRAPPED_LINES_THROUGH_SENTENCE_OR_BLANK_BOUNDARY",
+                "block_text": "EXTRACTED_LINES_JOINED_BY_LF_WITH_ONE_TERMINAL_LF",
                 "text_correction": "NONE",
             },
             "page_count": len(pages),

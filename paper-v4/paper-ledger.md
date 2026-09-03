@@ -1,10 +1,10 @@
 # Malleus paper ledger
 
-Ledger version: 0.8.0
+Ledger version: 0.9.0
 
 Opened: 2026-09-02
 
-Plan tracked: `paper-master-plan.md` version 0.8.0
+Plan tracked: `paper-master-plan.md` version 0.9.0
 
 ## Operating rule
 
@@ -93,6 +93,16 @@ Plan version: 0.8.0
 Change: Retained the exact recovery compilation and its separate one-shot adequacy review. The corrected digest was selected for post-primary control population. Query authoring must now freeze against that digest before any population artifact is created.
 
 Reason: The bounded correction resolves the one failed count distinction without changing the primary candidate or result. Separating selection, query freeze, and population prevents the control from adapting its ontology or queries to populated answers.
+
+### PV-0009
+
+Date: 2026-09-02
+
+Plan version: 0.9.0
+
+Change: Applied D-0011 through D-0016. Replaced raster OCR with a pinned PDF text-layer reading, retired hand repair and LLM adequacy review, limited the experiment to five identities, isolated it on Core 1611944, made a fresh model session the sole population producer, and rebound queries to ontology types rather than a fixed graph closure.
+
+Reason: The retained OCR corrupted CO2 in question-critical text, the reviewer and hand repair introduced an experimenter-mediated result, the existing query binding fixed the graph before model population, and the shared checkout did not preserve the claimed Core baseline.
 
 ## Author decisions already expressed
 
@@ -221,6 +231,54 @@ Status: accepted
 Decision: Use a faithful raster-to-text reading emitter through the existing Malleus OCR evidence profile. Do not create a born-digital sibling profile for paper four.
 
 Source: Author instruction to assume the pending choices accepted, 2026-09-02.
+
+### D-0011
+
+Status: accepted
+
+Decision: Use the PDF text layer through pinned `pypdf==6.16.2`, freeze one selected-reading digest, rebuild the block projection, and rebind oracle locators in evaluator-only storage. Raster, Tesseract, and `malleus-ocr` leave the active paper path. This supersedes D-0006 and D-0010.
+
+Source: Author decision via overseer session, 2026-09-02
+
+### D-0012
+
+Status: accepted
+
+Decision: Re-run ontology acquisition in a fresh session from the clean selected reading. Return exact compiler diagnostics to that session at most twice. Do not hand-repair the result. Retire the recovery ontology and Tesseract-era result from active evidence.
+
+Source: Author decision via overseer session, 2026-09-02
+
+### D-0013
+
+Status: accepted
+
+Decision: Freeze exactly five identity groups: source PDF, selected reading, selected ontology, ledger head plus replay receipt, and query binding. Keep one retained artifact per producing step, add tests only for real error classes, copy model-visible inputs instead of pinning living shared files, stop hostile reviews, bump the plan only for author decisions, and target a manuscript of about 3,500 words.
+
+Source: Author decision via overseer session, 2026-09-02
+
+### D-0014
+
+Status: accepted
+
+Decision: Run the experiment in an isolated clean checkout of Core `1611944eb8856dbd4f25c2ea8bddbecdb970a3a3`. Never commit the PDF. Ignore `paper-v4/source/*.pdf` and `__pycache__/`.
+
+Source: Author decision via overseer session, 2026-09-02
+
+### D-0015
+
+Status: accepted
+
+Decision: Give a fresh population session the selected ontology, selected reading, generic recipe library, and four questions. Require one population file with a block locator per value. Permit one structural retry. Use no evaluator-authored population and no fallback. Count natural refusals as negative cases before adding planned synthetic mutations.
+
+Source: Author decision via overseer session, 2026-09-02
+
+### D-0016
+
+Status: accepted
+
+Decision: Remove the ontology adequacy rubric and reviewer. The compiler is the ontology gate. Record one evaluator acceptance event with ontology digest and actor id. Bind queries only to record types, relation types, and enum values. Run queries against replayed graph state, then score separately against the sealed oracle.
+
+Source: Author decision via overseer session, 2026-09-02
 
 ## Raw findings
 
@@ -1009,3 +1067,57 @@ Identities: The query binding is 8,424 bytes at `sha256:4eebc55bc86fa842d10bacc0
 Guard: Twelve query tests use a fictional sentinel graph. They verify exact input identities, graph closure, question order, public-API use, absence of source access, propagation of changed graph scalars and enums into output, and refusal of cardinality, context, and causal-topology mutations. Together with recovery selection and compilation guards, the focused gate passed 21 tests in 0.83 seconds; Ruff and formatting checks passed.
 
 Impact: Query authorship can no longer adapt to the population. Population may now begin against the one selected control digest. No document graph or query result exists at this entry.
+
+### E-0068, paper experiment isolated on the declared Core baseline
+
+Date: 2026-09-02
+
+Sources: worktree `/Users/luis/Projects/malleus-dev/.claude/worktrees/paper-v4-lean`, branch `codex/paper-v4-lean`, `.gitignore`, and initial paper boundary commit `6d685c5230d1b09cd2a140f94eb571aa37cf82a4` with tree `186bedcb829556997f18992a3573e0aabe8ffc27`.
+
+Observation: The paper directory and document-paper harness were moved out of the shared main checkout into a worktree created from exact Core commit `1611944eb8856dbd4f25c2ea8bddbecdb970a3a3`, tree `657ba6ce1be83064d104803ad5dad644d65b4352`. The PDF is ignored by `/paper-v4/source/*.pdf`; Python caches are ignored by the repository-wide `__pycache__/` rule. The initial isolated boundary was clean, excluded the PDF and all private files, and passed 29 focused active harness tests.
+
+Impact: D5 is complete. Later Core work and the shared main checkout cannot change the implementation under this experiment without an explicit baseline decision.
+
+### E-0069, PDF text-layer reading selected
+
+Date: 2026-09-02
+
+Sources: `pyproject.toml`, `text_layer_reading.py`, its focused test, the source manifest, and private `paper-v4-text-layer/selected-reading.json`.
+
+Observation: The active reader is `pypdf==6.16.2`, invoked as `PdfReader(strict=True)` followed by `PageObject.extract_text()`. The source digest and 11-page count are checked before extraction. Text correction is `NONE`; only CRLF and CR are normalized to LF. Wrapped lines are grouped until a sentence, blank, or page boundary, producing 186 stable blocks. Two builds were byte-identical. The selected reading digest is `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
+
+Raw quality check: The selected `pypdf` reading contains 31 literal `CO2` forms, 38 `CO` plus whitespace plus `2` forms, and zero `CO,` forms. A diagnostic run of host `pdftotext` produced 74 literal `CO2` forms, but that tool is not the selected dependency or retained reading. The paper must report the selected reader's result, not transfer the diagnostic count to it.
+
+Errors and guards: The first import failed because `pypdf` was absent. The exact dependency is now in the project research extra and runtime version drift refuses under a focused test. Direct `pytest` initially could not import the repository namespace; the project test path now includes the repository root, and both direct and module invocations pass. The inherited blank-line projection collapsed each extracted page into one locator during a dry run. The final sentence-boundary projector has a test that prevents wrapped support from splitting into per-line blocks or collapsing into one page block.
+
+Impact: D1 reading selection is complete. The earlier raster, Tesseract, and Malleus OCR artifacts do not support an active paper claim.
+
+### E-0070, sealed oracle locators rebound without changing answers
+
+Date: 2026-09-02
+
+Sources: the original sealed evaluator oracle, the selected text-layer reading, and private `paper-v4-evaluation/answer-oracle.json` in the isolated worktree.
+
+Observation: The four parsed answer objects are equal to the original sealed answer objects. The new evaluator-only oracle contains 22 value-to-block locators. Every locator resolves to one of the 186 selected-reading blocks, and the oracle's embedded selected-reading digest recomputes correctly.
+
+Impact: D1 locator rebinding is complete. The population model cannot see the answer key. Later scoring may use these answers and locators, but the oracle is not a sixth public experiment identity.
+
+### E-0071, pre-steer mechanisms retired from the active experiment
+
+Date: 2026-09-02
+
+Sources: `paper-v4/retired/pre-steer-experiment/`, `paper-v4/retired/tesseract-harness/`, and `paper-v4/retired/adequacy-review-harness/`.
+
+Observation: The raster OCR run, hand-authored recovery ontology, adequacy tasks and receipts, fixed 15-entity and 20-relation query binding, and answer-encoding recipe are retained under `paper-v4/retired/`. Their executable tests and harness modules are outside active test discovery. Existing private OCR files were left untouched. The active experiment directory retains only the four frozen competency questions until new D2 and D3 artifacts are produced.
+
+Impact: D2, D3, and D6 have no fallback to the old ontology, evaluator population, reviewer, or fixed graph closure. Historical ledger entries remain factual records of superseded work and are not current paper claims.
+
+### E-0072, later Core correction publication is coordination only
+
+Date: 2026-09-02
+
+Source: coordination from the Malleus Core task after its publication gate.
+
+Observation: Core published annotated research tag `research/small-shop-correction-replay-v1` at commit `e94f45c74475948dfebdc89247bfb070de0b778d`, tree `60f393403728aa25a256909618a94aba344d690b`, after local and remote gates. This coordinate arrived after D5 fixed the document experiment on Core `1611944`.
+
+Impact: The tag is not adopted as a paper experiment identity and does not replace the document baseline. It may be reconsidered only through a later author decision.
