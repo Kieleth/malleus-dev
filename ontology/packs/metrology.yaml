@@ -31,7 +31,7 @@ annotations:
             - quantity value
             - measurement unit
             - measurement uncertainty
-            - quantity kind
+            - kind of quantity
       invented_terms: []
 
 enums:
