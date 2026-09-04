@@ -32,6 +32,7 @@ from malleus.compiler import (
     create_structural_history,
     population_retention_events,
     prepare_population_change,
+    trace_population_record,
 )
 
 
@@ -314,6 +315,80 @@ def _run_admit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def _run_replay(arguments: argparse.Namespace) -> int:
+    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
+    Path(arguments.records_out).write_bytes(_canonical(replay.graph.export_records()))
+    Path(arguments.receipt_out).write_bytes(replay.receipt.canonical_bytes)
+    _emit(
+        {
+            "change_set_ids": [change.change_set_id for change in replay.change_sets],
+            "graph_state_digest": replay.graph.state_digest(),
+            "ledger_event_count": replay.ledger_event_count,
+            "receipt_identity": replay.receipt.identity,
+            "records_path": str(Path(arguments.records_out)),
+            "receipt_path": str(Path(arguments.receipt_out)),
+        }
+    )
+    return 0
+
+
+def _run_query(arguments: argparse.Namespace) -> int:
+    filters: dict[str, str] = {}
+    for item in arguments.where or ():
+        key, separator, value = item.partition("=")
+        if not separator or not key:
+            raise ValueError(f"a query filter must read KEY=VALUE: {item}")
+        if key in {"entity_type", "mixin"} or key in filters:
+            raise ValueError(f"query filter key is not available: {key}")
+        filters[key] = value
+    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
+    _emit(replay.graph.query(arguments.type, mixin=arguments.mixin, **filters))
+    return 0
+
+
+def _run_trace(arguments: argparse.Namespace) -> int:
+    replay = KnowledgeChangeHistory.reopen(arguments.ledger).replay()
+    trace = trace_population_record(replay, arguments.record_id)
+    record = trace.record_history
+    _emit(
+        {
+            "change_set_id": trace.change_set.change_set_id,
+            "contract_identity": trace.change_set.contract_identity,
+            "derivations": [_plain(item) for item in trace.derivations],
+            "evidence": [
+                {"record_id": item.record_id, "sha256": item.identity}
+                for item in trace.evidence
+            ],
+            "history_profile": {
+                "profile_id": trace.history_profile.profile_id,
+                "sha256": trace.history_profile.identity,
+            },
+            "population_plan": {
+                "plan_id": str(trace.population_plan["plan_id"]),
+                "sha256": trace.population_plan_identity,
+            },
+            "record_id": trace.record_id,
+            "record_type": record.operation.record_type,
+            "sources": [
+                {"record_id": item.record_id, "sha256": item.identity}
+                for item in trace.sources
+            ],
+            "superseded_by": record.superseded_by,
+            "supersedes_record_id": record.supersedes_record_id,
+            "valid_from": {
+                "kind": record.valid_from.kind,
+                "value": record.valid_from.value,
+            },
+            "valid_to": (
+                None
+                if record.valid_to is None
+                else {"kind": record.valid_to.kind, "value": record.valid_to.value}
+            ),
+        }
+    )
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="malleus-compiler", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -420,6 +495,36 @@ def _parser() -> argparse.ArgumentParser:
     )
     add_actor(admit)
 
+    replay = commands.add_parser(
+        "replay", help="reopen one history and write its export and receipt"
+    )
+    add_ledger(replay)
+    replay.add_argument(
+        "--records-out", required=True, help="export_records JSON output path"
+    )
+    replay.add_argument(
+        "--receipt-out", required=True, help="replay receipt bytes output path"
+    )
+
+    query = commands.add_parser(
+        "query", help="read the replayed graph through its public query signature"
+    )
+    add_ledger(query)
+    query.add_argument("--type", required=True, help="record type to read")
+    query.add_argument("--mixin", help="mixin every returned record must carry")
+    query.add_argument(
+        "--where",
+        action="append",
+        metavar="KEY=VALUE",
+        help="exact property filter compared as text; repeatable",
+    )
+
+    trace = commands.add_parser(
+        "trace", help="reach the retained inputs behind one accepted record"
+    )
+    add_ledger(trace)
+    trace.add_argument("--record-id", required=True, help="accepted record ID")
+
     return parser
 
 
@@ -430,6 +535,9 @@ _COMMANDS = {
     "capture": _run_capture,
     "populate": _run_populate,
     "admit": _run_admit,
+    "replay": _run_replay,
+    "query": _run_query,
+    "trace": _run_trace,
 }
 
 
