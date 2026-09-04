@@ -13,6 +13,9 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Per-assertion-time RED: `26859bc7e6ddee874e0586dfc1e3c3437f581704`
 - Corrected GREEN: `5cd15c286ef0c22015f7571e1bd1279f17a54a66`
 - Corrected GREEN tree: `2e8190ae0c58f7d85f27845d97aa9b6514f0fbf8`
+- Runnable-example RED: `d1ab24267fa92c7f198ad807a7268e6d17594a39`
+- Runnable-example GREEN: `17c4a8c64b597eb5dd5aaebf623c39ef8f721692`
+- Runnable-example GREEN tree: `873f7754cf51447335be0cbfce161204d1757e96`
 
 ## What changed
 
@@ -78,13 +81,32 @@ The regenerated exact outputs are:
 - evidence JSON SHA-256:
   `c8dd95737ad907cc787cea623f0b7a5400b607fe9c30e7f7c900720372fd5567`.
 
+## Runnable document example
+
+The checked-in inspection-note example now consumes its committed source and
+capture bytes directly. Tests no longer replace the profile identity or valid
+time in memory. The public path compiles those bytes, emits the checked-in
+plan, prepares the checked-in change set, admits it, reopens the ledger, and
+traces the accepted records back to the same retained bytes.
+
+Exact input identities are:
+
+- reading: `sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745`;
+- capture: `sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99`.
+
+The example generator now consumes the shipped P6 profile artifacts and the
+public LinkML compiler. Rerunning it reproduces the committed plan and change
+instead of restoring the retired five-field profile or an `INSTANT` batch
+timestamp.
+
 ## Mechanical evidence
 
 - Profile, document-adapter, public-trace, public-compiler, and public Small
-  Shop focused tests pass: 46 tests.
+  Shop focused tests pass: 48 tests.
 - The complete contract-compiler Pareto suite plus the public Small Shop run
-  passes: 336 tests.
-- Every Small Shop research test passes: 194 tests.
+  passes: 337 tests.
+- The complete Small Shop seam, including research runs, fixture validators,
+  public population, and contract revision, passes: 215 tests.
 - Tests reject the old grammar, extra or missing fields, invalid origin/genesis
   pairs, unknown origins and units, unordered or duplicate role roots, and
   ungrounded profiles.
@@ -96,6 +118,9 @@ The regenerated exact outputs are:
   domain time, malformed time values refuse, and public replay trace returns
   the exact evidence.
 - The shipped JSON files, not Python constants, own the three profile choices.
+- The exact committed reading, capture, plan, and change pass without fixture
+  mutation. Their source and capture file digests equal the identities used by
+  the public adapter.
 
 ## Non-claims
 
