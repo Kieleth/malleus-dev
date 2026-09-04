@@ -227,10 +227,11 @@ contract, mapping, sources, evidence, valid time, and accepted-state
 coordinates. It does not claim that each source member caused each individual
 operation.
 
-The newer public population path can go one level deeper. In the
-[contract-revision conformance fixture](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_contract_revision_v1/README.md),
-`trace_population_record(replay, "supplier-order-state:B:e7")` verifies and
-returns the retained `state-version` profile, population plan, four field
+The newer public population path can go one level deeper. The conformance
+fixture at
+`research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_contract_revision_v1/README.md`
+uses `trace_population_record(replay, "supplier-order-state:B:e7")` to verify
+and return the retained `state-version` profile, population plan, four field
 derivations, exact supplier-history source bytes, accepted change set, and the
 `B@e4` supersession link. The trace is rebuilt after reopening the ledger and
 does not write to it.
