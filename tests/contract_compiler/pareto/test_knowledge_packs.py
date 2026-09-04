@@ -130,6 +130,22 @@ def test_research_pack_carries_the_shared_assertion_modality() -> None:
     assert set(values) == ASSERTION_MODALITIES
 
 
+def test_metrology_uses_the_exact_vim_term_for_quantity_kind() -> None:
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    )
+    vocabularies = source["annotations"]["grounding"]["value"]["vocabularies"]
+    vim_terms = next(
+        item["borrowed_terms"]
+        for item in vocabularies
+        if item["vocabulary"].startswith("JCGM 200:2012")
+    )
+
+    assert "kind of quantity" in vim_terms
+    assert "quantity kind" not in vim_terms
+    assert "quantity_kind" in source["slots"]
+
+
 def test_research_observation_is_explicitly_grounded_in_sosa_ssn() -> None:
     source = yaml.safe_load(
         bundled_ontology_path("packs", "research.yaml").read_bytes()
