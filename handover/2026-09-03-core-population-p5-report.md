@@ -37,6 +37,22 @@ the current graph all reconstruct from the same JSONL history.
 `record_contract_revision`. The lower-level deterministic compiler remains
 available as `compile_contract_revision`.
 
+## Boundary classification
+
+The lowest affected boundary is the optional compiler-enabled
+semantic-history and replay profile. `ContractRevision` and
+`CONTRACT_REVISION_POLICY` are identified profile artifacts. The Python
+compiler, history executor, and public facade are the reference
+implementation. The test ontologies and Small Shop history are conformance
+fixtures. Selecting a domain ontology, deciding when it should change, and
+choosing a domain-history model remain adopter choices.
+
+This slice adds no base-protocol requirement. An adopter that does not select
+this optional profile receives no guarantee of compiled-contract revision or
+cross-contract replay. The current private-v0 grammar is executable by the
+Python reference implementation; cross-language interpreter parity is not
+claimed.
+
 ## Mechanical evidence
 
 - The RED commit collected eight tests and failed all eight because the
