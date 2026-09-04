@@ -120,6 +120,14 @@ _CITED_FIELDS = frozenset(_RITE["cited_fields"])
 _CITED_WITH_INVENTIONS_FIELDS = frozenset(_RITE["cited_with_inventions_fields"])
 _VOCABULARY_FIELDS = frozenset(_RITE["vocabulary_fields"])
 _NONE_FOUND_FIELDS = frozenset(_RITE["none_found_fields"])
+_ROOT_FORMS = "closed forms: " + " | ".join(
+    "+".join(str(field) for field in _RITE[name])
+    for name in ("cited_fields", "cited_with_inventions_fields", "none_found_fields")
+)
+_ENTRY_FORM = "closed form: " + "+".join(
+    str(field) for field in _RITE["vocabulary_fields"]
+)
+_ANNOTATION_FORM = "closed form: tag+value"
 
 
 @dataclass(frozen=True, slots=True)
@@ -181,7 +189,84 @@ def _nonblank(value: object, where: str) -> str:
     return value
 
 
-def _terms(value: object, where: str, *, nonempty: bool) -> tuple[str, ...]:
+@dataclass(frozen=True, slots=True)
+class _Defect:
+    """One ill-formed grounding position, its reason, and the form it must take."""
+
+    subject: str
+    ordinal: int
+    reason: PackGroundingRefusalReason
+    message: str
+    expected: str
+
+    @property
+    def order(self) -> tuple[str, int, str]:
+        return (self.subject, self.ordinal, self.message)
+
+    def render(self) -> str:
+        return f"{self.message} [{self.reason.name}] {self.expected}"
+
+
+def _note(
+    defects: list[_Defect],
+    subject: str,
+    ordinal: int,
+    reason: PackGroundingRefusalReason,
+    message: str,
+    expected: str,
+) -> None:
+    defects.append(_Defect(subject, ordinal, reason, message, expected))
+
+
+def _refuse_defects(defects: list[_Defect]) -> PackGroundingRefusal:
+    ordered = sorted(defects, key=lambda defect: defect.order)
+    return PackGroundingRefusal(
+        ordered[0].reason,
+        "grounding blocks are not accepted: "
+        + "; ".join(defect.render() for defect in ordered),
+    )
+
+
+def _string_mapping(value: object) -> Mapping[str, object] | None:
+    if not isinstance(value, Mapping) or not all(
+        isinstance(key, str) for key in value
+    ):
+        return None
+    return value
+
+
+def _check_text(
+    value: object,
+    where: str,
+    *,
+    subject: str,
+    ordinal: int,
+    expected: str,
+    defects: list[_Defect],
+) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        _note(
+            defects,
+            subject,
+            ordinal,
+            PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
+            f"{where} must be nonblank text",
+            expected,
+        )
+        return False
+    return True
+
+
+def _check_terms(
+    value: object,
+    where: str,
+    *,
+    nonempty: bool,
+    subject: str,
+    ordinal: int,
+    expected: str,
+    defects: list[_Defect],
+) -> tuple[str, ...] | None:
     if (
         not isinstance(value, list)
         or any(not isinstance(item, str) or not item.strip() for item in value)
@@ -189,118 +274,278 @@ def _terms(value: object, where: str, *, nonempty: bool) -> tuple[str, ...]:
         or (nonempty and not value)
     ):
         qualifier = "nonempty " if nonempty else ""
-        raise PackGroundingRefusal(
+        _note(
+            defects,
+            subject,
+            ordinal,
             PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
             f"{where} must be a {qualifier}unique string list",
+            expected,
         )
+        return None
     return tuple(value)
 
 
-def _vocabularies(value: object, subject: str) -> None:
+def _check_vocabularies(
+    value: object,
+    subject: str,
+    defects: list[_Defect],
+) -> None:
     where = f"{subject}.grounding.vocabularies"
     if not isinstance(value, list) or not value:
-        raise PackGroundingRefusal(
+        _note(
+            defects,
+            subject,
+            -1,
             PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
             f"{where} must be a nonempty list",
+            _ENTRY_FORM,
         )
-    seen: set[tuple[str, str]] = set()
+        return
+    seen: dict[tuple[str, str], int] = {}
     for ordinal, raw_vocabulary in enumerate(value):
-        vocabulary = _mapping(raw_vocabulary, f"{where}[{ordinal}]")
+        position = f"{where}[{ordinal}]"
+        vocabulary = _string_mapping(raw_vocabulary)
+        if vocabulary is None:
+            _note(
+                defects,
+                subject,
+                ordinal,
+                PackGroundingRefusalReason.MALFORMED_SOURCE,
+                f"{position} must be a mapping with string keys",
+                _ENTRY_FORM,
+            )
+            continue
         if set(vocabulary) != _VOCABULARY_FIELDS:
-            raise PackGroundingRefusal(
+            _note(
+                defects,
+                subject,
+                ordinal,
                 PackGroundingRefusalReason.GROUNDING_NOT_CLOSED,
-                f"{where}[{ordinal}] fields are not closed",
+                f"{position} fields are not closed",
+                _ENTRY_FORM,
             )
-        name = _nonblank(vocabulary["vocabulary"], f"{where}[{ordinal}].vocabulary")
-        url = _nonblank(
+            continue
+        named = _check_text(
+            vocabulary["vocabulary"],
+            f"{position}.vocabulary",
+            subject=subject,
+            ordinal=ordinal,
+            expected=_ENTRY_FORM,
+            defects=defects,
+        )
+        located = _check_text(
             vocabulary["vocabulary_url"],
-            f"{where}[{ordinal}].vocabulary_url",
+            f"{position}.vocabulary_url",
+            subject=subject,
+            ordinal=ordinal,
+            expected=_ENTRY_FORM,
+            defects=defects,
         )
-        if not urlsplit(url).scheme:
-            raise PackGroundingRefusal(
+        if located and not urlsplit(str(vocabulary["vocabulary_url"])).scheme:
+            _note(
+                defects,
+                subject,
+                ordinal,
                 PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
-                f"{where}[{ordinal}].vocabulary_url must be an absolute locator",
+                f"{position}.vocabulary_url must be an absolute locator",
+                _ENTRY_FORM,
             )
-        identity = (name, url)
-        if identity in seen:
-            raise PackGroundingRefusal(
-                PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
-                f"{where} repeats one vocabulary identity",
+            located = False
+        if named and located:
+            identity = (
+                str(vocabulary["vocabulary"]),
+                str(vocabulary["vocabulary_url"]),
             )
-        seen.add(identity)
-        _terms(
+            if identity in seen:
+                _note(
+                    defects,
+                    subject,
+                    ordinal,
+                    PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
+                    f"{position} repeats the vocabulary identity of "
+                    f"{where}[{seen[identity]}]",
+                    _ENTRY_FORM,
+                )
+            else:
+                seen[identity] = ordinal
+        _check_terms(
             vocabulary["borrowed_terms"],
-            f"{where}[{ordinal}].borrowed_terms",
+            f"{position}.borrowed_terms",
             nonempty=True,
+            subject=subject,
+            ordinal=ordinal,
+            expected=_ENTRY_FORM,
+            defects=defects,
         )
 
 
-def _grounding(annotations: object, subject: str) -> None:
+def _grounding_defects(annotations: object, subject: str) -> list[_Defect] | None:
+    """Collect every defect in one subject's grounding block.
+
+    ``None`` means the block is absent, which the caller reports as its own
+    reason. An empty list means the block is well formed.
+    """
+
     if annotations is None:
-        raise PackGroundingRefusal(
-            PackGroundingRefusalReason.GROUNDING_REQUIRED,
-            f"{subject} has no grounding annotation",
+        return None
+    defects: list[_Defect] = []
+    values = _string_mapping(annotations)
+    if values is None:
+        _note(
+            defects,
+            subject,
+            -1,
+            PackGroundingRefusalReason.MALFORMED_SOURCE,
+            f"{subject}.annotations must be a mapping with string keys",
+            _ANNOTATION_FORM,
         )
-    values = _mapping(annotations, f"{subject}.annotations")
+        return defects
     key = str(_RITE["annotation_key"])
     if key not in values:
-        raise PackGroundingRefusal(
-            PackGroundingRefusalReason.GROUNDING_REQUIRED,
-            f"{subject} has no grounding annotation",
+        return None
+    annotation = _string_mapping(values[key])
+    if annotation is None:
+        _note(
+            defects,
+            subject,
+            -1,
+            PackGroundingRefusalReason.MALFORMED_SOURCE,
+            f"{subject}.annotations.{key} must be a mapping with string keys",
+            _ANNOTATION_FORM,
         )
-    annotation = _mapping(values[key], f"{subject}.annotations.{key}")
+        return defects
     if set(annotation) != {"tag", "value"}:
-        raise PackGroundingRefusal(
+        _note(
+            defects,
+            subject,
+            -1,
             PackGroundingRefusalReason.GROUNDING_NOT_CLOSED,
             f"{subject} grounding annotation must contain exactly tag and value",
+            _ANNOTATION_FORM,
         )
+        return defects
     if annotation["tag"] != _RITE["annotation_tag"]:
-        raise PackGroundingRefusal(
+        _note(
+            defects,
+            subject,
+            -1,
             PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
             f"{subject} grounding annotation has the wrong tag",
+            _ANNOTATION_FORM,
         )
-    grounding = _mapping(annotation["value"], f"{subject}.grounding.value")
+    grounding = _string_mapping(annotation["value"])
+    if grounding is None:
+        _note(
+            defects,
+            subject,
+            -1,
+            PackGroundingRefusalReason.MALFORMED_SOURCE,
+            f"{subject}.grounding.value must be a mapping with string keys",
+            _ROOT_FORMS,
+        )
+        return defects
     fields = set(grounding)
     if fields in {_CITED_FIELDS, _CITED_WITH_INVENTIONS_FIELDS}:
-        _nonblank(grounding["area"], f"{subject}.grounding.area")
-        _nonblank(grounding["taxonomy"], f"{subject}.grounding.taxonomy")
-        _vocabularies(grounding["vocabularies"], subject)
-        invented = _terms(
+        _check_text(
+            grounding["area"],
+            f"{subject}.grounding.area",
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
+        )
+        _check_text(
+            grounding["taxonomy"],
+            f"{subject}.grounding.taxonomy",
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
+        )
+        _check_vocabularies(grounding["vocabularies"], subject, defects)
+        invented = _check_terms(
             grounding["invented_terms"],
             f"{subject}.grounding.invented_terms",
             nonempty=False,
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
         )
         has_search = fields == _CITED_WITH_INVENTIONS_FIELDS
-        if bool(invented) != has_search:
-            raise PackGroundingRefusal(
+        if invented is not None and bool(invented) != has_search:
+            _note(
+                defects,
+                subject,
+                -1,
                 PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
                 f"{subject} must pair invented terms with invention_search",
+                _ROOT_FORMS,
             )
         if has_search:
-            _nonblank(
+            _check_text(
                 grounding["invention_search"],
                 f"{subject}.grounding.invention_search",
+                subject=subject,
+                ordinal=-1,
+                expected=_ROOT_FORMS,
+                defects=defects,
             )
-        return
+        return defects
     if fields == _NONE_FOUND_FIELDS:
-        _nonblank(grounding["area"], f"{subject}.grounding.area")
-        _nonblank(grounding["taxonomy"], f"{subject}.grounding.taxonomy")
+        _check_text(
+            grounding["area"],
+            f"{subject}.grounding.area",
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
+        )
+        _check_text(
+            grounding["taxonomy"],
+            f"{subject}.grounding.taxonomy",
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
+        )
         if grounding["none_found"] is not True:
-            raise PackGroundingRefusal(
+            _note(
+                defects,
+                subject,
+                -1,
                 PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
                 f"{subject}.grounding.none_found must be literal true",
+                _ROOT_FORMS,
             )
-        _nonblank(grounding["search"], f"{subject}.grounding.search")
-        _terms(
+        _check_text(
+            grounding["search"],
+            f"{subject}.grounding.search",
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
+        )
+        _check_terms(
             grounding["invented_terms"],
             f"{subject}.grounding.invented_terms",
             nonempty=True,
+            subject=subject,
+            ordinal=-1,
+            expected=_ROOT_FORMS,
+            defects=defects,
         )
-        return
-    raise PackGroundingRefusal(
+        return defects
+    _note(
+        defects,
+        subject,
+        -1,
         PackGroundingRefusalReason.GROUNDING_NOT_CLOSED,
         f"{subject} grounding fields are not one supported closed form",
+        _ROOT_FORMS,
     )
+    return defects
 
 
 def _document(source: bytes) -> Mapping[str, object]:
@@ -447,25 +692,35 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
     source_id = _nonblank(document.get("id"), "schema.id")
     grounded: list[str] = []
     if role == "PACK":
-        _grounding(document.get("annotations"), source_id)
+        defects = _grounding_defects(document.get("annotations"), source_id)
+        if defects is None:
+            raise PackGroundingRefusal(
+                PackGroundingRefusalReason.GROUNDING_REQUIRED,
+                f"{source_id} has no grounding annotation",
+            )
+        if defects:
+            raise _refuse_defects(defects)
         grounded.append(source_id)
     else:
         classes = _mapping(document.get("classes", {}), "schema.classes")
         prefixes = _mapping(document.get("prefixes", {}), "schema.prefixes")
         missing: list[tuple[str, str]] = []
+        defects = []
         for name, raw_class in classes.items():
             body = _mapping(raw_class, f"classes.{name}")
             root_parent = _direct_root_parent(body.get("is_a"), prefixes)
             if root_parent is None:
                 continue
-            try:
-                _grounding(body.get("annotations"), str(name))
-            except PackGroundingRefusal as error:
-                if error.reason is PackGroundingRefusalReason.GROUNDING_REQUIRED:
-                    missing.append((str(name), root_parent))
-                    continue
-                raise
+            found = _grounding_defects(body.get("annotations"), str(name))
+            if found is None:
+                missing.append((str(name), root_parent))
+                continue
+            if found:
+                defects.extend(found)
+                continue
             grounded.append(str(name))
+        if defects:
+            raise _refuse_defects(defects)
         if missing:
             detail = "; ".join(
                 f"{name} extends {parent}" for name, parent in sorted(missing)
