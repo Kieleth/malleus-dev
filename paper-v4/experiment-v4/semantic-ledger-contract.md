@@ -59,7 +59,7 @@ ordinary `CAUSES_EVENT` relation. If replay exposes only that unqualified edge,
 the graph has flattened a claim about a hypothesis into an apparent domain
 fact.
 
-The full profile must select and enforce one queryable representation:
+The design space contained three queryable representations:
 
 1. Every projected record licensed by a source assertion carries its modality
    and attribution.
@@ -68,10 +68,11 @@ The full profile must select and enforce one queryable representation:
 3. Modality remains in retained evidence, and the public read boundary exposes
    a typed graph-to-assertion provenance join.
 
-An optional ontology mixin is not an enforcement rule. The selected contract
-must either preserve the qualification or refuse the proposal before
-admission. The minimum test begins with one `HYPOTHESISED` capture and proves a
-qualified replay query or the typed refusal.
+An optional ontology mixin is not an enforcement rule. P6 selects the third
+representation. The capture retains modality, and
+`trace_population_record` joins an accepted replayed record to the exact
+assertion that licensed it. A paper query that reports epistemic status must
+include that trace. A bare domain edge is not enough.
 
 ## What the three prior producers established
 
@@ -128,7 +129,7 @@ Until those pieces are frozen, paper work may refine the run manifest,
 isolation checks, and manuscript explanation. It must not create v4 population
 facts, rebind the selected v2 result, or claim that the new profile executed.
 
-## KISS cut for author review
+## Accepted KISS cut
 
 The lean candidate is one document, one default single-session v4 loop, and no
 more than the revision rounds produced naturally by typed gaps. The existing
@@ -136,5 +137,4 @@ three-producer comparison remains diagnostic background and does not need to be
 rerun under v4 for the first paper. The staged-session variant and a new
 multi-producer matrix can move to follow-on work.
 
-This is a provisional scope recommendation. It does not change the master plan
-until the author accepts it.
+The author accepted this cut in E-0100. It is the active v4 execution boundary.

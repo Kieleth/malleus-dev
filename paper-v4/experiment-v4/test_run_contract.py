@@ -9,6 +9,7 @@ CONTRACT_PATH = Path(__file__).with_name("run-contract.json")
 ROOT = Path(__file__).resolve().parents[2]
 ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
 ARXIV_README = ROOT / "paper-v4" / "arxiv" / "README.md"
+MASTER_PLAN = ROOT / "paper-v4" / "paper-master-plan.md"
 
 
 def _contract() -> dict[str, object]:
@@ -65,7 +66,7 @@ def test_source_assertion_profile_preserves_modality_or_refuses() -> None:
         "composition": "ONE_ATOMIC_CAPTURE_BATCH",
         "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
         "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
-        "modality_rule": "QUERYABLE_OR_TYPED_REFUSAL",
+        "modality_rule": "REPLAY_RECORD_TO_RETAINED_ASSERTION_TRACE_REQUIRED",
     }
 
 
@@ -137,3 +138,28 @@ def test_publication_instructions_do_not_name_an_ephemeral_host_environment() ->
     assert (
         '"$malleus_paper_env/bin/python" paper-v4/run_active_tests.py' in instructions
     )
+
+
+def test_master_plan_describes_only_the_active_v4_execution_boundary() -> None:
+    plan = MASTER_PLAN.read_text(encoding="utf-8")
+    plain = " ".join(plan.split())
+
+    stale_active_claims = {
+        "A separate fresh model later proposes",
+        "with those questions visible",
+        "fixed after ontology compilation and before population",
+        "A **query** is a deterministic graph read fixed before population",
+        "GraphRecipe lowering, document validation, queries, and the experiment runner remain paper-local",
+    }
+    for claim in stale_active_claims:
+        assert claim not in plain
+
+    required_v4_claims = {
+        "one fresh single-session producer loop",
+        "withheld until replay",
+        "bound only after replay",
+        "one atomic capture batch",
+        "trace_population_record",
+    }
+    for claim in required_v4_claims:
+        assert claim in plain

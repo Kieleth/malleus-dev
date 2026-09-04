@@ -1635,3 +1635,37 @@ Final rule: The shipped profile at `sha256:2317d88fd236fb63d5f4b68262619de6b5874
 Verification: The exact committed example generator reproduced its raw reading, capture, plan, change, census, and profile artifacts and left the detached checkout clean. The complete Pareto and ledger gate passed 497 tests. No remaining P6 seam request exists.
 
 Impact: E-0100's `ASSERTION` shorthand is superseded. P6 is verified. The v4 run remains blocked only on P7 grounded packs plus the grounding rite and P8's nascent-project playbook.
+
+### E-0107, active v4 prose is rebound to the accepted execution contract
+
+Date: 2026-09-04
+
+Sources: author decision E-0100; the v4 run contract; audited Core P6 commit
+`573c45b82725d6f444b70e5ff193302dac883e7b`, tree
+`6704031dea824572b4d7163ba477c33175397fe7`; and the public
+`trace_population_record` seam.
+
+Observation: The machine-readable v4 contract already required one
+question-blind producer loop and post-replay query binding, but active master
+plan prose still described the selected v2 path: two producer sessions,
+question-visible population, pre-population query binding, private history, and
+paper-local GraphRecipe lowering. Those statements contradicted E-0100 and the
+verified public P6 boundary.
+
+Correction: Active v4 prose now names one fresh single-session producer loop,
+one atomic capture batch, questions withheld until replay, terminal-change-only
+admission, public Core population and replay calls, and a required replay
+record-to-retained-assertion trace for epistemic status. Historical v1 and v2
+results remain unchanged. The five v2 identity groups remain selected until a
+complete v4 run replaces only ontology, ledger plus replay receipt, and query
+binding identities.
+
+Guard: A focused consistency test first failed on both the stale plan language
+and the broad `QUERYABLE_OR_TYPED_REFUSAL` modality placeholder. It now rejects
+those superseded active-path statements and requires the accepted v4 boundary.
+The focused contract gate passes 9 tests; the complete active paper gate passes
+198 tests.
+
+Boundary: This entry records no new author decision and does not bump the master
+plan version. It does not bind unfinished P7 or P8 bytes, create population
+facts, alter selected v2 evidence, or start the producer run.

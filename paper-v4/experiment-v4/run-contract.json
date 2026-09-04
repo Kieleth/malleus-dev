@@ -37,7 +37,7 @@
     "composition": "ONE_ATOMIC_CAPTURE_BATCH",
     "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
     "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
-    "modality_rule": "QUERYABLE_OR_TYPED_REFUSAL"
+    "modality_rule": "REPLAY_RECORD_TO_RETAINED_ASSERTION_TRACE_REQUIRED"
   },
   "producer": {
     "session": "FRESH_SINGLE_SESSION",
