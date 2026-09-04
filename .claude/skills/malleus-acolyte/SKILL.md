@@ -136,10 +136,10 @@ operating manual and this skill is its enforcement arm.
 
 Use this path when the project has no accepted domain schema or semantic
 history yet. Every generated ontology, record set, and population is a
-proposal, not accepted knowledge. Do not ask for or accept competency questions,
-answer keys, query bindings, or evaluation criteria as inputs to ontology
-construction or population. They may inspect the replayed graph only after the
-population is frozen.
+proposal, not accepted knowledge. Downstream assessment material is not an input
+to ontology construction or population. It may inspect the replayed graph only
+after the population is frozen. Refresh the Codex-installed copy before starting:
+`malleus-inquisitor install-skills --agent codex --project .`.
 
 1. **Retain the source boundary.** Identify the exact source bytes and their
    locators. Model only concepts, properties, relations, values, and distinctions
@@ -156,7 +156,7 @@ population is frozen.
    `metrology`, `chronology`, and `research` packs. Import only what the domain
    needs. Check a copied pack with `malleus-inquisitor pack-conformance`; extend
    an existing pack class through a new subclass rather than weakening its
-   surface.
+   surface. Always extend a pack concept before extending root.
 
    Before you propose a concept that could belong to a pack, ground it. Name the
    area of knowledge it comes from in an existing taxonomy (the Dewey Decimal
@@ -171,7 +171,10 @@ population is frozen.
    identifiers, conclusions, and wording are data, not class, slot, relation, or
    enum names. Keep protocol, provenance, locators, ledger, policy, and query
    machinery out of the domain ontology. Labels identify records; they never
-   carry an otherwise untyped assertion.
+   carry an otherwise untyped assertion. The admissible population surface is
+   every concrete Entity and Relation type in the compiled contract. Never shrink
+   that surface to types selected by a later query. Event and Signal population
+   currently refuses at the public governed boundary.
 5. **Run the structural gates and compile exact sources.** Run
    `malleus-inquisitor pack-grounding schema/your_project.yaml --role PROJECT`.
    If a pack was copied, also run its conformance command. Then run
@@ -186,24 +189,32 @@ population is frozen.
    `adapt_document_assertions`. For structured sources, write a source-specific
    adapter that emits the same neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
-   operation.
+   operation. Inspect the returned `canonical_census_bytes`; continue reviewing
+   and capturing source-supported material across `UNTOUCHED` blocks. If the
+   declared capture remains partial, retain that limitation and never call it
+   complete.
 7. **Compile, then admit.** Pass the proposed plan to
    `compile_population_plan`, then `prepare_population_change`, then admit it
-   through `KnowledgeChangeHistory`. The plan must bind its compiled contract, history
-   profile, adapter, source bytes, evidence, records, field-level derivations,
-   typed gaps, and valid time. `NO_DOMAIN_CHANGE` is a valid outcome and never
-   triggers fallback population. A refusal changes no accepted history.
+   with `history.admit(...)` through `KnowledgeChangeHistory`. The plan must bind
+   its compiled contract, history profile, adapter, source bytes, evidence,
+   records, field-level derivations, typed gaps, and valid time.
+   `NO_DOMAIN_CHANGE` is a valid outcome and never triggers fallback population.
+   A refusal changes no accepted history.
 8. **Reopen, replay, and inspect.** Reopen the history from its retained ledger,
-   replay the graph, query through the graph's public read methods, and use
-   `trace_population_record` to reach the exact plan, source, capture, and field
-   derivations behind an accepted record. Do not call a structurally valid record
-   true merely because it was admitted.
-9. **Grow only from recorded gaps.** If typed gaps cluster around a missing
-   class, optional slot, or enum value, propose an additive ontology revision,
-   pass the prior and proposed contracts to `compile_contract_revision`, record
-   the migration receipt, and repeat from the retained source. Reach for a pack
-   before a new root concept. Do not silently narrow or delete a definition that
-   already has instances.
+   using `KnowledgeChangeHistory.reopen(...)`, replay the graph, query through the
+   graph's public read methods, and use `trace_population_record` to reach the
+   exact plan, source, capture, and field derivations behind an accepted record.
+   Do not call a structurally valid record true merely because it was admitted.
+9. **Grow only from recorded gaps.** Keep propose, populate, refuse or record
+   gaps, revise, and repopulate in one working session by default. Set the limit
+   before the loop starts: at most two additive revision rounds. If typed gaps
+   cluster around a missing class, optional slot, or enum value, propose an
+   additive ontology revision, pass the prior and proposed contracts to
+   `compile_contract_revision`, record the migration receipt, and repeat from
+   the retained source. Reach for a pack before a new root concept. Do not
+   silently narrow or delete a definition that already has instances. A stricter
+   deployment may split stages between sessions that exchange only retained
+   ledger artifacts.
 10. **Stop honestly.** Stop when another addition would require invention.
     Preserve incomplete captures, gaps, and typed refusals as results. Do not add
     a fallback mapper, hand-built accepted state, or query-shaped vocabulary to
