@@ -81,7 +81,7 @@ PUBLIC_GUIDE_ROOT_IMPORTS = (
     "bundled_ontology_path",
     "stage_subgraph",
 )
-PUBLIC_GUIDE_MODULE_IMPORTS = {"malleus.compiler"}
+PUBLIC_GUIDE_MODULE_IMPORTS = {"malleus.compiler", "malleus.inquisition"}
 PUBLIC_IMPORT_TARGETS = {"malleus", "malleus.OntologyRegistry"}
 PROTOCOL_BOUNDARY_ROLES = (
     "PROTOCOL_INVARIANT",
@@ -260,8 +260,8 @@ APPROVED_REFERENCE_SOURCE = (
     "# Current public API reference\n"
     "\n"
     "This page exercises Sphinx autodoc and autosummary against the public package\n"
-    "root, migration module, and narrow compiler facade. It does not promote private\n"
-    "compiler stages or CLI implementation modules.\n"
+    "root, migration module, narrow compiler facade, and pack-grounding checker. It\n"
+    "does not promote private compiler stages or CLI implementation modules.\n"
     "\n"
     "`compile_population_plan` raises `PopulationPlanRefusal` with reason\n"
     "`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or\n"
@@ -278,6 +278,10 @@ APPROVED_REFERENCE_SOURCE = (
     "`KnowledgeChangeHistory.compose_contract_revision` derives an additive\n"
     "contract revision from two compiled contracts. The current policy admits added\n"
     "classes, slots, and enum values and refuses added imports.\n"
+    "\n"
+    "`validate_pack_grounding` checks the closed provenance annotation on an\n"
+    "optional knowledge pack or project ontology. It checks citation structure, not\n"
+    "the intellectual suitability of a cited vocabulary.\n"
     "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
@@ -309,6 +313,12 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.DocumentAssertionCompilation\n"
     "   malleus.compiler.DocumentAssertionRefusal\n"
     "   malleus.compiler.DocumentAssertionRefusalReason\n"
+    "   malleus.inquisition\n"
+    "   malleus.inquisition.validate_pack_grounding\n"
+    "   malleus.inquisition.PackGroundingReceipt\n"
+    "   malleus.inquisition.PackGroundingRefusal\n"
+    "   malleus.inquisition.PackGroundingRefusalReason\n"
+    "   malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY\n"
     "\n"
     ".. automodule:: malleus\n"
     "\n"
@@ -370,6 +380,18 @@ APPROVED_REFERENCE_SOURCE = (
     ".. autoclass:: malleus.compiler.DocumentAssertionRefusal\n"
     "\n"
     ".. autoclass:: malleus.compiler.DocumentAssertionRefusalReason\n"
+    "\n"
+    ".. automodule:: malleus.inquisition\n"
+    "\n"
+    ".. autofunction:: malleus.inquisition.validate_pack_grounding\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingReceipt\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingRefusalReason\n"
+    "\n"
+    ".. autodata:: malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY\n"
     "```\n"
 ).encode()
 
@@ -1281,7 +1303,17 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.DocumentAssertionRefusal",
         "malleus.compiler.DocumentAssertionRefusalReason",
     )
-    class_ids = ontology_class_ids + migration_class_ids + compiler_class_ids
+    inquisition_class_ids = (
+        "malleus.inquisition.PackGroundingReceipt",
+        "malleus.inquisition.PackGroundingRefusal",
+        "malleus.inquisition.PackGroundingRefusalReason",
+    )
+    class_ids = (
+        ontology_class_ids
+        + migration_class_ids
+        + compiler_class_ids
+        + inquisition_class_ids
+    )
     function_ids = (
         "malleus.compiler.compile_linkml_contract",
         "malleus.compiler.compile_population_plan",
@@ -1289,7 +1321,9 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
+        "malleus.inquisition.validate_pack_grounding",
     )
+    data_ids = ("malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY",)
     method_ids = (
         "malleus.OntologyRegistry.source_closure",
         "malleus.migration.MigrationVerifier.verify",
@@ -1341,13 +1375,21 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
             ),
         }
     )
+    aliases.update(
+        {
+            f"malleus.inquisition.pack_grounding.{name.rsplit('.', 1)[-1]}": name
+            for name in inquisition_class_ids
+        }
+    )
     module_ids = {
         "malleus": "module-malleus",
         "malleus.compiler": "module-malleus.compiler",
+        "malleus.inquisition": "module-malleus.inquisition",
     }
     object_types = {
         **dict.fromkeys(class_ids, "class"),
         **dict.fromkeys(function_ids, "function"),
+        **dict.fromkeys(data_ids, "data"),
         **dict.fromkeys(method_ids, "method"),
     }
     assert set(objects) == {*module_ids, *object_types, *aliases}
@@ -1412,6 +1454,11 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.DocumentAssertionCompilation",
         "malleus.compiler.DocumentAssertionRefusal",
         "malleus.compiler.DocumentAssertionRefusalReason",
+        "malleus.inquisition.validate_pack_grounding",
+        "malleus.inquisition.PackGroundingReceipt",
+        "malleus.inquisition.PackGroundingRefusal",
+        "malleus.inquisition.PackGroundingRefusalReason",
+        "malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY",
     )
     assert [(node.get("objtype"), node.get("classes")) for node in descriptions] == [
         (object_types[identity], ["py", object_types[identity]])
@@ -1425,12 +1472,13 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
     assert '<table class="autosummary longtable docutils align-default">' in rendered
     for node_id in module_ids.values():
         assert f'id="{node_id}"' in rendered
-    for identity in (*class_ids, *function_ids):
+    for identity in (*class_ids, *function_ids, *data_ids):
         assert f'href="#{identity}"' in rendered
     for identity in signature_ids:
         assert f'id="{identity}"' in rendered
     assert "PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED" in rendered
     assert "Captured assertions remain evidence" in rendered
+    assert "checks citation structure" in rendered
     assert "malleus.compiler_cli" not in rendered
     assert 'class="py class"' in rendered
     assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered
@@ -2109,9 +2157,15 @@ def test_from_malleus_import_allows_only_the_current_guide_root_objects() -> Non
 
 
 def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
-    assert PUBLIC_GUIDE_MODULE_IMPORTS == {"malleus.compiler"}
-    allowed = ast.parse("from malleus.compiler import compile_linkml_contract")
-    assert _forbidden_example_operations(allowed) == []
+    assert PUBLIC_GUIDE_MODULE_IMPORTS == {
+        "malleus.compiler",
+        "malleus.inquisition",
+    }
+    for source in (
+        "from malleus.compiler import compile_linkml_contract",
+        "from malleus.inquisition import validate_pack_grounding",
+    ):
+        assert _forbidden_example_operations(ast.parse(source)) == []
 
     for module in (
         "malleus._contract_pipeline",

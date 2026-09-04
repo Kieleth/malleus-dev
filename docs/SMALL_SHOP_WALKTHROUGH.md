@@ -20,7 +20,7 @@ The original showcase below remains frozen evidence. A newer sibling
 [public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
 now sends the same complete five-stage dataset through `malleus.compiler` using
 five canonical neutral population plans. It also records one additive ontology
-revision, reopens one history, and verifies every current and superseded record
+revision, reopens one history, and traces every current and superseded record
 back to its retained plan, field derivations, source bytes, and mapping bytes.
 
 ## 1. Start with controlled source bytes

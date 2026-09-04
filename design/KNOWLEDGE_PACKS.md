@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. Nothing here is implemented. Sections marked "open" are not decided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, and structural grounding rite are implemented. Sections marked "open" remain undecided.
 
 ## Why
 

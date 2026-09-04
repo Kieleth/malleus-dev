@@ -162,14 +162,11 @@ def test_research_grounding_assigns_only_supported_term_groups() -> None:
     )
     grounding = source["annotations"]["grounding"]["value"]
     vocabularies = {
-        item["vocabulary"]: item["borrowed_terms"]
-        for item in grounding["vocabularies"]
+        item["vocabulary"]: item["borrowed_terms"] for item in grounding["vocabularies"]
     }
 
     assert vocabularies["W3C SOSA/SSN"] == ["Observation", "Sample"]
-    assert vocabularies["JCGM 200:2012 (VIM), 3rd edition"] == [
-        "measuring instrument"
-    ]
+    assert vocabularies["JCGM 200:2012 (VIM), 3rd edition"] == ["measuring instrument"]
     assert vocabularies["OECD Frascati Manual 2015"] == [
         "research and experimental development",
         "investigation",

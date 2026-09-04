@@ -80,6 +80,16 @@ yet interpret arbitrary projection programs from them. Contract revision is
 additive only; it is not a general ontology migration or import-admission
 mechanism. See `contract_compiler/index.md`.
 
+Three optional, grounded knowledge packs also ship: `metrology`, `chronology`,
+and `research`. They provide reusable mixins, reference classes, and enums
+between the root primitives and a project ontology. A closed, content-addressed
+grounding rite checks that borrowed term groups name their vocabulary and
+locator, or that a root-extending project class records a bounded unsuccessful
+search. The rite checks structure only; it does not judge a citation's quality.
+Pack grounding is retained provenance and does not alter semantic fact
+identity. Packs remain adopter choices and are never required by the base
+protocol.
+
 ## Implemented
 
 - Stage 2: closed-world ontology and typed-graph validation

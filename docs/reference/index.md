@@ -1,8 +1,8 @@
 # Current public API reference
 
 This page exercises Sphinx autodoc and autosummary against the public package
-root, migration module, and narrow compiler facade. It does not promote private
-compiler stages or CLI implementation modules.
+root, migration module, narrow compiler facade, and pack-grounding checker. It
+does not promote private compiler stages or CLI implementation modules.
 
 `compile_population_plan` raises `PopulationPlanRefusal` with reason
 `PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or
@@ -19,6 +19,10 @@ read-only and refuses to guess when a plan is absent or inconsistent.
 `KnowledgeChangeHistory.compose_contract_revision` derives an additive
 contract revision from two compiled contracts. The current policy admits added
 classes, slots, and enum values and refuses added imports.
+
+`validate_pack_grounding` checks the closed provenance annotation on an
+optional knowledge pack or project ontology. It checks citation structure, not
+the intellectual suitability of a cited vocabulary.
 
 ```{eval-rst}
 .. autosummary::
@@ -50,6 +54,12 @@ classes, slots, and enum values and refuses added imports.
    malleus.compiler.DocumentAssertionCompilation
    malleus.compiler.DocumentAssertionRefusal
    malleus.compiler.DocumentAssertionRefusalReason
+   malleus.inquisition
+   malleus.inquisition.validate_pack_grounding
+   malleus.inquisition.PackGroundingReceipt
+   malleus.inquisition.PackGroundingRefusal
+   malleus.inquisition.PackGroundingRefusalReason
+   malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY
 
 .. automodule:: malleus
 
@@ -111,4 +121,16 @@ classes, slots, and enum values and refuses added imports.
 .. autoclass:: malleus.compiler.DocumentAssertionRefusal
 
 .. autoclass:: malleus.compiler.DocumentAssertionRefusalReason
+
+.. automodule:: malleus.inquisition
+
+.. autofunction:: malleus.inquisition.validate_pack_grounding
+
+.. autoclass:: malleus.inquisition.PackGroundingReceipt
+
+.. autoclass:: malleus.inquisition.PackGroundingRefusal
+
+.. autoclass:: malleus.inquisition.PackGroundingRefusalReason
+
+.. autodata:: malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY
 ```
