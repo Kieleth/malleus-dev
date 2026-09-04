@@ -380,7 +380,11 @@ def validate_pack_conformance(
     reference_receipt = validate_pack_grounding(reference, role="PACK")
     source_document = _document(source)
     reference_document = _document(reference)
-    missing: list[str] = []
+    missing = _missing_surface(
+        reference_document.get("imports", []),
+        source_document.get("imports", []),
+        "imports",
+    )
     for section in ("classes", "slots", "enums"):
         reference_declarations = _mapping(
             reference_document.get(section, {}), f"reference.{section}"
