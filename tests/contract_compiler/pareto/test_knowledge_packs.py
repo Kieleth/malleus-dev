@@ -516,6 +516,32 @@ def test_project_direct_root_extension_requires_its_own_grounding() -> None:
     )
 
 
+def test_project_grounding_reports_every_ungrounded_direct_root_at_once() -> None:
+    api = _inquisition()
+    source = yaml.safe_load(_source())
+    source["classes"] = {
+        "GeologicFeature": {"is_a": "Entity"},
+        "EarthMaterial": {"is_a": "Entity"},
+        "GeologicOccurrence": {"is_a": "Event"},
+    }
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(
+            yaml.safe_dump(source, sort_keys=False).encode(),
+            role="PROJECT",
+        )
+
+    assert (
+        caught.value.reason
+        is api.PackGroundingRefusalReason.DIRECT_ROOT_GROUNDING_REQUIRED
+    )
+    assert caught.value.detail == (
+        "project classes extend Malleus roots without grounding: "
+        "EarthMaterial extends Entity; GeologicFeature extends Entity; "
+        "GeologicOccurrence extends Event"
+    )
+
+
 @pytest.mark.parametrize("prefix", ["malleus", "root"])
 def test_project_malleus_curie_root_extension_requires_its_own_grounding(
     prefix: str,
