@@ -1996,3 +1996,31 @@ Small Shop admission bytes. A later successful run requires a new frozen paper
 contract bound to the corrected immutable Core coordinate after independent
 audit. Questions, ontology semantics, capture, query binding, and human
 inspection remain paper-owned.
+
+### E-0118, the lean v4 manuscript core is drafted without result substitution
+
+Date: 2026-09-04
+
+Source: `paper-v4/manuscript-v4-working.md` at
+`sha256:e685d1bf0157fc4791be79659a59f162225eea864974b5b2acc2fa84bb6ec09c`
+before support-document status edits.
+
+Decision: Draft a separate v4 manuscript instead of patching the selected v2
+manuscript paragraph by paragraph. The 2,525-word working file contains the
+stable problem, protocol, semantic-ledger distinction, experiment controls,
+failed first-run account, related-work boundary, and limitations. Exact result
+fields remain visibly bracketed. It is not yet the selected manuscript and does
+not alter the v2 publication consistency guard.
+
+KISS cut: Define ontology, change set, ledger, replay, locator, and query once.
+Use one short document-versus-Small-Shop contrast to show that ontology
+vocabulary and the meaning of a change are different contracts. Keep the old
+three-producer comparison as design history only. Move Core audit chronology,
+RED/GREEN counts, retired scorer history, environment detail, and full hashes
+out of the main paper.
+
+Cross-model evidence: The retained Sonnet 5 and Opus 5 runs support the need for
+typed gaps and modality-preserving trace, because they recorded losses around
+ranges, aggregate counts, and hypotheses. They predate packs, the full history
+profile, and whole-reading capture, and their population prompts saw the four
+questions. They therefore motivate v4 but cannot validate it.

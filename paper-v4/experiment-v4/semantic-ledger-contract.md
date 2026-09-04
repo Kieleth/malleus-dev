@@ -119,15 +119,20 @@ adding assertion metadata to every domain record. It does not make the graph
 edge self-qualifying, so paper queries that report epistemic status must execute
 and display that verified join.
 
-The remaining Core pieces are frozen. P7 supplies the grounded metrology,
+The first-run Core pieces are frozen. P7 supplies the grounded metrology,
 chronology, and research packs at Core commit
 `465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`. P8 supplies the generic
 nascent-project playbook at Core commit
 `6488ddbfc599e8899d269f8794810f352a5d1fe0`, with installed skill digest
 `sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`.
 Both passed immutable paper audits. The isolated paper branch merged that exact
-P8 baseline at `f8d96123f86b2af41d9c67353f952d56565cf6af`, so the v4 producer gate is
-open. V2 remains selected until the complete v4 run passes.
+P8 baseline at `f8d96123f86b2af41d9c67353f952d56565cf6af`. The first v4 producer run
+then froze as a structural refusal: fail-fast grounding diagnostics named one
+direct-root class per pass and exhausted the two-return budget. The same audit
+found that a fresh adopter still needed fixture-local protocol bytes and
+caller-asserted check outcomes to admit governed history. Core classified both
+as generic adopter gaps. A separate rerun waits for their corrected immutable
+boundary. V2 remains selected until a complete v4 run passes.
 
 ## Accepted KISS cut
 

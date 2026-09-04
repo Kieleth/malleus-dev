@@ -1,7 +1,8 @@
 # v4 brief-to-skill map
 
-Status: paper-owned input to the future Malleus nascent-project playbook. It does
-not define a Core contract and is not an experiment result.
+Status: paper-owned input incorporated into the shipped Malleus
+nascent-project playbook at the frozen P8 coordinate. It does not define a Core
+contract and is not an experiment result.
 
 Source briefs:
 

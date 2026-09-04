@@ -4,14 +4,15 @@ Version: 1.2.0
 
 Date: 2026-09-04
 
-Status: corrected v2 remains the selected evidence. The author has authorized one
-KISS v4 document run. Core P6 verifies the `source-assertion` history profile
-and public replay-to-source trace. P7 verifies the three grounded optional
-packs and their grounding and conformance rites. P8 verifies the installed
-nascent-project playbook. The paper has merged the exact P8 Core baseline and
-the producer gate is open. V4 uses one fresh single-session producer loop,
-typed gaps, and no question input before replay. It supersedes v2 only if the
-run, inspection, reproduction, and paper gates all pass.
+Status: corrected v2 remains the selected evidence. The first KISS v4 producer
+run is frozen as a structural refusal after three fail-fast grounding failures
+exhausted its two-diagnostic budget. It produced no accepted ontology or
+population. Core classified aggregate grounding diagnostics and a neutral
+governed-history admission path as generic adopter gaps and is correcting them.
+A separate v4 rerun requires a new immutable Core coordinate and frozen run
+contract. It will keep one fresh single-session producer loop, typed gaps, and
+no question input before replay. V4 supersedes v2 only if the run, inspection,
+reproduction, and paper gates all pass.
 
 ## Objective
 
@@ -63,7 +64,7 @@ a second empirical case. Its research milestone is annotated tag
 `research/small-shop-correction-replay-v1`, tag object
 `449ba25964a88ead86cc1aec337be1631cad9471`, at commit
 `e94f45c74475948dfebdc89247bfb070de0b778d`. The v4 execution checkout is
-bound to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+first-run execution was bound to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
 `6fc5e585e5058e7376ea1aef96fcb49b59107e5e`, merged only into the isolated
 paper branch at paper commit `f8d96123f86b2af41d9c67353f952d56565cf6af`.
 P6 passed at commit
@@ -130,18 +131,24 @@ The retired answer key remains sealed historical material and leaves the active 
    pinned `pypdf==6.16.2` text-layer path reproduces 186 blocks across 11 pages
    at the frozen source and reading digests. Raster OCR and Tesseract remain
    retired from the paper path.
-2. **Core execution gate, complete.** P6 supplies the audited public
+2. **First-run Core execution gate, complete.** P6 supplies the audited public
    `source-assertion` profile and replay-to-source trace. P7 supplies the
    audited metrology, chronology, and research packs plus mechanical grounding
    and conformance. P8 supplies the audited generic nascent-project playbook.
-   The paper is bound to the exact immutable P8 coordinate above.
-3. **One producer loop, active.** One fresh session receives only the selected
+   The failed run remains bound to the exact immutable P8 coordinate above.
+3. **First producer loop, refused and frozen.** One fresh session received only the selected
    reading, frozen Core playbook, shipped profiles, and shipped packs. It first
    proposes and compiles the ontology. The runner may return typed compiler
    diagnostics at most twice. One evaluator event accepts the compiled ontology
-   digest. The same session then authors the document capture and neutral
-   population plan. Competency questions remain withheld throughout.
-4. **Typed-gap revision, pending if produced.** A source-located gap may trigger
+   digest. Attempts 1 through 3 refused on successive direct-root grounding
+   subjects because the public rite returned one subject per pass. No ontology
+   was accepted and population did not start.
+4. **Corrected rerun, pending Core freeze.** After independent audit of an
+   aggregate grounding diagnostic and neutral checked admission path, freeze a
+   new paper contract and start a separate fresh session. If compilation
+   succeeds, the same session authors the document capture and neutral
+   population plan. Competency questions remain withheld throughout. A
+   source-located gap may trigger
    no more than two additive ontology revisions in the same session. Candidate
    captures and gaps are retained. Only the terminal population change is
    admitted. The run stops when another addition would require invention.
@@ -201,9 +208,12 @@ The ontology is supported here only by compilation, structural population succes
 
 ## Implementation constraints
 
-The audited Core path publicly exposes ontology compilation, a neutral
-population plan, evidence retention, change composition, admission, reopen,
-replay, native graph reads, and `trace_population_record`. The shipped
+The first-run Core path publicly exposes ontology compilation, a neutral
+population plan, evidence retention, low-level change composition and
+admission, reopen, replay, native graph reads, and `trace_population_record`.
+It does not ship a neutral machine, history binding, or executor that derives
+its generic admission-check outcomes. Core accepted this as a generic adopter
+gap and is preparing a checked public helper. The shipped
 `source-assertion` profile fixes the paper's semantic unit as one atomic capture
 batch with `PARTIAL_IMPORT` origin and capture-order valid time. Core does not
 extract assertions, invent records, choose the paper's ontology, define its
@@ -266,12 +276,17 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Audit and bind the immutable Core artifacts for the full domain-history profile, grounded packs, and nascent-project playbook.
-2. Execute one fresh, question-free v4 producer loop from the selected reading, retaining typed gaps and no fallback.
-3. Dispose live state, reopen and replay the ledger, then bind and run evaluator-owned queries against the replayed graph.
+1. Audit the corrected Core aggregate-grounding and neutral-admission boundary,
+   then bind a new immutable paper execution coordinate.
+2. Freeze a separate rerun contract and execute one fresh, question-free
+   producer loop from the selected reading, retaining typed gaps and no fallback.
+3. Dispose live state, reopen and replay the ledger, then bind and run
+   evaluator-owned queries against the replayed graph.
 4. Prepare source-grounded preliminary inspection for author ratification.
-5. Reconcile the lean manuscript and arXiv source, reproduce from a clean checkout, and visually inspect the rendered PDF.
-6. Publish the exact paper reproducer through an immutable tag or archive, obtain final author review, and submit.
+5. Replace the selected Markdown and arXiv sources with the lean v4 draft,
+   reproduce from a clean checkout, and inspect every rendered PDF page.
+6. Publish the exact paper reproducer through an immutable tag or archive,
+   obtain final author review, and submit.
 
 ## Submission gate
 
