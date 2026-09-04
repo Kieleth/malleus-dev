@@ -328,14 +328,26 @@ def _missing_surface(reference: object, candidate: object, path: str) -> list[st
         if not isinstance(candidate, Mapping):
             return [path]
         missing: list[str] = []
-        for key, value in reference.items():
-            if key in _DOCUMENTATION_FIELDS:
-                continue
+        reference_fields = {
+            key: value
+            for key, value in reference.items()
+            if key not in _DOCUMENTATION_FIELDS
+        }
+        candidate_fields = {
+            key: value
+            for key, value in candidate.items()
+            if key not in _DOCUMENTATION_FIELDS
+        }
+        for key, value in reference_fields.items():
             child = f"{path}.{key}"
-            if key not in candidate:
+            if key not in candidate_fields:
                 missing.append(child)
                 continue
-            missing.extend(_missing_surface(value, candidate[key], child))
+            missing.extend(_missing_surface(value, candidate_fields[key], child))
+        if not path.endswith(".permissible_values"):
+            missing.extend(
+                f"{path}.{key}" for key in candidate_fields.keys() - reference_fields
+            )
         return missing
     if isinstance(reference, list):
         if not isinstance(candidate, list):
@@ -361,13 +373,20 @@ def validate_pack_conformance(
     reference_document = _document(reference)
     missing: list[str] = []
     for section in ("classes", "slots", "enums"):
-        missing.extend(
-            _missing_surface(
-                reference_document.get(section, {}),
-                source_document.get(section, {}),
-                section,
-            )
+        reference_declarations = _mapping(
+            reference_document.get(section, {}), f"reference.{section}"
         )
+        source_declarations = _mapping(
+            source_document.get(section, {}), f"source.{section}"
+        )
+        for name, declaration in reference_declarations.items():
+            path = f"{section}.{name}"
+            if name not in source_declarations:
+                missing.append(path)
+                continue
+            missing.extend(
+                _missing_surface(declaration, source_declarations[name], path)
+            )
     if missing:
         raise PackGroundingRefusal(
             PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED,
