@@ -352,7 +352,12 @@ def _missing_surface(reference: object, candidate: object, path: str) -> list[st
     if isinstance(reference, list):
         if not isinstance(candidate, list):
             return [path]
-        return [
+        duplicates = [
+            item
+            for ordinal, item in enumerate(candidate)
+            if item in candidate[:ordinal]
+        ]
+        return [f"{path}[{item!r}]" for item in duplicates] + [
             f"{path}[{item!r}]"
             for item in (*reference, *candidate)
             if (item in reference) != (item in candidate)
