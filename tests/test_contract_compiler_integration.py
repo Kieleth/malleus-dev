@@ -7585,6 +7585,7 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     build = project["tool"]["hatch"]["build"]
     assert "/src/malleus/_contract_source.py" in build["include"]
+    assert "/src/malleus/_contract_pipeline/revision.py" in build["include"]
     assert "exclude" not in build["targets"]["wheel"]
 
     corpus = _read_json(ROOT / "conformance/contract_kernel/v0/corpus.json")

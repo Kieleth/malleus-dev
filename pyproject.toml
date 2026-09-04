@@ -88,6 +88,7 @@ include = [
     "/src/malleus/_contract_pipeline/machine.py",
     "/src/malleus/_contract_pipeline/model.py",
     "/src/malleus/_contract_pipeline/population.py",
+    "/src/malleus/_contract_pipeline/revision.py",
     "/src/malleus/_contract_pipeline/view.py",
     "/src/malleus/ontology.py",
     "/src/malleus/kg.py",
