@@ -89,6 +89,15 @@ from malleus._contract_pipeline.population import (
     compile_population_plan,
     prepare_population_change,
 )
+from malleus._contract_pipeline.revision import (
+    CONTRACT_REVISION_POLICY,
+    ContractRevision,
+    ContractRevisionChange,
+    ContractRevisionPolicy,
+    ContractRevisionRefusal,
+    ContractRevisionRefusalReason,
+    compile_contract_revision,
+)
 from malleus._contract_source import (
     CollaboratorRefusal,
     ImportRequest,
@@ -205,7 +214,13 @@ __all__ = (
     "ArtifactRefusalReason",
     "BindingRefusal",
     "BindingRefusalReason",
+    "CONTRACT_REVISION_POLICY",
     "ContractView",
+    "ContractRevision",
+    "ContractRevisionChange",
+    "ContractRevisionPolicy",
+    "ContractRevisionRefusal",
+    "ContractRevisionRefusalReason",
     "DomainHistoryProfile",
     "DOCUMENT_ASSERTION_ADAPTER",
     "DOCUMENT_CAPTURE_GRAMMAR",
@@ -255,6 +270,7 @@ __all__ = (
     "ValidatedContractCompilation",
     "adapt_document_assertions",
     "compile_linkml_contract",
+    "compile_contract_revision",
     "compile_population_plan",
     "compose_normative_profile",
     "compose_partial_effective_contract",

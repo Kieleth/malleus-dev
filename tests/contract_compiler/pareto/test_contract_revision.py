@@ -282,7 +282,7 @@ prefixes:
 imports:
   - linkml:types
 classes:
-  ImportedObject:
+  ImportedObject: {}
 """
     source = BASE_SOURCE.replace(
         b"  - malleus\n",
@@ -357,7 +357,7 @@ def test_one_history_replays_records_across_one_contract_revision(
 
     after_revision = history.record_contract_revision(
         revision=revision,
-        transaction_time="2026-09-03T00:01:00Z",
+        transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
     )
     second, admitted = _admit(

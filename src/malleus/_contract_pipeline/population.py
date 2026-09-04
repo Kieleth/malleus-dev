@@ -1167,8 +1167,8 @@ def prepare_population_change(
     compiled_profile = DomainHistoryProfile.from_data(profile)
     compilation = compile_population_plan(
         plan,
-        partial_contract=history.partial_contract,
-        contract_view=history.contract_view,
+        partial_contract=before.partial_contract,
+        contract_view=before.contract_view,
         base_state=PopulationBaseState.from_replay(before),
     )
     root = json.loads(compilation.canonical_plan_bytes)
