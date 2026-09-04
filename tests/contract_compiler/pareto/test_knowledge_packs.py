@@ -172,6 +172,13 @@ def test_research_grounding_assigns_only_supported_term_groups() -> None:
         "investigation",
         "method",
     ]
+    assert vocabularies["SEPIO"] == [
+        "assertion",
+        "Data Item",
+        "Evidence Line",
+        "support",
+        "refute",
+    ]
     assert {"Agent", "Campaign", "Instrument"}.isdisjoint(
         term for terms in vocabularies.values() for term in terms
     )
@@ -223,6 +230,19 @@ def test_pack_without_grounding_refuses_with_typed_reason() -> None:
     with pytest.raises(api.PackGroundingRefusal) as caught:
         api.validate_pack_grounding(_source(), role="PACK")
     assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_REQUIRED
+
+
+def test_duplicate_yaml_key_refuses_as_malformed_source() -> None:
+    api = _inquisition()
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(
+            b"id: https://example.org/one\nid: https://example.org/two\n",
+            role="PACK",
+        )
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.MALFORMED_SOURCE
+    assert "Duplicate YAML key 'id'" in caught.value.detail
 
 
 @pytest.mark.parametrize(
@@ -348,3 +368,30 @@ def test_pack_grounding_cli_reports_the_exact_receipt() -> None:
     payload = json.loads(result.stdout)
     assert payload["role"] == "PACK"
     assert payload["source_sha256"] == "sha256:" + sha256(path.read_bytes()).hexdigest()
+
+
+def test_pack_grounding_cli_reports_duplicate_key_as_typed_refusal(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "duplicate.yaml"
+    path.write_bytes(b"id: https://example.org/one\nid: https://example.org/two\n")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "malleus.inquisition.cli",
+            "pack-grounding",
+            str(path),
+            "--role",
+            "PACK",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "MALFORMED_SOURCE" in result.stderr
+    assert "Duplicate YAML key 'id'" in result.stderr
+    assert "Traceback" not in result.stderr
