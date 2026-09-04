@@ -763,6 +763,30 @@ def test_valid_plan_lowers_exact_operations_closures_and_time_without_io(
         first.operations[0].properties["label"] = "mutated"
 
 
+def test_relation_dependencies_follow_endpoint_roles_not_record_order(
+    contract_pair,
+) -> None:
+    _, partial = contract_pair
+    plan = _plan(partial.identity)
+    entities = plan["records"]["entities"]
+    assert [entity["id"] for entity in entities] == ["left-1", "right-1"]
+    plan["records"]["entities"] = [entities[1], entities[0]]
+
+    result = _compile(plan, contract_pair)
+
+    relation = result.operations[2]
+    assert [operation.record_id for operation in result.operations] == [
+        "right-1",
+        "left-1",
+        "link:left-1:right-1",
+    ]
+    assert (relation.source_id, relation.target_id) == ("left-1", "right-1")
+    assert relation.depends_on == (
+        "operation:plan:neutral:1:1",
+        "operation:plan:neutral:1:0",
+    )
+
+
 def test_relation_dependency_omits_endpoint_already_in_base(tmp_path: Path) -> None:
     population = _population()
     history, compiled, partial, _, _, _ = _anchored_history(tmp_path)

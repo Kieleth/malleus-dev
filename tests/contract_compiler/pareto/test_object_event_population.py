@@ -418,3 +418,44 @@ def test_source_assertion_profile_can_describe_events_without_becoming_occurrenc
         "CREATE_EVENT",
         "CREATE_EVENT_PARTICIPATION",
     ]
+
+
+def test_event_participation_depends_on_entity_then_event(tmp_path: Path) -> None:
+    compiled = _compiled()
+    history, partial = _history(tmp_path, compiled)
+    plan = _plan(partial.identity)
+    plan["records"]["entities"].append(
+        {"id": "o2", "properties": {"label": "Object 2"}, "type": "TestObject"}
+    )
+    plan["derivations"].append(
+        {
+            "locator": "object-2",
+            "path": ["properties", "label"],
+            "record_id": "o2",
+            "source_id": "source:test-object-event",
+        }
+    )
+
+    prepared = api.prepare_population_change(
+        history=history,
+        plan=plan,
+        profile=api.OBJECT_EVENT_PROFILE,
+        retention_events=_retention_events(plan),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+
+    assert prepared.change_set is not None
+    operations = prepared.change_set.operations
+    operation_by_record = {
+        operation.record_id: operation.operation_id for operation in operations
+    }
+    participation = operations[-1]
+    assert participation.operation_type == "CREATE_EVENT_PARTICIPATION"
+    assert participation.record_id == "participation:e1:o1:item"
+    assert operation_by_record["o1"] == "operation:plan:test-object-event:0"
+    assert operation_by_record["e1"] == "operation:plan:test-object-event:2"
+    assert participation.depends_on == (
+        operation_by_record["o1"],
+        operation_by_record["e1"],
+    )
