@@ -162,8 +162,12 @@ fallback.
    bytes. Never infer a history model from the first record or from ledger order.
    Steps 6 through 9 are the governed-history branch, so you must choose an exact
    history profile before proposing the ontology when you will follow them. For
-   schema-only or typed-graph-only adoption, complete the structural route and
-   stop after step 5; do not invoke population or history APIs.
+   schema-only adoption, stop after step 5. For typed-graph-only adoption, load
+   the exact schema and imports with `OntologyRegistry`, validate and construct
+   the proposed public record envelope with
+   `KnowledgeGraph.from_records(registry, records)`, inspect the returned graph,
+   and stop before step 6. That graph is checked structural state, not accepted
+   history. Neither lower-level branch invokes population or history APIs.
 3. **Look for vocabulary before inventing it.** Inspect the optional
    `metrology`, `chronology`, and `research` packs. Import only what the domain
    needs. Check a copied pack with `malleus-inquisitor pack-conformance`; extend
@@ -245,12 +249,28 @@ fallback.
 
 This is the current private-v0 shape, not a stable wire. Parse the JSON, replace
 the contract identity and project record types with values from the compiled
-contract, and pass only `reading`, `capture`, `capture_id`, `plan_id`, `records`,
-and `supersessions` to `adapt_document_assertions`. The capture root, attribution,
-formalisation, gap, Entity record, and Relation record shapes are closed as
-shown. `assertion_time` and `domain_time` are optional strings: omit either when
-it is unknown, never invent it or encode it as null. `accepted_gap_kinds` lists
-the complete current set and is guidance, not an adapter argument.
+contract. Encode the `reading` and `capture` objects as canonical JSON bytes:
+UTF-8, sorted keys, no insignificant whitespace, and no non-finite numbers. Pass
+exactly these seven public keyword arguments to `adapt_document_assertions`:
+`reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`,
+`records`, and `supersessions`. The reading object is illustrative input, not a
+live grammar or closed shape; the adapter reads its pages and each block's ID,
+ordinal, and text. The only live grammar in this example is
+`DOCUMENT_CAPTURE_GRAMMAR == malleus.document-capture/private-v0` in
+`capture.schema`. The capture root, attribution, assertion, formalisation, and
+gap shapes are closed by the adapter. The Entity and Relation records illustrate
+the neutral plan envelopes checked by the population compiler.
+`assertion_time` and `domain_time` are optional strings: omit either when it is
+unknown, never invent it or encode it as null. `accepted_gap_kinds` lists the
+complete current set and is guidance, not an adapter argument.
+
+Accepted modalities are `CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`,
+`NEGATED`, or `STATED`. Every assertion must name a known reading block, and its
+statement must occur verbatim after whitespace normalization in that block. If
+`formalized_by` is empty, at least one typed gap is required. Every formalization
+`record_id` and `path` must resolve in `records`. Every `nothing_assertable`
+block ID must exist in the reading. A failure is a typed refusal, not permission
+to repair, infer, or ignore the capture.
 
 <!-- malleus-nascent-document-template:start -->
 ```json
@@ -262,6 +282,14 @@ the complete current set and is guidance, not an adapter argument.
     "REQUIRED_FIELD_ABSENT_IN_SOURCE",
     "TYPE_ABSENT",
     "RELATION_ABSENT"
+  ],
+  "accepted_modalities": [
+    "CALCULATED",
+    "CONTESTED",
+    "HYPOTHESISED",
+    "MEASURED",
+    "NEGATED",
+    "STATED"
   ],
   "capture": {
     "assertions": [
@@ -300,7 +328,7 @@ the complete current set and is guidance, not an adapter argument.
       "source_id": "source:neutral"
     },
     "nothing_assertable": [],
-    "reading_sha256": "sha256:12781a7881fb11a7337abe7f7b29e60be42034b6597e5d79d423d6f610060b2e",
+    "reading_sha256": "sha256:259fa8fd86ba0afd43998e66fc0edc2633a41863f7e9b901707825e56a1d3423",
     "schema": "malleus.document-capture/private-v0"
   },
   "capture_id": "capture:neutral:1",
@@ -314,12 +342,16 @@ the complete current set and is guidance, not an adapter argument.
             "id": "block:1",
             "ordinal": 0,
             "text": "On 2026-01-02, object A links to object B."
+          },
+          {
+            "id": "block:2",
+            "ordinal": 1,
+            "text": "No captured assertion in this block."
           }
         ],
         "page": 1
       }
-    ],
-    "schema": "example.reading/v0"
+    ]
   },
   "records": {
     "entities": [
@@ -346,7 +378,6 @@ the complete current set and is guidance, not an adapter argument.
       }
     ]
   },
-  "schema": "malleus.nascent-document-example/private-v0",
   "supersessions": []
 }
 ```
