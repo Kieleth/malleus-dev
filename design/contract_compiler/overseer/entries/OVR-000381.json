@@ -1,0 +1,144 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:659fff71f2eee50fb705da357a9c92b6c22f2c7f59b7bba51d0c0131d12e060d",
+        "before_digest": "sha256:7333cc4a9b95d017935bb776787987826c39c98b7cd6ad2cc12854bea046fb34",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:fcec3d3fcff5861ffc9bdf5d915ce735c3eef0cb886d44924167f7a92f6b5001",
+        "before_digest": "sha256:08e8e26016f7d1fd3a6f82638db0966f2cb808333b928f3a36a58bea4cfdce56",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:a09858eba3f8f585bc705fcaf8b011a8dc695eba521ea14c2e2a6f80856cfd4c",
+        "before_digest": "sha256:c78c228456264fb5a6ba584778f2610d2d36305e800cff46df574d7587265a11",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:a1af66fd8f558c2312db9c36637725835b948c32d622b52481bbede06b8b94ee",
+        "before_digest": "sha256:191a5185b2b58ccff621793094a645a105eac440bd5b838a41a7c9b59c9b7307",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:4aa4ed0d1275deb11cda3e850d9d67b7ccca5975676bdbeae43cafbc394f9846",
+        "before_digest": "sha256:1f937916ee8b5881de3101e93edfd5fbe0ba47f872b8c9c83dae23490757bf82",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:d55a5206d1114d77e02b66c6e0c55770ac69cb95d1afd209ad23d8435d7b31bf",
+        "before_digest": "sha256:eb425fa6db186c8bf9b90e1e8cae9b829e930830e56f7cb5d48e31bed331ddd4",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence-role-v1/explanation.json"
+      },
+      {
+        "after_digest": "sha256:1fe8f7f7f431d279dcebabf0c8c83093c7d0a8ed194d55f9dcfc0f0230228c6f",
+        "before_digest": "sha256:27ef0b16d3eba5f97a318871bba8c41784e7e708c436711725cbf336e727d5e6",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/evidence-role-v1/receipt.json"
+      },
+      {
+        "after_digest": "sha256:af7c61c2520db1f8c252274a7cf0432dcad07fa171fccd18458b87cbf63a69df",
+        "before_digest": "sha256:44b12afe6ad4d1c94c198edcd038583f33794f5860f57dcbf972b073cca9a858",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py"
+      },
+      {
+        "after_digest": "sha256:abb625fd7ebc00c389c60a05cc58e78071feea248b566830844d249143dc91a7",
+        "before_digest": "sha256:c8dd95737ad907cc787cea623f0b7a5400b607fe9c30e7f7c900720372fd5567",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json"
+      },
+      {
+        "after_digest": "sha256:90497272ff3ffb5ae2572b4fede11e43336166c92a8fe22e0d3d298fd87c9254",
+        "before_digest": "sha256:7dd3f9280562d786cc222e22473b88a3631a4cd401cfa2e9c67801de2fd79fb6",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json"
+      },
+      {
+        "after_digest": "sha256:86e24272e9de1e3fc3c70648e61b80a9ba0f6ce55e8ad3d0fb22880f1b55b86e",
+        "before_digest": "sha256:4ec19541f38348c99dd5bd28cc7f498568234a713da6b843d4d2b9ffc21627b2",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/queries.json"
+      },
+      {
+        "after_digest": "sha256:09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41",
+        "before_digest": "sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/receipt.json"
+      },
+      {
+        "after_digest": "sha256:06c3735367630f9ddc2b8895b8696c231434159e58de60cca5b330a3827ed601",
+        "before_digest": "sha256:b6c824b8233ccbc40c7c5785591176d146a55e46e1a9f331de4116c7d9cb7fe3",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:a4a0dcac018289992b79575f6b96ef63f437d8bbb2ddda3d2464ed3a6100269d",
+        "before_digest": "sha256:dabf4c8a728196be6551bf77de85819b22f32843a6711f6a024c47feaec100d0",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:5a8150e4b499946d5957e8cc583c6c65204fdc3f6b2f7dd509289656c57b8368",
+        "before_digest": "sha256:3bea1d54502db3761aeef7196126629641f8da2ec508b05ffcb559e4178329d4",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_ledger.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:e4e8a41cd292cca4651e824bca47972b361bc2ec096af6c61d19ce339da35862",
+  "entry_id": "OVR-000381",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:1c714ba2664eacf1cc84350b7c80cb7c5272cb7866f3b4b4c2a6e14101e0842d",
+  "recorded_at": "2026-09-04T06:36:13Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "5460c8f90e2dc06ad244d9ebc88d444628755e95",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9a33e645f0be4f19d4e9f0df89cd9fcfbb6ab501",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f3c50c3fd916d0c388d73547750d9c6533eec1d7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "576f15233676f5de0dde01e0bafc21b7427ed991",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 381,
+  "subject": {
+    "id": "grounded-pack-public-guidance-and-small-shop-evidence",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the public pack guidance and current Small Shop replay evidence.",
+  "why": "The public reference now exposes only the narrow pack-grounding and pack-conformance checkers beside the compiler facade. Current Small Shop evidence is regenerated under the advanced compiler profile, while the original RET-010 receipt remains immutable and separately guarded. Exact governance tests now describe the current public adapter boundary and bind all five compiler-profile files that evolved after the original LinkML research candidate. This keeps current reproducibility distinct from historical evidence instead of rewriting one as the other."
+}

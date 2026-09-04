@@ -1,0 +1,237 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:299ef29f368faa84bd9e7b6408ecd6d579772856403e21496e2aa3daee507230",
+        "before_digest": "sha256:7e0473cc43737525e63841479777f8509379cee9aa672486b3d2ba31737ed7d7",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:613b0e4a121ee4c7c8fc1525903cf532e508afc4c6124feac9ca4915be49bff1",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-p7-report.md"
+      },
+      {
+        "after_digest": "sha256:ac48ac4917f12541ed87dbff5b7bb7bd7ae31d6958b41ba58c6a833e5ecd9184",
+        "before_digest": "sha256:f6176f3e5f6aa4707715ea2921050fb0b79305708eb712f5b21d5e7b79d4d770",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-v2/examples/document-change.json"
+      },
+      {
+        "after_digest": "sha256:5a4105bd2f04a14b10c8e3b95c7ad746014436c34ceb285579b677b3ed2e8dfe",
+        "before_digest": "sha256:72eaca7b0b948b469742babd416d0398f38287ce650c3e93e4de3c6d3a2dc2b6",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-v2/examples/small-shop-change-e7.json"
+      },
+      {
+        "after_digest": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
+        "change": "CREATED",
+        "path": "ontology/packs/chronology.yaml"
+      },
+      {
+        "after_digest": "sha256:1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586",
+        "change": "CREATED",
+        "path": "ontology/packs/metrology.yaml"
+      },
+      {
+        "after_digest": "sha256:c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e",
+        "change": "CREATED",
+        "path": "ontology/packs/research.yaml"
+      },
+      {
+        "after_digest": "sha256:cacdcfb21d1993675bb07710244155a74425de6cf45b62e3a5e60021af8ed1d8",
+        "before_digest": "sha256:f1abdb6b465bd603068673bff150291bd7d3012951e3400a9264f1ae7dc51a50",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:7b58775c369bbb0cc21e952218c75d8de3de460e18115202b505a3541bc3fd12",
+        "before_digest": "sha256:f9a840b15fae34060f8907d6b6724b4d9f3cf785f3613efe83b6ba59eb930a0f",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_binding_profile.json"
+      },
+      {
+        "after_digest": "sha256:d1dded7218ce348adf984b7b974c3654dc656ec1192128253ed1c3b397b21f56",
+        "before_digest": "sha256:904eb338e2239c07282d017cf1ac0c342c650efffda5b5c4b471d665bc010f5c",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_compiler.py"
+      },
+      {
+        "after_digest": "sha256:d9d31fae01c082a7dfd51df23d068fbdda7126965257847a7143addea74fd792",
+        "before_digest": "sha256:13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_compiler_profile.json"
+      },
+      {
+        "after_digest": "sha256:1ceb1e9bbca1177638659af07ab458d5e0eb885323c64126816f9cd4ec46a7e9",
+        "before_digest": "sha256:15031b57d438ea46a43138f1a9fddb9387ff9aa4ab6fae7617c08cba7dea9115",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_linkml_adapter.py"
+      },
+      {
+        "after_digest": "sha256:68cf3c0647d4347bc5237c8d5dcfb9cc805c9dd1e7888aa7c47378ac58cb7e72",
+        "before_digest": "sha256:fbaafa5f7d749dbcdc2095bb6c0acf7500e11e3732eeb10e992c129e614f32e1",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:f7b6022de7d9fbff49f04d8b979133b0febd6bca6b0f2ce448269534d3427f1c",
+        "before_digest": "sha256:c4253fc74f373aa7e9a67fc9d403162056ba8de56fe9181b43199cca3e3a19e8",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/__init__.py"
+      },
+      {
+        "after_digest": "sha256:dd255867c0b32858256a6ac4725896f583bf1dbe17ff346929269051e4c076be",
+        "before_digest": "sha256:99058e46cb1b99b60d5dbf0918734deed5fd8dfd081fd01a6da6c3d37b39ac35",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/cli.py"
+      },
+      {
+        "after_digest": "sha256:1f642cffadd71e0dc4aabe3f9fdf48b0c0068e2ff4a5e5b8ea588a18de8b3a3e",
+        "change": "CREATED",
+        "path": "src/malleus/inquisition/pack-grounding.json"
+      },
+      {
+        "after_digest": "sha256:87bae6022baa6f5dd4bcb1cc922d304173a75b2d7445be78bc3c43a2ec86ed9f",
+        "change": "CREATED",
+        "path": "src/malleus/inquisition/pack_grounding.py"
+      },
+      {
+        "after_digest": "sha256:bc0f7fce1a2b6b37f235b22405fd3f2122bad9bcee28c37a480331c58dbe03aa",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:19486dfd77ca06151a09fa30fc90283cc4f6633a19f10838cad34584298f1247",
+        "before_digest": "sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_greenhouse_compiler.py"
+      },
+      {
+        "after_digest": "sha256:9ad3e08a274fe1280a4814435349cb964030696ac82a3dc01b8aaade023b6dbb",
+        "before_digest": "sha256:b0e332e169ac938fd28d78e31a9337e12938bb534d57f75db6abb26d06f20446",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_linkml_adapter.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:1c714ba2664eacf1cc84350b7c80cb7c5272cb7866f3b4b4c2a6e14101e0842d",
+  "entry_id": "OVR-000380",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:60808e07abbea8c3e0470b86323e0fd73cbcbd32d1903c024acba8c5eca27023",
+  "recorded_at": "2026-09-04T06:36:12Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "636befa7c079afe3eb7a26bb91072f7a28393966",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "3db80bcff235f85f9fda2add031c316350ac2fd7",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "101c6bf92eda37482b75510d744aae21f0d332ff",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6a405b11ad60bec8b73a17d149f8b8801dd27d33",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "76b56df662866d8c262352937688dd05385821e2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a559252e014f3605b2c0d6bfe981f31f3e17361e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "75856c991c82cdb10b63c27ed1d32a63cff3834c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5460c8f90e2dc06ad244d9ebc88d444628755e95",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9a33e645f0be4f19d4e9f0df89cd9fcfbb6ab501",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "afe7a69b5eb3617d7c2d53a95df7a2df6cbb90b8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6d93b26884a0f65934f79e1b7113a8b4f32244be",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c9b964b6152f4dab039fefd60247f05506230159",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "653c47926d4d81bb73e5866464bd8d15988fcced",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8a0cb78b001370b3f5e1bed7d7f83ad9b27e9a75",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b5625b58ed274ab6734fc28e215910fcefc13479",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9ff72d098e7f3b635888ec40141f16975a7cfb18",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7a78406e7473cf49dee3901d221ffa5c5bd3655e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6afd5764201253885cc20252f6bdf6192c469591",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 380,
+  "subject": {
+    "id": "optional-grounded-knowledge-packs",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the optional pack vocabulary and structural grounding checker.",
+  "why": "Three optional packs now expose small reusable vocabularies without becoming protocol requirements. Exact term groups retain honest source attribution, locally invented names are explicit, and the offline rite checks only the closed citation shape. This advances the LinkML support profile without adding a mapping language, domain-history choice, Event population, or network-dependent judgment."
+}
