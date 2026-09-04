@@ -29,7 +29,11 @@ FIXTURE = (
     / "inspection_note_capture_v1"
 )
 LINKML_TYPES = Path(
-    str(files("linkml_runtime").joinpath("linkml_model", "model", "schema", "types.yaml"))
+    str(
+        files("linkml_runtime").joinpath(
+            "linkml_model", "model", "schema", "types.yaml"
+        )
+    )
 )
 TRANSACTION_TIME = "2026-09-04T00:00:00Z"
 ACTOR = "actor:paper-v4-run-02"
@@ -328,7 +332,10 @@ def test_run_admits_replays_and_reproduces_the_same_receipt(
 
     assert result["schema"] == "malleus.paper-v4.run-02-result/v1"
     assert result["status"] == "ADMITTED_AND_REPLAYED"
-    assert result["reopen_matches_admitted"] == {"receipt": True, "export_records": True}
+    assert result["reopen_matches_admitted"] == {
+        "receipt": True,
+        "export_records": True,
+    }
     assert result["replay_receipt_sha256"] == _digest(
         (results / "replay-receipt.json").read_bytes()
     )
@@ -474,6 +481,17 @@ def test_native_query_traces_every_witness_and_selects_evidence_by_id(
         assert trace["evidence"][CAPTURE_ID] == _digest(
             (FIXTURE / "document-capture.json").read_bytes()
         )
+
+
+def test_the_source_free_guard_refuses_and_counts_a_file_read() -> None:
+    subject = _module("native_query")
+    guard = subject._SourceFreeGuard()
+
+    with pytest.raises(subject.NativeQueryRefusal):
+        with guard:
+            open(FIXTURE / "reading.json", "rb")
+
+    assert guard.attempts == {"embedding_import": 0, "file_read": 1, "network": 0}
 
 
 def test_native_query_refuses_a_binding_naming_an_absent_type(

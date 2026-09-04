@@ -52,8 +52,7 @@ REMOVED_MODELLING_PHRASES = (
     "choose needed packs before project terms",
     "keep source instances, protocol, provenance, locators, ledger, policy,"
     " and query machinery out of the ontology",
-    "preserve source values, units, distinctions, attribution,"
-    " and epistemic status",
+    "preserve source values, units, distinctions, attribution, and epistemic status",
     "do not invent missing facts or collapse distinct source concepts",
     "review both census axes",
 )
@@ -105,8 +104,7 @@ def test_producer_record_names_the_model_harness_and_boundary() -> None:
 
     assert producer["kind"] == "CLAUDE_CODE_FRESH_SUBAGENT"
     assert producer["harness"] == (
-        "Claude Code Agent tool, subagent_type general-purpose,"
-        " no inherited context"
+        "Claude Code Agent tool, subagent_type general-purpose, no inherited context"
     )
     assert producer["requested_model"] == "opus"
     assert producer["model_family"] == "Claude Opus 5"
@@ -334,3 +332,10 @@ def test_the_paper_ledger_records_the_rebind() -> None:
     assert "### E-0121," in ledger
     for phrase in REMOVED_MODELLING_PHRASES[:1]:
         assert phrase in ledger.lower()
+
+
+def test_the_run_output_directories_exist_and_hold_no_result() -> None:
+    for name in ("ontology-run", "results"):
+        directory = HERE / name
+        assert directory.is_dir()
+        assert [path.name for path in directory.iterdir()] == [".gitkeep"]
