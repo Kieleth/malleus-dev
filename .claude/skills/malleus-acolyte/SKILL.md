@@ -229,10 +229,14 @@ fallback.
    only the selected packs. Derive domain records from Malleus roles directly or
    through pack types. Keep instances out of schema vocabulary: source values,
    identifiers, conclusions, and wording are data, not class, slot, relation, or
-   enum names. Keep protocol, provenance, locators, ledger, policy, and query
-   machinery out of the domain ontology. Labels identify records; they never
-   carry an otherwise untyped assertion. The baseline admissible population
-   surface is every concrete Entity and Relation type in the compiled contract.
+   enum names. Keep protocol, provenance, ledger, policy, and query machinery
+   out of the domain ontology: provenance locators, meaning block IDs,
+   assertion IDs, and retained-input IDs, belong to the capture and the ledger,
+   never to a domain slot. Identifiers the source reports as facts about the
+   domain are domain slots and belong in the ontology: a DOI, a dataset URL, a
+   grant number, an accession. Labels identify records; they never carry an
+   otherwise untyped assertion. The baseline admissible population surface is
+   every concrete Entity and Relation type in the compiled contract.
    Any exact profile with a nonempty Event role also admits every concrete Event
    type. When the compiled ontology contains `EventParticipation`, it admits
    those concrete types too. Load the optional vocabulary with
