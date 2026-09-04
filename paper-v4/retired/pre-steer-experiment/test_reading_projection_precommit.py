@@ -1,0 +1,62 @@
+"""Guard the reading-block rule frozen before retained OCR."""
+
+from __future__ import annotations
+
+from hashlib import sha256
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+PRECOMMIT = ROOT / "paper-v4/experiment/reading-projection-precommit.json"
+OCR_PRECOMMIT = ROOT / "paper-v4/experiment/ocr-precommit.json"
+
+
+def _digest(path: Path) -> str:
+    return "sha256:" + sha256(path.read_bytes()).hexdigest()
+
+
+def test_reading_projection_is_closed_before_retained_ocr() -> None:
+    document = json.loads(PRECOMMIT.read_bytes())
+
+    assert document == {
+        "schema": "malleus.paper-v4.reading-projection-precommit/v1",
+        "frozen_at": "2026-09-02T21:45:28Z",
+        "status": "FROZEN_BEFORE_RETAINED_READING",
+        "source_sha256": (
+            "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9"
+        ),
+        "input": {
+            "ocr_precommit_path": "paper-v4/experiment/ocr-precommit.json",
+            "ocr_precommit_sha256": (
+                "sha256:68580e74a1107af8b0de033f664fb5053d7c1ffd3ec14c53508d06c79f36fbda"
+            ),
+            "ocr_bundle_path": "paper-v4/experiment/ocr-bundle.json",
+            "ocr_verification_path": "paper-v4/experiment/ocr-verification.json",
+            "selected_page_path_pattern": (
+                "private/paper-v4-ocr/yu-2025-tesseract-v1/selected/page-{page:03d}.txt"
+            ),
+            "required_pages": list(range(1, 12)),
+        },
+        "projection": {
+            "encoding": "UTF-8_STRICT",
+            "line_endings": "CRLF_AND_CR_TO_LF",
+            "blank_line": ("LINE_CONTAINING_ONLY_ZERO_OR_MORE_SPACE_OR_TAB_CHARACTERS"),
+            "block_rule": "MAXIMAL_RUN_OF_NONBLANK_LINES",
+            "block_bytes": ("PRESERVE_LINE_PAYLOADS_JOINED_BY_LF_WITH_ONE_TERMINAL_LF"),
+            "ordering": "PAGE_ASCENDING_THEN_BLOCK_ORDINAL_ASCENDING",
+            "block_id_pattern": "page:{page}:block:{ordinal:03d}",
+            "empty_page_policy": "REFUSE",
+            "text_correction": "NONE",
+        },
+        "output": {
+            "private_reading_path": (
+                "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json"
+            ),
+            "public_manifest_path": (
+                "paper-v4/experiment/selected-reading-manifest.json"
+            ),
+            "public_text": "DIGEST_ONLY",
+        },
+    }
+    assert document["input"]["ocr_precommit_sha256"] == _digest(OCR_PRECOMMIT)

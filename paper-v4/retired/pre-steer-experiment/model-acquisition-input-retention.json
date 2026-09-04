@@ -1,0 +1,17 @@
+{
+  "schema": "malleus.paper-v4.model-acquisition-input-retention/v1",
+  "status": "POST_ACQUISITION_CORE_REBIND",
+  "original_core_commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+  "current_core_commit": "92ae0af8cb65a46aba0431372e3573a5642c2622",
+  "retained_inputs": [
+    {
+      "original_path": "docs/IMPLEMENTATION_STATUS.md",
+      "original_sha256": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f",
+      "retained_path": "paper-v4/experiment/model-acquisition-inputs/docs-IMPLEMENTATION_STATUS-1611944.md",
+      "retained_sha256": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f",
+      "retained_byte_length": 27060,
+      "current_sha256": "sha256:f720aa6b3701892459108df6ebabaa8b916fe5c0601eb0febc0f6e715ab8902a",
+      "reason": "AUTHORITATIVE_CORE_REBIND_AFTER_COMPLETED_PRIMARY_ACQUISITION"
+    }
+  ]
+}

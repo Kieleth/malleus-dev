@@ -1,0 +1,226 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v1",
+  "frozen_at": "2026-09-02T23:30:00Z",
+  "status": "FROZEN_AFTER_SELECTED_CONTROL_BEFORE_POPULATION",
+  "classification": "POST_PRIMARY_CONTROL",
+  "primary_result": "REFUSED_ADEQUACY",
+  "population_status": "NOT_STARTED",
+  "canonicalization": "UTF8_JSON_SORTED_KEYS_COMPACT_FOR_DERIVED_IDENTITIES",
+  "core": {
+    "commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3",
+    "tree": "657ba6ce1be83064d104803ad5dad644d65b4352"
+  },
+  "identities": {
+    "question_set": {
+      "path": "paper-v4/experiment/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    "sealed_oracle": {
+      "path": "private/paper-v4-evaluation/answer-oracle.json",
+      "sha256": "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571"
+    },
+    "recovery_precommit": {
+      "path": "paper-v4/experiment/ontology-recovery-precommit.json",
+      "sha256": "sha256:4a389e6c70a61f7938f86bf4495f8933b29a2b0ca14326114afdace09e3fa31b"
+    },
+    "recovery_ontology": {
+      "path": "paper-v4/experiment/controlled-ontology-recovery.yaml",
+      "sha256": "sha256:29fca9e9325c9d14e5070bcb4274c8704f9d1aaa058799e5a81f27cb5a5a99e9"
+    },
+    "validated_contract": {
+      "path": "paper-v4/experiment/ontology-recovery-compilation/validated-contract.json",
+      "sha256": "sha256:4e5297a3844e55a17c21dbbbd94778f8426cad91a14f1f42e2c747ad8c2d72cd"
+    },
+    "compiler_receipt": {
+      "path": "paper-v4/experiment/ontology-recovery-compilation/compile-receipt.json",
+      "sha256": "sha256:f8843baa1802529de46df8410dcd16f14bdebc0a9db048850175654ecad2277b"
+    },
+    "recovery_review_result": {
+      "path": "private/paper-v4-evaluation/ontology-recovery-adequacy-result.json",
+      "sha256": "sha256:fbd6b609a854619b3931933932f39687f4e9fe2861076cfc1941c9631a92ce4c"
+    },
+    "recovery_review_receipt": {
+      "path": "paper-v4/experiment/ontology-recovery-adequacy-receipt.json",
+      "sha256": "sha256:c61ca58167a2655b4d6b4a160559e158db32a5a2872f280d56b9e4c5e41d4841"
+    },
+    "knowledge_graph_runtime": {
+      "path": "src/malleus/kg.py",
+      "sha256": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316"
+    },
+    "query_executor": {
+      "path": "research/ontology_driven_kg_realization/experiments/document_paper/native_query.py",
+      "sha256": "sha256:336554a43ab87c53322e8422e4d1d410f28eb93696f391eba74111a0f26ecbf8"
+    }
+  },
+  "compiled_contract": {
+    "contract_id": "https://malleus.dev/contracts/paper-v4-domain-proposal",
+    "logical_contract_digest": "sha256:38dd043bd5b4b596b23da9e5634fa414233c3a6a589d71ae662ccd82b42c0abb",
+    "registry_hash": "sha256:c7b71d094fd8ea2bb7a9e368c581475891f110538caebeaceedca9d7532b3332",
+    "symbol_binding_id": "urn:malleus:compiled-graph-recipe-bindings:14af66f206b0ddeaa870be391a03ab6f0679e57fa224a2686fdd1b93d5726b9f"
+  },
+  "rehydration_registry_hash": "sha256:3197dc7410639ce0164d9fdc527baa96b7c874243fd912b2da1be9212120f7f7",
+  "graph_closure": {
+    "entities": {
+      "ObservationNetwork": 1,
+      "Campaign": 1,
+      "RidgeSection": 1,
+      "EarthquakePopulation": 1,
+      "MeltPopulation": 1,
+      "QuantitativeRange": 2,
+      "CausalHypothesis": 1,
+      "MechanismElement": 7
+    },
+    "relations": {
+      "DataAcquisitionRelation": 1,
+      "SpatialAssociationRelation": 2,
+      "QuantitySubjectRelation": 2,
+      "HypothesisComponentRelation": 7,
+      "CausalLinkRelation": 7,
+      "HypothesisTargetRelation": 1
+    },
+    "total_entities": 15,
+    "total_relations": 20
+  },
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "allowed_record_types": [
+        "ObservationNetwork",
+        "Campaign",
+        "DataAcquisitionRelation"
+      ],
+      "cardinalities": {
+        "acquisition_relations": 1,
+        "campaigns": 1,
+        "observation_networks": 1
+      },
+      "predicates": {
+        "data_kind": "MICROSEISMICITY",
+        "epistemic_status": "REPORTED_OBSERVATION",
+        "relation_type": "ACQUIRED_DURING"
+      },
+      "selection_rule": "Join the single acquisition source and target by typed endpoint. Do not filter returned names, year, or counts."
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "allowed_record_types": [
+        "EarthquakePopulation",
+        "RidgeSection",
+        "SpatialAssociationRelation"
+      ],
+      "cardinalities": {
+        "earthquake_populations": 1,
+        "joined_spatial_relations": 1,
+        "ridge_sections": 1
+      },
+      "predicates": {
+        "epistemic_status": "REPORTED_OBSERVATION",
+        "relation_type": "SPATIALLY_ASSOCIATED_WITH"
+      },
+      "selection_rule": "Select the spatial relation from the exact earthquake-population type and emit its position. Do not filter returned names or position."
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "allowed_record_types": [
+        "EarthquakePopulation",
+        "MeltPopulation",
+        "RidgeSection",
+        "QuantitativeRange",
+        "QuantitySubjectRelation",
+        "SpatialAssociationRelation"
+      ],
+      "cardinalities": {
+        "depth_ranges": 1,
+        "melt_co2_ranges": 1,
+        "quantity_relations": 2,
+        "shared_ridge_sections": 1,
+        "spatial_relations": 2
+      },
+      "predicates": {
+        "depth_quantity_kind": "EARTHQUAKE_DEPTH",
+        "earthquake_position": "BENEATH_RIDGE_AXIS",
+        "melt_position": "ALONG_RIDGE_SECTION",
+        "melt_quantity_kind": "PRIMARY_MELT_CO2_CONCENTRATION",
+        "quantity_relation_type": "HAS_QUANTITY",
+        "spatial_relation_type": "SPATIALLY_ASSOCIATED_WITH"
+      },
+      "selection_rule": "Join each typed quantity range to its subject and require both subjects to share one ridge. Do not filter returned bounds, units, or epistemic status."
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "allowed_record_types": [
+        "CausalHypothesis",
+        "MechanismElement",
+        "HypothesisComponentRelation",
+        "CausalLinkRelation",
+        "HypothesisTargetRelation",
+        "EarthquakePopulation",
+        "RidgeSection",
+        "SpatialAssociationRelation"
+      ],
+      "cardinalities": {
+        "causal_hypotheses": 1,
+        "causal_links": 7,
+        "hypothesis_components": 7,
+        "hypothesis_targets": 1,
+        "mechanism_elements": 7,
+        "outcome_spatial_relations": 1
+      },
+      "causal_kind_edges": [
+        ["ASCENDING_MELT", "CARBON_DIOXIDE_DEGASSING"],
+        ["CARBON_DIOXIDE_DEGASSING", "VOLUME_CHANGE"],
+        ["CARBON_DIOXIDE_DEGASSING", "PRESSURE_INCREASE"],
+        ["VOLUME_CHANGE", "LOCAL_HIGH_STRAIN_RATE"],
+        ["EXTENSIONAL_STRESS", "LOCAL_HIGH_STRAIN_RATE"],
+        ["PRESSURE_INCREASE", "EARTHQUAKE_TRIGGERING"],
+        ["LOCAL_HIGH_STRAIN_RATE", "EARTHQUAKE_TRIGGERING"]
+      ],
+      "predicates": {
+        "causal_relation_type": "CAUSES",
+        "component_relation_type": "HAS_COMPONENT",
+        "epistemic_status": "PREFERRED_HYPOTHESIS",
+        "spatial_position": "BENEATH_RIDGE_AXIS",
+        "target_relation_type": "EXPLAINS"
+      },
+      "selection_rule": "Require one preferred acyclic seven-node mechanism with exactly the frozen directed edge set, one explained earthquake population, and its one ridge position."
+    }
+  ],
+  "execution_boundary": {
+    "allowed_graph_methods": ["query", "query_relations", "get_node"],
+    "runtime_inputs": ["SOURCE_FREE_GRAPH_PROJECTION", "QUERY_BINDING"],
+    "forbidden_runtime_inputs": [
+      "PDF",
+      "OCR_TEXT",
+      "SOURCE_LEDGER",
+      "LOCATOR_MAP",
+      "MODEL_TRANSCRIPT",
+      "ANSWER_ORACLE",
+      "EMBEDDING_MODEL",
+      "VECTOR_INDEX",
+      "NETWORK"
+    ],
+    "oracle_comparison": "SEPARATE_EVALUATOR_PROCESS"
+  },
+  "refusal_policy": [
+    "ZERO_OR_MULTIPLE_MATCHES",
+    "WRONG_EXACT_RECORD_TYPE",
+    "MISSING_REQUIRED_FIELD",
+    "UNKNOWN_LEXICAL_VALUE",
+    "WRONG_ENDPOINT_TYPE",
+    "DUPLICATE_KIND_ASSIGNMENT",
+    "EXTRA_OR_MISSING_CAUSAL_EDGE",
+    "CAUSAL_CYCLE",
+    "CROSS_QUESTION_IDENTITY_DISAGREEMENT"
+  ],
+  "output_contract": {
+    "order": ["CQ-01", "CQ-02", "CQ-03", "CQ-04"],
+    "retains_raw_semantics": true,
+    "retains_entity_and_relation_witness_ids": true,
+    "renderer_may_lexicalize_ontology_enums": true,
+    "fallback_answer": "FORBIDDEN"
+  }
+}

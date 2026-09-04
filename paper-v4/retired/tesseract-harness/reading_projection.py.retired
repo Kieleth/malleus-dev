@@ -1,0 +1,599 @@
+"""Project one frozen OCR reading into private blocks and a public manifest."""
+
+from __future__ import annotations
+
+import argparse
+from dataclasses import dataclass
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import re
+import sys
+import tempfile
+from typing import Any, Mapping, Sequence
+
+from malleus.ocr import Bundle, verify_bundle
+from research.ontology_driven_kg_realization.experiments.document_paper.ocr_emitter import (
+    PageArtifacts,
+    _construct_bundle,
+    _verification_document,
+    validate_alignment,
+)
+
+
+PRECOMMIT_SCHEMA = "malleus.paper-v4.reading-projection-precommit/v1"
+PRIVATE_SCHEMA = "malleus.paper-v4.selected-reading/v1"
+PUBLIC_SCHEMA = "malleus.paper-v4.selected-reading-manifest/v1"
+PAGES = tuple(range(1, 12))
+UNITS = tuple(f"page:{page}" for page in PAGES)
+PROJECTION = {
+    "encoding": "UTF-8_STRICT",
+    "line_endings": "CRLF_AND_CR_TO_LF",
+    "blank_line": "LINE_CONTAINING_ONLY_ZERO_OR_MORE_SPACE_OR_TAB_CHARACTERS",
+    "block_rule": "MAXIMAL_RUN_OF_NONBLANK_LINES",
+    "block_bytes": "PRESERVE_LINE_PAYLOADS_JOINED_BY_LF_WITH_ONE_TERMINAL_LF",
+    "ordering": "PAGE_ASCENDING_THEN_BLOCK_ORDINAL_ASCENDING",
+    "block_id_pattern": "page:{page}:block:{ordinal:03d}",
+    "empty_page_policy": "REFUSE",
+    "text_correction": "NONE",
+}
+_BLANK = re.compile(r"^[ \t]*$")
+
+
+class ReadingProjectionError(ValueError):
+    """The frozen selected reading cannot be projected without guessing."""
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectionResult:
+    private_reading_path: Path
+    public_manifest_path: Path
+
+
+def _digest(value: bytes) -> str:
+    return "sha256:" + sha256(value).hexdigest()
+
+
+def _json_bytes(value: Any) -> bytes:
+    try:
+        return (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode()
+    except (TypeError, ValueError, UnicodeEncodeError) as error:
+        raise ReadingProjectionError(f"value is not canonical JSON: {error}") from error
+
+
+def _object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ReadingProjectionError(f"JSON declares duplicate key {key!r}")
+        result[key] = value
+    return result
+
+
+def _load(path: Path, label: str) -> tuple[dict[str, Any], bytes]:
+    try:
+        raw = path.read_bytes()
+        value = json.loads(raw, object_pairs_hook=_object)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ReadingProjectionError(f"cannot read {label} {path}: {error}") from error
+    if not isinstance(value, dict):
+        raise ReadingProjectionError(f"{label} must be a JSON object")
+    return value, raw
+
+
+def _mapping(value: Any, label: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ReadingProjectionError(f"{label} must be an object")
+    return value
+
+
+def _keys(value: Mapping[str, Any], expected: set[str], label: str) -> None:
+    if set(value) != expected:
+        raise ReadingProjectionError(f"{label} fields drift from the frozen contract")
+
+
+def _repo_path(root: Path, locator: Any, label: str) -> Path:
+    relative = Path(locator) if isinstance(locator, str) else None
+    if (
+        relative is None
+        or not locator
+        or relative.is_absolute()
+        or ".." in relative.parts
+    ):
+        raise ReadingProjectionError(f"{label} must be a nonempty repository path")
+    candidate = root / relative
+    cursor = candidate
+    while cursor != root:
+        if cursor.is_symlink():
+            raise ReadingProjectionError(f"{label} traverses a symbolic link")
+        cursor = cursor.parent
+    path = candidate.resolve()
+    if not path.is_relative_to(root):
+        raise ReadingProjectionError(f"{label} escapes the repository root")
+    return path
+
+
+def _validate_precommit(value: Mapping[str, Any]) -> None:
+    _keys(
+        value,
+        {
+            "schema",
+            "frozen_at",
+            "status",
+            "source_sha256",
+            "input",
+            "projection",
+            "output",
+        },
+        "projection precommit",
+    )
+    if value["schema"] != PRECOMMIT_SCHEMA:
+        raise ReadingProjectionError("projection precommit schema drift")
+    if value["status"] != "FROZEN_BEFORE_RETAINED_READING":
+        raise ReadingProjectionError(
+            "projection precommit is not frozen before reading"
+        )
+    if not isinstance(value["frozen_at"], str) or not value["frozen_at"]:
+        raise ReadingProjectionError("projection precommit frozen_at is missing")
+    if value["projection"] != PROJECTION:
+        raise ReadingProjectionError("reading projection rules drift")
+    inputs = _mapping(value["input"], "projection input")
+    _keys(
+        inputs,
+        {
+            "ocr_precommit_path",
+            "ocr_precommit_sha256",
+            "ocr_bundle_path",
+            "ocr_verification_path",
+            "selected_page_path_pattern",
+            "required_pages",
+        },
+        "projection input",
+    )
+    if inputs["required_pages"] != list(PAGES):
+        raise ReadingProjectionError("projection must require pages 1 through 11")
+    outputs = _mapping(value["output"], "projection output")
+    _keys(
+        outputs,
+        {"private_reading_path", "public_manifest_path", "public_text"},
+        "projection output",
+    )
+    if outputs["private_reading_path"] != (
+        "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json"
+    ) or outputs["public_manifest_path"] != (
+        "paper-v4/experiment/selected-reading-manifest.json"
+    ):
+        raise ReadingProjectionError("projection output locators drift")
+    if outputs["public_text"] != "DIGEST_ONLY":
+        raise ReadingProjectionError("public projection must remain digest only")
+
+
+def _ocr_identity(
+    projection: Mapping[str, Any],
+    ocr: Mapping[str, Any],
+    verification: Mapping[str, Any],
+    bundle_document: Mapping[str, Any],
+    *,
+    ocr_digest: str,
+) -> tuple[
+    Bundle,
+    list[Mapping[str, Any]],
+    Mapping[str, Any],
+    Mapping[str, str],
+]:
+    inputs = _mapping(projection["input"], "projection input")
+    if ocr.get("schema") != "malleus.paper-v4.ocr-precommit/v1":
+        raise ReadingProjectionError("OCR precommit schema drift")
+    if ocr.get("status") != "FROZEN_BEFORE_RETAINED_READING":
+        raise ReadingProjectionError("OCR precommit status drift")
+    if verification.get("schema") != "malleus.paper-v4.ocr-verification/v1":
+        raise ReadingProjectionError("OCR verification schema drift")
+    source = _mapping(ocr.get("source"), "OCR source")
+    retention = _mapping(ocr.get("retention"), "OCR retention")
+    malleus = _mapping(ocr.get("malleus_ocr"), "OCR Malleus identity")
+    source_class = _mapping(ocr.get("source_class"), "OCR source class")
+    if inputs["ocr_precommit_sha256"] != ocr_digest:
+        raise ReadingProjectionError("OCR precommit hash drift")
+    if projection["source_sha256"] != source.get("sha256"):
+        raise ReadingProjectionError("source identity drift")
+    if source.get("page_count") != len(PAGES):
+        raise ReadingProjectionError("OCR page count drift")
+    if source_class.get("required_units") != list(UNITS):
+        raise ReadingProjectionError("OCR required units drift")
+    if retention.get("public_bundle") != inputs["ocr_bundle_path"]:
+        raise ReadingProjectionError("OCR bundle path drift")
+    if retention.get("public_verification") != inputs["ocr_verification_path"]:
+        raise ReadingProjectionError("OCR verification path drift")
+    expected_pattern = f"{retention.get('private_root')}/selected/page-{{page:03d}}.txt"
+    if inputs["selected_page_path_pattern"] != expected_pattern:
+        raise ReadingProjectionError("selected page path pattern drift")
+    for key in ("profile", "profile_version", "document_version"):
+        if bundle_document.get(key) != malleus.get(key):
+            raise ReadingProjectionError(f"OCR bundle {key} identity drift")
+
+    try:
+        bundle = Bundle.from_document(bundle_document)
+    except (TypeError, ValueError) as error:
+        raise ReadingProjectionError(f"invalid OCR bundle: {error}") from error
+    checked = verify_bundle(bundle)
+    if not checked.conforms or not checked.account.complete:
+        raise ReadingProjectionError("OCR bundle does not independently verify")
+    sidecars = verification.get("sidecars")
+    if not isinstance(sidecars, list) or len(sidecars) != len(PAGES):
+        raise ReadingProjectionError("OCR verification must declare 11 sidecar rows")
+    runtime = _mapping(verification.get("runtime"), "OCR verification runtime")
+    reader = _mapping(runtime.get("reader"), "OCR verification reader runtime")
+    reader_version = _mapping(reader.get("version"), "OCR verification reader version")
+    ontology = _mapping(runtime.get("ontology"), "OCR verification ontology runtime")
+    renderer = _mapping(runtime.get("renderer"), "OCR verification renderer runtime")
+    expected_runtime = (
+        runtime.get("malleus_version") == malleus.get("malleus_version"),
+        ontology.get("version") == malleus.get("ontology_version"),
+        ontology.get("sha256") == malleus.get("ontology_sha256"),
+        ontology.get("registry_content_hash") == malleus.get("registry_content_hash"),
+        renderer.get("id") == ocr["renderer"].get("id"),
+        renderer.get("binary_sha256") == ocr["renderer"].get("binary_sha256"),
+        reader.get("id") == ocr["reader"].get("id"),
+        reader.get("binary_sha256") == ocr["reader"].get("binary_sha256"),
+        reader.get("traineddata_sha256") == ocr["reader"].get("traineddata_sha256"),
+    )
+    if not all(expected_runtime):
+        raise ReadingProjectionError("OCR runtime identity drifts from its precommit")
+    return bundle, sidecars, runtime, reader_version
+
+
+def _selected_digests(
+    root: Path,
+    projection: Mapping[str, Any],
+    sidecars: list[Mapping[str, Any]],
+) -> tuple[
+    list[tuple[int, str, Path, str, bytes]],
+    dict[Path, str],
+    tuple[PageArtifacts, ...],
+]:
+    pattern = projection["input"]["selected_page_path_pattern"]
+    rows: list[tuple[int, str, Path, str, bytes]] = []
+    snapshots: dict[Path, str] = {}
+    artifacts: list[PageArtifacts] = []
+    for page, raw_sidecar in zip(PAGES, sidecars, strict=True):
+        sidecar = _mapping(raw_sidecar, f"sidecar page {page}")
+        _keys(
+            sidecar,
+            {"unit", "dimensions", "raster", "request", "response", "selected"},
+            f"sidecar page {page}",
+        )
+        if sidecar.get("unit") != f"page:{page}":
+            raise ReadingProjectionError("sidecar page order or unit drift")
+        dimensions = _mapping(sidecar.get("dimensions"), f"dimensions page {page}")
+        _keys(dimensions, {"width", "height"}, f"dimensions page {page}")
+        if any(
+            type(dimensions[key]) is not int or dimensions[key] < 1
+            for key in ("width", "height")
+        ):
+            raise ReadingProjectionError(f"invalid sidecar dimensions on page {page}")
+        planes = {
+            name: _mapping(sidecar.get(name), f"{name} sidecar page {page}")
+            for name in ("raster", "request", "response", "selected")
+        }
+        for name, plane in planes.items():
+            _keys(plane, {"path", "sha256"}, f"{name} sidecar page {page}")
+        selected = planes["selected"]
+        expected_path = pattern.format(page=page)
+        if selected["path"] != expected_path:
+            raise ReadingProjectionError(f"selected sidecar path drift on page {page}")
+        path = _repo_path(root, selected["path"], f"selected sidecar page {page}")
+        try:
+            raw = path.read_bytes()
+        except OSError as error:
+            raise ReadingProjectionError(
+                f"cannot read selected page {page}: {error}"
+            ) from error
+        digest = _digest(raw)
+        if digest != selected["sha256"]:
+            raise ReadingProjectionError(f"selected sidecar hash drift on page {page}")
+        rows.append((page, f"page:{page}", path, digest, raw))
+        snapshots[path] = digest
+        if planes["response"]["sha256"] != digest:
+            raise ReadingProjectionError(
+                f"response and selected digest differ on page {page}"
+            )
+        values: list[Any] = []
+        for name in ("raster", "request", "response", "selected"):
+            plane = planes[name]
+            values.extend(
+                (
+                    _repo_path(root, plane["path"], f"{name} sidecar page {page}"),
+                    plane["path"],
+                    plane["sha256"],
+                )
+            )
+        artifacts.append(
+            PageArtifacts(
+                page,
+                sidecar["unit"],
+                dimensions["width"],
+                dimensions["height"],
+                *values,
+            )
+        )
+    return rows, snapshots, tuple(artifacts)
+
+
+def _blocks(raw: bytes, page: int) -> list[dict[str, Any]]:
+    try:
+        normalized = (
+            raw.decode("utf-8", errors="strict")
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+        )
+    except UnicodeDecodeError as error:
+        raise ReadingProjectionError(
+            f"selected page {page} is not strict UTF-8: {error}"
+        ) from error
+    blocks: list[dict[str, Any]] = []
+    run: list[str] = []
+    for line in normalized.split("\n") + [""]:
+        if _BLANK.fullmatch(line):
+            if run:
+                text = "\n".join(run) + "\n"
+                payload = text.encode()
+                ordinal = len(blocks) + 1
+                blocks.append(
+                    {
+                        "id": f"page:{page}:block:{ordinal:03d}",
+                        "ordinal": ordinal,
+                        "byte_length": len(payload),
+                        "sha256": _digest(payload),
+                        "text": text,
+                    }
+                )
+                run = []
+        else:
+            run.append(line)
+    if not blocks:
+        raise ReadingProjectionError(f"selected page {page} contains no nonblank block")
+    return blocks
+
+
+def _publish(staged: Sequence[tuple[Path, Path]]) -> None:
+    published: list[Path] = []
+    try:
+        for source, target in staged:
+            os.link(source, target)
+            published.append(target)
+    except OSError as error:
+        rollback_errors: list[str] = []
+        for target in reversed(published):
+            try:
+                target.unlink()
+            except OSError as rollback_error:
+                rollback_errors.append(f"{target}: {rollback_error}")
+        if rollback_errors:
+            raise ReadingProjectionError(
+                "publication failed and rollback was incomplete: "
+                + "; ".join(rollback_errors)
+            ) from error
+        raise ReadingProjectionError(
+            f"publication failed and was rolled back: {error}"
+        ) from error
+
+
+def project(repository_root: Path, precommit_path: Path) -> ProjectionResult:
+    """Project the exact retained page readings named by one frozen precommit."""
+
+    root = repository_root.resolve()
+    if not root.is_dir():
+        raise ReadingProjectionError(f"repository root is not a directory: {root}")
+    precommit = precommit_path.resolve()
+    if not precommit.is_relative_to(root):
+        raise ReadingProjectionError(
+            "projection precommit must be inside the repository"
+        )
+    projection, projection_raw = _load(precommit, "projection precommit")
+    _validate_precommit(projection)
+    inputs = projection["input"]
+    outputs = projection["output"]
+    private_final = _repo_path(
+        root, outputs["private_reading_path"], "private reading path"
+    )
+    public_final = _repo_path(
+        root, outputs["public_manifest_path"], "public manifest path"
+    )
+    if private_final == public_final:
+        raise ReadingProjectionError("private and public output paths must differ")
+    final_paths = (private_final, public_final)
+    if any(path.exists() or path.is_symlink() for path in final_paths):
+        raise ReadingProjectionError("refusing to overwrite a final projection output")
+    ocr_path = _repo_path(root, inputs["ocr_precommit_path"], "OCR precommit path")
+    bundle_path = _repo_path(root, inputs["ocr_bundle_path"], "OCR bundle path")
+    verification_path = _repo_path(
+        root, inputs["ocr_verification_path"], "OCR verification path"
+    )
+    ocr, ocr_raw = _load(ocr_path, "OCR precommit")
+    bundle_document, bundle_raw = _load(bundle_path, "OCR bundle")
+    verification, verification_raw = _load(verification_path, "OCR verification")
+    source = _mapping(ocr.get("source"), "OCR source")
+    source_path = _repo_path(root, source.get("path"), "source path")
+    try:
+        source_raw = source_path.read_bytes()
+    except OSError as error:
+        raise ReadingProjectionError(
+            f"cannot read frozen source {source_path}: {error}"
+        ) from error
+    if _digest(source_raw) != source.get("sha256") or len(source_raw) != source.get(
+        "byte_length"
+    ):
+        raise ReadingProjectionError("source bytes drift from the OCR precommit")
+    bundle, sidecars, runtime, reader_version = _ocr_identity(
+        projection,
+        ocr,
+        verification,
+        bundle_document,
+        ocr_digest=_digest(ocr_raw),
+    )
+    selected, snapshots, artifacts = _selected_digests(root, projection, sidecars)
+    try:
+        expected_bundle = _construct_bundle(ocr, artifacts, reader_version)
+    except (KeyError, TypeError, ValueError) as error:
+        raise ReadingProjectionError(
+            f"cannot reconstruct the frozen OCR bundle: {error}"
+        ) from error
+    if bundle != expected_bundle:
+        raise ReadingProjectionError(
+            "OCR bundle drifts from its frozen precommit and sidecar receipt"
+        )
+    try:
+        validate_alignment(
+            bundle,
+            ocr,
+            artifacts,
+            _repo_path(root, ocr["retention"]["private_root"], "OCR private root"),
+            reader_version,
+        )
+        expected_verification = _verification_document(
+            root,
+            ocr_path,
+            _digest(ocr_raw),
+            ocr,
+            bundle,
+            bundle_raw,
+            artifacts,
+            runtime,
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ReadingProjectionError(
+            f"cannot recompute the OCR verification receipt: {error}"
+        ) from error
+    if verification != expected_verification:
+        raise ReadingProjectionError("OCR verification drifts from recomputation")
+
+    identity = {
+        "source_sha256": projection["source_sha256"],
+        "projection_precommit": {
+            "path": precommit.relative_to(root).as_posix(),
+            "sha256": _digest(projection_raw),
+        },
+        "ocr_precommit": {
+            "path": inputs["ocr_precommit_path"],
+            "sha256": _digest(ocr_raw),
+        },
+        "ocr_bundle": {
+            "id": bundle.id,
+            "path": inputs["ocr_bundle_path"],
+            "sha256": _digest(bundle_raw),
+        },
+        "ocr_verification": {
+            "path": inputs["ocr_verification_path"],
+            "sha256": _digest(verification_raw),
+        },
+    }
+    pages: list[dict[str, Any]] = []
+    for page, unit, path, selected_sha256, raw in selected:
+        blocks = _blocks(raw, page)
+        pages.append(
+            {
+                "page": page,
+                "unit": unit,
+                "selected": {
+                    "path": path.relative_to(root).as_posix(),
+                    "sha256": selected_sha256,
+                },
+                "blocks": blocks,
+            }
+        )
+    block_count = sum(len(page["blocks"]) for page in pages)
+    private_document = {
+        "schema": PRIVATE_SCHEMA,
+        **identity,
+        "block_count": block_count,
+        "pages": pages,
+    }
+    public_pages = [
+        {
+            "page": page["page"],
+            "unit": page["unit"],
+            "selected": page["selected"],
+            "block_count": len(page["blocks"]),
+            "blocks": [
+                {key: block[key] for key in ("id", "ordinal", "byte_length", "sha256")}
+                for block in page["blocks"]
+            ],
+        }
+        for page in pages
+    ]
+    private_bytes = _json_bytes(private_document)
+    public_document = {
+        "schema": PUBLIC_SCHEMA,
+        **identity,
+        "private_reading": {
+            "path": outputs["private_reading_path"],
+            "sha256": _digest(private_bytes),
+        },
+        "block_count": block_count,
+        "pages": public_pages,
+        "publication_boundary": {"public_text": "DIGEST_ONLY"},
+    }
+    public_bytes = _json_bytes(public_document)
+    input_snapshots = {
+        precommit: _digest(projection_raw),
+        ocr_path: _digest(ocr_raw),
+        bundle_path: _digest(bundle_raw),
+        verification_path: _digest(verification_raw),
+        source_path: _digest(source_raw),
+        **snapshots,
+    }
+    for path, digest in input_snapshots.items():
+        try:
+            current = _digest(path.read_bytes())
+        except OSError as error:
+            raise ReadingProjectionError(
+                f"projection input disappeared: {path}: {error}"
+            ) from error
+        if current != digest:
+            raise ReadingProjectionError(
+                f"projection input changed during execution: {path}"
+            )
+
+    for path in final_paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(
+        prefix=".paper-v4-reading-", dir=root
+    ) as temporary:
+        stage = Path(temporary)
+        private_stage = stage / "selected-reading.json"
+        public_stage = stage / "selected-reading-manifest.json"
+        private_stage.write_bytes(private_bytes)
+        public_stage.write_bytes(public_bytes)
+        _publish(((private_stage, private_final), (public_stage, public_final)))
+    return ProjectionResult(private_final, public_final)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Project one frozen OCR reading into ordered text blocks."
+    )
+    parser.add_argument("repository_root", type=Path)
+    parser.add_argument("precommit", type=Path)
+    arguments = parser.parse_args(argv)
+    try:
+        result = project(arguments.repository_root, arguments.precommit)
+    except ReadingProjectionError as error:
+        print(f"REFUSED: {error}", file=sys.stderr)
+        return 1
+    print(result.private_reading_path)
+    print(result.public_manifest_path)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

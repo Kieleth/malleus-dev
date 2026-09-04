@@ -1,0 +1,1300 @@
+"""Strict paper-local PDF raster and OCR evidence emitter.
+
+The frozen precommit is the authority. This module adds no ingestion behavior
+to Malleus Core: it runs the named local binaries, retains their exact bytes,
+and emits the public ``malleus.ocr`` bundle those bytes support.
+"""
+
+from __future__ import annotations
+
+import argparse
+from dataclasses import dataclass, fields
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import struct
+import subprocess
+import sys
+import tempfile
+from typing import Any, Mapping, Sequence
+
+from malleus import __version__ as MALLEUS_VERSION
+from malleus.ocr import (
+    Bundle,
+    Hypothesis,
+    OCRAttempt,
+    Raster,
+    Region,
+    Selection,
+    SourceClass,
+    SourceRepresentation,
+    canonical_digest,
+    profile_registry,
+    verify_bundle,
+)
+
+
+PRECOMMIT_SCHEMA = "malleus.paper-v4.ocr-precommit/v1"
+RESULT_SCHEMA = "malleus.paper-v4.ocr-verification/v1"
+REQUEST_SCHEMA = "malleus.paper-v4.ocr-request/v1"
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+class OCREmitterError(ValueError):
+    """The frozen OCR run cannot be performed without guessing or drift."""
+
+
+@dataclass(frozen=True, slots=True)
+class PageArtifacts:
+    page: int
+    unit: str
+    width: int
+    height: int
+    raster_path: Path
+    raster_locator: str
+    raster_sha256: str
+    request_path: Path
+    request_locator: str
+    request_sha256: str
+    response_path: Path
+    response_locator: str
+    response_sha256: str
+    selected_path: Path
+    selected_locator: str
+    selected_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class EmissionResult:
+    bundle_path: Path
+    verification_path: Path
+    private_root: Path
+
+
+def _digest_bytes(value: bytes) -> str:
+    return "sha256:" + sha256(value).hexdigest()
+
+
+def _digest_file(path: Path) -> str:
+    try:
+        return _digest_bytes(path.read_bytes())
+    except OSError as error:
+        raise OCREmitterError(f"cannot read {path}: {error}") from error
+
+
+def _json_bytes(value: Any) -> bytes:
+    try:
+        return (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+    except (TypeError, ValueError, UnicodeEncodeError) as error:
+        raise OCREmitterError(f"value is not canonical JSON: {error}") from error
+
+
+def _mapping(value: Any, where: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise OCREmitterError(f"{where} must be a mapping")
+    return value
+
+
+def _exact_keys(value: Any, keys: Sequence[str], where: str) -> Mapping[str, Any]:
+    result = _mapping(value, where)
+    missing = sorted(set(keys) - set(result))
+    unknown = sorted(set(result) - set(keys))
+    if missing or unknown:
+        raise OCREmitterError(
+            f"{where} key mismatch; missing={missing}, unknown={unknown}"
+        )
+    return result
+
+
+def _text(value: Any, where: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise OCREmitterError(f"{where} must be nonblank text")
+    return value
+
+
+def _integer(value: Any, where: str, *, minimum: int = 0) -> int:
+    if type(value) is not int or value < minimum:
+        raise OCREmitterError(f"{where} must be an integer >= {minimum}")
+    return value
+
+
+def _number(value: Any, where: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise OCREmitterError(f"{where} must be numeric")
+    return float(value)
+
+
+def _texts(value: Any, where: str) -> tuple[str, ...]:
+    if not isinstance(value, list) or not value:
+        raise OCREmitterError(f"{where} must be a nonempty array")
+    result = tuple(_text(item, f"{where}[{index}]") for index, item in enumerate(value))
+    if len(result) != len(set(result)):
+        raise OCREmitterError(f"{where} must not contain duplicates")
+    return result
+
+
+def _require(value: Any, expected: Any, where: str) -> None:
+    if value != expected:
+        raise OCREmitterError(f"{where} must be {expected!r}, got {value!r}")
+
+
+def _validate_precommit(document: Any) -> Mapping[str, Any]:
+    section_keys = {
+        "source": (
+            "manifest",
+            "source_id",
+            "path",
+            "media_type",
+            "byte_length",
+            "sha256",
+            "page_count",
+        ),
+        "malleus_ocr": (
+            "malleus_version",
+            "profile",
+            "profile_version",
+            "document_version",
+            "ontology_version",
+            "ontology_path",
+            "ontology_sha256",
+            "registry_content_hash",
+        ),
+        "source_class": (
+            "id",
+            "required_units",
+            "metric_families",
+            "temporal_policy",
+            "inventory_basis",
+            "frozen_at",
+        ),
+        "renderer": (
+            "id",
+            "executable",
+            "version_contains",
+            "binary_sha256",
+            "format",
+            "dpi",
+            "page_box",
+            "single_page_arguments",
+        ),
+        "reader": (
+            "id",
+            "executable",
+            "version_contains",
+            "binary_sha256",
+            "traineddata_path",
+            "traineddata_sha256",
+            "language",
+            "arguments",
+            "confidence_policy",
+            "empty_page_policy",
+        ),
+        "selector": ("profile", "type", "conforms_to", "scope", "coordinate_system"),
+        "selection": ("cardinality", "reason", "human_verified"),
+        "policies": ("data_handling", "hostile_content"),
+        "retention": (
+            "private_root",
+            "public_bundle",
+            "public_verification",
+            "page_rasters",
+            "page_requests",
+            "page_responses",
+            "selected_reading",
+            "bundle_text_bytes",
+        ),
+        "execution": (
+            "network",
+            "embedded_pdf_text_layer",
+            "pdftotext",
+            "preprocessing",
+            "retries",
+            "final_output_on_partial_failure",
+            "reproducibility_status",
+        ),
+    }
+    config = _exact_keys(
+        document, ("schema", "frozen_at", "status", *section_keys), "precommit"
+    )
+    sections = {
+        name: _exact_keys(config[name], keys, f"precommit.{name}")
+        for name, keys in section_keys.items()
+    }
+    _require(config["schema"], PRECOMMIT_SCHEMA, "precommit.schema")
+    _text(config["frozen_at"], "precommit.frozen_at")
+    _require(config["status"], "FROZEN_BEFORE_RETAINED_READING", "precommit.status")
+
+    text_fields = {
+        "source": ("manifest", "source_id", "path", "media_type", "sha256"),
+        "malleus_ocr": (
+            "malleus_version",
+            "profile",
+            "profile_version",
+            "ontology_version",
+            "ontology_path",
+            "ontology_sha256",
+            "registry_content_hash",
+        ),
+        "source_class": ("id", "temporal_policy", "inventory_basis", "frozen_at"),
+        "renderer": ("id", "executable", "version_contains", "binary_sha256"),
+        "reader": (
+            "id",
+            "executable",
+            "version_contains",
+            "binary_sha256",
+            "traineddata_path",
+            "traineddata_sha256",
+            "language",
+        ),
+        "selector": ("profile", "type", "conforms_to"),
+        "selection": ("reason",),
+        "retention": ("private_root", "public_bundle", "public_verification"),
+        "execution": ("reproducibility_status",),
+    }
+    for section, names in text_fields.items():
+        for field in names:
+            _text(sections[section][field], f"precommit.{section}.{field}")
+
+    source = sections["source"]
+    _require(source["media_type"], "application/pdf", "precommit.source.media_type")
+    _integer(source["byte_length"], "precommit.source.byte_length", minimum=1)
+    page_count = _integer(
+        source["page_count"], "precommit.source.page_count", minimum=1
+    )
+    _require(page_count, 11, "precommit.source.page_count")
+
+    ocr = sections["malleus_ocr"]
+    _integer(ocr["document_version"], "precommit.malleus_ocr.document_version")
+    _require(
+        ocr["profile"],
+        "malleus.ocr.evidence_integrity",
+        "precommit.malleus_ocr.profile",
+    )
+    _require(ocr["profile_version"], "v0", "precommit.malleus_ocr.profile_version")
+    _require(ocr["document_version"], 1, "precommit.malleus_ocr.document_version")
+
+    source_class = sections["source_class"]
+    units = _texts(
+        source_class["required_units"], "precommit.source_class.required_units"
+    )
+    _require(
+        units,
+        tuple(f"page:{page}" for page in range(1, page_count + 1)),
+        "precommit.source_class.required_units",
+    )
+    families = _exact_keys(
+        source_class["metric_families"],
+        ("page_coverage",),
+        "precommit.source_class.metric_families",
+    )
+    page_coverage = _exact_keys(
+        families["page_coverage"],
+        ("denominator", "threshold"),
+        "precommit.source_class.metric_families.page_coverage",
+    )
+    _require(
+        page_coverage["denominator"],
+        "declared_units",
+        "precommit.source_class.metric_families.page_coverage.denominator",
+    )
+    _require(
+        _number(
+            page_coverage["threshold"],
+            "precommit.source_class.metric_families.page_coverage.threshold",
+        ),
+        1.0,
+        "precommit.source_class.metric_families.page_coverage.threshold",
+    )
+
+    renderer = sections["renderer"]
+    _require(renderer["format"], "png", "precommit.renderer.format")
+    dpi = _integer(renderer["dpi"], "precommit.renderer.dpi", minimum=1)
+    _require(renderer["page_box"], "media_box", "precommit.renderer.page_box")
+    render_arguments = _texts(
+        renderer["single_page_arguments"],
+        "precommit.renderer.single_page_arguments",
+    )
+    _require(
+        render_arguments,
+        ("-singlefile", "-r", str(dpi), "-png"),
+        "precommit.renderer.single_page_arguments",
+    )
+
+    reader = sections["reader"]
+    arguments = _texts(reader["arguments"], "precommit.reader.arguments")
+    if arguments[0] != "stdout":
+        raise OCREmitterError("precommit.reader.arguments must emit to stdout")
+    try:
+        language = arguments[arguments.index("-l") + 1]
+    except (ValueError, IndexError) as error:
+        raise OCREmitterError(
+            "precommit.reader.arguments do not bind reader.language"
+        ) from error
+    if language != reader["language"]:
+        raise OCREmitterError("precommit.reader.arguments do not bind reader.language")
+    _require(
+        reader["confidence_policy"],
+        "OMIT_UNCALIBRATED_CONFIDENCE",
+        "precommit.reader.confidence_policy",
+    )
+    _require(
+        reader["empty_page_policy"],
+        "REFUSE_KNOWN_NONBLANK_ARTICLE_PAGE",
+        "precommit.reader.empty_page_policy",
+    )
+
+    selector = sections["selector"]
+    _require(selector["scope"], "FULL_RENDERED_PAGE", "precommit.selector.scope")
+    _require(
+        selector["coordinate_system"], "pixel", "precommit.selector.coordinate_system"
+    )
+
+    selection = sections["selection"]
+    _require(
+        selection["cardinality"],
+        "ONE_MACHINE_HYPOTHESIS_PER_PAGE",
+        "precommit.selection.cardinality",
+    )
+    _require(selection["human_verified"], False, "precommit.selection.human_verified")
+
+    policies = sections["policies"]
+    data_handling = _exact_keys(
+        policies["data_handling"],
+        (
+            "id",
+            "classification",
+            "processing",
+            "provider_retention",
+            "credentials",
+            "raw_responses",
+            "rasters",
+            "public_export",
+            "full_text_export",
+        ),
+        "precommit.policies.data_handling",
+    )
+    hostile = _exact_keys(
+        policies["hostile_content"],
+        (
+            "id",
+            "document_role",
+            "instruction_effect",
+            "tool_effect",
+            "policy_effect",
+            "ontology_effect",
+        ),
+        "precommit.policies.hostile_content",
+    )
+    for name, policy in (
+        ("data_handling", data_handling),
+        ("hostile_content", hostile),
+    ):
+        for key, value in policy.items():
+            _text(value, f"precommit.policies.{name}.{key}")
+    _require(
+        data_handling["processing"], "local binaries only", "data handling processing"
+    )
+    _require(data_handling["credentials"], "forbidden", "data handling credentials")
+
+    retention = sections["retention"]
+    for key in ("page_rasters", "page_requests", "page_responses", "selected_reading"):
+        _require(retention[key], "private", f"precommit.retention.{key}")
+    _require(
+        retention["bundle_text_bytes"],
+        "digest_only",
+        "precommit.retention.bundle_text_bytes",
+    )
+
+    execution = sections["execution"]
+    for key in ("network", "embedded_pdf_text_layer", "pdftotext"):
+        _require(execution[key], "forbidden", f"precommit.execution.{key}")
+    _require(execution["preprocessing"], "none", "precommit.execution.preprocessing")
+    _require(execution["retries"], 0, "precommit.execution.retries")
+    _require(
+        execution["final_output_on_partial_failure"],
+        "forbidden",
+        "precommit.execution.final_output_on_partial_failure",
+    )
+    return config
+
+
+def _repo_path(root: Path, value: Any, where: str) -> Path:
+    text = _text(value, where)
+    relative = Path(text)
+    if relative.is_absolute():
+        raise OCREmitterError(f"{where} must be repository-relative")
+    resolved = (root / relative).resolve()
+    if not resolved.is_relative_to(root):
+        raise OCREmitterError(f"{where} escapes the repository root")
+    return resolved
+
+
+def _load_json(path: Path, where: str) -> Mapping[str, Any]:
+    try:
+        return _mapping(json.loads(path.read_bytes()), where)
+    except (OSError, json.JSONDecodeError) as error:
+        raise OCREmitterError(f"cannot read {where} at {path}: {error}") from error
+
+
+def _validate_source_manifest(root: Path, source: Mapping[str, Any]) -> None:
+    manifest_path = _repo_path(root, source["manifest"], "precommit.source.manifest")
+    manifest = _exact_keys(
+        _load_json(manifest_path, "source manifest"),
+        (
+            "schema",
+            "source_id",
+            "title",
+            "authors",
+            "journal",
+            "publication_date",
+            "doi",
+            "landing_url",
+            "source_url",
+            "license",
+            "artifact",
+            "acquisition",
+        ),
+        "source manifest",
+    )
+    _require(
+        manifest["schema"],
+        "malleus.paper-v4.source-freeze/v1",
+        "source manifest.schema",
+    )
+    _require(manifest["source_id"], source["source_id"], "source manifest.source_id")
+    artifact = _mapping(manifest["artifact"], "source manifest.artifact")
+    for key in ("path", "media_type", "byte_length", "sha256", "page_count"):
+        if key not in artifact:
+            raise OCREmitterError(f"source manifest.artifact is missing {key}")
+        _require(artifact[key], source[key], f"source manifest.artifact.{key}")
+    license_record = _mapping(manifest["license"], "source manifest.license")
+    if "derived_full_text_publication" not in license_record:
+        raise OCREmitterError(
+            "source manifest.license is missing derived_full_text_publication"
+        )
+    if (
+        license_record["derived_full_text_publication"]
+        != "REQUIRES_SEPARATE_RIGHTS_REVIEW"
+    ):
+        raise OCREmitterError(
+            "source manifest does not preserve the full-text publication boundary"
+        )
+
+
+def _run(command: Sequence[str]) -> subprocess.CompletedProcess[bytes]:
+    try:
+        result = subprocess.run(
+            list(command),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    except OSError as error:
+        raise OCREmitterError(f"cannot execute {command[0]}: {error}") from error
+    if result.returncode != 0:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()
+        raise OCREmitterError(
+            f"command {command[0]} failed with exit {result.returncode}: {detail}"
+        )
+    return result
+
+
+def _executable(config: Mapping[str, Any], where: str) -> Path:
+    path = Path(_text(config["executable"], f"{where}.executable"))
+    if not path.is_absolute():
+        raise OCREmitterError(f"{where}.executable must be absolute")
+    if not path.is_file() or not os.access(path, os.X_OK):
+        raise OCREmitterError(f"{where}.executable is not an executable file: {path}")
+    if _digest_file(path) != config["binary_sha256"]:
+        raise OCREmitterError(f"{where} binary hash drift: {path}")
+    return path
+
+
+def _version_evidence(
+    path: Path, argument: str, expected: str, where: str
+) -> dict[str, str]:
+    result = _run((str(path), argument))
+    combined = result.stdout + result.stderr
+    if expected.encode("utf-8") not in combined:
+        raise OCREmitterError(f"{where} version output does not contain {expected!r}")
+    return {
+        "expected_fragment": expected,
+        "stdout_sha256": _digest_bytes(result.stdout),
+        "stderr_sha256": _digest_bytes(result.stderr),
+        "observed": combined.decode("utf-8", errors="strict").strip(),
+    }
+
+
+def _png_dimensions(path: Path) -> tuple[int, int]:
+    try:
+        header = path.read_bytes()[:33]
+    except OSError as error:
+        raise OCREmitterError(f"cannot read raster {path}: {error}") from error
+    if len(header) < 33 or header[:8] != PNG_SIGNATURE:
+        raise OCREmitterError(f"renderer did not produce a PNG: {path}")
+    length, chunk_type = struct.unpack(">I4s", header[8:16])
+    if length != 13 or chunk_type != b"IHDR":
+        raise OCREmitterError(f"PNG has no leading IHDR chunk: {path}")
+    width, height = struct.unpack(">II", header[16:24])
+    if width < 1 or height < 1:
+        raise OCREmitterError(f"PNG has invalid dimensions {width}x{height}: {path}")
+    return width, height
+
+
+def _selector(config: Mapping[str, Any], width: int, height: int) -> dict[str, str]:
+    selector = config["selector"]
+    return {
+        "type": selector["type"],
+        "conformsTo": selector["conforms_to"],
+        "value": f"xywh=pixel:0,0,{width},{height}",
+    }
+
+
+def _ids(source_id: str, page: int) -> dict[str, str]:
+    stem = f"{source_id}:page:{page}"
+    return {
+        "raster": f"raster:{stem}",
+        "region": f"region:{stem}:full",
+        "attempt": f"attempt:{stem}:machine:1",
+        "hypothesis": f"hypothesis:{stem}:machine:1",
+        "selection": f"selection:{stem}",
+    }
+
+
+def _sidecar_closure(artifacts: tuple[PageArtifacts, ...]) -> list[dict[str, Any]]:
+    return [
+        {
+            "unit": item.unit,
+            "dimensions": {"width": item.width, "height": item.height},
+            "raster": {"path": item.raster_locator, "sha256": item.raster_sha256},
+            "request": {"path": item.request_locator, "sha256": item.request_sha256},
+            "response": {"path": item.response_locator, "sha256": item.response_sha256},
+            "selected": {"path": item.selected_locator, "sha256": item.selected_sha256},
+        }
+        for item in artifacts
+    ]
+
+
+def _source_class(config: Mapping[str, Any]) -> SourceClass:
+    frozen = config["source_class"]
+    return SourceClass(
+        id=frozen["id"],
+        required_units=tuple(frozen["required_units"]),
+        metric_families=frozen["metric_families"],
+        temporal_policy=frozen["temporal_policy"],
+        frozen_at=frozen["frozen_at"],
+        inventory_basis=frozen["inventory_basis"],
+    )
+
+
+def _reader_identity(
+    config: Mapping[str, Any], reader_version: Mapping[str, str]
+) -> dict[str, str]:
+    reader = config["reader"]
+    return {
+        "reader_id": reader["id"],
+        "reader_binary_sha256": reader["binary_sha256"],
+        "reader_version_evidence_sha256": canonical_digest(reader_version),
+        "traineddata_sha256": reader["traineddata_sha256"],
+        "language": reader["language"],
+        "arguments_sha256": canonical_digest(reader["arguments"]),
+    }
+
+
+def _request_document(
+    config: Mapping[str, Any],
+    unit: str,
+    raster_sha256: str,
+    width: int,
+    height: int,
+    reader_version: Mapping[str, str],
+) -> dict[str, Any]:
+    source = config["source"]
+    reader = config["reader"]
+    return {
+        "schema": REQUEST_SCHEMA,
+        "source": {"id": source["source_id"], "sha256": source["sha256"], "unit": unit},
+        "raster": {
+            "sha256": raster_sha256,
+            "selector": _selector(config, width, height),
+        },
+        "reader": {
+            "id": reader["id"],
+            "executable": reader["executable"],
+            "binary_sha256": reader["binary_sha256"],
+            "version_evidence_sha256": canonical_digest(reader_version),
+            "traineddata_path": reader["traineddata_path"],
+            "traineddata_sha256": reader["traineddata_sha256"],
+            "language": reader["language"],
+            "arguments": reader["arguments"],
+            "effective_tessdata_dir": str(Path(reader["traineddata_path"]).parent),
+        },
+    }
+
+
+def _render_and_read(
+    root: Path,
+    config: Mapping[str, Any],
+    private_root: Path,
+    renderer: Path,
+    reader: Path,
+    reader_version: Mapping[str, str],
+) -> tuple[PageArtifacts, ...]:
+    source = config["source"]
+    source_path = _repo_path(root, source["path"], "precommit.source.path")
+    retention_root = Path(config["retention"]["private_root"])
+    for name in ("rasters", "requests", "responses", "selected"):
+        (private_root / name).mkdir(parents=True)
+    traineddata = Path(config["reader"]["traineddata_path"])
+    artifacts: list[PageArtifacts] = []
+    for page in range(1, source["page_count"] + 1):
+        unit = f"page:{page}"
+        filename = f"page-{page:03d}"
+        raster = private_root / "rasters" / f"{filename}.png"
+        prefix = raster.with_suffix("")
+        render_command = (
+            str(renderer),
+            "-f",
+            str(page),
+            "-l",
+            str(page),
+            *config["renderer"]["single_page_arguments"],
+            str(source_path),
+            str(prefix),
+        )
+        _run(render_command)
+        produced = tuple(private_root.joinpath("rasters").glob(f"{filename}*"))
+        if produced != (raster,):
+            raise OCREmitterError(
+                f"renderer page drift for {unit}: expected only {raster.name}, "
+                f"got {[path.name for path in produced]}"
+            )
+        width, height = _png_dimensions(raster)
+        raster_sha256 = _digest_file(raster)
+        request_document = _request_document(
+            config, unit, raster_sha256, width, height, reader_version
+        )
+        request = private_root / "requests" / f"{filename}.json"
+        request_bytes = _json_bytes(request_document)
+        request.write_bytes(request_bytes)
+        response = _run(
+            (
+                str(reader),
+                str(raster),
+                *config["reader"]["arguments"],
+                "--tessdata-dir",
+                str(traineddata.parent),
+            )
+        ).stdout
+        if not response.strip():
+            raise OCREmitterError(f"empty OCR response for known nonblank {unit}")
+        response_path = private_root / "responses" / f"{filename}.txt"
+        selected_path = private_root / "selected" / f"{filename}.txt"
+        response_path.write_bytes(response)
+        selected_path.write_bytes(response)
+        artifacts.append(
+            PageArtifacts(
+                page=page,
+                unit=unit,
+                width=width,
+                height=height,
+                raster_path=raster,
+                raster_locator=(retention_root / "rasters" / raster.name).as_posix(),
+                raster_sha256=raster_sha256,
+                request_path=request,
+                request_locator=(retention_root / "requests" / request.name).as_posix(),
+                request_sha256=_digest_bytes(request_bytes),
+                response_path=response_path,
+                response_locator=(
+                    retention_root / "responses" / response_path.name
+                ).as_posix(),
+                response_sha256=_digest_bytes(response),
+                selected_path=selected_path,
+                selected_locator=(
+                    retention_root / "selected" / selected_path.name
+                ).as_posix(),
+                selected_sha256=_digest_bytes(response),
+            )
+        )
+    return tuple(artifacts)
+
+
+def _construct_bundle(
+    config: Mapping[str, Any],
+    artifacts: tuple[PageArtifacts, ...],
+    reader_version: Mapping[str, str],
+) -> Bundle:
+    source = config["source"]
+    rasters: list[Raster] = []
+    regions: list[Region] = []
+    attempts: list[OCRAttempt] = []
+    hypotheses: list[Hypothesis] = []
+    selections: list[Selection] = []
+    config_identity = _reader_identity(config, reader_version)
+    for artifact in artifacts:
+        ids = _ids(source["source_id"], artifact.page)
+        rasters.append(
+            Raster(
+                ids["raster"],
+                source["source_id"],
+                artifact.unit,
+                artifact.raster_sha256,
+                config["renderer"]["id"],
+            )
+        )
+        regions.append(
+            Region(
+                ids["region"],
+                ids["raster"],
+                _selector(config, artifact.width, artifact.height),
+                config["selector"]["profile"],
+            )
+        )
+        attempts.append(
+            OCRAttempt(
+                ids["attempt"],
+                ids["region"],
+                artifact.request_sha256,
+                config_identity,
+                "COMPLETED",
+                artifact.response_sha256,
+            )
+        )
+        hypotheses.append(
+            Hypothesis(
+                ids["hypothesis"],
+                ids["region"],
+                artifact.selected_sha256,
+                attempt_id=ids["attempt"],
+            )
+        )
+        selections.append(
+            Selection(
+                ids["selection"],
+                ids["region"],
+                (ids["hypothesis"],),
+                ids["hypothesis"],
+                config["selection"]["reason"],
+                human_verified=config["selection"]["human_verified"],
+            )
+        )
+    retained_sidecars_sha256 = canonical_digest(_sidecar_closure(artifacts))
+    return Bundle(
+        id=f"bundle:paper-v4:{retained_sidecars_sha256.removeprefix('sha256:')}",
+        source_class=_source_class(config),
+        sources=(
+            SourceRepresentation(
+                source["source_id"],
+                source["sha256"],
+                source["byte_length"],
+                source["media_type"],
+                source["path"],
+            ),
+        ),
+        rasters=tuple(rasters),
+        regions=tuple(regions),
+        attempts=tuple(attempts),
+        hypotheses=tuple(hypotheses),
+        selections=tuple(selections),
+        observed_units=tuple(config["source_class"]["required_units"]),
+        data_handling_policy_id=config["policies"]["data_handling"]["id"],
+        hostile_content_policy_id=config["policies"]["hostile_content"]["id"],
+        transport_metadata={
+            "adapter": "malleus.paper-v4.local-ocr/v1",
+            "network": config["execution"]["network"],
+            "retries": str(config["execution"]["retries"]),
+            "retained_sidecars_sha256": retained_sidecars_sha256,
+        },
+    )
+
+
+def _build_bundle(
+    config: Mapping[str, Any],
+    artifacts: tuple[PageArtifacts, ...],
+    reader_version: Mapping[str, str],
+) -> Bundle:
+    """Test seam around the canonical construction."""
+
+    return _construct_bundle(config, artifacts, reader_version)
+
+
+def validate_alignment(
+    bundle: Bundle,
+    config: Mapping[str, Any],
+    artifacts: tuple[PageArtifacts, ...],
+    private_root: Path,
+    reader_version: Mapping[str, str],
+) -> None:
+    """Close the v0 profile gaps against the frozen paper run."""
+
+    required = tuple(config["source_class"]["required_units"])
+    expected_pages = tuple((page, unit) for page, unit in enumerate(required, 1))
+    if tuple((item.page, item.unit) for item in artifacts) != expected_pages:
+        raise OCREmitterError("sidecar chains drift from the frozen page inventory")
+
+    retention_root = Path(config["retention"]["private_root"])
+    expected_files: set[Path] = set()
+    for artifact in artifacts:
+        stem = f"page-{artifact.page:03d}"
+        declarations = (
+            (
+                "raster",
+                "rasters",
+                ".png",
+                artifact.raster_path,
+                artifact.raster_locator,
+                artifact.raster_sha256,
+            ),
+            (
+                "request",
+                "requests",
+                ".json",
+                artifact.request_path,
+                artifact.request_locator,
+                artifact.request_sha256,
+            ),
+            (
+                "response",
+                "responses",
+                ".txt",
+                artifact.response_path,
+                artifact.response_locator,
+                artifact.response_sha256,
+            ),
+            (
+                "selected",
+                "selected",
+                ".txt",
+                artifact.selected_path,
+                artifact.selected_locator,
+                artifact.selected_sha256,
+            ),
+        )
+        for label, directory, suffix, path, locator, digest in declarations:
+            expected_path = private_root / directory / f"{stem}{suffix}"
+            expected_locator = (
+                retention_root / directory / f"{stem}{suffix}"
+            ).as_posix()
+            if path != expected_path or locator != expected_locator:
+                raise OCREmitterError(
+                    f"{artifact.unit} {label} sidecar path or locator drift"
+                )
+            if not path.is_file() or path.is_symlink():
+                raise OCREmitterError(
+                    f"{artifact.unit} {label} is not its retained stage file"
+                )
+            if _digest_file(path) != digest:
+                raise OCREmitterError(f"{artifact.unit} {label} sidecar hash drift")
+            expected_files.add(path)
+
+        if _png_dimensions(artifact.raster_path) != (artifact.width, artifact.height):
+            raise OCREmitterError(f"{artifact.unit} PNG dimensions drift")
+        expected_request = _request_document(
+            config,
+            artifact.unit,
+            artifact.raster_sha256,
+            artifact.width,
+            artifact.height,
+            reader_version,
+        )
+        if (
+            _load_json(artifact.request_path, f"{artifact.unit} request")
+            != expected_request
+        ):
+            raise OCREmitterError(f"{artifact.unit} request identity drift")
+        response = artifact.response_path.read_bytes()
+        if not response.strip():
+            raise OCREmitterError(f"{artifact.unit} retained an empty selected reading")
+        if response != artifact.selected_path.read_bytes():
+            raise OCREmitterError(
+                f"{artifact.unit} selected bytes differ from the sole machine response"
+            )
+
+    retained_files = {
+        path for path in private_root.rglob("*") if path.is_file() or path.is_symlink()
+    }
+    if retained_files != expected_files:
+        raise OCREmitterError("retained stage files drift from the sidecar closure")
+
+    expected_bundle = _construct_bundle(config, artifacts, reader_version)
+    for field in fields(Bundle):
+        if getattr(bundle, field.name) != getattr(expected_bundle, field.name):
+            raise OCREmitterError(
+                f"bundle {field.name} drifts from the frozen aligned construction"
+            )
+
+
+def _runtime(
+    root: Path,
+    config: Mapping[str, Any],
+) -> tuple[Path, Path, dict[str, Any]]:
+    ocr = config["malleus_ocr"]
+    if ocr["malleus_version"] != MALLEUS_VERSION:
+        raise OCREmitterError(
+            f"Malleus version drift: expected {ocr['malleus_version']}, got {MALLEUS_VERSION}"
+        )
+    ontology_path = _repo_path(
+        root, ocr["ontology_path"], "precommit.malleus_ocr.ontology_path"
+    )
+    if _digest_file(ontology_path) != ocr["ontology_sha256"]:
+        raise OCREmitterError("OCR ontology byte hash drift")
+    registry = profile_registry()
+    if registry.schema_version != ocr["ontology_version"]:
+        raise OCREmitterError("OCR ontology version drift")
+    registry_hash = "sha256:" + registry.content_hash()
+    if registry_hash != ocr["registry_content_hash"]:
+        raise OCREmitterError("OCR ontology registry hash drift")
+
+    renderer = _executable(config["renderer"], "precommit.renderer")
+    reader = _executable(config["reader"], "precommit.reader")
+    traineddata = Path(config["reader"]["traineddata_path"])
+    if not traineddata.is_absolute() or not traineddata.is_file():
+        raise OCREmitterError(
+            f"configured traineddata is not an absolute file: {traineddata}"
+        )
+    if _digest_file(traineddata) != config["reader"]["traineddata_sha256"]:
+        raise OCREmitterError("Tesseract traineddata hash drift")
+    versions = {
+        "renderer": _version_evidence(
+            renderer,
+            "-v",
+            config["renderer"]["version_contains"],
+            "renderer",
+        ),
+        "reader": _version_evidence(
+            reader,
+            "--version",
+            config["reader"]["version_contains"],
+            "reader",
+        ),
+    }
+    return (
+        renderer,
+        reader,
+        {
+            "malleus_version": MALLEUS_VERSION,
+            "ontology": {
+                "version": registry.schema_version,
+                "sha256": ocr["ontology_sha256"],
+                "registry_content_hash": registry_hash,
+            },
+            "renderer": {
+                "id": config["renderer"]["id"],
+                "binary_sha256": config["renderer"]["binary_sha256"],
+                "version": versions["renderer"],
+            },
+            "reader": {
+                "id": config["reader"]["id"],
+                "binary_sha256": config["reader"]["binary_sha256"],
+                "version": versions["reader"],
+                "traineddata_sha256": config["reader"]["traineddata_sha256"],
+                "model_version": "NOT_DECLARED; IDENTITY_IS_TRAINEDDATA_SHA256",
+            },
+        },
+    )
+
+
+def _assert_inputs_unchanged(
+    root: Path,
+    config: Mapping[str, Any],
+    precommit_path: Path,
+    precommit_sha256: str,
+) -> None:
+    checks = (
+        (precommit_path, precommit_sha256, "precommit"),
+        (
+            _repo_path(root, config["source"]["path"], "precommit.source.path"),
+            config["source"]["sha256"],
+            "source",
+        ),
+        (
+            _repo_path(root, config["malleus_ocr"]["ontology_path"], "ontology path"),
+            config["malleus_ocr"]["ontology_sha256"],
+            "ontology",
+        ),
+        (
+            Path(config["renderer"]["executable"]),
+            config["renderer"]["binary_sha256"],
+            "renderer",
+        ),
+        (
+            Path(config["reader"]["executable"]),
+            config["reader"]["binary_sha256"],
+            "reader",
+        ),
+        (
+            Path(config["reader"]["traineddata_path"]),
+            config["reader"]["traineddata_sha256"],
+            "traineddata",
+        ),
+    )
+    for path, expected, label in checks:
+        if _digest_file(path) != expected:
+            raise OCREmitterError(f"{label} changed during the OCR run")
+
+
+def _verification_document(
+    root: Path,
+    precommit_path: Path,
+    precommit_sha256: str,
+    config: Mapping[str, Any],
+    bundle: Bundle,
+    bundle_bytes: bytes,
+    artifacts: tuple[PageArtifacts, ...],
+    runtime: Mapping[str, Any],
+) -> dict[str, Any]:
+    verified = verify_bundle(bundle)
+    if not verified.conforms:
+        raise OCREmitterError(
+            "public OCR profile refused the emitted bundle: "
+            + "; ".join(str(item) for item in verified.diagnostics)
+        )
+    if not verified.account.complete:
+        raise OCREmitterError(
+            "public OCR profile did not account for every frozen page"
+        )
+    return {
+        "schema": RESULT_SCHEMA,
+        "precommit": {
+            "path": precommit_path.relative_to(root).as_posix(),
+            "sha256": precommit_sha256,
+        },
+        "source": {
+            "id": config["source"]["source_id"],
+            "sha256": config["source"]["sha256"],
+            "byte_length": config["source"]["byte_length"],
+            "page_count": config["source"]["page_count"],
+        },
+        "bundle": {
+            "id": bundle.id,
+            "path": config["retention"]["public_bundle"],
+            "sha256": _digest_bytes(bundle_bytes),
+        },
+        "runtime": runtime,
+        "result": {
+            "capability": verified.capability,
+            "conforms": verified.conforms,
+            "diagnostics": [str(item) for item in verified.diagnostics],
+            "account": {
+                "kind": verified.account.kind,
+                "complete": verified.account.complete,
+                "units": [
+                    {
+                        "unit": item.unit,
+                        "outcome": item.outcome,
+                        "disposition": item.disposition,
+                    }
+                    for item in verified.account.units
+                ],
+                "metrics": [
+                    {
+                        "family": item.family,
+                        "denominator": item.denominator,
+                        "value": item.value,
+                        "threshold": item.threshold,
+                        "verdict": item.verdict,
+                    }
+                    for item in verified.account.metrics
+                ],
+            },
+            "strict_alignment": "PASS",
+        },
+        "sidecars": _sidecar_closure(artifacts),
+        "publication_boundary": {
+            "raw_ocr_text": "PRIVATE_SIDECAR_ONLY",
+            "public_text": "DIGEST_ONLY",
+        },
+    }
+
+
+def _require_document_identity(
+    document: Mapping[str, Any], config: Mapping[str, Any]
+) -> None:
+    document = _exact_keys(
+        document,
+        ("profile", "profile_version", "document_version", "bundle"),
+        "emitted Bundle document",
+    )
+    frozen = config["malleus_ocr"]
+    expected = {
+        "profile": frozen["profile"],
+        "profile_version": frozen["profile_version"],
+        "document_version": frozen["document_version"],
+    }
+    actual = {key: document[key] for key in expected}
+    if actual != expected:
+        raise OCREmitterError(
+            f"emitted Bundle document identity drifts from precommit: {actual}"
+        )
+
+
+def _publish(staged: Sequence[tuple[Path, Path]]) -> None:
+    published: list[tuple[Path, Path]] = []
+    try:
+        for source, target in staged:
+            if target.exists() or target.is_symlink():
+                raise OCREmitterError(f"refusing to overwrite final output: {target}")
+            source.replace(target)
+            published.append((source, target))
+    except (OSError, OCREmitterError) as error:
+        rollback_errors: list[str] = []
+        for source, target in reversed(published):
+            try:
+                target.replace(source)
+            except OSError as rollback_error:
+                rollback_errors.append(f"{target}: {rollback_error}")
+        if rollback_errors:
+            raise OCREmitterError(
+                "publication failed and rollback was incomplete: "
+                + "; ".join(rollback_errors)
+            ) from error
+        raise OCREmitterError(
+            f"publication failed and was rolled back: {error}"
+        ) from error
+
+
+def emit(repository_root: Path, precommit_path: Path) -> EmissionResult:
+    """Execute one frozen OCR run and publish only after all checks pass."""
+
+    root = repository_root.resolve()
+    if not root.is_dir():
+        raise OCREmitterError(f"repository root is not a directory: {root}")
+    precommit = precommit_path.resolve()
+    if not precommit.is_relative_to(root):
+        raise OCREmitterError("precommit path must be inside the repository root")
+    try:
+        precommit_bytes = precommit.read_bytes()
+        config = _validate_precommit(json.loads(precommit_bytes))
+    except (OSError, json.JSONDecodeError) as error:
+        raise OCREmitterError(f"cannot read precommit {precommit}: {error}") from error
+    precommit_sha256 = _digest_bytes(precommit_bytes)
+    _validate_source_manifest(root, config["source"])
+
+    source_path = _repo_path(root, config["source"]["path"], "precommit.source.path")
+    if _digest_file(source_path) != config["source"]["sha256"]:
+        raise OCREmitterError("source hash drift")
+    try:
+        source_length = source_path.stat().st_size
+    except OSError as error:
+        raise OCREmitterError(f"cannot stat source {source_path}: {error}") from error
+    if source_length != config["source"]["byte_length"]:
+        raise OCREmitterError("source byte length drift")
+    if not source_path.read_bytes().startswith(b"%PDF-"):
+        raise OCREmitterError("frozen source is not a PDF")
+
+    retention = config["retention"]
+    private_final = _repo_path(
+        root, retention["private_root"], "retention.private_root"
+    )
+    bundle_final = _repo_path(
+        root, retention["public_bundle"], "retention.public_bundle"
+    )
+    verification_final = _repo_path(
+        root,
+        retention["public_verification"],
+        "retention.public_verification",
+    )
+    final_paths = (private_final, bundle_final, verification_final)
+    if len(set(final_paths)) != len(final_paths):
+        raise OCREmitterError("final output paths must be distinct")
+    if any(
+        left != right and right.is_relative_to(left)
+        for left in final_paths
+        for right in final_paths
+    ):
+        raise OCREmitterError("final output paths must not contain one another")
+    existing = [str(path) for path in final_paths if path.exists() or path.is_symlink()]
+    if existing:
+        raise OCREmitterError(f"refusing to overwrite final outputs: {existing}")
+
+    renderer, reader, runtime = _runtime(root, config)
+    for path in final_paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".paper-v4-ocr-", dir=root) as temporary:
+        stage = Path(temporary)
+        private_stage = stage / "private"
+        private_stage.mkdir()
+        artifacts = _render_and_read(
+            root,
+            config,
+            private_stage,
+            renderer,
+            reader,
+            runtime["reader"]["version"],
+        )
+        bundle = _build_bundle(config, artifacts, runtime["reader"]["version"])
+        validate_alignment(
+            bundle,
+            config,
+            artifacts,
+            private_stage,
+            runtime["reader"]["version"],
+        )
+        document = bundle.document()
+        _require_document_identity(document, config)
+        bundle_bytes = _json_bytes(document)
+        round_trip = Bundle.from_document(json.loads(bundle_bytes))
+        if round_trip.document() != document:
+            raise OCREmitterError("Bundle JSON round trip changed the document")
+        validate_alignment(
+            round_trip,
+            config,
+            artifacts,
+            private_stage,
+            runtime["reader"]["version"],
+        )
+        result_document = _verification_document(
+            root,
+            precommit,
+            precommit_sha256,
+            config,
+            round_trip,
+            bundle_bytes,
+            artifacts,
+            runtime,
+        )
+        _assert_inputs_unchanged(root, config, precommit, precommit_sha256)
+        bundle_stage = stage / "ocr-bundle.json"
+        verification_stage = stage / "ocr-verification.json"
+        bundle_stage.write_bytes(bundle_bytes)
+        verification_stage.write_bytes(_json_bytes(result_document))
+        _publish(
+            (
+                (private_stage, private_final),
+                (bundle_stage, bundle_final),
+                (verification_stage, verification_final),
+            )
+        )
+    return EmissionResult(bundle_final, verification_final, private_final)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Run the paper-local OCR emitter against one frozen precommit."
+    )
+    parser.add_argument("repository_root", type=Path)
+    parser.add_argument("precommit", type=Path)
+    arguments = parser.parse_args(argv)
+    try:
+        result = emit(arguments.repository_root, arguments.precommit)
+    except OCREmitterError as error:
+        print(f"REFUSED: {error}", file=sys.stderr)
+        return 1
+    print(result.bundle_path)
+    print(result.verification_path)
+    print(result.private_root)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

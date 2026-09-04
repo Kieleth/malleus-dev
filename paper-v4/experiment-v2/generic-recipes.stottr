@@ -1,0 +1,305 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix malleus: <https://malleus.dev/schema/> .
+@prefix morg: <https://malleus.dev/domains/mid-ocean-ridge-geodynamics/> .
+@prefix recipe: <https://malleus.dev/paper-v4/experiment-v2/recipe/> .
+
+mgrp:Record [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?operationKind,
+  ! ottr:IRI ?recordType,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:Property [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?property,
+  ?value
+] :: BASE .
+
+mgrp:RelationSource [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:RelationTarget [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:DependsOn [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?prerequisiteMember
+] :: BASE .
+
+recipe:ObservationMethod-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?observationMethodKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:ObservationMethod, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:observation_method_kind, ?observationMethodKind)
+} .
+
+recipe:Instrument-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?instrumentKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:Instrument, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:instrument_kind, ?instrumentKind)
+} .
+
+recipe:GeologicFeature-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?geologicFeatureKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:GeologicFeature, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:geologic_feature_kind, ?geologicFeatureKind)
+} .
+
+recipe:SeismicPhenomenon-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?seismicPhenomenonKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:SeismicPhenomenon, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:seismic_phenomenon_kind, ?seismicPhenomenonKind)
+} .
+
+recipe:QuantitativeObservation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?quantityKind,
+  ! ?lowerNumericValue,
+  ! ?upperNumericValue,
+  ! xsd:string ?measurementUnit,
+  ! xsd:string ?observationBasis
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:QuantitativeObservation, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:quantity_kind, ?quantityKind),
+  mgrp:Property(?member, morg:lower_numeric_value, ?lowerNumericValue),
+  mgrp:Property(?member, morg:upper_numeric_value, ?upperNumericValue),
+  mgrp:Property(?member, morg:measurement_unit, ?measurementUnit),
+  mgrp:Property(?member, morg:observation_basis, ?observationBasis)
+} .
+
+recipe:GeologicMaterial-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?geologicMaterialKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:GeologicMaterial, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:geologic_material_kind, ?geologicMaterialKind)
+} .
+
+recipe:ChemicalConstituent-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?chemicalFormula
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:ChemicalConstituent, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:chemical_formula, ?chemicalFormula)
+} .
+
+recipe:GeologicProcess-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?geologicProcessKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:GeologicProcess, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:geologic_process_kind, ?geologicProcessKind)
+} .
+
+recipe:CategoricalObservation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?categoricalObservationKind,
+  ! xsd:string ?categoricalObservationValue,
+  ! xsd:string ?observationBasis
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, morg:CategoricalObservation, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, morg:categorical_observation_kind, ?categoricalObservationKind),
+  mgrp:Property(?member, morg:categorical_observation_value, ?categoricalObservationValue),
+  mgrp:Property(?member, morg:observation_basis, ?observationBasis)
+} .
+
+recipe:MethodUsesInstrumentRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:MethodUsesInstrumentRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "METHOD_USES_INSTRUMENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:FeaturePartOfRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:FeaturePartOfRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "FEATURE_PART_OF"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:SeismicPhenomenonOccursAtRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:SeismicPhenomenonOccursAtRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "SEISMIC_PHENOMENON_OCCURS_AT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ObservationCharacterizesRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ObservationCharacterizesRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "OBSERVATION_CHARACTERIZES"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ObservationConcernsConstituentRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ObservationConcernsConstituentRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "OBSERVATION_CONCERNS_CONSTITUENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:MaterialOccursAtRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:MaterialOccursAtRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "MATERIAL_OCCURS_AT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ProcessActsOnMaterialRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ProcessActsOnMaterialRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "PROCESS_ACTS_ON_MATERIAL"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ProcessReleasesConstituentRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ProcessReleasesConstituentRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "PROCESS_RELEASES_CONSTITUENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ProcessCausesProcessRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ProcessCausesProcessRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "PROCESS_CAUSES_PROCESS"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ProcessTriggersSeismicPhenomenonRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, morg:ProcessTriggersSeismicPhenomenonRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "PROCESS_TRIGGERS_SEISMIC_PHENOMENON"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .

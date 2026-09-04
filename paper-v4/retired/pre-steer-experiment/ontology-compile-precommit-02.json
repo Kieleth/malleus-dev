@@ -1,0 +1,61 @@
+{
+  "schema": "malleus.paper-v4.ontology-compile-precommit/v1",
+  "frozen_at": "2026-09-02T22:38:46Z",
+  "status": "FROZEN_BEFORE_CORRECTED_OFFICIAL_RETAINED_COMPILE",
+  "supersedes_precommit": {
+    "path": "paper-v4/experiment/ontology-compile-precommit.json",
+    "sha256": "sha256:04a32000ec8b99f438e2a9d92a12d11cc630f8d887a1a486c9e2b849ebaa706c",
+    "reason": "The first retained run used the harness's exact memory-resolver identifiers, which did not equal the mapping-resolver identifiers written in the first precommit."
+  },
+  "candidate_attempt": 2,
+  "inputs": [
+    {
+      "locator": "paper-v4-domain",
+      "path": "paper-v4/experiment/model-ontology-proposal.yaml",
+      "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df"
+    },
+    {
+      "locator": "malleus",
+      "path": "ontology/malleus.yaml",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "locator": "linkml:types",
+      "package_resource": "linkml_runtime/linkml_model/model/schema/types.yaml",
+      "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    }
+  ],
+  "runtime": {
+    "python": "3.12.9",
+    "linkml": "1.11.1",
+    "linkml_runtime": "1.11.1",
+    "repository_commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3"
+  },
+  "harness": {
+    "path": "research/ontology_driven_kg_realization/experiments/document_paper/ontology_compile.py",
+    "sha256": "sha256:0bd0b85d28f888a32bccff23197627f3bece2271d799ce8e4ded6ca2702775b7"
+  },
+  "resolver_selection": {
+    "resolver_id": "MALLEUS_PAPER_V4_EXACT_MEMORY_RESOLVER",
+    "profile_version": "MALLEUS_PAPER_V4_EXACT_MEMORY_RESOLVER_V0",
+    "configuration_id": "sha256:ca51a7bfeca316fcaf2a3b26484d9063297ab2922a52f99204b859cf8518dc8d",
+    "allowed_locators": ["paper-v4-domain", "malleus", "linkml:types"],
+    "unknown_locator": "REFUSE"
+  },
+  "outputs": {
+    "directory": "paper-v4/experiment/ontology-compilation-02",
+    "validated_contract": "paper-v4/experiment/ontology-compilation-02/validated-contract.json",
+    "receipt": "paper-v4/experiment/ontology-compilation-02/compile-receipt.json",
+    "overwrite": "REFUSE",
+    "partial_publication": "FORBIDDEN"
+  },
+  "success": {
+    "source_closure_complete": true,
+    "compile_binding": "PASS",
+    "artifact_reload": "BYTE_IDENTICAL_AND_VALID",
+    "expected_validated_fact_set_sha256": "sha256:8b1aca802746ab7fe487af92a286e1242ae105adda9665ba68388688838ffce2",
+    "expected_fact_count": 1632,
+    "expected_validated_contract_sha256": "sha256:cec07ba6cce324e7b3a5867a46818a3249923a1fb1d49577eea78c1717cf1dee",
+    "expected_receipt_sha256": "sha256:bd10af7086c7efb55478817e55e8c30956efa8c6395f3de574917855fdbf3054"
+  }
+}

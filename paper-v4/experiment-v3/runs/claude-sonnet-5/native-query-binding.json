@@ -1,0 +1,133 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v1",
+  "status": "FROZEN_BEFORE_POPULATION",
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicInstrument",
+          "relation_record_type": "InstrumentDetectedEventRelation",
+          "relation_type": {
+            "enum": "RelationType",
+            "value": "DETECTED_EVENT"
+          },
+          "target_record_type": "SeismicEvent",
+          "output_fields": {
+            "source": [
+              "status"
+            ],
+            "relation": [],
+            "target": [
+              "hypocenter_depth",
+              "location_quality"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicEvent",
+          "relation_record_type": "EventLocatedBeneathSegmentRelation",
+          "relation_type": {
+            "enum": "RelationType",
+            "value": "LOCATED_BENEATH_SEGMENT"
+          },
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "hypocenter_depth",
+              "location_quality"
+            ],
+            "relation": [],
+            "target": [
+              "segment_class",
+              "spreading_rate"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "SeismicEvent",
+          "relation_record_type": "EventLocatedBeneathSegmentRelation",
+          "relation_type": {
+            "enum": "RelationType",
+            "value": "LOCATED_BENEATH_SEGMENT"
+          },
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "hypocenter_depth",
+              "location_quality"
+            ],
+            "relation": [],
+            "target": [
+              "segment_class",
+              "spreading_rate"
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "source_record_type": "RockSample",
+          "relation_record_type": "SampleCollectedFromSegmentRelation",
+          "relation_type": {
+            "enum": "RelationType",
+            "value": "COLLECTED_FROM_SEGMENT"
+          },
+          "target_record_type": "RidgeSegment",
+          "output_fields": {
+            "source": [
+              "lithology",
+              "volatile_concentration"
+            ],
+            "relation": [],
+            "target": [
+              "segment_class",
+              "spreading_rate"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "cases": [
+        {
+          "ordinal": 1,
+          "source_record_type": "GeologicalProcess",
+          "relation_record_type": "ProcessCausesEventRelation",
+          "relation_type": {
+            "enum": "RelationType",
+            "value": "CAUSES_EVENT"
+          },
+          "target_record_type": "SeismicEvent",
+          "output_fields": {
+            "source": [
+              "process_kind"
+            ],
+            "relation": [],
+            "target": [
+              "hypocenter_depth",
+              "location_quality"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

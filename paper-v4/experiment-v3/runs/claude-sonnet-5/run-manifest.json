@@ -1,0 +1,46 @@
+{
+  "schema": "malleus.paper-v4.multimodel-run-manifest/v1",
+  "run_id": "claude-sonnet-5",
+  "root_locator": "paper-v4:v3-claude-sonnet-5",
+  "contract_id": "https://malleus.dev/contracts/paper-v4/experiment-v3/claude-sonnet-5",
+  "recipe_namespace": "https://malleus.dev/paper-v4/experiment-v3/claude-sonnet-5/recipe/",
+  "member_namespace": "https://malleus.dev/paper-v4/experiment-v3/claude-sonnet-5/population/member/",
+  "entity_types": [
+    "SeismicInstrument",
+    "SeismicEvent",
+    "RidgeSegment",
+    "RockSample",
+    "GeologicalProcess"
+  ],
+  "relation_types": [
+    "InstrumentDetectedEventRelation",
+    "EventLocatedBeneathSegmentRelation",
+    "SampleCollectedFromSegmentRelation",
+    "ProcessCausesEventRelation"
+  ],
+  "contract_only_types": [],
+  "paths": {
+    "source": "paper-v4/source/yu-et-al-2025-mid-atlantic-ridge.pdf",
+    "ontology": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/ontology-01.yaml",
+    "malleus": "paper-v4/experiment-v2/ontology-run/inputs/malleus.yaml",
+    "linkml": "paper-v4/experiment-v2/run-inputs/linkml-types.yaml",
+    "reading": "private/paper-v4-text-layer/selected-reading.json",
+    "population": "paper-v4/experiment-v3/runs/claude-sonnet-5/population-run/population.json",
+    "recipes": "paper-v4/experiment-v3/runs/claude-sonnet-5/generic-recipes.stottr",
+    "acceptance": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/acceptance.jsonl",
+    "machine": "paper-v4/experiment-v2/run-inputs/protocol-machine.json",
+    "binding": "paper-v4/experiment-v3/runs/claude-sonnet-5/native-query-binding.json"
+  },
+  "sha256": {
+    "source": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "ontology": "sha256:7fad8b9e9480781dd2207725d9c8d9906742c61988f1acbfa7883c2a55a16015",
+    "malleus": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3",
+    "linkml": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00",
+    "reading": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+    "population": "sha256:b85bd76aa5ffe21e63e3986ae64c905934c29a88656669f80813352b5a0f2996",
+    "recipes": "sha256:5cadcaf770d648f8613da31784557447b5293a0e77e9e6858e4d67727f193794",
+    "acceptance": "sha256:6556849f043d06022ee20619097742988cef05670550b2edf286d87eb5b1a413",
+    "machine": "sha256:ad4d7153c34e67f2edf677c53d228b3a277ee68b0088df4ebc19675c0898c9eb",
+    "binding": "sha256:2cfb6a35c554094193ac1b2c9173a86ffd419b6e3925ae7ad2fb71c79035017f"
+  }
+}

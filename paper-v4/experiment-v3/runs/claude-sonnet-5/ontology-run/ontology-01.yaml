@@ -1,0 +1,368 @@
+id: https://malleus.dev/schema/domains/mid-ocean-ridge-seismicity
+name: mid_ocean_ridge_seismicity
+title: Mid-Ocean Ridge Seismicity Domain Ontology (Proposal)
+description: >-
+  Proposed domain ontology for entities and relations describing seismicity,
+  tectonics, and geochemistry along oceanic spreading ridges, grounded in a
+  single selected reading. A proposal only: not asserted as accepted, true,
+  or already part of any knowledge graph.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+
+imports:
+  - linkml:types
+  - malleus
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  SegmentClass:
+    description: Structural class of a section of an oceanic spreading ridge.
+    permissible_values:
+      RIDGE_SEGMENT:
+        description: A magmatically or tectonically active section of the ridge axis.
+      NON_TRANSFORM_DISCONTINUITY:
+        description: A boundary separating two ridge segments that is not a transform fault.
+      RIDGE_TRANSFORM_INTERSECTION:
+        description: The segment where a ridge axis meets a transform fault.
+
+  LocationQuality:
+    description: Reliability tier assigned to a located seismic hypocenter.
+    permissible_values:
+      QUALITY_A:
+        description: Location meeting all established reliability criteria.
+      QUALITY_B:
+        description: Location meeting two established reliability criteria, tighter uncertainty band.
+      QUALITY_C:
+        description: Location meeting two established reliability criteria, looser uncertainty band.
+      QUALITY_D:
+        description: Location meeting only one established reliability criterion.
+
+  InterfaceType:
+    description: Kind of subsurface boundary separating rock or thermal regimes at depth.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+        description: The transition between brittle and ductile deformation regimes.
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+        description: The base of the rigid lithosphere.
+      MOHO:
+        description: The interface between crust and mantle.
+
+  FaultStyle:
+    description: Style of deformation exhibited by a fault.
+    permissible_values:
+      DETACHMENT_FAULT:
+        description: A low-angle fault exhuming lower-crustal or mantle rock.
+      NORMAL_FAULT:
+        description: A high-angle fault accommodating extension.
+      TRANSFORM_FAULT:
+        description: A strike-slip fault offsetting ridge segments.
+
+  SeafloorFeatureType:
+    description: Kind of discrete morphological or hydrothermal feature of the sea floor.
+    permissible_values:
+      OCEANIC_CORE_COMPLEX:
+        description: A dome of exhumed lower-crustal or mantle rock bounded by a detachment fault.
+      HYDROTHERMAL_VENT:
+        description: A site of focused hydrothermal fluid discharge.
+      VOLCANIC_CONE:
+        description: A constructional volcanic edifice on the sea floor.
+
+  Lithology:
+    description: Rock type of a collected sample.
+    permissible_values:
+      BASALT:
+        description: An extrusive mafic volcanic rock.
+      PERIDOTITE:
+        description: An ultramafic mantle rock.
+
+  ProcessKind:
+    description: Kind of physical mechanism proposed to explain a pattern of seismicity.
+    permissible_values:
+      VOLATILE_DEGASSING:
+        description: Exsolution of a dissolved volatile from ascending melt.
+      MELT_MIGRATION:
+        description: Movement of melt through the crust or mantle.
+      HYDROTHERMAL_COOLING:
+        description: Cooling of the lithosphere driven by circulating hydrothermal fluid.
+      SHEAR_DEFORMATION:
+        description: Localized high-strain shearing within a ductile shear zone.
+
+  RelationType:
+    description: Declared predicate values for relations in this domain.
+    permissible_values:
+      BOUNDED_BY_FAULT:
+        description: The source ridge segment is bounded by the target fault.
+      ADJACENT_TO_SEGMENT:
+        description: The source ridge segment directly adjoins the target ridge segment.
+      LOCATED_BENEATH_SEGMENT:
+        description: The source seismic event's hypocenter lies beneath the target ridge segment.
+      UNDERLIES_SEGMENT:
+        description: The source interface's depth is constrained beneath the target ridge segment.
+      HOSTS_FEATURE:
+        description: The source ridge segment hosts the target seafloor feature.
+      COLLECTED_FROM_SEGMENT:
+        description: The source rock sample was collected from the target ridge segment.
+      DETECTED_EVENT:
+        description: The source instrument detected the target seismic event.
+      CAUSES_EVENT:
+        description: The source process is proposed as the cause of the target seismic event.
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  segment_class:
+    range: SegmentClass
+    required: true
+    description: The structural class of the ridge segment.
+
+  spreading_rate:
+    range: float
+    required: true
+    minimum_value: 0.0
+    description: The rate at which the two sides of the ridge diverge, in millimeters per year.
+
+  hypocenter_depth:
+    range: float
+    required: true
+    minimum_value: 0.0
+    description: The depth of the earthquake hypocenter below the sea floor, in kilometers.
+
+  location_quality:
+    range: LocationQuality
+    required: true
+    description: The reliability tier assigned to a hypocenter location.
+
+  interface_type:
+    range: InterfaceType
+    required: true
+    description: The kind of subsurface boundary represented.
+
+  interface_depth:
+    range: float
+    required: true
+    minimum_value: 0.0
+    description: The depth of the interface below the sea floor, in kilometers.
+
+  fault_style:
+    range: FaultStyle
+    required: true
+    description: The style of deformation exhibited by the fault.
+
+  feature_type:
+    range: SeafloorFeatureType
+    required: true
+    description: The kind of seafloor feature represented.
+
+  lithology:
+    range: Lithology
+    required: true
+    description: The rock type of the sample.
+
+  volatile_concentration:
+    range: float
+    required: true
+    minimum_value: 0.0
+    description: The concentration of a dissolved volatile element in the sample, expressed as weight percent.
+
+  process_kind:
+    range: ProcessKind
+    required: true
+    description: The kind of physical mechanism represented.
+
+# -------------------------------------------------------------------
+# Entities
+# -------------------------------------------------------------------
+
+classes:
+  RidgeSegment:
+    is_a: Entity
+    description: >-
+      A discrete section of an oceanic spreading ridge, or a non-transform
+      discontinuity between such sections.
+    slots:
+      - segment_class
+      - spreading_rate
+
+  SeismicEvent:
+    is_a: Entity
+    description: >-
+      A located earthquake hypocenter, classified by depth and by the
+      reliability of its location.
+    slots:
+      - hypocenter_depth
+      - location_quality
+
+  GeologicalInterface:
+    is_a: Entity
+    description: >-
+      A subsurface boundary separating rock or thermal regimes at depth.
+    slots:
+      - interface_type
+      - interface_depth
+
+  Fault:
+    is_a: Entity
+    description: >-
+      A fracture along which rock has been displaced, classified by its
+      style of deformation and its current activity.
+    slots:
+      - fault_style
+      - status
+    slot_usage:
+      status:
+        required: true
+
+  SeafloorFeature:
+    is_a: Entity
+    description: >-
+      A discrete morphological or hydrothermal feature of the sea floor.
+    slots:
+      - feature_type
+      - status
+    slot_usage:
+      status:
+        required: true
+
+  RockSample:
+    is_a: Entity
+    description: >-
+      A collected rock sample characterized by lithology and by its
+      volatile-element concentration.
+    slots:
+      - lithology
+      - volatile_concentration
+
+  SeismicInstrument:
+    is_a: Entity
+    description: >-
+      A seafloor instrument deployed to record seismic signals.
+    slots:
+      - status
+    slot_usage:
+      status:
+        required: true
+
+  GeologicalProcess:
+    is_a: Entity
+    description: >-
+      A physical mechanism proposed to explain a pattern of observed
+      seismicity.
+    slots:
+      - process_kind
+
+# -------------------------------------------------------------------
+# Relations
+# -------------------------------------------------------------------
+
+  SegmentBoundedByFaultRelation:
+    is_a: Relation
+    description: A ridge segment whose margin is bounded by a fault.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: BOUNDED_BY_FAULT
+      source_id:
+        range: RidgeSegment
+      target_id:
+        range: Fault
+
+  SegmentAdjacentToSegmentRelation:
+    is_a: Relation
+    description: Two ridge segments that directly adjoin each other along the ridge axis.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: ADJACENT_TO_SEGMENT
+      source_id:
+        range: RidgeSegment
+      target_id:
+        range: RidgeSegment
+
+  EventLocatedBeneathSegmentRelation:
+    is_a: Relation
+    description: A seismic event whose hypocenter lies beneath a ridge segment.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: LOCATED_BENEATH_SEGMENT
+      source_id:
+        range: SeismicEvent
+      target_id:
+        range: RidgeSegment
+
+  InterfaceUnderliesSegmentRelation:
+    is_a: Relation
+    description: A geological interface whose depth is constrained beneath a ridge segment.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: UNDERLIES_SEGMENT
+      source_id:
+        range: GeologicalInterface
+      target_id:
+        range: RidgeSegment
+
+  SegmentHostsFeatureRelation:
+    is_a: Relation
+    description: A ridge segment on which a seafloor feature is situated.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: HOSTS_FEATURE
+      source_id:
+        range: RidgeSegment
+      target_id:
+        range: SeafloorFeature
+
+  SampleCollectedFromSegmentRelation:
+    is_a: Relation
+    description: A rock sample collected from a ridge segment.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: COLLECTED_FROM_SEGMENT
+      source_id:
+        range: RockSample
+      target_id:
+        range: RidgeSegment
+
+  InstrumentDetectedEventRelation:
+    is_a: Relation
+    description: A seismic instrument that detected a seismic event.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: DETECTED_EVENT
+      source_id:
+        range: SeismicInstrument
+      target_id:
+        range: SeismicEvent
+
+  ProcessCausesEventRelation:
+    is_a: Relation
+    description: A geological process proposed as the cause of a seismic event.
+    slot_usage:
+      relation_type:
+        range: RelationType
+        required: true
+        equals_string: CAUSES_EVENT
+      source_id:
+        range: GeologicalProcess
+      target_id:
+        range: SeismicEvent

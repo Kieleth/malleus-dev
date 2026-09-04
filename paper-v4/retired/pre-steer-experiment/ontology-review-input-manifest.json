@@ -1,0 +1,112 @@
+{
+  "schema": "malleus.paper-v4.ontology-review-input-manifest/v1",
+  "frozen_at": "2026-09-02T22:47:50Z",
+  "status": "FROZEN_BEFORE_REVIEW_INPUT_GENERATION",
+  "execution": {
+    "interpreter": ".venv/bin/python",
+    "python_implementation": "CPython",
+    "python_version": "3.12.9",
+    "distributions": {
+      "PyYAML": "6.0.3",
+      "jsonschema": "4.26.0",
+      "linkml": "1.11.1",
+      "linkml-runtime": "1.11.1"
+    }
+  },
+  "generator": {
+    "path": "research/ontology_driven_kg_realization/experiments/document_paper/ontology_review_inputs.py",
+    "sha256": "sha256:b2206de8f0f57aa0cb47a07aec4fc88dffadbfd74e354605c1b81eb374a82151"
+  },
+  "inputs": [
+    {
+      "role": "candidate",
+      "path": "paper-v4/experiment/model-ontology-proposal.yaml",
+      "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df"
+    },
+    {
+      "role": "malleus",
+      "path": "ontology/malleus.yaml",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "role": "linkml_types",
+      "package_resource": "linkml_runtime/linkml_model/model/schema/types.yaml",
+      "distribution": "linkml-runtime",
+      "distribution_version": "1.11.1",
+      "byte_length": 7296,
+      "sha256": "sha256:1c79b264397bec0eadb404d22e9b163458f1b889809b3b482ecc39c98743fe00"
+    },
+    {
+      "role": "compile_precommit",
+      "path": "paper-v4/experiment/ontology-compile-precommit-02.json",
+      "sha256": "sha256:8439fc19daf9bdf3f901a2af6401bf4f573a0eccb0c99368f6b287fc8938f834"
+    },
+    {
+      "role": "validated_contract",
+      "path": "paper-v4/experiment/ontology-compilation-02/validated-contract.json",
+      "sha256": "sha256:cec07ba6cce324e7b3a5867a46818a3249923a1fb1d49577eea78c1717cf1dee"
+    },
+    {
+      "role": "compiler_receipt",
+      "path": "paper-v4/experiment/ontology-compilation-02/compile-receipt.json",
+      "sha256": "sha256:bd10af7086c7efb55478817e55e8c30956efa8c6395f3de574917855fdbf3054"
+    },
+    {
+      "role": "model_acquisition_receipt",
+      "path": "paper-v4/experiment/model-acquisition-receipt.json",
+      "sha256": "sha256:06b0035580c2e98487d715842418deae536a5d6f2e21cacb8217b0baa393081d"
+    },
+    {
+      "role": "task_contract",
+      "path": "paper-v4/experiment/model-ontology-task.md",
+      "sha256": "sha256:39bd95ce2fd48aa559f6c5796be4dde7f72d866f366587729045b2bc2af628cf"
+    },
+    {
+      "role": "questions",
+      "path": "paper-v4/experiment/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    {
+      "role": "answer_oracle",
+      "path": "private/paper-v4-evaluation/answer-oracle.json",
+      "sha256": "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571"
+    },
+    {
+      "role": "adequacy_rubric",
+      "path": "private/paper-v4-evaluation/ontology-adequacy-rubric.json",
+      "sha256": "sha256:f73c86e2635afa78661acffc1cc5b8aeca6924d446d4a52e44fc7ac739936a10"
+    },
+    {
+      "role": "locator_binding",
+      "path": "private/paper-v4-evaluation/oracle-locator-binding.json",
+      "sha256": "sha256:bd61e591b77e05ed28babff4300b2b913f6a92a76635d15742d4530e0faaa15c"
+    },
+    {
+      "role": "support_guide",
+      "path": "private/paper-v4-evaluation/support-adjudication-guide.json",
+      "sha256": "sha256:e4b0ee89ee87db51201e4e183b94162bb01ea8b81cc9bc131d0971cb792cdb53"
+    },
+    {
+      "role": "selected_reading",
+      "path": "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json",
+      "sha256": "sha256:0537411117e73b2611ade5088978ba7c8d8a4467d5b51b0c8941bc47f0d41261"
+    },
+    {
+      "role": "selected_reading_manifest",
+      "path": "paper-v4/experiment/selected-reading-manifest.json",
+      "sha256": "sha256:74399ce57cbe512157c0afdea4bbca946bc2693a3ead69cdfc82b3d6f292c35c"
+    },
+    {
+      "role": "bound_support_blocks",
+      "path": "private/paper-v4-evaluation/bound-support-blocks.json",
+      "sha256": "sha256:36cb8c6a51f18aecc7acdf9ab257029e96578addcb36e891047ebb02cfcc22ac"
+    }
+  ],
+  "outputs": {
+    "directory": "paper-v4/experiment/ontology-review-inputs",
+    "schema_inventory": "paper-v4/experiment/ontology-review-inputs/schema-inventory.json",
+    "review_eligibility": "paper-v4/experiment/ontology-review-inputs/review-eligibility.json",
+    "overwrite": "REFUSE",
+    "partial_publication": "FORBIDDEN"
+  }
+}

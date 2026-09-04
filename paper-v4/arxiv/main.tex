@@ -1,0 +1,265 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Malleus: An Executable Commitment Boundary for Model-Proposed Knowledge Graphs},
+  pdfauthor={Luis Guzman Lorenzo}
+}
+
+\newcommand{\malleus}{\textsc{Malleus}}
+\newcommand{\code}[1]{\texttt{#1}}
+\def\UrlBreaks{\do\a\do\b\do\c\do\d\do\e\do\f\do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}
+\newcommand{\digest}[1]{{\scriptsize\nolinkurl{sha256:#1}}}
+\newcommand{\gitid}[1]{{\scriptsize\nolinkurl{#1}}}
+\setlength{\emergencystretch}{2em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+
+\title{Malleus: An Executable Commitment Boundary\\for Model-Proposed Knowledge Graphs}
+\author{Luis Guzman Lorenzo}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Language models can propose structured claims from documents, but generation alone does not make those claims accepted system state. We present \malleus{} as an executable commitment boundary for model-proposed knowledge graphs. A fresh model session proposes a domain ontology without seeing the evaluation questions. Deterministic components compile it. A second fresh session proposes source-located population records after the questions are introduced. Generic construction templates lower those records into an immutable change set; checks and a recorded decision govern atomic ledger admission; replay reconstructs the graph; and an application-side query surface reads only replayed state. We execute this path on one marine-seismology paper. The ontology, 15 entity and 33 relation classes with 16 enums, compiled after one structural correction. The first population proposal compiled into 13 operations with 47 located assertions, producing seven entities and six relations in a 23-event history. Disposal, reopen, and replay reproduced the graph and receipt. Four type-bound queries returned 0, 2, 4, and 0 rows, with zero guarded file, network, or embedding-package import attempts. One query covers its requested typed structure, one weakens a requested spatial relation, and two return nothing. Repeating the protocol unchanged with two other fresh producers, Claude Sonnet~5 and Claude Opus~5, returned 0, 0, 0, 0 and 0, 0, 0, 1 rows: both proposed single-valued fields where the source reports ranges and neither required a name, so the proposed ontology, not the pipeline, decided what could be answered. Human source review remains pending. The demonstrated claim is narrow: generated structure can cross a source-bound, replayable commitment protocol, and this fixed query path used no embedding index.
+\end{abstract}
+
+\section{Problem and contribution}
+
+A language model can emit plausible JSON, triples, or graph writes. Fluency is not an admission rule. A durable knowledge system still needs to say which source was read, which schema was in force, what exactly was proposed, which checks ran, who or what accepted the proposal, whether failure was atomic, and whether later state can be reconstructed from accepted history.
+
+\malleus{} addresses that boundary. Generated output remains a proposal until deterministic compilation and policy admit it. The model does not write the accepted graph. A typed change binds ordered operations to exact evidence and prior state. A decision controls atomic admission of the proposed change and its protocol events into the ledger. The working knowledge graph is a projection rebuilt by replay, not a second source of truth.
+
+This paper tests the smallest useful version of that idea on one document. The source is a 2025 \emph{Nature Communications} article on deep earthquakes and carbon-dioxide degassing at the Mid-Atlantic Ridge~\citep{yu2025deep}. One fresh session reads the document and proposes a domain ontology without access to the four competency questions. After compilation, the experiment binds the questions to types in that ontology. A different fresh session sees the questions, ontology, source reading, and a generic construction library, then proposes a source-located population. The system compiles, checks, admits, replays, and queries the result without semantic repair or fallback.
+
+The absence of question conditioning matters. An ontology tailored to known questions can make an end-to-end demonstration look stronger than the ontology acquisition method warrants. Here, missing concepts remain missing. The ontology cannot completely represent three questions. Later queries cover one question, partially represent one, and return no rows for two. That uneven result was frozen, not repaired after inspection.
+
+The paper makes three bounded contributions. First, it states a compact protocol separating model proposal, deterministic compilation, recorded acceptance, immutable change, ledger admission, replay, and query. Second, it connects an ontology and finite construction grammar to a typed change set with per-value source locators and atomic admission. Third, it reports one complete document run, including compiler refusal, incomplete query coverage, replay equality, and guarded query execution, and repeats the run unchanged with two other proposal producers.
+
+The paper does not claim that \malleus{} discovers true knowledge, induces generally adequate ontologies, answers arbitrary questions, or replaces retrieval-augmented generation. It reports an engineering property of one identified execution. Separate source-grounded human-author review of the query rows is still pending.
+
+\section{Protocol}
+
+Six terms define the boundary. An \emph{ontology} declares legal domain record types, properties, relations, and values. A \emph{change set} is an immutable proposal containing ordered operations plus the source, evidence, contract, and prior-state coordinates required to interpret them. A \emph{ledger} is the append-only accepted history. \emph{Replay} reconstructs accepted graph state from that history. A \emph{locator} names one block in the selected source reading. A \emph{query} is a deterministic graph read whose type binding is fixed before population.
+
+\begin{figure}[h!]
+\centering
+\fbox{\begin{minipage}{0.92\linewidth}
+\centering\small
+PDF bytes $\rightarrow$ pinned text-layer reading with block locators\\[2pt]
+$\downarrow$\\[-2pt]
+question-independent ontology proposal $\rightarrow$ deterministic compilation $\rightarrow$ recorded acceptance\\[2pt]
+$\downarrow$\\[-2pt]
+type-bound queries + generic templates + question-visible population proposal\\[2pt]
+$\downarrow$\\[-2pt]
+typed change set $\rightarrow$ checks and decision $\rightarrow$ atomic ledger admission\\[2pt]
+$\downarrow$\\[-2pt]
+disposal $\rightarrow$ reopen and replay $\rightarrow$ application-side graph reads\\[2pt]
+$\downarrow$\\[-2pt]
+source-grounded human review under a separately frozen protocol
+\end{minipage}}
+\caption{The tested commitment path. Model outputs remain proposals until deterministic checks and a recorded decision admit a change.}
+\label{fig:protocol}
+\end{figure}
+
+\subsection{Reading and locators}
+
+The publisher PDF is retained locally, excluded from version control, and identified by digest. One pinned reader, \code{pypdf==6.16.2}, extracts its text layer without rasterization or OCR. The projector normalizes line endings, groups wrapped lines until a sentence, blank-line, or page boundary, and assigns stable page and block identifiers. The selected reading has 186 blocks across 11 pages. Its full text remains private because redistribution needs a separate rights decision; its digest, source manifest, and extraction code are retained.
+
+Every population-supplied record value must carry a valid block locator. Locators do not prove that a statement is supported or true. They make the model's proposed interpretation inspectable and allow the runner to reject missing or unknown references before admission. Provenance also records the construction emission that produced each operation.
+
+\subsection{Ontology acquisition}
+
+The ontology producer is a new session with no inherited paper conversation. Its declared read set contains the selected reading and generic \malleus{} ontology inputs. The task forbids access to the competency questions, an answer key, an earlier ontology, the manuscript, source code, tests, or a question-derived semantic checklist. It may return one ontology. If compilation fails, the exact diagnostic may be returned to the same session at most twice. There is no hand edit, restart, best-of selection, semantic reviewer, or recovery ontology in the selected path.
+
+Compilation checks the supported schema profile and produces a deterministic fact set, contract bytes, and a receipt. It establishes structural validity only. After compilation, one recorded evaluator event accepts that exact ontology digest for population. The event authorizes the next stage; it is not an adequacy or truth judgment.
+
+\subsection{Query binding, recipes, and population}
+
+Only after ontology compilation do the four questions enter the pipeline. Each question is bound to direct graph cases using record types, relation types, controlled values, and projected properties. A binding cannot name a document value, population identifier, source locator, result count, or exact graph closure. It is frozen before population and does not enter change-set construction, ledger identity, or replay identity.
+
+Nineteen templates in a restricted syntax derived from OTTR~\citep{skjaeveland2024reasonable} provide nine entity constructors and ten relation constructors for 19 selected concrete ontology record types. They encode legal construction form, ontology types, and controlled relation values. They contain no document value, answer, population id, locator, cardinality, or graph size. This is a finite recipe library, not full OTTR support or a general mapping language.
+
+The population producer is another new session. Its declared read set contains the selected ontology, selected reading, generic recipes, four questions, and a closed population grammar. The task forbids access to the query binding, earlier population, manuscript, ledger, model transcripts, or answer material. Each output id must be opaque and sequential. Names may denote records but may not smuggle counts, locations, causal clauses, epistemic qualifiers, or relationships that the ontology cannot type. One structural retry is allowed; a refusal or semantically sparse graph remains the result. There is no evaluator-authored fallback.
+
+The population compiler validates the outer structure, types, required fields, endpoints, locator membership, and complete mapping for the selected population profile. It expands accepted records into an ordered construction plan and deterministic provenance. Required population information has no default. Missing source coordinates, locators, types, or endpoints cause a typed refusal. The later runner separately refuses stale history coordinates or a missing transaction time.
+
+\subsection{Commitment, replay, query, and review}
+
+The runner derives two checks: source-locator integrity and structural conformance. The private change-set composer then binds explicit sources and evidence, ordered operations, valid time, the active contract, and current history coordinates into one change set. It does not parse the document, select domain meaning, run policy, admit events, or replay state. Transaction time enters separately at admission. A recorded verdict controls atomic admission of the retained change set and its protocol events. Compiler failure, a non-accepting verdict, stale prior state, or failed application leaves that admission batch unapplied.
+
+After admission, the runner records the live graph, protocol state, and receipt, discards those in-memory objects, reopens the file-backed ledger, and replays it. Equality of graph, protocol state, and canonical receipt is checked. Here, disposal means loss of the derived in-memory projection, not deletion of an external graph database. Replay still depends on the identified \malleus{} implementation; the ledger is not self-executing.
+
+The paper-owned query adapter receives the replay receipt, selected ontology, retained \malleus{} ontology input, and frozen binding. It receives no source reading, population file, provenance map, answer material, or manuscript. During the query region, Python guards count file opens, socket and name-resolution calls, and imports of named embedding or vector packages. These are interpreter-level observations, not an operating-system sandbox.
+
+Evaluation is separate from construction and querying. Its protocol was frozen before the query result. An identified reviewer must inspect each exact row against independently selected reading blocks and record narrative judgments. The validator can check identities, coverage, locators, labels, and authorship order, but it cannot choose a judgment. The selected experiment computes no numeric or exact-match result.
+
+\section{Implementation and experiment}
+
+The experiment is pinned to \malleus{} Core commit \gitid{f9052b4783100203318d4a21a0236f3851218af1}, tree \gitid{39a1ab48b913abc26f975873792c639ee690e811}. The exact paper reproducer is the commit tagged \code{paper-v4-multimodel-v2}; it contains the v2 experiment, the two further producer runs, the drivers, and the environment lock. This reproduction coordinate is outside the five experiment identities. The run uses the research ontology compiler, restricted template grammar, paper-local population bridge, private change-set composer, ledger admission, replay, and native graph reads. These are identified research seams, not stable public APIs or wire contracts.
+
+The worked source is Yu et al.'s \emph{Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge}~\citep{yu2025deep}. The publisher PDF is 11 pages and 6,921,046 bytes. The case uses prose blocks only. Figures, tables, open-ended synthesis, and specialist reinterpretation are outside scope.
+
+Four questions were fixed before this run:
+\begin{enumerate}
+\item Which observation network and campaign produced the microseismicity data, and how many instruments were deployed?
+\item Which named ridge subsection is associated with the deep microseismicity, and where are the events relative to its ridge axis?
+\item What earthquake-depth range and calculated primary-melt CO$_2$ range are reported for the central association, including units and estimate status?
+\item What causal mechanism do the authors prefer for the deep mantle earthquakes, represented explicitly as a hypothesis rather than an established fact?
+\end{enumerate}
+
+The ontology session did not see these questions. The population session did, because its task was to populate the already selected ontology for them. This separation tests whether the unconditioned domain language can carry later question-relevant facts without allowing the questions to shape that language.
+
+Before population, the binding exposed the expressibility limits in Table~\ref{tab:expressibility}. These gaps were recorded and left unchanged. The last column is read from the population after the fact: the session created no method, instrument or process record, so CQ1 and CQ4 are population limits as much as ontology limits.
+
+\begin{table}[h!]
+\centering
+\caption{Question expressibility in the selected ontology.}
+\label{tab:expressibility}
+\small
+\begin{tabular}{@{}p{0.09\linewidth}p{0.36\linewidth}p{0.36\linewidth}p{0.1\linewidth}@{}}
+\toprule
+Question & Expressible & Missing semantics & Populated \\
+\midrule
+CQ1 & Method uses instrument & Campaign, network, acquisition, instrument count & no \\
+CQ2 & Phenomenon occurs at feature; feature part of feature & Relative position such as beneath an axis & yes \\
+CQ3 & Quantitative observation, target, constituent, estimate status & None required by the frozen binding & yes \\
+CQ4 & Process components and observations & Hypothesis, preference, epistemic status, direction & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Fresh-session inputs were copied and digest-frozen before each model run. Both tasks forbade network use and extra repository reads. The ontology task forbade file writes; the population task allowed only \code{population.json} and also forbade delegation. This was a declared session boundary over a shared workspace and tool surface; the experiment does not claim operating-system sandbox enforcement. Observable producer kind, task name, visible files, retry count, and diagnostics are retained. Provider internals that the experiment cannot observe are not inferred.
+
+Focused negative tests cover source digest drift, missing or unknown locators, illegal or abstract record mappings, bad relation endpoints, stale prior state, and failed grouped application. Each class refuses mechanically. Synthetic mutations remain separate from the selected proposal and do not contribute alternative facts.
+
+The published Small Shop correction fixture supplies component evidence that ordered states can preserve a superseded record in history while projecting the later record as current. It is published under research tag \code{research/small-shop-correction-replay-v1}, a research milestone rather than a package release or second paper experiment.
+
+\section{Results}
+
+\subsection{Frozen identities}
+
+The selected run uses exactly five manuscript identities:
+\begin{enumerate}
+\item Source PDF: \digest{7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9}.
+\item Selected reading: \digest{f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17}.
+\item Selected ontology: \digest{7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed}.
+\item Ledger head \digest{7117c49b0c4b46dd0b39c872cd4d1b914f8d4ec37a805011030ad3f374fd835b} plus replay receipt \digest{1a86d1229af04d55275dff9616e50d8686510153241689487a13e5732148b796}.
+\item Application-side query binding: \digest{922e2c628a86bca22d761ebf6d453c9056ead8bdc5301e3c5dfb193db61368c1}.
+\end{enumerate}
+The fifth identity is not accepted-state evidence. Diagnostics, tests, population, and result files remain retained artifacts without becoming extra manuscript identity chains.
+
+\subsection{Ontology, population, and admission}
+
+Ontology attempt one was refused because the root field \code{default\_prefix} is outside the supported LinkML profile. The exact compiler diagnostic was returned once. Attempt two removed only that field and compiled into 15 entity classes, 33 relation classes and 16 enums; the validated import closure, which also carries the LinkML types and the \malleus{} root, holds 4,146 facts. No semantic edit or question input intervened.
+
+The nineteen value-generic templates compiled against this ontology. The separate population session returned a valid proposal on its first attempt, so no structural retry occurred. It contained 13 records and compiled unchanged into 13 ordered operations with 47 provenance assertions over four reading blocks. Seven operations create entities and six create relations. Both source-locator and structural checks were \code{SATISFIED}; policy produced \code{ACCEPT}.
+
+Eighteen anchor events retaining the contract, sources and evidence, plus a five-event atomic admission batch, produced the 23-event history. The admitted graph contains seven entities and six relations. After the live graph and protocol objects were discarded, ledger reopen and replay reproduced the graph state, protocol state, and receipt.
+
+\subsection{Query output}
+
+The query binding contains 1, 2, 4, and 6 direct one-hop cases for CQ1 through CQ4. The resulting row counts were $[0,2,4,0]$ (Table~\ref{tab:query}).
+
+\begin{table}[h!]
+\centering
+\caption{Raw replay-derived query rows.}
+\label{tab:query}
+\small
+\begin{tabular}{@{}p{0.09\linewidth}r p{0.72\linewidth}@{}}
+\toprule
+Question & Rows & Exact graph content returned \\
+\midrule
+CQ1 & 0 & No method-to-instrument row \\
+CQ2 & 2 & Microseismicity occurs at the ridge axis; the axis is part of RC2 \\
+CQ3 & 4 & Depth 10--20 km; calculated primary-melt CO$_2$ concentration 0.4--3.0 wt\%; constituent and material-location links \\
+CQ4 & 0 & No process or hypothesis row \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These are raw replay-derived rows, not reviewed answers. CQ2 encodes neither the deep qualifier nor that events are beneath the axis. The ontology lacks complete semantics for CQ1, CQ2, and CQ4. The sparse model population also left partially expressible cases unrealized in CQ1 and CQ4. The two causes separate cleanly. CQ1 lacks campaign, network and count in the ontology, and the population also created no method or instrument record. CQ4's causal chain is expressible through process relations, and the population created no process record, so that empty row is a population limit, not an ontology limit. Given 186 blocks and 48 classes, the fresh session wrote 13 records from four blocks. The rows are not false successes and were not repaired after query execution. CQ3 returns the requested range values, units, targets, and observed or calculated status, but its source support still awaits separate human-author review.
+
+The guarded query region recorded zero file-read attempts, zero network attempts, and zero imports of the named embedding or vector packages. It received the replay receipt, selected ontology inputs, loaded \malleus{} implementation, and binding. For this fixed execution, the graph was queried without an embedding index. This says nothing about unseen questions, semantic similarity, other retrieval implementations, or operating-system-level isolation.
+
+For contrast, the earlier run whose ontology session did see the four questions, retained at commit \gitid{746a48b} and not selected, returned rows for every question, 1, 1, 2 and 1, from a 14-record population. Its population also differed, so this is an end-to-end contrast, not an ontology-only ablation. It is the reason Section~1 treats question conditioning as a confound rather than a convenience.
+
+A second invocation into new ignored directories, using transaction time \code{2026-09-03T09:11:42Z}, reproduced the semantic ledger and all five public result files byte for byte. The source-grounded review protocol had been frozen before query output, and its exact input manifest was bound afterward. A separate fresh model session then prepared preliminary support and responsiveness judgments for all four questions; that record is explicitly nonhuman. The human author ratified it as recorded on 2026-09-03 after checking every row against the cited blocks, and the ratified record is retained beside it. It labels the two CQ-02 rows supported and partially responsive, the four CQ-03 rows supported and responsive, and the two empty results not evaluable. Support means the row's content is stated in the cited prose; we still make no answer-correctness claim.
+
+\subsection{Two other proposal producers}
+
+The protocol was run twice more with nothing changed but the producer. Each run used the byte-identical ontology brief and the same five inputs, a fresh session with no inherited context, compiler diagnostics returned at most twice, one recorded acceptance event, a type-only binding authored against the accepted ontology, recipes and population brief derived mechanically from that ontology and binding, a fresh population session under the same rules, and the same build, admission, replay and guarded query path. The harness that runs a producer from one manifest was first pointed at the v2 artifacts and reproduced the v2 recipes, brief, acceptance event, five result files and private ledger byte for byte. The v2 producer was gpt-5.6-sol at reasoning effort ultra under Codex; the two new producers were Claude Sonnet~5 and Claude Opus~5 under Claude Code at the harness default effort, which the experiment cannot pin or observe. Table~\ref{tab:producers} reports every run from retained artifacts.
+
+\begin{table}[h!]
+\centering
+\caption{Three proposal producers under the same protocol. Classes are entity / relation classes; rows are CQ1 to CQ4.}
+\label{tab:producers}
+\small
+\begin{tabular}{@{}l r l r r l r l l@{}}
+\toprule
+Producer & Attempts & Classes & Enums & Facts & Cases & Records & Graph & Rows \\
+\midrule
+gpt-5.6, selected run & 2 & 15 / 33 & 16 & 4,146 & 1, 2, 4, 6 & 13 & 7 ent., 6 rel. & 0, 2, 4, 0 \\
+Claude Sonnet~5 & 1 & 8 / 8 & 8 & 1,738 & 1, 1, 2, 1 & 2 & 2 ent., 0 rel. & 0, 0, 0, 0 \\
+Claude Opus~5 & 2 & 20 / 18 & 16 & 3,869 & 1, 2, 3, 2 & 6 & 5 ent., 1 rel. & 0, 0, 0, 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every run admitted atomically, produced a 23-event history, reproduced its graph and receipt after disposal and replay, and recorded zero guarded file, network or embedding-import attempts. Two of the three ontology sessions hit the same compiler boundary on their first attempt, the unsupported root field \code{default\_prefix}, and both removed only that field when the diagnostic was returned. The Opus session also failed to launch three times on server-side overload before producing anything; those launches are logged and are not attempts.
+
+The differences are in the proposed ontologies. Sonnet proposed eight entity and eight relation classes; Opus proposed twenty and eighteen, with an explicit depth datum, unit, determination mode and an abstract subsection root. Neither required the root \code{name} slot, so neither can name a ridge subsection; the selected v2 ontology required it. Both gave depth and concentration as one value per event or sample, while the source reports them as ranges over populations, and the population brief forbids inventing a value; so neither population contains an earthquake, a sample or a concentration. The v2 ontology carried lower and upper bounds on one observation record, which is why it alone answers CQ3. Neither Claude ontology has a process or hypothesis class with a typed relation to seismicity, so neither can answer CQ4 as asked. Opus's one row states the saturation condition of a pre-eruptive melt in CO$_2$ at 0.7~GPa and 1250~$^{\circ}$C, which is the mechanism's premise, not the authors' claim that it triggers the earthquakes. Asked afterwards, without reopening any file, why records were omitted, both population sessions named these rules; the replies are retained as self-reports, not evidence.
+
+Source-grounded review, by a fresh Claude session under the method of Section~2.4 and ratified as recorded by the human author on 2026-09-03, labelled every Sonnet question and the first three Opus questions not evaluable and not responsive on zero rows, and labelled the single Opus row supported on its content and not responsive to the question.
+
+The finding is narrow. The pipeline behaved identically across producers. What varied was whether the proposed vocabulary could hold what the source says, and that was decided before any fact was proposed. A commitment boundary makes this visible: the two near-empty graphs are refusals to invent, recorded as such, not silent gaps.
+
+\section{Related work}
+
+The original retrieval-augmented generation formulation combines a generator with a neural retriever over an external dense index and conditions output on retrieved passages~\citep{lewis2020retrieval}. \malleus{} asks a different systems question: when does a proposed typed change become accepted, replayable state? This paper has no matched retrieval baseline and does not show that \malleus{} replaces or outperforms RAG.
+
+Schema-guided extraction is established. SPIRES recursively extracts schema-conforming instances from text with LinkML and grounds named entities against ontologies~\citep{caufield2024spires}. OntoLogX generates ontology-grounded graphs from cybersecurity logs, checks syntax, SHACL compliance, and higher-level conditions, feeds targeted diagnostics back to the model, and persists only validated graphs~\citep{cotti2026ontologx}. These systems rule out claims that \malleus{} is the first model-based extraction pipeline, ontology-guided graph builder, or validate-before-persist design. The narrower object tested here is the identified commitment boundary among proposal, decision, immutable change, accepted ledger, and replayed graph.
+
+PROV-O supplies an interoperable vocabulary for entities, activities, agents, derivation, and attribution~\citep{lebo2013provo}. \malleus{} does not claim provenance as new. It requires source and evidence coordinates at admission; formal PROV-O interoperability remains future work.
+
+Blue Brain Nexus validates RDF metadata with SHACL on resource creation and update, records changes in an append-only event log, and rebuilds indexes by replaying that log~\citep{sy2023bluebrainnexus}. Zep retains source episodes and temporal semantic edges, combines cosine search, BM25 full-text retrieval, and graph traversal, and uses a model to identify conflicts before timestamp invalidation~\citep{rasmussen2025zep}. Nakajima's ActiveGraph architecture treats an append-only run log as authoritative and the working graph as a deterministic replay projection~\citep{nakajima2026log}. \malleus{} does not claim append-only history, temporal graphs, validation, or replayed projections as new. Its contribution is the compact, executable boundary that a generated change must cross before replay.
+
+\section{Limitations}
+
+One document and four questions cannot establish general ontology induction quality, domain robustness, or statistical performance. The producer comparison is one session per producer; it shows what each produced once under this protocol, not what each produces typically. The ontology producer was one model session, not a general \malleus{} ontology builder. Its proposal was broad, structurally valid, and incomplete for three questions. Compilation cannot establish fitness for the questions.
+
+The population producer saw the questions, so the experiment does not test open-ended graph construction. Conversely, it could not add missing ontology semantics. The query binding consists of direct typed cases, not Cypher, SPARQL, Prolog, arbitrary traversal, or natural-language query generation.
+
+An accepted change is conformant under identified checks and a recorded decision. It may still be incomplete, misleading, or false. Per-value locators aid inspection but do not authenticate the publisher, model provider, evaluator, runtime host, or storage owner. Human source review is pending, so even the nonempty rows are not yet evidence of answer support.
+
+The reading comes from a PDF text layer and may retain spacing or ligature artifacts. Figures and tables were excluded. Replay is file-backed and in-process, not a distributed durability result. The access guards observe selected Python entry points only. The run does not test Semantic Re-entry, temporal correction, effects, actions, or autonomous knowledge revision. The ledger here is a generic commitment history parameterized by the accepted ontology. It carries no domain event vocabulary: each run holds one change over empty state, the first population is an ordinary change set rather than a typed seed, and the private path admits only entity and relation creation. A domain semantic ledger in the sense of event-centred accounting models, which fixes how both initial state and later transitions are represented, is not demonstrated. The paper-specific dependency lock is limited to CPython 3.12 on macOS arm64. It identifies but does not vendor the interpreter or operating system, and reproduction still requires the ignored publisher PDF and exact checkout because the research seam is not in the distributable package.
+
+\section{Conclusion}
+
+\malleus{} treats model-generated structure as a candidate state transition, not accepted knowledge. In the worked run, a question-independent ontology proposal compiled after one structural correction. A separate model-authored population crossed typed construction, source and structure checks, recorded acceptance, atomic ledger admission, disposal, and replay. The result was reproduced byte for byte and queried without an embedding index on the guarded path.
+
+The same run preserved its limits. Two questions returned no rows, and the CQ2 rows weakened the requested spatial relation. No fallback filled the gaps, and no automated comparison converted raw rows into a success claim. The evidence supports a narrow engineering result: \malleus{} can turn a source-located proposal into identified, replayable graph state under an explicit commitment protocol. Answer support awaits separate source-grounded human-author review.
+
+\appendix
+\section{Reproduction}
+
+The Core baseline is commit \gitid{f9052b4783100203318d4a21a0236f3851218af1}, tree \gitid{39a1ab48b913abc26f975873792c639ee690e811}. The exact paper reproducer is the commit tagged \code{paper-v4-multimodel-v2}. It contains the v2 experiment, the two further producer runs, the environment lock, and the drivers, and remains outside the five experiment identities. The further runs use the manifest driver, {\scriptsize\path{research/ontology_driven_kg_realization/experiments/document_paper/multimodel.py}}, with each run's \code{run-manifest.json} and transaction time retained beside it. The ignored source PDF must exist at the path named by \code{paper-v4/source/source-manifest.json}. Reproduction requires CPython 3.12.9 on macOS arm64, the hash-checked lock, and the private research seam from that exact paper checkout. Both output paths must be absent before execution. The complete commands are retained in the source bundle's \code{README.md}.
+
+The lock contains 89 pinned distributions and archive hashes. A clean virtual environment installed from it, reproduced the selected reading, five public result files, and private ledger byte for byte, then passed all 184 document-paper and active v2 paper tests. The lock identifies but does not vendor the interpreter or operating system. It permits the resolver-listed archives for each pinned release rather than selecting one wheel per package.
+
+\section{Artifact index}
+
+The source contract is \code{paper-v4/source/source-manifest.json}. The selected ontology and acquisition record are under \code{paper-v4/experiment-v2/ontology-run/}. Generic templates, query binding, model-authored population, replay receipt, query output, and build result are under \code{paper-v4/experiment-v2/}. The explicit driver is {\scriptsize\path{research/ontology_driven_kg_realization/experiments/document_paper/v2_experiment.py}}. The review protocol, preliminary record, ratification guide, and human ratification record are under \code{paper-v4/evaluation-v2/}. The two further producer runs, each with ontology run, binding, recipes, population run, results, and evaluation, are under \code{paper-v4/experiment-v3/runs/}. The dependency lock and clean-verification record are under \code{paper-v4/environment/}. The source PDF, selected reading, and source-bearing ledger remain ignored under \code{private/}.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

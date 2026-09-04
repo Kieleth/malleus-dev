@@ -1,0 +1,160 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix malleus: <https://malleus.dev/schema/> .
+@prefix paper4: <https://malleus.dev/schema/paper-four-domain/> .
+@prefix recipe: <https://malleus.dev/paper-v4/recipe/> .
+
+mgrp:Record [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?operationKind,
+  ! ottr:IRI ?recordType,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:Property [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?property,
+  ?value
+] :: BASE .
+
+mgrp:RelationSource [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:RelationTarget [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:DependsOn [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?prerequisiteMember
+] :: BASE .
+
+recipe:NamedEntity-1.0.0 [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?recordType,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, ?recordType, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name)
+} .
+
+recipe:ObservingSystem-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?name,
+  ! xsd:string ?instrumentKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, paper4:ObservingSystem, ?recordId),
+  mgrp:Property(?member, malleus:name, ?name),
+  mgrp:Property(?member, paper4:instrument_kind, ?instrumentKind)
+} .
+
+recipe:BoundedQuantity-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?quantityKind,
+  ! ?lowerValue,
+  ! ?upperValue,
+  ! xsd:string ?unit,
+  ! xsd:string ?quantityStatus
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, paper4:BoundedQuantity, ?recordId),
+  mgrp:Property(?member, paper4:quantity_kind, ?quantityKind),
+  mgrp:Property(?member, paper4:lower_value, ?lowerValue),
+  mgrp:Property(?member, paper4:upper_value, ?upperValue),
+  mgrp:Property(?member, paper4:unit, ?unit),
+  mgrp:Property(?member, paper4:quantity_status, ?quantityStatus)
+} .
+
+recipe:MechanismHypothesis-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?initiatingCondition,
+  ! xsd:string ?transformation,
+  ! xsd:string ?physicalEffect,
+  ! xsd:string ?stressContext,
+  ! xsd:string ?outcome
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, paper4:MechanismHypothesis, ?recordId),
+  mgrp:Property(?member, paper4:initiating_condition, ?initiatingCondition),
+  mgrp:Property(?member, paper4:transformation, ?transformation),
+  mgrp:Property(?member, paper4:physical_effect, ?physicalEffect),
+  mgrp:Property(?member, paper4:stress_context, ?stressContext),
+  mgrp:Property(?member, paper4:outcome, ?outcome),
+  mgrp:Property(?member, paper4:hypothesis_status, "PREFERRED")
+} .
+
+recipe:DataAcquisitionRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId,
+  ! xsd:integer ?instrumentCount,
+  ! xsd:string ?dataKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, paper4:DataAcquisitionRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "DATA_ACQUISITION"),
+  mgrp:Property(?member, paper4:instrument_count, ?instrumentCount),
+  mgrp:Property(?member, paper4:data_kind, ?dataKind),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:SpatialAssociationRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId,
+  ! xsd:string ?relativePosition
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, paper4:SpatialAssociationRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "SPATIAL_ASSOCIATION"),
+  mgrp:Property(?member, paper4:relative_position, ?relativePosition),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:QuantityCharacterizationRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, paper4:QuantityCharacterizationRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "QUANTITY_CHARACTERIZATION"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:HypothesisExplainsRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, paper4:HypothesisExplainsRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "EXPLAINS"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .

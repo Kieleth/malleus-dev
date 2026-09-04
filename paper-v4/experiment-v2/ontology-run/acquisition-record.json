@@ -1,0 +1,35 @@
+{
+  "schema": "malleus.paper-v4.ontology-acquisition/v2",
+  "status": "COMPILED_ACCEPTED_FOR_POPULATION",
+  "input_manifest_sha256": "sha256:fa298805d07ea96f3640263ee0019e7eb8284de520f26fa77e4c2d59432757b0",
+  "producer": {
+    "kind": "CODEX_FRESH_SUBAGENT",
+    "fork_turns": "none",
+    "task_name": "ontology_v2_producer"
+  },
+  "question_input": false,
+  "human_repair": false,
+  "compiler_diagnostic_returns": 1,
+  "attempts": [
+    {
+      "ordinal": 1,
+      "ontology_path": "paper-v4/experiment-v2/ontology-run/ontology.yaml",
+      "ontology_sha256": "sha256:113f6e183377cc5ff8ed3980b043705fd50e0f8d3fb6fc1b51f842af67dd5652",
+      "compiler_status": "REFUSED",
+      "diagnostic_path": "paper-v4/experiment-v2/ontology-run/compile-attempt-01.json",
+      "diagnostic_sha256": "sha256:67b9032b8eca1e90dc394b9f7ad378bfae84d6f15fa15058bfe3ef56f779a3c3"
+    },
+    {
+      "ordinal": 2,
+      "ontology_path": "paper-v4/experiment-v2/ontology-run/ontology-02.yaml",
+      "ontology_sha256": "sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed",
+      "compiler_status": "ACCEPTED",
+      "fact_count": 4146,
+      "validated_fact_set_sha256": "sha256:bc178b7c9125d5edefd43df45f1a2949e815b17da27668308b0ae728f3f6f4ad",
+      "validated_contract_sha256": "sha256:292f8777ea24ad06de82c70bd87f1c049eb457fd34b742e2d5db12dd0e6233ae",
+      "compile_receipt_sha256": "sha256:d4595bf34eeed2aaa743e18703eadee7324c89bc2f257c88379405279ea62c69"
+    }
+  ],
+  "selected_ontology_path": "paper-v4/experiment-v2/ontology-run/ontology-02.yaml",
+  "selected_ontology_sha256": "sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed"
+}

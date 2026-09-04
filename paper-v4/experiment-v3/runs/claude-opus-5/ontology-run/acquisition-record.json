@@ -1,0 +1,82 @@
+{
+  "schema": "malleus.paper-v4.ontology-acquisition/v3",
+  "run_id": "claude-opus-5",
+  "status": "COMPILED_ACCEPTED_FOR_POPULATION",
+  "input_manifest": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/input-manifest.json",
+  "task_sha256": "sha256:276d10f6792a70533dfd1a230f450ef70ac390e1c4e186e984785728b7c47a0e",
+  "task_identical_to_v2": true,
+  "inputs_identical_to_v2": true,
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_sent_to_api": "claude-opus-5 (from the harness error reports of the failed launches)",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "spawn_message": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/spawn-message.md",
+    "launch_log": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/launch-log.json",
+    "launches_before_output": 3,
+    "observed_usage": {
+      "attempt_1": {"subagent_tokens": 174764, "tool_uses": 17, "duration_ms": 795433},
+      "attempt_2_turn": {"subagent_tokens_cumulative": 185632, "tool_uses": 0, "duration_ms": 89406}
+    }
+  },
+  "question_input": false,
+  "human_repair": false,
+  "compiler_diagnostic_returns": 1,
+  "diagnostic_return_message": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/diagnostic-return-01.md",
+  "attempts": [
+    {
+      "ordinal": 1,
+      "raw_report_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/attempt-01.raw.md",
+      "raw_report_sha256": "sha256:68ea676d36b6aed4c7d7ae4344052182300bbde587ee6b21b8df694041343b11",
+      "ontology_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/ontology-01.yaml",
+      "ontology_sha256": "sha256:a463425cdbd62d1a01c3c86dffa7d7aaac9977786c2432b8bde337285806b1d3",
+      "compiler_status": "REFUSED",
+      "diagnostic_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/compile-attempt-01.json",
+      "diagnostic_sha256": "sha256:06abb54eab654395205167fbe90aaa7e2923986922d42f53a777928d8def64e3",
+      "refusal": "schema root contains rejected field default_prefix (same boundary as the v2 producer's first attempt)"
+    },
+    {
+      "ordinal": 2,
+      "raw_report_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/attempt-02.raw.md",
+      "raw_report_sha256": "sha256:707eaa1ebd75b3cf64acdee7799b565592ec4a59d4d18b535af1d800fad9db7f",
+      "ontology_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/ontology-02.yaml",
+      "ontology_sha256": "sha256:b0f9d04edbf96df82f97de9d357dd4dea8921fbe96b3f59fcc0c95bd76e90c22",
+      "compiler_status": "ACCEPTED",
+      "fact_count": 3869,
+      "validated_contract_sha256": "sha256:2def7bad615869ae806eab96abc86189da83da2ed5c3ecff82a722437ce9a3a1",
+      "compile_receipt_sha256": "sha256:c4ccf07153c74ae18e4fefcb5dee2603958d29c33a8d8f7bdf72c9099891c465",
+      "diff_from_attempt_1": "removed the default_prefix line and its preceding blank line; nothing else",
+      "report_commentary_outside_delimiters": "one sentence naming the rejected field; retained in the raw report, excluded from the ontology bytes"
+    }
+  ],
+  "selected_ontology_path": "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/ontology-02.yaml",
+  "selected_ontology_sha256": "sha256:b0f9d04edbf96df82f97de9d357dd4dea8921fbe96b3f59fcc0c95bd76e90c22",
+  "acceptance_sha256": "sha256:777ddb7fab491bac2e2f50f9c0185477dc02c3f4fec2b0379cf8211f26123559",
+  "producer_access_report": {
+    "requested_after_output": true,
+    "files_read": [
+      "paper-v4/experiment-v3/runs/claude-opus-5/ontology-run/task.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/malleus-acolyte-SKILL.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/ADOPTION_GUIDE.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/IMPLEMENTATION_STATUS.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/malleus.yaml",
+      "private/paper-v4-text-layer/selected-reading.json"
+    ],
+    "scratch_files_outside_repository": [
+      "a plain-text dump of the 186 reading blocks, for reading in order",
+      "a copy of its own candidate ontology, written to parse-check YAML validity before delivery; the producer itself reported this as a deviation from the no-write instruction"
+    ],
+    "network": false,
+    "repository_writes": false,
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox"
+  },
+  "shape": {
+    "entity_classes": 20,
+    "abstract_entity_classes": 2,
+    "relation_classes": 18,
+    "enums": 16,
+    "name_required_on_entities": false
+  }
+}

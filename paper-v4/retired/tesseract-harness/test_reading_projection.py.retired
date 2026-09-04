@@ -1,0 +1,432 @@
+"""Focused checks for the frozen selected-reading projection."""
+
+from __future__ import annotations
+
+from hashlib import sha256
+import json
+from pathlib import Path
+import shutil
+import struct
+import zlib
+
+import pytest
+
+from malleus.ocr import canonical_digest
+from research.ontology_driven_kg_realization.experiments.document_paper import (
+    reading_projection,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.ocr_emitter import (
+    PageArtifacts,
+    _construct_bundle,
+    _request_document,
+    _verification_document,
+)
+from research.ontology_driven_kg_realization.experiments.document_paper.reading_projection import (
+    ReadingProjectionError,
+    project,
+)
+
+
+ROOT = Path(__file__).resolve().parents[4]
+
+
+def _digest(value: bytes) -> str:
+    return "sha256:" + sha256(value).hexdigest()
+
+
+def _json_bytes(value: object) -> bytes:
+    return (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        + "\n"
+    ).encode()
+
+
+def _png(width: int = 2, height: int = 3) -> bytes:
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+        )
+
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    pixels = b"\0\0\0\0\0\0\0" * height
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(pixels))
+        + chunk(b"IEND", b"")
+    )
+
+
+def _write_json(path: Path, value: object) -> bytes:
+    raw = _json_bytes(value)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(raw)
+    return raw
+
+
+def _fixture(tmp_path: Path) -> tuple[Path, Path, dict[str, Path]]:
+    root = tmp_path / "repo"
+    experiment = root / "paper-v4/experiment"
+    experiment.mkdir(parents=True)
+    projection_path = experiment / "reading-projection-precommit.json"
+    ocr_path = experiment / "ocr-precommit.json"
+    shutil.copy2(
+        ROOT / "paper-v4/experiment/reading-projection-precommit.json", projection_path
+    )
+    shutil.copy2(ROOT / "paper-v4/experiment/ocr-precommit.json", ocr_path)
+    projection = json.loads(projection_path.read_bytes())
+    config = json.loads(ocr_path.read_bytes())
+    source_raw = b"%PDF-1.4\nfrozen fixture source\n"
+    source_path = root / config["source"]["path"]
+    source_path.parent.mkdir(parents=True)
+    source_path.write_bytes(source_raw)
+    config["source"]["sha256"] = _digest(source_raw)
+    config["source"]["byte_length"] = len(source_raw)
+    ocr_raw = _write_json(ocr_path, config)
+    projection["source_sha256"] = config["source"]["sha256"]
+    projection["input"]["ocr_precommit_sha256"] = _digest(ocr_raw)
+    _write_json(projection_path, projection)
+
+    page_bytes = {page: (f"Page {page}\n".encode()) for page in range(1, 12)}
+    page_bytes[1] = b"  Alpha  \r\nBeta\r\n \t\r\nGamma\rDelta\r\n\r\nEpsilon"
+    reader_version = {
+        "expected_fragment": config["reader"]["version_contains"],
+        "observed": "fixture reader version",
+        "stdout_sha256": _digest(b"fixture reader version"),
+        "stderr_sha256": _digest(b""),
+    }
+    retained = config["retention"]["private_root"]
+    artifacts = []
+    for page, raw in page_bytes.items():
+        unit = f"page:{page}"
+        stem = f"page-{page:03d}"
+        raster_locator = f"{retained}/rasters/{stem}.png"
+        request_locator = f"{retained}/requests/{stem}.json"
+        response_locator = f"{retained}/responses/{stem}.txt"
+        selected_locator = f"{retained}/selected/{stem}.txt"
+        raster_path = root / raster_locator
+        request_path = root / request_locator
+        response_path = root / response_locator
+        selected_path = root / selected_locator
+        for path in (raster_path, request_path, response_path, selected_path):
+            path.parent.mkdir(parents=True, exist_ok=True)
+        raster_raw = _png()
+        raster_path.write_bytes(raster_raw)
+        raster_digest = _digest(raster_raw)
+        request_raw = _json_bytes(
+            _request_document(config, unit, raster_digest, 2, 3, reader_version)
+        )
+        request_path.write_bytes(request_raw)
+        response_path.write_bytes(raw)
+        selected_path.write_bytes(raw)
+        text_digest = _digest(raw)
+        request_digest = _digest(request_raw)
+        artifacts.append(
+            PageArtifacts(
+                page,
+                unit,
+                2,
+                3,
+                raster_path,
+                raster_locator,
+                raster_digest,
+                request_path,
+                request_locator,
+                request_digest,
+                response_path,
+                response_locator,
+                text_digest,
+                selected_path,
+                selected_locator,
+                text_digest,
+            )
+        )
+
+    renderer_version = {
+        "expected_fragment": config["renderer"]["version_contains"],
+        "observed": "fixture renderer version",
+        "stdout_sha256": _digest(b""),
+        "stderr_sha256": _digest(b"fixture renderer version"),
+    }
+    runtime = {
+        "malleus_version": config["malleus_ocr"]["malleus_version"],
+        "ontology": {
+            "version": config["malleus_ocr"]["ontology_version"],
+            "sha256": config["malleus_ocr"]["ontology_sha256"],
+            "registry_content_hash": config["malleus_ocr"]["registry_content_hash"],
+        },
+        "renderer": {
+            "id": config["renderer"]["id"],
+            "binary_sha256": config["renderer"]["binary_sha256"],
+            "version": renderer_version,
+        },
+        "reader": {
+            "id": config["reader"]["id"],
+            "binary_sha256": config["reader"]["binary_sha256"],
+            "version": reader_version,
+            "traineddata_sha256": config["reader"]["traineddata_sha256"],
+            "model_version": "NOT_DECLARED; IDENTITY_IS_TRAINEDDATA_SHA256",
+        },
+    }
+    bundle = _construct_bundle(config, tuple(artifacts), reader_version)
+    bundle_raw = _write_json(experiment / "ocr-bundle.json", bundle.document())
+    verification = _verification_document(
+        root,
+        ocr_path,
+        _digest(ocr_raw),
+        config,
+        bundle,
+        bundle_raw,
+        tuple(artifacts),
+        runtime,
+    )
+    _write_json(experiment / "ocr-verification.json", verification)
+    return (
+        root,
+        projection_path,
+        {
+            "ocr": ocr_path,
+            "bundle": experiment / "ocr-bundle.json",
+            "verification": experiment / "ocr-verification.json",
+            "source": source_path,
+            "private": root / projection["output"]["private_reading_path"],
+            "public": root / projection["output"]["public_manifest_path"],
+            "page_1": root
+            / projection["input"]["selected_page_path_pattern"].format(page=1),
+            "page_2": root
+            / projection["input"]["selected_page_path_pattern"].format(page=2),
+            "response_1": root / f"{retained}/responses/page-001.txt",
+            "response_2": root / f"{retained}/responses/page-002.txt",
+            "raster_1": root / f"{retained}/rasters/page-001.png",
+        },
+    )
+
+
+def _assert_no_outputs(paths: dict[str, Path]) -> None:
+    assert not paths["private"].exists()
+    assert not paths["public"].exists()
+
+
+def test_exact_blocks_are_private_and_public_manifest_is_digest_only(
+    tmp_path: Path,
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    result = project(root, precommit)
+
+    private = json.loads(paths["private"].read_bytes())
+    public = json.loads(paths["public"].read_bytes())
+    assert result.private_reading_path == paths["private"]
+    assert result.public_manifest_path == paths["public"]
+    assert private["block_count"] == public["block_count"] == 13
+    assert private["pages"][0]["blocks"] == [
+        {
+            "id": "page:1:block:001",
+            "ordinal": 1,
+            "byte_length": len("  Alpha  \nBeta\n".encode()),
+            "sha256": _digest("  Alpha  \nBeta\n".encode()),
+            "text": "  Alpha  \nBeta\n",
+        },
+        {
+            "id": "page:1:block:002",
+            "ordinal": 2,
+            "byte_length": len("Gamma\nDelta\n".encode()),
+            "sha256": _digest("Gamma\nDelta\n".encode()),
+            "text": "Gamma\nDelta\n",
+        },
+        {
+            "id": "page:1:block:003",
+            "ordinal": 3,
+            "byte_length": len("Epsilon\n".encode()),
+            "sha256": _digest("Epsilon\n".encode()),
+            "text": "Epsilon\n",
+        },
+    ]
+    assert [page["page"] for page in public["pages"]] == list(range(1, 12))
+    assert [block["id"] for page in public["pages"] for block in page["blocks"]][
+        0:4
+    ] == [
+        "page:1:block:001",
+        "page:1:block:002",
+        "page:1:block:003",
+        "page:2:block:001",
+    ]
+    assert public["private_reading"]["sha256"] == _digest(paths["private"].read_bytes())
+    assert b"Alpha" in paths["private"].read_bytes()
+    assert b"Alpha" not in paths["public"].read_bytes()
+    assert all(
+        "text" not in block for page in public["pages"] for block in page["blocks"]
+    )
+
+
+def test_source_identity_drift_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["source"].write_bytes(paths["source"].read_bytes() + b"drift")
+    with pytest.raises(ReadingProjectionError, match="source bytes drift"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_ocr_precommit_drift_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["ocr"].write_bytes(paths["ocr"].read_bytes() + b" ")
+    with pytest.raises(ReadingProjectionError, match="OCR precommit hash drift"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_bundle_drift_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["bundle"].write_bytes(paths["bundle"].read_bytes() + b" ")
+    with pytest.raises(ReadingProjectionError, match="drifts"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_selected_sidecar_drift_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["page_1"].write_bytes(paths["page_1"].read_bytes() + b"drift")
+    with pytest.raises(ReadingProjectionError, match="sidecar hash drift on page 1"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_nonselected_sidecar_byte_drift_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    paths["raster_1"].write_bytes(paths["raster_1"].read_bytes() + b"drift")
+    with pytest.raises(ReadingProjectionError, match="raster sidecar hash drift"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_bundle_semantics_must_equal_the_frozen_construction(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    bundle = json.loads(paths["bundle"].read_bytes())
+    bundle["bundle"]["source_class"]["temporal_policy"] = "drifted"
+    bundle_raw = _write_json(paths["bundle"], bundle)
+    verification = json.loads(paths["verification"].read_bytes())
+    verification["bundle"]["sha256"] = _digest(bundle_raw)
+    _write_json(paths["verification"], verification)
+    with pytest.raises(ReadingProjectionError, match="drifts"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_response_sidecar_must_align_with_the_selected_reading(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    verification = json.loads(paths["verification"].read_bytes())
+    verification["sidecars"][0]["response"]["sha256"] = _digest(b"other response")
+    bundle = json.loads(paths["bundle"].read_bytes())
+    closure = canonical_digest(verification["sidecars"])
+    bundle["bundle"]["id"] = f"bundle:paper-v4:{closure.removeprefix('sha256:')}"
+    bundle["bundle"]["transport_metadata"]["retained_sidecars_sha256"] = closure
+    bundle_raw = _write_json(paths["bundle"], bundle)
+    verification["bundle"]["id"] = bundle["bundle"]["id"]
+    verification["bundle"]["sha256"] = _digest(bundle_raw)
+    _write_json(paths["verification"], verification)
+    with pytest.raises(ReadingProjectionError, match="response and selected digest"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_verification_result_is_recomputed(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    verification = json.loads(paths["verification"].read_bytes())
+    verification["result"]["capability"] = "NOT_AUDIT_ONLY"
+    verification["result"]["account"]["units"] = []
+    _write_json(paths["verification"], verification)
+    with pytest.raises(
+        ReadingProjectionError, match="verification drifts from recomputation"
+    ):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_invalid_utf8_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    raw = b"valid\n\xff\n"
+    paths["page_1"].write_bytes(raw)
+    paths["response_1"].write_bytes(raw)
+    verification = json.loads(paths["verification"].read_bytes())
+    verification["sidecars"][0]["selected"]["sha256"] = _digest(raw)
+    verification["sidecars"][0]["response"]["sha256"] = _digest(raw)
+    _rewrite_bundle_text_digest(paths, verification, 0, _digest(raw))
+    with pytest.raises(ReadingProjectionError, match="not strict UTF-8"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def test_empty_page_refuses(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    raw = b" \r\n\t\r"
+    paths["page_2"].write_bytes(raw)
+    paths["response_2"].write_bytes(raw)
+    verification = json.loads(paths["verification"].read_bytes())
+    verification["sidecars"][1]["selected"]["sha256"] = _digest(raw)
+    verification["sidecars"][1]["response"]["sha256"] = _digest(raw)
+    _rewrite_bundle_text_digest(paths, verification, 1, _digest(raw))
+    with pytest.raises(ReadingProjectionError, match="empty selected reading"):
+        project(root, precommit)
+    _assert_no_outputs(paths)
+
+
+def _rewrite_bundle_text_digest(
+    paths: dict[str, Path], verification: dict[str, object], index: int, digest: str
+) -> None:
+    bundle = json.loads(paths["bundle"].read_bytes())
+    payload = bundle["bundle"]
+    payload["attempts"][index]["response_digest"] = digest
+    payload["hypotheses"][index]["text_digest"] = digest
+    closure = canonical_digest(verification["sidecars"])
+    payload["transport_metadata"]["retained_sidecars_sha256"] = closure
+    payload["id"] = f"bundle:paper-v4:{closure.removeprefix('sha256:')}"
+    bundle_raw = _write_json(paths["bundle"], bundle)
+    verification["bundle"]["id"] = payload["id"]
+    verification["bundle"]["sha256"] = _digest(bundle_raw)
+    _write_json(paths["verification"], verification)
+
+
+def test_existing_output_is_not_overwritten(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    sentinel = b"existing"
+    paths["public"].write_bytes(sentinel)
+    with pytest.raises(ReadingProjectionError, match="refusing to overwrite"):
+        project(root, precommit)
+    assert paths["public"].read_bytes() == sentinel
+    assert not paths["private"].exists()
+
+
+def test_dangling_output_symlink_cannot_redirect_private_text(tmp_path: Path) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    leak = root / "paper-v4/experiment/leaked-private.json"
+    paths["private"].symlink_to(leak)
+    with pytest.raises(ReadingProjectionError, match="symbolic link"):
+        project(root, precommit)
+    assert paths["private"].is_symlink()
+    assert not leak.exists()
+    assert not paths["public"].exists()
+
+
+def test_partial_publication_failure_rolls_back(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, precommit, paths = _fixture(tmp_path)
+    link = reading_projection.os.link
+    calls = 0
+
+    def fail_second(source: Path, target: Path) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise OSError("injected public failure")
+        link(source, target)
+
+    monkeypatch.setattr(reading_projection.os, "link", fail_second)
+    with pytest.raises(
+        ReadingProjectionError, match="publication failed and was rolled back"
+    ):
+        project(root, precommit)
+    assert calls == 2
+    _assert_no_outputs(paths)

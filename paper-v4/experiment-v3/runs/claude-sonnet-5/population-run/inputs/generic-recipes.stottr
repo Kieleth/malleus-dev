@@ -1,0 +1,149 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix malleus: <https://malleus.dev/schema/> .
+@prefix domain: <https://malleus.dev/schema/domains/mid-ocean-ridge-seismicity/> .
+@prefix recipe: <https://malleus.dev/paper-v4/experiment-v3/claude-sonnet-5/recipe/> .
+
+mgrp:Record [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?operationKind,
+  ! ottr:IRI ?recordType,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:Property [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?property,
+  ?value
+] :: BASE .
+
+mgrp:RelationSource [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:RelationTarget [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:DependsOn [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?prerequisiteMember
+] :: BASE .
+
+recipe:SeismicInstrument-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?status
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, domain:SeismicInstrument, ?recordId),
+  mgrp:Property(?member, domain:status, ?status)
+} .
+
+recipe:SeismicEvent-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?hypocenterDepth,
+  ! xsd:string ?locationQuality
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, domain:SeismicEvent, ?recordId),
+  mgrp:Property(?member, domain:hypocenter_depth, ?hypocenterDepth),
+  mgrp:Property(?member, domain:location_quality, ?locationQuality)
+} .
+
+recipe:RidgeSegment-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?segmentClass,
+  ! ?spreadingRate
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, domain:RidgeSegment, ?recordId),
+  mgrp:Property(?member, domain:segment_class, ?segmentClass),
+  mgrp:Property(?member, domain:spreading_rate, ?spreadingRate)
+} .
+
+recipe:RockSample-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?lithology,
+  ! ?volatileConcentration
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, domain:RockSample, ?recordId),
+  mgrp:Property(?member, domain:lithology, ?lithology),
+  mgrp:Property(?member, domain:volatile_concentration, ?volatileConcentration)
+} .
+
+recipe:GeologicalProcess-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?processKind
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, domain:GeologicalProcess, ?recordId),
+  mgrp:Property(?member, domain:process_kind, ?processKind)
+} .
+
+recipe:InstrumentDetectedEventRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, domain:InstrumentDetectedEventRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "DETECTED_EVENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:EventLocatedBeneathSegmentRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, domain:EventLocatedBeneathSegmentRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "LOCATED_BENEATH_SEGMENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:SampleCollectedFromSegmentRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, domain:SampleCollectedFromSegmentRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "COLLECTED_FROM_SEGMENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:ProcessCausesEventRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, domain:ProcessCausesEventRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "CAUSES_EVENT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .

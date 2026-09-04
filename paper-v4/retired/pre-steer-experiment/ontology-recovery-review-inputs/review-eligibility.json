@@ -1,0 +1,47 @@
+{
+  "schema": "malleus.paper-v4.ontology-recovery-review-eligibility/v1",
+  "verdict": "PASS",
+  "classification": "POST_PRIMARY_CONTROL",
+  "primary_result": "REFUSED_ADEQUACY",
+  "primary_result_changed": false,
+  "candidate_sha256": "sha256:29fca9e9325c9d14e5070bcb4274c8704f9d1aaa058799e5a81f27cb5a5a99e9",
+  "compiled_contract_identity": "sha256:c7b71d094fd8ea2bb7a9e368c581475891f110538caebeaceedca9d7532b3332",
+  "schema_inventory_sha256": "sha256:1464603552d33e8953084dbe729942eb631ea2eda0eee2f4711dadd2c183ef3a",
+  "checks": [
+    {"id": "PRIMARY_CANDIDATE_BYTES_UNCHANGED", "verdict": "PASS"},
+    {"id": "EXACT_RECOVERY_PRECOMMIT", "verdict": "PASS"},
+    {"id": "EXACT_THREE_CHANGE_SEMANTIC_DIFF", "verdict": "PASS"},
+    {"id": "FROZEN_EVALUATION_INPUTS_UNCHANGED", "verdict": "PASS"},
+    {"id": "BYTE_IDENTICAL_RECOMPILATION", "verdict": "PASS"},
+    {"id": "FIFTEEN_CLASS_SELECTION_CLOSURE", "verdict": "PASS"},
+    {"id": "GRAPH_RECIPE_PROFILE_FIT", "verdict": "PASS"},
+    {"id": "BOUND_BLOCK_CLOSURE", "verdict": "PASS"}
+  ],
+  "input_identities": [
+    {"role": "recovery_precommit", "sha256": "sha256:4a389e6c70a61f7938f86bf4495f8933b29a2b0ca14326114afdace09e3fa31b"},
+    {"role": "original_candidate", "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df"},
+    {"role": "recovery_candidate", "sha256": "sha256:29fca9e9325c9d14e5070bcb4274c8704f9d1aaa058799e5a81f27cb5a5a99e9"},
+    {"role": "validated_contract", "sha256": "sha256:4e5297a3844e55a17c21dbbbd94778f8426cad91a14f1f42e2c747ad8c2d72cd"},
+    {"role": "compiler_receipt", "sha256": "sha256:f8843baa1802529de46df8410dcd16f14bdebc0a9db048850175654ecad2277b"},
+    {"role": "questions", "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"},
+    {"role": "answer_oracle", "sha256": "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571"},
+    {"role": "adequacy_rubric", "sha256": "sha256:f73c86e2635afa78661acffc1cc5b8aeca6924d446d4a52e44fc7ac739936a10"},
+    {"role": "locator_binding", "sha256": "sha256:bd61e591b77e05ed28babff4300b2b913f6a92a76635d15742d4530e0faaa15c"},
+    {"role": "support_guide", "sha256": "sha256:e4b0ee89ee87db51201e4e183b94162bb01ea8b81cc9bc131d0971cb792cdb53"},
+    {"role": "bound_support_blocks", "sha256": "sha256:36cb8c6a51f18aecc7acdf9ab257029e96578addcb36e891047ebb02cfcc22ac"}
+  ],
+  "bound_support_block_ids": [
+    "page:1:block:010",
+    "page:2:block:015",
+    "page:2:block:018",
+    "page:5:block:015",
+    "page:5:block:017",
+    "page:5:block:018"
+  ],
+  "review_boundary": {
+    "adequacy_scored": false,
+    "review_attempts": 1,
+    "feedback": "NONE",
+    "retry": "NONE"
+  }
+}

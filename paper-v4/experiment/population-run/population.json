@@ -1,0 +1,250 @@
+{
+  "schema": "malleus.paper-v4.population/v1",
+  "ontology_sha256": "sha256:df483285ede9820e25e17215d18ee089d9faeff8d7afaf02365083e19671c941",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+  "records": [
+    {
+      "record_id": "campaign-smarties-2019",
+      "record_type": "Campaign",
+      "record_block_id": "page:2:block:002",
+      "properties": {
+        "name": {
+          "value": "SMARTIES cruise in 2019",
+          "block_id": "page:2:block:002"
+        }
+      }
+    },
+    {
+      "record_id": "observing-system-smarties-obs-network",
+      "record_type": "ObservingSystem",
+      "record_block_id": "page:2:block:002",
+      "properties": {
+        "name": {
+          "value": "SMARTIES ocean-bottom seismometer network",
+          "block_id": "page:2:block:002"
+        },
+        "instrument_kind": {
+          "value": "ocean-bottom seismometer (OBS)",
+          "block_id": "page:2:block:002"
+        }
+      }
+    },
+    {
+      "record_id": "region-segment-rc2",
+      "record_type": "Region",
+      "record_block_id": "page:1:block:005",
+      "properties": {
+        "name": {
+          "value": "segment RC2",
+          "block_id": "page:1:block:005"
+        }
+      }
+    },
+    {
+      "record_id": "earthquakes-deep-rc2",
+      "record_type": "EarthquakePopulation",
+      "record_block_id": "page:2:block:004",
+      "properties": {
+        "name": {
+          "value": "deep microseismicity beneath the segment RC2 ridge axis",
+          "block_id": "page:2:block:004"
+        }
+      }
+    },
+    {
+      "record_id": "primary-melts-rc2",
+      "record_type": "PrimaryMeltPopulation",
+      "record_block_id": "page:8:block:007",
+      "properties": {
+        "name": {
+          "value": "primary melts along segment RC2",
+          "block_id": "page:8:block:007"
+        }
+      }
+    },
+    {
+      "record_id": "quantity-rc2-earthquake-depth",
+      "record_type": "BoundedQuantity",
+      "record_block_id": "page:1:block:001",
+      "properties": {
+        "quantity_kind": {
+          "value": "earthquake depth",
+          "block_id": "page:1:block:001"
+        },
+        "lower_value": {
+          "value": 10,
+          "block_id": "page:1:block:001"
+        },
+        "upper_value": {
+          "value": 20,
+          "block_id": "page:1:block:001"
+        },
+        "unit": {
+          "value": "km",
+          "block_id": "page:1:block:001"
+        },
+        "quantity_status": {
+          "value": "REPORTED_OBSERVATION",
+          "block_id": "page:1:block:001"
+        }
+      }
+    },
+    {
+      "record_id": "quantity-rc2-primary-melt-co2",
+      "record_type": "BoundedQuantity",
+      "record_block_id": "page:8:block:007",
+      "properties": {
+        "quantity_kind": {
+          "value": "CO2 content in primary melts",
+          "block_id": "page:8:block:007"
+        },
+        "lower_value": {
+          "value": 0.4,
+          "block_id": "page:8:block:007"
+        },
+        "upper_value": {
+          "value": 3.0,
+          "block_id": "page:8:block:007"
+        },
+        "unit": {
+          "value": "wt%",
+          "block_id": "page:8:block:007"
+        },
+        "quantity_status": {
+          "value": "CALCULATED_ESTIMATE",
+          "block_id": "page:8:block:007"
+        }
+      }
+    },
+    {
+      "record_id": "hypothesis-co2-degassing-earthquakes",
+      "record_type": "MechanismHypothesis",
+      "record_block_id": "page:5:block:002",
+      "properties": {
+        "initiating_condition": {
+          "value": "ascending melt",
+          "block_id": "page:5:block:002"
+        },
+        "transformation": {
+          "value": "CO2 degassing",
+          "block_id": "page:5:block:002"
+        },
+        "physical_effect": {
+          "value": "volume change and a small pressure increase",
+          "block_id": "page:5:block:003"
+        },
+        "stress_context": {
+          "value": "extensional stresses",
+          "block_id": "page:5:block:003"
+        },
+        "outcome": {
+          "value": "triggering deep earthquakes in the mantle",
+          "block_id": "page:5:block:003"
+        }
+      }
+    },
+    {
+      "record_id": "acquisition-smarties-obs",
+      "record_type": "DataAcquisitionRelation",
+      "record_block_id": "page:2:block:002",
+      "properties": {
+        "instrument_count": {
+          "value": 19,
+          "block_id": "page:2:block:002"
+        },
+        "data_kind": {
+          "value": "microseismicity data",
+          "block_id": "page:2:block:002"
+        }
+      },
+      "source": {
+        "record_id": "campaign-smarties-2019",
+        "block_id": "page:2:block:002"
+      },
+      "target": {
+        "record_id": "observing-system-smarties-obs-network",
+        "block_id": "page:2:block:002"
+      }
+    },
+    {
+      "record_id": "spatial-deep-earthquakes-rc2",
+      "record_type": "SpatialAssociationRelation",
+      "record_block_id": "page:2:block:004",
+      "properties": {
+        "relative_position": {
+          "value": "beneath the ridge axis",
+          "block_id": "page:2:block:004"
+        }
+      },
+      "source": {
+        "record_id": "earthquakes-deep-rc2",
+        "block_id": "page:2:block:004"
+      },
+      "target": {
+        "record_id": "region-segment-rc2",
+        "block_id": "page:2:block:004"
+      }
+    },
+    {
+      "record_id": "characterization-earthquake-depth",
+      "record_type": "QuantityCharacterizationRelation",
+      "record_block_id": "page:1:block:001",
+      "properties": {},
+      "source": {
+        "record_id": "quantity-rc2-earthquake-depth",
+        "block_id": "page:1:block:001"
+      },
+      "target": {
+        "record_id": "earthquakes-deep-rc2",
+        "block_id": "page:1:block:001"
+      }
+    },
+    {
+      "record_id": "spatial-primary-melts-rc2",
+      "record_type": "SpatialAssociationRelation",
+      "record_block_id": "page:8:block:007",
+      "properties": {
+        "relative_position": {
+          "value": "along segment RC2",
+          "block_id": "page:8:block:007"
+        }
+      },
+      "source": {
+        "record_id": "primary-melts-rc2",
+        "block_id": "page:8:block:007"
+      },
+      "target": {
+        "record_id": "region-segment-rc2",
+        "block_id": "page:8:block:007"
+      }
+    },
+    {
+      "record_id": "characterization-primary-melt-co2",
+      "record_type": "QuantityCharacterizationRelation",
+      "record_block_id": "page:8:block:007",
+      "properties": {},
+      "source": {
+        "record_id": "quantity-rc2-primary-melt-co2",
+        "block_id": "page:8:block:007"
+      },
+      "target": {
+        "record_id": "primary-melts-rc2",
+        "block_id": "page:8:block:007"
+      }
+    },
+    {
+      "record_id": "explanation-co2-degassing-deep-earthquakes",
+      "record_type": "HypothesisExplainsRelation",
+      "record_block_id": "page:5:block:002",
+      "properties": {},
+      "source": {
+        "record_id": "hypothesis-co2-degassing-earthquakes",
+        "block_id": "page:5:block:002"
+      },
+      "target": {
+        "record_id": "earthquakes-deep-rc2",
+        "block_id": "page:5:block:002"
+      }
+    }
+  ]
+}

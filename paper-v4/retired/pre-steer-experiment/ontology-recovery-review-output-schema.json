@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://malleus.dev/paper-v4/ontology-recovery-review-output-schema/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "reviewer_id",
+    "candidate_sha256",
+    "compiled_contract_identity",
+    "status",
+    "eligibility",
+    "criteria",
+    "witness",
+    "unresolved_count"
+  ],
+  "properties": {
+    "schema": {
+      "const": "malleus.paper-v4.ontology-recovery-adequacy-result/v1"
+    },
+    "reviewer_id": {
+      "const": "reviewer:codex-paper-recovery-evaluator-v1"
+    },
+    "candidate_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "compiled_contract_identity": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "SELECTED_CONTROL",
+        "REFUSED_CONTROL",
+        "EVALUATION_INVALID"
+      ]
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict",
+        "reason"
+      ],
+      "properties": {
+        "verdict": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "verdict",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "OA-01",
+              "OA-02",
+              "OA-03",
+              "OA-04",
+              "OA-05",
+              "OA-06"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "witness": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "semantic_atom",
+          "ontology_record_type",
+          "ontology_property_or_relation",
+          "representation_kind",
+          "source_endpoint_type",
+          "target_endpoint_type",
+          "epistemic_representation",
+          "supporting_blocks",
+          "judgment",
+          "support",
+          "reason"
+        ],
+        "properties": {
+          "question_id": {
+            "enum": [
+              "CQ-01",
+              "CQ-02",
+              "CQ-03",
+              "CQ-04"
+            ]
+          },
+          "semantic_atom": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ontology_record_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ontology_property_or_relation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "representation_kind": {
+            "enum": [
+              "TYPE",
+              "PROPERTY",
+              "RELATION",
+              "ENDPOINT",
+              "CHAIN"
+            ]
+          },
+          "source_endpoint_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target_endpoint_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "epistemic_representation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supporting_blocks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "sha256"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^page:[1-9][0-9]*:block:[0-9]{3}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              }
+            }
+          },
+          "judgment": {
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "support": {
+            "enum": [
+              "SUPPORTED",
+              "UNSUPPORTED",
+              "UNLOCATED",
+              "AMBIGUOUS"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "unresolved_count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

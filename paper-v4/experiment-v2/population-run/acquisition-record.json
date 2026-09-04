@@ -1,0 +1,31 @@
+{
+  "schema": "malleus.paper-v4.population-acquisition/v2",
+  "status": "STRUCTURALLY_ACCEPTED",
+  "input_manifest_sha256": "sha256:2085a20e580bc591f9a3a23a782f24bfc6f8b08ebfced93ad7327279bd9c2282",
+  "producer": {
+    "kind": "CODEX_FRESH_SUBAGENT",
+    "fork_turns": "none",
+    "task_name": "population_v2_producer"
+  },
+  "declared_input_count": 5,
+  "query_binding_visible": false,
+  "content_review_performed": false,
+  "human_repair": false,
+  "fallback_population": false,
+  "model_refusal": false,
+  "structural_diagnostic_returns": 0,
+  "structural_retries": 0,
+  "attempts": [
+    {
+      "ordinal": 1,
+      "population_path": "paper-v4/experiment-v2/population-run/population.json",
+      "population_sha256": "sha256:d4c6fe42c7f96a86c3116c57bccd9c81e53c2ce6e62b421da714a1915ee79964",
+      "envelope_status": "PROPOSAL",
+      "compiler_status": "ACCEPTED",
+      "record_count": 13,
+      "operation_count": 13,
+      "provenance_assertion_count": 47,
+      "plan_sha256": "sha256:fa1194aa705c36ff6ef06bc3d7bcadbeb4297d44c95a3558e5946fb97dbc09e6"
+    }
+  ]
+}

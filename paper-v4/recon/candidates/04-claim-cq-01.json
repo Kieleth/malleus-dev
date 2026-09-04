@@ -1,0 +1,13 @@
+{
+  "id": "claim:yu-2025:cq-01",
+  "label": "CQ-01 observing system",
+  "review_state": "REVIEWED",
+  "evidence_ids": [
+    "evidence:yu-2025-publisher-pdf"
+  ],
+  "notes": [
+    "Source locator: publisher PDF page index 2 (1-based); phrase anchor: Results prose naming the 19-instrument network, SMARTIES, 2019, and 17 useful stations."
+  ],
+  "statement": "The 2019 SMARTIES cruise deployed an ocean-bottom seismometer network of 19 instruments, of which 17 yielded usable data.",
+  "claim_kind": "reported_observing_system"
+}

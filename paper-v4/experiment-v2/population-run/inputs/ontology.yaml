@@ -1,0 +1,971 @@
+id: https://malleus.dev/domains/mid-ocean-ridge-geodynamics
+name: mid_ocean_ridge_geodynamics
+version: 0.1.0
+title: Mid-Ocean Ridge Geodynamics Ontology Proposal
+description: >-
+  Proposed reusable vocabulary for tectonic features, mantle and crustal
+  regions, melts, volatile constituents, geologic processes, seismic
+  phenomena, observations, samples, instruments, methods, and models used in
+  studies of mid-ocean ridge geodynamics.
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  morg: https://malleus.dev/domains/mid-ocean-ridge-geodynamics/
+
+default_range: string
+
+imports:
+  - linkml:types
+  - malleus
+
+enums:
+  GeologicFeatureKind:
+    permissible_values:
+      OCEAN_SPREADING_CENTER: {}
+      MID_OCEAN_RIDGE: {}
+      RIDGE_SEGMENT: {}
+      RIDGE_AXIS: {}
+      RIDGE_TRANSFORM_INTERSECTION: {}
+      TRANSFORM_FAULT: {}
+      FRACTURE_ZONE: {}
+      NON_TRANSFORM_DISCONTINUITY: {}
+      OCEANIC_CORE_COMPLEX: {}
+      AXIAL_VALLEY: {}
+      NEOVOLCANIC_RIDGE: {}
+      AXIAL_MELT_LENS: {}
+      DETACHMENT_FAULT: {}
+      NORMAL_FAULT: {}
+      MYLONITE_SHEAR_ZONE: {}
+      HYDROTHERMAL_VENT_FIELD: {}
+      HYDROTHERMAL_MOUND: {}
+      VOLCANIC_CONE: {}
+      MAGMA_RESERVOIR: {}
+      MELT_CHANNEL: {}
+
+  EarthRegionKind:
+    permissible_values:
+      SEAFLOOR: {}
+      OCEANIC_CRUST: {}
+      LOWER_CRUST: {}
+      MANTLE: {}
+      MANTLE_SOURCE: {}
+      LITHOSPHERE: {}
+      BRITTLE_LITHOSPHERE: {}
+      DUCTILE_LITHOSPHERE: {}
+      ASTHENOSPHERE: {}
+
+  GeophysicalBoundaryKind:
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY: {}
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY: {}
+      MOHOROVICIC_DISCONTINUITY: {}
+      THERMAL_ISOTHERM: {}
+
+  GeologicMaterialKind:
+    permissible_values:
+      SILICATE_MELT: {}
+      PRIMARY_MELT: {}
+      PRE_ERUPTIVE_MELT: {}
+      PARTIAL_MELT: {}
+      BASALTIC_MAGMA: {}
+      BASALT: {}
+      MID_OCEAN_RIDGE_BASALT: {}
+      PERIDOTITE: {}
+      OLIVINE_MELT_INCLUSION: {}
+      GAS_PHASE: {}
+      HYDROTHERMAL_FLUID: {}
+      SEDIMENT: {}
+
+  GeologicProcessKind:
+    permissible_values:
+      OCEANIC_CRUST_FORMATION: {}
+      MANTLE_UPWELLING: {}
+      PARTIAL_MELTING: {}
+      MELT_FOCUSING: {}
+      MELT_MIGRATION: {}
+      MELT_INJECTION: {}
+      FRACTIONAL_CRYSTALLIZATION: {}
+      VOLATILE_DISSOLUTION: {}
+      VOLATILE_SATURATION: {}
+      GAS_PHASE_NUCLEATION: {}
+      DEGASSING: {}
+      VOLUME_CHANGE: {}
+      PORE_PRESSURE_INCREASE: {}
+      STRAIN_LOCALIZATION: {}
+      BRITTLE_FAILURE: {}
+      EARTHQUAKE_NUCLEATION: {}
+      HYDROTHERMAL_CIRCULATION: {}
+      LITHOSPHERE_COOLING: {}
+      CRUSTAL_ACCRETION: {}
+      MAGMATIC_ACTIVITY: {}
+      TECTONIC_DEFORMATION: {}
+      MELT_FREEZING: {}
+
+  SeismicPhenomenonKind:
+    permissible_values:
+      EARTHQUAKE: {}
+      MICROSEISMICITY: {}
+      EARTHQUAKE_CLUSTER: {}
+      EARTHQUAKE_SWARM: {}
+      LONG_PERIOD_EARTHQUAKE: {}
+
+  GeologicSampleKind:
+    permissible_values:
+      ROCK_SAMPLE: {}
+      WHOLE_ROCK: {}
+      BASALT_GLASS: {}
+      MELT_INCLUSION: {}
+
+  ObservationMethodKind:
+    permissible_values:
+      PASSIVE_SEISMIC_MONITORING: {}
+      ARRIVAL_TRIGGER_DETECTION: {}
+      MANUAL_PHASE_PICKING: {}
+      ACTIVE_SOURCE_SEISMIC_REFRACTION: {}
+      TRAVEL_TIME_CALCULATION: {}
+      HYPOCENTER_LOCATION: {}
+      DOUBLE_DIFFERENCE_RELOCATION: {}
+      DEPTH_RESOLUTION_TEST: {}
+      MAGNITUDE_ESTIMATION: {}
+      FOCAL_MECHANISM_INVERSION: {}
+      WAVEFORM_SPECTRAL_ANALYSIS: {}
+      GEOCHEMICAL_ANALYSIS: {}
+      TRACE_ELEMENT_PROXY_ESTIMATION: {}
+      SOLUBILITY_CALCULATION: {}
+      THERMAL_MODELING: {}
+      MORPHOLOGIC_INTERPRETATION: {}
+
+  InstrumentKind:
+    permissible_values:
+      SEISMOMETER: {}
+      OCEAN_BOTTOM_SEISMOMETER: {}
+
+  ScientificModelKind:
+    permissible_values:
+      ONE_DIMENSIONAL_SEISMIC_VELOCITY_MODEL: {}
+      HYPOCENTER_LOCATION_MODEL: {}
+      THERMAL_MODEL: {}
+      VOLATILE_SOLUBILITY_MODEL: {}
+
+  QuantityKind:
+    permissible_values:
+      DEPTH: {}
+      THICKNESS: {}
+      LENGTH: {}
+      OFFSET: {}
+      ORIENTATION: {}
+      AGE: {}
+      SPREADING_RATE: {}
+      TEMPERATURE: {}
+      PRESSURE: {}
+      PORE_PRESSURE_CHANGE: {}
+      CONCENTRATION: {}
+      SOLUBILITY: {}
+      FRACTION: {}
+      RATIO: {}
+      SEISMIC_VELOCITY: {}
+      TRAVEL_TIME: {}
+      RESIDUAL: {}
+      LOCATION_UNCERTAINTY: {}
+      STATION_GAP: {}
+      MAGNITUDE: {}
+      FREQUENCY: {}
+      EVENT_COUNT: {}
+      DURATION: {}
+      DISTANCE: {}
+      STRAIN_RATE: {}
+
+  MeasurementUnit:
+    permissible_values:
+      METER: {}
+      KILOMETER: {}
+      MILLIMETER_PER_YEAR: {}
+      DEGREE_CELSIUS: {}
+      GIGAPASCAL: {}
+      BAR: {}
+      WEIGHT_PERCENT: {}
+      PERCENT: {}
+      PARTS_PER_MILLION: {}
+      KILOMETER_PER_SECOND: {}
+      SECOND: {}
+      HERTZ: {}
+      DEGREE: {}
+      MILLION_YEARS: {}
+      COUNT: {}
+      DIMENSIONLESS: {}
+
+  ObservationBasis:
+    permissible_values:
+      OBSERVED: {}
+      MEASURED: {}
+      CALCULATED: {}
+      ESTIMATED: {}
+      MODELED: {}
+      EXPECTED: {}
+      COMPILED: {}
+
+  CategoricalObservationKind:
+    permissible_values:
+      PRESENCE: {}
+      ACTIVITY_STATE: {}
+      TECTONO_MAGMATIC_CHARACTER: {}
+      THERMAL_REGIME: {}
+      RHEOLOGICAL_REGIME: {}
+      STRESS_REGIME: {}
+      MORPHOLOGY: {}
+      SPECTRAL_CHARACTER: {}
+      SATURATION_STATE: {}
+      DEGASSING_STATE: {}
+      SPATIAL_PATTERN: {}
+
+  CategoricalObservationValue:
+    permissible_values:
+      PRESENT: {}
+      ABSENT: {}
+      ACTIVE: {}
+      INACTIVE: {}
+      MAGMATIC: {}
+      AMAGMATIC: {}
+      TECTONIC: {}
+      MAGMATIC_TECTONIC: {}
+      HOT: {}
+      COLD: {}
+      BRITTLE: {}
+      DUCTILE: {}
+      SEMIBRITTLE: {}
+      EXTENSIONAL: {}
+      HUMMOCKY: {}
+      SMOOTH: {}
+      CORRUGATED: {}
+      LONG_PERIOD: {}
+      HIGH_FREQUENCY: {}
+      LOW_FREQUENCY: {}
+      SATURATED: {}
+      UNDERSATURATED: {}
+      DEGASSED: {}
+      UNDEGASSED: {}
+      ALIGNED: {}
+      CLUSTERED: {}
+      SWARM_LIKE: {}
+
+  GeoscienceRelationType:
+    permissible_values:
+      FEATURE_PART_OF: {}
+      FEATURE_ADJACENT_TO: {}
+      FEATURE_OFFSETS: {}
+      FEATURE_CONTAINS_REGION: {}
+      FEATURE_HAS_BOUNDARY: {}
+      BOUNDARY_BOUNDS_REGION: {}
+      SEISMIC_PHENOMENON_OCCURS_AT: {}
+      SEISMIC_PHENOMENON_OCCURS_IN: {}
+      SEISMIC_PHENOMENON_ALIGNED_WITH_FEATURE: {}
+      PROCESS_OCCURS_AT: {}
+      PROCESS_OCCURS_IN: {}
+      PROCESS_ACTS_ON_MATERIAL: {}
+      PROCESS_PRODUCES_MATERIAL: {}
+      PROCESS_CAUSES_PROCESS: {}
+      PROCESS_TRIGGERS_SEISMIC_PHENOMENON: {}
+      PROCESS_INFLUENCES_BOUNDARY: {}
+      PROCESS_RELEASES_CONSTITUENT: {}
+      MATERIAL_CONTAINS_CONSTITUENT: {}
+      MATERIAL_DERIVED_FROM: {}
+      MATERIAL_OCCURS_AT: {}
+      MATERIAL_OCCURS_IN: {}
+      SAMPLE_REPRESENTS_MATERIAL: {}
+      SAMPLE_COLLECTED_AT: {}
+      OBSERVATION_CHARACTERIZES: {}
+      OBSERVATION_CONCERNS_CONSTITUENT: {}
+      OBSERVATION_HAS_NUMERATOR_CONSTITUENT: {}
+      OBSERVATION_HAS_DENOMINATOR_CONSTITUENT: {}
+      OBSERVATION_PRODUCED_BY_METHOD: {}
+      OBSERVATION_PRODUCED_BY_MODEL: {}
+      METHOD_USES_INSTRUMENT: {}
+      METHOD_USES_MODEL: {}
+      METHOD_APPLIED_AT: {}
+      INSTRUMENT_DEPLOYED_AT: {}
+
+classes:
+  GeoscienceObject:
+    abstract: true
+    is_a: Entity
+    description: Abstract root for source-locatable geoscience domain objects.
+    slot_usage:
+      name:
+        range: string
+        required: true
+
+  GeologicFeature:
+    is_a: GeoscienceObject
+    description: A persistent tectonic, volcanic, hydrothermal, or seafloor feature.
+    slots:
+      - geologic_feature_kind
+
+  EarthRegion:
+    is_a: GeoscienceObject
+    description: A persistent region or layer of the solid Earth.
+    slots:
+      - earth_region_kind
+
+  GeophysicalBoundary:
+    is_a: GeoscienceObject
+    description: A boundary inferred from thermal, mechanical, or seismic properties.
+    slots:
+      - geophysical_boundary_kind
+
+  GeologicMaterial:
+    is_a: GeoscienceObject
+    description: Rock, melt, fluid, gas, sediment, or another geologic material.
+    slots:
+      - geologic_material_kind
+
+  ChemicalConstituent:
+    is_a: GeoscienceObject
+    description: A chemical constituent present in or released from geologic material.
+    slots:
+      - chemical_formula
+
+  GeologicProcess:
+    is_a: GeoscienceObject
+    description: A physical, chemical, magmatic, hydrothermal, or tectonic process.
+    slots:
+      - geologic_process_kind
+
+  SeismicPhenomenon:
+    is_a: GeoscienceObject
+    description: An individual seismic event or an identifiable seismicity population.
+    slots:
+      - seismic_phenomenon_kind
+
+  GeologicSample:
+    is_a: GeoscienceObject
+    description: A collected material sample used for petrologic or geochemical analysis.
+    slots:
+      - geologic_sample_kind
+
+  ObservationMethod:
+    is_a: GeoscienceObject
+    description: A scientific method used to detect, calculate, estimate, or interpret a domain quantity or state.
+    slots:
+      - observation_method_kind
+
+  Instrument:
+    is_a: GeoscienceObject
+    description: A physical instrument used to acquire observations.
+    slots:
+      - instrument_kind
+
+  ScientificModel:
+    is_a: GeoscienceObject
+    description: A model used to derive locations, physical states, or expected quantities.
+    slots:
+      - scientific_model_kind
+
+  DomainObservation:
+    abstract: true
+    is_a: GeoscienceObject
+    description: Abstract root for quantitative and categorical domain observations.
+
+  QuantitativeObservation:
+    is_a: DomainObservation
+    description: A measured, calculated, estimated, modeled, expected, or compiled numeric interval.
+    slots:
+      - quantity_kind
+      - lower_numeric_value
+      - upper_numeric_value
+      - measurement_unit
+      - observation_basis
+
+  CategoricalObservation:
+    is_a: DomainObservation
+    description: A measured, observed, or interpreted categorical state.
+    slots:
+      - categorical_observation_kind
+      - categorical_observation_value
+      - observation_basis
+
+  FeaturePartOfRelation:
+    is_a: Relation
+    description: Relates a geologic feature to a larger geologic feature containing it.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: FEATURE_PART_OF
+      source_id:
+        range: GeologicFeature
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  FeatureAdjacentToRelation:
+    is_a: Relation
+    description: Relates two spatially adjacent geologic features.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: FEATURE_ADJACENT_TO
+      source_id:
+        range: GeologicFeature
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  FeatureOffsetsRelation:
+    is_a: Relation
+    description: Relates a geologic feature to another feature that it offsets.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: FEATURE_OFFSETS
+      source_id:
+        range: GeologicFeature
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  FeatureContainsRegionRelation:
+    is_a: Relation
+    description: Relates a geologic feature to an Earth region beneath or within it.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: FEATURE_CONTAINS_REGION
+      source_id:
+        range: GeologicFeature
+        required: true
+      target_id:
+        range: EarthRegion
+        required: true
+
+  FeatureHasBoundaryRelation:
+    is_a: Relation
+    description: Relates a geologic feature to a geophysical boundary associated with it.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: FEATURE_HAS_BOUNDARY
+      source_id:
+        range: GeologicFeature
+        required: true
+      target_id:
+        range: GeophysicalBoundary
+        required: true
+
+  BoundaryBoundsRegionRelation:
+    is_a: Relation
+    description: Relates a geophysical boundary to an Earth region that it bounds.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: BOUNDARY_BOUNDS_REGION
+      source_id:
+        range: GeophysicalBoundary
+        required: true
+      target_id:
+        range: EarthRegion
+        required: true
+
+  SeismicPhenomenonOccursAtRelation:
+    is_a: Relation
+    description: Locates a seismic phenomenon at a geologic feature.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: SEISMIC_PHENOMENON_OCCURS_AT
+      source_id:
+        range: SeismicPhenomenon
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  SeismicPhenomenonOccursInRelation:
+    is_a: Relation
+    description: Locates a seismic phenomenon within an Earth region.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: SEISMIC_PHENOMENON_OCCURS_IN
+      source_id:
+        range: SeismicPhenomenon
+        required: true
+      target_id:
+        range: EarthRegion
+        required: true
+
+  SeismicPhenomenonAlignedWithFeatureRelation:
+    is_a: Relation
+    description: Relates a spatially aligned seismic phenomenon and geologic feature.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: SEISMIC_PHENOMENON_ALIGNED_WITH_FEATURE
+      source_id:
+        range: SeismicPhenomenon
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  ProcessOccursAtRelation:
+    is_a: Relation
+    description: Locates a geologic process at a geologic feature.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_OCCURS_AT
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  ProcessOccursInRelation:
+    is_a: Relation
+    description: Locates a geologic process within an Earth region.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_OCCURS_IN
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: EarthRegion
+        required: true
+
+  ProcessActsOnMaterialRelation:
+    is_a: Relation
+    description: Relates a geologic process to the material it acts upon.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_ACTS_ON_MATERIAL
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: GeologicMaterial
+        required: true
+
+  ProcessProducesMaterialRelation:
+    is_a: Relation
+    description: Relates a geologic process to material it produces.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_PRODUCES_MATERIAL
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: GeologicMaterial
+        required: true
+
+  ProcessCausesProcessRelation:
+    is_a: Relation
+    description: Relates a geologic process to a process it causes.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_CAUSES_PROCESS
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: GeologicProcess
+        required: true
+
+  ProcessTriggersSeismicPhenomenonRelation:
+    is_a: Relation
+    description: Relates a geologic process to a seismic phenomenon it triggers.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_TRIGGERS_SEISMIC_PHENOMENON
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: SeismicPhenomenon
+        required: true
+
+  ProcessInfluencesBoundaryRelation:
+    is_a: Relation
+    description: Relates a geologic process to a geophysical boundary it changes or controls.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_INFLUENCES_BOUNDARY
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: GeophysicalBoundary
+        required: true
+
+  ProcessReleasesConstituentRelation:
+    is_a: Relation
+    description: Relates a geologic process to a chemical constituent it releases.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: PROCESS_RELEASES_CONSTITUENT
+      source_id:
+        range: GeologicProcess
+        required: true
+      target_id:
+        range: ChemicalConstituent
+        required: true
+
+  MaterialContainsConstituentRelation:
+    is_a: Relation
+    description: Relates geologic material to one of its chemical constituents.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: MATERIAL_CONTAINS_CONSTITUENT
+      source_id:
+        range: GeologicMaterial
+        required: true
+      target_id:
+        range: ChemicalConstituent
+        required: true
+
+  MaterialDerivedFromRelation:
+    is_a: Relation
+    description: Relates geologic material to material from which it was derived.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: MATERIAL_DERIVED_FROM
+      source_id:
+        range: GeologicMaterial
+        required: true
+      target_id:
+        range: GeologicMaterial
+        required: true
+
+  MaterialOccursAtRelation:
+    is_a: Relation
+    description: Locates geologic material at a geologic feature.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: MATERIAL_OCCURS_AT
+      source_id:
+        range: GeologicMaterial
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  MaterialOccursInRelation:
+    is_a: Relation
+    description: Locates geologic material within an Earth region.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: MATERIAL_OCCURS_IN
+      source_id:
+        range: GeologicMaterial
+        required: true
+      target_id:
+        range: EarthRegion
+        required: true
+
+  SampleRepresentsMaterialRelation:
+    is_a: Relation
+    description: Relates a geologic sample to the material it represents.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: SAMPLE_REPRESENTS_MATERIAL
+      source_id:
+        range: GeologicSample
+        required: true
+      target_id:
+        range: GeologicMaterial
+        required: true
+
+  SampleCollectedAtRelation:
+    is_a: Relation
+    description: Relates a geologic sample to its collection feature.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: SAMPLE_COLLECTED_AT
+      source_id:
+        range: GeologicSample
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  ObservationCharacterizesRelation:
+    is_a: Relation
+    description: Relates an observation to the domain object it characterizes.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_CHARACTERIZES
+      source_id:
+        range: DomainObservation
+        required: true
+      target_id:
+        range: GeoscienceObject
+        required: true
+
+  ObservationConcernsConstituentRelation:
+    is_a: Relation
+    description: Relates an observation to the chemical constituent whose amount or state it concerns.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_CONCERNS_CONSTITUENT
+      source_id:
+        range: DomainObservation
+        required: true
+      target_id:
+        range: ChemicalConstituent
+        required: true
+
+  ObservationHasNumeratorConstituentRelation:
+    is_a: Relation
+    description: Identifies the numerator constituent of a quantitative ratio observation.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_HAS_NUMERATOR_CONSTITUENT
+      source_id:
+        range: QuantitativeObservation
+        required: true
+      target_id:
+        range: ChemicalConstituent
+        required: true
+
+  ObservationHasDenominatorConstituentRelation:
+    is_a: Relation
+    description: Identifies the denominator constituent of a quantitative ratio observation.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_HAS_DENOMINATOR_CONSTITUENT
+      source_id:
+        range: QuantitativeObservation
+        required: true
+      target_id:
+        range: ChemicalConstituent
+        required: true
+
+  ObservationProducedByMethodRelation:
+    is_a: Relation
+    description: Relates an observation to the method that produced it.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_PRODUCED_BY_METHOD
+      source_id:
+        range: DomainObservation
+        required: true
+      target_id:
+        range: ObservationMethod
+        required: true
+
+  ObservationProducedByModelRelation:
+    is_a: Relation
+    description: Relates an observation to the scientific model that produced it.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: OBSERVATION_PRODUCED_BY_MODEL
+      source_id:
+        range: DomainObservation
+        required: true
+      target_id:
+        range: ScientificModel
+        required: true
+
+  MethodUsesInstrumentRelation:
+    is_a: Relation
+    description: Relates an observation method to an instrument it uses.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: METHOD_USES_INSTRUMENT
+      source_id:
+        range: ObservationMethod
+        required: true
+      target_id:
+        range: Instrument
+        required: true
+
+  MethodUsesModelRelation:
+    is_a: Relation
+    description: Relates an observation method to a scientific model it uses.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: METHOD_USES_MODEL
+      source_id:
+        range: ObservationMethod
+        required: true
+      target_id:
+        range: ScientificModel
+        required: true
+
+  MethodAppliedAtRelation:
+    is_a: Relation
+    description: Relates an observation method to the geologic feature where it was applied.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: METHOD_APPLIED_AT
+      source_id:
+        range: ObservationMethod
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+  InstrumentDeployedAtRelation:
+    is_a: Relation
+    description: Relates an instrument to the geologic feature where it was deployed.
+    slot_usage:
+      relation_type:
+        range: GeoscienceRelationType
+        required: true
+        equals_string: INSTRUMENT_DEPLOYED_AT
+      source_id:
+        range: Instrument
+        required: true
+      target_id:
+        range: GeologicFeature
+        required: true
+
+slots:
+  geologic_feature_kind:
+    range: GeologicFeatureKind
+    required: true
+    description: Domain category of a geologic feature.
+
+  earth_region_kind:
+    range: EarthRegionKind
+    required: true
+    description: Domain category of an Earth region.
+
+  geophysical_boundary_kind:
+    range: GeophysicalBoundaryKind
+    required: true
+    description: Domain category of a geophysical boundary.
+
+  geologic_material_kind:
+    range: GeologicMaterialKind
+    required: true
+    description: Domain category of geologic material.
+
+  chemical_formula:
+    range: string
+    required: true
+    description: Chemical formula or elemental symbol identifying a constituent.
+
+  geologic_process_kind:
+    range: GeologicProcessKind
+    required: true
+    description: Domain category of a geologic process.
+
+  seismic_phenomenon_kind:
+    range: SeismicPhenomenonKind
+    required: true
+    description: Domain category of a seismic phenomenon.
+
+  geologic_sample_kind:
+    range: GeologicSampleKind
+    required: true
+    description: Domain category of a geologic sample.
+
+  observation_method_kind:
+    range: ObservationMethodKind
+    required: true
+    description: Domain category of an observation method.
+
+  instrument_kind:
+    range: InstrumentKind
+    required: true
+    description: Domain category of a scientific instrument.
+
+  scientific_model_kind:
+    range: ScientificModelKind
+    required: true
+    description: Domain category of a scientific model.
+
+  quantity_kind:
+    range: QuantityKind
+    required: true
+    description: Physical or observational quantity represented by a quantitative observation.
+
+  lower_numeric_value:
+    range: float
+    required: true
+    description: Inclusive lower bound, equal to the upper bound for an exact value.
+
+  upper_numeric_value:
+    range: float
+    required: true
+    description: Inclusive upper bound, equal to the lower bound for an exact value.
+
+  measurement_unit:
+    range: MeasurementUnit
+    required: true
+    description: Unit applying to both numeric bounds.
+
+  observation_basis:
+    range: ObservationBasis
+    required: true
+    description: How the observation value was obtained.
+
+  categorical_observation_kind:
+    range: CategoricalObservationKind
+    required: true
+    description: Dimension described by a categorical observation.
+
+  categorical_observation_value:
+    range: CategoricalObservationValue
+    required: true
+    description: Categorical state assigned by an observation.

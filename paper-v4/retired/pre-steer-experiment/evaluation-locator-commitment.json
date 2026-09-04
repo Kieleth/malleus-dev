@@ -1,0 +1,28 @@
+{
+  "schema": "malleus.paper-v4.evaluation-locator-commitment/v1",
+  "frozen_at": "2026-09-02T22:09:00Z",
+  "status": "FROZEN_BEFORE_MODEL_ACQUISITION",
+  "source_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+  "prior_evaluation_commitment": {
+    "path": "paper-v4/experiment/evaluation-commitments.json",
+    "sha256": "sha256:af91dbd18f503ccffd556108bdc61aa527163d7b109bf598fdc6d709bceb5e4d"
+  },
+  "selected_reading": {
+    "manifest_path": "paper-v4/experiment/selected-reading-manifest.json",
+    "manifest_sha256": "sha256:74399ce57cbe512157c0afdea4bbca946bc2693a3ead69cdfc82b3d6f292c35c",
+    "sealed_path": "private/paper-v4-ocr/yu-2025-tesseract-v1/selected-reading.json",
+    "sha256": "sha256:0537411117e73b2611ade5088978ba7c8d8a4467d5b51b0c8941bc47f0d41261"
+  },
+  "oracle_locator_binding": {
+    "sealed_path": "private/paper-v4-evaluation/oracle-locator-binding.json",
+    "sha256": "sha256:bd61e591b77e05ed28babff4300b2b913f6a92a76635d15742d4530e0faaa15c",
+    "visibility": "SEALED_FROM_PROPOSAL_PRODUCER"
+  },
+  "support_adjudication_guide": {
+    "sealed_path": "private/paper-v4-evaluation/support-adjudication-guide.json",
+    "sha256": "sha256:e4b0ee89ee87db51201e4e183b94162bb01ea8b81cc9bc131d0971cb792cdb53",
+    "visibility": "SEALED_FROM_PROPOSAL_PRODUCER"
+  },
+  "review_feedback": "FORBIDDEN",
+  "review_retry": "FORBIDDEN"
+}

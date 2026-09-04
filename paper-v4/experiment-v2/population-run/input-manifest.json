@@ -1,0 +1,46 @@
+{
+  "schema": "malleus.paper-v4.population-input-manifest/v2",
+  "frozen_at": "2026-09-03T08:48:50Z",
+  "status": "FROZEN_BEFORE_POPULATION_ACQUISITION",
+  "attempt_policy": {
+    "maximum_structural_retries": 1,
+    "semantic_repair": "FORBIDDEN",
+    "fallback_population": "FORBIDDEN"
+  },
+  "session_policy": {
+    "fresh_context": true,
+    "network_access": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "read_scope": "DECLARED_FILES_ONLY",
+    "write_scope": "POPULATION_JSON_ONLY"
+  },
+  "files": [
+    {
+      "role": "TASK",
+      "locator": "paper-v4/experiment-v2/population-run/task.md",
+      "sha256": "sha256:00cca7d26cd37260fd3bf056f55e96f6562cad25f9d1c951d2fac43f916825c2"
+    },
+    {
+      "role": "SELECTED_ONTOLOGY",
+      "locator": "paper-v4/experiment-v2/population-run/inputs/ontology.yaml",
+      "sha256": "sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed"
+    },
+    {
+      "role": "GENERIC_RECIPES",
+      "locator": "paper-v4/experiment-v2/population-run/inputs/generic-recipes.stottr",
+      "sha256": "sha256:7324dbe955a7f0395d878c4e6198704a4fa11c296b79a66c8a30729ab4fbb968"
+    },
+    {
+      "role": "COMPETENCY_QUESTIONS",
+      "locator": "paper-v4/experiment-v2/population-run/inputs/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    {
+      "role": "SELECTED_READING",
+      "locator": "private/paper-v4-text-layer/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+    }
+  ],
+  "success_schema": "malleus.paper-v4.population/v2",
+  "refusal_schema": "malleus.paper-v4.population-refusal/v2"
+}

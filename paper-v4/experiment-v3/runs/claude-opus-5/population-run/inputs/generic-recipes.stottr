@@ -1,0 +1,279 @@
+@prefix mgrp: <https://malleus.dev/graph-recipe/base/> .
+@prefix ottr: <http://ns.ottr.xyz/0.4/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix malleus: <https://malleus.dev/schema/> .
+@prefix osc: <https://malleus.dev/schema/proposals/oceanic-spreading-center/> .
+@prefix recipe: <https://malleus.dev/paper-v4/experiment-v3/claude-opus-5/recipe/> .
+
+mgrp:Record [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?operationKind,
+  ! ottr:IRI ?recordType,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:Property [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?property,
+  ?value
+] :: BASE .
+
+mgrp:RelationSource [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:RelationTarget [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId
+] :: BASE .
+
+mgrp:DependsOn [
+  ! ottr:IRI ?member,
+  ! ottr:IRI ?prerequisiteMember
+] :: BASE .
+
+recipe:SeismicStation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?latitude,
+  ! ?longitude,
+  ! xsd:string ?stationDataState
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:SeismicStation, ?recordId),
+  mgrp:Property(?member, osc:latitude, ?latitude),
+  mgrp:Property(?member, osc:longitude, ?longitude),
+  mgrp:Property(?member, osc:station_data_state, ?stationDataState)
+} .
+
+recipe:SeismicDeployment-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?stationCount,
+  ! ?meanStationSpacing,
+  ! ?recordingDuration
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:SeismicDeployment, ?recordId),
+  mgrp:Property(?member, osc:station_count, ?stationCount),
+  mgrp:Property(?member, osc:mean_station_spacing, ?meanStationSpacing),
+  mgrp:Property(?member, osc:recording_duration, ?recordingDuration)
+} .
+
+recipe:SeismicityDepthSummary-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?maximumHypocentralDepth,
+  ! xsd:string ?depthDatum,
+  ! ?supportingEventCount
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:SeismicityDepthSummary, ?recordId),
+  mgrp:Property(?member, osc:maximum_hypocentral_depth, ?maximumHypocentralDepth),
+  mgrp:Property(?member, osc:depth_datum, ?depthDatum),
+  mgrp:Property(?member, osc:supporting_event_count, ?supportingEventCount)
+} .
+
+recipe:SpreadingSegment-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?axialLength,
+  ! ?trendAzimuth,
+  ! ?fullSpreadingRate,
+  ! xsd:string ?accretionMode
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:SpreadingSegment, ?recordId),
+  mgrp:Property(?member, osc:axial_length, ?axialLength),
+  mgrp:Property(?member, osc:trend_azimuth, ?trendAzimuth),
+  mgrp:Property(?member, osc:full_spreading_rate, ?fullSpreadingRate),
+  mgrp:Property(?member, osc:accretion_mode, ?accretionMode)
+} .
+
+recipe:Earthquake-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ?latitude,
+  ! ?longitude,
+  ! ?hypocentralDepth,
+  ! xsd:string ?depthDatum,
+  ! ?depthUncertainty,
+  ! ?epicentralUncertainty,
+  ! ?azimuthalStationGap,
+  ! ?travelTimeResidual,
+  ! ?satisfiedCriteriaCount
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:Earthquake, ?recordId),
+  mgrp:Property(?member, osc:latitude, ?latitude),
+  mgrp:Property(?member, osc:longitude, ?longitude),
+  mgrp:Property(?member, osc:hypocentral_depth, ?hypocentralDepth),
+  mgrp:Property(?member, osc:depth_datum, ?depthDatum),
+  mgrp:Property(?member, osc:depth_uncertainty, ?depthUncertainty),
+  mgrp:Property(?member, osc:epicentral_uncertainty, ?epicentralUncertainty),
+  mgrp:Property(?member, osc:azimuthal_station_gap, ?azimuthalStationGap),
+  mgrp:Property(?member, osc:travel_time_residual, ?travelTimeResidual),
+  mgrp:Property(?member, osc:satisfied_criteria_count, ?satisfiedCriteriaCount)
+} .
+
+recipe:ChemicalConcentration-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?analyteSymbol,
+  ! xsd:string ?analyteKind,
+  ! ?concentrationValue,
+  ! xsd:string ?concentrationUnit,
+  ! xsd:string ?determinationMode
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:ChemicalConcentration, ?recordId),
+  mgrp:Property(?member, osc:analyte_symbol, ?analyteSymbol),
+  mgrp:Property(?member, osc:analyte_kind, ?analyteKind),
+  mgrp:Property(?member, osc:concentration_value, ?concentrationValue),
+  mgrp:Property(?member, osc:concentration_unit, ?concentrationUnit),
+  mgrp:Property(?member, osc:determination_mode, ?determinationMode)
+} .
+
+recipe:MeltPhase-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?meltStage
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:MeltPhase, ?recordId),
+  mgrp:Property(?member, osc:melt_stage, ?meltStage)
+} .
+
+recipe:ElementRatioProxy-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?numeratorSymbol,
+  ! xsd:string ?denominatorSymbol,
+  ! ?ratioValue,
+  ! ?ratioUncertainty
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:ElementRatioProxy, ?recordId),
+  mgrp:Property(?member, osc:numerator_symbol, ?numeratorSymbol),
+  mgrp:Property(?member, osc:denominator_symbol, ?denominatorSymbol),
+  mgrp:Property(?member, osc:ratio_value, ?ratioValue),
+  mgrp:Property(?member, osc:ratio_uncertainty, ?ratioUncertainty)
+} .
+
+recipe:VolatileSaturationCondition-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! xsd:string ?analyteSymbol,
+  ! ?pressure,
+  ! ?temperature
+] :: {
+  mgrp:Record(?member, mgrp:CreateEntity, osc:VolatileSaturationCondition, ?recordId),
+  mgrp:Property(?member, osc:analyte_symbol, ?analyteSymbol),
+  mgrp:Property(?member, osc:pressure, ?pressure),
+  mgrp:Property(?member, osc:temperature, ?temperature)
+} .
+
+recipe:DeployedInRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:DeployedInRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "DEPLOYED_IN"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:SummarizesSeismicityDepthRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:SummarizesSeismicityDepthRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "SUMMARIZES_SEISMICITY_DEPTH"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:HostsSeismicityRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:HostsSeismicityRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "HOSTS_SEISMICITY"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:CharacterizesMeltRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:CharacterizesMeltRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "CHARACTERIZES_MELT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:EstimatedFromRatioRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:EstimatedFromRatioRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "ESTIMATED_FROM_RATIO"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:SaturatesAtRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:SaturatesAtRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "SATURATES_AT"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .
+
+recipe:GeneratedBeneathRelation-1.0.0 [
+  ! ottr:IRI ?member,
+  ! xsd:string ?recordId,
+  ! ottr:IRI ?sourceMember,
+  ! xsd:string ?sourceId,
+  ! ottr:IRI ?targetMember,
+  ! xsd:string ?targetId
+] :: {
+  mgrp:Record(?member, mgrp:CreateRelation, osc:GeneratedBeneathRelation, ?recordId),
+  mgrp:Property(?member, malleus:relation_type, "GENERATED_BENEATH"),
+  mgrp:RelationSource(?member, ?sourceId),
+  mgrp:RelationTarget(?member, ?targetId),
+  mgrp:DependsOn(?member, ?sourceMember),
+  mgrp:DependsOn(?member, ?targetMember)
+} .

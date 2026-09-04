@@ -1,0 +1,92 @@
+{
+  "schema": "malleus.paper-v4.model-acquisition-receipt/v1",
+  "status": "CANDIDATE_02_COMPILED",
+  "precommit": {
+    "path": "paper-v4/experiment/model-acquisition-precommit.json",
+    "sha256": "sha256:1590853f951e4e4080e08164cd0aef1fc8b4535b440948951a533388b8e22504"
+  },
+  "session": {
+    "task_id": "01a06430-46af-7bd0-9098-ad857445738f",
+    "title": "Malleus Paper v4 Ontology Proposal",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "turn_id": "01a06430-495f-7dd0-9625-b3464fc0600f",
+      "started_at": "2026-09-02T22:14:41Z",
+      "completed_at": "2026-09-02T22:19:30Z",
+      "duration_ms": 289036,
+      "response": {
+        "path": "private/paper-v4-evaluation/model-ontology-response-01.txt",
+        "sha256": "sha256:5d3b1ea94fbb72e6b1dcbd6535f0e687e80dbb54a27da6e18edd61afbc60caed",
+        "byte_length": 5501,
+        "delimiter_contract": "PASS"
+      },
+      "extracted_candidate": {
+        "sha256": "sha256:defe0c91e90326eb44e06480a20234ffc153ccba81e3a3f6837cbfab64a4dbeb",
+        "byte_length": 5463,
+        "manual_repairs": 0
+      },
+      "compiler": {
+        "status": "REFUSED",
+        "stage": "SOURCE_CLOSURE_IMPORT_READER",
+        "diagnostic": "REJECTED_SOURCE: schema root contains rejected field 'default_prefix'"
+      }
+    },
+    {
+      "attempt": 2,
+      "turn_id": "01a0643a-64f3-7632-85f6-8457cffebfa1",
+      "started_at": "2026-09-02T22:25:43Z",
+      "completed_at": "2026-09-02T22:26:10Z",
+      "duration_ms": 26354,
+      "response": {
+        "path": "private/paper-v4-evaluation/model-ontology-response-02.txt",
+        "sha256": "sha256:704133e6243d4b9dd3bd38f940895f9166394f2a9ff08faabaffe7143678a9ce",
+        "byte_length": 5478,
+        "delimiter_contract": "PASS"
+      },
+      "extracted_candidate": {
+        "path": "paper-v4/experiment/model-ontology-proposal.yaml",
+        "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df",
+        "byte_length": 5440,
+        "manual_repairs": 0
+      },
+      "compiler": {
+        "status": "ACCEPTED",
+        "official_run": 2,
+        "precommit_sha256": "sha256:8439fc19daf9bdf3f901a2af6401bf4f573a0eccb0c99368f6b287fc8938f834",
+        "validated_fact_set_sha256": "sha256:8b1aca802746ab7fe487af92a286e1242ae105adda9665ba68388688838ffce2",
+        "fact_count": 1632,
+        "validated_contract_sha256": "sha256:cec07ba6cce324e7b3a5867a46818a3249923a1fb1d49577eea78c1717cf1dee",
+        "receipt_sha256": "sha256:bd10af7086c7efb55478817e55e8c30956efa8c6395f3de574917855fdbf3054"
+      }
+    }
+  ],
+  "invalid_retained_compiler_runs": [
+    {
+      "run": 1,
+      "precommit_path": "paper-v4/experiment/ontology-compile-precommit.json",
+      "precommit_sha256": "sha256:04a32000ec8b99f438e2a9d92a12d11cc630f8d887a1a486c9e2b849ebaa706c",
+      "output_directory": "paper-v4/experiment/ontology-compilation",
+      "reason": "The emitted resolver identifiers did not equal the first precommit. The outputs are retained but excluded from evidence."
+    }
+  ],
+  "trace_audit": {
+    "input_identity_check": "PASS",
+    "allowed_input_count": 7,
+    "task_contract_read": true,
+    "only_allowed_repository_paths_read": true,
+    "network_used": false,
+    "file_writes": false,
+    "subtasks": false,
+    "prior_conversation": "NONE",
+    "correction_feedback_count": 1,
+    "correction_feedback_kind": "EXACT_COMPILER_DIAGNOSTIC_ONLY",
+    "isolation_note": "The restriction was an explicit task contract audited from the retained task trace, not an operating-system read sandbox."
+  },
+  "adequacy_review": {
+    "status": "NOT_RUN"
+  }
+}

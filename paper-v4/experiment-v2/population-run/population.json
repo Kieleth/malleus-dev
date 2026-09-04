@@ -1,0 +1,228 @@
+{
+  "schema": "malleus.paper-v4.population/v2",
+  "ontology_sha256": "sha256:7c07f94630277edf4aa1be2515e7627e5ebe42c4c9cfddd6c50b867e9c6291ed",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+  "records": [
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:001",
+      "record_type": "GeologicFeature",
+      "record_block_id": "page:1:block:005",
+      "properties": {
+        "name": {
+          "value": "RC2",
+          "block_id": "page:1:block:005"
+        },
+        "geologic_feature_kind": {
+          "value": "RIDGE_SEGMENT",
+          "block_id": "page:1:block:005"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:002",
+      "record_type": "GeologicFeature",
+      "record_block_id": "page:2:block:004",
+      "properties": {
+        "name": {
+          "value": "ridge axis",
+          "block_id": "page:2:block:004"
+        },
+        "geologic_feature_kind": {
+          "value": "RIDGE_AXIS",
+          "block_id": "page:2:block:004"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:003",
+      "record_type": "SeismicPhenomenon",
+      "record_block_id": "page:2:block:004",
+      "properties": {
+        "name": {
+          "value": "microseismicity",
+          "block_id": "page:2:block:004"
+        },
+        "seismic_phenomenon_kind": {
+          "value": "MICROSEISMICITY",
+          "block_id": "page:2:block:004"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:004",
+      "record_type": "QuantitativeObservation",
+      "record_block_id": "page:2:block:004",
+      "properties": {
+        "name": {
+          "value": "earthquake depth",
+          "block_id": "page:2:block:004"
+        },
+        "quantity_kind": {
+          "value": "DEPTH",
+          "block_id": "page:2:block:004"
+        },
+        "lower_numeric_value": {
+          "value": 10,
+          "block_id": "page:2:block:004"
+        },
+        "upper_numeric_value": {
+          "value": 20,
+          "block_id": "page:2:block:004"
+        },
+        "measurement_unit": {
+          "value": "KILOMETER",
+          "block_id": "page:2:block:004"
+        },
+        "observation_basis": {
+          "value": "OBSERVED",
+          "block_id": "page:2:block:004"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:005",
+      "record_type": "GeologicMaterial",
+      "record_block_id": "page:5:block:004",
+      "properties": {
+        "name": {
+          "value": "primary melt",
+          "block_id": "page:5:block:004"
+        },
+        "geologic_material_kind": {
+          "value": "PRIMARY_MELT",
+          "block_id": "page:5:block:004"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:006",
+      "record_type": "ChemicalConstituent",
+      "record_block_id": "page:5:block:005",
+      "properties": {
+        "name": {
+          "value": "CO2",
+          "block_id": "page:5:block:005"
+        },
+        "chemical_formula": {
+          "value": "CO2",
+          "block_id": "page:5:block:005"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:007",
+      "record_type": "QuantitativeObservation",
+      "record_block_id": "page:5:block:005",
+      "properties": {
+        "name": {
+          "value": "CO2 concentration",
+          "block_id": "page:5:block:005"
+        },
+        "quantity_kind": {
+          "value": "CONCENTRATION",
+          "block_id": "page:5:block:005"
+        },
+        "lower_numeric_value": {
+          "value": 0.4,
+          "block_id": "page:5:block:005"
+        },
+        "upper_numeric_value": {
+          "value": 3.0,
+          "block_id": "page:5:block:005"
+        },
+        "measurement_unit": {
+          "value": "WEIGHT_PERCENT",
+          "block_id": "page:5:block:005"
+        },
+        "observation_basis": {
+          "value": "CALCULATED",
+          "block_id": "page:5:block:005"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:008",
+      "record_type": "FeaturePartOfRelation",
+      "record_block_id": "page:2:block:004",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:002",
+        "block_id": "page:2:block:004"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:001",
+        "block_id": "page:2:block:004"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:009",
+      "record_type": "SeismicPhenomenonOccursAtRelation",
+      "record_block_id": "page:2:block:004",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:003",
+        "block_id": "page:2:block:004"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:002",
+        "block_id": "page:2:block:004"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:010",
+      "record_type": "ObservationCharacterizesRelation",
+      "record_block_id": "page:2:block:004",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:004",
+        "block_id": "page:2:block:004"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:003",
+        "block_id": "page:2:block:004"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:011",
+      "record_type": "MaterialOccursAtRelation",
+      "record_block_id": "page:5:block:005",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:005",
+        "block_id": "page:5:block:005"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:001",
+        "block_id": "page:5:block:005"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:012",
+      "record_type": "ObservationCharacterizesRelation",
+      "record_block_id": "page:5:block:005",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:007",
+        "block_id": "page:5:block:005"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:005",
+        "block_id": "page:5:block:005"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:013",
+      "record_type": "ObservationConcernsConstituentRelation",
+      "record_block_id": "page:5:block:005",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:007",
+        "block_id": "page:5:block:005"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:006",
+        "block_id": "page:5:block:005"
+      }
+    }
+  ]
+}

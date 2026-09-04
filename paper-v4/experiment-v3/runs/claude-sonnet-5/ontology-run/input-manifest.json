@@ -1,0 +1,41 @@
+{
+  "schema": "malleus.paper-v4.ontology-acquisition-inputs/v2",
+  "status": "FROZEN_BEFORE_MODEL_ACQUISITION",
+  "task": {
+    "path": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/task.md",
+    "sha256": "sha256:276d10f6792a70533dfd1a230f450ef70ac390e1c4e186e984785728b7c47a0e"
+  },
+  "model_visible_inputs": [
+    {
+      "role": "malleus_skill",
+      "path": "paper-v4/experiment-v2/ontology-run/inputs/malleus-acolyte-SKILL.md",
+      "sha256": "sha256:2e2273b1638a91b792a9b7aab27c5430d6e85d531fa150e86cbc8d505ccace08"
+    },
+    {
+      "role": "adoption_guide",
+      "path": "paper-v4/experiment-v2/ontology-run/inputs/ADOPTION_GUIDE.md",
+      "sha256": "sha256:62a12e1769cf81d8ccc0ea199eb6536d99b575a3bf14bed36733303d2bf8312c"
+    },
+    {
+      "role": "implementation_status",
+      "path": "paper-v4/experiment-v2/ontology-run/inputs/IMPLEMENTATION_STATUS.md",
+      "sha256": "sha256:0982eabc8b3eb09bcac4afc48b05fecab34d34eac0f62599182b668f84c29d9f"
+    },
+    {
+      "role": "malleus_ontology",
+      "path": "paper-v4/experiment-v2/ontology-run/inputs/malleus.yaml",
+      "sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+    },
+    {
+      "role": "selected_reading",
+      "path": "private/paper-v4-text-layer/selected-reading.json",
+      "sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+    }
+  ],
+  "execution_contract": {
+    "additional_repository_reads": "FORBIDDEN",
+    "fresh_session": true,
+    "model_output": "ABSENT",
+    "network": "FORBIDDEN"
+  }
+}

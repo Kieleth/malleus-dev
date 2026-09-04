@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-research = ["anthropic>=0.49", "openai>=1.0"]
+research = ["anthropic>=0.49", "openai>=1.0", "pypdf==6.16.2"]
 recon = ["pyvis>=0.3.2"]
 ocr = []
 dev = [
@@ -235,7 +235,7 @@ core-metadata-version = "2.4"
 core-metadata-version = "2.4"
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = [".", "src"]
 testpaths = [
     "tests/contract_compiler",
     "tests/test_contract_compiler_ledger.py",

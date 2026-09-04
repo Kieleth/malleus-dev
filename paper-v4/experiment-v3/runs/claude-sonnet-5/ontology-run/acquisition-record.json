@@ -1,0 +1,65 @@
+{
+  "schema": "malleus.paper-v4.ontology-acquisition/v3",
+  "run_id": "claude-sonnet-5",
+  "status": "COMPILED_ACCEPTED_FOR_POPULATION",
+  "input_manifest": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/input-manifest.json",
+  "task_sha256": "sha256:276d10f6792a70533dfd1a230f450ef70ac390e1c4e186e984785728b7c47a0e",
+  "task_identical_to_v2": true,
+  "inputs_identical_to_v2": true,
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "sonnet",
+    "model_family": "Claude Sonnet 5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "spawn_message": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/spawn-message.md",
+    "observed_usage": {
+      "subagent_tokens": 179091,
+      "tool_uses": 11,
+      "duration_ms": 308818
+    }
+  },
+  "question_input": false,
+  "human_repair": false,
+  "compiler_diagnostic_returns": 0,
+  "attempts": [
+    {
+      "ordinal": 1,
+      "raw_report_path": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/attempt-01.raw.md",
+      "raw_report_sha256": "sha256:4773700ee65f72f28f479f6c8f597ae6361518c0fd4ea2806a94298866b3f452",
+      "ontology_path": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/ontology-01.yaml",
+      "ontology_sha256": "sha256:7fad8b9e9480781dd2207725d9c8d9906742c61988f1acbfa7883c2a55a16015",
+      "compiler_status": "ACCEPTED",
+      "fact_count": 1738,
+      "validated_contract_sha256": "sha256:7c407bf932dd91b426f16be843225f1d9598dbd7e23609df87aab70b6cd2e32a",
+      "compile_receipt_sha256": "sha256:fdfed0f8158961414c524b2a71f412b6da791f74d75e7312ab54b879811a3444",
+      "report_commentary_outside_delimiters": "one preamble sentence stating which files were read; retained in the raw report, excluded from the ontology bytes"
+    }
+  ],
+  "selected_ontology_path": "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/ontology-01.yaml",
+  "selected_ontology_sha256": "sha256:7fad8b9e9480781dd2207725d9c8d9906742c61988f1acbfa7883c2a55a16015",
+  "acceptance_sha256": "sha256:6556849f043d06022ee20619097742988cef05670550b2edf286d87eb5b1a413",
+  "producer_access_report": {
+    "requested_after_output": true,
+    "files_read": [
+      "paper-v4/experiment-v3/runs/claude-sonnet-5/ontology-run/task.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/malleus-acolyte-SKILL.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/ADOPTION_GUIDE.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/IMPLEMENTATION_STATUS.md",
+      "paper-v4/experiment-v2/ontology-run/inputs/malleus.yaml",
+      "private/paper-v4-text-layer/selected-reading.json"
+    ],
+    "scratch_files_outside_repository": [
+      "a pretty-printed copy of selected-reading.json written to the session scratchpad to read past the harness long-line limit; same content, not an additional input"
+    ],
+    "network": false,
+    "repository_writes": false,
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox"
+  },
+  "shape": {
+    "entity_classes": 8,
+    "relation_classes": 8,
+    "enums": 8,
+    "name_required_on_entities": false
+  }
+}

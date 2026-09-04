@@ -1,0 +1,140 @@
+{
+  "schema": "malleus.paper-v4.ocr-precommit/v1",
+  "frozen_at": "2026-09-02T21:21:52Z",
+  "status": "FROZEN_BEFORE_RETAINED_READING",
+  "source": {
+    "manifest": "paper-v4/source/source-manifest.json",
+    "source_id": "source:yu-2025-mid-atlantic-ridge",
+    "path": "paper-v4/source/yu-et-al-2025-mid-atlantic-ridge.pdf",
+    "media_type": "application/pdf",
+    "byte_length": 6921046,
+    "sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "page_count": 11
+  },
+  "malleus_ocr": {
+    "malleus_version": "0.13.3",
+    "profile": "malleus.ocr.evidence_integrity",
+    "profile_version": "v0",
+    "document_version": 1,
+    "ontology_version": "0.1.0",
+    "ontology_path": "ontology/domains/ocr.yaml",
+    "ontology_sha256": "sha256:90be951e63b3e8c21e732e11e92deffbbbd57e2cae00f1389f5acd14a264f9d3",
+    "registry_content_hash": "sha256:41df47147dad536825983ec0bc002a3e137e02ea75c220c6434665698532df2f"
+  },
+  "source_class": {
+    "id": "source-class:scientific-article-pdf-v1",
+    "required_units": [
+      "page:1",
+      "page:2",
+      "page:3",
+      "page:4",
+      "page:5",
+      "page:6",
+      "page:7",
+      "page:8",
+      "page:9",
+      "page:10",
+      "page:11"
+    ],
+    "metric_families": {
+      "page_coverage": {
+        "denominator": "declared_units",
+        "threshold": 1.0
+      }
+    },
+    "temporal_policy": "STATIC_DOCUMENT_ORDER_ONLY; printed dates remain source claims",
+    "inventory_basis": "publisher page count derived and confirmed by all-page visual inspection",
+    "frozen_at": "2026-09-02T21:21:52Z"
+  },
+  "renderer": {
+    "id": "renderer:pdftoppm-26.03.0-png-300dpi-media-box",
+    "executable": "/opt/homebrew/bin/pdftoppm",
+    "version_contains": "pdftoppm version 26.03.0",
+    "binary_sha256": "sha256:cd5691d4ea22f7ee4dcecdfb0e948fbf384504085aa22a161054a5d21366555c",
+    "format": "png",
+    "dpi": 300,
+    "page_box": "media_box",
+    "single_page_arguments": [
+      "-singlefile",
+      "-r",
+      "300",
+      "-png"
+    ]
+  },
+  "reader": {
+    "id": "reader:tesseract-5.5.2-eng-oem1-psm3-300dpi",
+    "executable": "/opt/homebrew/bin/tesseract",
+    "version_contains": "tesseract 5.5.2",
+    "binary_sha256": "sha256:beb291643298f6f824e38531182802b17588c6ac240c168146885a82afa90785",
+    "traineddata_path": "/opt/homebrew/share/tessdata/eng.traineddata",
+    "traineddata_sha256": "sha256:7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+    "language": "eng",
+    "arguments": [
+      "stdout",
+      "-l",
+      "eng",
+      "--oem",
+      "1",
+      "--psm",
+      "3",
+      "--dpi",
+      "300",
+      "--loglevel",
+      "ERROR"
+    ],
+    "confidence_policy": "OMIT_UNCALIBRATED_CONFIDENCE",
+    "empty_page_policy": "REFUSE_KNOWN_NONBLANK_ARTICLE_PAGE"
+  },
+  "selector": {
+    "profile": "w3c-web-annotation+iiif",
+    "type": "FragmentSelector",
+    "conforms_to": "http://www.w3.org/TR/media-frags/",
+    "scope": "FULL_RENDERED_PAGE",
+    "coordinate_system": "pixel"
+  },
+  "selection": {
+    "cardinality": "ONE_MACHINE_HYPOTHESIS_PER_PAGE",
+    "reason": "sole completed page-specific raster reading",
+    "human_verified": false
+  },
+  "policies": {
+    "data_handling": {
+      "id": "policy:data-handling:paper-v4-local-ocr-v1",
+      "classification": "public scholarly source with publication-limited derivatives",
+      "processing": "local binaries only",
+      "provider_retention": "none",
+      "credentials": "forbidden",
+      "raw_responses": "retain privately by exact bytes and digest",
+      "rasters": "retain privately by exact bytes and digest",
+      "public_export": "bundle, manifests, identities, counts, and diagnostics only",
+      "full_text_export": "requires separate rights review"
+    },
+    "hostile_content": {
+      "id": "policy:hostile-content:paper-v4-document-data-v1",
+      "document_role": "untrusted data",
+      "instruction_effect": "none",
+      "tool_effect": "none",
+      "policy_effect": "none",
+      "ontology_effect": "proposal input only under the later frozen model task"
+    }
+  },
+  "retention": {
+    "private_root": "private/paper-v4-ocr/yu-2025-tesseract-v1",
+    "public_bundle": "paper-v4/experiment/ocr-bundle.json",
+    "public_verification": "paper-v4/experiment/ocr-verification.json",
+    "page_rasters": "private",
+    "page_requests": "private",
+    "page_responses": "private",
+    "selected_reading": "private",
+    "bundle_text_bytes": "digest_only"
+  },
+  "execution": {
+    "network": "forbidden",
+    "embedded_pdf_text_layer": "forbidden",
+    "pdftotext": "forbidden",
+    "preprocessing": "none",
+    "retries": 0,
+    "final_output_on_partial_failure": "forbidden",
+    "reproducibility_status": "LOCAL_EXACT_BINARIES_PINNED; CLEAN_CONTAINER_PENDING"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "malleus.paper-v4.population/v2",
+  "ontology_sha256": "sha256:b0f9d04edbf96df82f97de9d357dd4dea8921fbe96b3f59fcc0c95bd76e90c22",
+  "reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17",
+  "records": [
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:001",
+      "record_type": "SeismicDeployment",
+      "record_block_id": "page:2:block:002",
+      "properties": {
+        "station_count": {
+          "value": 19,
+          "block_id": "page:2:block:002"
+        },
+        "mean_station_spacing": {
+          "value": 30.0,
+          "block_id": "page:2:block:002"
+        },
+        "recording_duration": {
+          "value": 21.0,
+          "block_id": "page:2:block:002"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:002",
+      "record_type": "MeltPhase",
+      "record_block_id": "page:5:block:006",
+      "properties": {
+        "melt_stage": {
+          "value": "PRE_ERUPTIVE",
+          "block_id": "page:5:block:006"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:003",
+      "record_type": "VolatileSaturationCondition",
+      "record_block_id": "page:5:block:006",
+      "properties": {
+        "analyte_symbol": {
+          "value": "CO2",
+          "block_id": "page:5:block:006"
+        },
+        "pressure": {
+          "value": 0.7,
+          "block_id": "page:5:block:006"
+        },
+        "temperature": {
+          "value": 1250.0,
+          "block_id": "page:5:block:006"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:004",
+      "record_type": "SaturatesAtRelation",
+      "record_block_id": "page:5:block:006",
+      "properties": {},
+      "source": {
+        "record_id": "urn:malleus:paper-v4:v2:record:002",
+        "block_id": "page:5:block:006"
+      },
+      "target": {
+        "record_id": "urn:malleus:paper-v4:v2:record:003",
+        "block_id": "page:5:block:006"
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:005",
+      "record_type": "ElementRatioProxy",
+      "record_block_id": "page:8:block:006",
+      "properties": {
+        "numerator_symbol": {
+          "value": "CO2",
+          "block_id": "page:8:block:006"
+        },
+        "denominator_symbol": {
+          "value": "Rb",
+          "block_id": "page:8:block:006"
+        },
+        "ratio_value": {
+          "value": 991.0,
+          "block_id": "page:8:block:006"
+        },
+        "ratio_uncertainty": {
+          "value": 129.0,
+          "block_id": "page:8:block:006"
+        }
+      }
+    },
+    {
+      "record_id": "urn:malleus:paper-v4:v2:record:006",
+      "record_type": "ElementRatioProxy",
+      "record_block_id": "page:8:block:006",
+      "properties": {
+        "numerator_symbol": {
+          "value": "CO2",
+          "block_id": "page:8:block:006"
+        },
+        "denominator_symbol": {
+          "value": "Ba",
+          "block_id": "page:8:block:006"
+        },
+        "ratio_value": {
+          "value": 81.3,
+          "block_id": "page:8:block:006"
+        },
+        "ratio_uncertainty": {
+          "value": 23.0,
+          "block_id": "page:8:block:006"
+        }
+      }
+    }
+  ]
+}

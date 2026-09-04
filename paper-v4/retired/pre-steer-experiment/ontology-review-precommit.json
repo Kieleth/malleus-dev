@@ -1,0 +1,110 @@
+{
+  "schema": "malleus.paper-v4.ontology-review-precommit/v1",
+  "frozen_at": "2026-09-02T22:49:27Z",
+  "status": "FROZEN_BEFORE_ONE_SHOT_REVIEW",
+  "review": {
+    "reviewer_id": "reviewer:codex-paper-evaluator-v1",
+    "attempt": 1,
+    "attempts_allowed": 1,
+    "feedback": "FORBIDDEN",
+    "repair": "FORBIDDEN",
+    "retry": "FORBIDDEN"
+  },
+  "session": {
+    "kind": "FRESH_COLLABORATION_SUBAGENT",
+    "prior_conversation": "NONE",
+    "producer_identity": "DISTINCT",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "service_date": "2026-09-02",
+    "repository_commit": "1611944eb8856dbd4f25c2ea8bddbecdb970a3a3"
+  },
+  "allowed_inputs": [
+    {
+      "role": "review_task",
+      "path": "paper-v4/experiment/ontology-review-task.md",
+      "sha256": "sha256:314d79841aa9d937eff732173d81dc5b24cb122de5f369c2a92c4d58a57e97a5"
+    },
+    {
+      "role": "output_schema",
+      "path": "paper-v4/experiment/ontology-review-output-schema.json",
+      "sha256": "sha256:f434dc7590ab3cb3dbb309d09cd4660546837a58a6735df2ece4724818080dfe"
+    },
+    {
+      "role": "review_input_manifest",
+      "path": "paper-v4/experiment/ontology-review-input-manifest.json",
+      "sha256": "sha256:6e32b74dee85ba081f36d88950ccca92b961d07ef3cf363e9cbb44304b386803"
+    },
+    {
+      "role": "candidate",
+      "path": "paper-v4/experiment/model-ontology-proposal.yaml",
+      "sha256": "sha256:5abfa4774d932ed79e637c82396538620ee7fe8e460e59ad17ecf812fa44f4df"
+    },
+    {
+      "role": "validated_contract",
+      "path": "paper-v4/experiment/ontology-compilation-02/validated-contract.json",
+      "sha256": "sha256:cec07ba6cce324e7b3a5867a46818a3249923a1fb1d49577eea78c1717cf1dee"
+    },
+    {
+      "role": "compiler_receipt",
+      "path": "paper-v4/experiment/ontology-compilation-02/compile-receipt.json",
+      "sha256": "sha256:bd10af7086c7efb55478817e55e8c30956efa8c6395f3de574917855fdbf3054"
+    },
+    {
+      "role": "schema_inventory",
+      "path": "paper-v4/experiment/ontology-review-inputs/schema-inventory.json",
+      "sha256": "sha256:feeca8a149d7888b87dacbc1e69074a3fb2152168483a51c10146d84d6aa70c4"
+    },
+    {
+      "role": "review_eligibility",
+      "path": "paper-v4/experiment/ontology-review-inputs/review-eligibility.json",
+      "sha256": "sha256:8b123681923fb16276b48632a275d8637aca4495433b97fb74013c21ebae18e8"
+    },
+    {
+      "role": "questions",
+      "path": "paper-v4/experiment/competency-questions.json",
+      "sha256": "sha256:5ec41374e32a8745963a0f0498e2044f225dec47a6cbfcfde1417752b27b9a92"
+    },
+    {
+      "role": "answer_oracle",
+      "path": "private/paper-v4-evaluation/answer-oracle.json",
+      "sha256": "sha256:95b206a8a8eac20f208854c2374ed8433187402d9ab1e50771003e412066b571"
+    },
+    {
+      "role": "adequacy_rubric",
+      "path": "private/paper-v4-evaluation/ontology-adequacy-rubric.json",
+      "sha256": "sha256:f73c86e2635afa78661acffc1cc5b8aeca6924d446d4a52e44fc7ac739936a10"
+    },
+    {
+      "role": "locator_binding",
+      "path": "private/paper-v4-evaluation/oracle-locator-binding.json",
+      "sha256": "sha256:bd61e591b77e05ed28babff4300b2b913f6a92a76635d15742d4530e0faaa15c"
+    },
+    {
+      "role": "support_guide",
+      "path": "private/paper-v4-evaluation/support-adjudication-guide.json",
+      "sha256": "sha256:e4b0ee89ee87db51201e4e183b94162bb01ea8b81cc9bc131d0971cb792cdb53"
+    },
+    {
+      "role": "bound_support_blocks",
+      "path": "private/paper-v4-evaluation/bound-support-blocks.json",
+      "sha256": "sha256:36cb8c6a51f18aecc7acdf9ab257029e96578addcb36e891047ebb02cfcc22ac"
+    }
+  ],
+  "tool_policy": {
+    "file_reads": "ALLOWLIST_ONLY",
+    "file_writes": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "subtasks": "FORBIDDEN"
+  },
+  "output": {
+    "encoding": "UTF-8",
+    "start_delimiter": "BEGIN_ADEQUACY_JSON",
+    "end_delimiter": "END_ADEQUACY_JSON",
+    "objects": 1,
+    "commentary_outside_delimiters": "FORBIDDEN",
+    "schema_path": "paper-v4/experiment/ontology-review-output-schema.json",
+    "retained_raw_path": "private/paper-v4-evaluation/ontology-adequacy-review-raw.txt",
+    "retained_result_path": "private/paper-v4-evaluation/ontology-adequacy-result.json"
+  }
+}

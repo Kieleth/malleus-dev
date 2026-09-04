@@ -1,0 +1,14 @@
+{
+  "id": "evidence:yu-2025-publisher-pdf",
+  "label": "Yu et al. (2025) publisher PDF",
+  "review_state": "REVIEWED",
+  "source_uri": "https://www.nature.com/articles/s41467-024-55792-9.pdf",
+  "local_path": "paper-v4/source/yu-et-al-2025-mid-atlantic-ridge.pdf",
+  "locator": "Publisher PDF page indices 1, 2, and 5 (1-based). Phrase anchors: Abstract depth range; Results prose naming the 19-instrument network, SMARTIES, 2019, and 17 useful stations; Results prose listing the three regional seismic observations; Discussion calculated RC2 primary-melt CO2 range; Discussion prose marking the fourth possibility as preferred and explaining the trigger chain.",
+  "evidence_description": "Exact publisher PDF inspected for the four frozen competency-question answers. Claim records retain the question-specific page indices and phrase anchors; no OCR block locator is asserted.",
+  "source_class": "PUBLISHER",
+  "accessed_on": "2026-09-02",
+  "access_status": "INSPECTED",
+  "artifact_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+  "artifact_byte_length": 6921046
+}
