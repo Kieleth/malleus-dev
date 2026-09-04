@@ -1946,6 +1946,37 @@ class TestSkillsAreInstallable:
         ):
             assert leaked not in section.lower()
 
+    def test_acolyte_grounding_block_passes_the_live_rite(self):
+        """The block the skill tells a project to copy is run through the
+        checker it must satisfy. A prose example is wrong until proven
+        otherwise, and this one cost a fresh producer two ontology attempts
+        when the skill named the rite and showed no block."""
+        from malleus.inquisition.pack_grounding import validate_pack_grounding
+
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        section = skill.split("## Starting a project with no schema", 1)[1].split(
+            "\n## ", 1
+        )[0]
+        blocks = re.findall(r"```yaml\n(.*?)```", section, re.S)
+        assert len(blocks) == 1, "the section carries exactly one grounding block"
+        schema = textwrap.dedent(
+            """
+            id: https://example.org/schema/acolyte-grounding-block
+            name: acolyte_grounding_block
+            prefixes:
+              linkml: https://w3id.org/linkml/
+              malleus: https://malleus.dev/schema/
+            imports:
+              - linkml:types
+              - malleus
+            """
+        ).strip() + "\n" + textwrap.dedent(blocks[0])
+        receipt = validate_pack_grounding(schema.encode("utf-8"), role="PROJECT")
+        assert receipt.role == "PROJECT"
+        assert receipt.grounded_subjects == ("ProjectSensorReading",)
+
     def test_installed_acolyte_keeps_the_nascent_project_playbook(
         self, tmp_path, capsys
     ):

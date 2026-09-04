@@ -185,6 +185,46 @@ fallback.
    definitions, and record the citation. Invent a term only when the grounding
    search finds none, and say so in the record.
 
+   Record it as an annotation. Under role `PROJECT` the rite reads only classes
+   whose `is_a` is a Malleus root directly (`Entity`, `Event`, `Signal`, or
+   `Relation`, bare or under the Malleus prefix), and each of those carries its
+   own class-level block; a class derived through a pack type carries none.
+   Under role `PACK` one block sits at the top of the pack document. The rite
+   reports every ungrounded root extension in a single
+   `DIRECT_ROOT_GROUNDING_REQUIRED` refusal, but it stops at the first block
+   whose shape is wrong, one entry at a time, so write the block correctly the
+   first time:
+
+   ```yaml
+   classes:
+     ProjectSensorReading:
+       is_a: Entity
+       annotations:
+         grounding:
+           tag: grounding
+           value:
+             area: Physical measurement
+             taxonomy: DDC 530.8
+             vocabularies:
+               - vocabulary: JCGM 200:2012 International Vocabulary of Metrology
+                 vocabulary_url: https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf
+                 borrowed_terms:
+                   - quantity value
+                   - measurement unit
+             invented_terms: []
+   ```
+
+   The `value` field set is closed: it must equal one of three closed forms
+   exactly, with no extra key and none missing. The cited form above is `area`,
+   `taxonomy`, `vocabularies`, and an empty `invented_terms`. A nonempty
+   `invented_terms` requires `invention_search` beside it, and the two travel
+   together: either alone refuses. The third form drops `vocabularies` for
+   `none_found: true` and `search`, and its `invented_terms` must be nonempty.
+   `vocabularies` is a nonempty list; each entry carries exactly `vocabulary`,
+   `vocabulary_url` and `borrowed_terms`, the URL is absolute with a scheme,
+   `borrowed_terms` is a nonempty list of unique strings, and no two entries
+   repeat one name and URL pair.
+
 4. **Propose the project ontology.** Import `linkml:types`, the Malleus root, and
    only the selected packs. Derive domain records from Malleus roles directly or
    through pack types. Keep instances out of schema vocabulary: source values,
