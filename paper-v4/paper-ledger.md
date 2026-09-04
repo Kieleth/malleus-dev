@@ -1621,3 +1621,17 @@ Failure classes: The runs independently exposed missing interval support, aggreg
 Reuse: V4 keeps deterministic type-bound native traversal, runtime witness identifiers, source-free query guards, and separate judgments for source support and question responsiveness. It retires pre-population query binding, the closed constructible subset, direct-edge-only limits, and question-guided population.
 
 Impact: This comparison is diagnostic background, not another v4 matrix. It explains why grounded packs, typed gaps, a declared history profile, and record-to-capture trace are needed before one new KISS run.
+
+### E-0106, P6 closes the document history semantics after three audit corrections
+
+Date: 2026-09-03
+
+Sources: Core commit `573c45b82725d6f444b70e5ff193302dac883e7b`, tree `6704031dea824572b4d7163ba477c33175397fe7`; corrective GREEN `17c4a8c64b597eb5dd5aaebf623c39ef8f721692`; report commit `bcfa787`; governance head `OVR-000379` / `sha256:60808e07abbea8c3e0470b86323e0fd73cbcbd32d1903c024acba8c5eca27023`; and an independent detached audit.
+
+Audit history: The first P6 draft called the source-assertion origin `EMPTY`, which would have treated one imported paper as the whole domain. The second called each change an assertion while the adapter emitted one multi-assertion plan with one valid time. The first GREEN then declared capture-order time only in profile text while accepting an arbitrary source date, and its capture grammar could not retain assertion-specific times. A later GREEN fixed the code but tests silently repaired stale checked-in examples. Core accepted each reproducer before governance freeze.
+
+Final rule: The shipped profile at `sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5` defines one atomic capture batch as a `COMPOSITION` with origin `PARTIAL_IMPORT`. The adapter owns change valid time and emits `ORDER_ONLY(capture_id)`. Each retained assertion may independently carry nonempty lexical `assertion_time` and `domain_time`; omission remains omission. Modality and time reach graph results through `trace_population_record`. Retraction is not admitted by this profile.
+
+Verification: The exact committed example generator reproduced its raw reading, capture, plan, change, census, and profile artifacts and left the detached checkout clean. The complete Pareto and ledger gate passed 497 tests. No remaining P6 seam request exists.
+
+Impact: E-0100's `ASSERTION` shorthand is superseded. P6 is verified. The v4 run remains blocked only on P7 grounded packs plus the grounding rite and P8's nascent-project playbook.

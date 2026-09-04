@@ -32,22 +32,23 @@ adequate, the capture was exhaustive, or the source was true.
 | Question | Paper document | Small Shop |
 | --- | --- | --- |
 | Selected profile | `source-assertion` | `state-version` |
-| Semantic unit | One dated, attributed assertion from an identified source | One version of a domain state record |
+| Semantic unit | One atomic composition of assertions captured from an identified source | One version of a domain state record |
 | Vocabulary | Optional research, metrology, and chronology packs plus project terms | Small Shop project ontology |
 | Source evidence | Exact reading, captured verbatim assertion, block locator, modality, attribution | Exact source rows and mapping evidence |
-| Domain time | Time stated by the document for an event, observation, or sample | Source occurrence order such as `e4`, then `e7` |
-| Assertion time | The date attached to the source assertion | Not the semantic unit |
+| Domain time | Optional lexical evidence on each assertion for an event, observation, or sample | Source occurrence order such as `e4`, then `e7` |
+| Assertion time | Optional lexical evidence on each retained assertion | Not the semantic unit |
+| Change valid time | `ORDER_ONLY` with the capture id, meaning capture/import order | Domain valid time, such as `e4`, then `e7` |
 | Transaction time | When Malleus admits the proposal | When Malleus admits each state version |
 | Correction | A later assertion and any formalized record explicitly supersede their predecessors | A later state record explicitly supersedes the earlier version |
-| Retraction | A superseding assertion with modality `NEGATED`; no destructive erase | Outside the frozen correction example |
+| Retraction | Not admitted by the shipped profile | Outside the frozen correction example |
 | Current graph | Accepted formalized records selected by the source-assertion projection rule | Latest non-superseded state records |
 | Retained history | Earlier assertions, evidence, records, and supersession links remain inspectable | Both `B/Y/1@e4` and `B/Y/2@e7` remain; only `e7` is current |
 
-The paper still needs an explicit origin choice for the selected document run.
-`SNAPSHOT` may overstate capture completeness. `PARTIAL_IMPORT` is safer unless
-the implemented profile defines snapshot scope as the identified reading and
-the census makes its limited coverage explicit. The run must record the chosen
-value before ontology construction.
+The selected document profile fixes origin as `PARTIAL_IMPORT`, genesis as one
+retained partial import, and completeness as the declared capture only. It does
+not claim that the graph or capture is a complete account of the wider domain.
+The capture census reports which reading blocks were reviewed and how many
+captured assertions were fully, partly, or not formalized.
 
 ## No epistemic flattening
 
@@ -102,10 +103,13 @@ it does not repair the ontology or authorize a guessed fact.
 
 ## Execution gate
 
-Core's public population, ontology-revision, replay, graph-read, and provenance
-trace path is verified at commit
-`8e8917533283009d152d3db97329335c663456c3`, tree
-`f38eae64b9050abce2538ce68d307147abf3968d`. The public
+Core's full public `DomainHistoryProfile`, population, ontology-revision,
+replay, graph-read, and provenance-trace path is verified through commit
+`573c45b82725d6f444b70e5ff193302dac883e7b`, tree
+`6704031dea824572b4d7163ba477c33175397fe7`. The selected profile is
+`source-assertion` at
+`sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5`.
+The public
 `trace_population_record` read follows a replayed record through its accepted
 change, population plan, history profile, field derivations, and retained
 source and evidence bytes. This realizes the third no-flattening option above:
@@ -114,10 +118,9 @@ adding assertion metadata to every domain record. It does not make the graph
 edge self-qualifying, so paper queries that report epistemic status must execute
 and display that verified join.
 
-The v4 document run still waits for the later Core pieces that implement the
-approved experiment rather than another paper-local brief:
+The v4 document run still waits for the remaining Core pieces that implement
+the approved experiment rather than another paper-local brief:
 
-- the full `DomainHistoryProfile` contract;
 - the grounded metrology, chronology, and research packs;
 - the nascent-project skill playbook.
 

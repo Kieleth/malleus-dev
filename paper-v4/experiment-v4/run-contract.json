@@ -13,17 +13,30 @@
     "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
   },
   "core_gate": {
-    "status": "REQUIRED_UNBOUND",
+    "status": "P6_VERIFIED_P7_P8_REQUIRED",
     "required_pieces": [
       "FULL_DOMAIN_HISTORY_PROFILE",
       "GROUNDED_PACKS_AND_PACK_GROUNDING",
       "NASCENT_PROJECT_PLAYBOOK"
-    ]
+    ],
+    "verified_pieces": {
+      "FULL_DOMAIN_HISTORY_PROFILE": {
+        "core_commit": "573c45b82725d6f444b70e5ff193302dac883e7b",
+        "core_tree": "6704031dea824572b4d7163ba477c33175397fe7",
+        "profile_id": "source-assertion",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "paper_audit": "PASS"
+      }
+    }
   },
   "history": {
     "profile_id": "source-assertion",
-    "semantic_unit": "ASSERTION",
+    "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
     "origin": "PARTIAL_IMPORT",
+    "composition": "ONE_ATOMIC_CAPTURE_BATCH",
+    "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
+    "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
     "modality_rule": "QUERYABLE_OR_TYPED_REFUSAL"
   },
   "producer": {

@@ -59,8 +59,12 @@ def test_source_assertion_profile_preserves_modality_or_refuses() -> None:
 
     assert history == {
         "profile_id": "source-assertion",
-        "semantic_unit": "ASSERTION",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "semantic_unit": "COMPOSITION",
         "origin": "PARTIAL_IMPORT",
+        "composition": "ONE_ATOMIC_CAPTURE_BATCH",
+        "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
+        "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
         "modality_rule": "QUERYABLE_OR_TYPED_REFUSAL",
     }
 
@@ -69,7 +73,15 @@ def test_execution_remains_blocked_until_core_gate_is_bound() -> None:
     contract = _contract()
 
     assert contract["status"] == "WAITING_FOR_CORE_GATE"
-    assert contract["core_gate"]["status"] == "REQUIRED_UNBOUND"
+    gate = contract["core_gate"]
+    assert gate["status"] == "P6_VERIFIED_P7_P8_REQUIRED"
+    assert gate["verified_pieces"]["FULL_DOMAIN_HISTORY_PROFILE"] == {
+        "core_commit": "573c45b82725d6f444b70e5ff193302dac883e7b",
+        "core_tree": "6704031dea824572b4d7163ba477c33175397fe7",
+        "profile_id": "source-assertion",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "paper_audit": "PASS",
+    }
 
 
 def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
