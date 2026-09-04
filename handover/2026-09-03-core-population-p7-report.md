@@ -24,8 +24,13 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Duplicate-list RED: `32aaf89b2954814d0b38972422abf48b8d678fa2`
 - Duplicate-list GREEN: `978d6bd2071b35d6319d9a59e8ab43f4a2ccb6ba`
 - Reference-import RED: `33f915b722000811fe142be69c00d865fdf746e6`
-- Final implementation GREEN: `b37c59708a4ed03eab89d0d3f8dda60912a4ee53`
-- Final implementation GREEN tree: `ea2d724638f3a72fabe3d32a05f04502b814551c`
+- Reference-import GREEN: `b37c59708a4ed03eab89d0d3f8dda60912a4ee53`
+- Root-CURIE grounding RED: `b4d1ad79b7d1baac2170a6bc1539497f1ff6e700`
+- Grounded-project compilation RED: `2fb24f0c65249d5e75421c011c31534b5c581f60`
+- Final implementation GREEN: `99139ef5aa6c7b633377061c53e7b3a1b8484c2d`
+- Final implementation GREEN tree: `969cca8df1592270f2d7573e833e82bd48d3f8f1`
+- Executable-documentation RED: `380cb3d4ac82cbeea59c29a3a759e34a87ac3d4a`
+- Executable-documentation GREEN: `ee429036a316075d6a526d9dd4cf31992455efff`
 
 ## What changed
 
@@ -85,6 +90,15 @@ Malformed or duplicate-key YAML becomes the typed `MALFORMED_SOURCE` refusal
 at both the API and CLI boundary. It never escapes as an ontology-loader
 traceback.
 
+The PROJECT rite treats a bare Malleus root and any CURIE whose declared prefix
+maps to the exact Malleus root namespace as the same direct-root extension. It
+does not mistake an unrelated namespace or the compiler's currently unsupported
+full URI spelling for a Malleus root. A class-level grounding annotation passes
+through the public compiler as retained source evidence. The binder enters
+adoption logic only when the separate `adopts` field is actually present, and a
+grounding-only edit changes source attestation without changing semantic fact
+identity.
+
 The separate conformance call compares an edited pack with one exact reference
 pack. Documentation, new declarations, and enum values may be added. Existing
 classes, slots, enums, scalar constraints, mapping constraints, and declaration
@@ -106,8 +120,8 @@ as `research` never resolves through ambient network or filesystem state.
 | `ontology/packs/metrology.yaml` | `1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586` |
 | `ontology/packs/chronology.yaml` | `6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1` |
 | `ontology/packs/research.yaml` | `c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e` |
-| grounding rite | `1f642cffadd71e0dc4aabe3f9fdf48b0c0068e2ff4a5e5b8ea588a18de8b3a3e` |
-| grounding and conformance executor | `37df23e72a764c6ceb8b03797811c67586412698a2d6c0272e394d660b7bf838` |
+| grounding rite | `452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709` |
+| grounding and conformance executor | `8721fff12b5a183c8e112b4953854f191692c738cfc033fd96ea6908aa3f77b8` |
 
 The LinkML support profile advances from `malleus.linkml/private-v0` to
 `malleus.linkml/private-v1` because schema and class grounding annotations are
@@ -124,9 +138,10 @@ evidence is regenerated and tested separately.
 
 ## Mechanical evidence
 
-- The final focused pack suite passes 32 tests.
-- The complete contract-compiler and inquisitor suites pass 895 tests.
-- The Small Shop plus pack integration slice passes 247 tests after
+- The final focused pack suite passes 38 tests.
+- In a clean checkout, the complete contract-compiler and inquisitor suites
+  pass 900 tests and skip 1 test whose gitignored input is absent.
+- The Small Shop plus pack integration slice passes 253 tests after
   regenerating current evidence under the new compiler profile.
 - The three shipped packs compile through the public compiler.
 - One project importing both `research` and `metrology` compiles through the
@@ -134,6 +149,11 @@ evidence is regenerated and tested separately.
 - Tests reject absent grounding, unknown fields, missing URLs, empty borrowed
   term groups, and an ungrounded project class that extends a root directly.
 - Duplicate YAML keys refuse through the API and CLI without a traceback.
+- Bare roots and two aliases of the exact Malleus namespace require grounding;
+  an unrelated CURIE and the unsupported full URI spelling do not. A correctly
+  grounded direct-root project compiles through the public facade, and a
+  grounding-only edit preserves semantic fact identity while changing source
+  attestation.
 - An edited copy may change documentation, add a class, and add an enum value.
   It refuses if the copy deletes the reference surface, makes a concrete class
   abstract, makes an existing slot required, or adds a requirement-bearing
@@ -148,6 +168,8 @@ evidence is regenerated and tested separately.
 - Another test binds the accepted `Campaign` and `PART_OF_CAMPAIGN` surface.
 - The example generator reproduces the committed source-assertion and Small
   Shop change bytes under the new compiler profile.
+- The governing grounding example is parsed and accepted by the real rite, and
+  the documented frozen-receipt test node is executed directly.
 
 ## Non-claims
 
