@@ -1784,3 +1784,45 @@ place and reproducible only at their declared historical coordinate.
 Impact: Current-Core test counts can no longer reinterpret v2 bytes. This
 narrows the active gate to coordinate-compatible evidence and does not select
 v4, alter v2 identities, or hide a v4 failure.
+
+### E-0111, the question-blind producer input closure is frozen
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/producer-input-manifest.json` at
+`sha256:b00762dc84efa371a1d600c4eb9144e48182eb9d83e5e3f02f6b04248122a86d`;
+`spawn-message.md` at
+`sha256:401c80434c5355a6bb92e9a48c98f65045863474893fe391bf6bb26c047c8b74`;
+`prepare_producer.py` at
+`sha256:51048eb24d1c5ab9221094157fc611957dcc03615c395088aee2d8973b9f0f47`;
+and the ignored staging receipt at
+`sha256:d32d749e808e8813de33e8df589a7a78dff650eb498ec72f6353cc1e3fa7f45a`.
+
+Observation: The closed producer workspace contains exactly eight files: the
+installed P8 acolyte skill, selected reading, Malleus root, LinkML types,
+metrology, chronology, and research packs, and the `source-assertion` profile.
+Their exact byte digests match the frozen manifest. The interface supplies only
+source, capture, and plan identifiers. It supplies no contract identity,
+question, query binding, answer, prior ontology, prior population, result, or
+manuscript.
+
+Isolation correction: The public skill installer correctly installs all four
+shipped skills and has no single-skill selector. That left three undeclared
+skills plus agent metadata in the first private staging directory. The
+preparation command now verifies every source digest, runs the required
+installer, reduces its output to the one declared skill file, copies the seven
+declared artifacts, and refuses unless the resulting file closure is exact. A
+hard test creates extra installed skills and metadata and proves the reducer
+retains only the declared acolyte file. The staging directory was regenerated
+from this command; no source or result byte was removed.
+
+Boundary: This is a task boundary inside a shared workspace, not an operating
+system sandbox. The fresh producer is instructed to read only the declared
+closure, write only its owned `work/` directory, avoid network and delegation,
+and stop after the first ontology proposal. The same session may receive exact
+typed compiler diagnostics at most twice and may later produce one document
+population file. No fallback exists.
+
+Impact: The v4 producer can start without question or prior-result leakage. The
+manifest and staging receipt are supporting evidence, not additional paper
+identity groups.

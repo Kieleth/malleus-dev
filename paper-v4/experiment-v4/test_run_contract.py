@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[2]
 ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
 ARXIV_README = ROOT / "paper-v4" / "arxiv" / "README.md"
 MASTER_PLAN = ROOT / "paper-v4" / "paper-master-plan.md"
+PRODUCER_MANIFEST = ROOT / "paper-v4" / "experiment-v4" / "producer-input-manifest.json"
+SPAWN_MESSAGE = ROOT / "paper-v4" / "experiment-v4" / "spawn-message.md"
 
 
 def _contract() -> dict[str, object]:
@@ -182,6 +184,70 @@ def test_v4_questions_and_human_review_are_frozen_but_producer_blind() -> None:
     ]
     assert protocol["authorship"]["ratifier_actor_id"] == "actor:luis"
     assert "numeric_score" in protocol["forbidden_record_fields"]
+
+
+def test_producer_input_set_is_exact_and_question_blind() -> None:
+    manifest = json.loads(PRODUCER_MANIFEST.read_bytes())
+    declared = {item["name"]: item for item in manifest["declared_inputs"]}
+
+    assert manifest["status"] == "FROZEN"
+    assert manifest["core"] == {
+        "commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+        "tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+    }
+    assert set(declared) == {
+        "MALLEUS_NASCENT_PROJECT_SKILL",
+        "SELECTED_READING",
+        "MALLEUS_ROOT",
+        "LINKML_TYPES",
+        "METROLOGY_PACK",
+        "CHRONOLOGY_PACK",
+        "RESEARCH_PACK",
+        "SOURCE_ASSERTION_PROFILE",
+    }
+    assert (
+        declared["SELECTED_READING"]["sha256"]
+        == _contract()["source"]["selected_reading_sha256"]
+    )
+    for item in declared.values():
+        if item["name"] == "SELECTED_READING":
+            continue
+        assert item["sha256"] == _digest(ROOT / item["source"])
+    assert manifest["session"] == {
+        "fresh": True,
+        "single_session": True,
+        "delegation": "FORBIDDEN",
+        "max_compiler_diagnostic_returns": 2,
+        "max_additive_revision_rounds": 2,
+        "fallback": "FORBIDDEN",
+    }
+
+
+def test_producer_message_stages_one_closed_no_fallback_session() -> None:
+    message = SPAWN_MESSAGE.read_text(encoding="utf-8")
+    plain = " ".join(message.split())
+
+    required = {
+        "Start with no inherited task context",
+        "read only the eight declared inputs",
+        "Do not use the network or delegate",
+        "Set status to `ONTOLOGY_READY` and stop",
+        "at most twice",
+        "phase two in this same session",
+        "one `work/document-population.json`",
+        "A partial or refused result is valid and triggers no fallback",
+    }
+    for phrase in required:
+        assert phrase in plain
+    forbidden = {
+        "Which observation network",
+        "RC2",
+        "CO2 range",
+        "preferred causal mechanism",
+        "expected answer",
+    }
+    for phrase in forbidden:
+        assert phrase not in message
 
 
 def test_publication_instructions_do_not_name_an_ephemeral_host_environment() -> None:
