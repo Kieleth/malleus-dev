@@ -28,6 +28,7 @@ from malleus.inquisition import (
     SUSPICION,
     RubricError,
     run_rites,
+    validate_pack_conformance,
     validate_pack_grounding,
 )
 
@@ -117,12 +118,47 @@ def _pack_grounding(argv: list[str]) -> int:
     return 0
 
 
+def _pack_conformance(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="malleus-inquisitor pack-conformance",
+        description="Check an edited pack against one exact reference pack.",
+    )
+    parser.add_argument("schema", help="path to the edited LinkML pack")
+    parser.add_argument(
+        "--against", required=True, metavar="REFERENCE",
+        help="path to the exact reference LinkML pack",
+    )
+    parser.add_argument("--json", action="store_true", help="machine-readable receipt")
+    args = parser.parse_args(argv)
+    try:
+        receipt = validate_pack_conformance(
+            Path(args.schema).read_bytes(),
+            reference=Path(args.against).read_bytes(),
+        )
+    except OSError as error:
+        print(f"malleus-inquisitor: cannot read source: {error}", file=sys.stderr)
+        return 2
+    except PackGroundingRefusal as error:
+        print(f"malleus-inquisitor: {error}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(receipt.to_json())
+    else:
+        print(
+            f"PACK CONFORMANCE PASS :: {receipt.source_id} :: "
+            f"{receipt.source_sha256} :: against {receipt.reference_sha256}"
+        )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv and argv[0] == "install-skills":
         return _install_skills(argv[1:])
     if argv and argv[0] == "pack-grounding":
         return _pack_grounding(argv[1:])
+    if argv and argv[0] == "pack-conformance":
+        return _pack_conformance(argv[1:])
     parser = argparse.ArgumentParser(
         prog="malleus-inquisitor",
         description="Mechanical rites for the Malleus root ontology profile.",

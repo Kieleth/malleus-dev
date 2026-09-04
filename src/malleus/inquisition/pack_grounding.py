@@ -28,6 +28,7 @@ class PackGroundingRefusalReason(Enum):
     GROUNDING_NOT_CLOSED = auto()
     GROUNDING_INCOMPLETE = auto()
     DIRECT_ROOT_GROUNDING_REQUIRED = auto()
+    PACK_SURFACE_NOT_PRESERVED = auto()
 
 
 class PackGroundingRefusal(ValueError):
@@ -136,6 +137,30 @@ class PackGroundingReceipt:
                 "grounded_subjects": list(self.grounded_subjects),
                 "rite_identity": self.rite_identity,
                 "role": self.role,
+                "source_id": self.source_id,
+                "source_sha256": self.source_sha256,
+            }
+        )
+
+    def to_json(self) -> str:
+        return json.dumps(json.loads(self.canonical_bytes), indent=2, sort_keys=True)
+
+
+@dataclass(frozen=True, slots=True)
+class PackConformanceReceipt:
+    """Exact candidate and reference identities for one compatible pack edit."""
+
+    source_id: str
+    source_sha256: str
+    reference_id: str
+    reference_sha256: str
+
+    @property
+    def canonical_bytes(self) -> bytes:
+        return _canonical(
+            {
+                "reference_id": self.reference_id,
+                "reference_sha256": self.reference_sha256,
                 "source_id": self.source_id,
                 "source_sha256": self.source_sha256,
             }
@@ -276,6 +301,86 @@ def _grounding(annotations: object, subject: str) -> None:
     )
 
 
+def _document(source: bytes) -> Mapping[str, object]:
+    if type(source) is not bytes:
+        raise PackGroundingRefusal(
+            PackGroundingRefusalReason.MALFORMED_SOURCE,
+            "source must be exact bytes",
+        )
+    try:
+        decoded = source.decode("utf-8")
+        root = yaml.load(decoded, Loader=UniqueKeyLoader)
+    except (UnicodeDecodeError, yaml.YAMLError, OntologyError) as error:
+        raise PackGroundingRefusal(
+            PackGroundingRefusalReason.MALFORMED_SOURCE,
+            f"source is not unique-key UTF-8 YAML: {error}",
+        ) from error
+    return _mapping(root, "schema")
+
+
+_DOCUMENTATION_FIELDS = frozenset(
+    {"annotations", "comments", "description", "examples", "notes", "title"}
+)
+
+
+def _missing_surface(reference: object, candidate: object, path: str) -> list[str]:
+    if isinstance(reference, Mapping):
+        if not isinstance(candidate, Mapping):
+            return [path]
+        missing: list[str] = []
+        for key, value in reference.items():
+            if key in _DOCUMENTATION_FIELDS:
+                continue
+            child = f"{path}.{key}"
+            if key not in candidate:
+                missing.append(child)
+                continue
+            missing.extend(_missing_surface(value, candidate[key], child))
+        return missing
+    if isinstance(reference, list):
+        if not isinstance(candidate, list):
+            return [path]
+        return [f"{path}[{item!r}]" for item in reference if item not in candidate]
+    return [] if candidate == reference else [path]
+
+
+def validate_pack_conformance(
+    source: bytes,
+    *,
+    reference: bytes,
+) -> PackConformanceReceipt:
+    """Check that an edited pack preserves one exact reference pack's surface.
+
+    Documentation may change and declarations may be added. Existing class,
+    slot, and enum declarations may not be removed or weakened.
+    """
+
+    source_receipt = validate_pack_grounding(source, role="PACK")
+    reference_receipt = validate_pack_grounding(reference, role="PACK")
+    source_document = _document(source)
+    reference_document = _document(reference)
+    missing: list[str] = []
+    for section in ("classes", "slots", "enums"):
+        missing.extend(
+            _missing_surface(
+                reference_document.get(section, {}),
+                source_document.get(section, {}),
+                section,
+            )
+        )
+    if missing:
+        raise PackGroundingRefusal(
+            PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED,
+            "reference surface is not preserved: " + ", ".join(sorted(missing)),
+        )
+    return PackConformanceReceipt(
+        source_id=source_receipt.source_id,
+        source_sha256=source_receipt.source_sha256,
+        reference_id=reference_receipt.source_id,
+        reference_sha256=reference_receipt.source_sha256,
+    )
+
+
 def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt:
     """Check grounding metadata without judging whether the citation is apt."""
 
@@ -289,15 +394,7 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
             PackGroundingRefusalReason.UNKNOWN_ROLE,
             f"unknown grounding role: {role!r}",
         )
-    try:
-        decoded = source.decode("utf-8")
-        root = yaml.load(decoded, Loader=UniqueKeyLoader)
-    except (UnicodeDecodeError, yaml.YAMLError, OntologyError) as error:
-        raise PackGroundingRefusal(
-            PackGroundingRefusalReason.MALFORMED_SOURCE,
-            f"source is not unique-key UTF-8 YAML: {error}",
-        ) from error
-    document = _mapping(root, "schema")
+    document = _document(source)
     source_id = _nonblank(document.get("id"), "schema.id")
     grounded: list[str] = []
     if role == "PACK":
@@ -330,8 +427,10 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
 
 __all__ = (
     "PACK_GROUNDING_RITE_IDENTITY",
+    "PackConformanceReceipt",
     "PackGroundingReceipt",
     "PackGroundingRefusal",
     "PackGroundingRefusalReason",
+    "validate_pack_conformance",
     "validate_pack_grounding",
 )

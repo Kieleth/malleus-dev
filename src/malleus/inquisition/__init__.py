@@ -25,9 +25,11 @@ import yaml
 
 from malleus.inquisition.pack_grounding import (
     PACK_GROUNDING_RITE_IDENTITY,
+    PackConformanceReceipt,
     PackGroundingReceipt,
     PackGroundingRefusal,
     PackGroundingRefusalReason,
+    validate_pack_conformance,
     validate_pack_grounding,
 )
 from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
@@ -649,6 +651,7 @@ __all__ = (
     "HERESY",
     "NOTE",
     "PACK_GROUNDING_RITE_IDENTITY",
+    "PackConformanceReceipt",
     "PackGroundingReceipt",
     "PackGroundingRefusal",
     "PackGroundingRefusalReason",
@@ -660,5 +663,6 @@ __all__ = (
     "SUSPICION",
     "UNDISABLABLE_RITES",
     "run_rites",
+    "validate_pack_conformance",
     "validate_pack_grounding",
 )
