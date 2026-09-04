@@ -90,6 +90,16 @@ population were under-specified before admission. Packs address repeated
 vocabulary. The history profile addresses what a change means. Neither removes
 the need for source-grounded inspection.
 
+The retained population-session reports name the concrete failure. Sonnet and
+Opus both refused to invent point values where the source reports ranges. They
+also omitted the preferred causal mechanism because their ontologies could not
+carry its hypothesis status. Sonnet additionally refused to turn an aggregate
+instrument count into invented instruments. In the old runs those choices
+appeared only as missing records plus a later self-report. In v4 they must become
+typed `INTERVAL_NOT_EXPRESSIBLE`, `MODALITY_NOT_EXPRESSIBLE`, or
+`AGGREGATE_ONLY` gaps tied to source locators. A gap makes the loss inspectable;
+it does not repair the ontology or authorize a guessed fact.
+
 ## Execution gate
 
 Core P3 is verified at final tip
