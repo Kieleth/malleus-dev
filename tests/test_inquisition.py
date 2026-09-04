@@ -1844,6 +1844,13 @@ class TestSkillsAreInstallable:
                 "domain slots and belong in the ontology: a DOI, a dataset "
                 "URL, a grant number, an accession"
             ),
+            (
+                "a claim-bearing record carries `assertion_locator`, the "
+                "opaque route back to the retained assertion, and "
+                "`statement_sha256`, the digest of its exact text, and "
+                "`statement` stays empty unless the record's `Source` "
+                "declares a licence that permits reproducing the sentence"
+            ),
             "Labels identify records",
             "document capture",
             "coverage of the retained reading is the objective",
@@ -1874,6 +1881,11 @@ class TestSkillsAreInstallable:
             "uncaptured assertions remain invisible",
             "UNTOUCHED",
             "Preserve source units and values",
+            (
+                "set `quantity_kind_class` to it and keep the source's own "
+                "wording in `quantity_kind`, which stays open and is never "
+                "rewritten to fit the class"
+            ),
             "explicit evidence-bearing operation",
             "typed gaps",
             "NO_DOMAIN_CHANGE",
