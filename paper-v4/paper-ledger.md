@@ -1485,3 +1485,610 @@ Final gate: A clean hash-locked CPython environment passed 189 tests across the 
 Boundary: The PDF is a reviewed build artifact, not a human-ratified answer evaluation. The exact executable paper snapshot is local commit `8e818103e6867e326544123a30abe756bdd45117`, tree `455e91e3110d1789fb3db8c8a902bc2e87c4eb04`. It contains the v2 code, artifacts, and environment lock but not the later prose. It is not yet reachable through a public immutable tag or archive, and the paper states that limit. Neither the PDF digest nor this code coordinate enters the five experiment identity groups.
 
 Impact: All nonhuman experiment, reproduction, manuscript, source-bundle, compilation, and visual-QA work is complete. Submission still requires Luis's source-review ratification, publication of the exact executable snapshot, and final author review.
+
+### E-0096, executor handover separates paper work from the Core gate
+
+Date: 2026-09-03
+
+Sources: approved executor plan `handover/2026-09-03-paper-executor-plan.md` as amended through Core handover commit `7e9563e8ac32ed2504f990d592e1f4638a584efb`; `design/KNOWLEDGE_PACKS.md`; Core population handover `handover/2026-09-03-core-population-v2.md`; frozen branch `paper-v4-multimodel` at tag `paper-v4-multimodel-v2`, commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; and a read-only run of the active paper and document tests in its retained CPython 3.12.9 environment.
+
+Observation: The handover introduces the missing contract between ontology and ledger mechanics. A `DomainHistoryProfile` states what one change means. The document case selects `source-assertion`; Small Shop selects `state-version`. Assertions in the document profile are retained capture evidence linked to graph fields, not automatically Claim or Event records. The same physical history and replay machinery can therefore serve two semantic-ledger choices without pretending that Core selected either domain meaning.
+
+Core gate: The neutral population compiler has a verified P1 cut. P2 governed integration remains under correction for declarative retention-event role binding and has no accepted final coordinate at this entry. The public facade, document adapter, ontology-supersession replay, full profile, packs, and nascent-project skill required by the approved v4 loop are not yet verified. A selected v4 run must not start against moving private seams.
+
+Parallel evidence: The three frozen producer runs remain useful baseline evidence. In the retained environment, 198 active document-paper, v2, v3-fidelity, review, environment, and publication tests pass with `PYTHONPATH=.:src`. The runs differ sharply in vocabulary and query rows while all admit and replay. Human ratification records exist for all three. This evidence diagnoses ontology variability; it does not supply the new history-profile execution.
+
+KISS finding: The parallel manuscript is about 5,000 Markdown words and the approved v4 matrix adds three single-session producers, one staged-session variant, packs, typed gaps, and as many as two ontology revisions. Executing all of that would answer a larger question than the original thin paper. The smallest coherent paper argument is the distinction among domain vocabulary, domain-history meaning, and accepted replayable change. Whether the v4 matrix stays in this paper or moves to follow-on work is an author scope decision and is not taken here.
+
+Action that does not wait: `paper-v4/experiment-v4/brief-to-skill-map.md` removes paper and question rules from the future common skill, and `paper-v4/experiment-v4/spawn-message.md` reduces the experimenter input to isolation plus the selected-reading path. No Core code, result identity, baseline, manuscript claim, or plan version changed.
+
+### E-0097, Core public population boundary passes independent paper audit
+
+Date: 2026-09-03
+
+Sources: Core implementation commit `d758d40bd084a25c0ca17cdb80720686f4d67a95`, tree `e0fca1db8bc0a50ce5821ba7308686b98382a265`; final governance tip `add4535f757551b6ed30b449e19c31fc97769e1e`, tree `df2c0b7acafc44ff2d45ed9195d13b73577b0979`; `malleus.compiler`; `malleus-compiler contract`; public adopter, integration, ledger, and package artifacts in an isolated read-only clone.
+
+Observation: The public facade compiles exact LinkML source bytes, compiles and prepares the neutral population plan, admits a governed change, reopens and replays history, and exposes the replayed graph's native query methods. The public adopter test admits Small Shop states `B/Y/1@e4` and `B/Y/2@e7`, returns quantity 2 as current, and retains the exact `e4` to `e7` supersession without importing private or research Python modules. Event population refuses as `FAMILY_NOT_ADMITTED`, and the CLI rejects a raw ontology digest.
+
+Verification: The exact final tree passed 326 population, history, public-facade, and graph tests; 199 integration tests; and the ledger checker at 370 entries, head `OVR-000370` / `sha256:7f9bbf9b16de54e32fd365a199e8cce1265b3615a297af9984b26694a346a2c5`. A direct wheel and the wheel rebuilt from its source distribution were byte-identical at `sha256:01e091baa32df38708f53c2285a4b4ee131096861d18255fb7aff50eb0c2c78e`; both distribution artifacts passed `twine check`, and the installed command compiled the exact Small Shop ontology sources.
+
+Boundary: This proves a supported import path and installed command in packages built from that source. It does not stabilize a `private-v0` wire, invent mappings, select domain-history meaning, populate Events, implement Semantic Re-entry, or establish a package release. The paper experiment remains pinned to its selected v2 coordinate until a new run is authorized and complete.
+
+Impact: Core P3 no longer gates paper design. The document adapter, ontology-supersession replay, full profile, packs, and skill still gate the approved v4 execution.
+
+### E-0098, vocabulary and history meaning are separate causes of graph variance
+
+Date: 2026-09-03
+
+Sources: frozen `paper-v4-multimodel` branch at commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; the three retained run manifests, ontology receipts, population receipts, replay receipts, query results, and human review records; `paper-v4/experiment-v3/summarize_runs.py`; `design/KNOWLEDGE_PACKS.md`; and `paper-v4/experiment-v4/semantic-ledger-contract.md`.
+
+Observation: Artifact-derived comparison gives ontology entity/relation counts of 15/33, 20/18, and 8/8; population sizes of 13, 6, and 2; and CQ row counts of `[0,2,4,0]`, `[0,0,0,1]`, and `[0,0,0,0]` for gpt-5.6-sol, Claude Opus 5, and Claude Sonnet 5. All three produced 23-event histories and replayed successfully. The differing graphs therefore expose proposal vocabulary and capture choices, not a failure of atomic admission or replay.
+
+Producer evidence: The retained Sonnet and Opus population reports both say that point-valued ontology fields could not represent source ranges without invention and that the preferred causal mechanism could not preserve its hypothesis status. Sonnet also reports refusing to turn an aggregate instrument count into invented individual instruments. The old protocol left these as absent records plus post-run prose. The v4 contract should expose them during population as source-located `INTERVAL_NOT_EXPRESSIBLE`, `MODALITY_NOT_EXPRESSIBLE`, and `AGGREGATE_ONLY` gaps.
+
+Finding: Packs can reduce reinvention of quantity, time, research, and modality terms. A separate `DomainHistoryProfile` is still required because an ontology does not say whether one accepted change is an assertion, state version, event, or commitment. Under `source-assertion`, there is a further representational risk: a captured `HYPOTHESISED` causal assertion may project as an unqualified graph relation if modality remains only in retained evidence. An optional `SourceAsserted` mixin does not mechanically prevent that flattening.
+
+Impact: The paper must explain vocabulary, history meaning, evidence-bearing population, and replay projection as four separate concerns. A bounded Core inquiry asks the later full-profile and pack pieces to enforce either queryable qualification, Claim reification, a typed provenance join, or refusal. This is not a P3 or P4 blocker and does not select the Core representation.
+
+### E-0099, paper work can advance while v4 execution waits
+
+Date: 2026-09-03
+
+Sources: `handover/2026-09-03-paper-executor-plan.md`; `handover/2026-09-03-core-population-v2.md`; Core P3 PASS in E-0097; and the KISS priority in D-0001 and D-0002.
+
+Observation: Re-running now would recreate the retired paper-local interface. The approved no-brief experiment needs the document adapter, ontology-supersession replay, full history profile, packs, and nascent-project skill. Those Core pieces are not frozen at this entry. Paper-owned isolation text and the brief-to-skill mapping are complete.
+
+Provisional cut for author review: use one document and one default single-session v4 loop in the lean paper. Retain the existing three-producer evidence as diagnostic background. Move the new three-producer matrix and strict staged-session variant to follow-on work. This removes repeated experiment cells without weakening the central claim that a model proposal crosses an explicit, source-grounded, replayable commitment boundary.
+
+Boundary: This is a recorded recommendation under the overnight autonomy instruction, not an accepted author decision. It does not increment the master plan, change the selected result, or authorize a run.
+
+Impact: Continue with paper prose, a dependency-stable run manifest, and harness isolation specifications. Start no v4 model population until the Core execution gate closes.
+
+### E-0100, author accepts the KISS v4 run and overnight relay
+
+Date: 2026-09-03
+
+Sources: the author's instruction to resume the paper and PDF capture as soon as Core finishes, to coordinate exact Core needs through the existing Core task, and to produce a new paper-ready result from rich replay-derived graph queries; the KISS priority in D-0001 and D-0002; and the provisional cut in E-0099.
+
+Decision: Execute one document and one fresh single-session producer loop. Use the shipped `source-assertion` history profile with origin `PARTIAL_IMPORT`, because the run cannot prove exhaustive capture of every assertion in the reading. Withhold competency questions, query binding, answer material, prior runs, and manuscript results from ontology construction and population. Bind evaluator-owned queries only after population and replay freeze. Permit at most two compiler-diagnostic returns and at most two ontology revision rounds triggered by source-located typed gaps. Allow no hand repair, alternate producer, or fallback. Retain the prior three-producer comparison as diagnostic background and move a new matrix and staged-session variant outside this paper.
+
+Boundary: V2 remains the selected result until the v4 Core gate, producer loop, admission, replay, query, inspection, and clean-reproduction gates all pass. Codex may prepare a preliminary source-grounded inspection overnight, but only Luis can ratify it as paper evidence. No current v2 identity or result is rewritten by this decision.
+
+Guard: `paper-v4/experiment-v4/run-contract.json` records the executable boundary without population facts or answer values. Its focused tests require one loop, no fallback, question-free construction, post-replay querying, source-free query execution, and an unbound Core gate that prevents premature execution.
+
+Impact: Master plan 1.2.0 accepts the lean v4 cut. Paper-only preparation continues while Core finishes the remaining public profile, pack, and playbook pieces.
+
+### E-0101, v4 source and selected-reading preflight reproduces byte for byte
+
+Date: 2026-09-03
+
+Sources: ignored publisher PDF at the path fixed by `paper-v4/source/source-manifest.json`; the retained CPython 3.12 environment with `pypdf==6.16.2`; the committed text-layer projector; the selected v2 reading under `private/paper-v4-text-layer/`; and a new ignored preflight under `private/paper-v4-v4-preflight/`.
+
+Observation: The source PDF recomputes to `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`. A fresh strict text-layer extraction produced 11 pages and 186 stable blocks at `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`. The regenerated selected-reading bytes are identical to the retained selected reading.
+
+Boundary: This verifies only the source and reading inputs. It does not start the v4 producer loop, select an ontology, inspect document claims, bind Core, or create another manuscript identity. The scratch reading remains ignored and private.
+
+Impact: The v4 run can reuse the exact selected reading without introducing PDF or extractor drift. Its next external dependency remains the frozen Core execution gate.
+
+### E-0102, public replay-to-source trace and full Small Shop path pass paper audit
+
+Date: 2026-09-03
+
+Sources: Core commit `8e8917533283009d152d3db97329335c663456c3`, tree `f38eae64b9050abce2538ce68d307147abf3968d`; RED `3912c3fc0510ec11291b22651c3547632ca213f0`; GREEN `0a4667acb8fb6605f0ab5b4e74ced7e6a9194582`; governance entry `OVR-000376`; the public Small Shop population fixture and retained evidence; public `malleus.compiler` trace surface; and an independent detached checkout.
+
+Observation: A fresh run from an empty output directory reproduced the committed Small Shop evidence byte for byte. It contains 48 ledger events, five accepted changes, one additive ontology revision, ten historical records, and nine current records. The history bytes are `sha256:cd08faafbce7685f6432ade0549f53b87c8213f74e5e332a45d3ab691daa6739`; evidence is `sha256:b2eeae42456fd6dc2d8cd87808e7f7bceab14382f9179a14abeea1d4cdc7a1c1`. The detached audit reproduced 420 population, history, revision, public-facade, and graph tests plus all 194 Small Shop tests.
+
+Paper impact: `trace_population_record` reconstructs and verifies the path from one replayed graph record through its accepted change, population plan, history profile, field derivations, and retained source and evidence bytes. For document captures, the evidence includes the source assertion and its modality. The paper can therefore query graph topology and join returned records to source assertion, locator, and modality without a paper-local compatibility adapter or a new Core query contract.
+
+Boundary: The five Small Shop plans remain adopter-authored and select the minimal `state-version` profile. This evidence adds no mapping language, universal history semantics, Event population, Semantic Re-entry, effects, stable wire, or release claim. The paper does not rebind its executable baseline at this entry. Its v4 run still waits for the full `DomainHistoryProfile`, grounded packs, and nascent-project playbook.
+
+### E-0103, the active paper gate is explicit
+
+Date: 2026-09-03
+
+Sources: the failed broad collection command over `paper-v4/`; the exact active paper and document test paths; and the locked CPython 3.12 environment.
+
+Observation: A directory-wide pytest invocation collected superseded tests under `paper-v4/experiment/` and historical tests under `paper-v4/retired/`. An otherwise correct explicit invocation also failed when its subprocess lacked the repository and `src` import roots. Neither failure changed repository or experiment state.
+
+Guard: `paper-v4/active-test-manifest.json` names the active test roots, the two excluded historical roots, import roots, and pytest import mode. `paper-v4/run_active_tests.py` validates every path, refuses paths outside the repository or inside excluded history, sets the exact import roots, and runs the manifest. A paper-local test hardens those exclusions.
+
+The first README edit named the verifier's temporary environment directly. That host-local path was replaced by the documented repository-local environment variable. A test now refuses `/private/tmp` in publication instructions.
+
+Impact: The active gate now has one reproducible command. Superseded experiments cannot silently re-enter a v4 pass count.
+
+### E-0104, v4 questions and human review are frozen outside the producer loop
+
+Date: 2026-09-03
+
+Sources: the four existing document competency questions; the accepted D3 and D6 decisions; the v2 source-grounded review method; and the public replay-to-source trace verified in E-0102.
+
+Decision: Keep the four question texts but freeze them as a new v4 artifact at `sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86`. The producer cannot read this artifact. It enters only after ontology, capture, population, admission, and replay have frozen. A new v4 review protocol at `sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379` keeps the two qualitative judgments from v2 and adds the verified graph-row-to-capture trace as review material.
+
+Boundary: The protocol contains no answer oracle, canonical answer, exact-match rule, numeric score, schema symbol, record identifier, or source locator. Codex may create a preliminary record. Only `actor:luis` may ratify it as paper evidence.
+
+Impact: Query richness will be judged through responsive graph rows plus their source and modality traces, without letting the questions shape the ontology or population.
+
+### E-0105, the frozen multi-producer comparison isolates the v4 vocabulary failures
+
+Date: 2026-09-03
+
+Sources: annotated tag `paper-v4-multimodel-v2`, tag object `c9f2bd6dda0cb9a40c5d124230641a81a0261d8d`, commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; its three run manifests, ontologies, population records, replay receipts, query results, and human-ratified review records.
+
+Observation: All three runs accepted, recorded 23 ledger events, reopened, replayed, and made zero forbidden query-time source, network, or embedding accesses. Their graph populations were 13, 6, and 2 records, and their question row counts were `[0,2,4,0]`, `[0,0,0,1]`, and `[0,0,0,0]`. The invariant event count therefore says nothing about semantic coverage. Human review, not row count, found only one fully responsive result: the bounded quantities in CQ-03 from the first run.
+
+Failure classes: The runs independently exposed missing interval support, aggregate-only counts, source fields made mandatory without evidence, unnamed domain entities, and causal relations unable to carry hypothesis status. These map to the v4 typed gaps `INTERVAL_NOT_EXPRESSIBLE`, `AGGREGATE_ONLY`, `REQUIRED_FIELD_ABSENT_IN_SOURCE`, `TYPE_ABSENT`, `RELATION_ABSENT`, and `MODALITY_NOT_EXPRESSIBLE`. In two runs, the word “proposed” or its equivalent existed only in ontology prose, so emitting the causal edge would have flattened epistemic status.
+
+Reuse: V4 keeps deterministic type-bound native traversal, runtime witness identifiers, source-free query guards, and separate judgments for source support and question responsiveness. It retires pre-population query binding, the closed constructible subset, direct-edge-only limits, and question-guided population.
+
+Impact: This comparison is diagnostic background, not another v4 matrix. It explains why grounded packs, typed gaps, a declared history profile, and record-to-capture trace are needed before one new KISS run.
+
+### E-0106, P6 closes the document history semantics after three audit corrections
+
+Date: 2026-09-03
+
+Sources: Core commit `573c45b82725d6f444b70e5ff193302dac883e7b`, tree `6704031dea824572b4d7163ba477c33175397fe7`; corrective GREEN `17c4a8c64b597eb5dd5aaebf623c39ef8f721692`; report commit `bcfa787`; governance head `OVR-000379` / `sha256:60808e07abbea8c3e0470b86323e0fd73cbcbd32d1903c024acba8c5eca27023`; and an independent detached audit.
+
+Audit history: The first P6 draft called the source-assertion origin `EMPTY`, which would have treated one imported paper as the whole domain. The second called each change an assertion while the adapter emitted one multi-assertion plan with one valid time. The first GREEN then declared capture-order time only in profile text while accepting an arbitrary source date, and its capture grammar could not retain assertion-specific times. A later GREEN fixed the code but tests silently repaired stale checked-in examples. Core accepted each reproducer before governance freeze.
+
+Final rule: The shipped profile at `sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5` defines one atomic capture batch as a `COMPOSITION` with origin `PARTIAL_IMPORT`. The adapter owns change valid time and emits `ORDER_ONLY(capture_id)`. Each retained assertion may independently carry nonempty lexical `assertion_time` and `domain_time`; omission remains omission. Modality and time reach graph results through `trace_population_record`. Retraction is not admitted by this profile.
+
+Verification: The exact committed example generator reproduced its raw reading, capture, plan, change, census, and profile artifacts and left the detached checkout clean. The complete Pareto and ledger gate passed 497 tests. No remaining P6 seam request exists.
+
+Impact: E-0100's `ASSERTION` shorthand is superseded. P6 is verified. The v4 run remains blocked only on P7 grounded packs plus the grounding rite and P8's nascent-project playbook.
+
+### E-0107, active v4 prose is rebound to the accepted execution contract
+
+Date: 2026-09-04
+
+Sources: author decision E-0100; the v4 run contract; audited Core P6 commit
+`573c45b82725d6f444b70e5ff193302dac883e7b`, tree
+`6704031dea824572b4d7163ba477c33175397fe7`; and the public
+`trace_population_record` seam.
+
+Observation: The machine-readable v4 contract already required one
+question-blind producer loop and post-replay query binding, but active master
+plan prose still described the selected v2 path: two producer sessions,
+question-visible population, pre-population query binding, private history, and
+paper-local GraphRecipe lowering. Those statements contradicted E-0100 and the
+verified public P6 boundary.
+
+Correction: Active v4 prose now names one fresh single-session producer loop,
+one atomic capture batch, questions withheld until replay, terminal-change-only
+admission, public Core population and replay calls, and a required replay
+record-to-retained-assertion trace for epistemic status. Historical v1 and v2
+results remain unchanged. The five v2 identity groups remain selected until a
+complete v4 run replaces only ontology, ledger plus replay receipt, and query
+binding identities.
+
+Guard: A focused consistency test first failed on both the stale plan language
+and the broad `QUERYABLE_OR_TYPED_REFUSAL` modality placeholder. It now rejects
+those superseded active-path statements and requires the accepted v4 boundary.
+The focused contract gate passes 9 tests; the complete active paper gate passes
+198 tests.
+
+Boundary: This entry records no new author decision and does not bump the master
+plan version. It does not bind unfinished P7 or P8 bytes, create population
+facts, alter selected v2 evidence, or start the producer run.
+
+### E-0108, P7 freezes the optional grounded vocabulary layer
+
+Date: 2026-09-04
+
+Sources: Core commit `465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`,
+tree `5281da97f17905da45e254fd044536cb67d3398e`; governance entry
+`OVR-000383` at
+`sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc`;
+the shipped metrology, chronology, and research packs; their grounding and
+conformance rites; exact clean-checkout test and package receipts; and two
+independent detached audits.
+
+Observation: The three optional packs remain exact-source inputs rather than
+protocol vocabulary. Their SHA-256 identities are respectively
+`1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586`,
+`6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1`,
+and `c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e`.
+The research pack supplies source modality, claim, observation, instrument,
+campaign, sample, source, evidence, and research-relation vocabulary.
+Metrology supplies bounded quantities, units, counts, ratios, and determination
+basis. Chronology supplies domain-time extents distinct from ledger time.
+
+Audit: The final cut closes the observed receipt-to-compiler divergences for
+preserved declaration lists, imports, direct-root CURIE aliases, and unrelated
+class annotations. It passes 38 focused pack tests, the exact 253-test Small
+Shop and pack slice, 900 compiler and inquisitor tests with one declared skip,
+and 485 documentation, integration, and ledger tests. A clean Python 3.12
+wheel install resolves, grounds, and compiles all three packs. Direct and
+sdist-rebuilt wheels agree, and current examples reproduce while the historic
+RET-010 receipt remains byte-identical.
+
+Boundary: The grounding rite checks declared citation structure, not the
+intellectual fitness of a borrowed term. The packs are optional. They do not
+select domain-history meaning, populate a graph, admit Events, implement
+Semantic Re-entry, or establish semantic equivalence for an edited copy.
+
+Impact: P7 is verified. The active v4 run remains blocked only on P8's frozen
+generic nascent-project playbook. No population fact or manuscript result is
+created, and the master-plan version does not change.
+
+### E-0109, P8 freezes the adoption procedure and opens the v4 producer gate
+
+Date: 2026-09-04
+
+Sources: Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`,
+tree `6fc5e585e5058e7376ea1aef96fcb49b59107e5e`; governance entry
+`OVR-000384` at
+`sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8`;
+the installed `malleus-acolyte` skill at
+`sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`;
+the P8 report; Core's clean and package gates; an independent immutable audit;
+and isolated paper merge commit
+`f8d96123f86b2af41d9c67353f952d56565cf6af`, tree
+`c22387313a16b228f0e9c04e88651f42d0ce5bad`.
+
+Observation: The generic playbook separates schema-only, typed-graph-only, and
+governed-history adoption. Its document route chooses profiles and optional
+packs before ontology work, withholds downstream assessment material until
+population freezes, applies pack-before-invention and subclass-before-root,
+reviews both reading blocks and formalized assertions, exposes every concrete
+Entity and Relation type, and bounds one-session additive revision to two
+rounds. The installed example exercises every capture modality and typed gap
+kind through the exact seven-argument public adapter call. It invents no
+wrapper, reading grammar, population CLI, or answer evaluation.
+
+Verification: The independent audit passed. Core's clean gate reports 3,002
+passed and 3 skipped tests, plus the GraphRecipe and Small Shop suites, strict
+HTML, doctest, network-enabled linkcheck, package build, twine, sdist-rebuilt
+wheel parity, clean install, and command smoke tests. The paper merged only the
+frozen P8 baseline into `codex/paper-v4-lean`; it did not move Core main or
+integrate the paper branch.
+
+Boundary: P8 does not generate an ontology or population, choose domain
+semantics, extract assertions, invent mappings, evaluate answers, admit Event
+records, or guarantee that a model follows the procedure. V2 remains selected
+until v4 passes its terminal evidence and reproduction gates.
+
+Impact: The Core gate is complete and the one fresh, question-blind v4 producer
+loop may begin. This is implementation evidence, not a new author decision, so
+the master-plan version remains 1.2.0.
+
+### E-0110, the P8 merge exposes stale active reproduction paths
+
+Date: 2026-09-04
+
+Sources: the first active paper gate after merge
+`f8d96123f86b2af41d9c67353f952d56565cf6af`; the v2 history binding and
+validated-contract receipts; current Core binding grammar and compiler output;
+and `paper-v4/active-test-manifest.json`.
+
+Failure: The focused v4 contract passed 9 tests, but the broad active gate
+reported 8 failures and 7 setup errors among 198 collected tests. Seven errors
+and six failures came from executing the historical document runner with its
+old history binding, which current Core correctly refused as
+`MALFORMED_BINDING`. Two failures came from recompiling the frozen v2 ontology
+under the current compiler and comparing its output to a receipt produced at an
+older Core coordinate. The byte difference is expected across those immutable
+execution baselines. It is not a v4 population or replay result.
+
+Root cause: The active manifest separated retired pre-steer paths but still
+collected the selected v2 runtime and its shared research runner after the
+paper intentionally changed Core baselines. Exact historical evidence and a
+moving active implementation cannot share one unqualified reproduction gate.
+
+Guard: The active manifest now excludes direct collection of both
+`paper-v4/experiment-v2` and the v2-bound `document_paper` research package.
+The runner already refuses any listed path under an excluded root. A new hard
+test requires those historical runtime roots to stay out of the current P8
+gate while retaining `paper-v4/experiment-v4`. Frozen v2 artifacts remain in
+place and reproducible only at their declared historical coordinate.
+
+Impact: Current-Core test counts can no longer reinterpret v2 bytes. This
+narrows the active gate to coordinate-compatible evidence and does not select
+v4, alter v2 identities, or hide a v4 failure.
+
+### E-0111, the question-blind producer input closure is frozen
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/producer-input-manifest.json` at
+`sha256:b00762dc84efa371a1d600c4eb9144e48182eb9d83e5e3f02f6b04248122a86d`;
+`spawn-message.md` at
+`sha256:401c80434c5355a6bb92e9a48c98f65045863474893fe391bf6bb26c047c8b74`;
+`prepare_producer.py` at
+`sha256:51048eb24d1c5ab9221094157fc611957dcc03615c395088aee2d8973b9f0f47`;
+and the ignored staging receipt at
+`sha256:d32d749e808e8813de33e8df589a7a78dff650eb498ec72f6353cc1e3fa7f45a`.
+
+Observation: The closed producer workspace contains exactly eight files: the
+installed P8 acolyte skill, selected reading, Malleus root, LinkML types,
+metrology, chronology, and research packs, and the `source-assertion` profile.
+Their exact byte digests match the frozen manifest. The interface supplies only
+source, capture, and plan identifiers. It supplies no contract identity,
+question, query binding, answer, prior ontology, prior population, result, or
+manuscript.
+
+Isolation correction: The public skill installer correctly installs all four
+shipped skills and has no single-skill selector. That left three undeclared
+skills plus agent metadata in the first private staging directory. The
+preparation command now verifies every source digest, runs the required
+installer, reduces its output to the one declared skill file, copies the seven
+declared artifacts, and refuses unless the resulting file closure is exact. A
+hard test creates extra installed skills and metadata and proves the reducer
+retains only the declared acolyte file. The staging directory was regenerated
+from this command; no source or result byte was removed.
+
+Boundary: This is a task boundary inside a shared workspace, not an operating
+system sandbox. The fresh producer is instructed to read only the declared
+closure, write only its owned `work/` directory, avoid network and delegation,
+and stop after the first ontology proposal. The same session may receive exact
+typed compiler diagnostics at most twice and may later produce one document
+population file. No fallback exists.
+
+Impact: The v4 producer can start without question or prior-result leakage. The
+manifest and staging receipt are supporting evidence, not additional paper
+identity groups.
+
+### E-0112, the exact ontology gate is fixed before inspecting the proposal
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/compile_ontology_candidate.py` at
+`sha256:17a84fa181e627ca9c790ec7e92e54f0862f1c71b991da59a60615c879e60f87`;
+its focused test at
+`sha256:7396a58681f7f711eac60b37d5b547e7685f8e083e26c8b785413c8096047be5`;
+and the frozen producer manifest from E-0111.
+
+Observation: The paper-owned gate first verifies the exact root, LinkML, and
+three pack bytes from the producer closure. It then applies the public project
+grounding rite and `compile_linkml_contract` to the exact proposed ontology and
+named source map. Success retains the validated contract, grounding receipt,
+typed diagnostic, and every concrete Entity and Relation type with its exact
+effective slots. Refusal retains one typed diagnostic and no success artifact.
+
+Guard: One test proves that an ungrounded direct-root class refuses as
+`DIRECT_ROOT_GROUNDING_REQUIRED`. A second proves that a pack-derived project
+class compiles and appears in the generated population surface. The complete
+current-coordinate paper gate passes 25 tests.
+
+Boundary: This gate checks citation shape and compiler conformance, not domain
+fitness or question adequacy. It supplies no source fact, answer, query, graph
+cardinality, or ontology repair. The producer may receive only its exact typed
+diagnostic, at most twice.
+
+Impact: The first ontology proposal can now be evaluated without changing the
+gate in response to its content. This supporting harness is not a sixth paper
+identity.
+
+### E-0113, first gate invocation refuses in the parent CLI binding
+
+Date: 2026-09-04
+
+Source: the first invocation of the frozen E-0112 harness against producer
+ontology attempt 1.
+
+Failure: Argument parsing exposed `--ontology` as `ontology`, but
+`compile_candidate` requires `ontology_path`. Expanding the parser namespace
+directly into the callable raised `TypeError` before reading, grounding, or
+compiling the candidate. No gate output directory or candidate diagnostic was
+created. The producer proposal remains byte-identical.
+
+Root cause: Unit tests exercised the callable but not the command-line binding
+used by the actual run.
+
+Guard: `main` now binds each parsed field explicitly. A CLI-level test replaces
+the compiler callable with an observer and proves all four argument names,
+values, and integer conversion reach the correct parameters. The existing
+typed-refusal and successful-compilation tests remain.
+
+Impact: Rerun the same ontology attempt through the corrected parent harness.
+This was a harness failure, not a compiler diagnostic and does not consume one
+of the producer's two diagnostic returns.
+
+### E-0114, ontology attempt 1 receives one typed grounding diagnostic
+
+Date: 2026-09-04
+
+Sources: the ignored producer output `ontology-attempt-01.yaml` at
+`sha256:19ea02de255c8e2d57f1daf34c140b072bf70d6dcaf31f8e9a963058d0b39571`
+and the ignored parent diagnostic at
+`sha256:7bacc39a8223e3e0fc1bca50bd613eb925e4f6b8d0660ef8db9d229cec61da5f`.
+
+Observation: The corrected frozen gate reached the P7 project-grounding rite.
+It refused before contract compilation with stage `PACK_GROUNDING`, error type
+`PackGroundingRefusal`, reason `DIRECT_ROOT_GROUNDING_REQUIRED`, and detail
+`DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicFeature extends Entity
+directly`. The candidate digest in the diagnostic matches the exact producer
+file.
+
+Action: Return this diagnostic once to the same question-blind producer
+session. The producer may use only the installed acolyte instructions and its
+existing attempt to write immutable attempt 2. No source fact, competency
+question, query, expected answer, or hand-authored ontology repair accompanies
+the diagnostic.
+
+Boundary: This consumes the first of at most two typed diagnostic returns. It
+does not accept the ontology, create a contract identity, start document
+population, or add a paper identity group. Attempt 1 and its refusal remain
+unchanged.
+
+### E-0115, ontology attempt 2 receives the final allowed diagnostic
+
+Date: 2026-09-04
+
+Sources: the ignored producer output `ontology-attempt-02.yaml` at
+`sha256:18e9b3022b28e6a09b5accbd683c000998a23de057876149f52ef87b2bcd8b42`
+and the ignored parent diagnostic at
+`sha256:bbdc19501f71ae309082c740fe826498c979648fde8cf69e4a27e869394ba576`.
+Attempt 1 remains byte-identical at its E-0114 digest.
+
+Observation: The unchanged gate again refused at `PACK_GROUNDING`, with error
+type `PackGroundingRefusal`, reason `DIRECT_ROOT_GROUNDING_REQUIRED`, and
+detail `DIRECT_ROOT_GROUNDING_REQUIRED: project class EarthMaterial extends
+Entity directly`. Attempt 2 had changed only the class named in diagnostic 1.
+
+Action: Return diagnostic 2 to the same question-blind producer as the second
+and final compiler diagnostic. It may inspect its own attempts and the installed
+generic skill, then write one final immutable ontology attempt. The parent does
+not enumerate other possible failures or prescribe an ontology edit.
+
+Boundary: If the next candidate refuses, ontology construction terminates as a
+structural failure. There is no hand repair, alternate producer, or extension
+of the diagnostic budget.
+
+### E-0116, the first no-brief ontology run terminates structurally
+
+Date: 2026-09-04
+
+Sources: ontology attempt 3 at
+`sha256:d80d515f530659858dbac3c57c3bdc1c381d7b2acca7f3b11a9e82041e39d8cf`;
+its diagnostic at
+`sha256:f4d448f96daa71822c7129c44d9912cc9ef340d74c192edd5bb87fb1f83731ae`;
+and `paper-v4/experiment-v4/ontology-run/result.json` with the three immutable
+diagnostics it binds.
+
+Observation: The final candidate refused at `PACK_GROUNDING` with reason
+`DIRECT_ROOT_GROUNDING_REQUIRED` and detail
+`DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicOccurrence extends
+Event directly`. The same session had used the two permitted diagnostic returns
+to add grounding only to the class named by each earlier fail-fast diagnostic.
+It never saw a question, expected answer, prior population, result, or
+manuscript. Population did not start and no ontology was accepted.
+
+Decision: End this producer run exactly as preregistered. Preserve its three
+candidates privately and its three diagnostics publicly. Do not enumerate or
+repair remaining roots, start a second producer under the same contract, or
+reinterpret the failure as a domain-quality judgment. A hard test binds the
+attempt count to the frozen diagnostic budget, verifies every public diagnostic
+digest, and requires no fallback, hand repair, acceptance, or population.
+
+Learning: The public grounding rite reports only the first missing direct-root
+grounding subject. A source-grounded ontology with several direct roots can
+therefore consume a bounded correction budget through serial instances of one
+mechanically discoverable error class. This run tests the gate as shipped, not
+the producer's ability to respond to an aggregate diagnostic.
+
+### E-0117, two generic Core adopter gaps gate a separate rerun
+
+Date: 2026-09-04
+
+Core coordinate inspected:
+`6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+`6fc5e585e5058e7376ea1aef96fcb49b59107e5e`.
+
+Facts: First, the public governed-history path requires caller-supplied bytes
+for `ProtocolMachineProgram`, `PolicyProgram`, and
+`KnowledgeChangeHistoryBinding`. Core ships the three history profiles but no
+neutral machine, binding, admission composition, or executor that derives
+required check outcomes. The executable examples use fixture-local Small Shop
+artifacts and caller-authored `SATISFIED` outcomes. Second,
+`validate_pack_grounding` raises at the first ungrounded direct-root class, as
+the three-run sequence in E-0114 through E-0116 demonstrates.
+
+Core classification: Both are generic adopter gaps. A domain adopter owns
+domain-specific policy and check implementations, but should not copy a fixture
+machine or binding, hand-assemble generic lifecycle events, or assert a check
+outcome. Core accepted a narrow correction: a content-addressed neutral bundle,
+Core-executed mechanical source/evidence and replayability checks, one public
+admission helper, and an aggregate missing-root grounding diagnostic. These
+mechanics make no source-truth or domain-adequacy judgment.
+
+Paper boundary: Keep the failed run and P8 coordinate unchanged. Do not copy
+Small Shop admission bytes. A later successful run requires a new frozen paper
+contract bound to the corrected immutable Core coordinate after independent
+audit. Questions, ontology semantics, capture, query binding, and human
+inspection remain paper-owned.
+
+### E-0118, the lean v4 manuscript core is drafted without result substitution
+
+Date: 2026-09-04
+
+Source: `paper-v4/manuscript-v4-working.md` at
+`sha256:e685d1bf0157fc4791be79659a59f162225eea864974b5b2acc2fa84bb6ec09c`
+before support-document status edits.
+
+Decision: Draft a separate v4 manuscript instead of patching the selected v2
+manuscript paragraph by paragraph. The 2,525-word working file contains the
+stable problem, protocol, semantic-ledger distinction, experiment controls,
+failed first-run account, related-work boundary, and limitations. Exact result
+fields remain visibly bracketed. It is not yet the selected manuscript and does
+not alter the v2 publication consistency guard.
+
+KISS cut: Define ontology, change set, ledger, replay, locator, and query once.
+Use one short document-versus-Small-Shop contrast to show that ontology
+vocabulary and the meaning of a change are different contracts. Keep the old
+three-producer comparison as design history only. Move Core audit chronology,
+RED/GREEN counts, retired scorer history, environment detail, and full hashes
+out of the main paper.
+
+Cross-model evidence: The retained Sonnet 5 and Opus 5 runs support the need for
+typed gaps and modality-preserving trace, because they recorded losses around
+ranges, aggregate counts, and hypotheses. They predate packs, the full history
+profile, and whole-reading capture, and their population prompts saw the four
+questions. They therefore motivate v4 but cannot validate it.
+
+### E-0119, provisional Core corrections pass a paper-shaped semantic audit
+
+Date: 2026-09-04
+
+Coordinate audited read-only: Core commit
+`bcc7d7be3a67a8da7093f60b20d65ac5b569f661`, tree
+`585765939ef58d2e88bdbe74ea85825b0d014834`, extracted with `git archive`
+outside both working trees. This is a provisional coordinate, not a paper
+rebind.
+
+Observation: The actual attempt-1 ontology now produces one typed grounding
+diagnostic that lists the complete missing set in sorted order: `EarthMaterial
+extends Entity; GeologicFeature extends Entity; GeologicOccurrence extends
+Event`. The rite still requires class-local grounding. The public neutral
+history bundle has identity
+`sha256:0ef377d965638263810edbac1047102facb2b2367c77498aba43b50ec32a884f`.
+Its admission helper accepts a history, preparation, transaction time, and actor
+only; callers cannot pass check outcomes or protocol events.
+
+Downstream check: A public-only synthetic document execution used
+`source-assertion`, the document adapter, neutral history creation, preparation,
+structural admission, reopen, query, and trace. It replayed one record through a
+13-event history and reproduced receipt
+`sha256:14586746f78a0a6e49da5aeeffae0c3df82ec67758feb9e6c2f9f3f90752715a`.
+The two directly relevant Core test files passed 46 tests; four installed-skill
+route tests also passed.
+
+Harness failure and guard: The first downstream assertion assumed
+`trace.evidence[0]` was the capture. The trace correctly contained the history
+profile, population plan, and capture as evidence, so list position was not a
+capture contract. The corrected check indexes retained evidence by
+`record_id`, requires the exact expected set, and then compares the capture
+bytes at its declared capture id. The active paper runner must carry this hard
+rule.
+
+Boundary: Semantic audit is PASS with no paper capability blocker. Full Core
+tests, packaging, governance, immutable review, and an exact final coordinate
+remain pending. The failed first run and P8 identity stay unchanged until that
+packet arrives.
+
+### E-0120, working manuscript semantics corrected before result insertion
+
+Date: 2026-09-04
+
+Review target: `paper-v4/manuscript-v4-working.md` at paper commit `dc16d1c`.
+
+Corrections: A domain history profile defines the meaning of one accepted
+change, not one ledger event. One accepted change may produce several protocol
+events. The source-assertion profile means one atomic document-capture batch,
+with `PARTIAL_IMPORT` origin, `DECLARED_CAPTURE_ONLY` completeness, and
+capture/import-order knowledge time. Assertion and domain times are optional
+per-assertion evidence. Preparation evidence may remain after a later admission
+refusal; admission itself cannot persist a partial accepted change or graph
+state.
+
+Claim guard: Result claims, accepted-run artifacts, trace coverage, embedding
+access observations, final admitted record families, and the corrected Core
+bundle remain bracketed until the corrected run and final Core coordinate are
+frozen. Query binding is stated as a replaceable post-replay artifact outside
+accepted-state, ledger, and replay identity. Producer isolation and whole-reading
+coverage are described as task instructions and observable census behavior, not
+as operating-system isolation or exhaustive-extraction guarantees.
+
+KISS decision: Keep the first run in the main text as one short structural
+refusal. Exact class names and diagnostics stay in the artifact record. Keep REA
+only as a bounded analogy between domain vocabulary and history semantics; make
+no REA mapping or Event-population claim.

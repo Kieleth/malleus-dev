@@ -1,0 +1,1 @@
+{"attempt":1,"detail":"DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicFeature extends Entity directly","error_type":"PackGroundingRefusal","ontology_sha256":"sha256:19ea02de255c8e2d57f1daf34c140b072bf70d6dcaf31f8e9a963058d0b39571","reason":"DIRECT_ROOT_GROUNDING_REQUIRED","schema":"malleus.paper-v4.ontology-compile-attempt/v1","stage":"PACK_GROUNDING","status":"REFUSED"}

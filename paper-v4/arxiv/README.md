@@ -11,6 +11,16 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 
 The resulting `main.pdf` is a build artifact and must not be committed here.
 
+## Run the active paper test gate
+
+Use the locked paper interpreter. The manifest excludes superseded and retired
+experiment trees by construction and supplies the repository import path:
+
+```sh
+malleus_paper_env="$PWD/private/paper-v4-cp312"
+"$malleus_paper_env/bin/python" paper-v4/run_active_tests.py
+```
+
 ## Reproduce the experiment
 
 Run these commands from the repository root at the commit tagged `paper-v4-multimodel-v2`. That coordinate contains the v2 experiment, the two further producer runs, their human ratification records, the environment lock, and the drivers. It is based on Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The paper coordinate is outside the five experiment identities.

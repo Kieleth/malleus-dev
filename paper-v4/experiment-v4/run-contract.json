@@ -1,0 +1,137 @@
+{
+  "schema": "malleus.paper-v4.v4-run-contract/v1",
+  "status": "READY_FOR_PRODUCER",
+  "scope": {
+    "documents": 1,
+    "producer_loops": 1,
+    "staged_session_variant": false,
+    "new_multi_producer_matrix": false
+  },
+  "source": {
+    "source_id": "source:yu-2025-mid-atlantic-ridge",
+    "pdf_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "core_gate": {
+    "status": "P6_P7_P8_VERIFIED",
+    "execution_baseline": {
+      "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+      "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+      "paper_merge_commit": "f8d96123f86b2af41d9c67353f952d56565cf6af",
+      "paper_merge_tree": "c22387313a16b228f0e9c04e88651f42d0ce5bad"
+    },
+    "required_pieces": [
+      "FULL_DOMAIN_HISTORY_PROFILE",
+      "GROUNDED_PACKS_AND_PACK_GROUNDING",
+      "NASCENT_PROJECT_PLAYBOOK"
+    ],
+    "verified_pieces": {
+      "FULL_DOMAIN_HISTORY_PROFILE": {
+        "core_commit": "573c45b82725d6f444b70e5ff193302dac883e7b",
+        "core_tree": "6704031dea824572b4d7163ba477c33175397fe7",
+        "profile_id": "source-assertion",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "paper_audit": "PASS"
+      },
+      "GROUNDED_PACKS_AND_PACK_GROUNDING": {
+        "core_commit": "465924f3e6b0dee64aafeecaeb68cb5e8beb6b41",
+        "core_tree": "5281da97f17905da45e254fd044536cb67d3398e",
+        "governance_head": "sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc",
+        "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
+        "pack_sha256": {
+          "chronology": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
+          "metrology": "sha256:1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586",
+          "research": "sha256:c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e"
+        },
+        "paper_audit": "PASS"
+      },
+      "NASCENT_PROJECT_PLAYBOOK": {
+        "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+        "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+        "governance_head": "sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8",
+        "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "skill_sha256": "sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8",
+        "paper_audit": "PASS"
+      }
+    }
+  },
+  "history": {
+    "profile_id": "source-assertion",
+    "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
+    "origin": "PARTIAL_IMPORT",
+    "composition": "ONE_ATOMIC_CAPTURE_BATCH",
+    "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
+    "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
+    "modality_rule": "REPLAY_RECORD_TO_RETAINED_ASSERTION_TRACE_REQUIRED"
+  },
+  "producer": {
+    "session": "FRESH_SINGLE_SESSION",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "SHIPPED_DOMAIN_HISTORY_PROFILES",
+      "SHIPPED_GROUNDED_PACKS"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_ontology_revision_rounds": 2,
+    "revision_trigger": "SOURCE_LOCATED_TYPED_GAP",
+    "terminal_rule": "STOP_WHEN_ANOTHER_ADDITION_WOULD_REQUIRE_INVENTION"
+  },
+  "population": {
+    "questions_visible": false,
+    "constructible_types": "ALL_CONCRETE_ENTITY_AND_RELATION_TYPES",
+    "field_level_source_derivations": "REQUIRED",
+    "typed_gaps": "REQUIRED_WHEN_ASSERTION_IS_NOT_FORMALIZED",
+    "human_repair": "FORBIDDEN"
+  },
+  "query": {
+    "binding_owner": "PAPER_EVALUATOR",
+    "binding_time": "AFTER_POPULATION_AND_REPLAY_FREEZE",
+    "execution_state": "REPLAY_DERIVED_GRAPH_ONLY",
+    "source_reads": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "embedding_index": "FORBIDDEN",
+    "knowledge_state_identity": "EXCLUDED"
+  },
+  "evaluation": {
+    "questions_enter_at": "POST_REPLAY_QUERY_BINDING",
+    "method": "SOURCE_GROUNDED_HUMAN_INSPECTION",
+    "numeric_score": "FORBIDDEN",
+    "preliminary_inspector": "CODEX",
+    "paper_evidence_requires": "LUIS_RATIFICATION",
+    "competency_questions": {
+      "path": "paper-v4/experiment-v4/competency-questions.json",
+      "sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86",
+      "producer_visibility": "WITHHELD"
+    },
+    "review_protocol": {
+      "path": "paper-v4/evaluation-v4/review-protocol.json",
+      "sha256": "sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379"
+    }
+  },
+  "completion": [
+    "ONTOLOGY_DIAGNOSTIC_HISTORY",
+    "ACCEPTED_ONTOLOGY_AND_REVISIONS",
+    "DOCUMENT_CAPTURE_AND_CENSUS",
+    "POPULATION_PLAN_AND_TYPED_GAPS",
+    "ADMITTED_LEDGER",
+    "REOPEN_REPLAY_RECEIPT",
+    "POST_REPLAY_QUERY_BINDING",
+    "QUERY_RESULTS",
+    "SOURCE_GROUNDED_PRELIMINARY_INSPECTION",
+    "CLEAN_REPRODUCTION_RECEIPT",
+    "LEAN_MANUSCRIPT_AND_RENDERED_PDF"
+  ]
+}

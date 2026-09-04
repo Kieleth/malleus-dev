@@ -1,0 +1,55 @@
+{
+  "schema": "malleus.paper-v4.competency-questions/v2",
+  "status": "FROZEN_BEFORE_V4_PRODUCER",
+  "visibility": "WITHHELD_FROM_PRODUCER_UNTIL_POST_REPLAY",
+  "scope": {
+    "answer_surface": "REPLAY_DERIVED_NATIVE_GRAPH_QUERY_WITH_PROVENANCE_TRACE",
+    "source_support": "SELECTED_READING_TEXT_LAYER",
+    "figures": "EXCLUDED",
+    "tables": "EXCLUDED",
+    "free_form_synthesis": "EXCLUDED"
+  },
+  "questions": [
+    {
+      "id": "CQ-01",
+      "question": "Which observation network and campaign produced the microseismicity data, and how many instruments were deployed?",
+      "required_semantics": [
+        "observing_system",
+        "campaign",
+        "instrument_count",
+        "data_acquisition"
+      ]
+    },
+    {
+      "id": "CQ-02",
+      "question": "Which named ridge subsection is associated with the deep microseismicity, and where are the events relative to its ridge axis?",
+      "required_semantics": [
+        "named_region",
+        "earthquake_population",
+        "spatial_relation"
+      ]
+    },
+    {
+      "id": "CQ-03",
+      "question": "What earthquake-depth range and calculated primary-melt CO2 range are reported for the central association, including units and estimate status?",
+      "required_semantics": [
+        "bounded_quantity",
+        "unit",
+        "quantity_subject",
+        "observed_or_calculated_status"
+      ]
+    },
+    {
+      "id": "CQ-04",
+      "question": "What causal mechanism do the authors prefer for the deep mantle earthquakes, represented explicitly as a hypothesis rather than an established fact?",
+      "required_semantics": [
+        "ascending_melt",
+        "co2_degassing",
+        "volume_or_pressure_change",
+        "extensional_stress",
+        "earthquake_trigger",
+        "epistemic_status"
+      ]
+    }
+  ]
+}

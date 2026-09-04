@@ -1,0 +1,24 @@
+{
+  "schema": "malleus.paper-v4.active-test-manifest/v1",
+  "python": "CPYTHON_3_12_LOCKED",
+  "pythonpath": [
+    ".",
+    "src"
+  ],
+  "pytest_args": [
+    "--import-mode=importlib",
+    "-q"
+  ],
+  "paths": [
+    "paper-v4/environment",
+    "paper-v4/evaluation-v2",
+    "paper-v4/experiment-v4",
+    "paper-v4/test_publication_consistency.py"
+  ],
+  "excluded_roots": [
+    "research/ontology_driven_kg_realization/experiments/document_paper",
+    "paper-v4/experiment",
+    "paper-v4/experiment-v2",
+    "paper-v4/retired"
+  ]
+}

@@ -1,10 +1,18 @@
 # Malleus paper master plan
 
-Version: 1.1.0
+Version: 1.2.0
 
-Date: 2026-09-03
+Date: 2026-09-04
 
-Status: corrected run complete through Codex preliminary inspection, clean environment reproduction, and arXiv source plus rendered-PDF inspection under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification, public reachability of the exact paper snapshot, and final author review remain pending.
+Status: corrected v2 remains the selected evidence. The first KISS v4 producer
+run is frozen as a structural refusal after three fail-fast grounding failures
+exhausted its two-diagnostic budget. It produced no accepted ontology or
+population. Core classified aggregate grounding diagnostics and a neutral
+governed-history admission path as generic adopter gaps and is correcting them.
+A separate v4 rerun requires a new immutable Core coordinate and frozen run
+contract. It will keep one fresh single-session producer loop, typed gaps, and
+no question input before replay. V4 supersedes v2 only if the run, inspection,
+reproduction, and paper gates all pass.
 
 ## Objective
 
@@ -19,7 +27,13 @@ A reader should leave with four answers:
 
 ## Working claim
 
-For one fixed document, a fresh model proposes an ontology without seeing the evaluation questions. A separate fresh model later proposes a source-located population with those questions visible. Malleus compiles the ontology, validates the proposed change, records the decision, admits accepted events atomically, and rebuilds a graph by replay. An adopter-owned query surface returns typed rows from that replayed graph, and an identified evaluator inspects them against exact source blocks.
+For one fixed document, one fresh model session proposes an ontology and then a
+source-located document capture and population. The competency questions remain
+withheld until replay. Malleus compiles the ontology, retains the capture,
+validates the proposed change, records the decision, admits it atomically, and
+rebuilds a graph by replay. An adopter-owned query surface, bound only after
+replay, returns typed rows from that graph. An identified evaluator inspects
+each row and its provenance trace against exact source blocks.
 
 If the isolated query process opens no source text and no embedding index, the paper may report that bounded observation for this run. It will not claim that Malleus replaces RAG, answers arbitrary questions, or establishes source truth.
 
@@ -30,14 +44,36 @@ The paper contains one worked document:
 - Yu et al., *Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge*, Nature Communications, 2025.
 - One publisher PDF, 11 pages, retained locally and identified by SHA-256.
 - One selected text-layer reading produced by one pinned Python dependency.
-- One fresh-session ontology proposal from the selected reading without competency questions or question-derived semantic instructions, with compiler diagnostics returned at most twice.
+- One fresh single-session producer loop from the selected reading, without
+  competency questions or question-derived semantic instructions.
+- Ontology compilation with diagnostics returned at most twice, followed by no
+  more than two source-located, typed-gap revisions in the same session.
 - One recorded evaluator acceptance event carrying the compiled ontology digest and evaluator actor id.
-- One adopter-owned query binding fixed after ontology compilation and before population. It does not fix graph size or answer values and does not enter knowledge-state identity.
-- One fresh-session population proposal, with one block locator per value and at most one structural retry.
-- One generic construction recipe library. A recipe may encode construction form and types, never an answer value.
-- One typed change, ledger admission, disposal and replay of the derived in-memory graph, four queries, one source-grounded inspection, and one identified human ratification.
+- One model-authored capture and population in that producer loop, with one
+  selected-reading block locator per proposed value, explicit typed gaps, and
+  no fallback or human repair.
+- One atomic capture batch under the shipped `source-assertion` history profile.
+- One adopter-owned query binding created after population, admission, disposal,
+  reopen, and replay. It fixes types, relations, enums, and projected fields,
+  never graph size, record identifiers, locators, or answer values.
+- Four replay-derived queries, a public `trace_population_record` join for every
+  witness, one source-grounded inspection, and one identified human ratification.
 
-The published Small Shop correction fixture is an implementation baseline, not a second empirical case. Its research milestone is annotated tag `research/small-shop-correction-replay-v1`, tag object `449ba25964a88ead86cc1aec337be1631cad9471`, at commit `e94f45c74475948dfebdc89247bfb070de0b778d`. The document experiment is pinned to later Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`.
+The published Small Shop correction fixture is an implementation baseline, not
+a second empirical case. Its research milestone is annotated tag
+`research/small-shop-correction-replay-v1`, tag object
+`449ba25964a88ead86cc1aec337be1631cad9471`, at commit
+`e94f45c74475948dfebdc89247bfb070de0b778d`. The first v4 execution was bound
+to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+`6fc5e585e5058e7376ea1aef96fcb49b59107e5e`, merged only into the isolated
+paper branch at paper commit `f8d96123f86b2af41d9c67353f952d56565cf6af`.
+P6 passed at commit
+`573c45b82725d6f444b70e5ff193302dac883e7b`, tree
+`6704031dea824572b4d7163ba477c33175397fe7`. P7 has passed at commit
+`465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`, tree
+`5281da97f17905da45e254fd044536cb67d3398e`. P8 passed at the execution
+coordinate above, with installed skill digest
+`sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`.
 
 Excluded:
 
@@ -47,16 +83,25 @@ Excluded:
 - A general PDF ingestion product.
 - A retrieval comparison or general anti-embedding claim.
 - Cypher, SPARQL, question-answering Prolog, Semantic Re-entry, temporal correction, actions, effects, invoices, and payment.
-- A stable public compiler, mapping grammar, or wire-format promise.
+- A new query language, general mapping grammar, or stable private wire-format
+  promise.
 - Cross-language conformance.
 
 ## Six terms
 
-An **ontology** defines legal domain record types, properties, relations, and values. A **change set** is one immutable proposal containing ordered operations plus the source, evidence, contract, and prior-state coordinates needed to interpret them. A **ledger** is the append-only accepted history. **Replay** reconstructs accepted graph state from that history. A **locator** names the selected-reading block supporting one proposed value. A **query** is a deterministic graph read fixed before population.
+An **ontology** defines legal domain record types, properties, relations, and
+values. A **change set** is one immutable proposal containing ordered operations
+plus the source, evidence, contract, and prior-state coordinates needed to
+interpret them. A **ledger** is the append-only accepted history. **Replay**
+reconstructs accepted graph state from that history. A **locator** names the
+selected-reading block supporting one proposed value. A **query** is a
+deterministic graph read whose vocabulary binding is made after replay and does
+not enter accepted knowledge identity.
 
 ## Five identities
 
-The experiment freezes exactly five identity groups:
+The selected v2 evidence freezes exactly five identity groups. V4 keeps groups
+1 and 2, then replaces groups 3 through 5 only after its terminal run succeeds:
 
 1. Source PDF digest: `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`.
 2. Selected reading digest: `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`.
@@ -81,20 +126,60 @@ The retired answer key remains sealed historical material and leaves the active 
 
 ### Sequence
 
-1. **Isolation, complete.** Run on branch `codex/paper-v4-lean`, forward-merged with exact Core `f9052b4`. The PDF and private files are ignored.
-2. **Reading, complete.** `pypdf==6.16.2` reads the PDF text layer with `PdfReader(strict=True)` and `PageObject.extract_text()`. The projector changes only line endings, groups wrapped lines through a sentence, blank, or page boundary, and adds stable page/block locators. The selected reading has 186 blocks across 11 pages. It contains zero literal `CO,`. The prior raster and Tesseract path is retired and uncited.
-3. **Ontology, complete.** A question-independent fresh session received the selected reading plus generic Malleus ontology inputs, but no competency questions or question-derived semantic checklist. Attempt one was refused because `default_prefix` is outside the supported LinkML profile. The exact diagnostic was returned once; attempt two removed only that field and compiled into 4,146 validated facts. One event accepts its digest for population. This is one document-domain proposal, not a general builder or minimality result.
-4. **Query binding and recipes, complete.** The paper-owned binding fixes only ontology record types, relation types, enum values, and projected properties. It fixes no record id, answer value, locator, cardinality, or graph closure, and remains outside admission evidence and replay identity. Nineteen ontology-specific construction templates compile and materialize an arbitrary valid graph without document values.
-5. **Population, complete.** A different fresh session received only the corrected ontology, selected reading, ontology-specific generic recipes, four questions, and the closed task. Its first proposal passed the frozen envelope and ontology compiler without a retry. No human repair, content review, or fallback occurred.
-6. **Commitment, complete.** Compiled 47 provenance assertions, derived both checks, composed one 13-operation change without query evidence, and admitted it atomically to a 23-event history after both checks were satisfied.
-7. **Replay and query, complete.** The runner disposed the live objects, reopened the ledger, reproduced the graph, protocol state, and receipt, then queried the receipt-derived graph through the frozen adopter surface. The four row counts are `[0, 2, 4, 0]`; all guarded source-file, network, and embedding-import attempts are zero.
-8. **Source-grounded inspection, preliminary complete and human ratification pending.** The protocol was frozen before corrected query output. A separate fresh Codex session inspected the exact rows against the selected reading without ontology, population, provenance, replay receipt, oracle, score, manuscript, or paper-ledger access. Its preliminary labels are `NOT_EVALUABLE/NOT_RESPONSIVE`, `SUPPORTED/PARTIAL`, `SUPPORTED/RESPONSIVE`, and `NOT_EVALUABLE/NOT_RESPONSIVE` for CQ1 through CQ4. These labels are not paper evidence until Luis independently reviews the rows and source blocks, then ratifies or corrects the record. Report categories and reasoning, never an aggregate score.
-9. **Environment reproduction, complete.** A platform-specific lock fixes 89 distributions for CPython 3.12 on macOS arm64 and requires archive hashes. A new virtual environment installed only that lock, then reproduced the selected reading, all five public result files, and the private ledger byte for byte from the exact checkout. The complete document-paper and active v2 paper-local gate passed 184 tests. The lock identifies but does not vendor the interpreter or operating system; the ignored PDF and source checkout remain required inputs.
-10. **arXiv bundle, complete.** The lean LaTeX source compiles without warnings, undefined citations, or box overflow into an eight-page PDF with embedded fonts. The final render is `sha256:6b243bafd7331a896a2571b1bcdc24fcf46163014fd72e06c86efae26ca8b25a`, and every page passed visual inspection. A publication-consistency guard binds duplicated manuscript and LaTeX claims to the frozen v2 result files. The final clean paper-local gate passes 189 tests.
+1. **Isolation and reading, complete.** Work remains on
+   `codex/paper-v4-lean`. The PDF and source-bearing ledger are ignored. The
+   pinned `pypdf==6.16.2` text-layer path reproduces 186 blocks across 11 pages
+   at the frozen source and reading digests. Raster OCR and Tesseract remain
+   retired from the paper path.
+2. **First-run Core execution gate, complete.** P6 supplies the audited public
+   `source-assertion` profile and replay-to-source trace. P7 supplies the
+   audited metrology, chronology, and research packs plus mechanical grounding
+   and conformance. P8 supplies the audited generic nascent-project playbook.
+   The failed run remains bound to the exact immutable P8 coordinate above.
+3. **First producer loop, refused and frozen.** One fresh session received only the selected
+   reading, frozen Core playbook, shipped profiles, and shipped packs. It first
+   proposes and compiles the ontology. The runner may return typed compiler
+   diagnostics at most twice. One evaluator event accepts the compiled ontology
+   digest. Attempts 1 through 3 refused on successive direct-root grounding
+   subjects because the public rite returned one subject per pass. No ontology
+   was accepted and population did not start.
+4. **Corrected rerun, pending Core freeze.** After independent audit of an
+   aggregate grounding diagnostic and neutral checked admission path, freeze a
+   new paper contract and start a separate fresh session. If compilation
+   succeeds, the same session authors the document capture and neutral
+   population plan. Competency questions remain withheld throughout. A
+   source-located gap may trigger
+   no more than two additive ontology revisions in the same session. Candidate
+   captures and gaps are retained. Only the terminal population change is
+   admitted. The run stops when another addition would require invention.
+5. **Commitment and replay, pending.** The runner retains the exact reading,
+   profile, capture, plan, census, gaps, and acceptance evidence; composes and
+   checks one terminal change; admits it atomically; discards live state; then
+   reopens the ledger and reconstructs the contract and graph by replay.
+6. **Binding and query, pending.** After replay freezes, the evaluator binds the
+   four questions only to record types, relation types, enum values, directions,
+   and projected fields. Queries use the public replayed graph. Every witness is
+   joined through `trace_population_record` to the retained assertion, block,
+   modality, and attribution. Query execution reads no PDF, selected-reading
+   file, network resource, or embedding index.
+7. **Inspection, pending.** Codex prepares a preliminary record with separate
+   judgments for source support and question responsiveness. Luis alone may
+   ratify or correct it. No answer oracle, exact-match schema, or numeric score
+   enters the active path.
+8. **Reproduction and paper, pending.** A clean environment must reproduce the
+   selected reading, admitted ledger, replay receipt, query binding, query
+   output, and manuscript facts. The lean Markdown and LaTeX sources are then
+   reconciled, built, rendered page by page, and visually inspected.
 
 ### Fresh-session rules
 
-Ontology and population stages use new sessions with no earlier paper conversation. Each receives a declared input set and is instructed to access only those files, make no network call or delegation, and write only the requested output. This is a task boundary over a shared workspace and tool surface, not an operating-system sandbox. The exact model-visible files are copied into one retained input directory before the run. Observable producer and task coordinates are recorded; unobservable provider settings are named as limitations.
+The single producer loop uses a new session with no earlier paper conversation.
+It receives one declared input set and may access only those files, make no
+network call or delegation, and write only its owned staging directory. This is
+a task boundary over a shared workspace and tool surface, not an
+operating-system sandbox. Exact model-visible bytes and observable producer
+coordinates are retained. Provider settings that cannot be observed are named
+as limitations.
 
 ### Negative cases
 
@@ -123,7 +208,23 @@ The ontology is supported here only by compilation, structural population succes
 
 ## Implementation constraints
 
-The rebound Core baseline provides the private history and a pure domain-neutral KnowledgeChangeSet composer. The composer binds explicit sources, evidence, operations, valid time, and supersession to current history coordinates. It does not parse sources, choose domain semantics, run checks, admit, replay, or expose a public API. GraphRecipe lowering, document validation, queries, and the experiment runner remain paper-local.
+The first-run Core path publicly exposes ontology compilation, a neutral
+population plan, evidence retention, low-level change composition and
+admission, reopen, replay, native graph reads, and `trace_population_record`.
+It does not ship a neutral machine, history binding, or executor that derives
+its generic admission-check outcomes. Core accepted this as a generic adopter
+gap and is preparing a checked public helper. The shipped
+`source-assertion` profile fixes the paper's semantic unit as one atomic capture
+batch with `PARTIAL_IMPORT` origin and capture-order valid time. Core does not
+extract assertions, invent records, choose the paper's ontology, define its
+questions, or judge its answers. P7 and P8 supply the grounded packs and
+generic producer playbook used by v4.
+
+The active v4 runner uses only `malleus.compiler` public surfaces. The retired
+paper-local GraphRecipe path remains historical and cannot enter active tests or
+result identity. The paper still owns producer isolation, post-replay query
+binding, source-free query guards, source-grounded inspection, and manuscript
+claims.
 
 Required fields fail loudly. The runner cannot synthesize a source digest, locator, type, relation endpoint, prior state, transaction time, or answer when it is absent. Replacing an experimental mechanism removes its old active path. The retired OCR, recovery ontology, reviewer, fixed-closure query, and answer-encoding recipe remain under `paper-v4/retired/` for history and are excluded from tests and claims.
 
@@ -137,13 +238,16 @@ The corrected run reports replay equality, exact query rows, and zero guarded ac
 
 ## Retained artifacts
 
-Public repository material:
+Public repository material, retaining both the selected v2 evidence and the
+eventual v4 record:
 
 - this plan, raw paper-development ledger, and manuscript;
 - source manifest, URL, license, and digest, but not the PDF;
 - four competency questions;
 - pinned dependency configuration and text-layer extractor;
-- selected ontology, model-authored population, generic recipes, type-based query binding, runner, replay receipt, query outputs, Codex preliminary review record, ratification guide, and focused tests;
+- selected ontology, model-authored capture and population plan, typed gaps,
+  post-replay type binding, runner, replay receipt, traced query outputs, Codex
+  preliminary review record, ratification guide, and focused tests;
 - platform-specific input constraints, hash-checked transitive lock, clean-verification record, and guard tests;
 - lean arXiv LaTeX source, verified bibliography, build instructions, and publication-consistency guard;
 - concise reproduction instructions and claim-to-artifact index.
@@ -152,7 +256,7 @@ Private or evaluator-only material:
 
 - source PDF;
 - selected reading text;
-- source-bearing semantic ledger;
+- source-bearing semantic ledger and exact retained capture assertions;
 - sealed historical answer key and rebound locators, plus the retired typed score result;
 - private source-review material needed for human ratification.
 
@@ -172,9 +276,17 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Obtain identified human ratification of the inspection record.
-2. Publish the exact paper reproducer through an immutable tag or archive with a reachable URL.
-3. Perform the final author review and submit the arXiv bundle.
+1. Audit the corrected Core aggregate-grounding and neutral-admission boundary,
+   then bind a new immutable paper execution coordinate.
+2. Freeze a separate rerun contract and execute one fresh, question-free
+   producer loop from the selected reading, retaining typed gaps and no fallback.
+3. Dispose live state, reopen and replay the ledger, then bind and run
+   evaluator-owned queries against the replayed graph.
+4. Prepare source-grounded preliminary inspection for author ratification.
+5. Replace the selected Markdown and arXiv sources with the lean v4 draft,
+   reproduce from a clean checkout, and inspect every rendered PDF page.
+6. Publish the exact paper reproducer through an immutable tag or archive,
+   obtain final author review, and submit.
 
 ## Submission gate
 
@@ -194,6 +306,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.2.0, 2026-09-03: Accepted the KISS v4 execution cut under the author's overnight relay instruction. Selected one document and one producer loop, `source-assertion` with conservative `PARTIAL_IMPORT` origin, questions only after replay, typed gaps, no fallback, and no more than two evidence-triggered ontology revision rounds. The prior three-producer matrix remains diagnostic background. V2 remains selected until v4 passes its complete evidence and reproduction gates.
 - 1.1.0, 2026-09-03: Applied D-0018. Preserved the completed question-conditioned run as history, selected a versioned rerun from ontology acquisition, removed competency questions and derived semantic targets from ontology construction, placed adopter query surfaces after replay identity, withdrew automated exact-match scoring, and selected source-grounded inspection with explicit human ratification.
 - 1.0.0, 2026-09-02: Applied D-0017. Rebound the isolated paper branch to exact Core `f9052b4`, accepted the published Small Shop correction tag as bounded research evidence, and accepted the later private composer as a private implementation seam. Preserved the PDF exclusion, five identities, frozen model inputs, and claim boundary.
 - 0.9.0, 2026-09-02: Applied author decisions D1 through D6. Moved to a pinned PDF text-layer reading, clean Core worktree, five-identity budget, fresh model-authored population, compiler-only ontology gate, one evaluator acceptance event, type-based query binding, and no fallback. Retired raster OCR, hand recovery, adequacy review, fixed graph closure, and answer-encoding recipes. D1 completed at the selected-reading digest above.
