@@ -2,6 +2,7 @@
   "schema": "malleus.pack-grounding-rite/v0",
   "roles": ["PACK", "PROJECT"],
   "root_parents": ["Entity", "Event", "Signal", "Relation"],
+  "root_namespace": "https://malleus.dev/schema/",
   "annotation_key": "grounding",
   "annotation_tag": "grounding",
   "cited_fields": [

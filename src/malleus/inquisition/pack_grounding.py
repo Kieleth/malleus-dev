@@ -72,6 +72,7 @@ def _load_rite() -> tuple[Mapping[str, object], str]:
             "schema",
             "roles",
             "root_parents",
+            "root_namespace",
             "annotation_key",
             "annotation_tag",
             "cited_fields",
@@ -103,7 +104,7 @@ def _load_rite() -> tuple[Mapping[str, object], str]:
             raise ValueError("roles differ from the executable boundary")
         if rite["root_parents"] != ["Entity", "Event", "Signal", "Relation"]:
             raise ValueError("root parents differ from the Malleus primitives")
-        for field in ("annotation_key", "annotation_tag"):
+        for field in ("root_namespace", "annotation_key", "annotation_tag"):
             if not isinstance(rite[field], str) or not rite[field]:
                 raise ValueError(f"{field} must be nonempty text")
     except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
@@ -114,6 +115,7 @@ def _load_rite() -> tuple[Mapping[str, object], str]:
 _RITE, PACK_GROUNDING_RITE_IDENTITY = _load_rite()
 _ROLES = frozenset(_RITE["roles"])
 _ROOT_PARENTS = frozenset(_RITE["root_parents"])
+_ROOT_NAMESPACE = str(_RITE["root_namespace"])
 _CITED_FIELDS = frozenset(_RITE["cited_fields"])
 _CITED_WITH_INVENTIONS_FIELDS = frozenset(_RITE["cited_with_inventions_fields"])
 _VOCABULARY_FIELDS = frozenset(_RITE["vocabulary_fields"])
@@ -318,6 +320,20 @@ def _document(source: bytes) -> Mapping[str, object]:
     return _mapping(root, "schema")
 
 
+def _direct_root_parent(
+    value: object,
+    prefixes: Mapping[str, object],
+) -> str | None:
+    if not isinstance(value, str):
+        return None
+    if value in _ROOT_PARENTS:
+        return value
+    prefix, separator, local = value.partition(":")
+    if not separator or local not in _ROOT_PARENTS:
+        return None
+    return local if prefixes.get(prefix) == _ROOT_NAMESPACE else None
+
+
 _DOCUMENTATION_FIELDS = frozenset(
     {"annotations", "comments", "description", "examples", "notes", "title"}
 )
@@ -435,9 +451,10 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
         grounded.append(source_id)
     else:
         classes = _mapping(document.get("classes", {}), "schema.classes")
+        prefixes = _mapping(document.get("prefixes", {}), "schema.prefixes")
         for name, raw_class in classes.items():
             body = _mapping(raw_class, f"classes.{name}")
-            if body.get("is_a") not in _ROOT_PARENTS:
+            if _direct_root_parent(body.get("is_a"), prefixes) is None:
                 continue
             try:
                 _grounding(body.get("annotations"), str(name))
