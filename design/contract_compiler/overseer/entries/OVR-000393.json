@@ -1,0 +1,77 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:aa1f62d24ee404700113a6e551a3a7a620e2faa79d968997891a3bd969f304b5",
+        "before_digest": "sha256:f46313b54c62d27ac4978706f65801d8c228f2e47f9443b80b19a03358f58fcb",
+        "change": "MODIFIED",
+        "path": ".gitignore"
+      },
+      {
+        "after_digest": "sha256:2d518060f6e55778c8f426fda54a7c056ad17557bad2340dded5be087052dc5f",
+        "before_digest": "sha256:14205891c83d73cff32fdc82b02ac171141ff89a8b34ae4d4e0b33b2abdb97ae",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c97e3c65c4d1a455477277a33bb97e039c60fc0f06a09386ee86002ef31b97ad",
+  "entry_id": "OVR-000393",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:66e6f00f3f273be1e0e8a254bf483eb6e55cce26cb15e0efdef012b514061093",
+  "recorded_at": "2026-09-04T18:45:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "bbcc25311ce265d9e3095c2e292c279b9e6b1612",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1e837f8fa5da54b363ea287b2f0d6ca621be705c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ca8c9de276808ec56d0237f57192c942712fbd1b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ad7be7dcb9f6ec66608dd815ead4e456b6331c0b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000392",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 393,
+  "subject": {
+    "id": "paper-branch-merge-repin",
+    "type": "DOCUMENT"
+  },
+  "summary": "Re-pin the two governed documents the paper branch merges changed.",
+  "why": "paper-v4-multimodel at ca8c9de under tag paper-v4-multimodel-v2, the paper of record, and the paper thread's 23 v4 commits, codex/paper-v4-lean at ad7be7d, merged into main as bbcc253 and 1e837f8. They change exactly two documents this ledger pins; check refused until both were re-pinned here. .gitignore, pinned since OVR-000173 with the CC-000 CI scaffold, gains one rule keeping paper source PDFs local; paper-v4/source/source-manifest.json and its digest stay the retained reference. pyproject.toml, last pinned by OVR-000387, gains pypdf==6.16.2 in the research extra, which the paper's text-layer reading needs, and \".\" ahead of \"src\" on pytest pythonpath, which lets the paper harness import from the repository root. testpaths is unchanged and the merges add nothing under src/ or tests/, so the configured suite runs exactly what it ran before. The paper's own tests, under paper-v4/ and research/ontology_driven_kg_realization/experiments/document_paper/, stay outside it: they need private inputs held in the paper worktrees and are pinned to Core coordinate f9052b4. paper-v4/manuscript.md at 1.2.1 stays the paper per decision 3 of handover/2026-09-04-overseer-takeover.md."
+}
