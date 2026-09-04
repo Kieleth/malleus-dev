@@ -333,6 +333,46 @@ def test_edited_pack_conformance_refuses_a_new_mixin_on_an_existing_class() -> N
     assert "classes.QuantityValue.mixins['RequiredTag']" in caught.value.detail
 
 
+@pytest.mark.parametrize(
+    "mutate,expected_path",
+    [
+        (
+            lambda source: source["classes"]["QuantityValue"]["mixins"].append(
+                "Quantified"
+            ),
+            "classes.QuantityValue.mixins['Quantified']",
+        ),
+        (
+            lambda source: source["classes"]["Quantified"]["slots"].append(
+                "quantity_kind"
+            ),
+            "classes.Quantified.slots['quantity_kind']",
+        ),
+    ],
+)
+def test_edited_pack_conformance_refuses_duplicate_existing_list_member(
+    mutate,
+    expected_path: str,
+) -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    mutate(edited)
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_conformance(
+            yaml.safe_dump(edited, sort_keys=False).encode(),
+            reference=reference,
+        )
+
+    assert (
+        caught.value.reason is api.PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED
+    )
+    assert expected_path in caught.value.detail
+
+
 def test_pack_without_grounding_refuses_with_typed_reason() -> None:
     api = _inquisition()
     with pytest.raises(api.PackGroundingRefusal) as caught:
