@@ -75,12 +75,34 @@ def test_execution_remains_blocked_until_core_gate_is_bound() -> None:
 
     assert contract["status"] == "WAITING_FOR_CORE_GATE"
     gate = contract["core_gate"]
-    assert gate["status"] == "P6_VERIFIED_P7_P8_REQUIRED"
+    assert gate["status"] == "P6_P7_VERIFIED_P8_REQUIRED"
     assert gate["verified_pieces"]["FULL_DOMAIN_HISTORY_PROFILE"] == {
         "core_commit": "573c45b82725d6f444b70e5ff193302dac883e7b",
         "core_tree": "6704031dea824572b4d7163ba477c33175397fe7",
         "profile_id": "source-assertion",
         "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "paper_audit": "PASS",
+    }
+    assert gate["verified_pieces"]["GROUNDED_PACKS_AND_PACK_GROUNDING"] == {
+        "core_commit": "465924f3e6b0dee64aafeecaeb68cb5e8beb6b41",
+        "core_tree": "5281da97f17905da45e254fd044536cb67d3398e",
+        "governance_head": (
+            "sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc"
+        ),
+        "grounding_rite_sha256": (
+            "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709"
+        ),
+        "pack_sha256": {
+            "chronology": (
+                "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1"
+            ),
+            "metrology": (
+                "sha256:1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586"
+            ),
+            "research": (
+                "sha256:c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e"
+            ),
+        },
         "paper_audit": "PASS",
     }
 

@@ -1669,3 +1669,43 @@ The focused contract gate passes 9 tests; the complete active paper gate passes
 Boundary: This entry records no new author decision and does not bump the master
 plan version. It does not bind unfinished P7 or P8 bytes, create population
 facts, alter selected v2 evidence, or start the producer run.
+
+### E-0108, P7 freezes the optional grounded vocabulary layer
+
+Date: 2026-09-04
+
+Sources: Core commit `465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`,
+tree `5281da97f17905da45e254fd044536cb67d3398e`; governance entry
+`OVR-000383` at
+`sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc`;
+the shipped metrology, chronology, and research packs; their grounding and
+conformance rites; exact clean-checkout test and package receipts; and two
+independent detached audits.
+
+Observation: The three optional packs remain exact-source inputs rather than
+protocol vocabulary. Their SHA-256 identities are respectively
+`1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586`,
+`6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1`,
+and `c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e`.
+The research pack supplies source modality, claim, observation, instrument,
+campaign, sample, source, evidence, and research-relation vocabulary.
+Metrology supplies bounded quantities, units, counts, ratios, and determination
+basis. Chronology supplies domain-time extents distinct from ledger time.
+
+Audit: The final cut closes the observed receipt-to-compiler divergences for
+preserved declaration lists, imports, direct-root CURIE aliases, and unrelated
+class annotations. It passes 38 focused pack tests, the exact 253-test Small
+Shop and pack slice, 900 compiler and inquisitor tests with one declared skip,
+and 485 documentation, integration, and ledger tests. A clean Python 3.12
+wheel install resolves, grounds, and compiles all three packs. Direct and
+sdist-rebuilt wheels agree, and current examples reproduce while the historic
+RET-010 receipt remains byte-identical.
+
+Boundary: The grounding rite checks declared citation structure, not the
+intellectual fitness of a borrowed term. The packs are optional. They do not
+select domain-history meaning, populate a graph, admit Events, implement
+Semantic Re-entry, or establish semantic equivalence for an edited copy.
+
+Impact: P7 is verified. The active v4 run remains blocked only on P8's frozen
+generic nascent-project playbook. No population fact or manuscript result is
+created, and the master-plan version does not change.

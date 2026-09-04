@@ -5,9 +5,10 @@ Version: 1.2.0
 Date: 2026-09-03
 
 Status: corrected v2 remains the selected evidence. The author has authorized one
-KISS v4 document run. Core P6 now verifies the `source-assertion` history
-profile and public replay-to-source trace. Execution waits only for the frozen
-P7 grounded packs and P8 nascent-project playbook. V4 uses one fresh
+KISS v4 document run. Core P6 verifies the `source-assertion` history profile
+and public replay-to-source trace. P7 verifies the three grounded optional
+packs and their grounding and conformance rites. Execution waits only for the
+frozen P8 nascent-project playbook. V4 uses one fresh
 single-session producer loop, typed gaps, and no question input before replay.
 It supersedes v2 only if the run, inspection, reproduction, and paper gates all
 pass.
@@ -65,7 +66,9 @@ a second empirical case. Its research milestone is annotated tag
 is still based on `f9052b4`. The v4 run will bind one exact Core coordinate only
 after P7 and P8 pass immutable paper audits. P6 has passed at commit
 `573c45b82725d6f444b70e5ff193302dac883e7b`, tree
-`6704031dea824572b4d7163ba477c33175397fe7`.
+`6704031dea824572b4d7163ba477c33175397fe7`. P7 has passed at commit
+`465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`, tree
+`5281da97f17905da45e254fd044536cb67d3398e`.
 
 Excluded:
 
@@ -123,11 +126,11 @@ The retired answer key remains sealed historical material and leaves the active 
    pinned `pypdf==6.16.2` text-layer path reproduces 186 blocks across 11 pages
    at the frozen source and reading digests. Raster OCR and Tesseract remain
    retired from the paper path.
-2. **Core execution gate, in progress.** P6 is audited. It supplies the public
-   `source-assertion` profile and replay-to-source trace. P7 must freeze grounded
-   metrology, chronology, and research packs plus mechanical grounding and
-   conformance. P8 must freeze the generic nascent-project playbook. The paper
-   binds no moving Core coordinate.
+2. **Core execution gate, in progress.** P6 supplies the audited public
+   `source-assertion` profile and replay-to-source trace. P7 supplies the
+   audited metrology, chronology, and research packs plus mechanical grounding
+   and conformance. P8 must freeze the generic nascent-project playbook. The
+   paper binds no moving Core coordinate.
 3. **One producer loop, pending.** One fresh session receives only the selected
    reading, frozen Core playbook, shipped profiles, and shipped packs. It first
    proposes and compiles the ontology. The runner may return typed compiler
