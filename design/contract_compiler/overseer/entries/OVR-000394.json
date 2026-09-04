@@ -1,0 +1,91 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:df96be44f67dd11ac06d516f24c751159746285d5ae91e43bef3fecf0551948c",
+        "before_digest": "sha256:2e0c936448f18b076fc7fef77e55e2428f73576e801bb6afc81f50c3d685458c",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:2481ee21206dacdc7f8fc54a6c164850f09a59dc862db658da8bca32bddcfd82",
+        "before_digest": "sha256:202eee1bf98ecea6003dffc18d0f191474893599ea43c503a9bc45b8b8543a2f",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:4d30f11102b8381266200a15761a88de6065ff4a5178ab786ad18fb0eb3503f4",
+  "entry_id": "OVR-000394",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c97e3c65c4d1a455477277a33bb97e039c60fc0f06a09386ee86002ef31b97ad",
+  "recorded_at": "2026-09-04T20:10:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "77cd982bc87ab8705f67ea93e297601248adb4a2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "28fe73d00c0fa61b09df316b00f5514600e431e3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1603233375680020aedb2f1477ab7f29b5118183",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e2735e5cc286c846714730a20d94f0bc9387fd7c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0d4f3029016104b057a0f334456328d0928e1a3b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5fc6a1e70b9b68235a8276ed3f87194e8001f73d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d877503f5f4f357db250d27eba564c3d61414f47",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d04dde38e0469d689e61371504bfdd5f357c4e21",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000392",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 394,
+  "subject": {
+    "id": "acolyte-capture-interface-facts",
+    "type": "DOCUMENT"
+  },
+  "summary": "State the capture interface facts a fresh producer had to discover by refusal.",
+  "why": "Run-02's producer spent two structural returns and two of three ontology attempts on facts the skill does not carry. Four are now in it, each behind a failing guard first. The adapter digests the reading_bytes it is handed and compares that against capture.reading_sha256, so a capture names the raw declared input bytes; a canonical re-encoding refuses at READING_MISMATCH. Every properties key and a relation's two endpoints need a formalization target, type and id do not, and UNDERIVED_FIELD returns one field per refusal. Step 3 shows a class-level grounding block on a class extending Entity directly, its three closed value forms and closed per-entry vocabulary fields, and says DIRECT_ROOT_GROUNDING_REQUIRED aggregates while a shape defect comes back alone; a guard runs that block through validate_pack_grounding at role PROJECT. The template gains an events envelope and claims only what the code admits: events need the profile bound, participations an EventParticipation type, and no bound profile refuses FAMILY_NOT_ADMITTED. Step 4 separates provenance locators from identifiers the source reports as domain facts. No subject-relation rule was added; that design is open."
+}
