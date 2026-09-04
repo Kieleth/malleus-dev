@@ -1884,6 +1884,50 @@ class TestSkillsAreInstallable:
         assert "malleus-compiler contract" in installed
         assert "neutral population plan" in installed
 
+    def test_nascent_playbook_names_live_python_and_cli_surfaces(
+        self, tmp_path, capsys
+    ):
+        from importlib import import_module
+
+        compiler = import_module("malleus.compiler")
+        required = {
+            "DOCUMENT_CAPTURE_GRAMMAR",
+            "KnowledgeChangeHistory",
+            "PopulationPreparation",
+            "adapt_document_assertions",
+            "compile_contract_revision",
+            "compile_population_plan",
+            "prepare_population_change",
+            "trace_population_record",
+        }
+        assert required <= set(compiler.__all__)
+        assert all(hasattr(compiler, name) for name in required)
+        assert callable(compiler.KnowledgeChangeHistory.admit)
+        assert callable(compiler.KnowledgeChangeHistory.reopen)
+
+        assert main(
+            ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+        ) == 0
+        capsys.readouterr()
+        pack = bundled_ontology_path("packs", "metrology.yaml")
+        assert main(["pack-grounding", str(pack), "--role", "PACK"]) == 0
+        capsys.readouterr()
+        assert main(["pack-conformance", str(pack), "--against", str(pack)]) == 0
+        capsys.readouterr()
+
+        compiler_cli = import_module("malleus.compiler_cli")
+        arguments = compiler_cli._parser().parse_args(
+            [
+                "contract",
+                "--root",
+                "project",
+                "--source",
+                "project",
+                str(tmp_path / "project.yaml"),
+            ]
+        )
+        assert arguments.command == "contract"
+
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
         out = capsys.readouterr().out
