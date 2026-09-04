@@ -1793,11 +1793,17 @@ class TestSkillsAreInstallable:
             "pack-conformance",
             "extend a pack concept before extending root",
             "state-version`, `source-assertion`, or `object-event",
+            "Steps 6 through 9 are the governed-history branch",
+            "choose an exact history profile before proposing the ontology",
+            "schema-only or typed-graph-only adoption",
+            "stop after step 5",
             "malleus-compiler contract",
             "Keep instances out of schema vocabulary",
             "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
             "Labels identify records",
             "document capture",
+            "coverage of the retained reading is the objective",
+            "never the smallest query- or answer-changing subset",
             "neutral population plan",
             "every concrete Entity and Relation type",
             "canonical_census_bytes",
@@ -1825,6 +1831,13 @@ class TestSkillsAreInstallable:
             "Stop when another addition would require invention",
             "incomplete captures, gaps, and typed refusals as results",
             "query-shaped vocabulary",
+            "current private-v0 shape, not a stable wire",
+            "INTERVAL_NOT_EXPRESSIBLE",
+            "AGGREGATE_ONLY",
+            "MODALITY_NOT_EXPRESSIBLE",
+            "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+            "TYPE_ABSENT",
+            "RELATION_ABSENT",
         )
         for phrase in required:
             assert phrase in section
@@ -1883,6 +1896,91 @@ class TestSkillsAreInstallable:
         assert "## Starting a project with no schema" in installed
         assert "malleus-compiler contract" in installed
         assert "neutral population plan" in installed
+
+    def test_nascent_document_template_runs_through_the_public_adapter(self):
+        from hashlib import sha256
+        from importlib import import_module
+
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        template_region = skill.split(
+            "<!-- malleus-nascent-document-template:start -->", 1
+        )[1].split("<!-- malleus-nascent-document-template:end -->", 1)[0]
+        template = json.loads(template_region.split("```json", 1)[1].split("```", 1)[0])
+        assert template["schema"] == "malleus.nascent-document-example/private-v0"
+        assert template["accepted_gap_kinds"] == [
+            "INTERVAL_NOT_EXPRESSIBLE",
+            "AGGREGATE_ONLY",
+            "MODALITY_NOT_EXPRESSIBLE",
+            "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+            "TYPE_ABSENT",
+            "RELATION_ABSENT",
+        ]
+
+        reading_bytes = json.dumps(
+            template["reading"],
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode()
+        capture = template["capture"]
+        assert capture["reading_sha256"] == "sha256:" + sha256(
+            reading_bytes
+        ).hexdigest()
+        assertion = capture["assertions"][0]
+        assert set(assertion) == {
+            "assertion_time",
+            "block",
+            "domain_time",
+            "formalized_by",
+            "gaps",
+            "id",
+            "modality",
+            "statement",
+        }
+        assert set(assertion["gaps"][0]) == {"kind", "statement"}
+        assert set(template["records"]) == {"entities", "relations"}
+        assert set(template["records"]["entities"][0]) == {
+            "id",
+            "properties",
+            "type",
+        }
+        assert set(template["records"]["relations"][0]) == {
+            "id",
+            "properties",
+            "source_id",
+            "target_id",
+            "type",
+        }
+
+        compiler = import_module("malleus.compiler")
+        result = compiler.adapt_document_assertions(
+            reading_bytes=reading_bytes,
+            capture_bytes=json.dumps(
+                capture,
+                allow_nan=False,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode(),
+            capture_id=template["capture_id"],
+            plan_id=template["plan_id"],
+            contract_identity=template["contract_identity"],
+            records=template["records"],
+            supersessions=template["supersessions"],
+        )
+        plan = json.loads(result.canonical_plan_bytes)
+        census = json.loads(result.canonical_census_bytes)
+        assert plan["records"] == template["records"]
+        assert plan["gaps"][0]["kind"] == "MODALITY_NOT_EXPRESSIBLE"
+        assert census["blocks"] == {"block:1": "REVIEWED"}
+        assert census["assertions"] == {
+            "FULLY_FORMALIZED": 0,
+            "PARTLY_FORMALIZED": 1,
+            "UNFORMALIZED": 0,
+        }
 
     def test_nascent_playbook_names_live_python_and_cli_surfaces(
         self, tmp_path, capsys
