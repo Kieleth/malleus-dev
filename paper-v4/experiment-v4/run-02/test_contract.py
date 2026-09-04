@@ -514,7 +514,9 @@ def test_the_ontology_run_result_records_three_attempts_and_two_returns() -> Non
         HERE / "ontology-run/grounding-receipt.json"
     )
     assert result["population_started"] is True
-    assert result["stage_acceptance_non_claim"] == "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY"
+    assert (
+        result["stage_acceptance_non_claim"] == "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY"
+    )
 
 
 def test_the_accepted_surface_carries_no_event_type() -> None:
@@ -536,9 +538,10 @@ def test_the_run_result_is_admitted_replayed_and_binds_the_frozen_stage() -> Non
     assert result["status"] == "ADMITTED_AND_REPLAYED"
     assert result["run_id"] == "run-02"
     assert result["actor_id"] == "actor:overseer-run-02"
-    assert result["transaction_time"] == (
-        HERE / "results/transaction-time.txt"
-    ).read_text(encoding="utf-8").strip()
+    assert (
+        result["transaction_time"]
+        == (HERE / "results/transaction-time.txt").read_text(encoding="utf-8").strip()
+    )
     assert result["ontology_sha256"] == _digest(HERE / "ontology-run/ontology-03.yaml")
     assert result["validated_contract_sha256"] == _digest(
         HERE / "ontology-run/validated-contract.json"
@@ -549,7 +552,9 @@ def test_the_run_result_is_admitted_replayed_and_binds_the_frozen_stage() -> Non
         "export_records": True,
     }
     assert result["admitted_receipt_sha256"] == result["replay_receipt_sha256"]
-    assert result["trace_summary_sha256"] == _digest(HERE / "results/trace-summary.json")
+    assert result["trace_summary_sha256"] == _digest(
+        HERE / "results/trace-summary.json"
+    )
     assert result["ledger_event_count"] == 14
     assert result["graph"] == {
         "entities": 419,
