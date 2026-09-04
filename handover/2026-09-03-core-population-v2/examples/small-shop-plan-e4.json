@@ -47,7 +47,7 @@
   "grammar": "malleus.population-plan/private-v0",
   "history_profile": {
     "profile_id": "state-version",
-    "sha256": "sha256:a6a12681534884f17f233aaa2bde382d730e2496c17216aa3b3ae8c24c9a1da8"
+    "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
   },
   "plan_id": "plan:shop:B:e4",
   "records": {

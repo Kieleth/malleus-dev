@@ -52,7 +52,7 @@
   "evidence": [
     {
       "evidence_id": "capture:inspection-note",
-      "sha256": "sha256:44b1936e98870f6e74801f1bf701f5a9823f3309791b6a42297d10ec05902a0f"
+      "sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99"
     }
   ],
   "gaps": [
@@ -78,7 +78,7 @@
   "grammar": "malleus.population-plan/private-v0",
   "history_profile": {
     "profile_id": "source-assertion",
-    "sha256": "sha256:1a24e12fc35b8a88dad634f4b19387cb451a3bfbe35cf7b9021159310a142f3c"
+    "sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
   },
   "plan_id": "plan:inspection-note:1",
   "records": {
@@ -112,13 +112,13 @@
   },
   "sources": [
     {
-      "sha256": "sha256:bb53392a52103dd6cc82e220cf85a4580d8da6f1140c8a43b07719aaaa27ca48",
+      "sha256": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745",
       "source_id": "source:inspection-note"
     }
   ],
   "supersessions": [],
   "valid_time": {
-    "kind": "INSTANT",
-    "value": "2026-03-02T00:00:00Z"
+    "kind": "ORDER_ONLY",
+    "value": "capture:inspection-note"
   }
 }

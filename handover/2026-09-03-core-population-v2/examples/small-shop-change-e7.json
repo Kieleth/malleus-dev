@@ -1,20 +1,20 @@
 {
-  "base_acceptance_head": "sha256:130df0365f96457bdc190ff0c56bb55ac86aac99d55ea60396393a12d2133ced",
+  "base_acceptance_head": "sha256:0fd7fb0745f0f6c8ce405d04073980b65f56924bdfc688ada7d38f4238dcec23",
   "base_accepted_state_digest": "sha256:4e9dd147de37bb504ebcd7935425ade2614485b7292d74704e981493b5e31dea",
   "base_ledger_event_count": 13,
-  "base_ledger_head": "sha256:5f60b702942b9b7e21bb7b2fa0d8c4133ec691d368ef0d373e269ab5145c5225",
-  "base_materialization_head": "sha256:8b5a94aa66ff0724aab38f9b8a1cb8bdfb2f1a0fa480ac62234684a77997dce3",
+  "base_ledger_head": "sha256:96f8ae5601a2a5dfbf528685af61f75c920edbbb39757255d22a56c71a839351",
+  "base_materialization_head": "sha256:c5c857330d073689f882bda555a389641aa9aed2ba296f0bcd238157bd3e96eb",
   "change_set_id": "change:plan:shop:B:e7",
   "contract_identity": "sha256:01470c0b41aa26720fb33c82fd65d3d00a5c26354db85b527fa6d7a79dc9beb2",
   "contract_kind": "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0",
   "evidence": [
     {
       "evidence_id": "profile:state-version",
-      "sha256": "sha256:a6a12681534884f17f233aaa2bde382d730e2496c17216aa3b3ae8c24c9a1da8"
+      "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"
     },
     {
       "evidence_id": "plan:shop:B:e7",
-      "sha256": "sha256:5aaf2835fbc058930bef24aea348a544d0375ca4edbccbf647e3e6dbc5ad9d67"
+      "sha256": "sha256:e517152ec06e666ab6a7e1cf73aaa5f463fecfc1994c523a0c9c9f2a48dcdd0a"
     }
   ],
   "grammar": "malleus.knowledge-change-set/private-v0",

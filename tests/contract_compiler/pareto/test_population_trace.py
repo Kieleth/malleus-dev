@@ -14,6 +14,7 @@ from tests.contract_compiler.pareto.test_document_assertion_adapter import _inpu
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _admit_record_change,
     _anchored_history,
+    _binding_payload,
     _record_change,
 )
 from tests.contract_compiler.pareto.test_public_compiler import (
@@ -26,6 +27,10 @@ from tests.contract_compiler.pareto.test_public_compiler import (
     _prepare_and_admit,
     _protocol_events,
     _runtime,
+)
+from tests.contract_compiler.pareto.test_protocol_machine import (
+    _effective,
+    _load_policy,
 )
 
 
@@ -72,22 +77,21 @@ def _small_shop_replay(tmp_path: Path):
 def _retain_document_inputs(history, compiled, partial, reading: bytes, capture: bytes):
     anchors = (
         (
-            "artifact:validated-contract",
+            "validated-contract-artifact",
             compiled.artifact.artifact_bytes,
             "VALIDATED_CONTRACT",
         ),
         (
-            "artifact:partial-contract",
+            "contract-artifact",
             partial.canonical_bytes,
             "PARTIAL_EFFECTIVE_CONTRACT",
         ),
         (
-            "artifact:history-binding",
+            "history-binding-artifact",
             history.binding.canonical_bytes,
             "KNOWLEDGE_HISTORY_BINDING",
         ),
-        ("capture:inspection-note", capture, "RETAINED_EVIDENCE"),
-        ("artifact:inspection-note", reading, "SOURCE_ARTIFACT"),
+        ("source-artifact", reading, "SOURCE_ARTIFACT"),
     )
     for record_id, content, role in anchors:
         _anchor(
@@ -104,12 +108,22 @@ def _retain_document_inputs(history, compiled, partial, reading: bytes, capture:
         history,
         _event(
             "SOURCE_REGISTERED",
-            artifact_id="artifact:inspection-note",
+            artifact_id="source-artifact",
             source_id="source:inspection-note",
             source_identity=_digest(reading),
         ),
         reading,
         "RETAINED_SOURCE",
+    )
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="capture:inspection-note",
+            artifact_identity=_digest(capture),
+        ),
+        capture,
+        "RETAINED_EVIDENCE",
     )
 
 
@@ -117,7 +131,6 @@ def _document_replay(
     tmp_path: Path,
     *,
     first_assertion_modality: str = "STATED",
-    assertion_times: dict[str, dict[str, str]] | None = None,
 ):
     api = _api()
     compiled = api.compile_linkml_contract(
@@ -132,16 +145,31 @@ def _document_replay(
             ),
         },
     )
-    history, partial, policy = _runtime(
-        api, compiled, tmp_path / "document-trace.jsonl"
+    partial = _effective(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
     )
+    history = api.KnowledgeChangeHistory(
+        tmp_path / "document-trace.jsonl",
+        partial_contract=partial,
+        contract_view=compiled.view,
+        binding=api.KnowledgeChangeHistoryBinding.from_bytes(
+            _canonical(_binding_payload())
+        ),
+    )
+    policy = _load_policy()
     reading, capture, plan, _ = _inputs()
     capture["assertions"][0]["modality"] = first_assertion_modality
-    if assertion_times is not None:
-        for assertion in capture["assertions"]:
-            assertion.update(assertion_times[assertion["id"]])
-    reading_bytes = _canonical(reading)
-    capture_bytes = _canonical(capture)
+    uses_committed_capture = first_assertion_modality == "STATED"
+    reading_bytes = (
+        (EXAMPLES / "reading.json").read_bytes()
+        if uses_committed_capture
+        else _canonical(reading)
+    )
+    capture_bytes = (
+        (EXAMPLES / "document-capture.json").read_bytes()
+        if uses_committed_capture
+        else _canonical(capture)
+    )
     adapted = api.adapt_document_assertions(
         reading_bytes=reading_bytes,
         capture_bytes=capture_bytes,
@@ -151,7 +179,10 @@ def _document_replay(
         records=plan["records"],
         supersessions=plan["supersessions"],
     )
-    assert adapted.canonical_plan_bytes == _canonical(plan)
+    if uses_committed_capture:
+        assert reading_bytes == _canonical(reading)
+        assert capture_bytes == _canonical(capture)
+        assert adapted.canonical_plan_bytes == _canonical(plan)
     plan = json.loads(adapted.canonical_plan_bytes)
     _retain_document_inputs(history, compiled, partial, reading_bytes, capture_bytes)
     gaps_id = f"{plan['plan_id']}:gaps"
@@ -182,8 +213,10 @@ def _document_replay(
         actor_id="actor:public-adopter",
     )
     assert prepared.change_set is not None
-    expected_change = json.loads((EXAMPLES / "document-change.json").read_bytes())
-    assert prepared.change_set.canonical_bytes == _canonical(expected_change)
+    if uses_committed_capture:
+        expected_change = json.loads((EXAMPLES / "document-change.json").read_bytes())
+        actual_change = json.loads(prepared.change_set.canonical_bytes)
+        assert actual_change == expected_change
     history.admit(
         change_set=prepared.change_set,
         machine_events=_protocol_events(

@@ -20,7 +20,13 @@ source bytes  →  adapter (source-specific)  →  population plan (neutral, Cor
               →  KnowledgeChangeSet (existing grammar)  →  ledger  →  replayed graph
 ```
 
-Two consumers with different shapes, both executed today at HEAD a7ccf3b (section "Evidence"): Small Shop rows through a row mapping, and a three-block inspection note through the document adapter. Same plan grammar, same lowering, same admission, same replay. Small Shop has no prose and no verbatim clause; the plan does not ask for one.
+Two consumers with different shapes were first executed at HEAD a7ccf3b
+(section "Evidence"): Small Shop rows through a row mapping, and a three-block
+inspection note through the document adapter. P6 later refreshed the runnable
+examples to the full shipped profiles and public compiler facade. The exact
+example bytes are now exercised without test-time rewriting. Both consumers
+still use the same plan grammar, lowering, admission, and replay. Small Shop
+has no prose and no verbatim clause; the plan does not ask for one.
 
 ## The population plan
 
@@ -78,7 +84,11 @@ The lowering takes the plan and a base-state view: the replay's existing record 
 
 ## The minimal profile artifact
 
-Five fields, closed: `grammar` (`malleus.domain-history-profile/private-v0`), `profile_id`, `semantic_unit` in {ASSERTION, STATE_VERSION, OCCURRENCE, COMMITMENT, COMPOSITION}, `origin` in {EMPTY, SNAPSHOT, PARTIAL_IMPORT, HISTORICAL_RECONSTRUCTION} (the four origin semantics of `design/KNOWLEDGE_PACKS.md`, domain-history profiles), `grounding` (nonempty object). Identity by canonical bytes. Refusals: `FIELDS_NOT_CLOSED`, `UNSUPPORTED_GRAMMAR`, `UNKNOWN_SEMANTIC_UNIT`, `UNKNOWN_ORIGIN`, `GROUNDING_REQUIRED`. The full contract (times, change kinds, role types, projection family) is P6.
+P1 initially used a closed five-field `private-v0` bootstrap. P6 superseded it
+with the full `malleus.domain-history-profile/private-v1` contract covering
+genesis, time, change, ontology roles, projection, and grounding. The runnable
+examples now use the full shipped profile bytes. The old grammar is refused,
+not retained as a fallback.
 
 ## Pieces, in order, each RED then GREEN
 
@@ -113,9 +123,16 @@ Census, two axes, derived not declared except `nothing_assertable`, carrying the
 
 Query binding isolation, competency questions, human sampling, paper reruns, the three frozen paper runs. The former S5 and S6 (binding after population; a digest cannot prove precedence) move to the paper executor plan as harness checks (its E9).
 
-## Evidence: both consumers executed at HEAD a7ccf3b
+## Evidence: both consumers, refreshed through P6
 
-`handover/2026-09-03-core-population-v2/validate_examples.py` builds both example ontologies through Core's own compiler (`_compile_binding`), checks both plans with a reference validator of the rules above, lowers them with a reference lowering, admits them through `KnowledgeChangeHistory` with Core's test-protocol events, reopens, compares with `KnowledgeGraph.from_records`, and then provokes every pinned rule once. It reuses Core's test helpers and is not a deliverable; it is the seed for the RED tests of P1, P2 and P4. The files it writes sit beside it under `examples/`. Output, verbatim:
+`handover/2026-09-03-core-population-v2/validate_examples.py` builds both
+example ontologies through public `malleus.compiler.compile_linkml_contract`,
+checks both plans with a reference validator of the rules above, lowers them
+with a reference lowering, admits them through `KnowledgeChangeHistory`,
+reopens, compares with `KnowledgeGraph.from_records`, and then provokes every
+pinned rule once. It reuses Core's test helpers and is not a library
+deliverable; it is the executable seed for the P1, P2, P4, and P6 tests. The
+files it writes sit beside it under `examples/`. Output, verbatim:
 
 ```text
 shop e4: CHANGE_SET; change change:plan:shop:B:e4; ops 1; nodes 1
@@ -127,7 +144,7 @@ shop: ledger events 18
 doc: CHANGE_SET; change change:plan:inspection-note:1; ops 3; relation depends_on ['operation:plan:inspection-note:1:1', 'operation:plan:inspection-note:1:0']
 doc: evidence closure ids ['profile:source-assertion', 'plan:inspection-note:1', 'capture:inspection-note', 'plan:inspection-note:1:gaps']
 doc: direct from_records export == governed replay export: True
-doc census: blocks reviewed 3/3, untouched []; assertions {'FULLY_FORMALIZED': 1, 'PARTLY_FORMALIZED': 0, 'UNFORMALIZED': 2}; gaps by kind {'INTERVAL_NOT_EXPRESSIBLE': 1, 'MODALITY_NOT_EXPRESSIBLE': 1, 'TYPE_ABSENT': 1}; capture_sha256 sha256:44b1936e9887...
+doc census: blocks reviewed 3/3, untouched []; assertions {'FULLY_FORMALIZED': 1, 'PARTLY_FORMALIZED': 0, 'UNFORMALIZED': 2}; gaps by kind {'INTERVAL_NOT_EXPRESSIBLE': 1, 'MODALITY_NOT_EXPRESSIBLE': 1, 'TYPE_ABSENT': 1}; capture_sha256 sha256:503bb11d61c6...
 gaps-only plan: lowering status NO_DOMAIN_CHANGE; change set None; retained True
 grammar on empty operations: MALFORMED_CHANGE_SET: a change set must contain an operation
 grammar on supersedes_record_id null: MALFORMED_CHANGE_SET: superseded record ID is required
@@ -150,9 +167,9 @@ negative cases (each must refuse):
   governed DUPLICATE_PLAN_ID: plan:shop:B:e7
   governed re-admission of the same records: STRUCTURAL_REFUSAL: record ID already exists in history: asset:P-7
   governed UNRETAINED_EVIDENCE: capture:ghost
-  profile GROUNDING_REQUIRED: a profile without a grounding block is refused
-  profile UNKNOWN_SEMANTIC_UNIT: VIBE
-  profile UNKNOWN_ORIGIN: SOMEWHERE
+  profile GROUNDING_REQUIRED: domain-history grounding must not be empty
+  profile UNKNOWN_SEMANTIC_UNIT: unknown domain-history semantic unit: VIBE
+  profile UNKNOWN_ORIGIN: unknown domain-history origin: SOMEWHERE
   capture READING_MISMATCH: capture names a different reading
   capture UNKNOWN_BLOCK: page:9:block:999
   capture NOT_VERBATIM: asr:001
@@ -170,7 +187,7 @@ Consumer 1, Small Shop, plan for the e7 correction (`examples/small-shop-plan-e7
   "grammar": "malleus.population-plan/private-v0",
   "plan_id": "plan:shop:B:e7",
   "contract_identity": "sha256:01470c0b41aa26720fb33c82fd65d3d00a5c26354db85b527fa6d7a79dc9beb2",
-  "history_profile": {"profile_id": "state-version", "sha256": "sha256:a6a12681534884f17f233aaa2bde382d730e2496c17216aa3b3ae8c24c9a1da8"},
+  "history_profile": {"profile_id": "state-version", "sha256": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3"},
   "adapter": {"adapter_id": "small-shop-row-mapping", "version": "0"},
   "sources": [{"source_id": "source:supplier-order-history", "sha256": "sha256:a441c49f325670e09d9fc09fd8e6510669258bed1d5532cfb2b1104c4eceb081"}],
   "evidence": [],
@@ -193,25 +210,34 @@ Consumer 1, Small Shop, plan for the e7 correction (`examples/small-shop-plan-e7
 
 The source is the fixture's own `sources/supplier-order-history.jsonl` (two rows, 148 bytes). The lowered e7 change set (`examples/small-shop-change-e7.json`) carries `supersedes ["change:plan:shop:B:e4"]` derived from the base view and one operation with `supersedes_record_id`, as in the existing `correction/mapping.json`.
 
-Consumer 2, the inspection note. Reading (`examples/reading.json`), three blocks: "Pump P-7 was inspected on 2026-03-02. Vibration measured between 4.1 and 4.6 mm/s." / "The technician suspects bearing wear." / "Page 1 of 1." Ontology (`examples/inspection-note.yaml`): `Asset` (root `name` required), `Inspection` (`inspected_on` required), `VibrationReading` (`vibration_mm_s` single float), `InspectionOfRelation` (Inspection → Asset). Capture (`examples/document-capture.json`):
+Consumer 2, the inspection note. Reading (`examples/reading.json`), three
+blocks: "Pump P-7 was inspected on 2026-03-02. Vibration measured between 4.1
+and 4.6 mm/s on 2026-03-01." / "The technician suspects bearing wear." / "Page
+1 of 1." Ontology (`examples/inspection-note.yaml`): `Asset` (root `name`
+required), `Inspection` (`inspected_on` required), `VibrationReading`
+(`vibration_mm_s` single float), `InspectionOfRelation` (Inspection → Asset).
+Capture (`examples/document-capture.json`):
 
 ```json
 {
   "schema": "malleus.document-capture/private-v0",
-  "reading_sha256": "sha256:bb53392a52103dd6cc82e220cf85a4580d8da6f1140c8a43b07719aaaa27ca48",
+  "reading_sha256": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745",
   "attribution": {"source_id": "source:inspection-note", "author": "maintenance technician", "date": "2026-03-02"},
   "assertions": [
     {"id": "asr:001", "block": "page:1:block:001", "statement": "Pump P-7 was inspected on 2026-03-02.", "modality": "STATED",
+     "assertion_time": "2026-03-03T09:00:00Z", "domain_time": "2026-03-02",
      "formalized_by": [{"record_id": "asset:P-7", "path": ["properties", "name"]},
                        {"record_id": "inspection:P-7:2026-03-02", "path": ["properties", "inspected_on"]},
                        {"record_id": "inspection-of:P-7:2026-03-02", "path": ["properties", "relation_type"]},
                        {"record_id": "inspection-of:P-7:2026-03-02", "path": ["source_id"]},
                        {"record_id": "inspection-of:P-7:2026-03-02", "path": ["target_id"]}],
      "gaps": []},
-    {"id": "asr:002", "block": "page:1:block:001", "statement": "Vibration measured between 4.1 and 4.6 mm/s.", "modality": "MEASURED",
+    {"id": "asr:002", "block": "page:1:block:001", "statement": "Vibration measured between 4.1 and 4.6 mm/s on 2026-03-01.", "modality": "MEASURED",
+     "assertion_time": "2026-03-03T09:05:00Z", "domain_time": "2026-03-01",
      "formalized_by": [],
      "gaps": [{"kind": "INTERVAL_NOT_EXPRESSIBLE", "statement": "VibrationReading.vibration_mm_s is a single float; the source states a range"}]},
     {"id": "asr:003", "block": "page:1:block:002", "statement": "The technician suspects bearing wear.", "modality": "HYPOTHESISED",
+     "assertion_time": "2026-03-03T09:10:00Z",
      "formalized_by": [],
      "gaps": [{"kind": "TYPE_ABSENT", "statement": "no type for a suspected fault"},
               {"kind": "MODALITY_NOT_EXPRESSIBLE", "statement": "no slot carries HYPOTHESISED on any record"}]}
@@ -220,7 +246,20 @@ Consumer 2, the inspection note. Reading (`examples/reading.json`), three blocks
 }
 ```
 
-The plan the adapter emits from it (`examples/document-plan.json`) has two entities, one relation, `evidence` naming the retained capture (`capture:inspection-note`, `sha256:44b1936e9887…`), five derivations all with locator `asr:001` (the relation's `relation_type`, a contract-fixed value, still derives from the assertion that licenses the relation), three gaps with locators `asr:002` and `asr:003`, profile `source-assertion` (`sha256:1a24e12fc35b…`), valid time `INSTANT 2026-03-02T00:00:00Z`. The lowered change set (`examples/document-change.json`) has three operations, the relation depending on both endpoint operations, and an evidence closure of the profile artifact, the plan, the capture and the gaps artifact. The census (`examples/document-census.json`) carries the capture digest. This example reproduces the paper's failure shape with neutral content: a range the vocabulary cannot hold and a hypothesis with no type end up as visible gaps instead of silence, and the graph still admits.
+The plan the adapter emits from it (`examples/document-plan.json`) has two
+entities, one relation, `evidence` naming the retained capture
+(`capture:inspection-note`, `sha256:503bb11d61c6…`), five derivations all with
+locator `asr:001`, three gaps with locators `asr:002` and `asr:003`, and the
+shipped `source-assertion` profile
+(`sha256:2317d88fd236…`). Its change-level valid time is `ORDER_ONLY` with value
+`capture:inspection-note`; the two different domain dates and the third absent
+domain date remain in the retained assertions. The lowered change set
+(`examples/document-change.json`) has three operations, the relation depending
+on both endpoint operations, and an evidence closure of the profile artifact,
+the plan, the capture, and the gaps artifact. The census
+(`examples/document-census.json`) carries the capture digest. A range the
+vocabulary cannot hold and a hypothesis with no type become visible gaps
+instead of silence, while the formalized records can still be admitted.
 
 ## Fixtures
 

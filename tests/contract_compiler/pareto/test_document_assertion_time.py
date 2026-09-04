@@ -47,8 +47,6 @@ def test_committed_capture_contains_distinct_and_absent_assertion_times() -> Non
 def test_document_adapter_retains_distinct_and_absent_assertion_times() -> None:
     api = _api()
     reading, capture, plan, _ = _inputs()
-    for assertion in capture["assertions"]:
-        assertion.update(ASSERTION_TIMES[assertion["id"]])
 
     result = api.adapt_document_assertions(
         reading_bytes=_canonical(reading),
@@ -71,7 +69,7 @@ def test_public_trace_reaches_each_assertions_own_time_or_absence(
     tmp_path: Path,
 ) -> None:
     api = _api()
-    _, replay = _document_replay(tmp_path, assertion_times=ASSERTION_TIMES)
+    _, replay = _document_replay(tmp_path)
 
     trace = api.trace_population_record(replay, "inspection-of:P-7:2026-03-02")
     capture = json.loads(

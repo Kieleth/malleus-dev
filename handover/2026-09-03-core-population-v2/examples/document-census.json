@@ -11,7 +11,7 @@
   },
   "blocks_reviewed": 3,
   "blocks_total": 3,
-  "capture_sha256": "sha256:44b1936e98870f6e74801f1bf701f5a9823f3309791b6a42297d10ec05902a0f",
+  "capture_sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99",
   "gaps_by_kind": {
     "INTERVAL_NOT_EXPRESSIBLE": 1,
     "MODALITY_NOT_EXPRESSIBLE": 1,

@@ -28,6 +28,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT)]
 
 from malleus import KnowledgeGraph, OntologyRegistry  # noqa: E402
+from malleus.compiler import (  # noqa: E402
+    DomainHistoryProfile,
+    PopulationPlanRefusal,
+    SOURCE_ASSERTION_PROFILE,
+    STATE_VERSION_PROFILE,
+    compile_linkml_contract,
+)
 from malleus._contract_pipeline.knowledge import (  # noqa: E402
     KnowledgeChangeHistory,
     KnowledgeChangeHistoryBinding,
@@ -37,8 +44,6 @@ from malleus._contract_pipeline.knowledge import (  # noqa: E402
     KnowledgeValidTime,
 )
 from tests.contract_compiler.pareto.test_knowledge_change_history import (  # noqa: E402
-    TRANSACTION_TIME,
-    _anchor,
     _binding_payload,
     _canonical,
     _event,
@@ -46,8 +51,6 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (  # no
 )
 from tests.contract_compiler.pareto.test_protocol_machine import _effective  # noqa: E402
 from tests.contract_compiler.pareto.test_validated_contract import (  # noqa: E402
-    _binding,
-    _compile_binding,
     _trusted_types,
 )
 
@@ -55,6 +58,7 @@ OUT = Path(__file__).parent / "examples"
 OUT.mkdir(exist_ok=True)
 FIX = ROOT / "research/ontology_driven_kg_realization/fixtures"
 ROOT_YAML = (ROOT / "ontology/malleus.yaml").read_bytes()
+TRANSACTION_TIME = "2026-09-03T00:00:00Z"
 
 
 def digest(b: bytes) -> str:
@@ -79,6 +83,25 @@ class PlanRefusal(ValueError):
 
 def refuse(reason: str, detail: str) -> PlanRefusal:
     return PlanRefusal(reason, detail)
+
+
+def _anchor(
+    history: KnowledgeChangeHistory,
+    event: bytes,
+    retained: bytes,
+    role: str,
+    *,
+    media_type: str = "application/octet-stream",
+) -> None:
+    result = history.append_anchor(
+        machine_event=event,
+        retained_bytes=retained,
+        media_type=media_type,
+        role=role,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:public-adopter",
+    )
+    assert result.machine_receipt.outcome == "APPLIED"
 
 
 # ---------------------------------------------------------------- sources ---
@@ -151,7 +174,7 @@ READING = {
             "page": 1,
             "blocks": [
                 {"id": "page:1:block:001", "ordinal": 0,
-                 "text": "Pump P-7 was inspected on 2026-03-02. Vibration measured between 4.1 and 4.6 mm/s."},
+                 "text": "Pump P-7 was inspected on 2026-03-02. Vibration measured between 4.1 and 4.6 mm/s on 2026-03-01."},
                 {"id": "page:1:block:002", "ordinal": 1,
                  "text": "The technician suspects bearing wear."},
                 {"id": "page:1:block:003", "ordinal": 2,
@@ -162,43 +185,15 @@ READING = {
 }
 READING_BYTES = _canonical(READING)
 
-PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v0"
-SEMANTIC_UNITS = {"ASSERTION", "STATE_VERSION", "OCCURRENCE", "COMMITMENT", "COMPOSITION"}
-ORIGINS = {"EMPTY", "SNAPSHOT", "PARTIAL_IMPORT", "HISTORICAL_RECONSTRUCTION"}
-
-PROFILE_SOURCE_ASSERTION = {
-    "grammar": PROFILE_GRAMMAR,
-    "profile_id": "source-assertion",
-    "semantic_unit": "ASSERTION",
-    "origin": "EMPTY",
-    "grounding": {
-        "taxonomy": "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications",
-        "note": "minimal artifact: identity and unit only; full fields per P6",
-    },
-}
-PROFILE_STATE_VERSION = {
-    "grammar": PROFILE_GRAMMAR,
-    "profile_id": "state-version",
-    "semantic_unit": "STATE_VERSION",
-    "origin": "EMPTY",
-    "grounding": {
-        "taxonomy": "temporal database versioning; Small Shop walkthrough",
-        "note": "minimal artifact: identity and unit only; full fields per P6",
-    },
-}
+PROFILE_SOURCE_ASSERTION = json.loads(SOURCE_ASSERTION_PROFILE.canonical_bytes)
+PROFILE_STATE_VERSION = json.loads(STATE_VERSION_PROFILE.canonical_bytes)
 
 
 def check_profile(profile: dict) -> None:
-    if set(profile) != {"grammar", "profile_id", "semantic_unit", "origin", "grounding"}:
-        raise refuse("FIELDS_NOT_CLOSED", "profile fields are not closed")
-    if profile["grammar"] != PROFILE_GRAMMAR:
-        raise refuse("UNSUPPORTED_GRAMMAR", profile["grammar"])
-    if profile["semantic_unit"] not in SEMANTIC_UNITS:
-        raise refuse("UNKNOWN_SEMANTIC_UNIT", profile["semantic_unit"])
-    if profile["origin"] not in ORIGINS:
-        raise refuse("UNKNOWN_ORIGIN", profile["origin"])
-    if not isinstance(profile["grounding"], dict) or not profile["grounding"]:
-        raise refuse("GROUNDING_REQUIRED", "a profile without a grounding block is refused")
+    try:
+        DomainHistoryProfile.from_data(profile)
+    except PopulationPlanRefusal as error:
+        raise refuse(error.reason.name, error.detail) from error
 
 
 # ------------------------------------------------------------------ plans ---
@@ -265,6 +260,8 @@ CAPTURE = {
         {"id": "asr:001", "block": "page:1:block:001",
          "statement": "Pump P-7 was inspected on 2026-03-02.",
          "modality": "STATED",
+         "assertion_time": "2026-03-03T09:00:00Z",
+         "domain_time": "2026-03-02",
          "formalized_by": [
              {"record_id": "asset:P-7", "path": ["properties", "name"]},
              {"record_id": "inspection:P-7:2026-03-02", "path": ["properties", "inspected_on"]},
@@ -274,14 +271,17 @@ CAPTURE = {
          ],
          "gaps": []},
         {"id": "asr:002", "block": "page:1:block:001",
-         "statement": "Vibration measured between 4.1 and 4.6 mm/s.",
+         "statement": "Vibration measured between 4.1 and 4.6 mm/s on 2026-03-01.",
          "modality": "MEASURED",
+         "assertion_time": "2026-03-03T09:05:00Z",
+         "domain_time": "2026-03-01",
          "formalized_by": [],
          "gaps": [{"kind": "INTERVAL_NOT_EXPRESSIBLE",
                    "statement": "VibrationReading.vibration_mm_s is a single float; the source states a range"}]},
         {"id": "asr:003", "block": "page:1:block:002",
          "statement": "The technician suspects bearing wear.",
          "modality": "HYPOTHESISED",
+         "assertion_time": "2026-03-03T09:10:00Z",
          "formalized_by": [],
          "gaps": [{"kind": "TYPE_ABSENT", "statement": "no type for a suspected fault"},
                   {"kind": "MODALITY_NOT_EXPRESSIBLE", "statement": "no slot carries HYPOTHESISED on any record"}]},
@@ -357,7 +357,7 @@ def document_plan(capture: dict, records: dict, contract: str, profile: str, cap
             {"kind": g["kind"], "statement": g["statement"], "source_id": src, "locator": a["id"]}
             for a in capture["assertions"] for g in a["gaps"]
         ],
-        "valid_time": {"kind": "INSTANT", "value": "2026-03-02T00:00:00Z"},
+        "valid_time": {"kind": "ORDER_ONLY", "value": "capture:inspection-note"},
     }
 
 
@@ -505,7 +505,7 @@ def lower(plan: dict, base) -> tuple[str, tuple[KnowledgeOperation, ...], tuple[
 # ------------------------------------------------ P2: governed integration ---
 
 def governed_history(tmp: Path, sources: dict[str, bytes], root_locator: str, source_id: str, source_bytes: bytes):
-    compiled = _compile_binding(_binding(sources, root_locator))
+    compiled = compile_linkml_contract(root_locator=root_locator, sources=sources)
     partial = _effective(validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256)
     binding = KnowledgeChangeHistoryBinding.from_bytes(_canonical(_binding_payload()))
     history = KnowledgeChangeHistory(
@@ -538,7 +538,7 @@ def retained_ids(history: KnowledgeChangeHistory) -> set[str]:
 
 def retain_evidence(history: KnowledgeChangeHistory, record_id: str, content: bytes) -> None:
     _anchor(history, _event("ARTIFACT_REGISTERED", artifact_id=record_id, artifact_identity=digest(content)),
-            content, "RETAINED_EVIDENCE")
+            content, "RETAINED_EVIDENCE", media_type="application/json")
 
 
 def admit_plan(history: KnowledgeChangeHistory, plan: dict, profile: dict, suffix: str):
@@ -601,7 +601,8 @@ def main() -> None:
     tmp = Path(tempfile.mkdtemp(prefix="population-examples-"))
 
     # ---- consumer 1: Small Shop rows ----------------------------------------
-    shop_dir = tmp / "shop"; shop_dir.mkdir()
+    shop_dir = tmp / "shop"
+    shop_dir.mkdir()
     history, partial = governed_history(
         shop_dir,
         {"small-shop-correction": SHOP_TBOX, "small-shop": SHOP_BASE, "malleus": ROOT_YAML,
@@ -633,7 +634,8 @@ def main() -> None:
     shop_history = history
 
     # ---- consumer 2: document capture ---------------------------------------
-    doc_dir = tmp / "doc"; doc_dir.mkdir()
+    doc_dir = tmp / "doc"
+    doc_dir.mkdir()
     history, partial = governed_history(
         doc_dir,
         {"inspection-note": INSPECTION_TBOX, "malleus": ROOT_YAML, "linkml:types": _trusted_types()},
@@ -643,7 +645,16 @@ def main() -> None:
     check_capture(CAPTURE, READING, READING_BYTES, DOC_RECORDS)
     capture_bytes = _canonical(CAPTURE)
     capture_sha = digest(capture_bytes)
-    retain_evidence(history, "capture:inspection-note", capture_bytes)
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="capture:inspection-note",
+            artifact_identity=capture_sha,
+        ),
+        capture_bytes,
+        "RETAINED_EVIDENCE",
+    )
     plan = document_plan(CAPTURE, DOC_RECORDS, partial.identity, doc_profile_sha, capture_sha)
     status, (change, admitted) = admit_plan(history, plan, PROFILE_SOURCE_ASSERTION, "-doc")
     log(f"doc: {status}; change {change.change_set_id}; ops {len(change.operations)}; "
@@ -658,12 +669,12 @@ def main() -> None:
         f"untouched {[b for b, s in doc_census['blocks'].items() if s == 'UNTOUCHED']}; "
         f"assertions {doc_census['assertions']}; gaps by kind {doc_census['gaps_by_kind']}; "
         f"capture_sha256 {capture_sha[:19]}...")
-    dump("document-capture.json", CAPTURE)
+    (OUT / "document-capture.json").write_bytes(capture_bytes)
     dump("document-plan.json", plan)
     dump("document-change.json", json.loads(change.canonical_bytes))
     dump("document-census.json", doc_census)
     dump("profile-source-assertion.json", PROFILE_SOURCE_ASSERTION)
-    dump("reading.json", READING)
+    (OUT / "reading.json").write_bytes(READING_BYTES)
     (OUT / "inspection-note.yaml").write_bytes(INSPECTION_TBOX)
 
     # ---- capture with zero graph operations ---------------------------------
@@ -690,7 +701,9 @@ def main() -> None:
     base = history.replay()
 
     def mutate(source: dict, fn) -> dict:
-        copy = deepcopy(source); fn(copy); return copy
+        copy = deepcopy(source)
+        fn(copy)
+        return copy
 
     plan_cases = [
         ("FIELDS_NOT_CLOSED", mutate(plan, lambda p: p.update(extra=1))),

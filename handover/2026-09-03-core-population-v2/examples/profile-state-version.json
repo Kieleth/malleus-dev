@@ -1,10 +1,39 @@
 {
-  "grammar": "malleus.domain-history-profile/private-v0",
+  "change_semantics": {
+    "addition": "ADD_STATE_VERSION",
+    "correction": "SUPERSEDE_STATE_VERSION",
+    "retraction": "NOT_ADMITTED",
+    "transition": "SUPERSEDE_STATE_VERSION"
+  },
+  "genesis": {
+    "boundary": "FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH",
+    "completeness_scope": "DECLARED_SOURCES_ONLY"
+  },
+  "grammar": "malleus.domain-history-profile/private-v1",
   "grounding": {
-    "note": "minimal artifact: identity and unit only; full fields per P6",
-    "taxonomy": "temporal database versioning; Small Shop walkthrough"
+    "citations": [
+      "Temporal database versioning"
+    ],
+    "taxonomy": "versioned domain state"
+  },
+  "ontology_roles": {
+    "claim": [],
+    "entity": [
+      "Entity"
+    ],
+    "event": [],
+    "state": [
+      "Entity"
+    ]
   },
   "origin": "EMPTY",
   "profile_id": "state-version",
-  "semantic_unit": "STATE_VERSION"
+  "projection_rule_family": "CURRENT_NON_SUPERSEDED_RECORDS",
+  "semantic_unit": "STATE_VERSION",
+  "time_semantics": {
+    "assertion_time": "NOT_REPRESENTED",
+    "domain_time": "KNOWLEDGE_VALID_TIME",
+    "knowledge_valid_time": "DOMAIN_TIME",
+    "transaction_time": "LEDGER_TRANSACTION_TIME"
+  }
 }

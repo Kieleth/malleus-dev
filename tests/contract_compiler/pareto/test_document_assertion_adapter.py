@@ -89,8 +89,19 @@ def test_document_adapter_is_public_and_emits_the_exact_neutral_plan() -> None:
     )
 
     reading, capture, expected_plan, expected_census = _inputs()
-    capture_bytes = _canonical(capture)
-    result = _adapt(reading=reading, capture=capture)
+    reading_bytes = (EXAMPLES / "reading.json").read_bytes()
+    capture_bytes = (EXAMPLES / "document-capture.json").read_bytes()
+    assert reading_bytes == _canonical(reading)
+    assert capture_bytes == _canonical(capture)
+    result = api.adapt_document_assertions(
+        reading_bytes=reading_bytes,
+        capture_bytes=capture_bytes,
+        capture_id="capture:inspection-note",
+        plan_id=str(expected_plan["plan_id"]),
+        contract_identity=str(expected_plan["contract_identity"]),
+        records=expected_plan["records"],
+        supersessions=expected_plan["supersessions"],
+    )
 
     assert isinstance(result, api.DocumentAssertionCompilation)
     assert result.capture_id == "capture:inspection-note"

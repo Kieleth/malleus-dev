@@ -1,10 +1,40 @@
 {
-  "grammar": "malleus.domain-history-profile/private-v0",
-  "grounding": {
-    "note": "minimal artifact: identity and unit only; full fields per P6",
-    "taxonomy": "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications"
+  "change_semantics": {
+    "addition": "ADD_CAPTURE_BATCH_FORMALIZATIONS",
+    "correction": "SUPERSEDE_CAPTURE_BATCH_FORMALIZATIONS",
+    "retraction": "NOT_ADMITTED",
+    "transition": "NOT_APPLICABLE"
   },
-  "origin": "EMPTY",
+  "genesis": {
+    "boundary": "RETAINED_PARTIAL_IMPORT",
+    "completeness_scope": "DECLARED_CAPTURE_ONLY"
+  },
+  "grammar": "malleus.domain-history-profile/private-v1",
+  "grounding": {
+    "citations": [
+      "Clark, Ciccarese, and Goble (2014), Micropublications",
+      "Nanopublications"
+    ],
+    "taxonomy": "source-attributed assertion"
+  },
+  "ontology_roles": {
+    "claim": [],
+    "entity": [
+      "Entity"
+    ],
+    "event": [
+      "Event"
+    ],
+    "state": []
+  },
+  "origin": "PARTIAL_IMPORT",
   "profile_id": "source-assertion",
-  "semantic_unit": "ASSERTION"
+  "projection_rule_family": "CURRENT_NON_SUPERSEDED_RECORDS_WITH_RETAINED_ASSERTION_TRACE",
+  "semantic_unit": "COMPOSITION",
+  "time_semantics": {
+    "assertion_time": "RETAINED_ASSERTION_EVIDENCE",
+    "domain_time": "RETAINED_ASSERTION_EVIDENCE",
+    "knowledge_valid_time": "CAPTURE_IMPORT_ORDER",
+    "transaction_time": "LEDGER_TRANSACTION_TIME"
+  }
 }

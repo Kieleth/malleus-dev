@@ -45,13 +45,14 @@ result = adapt_document_assertions(
     contract_identity=effective_contract.identity,
     records=proposed_records,
     supersessions=[],
-    valid_time={"kind": "INSTANT", "value": "2026-03-02T00:00:00Z"},
 )
 ```
 
 The returned plan enters the same public population compiler used for
 structured rows. The capture is retained as evidence. Its assertions are not
-added to the domain graph.
+added to the domain graph. The adapter derives the capture batch's
+`ORDER_ONLY` valid time from `capture_id`; assertion and domain dates remain
+optional fields in the retained capture.
 
 ## Mechanical evidence
 
