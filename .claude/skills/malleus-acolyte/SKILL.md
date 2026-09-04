@@ -291,9 +291,15 @@ fallback.
 
 This is the current private-v0 shape, not a stable wire. Parse the JSON, replace
 the contract identity and project record types with values from the compiled
-contract. Encode the `reading` and `capture` objects as canonical JSON bytes:
-UTF-8, sorted keys, no insignificant whitespace, and no non-finite numbers. Pass
-exactly these seven public keyword arguments to `adapt_document_assertions`:
+contract. Encode the `capture` object as canonical JSON bytes: UTF-8, sorted
+keys, no insignificant whitespace, and no non-finite numbers. `reading_bytes`
+are the raw bytes of the declared reading input exactly as supplied, and
+`capture.reading_sha256` is `sha256:` followed by the SHA-256 of those same
+bytes. The adapter digests the argument it is handed and compares the two; it
+never re-serialises the reading first, so naming the reading by the digest of a
+re-encoding refuses with `READING_MISMATCH`. The reading in this template is
+canonical JSON only because it is written here as JSON data. Pass exactly
+these seven public keyword arguments to `adapt_document_assertions`:
 `reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`,
 `records`, and `supersessions`. The reading object is illustrative input, not a
 live grammar or closed shape; the adapter reads its pages and each block's ID,
@@ -313,6 +319,14 @@ statement must occur verbatim after whitespace normalization in that block. If
 `record_id` and `path` must resolve in `records`. Every `nothing_assertable`
 block ID must exist in the reading. A failure is a typed refusal, not permission
 to repair, infer, or ignore the capture.
+
+Provenance also runs the other way: every key under a record's `properties`,
+and both endpoints of a relation record, must be named by at least one
+assertion's formalization target. `type` and `id` are not derived and need no
+target; an event participation carries its `event_id` and `entity_id` under
+`properties`, so the same rule reaches them there. The plan compiler refuses
+`UNDERIVED_FIELD` naming the first such field it meets, one field per refusal,
+so sweep the whole capture for missing derivations before you submit it.
 
 <!-- malleus-nascent-document-template:start -->
 ```json
