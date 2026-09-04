@@ -2342,3 +2342,75 @@ Non-claim: no producer has run at this coordinate. No ontology, population,
 admission, replay, query or inspection result exists for run-03, and the
 comparison between the two cells is not a result until both are ratified. One
 cell per model is one observation per model, not a measurement of either model.
+
+### E-0124, run-03 refuses at the ontology stage on a third grounding rule
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-03/ontology-run/result.json`, the three
+frozen attempts `ontology-0{1,2,3}.yaml`, their diagnostics
+`attempt-0{1,2,3}-diagnostic.json`, `results/launch-log.json`, and the private
+workspace `private/paper-v4-v4-run-03/`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `sonnet`, model family
+Claude Sonnet 5, reasoning effort the harness default and neither pinned nor
+observed. It received `run-03/spawn-message.md` verbatim, the eight declared
+inputs at run-02's digests, and Core at commit
+`26877364cc2649df9bc9a93fd10e75f993e31cb1`, tree
+`d12866050ad53d04243aaf0b4a899c626320d841`. It never saw a question, an answer,
+a prior ontology, a prior population or a manuscript.
+
+Outcome: three ontology attempts, all refused at `PACK_GROUNDING`, each on a
+different rule, and both diagnostic returns used. Attempt 1 at
+`sha256:8d68c97f…` refused with `DIRECT_ROOT_GROUNDING_REQUIRED` naming all ten
+ungrounded project classes in one sorted set. Attempt 2 at `sha256:7dc84424…`
+refused with `GROUNDING_NOT_CLOSED` on one vocabulary entry,
+`RidgeAxisSection.grounding.vocabularies[0]`. Attempt 3 at `sha256:d7f29d83…`
+refused with `GROUNDING_INCOMPLETE`, `RidgeAxisSection must pair invented terms
+with invention_search`, at 21:35:20Z. Status
+`REFUSED_AFTER_DIAGNOSTIC_BUDGET`. Population never started, no fallback, no
+hand repair, and the questions stayed withheld.
+
+Observation across the two cells: Opus in run-02 and Sonnet in run-03 hit the
+same first two gates in the same order, `DIRECT_ROOT_GROUNDING_REQUIRED` on all
+ten roots, then `GROUNDING_NOT_CLOSED` on a single vocabulary entry, and both
+spent the same two returns on them. Sonnet then met a third rule Opus never
+saw, the pairing of invented terms with `invention_search`, and had no return
+left. Two runs is not a measurement of either model. What the pair does show is
+that the grounding block is where a fresh producer spends its budget, and that
+the budget is spent on the block's shape rather than on the domain.
+
+Finding: the rite reports shape defects one entry at a time. The aggregate
+diagnostic Core added after run-01 fixed the missing-root case and nothing
+else. `GROUNDING_NOT_CLOSED` still names one vocabulary entry and does not list
+the field set it requires; `GROUNDING_INCOMPLETE` names one class and one
+missing pairing. A producer that gets the closed field set right and the
+invention pairing wrong therefore burns two returns discovering one block's
+shape. This is the same failure class as E-0122 finding 2 for `UNDERIVED_FIELD`,
+one layer up.
+
+Consequence, in two places. The grounding block shape, its closed field set and
+the rule that invented terms pair with `invention_search`, belongs in the skill,
+written at the template a producer copies; that skill revision is in progress as
+a Core piece. The pack-grounding rite should aggregate shape defects the way it
+now aggregates missing roots, so one refusal reports every ungrounded or
+ill-formed subject with the fields each is missing. Until both land, the second
+matrix cell yields no population under the v4 harness. Run-03 stays frozen as
+what this harness produced with Sonnet; the rerun happens under the revised
+skill and rite at a new Core coordinate and opens a new cell rather than
+replacing this one.
+
+Reading reproduction: the three attempts share thirteen 60-character normalized
+runs with the reading, one of them the reading's own title and twelve entries of
+its bibliography, all inside `grounding.vocabularies` and `invention_search`
+citation strings. Every run was located in the reading and occurs only in the
+article header or the numbered reference list, so the attempts are frozen whole
+rather than by digest. The diagnostics, the record and the launch log share
+nothing. `run-03/test_contract.py` holds that line.
+
+Non-claim: a refusal at the gate is not a judgment of the producer, of the model
+family, or of the ontology's domain quality. It is the record of one session
+against one rite at one coordinate. Nothing here is paper evidence, no
+manuscript sentence changes, and the two cells are not comparable as a result
+until both have run to ratification under the same harness.

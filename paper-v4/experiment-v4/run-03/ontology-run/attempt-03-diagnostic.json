@@ -1,0 +1,1 @@
+{"attempt":3,"detail":"GROUNDING_INCOMPLETE: RidgeAxisSection must pair invented terms with invention_search","error_type":"PackGroundingRefusal","ontology_sha256":"sha256:d7f29d83b38d873855545401a87bdb4288ac0a7931766fd227ac387504727903","reason":"GROUNDING_INCOMPLETE","schema":"malleus.paper-v4.ontology-compile-attempt/v1","stage":"PACK_GROUNDING","status":"REFUSED"}

@@ -1,0 +1,56 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v1",
+  "run": "run-03",
+  "launches": [
+    {
+      "ordinal": 1,
+      "phase": "ONTOLOGY",
+      "launched_at": "2026-09-04T21:12:56Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "sonnet",
+      "model_family": "Claude Sonnet 5",
+      "spawn_message": "paper-v4/experiment-v4/run-03/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "ONTOLOGY_READY"
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:8d68c97f1cb574a760c4eccddc56d71c9911d670e9eef2dbcd2fdd7ae9e1c16e",
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "DIRECT_ROOT_GROUNDING_REQUIRED",
+      "subjects": 10,
+      "diagnostic_returned_to_producer_at": "2026-09-04T21:23:44Z",
+      "diagnostic_return_ordinal": 1,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:7dc8442438cbd9e9de971b3004c36234c8635062e61f23bfa09a76b328710729",
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_NOT_CLOSED",
+      "subjects": 1,
+      "detail": "RidgeAxisSection.grounding.vocabularies[0] fields are not closed",
+      "diagnostic_returned_to_producer_at": "2026-09-04T21:30:12Z",
+      "diagnostic_return_ordinal": 2,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 3,
+      "ontology_sha256": "sha256:d7f29d83b38d873855545401a87bdb4288ac0a7931766fd227ac387504727903",
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_INCOMPLETE",
+      "subjects": 1,
+      "detail": "RidgeAxisSection must pair invented terms with invention_search",
+      "gate_at": "2026-09-04T21:35:20Z",
+      "terminal": true,
+      "run_status": "REFUSED_AFTER_DIAGNOSTIC_BUDGET",
+      "population_started": false,
+      "fallback_used": false,
+      "hand_repair_used": false
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Malleus paper master plan
 
-Version: 1.3.0
+Version: 1.3.1
 
 Date: 2026-09-04
 
@@ -22,7 +22,19 @@ run-02 is admitted and replayed at Core
 replay, 419 entities, 170 relations, 104 typed gaps, 186 of 186 blocks reviewed,
 and a post-replay type-only binding returning 4, 32, 34 and 3 rows over CQ-01 to
 CQ-04. It is awaiting preliminary review and ratification, staged under
-`paper-v4/evaluation-v4/`, and it is not paper evidence until Luis ratifies.
+`paper-v4/evaluation-v4/`, and it is not paper evidence until Luis ratifies. The
+second matrix cell, run-03, changes the producer model to Claude Sonnet 5 and
+nothing else. It executed at Core
+`26877364cc2649df9bc9a93fd10e75f993e31cb1` and run-03 refused at the ontology
+stage: three attempts, all refused by the pack-grounding rite, on
+`DIRECT_ROOT_GROUNDING_REQUIRED` over ten roots, then `GROUNDING_NOT_CLOSED` on
+one vocabulary entry, then `GROUNDING_INCOMPLETE` on the pairing of invented
+terms with `invention_search`, with both diagnostic returns used. Population
+never started, no fallback and no hand repair. Its artifacts are frozen under
+`paper-v4/experiment-v4/run-03/`. The second cell therefore yields no population
+under this harness; the grounding block shape belongs in the skill and the rite
+should aggregate shape defects, and the rerun happens under the revised skill
+and rite at a new Core coordinate as a new cell rather than a replacement.
 Manuscript 1.2.1 on branch
 `paper-v4-multimodel` remains the paper of record; the v4 result becomes a new
 section of its successor. V4 supersedes nothing on its own: it is admitted to the
@@ -323,6 +335,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.3.1, 2026-09-04: Recorded the second matrix cell. Run-03 changed the producer model to Claude Sonnet 5 and refused at the ontology stage on three grounding rules with both diagnostic returns used, so the cell yields no population under this harness. The grounding block shape moves into the skill and the pack-grounding rite is to aggregate shape defects; the rerun opens a new cell at the corrected Core coordinate and replaces neither run-02 nor run-03. Scope, claim boundary and submission gate are unchanged.
 - 1.3.0, 2026-09-04: Applied the author's decisions of 2026-09-04. Bound the v4 rerun as run-02 to the current Core coordinate, cut the producer spawn message to isolation only, recorded the producer model and harness in the run contract, and kept manuscript 1.2.1 as the paper of record with the v4 result entering as a new section of its successor. The lean v4 draft is a support document and replaces nothing.
 - 1.2.0, 2026-09-03: Accepted the KISS v4 execution cut under the author's overnight relay instruction. Selected one document and one producer loop, `source-assertion` with conservative `PARTIAL_IMPORT` origin, questions only after replay, typed gaps, no fallback, and no more than two evidence-triggered ontology revision rounds. The prior three-producer matrix remains diagnostic background. V2 remains selected until v4 passes its complete evidence and reproduction gates.
 - 1.1.0, 2026-09-03: Applied D-0018. Preserved the completed question-conditioned run as history, selected a versioned rerun from ontology acquisition, removed competency questions and derived semantic targets from ontology construction, placed adopter query surfaces after replay identity, withdrew automated exact-match scoring, and selected source-grounded inspection with explicit human ratification.

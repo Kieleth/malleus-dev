@@ -1,0 +1,383 @@
+id: https://malleus.dev/schema/projects/mar-deep-earthquakes
+name: mar_deep_earthquakes
+version: 0.1.0
+title: Deep Mantle Earthquakes and CO2 Degassing at the Mid-Atlantic Ridge — Project Ontology
+description: >-
+  Project ontology for one selected reading: Yu, Z., Singh, S.C., Hamelin, C.,
+  Grenet, L., Maia, M., Briais, A., Petracchini, L. & Brunelli, D. (2025),
+  "Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge",
+  Nature Communications 16:563, https://doi.org/10.1038/s41467-024-55792-9.
+  Covers the source's microseismicity study of the Romanche ridge-transform
+  intersection area of the Mid-Atlantic Ridge (MAR): ridge-axis structure,
+  the SMARTIES OBS deployment, earthquake catalog statistics, rock-sample
+  geochemistry, and the four candidate explanations the source weighs for
+  the observed deep mantle earthquakes, with CO2 degassing as its preferred
+  explanation.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  mardeq: https://malleus.dev/schema/projects/mar-deep-earthquakes/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: >-
+        Marine geology and seismology of mid-ocean ridges, with igneous
+        petrology/geochemistry of mid-ocean-ridge basalts.
+      taxonomy: >-
+        DDC 551.22 (seismology), adjacent to DDC 551.1 (structural geology,
+        plate tectonics) and DDC 552.1 (igneous petrology).
+      vocabularies:
+        - vocabulary: OBO Basic Formal Ontology (BFO) and OBO Relations Ontology (RO)
+          vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+          borrowed_terms:
+            - part_of
+            - located_in
+            - adjacent_to
+        - vocabulary: IASPEI standard seismological nomenclature
+          vocabulary_url: http://www.iaspei.org/
+          borrowed_terms:
+            - hypocenter
+            - focal depth
+            - local magnitude
+            - moment magnitude
+            - focal mechanism
+      invented_terms:
+        - RidgeAxisSection
+        - OceanicCoreComplex
+        - DetachmentFault
+        - HydrothermalVentField
+        - TransformFault
+        - GeologicalLayer
+        - GeologicalBoundary
+        - RockSample
+        - EarthquakeOccurrence
+        - CountObservation
+        - StructuralRelation
+      invention_search: >-
+        BFO/RO were checked for generic mereotopological relations and
+        supply part_of, located_in, and adjacent_to for StructuralRelationType.
+        IASPEI nomenclature was checked for seismological terms and grounds
+        EarthquakeOccurrence's use of magnitude, focal depth, and focal
+        mechanism as concepts, and its status as a malleus Event rather than
+        an Entity. No offline-verifiable formal ontology (e.g. GeoSciML) class
+        match was available without network access for the mid-ocean-ridge
+        structural vocabulary itself (ridge segment, RTI segment,
+        non-transform discontinuity, oceanic core complex, detachment fault,
+        brittle-ductile boundary, Moho, lithosphere-asthenosphere boundary);
+        these are recorded as invented project terms using the source paper's
+        own standard geoscience nomenclature, not matched against a
+        pack-level vocabulary. RockSample, CountObservation, and
+        StructuralRelation are project compositions of existing malleus root
+        and pack vocabulary (Sample, Counted, TemporalExtent, SourceAsserted,
+        Relation), not new external borrowings, and are listed as invented
+        because their class identities are project-local.
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  RidgeSegmentKind:
+    description: >-
+      Structural role of a section of the ridge axis, as the source
+      delimits it.
+    permissible_values:
+      RIDGE_SEGMENT:
+        description: An ordinary magmatic or tectonic ridge segment (e.g. RC2, RC3).
+      RTI_SEGMENT:
+        description: >-
+          The amagmatic segment at a ridge-transform intersection (e.g. RC1).
+      NON_TRANSFORM_DISCONTINUITY:
+        description: A non-transform discontinuity offsetting two ridge segments.
+      STUDY_AREA:
+        description: >-
+          A coarser bounding region the source names (e.g. the ~200-km-long
+          MAR segment, or the ~120-km studied portion of the ridge) that
+          contains finer sections.
+
+  SpreadingCharacter:
+    description: >-
+      Tectonic/magmatic character the source attributes to a ridge-axis
+      section. Multivalued on the section record because the source
+      attributes more than one character to a single section.
+    permissible_values:
+      MAGMATIC:
+        description: Section shows magmatic construction (e.g. basalt, volcanic ridge).
+      AMAGMATIC:
+        description: Section shows no evidence of magmatic construction.
+      TECTONIC:
+        description: Section shows tectonic origin (e.g. exhumed mantle, faulting).
+
+  GeologicalLayerKind:
+    description: Named lithospheric or asthenospheric layer.
+    permissible_values:
+      CRUST:
+      MANTLE:
+      LITHOSPHERE:
+      ASTHENOSPHERE:
+
+  GeologicalBoundaryKind:
+    description: Named geological boundary the source discusses.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+        description: >-
+          The BDB; at slow- and ultraslow-spreading ridges, defined by the
+          maximum depth of earthquakes and an associated isotherm.
+      MOHO:
+        description: Crust-mantle boundary.
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+        description: The LAB.
+
+  RockLithology:
+    description: Rock type the source reports for a seafloor or dredged sample.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      PERIDOTITE:
+
+  RockAnalysisKind:
+    description: >-
+      Geochemical analysis category the source assigns to a sample used for
+      CO2-content estimation.
+    permissible_values:
+      MORB_WHOLE_ROCK:
+      POPPING_ROCK:
+      MELT_INCLUSION:
+
+  EarthquakeLocationQuality:
+    description: >-
+      Source-assigned location-quality category for an earthquake, per the
+      source's stated location criteria (category A meets all criteria, B-C
+      meet two, D meets one).
+    permissible_values:
+      QUALITY_A:
+      QUALITY_B:
+      QUALITY_C:
+      QUALITY_D:
+
+  EarthquakeEventKind:
+    description: >-
+      Distinguishes a mainshock from a subevent for an earthquake the source
+      names individually, rather than reports as part of an aggregate
+      catalog statistic.
+    permissible_values:
+      MAINSHOCK:
+      SUBEVENT:
+
+  StructuralRelationType:
+    description: >-
+      Spatial, mereological, and characterization predicates not covered by
+      the research pack's ResearchRelationType, which is reserved for
+      evidentiary/epistemic relations (support, challenge, sampling,
+      campaign membership, reporting).
+    permissible_values:
+      PART_OF:
+        description: Mereological containment between two structural entities.
+      ADJACENT_TO:
+        description: Two structural entities are next to one another along the ridge axis.
+      BOUNDS:
+        description: One entity forms the bound/edge of another (e.g. a fault bounding a segment).
+      LOCATED_ON:
+        description: One entity sits on or at the surface of another.
+      LOCATED_BENEATH:
+        description: One entity lies at depth beneath another.
+      CHARACTERIZES:
+        description: >-
+          An Observation or CountObservation reports a property of its
+          bearer (the relation's target).
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+  RidgeAxisSection:
+    is_a: Entity
+    description: >-
+      A named section along the studied MAR ridge axis: a ridge segment, an
+      RTI segment, a non-transform discontinuity, or the coarser study area
+      that contains them. Source examples: RC1 (RTI segment), NTD1, RC2,
+      NTD2, RC3, and the ~120-km studied portion of the ridge.
+    slots:
+      - segment_kind
+      - spreading_character
+    slot_usage:
+      segment_kind:
+        required: true
+
+  OceanicCoreComplex:
+    is_a: Entity
+    description: >-
+      An oceanic core complex exposing exhumed mantle at the surface, such
+      as the OCC on the outside corner of the RTI segment (RC1).
+
+  DetachmentFault:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A detachment fault bounding a ridge-axis section. The source reports
+      at least one such fault as inactive (the OCC-bounding fault beneath
+      the axial valley floor near the OCC termination), which is recorded
+      via the inherited status slot.
+
+  HydrothermalVentField:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A hydrothermal vent field. The source reports one extinct field on
+      the eastern flank of NTD1 and no active vents on the segment RC2
+      axis; activity is recorded via the inherited status slot.
+
+  TransformFault:
+    is_a: Entity
+    description: >-
+      An oceanic transform fault bounding the studied ridge segment, such
+      as the Romanche or Chain transform faults.
+
+  GeologicalLayer:
+    is_a: Entity
+    description: >-
+      A named lithospheric or asthenospheric layer (crust, mantle,
+      lithosphere, asthenosphere) as the source discusses it beneath a
+      ridge-axis section.
+    slots:
+      - layer_kind
+    slot_usage:
+      layer_kind:
+        required: true
+
+  GeologicalBoundary:
+    is_a: Entity
+    description: >-
+      A named geological boundary the source discusses (brittle-ductile
+      boundary, Moho, lithosphere-asthenosphere boundary).
+    slots:
+      - boundary_kind
+    slot_usage:
+      boundary_kind:
+        required: true
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock sample the source reports, whether observed on the seafloor
+      (by lithology) or compiled for geochemical CO2-content analysis (by
+      analysis kind). Extends the research pack's Sample rather than the
+      Malleus root, per pack-before-root precedence.
+    slots:
+      - lithology
+      - analysis_kind
+
+  EarthquakeOccurrence:
+    is_a: Event
+    mixins:
+      - Quantified
+      - Describable
+    description: >-
+      A single, individually identified earthquake the source names by
+      magnitude and role rather than reports only as part of an aggregate
+      catalog statistic — for example, the 2016 Mw 7.1 Romanche earthquake
+      and its two subevents. Aggregate microseismicity patterns (e.g. "deep
+      microseismicity beneath segment RC2") are captured as Observation
+      records characterizing a RidgeAxisSection instead, since the source
+      does not individuate those into single named occurrences. Adds
+      Quantified (for the reported magnitude) and Describable (for
+      qualitative location context) because the root Event class mixes in
+      neither.
+    slots:
+      - location_quality
+    slot_usage:
+      event_type:
+        range: EarthquakeEventKind
+
+  CountObservation:
+    is_a: Entity
+    mixins:
+      - Counted
+      - TemporalExtent
+      - SourceAsserted
+    description: >-
+      A source-attributed integer count over a declared scope (e.g. "19
+      ocean-bottom seismometers deployed", "514 earthquakes located", "364
+      well-constrained events"), distinct from the research pack's
+      Observation, which carries a continuous Quantified value rather than
+      an integer count. Composes the metrology pack's Counted mixin with
+      the research pack's TemporalExtent and SourceAsserted mixins, the
+      same way the research pack composes Observation from Quantified,
+      TemporalExtent, and SourceAsserted.
+
+  StructuralRelation:
+    is_a: Relation
+    description: >-
+      A typed structural, spatial, or characterization relation between
+      graph entities, for links the research pack's ResearchRelationType
+      does not cover (which is reserved for evidentiary/epistemic
+      relations: support, challenge, sampling, campaign membership,
+      reporting).
+    slot_usage:
+      relation_type:
+        range: StructuralRelationType
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  segment_kind:
+    range: RidgeSegmentKind
+    description: >-
+      Structural role of this ridge-axis section as delimited in the
+      source: an ordinary ridge segment, an amagmatic RTI segment, a
+      non-transform discontinuity, or the coarser study-area bounding
+      region.
+
+  spreading_character:
+    range: SpreadingCharacter
+    multivalued: true
+    description: >-
+      Source-stated tectonic/magmatic character of the section. Multivalued
+      because the source attributes both magmatic and tectonic origin to at
+      least one section (NTD1).
+
+  layer_kind:
+    range: GeologicalLayerKind
+    description: Which lithospheric or asthenospheric layer this record represents.
+
+  boundary_kind:
+    range: GeologicalBoundaryKind
+    description: Which named geological boundary this record represents.
+
+  lithology:
+    range: RockLithology
+    description: Rock type observed for this sample, when the source names one.
+
+  analysis_kind:
+    range: RockAnalysisKind
+    description: >-
+      Geochemical analysis category the source assigns to this sample
+      (whole-rock MORB, popping rock, or melt inclusion).
+
+  location_quality:
+    range: EarthquakeLocationQuality
+    description: >-
+      Source-assigned location-quality category (A-D) for this earthquake
+      occurrence, per the source's stated location criteria. Left unset
+      when the source does not classify the occurrence this way (e.g. the
+      externally-referenced 2016 Mw 7.1 event).

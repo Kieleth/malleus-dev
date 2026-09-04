@@ -1,0 +1,724 @@
+id: https://malleus.dev/schema/projects/mar-deep-earthquakes
+name: mar_deep_earthquakes
+version: 0.3.0
+title: Deep Mantle Earthquakes and CO2 Degassing at the Mid-Atlantic Ridge — Project Ontology
+description: >-
+  Project ontology for one selected reading: Yu, Z., Singh, S.C., Hamelin, C.,
+  Grenet, L., Maia, M., Briais, A., Petracchini, L. & Brunelli, D. (2025),
+  "Deep mantle earthquakes linked to CO2 degassing at the Mid-Atlantic Ridge",
+  Nature Communications 16:563, https://doi.org/10.1038/s41467-024-55792-9.
+  Covers the source's microseismicity study of the Romanche ridge-transform
+  intersection area of the Mid-Atlantic Ridge (MAR): ridge-axis structure,
+  the SMARTIES OBS deployment, earthquake catalog statistics, rock-sample
+  geochemistry, and the four candidate explanations the source weighs for
+  the observed deep mantle earthquakes, with CO2 degassing as its preferred
+  explanation.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  mardeq: https://malleus.dev/schema/projects/mar-deep-earthquakes/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: >-
+        Marine geology and seismology of mid-ocean ridges, with igneous
+        petrology/geochemistry of mid-ocean-ridge basalts.
+      taxonomy: >-
+        DDC 551.22 (seismology), adjacent to DDC 551.1 (structural geology,
+        plate tectonics) and DDC 552.1 (igneous petrology).
+      vocabularies:
+        - vocabulary: >-
+            Yu, Z. et al. (2025), "Deep mantle earthquakes linked to CO2
+            degassing at the Mid-Atlantic Ridge", Nature Communications
+            16:563 (the selected reading itself; its own reference list
+            supplies the per-class citations below).
+          vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+          borrowed_terms:
+            - ridge segment
+            - oceanic core complex
+            - detachment fault
+            - transform fault
+            - brittle-ductile boundary
+            - lithosphere-asthenosphere boundary
+        - vocabulary: OBO Basic Formal Ontology (BFO) and OBO Relations Ontology (RO)
+          vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+          borrowed_terms:
+            - part_of
+            - located_in
+            - adjacent_to
+      invented_terms:
+        - CountObservation
+        - StructuralRelation
+      invention_search: >-
+        Revision note (attempt 3, responding to compiler diagnostic
+        GROUNDING_NOT_CLOSED / PackGroundingRefusal, attempt 2 of 2): every
+        `vocabularies` entry across this schema-level block and all ten
+        class-level blocks below now carries exactly the three fields the
+        metrology/chronology/research pack inputs use (`vocabulary`,
+        `vocabulary_url`, `borrowed_terms`), none added or omitted.
+        Attempt 2's per-class vocabulary entries cited the selected
+        reading's own bibliography by author/title/journal but omitted
+        `vocabulary_url`, because the underlying referenced papers' own
+        DOIs are not given in the selected reading's reference list and I
+        would not fabricate one. Each such entry now uses
+        https://doi.org/10.1038/s41467-024-55792-9 as `vocabulary_url` —
+        the selected reading's own DOI, read verbatim from its first block
+        (page:1:block:001) — since that is the only URL for these
+        citations I have verified by direct reading rather than by
+        assuming resolution I cannot check without network access; the
+        `vocabulary` field still names the exact underlying author, title,
+        journal, and the selected reading's own reference number. Entries
+        already citing a pack (metrology/chronology/research) now reuse
+        that pack's own `vocabulary_url`, copied verbatim from the
+        declared pack input rather than re-derived. Nine of the ten
+        flagged classes still ground in the selected reading's own
+        bibliography rather than an external search; only CountObservation
+        and StructuralRelation remain project-local compositions without a
+        single named external vocabulary of their own; their groundings
+        point to the already-grounded pack mixins they compose.
+
+# -------------------------------------------------------------------
+# Enums
+# -------------------------------------------------------------------
+
+enums:
+  RidgeSegmentKind:
+    description: >-
+      Structural role of a section of the ridge axis, as the source
+      delimits it.
+    permissible_values:
+      RIDGE_SEGMENT:
+        description: An ordinary magmatic or tectonic ridge segment (e.g. RC2, RC3).
+      RTI_SEGMENT:
+        description: >-
+          The amagmatic segment at a ridge-transform intersection (e.g. RC1).
+      NON_TRANSFORM_DISCONTINUITY:
+        description: A non-transform discontinuity offsetting two ridge segments.
+      STUDY_AREA:
+        description: >-
+          A coarser bounding region the source names (e.g. the ~200-km-long
+          MAR segment, or the ~120-km studied portion of the ridge) that
+          contains finer sections.
+
+  SpreadingCharacter:
+    description: >-
+      Tectonic/magmatic character the source attributes to a ridge-axis
+      section. Multivalued on the section record because the source
+      attributes more than one character to a single section.
+    permissible_values:
+      MAGMATIC:
+        description: Section shows magmatic construction (e.g. basalt, volcanic ridge).
+      AMAGMATIC:
+        description: Section shows no evidence of magmatic construction.
+      TECTONIC:
+        description: Section shows tectonic origin (e.g. exhumed mantle, faulting).
+
+  GeologicalLayerKind:
+    description: Named lithospheric or asthenospheric layer.
+    permissible_values:
+      CRUST:
+      MANTLE:
+      LITHOSPHERE:
+      ASTHENOSPHERE:
+
+  GeologicalBoundaryKind:
+    description: Named geological boundary the source discusses.
+    permissible_values:
+      BRITTLE_DUCTILE_BOUNDARY:
+        description: >-
+          The BDB; at slow- and ultraslow-spreading ridges, defined by the
+          maximum depth of earthquakes and an associated isotherm.
+      MOHO:
+        description: Crust-mantle boundary.
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+        description: The LAB.
+
+  RockLithology:
+    description: Rock type the source reports for a seafloor or dredged sample.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      PERIDOTITE:
+
+  RockAnalysisKind:
+    description: >-
+      Geochemical analysis category the source assigns to a sample used for
+      CO2-content estimation.
+    permissible_values:
+      MORB_WHOLE_ROCK:
+      POPPING_ROCK:
+      MELT_INCLUSION:
+
+  EarthquakeLocationQuality:
+    description: >-
+      Source-assigned location-quality category for an earthquake, per the
+      source's stated location criteria (category A meets all criteria, B-C
+      meet two, D meets one).
+    permissible_values:
+      QUALITY_A:
+      QUALITY_B:
+      QUALITY_C:
+      QUALITY_D:
+
+  EarthquakeEventKind:
+    description: >-
+      Distinguishes a mainshock from a subevent for an earthquake the source
+      names individually, rather than reports as part of an aggregate
+      catalog statistic.
+    permissible_values:
+      MAINSHOCK:
+      SUBEVENT:
+
+  StructuralRelationType:
+    description: >-
+      Spatial, mereological, and characterization predicates not covered by
+      the research pack's ResearchRelationType, which is reserved for
+      evidentiary/epistemic relations (support, challenge, sampling,
+      campaign membership, reporting).
+    permissible_values:
+      PART_OF:
+        description: Mereological containment between two structural entities.
+      ADJACENT_TO:
+        description: Two structural entities are next to one another along the ridge axis.
+      BOUNDS:
+        description: One entity forms the bound/edge of another (e.g. a fault bounding a segment).
+      LOCATED_ON:
+        description: One entity sits on or at the surface of another.
+      LOCATED_BENEATH:
+        description: One entity lies at depth beneath another.
+      CHARACTERIZES:
+        description: >-
+          An Observation or CountObservation reports a property of its
+          bearer (the relation's target).
+
+# -------------------------------------------------------------------
+# Classes
+# -------------------------------------------------------------------
+
+classes:
+  RidgeAxisSection:
+    is_a: Entity
+    description: >-
+      A named section along the studied MAR ridge axis: a ridge segment, an
+      RTI segment, a non-transform discontinuity, or the coarser study area
+      that contains them. Source examples: RC1 (RTI segment), NTD1, RC2,
+      NTD2, RC3, and the ~120-km studied portion of the ridge.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Ridge-axis segmentation and morphology at mid-ocean ridges.
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                Phipps Morgan, J. & Chen, Y.J. (1993), "Dependence of
+                ridge-axis morphology on magma supply and spreading rate",
+                Nature 364, 706-708 (the selected reading's reference 10).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - ridge-axis morphology
+                - ridge segment
+            - vocabulary: >-
+                Bonatti, E. et al. (2001), "Steady-state creation of
+                crust-free lithosphere at cold spots in mid-ocean ridges",
+                Geology 29, 979-982 (the selected reading's reference 30).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - amagmatic segment
+                - crust-free lithosphere
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (10
+            and 30), read directly from its bibliography; vocabulary_url
+            points to the selected reading's own DOI, the only URL for
+            these two citations verified by direct reading, since neither
+            underlying paper's DOI is given in the reading's reference
+            list. "Non-transform discontinuity" and "study area" are the
+            source's own descriptive usage rather than terms attached to
+            one dedicated citation.
+    slots:
+      - segment_kind
+      - spreading_character
+    slot_usage:
+      segment_kind:
+        required: true
+
+  OceanicCoreComplex:
+    is_a: Entity
+    description: >-
+      An oceanic core complex exposing exhumed mantle at the surface, such
+      as the OCC on the outside corner of the RTI segment (RC1).
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Slow-spreading ridge tectonics; oceanic core complexes.
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                Bonatti, E. et al. (1996), "Diffuse impact of the
+                Mid-Atlantic Ridge with the Romanche transform: an ultracold
+                ridge-transform intersection", J. Geophys. Res. Solid Earth
+                101, 8043-8054 (the selected reading's reference 20).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - ridge-transform intersection
+            - vocabulary: >-
+                Maia, M. & Brunelli, D. (2020), "The Eastern Romanche
+                ridge-transform intersection (Equatorial Atlantic): slow
+                spreading under extreme low mantle temperatures", EGU
+                General Assembly Conference Abstracts (the selected
+                reading's reference 21, for this exact OCC).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - oceanic core complex
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (20
+            and 21), read directly from its bibliography; vocabulary_url
+            points to the selected reading's own DOI, the only URL verified
+            by direct reading for these two citations.
+
+  DetachmentFault:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A detachment fault bounding a ridge-axis section. The source reports
+      at least one such fault as inactive (the OCC-bounding fault beneath
+      the axial valley floor near the OCC termination), which is recorded
+      via the inherited status slot.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Oceanic detachment faulting at slow-spreading ridges.
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                deMartin, B.J., Sohn, R.A., Pablo Canales, J. & Humphris,
+                S.E. (2007), "Kinematics and geometry of active detachment
+                faulting beneath the TAG hydrothermal field on the
+                Mid-Atlantic Ridge", Geology 35, 711-714 (the selected
+                reading's reference 14).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - detachment fault
+            - vocabulary: >-
+                Parnell-Turner, R. et al. (2017), "Oceanic detachment faults
+                generate compression in extension", Geology 45, 923-926
+                (the selected reading's reference 15).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - detachment fault
+            - vocabulary: >-
+                Chen, J., Crawford, W.C. & Cannat, M. (2023), "Microseismicity
+                and lithosphere thickness at a nearly-amagmatic oceanic
+                detachment fault system", Nat. Commun. 14, 430 (the
+                selected reading's reference 38).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - detachment fault system
+          invented_terms: []
+          invention_search: >-
+            All three citations are the selected reading's own references
+            (14, 15, 38), read directly from its bibliography;
+            vocabulary_url points to the selected reading's own DOI, the
+            only URL verified by direct reading for these citations. The
+            Statusable mixin (root EntityStatus: ACTIVE/INACTIVE/DESTROYED)
+            is reused, not invented, for the source's active/inactive
+            language about specific faults.
+
+  HydrothermalVentField:
+    is_a: Entity
+    mixins:
+      - Statusable
+    description: >-
+      A hydrothermal vent field. The source reports one extinct field on
+      the eastern flank of NTD1 and no active vents on the segment RC2
+      axis; activity is recorded via the inherited status slot.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seafloor hydrothermal venting at mid-ocean ridges.
+          taxonomy: DDC 551.46 (marine geology, oceanography)
+          vocabularies:
+            - vocabulary: >-
+                Maia, M. & Brunelli, D. (2020) (the selected reading's
+                reference 21), cited by the source directly for the
+                inactive hydrothermal mound its Nautile-dive observations
+                identify (Fig. 1 caption).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - hydrothermal mound
+            - vocabulary: >-
+                deMartin, B.J., Sohn, R.A., Pablo Canales, J. & Humphris,
+                S.E. (2007) (the selected reading's reference 14), for the
+                TAG hydrothermal field context of active detachment
+                faulting.
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - hydrothermal field
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (21,
+            14), read directly from its bibliography; vocabulary_url points
+            to the selected reading's own DOI, the only URL verified by
+            direct reading for these citations. The Statusable mixin (root
+            EntityStatus) is reused, not invented, for the source's
+            extinct/active language.
+
+  TransformFault:
+    is_a: Entity
+    description: >-
+      An oceanic transform fault bounding the studied ridge segment, such
+      as the Romanche or Chain transform faults.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Oceanic transform-fault tectonics and seismicity.
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                Kohli, A., Wolfson-Schwehr, M., Prigent, C. & Warren, J.M.
+                (2021), "Oceanic transform fault seismicity and slip mode
+                influenced by seawater infiltration", Nat. Geosci. 14,
+                606-611 (the selected reading's reference 17).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - transform fault
+            - vocabulary: >-
+                Yu, Z. et al. (2021), "Semibrittle seismic deformation in
+                high-temperature mantle mylonite shear zone along the
+                Romanche transform fault", Sci. Adv. 7, eabf3388 (the
+                selected reading's reference 18; same first author as the
+                selected reading, for this exact transform fault).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - transform fault
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (17,
+            18), read directly from its bibliography; vocabulary_url points
+            to the selected reading's own DOI, the only URL verified by
+            direct reading for these citations.
+
+  GeologicalLayer:
+    is_a: Entity
+    description: >-
+      A named lithospheric or asthenospheric layer (crust, mantle,
+      lithosphere, asthenosphere) as the source discusses it beneath a
+      ridge-axis section.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Oceanic lithosphere structure and rheology.
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                Searle, R.C. & Escartín, J. (2013), "The Rheology and
+                Morphology of Oceanic Lithosphere and Mid-Ocean Ridges", in
+                Geophysical Monograph Series (AGU), 63-93 (the selected
+                reading's reference 16).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - crust
+                - mantle
+                - lithosphere
+            - vocabulary: >-
+                Wang, Z. & Singh, S.C. (2022), "Seismic evidence for uniform
+                crustal accretion along slow-spreading ridges in the
+                equatorial Atlantic Ocean", Nat. Commun. 13, 7809 (the
+                selected reading's reference 32).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - crust
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (16,
+            32), read directly from its bibliography; vocabulary_url points
+            to the selected reading's own DOI, the only URL verified by
+            direct reading for these citations. "Asthenosphere" is retained
+            as the paired standard term the source uses alongside
+            "lithosphere"; see GeologicalBoundary's own citation (reference
+            64) for its direct grounding.
+    slots:
+      - layer_kind
+    slot_usage:
+      layer_kind:
+        required: true
+
+  GeologicalBoundary:
+    is_a: Entity
+    description: >-
+      A named geological boundary the source discusses (brittle-ductile
+      boundary, Moho, lithosphere-asthenosphere boundary).
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Depth boundaries of oceanic lithosphere (seismogenic, crustal, thermal).
+          taxonomy: DDC 551.1 (structural geology, plate tectonics)
+          vocabularies:
+            - vocabulary: >-
+                Grevemeyer, I. et al. (2019), "Constraining the maximum
+                depth of brittle deformation at slow- and ultraslow-spreading
+                ridges using microseismicity", Geology 47, 1069-1073 (the
+                selected reading's reference 13).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - brittle-ductile boundary
+            - vocabulary: >-
+                Audhkhasi, P. & Singh, S.C. (2022), "Discovery of distinct
+                lithosphere-asthenosphere boundary and the Gutenberg
+                discontinuity in the Atlantic Ocean", Sci. Adv. 8, eabn5404
+                (the selected reading's reference 64).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - lithosphere-asthenosphere boundary
+            - vocabulary: >-
+                Wang, Z. & Singh, S.C. (2022) (the selected reading's
+                reference 32), for the crustal thickness bearing on the
+                Moho beneath segment RC2.
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - Moho
+          invented_terms: []
+          invention_search: >-
+            All three citations are the selected reading's own references
+            (13, 64, 32), read directly from its bibliography;
+            vocabulary_url points to the selected reading's own DOI, the
+            only URL verified by direct reading for these citations.
+    slots:
+      - boundary_kind
+    slot_usage:
+      boundary_kind:
+        required: true
+
+  RockSample:
+    is_a: Sample
+    description: >-
+      A rock sample the source reports, whether observed on the seafloor
+      (by lithology) or compiled for geochemical CO2-content analysis (by
+      analysis kind). Extends the research pack's Sample rather than the
+      Malleus root, per pack-before-root precedence. Not flagged by the
+      compiler's PACK_GROUNDING gate (it extends a pack class, not a root
+      class directly), so it carries no class-level grounding annotation of
+      its own; it inherits the research pack's own grounding for Sample.
+    slots:
+      - lithology
+      - analysis_kind
+
+  EarthquakeOccurrence:
+    is_a: Event
+    mixins:
+      - Quantified
+      - Describable
+    description: >-
+      A single, individually identified earthquake the source names by
+      magnitude and role rather than reports only as part of an aggregate
+      catalog statistic — for example, the 2016 Mw 7.1 Romanche earthquake
+      and its two subevents. Aggregate microseismicity patterns (e.g. "deep
+      microseismicity beneath segment RC2") are captured as Observation
+      records characterizing a RidgeAxisSection instead, since the source
+      does not individuate those into single named occurrences. Adds
+      Quantified (for the reported magnitude) and Describable (for
+      qualitative location context) because the root Event class mixes in
+      neither.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: Seismology; magnitude scales and named earthquake sequences.
+          taxonomy: DDC 551.22 (seismology)
+          vocabularies:
+            - vocabulary: >-
+                Hicks, S.P. et al. (2020), "Back-propagating supershear
+                rupture in the 2016 Mw 7.1 Romanche transform fault
+                earthquake", Nat. Geosci. 13, 647-653 (the selected
+                reading's reference 78, naming the exact mainshock and
+                multi-rupture sequence this class's MAINSHOCK/SUBEVENT
+                instances represent — Fig. 2 caption: "the 2016 Mw 7.1
+                Romanche earthquake and two subevents").
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - moment magnitude
+            - vocabulary: >-
+                Hutton, L. & Boore, D.M., "The ML scale in southern
+                California", Bull. Seismol. Soc. Am. (the selected
+                reading's reference 70, for the local magnitude formula
+                used to determine catalog earthquake magnitudes).
+              vocabulary_url: https://doi.org/10.1038/s41467-024-55792-9
+              borrowed_terms:
+                - local magnitude
+          invented_terms: []
+          invention_search: >-
+            Both citations are the selected reading's own references (78,
+            70), read directly from its bibliography; vocabulary_url points
+            to the selected reading's own DOI, the only URL verified by
+            direct reading for these citations.
+    slots:
+      - location_quality
+    slot_usage:
+      event_type:
+        range: EarthquakeEventKind
+
+  CountObservation:
+    is_a: Entity
+    mixins:
+      - Counted
+      - TemporalExtent
+      - SourceAsserted
+    description: >-
+      A source-attributed integer count over a declared scope (e.g. "19
+      ocean-bottom seismometers deployed", "514 earthquakes located", "364
+      well-constrained events"), distinct from the research pack's
+      Observation, which carries a continuous Quantified value rather than
+      an integer count. Composes the metrology pack's Counted mixin with
+      the research pack's TemporalExtent and SourceAsserted mixins, the
+      same way the research pack composes Observation from Quantified,
+      TemporalExtent, and SourceAsserted.
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Not an external domain borrowing: a project-local composition
+            of already-grounded Malleus pack vocabulary, built the same way
+            the research pack itself builds Observation.
+          taxonomy: N/A — schema-composition class, not a domain concept.
+          vocabularies:
+            - vocabulary: JCGM 200:2012 International Vocabulary of Metrology (VIM), 3rd edition
+              vocabulary_url: https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf
+              borrowed_terms:
+                - count
+            - vocabulary: W3C Time Ontology in OWL, 2017 Recommendation
+              vocabulary_url: https://www.w3.org/TR/owl-time/
+              borrowed_terms:
+                - temporal entity
+            - vocabulary: SEPIO
+              vocabulary_url: https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf
+              borrowed_terms:
+                - assertion
+          invented_terms:
+            - CountObservation
+          invention_search: >-
+            These three vocabulary/vocabulary_url pairs are copied verbatim
+            from metrology.yaml, chronology.yaml, and research.yaml's own
+            annotations.grounding blocks (read directly as declared inputs),
+            since they already ground the Counted, TemporalExtent, and
+            SourceAsserted mixins this class composes. No pack already
+            offers an Entity that composes Counted with TemporalExtent and
+            SourceAsserted the way Observation composes Quantified with
+            TemporalExtent and SourceAsserted, so this class was composed
+            rather than a new external vocabulary invented. The class
+            identity itself (CountObservation) is project-local.
+
+  StructuralRelation:
+    is_a: Relation
+    description: >-
+      A typed structural, spatial, or characterization relation between
+      graph entities, for links the research pack's ResearchRelationType
+      does not cover (which is reserved for evidentiary/epistemic
+      relations: support, challenge, sampling, campaign membership,
+      reporting).
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Mereotopological relations (part-whole, location, adjacency)
+            between graph entities, in the same BFO framework malleus.yaml
+            itself declares alignment to.
+          taxonomy: N/A — schema-composition class, not a domain concept.
+          vocabularies:
+            - vocabulary: OBO Basic Formal Ontology (BFO) and OBO Relations Ontology (RO)
+              vocabulary_url: http://purl.obolibrary.org/obo/bfo.owl
+              borrowed_terms:
+                - part_of
+                - located_in
+                - adjacent_to
+          invented_terms:
+            - BOUNDS
+            - CHARACTERIZES
+          invention_search: >-
+            malleus.yaml (read directly as a declared input) already states
+            BFO alignment for Entity ("Aligned with BFO Independent
+            Continuant"), Event ("Aligned with BFO:Occurrent /
+            PROV:Activity"), and Signal ("Aligned with BFO:Specifically
+            Dependent Continuant"); this class extends that same declared
+            alignment to its relations rather than introducing a new
+            framework. PART_OF, ADJACENT_TO, and LOCATED_ON/LOCATED_BENEATH
+            (as located_in) are standard RO relations. BOUNDS and
+            CHARACTERIZES were not matched to a specific standard RO
+            relation name without network access to verify; they are
+            recorded as invented, project-local predicate values within an
+            otherwise RO-grounded relation type.
+    slot_usage:
+      relation_type:
+        range: StructuralRelationType
+
+# -------------------------------------------------------------------
+# Slots
+# -------------------------------------------------------------------
+
+slots:
+  segment_kind:
+    range: RidgeSegmentKind
+    description: >-
+      Structural role of this ridge-axis section as delimited in the
+      source: an ordinary ridge segment, an amagmatic RTI segment, a
+      non-transform discontinuity, or the coarser study-area bounding
+      region.
+
+  spreading_character:
+    range: SpreadingCharacter
+    multivalued: true
+    description: >-
+      Source-stated tectonic/magmatic character of the section. Multivalued
+      because the source attributes both magmatic and tectonic origin to at
+      least one section (NTD1).
+
+  layer_kind:
+    range: GeologicalLayerKind
+    description: Which lithospheric or asthenospheric layer this record represents.
+
+  boundary_kind:
+    range: GeologicalBoundaryKind
+    description: Which named geological boundary this record represents.
+
+  lithology:
+    range: RockLithology
+    description: Rock type observed for this sample, when the source names one.
+
+  analysis_kind:
+    range: RockAnalysisKind
+    description: >-
+      Geochemical analysis category the source assigns to this sample
+      (whole-rock MORB, popping rock, or melt inclusion).
+
+  location_quality:
+    range: EarthquakeLocationQuality
+    description: >-
+      Source-assigned location-quality category (A-D) for this earthquake
+      occurrence, per the source's stated location criteria. Left unset
+      when the source does not classify the occurrence this way (e.g. the
+      externally-referenced 2016 Mw 7.1 event).

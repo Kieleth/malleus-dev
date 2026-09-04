@@ -1,0 +1,87 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "REFUSED_AFTER_DIAGNOSTIC_BUDGET",
+  "run_id": "run-03",
+  "core": {
+    "commit": "26877364cc2649df9bc9a93fd10e75f993e31cb1",
+    "tree": "d12866050ad53d04243aaf0b4a899c626320d841"
+  },
+  "producer_input_manifest_sha256": "sha256:30b8e2432f67d4672b3295383daead526249667f7f0cd75f1f8dbfeced3f0484",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "sonnet",
+    "model_family": "Claude Sonnet 5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 2,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:0b7644dc91e4d0595b9ecb88dc07ff09f9355da454b1c0a1f5434260bd847c4f",
+    "final_status_sha256": "sha256:6bbb218390efce091cbd75f76b39d4f25fbf0c07c6fcb459db19aaeaeee1095b"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "DIRECT_ROOT_GROUNDING_REQUIRED",
+      "subjects": 10,
+      "ontology_sha256": "sha256:8d68c97f1cb574a760c4eccddc56d71c9911d670e9eef2dbcd2fdd7ae9e1c16e",
+      "ontology_path": "paper-v4/experiment-v4/run-03/ontology-run/ontology-01.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-03/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:e100f86c846b28979d58aade4ea1649e8034be8775a85db002494694c059d853",
+      "diagnostic_returned_to_producer_at": "2026-09-04T21:23:44Z"
+    },
+    {
+      "attempt": 2,
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_NOT_CLOSED",
+      "subjects": 1,
+      "ontology_sha256": "sha256:7dc8442438cbd9e9de971b3004c36234c8635062e61f23bfa09a76b328710729",
+      "ontology_path": "paper-v4/experiment-v4/run-03/ontology-run/ontology-02.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-03/ontology-run/attempt-02-diagnostic.json",
+      "diagnostic_sha256": "sha256:524445a86b61debe0bd2682559842b2c1a4bbc1df4be6542d53f0ca2013f167b",
+      "diagnostic_returned_to_producer_at": "2026-09-04T21:30:12Z"
+    },
+    {
+      "attempt": 3,
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_INCOMPLETE",
+      "subjects": 1,
+      "ontology_sha256": "sha256:d7f29d83b38d873855545401a87bdb4288ac0a7931766fd227ac387504727903",
+      "ontology_path": "paper-v4/experiment-v4/run-03/ontology-run/ontology-03.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-03/ontology-run/attempt-03-diagnostic.json",
+      "diagnostic_sha256": "sha256:c7707ee50f8ff827f12bf8b0267e879f8fe7cd6565ac7ef4d0944322653f9344",
+      "gate_at": "2026-09-04T21:35:20Z"
+    }
+  ],
+  "terminal_diagnostic": {
+    "stage": "PACK_GROUNDING",
+    "error_type": "PackGroundingRefusal",
+    "reason": "GROUNDING_INCOMPLETE",
+    "detail": "GROUNDING_INCOMPLETE: RidgeAxisSection must pair invented terms with invention_search"
+  },
+  "accepted_ontology_sha256": null,
+  "population_started": false,
+  "reading_reproduction": {
+    "window": 60,
+    "frozen_attempts_share_only": "REFERENCE_STRINGS",
+    "located_in": [
+      "ARTICLE_HEADER_TITLE_AND_DOI",
+      "NUMBERED_REFERENCE_LIST"
+    ],
+    "shared_runs": {
+      "ontology-01.yaml": 1,
+      "ontology-02.yaml": 12,
+      "ontology-03.yaml": 12
+    }
+  },
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "next_boundary": "The second matrix cell yields no population under this harness. A rerun requires the revised skill and pack-grounding rite, a new frozen contract at that Core coordinate, and it opens a new cell rather than replacing run-03."
+}

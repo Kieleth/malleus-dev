@@ -608,14 +608,16 @@ def test_the_ontology_run_result_records_three_refusals_and_two_returns() -> Non
             " with invention_search"
         ),
     }
-    assert result["terminal_diagnostic"]["detail"] == json.loads(
-        (HERE / "ontology-run/attempt-03-diagnostic.json").read_bytes()
-    )["detail"]
+    assert (
+        result["terminal_diagnostic"]["detail"]
+        == json.loads((HERE / "ontology-run/attempt-03-diagnostic.json").read_bytes())[
+            "detail"
+        ]
+    )
     assert result["accepted_ontology_sha256"] is None
     assert result["population_started"] is False
     assert result["reading_reproduction"]["shared_runs"] == {
-        Path(relative).name: count
-        for relative, count in SHARED_CITATION_RUNS.items()
+        Path(relative).name: count for relative, count in SHARED_CITATION_RUNS.items()
     }
 
 
