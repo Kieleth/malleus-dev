@@ -388,3 +388,33 @@ def test_event_participation_refuses_wrong_endpoint_kinds_atomically() -> None:
     assert wrong_entity.op_status is OpStatus.REJECTED
     assert "Entity 'e1' is not an Entity" in (wrong_entity.rejection_reason or "")
     assert graph.snapshot() == before
+
+
+def test_source_assertion_profile_can_describe_events_without_becoming_occurrence() -> (
+    None
+):
+    compiled = _compiled()
+    partial = _effective(
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256
+    )
+    plan = _plan(partial.identity)
+    plan["history_profile"] = {
+        "profile_id": "source-assertion",
+        "sha256": api.SOURCE_ASSERTION_PROFILE.identity,
+    }
+    plan["valid_time"] = {"kind": "ORDER_ONLY", "value": "capture:test-event"}
+
+    result = api.compile_population_plan(
+        plan,
+        partial_contract=partial,
+        contract_view=compiled.view,
+        base_state=api.PopulationBaseState.empty(),
+        history_profile=api.SOURCE_ASSERTION_PROFILE,
+    )
+
+    assert api.SOURCE_ASSERTION_PROFILE.semantic_unit == "COMPOSITION"
+    assert [operation.operation_type for operation in result.operations] == [
+        "CREATE_ENTITY",
+        "CREATE_EVENT",
+        "CREATE_EVENT_PARTICIPATION",
+    ]
