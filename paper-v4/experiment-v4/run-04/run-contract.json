@@ -1,0 +1,283 @@
+{
+  "schema": "malleus.paper-v4.v4-run-contract/v1",
+  "run_id": "run-04",
+  "status": "READY_FOR_PRODUCER",
+  "supersedes": "NOTHING_RUN_04_OPENS_THE_V4_1_ITERATION",
+  "protocol": {
+    "version": "v4.1",
+    "iteration": "SECOND",
+    "isolation": "ISOLATION_ONLY_SPAWN_MESSAGE_UNCHANGED_FROM_RUN_03",
+    "v4_cells_followed": [
+      {
+        "run_id": "run-02",
+        "path": "paper-v4/experiment-v4/run-02",
+        "requested_model": "opus",
+        "outcome": "ADMITTED_AND_REPLAYED",
+        "superseded": false
+      },
+      {
+        "run_id": "run-03",
+        "path": "paper-v4/experiment-v4/run-03",
+        "requested_model": "sonnet",
+        "outcome": "REFUSED_AFTER_DIAGNOSTIC_BUDGET",
+        "superseded": false
+      }
+    ],
+    "changes_since_v4": [
+      {
+        "id": "SKILL_REVISED",
+        "subject": ".claude/skills/malleus-acolyte/SKILL.md",
+        "revisions": [
+          "GROUNDING_BLOCK_EXAMPLE",
+          "READING_BYTES_FACT",
+          "DERIVATION_RULE",
+          "EVENTS_ENVELOPE",
+          "LOCATOR_WORDING",
+          "QUANTITY_KIND_CLASS_AND_CLAIM_LOCATOR_RULES"
+        ],
+        "detail": "The skill shows the grounding annotation in the shape the rite closes and states the three closed field sets; it states that reading_bytes are the raw declared input bytes and that the adapter never re-serialises them; it states that every properties key and both relation endpoints need a derivation while type and id do not; the capture template carries an events envelope beside entities and relations with the admission rule; it says which provenance locators leave the domain ontology and which source-reported identifiers stay; and it states the metrology quantity-kind class and the research claim locator and statement-digest rules.",
+        "why": "E-0122 findings 1, 2, 3 and 5 and E-0124's finding. Three fresh producers spent their diagnostic budget discovering the grounding block's shape and the capture interface by refusal rather than by reading."
+      },
+      {
+        "id": "PACKS_REVISED",
+        "subject": "ontology/packs/metrology.yaml, ontology/packs/research.yaml",
+        "versions": {
+          "metrology": "0.2.0",
+          "research": "0.2.0"
+        },
+        "detail": "metrology seeds enum QuantityKindClass, fifteen QUDT quantity-kind names plus a local OTHER, and the optional quantity_kind_class slot on the Quantified mixin beside the open quantity_kind, which keeps the source's own wording. research puts assertion_locator and statement_sha256 on the SourceAsserted mixin, reaching Claim and Observation, and gives Source a licence. Both edits are additive at 0.2.0.",
+        "why": "Run-02 wrote 137 distinct strings into the open quantity_kind, so a type-only binding could not sharpen, and put verbatim source sentences in Claim.statement, which withheld seven otherwise public artifacts."
+      },
+      {
+        "id": "CORE_AGGREGATED_DIAGNOSTICS",
+        "subject": "src/malleus/inquisition/pack_grounding.py, src/malleus/_contract_pipeline/population.py",
+        "governance_entry": "OVR-000395",
+        "reasons": [
+          "DIRECT_ROOT_GROUNDING_REQUIRED",
+          "GROUNDING_NOT_CLOSED",
+          "GROUNDING_INCOMPLETE",
+          "UNDERIVED_FIELD"
+        ],
+        "detail": "The pack-grounding rite reports every ill-formed grounding block and entry in one sorted refusal, each item naming its subject, its entry index and the closed field set that position requires. The plan compiler reports every underived field in one UNDERIVED_FIELD refusal with the rule that closes them. Before this, only the missing-root case aggregated.",
+        "why": "E-0124. One shape defect per refusal spent run-03's whole two-return budget on one grounding block's shape, and E-0122 finding 2 recorded the same failure class one layer down."
+      },
+      {
+        "id": "POPULATION_SURFACE_LISTS_EVENTS",
+        "subject": "paper-v4/experiment-v4/run-04/compile_ontology_candidate.py",
+        "surface_schema": "malleus.paper-v4.population-surface/v2",
+        "prior_surface_schema": "malleus.paper-v4.population-surface/v1",
+        "defect_of": "run-02",
+        "detail": "The population surface handed to the producer now lists every concrete type that subtypes the Malleus Event root under family EVENT, and concrete EventParticipation types under family EVENT_PARTICIPATION when the compiled contract declares that type, with the same effective slots and enum values entities and relations already carried. The surface also carries families_admitted, derived from the bound source-assertion profile.",
+        "why": "E-0122 finding 3. Run-02's accepted surface enumerated 26 ENTITY and 3 RELATION types and no EVENT type, although the accepted ontology declared SeismicEvent extending Event, the grounding receipt listed it among the grounded subjects, and the bound profile admits events. The producer wrote seven TYPE_ABSENT gaps instead of Event records. This is a paper-harness defect, not a Core one."
+      }
+    ]
+  },
+  "scope": {
+    "documents": 1,
+    "producer_loops": 1,
+    "staged_session_variant": false,
+    "new_multi_producer_matrix": false,
+    "protocol_version": "v4.1",
+    "matrix_cell": "FIRST_OF_V4_1",
+    "v4_cells": [
+      "run-02",
+      "run-03"
+    ],
+    "model_matched_cell": "run-02",
+    "variable": "SKILL_PACKS_CORE_DIAGNOSTICS_AND_POPULATION_SURFACE_NOT_THE_MODEL",
+    "harness": "RUN_03_HARNESS_WITH_THE_EVENT_SURFACE_DEFECT_FIXED"
+  },
+  "source": {
+    "source_id": "source:yu-2025-mid-atlantic-ridge",
+    "pdf_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "core_gate": {
+    "status": "PINNED_TO_THE_REVISED_CORE_COORDINATE",
+    "verification_owner": "OVERSEER_BEFORE_PRODUCER_SPAWN",
+    "execution_baseline": {
+      "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+      "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe"
+    },
+    "governance_head": {
+      "entry_id": "OVR-000396",
+      "head_hash": "sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2"
+    },
+    "required_pieces": [
+      "FULL_DOMAIN_HISTORY_PROFILE",
+      "GROUNDED_PACKS_AND_PACK_GROUNDING",
+      "NASCENT_PROJECT_PLAYBOOK",
+      "AGGREGATE_REFUSAL_DIAGNOSTICS",
+      "EVENT_FAMILY_ADMISSION"
+    ],
+    "verified_pieces": {
+      "FULL_DOMAIN_HISTORY_PROFILE": {
+        "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe",
+        "profile_id": "source-assertion",
+        "profile_path": "src/malleus/profiles/source-assertion.json",
+        "profile_file_sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46",
+        "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+        "paper_audit": "DIGEST_PINNED"
+      },
+      "GROUNDED_PACKS_AND_PACK_GROUNDING": {
+        "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe",
+        "grounding_rite_sha256": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
+        "pack_sha256": {
+          "chronology": "sha256:6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1",
+          "metrology": "sha256:c6c205d1d027eb116c4e0c79fb3d3cd71d60dcb7b68b0f14654fde1e2e15bc0a",
+          "research": "sha256:5ca437c55a17b0d116a464c472500dca8261eb758bbf72355e0b04ec6dbf6706"
+        },
+        "pack_version": {
+          "chronology": "0.1.0",
+          "metrology": "0.2.0",
+          "research": "0.2.0"
+        },
+        "paper_audit": "DIGEST_PINNED"
+      },
+      "NASCENT_PROJECT_PLAYBOOK": {
+        "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe",
+        "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "skill_sha256": "sha256:0909026f2c9d50192f02cf8f7af2572fffbb5e3a542c3bc4dc35fc96098f360b",
+        "paper_audit": "DIGEST_PINNED"
+      },
+      "AGGREGATE_REFUSAL_DIAGNOSTICS": {
+        "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe",
+        "governance_entry": "OVR-000395",
+        "shape": "ONE_SORTED_DEFECT_SET_PER_REFUSAL",
+        "reasons": [
+          "DIRECT_ROOT_GROUNDING_REQUIRED",
+          "GROUNDING_NOT_CLOSED",
+          "GROUNDING_INCOMPLETE",
+          "UNDERIVED_FIELD"
+        ],
+        "rite_module_sha256": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11",
+        "plan_compiler_sha256": "sha256:4778e43da6c4477297ee0b46ad8ceef6ddfe0ae7b53b0c32530c689751beed5c",
+        "paper_audit": "DIGEST_PINNED"
+      },
+      "EVENT_FAMILY_ADMISSION": {
+        "core_commit": "8b806f7411e11b84e1156cea84b4b641d701db19",
+        "core_tree": "1da402a610c6e38f2b7d7abcd059133d66aa3cbe",
+        "profile_id": "source-assertion",
+        "event_role": [
+          "Event"
+        ],
+        "admitted_families": [
+          "entities",
+          "events",
+          "relations"
+        ],
+        "event_participations": "ONLY_WHEN_THE_COMPILED_CONTRACT_DECLARES_EventParticipation",
+        "plan_compiler_sha256": "sha256:4778e43da6c4477297ee0b46ad8ceef6ddfe0ae7b53b0c32530c689751beed5c",
+        "paper_audit": "DIGEST_PINNED"
+      }
+    }
+  },
+  "history": {
+    "profile_id": "source-assertion",
+    "profile_sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "semantic_unit": "COMPOSITION",
+    "origin": "PARTIAL_IMPORT",
+    "composition": "ONE_ATOMIC_CAPTURE_BATCH",
+    "knowledge_valid_time": "ORDER_ONLY_CAPTURE_ID",
+    "assertion_and_domain_time": "OPTIONAL_PER_ASSERTION_RETAINED_EVIDENCE",
+    "modality_rule": "REPLAY_RECORD_TO_RETAINED_ASSERTION_TRACE_REQUIRED"
+  },
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "model_id": "claude-opus-5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "workspace_layout": "CLAUDE",
+    "session": "FRESH_SINGLE_SESSION",
+    "spawned_by": "OVERSEER",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "MALLEUS_ROOT",
+      "LINKML_TYPES",
+      "SHIPPED_GROUNDED_PACKS",
+      "SOURCE_ASSERTION_PROFILE"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_ONTOLOGY",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT",
+      "REPOSITORY_DOCUMENTATION",
+      "NETWORK"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_ontology_revision_rounds": 2,
+    "revision_trigger": "SOURCE_LOCATED_TYPED_GAP",
+    "terminal_rule": "STOP_WHEN_ANOTHER_ADDITION_WOULD_REQUIRE_INVENTION",
+    "spawn_message": "ISOLATION_ONLY_NO_MODELLING_INSTRUCTION"
+  },
+  "population": {
+    "questions_visible": false,
+    "constructible_types": "ALL_CONCRETE_ENTITY_EVENT_AND_RELATION_TYPES",
+    "population_surface_schema": "malleus.paper-v4.population-surface/v2",
+    "event_participations": "ONLY_WHEN_THE_COMPILED_CONTRACT_DECLARES_EventParticipation",
+    "field_level_source_derivations": "REQUIRED",
+    "typed_gaps": "REQUIRED_WHEN_ASSERTION_IS_NOT_FORMALIZED",
+    "human_repair": "FORBIDDEN",
+    "stage_acceptance_event": "ONTOLOGY_ACCEPTED_FOR_POPULATION",
+    "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY"
+  },
+  "query": {
+    "binding_owner": "PAPER_EVALUATOR",
+    "binding_time": "AFTER_POPULATION_AND_REPLAY_FREEZE",
+    "execution_state": "REPLAY_DERIVED_GRAPH_ONLY",
+    "source_reads": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "embedding_index": "FORBIDDEN",
+    "knowledge_state_identity": "EXCLUDED",
+    "evidence_selection": "BY_RECORD_ID_NEVER_BY_POSITION"
+  },
+  "evaluation": {
+    "questions_enter_at": "POST_REPLAY_QUERY_BINDING",
+    "method": "SOURCE_GROUNDED_HUMAN_INSPECTION",
+    "numeric_score": "FORBIDDEN",
+    "preliminary_inspector": "FRESH_CLAUDE_SESSION",
+    "paper_evidence_requires": "LUIS_RATIFICATION",
+    "competency_questions": {
+      "path": "paper-v4/experiment-v4/competency-questions.json",
+      "sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86",
+      "producer_visibility": "WITHHELD"
+    },
+    "review_protocol": {
+      "path": "paper-v4/evaluation-v4/review-protocol.json",
+      "sha256": "sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379"
+    }
+  },
+  "manuscript": {
+    "of_record": "1.2.1 on branch paper-v4-multimodel, tag paper-v4-multimodel-v2",
+    "v4_result": "NEW_SECTION_IN_THE_SUCCESSOR_OF_1_2_1",
+    "lean_draft": "SUPPORT_DOCUMENT_ONLY"
+  },
+  "completion": [
+    "ONTOLOGY_DIAGNOSTIC_HISTORY",
+    "ACCEPTED_ONTOLOGY_AND_REVISIONS",
+    "DOCUMENT_CAPTURE_AND_CENSUS",
+    "POPULATION_PLAN_AND_TYPED_GAPS",
+    "ADMITTED_LEDGER",
+    "REOPEN_REPLAY_RECEIPT",
+    "POST_REPLAY_QUERY_BINDING",
+    "QUERY_RESULTS",
+    "SOURCE_GROUNDED_PRELIMINARY_INSPECTION",
+    "CLEAN_REPRODUCTION_RECEIPT",
+    "MANUSCRIPT_SECTION"
+  ]
+}

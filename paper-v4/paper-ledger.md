@@ -2414,3 +2414,112 @@ family, or of the ontology's domain quality. It is the record of one session
 against one rite at one coordinate. Nothing here is paper evidence, no
 manuscript sentence changes, and the two cells are not comparable as a result
 until both have run to ratification under the same harness.
+
+### E-0125, run-04 opens v4.1 with a revised skill, revised packs and an Event surface
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-04/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `test_contract.py`,
+`compile_ontology_candidate.py`, and the Core governance entries `OVR-000394`
+to `OVR-000396`.
+
+Iteration: run-04 is the second iteration of the v4 protocol, `v4.1`. The
+protocol itself does not change: one document, one producer loop, one
+question-blind session, two diagnostic returns, two additive revision rounds, no
+fallback, and the same isolation-only spawn message run-03 carried, with only
+the run id substituted. What changes is what the producer reads and what the
+harness hands back. Run-02 and run-03 are the two v4 cells this iteration
+follows; neither is superseded, repaired or reinterpreted, and their frozen
+artifacts are digest-pinned by `run-04/test_contract.py` so this run cannot
+disturb them.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, model id `claude-opus-5`, reasoning effort the harness default
+and neither pinned nor observed. The model is run-02's, so the model is not the
+variable this time. Run-04 records the exact model id, which run-02 and run-03
+did not; every other key of the producer block is run-02's byte for byte, and
+the contract test compares them key by key.
+
+Coordinates: Core commit `8b806f7411e11b84e1156cea84b4b641d701db19`, tree
+`1da402a610c6e38f2b7d7abcd059133d66aa3cbe`, governance head `OVR-000396` at
+`sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2`. The
+interface coordinates are new: `capture:paper-v4:yu-2025:v4:4` and
+`plan:paper-v4:yu-2025:v4:4`. The private workspace is
+`private/paper-v4-v4-run-04/producer`. `prepare_producer.py` reads every tracked
+input with `git show 8b806f7:<path>` and installs the skill by writing those
+bytes, exactly as run-03 does.
+
+Three of the eight declared inputs moved and five did not. The skill is now
+`sha256:0909026f…`, metrology `sha256:c6c205d1…` at 0.2.0, research
+`sha256:5ca437c5…` at 0.2.0. The selected reading stays
+`sha256:f3885c7b…`, and so do the Malleus root, the LinkML types, chronology
+and the packaged source-assertion profile. The reading is the control:
+`test_contract.py` asserts the moved set is exactly those three and compares
+every digest against `git show` at the recorded commit, never against the
+working tree.
+
+What changed since v4, and why, in four entries the contract lists under
+`changes_since_v4`:
+
+1. The skill was revised in six places: the grounding annotation is now shown in
+   the shape the rite closes with its three closed field sets; `reading_bytes`
+   are stated to be the raw declared input bytes the adapter is handed, never a
+   re-serialization; every `properties` key and both relation endpoints are
+   stated to need a derivation while `type` and `id` do not; the capture
+   template carries an `events` envelope beside `entities` and `relations` with
+   the admission rule; the wording separates provenance locators, which leave the
+   domain ontology, from source-reported identifiers, which stay; and the
+   metrology quantity-kind class and the research claim locator and
+   statement-digest rules are stated. Cause: E-0122 findings 1, 2, 3 and 5, and
+   E-0124's finding.
+2. metrology and research are at 0.2.0, both additive. metrology seeds enum
+   `QuantityKindClass` and the optional `quantity_kind_class` slot beside the
+   open `quantity_kind`; research puts `assertion_locator` and
+   `statement_sha256` on the `SourceAsserted` mixin and gives `Source` a licence.
+   Cause: run-02 wrote 137 distinct strings into the open `quantity_kind`, and
+   put verbatim source sentences into `Claim.statement`, which withheld seven
+   otherwise public artifacts.
+3. Core aggregates refusal diagnostics, `OVR-000395`. The pack-grounding rite
+   reports every ill-formed grounding block and entry in one sorted refusal, each
+   item naming its subject, its entry index and the closed field set that
+   position requires; the plan compiler reports every underived field in one
+   `UNDERIVED_FIELD` refusal. Before this only the missing-root case aggregated.
+   Cause: E-0124, one shape defect per refusal spent run-03's whole budget on one
+   block's shape.
+4. The population surface lists Event types. This is the run-02 harness defect
+   E-0122 finding 3 recorded, and it is the paper's own, not Core's. Run-02's
+   accepted surface enumerated 26 `ENTITY` and 3 `RELATION` record types and no
+   `EVENT` type, although the accepted ontology declared `SeismicEvent` extending
+   `Event`, the grounding receipt listed it among the grounded subjects, and the
+   bound `source-assertion` profile admits events. The producer wrote seven
+   `TYPE_ABSENT` gaps instead of Event records. Run-04's
+   `compile_ontology_candidate.py` classes every concrete type that subtypes the
+   Malleus `Event` root as family `EVENT`, and concrete `EventParticipation`
+   types as family `EVENT_PARTICIPATION` when the compiled contract declares that
+   type, with the same effective slots and enum values entities and relations
+   already carried. The surface schema is now
+   `malleus.paper-v4.population-surface/v2` and it carries `families_admitted`,
+   derived from the bound profile: `entities`, `events`, `relations`, plus
+   `event_participations` only when the type exists.
+
+Harness: `run.py` and `native_query.py` are run-03's, unchanged except run-04's
+run id and result schema string. The events family needed no code path in the
+runner: `adapt_document_assertions` passes `records` through without naming a
+family, `export_records()` already returns all five families so the result's
+graph census counts events, and the trace summary walks every replayed record id
+rather than grouping by family. The public trace summary still carries no reading
+text. `test_pipeline.py` drives the whole harness end to end on Core's neutral
+inspection-note fixture, and one new test adds a grounded Event subclass to the
+test's own ontology bytes, compiles it, and admits, replays and exports one Event
+record from a capture whose `records` carry an `events` envelope with full field
+derivations. The shared fixture is not edited.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-04. A revised skill
+and a corrected surface are not evidence that either helps; whether the budget is
+still spent on the grounding block's shape, and whether an Event record is
+constructed at all, are open questions this run has not answered. Run-02 and
+run-03 remain one observation each and the three runs are not a measurement of
+anything until they have run to ratification under the same harness.
