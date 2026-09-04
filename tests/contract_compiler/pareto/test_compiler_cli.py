@@ -117,7 +117,7 @@ def _create_history(capsysbinary, tmp_path: Path) -> Path:
     return ledger
 
 
-def _retain_inputs(capsysbinary, ledger: Path) -> dict:
+def _retain_inputs(capsysbinary, ledger: Path, capture: Path | None = None) -> dict:
     return _emitted(
         capsysbinary,
         [
@@ -131,7 +131,7 @@ def _retain_inputs(capsysbinary, ledger: Path) -> dict:
             "application/json",
             "--evidence",
             CAPTURE_ID,
-            str(FIXTURE / "document-capture.json"),
+            str(capture or FIXTURE / "document-capture.json"),
             "application/json",
             "--transaction-time",
             TRANSACTION_TIME,
@@ -141,7 +141,9 @@ def _retain_inputs(capsysbinary, ledger: Path) -> dict:
     )
 
 
-def _capture_plan(capsysbinary, tmp_path: Path) -> tuple[Path, Path, dict]:
+def _capture_plan(
+    capsysbinary, tmp_path: Path, capture: Path | None = None
+) -> tuple[Path, Path, dict]:
     records, supersessions = _plan_inputs(tmp_path)
     plan_out = tmp_path / "plan.json"
     census_out = tmp_path / "census.json"
@@ -153,7 +155,7 @@ def _capture_plan(capsysbinary, tmp_path: Path) -> tuple[Path, Path, dict]:
             "--reading",
             str(FIXTURE / "reading.json"),
             "--capture",
-            str(FIXTURE / "document-capture.json"),
+            str(capture or FIXTURE / "document-capture.json"),
             "--capture-id",
             CAPTURE_ID,
             "--plan-id",
@@ -567,6 +569,84 @@ def test_typed_population_refusals_print_to_stderr_with_exit_two(
     assert out == b""
     assert err.startswith(b"malleus-compiler: ")
     assert b"UNRETAINED_SOURCE" in err
+    assert not (tmp_path / "change-set.json").exists()
+
+
+def _capture_without_targets(
+    tmp_path: Path, targets: tuple[tuple[str, list[str]], ...]
+) -> Path:
+    """Drop named formalization targets from the fixture capture."""
+
+    capture = json.loads((FIXTURE / "document-capture.json").read_bytes())
+    dropped = 0
+    for assertion in capture["assertions"]:
+        kept = [
+            formalization
+            for formalization in assertion["formalized_by"]
+            if (formalization["record_id"], formalization["path"]) not in targets
+        ]
+        assert kept or not assertion["formalized_by"], (
+            "an assertion that formalized something keeps a target"
+        )
+        dropped += len(assertion["formalized_by"]) - len(kept)
+        assertion["formalized_by"] = kept
+    assert dropped == len(targets)
+    path = tmp_path / "capture-missing-targets.json"
+    path.write_bytes(_canonical(capture))
+    return path
+
+
+def test_populate_surfaces_every_underived_field_from_the_document_route(
+    tmp_path: Path, capsysbinary
+) -> None:
+    """The adapter route and the command line carry the whole refusal detail.
+
+    Two targets are dropped from one capture, so the plan the document
+    adapter emits is missing two derivations. One populate call must name
+    both, not the first.
+    """
+
+    ledger = _create_history(capsysbinary, tmp_path)
+    capture = _capture_without_targets(
+        tmp_path,
+        (
+            ("asset:P-7", ["properties", "name"]),
+            ("inspection-of:P-7:2026-03-02", ["target_id"]),
+        ),
+    )
+    _retain_inputs(capsysbinary, ledger, capture)
+    plan_out, _, _ = _capture_plan(capsysbinary, tmp_path, capture)
+
+    code, out, err = _run(
+        capsysbinary,
+        [
+            "populate",
+            "--ledger",
+            str(ledger),
+            "--plan",
+            str(plan_out),
+            "--profile",
+            str(_profile_file(tmp_path)),
+            "--change-set-out",
+            str(tmp_path / "change-set.json"),
+            "--transaction-time",
+            TRANSACTION_TIME,
+            "--actor-id",
+            ACTOR,
+        ],
+    )
+
+    assert code == 2
+    assert out == b""
+    message = err.decode()
+    assert message.startswith("malleus-compiler: UNDERIVED_FIELD: ")
+    assert "record fields lack derivations: " in message
+    assert "asset:P-7:['properties', 'name']" in message
+    assert "inspection-of:P-7:2026-03-02:['target_id']" in message
+    assert (
+        "every properties key and both relation endpoints need a derivation, "
+        "type and id do not"
+    ) in message
     assert not (tmp_path / "change-set.json").exists()
 
 
