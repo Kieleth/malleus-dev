@@ -7583,16 +7583,9 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     )
 
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert project["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"] == [
-        "/src/malleus/_contract_compiler.py",
-        "/src/malleus/_contract_compiler_profile.json",
-        "/src/malleus/_contract_linkml_adapter.py",
-        "/src/malleus/_contract_source.py",
-    ]
-    assert (
-        "/src/malleus/_contract_source.py"
-        in project["tool"]["hatch"]["build"]["include"]
-    )
+    build = project["tool"]["hatch"]["build"]
+    assert "/src/malleus/_contract_source.py" in build["include"]
+    assert "exclude" not in build["targets"]["wheel"]
 
     corpus = _read_json(ROOT / "conformance/contract_kernel/v0/corpus.json")
     assert [corpus["cases"][0]["case_id"] for corpus in corpus["corpora"]] == [
@@ -7973,10 +7966,9 @@ def test_linkml_adapter_completion_is_exact() -> None:
     }
 
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert (
-        "/src/malleus/_contract_linkml_adapter.py"
-        in package["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"]
-    )
+    build = package["tool"]["hatch"]["build"]
+    assert "/src/malleus/_contract_linkml_adapter.py" in build["include"]
+    assert "exclude" not in build["targets"]["wheel"]
 
     completion = tuple(
         entry for entry in ledger_state.entries if 305 <= entry["sequence"] <= 307
