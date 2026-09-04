@@ -140,6 +140,32 @@ def test_research_observation_is_explicitly_grounded_in_sosa_ssn() -> None:
     assert "Observation" in sosa["borrowed_terms"]
 
 
+def test_research_grounding_assigns_only_supported_term_groups() -> None:
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+    grounding = source["annotations"]["grounding"]["value"]
+    vocabularies = {
+        item["vocabulary"]: item["borrowed_terms"]
+        for item in grounding["vocabularies"]
+    }
+
+    assert vocabularies["W3C SOSA/SSN"] == ["Observation", "Sample"]
+    assert vocabularies["JCGM 200:2012 (VIM), 3rd edition"] == [
+        "measuring instrument"
+    ]
+    assert vocabularies["OECD Frascati Manual 2015"] == [
+        "research and experimental development",
+        "investigation",
+        "method",
+    ]
+    assert {"Agent", "Campaign", "Instrument"}.isdisjoint(
+        term for terms in vocabularies.values() for term in terms
+    )
+    assert grounding["invented_terms"] == ["Campaign", "Instrument"]
+    assert grounding["invention_search"]
+
+
 def test_research_pack_matches_the_accepted_campaign_surface() -> None:
     source = yaml.safe_load(
         bundled_ontology_path("packs", "research.yaml").read_bytes()
@@ -241,6 +267,20 @@ def test_project_may_record_a_bounded_none_found_search() -> None:
         role="PROJECT",
     )
     assert receipt.grounded_subjects == ("ProjectThing",)
+
+
+def test_cited_grounding_requires_a_search_when_it_invents_terms() -> None:
+    api = _inquisition()
+    grounding = _cited_grounding()
+    grounding["invented_terms"] = ["LocalInstrument"]
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_grounding(
+            _source(annotations=_annotation(grounding)),
+            role="PACK",
+        )
+
+    assert caught.value.reason is api.PackGroundingRefusalReason.GROUNDING_INCOMPLETE
 
 
 def test_project_class_extending_a_pack_class_needs_no_duplicate_grounding() -> None:
