@@ -37,13 +37,21 @@ compilation. It accepts exact named ontology files and never accepts a raw
 ontology digest in their place. The sdist and direct wheel must contain the
 same compiler runtime bytes.
 
+The optional document-assertion adapter is also public through
+`malleus.compiler`. It checks exact reading and capture bytes, verbatim
+captured clauses, field-level formalisation targets, supported modalities, and
+typed representation gaps. It emits the same neutral population-plan grammar
+as structured-source adapters plus a two-axis review/formalisation census.
+Assertions remain retained evidence and are not added to the graph.
+
 This facade does not replace the shipped Assent runtime, stabilize any
 `private-v0` wire grammar, or turn a domain's source mapping into Core policy.
 It proves the reusable seam on one controlled initial-population case and one
 controlled record correction. General correction semantics, mapping syntax,
 stable change-set wire, Event population, external effects, Semantic Re-entry,
-cross-language parity, and release work remain outside this cut. See
-`contract_compiler/index.md`.
+cross-language parity, and release work remain outside this cut. The minimal
+`source-assertion` profile retains modality but does not yet require a
+queryable modality projection. See `contract_compiler/index.md`.
 
 ## Implemented
 

@@ -110,6 +110,51 @@ steps, but it does not invent a source mapping, policy, machine, or domain
 history model. Those remain explicit adopter inputs. Formats still named
 `private-v0` may change before a compatibility contract is published.
 
+### Populate from a document without hiding the gaps
+
+Structured rows are not the only possible source. The optional
+`adapt_document_assertions` frontend accepts exact reading bytes, a capture
+that quotes specific passages, and graph records proposed by the adopter. It
+checks that every quoted passage occurs in the named text block and that every
+record field points back to a captured assertion. It then emits the same
+neutral population plan used by row adapters:
+
+```python
+import json
+
+from malleus.compiler import adapt_document_assertions
+
+compiled = adapt_document_assertions(
+    reading_bytes=reading_bytes,
+    capture_bytes=capture_bytes,
+    capture_id="capture:inspection-note",
+    plan_id="plan:inspection-note:1",
+    contract_identity=effective_contract.identity,
+    records=proposed_records,
+    supersessions=[],
+    valid_time={"kind": "INSTANT", "value": "2026-03-02T00:00:00Z"},
+)
+population_plan = json.loads(compiled.canonical_plan_bytes)
+```
+
+The adapter does not invent `proposed_records`, accept them, or write the
+knowledge graph. The ordinary population compiler validates the emitted plan
+against the selected ontology contract. Admission and replay remain separate.
+Captured assertions stay retained ledger evidence rather than becoming graph
+records.
+
+The result also contains `canonical_census_bytes`. Its two independent axes
+say which source blocks were reviewed and which captured assertions were fully,
+partly, or not formalised. A quoted range that the ontology only models as one
+number, for example, becomes a typed gap instead of disappearing.
+
+The current minimal `source-assertion` profile preserves assertion modality in
+the retained capture. It does not guarantee that modality is visible in an
+ordinary graph query unless the adopter's ontology models it. The later full
+history-profile contract must either require that qualification, reify the
+claim, or provide a typed provenance join. Until then, do not present an
+unqualified projected edge as proof that a source asserted it as fact.
+
 ### Follow one fact through the system
 
 The source material is deliberately ordinary. The warehouse scenario is a

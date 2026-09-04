@@ -267,6 +267,10 @@ APPROVED_REFERENCE_SOURCE = (
     "`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or\n"
     "signal records.\n"
     "\n"
+    "`adapt_document_assertions` validates a document capture and emits the same\n"
+    "neutral population-plan grammar. Captured assertions remain evidence rather\n"
+    "than graph records.\n"
+    "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
     "\n"
@@ -282,9 +286,13 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.compile_linkml_contract\n"
     "   malleus.compiler.compile_population_plan\n"
     "   malleus.compiler.prepare_population_change\n"
+    "   malleus.compiler.adapt_document_assertions\n"
     "   malleus.compiler.KnowledgeChangeHistory\n"
     "   malleus.compiler.PopulationPlanRefusal\n"
     "   malleus.compiler.PopulationPlanRefusalReason\n"
+    "   malleus.compiler.DocumentAssertionCompilation\n"
+    "   malleus.compiler.DocumentAssertionRefusal\n"
+    "   malleus.compiler.DocumentAssertionRefusalReason\n"
     "\n"
     ".. automodule:: malleus\n"
     "\n"
@@ -316,11 +324,19 @@ APPROVED_REFERENCE_SOURCE = (
     "\n"
     ".. autofunction:: malleus.compiler.prepare_population_change\n"
     "\n"
+    ".. autofunction:: malleus.compiler.adapt_document_assertions\n"
+    "\n"
     ".. autoclass:: malleus.compiler.KnowledgeChangeHistory\n"
     "\n"
     ".. autoclass:: malleus.compiler.PopulationPlanRefusal\n"
     "\n"
     ".. autoclass:: malleus.compiler.PopulationPlanRefusalReason\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionCompilation\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionRefusalReason\n"
     "```\n"
 ).encode()
 
@@ -343,14 +359,18 @@ def _load_conf() -> ModuleType:
 def _public_doc_paths(root: Path = DOCS) -> list[Path]:
     paths = [root / relative for relative in sorted(PUBLIC_DOC_SOURCES)]
     missing = [path for path in paths if not path.is_file()]
-    assert missing == [], f"required public documentation sources are missing: {missing}"
+    assert missing == [], (
+        f"required public documentation sources are missing: {missing}"
+    )
     return paths
 
 
 def _repository_doc_paths(root: Path = DOCS) -> list[Path]:
     paths = [root / relative for relative in sorted(REPOSITORY_DOC_SOURCES)]
     missing = [path for path in paths if not path.is_file()]
-    assert missing == [], f"required repository documentation sources are missing: {missing}"
+    assert missing == [], (
+        f"required repository documentation sources are missing: {missing}"
+    )
     return paths
 
 
@@ -390,9 +410,9 @@ def _assert_support_profile_guide(source: str) -> None:
     assert _table_after(source, "## Exactly-one expression boundary") == (
         EXPRESSION_EXTENSION_ROWS
     )
-    decisions = (
-        ROOT / "design" / "contract_compiler" / "decisions.md"
-    ).read_text(encoding="utf-8")
+    decisions = (ROOT / "design" / "contract_compiler" / "decisions.md").read_text(
+        encoding="utf-8"
+    )
     for header in (
         ("Exact source member", "Required raw value"),
         ("Lexeme class", "Exact examples", "Result"),
@@ -401,10 +421,13 @@ def _assert_support_profile_guide(source: str) -> None:
         ("Governed source vector", "D08 outcome", "Exact reason"),
     ):
         assert _table_named(source, header) == _table_named(decisions, header)
-    assert _table_named(
-        source,
-        ("Component", "Canonical byte length", "Internal content identity"),
-    ) == INTERNAL_METAMODEL_IDENTITY_ROWS
+    assert (
+        _table_named(
+            source,
+            ("Component", "Canonical byte length", "Internal content identity"),
+        )
+        == INTERNAL_METAMODEL_IDENTITY_ROWS
+    )
     for phrase in (
         "Unknown input fails instead of acquiring hidden upstream semantics.",
         "The adapter emits deterministic, frontend-neutral facts.",
@@ -573,9 +596,7 @@ def _hostile_state() -> IntegrationState:
     return IntegrationState(
         manifest={
             "program_id": "CC-PROGRAM-001",
-            "authority": {
-                "snapshot": {"state": "SEALED", "result_commit": "0" * 40}
-            },
+            "authority": {"snapshot": {"state": "SEALED", "result_commit": "0" * 40}},
             "unused_absolute_path": str(ROOT),
         },
         workstreams={"CC-000": (), "CC-001": ("CC-000",)},
@@ -611,9 +632,7 @@ def _normalized_examples(
     ):
         return [
             (f"{location} doctest {index}", example.source)
-            for index, example in enumerate(
-                doctest.DocTestParser().get_examples(block)
-            )
+            for index, example in enumerate(doctest.DocTestParser().get_examples(block))
         ]
     return [(location, block)]
 
@@ -922,10 +941,7 @@ def _forbidden_example_operations(tree: ast.AST) -> list[str]:
         for name in names:
             if name == "pytest" or name.startswith(("linkml", "tests")):
                 found.append(f"forbidden import {name}")
-            if (
-                name.startswith("malleus.")
-                and name not in PUBLIC_GUIDE_MODULE_IMPORTS
-            ):
+            if name.startswith("malleus.") and name not in PUBLIC_GUIDE_MODULE_IMPORTS:
                 found.append(f"private Malleus import {name}")
         if isinstance(node, ast.Call):
             function = node.func
@@ -1013,16 +1029,18 @@ def test_contract_compiler_support_profile_is_rendered_and_exact() -> None:
         encoding="utf-8"
     )
     _assert_support_profile_guide(guide)
-    decisions = (
-        ROOT / "design" / "contract_compiler" / "decisions.md"
-    ).read_text(encoding="utf-8")
+    decisions = (ROOT / "design" / "contract_compiler" / "decisions.md").read_text(
+        encoding="utf-8"
+    )
     assert _table_after(decisions, "#### Exact location classification") == (
         SUPPORT_PROFILE_ROWS
     )
-    assert _table_after(decisions, "#### Versioned exactly-one expression extension") == (
-        EXPRESSION_EXTENSION_ROWS
+    assert _table_after(
+        decisions, "#### Versioned exactly-one expression extension"
+    ) == (EXPRESSION_EXTENSION_ROWS)
+    assert (
+        "contract_compiler/support_profile.md" in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
     )
-    assert "contract_compiler/support_profile.md" in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
     assert "contract_compiler/support_profile.md" not in PUBLIC_DOC_SOURCES
     assert "contract_compiler/index.md" not in PUBLIC_DOC_SOURCES
     assert "contract_compiler/manifests.md" not in PUBLIC_DOC_SOURCES
@@ -1036,9 +1054,7 @@ def test_contract_compiler_support_profile_refuses_semantic_drift() -> None:
         encoding="utf-8"
     )
     class_row = next(
-        line
-        for line in guide.splitlines()
-        if line.startswith("| `classes.<class>` |")
+        line for line in guide.splitlines() if line.startswith("| `classes.<class>` |")
     )
     condition_row = next(
         line
@@ -1072,8 +1088,7 @@ def test_contract_compiler_support_profile_refuses_semantic_drift() -> None:
         guide.replace(condition_row, "", 1),
         guide.replace(
             condition_row,
-            condition_row
-            + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
+            condition_row + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
             1,
         ),
         guide.replace("Source indexes never enter identity.", "", 1),
@@ -1223,12 +1238,16 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.KnowledgeChangeHistory",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.DocumentAssertionCompilation",
+        "malleus.compiler.DocumentAssertionRefusal",
+        "malleus.compiler.DocumentAssertionRefusalReason",
     )
     class_ids = ontology_class_ids + migration_class_ids + compiler_class_ids
     function_ids = (
         "malleus.compiler.compile_linkml_contract",
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
+        "malleus.compiler.adapt_document_assertions",
     )
     method_ids = (
         "malleus.OntologyRegistry.source_closure",
@@ -1249,6 +1268,15 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
             ),
             "malleus._contract_pipeline.population.PopulationPlanRefusalReason": (
                 "malleus.compiler.PopulationPlanRefusalReason"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionCompilation": (
+                "malleus.compiler.DocumentAssertionCompilation"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionRefusal": (
+                "malleus.compiler.DocumentAssertionRefusal"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionRefusalReason": (
+                "malleus.compiler.DocumentAssertionRefusalReason"
             ),
         }
     )
@@ -1289,9 +1317,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         if type(node).__name__ == "desc" and node.get("domain") == "py"
     ]
     signatures = [
-        node
-        for node in doctree.findall()
-        if type(node).__name__ == "desc_signature"
+        node for node in doctree.findall() if type(node).__name__ == "desc_signature"
     ]
     signature_ids = (
         "malleus.OntologyRegistry",
@@ -1308,9 +1334,13 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.compile_linkml_contract",
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
+        "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.KnowledgeChangeHistory",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.DocumentAssertionCompilation",
+        "malleus.compiler.DocumentAssertionRefusal",
+        "malleus.compiler.DocumentAssertionRefusalReason",
     )
     assert [(node.get("objtype"), node.get("classes")) for node in descriptions] == [
         (object_types[identity], ["py", object_types[identity]])
@@ -1329,10 +1359,11 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
     for identity in signature_ids:
         assert f'id="{identity}"' in rendered
     assert "PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED" in rendered
+    assert "Captured assertions remain evidence rather than graph records" in rendered
     assert "malleus.compiler_cli" not in rendered
     assert 'class="py class"' in rendered
     assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered
-    assert ':py:obj:' not in rendered
+    assert ":py:obj:" not in rendered
     assert ".. py:" not in rendered
     assert (output / "py-modindex.html").is_file()
 
@@ -1442,7 +1473,9 @@ def test_manifest_projection_uses_only_the_fixed_sealed_validator_result(
     monkeypatch.setattr(module, "validate_integration", validate)
     signature = inspect.signature(module.manifest_projection)
     assert tuple(signature.parameters) == ("repository",)
-    assert _rendered_xml(module, state) == module.manifest_projection(ROOT).asdom().toxml()
+    assert (
+        _rendered_xml(module, state) == module.manifest_projection(ROOT).asdom().toxml()
+    )
     assert calls == [((ROOT,), {"require_sealed": True})]
 
     def refuse(*args: object, **kwargs: object) -> IntegrationState:
@@ -1505,9 +1538,7 @@ def test_repository_python_examples_are_ast_checked() -> None:
     for path, capture in autosummaries:
         assert "toctree" not in capture["options"], path
     blocks = [
-        block
-        for path in public_paths
-        for block in _public_source_python_blocks(path)
+        block for path in public_paths for block in _public_source_python_blocks(path)
     ]
     assert blocks, "documentation has no executable Python or doctest blocks"
     for location, source in blocks:
@@ -1560,10 +1591,13 @@ def test_eval_rst_permission_cannot_be_spoofed_by_path_or_location(
         _public_source_captures(copied)
     with pytest.raises(AssertionError, match="unsupported MyST directive 'eval-rst'"):
         _public_source_python_blocks(copied)
-    assert _refusal_from(
-        APPROVED_REFERENCE_SOURCE.decode(),
-        location="docs/reference/index.md",
-    ) == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
+    assert (
+        _refusal_from(
+            APPROVED_REFERENCE_SOURCE.decode(),
+            location="docs/reference/index.md",
+        )
+        == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
+    )
 
 
 def test_repository_scan_excludes_unrendered_markdown_but_rst_stays_refused(
@@ -1671,8 +1705,14 @@ def test_real_autodoc_members_expands_unapproved_public_objects(tmp_path: Path) 
 @pytest.mark.parametrize(
     ("source", "target"),
     [
-        ("```{autosummary}\nlinkml_runtime.forbidden\n```\n", "linkml_runtime.forbidden"),
-        ("```{autosummary}\n:nosignatures:\n\nlinkml_runtime.forbidden\n```\n", "linkml_runtime.forbidden"),
+        (
+            "```{autosummary}\nlinkml_runtime.forbidden\n```\n",
+            "linkml_runtime.forbidden",
+        ),
+        (
+            "```{autosummary}\n:nosignatures:\n\nlinkml_runtime.forbidden\n```\n",
+            "linkml_runtime.forbidden",
+        ),
     ],
 )
 def test_autosummary_targets_cannot_bypass_ast_guard(
@@ -1682,17 +1722,19 @@ def test_autosummary_targets_cannot_bypass_ast_guard(
     assert _refusal_from(
         source,
         location="autosummary-target",
-    ) == (
-        f"autosummary-target: forbidden target {target!r} normalized {target!r}"
-    )
+    ) == (f"autosummary-target: forbidden target {target!r} normalized {target!r}")
 
 
 @pytest.mark.parametrize(
     "source",
-    ["```{automodule} malleus\n```\n\n```{autosummary}\n"
-     "malleus.OntologyRegistry\n```\n"],
+    [
+        "```{automodule} malleus\n```\n\n```{autosummary}\n"
+        "malleus.OntologyRegistry\n```\n"
+    ],
 )
-def test_public_root_autodoc_and_autosummary_targets_remain_allowed(source: str) -> None:
+def test_public_root_autodoc_and_autosummary_targets_remain_allowed(
+    source: str,
+) -> None:
     blocks = _myst_python_blocks_from(
         source,
         location="public-root-target",
@@ -1727,9 +1769,7 @@ def test_nested_myst_container_import_forms_are_checked(inner: str) -> None:
         expected_target = None
     else:
         myst_inner = "```{automodule} linkml\n```\n"
-        expected_target = (
-            f"{location}: forbidden target 'linkml' normalized 'linkml'"
-        )
+        expected_target = f"{location}: forbidden target 'linkml' normalized 'linkml'"
     source = f"````{{note}}\n{myst_inner}````\n"
 
     refusal = _refusal_from(source, location=location)
@@ -1746,9 +1786,7 @@ def test_valid_myst_autodoc_options_cannot_hide_import_targets(option: str) -> N
     assert _refusal_from(
         source,
         location="valid-myst-option",
-    ) == (
-        "valid-myst-option: forbidden target 'linkml' normalized 'linkml'"
-    )
+    ) == ("valid-myst-option: forbidden target 'linkml' normalized 'linkml'")
 
 
 def test_authored_rst_source_is_refused_with_actionable_path(tmp_path: Path) -> None:
@@ -1806,10 +1844,13 @@ def test_file_level_myst_parser_override_is_refused_before_scanning(
     configuration: str,
 ) -> None:
     source = f"---\n{configuration}---\n# File-local parser override\n"
-    assert _refusal_from(
-        source,
-        location="myst-topmatter",
-    ) == f"myst-topmatter: unsupported file-level MyST config {key!r}"
+    assert (
+        _refusal_from(
+            source,
+            location="myst-topmatter",
+        )
+        == f"myst-topmatter: unsupported file-level MyST config {key!r}"
+    )
 
 
 def test_real_myst_builder_executes_topmatter_enabled_directive(
@@ -1837,10 +1878,13 @@ def test_real_myst_builder_executes_topmatter_enabled_directive(
     assert result.returncode == 0, result.stdout + result.stderr
     report = (tmp_path / "output" / "output.txt").read_text(encoding="utf-8")
     assert "1 passed" in report
-    assert _refusal_from(
-        source_text,
-        location="real-myst-topmatter",
-    ) == "real-myst-topmatter: unsupported file-level MyST config 'myst'"
+    assert (
+        _refusal_from(
+            source_text,
+            location="real-myst-topmatter",
+        )
+        == "real-myst-topmatter: unsupported file-level MyST config 'myst'"
+    )
 
 
 @pytest.mark.parametrize(
@@ -1910,9 +1954,7 @@ def test_commonmark_container_import_forms_are_checked(
         assert result.returncode == 0, result.stdout + result.stderr
         expected_target = None
     else:
-        expected_target = (
-            f"{location}: forbidden target 'linkml' normalized 'linkml'"
-        )
+        expected_target = f"{location}: forbidden target 'linkml' normalized 'linkml'"
 
     refusal = _refusal_from(source, location=location)
     if expected_target is None:
@@ -1963,10 +2005,7 @@ def test_autodoc_and_autosummary_refuse_targets_outside_exact_allowlist(
     assert _refusal_from(
         source,
         location="exact-target-guard",
-    ) == (
-        f"exact-target-guard: {category} target {target!r} "
-        f"normalized {normalized!r}"
-    )
+    ) == (f"exact-target-guard: {category} target {target!r} normalized {normalized!r}")
 
 
 def test_autosummary_normalizes_only_a_leading_tilde() -> None:
@@ -2046,30 +2085,28 @@ def test_dynamic_import_and_execution_calls_are_ast_refused(
 @pytest.mark.parametrize("directive", SPHINX_SKIPIF_DIRECTIVES)
 def test_myst_skipif_expressions_use_the_bounded_ast_policy(directive: str) -> None:
     source = (
-        f"```{{{directive}}}\n"
-        ":skipif: __import__('linkml') and False\n\n"
-        "pass\n"
-        "```\n"
+        f"```{{{directive}}}\n:skipif: __import__('linkml') and False\n\npass\n```\n"
     )
-    assert _refusal_from(
-        source,
-        location=f"myst-skipif-{directive}",
-    ) == f"myst-skipif-{directive}: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            source,
+            location=f"myst-skipif-{directive}",
+        )
+        == f"myst-skipif-{directive}: ['forbidden dynamic import __import__']"
+    )
 
 
 def test_myst_yaml_skipif_uses_the_bounded_ast_policy() -> None:
     source = (
-        "```{testcode}\n"
-        "---\n"
-        "skipif: __import__('linkml') and False\n"
-        "---\n"
-        "pass\n"
-        "```\n"
+        "```{testcode}\n---\nskipif: __import__('linkml') and False\n---\npass\n```\n"
     )
-    assert _refusal_from(
-        source,
-        location="myst-yaml-skipif",
-    ) == "myst-yaml-skipif: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            source,
+            location="myst-yaml-skipif",
+        )
+        == "myst-yaml-skipif: ['forbidden dynamic import __import__']"
+    )
 
 
 @pytest.mark.parametrize(
@@ -2115,10 +2152,13 @@ def test_real_doctest_evaluates_skipif_that_guard_refuses(tmp_path: Path) -> Non
     assert result.returncode == 0, result.stdout + result.stderr
     report = (tmp_path / "output" / "output.txt").read_text(encoding="utf-8")
     assert "1 passed" in report
-    assert _refusal_from(
-        index,
-        location="real-skipif",
-    ) == "real-skipif: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            index,
+            location="real-skipif",
+        )
+        == "real-skipif: ['forbidden dynamic import __import__']"
+    )
 
 
 def test_static_example_policy_states_its_non_sandbox_boundary() -> None:
@@ -2163,12 +2203,7 @@ def test_ordinary_import_aliases_cannot_hide_dynamic_calls(
 def test_real_doctest_executes_dynamic_import_that_guard_refuses(
     tmp_path: Path,
 ) -> None:
-    index = (
-        "# Dynamic import bypass\n\n"
-        "```{testcode}\n"
-        "__import__('linkml')\n"
-        "```\n"
-    )
+    index = "# Dynamic import bypass\n\n```{testcode}\n__import__('linkml')\n```\n"
     source = _isolated_docs(
         tmp_path,
         extensions=("myst_parser", "sphinx.ext.doctest"),
@@ -2177,10 +2212,13 @@ def test_real_doctest_executes_dynamic_import_that_guard_refuses(
     )
     result = _build("doctest", tmp_path / "output", source=source)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert _refusal_from(
-        index,
-        location="real-dynamic-import",
-    ) == "real-dynamic-import: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            index,
+            location="real-dynamic-import",
+        )
+        == "real-dynamic-import: ['forbidden dynamic import __import__']"
+    )
 
 
 @pytest.mark.parametrize(
@@ -2220,9 +2258,7 @@ def test_real_builders_execute_import_forms_that_the_guard_refuses(
         location=f"real-{builder}",
     )
     if builder == "html":
-        assert refusal == (
-            "real-html: forbidden target 'linkml' normalized 'linkml'"
-        )
+        assert refusal == ("real-html: forbidden target 'linkml' normalized 'linkml'")
     else:
         assert f"real-{builder}" in refusal
         assert f"forbidden import {target}" in refusal
@@ -2324,9 +2360,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         (correction_root / "evidence" / "graph.json").read_text(encoding="utf-8")
     )
     correction_explanation = json.loads(
-        (correction_root / "evidence" / "explanation.json").read_text(
-            encoding="utf-8"
-        )
+        (correction_root / "evidence" / "explanation.json").read_text(encoding="utf-8")
     )
     normalized = " ".join(index.split())
     normalized_readme = " ".join(readme.split())
@@ -2498,9 +2532,10 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "supplier-order-state:B:e4"
     )
     assert not (correction_root / "checks" / "source-integrity.json").exists()
-    entrypoint_digest = "sha256:" + hashlib.sha256(
-        (correction_root / "run.py").read_bytes()
-    ).hexdigest()
+    entrypoint_digest = (
+        "sha256:"
+        + hashlib.sha256((correction_root / "run.py").read_bytes()).hexdigest()
+    )
     for check_path in (correction_root / "checks").glob("*.json"):
         check = json.loads(check_path.read_text(encoding="utf-8"))
         assert check["executor"]["sha256"] == entrypoint_digest
@@ -2518,9 +2553,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     ):
         assert evidence_claim in normalized_evidence
 
-    milestone_link = (
-        "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
-    )
+    milestone_link = "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
     assert milestone_link in normalized_readme
     assert (
         "Public here means a supported import path and installed command in packages "
@@ -2624,9 +2657,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "deterministic replay rebuilds it from the ledger",
     ):
         assert claim in normalized
-    assert (
-        "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9" in guide
-    )
+    assert "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9" in guide
     assert "`P1`, `I1`, and `I2` co-occur" in normalized
     assert "not asserted as a source-native direction by the chapter" in normalized
 
@@ -2708,9 +2739,10 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     assert coordinates["history"]["receipt_identity"] == (
         "sha256:" + hashlib.sha256(evidence_bytes["receipt.json"]).hexdigest()
     )
-    assert receipt["contract_identity"] == coordinates["contract"][
-        "effective_contract_identity"
-    ]
+    assert (
+        receipt["contract_identity"]
+        == coordinates["contract"]["effective_contract_identity"]
+    )
     assert receipt["ledger_head"] == coordinates["history"]["ledger_head"]
     assert receipt["graph_state_digest"] == coordinates["graph"]["state_digest"]
     assert explanation["run_program"]["identity"] == (
@@ -2814,7 +2846,13 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "settlement": 6,
         "correction": 5,
     }
-    expected_prefixes = ("ret010", "settlement", "settlement", "correction", "correction")
+    expected_prefixes = (
+        "ret010",
+        "settlement",
+        "settlement",
+        "correction",
+        "correction",
+    )
     for change, prefix in zip(
         explanation["accepted_changes"], expected_prefixes, strict=True
     ):
@@ -2843,9 +2881,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
 
     answers = queries["answers"]
     order = next(item for item in answers if item["command"] == "order-contents")
-    payment = next(
-        item for item in answers if item["command"] == "payment-settlements"
-    )
+    payment = next(item for item in answers if item["command"] == "payment-settlements")
     history = next(
         item for item in answers if item["command"] == "supplier-order-history"
     )
@@ -2857,8 +2893,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     )
     assert order["result"]["contents"][0]["unit"]["id"] == "X1"
     assert [
-        item["invoice"]["invoice_number"]
-        for item in payment["result"]["settlements"]
+        item["invoice"]["invoice_number"] for item in payment["result"]["settlements"]
     ] == ["I1", "I2"]
     assert [
         item["record"]["ordered_quantity"] for item in history["result"]["states"]
@@ -2885,9 +2920,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
     )
     selection = json.loads(
         (
-            settlement
-            / "configuration"
-            / "shop-payment-settlement-selection.json"
+            settlement / "configuration" / "shop-payment-settlement-selection.json"
         ).read_text(encoding="utf-8")
     )
     assert attribution["published_source_claims"][-1] == {
@@ -2919,17 +2952,19 @@ def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None
 
 
 def test_semantic_history_is_an_optional_profile() -> None:
-    design = (
-        ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md"
-    ).read_text(encoding="utf-8")
+    design = (ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "The semantic-history and replay profile is optional." in design
 
 
-def test_graph_realization_separates_structure_governance_and_fixture_authority() -> None:
-    design = (
-        ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
-    ).read_text(encoding="utf-8")
+def test_graph_realization_separates_structure_governance_and_fixture_authority() -> (
+    None
+):
+    design = (ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "StructuralGraphRealization" in design
     assert "GovernedAcceptedRealization" in design
