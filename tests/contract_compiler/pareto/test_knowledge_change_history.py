@@ -1790,6 +1790,108 @@ def test_anchor_refuses_bytes_that_do_not_match_machine_identity(
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
 
+def test_artifact_event_cannot_retain_source_role(tmp_path: Path) -> None:
+    history, _, _, _ = _history(tmp_path)
+    retained = b"artifact bytes\n"
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.append_anchor(
+            machine_event=_event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="artifact:wrong-role",
+                artifact_identity=_digest(retained),
+            ),
+            retained_bytes=retained,
+            media_type="application/octet-stream",
+            role="RETAINED_SOURCE",
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_source_event_cannot_retain_evidence_role_in_later_batch_member(
+    tmp_path: Path,
+) -> None:
+    history, _, _, _ = _history(tmp_path)
+    artifact = b"source artifact bytes\n"
+    source = b"source registration bytes\n"
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.append_anchors(
+            anchors=(
+                KnowledgeAnchorInput(
+                    machine_event=_event(
+                        "ARTIFACT_REGISTERED",
+                        artifact_id="artifact:source",
+                        artifact_identity=_digest(artifact),
+                    ),
+                    retained_bytes=artifact,
+                    media_type="application/octet-stream",
+                    role="SOURCE_ARTIFACT",
+                ),
+                KnowledgeAnchorInput(
+                    machine_event=_event(
+                        "SOURCE_REGISTERED",
+                        artifact_id="artifact:source",
+                        source_id="source:wrong-role",
+                        source_identity=_digest(source),
+                    ),
+                    retained_bytes=source,
+                    media_type="application/octet-stream",
+                    role="RETAINED_EVIDENCE",
+                ),
+            ),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_replay_refuses_an_event_role_pair_that_bypassed_the_writer(
+    tmp_path: Path,
+) -> None:
+    history, compiled, _, _ = _history(tmp_path)
+    retained = b"misclassified retained bytes\n"
+    machine_event = json.loads(
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="artifact:replay-wrong-role",
+            artifact_identity=_digest(retained),
+        )
+    )
+    ledger = JsonlLedger(
+        history.path,
+        compiled.artifact.validated_fact_set_sha256,
+    )
+    ledger.append(
+        event_id="anchor:RETAINED_SOURCE:artifact:replay-wrong-role",
+        event_type="ARTIFACT_REGISTERED",
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+        payload={
+            "machine_payload": machine_event["payload"],
+            "media_type": "application/octet-stream",
+            "record_id": "artifact:replay-wrong-role",
+            "retained_bytes_base64": b64encode(retained).decode("ascii"),
+            "retained_sha256": _digest(retained),
+            "role": "RETAINED_SOURCE",
+        },
+        validate=lambda _: None,
+    )
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.replay()
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.RETAINED_BYTES_MISMATCH
+
+
 @pytest.mark.parametrize(
     "role",
     [

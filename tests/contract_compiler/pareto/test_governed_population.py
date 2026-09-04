@@ -22,6 +22,7 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _anchored_history,
     _binding_payload,
     _event,
+    _generic_compilation,
     _ledger_bytes,
     _protocol_events,
     _record_change,
@@ -34,6 +35,7 @@ from tests.contract_compiler.pareto.test_population_plan import (
 from tests.contract_compiler.pareto.test_protocol_machine import (
     _canonical,
     _effective,
+    _program_payload,
 )
 from tests.contract_compiler.pareto.test_validated_contract import (
     ROOT,
@@ -134,6 +136,109 @@ def _prepare(
         transaction_time=TRANSACTION_TIME,
         actor_id="actor:test",
     )
+
+
+def _custom_evidence_history(tmp_path: Path):
+    compiled = _generic_compilation()
+    machine = _program_payload()
+    machine["events"]["EVIDENCE_CAPTURED"] = {
+        "instructions": [
+            {
+                "id_field": "evidence_id",
+                "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                "refusal": "GLOBAL_RECORD_ID_EXISTS",
+            },
+            {"opcode": "STORE_EVENT_RECORD", "record_type": "EvidenceRecord"},
+        ],
+        "record_type": "EvidenceRecord",
+    }
+    machine["record_schemas"]["EvidenceRecord"] = {
+        "fields": {
+            "evidence_id": "STRING",
+            "evidence_identity": "DIGEST",
+        },
+        "id_field": "evidence_id",
+        "input_fields": ["evidence_id", "evidence_identity"],
+    }
+    partial = _effective(
+        machine,
+        validated_fact_set_sha256=compiled.artifact.validated_fact_set_sha256,
+    )
+    binding_payload = _binding_payload()
+    binding_payload["retention_events"]["EVIDENCE_CAPTURED"] = {
+        "allowed_roles": ["RETAINED_EVIDENCE"],
+        "identity_field": "evidence_identity",
+        "record_id_field": "evidence_id",
+    }
+    binding = KnowledgeChangeHistoryBinding.from_bytes(_canonical(binding_payload))
+    history = KnowledgeChangeHistory(
+        tmp_path / "custom-evidence-history.jsonl",
+        partial_contract=partial,
+        contract_view=compiled.view,
+        binding=binding,
+    )
+    source_bytes = b"custom retained source\n"
+    evidence_bytes = b"custom retained adapter evidence\n"
+    anchors = (
+        (
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="validated-contract-artifact",
+                artifact_identity=_digest(compiled.artifact.artifact_bytes),
+            ),
+            compiled.artifact.artifact_bytes,
+            "VALIDATED_CONTRACT",
+        ),
+        (
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="contract-artifact",
+                artifact_identity=_digest(partial.canonical_bytes),
+            ),
+            partial.canonical_bytes,
+            "PARTIAL_EFFECTIVE_CONTRACT",
+        ),
+        (
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="history-binding-artifact",
+                artifact_identity=_digest(binding.canonical_bytes),
+            ),
+            binding.canonical_bytes,
+            "KNOWLEDGE_HISTORY_BINDING",
+        ),
+        (
+            _event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="source-artifact",
+                artifact_identity=_digest(source_bytes),
+            ),
+            source_bytes,
+            "SOURCE_ARTIFACT",
+        ),
+        (
+            _event(
+                "SOURCE_REGISTERED",
+                artifact_id="source-artifact",
+                source_id="source-generic",
+                source_identity=_digest(source_bytes),
+            ),
+            source_bytes,
+            "RETAINED_SOURCE",
+        ),
+        (
+            _event(
+                "EVIDENCE_CAPTURED",
+                evidence_id="evidence-generic",
+                evidence_identity=_digest(evidence_bytes),
+            ),
+            evidence_bytes,
+            "RETAINED_EVIDENCE",
+        ),
+    )
+    for event, content, role in anchors:
+        _anchor(history, event, content, role)
+    return history, compiled, partial, _digest(source_bytes), _digest(evidence_bytes)
 
 
 @pytest.mark.parametrize(
@@ -382,6 +487,68 @@ def test_preparation_retains_profile_plan_and_gaps_in_one_ordered_batch(
     )
 
 
+def test_custom_evidence_retention_event_prepares_admits_and_reopens(
+    tmp_path: Path,
+) -> None:
+    history, compiled, partial, source, evidence = _custom_evidence_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "missing type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+    artifacts = {
+        "profile:state-version": _canonical(NEUTRAL_PROFILE_DATA),
+        "plan:neutral:1": _canonical(plan),
+        "plan:neutral:1:gaps": _gaps_bytes(plan),
+    }
+    events = {
+        record_id: _event(
+            "EVIDENCE_CAPTURED",
+            evidence_id=record_id,
+            evidence_identity=_digest(content),
+        )
+        for record_id, content in artifacts.items()
+    }
+
+    prepared = population.prepare_population_change(
+        history=history,
+        plan=plan,
+        profile=NEUTRAL_PROFILE_DATA,
+        retention_events=events,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    assert prepared.change_set is not None
+    admitted = history.admit(
+        change_set=prepared.change_set,
+        machine_events=_protocol_events(
+            prepared.change_set,
+            prepared.retention_replay.machine_state.identity,
+            identifier_suffix="-custom-evidence-event",
+        ),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+    )
+    reopened = KnowledgeChangeHistory.reopen(history.path).replay()
+    direct = KnowledgeGraph.from_records(compiled.view, plan["records"])
+
+    assert reopened.graph.export_records() == direct.export_records()
+    assert reopened.receipt == admitted.receipt
+    for record_id, content in artifacts.items():
+        assert reopened.retained_bytes(record_id) == content
+        assert (
+            reopened.machine_state.get_record("EvidenceRecord", record_id) is not None
+        )
+
+
 @pytest.mark.parametrize(
     ("defect", "reason"),
     [
@@ -628,6 +795,57 @@ def test_retention_event_identifier_substitution_refuses_before_any_write(
     events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
     expected_id, content = expected[artifact]
     events[expected_id] = _artifact_event(f"misbound:{artifact}", content)
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        population.prepare_population_change(
+            history=history,
+            plan=plan,
+            profile=NEUTRAL_PROFILE_DATA,
+            retention_events=events,
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert (
+        refusal.value.reason
+        is population.PopulationPlanRefusalReason.MALFORMED_RETENTION_EVENT
+    )
+    assert _ledger_bytes(history) == ledger_before
+
+
+@pytest.mark.parametrize("artifact", ["profile", "plan", "gaps"])
+def test_source_event_cannot_retain_generated_evidence_artifact(
+    tmp_path: Path,
+    artifact: str,
+) -> None:
+    history, _, partial, _, source, evidence = _anchored_history(tmp_path)
+    plan = _plan(
+        partial.identity,
+        source_identity=source,
+        evidence_identity=evidence,
+    )
+    plan["gaps"] = [
+        {
+            "kind": "TYPE_ABSENT",
+            "statement": "missing type",
+            "source_id": "source-generic",
+            "locator": "row:0",
+        }
+    ]
+    expected = {
+        "profile": ("profile:state-version", _canonical(NEUTRAL_PROFILE_DATA)),
+        "plan": ("plan:neutral:1", _canonical(plan)),
+        "gaps": ("plan:neutral:1:gaps", _gaps_bytes(plan)),
+    }
+    events = _retention_events(plan, NEUTRAL_PROFILE_DATA)
+    expected_id, content = expected[artifact]
+    events[expected_id] = _event(
+        "SOURCE_REGISTERED",
+        artifact_id="validated-contract-artifact",
+        source_id=expected_id,
+        source_identity=_digest(content),
+    )
     ledger_before = _ledger_bytes(history)
 
     with pytest.raises(population.PopulationPlanRefusal) as refusal:
