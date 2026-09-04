@@ -1882,3 +1882,30 @@ typed-refusal and successful-compilation tests remain.
 Impact: Rerun the same ontology attempt through the corrected parent harness.
 This was a harness failure, not a compiler diagnostic and does not consume one
 of the producer's two diagnostic returns.
+
+### E-0114, ontology attempt 1 receives one typed grounding diagnostic
+
+Date: 2026-09-04
+
+Sources: the ignored producer output `ontology-attempt-01.yaml` at
+`sha256:19ea02de255c8e2d57f1daf34c140b072bf70d6dcaf31f8e9a963058d0b39571`
+and the ignored parent diagnostic at
+`sha256:7bacc39a8223e3e0fc1bca50bd613eb925e4f6b8d0660ef8db9d229cec61da5f`.
+
+Observation: The corrected frozen gate reached the P7 project-grounding rite.
+It refused before contract compilation with stage `PACK_GROUNDING`, error type
+`PackGroundingRefusal`, reason `DIRECT_ROOT_GROUNDING_REQUIRED`, and detail
+`DIRECT_ROOT_GROUNDING_REQUIRED: project class GeologicFeature extends Entity
+directly`. The candidate digest in the diagnostic matches the exact producer
+file.
+
+Action: Return this diagnostic once to the same question-blind producer
+session. The producer may use only the installed acolyte instructions and its
+existing attempt to write immutable attempt 2. No source fact, competency
+question, query, expected answer, or hand-authored ontology repair accompanies
+the diagnostic.
+
+Boundary: This consumes the first of at most two typed diagnostic returns. It
+does not accept the ontology, create a contract identity, start document
+population, or add a paper identity group. Attempt 1 and its refusal remain
+unchanged.
