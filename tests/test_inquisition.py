@@ -1780,13 +1780,15 @@ class TestSkillsAreInstallable:
         )
         required = (
             "proposal, not accepted knowledge",
-            "Do not ask for or accept competency questions",
+            "Downstream assessment material is not an input",
+            "malleus-inquisitor install-skills --agent codex --project .",
             "Model only concepts, properties, relations, values, and distinctions materially supported",
             "Never invent a missing value, count, record, relation, or epistemic status",
             "Do not collapse two source concepts",
             "metrology`, `chronology`, and `research",
             "pack-grounding",
             "pack-conformance",
+            "extend a pack concept before extending root",
             "state-version`, `source-assertion`, or `object-event",
             "malleus-compiler contract",
             "Keep instances out of schema vocabulary",
@@ -1831,8 +1833,31 @@ class TestSkillsAreInstallable:
         assert [section.index(step) for step in steps] == sorted(
             section.index(step) for step in steps
         )
-        assert "paper" not in section.lower()
-        assert "brief" not in section.lower()
+        assert section.index("Choose the Malleus level") < section.index(
+            "Look for vocabulary before inventing it"
+        ) < section.index("Propose the project ontology")
+        assert section.index("one working session by default") < section.index(
+            "compile_contract_revision"
+        )
+        assert section.index("at most two additive revision rounds") < section.index(
+            "compile_contract_revision"
+        )
+        for leaked in (
+            "paper",
+            "brief",
+            "gpt-5.6-sol",
+            "sonnet",
+            "opus",
+            "small shop",
+            "quiet bell",
+            "neutral greenhouse",
+            "cyp450",
+            "answer key",
+            "answer value",
+            "query binding",
+            "evaluation criter",
+        ):
+            assert leaked not in section.lower()
 
     def test_installed_acolyte_keeps_the_nascent_project_playbook(
         self, tmp_path, capsys
