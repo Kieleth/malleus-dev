@@ -14,7 +14,11 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[3]
-EXAMPLES = ROOT / "handover/2026-09-03-core-population-v2/examples"
+EXAMPLES = (
+    ROOT
+    / "research/ontology_driven_kg_realization/fixtures"
+    / "inspection_note_capture_v1"
+)
 
 
 def _api():

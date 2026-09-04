@@ -34,7 +34,11 @@ from tests.contract_compiler.pareto.test_protocol_machine import (
 )
 
 
-EXAMPLES = ROOT / "handover/2026-09-03-core-population-v2/examples"
+EXAMPLES = (
+    ROOT
+    / "research/ontology_driven_kg_realization/fixtures"
+    / "inspection_note_capture_v1"
+)
 SHOP_SOURCE = (
     ROOT
     / "research/ontology_driven_kg_realization/fixtures"

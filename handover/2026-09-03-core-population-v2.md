@@ -82,13 +82,51 @@ The lowering takes the plan and a base-state view: the replay's existing record 
 - Zero records → typed result `NO_DOMAIN_CHANGE`: profile, plan, evidence and gaps are retained; no change set is composed. The grammar refuses an empty operation list (`knowledge.py:469`, "a change set must contain an operation"), so this is a result, not an error.
 - `valid_time` passes through.
 
-## The minimal profile artifact
+## The profile artifact
 
-P1 initially used a closed five-field `private-v0` bootstrap. P6 superseded it
-with the full `malleus.domain-history-profile/private-v1` contract covering
-genesis, time, change, ontology roles, projection, and grounding. The runnable
-examples now use the full shipped profile bytes. The old grammar is refused,
-not retained as a fallback.
+The contract that ships is `malleus.domain-history-profile/private-v1`
+(`population.py:80`). Ten closed top-level fields (`population.py:81-94`):
+`change_semantics`, `genesis`, `grammar`, `grounding`, `ontology_roles`,
+`origin`, `profile_id`, `projection_rule_family`, `semantic_unit`,
+`time_semantics`. Any other key set refuses `FIELDS_NOT_CLOSED`
+(`population.py:542-547`).
+
+Four closed sub-field sets. `change_semantics` is `addition`, `correction`,
+`retraction`, `transition` (`population.py:95-97`); `genesis` is `boundary`,
+`completeness_scope` (`population.py:98`); `time_semantics` is
+`assertion_time`, `domain_time`, `knowledge_valid_time`, `transaction_time`
+(`population.py:100-107`). Those three are closed by one helper
+(`population.py:643-666`): a key set that is not exact refuses
+`FIELDS_NOT_CLOSED`, and every value is a nonblank string.
+`ontology_roles` is `claim`, `entity`, `event`, `state` (`population.py:99`),
+closed by `population.py:669-702`; each value is an array of type names, sorted
+and unique, else `MALFORMED_PROFILE_REFERENCE` (`population.py:696-700`).
+
+Two closed enums. `origin` is `EMPTY`, `HISTORICAL_RECONSTRUCTION`,
+`PARTIAL_IMPORT` or `SNAPSHOT` (`population.py:108-110`), else `UNKNOWN_ORIGIN`
+(`population.py:573-577`). `semantic_unit` is `ASSERTION`, `COMMITMENT`,
+`COMPOSITION`, `OCCURRENCE` or `STATE_VERSION` (`population.py:119-121`), else
+`UNKNOWN_SEMANTIC_UNIT` (`population.py:563-567`).
+
+The origin fixes the genesis boundary (`population.py:111-118`, checked at
+`population.py:583-588`): `EMPTY` requires
+`FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH`, `HISTORICAL_RECONSTRUCTION`
+requires `RETAINED_HISTORICAL_RECONSTRUCTION`, `PARTIAL_IMPORT` requires
+`RETAINED_PARTIAL_IMPORT`, `SNAPSHOT` requires `RETAINED_SNAPSHOT`. A boundary
+that does not match its origin refuses `MALFORMED_PROFILE_REFERENCE`.
+
+`grounding` must be an object and must not be empty, else `GROUNDING_REQUIRED`
+(`population.py:605-614`). `profile_id` and `projection_rule_family` are
+nonblank strings, else `MALFORMED_PROFILE_REFERENCE` (`population.py:553-557`,
+`population.py:600-604`). A grammar other than `private-v1` refuses
+`UNSUPPORTED_GRAMMAR` (`population.py:548-552`).
+
+The five-field `private-v0` shape P1 bootstrapped with is refused, not accepted
+as a fallback: it carries none of `change_semantics`, `genesis`,
+`ontology_roles`, `projection_rule_family` or `time_semantics`, so it refuses
+`FIELDS_NOT_CLOSED` at the closed-field check before its grammar is read.
+`tests/contract_compiler/pareto/test_domain_history_profile.py:232`
+(`test_retired_minimal_profile_shape_is_not_a_fallback`) pins that.
 
 ## Pieces, in order, each RED then GREEN
 
@@ -130,9 +168,15 @@ example ontologies through public `malleus.compiler.compile_linkml_contract`,
 checks both plans with a reference validator of the rules above, lowers them
 with a reference lowering, admits them through `KnowledgeChangeHistory`,
 reopens, compares with `KnowledgeGraph.from_records`, and then provokes every
-pinned rule once. It reuses Core's test helpers and is not a library
-deliverable; it is the executable seed for the P1, P2, P4, and P6 tests. The
-files it writes sit beside it under `examples/`. Output, verbatim:
+pinned rule once. Its `check_profile` states the `private-v1` rule of the
+section above in its own terms and calls `DomainHistoryProfile.from_data` only
+afterwards, as a cross-check: a profile the rule accepts and the shipped parser
+refuses is an assertion failure, not a relabelled refusal. It reuses Core's
+test helpers and is not a library deliverable; it is the executable seed for
+the P1, P2, P4, and P6 tests. The files it writes sit beside it under
+`examples/`; Core's tests read the copy under
+`research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/`,
+never this directory. Output, verbatim:
 
 ```text
 shop e4: CHANGE_SET; change change:plan:shop:B:e4; ops 1; nodes 1
@@ -167,9 +211,9 @@ negative cases (each must refuse):
   governed DUPLICATE_PLAN_ID: plan:shop:B:e7
   governed re-admission of the same records: STRUCTURAL_REFUSAL: record ID already exists in history: asset:P-7
   governed UNRETAINED_EVIDENCE: capture:ghost
-  profile GROUNDING_REQUIRED: domain-history grounding must not be empty
-  profile UNKNOWN_SEMANTIC_UNIT: unknown domain-history semantic unit: VIBE
-  profile UNKNOWN_ORIGIN: unknown domain-history origin: SOMEWHERE
+  profile GROUNDING_REQUIRED: grounding must not be empty
+  profile UNKNOWN_SEMANTIC_UNIT: VIBE
+  profile UNKNOWN_ORIGIN: SOMEWHERE
   capture READING_MISMATCH: capture names a different reading
   capture UNKNOWN_BLOCK: page:9:block:999
   capture NOT_VERBATIM: asr:001
@@ -263,7 +307,7 @@ instead of silence, while the formalized records can still be admitted.
 
 ## Fixtures
 
-Small Shop `small_shop_fulfilment_correction_v1` (Core's own) for the row consumer. The inspection note above for the document consumer; it is synthetic and may be copied into Core's tests as is. No paper file enters Core.
+Small Shop `small_shop_fulfilment_correction_v1` (Core's own) for the row consumer. The inspection note above for the document consumer; it is synthetic, and it now lives as a Core-owned fixture at `research/ontology_driven_kg_realization/fixtures/inspection_note_capture_v1/`, byte for byte the files under `examples/` plus a manifest and a README. Core's tests read that fixture; `examples/` stays here as this document's archived evidence. No paper file enters Core.
 
 ## Corrections to the previous handover, all taken
 

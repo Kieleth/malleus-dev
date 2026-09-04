@@ -29,7 +29,11 @@ SHOP_BASE = (
 SHOP_RUNTIME = (
     ROOT / "research/ontology_driven_kg_realization/experiments/small_shop/pareto"
 )
-EXAMPLES = ROOT / "handover/2026-09-03-core-population-v2/examples"
+EXAMPLES = (
+    ROOT
+    / "research/ontology_driven_kg_realization/fixtures"
+    / "inspection_note_capture_v1"
+)
 TRANSACTION_TIME = "2026-09-03T00:00:00Z"
 
 

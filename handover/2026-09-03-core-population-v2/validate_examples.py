@@ -189,11 +189,103 @@ PROFILE_SOURCE_ASSERTION = json.loads(SOURCE_ASSERTION_PROFILE.canonical_bytes)
 PROFILE_STATE_VERSION = json.loads(STATE_VERSION_PROFILE.canonical_bytes)
 
 
+# The domain-history profile contract, stated here and not read out of the
+# implementation. Mirrors population.py:80-121; the cross-check at the end of
+# check_profile is what keeps the two in step.
+PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v1"
+PROFILE_FIELDS = {
+    "change_semantics", "genesis", "grammar", "grounding", "ontology_roles", "origin",
+    "profile_id", "projection_rule_family", "semantic_unit", "time_semantics",
+}
+PROFILE_CHANGE_FIELDS = {"addition", "correction", "retraction", "transition"}
+PROFILE_GENESIS_FIELDS = {"boundary", "completeness_scope"}
+PROFILE_ROLE_FIELDS = {"claim", "entity", "event", "state"}
+PROFILE_TIME_FIELDS = {
+    "assertion_time", "domain_time", "knowledge_valid_time", "transaction_time",
+}
+PROFILE_ORIGINS = {"EMPTY", "HISTORICAL_RECONSTRUCTION", "PARTIAL_IMPORT", "SNAPSHOT"}
+PROFILE_GENESIS_BOUNDARIES = {
+    "EMPTY": "FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH",
+    "HISTORICAL_RECONSTRUCTION": "RETAINED_HISTORICAL_RECONSTRUCTION",
+    "PARTIAL_IMPORT": "RETAINED_PARTIAL_IMPORT",
+    "SNAPSHOT": "RETAINED_SNAPSHOT",
+}
+PROFILE_SEMANTIC_UNITS = {
+    "ASSERTION", "COMMITMENT", "COMPOSITION", "OCCURRENCE", "STATE_VERSION",
+}
+
+
+def nonblank(value: object, detail: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise refuse("MALFORMED_PROFILE_REFERENCE", detail)
+    return value
+
+
+def profile_map(profile: dict, field: str, fields: set[str]) -> dict[str, str]:
+    """A closed sub-field set whose every value is a nonblank string."""
+    value = profile[field]
+    if not isinstance(value, dict):
+        raise refuse("MALFORMED_PROFILE_REFERENCE", f"{field} must be an object")
+    if set(value) != fields:
+        raise refuse("FIELDS_NOT_CLOSED", f"{field}: {sorted(set(value) ^ fields)}")
+    return {key: nonblank(value[key], f"{field}.{key} is required") for key in sorted(fields)}
+
+
 def check_profile(profile: dict) -> None:
+    """The private-v1 domain-history profile rule, stated here, then cross-checked.
+
+    Ten closed top-level fields; four closed sub-field sets (change_semantics,
+    genesis, ontology_roles, time_semantics); origin and semantic_unit from closed
+    enums; the genesis boundary determined by the origin; ontology-role type lists
+    sorted and unique; grounding a nonempty object. The retired five-field
+    `private-v0` shape is refused by the first rule below, not accepted as a
+    fallback. `DomainHistoryProfile.from_data` runs afterwards only to prove the
+    shipped parser agrees with the rule stated here.
+    """
+    if not isinstance(profile, dict):
+        raise refuse("MALFORMED_PROFILE_REFERENCE", "profile must be an object")
+    if set(profile) != PROFILE_FIELDS:
+        raise refuse("FIELDS_NOT_CLOSED", f"{sorted(set(profile) ^ PROFILE_FIELDS)}")
+    if profile["grammar"] != PROFILE_GRAMMAR:
+        raise refuse("UNSUPPORTED_GRAMMAR", f"{profile['grammar']}")
+    nonblank(profile["profile_id"], "profile_id is required")
+    if profile["semantic_unit"] not in PROFILE_SEMANTIC_UNITS:
+        raise refuse("UNKNOWN_SEMANTIC_UNIT", f"{profile['semantic_unit']}")
+    if profile["origin"] not in PROFILE_ORIGINS:
+        raise refuse("UNKNOWN_ORIGIN", f"{profile['origin']}")
+    genesis = profile_map(profile, "genesis", PROFILE_GENESIS_FIELDS)
+    boundary = PROFILE_GENESIS_BOUNDARIES[profile["origin"]]
+    if genesis["boundary"] != boundary:
+        raise refuse("MALFORMED_PROFILE_REFERENCE",
+                     f"{profile['origin']} origin requires genesis boundary {boundary}")
+    profile_map(profile, "time_semantics", PROFILE_TIME_FIELDS)
+    profile_map(profile, "change_semantics", PROFILE_CHANGE_FIELDS)
+    roles = profile["ontology_roles"]
+    if not isinstance(roles, dict):
+        raise refuse("MALFORMED_PROFILE_REFERENCE", "ontology_roles must be an object")
+    if set(roles) != PROFILE_ROLE_FIELDS:
+        raise refuse("FIELDS_NOT_CLOSED",
+                     f"ontology_roles: {sorted(set(roles) ^ PROFILE_ROLE_FIELDS)}")
+    for role in sorted(PROFILE_ROLE_FIELDS):
+        types = roles[role]
+        if not isinstance(types, list):
+            raise refuse("MALFORMED_PROFILE_REFERENCE", f"{role} role must be an array")
+        for entry in types:
+            nonblank(entry, f"{role} role contains an invalid type")
+        if types != sorted(set(types)):
+            raise refuse("MALFORMED_PROFILE_REFERENCE",
+                         f"{role} role types must be sorted and unique")
+    nonblank(profile["projection_rule_family"], "projection_rule_family is required")
+    if not isinstance(profile["grounding"], dict):
+        raise refuse("GROUNDING_REQUIRED", "grounding must be an object")
+    if not profile["grounding"]:
+        raise refuse("GROUNDING_REQUIRED", "grounding must not be empty")
     try:
         DomainHistoryProfile.from_data(profile)
     except PopulationPlanRefusal as error:
-        raise refuse(error.reason.name, error.detail) from error
+        raise AssertionError(
+            f"the shipped parser refuses a profile this rule accepts: {error}"
+        ) from error
 
 
 # ------------------------------------------------------------------ plans ---

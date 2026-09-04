@@ -1,0 +1,23 @@
+{
+  "input_set_id": "inspection-note-capture-v1",
+  "members": [
+    {"bytes": 1574, "path": "document-capture.json", "sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99"},
+    {"bytes": 485, "path": "document-census.json", "sha256": "sha256:4897c36c485224bede030e7605a18b43bfeb11780aaea747fb91e153ad138304"},
+    {"bytes": 2594, "path": "document-change.json", "sha256": "sha256:ac48ac4917f12541ed87dbff5b7bb7bd7ae31d6958b41ba58c6a833e5ecd9184"},
+    {"bytes": 3069, "path": "document-plan.json", "sha256": "sha256:4cfe4dd1d232b53d5062b053cdbbadda43d0c435e4a7059c69f7f49669bb715d"},
+    {"bytes": 1090, "path": "inspection-note.yaml", "sha256": "sha256:c91cc11a8368ae98fc7e1c4058464393405d0f9c5c6eb49a59292bfbae3feec5"},
+    {"bytes": 1124, "path": "profile-source-assertion.json", "sha256": "sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46"},
+    {"bytes": 999, "path": "profile-state-version.json", "sha256": "sha256:2205605234ea2654b7c5a0efd442a24762825dac99b5ab34a573cd2949b03c80"},
+    {"bytes": 352, "path": "reading.json", "sha256": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745"},
+    {"bytes": 1791, "path": "small-shop-change-e7.json", "sha256": "sha256:5a4105bd2f04a14b10c8e3b95c7ad746014436c34ceb285579b677b3ed2e8dfe"},
+    {"bytes": 1969, "path": "small-shop-plan-e4.json", "sha256": "sha256:426154de1461fcccca53ad3716a2b632c3de9d8f202409e194c5f755822b3c32"},
+    {"bytes": 2090, "path": "small-shop-plan-e7.json", "sha256": "sha256:e186797a12f1a3ed380d71f3612ce390d1da2f4196de97742c67d20171e8e763"}
+  ],
+  "provenance": {
+    "copied_from": "handover/2026-09-03-core-population-v2/examples",
+    "inspection_note": "SYNTHETIC_FIXTURE_AUTHORED_FOR_MALLEUS",
+    "producer": "handover/2026-09-03-core-population-v2/validate_examples.py",
+    "small_shop_rows": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/sources/supplier-order-history.jsonl"
+  },
+  "schema": "malleus.inspection-note.capture-input-set/v1"
+}
