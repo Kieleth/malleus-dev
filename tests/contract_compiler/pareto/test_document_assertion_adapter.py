@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from hashlib import sha256
 from importlib import import_module
+from inspect import signature
 import json
 from pathlib import Path
 import tomllib
@@ -109,6 +110,27 @@ def test_document_adapter_is_public_and_emits_the_exact_neutral_plan() -> None:
         for records in expected_plan["records"].values()
         for record in records
     )
+
+
+def test_document_adapter_derives_capture_batch_order_time() -> None:
+    api = _api()
+    assert "valid_time" not in signature(api.adapt_document_assertions).parameters
+    reading, capture, plan, _ = _inputs()
+
+    result = api.adapt_document_assertions(
+        reading_bytes=_canonical(reading),
+        capture_bytes=_canonical(capture),
+        capture_id="capture:inspection-note",
+        plan_id=str(plan["plan_id"]),
+        contract_identity=str(plan["contract_identity"]),
+        records=plan["records"],
+        supersessions=plan["supersessions"],
+    )
+
+    assert json.loads(result.canonical_plan_bytes)["valid_time"] == {
+        "kind": "ORDER_ONLY",
+        "value": "capture:inspection-note",
+    }
 
 
 @pytest.mark.parametrize(
