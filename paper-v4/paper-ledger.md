@@ -2092,3 +2092,66 @@ KISS decision: Keep the first run in the main text as one short structural
 refusal. Exact class names and diagnostics stay in the artifact record. Keep REA
 only as a bounded analogy between domain vocabulary and history semantics; make
 no REA mapping or Event-population claim.
+
+### E-0121, the v4 rerun is rebound, cut to isolation, and its producer recorded
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-02/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, and the author's decisions
+of 2026-09-04 recorded in `handover/2026-09-04-overseer-takeover.md`.
+
+Rebind: The rerun is a separate `run-02` directory bound to Core commit
+`4881b3a040aaafc7600d009a16ae910084ae32c2`, tree
+`f532210148cc43e84dfcd764742ff5cfffda10a4`, governance head `OVR-000393` at
+`sha256:c97e3c65c4d1a455477277a33bb97e039c60fc0f06a09386ee86002ef31b97ad`. The
+eight declared inputs are digested from the files at that tree. Two of them
+moved: the installed skill is now
+`sha256:2e0c936448f18b076fc7fef77e55e2428f73576e801bb6afc81f50c3d685458c`, and
+the source-assertion profile is taken from the packaged
+`src/malleus/profiles/source-assertion.json` rather than the handover example
+copy, at the same bytes
+`sha256:e7451aaffe49695c5427f16b73333af1fdc6286254ca9d5e83551dff329a8c46`. The
+interface coordinates are new: `capture:paper-v4:yu-2025:v4:2` and
+`plan:paper-v4:yu-2025:v4:2`. The private workspace is
+`private/paper-v4-v4-run-02/`.
+
+Isolation cut: E3 requires the spawn message to carry isolation only. Run-01's
+message carried five modelling instructions that the brief-to-skill map itself
+classes as playbook material, and the installed skill carries every one of them.
+All five are removed: "Choose needed packs before project terms"; "Keep source
+instances, protocol, provenance, locators, ledger, policy, and query machinery
+out of the ontology"; "Preserve source values, units, distinctions, attribution,
+and epistemic status"; "Do not invent missing facts or collapse distinct source
+concepts"; "Review both census axes". `run-02/test_contract.py` asserts their
+absence from the run-02 message and their presence in the run-01 message, so the
+cut cannot silently regress. The isolation content, the two-phase protocol, the
+terminal rule, and the no-fallback rule are kept verbatim in substance.
+
+Producer record: The producer is one fresh Claude Code subagent spawned by the
+overseer through the Agent tool with `subagent_type general-purpose` and no
+inherited context, requested model `opus`, model family Claude Opus 5. Reasoning
+effort is the harness default and is neither pinned nor observed; the run
+contract says so rather than asserting a value. The isolation is a declared
+session boundary over a shared workspace, not an operating-system sandbox. The
+workspace is the Claude layout, so the skill installs at
+`.claude/skills/malleus-acolyte/SKILL.md`. Scope stays one document and one
+producer loop; a second cell, Claude Sonnet 5, follows only if this run reaches
+queries. Preliminary inspection is a fresh Claude session and paper evidence
+still requires Luis's ratification.
+
+Immutability: run-01 is not repaired and not reinterpreted. Its
+`ontology-run/result.json` and three diagnostics keep the digests they had,
+`sha256:d3fc616e…`, `sha256:7bacc39a…`, `sha256:bbdc1950…`, `sha256:f4d448f9…`,
+pinned by the run-02 contract test. Nothing under `private/paper-v4-v4-run/`
+changes.
+
+Manuscript: Per the author's decision 3, manuscript 1.2.1 on branch
+`paper-v4-multimodel` remains the paper of record and the three-producer
+comparison stays. The v4 result becomes a new section of its successor. The lean
+v4 draft is a support document and replaces nothing. Master plan 1.3.0 carries
+that ordering.
+
+Non-claim: This entry records a rebind and a message cut. No producer has run at
+this coordinate, no ontology has been accepted, and no population, replay, query
+or inspection result exists for run-02.

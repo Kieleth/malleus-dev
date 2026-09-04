@@ -1,6 +1,6 @@
 # Malleus paper master plan
 
-Version: 1.2.0
+Version: 1.3.0
 
 Date: 2026-09-04
 
@@ -11,8 +11,14 @@ population. Core classified aggregate grounding diagnostics and a neutral
 governed-history admission path as generic adopter gaps and is correcting them.
 A separate v4 rerun requires a new immutable Core coordinate and frozen run
 contract. It will keep one fresh single-session producer loop, typed gaps, and
-no question input before replay. V4 supersedes v2 only if the run, inspection,
-reproduction, and paper gates all pass.
+no question input before replay. That rerun is frozen as run-02 under
+`paper-v4/experiment-v4/run-02/`, bound to Core
+`4881b3a040aaafc7600d009a16ae910084ae32c2`, tree
+`f532210148cc43e84dfcd764742ff5cfffda10a4`, with an isolation-only spawn message
+and the producer model recorded in the run contract. Manuscript 1.2.1 on branch
+`paper-v4-multimodel` remains the paper of record; the v4 result becomes a new
+section of its successor. V4 supersedes nothing on its own: it is admitted to the
+paper only if the run, inspection, reproduction, and paper gates all pass.
 
 ## Objective
 
@@ -283,8 +289,11 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 3. Dispose live state, reopen and replay the ledger, then bind and run
    evaluator-owned queries against the replayed graph.
 4. Prepare source-grounded preliminary inspection for author ratification.
-5. Replace the selected Markdown and arXiv sources with the lean v4 draft,
-   reproduce from a clean checkout, and inspect every rendered PDF page.
+5. Add the v4 result to the manuscript of record as a new section in the
+   successor of 1.2.1, keeping the three-producer comparison and every 1.2.1
+   result sentence; the lean v4 draft does not replace it and stays a support
+   document. Then reproduce from a clean checkout and inspect every rendered
+   PDF page.
 6. Publish the exact paper reproducer through an immutable tag or archive,
    obtain final author review, and submit.
 
@@ -306,6 +315,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.3.0, 2026-09-04: Applied the author's decisions of 2026-09-04. Bound the v4 rerun as run-02 to the current Core coordinate, cut the producer spawn message to isolation only, recorded the producer model and harness in the run contract, and kept manuscript 1.2.1 as the paper of record with the v4 result entering as a new section of its successor. The lean v4 draft is a support document and replaces nothing.
 - 1.2.0, 2026-09-03: Accepted the KISS v4 execution cut under the author's overnight relay instruction. Selected one document and one producer loop, `source-assertion` with conservative `PARTIAL_IMPORT` origin, questions only after replay, typed gaps, no fallback, and no more than two evidence-triggered ontology revision rounds. The prior three-producer matrix remains diagnostic background. V2 remains selected until v4 passes its complete evidence and reproduction gates.
 - 1.1.0, 2026-09-03: Applied D-0018. Preserved the completed question-conditioned run as history, selected a versioned rerun from ontology acquisition, removed competency questions and derived semantic targets from ontology construction, placed adopter query surfaces after replay identity, withdrew automated exact-match scoring, and selected source-grounded inspection with explicit human ratification.
 - 1.0.0, 2026-09-02: Applied D-0017. Rebound the isolated paper branch to exact Core `f9052b4`, accepted the published Small Shop correction tag as bounded research evidence, and accepted the later private composer as a private implementation seam. Preserved the PDF exclusion, five identities, frozen model inputs, and claim boundary.

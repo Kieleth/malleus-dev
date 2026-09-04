@@ -13,6 +13,7 @@
     "paper-v4/environment",
     "paper-v4/evaluation-v2",
     "paper-v4/experiment-v4",
+    "paper-v4/experiment-v4/run-02",
     "paper-v4/test_publication_consistency.py"
   ],
   "excluded_roots": [

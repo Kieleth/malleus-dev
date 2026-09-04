@@ -7,7 +7,7 @@ import subprocess
 
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[3]
+ROOT = HERE.parents[2]
 CONTRACT_PATH = HERE / "run-contract.json"
 PRODUCER_MANIFEST = HERE / "producer-input-manifest.json"
 SPAWN_MESSAGE = HERE / "spawn-message.md"
