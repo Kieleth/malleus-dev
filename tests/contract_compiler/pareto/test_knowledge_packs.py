@@ -26,6 +26,10 @@ ASSERTION_MODALITIES = {
     "CONTESTED",
     "NEGATED",
 }
+GROUNDING_EXAMPLE_MARKER = (
+    "carries a `grounding` block:\n\n"
+    "```yaml\n"
+)
 
 
 def _compiler():
@@ -204,6 +208,54 @@ def test_research_pack_matches_the_accepted_campaign_surface() -> None:
     assert "Investigation" not in classes
     assert "PART_OF_CAMPAIGN" in relations
     assert "PART_OF_INVESTIGATION" not in relations
+
+
+def test_governing_design_uses_the_executable_grounding_shape() -> None:
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    example = yaml.safe_load(
+        design.split(GROUNDING_EXAMPLE_MARKER, 1)[1].split("\n```", 1)[0]
+    )
+    grounding = example["annotations"]["grounding"]
+
+    assert set(grounding) == {"tag", "value"}
+    assert grounding["tag"] == "grounding"
+    assert set(grounding["value"]) == {
+        "area",
+        "taxonomy",
+        "vocabularies",
+        "invented_terms",
+    }
+    assert grounding["value"]["vocabularies"] == [
+        {
+            "vocabulary": "JCGM 200:2012 (VIM), 3rd edition",
+            "vocabulary_url": (
+                "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf"
+            ),
+            "borrowed_terms": [
+                "quantity value",
+                "measurement unit",
+                "measurement uncertainty",
+                "kind of quantity",
+            ],
+        }
+    ]
+    assert "measured versus derived value" not in design
+    assert "quantity kind" not in design
+    assert _inquisition().validate_pack_grounding(
+        _source(annotations=example["annotations"]),
+        role="PACK",
+    )
+
+
+def test_public_milestone_names_the_live_frozen_receipt_guard() -> None:
+    index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    current = (
+        "test_vertical.py::"
+        "test_recorded_research_receipt_stays_frozen_while_current_history_runs"
+    )
+
+    assert current in index
+    assert "test_recorded_research_receipt_regenerates_from_the_exact_history" not in index
 
 
 def test_project_importing_research_and_metrology_compiles_through_public_api() -> None:
