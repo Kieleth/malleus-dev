@@ -2523,3 +2523,61 @@ still spent on the grounding block's shape, and whether an Event record is
 constructed at all, are open questions this run has not answered. Run-02 and
 run-03 remain one observation each and the three runs are not a measurement of
 anything until they have run to ratification under the same harness.
+
+### E-0126, run-05 opens the second v4.1 cell with the model as the only variable
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-05/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `test_contract.py`,
+`test_pipeline.py`, and the receipt at
+`private/paper-v4-v4-run-05/producer-input-receipt.json`.
+
+Cell: run-04 opened the v4.1 iteration and reached the producer, so the second
+cell of that iteration opens. It is one fresh Claude Code subagent, Agent tool,
+`subagent_type general-purpose`, no inherited context, requested model `sonnet`,
+model family Claude Sonnet 5, model id `claude-sonnet-5`, reasoning effort the
+harness default and neither pinned nor observed. Every other key of the producer
+block is run-04's, and `run-05/test_contract.py` compares the two blocks key by
+key so only `requested_model`, `model_family` and `model_id` may differ. The
+scope block says it plainly: `matrix_cell` SECOND_OF_V4_1, `first_cell_of_v4_1`
+run-04, `v4_1_cells_preceding` run-04, `variable` PRODUCER_MODEL_ONLY, `harness`
+IDENTICAL_TO_RUN_04. This is run-03's relation to run-02 repeated one iteration
+later. Run-05 supersedes nothing; run-04 stays the first cell of v4.1 and run-02
+and run-03 stay the two v4 cells.
+
+Coordinates: the same Core commit run-04 records,
+`8b806f7411e11b84e1156cea84b4b641d701db19`, tree
+`1da402a610c6e38f2b7d7abcd059133d66aa3cbe`, governance head `OVR-000396` at
+`sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2`. No
+declared input moved: all eight digests were recomputed with
+`git show 8b806f7:<path>` for the seven tracked inputs and from the private path
+for the untracked reading, and each equals run-04's. The skill is
+`sha256:0909026f…`, the reading `sha256:f3885c7b…`, the Malleus root
+`sha256:5b737c21…`, the LinkML types `sha256:1c79b264…`, metrology
+`sha256:c6c205d1…` at 0.2.0, chronology `sha256:6fbd3b49…` at 0.1.0, research
+`sha256:5ca437c5…` at 0.2.0, and the packaged source-assertion profile
+`sha256:e7451aaf…`. `run-05/test_contract.py` asserts the moved set is empty and
+compares the declared-input list to run-04's entry by entry, paths included. The
+interface coordinates are new: `capture:paper-v4:yu-2025:v4:5` and
+`plan:paper-v4:yu-2025:v4:5`. The private workspace is
+`private/paper-v4-v4-run-05/producer`.
+
+Harness: `native_query.py` is byte identical to run-04's, run-03's and run-02's.
+`run.py`, `compile_ontology_candidate.py` and `prepare_producer.py` are run-04's
+with the run id and the result schema string substituted and nothing else, and
+`run-05/test_pipeline.py` asserts that by reconstructing each file from run-04's
+bytes. The spawn message is run-04's with the run id substituted, so the
+isolation cut is the one run-03 and run-04 carried. `compile_ontology_candidate.py`
+keeps the `malleus.paper-v4.population-surface/v2` surface with Event types, and
+the contract's `changes_since_v4` list still names run-04's compiler as the
+subject of that change, because that is the file where it was written and
+run-05's is a copy of it.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-05, and run-04 has
+not reached a result either, so nothing here compares the two models. One cell
+per model is one observation per model. A model difference observed across two
+single sessions is not a measurement of either model, and the v4 pair run-02 and
+run-03 is not evidence about what run-04 and run-05 will do under the revised
+skill and packs.
