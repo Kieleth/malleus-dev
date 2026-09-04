@@ -139,6 +139,10 @@ IMPLEMENTED_MUTATIONS = {
     },
     "multipage-control": {
         "correction-text-digest-mismatch": (("OCR-D015",), {}),
+        "review-revision-without-predecessor": (
+            ("OCR-D016",),
+            {"page:2": "UNREADABLE"},
+        ),
     },
     "region-control": {
         "hypothesis-attempt-cross-region": (("OCR-D003",), {}),
@@ -568,7 +572,7 @@ def test_deterministic_regeneration_matches_every_retained_byte() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert completed.stdout == "verified 65 deterministic corpus artifacts\n"
+    assert completed.stdout == "verified 67 deterministic corpus artifacts\n"
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
@@ -867,8 +871,15 @@ def test_retained_sidecars_bind_each_attempt_path(case: dict[str, Any]) -> None:
         ]
         if reviewed:
             assert expected["response_text"] == response["text"]
-            assert len(corrections) == 1
-            correction = corrections[0]
+            assert [
+                {
+                    "id": item["id"],
+                    "verdict": item["verdict"],
+                    "predecessor_id": item["predecessor_id"],
+                }
+                for item in corrections
+            ] == expected["reviews"]
+            correction = corrections[-1]
             assert correction["verdict"] == expected["human_verdict"]
             if correction["verdict"] == "CORRECTED":
                 selected = hypotheses[selection["selected_id"]]
@@ -900,6 +911,60 @@ def test_multipage_oracle_selects_the_body_without_the_visible_heading() -> None
         "value": "xywh=0,0,1000,1400",
     }
     assert blank["expected_text"] == blank["response_text"] == ""
+
+
+def test_multipage_review_revision_keeps_history_and_only_its_head_speaks() -> None:
+    case = next(
+        item for item in _manifest()["cases"] if item["id"] == "multipage-control"
+    )
+    bundle = Bundle.from_bytes(_artifact_path(case["bundle"]).read_bytes())
+    oracle = _load(_artifact_path(case["oracle"]))
+    blank = oracle["regions"][1]
+    initial_id = "fixture:multipage-control:correction:page-2-blank"
+    revision_id = "fixture:multipage-control:correction:page-2-blank-revision"
+    assert blank["reviews"] == [
+        {"id": initial_id, "predecessor_id": None, "verdict": "UNREADABLE"},
+        {
+            "id": revision_id,
+            "predecessor_id": initial_id,
+            "verdict": "VERIFIED_BLANK",
+        },
+    ]
+    assert blank["human_verdict"] == "VERIFIED_BLANK"
+
+    reviews = [
+        item
+        for item in bundle.corrections
+        if item.reviewed_hypothesis_id
+        == "fixture:multipage-control:hypothesis:page-2-blank:machine"
+    ]
+    assert [(item.id, item.verdict, item.predecessor_id) for item in reviews] == [
+        (initial_id, "UNREADABLE", None),
+        (revision_id, "VERIFIED_BLANK", initial_id),
+    ]
+    result = verify_bundle(bundle)
+    assert result.conforms
+    assert "OCR-D016" not in result.codes()
+    assert _expected_payload(result)["units"]["page:2"] == {
+        "disposition": "ACCOUNTED",
+        "outcome": "VERIFIED_BLANK",
+    }
+
+    mutation = next(
+        item
+        for item in case["mutations"]
+        if item["id"] == "review-revision-without-predecessor"
+    )
+    unlinked = verify_bundle(
+        Bundle.from_bytes(_artifact_path(mutation["bundle"]).read_bytes())
+    )
+    assert [(item.code, item.subject) for item in unlinked.diagnostics] == [
+        ("OCR-D016", "fixture:multipage-control:region:page-2-blank")
+    ]
+    assert _expected_payload(unlinked)["units"]["page:2"] == {
+        "disposition": "ACCOUNTED",
+        "outcome": "UNREADABLE",
+    }
 
 
 def test_failed_attempt_retains_the_failure_without_inventing_a_reading() -> None:

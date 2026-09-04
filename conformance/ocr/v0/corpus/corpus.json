@@ -59,6 +59,18 @@
           "id": "correction-text-digest-mismatch",
           "purpose": "The correction digest must equal the corrected hypothesis digest.",
           "verification": "cases/multipage-control/mutations/correction-text-digest-mismatch.verification.json"
+        },
+        {
+          "bundle": "cases/multipage-control/mutations/review-revision-without-predecessor.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D016"
+          ],
+          "expected_unit_outcome": {
+            "page:2": "UNREADABLE"
+          },
+          "id": "review-revision-without-predecessor",
+          "purpose": "Removing the revision edge leaves two conflicting live reviews.",
+          "verification": "cases/multipage-control/mutations/review-revision-without-predecessor.verification.json"
         }
       ],
       "oracle": "cases/multipage-control/oracle.json",

@@ -32,7 +32,7 @@
     ],
     "corrections": [
       {
-        "corrected_text_digest": "sha256:0c199edd968ff9bad8a23d3046f3f2e3adbe6b8307a6a8d3aa752597a9fd014a",
+        "corrected_text_digest": "sha256:6c414cb9883b01646125757b88391ee334309b7cb35cebbaf39a8db83c220f45",
         "id": "fixture:multipage-control:correction:page-1-body",
         "predecessor_id": null,
         "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-1-body:machine",
@@ -50,7 +50,7 @@
       {
         "corrected_text_digest": null,
         "id": "fixture:multipage-control:correction:page-2-blank-revision",
-        "predecessor_id": "fixture:multipage-control:correction:page-2-blank",
+        "predecessor_id": null,
         "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-2-blank:machine",
         "reviewer_id": "fixture:reviewer:human-control",
         "verdict": "VERIFIED_BLANK"

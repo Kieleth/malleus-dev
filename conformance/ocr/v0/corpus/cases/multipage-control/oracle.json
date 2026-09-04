@@ -34,6 +34,18 @@
       "id": "correction-text-digest-mismatch",
       "purpose": "The correction digest must equal the corrected hypothesis digest.",
       "verification": "cases/multipage-control/mutations/correction-text-digest-mismatch.verification.json"
+    },
+    {
+      "bundle": "cases/multipage-control/mutations/review-revision-without-predecessor.bundle.json",
+      "expected_diagnostic_codes": [
+        "OCR-D016"
+      ],
+      "expected_unit_outcome": {
+        "page:2": "UNREADABLE"
+      },
+      "id": "review-revision-without-predecessor",
+      "purpose": "Removing the revision edge leaves two conflicting live reviews.",
+      "verification": "cases/multipage-control/mutations/review-revision-without-predecessor.verification.json"
     }
   ],
   "purpose": "Retain a corrected ambiguous token and an independently verified blank page.",
@@ -52,6 +64,13 @@
       "request": "cases/multipage-control/requests/page-1-body.json",
       "response": "cases/multipage-control/responses/page-1-body.json",
       "response_text": "The quick brown fox jumps.\nAMBIGUOUS TOKEN\nOOI1l",
+      "reviews": [
+        {
+          "id": "fixture:multipage-control:correction:page-1-body",
+          "predecessor_id": null,
+          "verdict": "CORRECTED"
+        }
+      ],
       "selected_text": "cases/multipage-control/selected/page-1-body.txt",
       "selector": {
         "type": "FragmentSelector",
@@ -67,6 +86,18 @@
       "request": "cases/multipage-control/requests/page-2-blank.json",
       "response": "cases/multipage-control/responses/page-2-blank.json",
       "response_text": "",
+      "reviews": [
+        {
+          "id": "fixture:multipage-control:correction:page-2-blank",
+          "predecessor_id": null,
+          "verdict": "UNREADABLE"
+        },
+        {
+          "id": "fixture:multipage-control:correction:page-2-blank-revision",
+          "predecessor_id": "fixture:multipage-control:correction:page-2-blank",
+          "verdict": "VERIFIED_BLANK"
+        }
+      ],
       "selected_text": "cases/multipage-control/selected/page-2-blank.txt",
       "selector": {
         "type": "FragmentSelector",

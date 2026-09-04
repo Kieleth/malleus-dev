@@ -45,6 +45,14 @@
         "predecessor_id": null,
         "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-2-blank:machine",
         "reviewer_id": "fixture:reviewer:human-control",
+        "verdict": "UNREADABLE"
+      },
+      {
+        "corrected_text_digest": null,
+        "id": "fixture:multipage-control:correction:page-2-blank-revision",
+        "predecessor_id": "fixture:multipage-control:correction:page-2-blank",
+        "reviewed_hypothesis_id": "fixture:multipage-control:hypothesis:page-2-blank:machine",
+        "reviewer_id": "fixture:reviewer:human-control",
         "verdict": "VERIFIED_BLANK"
       }
     ],
@@ -136,7 +144,7 @@
         ],
         "human_verified": true,
         "id": "fixture:multipage-control:selection:page-2-blank",
-        "reason": "human review confirms the retained empty response",
+        "reason": "revised human review confirms the retained empty response",
         "region_id": "fixture:multipage-control:region:page-2-blank",
         "selected_id": "fixture:multipage-control:hypothesis:page-2-blank:machine"
       }

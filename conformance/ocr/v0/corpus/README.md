@@ -18,7 +18,9 @@ The five cases separate different questions:
   attempt and selection lineage between the regions.
 * `multipage-control` is a two-page raster-only PDF. The first page contains
   known text and an intentionally ambiguous token. The second page is blank.
-  Its bundle retains the machine-shaped reading and the human correction.
+  Its bundle retains the machine-shaped reading and the human correction. The
+  blank-page review revises `UNREADABLE` to `VERIFIED_BLANK` through an explicit
+  predecessor edge, retaining both review records.
 * `incomplete-sequence` is a raster-only PDF containing visible logical pages
   1 of 3 and 3 of 3. Logical page 2 is absent from the source and the evidence
   census remains incomplete.

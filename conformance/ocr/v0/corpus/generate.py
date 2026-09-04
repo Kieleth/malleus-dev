@@ -767,11 +767,19 @@ class Case:
             self.exchanges.append(exchange)
         return exchange
 
-    def review(self, name: str, verdict: str, reason: str) -> None:
+    def review(
+        self,
+        name: str,
+        verdict: str,
+        reason: str,
+        *,
+        correction_name: str | None = None,
+        predecessor_id: str | None = None,
+    ) -> dict[str, Any]:
         reading = self.readings[name]
         machine = reading["machine"]
         selection = reading["selection"]
-        correction_id = _id(self.id, "correction", name)
+        correction_id = _id(self.id, "correction", correction_name or name)
         corrected_digest = None
         if verdict == "CORRECTED":
             corrected_digest = reading["exchange"]["selected_text_digest"]
@@ -783,16 +791,25 @@ class Case:
             self.bundle["hypotheses"].append(corrected)
             selection["candidate_ids"].append(corrected["id"])
             selection["selected_id"] = corrected["id"]
-        elif verdict != "VERIFIED_BLANK":
+        elif verdict not in {"UNREADABLE", "VERIFIED_BLANK"}:
             raise CorpusError(f"{self.id}/{name}: unsupported fixture review verdict {verdict!r}")
-        self.bundle["corrections"].append({
+        correction = {
             "id": correction_id, "reviewed_hypothesis_id": machine["id"],
-            "reviewer_id": "fixture:reviewer:human-control",
-            "verdict": verdict, "corrected_text_digest": corrected_digest, "predecessor_id": None,
-        })
+            "reviewer_id": "fixture:reviewer:human-control", "verdict": verdict,
+            "corrected_text_digest": corrected_digest, "predecessor_id": predecessor_id,
+        }
+        self.bundle["corrections"].append(correction)
         selection["reason"] = reason
         selection["human_verified"] = True
         reading["oracle"]["human_verdict"] = verdict
+        if "reviews" not in reading["oracle"]:
+            reading["oracle"]["reviews"] = []
+        reading["oracle"]["reviews"].append({
+            "id": correction_id,
+            "verdict": verdict,
+            "predecessor_id": predecessor_id,
+        })
+        return correction
 
     def write_reference(self, expected: Mapping[str, Any]) -> dict[str, Any]:
         self.document = _write_verified_document(
@@ -1064,8 +1081,17 @@ def _multipage_control(artifacts: Artifacts) -> dict[str, Any]:
     case.review(
         "page-1-body", "CORRECTED", "human correction resolves the intentionally ambiguous token"
     )
+    initial_blank_review = case.review(
+        "page-2-blank",
+        "UNREADABLE",
+        "initial review could not distinguish blank from unreadable",
+    )
     case.review(
-        "page-2-blank", "VERIFIED_BLANK", "human review confirms the retained empty response"
+        "page-2-blank",
+        "VERIFIED_BLANK",
+        "revised human review confirms the retained empty response",
+        correction_name="page-2-blank-revision",
+        predecessor_id=initial_blank_review["id"],
     )
     expected = _expected({
         "page:1": ("READ", "ACCOUNTED"),
@@ -1085,6 +1111,22 @@ def _multipage_control(artifacts: Artifacts) -> dict[str, Any]:
         expected=mutation_expected,
         expected_diagnostics=(("OCR-D015", correction_id),),
     )]
+    unlinked = copy.deepcopy(document)
+    unlinked["bundle"]["corrections"][2]["predecessor_id"] = None
+    unlinked_expected = _refusal(_expected({
+        "page:1": ("READ", "ACCOUNTED"),
+        "page:2": ("UNREADABLE", "ACCOUNTED"),
+    }), "OCR-D016")
+    mutations.append(case.write_mutation(
+        mutation_id="review-revision-without-predecessor",
+        purpose="Removing the revision edge leaves two conflicting live reviews.",
+        document=unlinked,
+        expected=unlinked_expected,
+        expected_diagnostics=((
+            "OCR-D016", _id(case.id, "region", "page-2-blank")
+        ),),
+        extra={"expected_unit_outcome": {"page:2": "UNREADABLE"}},
+    ))
     return case.finish(
         fixture_kind="two_page_raster_only_pdf",
         expected=expected,
