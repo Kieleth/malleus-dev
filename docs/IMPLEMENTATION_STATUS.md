@@ -105,8 +105,14 @@ gaps, checks the capture census for untouched source blocks, and repeats only
 through additive contract revision. It treats every concrete Entity and
 Relation type as eligible, calls the public history admit and reopen boundaries,
 keeps the loop in one session by default, and caps it at two revision rounds.
-The procedure adds no compiler command or runtime capability. It documents how
-a fresh adopter uses the public boundaries already listed above.
+Admission runs only when `PopulationPreparation.change_set` is present;
+`NO_DOMAIN_CHANGE` retains its evidence without an admission call.
+The census keeps block review separate from assertion formalisation and states
+that uncaptured assertions remain invisible. With a current installation and
+exact inputs supplied, the procedure forbids ambient checkout, home-directory,
+network, or undeclared-document discovery and fails when an input is absent.
+It adds no compiler command or runtime capability. It documents how a fresh
+adopter uses the public boundaries already listed above.
 
 ## Implemented
 

@@ -14,8 +14,16 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Coverage-and-loop RED tree: `c77a49e922b213ba801993f01ca4b96b36866201`
 - Neutrality-and-install RED: `7da27cd61f8a64ba0dca9205b9d54ccb0bf6159c`
 - Neutrality-and-install RED tree: `31a0dfaf43e4ee0f96a2e25c9367e02ed48292b6`
-- Final GREEN: `b3769d6e9fb55ab4e7fd455ea545230de5a4a429`
-- Final GREEN tree: `9e63885eae14870d72a39486d5131bd82162a4f0`
+- Loop GREEN: `b3769d6e9fb55ab4e7fd455ea545230de5a4a429`
+- Loop GREEN tree: `9e63885eae14870d72a39486d5131bd82162a4f0`
+- Self-contained-path RED: `020ad57729e32bf698eca584a1194072eda3ec52`
+- Self-contained-path RED tree: `ccc4f63724a90e19308f5909b5d7e396420e9158`
+- Self-contained-path GREEN: `97ee55c2f0ecbc4a3c6883468332c9b770f6516b`
+- Self-contained-path GREEN tree: `0eb52de1fe379d354512a4178f0a72090cd4980b`
+- Admission-branch RED: `9c087595b9f636b456892292455326e688224e74`
+- Admission-branch RED tree: `3eee37ac79c73100ae4f6ad2e182d96768727f8d`
+- Final GREEN: `387716a31e8483d56fd5f1ce95cf97555c67ba82`
+- Final GREEN tree: `9f3b870e01b15cb0e6a96f6f9b3f24996ebb6b21`
 
 ## What changed
 
@@ -38,15 +46,25 @@ The playbook gives a fresh adopter one ordered path:
    LinkML source closure;
 6. turn a document capture or structured source into the neutral population
    plan through an explicit source adapter, then use the two-axis capture census
-   to continue over source blocks still marked `UNTOUCHED`;
-7. compile and prepare that plan, then admit it through one
-   `KnowledgeChangeHistory` with `history.admit(...)`;
+   to inspect both block review and assertion formalisation, continue over source
+   blocks still marked `UNTOUCHED`, and retain the fact that reviewed blocks can
+   contain uncaptured assertions;
+7. compile and prepare that plan, admit only a non-null
+   `prepared.change_set` through one `KnowledgeChangeHistory` with
+   `history.admit(change_set=prepared.change_set, ...)`, and retain a
+   `NO_DOMAIN_CHANGE` preparation without calling admission;
 8. reopen with `KnowledgeChangeHistory.reopen(...)`, replay, query, and trace
    accepted records back to retained evidence;
 9. keep the loop in one working session by default, cap it at two additive
    revision rounds before it starts, and use only clustered typed gaps to
    justify a revision; and
 10. stop when another addition would require invention.
+
+For this path, a supplied current installation and exact input artifacts are the
+closed working set. The section explicitly supersedes the older checkout probe
+and adoption-guide pre-read. It forbids ambient home-directory, checkout,
+network, and undeclared-document discovery, and requires an explicit failure
+when a needed capability or artifact is absent.
 
 The exact grounding standing order from `design/KNOWLEDGE_PACKS.md` is carried
 into the skill. The playbook also preserves the twelve generic rules extracted
@@ -82,16 +100,18 @@ The public deliverable is the installable skill procedure itself.
 
 - The RED commit adds two tests. Both fail because the nascent-project section
   does not exist in either the source skill or an installed copy.
-- The later RED guards add the complete population surface, census continuation,
-  exact history calls, bounded loop, Codex install path, ordering, and leakage
-  constraints before the final GREEN.
+- The later RED guards add the complete population surface, both census axes,
+  exact history calls and no-change branch, bounded loop, Codex install path,
+  ordering, leakage constraints, and the closed installed-artifact boundary
+  before the final GREEN.
 - The two direct playbook tests pass after the final GREEN.
 - The complete skill-installation and shipped-guidance slice passes 19 tests.
 - The complete Inquisitor test module passes 102 tests.
 - The content guard binds the model-neutral rules, real public command and
-  function names, absence of model, fixture, assessment, brief, or paper
-  coupling, and the ten-step order. It also checks that profile and pack choices
-  precede ontology construction and that the fixed loop bounds precede revision.
+  function names, absence of model, fixture, answer, query, evaluation, brief,
+  or paper specifics, and the ten-step order. It also checks that profile and
+  pack choices precede ontology construction and that the fixed loop bounds
+  precede revision.
 - The installer test copies all shipped skills to a clean Codex project and
   proves the installed acolyte retains the playbook bytes.
 
