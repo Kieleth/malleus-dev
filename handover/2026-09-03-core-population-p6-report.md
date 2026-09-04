@@ -9,6 +9,10 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Capture-batch semantics RED: `d79d3d70fa2799a6d8e88b11053008f9ac94adaa`
 - GREEN: `7ad5b486e901902088e1a6872b790c6ec48d01a5`
 - GREEN tree: `d4ea8f6a334a728bac01ab871f6932e839b2ba7a`
+- Capture-order enforcement RED: `c837e2f0aac62a39e27c1560aa48a98df6e6dd97`
+- Per-assertion-time RED: `26859bc7e6ddee874e0586dfc1e3c3437f581704`
+- Corrected GREEN: `5cd15c286ef0c22015f7571e1bd1279f17a54a66`
+- Corrected GREEN tree: `2e8190ae0c58f7d85f27845d97aa9b6514f0fbf8`
 
 ## What changed
 
