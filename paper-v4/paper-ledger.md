@@ -1557,3 +1557,15 @@ Boundary: V2 remains the selected result until the v4 Core gate, producer loop, 
 Guard: `paper-v4/experiment-v4/run-contract.json` records the executable boundary without population facts or answer values. Its focused tests require one loop, no fallback, question-free construction, post-replay querying, source-free query execution, and an unbound Core gate that prevents premature execution.
 
 Impact: Master plan 1.2.0 accepts the lean v4 cut. Paper-only preparation continues while Core finishes the remaining public profile, pack, and playbook pieces.
+
+### E-0101, v4 source and selected-reading preflight reproduces byte for byte
+
+Date: 2026-09-03
+
+Sources: ignored publisher PDF at the path fixed by `paper-v4/source/source-manifest.json`; the retained CPython 3.12 environment with `pypdf==6.16.2`; the committed text-layer projector; the selected v2 reading under `private/paper-v4-text-layer/`; and a new ignored preflight under `private/paper-v4-v4-preflight/`.
+
+Observation: The source PDF recomputes to `sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9`. A fresh strict text-layer extraction produced 11 pages and 186 stable blocks at `sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17`. The regenerated selected-reading bytes are identical to the retained selected reading.
+
+Boundary: This verifies only the source and reading inputs. It does not start the v4 producer loop, select an ontology, inspect document claims, bind Core, or create another manuscript identity. The scratch reading remains ignored and private.
+
+Impact: The v4 run can reuse the exact selected reading without introducing PDF or extractor drift. Its next external dependency remains the frozen Core execution gate.
