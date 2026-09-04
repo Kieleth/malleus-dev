@@ -146,6 +146,22 @@ def _digest(path: Path) -> str:
     return "sha256:" + sha256(path.read_bytes()).hexdigest()
 
 
+def _frozen_digest(source: str) -> str:
+    """The digest of a tracked input as it stood at this run's recorded commit.
+
+    Run-02 is closed. Its declared inputs are the bytes the producer consumed,
+    which live at ``CORE_COMMIT``; the working tree moves on and a frozen run
+    must not turn red when it does.
+    """
+    blob = subprocess.run(
+        ["git", "show", f"{CORE_COMMIT}:{source}"],
+        capture_output=True,
+        check=True,
+        cwd=ROOT,
+    ).stdout
+    return "sha256:" + sha256(blob).hexdigest()
+
+
 def _plain(text: str) -> str:
     return " ".join(text.split())
 
@@ -233,7 +249,10 @@ def test_the_eight_declared_inputs_are_pinned_to_the_files_at_that_tree() -> Non
     assert set(declared) == set(DECLARED_SOURCES)
     for name, source in DECLARED_SOURCES.items():
         assert declared[name]["source"] == source
-        assert declared[name]["sha256"] == _digest(ROOT / source)
+        if name == "SELECTED_READING":
+            assert declared[name]["sha256"] == _digest(ROOT / source)
+            continue
+        assert declared[name]["sha256"] == _frozen_digest(source)
     assert declared["MALLEUS_NASCENT_PROJECT_SKILL"]["target"] == (
         ".claude/skills/malleus-acolyte/SKILL.md"
     )
