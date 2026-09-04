@@ -39,7 +39,7 @@ SOURCE_ASSERTION_PROFILE_DATA = {
         "transition": "NOT_APPLICABLE",
     },
     "genesis": {
-        "boundary": "FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH",
+        "boundary": "RETAINED_PARTIAL_IMPORT",
         "completeness_scope": "DECLARED_CAPTURE_ONLY",
     },
     "grammar": PROFILE_GRAMMAR,
@@ -56,7 +56,7 @@ SOURCE_ASSERTION_PROFILE_DATA = {
         "event": ["Event"],
         "state": [],
     },
-    "origin": "EMPTY",
+    "origin": "PARTIAL_IMPORT",
     "profile_id": "source-assertion",
     "projection_rule_family": (
         "CURRENT_NON_SUPERSEDED_RECORDS_WITH_RETAINED_ASSERTION_TRACE"
@@ -175,7 +175,9 @@ def test_three_full_profiles_are_public_canonical_and_explicit(
     assert profile.genesis == data["genesis"]
     assert profile.time_semantics == data["time_semantics"]
     assert profile.change_semantics == data["change_semantics"]
-    assert profile.ontology_roles == data["ontology_roles"]
+    assert profile.ontology_roles == {
+        role: tuple(types) for role, types in data["ontology_roles"].items()
+    }
     assert profile.projection_rule_family == data["projection_rule_family"]
     with pytest.raises(TypeError):
         profile.time_semantics["domain_time"] = "changed"
