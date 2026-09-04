@@ -519,11 +519,33 @@ def test_project_may_record_a_bounded_none_found_search() -> None:
         "search": "No shared vocabulary found for the local shelf marker.",
         "invented_terms": ["LocalShelfMarker"],
     }
-    receipt = api.validate_pack_grounding(
-        _source(class_annotations=_annotation(none_found)),
-        role="PROJECT",
+    source = _source(class_annotations=_annotation(none_found))
+    receipt = api.validate_pack_grounding(source, role="PROJECT")
+    sources = _pack_sources()
+    sources["project"] = source
+    compiled = _compiler().compile_linkml_contract(
+        root_locator="project",
+        sources=sources,
     )
+
     assert receipt.grounded_subjects == ("ProjectThing",)
+    assert compiled.view.is_subtype_of("ProjectThing", "Entity")
+
+    revised = yaml.safe_load(source)
+    revised["classes"]["ProjectThing"]["annotations"]["grounding"]["value"][
+        "search"
+    ] = "A second bounded vocabulary search found no shared shelf marker."
+    sources["project"] = yaml.safe_dump(revised, sort_keys=False).encode()
+    recompiled = _compiler().compile_linkml_contract(
+        root_locator="project",
+        sources=sources,
+    )
+
+    assert compiled.artifact.validated_fact_set_sha256 == (
+        recompiled.artifact.validated_fact_set_sha256
+    )
+    assert compiled.artifact.evidence != recompiled.artifact.evidence
+    assert compiled.artifact.artifact_bytes != recompiled.artifact.artifact_bytes
 
 
 def test_cited_grounding_requires_a_search_when_it_invents_terms() -> None:
