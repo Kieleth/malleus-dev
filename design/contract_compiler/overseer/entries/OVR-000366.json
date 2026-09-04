@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-P31",
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:04da3ec8904554ce6929c9db76be85704a7e2d8cb9e78bb542d0eae53bcb5586",
+        "before_digest": "sha256:d40940c7ea1ca137a4626619d56db9fe35fad8f7d7e33eee84ce1dade3988fbb",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:59abf2d51bed0ff947951cd77a030112884c90d0f82c27a6681cfa133a2f89a3",
+        "before_digest": "sha256:df1d241d3fab907b38ca666637535994a14f749207b6e3969d8c3a3a1ea0dfb4",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:f6099ceb318ffe243d8b72e1c91aee55ac1fb2da0cb9fbc8c7403c15f792764e",
+  "entry_id": "OVR-000366",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:091994613f894aee146817bb2d4fc01db4daf2ffcc65a81d19373590fe793513",
+  "recorded_at": "2026-09-04T00:27:47Z",
+  "references": [
+    {
+      "relation": "DEFINES",
+      "target": "pyproject.toml",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "DEFINES",
+      "target": "tests/test_inquisition.py",
+      "type": "DOCUMENT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "4fb088e1149edef822eddf7b1407110a1d902d1a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-P31",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 366,
+  "subject": {
+    "id": "ocr-fixture-corpus-package-boundary",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the grounded OCR fixture corpus package and release-guard bytes.",
+  "why": "Commit 4fb088e added deterministic OCR corpus generation dependencies, sdist-only fixture sources, default corpus tests, and guards keeping those files out of wheels. pyproject.toml and tests/test_inquisition.py were already governed documents, so this forward revision binds their exact successor bytes without editing history or claiming CC-P31 or CC-PKG02 completion."
+}
