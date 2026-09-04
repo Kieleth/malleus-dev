@@ -87,3 +87,20 @@ test "$(shasum -a 256 "$malleus_paper_root/private/paper-v4-v3-claude-opus-5-rep
 ```
 
 The manifest-driven harness itself is checked against the v2 run: `paper-v4/experiment-v3/test_v2_fidelity.py` reproduces the v2 recipes, brief, acceptance event, five result files and ledger digest from the v2 manifest.
+
+## The v4 run-02 single-producer run
+
+`paper-v4/experiment-v4/run-02/` holds the fourth run, reported in Section 4.5 of the manuscript. It has no reproducer tag. It lives at the commit that carries that directory, on Core commit `4881b3a040aaafc7600d009a16ae910084ae32c2`, tree `f532210148cc43e84dfcd764742ff5cfffda10a4`. The tag `paper-v4-multimodel-v2` remains the coordinate for the v2 and v3 runs above.
+
+Frozen and public in that directory:
+
+- `run-contract.json`, `producer-input-manifest.json`, `spawn-message.md`: the contract, the eight digest-pinned producer inputs, and the isolation message the producer received.
+- `ontology-run/ontology-01.yaml`, `ontology-02.yaml`, `ontology-03.yaml` with `attempt-01-diagnostic.json`, `attempt-02-diagnostic.json`, `attempt-03-diagnostic.json`: the three ontology candidates and the diagnostic each drew.
+- `ontology-run/grounding-receipt.json`, `validated-contract.json`, `population-surface.json`, `result.json`: the accepted ontology's grounding receipt, validated contract, population surface of 26 concrete entity and 3 relation record types, and the acquisition record at 3,515 compiled facts.
+- `results/census.json` and `results/run-result.json`: the census, 186 of 186 blocks reviewed with 226 assertions fully formalized, 103 partly, none unformalized, and 104 typed gaps; and the run identities, 14 ledger events, 419 entity and 170 relation records, 589 records traced, reopen equal to admitted on receipt and export.
+- `results/launch-log.json` and `results/paper-events.json`: the producer launch, the three ontology attempts, the two structural population refusals, and the recorded ontology-acceptance event.
+- `results/trace-summary.json` and `results/query-trace-summary.json`: 589 record traces and 126 query witnesses, selected by record id and never by position.
+- `results/native-query-binding.json` and `results/transaction-time.txt`: the 21-case type-only binding written after the replay was frozen, and the run's transaction time.
+- `results/withheld-artifacts.json`: the digest of every file that is not in this repository.
+
+The query rows are not in this repository. The producer wrote source sentences into `statement` and `description` record properties, so eight files carry reading text and are retained privately under `private/paper-v4-v4-run-02/`: the producer capture `document-population.json`, the retained capture, the population plan, the typed gaps, the ledger `history.jsonl`, the replay receipt, the exported records, and `query/query-result.json`. Each is published by digest in `results/withheld-artifacts.json` and nowhere else. Reopen and replay are reproduced from that retained ledger, not from anything published here.

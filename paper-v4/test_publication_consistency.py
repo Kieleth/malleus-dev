@@ -15,8 +15,12 @@ README = PAPER / "arxiv/README.md"
 QUERY_RESULT = PAPER / "experiment-v2/results/query-result.json"
 BUILD_RESULT = PAPER / "experiment-v2/results/experiment-result.json"
 COMPILE_RECEIPT = PAPER / "experiment-v2/ontology-run/compilation/compile-receipt.json"
+# The reproducer tag pins the v2 and v3 runs only. The v4 run-02 single-producer
+# run has no tag: it lives at the commit that carries paper-v4/experiment-v4/run-02/,
+# and the publications must say so rather than name a coordinate that does not exist.
 REPRODUCER_TAG = "paper-v4-multimodel-v2"
 V3_RUNS = PAPER / "experiment-v3/runs"
+RUN02 = PAPER / "experiment-v4/run-02"
 
 
 def _text(path: Path) -> str:
@@ -97,3 +101,122 @@ def test_publication_claims_match_frozen_v3_producer_results() -> None:
             assert facts in body
             assert classes in body
             assert rows in body
+
+
+def test_publication_claims_match_frozen_v4_run_02_results() -> None:
+    ontology = json.loads((RUN02 / "ontology-run/result.json").read_bytes())
+    run = json.loads((RUN02 / "results/run-result.json").read_bytes())
+    census = json.loads((RUN02 / "results/census.json").read_bytes())
+    binding = json.loads((RUN02 / "results/native-query-binding.json").read_bytes())
+    query_trace = json.loads((RUN02 / "results/query-trace-summary.json").read_bytes())
+    withheld = json.loads((RUN02 / "results/withheld-artifacts.json").read_bytes())
+
+    assert ontology["status"] == "ACCEPTED"
+    assert [item["status"] for item in ontology["attempts"]] == [
+        "REFUSED",
+        "REFUSED",
+        "ACCEPTED",
+    ]
+    assert [item.get("reason") for item in ontology["attempts"][:2]] == [
+        "DIRECT_ROOT_GROUNDING_REQUIRED",
+        "GROUNDING_NOT_CLOSED",
+    ]
+    assert ontology["attempts"][0]["subjects"] == 10
+    assert ontology["accepted"]["fact_count"] == 3515
+    assert ontology["accepted"]["population_surface_families"] == {
+        "ENTITY": 26,
+        "RELATION": 3,
+    }
+
+    assert run["status"] == "ADMITTED_AND_REPLAYED"
+    assert run["ledger_event_count"] == 14
+    assert run["records_traced"] == 589
+    assert run["graph"] == {
+        "entities": 419,
+        "event_participations": 0,
+        "events": 0,
+        "relations": 170,
+        "signals": 0,
+    }
+    assert run["reopen_matches_admitted"] == {"export_records": True, "receipt": True}
+
+    assert census["assertions"] == {
+        "FULLY_FORMALIZED": 226,
+        "PARTLY_FORMALIZED": 103,
+        "UNFORMALIZED": 0,
+    }
+    assert sum(census["assertions"].values()) == 329
+    assert census["blocks_reviewed"] == census["blocks_total"] == 186
+    assert census["gaps_by_kind"] == {
+        "AGGREGATE_ONLY": 84,
+        "INTERVAL_NOT_EXPRESSIBLE": 1,
+        "RELATION_ABSENT": 3,
+        "TYPE_ABSENT": 16,
+    }
+    assert sum(census["gaps_by_kind"].values()) == 104
+
+    assert binding["status"] == "FROZEN_AFTER_REPLAY"
+    assert sum(len(item["cases"]) for item in binding["queries"]) == 21
+    assert query_trace["witnesses_traced"] == len(query_trace["records"]) == 126
+
+    # The four row counts live only in the withheld query result, because its
+    # projected fields quote the reading. The file is named and digest-pinned
+    # here; the counts themselves are pinned as literal prose below.
+    assert len(withheld["withheld"]) == 8
+    assert {item["name"] for item in withheld["withheld"]} == {
+        "population-plan.json",
+        "gaps.json",
+        "replay-receipt.json",
+        "export-records.json",
+        "query-result.json",
+        "document-population.json",
+        "retained-capture.json",
+        "history.jsonl",
+    }
+    assert all(item["sha256"].startswith("sha256:") for item in withheld["withheld"])
+
+    for publication in (MANUSCRIPT, TEX):
+        body = _text(publication)
+        assert "3,515 compiled facts" in body
+        assert "26 concrete entity types and 3 relation types" in body
+        assert (
+            "329 verbatim assertions with their modality, 419 entity records, "
+            "170 relation records, and 104 typed gaps"
+        ) in body
+        assert (
+            "all 186 blocks reviewed, 226 assertions fully formalized, "
+            "103 partly formalized, and none unformalized"
+        ) in body
+        assert "deleted 41 of its own" in body
+        assert "One change set entered a 14-event ledger." in body
+        assert (
+            "Each of the 589 records traces to the assertion and the block "
+            "it was read from."
+        ) in body
+        assert "21 cases over the same four questions" in body
+        assert (
+            "returned 4, 32, 34, and 3 rows for CQ1 through CQ4, with 126 "
+            "witness records each traced"
+        ) in body
+        assert "an ontology accepted at 3,515 facts" in body
+        assert "a type-only binding written after replay returned 4, 32, 34, and 3 rows" in body
+        assert "Seven of the 16" in body
+        assert "gaps state that the population surface holds no Event record type" in body
+        assert "zero events and zero event participations" in body
+        assert (
+            "Eight files are therefore withheld from this repository and "
+            "published by digest only"
+        ) in body
+        assert (
+            "preliminary until the human author ratifies it"
+        ) in body
+        assert "This run has no reproducer tag" in body
+        assert "4881b3a040aaafc7600d009a16ae910084ae32c2" in body
+
+    for publication in (MANUSCRIPT, TEX, README):
+        body = _text(publication)
+        assert "paper-v4/experiment-v4/run-02/" in body
+        assert REPRODUCER_TAG in body
+        assert "run-02-v1" not in body
+        assert "paper-v4-run-02" not in body
+
