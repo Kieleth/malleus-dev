@@ -22,7 +22,8 @@ classes, slots, and enum values and refuses added imports.
 
 `validate_pack_grounding` checks the closed provenance annotation on an
 optional knowledge pack or project ontology. It checks citation structure, not
-the intellectual suitability of a cited vocabulary.
+the intellectual suitability of a cited vocabulary. Project root CURIEs are
+resolved only through the source schema's exact Malleus namespace mapping.
 
 `validate_pack_conformance` checks an edited pack against exact reference
 bytes. It permits documentation changes, new declarations, and new enum values

@@ -34,7 +34,7 @@ Luis asked for names taken from an existing taxonomy of areas of knowledge rathe
 
 | Pack | Area of knowledge | DDC | Seminal vocabulary the terms follow | Terms borrowed |
 | --- | --- | --- | --- | --- |
-| `metrology` | The science of measurement; formal and physical sciences in the outline of disciplines | 530.8 Physical measurement | JCGM 200:2012, the International Vocabulary of Metrology (VIM), 3rd edition; QUDT as the ontology precedent | quantity, quantity value, measurement unit, measurement uncertainty, measured versus derived value, quantity kind |
+| `metrology` | The science of measurement; formal and physical sciences in the outline of disciplines | 530.8 Physical measurement | JCGM 200:2012, the International Vocabulary of Metrology (VIM), 3rd edition; QUDT as the ontology precedent | quantity value, measurement unit, measurement uncertainty, kind of quantity |
 | `chronology` | Time and its reckoning | 529 Chronology | W3C Time Ontology in OWL (OWL-Time), Recommendation 2017 | temporal entity, instant, interval, beginning, end, duration, temporal reference system |
 | `research` | Research and experimental development; the scholarly record | 001.4 Research | Frascati Manual 2015 for research, investigation, and method; SOSA/SSN for Observation and Sample; VIM for measuring instrument; SEPIO for assertion, Data Item, Evidence Line, support, and refute; Micropublications for Claim, Evidence, support, and challenge | observation, sample, claim, evidence, support, challenge, method, investigation |
 
@@ -79,15 +79,24 @@ The record is machine-readable so the inquisitor can check it. A pack, and any p
 ```yaml
 annotations:
   grounding:
-    area: "Physical measurement"
-    taxonomy: "DDC 530.8"
-    vocabulary: "JCGM 200:2012 (VIM), 3rd edition"
-    vocabulary_url: "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf"
-    borrowed_terms: [quantity value, measurement unit, measurement uncertainty]
-    invented_terms: []
+    tag: grounding
+    value:
+      area: "Physical measurement"
+      taxonomy: "DDC 530.8"
+      vocabularies:
+        - vocabulary: "JCGM 200:2012 (VIM), 3rd edition"
+          vocabulary_url: "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf"
+          borrowed_terms:
+            - quantity value
+            - measurement unit
+            - measurement uncertainty
+            - kind of quantity
+      invented_terms: []
 ```
 
 A new rite, `pack-grounding`, refuses a pack without a grounding block, a grounding block without a taxonomy locator and a vocabulary citation, and a class that extends root directly without either a grounding block or a `grounding: none-found` declaration. The rite checks presence and shape; it cannot judge whether the grounding is apt, and it must not pretend to.
+
+For project classes, direct-root detection covers both bare root names and CURIEs whose declared prefix resolves to the exact Malleus root namespace. An arbitrary prefix ending in `Entity` is not treated as Malleus. Full URI class references remain outside the current compiler profile. A grounding annotation is retained source evidence; it is not an adoption marker and does not enter semantic fact identity.
 
 The separate `pack-conformance` rite checks a copied pack against one exact reference pack. The copy may change documentation, add declarations, and add enum values. Reference imports must remain unique and set-equivalent, although their order may change. The copy may not remove a reference class, slot, or enum; change an existing declaration list; weaken inherited structure; change an existing scalar constraint; or add a new scalar or mapping constraint to an existing declaration. An extension that changes an existing class instead becomes a new subclass. The receipt binds both byte identities. This is a minimum structural substitutability check, not proof that two vocabularies mean the same thing.
 

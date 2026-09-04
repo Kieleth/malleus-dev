@@ -292,7 +292,10 @@ locator. The research pack therefore ties `Observation` explicitly to W3C
 SOSA/SSN rather than hiding several intellectual sources behind one citation.
 The rite is deliberately modest: it checks citation shape offline and returns
 a deterministic receipt or typed refusal. It does not judge whether the
-chosen source is good scholarship.
+chosen source is good scholarship. For projects, bare Malleus roots and CURIEs
+resolved through the schema's exact prefix map trigger the same direct-root
+grounding requirement. Unrelated prefixes and unsupported full URI references
+do not masquerade as Malleus roots.
 
 If a project copies and edits a pack while claiming compatibility with it,
 `validate_pack_conformance(edited_bytes, reference=shipped_bytes)` binds both

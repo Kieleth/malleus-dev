@@ -415,11 +415,13 @@ the exact receipt check:
 ```bash
 pip install -e '.[dev]'
 python -m research.ontology_driven_kg_realization.experiments.small_shop.pareto.ret010 --ledger build/small-shop-ret010.jsonl
-python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py::test_recorded_research_receipt_regenerates_from_the_exact_history
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py::test_recorded_research_receipt_stays_frozen_while_current_history_runs
 ```
 
 Running the module again reopens the same ledger and prints the same receipt.
-The test regenerates the result independently and compares its bytes exactly.
+The test keeps the historical RET-010 research receipt byte-identical while
+running the current, separately versioned history. It does not regenerate old
+evidence with newer compiler bytes.
 
 ### Try to break it
 
