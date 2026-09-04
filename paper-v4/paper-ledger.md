@@ -1709,3 +1709,78 @@ Semantic Re-entry, or establish semantic equivalence for an edited copy.
 Impact: P7 is verified. The active v4 run remains blocked only on P8's frozen
 generic nascent-project playbook. No population fact or manuscript result is
 created, and the master-plan version does not change.
+
+### E-0109, P8 freezes the adoption procedure and opens the v4 producer gate
+
+Date: 2026-09-04
+
+Sources: Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`,
+tree `6fc5e585e5058e7376ea1aef96fcb49b59107e5e`; governance entry
+`OVR-000384` at
+`sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8`;
+the installed `malleus-acolyte` skill at
+`sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`;
+the P8 report; Core's clean and package gates; an independent immutable audit;
+and isolated paper merge commit
+`f8d96123f86b2af41d9c67353f952d56565cf6af`, tree
+`c22387313a16b228f0e9c04e88651f42d0ce5bad`.
+
+Observation: The generic playbook separates schema-only, typed-graph-only, and
+governed-history adoption. Its document route chooses profiles and optional
+packs before ontology work, withholds downstream assessment material until
+population freezes, applies pack-before-invention and subclass-before-root,
+reviews both reading blocks and formalized assertions, exposes every concrete
+Entity and Relation type, and bounds one-session additive revision to two
+rounds. The installed example exercises every capture modality and typed gap
+kind through the exact seven-argument public adapter call. It invents no
+wrapper, reading grammar, population CLI, or answer evaluation.
+
+Verification: The independent audit passed. Core's clean gate reports 3,002
+passed and 3 skipped tests, plus the GraphRecipe and Small Shop suites, strict
+HTML, doctest, network-enabled linkcheck, package build, twine, sdist-rebuilt
+wheel parity, clean install, and command smoke tests. The paper merged only the
+frozen P8 baseline into `codex/paper-v4-lean`; it did not move Core main or
+integrate the paper branch.
+
+Boundary: P8 does not generate an ontology or population, choose domain
+semantics, extract assertions, invent mappings, evaluate answers, admit Event
+records, or guarantee that a model follows the procedure. V2 remains selected
+until v4 passes its terminal evidence and reproduction gates.
+
+Impact: The Core gate is complete and the one fresh, question-blind v4 producer
+loop may begin. This is implementation evidence, not a new author decision, so
+the master-plan version remains 1.2.0.
+
+### E-0110, the P8 merge exposes stale active reproduction paths
+
+Date: 2026-09-04
+
+Sources: the first active paper gate after merge
+`f8d96123f86b2af41d9c67353f952d56565cf6af`; the v2 history binding and
+validated-contract receipts; current Core binding grammar and compiler output;
+and `paper-v4/active-test-manifest.json`.
+
+Failure: The focused v4 contract passed 9 tests, but the broad active gate
+reported 8 failures and 7 setup errors among 198 collected tests. Seven errors
+and six failures came from executing the historical document runner with its
+old history binding, which current Core correctly refused as
+`MALFORMED_BINDING`. Two failures came from recompiling the frozen v2 ontology
+under the current compiler and comparing its output to a receipt produced at an
+older Core coordinate. The byte difference is expected across those immutable
+execution baselines. It is not a v4 population or replay result.
+
+Root cause: The active manifest separated retired pre-steer paths but still
+collected the selected v2 runtime and its shared research runner after the
+paper intentionally changed Core baselines. Exact historical evidence and a
+moving active implementation cannot share one unqualified reproduction gate.
+
+Guard: The active manifest now excludes direct collection of both
+`paper-v4/experiment-v2` and the v2-bound `document_paper` research package.
+The runner already refuses any listed path under an excluded root. A new hard
+test requires those historical runtime roots to stay out of the current P8
+gate while retaining `paper-v4/experiment-v4`. Frozen v2 artifacts remain in
+place and reproducible only at their declared historical coordinate.
+
+Impact: Current-Core test counts can no longer reinterpret v2 bytes. This
+narrows the active gate to coordinate-compatible evidence and does not select
+v4, alter v2 identities, or hide a v4 failure.

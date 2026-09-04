@@ -1,6 +1,6 @@
 {
   "schema": "malleus.paper-v4.v4-run-contract/v1",
-  "status": "WAITING_FOR_CORE_GATE",
+  "status": "READY_FOR_PRODUCER",
   "scope": {
     "documents": 1,
     "producer_loops": 1,
@@ -13,7 +13,13 @@
     "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
   },
   "core_gate": {
-    "status": "P6_P7_VERIFIED_P8_REQUIRED",
+    "status": "P6_P7_P8_VERIFIED",
+    "execution_baseline": {
+      "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+      "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+      "paper_merge_commit": "f8d96123f86b2af41d9c67353f952d56565cf6af",
+      "paper_merge_tree": "c22387313a16b228f0e9c04e88651f42d0ce5bad"
+    },
     "required_pieces": [
       "FULL_DOMAIN_HISTORY_PROFILE",
       "GROUNDED_PACKS_AND_PACK_GROUNDING",
@@ -37,6 +43,14 @@
           "metrology": "sha256:1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586",
           "research": "sha256:c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e"
         },
+        "paper_audit": "PASS"
+      },
+      "NASCENT_PROJECT_PLAYBOOK": {
+        "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+        "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+        "governance_head": "sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8",
+        "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "skill_sha256": "sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8",
         "paper_audit": "PASS"
       }
     }

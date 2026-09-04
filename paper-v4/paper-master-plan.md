@@ -2,16 +2,16 @@
 
 Version: 1.2.0
 
-Date: 2026-09-03
+Date: 2026-09-04
 
 Status: corrected v2 remains the selected evidence. The author has authorized one
 KISS v4 document run. Core P6 verifies the `source-assertion` history profile
 and public replay-to-source trace. P7 verifies the three grounded optional
-packs and their grounding and conformance rites. Execution waits only for the
-frozen P8 nascent-project playbook. V4 uses one fresh
-single-session producer loop, typed gaps, and no question input before replay.
-It supersedes v2 only if the run, inspection, reproduction, and paper gates all
-pass.
+packs and their grounding and conformance rites. P8 verifies the installed
+nascent-project playbook. The paper has merged the exact P8 Core baseline and
+the producer gate is open. V4 uses one fresh single-session producer loop,
+typed gaps, and no question input before replay. It supersedes v2 only if the
+run, inspection, reproduction, and paper gates all pass.
 
 ## Objective
 
@@ -62,13 +62,17 @@ The published Small Shop correction fixture is an implementation baseline, not
 a second empirical case. Its research milestone is annotated tag
 `research/small-shop-correction-replay-v1`, tag object
 `449ba25964a88ead86cc1aec337be1631cad9471`, at commit
-`e94f45c74475948dfebdc89247bfb070de0b778d`. The paper's historical checkout
-is still based on `f9052b4`. The v4 run will bind one exact Core coordinate only
-after P7 and P8 pass immutable paper audits. P6 has passed at commit
+`e94f45c74475948dfebdc89247bfb070de0b778d`. The v4 execution checkout is
+bound to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+`6fc5e585e5058e7376ea1aef96fcb49b59107e5e`, merged only into the isolated
+paper branch at paper commit `f8d96123f86b2af41d9c67353f952d56565cf6af`.
+P6 passed at commit
 `573c45b82725d6f444b70e5ff193302dac883e7b`, tree
 `6704031dea824572b4d7163ba477c33175397fe7`. P7 has passed at commit
 `465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`, tree
-`5281da97f17905da45e254fd044536cb67d3398e`.
+`5281da97f17905da45e254fd044536cb67d3398e`. P8 passed at the execution
+coordinate above, with installed skill digest
+`sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`.
 
 Excluded:
 
@@ -126,12 +130,12 @@ The retired answer key remains sealed historical material and leaves the active 
    pinned `pypdf==6.16.2` text-layer path reproduces 186 blocks across 11 pages
    at the frozen source and reading digests. Raster OCR and Tesseract remain
    retired from the paper path.
-2. **Core execution gate, in progress.** P6 supplies the audited public
+2. **Core execution gate, complete.** P6 supplies the audited public
    `source-assertion` profile and replay-to-source trace. P7 supplies the
    audited metrology, chronology, and research packs plus mechanical grounding
-   and conformance. P8 must freeze the generic nascent-project playbook. The
-   paper binds no moving Core coordinate.
-3. **One producer loop, pending.** One fresh session receives only the selected
+   and conformance. P8 supplies the audited generic nascent-project playbook.
+   The paper is bound to the exact immutable P8 coordinate above.
+3. **One producer loop, active.** One fresh session receives only the selected
    reading, frozen Core playbook, shipped profiles, and shipped packs. It first
    proposes and compiles the ontology. The runner may return typed compiler
    diagnostics at most twice. One evaluator event accepts the compiled ontology
@@ -203,8 +207,8 @@ replay, native graph reads, and `trace_population_record`. The shipped
 `source-assertion` profile fixes the paper's semantic unit as one atomic capture
 batch with `PARTIAL_IMPORT` origin and capture-order valid time. Core does not
 extract assertions, invent records, choose the paper's ontology, define its
-questions, or judge its answers. P7 and P8 must supply the grounded packs and
-generic producer playbook before the paper executes v4.
+questions, or judge its answers. P7 and P8 supply the grounded packs and
+generic producer playbook used by v4.
 
 The active v4 runner uses only `malleus.compiler` public surfaces. The retired
 paper-local GraphRecipe path remains historical and cannot enter active tests or

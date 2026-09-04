@@ -70,12 +70,18 @@ def test_source_assertion_profile_preserves_modality_or_refuses() -> None:
     }
 
 
-def test_execution_remains_blocked_until_core_gate_is_bound() -> None:
+def test_execution_is_bound_to_the_frozen_core_gate() -> None:
     contract = _contract()
 
-    assert contract["status"] == "WAITING_FOR_CORE_GATE"
+    assert contract["status"] == "READY_FOR_PRODUCER"
     gate = contract["core_gate"]
-    assert gate["status"] == "P6_P7_VERIFIED_P8_REQUIRED"
+    assert gate["status"] == "P6_P7_P8_VERIFIED"
+    assert gate["execution_baseline"] == {
+        "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+        "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+        "paper_merge_commit": "f8d96123f86b2af41d9c67353f952d56565cf6af",
+        "paper_merge_tree": "c22387313a16b228f0e9c04e88651f42d0ce5bad",
+    }
     assert gate["verified_pieces"]["FULL_DOMAIN_HISTORY_PROFILE"] == {
         "core_commit": "573c45b82725d6f444b70e5ff193302dac883e7b",
         "core_tree": "6704031dea824572b4d7163ba477c33175397fe7",
@@ -105,6 +111,18 @@ def test_execution_remains_blocked_until_core_gate_is_bound() -> None:
         },
         "paper_audit": "PASS",
     }
+    assert gate["verified_pieces"]["NASCENT_PROJECT_PLAYBOOK"] == {
+        "core_commit": "6488ddbfc599e8899d269f8794810f352a5d1fe0",
+        "core_tree": "6fc5e585e5058e7376ea1aef96fcb49b59107e5e",
+        "governance_head": (
+            "sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8"
+        ),
+        "skill_path": ".claude/skills/malleus-acolyte/SKILL.md",
+        "skill_sha256": (
+            "sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8"
+        ),
+        "paper_audit": "PASS",
+    }
 
 
 def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
@@ -115,7 +133,9 @@ def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
     assert manifest["pythonpath"] == [".", "src"]
     assert manifest["pytest_args"] == ["--import-mode=importlib", "-q"]
     assert set(manifest["excluded_roots"]) == {
+        "research/ontology_driven_kg_realization/experiments/document_paper",
         "paper-v4/experiment",
+        "paper-v4/experiment-v2",
         "paper-v4/retired",
     }
     assert "paper-v4/experiment-v4" in manifest["paths"]
@@ -128,6 +148,17 @@ def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
         assert all(
             candidate != root and root not in candidate.parents for root in excluded
         )
+
+
+def test_active_gate_does_not_reinterpret_frozen_runs_under_p8_core() -> None:
+    manifest = json.loads(ACTIVE_TEST_MANIFEST.read_bytes())
+
+    assert "paper-v4/experiment-v2" not in manifest["paths"]
+    assert (
+        "research/ontology_driven_kg_realization/experiments/document_paper"
+        not in manifest["paths"]
+    )
+    assert "paper-v4/experiment-v4" in manifest["paths"]
 
 
 def test_v4_questions_and_human_review_are_frozen_but_producer_blind() -> None:

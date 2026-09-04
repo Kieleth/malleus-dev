@@ -119,15 +119,15 @@ adding assertion metadata to every domain record. It does not make the graph
 edge self-qualifying, so paper queries that report epistemic status must execute
 and display that verified join.
 
-The v4 document run still waits for the remaining Core pieces that implement
-the approved experiment rather than another paper-local brief:
-
-- the grounded metrology, chronology, and research packs;
-- the nascent-project skill playbook.
-
-Until those pieces are frozen, paper work may refine the run manifest,
-isolation checks, and manuscript explanation. It must not create v4 population
-facts, rebind the selected v2 result, or claim that the new profile executed.
+The remaining Core pieces are frozen. P7 supplies the grounded metrology,
+chronology, and research packs at Core commit
+`465924f3e6b0dee64aafeecaeb68cb5e8beb6b41`. P8 supplies the generic
+nascent-project playbook at Core commit
+`6488ddbfc599e8899d269f8794810f352a5d1fe0`, with installed skill digest
+`sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8`.
+Both passed immutable paper audits. The isolated paper branch merged that exact
+P8 baseline at `f8d96123f86b2af41d9c67353f952d56565cf6af`, so the v4 producer gate is
+open. V2 remains selected until the complete v4 run passes.
 
 ## Accepted KISS cut
 
