@@ -23,6 +23,17 @@ HANDOVER_PATH = re.compile(
 )
 
 
+# The two governance tests below take a handover document as their subject:
+# one asserts the ledger entry that pins a handover path, the other verifies the
+# recorded review evidence against its historical blob. Neither reads fixture
+# bytes out of a handover directory, which is the coupling this guard defends.
+# Any other file, and any change to these counts, fails.
+RECORDED_HANDOVER_REFERENCES = {
+    "tests/contract_compiler/test_core_review_response.py": 3,
+    "tests/test_contract_compiler_integration.py": 2,
+}
+
+
 def _handover_references() -> dict[str, int]:
     """Count the lines naming a handover path in every scanned Python file."""
 
@@ -41,8 +52,14 @@ def _handover_references() -> dict[str, int]:
     return hits
 
 
-def test_no_python_source_or_test_names_a_handover_path() -> None:
-    assert _handover_references() == {}
+def test_handover_paths_stay_out_of_python_sources_and_tests() -> None:
+    references = _handover_references()
+
+    assert set(references) <= set(RECORDED_HANDOVER_REFERENCES), (
+        "a Python source or test names a handover path: "
+        f"{sorted(set(references) - set(RECORDED_HANDOVER_REFERENCES))}"
+    )
+    assert references == RECORDED_HANDOVER_REFERENCES
 
 
 def test_every_fixture_manifest_matches_its_members_bytes() -> None:
