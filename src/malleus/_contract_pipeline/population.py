@@ -1323,12 +1323,12 @@ def compile_population_plan(
             elif family == "event_participations":
                 properties = record["properties"]
                 assert isinstance(properties, dict)
-                endpoint_ids = (properties["event_id"], properties["entity_id"])
-            dependencies = [
-                dependency
-                for record_id, dependency in operation_by_record.items()
-                if record_id in endpoint_ids
-            ]
+                endpoint_ids = (properties["entity_id"], properties["event_id"])
+            dependencies: list[str] = []
+            for endpoint in endpoint_ids:
+                dependency = operation_by_record.get(endpoint)
+                if dependency is not None and dependency not in dependencies:
+                    dependencies.append(dependency)
             operation = KnowledgeOperation(
                 ordinal=ordinal,
                 operation_id=operation_id,
