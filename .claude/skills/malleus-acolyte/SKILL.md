@@ -160,6 +160,10 @@ fallback.
    explicitly. The last is declarative today: Event population refuses until
    Core publishes that operation family. Record any custom profile as exact
    bytes. Never infer a history model from the first record or from ledger order.
+   Steps 6 through 9 are the governed-history branch, so you must choose an exact
+   history profile before proposing the ontology when you will follow them. For
+   schema-only or typed-graph-only adoption, complete the structural route and
+   stop after step 5; do not invoke population or history APIs.
 3. **Look for vocabulary before inventing it.** Inspect the optional
    `metrology`, `chronology`, and `research` packs. Import only what the domain
    needs. Check a copied pack with `malleus-inquisitor pack-conformance`; extend
@@ -190,10 +194,14 @@ fallback.
    pack files supplied under their exact import locators. The command-line
    compiler stops at contract compilation. Population, admission, replay, and
    query use the public `malleus.compiler` Python facade.
-6. **Capture before formalising.** For document sources, make one exact document
-   capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim assertions,
-   attribution, block locators, modality, optional assertion or domain time,
-   formalisation targets, and typed gaps. Pass it to
+6. **Capture before formalising.** For document population, coverage of the
+   retained reading is the objective, never the smallest query- or
+   answer-changing subset. This rule overrides the global "smallest observation",
+   "Build only what changes the answer", and "Build less" rules for document
+   capture; those rules still limit the implementation slice. Make one exact
+   document capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim
+   assertions, attribution, block locators, modality, optional assertion or
+   domain time, formalisation targets, and typed gaps. Pass it to
    `adapt_document_assertions`. For structured sources, write a source-specific
    adapter that emits the same neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
@@ -232,6 +240,117 @@ fallback.
     Preserve incomplete captures, gaps, and typed refusals as results. Do not add
     a fallback mapper, hand-built accepted state, or query-shaped vocabulary to
     make the run look complete.
+
+### Current document-capture template
+
+This is the current private-v0 shape, not a stable wire. Parse the JSON, replace
+the contract identity and project record types with values from the compiled
+contract, and pass only `reading`, `capture`, `capture_id`, `plan_id`, `records`,
+and `supersessions` to `adapt_document_assertions`. The capture root, attribution,
+formalisation, gap, Entity record, and Relation record shapes are closed as
+shown. `assertion_time` and `domain_time` are optional strings: omit either when
+it is unknown, never invent it or encode it as null. `accepted_gap_kinds` lists
+the complete current set and is guidance, not an adapter argument.
+
+<!-- malleus-nascent-document-template:start -->
+```json
+{
+  "accepted_gap_kinds": [
+    "INTERVAL_NOT_EXPRESSIBLE",
+    "AGGREGATE_ONLY",
+    "MODALITY_NOT_EXPRESSIBLE",
+    "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+    "TYPE_ABSENT",
+    "RELATION_ABSENT"
+  ],
+  "capture": {
+    "assertions": [
+      {
+        "assertion_time": "2026-01-03T00:00:00Z",
+        "block": "block:1",
+        "domain_time": "2026-01-02",
+        "formalized_by": [
+          {
+            "path": ["properties", "relation_type"],
+            "record_id": "relation:A:B"
+          },
+          {
+            "path": ["source_id"],
+            "record_id": "relation:A:B"
+          },
+          {
+            "path": ["target_id"],
+            "record_id": "relation:A:B"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "MODALITY_NOT_EXPRESSIBLE",
+            "statement": "The project records do not carry the retained STATED modality."
+          }
+        ],
+        "id": "assertion:1",
+        "modality": "STATED",
+        "statement": "On 2026-01-02, object A links to object B."
+      }
+    ],
+    "attribution": {
+      "author": "source author",
+      "date": "2026-01-03",
+      "source_id": "source:neutral"
+    },
+    "nothing_assertable": [],
+    "reading_sha256": "sha256:12781a7881fb11a7337abe7f7b29e60be42034b6597e5d79d423d6f610060b2e",
+    "schema": "malleus.document-capture/private-v0"
+  },
+  "capture_id": "capture:neutral:1",
+  "contract_identity": "replace-with-PartialEffectiveContract.identity",
+  "plan_id": "plan:neutral:1",
+  "reading": {
+    "pages": [
+      {
+        "blocks": [
+          {
+            "id": "block:1",
+            "ordinal": 0,
+            "text": "On 2026-01-02, object A links to object B."
+          }
+        ],
+        "page": 1
+      }
+    ],
+    "schema": "example.reading/v0"
+  },
+  "records": {
+    "entities": [
+      {
+        "id": "object:A",
+        "properties": {},
+        "type": "ProjectObject"
+      },
+      {
+        "id": "object:B",
+        "properties": {},
+        "type": "ProjectObject"
+      }
+    ],
+    "relations": [
+      {
+        "id": "relation:A:B",
+        "properties": {
+          "relation_type": "LINKS"
+        },
+        "source_id": "object:A",
+        "target_id": "object:B",
+        "type": "ProjectLinksRelation"
+      }
+    ]
+  },
+  "schema": "malleus.nascent-document-example/private-v0",
+  "supersessions": []
+}
+```
+<!-- malleus-nascent-document-template:end -->
 
 ## Standing orders (the playbook, condensed)
 
