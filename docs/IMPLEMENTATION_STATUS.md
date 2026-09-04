@@ -65,11 +65,20 @@ This facade does not replace the shipped Assent runtime, stabilize any
 It proves the reusable seam on one controlled initial-population case and one
 controlled record correction. General correction semantics, mapping syntax,
 stable change-set wire, Event population, external effects, Semantic Re-entry,
-cross-language parity, and release work remain outside this cut. The minimal
-`source-assertion` profile retains modality but does not yet require a
-queryable modality projection. Contract revision is additive only; it is not a
-general ontology migration or import-admission mechanism. See
-`contract_compiler/index.md`.
+cross-language parity, and release work remain outside this cut.
+
+Three full, content-addressed domain-history profile artifacts now ship through
+`malleus.compiler`: `state-version`, `source-assertion`, and `object-event`.
+They declare origin and genesis scope, semantic unit, time semantics, change
+semantics, ontology roles, projection-rule family, and grounding. Small Shop
+executes the `state-version` profile. The document adapter executes a
+capture-batch `source-assertion` profile whose assertion modality and domain
+time remain reachable through retained evidence and the public trace. The
+`object-event` profile is declarative only because Event population remains
+unsupported. The runtime validates and binds these declarations but does not
+yet interpret arbitrary projection programs from them. Contract revision is
+additive only; it is not a general ontology migration or import-admission
+mechanism. See `contract_compiler/index.md`.
 
 ## Implemented
 

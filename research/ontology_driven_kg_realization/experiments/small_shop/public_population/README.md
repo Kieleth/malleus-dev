@@ -17,7 +17,7 @@ second source mapper or import the older research runners.
 | Domain ontology | Small Shop base contract, then one additive revision adding supplier orders, invoices, payments, and settlement relations |
 | Source bytes | Warehouse JSONL, inventory CSV, invoice CSV, payment JSONL, and supplier-order JSONL |
 | Population | Five exact neutral plans in [`plans/`](plans/) |
-| Domain history choice | The shipped minimal `state-version` profile |
+| Domain history choice | The shipped full `state-version` profile |
 | Governance | The shipped declarative machine and required-check policy |
 | History | One append-only `KnowledgeChangeHistory` containing five accepted changes and one contract revision |
 | Projection | Reopen and replay derive the current `KnowledgeGraph` |
@@ -41,6 +41,12 @@ order `B@e4` remains in history with quantity `1`; `B@e7` supersedes it and is
 the only current supplier-order state, with quantity `2`. The current graph
 also contains order `O1`, inventory unit `X1`, invoices `I1` and `I2`, payment
 `P1`, and their three typed relations.
+
+The profile makes the fixture's history semantics explicit: the accepted unit
+is a state version, valid time is domain time, corrections supersede prior
+versions, and replay selects current non-superseded records. Its genesis scope
+is the declared source set, not a claim that the first change describes the
+whole shop.
 
 ## Exact boundary
 

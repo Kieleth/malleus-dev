@@ -106,30 +106,42 @@ produce this fixed sequence:
 
 ### What `genesis` means here
 
-`genesis` is a fixture name, not a formal `KnowledgeChangeSet` role. The first
-change is recognizable because it is the first accepted population over an
-empty graph. Its ledger base already contains 49 contract, protocol, and source
-events, and it is not a complete seed snapshot: the invoices and the initial
-`B@e4` supplier-order state enter through later changes in test-ladder order.
+In the original frozen showcase, `genesis` is a fixture name, not a formal
+`KnowledgeChangeSet` role. Its first change is recognizable because it is the
+first accepted population over an empty graph. Its ledger base already contains
+49 contract, protocol, and source events, and it is not a complete seed
+snapshot: invoices and the initial `B@e4` state enter through later changes in
+test-ladder order.
 
-Small Shop therefore selects a domain graph model and a fixture-specific
-state-versioning pattern, not a reusable Small Shop ledger vocabulary. Its
-mappings use labels such as `INITIAL_DOMAIN_STATE`, `CORRECTION`, and
-`FIXTURE_ORCHESTRATED_EXISTING_BASE`, but those labels remain mapping metadata.
-They are retained inside the bound mapping artifacts, but are not carried as
-typed change-role fields into, or interpreted by, Core's generic change-set
-format. Core sees typed entity and relation creation, valid time, dependencies,
-and explicit supersession.
+That original runner uses a fixture-specific state-versioning pattern, not a
+reusable Small Shop ledger vocabulary. Its mappings use labels such as
+`INITIAL_DOMAIN_STATE`, `CORRECTION`, and
+`FIXTURE_ORCHESTRATED_EXISTING_BASE`. They are retained inside the bound mapping
+artifacts, but are not carried as typed change-role fields into, or interpreted
+by, Core's generic change-set format.
 
-Another adopter must choose whether its domain history is made of state
-versions, business events, claims, REA commitments, or another model, then bind
-that choice through its ontology, mappings, identities, time, and supersession
-rules. Core supplies the generic history laws; it does not choose the domain
-change semantics. This executable showcase proves only its state-versioning
-choice; other models may require another conforming history implementation or
-future Core seams. Making change categories portable and queryable would
-require a separately identified domain-level contract. This showcase does not
-define one.
+The newer public-path run makes the previously implicit history choice
+explicit. Every population plan binds the shipped `state-version` profile. It
+declares:
+
+- history starts with the first accepted change over an empty graph;
+- completeness covers only the declared sources, not the whole world;
+- one semantic unit is one state version;
+- adding creates a state version, while correction and transition supersede an
+  older version;
+- `valid_time` is domain time and ledger order is transaction time;
+- replay projects current non-superseded records.
+
+This contract explains why `B@e4` stays in history while only `B@e7` appears in
+the current graph. It does not turn `genesis` into a special operation, claim
+that the first change is complete, or create a Small Shop-specific ledger.
+
+Another adopter may choose source-attributed assertions, business events, REA
+commitments, or another history model. Core now supplies closed, hashed profile
+artifacts so that choice is explicit and retained. It validates and binds the
+chosen declaration; it does not yet execute arbitrary projection rules from
+profile text. The shipped `object-event` profile is therefore declarative until
+Event population is supported.
 
 Each change's source closure is bundle-wide: eight baseline members, six
 settlement members, or five correction members. The retained check receipt's

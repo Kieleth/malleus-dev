@@ -155,12 +155,15 @@ say which source blocks were reviewed and which captured assertions were fully,
 partly, or not formalised. A quoted range that the ontology only models as one
 number, for example, becomes a typed gap instead of disappearing.
 
-The current minimal `source-assertion` profile preserves assertion modality in
-the retained capture. It does not guarantee that modality is visible in an
-ordinary graph query unless the adopter's ontology models it. The later full
-history-profile contract must either require that qualification, reify the
-claim, or provide a typed provenance join. Until then, do not present an
-unqualified projected edge as proof that a source asserted it as fact.
+The shipped `source-assertion` profile treats one capture as one atomic partial
+import, not as a complete world snapshot. A capture can contain assertions with
+different domain times or no stated domain time. The population plan's
+`valid_time` therefore records capture/import order; assertion time, domain
+time, and modality remain per-assertion retained evidence. The public trace is
+the selected provenance join: an ordinary graph query may expose an unqualified
+edge, while `trace_population_record` reaches the exact retained assertion and
+its modality. Do not present the edge alone as proof that a source asserted it
+as fact.
 
 ### Trace an accepted record back to its source
 

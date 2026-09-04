@@ -46,6 +46,14 @@ then traced to exact retained source and mapping bytes. See the
 [full public-path conformance run](research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
 and its [committed evidence](research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json).
 
+That run now binds a separate, explicit `state-version` history profile. The
+ontology defines the allowed Small Shop records. The profile declares that each
+accepted unit is a state version, that a correction supersedes an older version,
+and that replay shows only current non-superseded records. Malleus also ships a
+`source-assertion` profile for partial document imports and a declarative
+`object-event` profile. These are selectable contracts, not one mandatory
+history model for every domain.
+
 ## Why this exists
 
 I believe words have power. The closer we work with them, the more carefully we

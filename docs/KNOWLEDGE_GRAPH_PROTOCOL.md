@@ -134,6 +134,27 @@ history. An adopter may omit semantic history and keep the structural
 guarantees in this document, but cannot then claim Malleus accepted-state
 provenance or reconstruction.
 
+The domain-history profile answers a different question from the ontology:
+
+- The ontology says what kinds of domain records and fields are legal.
+- The history profile says what one accepted change means, where its history
+  starts, how domain and transaction time differ, and which current-state
+  projection family it claims.
+- The ledger records the ordered facts of proposal, checks, decision, and
+  application.
+- Replay derives the current graph from accepted changes. The graph is not a
+  second state authority.
+
+Core ships three content-addressed profile artifacts. `state-version` treats
+records as successive versions and powers the Small Shop proof.
+`source-assertion` treats a retained capture as one partial-import batch;
+per-assertion modality and domain time stay in evidence and are reachable by
+the public provenance trace. `object-event` declares event-history semantics,
+but the governed population path still refuses Event records, so that profile
+is not yet executable. Adopters may define another closed profile. Merely
+naming a projection-rule family does not make Core an interpreter for arbitrary
+projection programs.
+
 ### 3. A constructed graph does not swap registries in place
 
 A current `KnowledgeGraph` keeps the `OntologyRegistry` it was constructed with;
