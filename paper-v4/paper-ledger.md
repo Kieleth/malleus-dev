@@ -1826,3 +1826,34 @@ population file. No fallback exists.
 Impact: The v4 producer can start without question or prior-result leakage. The
 manifest and staging receipt are supporting evidence, not additional paper
 identity groups.
+
+### E-0112, the exact ontology gate is fixed before inspecting the proposal
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/compile_ontology_candidate.py` at
+`sha256:17a84fa181e627ca9c790ec7e92e54f0862f1c71b991da59a60615c879e60f87`;
+its focused test at
+`sha256:7396a58681f7f711eac60b37d5b547e7685f8e083e26c8b785413c8096047be5`;
+and the frozen producer manifest from E-0111.
+
+Observation: The paper-owned gate first verifies the exact root, LinkML, and
+three pack bytes from the producer closure. It then applies the public project
+grounding rite and `compile_linkml_contract` to the exact proposed ontology and
+named source map. Success retains the validated contract, grounding receipt,
+typed diagnostic, and every concrete Entity and Relation type with its exact
+effective slots. Refusal retains one typed diagnostic and no success artifact.
+
+Guard: One test proves that an ungrounded direct-root class refuses as
+`DIRECT_ROOT_GROUNDING_REQUIRED`. A second proves that a pack-derived project
+class compiles and appears in the generated population surface. The complete
+current-coordinate paper gate passes 25 tests.
+
+Boundary: This gate checks citation shape and compiler conformance, not domain
+fitness or question adequacy. It supplies no source fact, answer, query, graph
+cardinality, or ontology repair. The producer may receive only its exact typed
+diagnostic, at most twice.
+
+Impact: The first ontology proposal can now be evaluated without changing the
+gate in response to its content. This supporting harness is not a sixth paper
+identity.
