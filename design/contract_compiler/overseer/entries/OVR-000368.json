@@ -1,0 +1,118 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2c4440d423ed206fb77ea87a7f1a59354bf262419622b69048e2c1d80461a534",
+        "before_digest": "sha256:a258b679ef6c536242086ac723fcac9e4fa9d0698613b735cd759f0e08ccee2a",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:290bb5fc927d6aefd3b565b8b170a052cadc67e1d548fa30bbf787e6feb745e9",
+        "before_digest": "sha256:7434dc684648feae61f90d99e9132fda9ceac1d7056a6a598b9fe1d502b3d880",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:5868b60f55e89836c7c77b533871217d00e98833d0134a91b11df8e26d4c3dea",
+        "before_digest": "sha256:baff81d6fdce488a2ebd7c19820de082d5d5790f7f18f55e6b577fa7deca1d61",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:d9c446eefcedfa2e43684ff13a12ec99be45956ac1a5610dd4def1869c126af1",
+        "before_digest": "sha256:a0d50f22b1af9488589dedd0d60dcba3ea35a484216ba8bf92aaf2e44a963906",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:2b9bce964c0c96d3721965b13353dad4fee9dcc1710028a277a8943c355c3507",
+        "before_digest": "sha256:04da3ec8904554ce6929c9db76be85704a7e2d8cb9e78bb542d0eae53bcb5586",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:844eedb6c6803dc37d70435913b30151c3465694a03e53b7fcb237b223f3dcfb",
+        "before_digest": "sha256:9265ff6d8114d050b4aa256e1517e28b216399434364ca2ae000f8015f7d1443",
+        "change": "MODIFIED",
+        "path": "scripts/ci.py"
+      },
+      {
+        "after_digest": "sha256:065f422138281d771f5d9c7de46b31533089893ad1ee1ac44492c8dda6c6c686",
+        "change": "CREATED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:7f8be14c2d96d71f53d7b5476030ea74e6a95d698379af588f1e5b2d14522308",
+        "change": "CREATED",
+        "path": "src/malleus/compiler_cli.py"
+      },
+      {
+        "after_digest": "sha256:3b586bfbdbd8e38eaff62669f1c5c8e301f718135fec1b4ab2952375dd31df68",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:11e45cc9e452914527ec64a96e793ae6f67dae10ee0cb42e8e5b8444469a8c01",
+        "before_digest": "sha256:676ec10693a7d5fed1ec45b1a12898d9aa5a1d012f471f9d55ef36993be2e4f8",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_ci.py"
+      },
+      {
+        "after_digest": "sha256:b69dab492794575aa59367e069e1ed91be97b46cae8081b0066df4f0cdb5dd05",
+        "before_digest": "sha256:5866d0a5d684f8d830c7c62336982626d2b804169dab98cd4adbfedeaf2b67a7",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:40ddf9b39bc70a2075b34c9ef0e5cbaf5b8efc9a14ed1afd2b968b8ee8fc57d2",
+  "entry_id": "OVR-000368",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:998490dfef9f0a907889833752461f8a6a7e888607e0b0109e52f4319ae26220",
+  "recorded_at": "2026-09-04T01:07:52Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "1a26b2ff4fbf0e644a93a68167c58308f03a2867",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c72ce446df0f3c76fd0c0470d99778616a08db0f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d758d40bd084a25c0ca17cdb80720686f4d67a95",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 368,
+  "subject": {
+    "id": "public-compiler-population-facade",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the compiler, population, history, replay, and query path behind one packaged facade.",
+  "why": "The first end-to-end Small Shop path was executable only through private imports and research entrypoints. This cut exposes the existing deterministic executors without moving fixture meaning into Core, packages the complete runtime in both sdist and wheel, and mechanically requires parity between independently built wheels. Small Shop mapping and query conveniences remain research-local, private-v0 grammars remain unstable, and Event population still refuses with the public FAMILY_NOT_ADMITTED result."
+}
