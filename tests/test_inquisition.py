@@ -1158,6 +1158,7 @@ class TestNoPrivateMaterialCanReachARelease:
     }
     SDIST_ALLOWED_ROOTS = (
         ".claude/skills/",
+        "conformance/ocr/v0/corpus/",
         "docs/",
         "ontology/",
         "prolog/",
@@ -1165,6 +1166,14 @@ class TestNoPrivateMaterialCanReachARelease:
         "tests/",
     )
     WHEEL_SHARED_ROOTS = ("docs", "ontology", "prolog", "skills")
+
+    def _ocr_fixture_sources(self):
+        corpus = self.ROOT / "conformance" / "ocr" / "v0" / "corpus"
+        return {
+            path.relative_to(self.ROOT).as_posix()
+            for path in corpus.rglob("*")
+            if path.is_file() and "__pycache__" not in path.parts
+        } | {"docs/OCR_FIXTURE_CORPUS.md", "tests/test_ocr_corpus.py"}
 
     def _build(self, tmp_path):
         import subprocess
@@ -1264,6 +1273,7 @@ class TestNoPrivateMaterialCanReachARelease:
         assert skill_files
         for artifact in self._build(tmp_path):
             members = self._members(artifact)
+            fixture_sources = self._ocr_fixture_sources()
             unexpected = self._unexpected_members(artifact, members)
             assert not unexpected, (
                 f"{artifact.name} carries files outside allowed roots: "
@@ -1271,12 +1281,21 @@ class TestNoPrivateMaterialCanReachARelease:
                 "A release artifact is irrevocable once published."
             )
             if artifact.suffix != ".whl":
+                missing_fixtures = sorted(fixture_sources - set(members))
+                assert not missing_fixtures, (
+                    f"{artifact.name} omits OCR fixture sources: {missing_fixtures[:10]}"
+                )
                 untracked = self._untracked_sdist_members(members)
                 assert not untracked, (
                     f"{artifact.name} carries untracked source files: {untracked[:10]}. "
                     "Build and publish from one committed source identity."
                 )
             if artifact.suffix == ".whl":
+                leaked_fixtures = sorted(fixture_sources & set(members))
+                assert not leaked_fixtures, (
+                    f"{artifact.name} carries development-only OCR fixtures: "
+                    f"{leaked_fixtures[:10]}"
+                )
                 missing = [
                     path
                     for path in skill_files
@@ -1749,6 +1768,371 @@ class TestSkillsAreInstallable:
         ):
             assert requirement in normalized
         assert "every future example as conformance fixtures" not in normalized
+
+    def test_acolyte_carries_the_nascent_project_playbook(self):
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        section = " ".join(
+            skill.split("## Starting a project with no schema", 1)[1]
+            .split("\n## ", 1)[0]
+            .split()
+        )
+        required = (
+            "proposal, not accepted knowledge",
+            "Downstream assessment material is not an input",
+            "malleus-inquisitor install-skills --agent codex --project .",
+            "supersedes the earlier capability probe and ADOPTION_GUIDE.md pre-read",
+            "Do not inspect home directories, local checkouts, the network, or undeclared repository documentation",
+            "required capability or artifact is absent",
+            "Model only concepts, properties, relations, values, and distinctions materially supported",
+            "Never invent a missing value, count, record, relation, or epistemic status",
+            "Do not collapse two source concepts",
+            "metrology`, `chronology`, and `research",
+            "pack-grounding",
+            "pack-conformance",
+            "extend a pack concept before extending root",
+            "state-version`, `source-assertion`, or `object-event",
+            "Steps 6 through 9 are the governed-history branch",
+            "choose an exact history profile before proposing the ontology",
+            "For schema-only adoption, stop after step 5",
+            "For typed-graph-only adoption",
+            "OntologyRegistry",
+            "KnowledgeGraph.from_records",
+            "stop before step 6",
+            "malleus-compiler contract",
+            "Keep instances out of schema vocabulary",
+            "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
+            "Labels identify records",
+            "document capture",
+            "coverage of the retained reading is the objective",
+            "never the smallest query- or answer-changing subset",
+            (
+                'overrides the global "smallest observation", "Build only what '
+                'changes the answer", and "Build less" rules for document capture'
+            ),
+            "neutral population plan",
+            "every concrete Entity and Relation type",
+            "canonical_census_bytes",
+            "REVIEWED` or `UNTOUCHED",
+            "FULLY_FORMALIZED`, `PARTLY_FORMALIZED`, or `UNFORMALIZED",
+            "A reviewed block is not thereby formalized",
+            "uncaptured assertions remain invisible",
+            "UNTOUCHED",
+            "Preserve source units and values",
+            "explicit evidence-bearing operation",
+            "typed gaps",
+            "NO_DOMAIN_CHANGE",
+            "compile_population_plan",
+            "prepare_population_change",
+            "PopulationPreparation",
+            "prepared.change_set is not None",
+            "history.admit(change_set=prepared.change_set",
+            "prepared.change_set is None",
+            "do not call `history.admit`",
+            "KnowledgeChangeHistory.reopen",
+            "trace_population_record",
+            "compile_contract_revision",
+            "one working session by default",
+            "at most two additive revision rounds",
+            "Stop when another addition would require invention",
+            "incomplete captures, gaps, and typed refusals as results",
+            "query-shaped vocabulary",
+            "current private-v0 shape, not a stable wire",
+            "reading object is illustrative input, not a live grammar or closed shape",
+            "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, and `supersessions",
+            "canonical JSON bytes",
+            "after whitespace normalization",
+            "must name a known reading block",
+            "If `formalized_by` is empty, at least one typed gap is required",
+            "Every formalization `record_id` and `path` must resolve",
+            "Every `nothing_assertable` block ID must exist",
+            "CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`, `NEGATED`, or `STATED",
+            "INTERVAL_NOT_EXPRESSIBLE",
+            "AGGREGATE_ONLY",
+            "MODALITY_NOT_EXPRESSIBLE",
+            "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+            "TYPE_ABSENT",
+            "RELATION_ABSENT",
+        )
+        for phrase in required:
+            assert phrase in section
+        assert "The command-line compiler stops at contract compilation" in section
+        steps = (
+            "Retain the source boundary",
+            "Choose the Malleus level",
+            "Look for vocabulary before inventing it",
+            "Propose the project ontology",
+            "Run the structural gates and compile exact sources",
+            "Capture before formalising",
+            "Compile, then admit",
+            "Reopen, replay, and inspect",
+            "Grow only from recorded gaps",
+            "Stop honestly",
+        )
+        assert [section.index(step) for step in steps] == sorted(
+            section.index(step) for step in steps
+        )
+        assert section.index("Choose the Malleus level") < section.index(
+            "Look for vocabulary before inventing it"
+        ) < section.index("Propose the project ontology")
+        assert section.index("one working session by default") < section.index(
+            "compile_contract_revision"
+        )
+        assert section.index("at most two additive revision rounds") < section.index(
+            "compile_contract_revision"
+        )
+        for leaked in (
+            "paper",
+            "brief",
+            "gpt-5.6-sol",
+            "sonnet",
+            "opus",
+            "small shop",
+            "quiet bell",
+            "neutral greenhouse",
+            "cyp450",
+            "answer key",
+            "answer value",
+            "query binding",
+            "evaluation criter",
+        ):
+            assert leaked not in section.lower()
+
+    def test_installed_acolyte_keeps_the_nascent_project_playbook(
+        self, tmp_path, capsys
+    ):
+        assert main(
+            ["install-skills", "--project", str(tmp_path), "--agent", "codex"]
+        ) == 0
+        capsys.readouterr()
+        installed = (
+            tmp_path / ".codex" / "skills" / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        assert "## Starting a project with no schema" in installed
+        assert "malleus-compiler contract" in installed
+        assert "neutral population plan" in installed
+
+    def test_nascent_document_template_runs_through_the_public_adapter(
+        self, tmp_path, capsys
+    ):
+        from hashlib import sha256
+        from importlib import import_module
+        from inspect import signature
+
+        assert main(
+            ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+        ) == 0
+        capsys.readouterr()
+        installed_skill = (
+            tmp_path / ".codex" / "skills" / "malleus-acolyte" / "SKILL.md"
+        )
+        source_skill = self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        assert installed_skill.read_bytes() == source_skill.read_bytes()
+        skill = installed_skill.read_text(encoding="utf-8")
+        template_region = skill.split(
+            "<!-- malleus-nascent-document-template:start -->", 1
+        )[1].split("<!-- malleus-nascent-document-template:end -->", 1)[0]
+        template = json.loads(template_region.split("```json", 1)[1].split("```", 1)[0])
+        assert "schema" not in template
+        assert "documentation_example" not in template
+        assert "schema" not in template["reading"]
+        assert set(template) == {
+            "accepted_gap_kinds",
+            "accepted_modalities",
+            "capture",
+            "capture_id",
+            "contract_identity",
+            "plan_id",
+            "reading",
+            "records",
+            "supersessions",
+        }
+        modalities = [
+            "CALCULATED",
+            "CONTESTED",
+            "HYPOTHESISED",
+            "MEASURED",
+            "NEGATED",
+            "STATED",
+        ]
+        assert template["accepted_modalities"] == modalities
+        gap_kinds = [
+            "INTERVAL_NOT_EXPRESSIBLE",
+            "AGGREGATE_ONLY",
+            "MODALITY_NOT_EXPRESSIBLE",
+            "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+            "TYPE_ABSENT",
+            "RELATION_ABSENT",
+        ]
+        assert template["accepted_gap_kinds"] == gap_kinds
+
+        reading_bytes = json.dumps(
+            template["reading"],
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode()
+        capture = template["capture"]
+        capture["assertions"][0]["gaps"] = [
+            {"kind": kind, "statement": f"Example gap: {kind}"}
+            for kind in gap_kinds
+        ]
+        assert capture["reading_sha256"] == "sha256:" + sha256(
+            reading_bytes
+        ).hexdigest()
+        assertion = capture["assertions"][0]
+        assert set(assertion) == {
+            "assertion_time",
+            "block",
+            "domain_time",
+            "formalized_by",
+            "gaps",
+            "id",
+            "modality",
+            "statement",
+        }
+        assert set(assertion["gaps"][0]) == {"kind", "statement"}
+        assert set(template["records"]) == {"entities", "relations"}
+        assert set(template["records"]["entities"][0]) == {
+            "id",
+            "properties",
+            "type",
+        }
+        assert set(template["records"]["relations"][0]) == {
+            "id",
+            "properties",
+            "source_id",
+            "target_id",
+            "type",
+        }
+
+        compiler = import_module("malleus.compiler")
+        assert capture["schema"] == compiler.DOCUMENT_CAPTURE_GRAMMAR
+        assert tuple(signature(compiler.adapt_document_assertions).parameters) == (
+            "reading_bytes",
+            "capture_bytes",
+            "capture_id",
+            "plan_id",
+            "contract_identity",
+            "records",
+            "supersessions",
+        )
+        by_modality = {}
+        for modality in modalities:
+            candidate_capture = copy.deepcopy(capture)
+            candidate_capture["assertions"][0]["modality"] = modality
+            by_modality[modality] = compiler.adapt_document_assertions(
+                reading_bytes=reading_bytes,
+                capture_bytes=json.dumps(
+                    candidate_capture,
+                    allow_nan=False,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ).encode(),
+                capture_id=template["capture_id"],
+                plan_id=template["plan_id"],
+                contract_identity=template["contract_identity"],
+                records=template["records"],
+                supersessions=template["supersessions"],
+            )
+        result = by_modality["STATED"]
+        assert {
+            json.loads(compilation.capture_bytes)["assertions"][0]["modality"]
+            for compilation in by_modality.values()
+        } == set(modalities)
+        plan = json.loads(result.canonical_plan_bytes)
+        census = json.loads(result.canonical_census_bytes)
+        assert plan["records"] == template["records"]
+        assert [gap["kind"] for gap in plan["gaps"]] == gap_kinds
+        assert census["gaps_by_kind"] == {kind: 1 for kind in gap_kinds}
+        assert census["blocks"] == {
+            "block:1": "REVIEWED",
+            "block:2": "UNTOUCHED",
+        }
+        assert census["assertions"] == {
+            "FULLY_FORMALIZED": 0,
+            "PARTLY_FORMALIZED": 1,
+            "UNFORMALIZED": 0,
+        }
+
+    def test_nascent_playbook_names_live_python_and_cli_surfaces(
+        self, tmp_path, capsys
+    ):
+        from importlib import import_module
+
+        compiler = import_module("malleus.compiler")
+        malleus = import_module("malleus")
+        required = {
+            "DOCUMENT_CAPTURE_GRAMMAR",
+            "KnowledgeChangeHistory",
+            "PopulationPreparation",
+            "adapt_document_assertions",
+            "compile_contract_revision",
+            "compile_population_plan",
+            "prepare_population_change",
+            "trace_population_record",
+        }
+        assert required <= set(compiler.__all__)
+        assert all(hasattr(compiler, name) for name in required)
+        assert callable(compiler.KnowledgeChangeHistory.admit)
+        assert callable(compiler.KnowledgeChangeHistory.reopen)
+        assert {"KnowledgeGraph", "OntologyRegistry"} <= set(malleus.__all__)
+        assert callable(malleus.KnowledgeGraph.from_records)
+
+        schema = _write_schema(
+            tmp_path,
+            """
+            id: https://example.org/schema/nascent-typed-graph
+            name: nascent_typed_graph
+            imports:
+              - malleus
+              - linkml:types
+            classes:
+              ProjectObject:
+                is_a: Entity
+            """,
+        )
+        registry = malleus.OntologyRegistry(schema, import_map=ROOT_MAP)
+        graph = malleus.KnowledgeGraph.from_records(
+            registry,
+            {
+                "entities": [
+                    {
+                        "type": "ProjectObject",
+                        "id": "object:1",
+                        "properties": {},
+                    }
+                ]
+            },
+        )
+        assert graph.node_count == 1
+        assert graph.get_node("object:1")["type"] == "ProjectObject"
+
+        assert main(
+            ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+        ) == 0
+        capsys.readouterr()
+        pack = bundled_ontology_path("packs", "metrology.yaml")
+        assert main(["pack-grounding", str(pack), "--role", "PACK"]) == 0
+        capsys.readouterr()
+        assert main(["pack-conformance", str(pack), "--against", str(pack)]) == 0
+        capsys.readouterr()
+
+        compiler_cli = import_module("malleus.compiler_cli")
+        arguments = compiler_cli._parser().parse_args(
+            [
+                "contract",
+                "--root",
+                "project",
+                "--source",
+                "project",
+                str(tmp_path / "project.yaml"),
+            ]
+        )
+        assert arguments.command == "contract"
 
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0

@@ -22,14 +22,22 @@ from malleus._contract_pipeline.view import (
     ContractView,
     load_validated_contract_artifact,
 )
+from malleus._contract_pipeline.revision import (
+    CONTRACT_REVISION_POLICY,
+    ContractRevision,
+    ContractRevisionRefusal,
+    ContractRevisionRefusalReason,
+    compile_contract_revision,
+)
 from malleus.kg import KnowledgeGraph, OpStatus
 from malleus.ledger import GENESIS, JsonlLedger, LedgerError, content_digest
 
 
 _CHANGE_GRAMMAR = "malleus.knowledge-change-set/private-v0"
-_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v0"
+_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
 _CONTRACT_KIND = "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0"
 _CHANGE_EVENT = "KNOWLEDGE_CHANGE_SET_RETAINED"
+_REVISION_EVENT = "CONTRACT_REVISION_RECORDED"
 _HEAD_ROLES = frozenset(
     {
         "KNOWLEDGE_HISTORY_BINDING",
@@ -96,6 +104,9 @@ _ANCHOR_FIELDS = frozenset(
 )
 _CHANGE_FIELDS = frozenset(
     {"change_set_bytes_base64", "change_set_id", "change_set_identity"}
+)
+_REVISION_FIELDS = frozenset(
+    {"contract_revision_bytes_base64", "revision_id", "revision_identity"}
 )
 
 
@@ -593,11 +604,24 @@ class KnowledgeChangeHistoryBinding:
                 fields = _object(raw, "retention event binding must be an object")
                 _exact(
                     fields,
-                    frozenset({"identity_field", "record_id_field"}),
+                    frozenset({"allowed_roles", "identity_field", "record_id_field"}),
                     "retention event binding is not closed",
                 )
-                for field in fields.values():
+                for field in (fields["identity_field"], fields["record_id_field"]):
                     _text(field, "retention event field name is required")
+                allowed_roles = fields["allowed_roles"]
+                if not isinstance(allowed_roles, list) or not allowed_roles:
+                    raise ValueError("retention event allowed roles must be nonempty")
+                for role in allowed_roles:
+                    _text(role, "retention event allowed role is required")
+                    if role not in _HEAD_ROLES:
+                        raise ValueError(
+                            f"retention event allowed role is unsupported: {role}"
+                        )
+                if allowed_roles != sorted(set(allowed_roles)):
+                    raise ValueError(
+                        "retention event allowed roles must be sorted and unique"
+                    )
             for group in (proposal, decision):
                 for field in group.values():
                     _text(field, "history binding field is required")
@@ -692,6 +716,7 @@ class KnowledgeHistoryReplay:
     contract_view: ContractView
     binding: KnowledgeChangeHistoryBinding
     change_sets: tuple[KnowledgeChangeSet, ...]
+    contract_revisions: tuple[ContractRevision, ...]
     _retained: Mapping[str, KnowledgeRetainedInput]
     _machine_receipts: tuple[MachineReceipt, ...]
     _record_history: Mapping[str, KnowledgeRecordHistory]
@@ -965,6 +990,11 @@ class KnowledgeChangeHistory:
                 "machine event is not declared as a retention event",
             )
         fields = retention[event_type]
+        if role not in fields["allowed_roles"]:
+            raise _refuse(
+                KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                f"machine event cannot retain role: {role}",
+            )
         record_id = machine_payload.get(fields["record_id_field"])
         declared_identity = machine_payload.get(fields["identity_field"])
         actual_identity = _digest(retained_bytes)
@@ -1152,7 +1182,7 @@ class KnowledgeChangeHistory:
                     "base_ledger_head": replay.ledger_head,
                     "base_materialization_head": replay.materialization_head,
                     "change_set_id": change_set_id,
-                    "contract_identity": self.partial_contract.identity,
+                    "contract_identity": replay.partial_contract.identity,
                     "contract_kind": _CONTRACT_KIND,
                     "evidence": closure(
                         evidence_record_ids,
@@ -1176,6 +1206,81 @@ class KnowledgeChangeHistory:
                 }
             )
         )
+
+    def compose_contract_revision(
+        self,
+        *,
+        revision_id: str,
+        target_validated_contract_bytes: bytes,
+        target_partial_contract_bytes: bytes,
+        reason: str,
+        issued_at: str,
+    ) -> ContractRevision:
+        """Compile one additive revision against the exact current history."""
+
+        replay = self.replay()
+        previous_receipt = (
+            replay.contract_revisions[-1].migration_receipt.digest
+            if replay.contract_revisions
+            else None
+        )
+        return compile_contract_revision(
+            revision_id=revision_id,
+            base_ledger_head=replay.ledger_head,
+            base_ledger_event_count=replay.ledger_event_count,
+            base_acceptance_head=replay.acceptance_head,
+            base_materialization_head=replay.materialization_head,
+            base_accepted_state_digest=replay.graph.state_digest(),
+            current_validated_contract_bytes=replay.contract_view.artifact_bytes,
+            current_partial_contract_bytes=replay.partial_contract.canonical_bytes,
+            target_validated_contract_bytes=target_validated_contract_bytes,
+            target_partial_contract_bytes=target_partial_contract_bytes,
+            reason=reason,
+            issued_at=issued_at,
+            previous_migration_receipt=previous_receipt,
+        )
+
+    def record_contract_revision(
+        self,
+        *,
+        revision: ContractRevision,
+        transaction_time: str,
+        actor_id: str,
+    ) -> KnowledgeHistoryReplay:
+        """Append one complete contract revision or leave the ledger untouched."""
+
+        if not isinstance(revision, ContractRevision):
+            raise ContractRevisionRefusal(
+                ContractRevisionRefusalReason.MALFORMED_REVISION,
+                "a ContractRevision value is required",
+            )
+        try:
+            rebuilt = ContractRevision.from_bytes(revision.canonical_bytes)
+        except ContractRevisionRefusal as error:
+            raise ContractRevisionRefusal(
+                ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                "contract revision cannot be reproduced from its bytes",
+            ) from error
+        if rebuilt != revision:
+            raise ContractRevisionRefusal(
+                ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                "contract revision fields do not match its bytes",
+            )
+        entry = {
+            "actor_id": actor_id,
+            "event_id": f"revision:{revision.identity}",
+            "event_type": _REVISION_EVENT,
+            "payload": {
+                "contract_revision_bytes_base64": b64encode(
+                    revision.canonical_bytes
+                ).decode("ascii"),
+                "revision_id": revision.revision_id,
+                "revision_identity": revision.identity,
+            },
+            "transaction_time": transaction_time,
+        }
+        self._append((entry,), validate=self._validate_candidate)
+        return self.replay()
 
     def admit(
         self,
@@ -1289,7 +1394,7 @@ class KnowledgeChangeHistory:
     def replay(self) -> KnowledgeHistoryReplay:
         try:
             return self._replay_envelopes(self._ledger.read())
-        except KnowledgeChangeRefusal:
+        except (ContractRevisionRefusal, KnowledgeChangeRefusal):
             raise
         except (KeyError, TypeError, ValueError, LedgerError) as error:
             raise _refuse(
@@ -1303,8 +1408,10 @@ class KnowledgeChangeHistory:
     def _replay_envelopes(
         self, events: list[dict[str, object]]
     ) -> KnowledgeHistoryReplay:
-        machine_state = MachineState.empty(self.partial_contract.identity)
-        projection = KnowledgeGraph(self.contract_view)
+        active_contract = self.partial_contract
+        active_view = self.contract_view
+        machine_state = MachineState.empty(active_contract.identity)
+        projection = KnowledgeGraph(active_view)
         acceptance_head = GENESIS
         materialization_head = GENESIS
         retained: dict[str, KnowledgeRetainedInput] = {}
@@ -1314,6 +1421,8 @@ class KnowledgeChangeHistory:
         proposal_changes: dict[str, str] = {}
         machine_receipts: list[MachineReceipt] = []
         accepted_changes: list[KnowledgeChangeSet] = []
+        revisions: list[ContractRevision] = []
+        revision_ids: set[str] = set()
         record_history: dict[str, KnowledgeRecordHistory] = {}
         graphs_by_change: dict[str, KnowledgeGraph] = {}
         bootstrap_roles: set[str] = set()
@@ -1321,6 +1430,144 @@ class KnowledgeChangeHistory:
         for event in events:
             event_type = event["event_type"]
             payload = event["payload"]
+            if event_type == _REVISION_EVENT:
+                if bootstrap_roles != _REOPEN_ROLES:
+                    raise _refuse(
+                        KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+                        "contract revision requires the complete retained bootstrap",
+                    )
+                _exact(
+                    payload,
+                    _REVISION_FIELDS,
+                    "contract revision event is not closed",
+                )
+                source = _decode_b64(
+                    payload["contract_revision_bytes_base64"],
+                    "contract revision bytes are malformed",
+                )
+                revision = ContractRevision.from_bytes(source)
+                if (
+                    payload["revision_identity"] != revision.identity
+                    or payload["revision_id"] != revision.revision_id
+                    or revision.identity in {item.identity for item in revisions}
+                    or revision.revision_id in revision_ids
+                ):
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                        "recorded contract revision does not match its bytes",
+                    )
+                coordinates = (
+                    (
+                        revision.base_ledger_head,
+                        event["previous_event_hash"],
+                        "ledger head",
+                    ),
+                    (
+                        revision.base_ledger_event_count,
+                        event["sequence"] - 1,
+                        "ledger count",
+                    ),
+                    (
+                        revision.base_acceptance_head,
+                        acceptance_head,
+                        "acceptance head",
+                    ),
+                    (
+                        revision.base_materialization_head,
+                        materialization_head,
+                        "materialization head",
+                    ),
+                    (
+                        revision.base_accepted_state_digest,
+                        projection.state_digest(),
+                        "accepted-state digest",
+                    ),
+                )
+                for actual, expected_value, label in coordinates:
+                    if actual != expected_value:
+                        raise ContractRevisionRefusal(
+                            ContractRevisionRefusalReason.STALE_BASE,
+                            f"contract revision base {label} is stale",
+                        )
+                if (
+                    revision.from_contract_identity != active_contract.identity
+                    or revision.from_validated_fact_set_sha256
+                    != active_contract.validated_fact_set_sha256
+                ):
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.STALE_BASE,
+                        "contract revision does not start at the active contract",
+                    )
+                if revision.policy_identity != CONTRACT_REVISION_POLICY.identity:
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.POLICY_REFUSAL,
+                        "contract revision does not use the active revision policy",
+                    )
+                previous_receipt = (
+                    revisions[-1].migration_receipt.digest if revisions else None
+                )
+                if revision.migration_receipt.previous_receipt != previous_receipt:
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                        "contract revision skips its preceding migration receipt",
+                    )
+                if any(
+                    change.change_set_id not in applied_ids
+                    for change in changes.values()
+                ):
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                        "contract revision cannot cross a pending knowledge change",
+                    )
+                rebuilt = compile_contract_revision(
+                    revision_id=revision.revision_id,
+                    base_ledger_head=revision.base_ledger_head,
+                    base_ledger_event_count=revision.base_ledger_event_count,
+                    base_acceptance_head=revision.base_acceptance_head,
+                    base_materialization_head=revision.base_materialization_head,
+                    base_accepted_state_digest=revision.base_accepted_state_digest,
+                    current_validated_contract_bytes=active_view.artifact_bytes,
+                    current_partial_contract_bytes=active_contract.canonical_bytes,
+                    target_validated_contract_bytes=(
+                        revision.target_validated_contract_bytes
+                    ),
+                    target_partial_contract_bytes=(
+                        revision.target_partial_contract.canonical_bytes
+                    ),
+                    reason=revision.reason,
+                    issued_at=revision.issued_at,
+                    previous_migration_receipt=previous_receipt,
+                )
+                if rebuilt != revision:
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.IDENTITY_MISMATCH,
+                        "contract revision does not match the derived contract delta",
+                    )
+                target_view = revision.target_contract_view
+                try:
+                    projection = KnowledgeGraph.from_records(
+                        target_view, projection.export_records()
+                    )
+                except (TypeError, ValueError) as error:
+                    raise ContractRevisionRefusal(
+                        ContractRevisionRefusalReason.INCOMPATIBLE_CONTRACT,
+                        "accepted graph cannot be read under the target contract",
+                    ) from error
+                active_contract = revision.target_partial_contract
+                active_view = target_view
+                machine_state = MachineState._build(
+                    active_contract.identity, machine_state.records
+                )
+                materialization_head = content_digest(
+                    {
+                        "contract_revision": revision.identity,
+                        "previous": materialization_head,
+                        "state": projection.state_digest(),
+                    }
+                )
+                revisions.append(revision)
+                revision_ids.add(revision.revision_id)
+                continue
             if event_type == _CHANGE_EVENT:
                 if bootstrap_roles != _REOPEN_ROLES:
                     raise _refuse(
@@ -1351,6 +1598,7 @@ class KnowledgeChangeHistory:
                     materialization_head,
                     retained,
                     applied_ids,
+                    active_contract,
                 )
                 changes[change.identity] = change
                 change_ids.add(change.change_set_id)
@@ -1401,7 +1649,9 @@ class KnowledgeChangeHistory:
                         "retained event is absent from the history binding",
                     )
                 if (
-                    machine_payload.get(event_binding["record_id_field"]) != record_id
+                    role not in event_binding["allowed_roles"]
+                    or machine_payload.get(event_binding["record_id_field"])
+                    != record_id
                     or machine_payload.get(event_binding["identity_field"])
                     != payload["retained_sha256"]
                 ):
@@ -1412,9 +1662,7 @@ class KnowledgeChangeHistory:
                 machine_event = _canonical(
                     {"event_type": event_type, "payload": machine_payload}
                 )
-                result = execute_event(
-                    self.partial_contract, machine_state, machine_event
-                )
+                result = execute_event(active_contract, machine_state, machine_event)
                 if result.receipt.outcome != "APPLIED":
                     raise _refuse(
                         KnowledgeChangeRefusalReason.PROTOCOL_REFUSAL,
@@ -1437,7 +1685,7 @@ class KnowledgeChangeHistory:
                     "protocol execution requires the complete retained bootstrap",
                 )
             machine_event = _canonical({"event_type": event_type, "payload": payload})
-            result = execute_event(self.partial_contract, machine_state, machine_event)
+            result = execute_event(active_contract, machine_state, machine_event)
             if result.receipt.outcome != "APPLIED":
                 raise _refuse(
                     KnowledgeChangeRefusalReason.PROTOCOL_REFUSAL,
@@ -1502,7 +1750,7 @@ class KnowledgeChangeHistory:
 
         ledger_head = events[-1]["event_hash"] if events else GENESIS
         receipt = _history_receipt(
-            contract=self.partial_contract,
+            contract=active_contract,
             binding=self.binding,
             machine_state=machine_state,
             ledger_head=ledger_head,
@@ -1519,10 +1767,11 @@ class KnowledgeChangeHistory:
             acceptance_head=acceptance_head,
             materialization_head=materialization_head,
             receipt=receipt,
-            partial_contract=self.partial_contract,
-            contract_view=self.contract_view,
+            partial_contract=active_contract,
+            contract_view=active_view,
             binding=self.binding,
             change_sets=tuple(accepted_changes),
+            contract_revisions=tuple(revisions),
             _retained=MappingProxyType(dict(retained)),
             _machine_receipts=tuple(machine_receipts),
             _record_history=MappingProxyType(dict(record_history)),
@@ -1538,8 +1787,9 @@ class KnowledgeChangeHistory:
         materialization_head: str,
         retained: Mapping[str, KnowledgeRetainedInput],
         applied_ids: set[str],
+        active_contract: PartialEffectiveContract,
     ) -> None:
-        if change.contract_identity != self.partial_contract.identity:
+        if change.contract_identity != active_contract.identity:
             raise _refuse(
                 KnowledgeChangeRefusalReason.STALE_BASE,
                 "change set names a different effective contract",

@@ -2,20 +2,29 @@
 
 from __future__ import annotations
 
+import errno
 import json
 import os
 import re
+import stat
 import tempfile
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Iterator, Mapping
 from urllib.parse import urlparse
 
 from malleus.kg import KnowledgeGraph, OpStatus
-from malleus.ledger import JsonlLedger, LedgerError, canonical_json, record_hash
-from malleus.migration import migration_chain
+from malleus.ledger import LedgerError, canonical_json, record_hash
+from malleus.migration import (
+    MigrationAwareJsonlLedger,
+    MigrationError,
+    MigrationVerification,
+    MigrationVerifier,
+    migration_chain,
+)
 from malleus.ontology import OntologyRegistry, bundled_ontology_path
 
 
@@ -44,6 +53,9 @@ _PROJECT_FIELDS = {
 }
 _DIGEST = re.compile(r"^sha256:[0-9a-f]{64}$")
 _EVIDENCE_REQUIRED = frozenset({"Work", "Claim", "Result"})
+_WRITER_LOCK_FILE = ".recon-writer.lock"
+_LOCK_CONTENTION_ERRNOS = frozenset({errno.EACCES, errno.EAGAIN, errno.EWOULDBLOCK})
+_LOCK_CONTENTION_WINERRORS = frozenset({33})
 
 
 class ReconError(ValueError):
@@ -68,6 +80,81 @@ class RecordCandidate:
     supersedes_event_id: str | None = None
 
 
+@dataclass
+class _ReplayIndex:
+    """Current replay state plus reverse indexes for affected-record checks."""
+
+    registry: OntologyRegistry
+    records: dict[str, StoredRecord]
+    latest: dict[str, str]
+    relations_by_endpoint: dict[str, set[str]]
+    records_by_evidence: dict[str, set[str]]
+    coverage_profiles: dict[tuple[str, str], set[str]]
+
+    @classmethod
+    def from_records(
+        cls,
+        registry: OntologyRegistry,
+        records: Mapping[str, StoredRecord],
+    ) -> "_ReplayIndex":
+        index = cls(registry, {}, {}, {}, {}, {})
+        for stored in records.values():
+            index.replace(stored)
+        return index
+
+    def replace(self, stored: StoredRecord) -> None:
+        identifier = stored.record["id"]
+        previous = self.records.get(identifier)
+        if previous is not None:
+            self._remove(previous)
+        self.records[identifier] = stored
+        self.latest[identifier] = stored.event_id
+        self._add(stored)
+
+    def _add(self, stored: StoredRecord) -> None:
+        identifier = stored.record["id"]
+        evidence_ids = stored.record.get("evidence_ids", [])
+        if isinstance(evidence_ids, list):
+            for evidence_id in evidence_ids:
+                if isinstance(evidence_id, str):
+                    self.records_by_evidence.setdefault(evidence_id, set()).add(identifier)
+        if self.registry.is_subtype_of(stored.record_type, "Relation"):
+            for endpoint in (stored.record.get("source_id"), stored.record.get("target_id")):
+                if isinstance(endpoint, str):
+                    self.relations_by_endpoint.setdefault(endpoint, set()).add(identifier)
+        if stored.record_type == "CoversAxisRelation":
+            source = stored.record.get("source_id")
+            target = stored.record.get("target_id")
+            if isinstance(source, str) and isinstance(target, str):
+                self.coverage_profiles.setdefault((source, target), set()).add(identifier)
+
+    def _remove(self, stored: StoredRecord) -> None:
+        identifier = stored.record["id"]
+        evidence_ids = stored.record.get("evidence_ids", [])
+        if isinstance(evidence_ids, list):
+            for evidence_id in evidence_ids:
+                if isinstance(evidence_id, str):
+                    self._discard(self.records_by_evidence, evidence_id, identifier)
+        if self.registry.is_subtype_of(stored.record_type, "Relation"):
+            for endpoint in (stored.record.get("source_id"), stored.record.get("target_id")):
+                if isinstance(endpoint, str):
+                    self._discard(self.relations_by_endpoint, endpoint, identifier)
+        if stored.record_type == "CoversAxisRelation":
+            source = stored.record.get("source_id")
+            target = stored.record.get("target_id")
+            if isinstance(source, str) and isinstance(target, str):
+                self._discard(self.coverage_profiles, (source, target), identifier)
+
+    @staticmethod
+    def _discard(index: dict[Any, set[str]], key: Any, identifier: str) -> None:
+        identifiers = index.get(key)
+        if identifiers is None:
+            return
+        identifiers.discard(identifier)
+        if not identifiers:
+            del index[key]
+
+
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -89,32 +176,218 @@ def _exact_fields(value: Mapping[str, Any], expected: set[str], label: str) -> N
 
 
 def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    encoded = (json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
     try:
+        encoded = (
+            json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+        ).encode("utf-8")
+    except (TypeError, ValueError) as error:
+        raise ReconError(f"Could not encode {path} as canonical UTF-8 JSON: {error}") from error
+    descriptor = -1
+    temporary_name = ""
+    replace_started = False
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
+        )
         stream = os.fdopen(descriptor, "wb", closefd=True)
         descriptor = -1
         with stream:
             stream.write(encoded)
             stream.flush()
             os.fsync(stream.fileno())
+        replace_started = True
         Path(temporary_name).replace(path)
         temporary_name = ""
-    except OSError as error:
-        raise ReconError(f"Could not write {path} without partial replacement: {error}") from error
+        replace_started = False
+    except BaseException as error:
+        if replace_started:
+            rollback_error = None
+            try:
+                path.unlink(missing_ok=True)
+            except BaseException as failure:
+                rollback_error = failure
+            if rollback_error is not None:
+                try:
+                    marker_remains = path.exists()
+                except OSError:
+                    marker_remains = True
+                if marker_remains:
+                    raise ReconError(
+                        f"Project initialization outcome is indeterminate: {path} remains "
+                        "after replacement and rollback both failed"
+                    ) from error
+        if isinstance(error, OSError):
+            raise ReconError(
+                f"Could not write {path} without partial replacement: {error}"
+            ) from error
+        raise
     finally:
         if descriptor >= 0:
             try:
                 os.close(descriptor)
-            except OSError:
+            except BaseException:
                 pass
         if temporary_name:
-            Path(temporary_name).unlink(missing_ok=True)
+            try:
+                Path(temporary_name).unlink(missing_ok=True)
+            except BaseException:
+                pass
+
+
+def _acquire_writer_lock(stream: Any) -> None:
+    if os.name == "nt":
+        import msvcrt
+
+        stream.seek(0, os.SEEK_END)
+        if stream.tell() == 0:
+            stream.write(b"\0")
+            stream.flush()
+        stream.seek(0)
+        msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+        return
+
+    import fcntl
+
+    fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def _release_writer_lock(stream: Any) -> None:
+    if os.name == "nt":
+        import msvcrt
+
+        stream.seek(0)
+        msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+        return
+
+    import fcntl
+
+    fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
+def _is_lock_contention(error: OSError) -> bool:
+    return error.errno in _LOCK_CONTENTION_ERRNOS or getattr(
+        error, "winerror", None
+    ) in _LOCK_CONTENTION_WINERRORS
+
+
+def _precheck_reserved_lock(path: Path, subject: str) -> None:
+    try:
+        status = path.lstat()
+    except FileNotFoundError:
+        return
+    except OSError as error:
+        raise ReconError(f"Could not inspect {subject} {path}: {error}") from error
+    if not stat.S_ISREG(status.st_mode) or status.st_nlink != 1:
+        raise ReconError(
+            f"Reserved {subject} must be a single-link regular file: {path}"
+        )
+
+
+def _assert_reserved_lock_identity(path: Path, descriptor: int, subject: str) -> None:
+    try:
+        path_status = path.lstat()
+        descriptor_status = os.fstat(descriptor)
+    except OSError as error:
+        raise ReconError(f"Could not verify {subject} {path}: {error}") from error
+    if (
+        not stat.S_ISREG(path_status.st_mode)
+        or not stat.S_ISREG(descriptor_status.st_mode)
+        or path_status.st_nlink != 1
+        or descriptor_status.st_nlink != 1
+        or not os.path.samestat(path_status, descriptor_status)
+    ):
+        raise ReconError(
+            f"Reserved {subject} changed identity, has aliases, or is not a "
+            f"regular file: {path}"
+        )
+
+
+@contextmanager
+def _exclusive_writer(path: Path) -> Iterator[None]:
+    """Fail closed when another cooperating ReconProject writer is active."""
+
+    _precheck_reserved_lock(path, "Recon writer lock")
+    try:
+        descriptor = os.open(
+            path,
+            os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0),
+            0o600,
+        )
+    except OSError as error:
+        raise ReconError(f"Could not open Recon writer lock {path}: {error}") from error
+    try:
+        # The context owns the raw descriptor. Keeping it separate from the
+        # stream makes cleanup exact even when stream.close() raises after
+        # closing its own wrapper state.
+        stream = os.fdopen(descriptor, "r+b", closefd=False)
+    except OSError as error:
+        try:
+            os.close(descriptor)
+        except OSError:
+            pass
+        raise ReconError(
+            f"Could not initialize Recon writer lock {path}: {error}"
+        ) from error
+    try:
+        _assert_reserved_lock_identity(path, descriptor, "Recon writer lock")
+    except BaseException:
+        try:
+            stream.close()
+        except BaseException:
+            pass
+        try:
+            os.close(descriptor)
+        except BaseException:
+            pass
+        raise
+
+    acquired = False
+    body_failed = False
+    try:
+        try:
+            _acquire_writer_lock(stream)
+            acquired = True
+        except OSError as error:
+            if _is_lock_contention(error):
+                raise ReconError(
+                    f"Recon project already has an active writer: {path.parent}"
+                ) from error
+            raise ReconError(
+                f"Could not acquire Recon writer lock {path}: {error}"
+            ) from error
+        _assert_reserved_lock_identity(path, descriptor, "Recon writer lock")
+        yield
+    except BaseException:
+        body_failed = True
+        raise
+    finally:
+        cleanup_interrupt = None
+        if acquired:
+            try:
+                _release_writer_lock(stream)
+            except Exception:
+                # Closing the descriptor releases the process lock as the
+                # final guard even if an explicit unlock is interrupted.
+                pass
+            except BaseException as error:
+                cleanup_interrupt = error
+        try:
+            stream.close()
+        except Exception:
+            pass
+        except BaseException as error:
+            if cleanup_interrupt is None:
+                cleanup_interrupt = error
+        try:
+            os.close(descriptor)
+        except Exception:
+            pass
+        except BaseException as error:
+            if cleanup_interrupt is None:
+                cleanup_interrupt = error
+        if not body_failed and cleanup_interrupt is not None:
+            raise cleanup_interrupt
 
 
 class ReconProject:
@@ -128,27 +401,30 @@ class ReconProject:
     ):
         self.root = Path(root)
         self._clock = clock or _utc_now
-        self.registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
-        self.ontology_hash = f"sha256:{self.registry.content_hash()}"
-        # Two different reasons an earlier identity is still readable, and they
-        # must not be confused. A payload grammar change means the same bytes
-        # hashed differently, so the identity is recoverable by recomputation.
-        # A recorded migration means the bytes genuinely changed and somebody
-        # wrote down what that means for records written before it.
-        grammars = tuple(
-            f"sha256:{digest}"
-            for digest in self.registry.content_hashes().values()
-            if f"sha256:{digest}" != self.ontology_hash
-        )
-        self.migrations = migration_chain(self.registry)
-        self.historical_ontology_hashes = tuple(
-            dict.fromkeys(
-                (*grammars, *self.migrations.accepted_hashes(self.ontology_hash)[1:])
-            )
+        self._configure_registry(
+            OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
         )
         self.config = self._read_config()
-        self.ledger = JsonlLedger(
-            self.root / LEDGER_FILE, self.ontology_hash, self.historical_ontology_hashes
+        self._configure_ledger()
+
+    def _configure_registry(self, registry: OntologyRegistry) -> None:
+        self.registry = registry
+        self.ontology_hash = f"sha256:{self.registry.content_hash()}"
+        self.migrations = migration_chain(self.registry)
+        self.migration_verifier = MigrationVerifier(self.registry, self.migrations)
+        # Compatibility surface for callers that inspect grammar history. It
+        # contains only alternate hashes of the current bytes. Migration
+        # identities are deliberately absent and require the verifier above.
+        self.historical_ontology_hashes = tuple(
+            identity
+            for identity in self.migration_verifier.grammar_ontology_hashes
+            if identity != self.ontology_hash
+        )
+
+    def _configure_ledger(self) -> None:
+        self._ledger = MigrationAwareJsonlLedger(
+            self.root / LEDGER_FILE,
+            self.migration_verifier,
         )
 
     @classmethod
@@ -167,27 +443,37 @@ class ReconProject:
         creator_id = _nonblank(creator_id, "creator_id")
         if destination.exists() and not destination.is_dir():
             raise ReconError(f"Recon project path is not a directory: {destination}")
-        if destination.exists() and any(destination.iterdir()):
-            raise ReconError(f"Recon project directory is not empty: {destination}")
         destination.mkdir(parents=True, exist_ok=True)
         registry = OntologyRegistry(bundled_ontology_path("domains", "recon.yaml"))
-        now = (clock or _utc_now)()
-        try:
-            parsed = datetime.fromisoformat(now.replace("Z", "+00:00"))
-        except (AttributeError, ValueError) as error:
-            raise ReconError("Project clock must return an ISO 8601 datetime") from error
-        if parsed.tzinfo is None or parsed.utcoffset() is None:
-            raise ReconError("Project clock must include a timezone offset")
-        config = {
-            "schema_version": PROJECT_SCHEMA_VERSION,
-            "title": title,
-            "target_id": target_id,
-            "created_at": now,
-            "creator_id": creator_id,
-            "ontology_hash": f"sha256:{registry.content_hash()}",
-        }
-        _atomic_json(destination / PROJECT_FILE, config)
-        return cls(destination, clock=clock)
+        with _exclusive_writer(destination / _WRITER_LOCK_FILE):
+            existing = [
+                path for path in destination.iterdir() if path.name != _WRITER_LOCK_FILE
+            ]
+            if existing:
+                raise ReconError(f"Recon project directory is not empty: {destination}")
+            now = (clock or _utc_now)()
+            try:
+                parsed = datetime.fromisoformat(now.replace("Z", "+00:00"))
+            except (AttributeError, ValueError) as error:
+                raise ReconError("Project clock must return an ISO 8601 datetime") from error
+            if parsed.tzinfo is None or parsed.utcoffset() is None:
+                raise ReconError("Project clock must include a timezone offset")
+            config = {
+                "schema_version": PROJECT_SCHEMA_VERSION,
+                "title": title,
+                "target_id": target_id,
+                "created_at": now,
+                "creator_id": creator_id,
+                "ontology_hash": f"sha256:{registry.content_hash()}",
+            }
+            project = cls.__new__(cls)
+            project.root = destination
+            project._clock = clock or _utc_now
+            project._configure_registry(registry)
+            project.config = config
+            project._configure_ledger()
+            _atomic_json(destination / PROJECT_FILE, config)
+            return project
 
     def _read_config(self) -> dict[str, Any]:
         path = self.root / PROJECT_FILE
@@ -218,11 +504,12 @@ class ReconProject:
             value["ontology_hash"]
         ) is None:
             raise ReconError(f"{PROJECT_FILE} ontology_hash must be sha256:<64 hex>")
-        if value["ontology_hash"] not in (self.ontology_hash, *self.historical_ontology_hashes):
+        try:
+            self.migration_verifier.verify((value["ontology_hash"],))
+        except MigrationError as error:
             raise ReconError(
-                f"Recon ontology hash differs from this project. "
-                f"{self.migrations.explain(value['ontology_hash'], self.ontology_hash)}"
-            )
+                f"Recon ontology hash cannot be replayed by this project: {error}"
+            ) from error
         return value
 
     def events(self) -> list[dict[str, Any]]:
@@ -233,8 +520,21 @@ class ReconProject:
 
     def snapshot(self) -> tuple[list[dict[str, Any]], dict[str, StoredRecord]]:
         """Read and verify one ledger snapshot for a complete derived build."""
-        events = self.ledger.read()
-        return events, self._replay(events)
+        events, records, _verification = self.snapshot_verified()
+        return events, records
+
+    def snapshot_verified(
+        self,
+    ) -> tuple[
+        list[dict[str, Any]],
+        dict[str, StoredRecord],
+        MigrationVerification,
+    ]:
+        """Read one snapshot with exact grammar and migration evidence."""
+        events, verification = self._ledger.read_verified(
+            additional_ontology_hashes=(self.config["ontology_hash"],)
+        )
+        return events, self._replay(events), verification
 
     def record(
         self,
@@ -261,18 +561,26 @@ class ReconProject:
         _nonblank(actor_id, "actor_id")
         if not isinstance(candidates, list) or not candidates:
             raise ReconError("record batch must be a nonempty list")
-        if require_all_recorded:
-            return self._record_required_batch(candidates, actor_id=actor_id)
-        events = self.ledger.read()
-        state = self._replay(events)
-        latest = {identifier: item.event_id for identifier, item in state.items()}
+        with _exclusive_writer(self.root / _WRITER_LOCK_FILE):
+            if require_all_recorded:
+                return self._record_required_batch(candidates, actor_id=actor_id)
+            return self._record_decision_batch(candidates, actor_id=actor_id)
+
+    def _record_decision_batch(
+        self,
+        candidates: list[RecordCandidate],
+        *,
+        actor_id: str,
+    ) -> tuple[dict[str, Any], ...]:
+        events = self._ledger.read()
+        original_state = self._replay(events)
+        index = _ReplayIndex.from_records(self.registry, original_state)
         transaction_time = self._clock()
         entries = []
         for offset, item in enumerate(candidates, start=1):
             record_type, candidate, candidate_hash = self._prepare_candidate(item, offset)
             errors = self._candidate_errors(
-                state,
-                latest,
+                index,
                 record_type,
                 candidate,
                 item.supersedes_event_id,
@@ -296,12 +604,19 @@ class ReconProject:
                 }
             )
             if not errors:
-                identifier = candidate["id"]
-                state[identifier] = StoredRecord(record_type, candidate, event_id)
-                latest[identifier] = event_id
-        return self.ledger.append_many(
+                index.replace(StoredRecord(record_type, candidate, event_id))
+
+        def validate_suffix(candidate_events: list[dict[str, Any]]) -> None:
+            self._validate_decision_suffix(
+                candidate_events,
+                prefix=events,
+                original_state=original_state,
+                suffix_length=len(entries),
+            )
+
+        return self._ledger.append_many(
             entries,
-            validate=self._validate_history,
+            validate=validate_suffix,
         )
 
     def _prepare_candidate(
@@ -334,7 +649,7 @@ class ReconProject:
         *,
         actor_id: str,
     ) -> tuple[dict[str, Any], ...]:
-        events = self.ledger.read()
+        events = self._ledger.read()
         original_state = self._replay(events)
         original_latest = {
             identifier: item.event_id for identifier, item in original_state.items()
@@ -381,16 +696,37 @@ class ReconProject:
             raise ReconError(
                 "record batch final state is invalid: " + "; ".join(final_errors)
             )
+        replay_index = _ReplayIndex.from_records(self.registry, original_state)
+        for offset, entry in enumerate(entries, start=1):
+            payload = entry["payload"]
+            replay_errors = self._candidate_errors(
+                replay_index,
+                payload["record_type"],
+                payload["record"],
+                payload["supersedes_event_id"],
+            )
+            if replay_errors:
+                raise ReconError(
+                    f"record batch item {offset} is not replay-valid in caller order: "
+                    + "; ".join(replay_errors)
+                )
+            replay_index.replace(
+                StoredRecord(
+                    payload["record_type"],
+                    payload["record"],
+                    entry["event_id"],
+                )
+            )
 
         def validate_suffix(candidate_events: list[dict[str, Any]]) -> None:
             self._validate_required_suffix(
                 candidate_events,
-                prefix_length=len(events),
+                prefix=events,
                 original_state=original_state,
-                original_latest=original_latest,
+                suffix_length=len(entries),
             )
 
-        return self.ledger.append_many(entries, validate=validate_suffix)
+        return self._ledger.append_many(entries, validate=validate_suffix)
 
     def validate(
         self,
@@ -410,33 +746,15 @@ class ReconProject:
             )
         return errors
 
-    def _validate_history(self, events: list[dict[str, Any]]) -> None:
-        self._replay(events)
-
     def _replay(self, events: list[dict[str, Any]]) -> dict[str, StoredRecord]:
-        if events and all(
-            isinstance(event.get("payload"), dict)
-            and event["payload"].get("decision") == RECORDED
-            and event["payload"].get("supersedes_event_id") is None
-            for event in events
-        ):
-            return self._replay_append_only_recorded(events)
-        return self._replay_with_decisions(events)
-
-    def _replay_with_decisions(
-        self,
-        events: list[dict[str, Any]],
-    ) -> dict[str, StoredRecord]:
-        state: dict[str, StoredRecord] = {}
-        latest: dict[str, str] = {}
+        index = _ReplayIndex.from_records(self.registry, {})
         for position, event in enumerate(events, start=1):
             payload, record_type, record, supersedes = self._event_payload(
                 event, position
             )
             supplied_errors = payload["errors"]
             errors = self._candidate_errors(
-                state,
-                latest,
+                index,
                 record_type,
                 record,
                 supersedes,
@@ -450,90 +768,14 @@ class ReconProject:
             if supplied_errors != errors:
                 raise ReconError(f"event {position} validation errors do not replay exactly")
             if not errors:
-                identifier = record["id"]
-                state[identifier] = StoredRecord(
-                    record_type=record_type,
-                    record=deepcopy(record),
-                    event_id=event["event_id"],
-                )
-                latest[identifier] = event["event_id"]
-        return state
-
-    def _replay_append_only_recorded(
-        self,
-        events: list[dict[str, Any]],
-    ) -> dict[str, StoredRecord]:
-        state: dict[str, StoredRecord] = {}
-        graph = KnowledgeGraph(self.registry)
-        profiles: dict[tuple[str, str], str] = {}
-        for position, event in enumerate(events, start=1):
-            payload, record_type, record, supersedes = self._event_payload(event, position)
-            if payload["decision"] != RECORDED or payload["errors"] != [] or supersedes is not None:
-                raise ReconError(
-                    f"event {position} is not an append-only recorded event"
-                )
-            identifier = record.get("id")
-            if not isinstance(identifier, str) or not identifier.strip():
-                raise ReconError(f"event {position} record requires a nonblank string id")
-            if identifier in state:
-                raise ReconError(
-                    f"event {position} repeats record id '{identifier}' without revision"
-                )
-            if not self.registry.has_type(record_type):
-                raise ReconError(f"event {position} has unknown type '{record_type}'")
-            if self.registry.get_type(record_type).abstract:
-                raise ReconError(f"event {position} instantiates abstract type '{record_type}'")
-            for evidence_id in record.get("evidence_ids", []):
-                evidence = state.get(evidence_id)
-                if evidence is None or evidence.record_type != "EvidenceAttachment":
-                    raise ReconError(
-                        f"event {position} references evidence '{evidence_id}' before a "
-                        "matching EvidenceAttachment was recorded"
+                index.replace(
+                    StoredRecord(
+                        record_type=record_type,
+                        record=deepcopy(record),
+                        event_id=event["event_id"],
                     )
-            properties = {
-                key: deepcopy(value)
-                for key, value in record.items()
-                if key not in {"id", "source_id", "target_id"}
-            }
-            if self.registry.is_subtype_of(record_type, "Entity"):
-                operation = graph.create_entity(record_type, identifier, properties)
-            elif self.registry.is_subtype_of(record_type, "Relation"):
-                operation = graph.create_relation(
-                    record_type,
-                    identifier,
-                    record.get("source_id"),
-                    record.get("target_id"),
-                    properties,
                 )
-            elif self.registry.is_subtype_of(record_type, "Event"):
-                operation = graph.create_event(record_type, identifier, properties)
-            else:
-                raise ReconError(
-                    f"event {position} type '{record_type}' is not an Entity, Relation, or Event"
-                )
-            if operation.op_status == OpStatus.REJECTED:
-                raise ReconError(
-                    f"event {position} recorded an invalid {record_type} '{identifier}': "
-                    f"{operation.rejection_reason}"
-                )
-            if record_type == "CoversAxisRelation":
-                key = (record.get("source_id"), record.get("target_id"))
-                prior = profiles.get(key)
-                if prior is not None:
-                    raise ReconError(
-                        f"event {position} duplicates coverage profile from '{prior}'"
-                    )
-                profiles[key] = identifier
-            state[identifier] = StoredRecord(
-                record_type, deepcopy(record), event["event_id"]
-            )
-        errors = self._semantic_errors(state)
-        if errors:
-            raise ReconError(
-                "append-only recorded history has invalid final semantics: "
-                + "; ".join(errors)
-            )
-        return state
+        return index.records
 
     def _event_payload(
         self,
@@ -572,38 +814,85 @@ class ReconProject:
             )
         return payload, record_type, record, supersedes
 
+    @staticmethod
+    def _require_unchanged_prefix(
+        events: list[dict[str, Any]],
+        prefix: list[dict[str, Any]],
+        suffix_length: int,
+    ) -> int:
+        prefix_length = len(prefix)
+        if len(events) != prefix_length + suffix_length:
+            raise ReconError(
+                "ledger changed while the Recon record batch was being prepared"
+            )
+        if prefix_length and (
+            events[prefix_length - 1]["event_hash"]
+            != prefix[prefix_length - 1]["event_hash"]
+        ):
+            raise ReconError(
+                "ledger changed while the Recon record batch was being prepared"
+            )
+        return prefix_length
+
+    def _validate_decision_suffix(
+        self,
+        events: list[dict[str, Any]],
+        *,
+        prefix: list[dict[str, Any]],
+        original_state: Mapping[str, StoredRecord],
+        suffix_length: int,
+    ) -> None:
+        prefix_length = self._require_unchanged_prefix(
+            events, prefix, suffix_length
+        )
+        index = _ReplayIndex.from_records(self.registry, original_state)
+        for position, event in enumerate(events[prefix_length:], start=prefix_length + 1):
+            payload, record_type, record, supersedes = self._event_payload(event, position)
+            errors = self._candidate_errors(index, record_type, record, supersedes)
+            expected_decision = RECORDED if not errors else REJECTED
+            if payload["decision"] != expected_decision:
+                raise ReconError(
+                    f"event {position} decision is {payload['decision']}, "
+                    f"replay requires {expected_decision}"
+                )
+            if payload["errors"] != errors:
+                raise ReconError(f"event {position} validation errors do not replay exactly")
+            if not errors:
+                index.replace(
+                    StoredRecord(record_type, deepcopy(record), event["event_id"])
+                )
+
     def _validate_required_suffix(
         self,
         events: list[dict[str, Any]],
         *,
-        prefix_length: int,
+        prefix: list[dict[str, Any]],
         original_state: Mapping[str, StoredRecord],
-        original_latest: Mapping[str, str],
+        suffix_length: int,
     ) -> None:
-        if len(events) <= prefix_length:
-            raise ReconError("required batch validation received no appended events")
-        state = dict(original_state)
-        latest = dict(original_latest)
+        prefix_length = self._require_unchanged_prefix(
+            events, prefix, suffix_length
+        )
+        index = _ReplayIndex.from_records(self.registry, original_state)
         for position, event in enumerate(events[prefix_length:], start=prefix_length + 1):
             payload, record_type, record, supersedes = self._event_payload(event, position)
             if payload["decision"] != RECORDED or payload["errors"] != []:
                 raise ReconError(
                     f"event {position} in a required batch must be RECORDED without errors"
                 )
-            errors = self._identity_errors(
-                state, latest, record_type, record, supersedes
-            )
+            errors = self._candidate_errors(index, record_type, record, supersedes)
             if errors:
                 raise ReconError(
-                    f"event {position} required-batch identity does not replay: "
+                    f"event {position} required batch does not replay in order: "
                     + "; ".join(errors)
                 )
-            identifier = record["id"]
-            state[identifier] = StoredRecord(
-                record_type, deepcopy(record), event["event_id"]
+            index.replace(
+                StoredRecord(record_type, deepcopy(record), event["event_id"])
             )
-            latest[identifier] = event["event_id"]
-        errors = [*self._state_errors(state), *self._duplicate_profile_errors(state)]
+        errors = [
+            *self._state_errors(index.records),
+            *self._duplicate_profile_errors(index.records),
+        ]
         if errors:
             raise ReconError(
                 "required batch final state does not replay: " + "; ".join(errors)
@@ -611,15 +900,14 @@ class ReconProject:
 
     def _candidate_errors(
         self,
-        state: Mapping[str, StoredRecord],
-        latest: Mapping[str, str],
+        index: _ReplayIndex,
         record_type: str,
         record: Mapping[str, Any],
         supersedes_event_id: str | None,
     ) -> list[str]:
         errors = self._identity_errors(
-            state,
-            latest,
+            index.records,
+            index.latest,
             record_type,
             record,
             supersedes_event_id,
@@ -627,25 +915,142 @@ class ReconProject:
         if errors:
             return errors
         identifier = record["id"]
-        candidate = dict(state)
-        candidate[identifier] = StoredRecord(record_type, deepcopy(dict(record)), "candidate")
-        errors = self._state_errors(candidate)
+        candidate = StoredRecord(record_type, deepcopy(dict(record)), "candidate")
+        errors = self._transition_materialization_errors(index, candidate)
+
+        affected = {identifier}
+        if record_type == "EvidenceAttachment":
+            previous = index.records.get(identifier)
+            was_retired = (
+                previous is not None
+                and previous.record.get("review_state") == "RETIRED"
+            )
+            is_retired = candidate.record.get("review_state") == "RETIRED"
+            if was_retired != is_retired:
+                affected.update(index.records_by_evidence.get(identifier, ()))
+
+        def lookup(record_id: str) -> StoredRecord | None:
+            if record_id == identifier:
+                return candidate
+            return index.records.get(record_id)
+
+        for affected_id in sorted(affected):
+            stored = candidate if affected_id == identifier else index.records[affected_id]
+            errors.extend(self._record_semantic_errors(affected_id, stored, lookup))
+
         if record_type == "CoversAxisRelation":
-            profile = (record.get("source_id"), record.get("target_id"))
-            for existing_id, existing_record in sorted(state.items()):
-                if existing_id == identifier or existing_record.record_type != record_type:
-                    continue
-                existing_profile = (
-                    existing_record.record.get("source_id"),
-                    existing_record.record.get("target_id"),
-                )
-                if profile == existing_profile:
+            source = record.get("source_id")
+            target = record.get("target_id")
+            if isinstance(source, str) and isinstance(target, str):
+                duplicates = index.coverage_profiles.get((source, target), set()) - {
+                    identifier
+                }
+                if duplicates:
+                    existing_id = min(duplicates)
                     errors.append(
                         f"CoversAxisRelation '{identifier}' duplicates subject-axis profile "
                         f"already recorded by '{existing_id}'"
                     )
-                    break
         return errors
+
+    def _transition_materialization_errors(
+        self,
+        index: _ReplayIndex,
+        candidate: StoredRecord,
+    ) -> list[str]:
+        identifier = candidate.record["id"]
+        categories = tuple(
+            category
+            for category in ("Entity", "Relation", "Event")
+            if self.registry.is_subtype_of(candidate.record_type, category)
+        )
+        if not categories:
+            return [
+                f"{candidate.record_type} '{identifier}' is not an Entity, Relation, or Event"
+            ]
+
+        errors = []
+        for category in categories:
+            operation = self._validate_record_operation(
+                candidate,
+                index.records,
+                category,
+            )
+            if operation.op_status == OpStatus.REJECTED:
+                errors.append(
+                    f"{candidate.record_type} '{identifier}': "
+                    f"{operation.rejection_reason}"
+                )
+                if category == "Entity":
+                    for relation_id in sorted(
+                        index.relations_by_endpoint.get(identifier, ())
+                    ):
+                        relation = index.records[relation_id]
+                        dependent = self._validate_record_operation(
+                            relation,
+                            index.records,
+                            "Relation",
+                            excluded_entity_id=identifier,
+                        )
+                        if dependent.op_status == OpStatus.REJECTED:
+                            errors.append(
+                                f"{relation.record_type} '{relation_id}': "
+                                f"{dependent.rejection_reason}"
+                            )
+        return errors
+
+    def _validate_record_operation(
+        self,
+        stored: StoredRecord,
+        state: Mapping[str, StoredRecord],
+        category: str,
+        *,
+        excluded_entity_id: str | None = None,
+    ):
+        record = stored.record
+        identifier = record["id"]
+        properties = {
+            key: deepcopy(value)
+            for key, value in record.items()
+            if key not in {"id", "source_id", "target_id"}
+        }
+        graph = KnowledgeGraph(self.registry)
+        if category == "Entity":
+            return graph.create_entity(stored.record_type, identifier, properties)
+        if category == "Event":
+            return graph.create_event(stored.record_type, identifier, properties)
+
+        materialized_endpoints = set()
+        for endpoint in (record.get("source_id"), record.get("target_id")):
+            if (
+                not isinstance(endpoint, str)
+                or endpoint == excluded_entity_id
+                or endpoint in materialized_endpoints
+            ):
+                continue
+            endpoint_record = state.get(endpoint)
+            if endpoint_record is None or not self.registry.is_subtype_of(
+                endpoint_record.record_type, "Entity"
+            ):
+                continue
+            endpoint_properties = {
+                key: deepcopy(value)
+                for key, value in endpoint_record.record.items()
+                if key not in {"id", "source_id", "target_id"}
+            }
+            graph.create_entity(
+                endpoint_record.record_type,
+                endpoint,
+                endpoint_properties,
+            )
+            materialized_endpoints.add(endpoint)
+        return graph.create_relation(
+            stored.record_type,
+            identifier,
+            record.get("source_id"),
+            record.get("target_id"),
+            properties,
+        )
 
     def _identity_errors(
         self,
@@ -756,45 +1161,54 @@ class ReconProject:
     def _semantic_errors(self, state: Mapping[str, StoredRecord]) -> list[str]:
         errors = []
         for identifier, stored in sorted(state.items()):
-            record = stored.record
-            evidence_ids = record.get("evidence_ids", [])
-            if isinstance(evidence_ids, list):
-                for evidence_id in evidence_ids:
-                    evidence = state.get(evidence_id)
-                    if evidence is None:
-                        errors.append(
-                            f"{stored.record_type} '{identifier}' references missing evidence "
-                            f"'{evidence_id}'"
-                        )
-                    elif evidence.record_type != "EvidenceAttachment":
-                        errors.append(
-                            f"{stored.record_type} '{identifier}' evidence '{evidence_id}' is "
-                            f"{evidence.record_type}, expected EvidenceAttachment"
-                        )
-                    elif evidence.record.get("review_state") == "RETIRED":
-                        errors.append(
-                            f"{stored.record_type} '{identifier}' references retired evidence "
-                            f"'{evidence_id}'"
-                        )
-            if (
-                stored.record_type in _EVIDENCE_REQUIRED
-                and record.get("review_state") in {"REVIEWED", "CONTESTED"}
-                and not evidence_ids
-            ):
-                errors.append(
-                    f"Reviewed {stored.record_type} '{identifier}' requires evidence_ids"
-                )
-            if stored.record_type == "EvidenceAttachment":
-                errors.extend(self._evidence_errors(identifier, record))
-            for field in ("priority_date", "cutoff_date", "accessed_on"):
-                if field in record:
-                    try:
-                        date.fromisoformat(record[field])
-                    except (TypeError, ValueError):
-                        errors.append(
-                            f"{stored.record_type} '{identifier}' {field} must be YYYY-MM-DD"
-                        )
+            errors.extend(self._record_semantic_errors(identifier, stored, state.get))
+        return errors
 
+    def _record_semantic_errors(
+        self,
+        identifier: str,
+        stored: StoredRecord,
+        lookup: Callable[[Any], StoredRecord | None],
+    ) -> list[str]:
+        record = stored.record
+        errors = []
+        evidence_ids = record.get("evidence_ids", [])
+        if isinstance(evidence_ids, list):
+            for evidence_id in evidence_ids:
+                evidence = lookup(evidence_id)
+                if evidence is None:
+                    errors.append(
+                        f"{stored.record_type} '{identifier}' references missing evidence "
+                        f"'{evidence_id}'"
+                    )
+                elif evidence.record_type != "EvidenceAttachment":
+                    errors.append(
+                        f"{stored.record_type} '{identifier}' evidence '{evidence_id}' is "
+                        f"{evidence.record_type}, expected EvidenceAttachment"
+                    )
+                elif evidence.record.get("review_state") == "RETIRED":
+                    errors.append(
+                        f"{stored.record_type} '{identifier}' references retired evidence "
+                        f"'{evidence_id}'"
+                    )
+        if (
+            stored.record_type in _EVIDENCE_REQUIRED
+            and record.get("review_state") in {"REVIEWED", "CONTESTED"}
+            and not evidence_ids
+        ):
+            errors.append(
+                f"Reviewed {stored.record_type} '{identifier}' requires evidence_ids"
+            )
+        if stored.record_type == "EvidenceAttachment":
+            errors.extend(self._evidence_errors(identifier, record))
+        for field in ("priority_date", "cutoff_date", "accessed_on"):
+            if field in record:
+                try:
+                    date.fromisoformat(record[field])
+                except (TypeError, ValueError):
+                    errors.append(
+                        f"{stored.record_type} '{identifier}' {field} must be YYYY-MM-DD"
+                    )
         return errors
 
     @staticmethod

@@ -1,0 +1,57 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R01",
+      "CC-R02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:58586e21d6ef485860d8cbb5c92a6b1422b9652148cad99cb7634fe2c601b09c",
+        "before_digest": "sha256:9097b968f192d89bae389b60ee27f977e10c05ed15db1b4d20369e7b5c8cc991",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:7f9bbf9b16de54e32fd365a199e8cce1265b3615a297af9984b26694a346a2c5",
+  "entry_id": "OVR-000370",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4524b293a26b092f79dd0bcc03f93b40eae5877ff3b7a645e6c8246391005e3c",
+  "recorded_at": "2026-09-04T01:37:30Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "f3d55b3073077927146a050965e1d83631d36a03",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R01",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 370,
+  "subject": {
+    "id": "public-compiler-package-guards",
+    "type": "DOCUMENT"
+  },
+  "summary": "Replace obsolete wheel-exclusion assertions with the public compiler package contract.",
+  "why": "The compiler source and LinkML adapter were deliberately moved into the public installed package, but two historical completion tests still required their retired wheel exclusions. The corrected guards require both files in the declared build inputs and mechanically forbid restoration of the old wheel exclusion path."
+}

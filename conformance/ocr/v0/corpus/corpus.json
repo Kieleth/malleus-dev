@@ -1,0 +1,272 @@
+{
+  "cases": [
+    {
+      "bundle": "cases/region-control/bundle.json",
+      "id": "region-control",
+      "mutations": [
+        {
+          "bundle": "cases/region-control/mutations/hypothesis-attempt-cross-region.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D003"
+          ],
+          "id": "hypothesis-attempt-cross-region",
+          "purpose": "A hypothesis cannot cite an attempt over the other region.",
+          "verification": "cases/region-control/mutations/hypothesis-attempt-cross-region.verification.json"
+        },
+        {
+          "bundle": "cases/region-control/mutations/selection-hypothesis-cross-region.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D003"
+          ],
+          "id": "selection-hypothesis-cross-region",
+          "purpose": "A selection cannot select a hypothesis over the other region.",
+          "verification": "cases/region-control/mutations/selection-hypothesis-cross-region.verification.json"
+        }
+      ],
+      "oracle": "cases/region-control/oracle.json",
+      "purpose": "Keep two visible regions and every reading path spatially separate.",
+      "rasters": [
+        {
+          "height": 800,
+          "path": "cases/region-control/rasters/image-1.png",
+          "width": 1200
+        }
+      ],
+      "requests": [
+        "cases/region-control/requests/a.json",
+        "cases/region-control/requests/b.json"
+      ],
+      "responses": [
+        "cases/region-control/responses/a.json",
+        "cases/region-control/responses/b.json"
+      ],
+      "selected_texts": [
+        "cases/region-control/selected/a.txt",
+        "cases/region-control/selected/b.txt"
+      ],
+      "source": "cases/region-control/source/region-control.png",
+      "verification": "cases/region-control/verification.json"
+    },
+    {
+      "bundle": "cases/multipage-control/bundle.json",
+      "id": "multipage-control",
+      "mutations": [
+        {
+          "bundle": "cases/multipage-control/mutations/correction-text-digest-mismatch.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D015"
+          ],
+          "id": "correction-text-digest-mismatch",
+          "purpose": "The correction digest must equal the corrected hypothesis digest.",
+          "verification": "cases/multipage-control/mutations/correction-text-digest-mismatch.verification.json"
+        },
+        {
+          "bundle": "cases/multipage-control/mutations/review-revision-without-predecessor.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D016"
+          ],
+          "expected_unit_outcome": {
+            "page:2": "UNREADABLE"
+          },
+          "id": "review-revision-without-predecessor",
+          "purpose": "Removing the revision edge leaves two conflicting live reviews.",
+          "verification": "cases/multipage-control/mutations/review-revision-without-predecessor.verification.json"
+        },
+        {
+          "bundle": "cases/multipage-control/mutations/review-revision-cycle.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D016",
+            "OCR-D017"
+          ],
+          "expected_unit_outcome": {
+            "page:2": "UNREADABLE"
+          },
+          "id": "review-revision-cycle",
+          "purpose": "A review cycle names every trapped record and leaves both verdicts live.",
+          "verification": "cases/multipage-control/mutations/review-revision-cycle.verification.json"
+        }
+      ],
+      "oracle": "cases/multipage-control/oracle.json",
+      "purpose": "Retain a corrected ambiguous token and an independently verified blank page.",
+      "rasters": [
+        {
+          "height": 1400,
+          "path": "cases/multipage-control/rasters/page-1.png",
+          "width": 1000
+        },
+        {
+          "height": 1400,
+          "path": "cases/multipage-control/rasters/page-2.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/multipage-control/requests/page-1-body.json",
+        "cases/multipage-control/requests/page-2-blank.json"
+      ],
+      "responses": [
+        "cases/multipage-control/responses/page-1-body.json",
+        "cases/multipage-control/responses/page-2-blank.json"
+      ],
+      "selected_texts": [
+        "cases/multipage-control/selected/page-1-body.txt",
+        "cases/multipage-control/selected/page-2-blank.txt"
+      ],
+      "source": "cases/multipage-control/source/multipage-control.pdf",
+      "verification": "cases/multipage-control/verification.json"
+    },
+    {
+      "bundle": "cases/incomplete-sequence/bundle.json",
+      "id": "incomplete-sequence",
+      "mutations": [
+        {
+          "bundle": "cases/incomplete-sequence/mutations/observed-without-raster.bundle.json",
+          "expected_diagnostic_codes": [],
+          "expected_unit_outcome": {
+            "page:2": "NOT_RENDERED"
+          },
+          "id": "observed-without-raster",
+          "purpose": "An observed-unit assertion cannot replace a missing raster and reading.",
+          "verification": "cases/incomplete-sequence/mutations/observed-without-raster.verification.json"
+        }
+      ],
+      "oracle": "cases/incomplete-sequence/oracle.json",
+      "purpose": "Source declares logical pages 1 and 3 against required 1, 2, and 3; this is a source-sequence gap, not OCR skipping a present physical page.",
+      "rasters": [
+        {
+          "height": 1400,
+          "path": "cases/incomplete-sequence/rasters/page-1.png",
+          "width": 1000
+        },
+        {
+          "height": 1400,
+          "path": "cases/incomplete-sequence/rasters/page-3.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/incomplete-sequence/requests/page-1-body.json",
+        "cases/incomplete-sequence/requests/page-3-body.json"
+      ],
+      "responses": [
+        "cases/incomplete-sequence/responses/page-1-body.json",
+        "cases/incomplete-sequence/responses/page-3-body.json"
+      ],
+      "selected_texts": [
+        "cases/incomplete-sequence/selected/page-1-body.txt",
+        "cases/incomplete-sequence/selected/page-3-body.txt"
+      ],
+      "source": "cases/incomplete-sequence/source/incomplete-sequence.pdf",
+      "verification": "cases/incomplete-sequence/verification.json"
+    },
+    {
+      "bundle": "cases/failed-attempt/bundle.json",
+      "id": "failed-attempt",
+      "mutations": [
+        {
+          "bundle": "cases/failed-attempt/mutations/retry-succeeds.bundle.json",
+          "expected_diagnostic_codes": [],
+          "expected_unit_outcome": {
+            "image:1": "READ"
+          },
+          "id": "retry-succeeds",
+          "purpose": "A successful retry adds a reading without erasing the failed attempt.",
+          "requests": [
+            "cases/failed-attempt/requests/retry.json"
+          ],
+          "responses": [
+            "cases/failed-attempt/responses/retry.json"
+          ],
+          "selected_texts": [
+            "cases/failed-attempt/selected/retry.txt"
+          ],
+          "verification": "cases/failed-attempt/mutations/retry-succeeds.verification.json"
+        }
+      ],
+      "oracle": "cases/failed-attempt/oracle.json",
+      "purpose": "Retain a made-but-failed control-reader attempt without inventing a reading.",
+      "rasters": [
+        {
+          "height": 700,
+          "path": "cases/failed-attempt/rasters/image-1.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/failed-attempt/requests/main.json"
+      ],
+      "responses": [
+        "cases/failed-attempt/responses/main.json"
+      ],
+      "selected_texts": [],
+      "source": "cases/failed-attempt/source/failed-attempt.png",
+      "verification": "cases/failed-attempt/verification.json"
+    },
+    {
+      "bundle": "cases/unavailable-attempt/bundle.json",
+      "id": "unavailable-attempt",
+      "mutations": [
+        {
+          "bundle": "cases/unavailable-attempt/mutations/missing-unavailable-reason.bundle.json",
+          "expected_diagnostic_codes": [
+            "OCR-D015"
+          ],
+          "id": "missing-unavailable-reason",
+          "purpose": "An unavailable attempt must state why the call could not be made.",
+          "verification": "cases/unavailable-attempt/mutations/missing-unavailable-reason.verification.json"
+        }
+      ],
+      "oracle": "cases/unavailable-attempt/oracle.json",
+      "purpose": "Retain an unavailable control-reader call without inventing a response or reading.",
+      "rasters": [
+        {
+          "height": 700,
+          "path": "cases/unavailable-attempt/rasters/image-1.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/unavailable-attempt/requests/main.json"
+      ],
+      "responses": [],
+      "selected_texts": [],
+      "source": "cases/unavailable-attempt/source/unavailable-attempt.png",
+      "verification": "cases/unavailable-attempt/verification.json"
+    }
+  ],
+  "corpus_id": "malleus.ocr.fixture_corpus",
+  "corpus_version": 1,
+  "document_policy": {
+    "authorship": "self-authored deterministic controls",
+    "contains_private_material": false,
+    "contains_production_material": false,
+    "network_required": false
+  },
+  "generated_by": "conformance/ocr/v0/corpus/generate.py",
+  "hash_algorithm": "sha256",
+  "ocr_profile_id": "malleus.ocr.evidence_integrity",
+  "ocr_profile_version": "v0",
+  "reference_reader": {
+    "description": "Fixed readings for self-authored fixtures. No recognition engine is invoked.",
+    "id": "malleus.fixture.control_reader@1",
+    "kind": "deterministic_control_reader",
+    "production_ocr": false
+  },
+  "runtime_binding": {
+    "generator": {
+      "contract": "malleus.ocr.fixture_generator.v2",
+      "pillow_version": "12.3.0",
+      "png_contract": "Pillow RGB PNG; optimize=false; compress_level=9; strict round-trip",
+      "pypdf_version": "6.16.2",
+      "python_contract": "CPython>=3.10",
+      "reportlab_version": "4.4.9",
+      "zlib_contract": "RFC1950+RFC1951"
+    },
+    "malleus_version": "0.13.3",
+    "ocr_ontology_path": "ontology/domains/ocr.yaml",
+    "ocr_ontology_sha256": "sha256:90be951e63b3e8c21e732e11e92deffbbbd57e2cae00f1389f5acd14a264f9d3",
+    "ocr_registry_content_hash": "41df47147dad536825983ec0bc002a3e137e02ea75c220c6434665698532df2f",
+    "root_ontology_path": "ontology/malleus.yaml",
+    "root_ontology_sha256": "sha256:5b737c212a5893ceebb22be207a09f3eb09ebab269898d354bb1dacdaad0aff3"
+  }
+}

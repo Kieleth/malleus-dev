@@ -5928,3 +5928,305 @@ class TestAnOntologyChangeIsARecordedAct:
         assert chain.head == f"sha256:{registry.content_hash()}"
         assert all(receipt.grade == TOTAL for receipt in chain.receipts)
         assert "reviewer_id" in chain.receipts[0].reason
+
+
+class TestMigrationAwareLedger:
+    """Grammar compatibility and ontology migration are separate authorities."""
+
+    D = staticmethod(lambda n: "sha256:" + str(n) * 64)
+    T = "2026-08-20T00:00:00+00:00"
+
+    @staticmethod
+    def _registry():
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+
+        return OntologyRegistry(bundled_ontology_path("assent.yaml"))
+
+    @staticmethod
+    def _current(registry):
+        return f"sha256:{registry.content_hash()}"
+
+    def _receipt(self, from_hash, to_hash, *, grade="TOTAL", previous=None, reason="rename"):
+        from malleus.migration import MigrationReceipt
+
+        return MigrationReceipt(
+            ontology="malleus_assent",
+            from_hash=from_hash,
+            to_hash=to_hash,
+            grade=grade,
+            reason=reason,
+            issued_at=self.T,
+            previous_receipt=previous,
+        )
+
+    def _two_hop_chain(self, registry, *, first_grade="TOTAL", second_grade="TOTAL"):
+        from malleus.migration import MigrationChain
+
+        first = self._receipt(self.D(1), self.D(2), grade=first_grade)
+        second = self._receipt(
+            self.D(2),
+            self._current(registry),
+            grade=second_grade,
+            previous=first.digest,
+        )
+        return MigrationChain((first, second))
+
+    @staticmethod
+    def _append(ledger, number):
+        return ledger.append(
+            event_id=f"e{number}",
+            event_type="PROBE_RECORDED",
+            transaction_time=f"2026-08-20T00:0{number}:00+00:00",
+            actor_id="actor:1",
+            payload={"number": number},
+            validate=lambda events: None,
+        )
+
+    def test_current_and_legacy_grammars_need_no_receipt(self):
+        from malleus.migration import MigrationChain, MigrationVerifier
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+
+        registry = self._registry()
+        current = self._current(registry)
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        report = MigrationVerifier(registry, MigrationChain(())).verify((legacy, current))
+        assert report.current_ontology_hash == current
+        assert report.grammar_ontology_hashes == (current, legacy)
+        assert report.verified_ontology_hashes == (current, legacy)
+        assert report.migrated_ontology_hashes == ()
+        assert report.receipt_digests == ()
+
+    def test_verifier_requires_the_registry_contract(self):
+        from malleus.migration import MigrationChain, MigrationError, MigrationVerifier
+
+        with pytest.raises(MigrationError, match="requires an OntologyRegistry"):
+            MigrationVerifier(object(), MigrationChain(()))
+
+    def test_current_write_identity_is_first_when_it_uses_the_older_grammar(self):
+        from malleus.migration import MigrationChain, MigrationVerifier
+        from malleus.ontology import OntologyRegistry, bundled_ontology_path
+
+        registry = OntologyRegistry(bundled_ontology_path("malleus.yaml"))
+        current = self._current(registry)
+        assert current != f"sha256:{next(iter(registry.content_hashes().values()))}"
+        report = MigrationVerifier(registry, MigrationChain(())).verify(
+            f"sha256:{value}" for value in registry.content_hashes().values()
+        )
+        assert report.current_ontology_hash == current
+        assert report.verified_ontology_hashes[0] == current
+
+    def test_two_hops_report_only_the_crossed_receipts_oldest_to_newest(self):
+        from malleus.migration import MigrationVerifier
+
+        registry = self._registry()
+        chain = self._two_hop_chain(registry)
+        verifier = MigrationVerifier(registry, chain)
+
+        middle = verifier.verify((self.D(2),))
+        assert middle.migrated_ontology_hashes == (self.D(2),)
+        assert middle.receipts == (chain.receipts[1],)
+
+        oldest = verifier.verify((self.D(1),))
+        assert oldest.migrated_ontology_hashes == (self.D(1),)
+        assert oldest.receipts == chain.receipts
+        assert oldest.receipt_digests == tuple(r.digest for r in chain.receipts)
+
+    def test_chain_head_may_be_any_grammar_of_the_live_registry(self):
+        from malleus.migration import MigrationChain, MigrationVerifier
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+
+        registry = self._registry()
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        receipt = self._receipt(self.D(1), legacy)
+        report = MigrationVerifier(registry, MigrationChain((receipt,))).verify(
+            (self.D(1),)
+        )
+        assert report.current_ontology_hash == self._current(registry)
+        assert report.receipts == (receipt,)
+
+    @pytest.mark.parametrize(
+        "grade,reason,fragment",
+        [
+            ("PARTIAL", "only some records have a reader", "PARTIAL.*some records"),
+            ("HARD_BREAK", "old records are meaningless", "HARD_BREAK.*meaningless"),
+        ],
+    )
+    def test_non_total_receipts_refuse_generic_replay(self, grade, reason, fragment):
+        from malleus.migration import MigrationChain, MigrationError, MigrationVerifier
+
+        registry = self._registry()
+        receipt = self._receipt(
+            self.D(1), self._current(registry), grade=grade, reason=reason
+        )
+        verifier = MigrationVerifier(registry, MigrationChain((receipt,)))
+        with pytest.raises(MigrationError, match=fragment):
+            verifier.verify((self.D(1),))
+
+    def test_a_record_after_a_partial_change_only_crosses_the_total_suffix(self):
+        from malleus.migration import MigrationVerifier, PARTIAL
+
+        registry = self._registry()
+        chain = self._two_hop_chain(registry, first_grade=PARTIAL)
+        report = MigrationVerifier(registry, chain).verify((self.D(2),))
+        assert report.receipts == (chain.receipts[1],)
+
+    def test_unknown_identity_has_no_implicit_acceptance_path(self):
+        from malleus.migration import MigrationError, MigrationVerifier
+
+        registry = self._registry()
+        verifier = MigrationVerifier(registry, self._two_hop_chain(registry))
+        with pytest.raises(MigrationError, match="no recorded change connects"):
+            verifier.verify((self.D(8),))
+
+    def test_chain_head_must_be_a_live_registry_grammar(self):
+        from malleus.migration import MigrationChain, MigrationError, MigrationVerifier
+
+        registry = self._registry()
+        chain = MigrationChain((self._receipt(self.D(1), self.D(9)),))
+        with pytest.raises(MigrationError, match="describes a different ontology"):
+            MigrationVerifier(registry, chain)
+
+    def test_chain_name_must_match_the_live_registry(self):
+        from malleus.migration import (
+            MigrationChain,
+            MigrationError,
+            MigrationReceipt,
+            MigrationVerifier,
+        )
+
+        registry = self._registry()
+        receipt = MigrationReceipt(
+            ontology="not-assent",
+            from_hash=self.D(1),
+            to_hash=self._current(registry),
+            grade="TOTAL",
+            reason="a receipt for another ontology cannot authorize this history",
+            issued_at=self.T,
+        )
+        with pytest.raises(MigrationError, match="names ontology.*different ontology"):
+            MigrationVerifier(registry, MigrationChain((receipt,)))
+
+    def test_chain_discovery_keeps_the_registrys_resolved_entry_path(
+        self, tmp_path, monkeypatch
+    ):
+        from malleus.migration import migration_chain
+        from malleus.ontology import OntologyRegistry
+
+        repository = ASSENT_SCHEMA.parent.parent
+        monkeypatch.chdir(repository)
+        registry = OntologyRegistry(Path("ontology/domains/recon.yaml"))
+        monkeypatch.chdir(tmp_path)
+
+        chain = migration_chain(registry)
+        assert len(chain.receipts) == 1
+        assert chain.receipts[0].ontology == registry.schema_name == "recon"
+
+    def test_current_byte_grammar_cannot_masquerade_as_a_migration(self):
+        from malleus.migration import MigrationChain, MigrationError, MigrationVerifier
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+
+        registry = self._registry()
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        receipt = self._receipt(legacy, self._current(registry))
+        with pytest.raises(MigrationError, match="both a migration identity and a payload grammar"):
+            MigrationVerifier(registry, MigrationChain((receipt,)))
+
+    def test_base_ledger_refuses_migration_but_aware_ledger_appends_current(self, tmp_path):
+        from malleus.ledger import JsonlLedger, LedgerError
+        from malleus.migration import MigrationAwareJsonlLedger, MigrationVerifier
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+
+        registry = self._registry()
+        chain = self._two_hop_chain(registry)
+        path = tmp_path / "ledger.jsonl"
+        self._append(JsonlLedger(path, self.D(1)), 1)
+        original = path.read_bytes()
+
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        with pytest.raises(LedgerError, match="under any payload grammar"):
+            JsonlLedger(path, self._current(registry), (legacy,)).read()
+
+        ledger = MigrationAwareJsonlLedger(path, MigrationVerifier(registry, chain))
+        self._append(ledger, 2)
+        assert path.read_bytes().startswith(original)
+        events, report = ledger.read_verified()
+        assert [event["ontology_hash"] for event in events] == [
+            self.D(1),
+            self._current(registry),
+        ]
+        assert report.grammar_ontology_hashes == (self._current(registry),)
+        assert report.migrated_ontology_hashes == (self.D(1),)
+        assert report.receipts == chain.receipts
+
+    def test_aware_ledger_accepts_a_legacy_grammar_without_a_chain(self, tmp_path):
+        from malleus.ledger import JsonlLedger
+        from malleus.migration import (
+            MigrationAwareJsonlLedger,
+            MigrationChain,
+            MigrationVerifier,
+        )
+        from malleus.ontology import LEGACY_FINGERPRINT_VERSION
+
+        registry = self._registry()
+        legacy = f"sha256:{registry.content_hash_under(LEGACY_FINGERPRINT_VERSION)}"
+        path = tmp_path / "ledger.jsonl"
+        self._append(JsonlLedger(path, legacy), 1)
+        ledger = MigrationAwareJsonlLedger(
+            path, MigrationVerifier(registry, MigrationChain(()))
+        )
+        _events, report = ledger.read_verified()
+        assert report.grammar_ontology_hashes == (legacy,)
+        assert report.migrated_ontology_hashes == ()
+        assert report.receipts == ()
+
+    def test_mixed_identities_do_not_impose_an_epoch_order(self, tmp_path):
+        from malleus.ledger import JsonlLedger, canonical_json, event_hash
+        from malleus.migration import MigrationAwareJsonlLedger, MigrationVerifier
+
+        registry = self._registry()
+        path = tmp_path / "ledger.jsonl"
+        writer = JsonlLedger(path, self._current(registry))
+        self._append(writer, 1)
+        self._append(writer, 2)
+        events = writer.read()
+        events[1]["ontology_hash"] = self.D(1)
+        events[1]["event_hash"] = event_hash(events[1])
+        path.write_text(
+            "".join(canonical_json(event) + "\n" for event in events),
+            encoding="utf-8",
+        )
+
+        ledger = MigrationAwareJsonlLedger(
+            path,
+            MigrationVerifier(registry, self._two_hop_chain(registry)),
+        )
+        replayed, report = ledger.read_verified()
+        assert [event["ontology_hash"] for event in replayed] == [
+            self._current(registry),
+            self.D(1),
+        ]
+        assert report.receipts == ledger.verifier.chain.receipts
+
+    def test_additional_identity_is_bound_into_empty_ledger_evidence(self, tmp_path):
+        from malleus.migration import MigrationAwareJsonlLedger, MigrationVerifier
+
+        registry = self._registry()
+        chain = self._two_hop_chain(registry)
+        ledger = MigrationAwareJsonlLedger(
+            tmp_path / "ledger.jsonl", MigrationVerifier(registry, chain)
+        )
+        events, report = ledger.read_verified(
+            additional_ontology_hashes=(self.D(2),)
+        )
+        assert events == []
+        assert report.migrated_ontology_hashes == (self.D(2),)
+        assert report.receipts == (chain.receipts[1],)
+
+    def test_verification_artifact_is_frozen(self):
+        from dataclasses import FrozenInstanceError
+        from malleus.migration import MigrationChain, MigrationVerifier
+
+        registry = self._registry()
+        report = MigrationVerifier(registry, MigrationChain(())).verify(())
+        with pytest.raises(FrozenInstanceError):
+            report.current_ontology_hash = self.D(8)

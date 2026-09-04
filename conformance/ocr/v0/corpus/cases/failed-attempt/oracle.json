@@ -1,0 +1,78 @@
+{
+  "case_id": "failed-attempt",
+  "expected_verification": {
+    "capability": "AUDIT_ONLY",
+    "complete": false,
+    "conforms": true,
+    "diagnostic_codes": [],
+    "metrics": {
+      "coverage": {
+        "denominator": "declared_units",
+        "threshold": 1.0,
+        "value": 0.0,
+        "verdict": "UNMET"
+      }
+    },
+    "units": {
+      "image:1": {
+        "disposition": "CHECK_FAILED",
+        "outcome": "FAILED"
+      }
+    }
+  },
+  "fixture_kind": "single_image_failed_attempt",
+  "mutations": [
+    {
+      "bundle": "cases/failed-attempt/mutations/retry-succeeds.bundle.json",
+      "expected_diagnostic_codes": [],
+      "expected_unit_outcome": {
+        "image:1": "READ"
+      },
+      "id": "retry-succeeds",
+      "purpose": "A successful retry adds a reading without erasing the failed attempt.",
+      "requests": [
+        "cases/failed-attempt/requests/retry.json"
+      ],
+      "responses": [
+        "cases/failed-attempt/responses/retry.json"
+      ],
+      "selected_texts": [
+        "cases/failed-attempt/selected/retry.txt"
+      ],
+      "verification": "cases/failed-attempt/mutations/retry-succeeds.verification.json"
+    }
+  ],
+  "purpose": "Retain a made-but-failed control-reader attempt without inventing a reading.",
+  "reference_reader": {
+    "description": "Fixed readings for self-authored fixtures. No recognition engine is invoked.",
+    "id": "malleus.fixture.control_reader@1",
+    "kind": "deterministic_control_reader",
+    "production_ocr": false
+  },
+  "regions": [
+    {
+      "attempt_status": "FAILED",
+      "failure_class": "FIXTURE_CONTROL_FAILURE",
+      "id": "fixture:failed-attempt:region:main",
+      "request": "cases/failed-attempt/requests/main.json",
+      "response": "cases/failed-attempt/responses/main.json",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=100,180,800,390"
+      },
+      "unit": "image:1"
+    }
+  ],
+  "source": {
+    "byte_length": 29916,
+    "digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+    "license": "Apache-2.0",
+    "media_type": "image/png",
+    "origin": "generated from self-authored literals in conformance/ocr/v0/corpus/generate.py",
+    "path": "cases/failed-attempt/source/failed-attempt.png",
+    "pixel_dimensions": {
+      "height": 700,
+      "width": 1000
+    }
+  }
+}

@@ -49,6 +49,16 @@ and a projector rebuilds the accepted temporal graph from them. Governed initial
 state is an empty graph plus a retained genesis change set, never an unexplained
 nonempty graph supplied from outside the history.
 
+At this level, select a domain-history profile explicitly. The public compiler
+exports `STATE_VERSION_PROFILE`, `SOURCE_ASSERTION_PROFILE`, and
+`OBJECT_EVENT_PROFILE`. A profile records the origin and completeness boundary,
+semantic unit, time and change semantics, ontology roles, projection family,
+and grounding. `OBJECT_EVENT_PROFILE` is currently a declaration only: the
+governed population path refuses Event records until Event materialization has
+its own accepted contract. A project may supply another closed profile, but it
+must bind that exact profile into each population plan rather than leaving its
+history semantics implicit.
+
 This target does not make levels 1 through 4 invalid or incomplete. A project
 may persist and materialize structural candidates without selecting semantic
 history. Those results remain structurally checked, but they are non-governed

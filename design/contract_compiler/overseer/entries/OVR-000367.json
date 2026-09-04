@@ -1,0 +1,93 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ed3bd5ba68559059cbbcc0fc46d899a91199a01effce784315e1b2a901f944fe",
+        "before_digest": "sha256:f8465c380248b0fbacb48b2a38841a028ff8a816f86d223e57b6d5cb77976746",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/test_correction_vertical.py"
+      },
+      {
+        "after_digest": "sha256:4e8851c5b9ded2d9165e2e1c14e70b24b12d4a52e356a94032be60e068614dce",
+        "before_digest": "sha256:066268becce21347a639a11ec7736f22f63fc084e3b3feb24c9b1a3e6fe8bf7b",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/mapping.json"
+      },
+      {
+        "after_digest": "sha256:7aaaf6257e2d8e4306356f8660f6f181ac4bfdcb018378baabee398193a6f0d1",
+        "before_digest": "sha256:7ee4f2a4ed605b08c6c05ad60f82d08b1ded66a6f03cbf4da0e668e88f2a10bf",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json"
+      },
+      {
+        "after_digest": "sha256:7dd3f9280562d786cc222e22473b88a3631a4cd401cfa2e9c67801de2fd79fb6",
+        "before_digest": "sha256:2f529922b1b88f4f0f43feed3dcdf71b578e2fa2b0ad37fb295013d61341f4b9",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json"
+      },
+      {
+        "after_digest": "sha256:4ec19541f38348c99dd5bd28cc7f498568234a713da6b843d4d2b9ffc21627b2",
+        "before_digest": "sha256:e5dc8bb1be295ef9ebeae9582689d4f876036859b2739447dc60188f9bb8ba5c",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/queries.json"
+      },
+      {
+        "after_digest": "sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701",
+        "before_digest": "sha256:edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/receipt.json"
+      },
+      {
+        "after_digest": "sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6",
+        "before_digest": "sha256:766581ea6ca384cb325a05f235978bdbe849e8970304fe089b7a0509594a4835",
+        "change": "MODIFIED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.json"
+      },
+      {
+        "after_digest": "sha256:88e3fddc202028d61f2b9fab7fbe864b37e765ba6e3816cff4358f1cc2b159c5",
+        "before_digest": "sha256:172b4c6f0d93b5fc184d83e9a003341382cc36eefd9cd98b48f253abd7f22915",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:9d4c276be7957f5a15a4db1b8b6cb8a9b8c85708110e096ac1046136d2d83926",
+        "before_digest": "sha256:00710ab76772a6ca6bc9d842a37328b62bdf61719d4d295044042506e191b42f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_change_history.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:998490dfef9f0a907889833752461f8a6a7e888607e0b0109e52f4319ae26220",
+  "entry_id": "OVR-000367",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:f6099ceb318ffe243d8b72e1c91aee55ac1fb2da0cb9fbc8c7403c15f792764e",
+  "recorded_at": "2026-09-04T00:34:16Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "5bf35ab70ab6d9e039c3d71ab5b2fc2485576188",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 367,
+  "subject": {
+    "id": "ccr11-population-retention-role-binding",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind retention events to their permitted ledger roles and rebind the current Small Shop evidence.",
+  "why": "The population path previously verified retained identifiers and byte digests without verifying that the declaring protocol event had the matching ledger role. The private binding now carries that small declarative invariant, admission and replay enforce it, and the current Small Shop evidence advances without changing the published predecessor receipt. Exhaustive migration and adversarial hardening remain deferred under the recorded Pareto cut."
+}

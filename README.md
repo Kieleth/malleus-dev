@@ -20,8 +20,11 @@ The Small Shop proof takes a warehouse record plus a separate inventory lookup
 through the selected research chain, then reconstructs the same graph and
 receipt from retained history alone. The three graph records are deliberately
 simple. The achievement is making their path into accepted history explainable,
-testable, and replayable. This is working repository evidence, not yet a stable
-public compiler API or release.
+testable, and replayable. The reusable path beneath the fixture is now exposed
+through `malleus.compiler`, with `malleus-compiler contract` as the installed
+contract-compilation command. Public here means a supported import path and
+installed command in packages built from this source, not a stable wire format
+or release.
 [Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
 graph result.](docs/index.md#inspect-the-evidence)
 
@@ -32,6 +35,24 @@ superseded, and projects only the `e7` state into the current graph. It also
 executes and retains the exact source-and-mapping and structural check receipts
 used for each change. This remains a private research runner, but its
 [sources, contracts, history, current graph, and limits are all inspectable](docs/index.md#correct-one-fact-without-rewriting-the-past).
+
+The latest integration run combines the full five-stage dataset behind the
+public `malleus.compiler` facade. Five explicit population plans create the
+order, unit, invoices, payment, settlement relations, and two supplier-order
+states. One additive ontology revision separates the smaller starting contract
+from the later vocabulary. Reopen and replay derive nine current records, while
+the history keeps ten, including the superseded `B@e4` state. Every record is
+then traced to exact retained source and mapping bytes. See the
+[full public-path conformance run](research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+and its [committed evidence](research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json).
+
+That run now binds a separate, explicit `state-version` history profile. The
+ontology defines the allowed Small Shop records. The profile declares that each
+accepted unit is a state version, that a correction supersedes an older version,
+and that replay shows only current non-superseded records. Malleus also ships a
+`source-assertion` profile for partial document imports and a declarative
+`object-event` profile. These are selectable contracts, not one mandatory
+history model for every domain.
 
 ## Why this exists
 
@@ -94,9 +115,37 @@ pip install malleus-dev
 ```
 
 The released Python package contains the graph-to-Prolog fact compiler and
-verifier. That is distinct from the research-only ontology-to-contract compiler
-in the milestone above. Executing Prolog checks also requires a `swipl`
-executable on `PATH`; absence fails explicitly at check time.
+verifier. Packages built from the current source also contain the deterministic
+ontology-to-contract compiler, population-plan compiler, governed history, and
+replay boundary. Import it with:
+
+```python
+from malleus.compiler import compile_linkml_contract
+
+compilation = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={"my-domain": ontology_bytes, "linkml:types": linkml_types_bytes},
+)
+```
+
+The convenience command accepts one exact file for every named source:
+
+```bash
+malleus-compiler contract \
+  --root my-domain \
+  --source my-domain path/to/my-domain.yaml \
+  --source linkml:types path/to/linkml-types.yaml
+```
+
+It outputs the canonical validated contract artifact. It does not accept a raw
+ontology digest as a substitute for source bytes. Population, admission,
+reopen, replay, and graph query are Python surfaces in `malleus.compiler`; the
+command currently covers contract compilation only. Grammars still named
+`private-v0` remain explicitly unstable. Small Shop's source mapper and
+high-level runner remain research-local.
+
+Executing Prolog checks also requires a `swipl` executable on `PATH`; absence
+fails explicitly at check time.
 
 Recon's core recording and export code ships with Malleus. Install its optional
 dependency set for the interactive graph view:
@@ -393,10 +442,22 @@ Adoption guides:
 
 ## Malleus Recon
 
-Recon is the literature-forensics part of Malleus. It records a bounded review
-as typed works, claims, results, evidence, search events, comparison axes, and
-relations in an append-only ledger. It can then rebuild the graph, exact set
-comparisons, matrix, bibliography, readable report, and checksum manifest.
+Recon is Malleus's structural-capture profile for literature forensics. It
+records a bounded review as typed works, claims, results, evidence, search
+events, comparison axes, and relations in an append-only ledger. It can then
+rebuild the graph, exact set comparisons, matrix, bibliography, readable
+report, and a strict manifest v3. That manifest binds the ledger snapshot,
+project bytes, the registry's exact ontology source closure and JSON-LD term
+map, separated grammar and migration verification evidence, and the declared
+generator and runtime closure. The ontology evidence retains canonical source
+locators, every authored import edge, and the owner of every retained
+definition.
+
+`OntologyRegistry.source_closure()` exposes that immutable construction
+evidence: exact parsed bytes, canonical resolved locators, import resolutions,
+and definition ownership. Its absolute locators intentionally make exact Recon
+build identity location-sensitive. The registry's structural `content_hash()`
+remains location-independent.
 
 ```bash
 malleus-recon init research/recon \
@@ -409,9 +470,15 @@ malleus-recon build research/recon
 ```
 
 `RECORDED` means the candidate passed the ontology and local ledger rules. It
-does not mean the claim is true. Recon reports union, intersection, directional
-differences, partial coverage, and unresolved axes. It does not turn those
-facts into an automatic novelty, plagiarism, truth, or paper-quality verdict.
+does not mean the claim is true or accepted by Assent. Recon reports union,
+intersection, directional differences, partial coverage, and unresolved axes.
+It does not turn those facts into an automatic novelty, plagiarism, truth, or
+paper-quality verdict.
+
+Governed promotion is a separate, one-way boundary. A future adapter may turn
+one validated, identity-bound Recon selection into a core change candidate.
+Recon never dual-writes accepted state or maps `REVIEWED` to an Assent `ACCEPT`
+verdict or `ProposalState.ACCEPTED`.
 
 The `malleus-recon` skill carries the research procedure: claim-first search,
 bounded citation recursion, source inspection, cautious negative findings, and

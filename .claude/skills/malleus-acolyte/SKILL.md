@@ -132,6 +132,257 @@ Then resolve by verdict:
 Read ADOPTION_GUIDE.md once per project before schema work; it is your
 operating manual and this skill is its enforcement arm.
 
+## Starting a project with no schema
+
+Use this path when the project has no accepted domain schema or semantic
+history yet. Every generated ontology, record set, and population is a
+proposal, not accepted knowledge. Downstream assessment material is not an input
+to ontology construction or population. It may inspect the replayed graph only
+after the population is frozen. Refresh the Codex-installed copy before starting:
+`malleus-inquisitor install-skills --agent codex --project .`.
+
+When current installed capabilities and exact input artifacts are provided, this
+section supersedes the earlier capability probe and ADOPTION_GUIDE.md pre-read.
+Use only the installed package and skill plus the declared source, profile, pack,
+and project artifacts. Do not inspect home directories, local checkouts, the
+network, or undeclared repository documentation. If a required capability or
+artifact is absent, fail explicitly without an ambient probe, install, or
+fallback.
+
+1. **Retain the source boundary.** Identify the exact source bytes and their
+   locators. Model only concepts, properties, relations, values, and distinctions
+   materially supported by those bytes. Never invent a missing value, count,
+   record, relation, or epistemic status. Do not collapse two source concepts
+   merely because the current vocabulary cannot distinguish them.
+2. **Choose the Malleus level and, when governed history is needed, its history
+   profile.** A schema or typed graph does not require a semantic ledger. For a
+   governed history, choose `state-version`, `source-assertion`, or `object-event`
+   explicitly. The last is declarative today: Event population refuses until
+   Core publishes that operation family. Record any custom profile as exact
+   bytes. Never infer a history model from the first record or from ledger order.
+   Steps 6 through 9 are the governed-history branch, so you must choose an exact
+   history profile before proposing the ontology when you will follow them. For
+   schema-only adoption, stop after step 5. For typed-graph-only adoption, load
+   the exact schema and imports with `OntologyRegistry`, validate and construct
+   the proposed public record envelope with
+   `KnowledgeGraph.from_records(registry, records)`, inspect the returned graph,
+   and stop before step 6. That graph is checked structural state, not accepted
+   history. Neither lower-level branch invokes population or history APIs.
+3. **Look for vocabulary before inventing it.** Inspect the optional
+   `metrology`, `chronology`, and `research` packs. Import only what the domain
+   needs. Check a copied pack with `malleus-inquisitor pack-conformance`; extend
+   an existing pack class through a new subclass rather than weakening its
+   surface. Always extend a pack concept before extending root.
+
+   Before you propose a concept that could belong to a pack, ground it. Name the
+   area of knowledge it comes from in an existing taxonomy (the Dewey Decimal
+   Classification number, or the field in the outline of academic disciplines),
+   name the seminal vocabulary in that area, borrow its terms and their
+   definitions, and record the citation. Invent a term only when the grounding
+   search finds none, and say so in the record.
+
+4. **Propose the project ontology.** Import `linkml:types`, the Malleus root, and
+   only the selected packs. Derive domain records from Malleus roles directly or
+   through pack types. Keep instances out of schema vocabulary: source values,
+   identifiers, conclusions, and wording are data, not class, slot, relation, or
+   enum names. Keep protocol, provenance, locators, ledger, policy, and query
+   machinery out of the domain ontology. Labels identify records; they never
+   carry an otherwise untyped assertion. The admissible population surface is
+   every concrete Entity and Relation type in the compiled contract. Never shrink
+   that surface to types selected by a later query. Event and Signal population
+   currently refuses at the public governed boundary.
+5. **Run the structural gates and compile exact sources.** Run
+   `malleus-inquisitor pack-grounding schema/your_project.yaml --role PROJECT`.
+   If a pack was copied, also run its conformance command. Then run
+   `malleus-compiler contract` with the project, root, LinkML types, and selected
+   pack files supplied under their exact import locators. The command-line
+   compiler stops at contract compilation. Population, admission, replay, and
+   query use the public `malleus.compiler` Python facade.
+6. **Capture before formalising.** For document population, coverage of the
+   retained reading is the objective, never the smallest query- or
+   answer-changing subset. This rule overrides the global "smallest observation",
+   "Build only what changes the answer", and "Build less" rules for document
+   capture; those rules still limit the implementation slice. Make one exact
+   document capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim
+   assertions, attribution, block locators, modality, optional assertion or
+   domain time, formalisation targets, and typed gaps. Pass it to
+   `adapt_document_assertions`. For structured sources, write a source-specific
+   adapter that emits the same neutral population plan. Preserve source units
+   and values. Any normalization needs its own explicit evidence-bearing
+   operation. Inspect the returned `canonical_census_bytes`; continue reviewing
+   and capturing source-supported material across both census axes. Each block is
+   `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
+   `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
+   formalized, and uncaptured assertions remain invisible. If the declared
+   capture remains partial, retain that limitation and never call it complete.
+7. **Compile, then admit.** Pass the proposed plan to
+   `compile_population_plan`, then `prepare_population_change`, and keep the
+   returned `PopulationPreparation` as `prepared`. When
+   `prepared.change_set is not None`, call
+   `history.admit(change_set=prepared.change_set, ...)`. For
+   `NO_DOMAIN_CHANGE`, `prepared.change_set is None`; retain the preparation's
+   evidence and do not call `history.admit`. The plan must bind its compiled
+   contract, history profile, adapter, source bytes, evidence, records,
+   field-level derivations, typed gaps, and valid time. `NO_DOMAIN_CHANGE` never
+   triggers fallback population. A refusal changes no accepted history.
+8. **Reopen, replay, and inspect.** Reopen the history from its retained ledger,
+   using `KnowledgeChangeHistory.reopen(...)`, replay the graph, query through the
+   graph's public read methods, and use `trace_population_record` to reach the
+   exact plan, source, capture, and field derivations behind an accepted record.
+   Do not call a structurally valid record true merely because it was admitted.
+9. **Grow only from recorded gaps.** Keep propose, populate, refuse or record
+   gaps, revise, and repopulate in one working session by default. Set the limit
+   before the loop starts: at most two additive revision rounds. If typed gaps
+   cluster around a missing class, optional slot, or enum value, propose an
+   additive ontology revision, pass the prior and proposed contracts to
+   `compile_contract_revision`, record the migration receipt, and repeat from
+   the retained source. Reach for a pack before a new root concept. Do not
+   silently narrow or delete a definition that already has instances. A stricter
+   deployment may split stages between sessions that exchange only retained
+   ledger artifacts.
+10. **Stop honestly.** Stop when another addition would require invention.
+    Preserve incomplete captures, gaps, and typed refusals as results. Do not add
+    a fallback mapper, hand-built accepted state, or query-shaped vocabulary to
+    make the run look complete.
+
+### Current document-capture template
+
+This is the current private-v0 shape, not a stable wire. Parse the JSON, replace
+the contract identity and project record types with values from the compiled
+contract. Encode the `reading` and `capture` objects as canonical JSON bytes:
+UTF-8, sorted keys, no insignificant whitespace, and no non-finite numbers. Pass
+exactly these seven public keyword arguments to `adapt_document_assertions`:
+`reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`,
+`records`, and `supersessions`. The reading object is illustrative input, not a
+live grammar or closed shape; the adapter reads its pages and each block's ID,
+ordinal, and text. The only live grammar in this example is
+`DOCUMENT_CAPTURE_GRAMMAR == malleus.document-capture/private-v0` in
+`capture.schema`. The capture root, attribution, assertion, formalisation, and
+gap shapes are closed by the adapter. The Entity and Relation records illustrate
+the neutral plan envelopes checked by the population compiler.
+`assertion_time` and `domain_time` are optional strings: omit either when it is
+unknown, never invent it or encode it as null. `accepted_gap_kinds` lists the
+complete current set and is guidance, not an adapter argument.
+
+Accepted modalities are `CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`,
+`NEGATED`, or `STATED`. Every assertion must name a known reading block, and its
+statement must occur verbatim after whitespace normalization in that block. If
+`formalized_by` is empty, at least one typed gap is required. Every formalization
+`record_id` and `path` must resolve in `records`. Every `nothing_assertable`
+block ID must exist in the reading. A failure is a typed refusal, not permission
+to repair, infer, or ignore the capture.
+
+<!-- malleus-nascent-document-template:start -->
+```json
+{
+  "accepted_gap_kinds": [
+    "INTERVAL_NOT_EXPRESSIBLE",
+    "AGGREGATE_ONLY",
+    "MODALITY_NOT_EXPRESSIBLE",
+    "REQUIRED_FIELD_ABSENT_IN_SOURCE",
+    "TYPE_ABSENT",
+    "RELATION_ABSENT"
+  ],
+  "accepted_modalities": [
+    "CALCULATED",
+    "CONTESTED",
+    "HYPOTHESISED",
+    "MEASURED",
+    "NEGATED",
+    "STATED"
+  ],
+  "capture": {
+    "assertions": [
+      {
+        "assertion_time": "2026-01-03T00:00:00Z",
+        "block": "block:1",
+        "domain_time": "2026-01-02",
+        "formalized_by": [
+          {
+            "path": ["properties", "relation_type"],
+            "record_id": "relation:A:B"
+          },
+          {
+            "path": ["source_id"],
+            "record_id": "relation:A:B"
+          },
+          {
+            "path": ["target_id"],
+            "record_id": "relation:A:B"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "MODALITY_NOT_EXPRESSIBLE",
+            "statement": "The project records do not carry the retained STATED modality."
+          }
+        ],
+        "id": "assertion:1",
+        "modality": "STATED",
+        "statement": "On 2026-01-02, object A links to object B."
+      }
+    ],
+    "attribution": {
+      "author": "source author",
+      "date": "2026-01-03",
+      "source_id": "source:neutral"
+    },
+    "nothing_assertable": [],
+    "reading_sha256": "sha256:259fa8fd86ba0afd43998e66fc0edc2633a41863f7e9b901707825e56a1d3423",
+    "schema": "malleus.document-capture/private-v0"
+  },
+  "capture_id": "capture:neutral:1",
+  "contract_identity": "replace-with-PartialEffectiveContract.identity",
+  "plan_id": "plan:neutral:1",
+  "reading": {
+    "pages": [
+      {
+        "blocks": [
+          {
+            "id": "block:1",
+            "ordinal": 0,
+            "text": "On 2026-01-02, object A links to object B."
+          },
+          {
+            "id": "block:2",
+            "ordinal": 1,
+            "text": "No captured assertion in this block."
+          }
+        ],
+        "page": 1
+      }
+    ]
+  },
+  "records": {
+    "entities": [
+      {
+        "id": "object:A",
+        "properties": {},
+        "type": "ProjectObject"
+      },
+      {
+        "id": "object:B",
+        "properties": {},
+        "type": "ProjectObject"
+      }
+    ],
+    "relations": [
+      {
+        "id": "relation:A:B",
+        "properties": {
+          "relation_type": "LINKS"
+        },
+        "source_id": "object:A",
+        "target_id": "object:B",
+        "type": "ProjectLinksRelation"
+      }
+    ]
+  },
+  "supersessions": []
+}
+```
+<!-- malleus-nascent-document-template:end -->
+
 ## Standing orders (the playbook, condensed)
 
 1. Schema first, code second. When the human names a new domain concept,

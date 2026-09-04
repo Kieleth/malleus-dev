@@ -1,0 +1,11 @@
+{
+  "contract": "malleus.fixture.control_failure_response.v1",
+  "failure_class": "FIXTURE_CONTROL_FAILURE",
+  "note": "The deterministic fixture reader returned this controlled failure. No OCR engine or provider was invoked.",
+  "outcome": "FAILED",
+  "production_ocr": false,
+  "reader_id": "malleus.fixture.control_reader@1",
+  "reader_kind": "deterministic_control_reader",
+  "region_id": "fixture:failed-attempt:region:main",
+  "retryable": true
+}

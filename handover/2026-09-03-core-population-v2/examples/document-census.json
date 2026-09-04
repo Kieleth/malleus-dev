@@ -1,0 +1,20 @@
+{
+  "assertions": {
+    "FULLY_FORMALIZED": 1,
+    "PARTLY_FORMALIZED": 0,
+    "UNFORMALIZED": 2
+  },
+  "blocks": {
+    "page:1:block:001": "REVIEWED",
+    "page:1:block:002": "REVIEWED",
+    "page:1:block:003": "REVIEWED"
+  },
+  "blocks_reviewed": 3,
+  "blocks_total": 3,
+  "capture_sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99",
+  "gaps_by_kind": {
+    "INTERVAL_NOT_EXPRESSIBLE": 1,
+    "MODALITY_NOT_EXPRESSIBLE": 1,
+    "TYPE_ABSENT": 1
+  }
+}

@@ -1074,7 +1074,9 @@ def _marker(
     if type(annotations.value) is not AuthoredMapping:
         return AuthoredScalar("INVALID", "", None)
     marker = _mapping_field(annotations.value, policy.marker_field)
-    if marker is None or type(marker.value) is not AuthoredScalar:
+    if marker is None:
+        return None
+    if type(marker.value) is not AuthoredScalar:
         return AuthoredScalar("INVALID", "", None)
     return marker.value
 

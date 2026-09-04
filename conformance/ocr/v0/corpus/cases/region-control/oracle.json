@@ -1,0 +1,93 @@
+{
+  "case_id": "region-control",
+  "expected_verification": {
+    "capability": "AUDIT_ONLY",
+    "complete": true,
+    "conforms": true,
+    "diagnostic_codes": [],
+    "metrics": {
+      "coverage": {
+        "denominator": "declared_units",
+        "threshold": 1.0,
+        "value": 1.0,
+        "verdict": "MET"
+      }
+    },
+    "units": {
+      "image:1": {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ"
+      }
+    }
+  },
+  "fixture_kind": "single_image_two_regions",
+  "mutations": [
+    {
+      "bundle": "cases/region-control/mutations/hypothesis-attempt-cross-region.bundle.json",
+      "expected_diagnostic_codes": [
+        "OCR-D003"
+      ],
+      "id": "hypothesis-attempt-cross-region",
+      "purpose": "A hypothesis cannot cite an attempt over the other region.",
+      "verification": "cases/region-control/mutations/hypothesis-attempt-cross-region.verification.json"
+    },
+    {
+      "bundle": "cases/region-control/mutations/selection-hypothesis-cross-region.bundle.json",
+      "expected_diagnostic_codes": [
+        "OCR-D003"
+      ],
+      "id": "selection-hypothesis-cross-region",
+      "purpose": "A selection cannot select a hypothesis over the other region.",
+      "verification": "cases/region-control/mutations/selection-hypothesis-cross-region.verification.json"
+    }
+  ],
+  "purpose": "Keep two visible regions and every reading path spatially separate.",
+  "reference_reader": {
+    "description": "Fixed readings for self-authored fixtures. No recognition engine is invoked.",
+    "id": "malleus.fixture.control_reader@1",
+    "kind": "deterministic_control_reader",
+    "production_ocr": false
+  },
+  "regions": [
+    {
+      "attempt_status": "COMPLETED",
+      "expected_text": "REGION A\nALPHA 123\nLEFT BOX",
+      "id": "fixture:region-control:region:a",
+      "request": "cases/region-control/requests/a.json",
+      "response": "cases/region-control/responses/a.json",
+      "response_text": "REGION A\nALPHA 123\nLEFT BOX",
+      "selected_text": "cases/region-control/selected/a.txt",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=80,180,500,420"
+      },
+      "unit": "image:1"
+    },
+    {
+      "attempt_status": "COMPLETED",
+      "expected_text": "REGION B\nBRAVO 789\nRIGHT BOX",
+      "id": "fixture:region-control:region:b",
+      "request": "cases/region-control/requests/b.json",
+      "response": "cases/region-control/responses/b.json",
+      "response_text": "REGION B\nBRAVO 789\nRIGHT BOX",
+      "selected_text": "cases/region-control/selected/b.txt",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=620,180,500,420"
+      },
+      "unit": "image:1"
+    }
+  ],
+  "source": {
+    "byte_length": 49810,
+    "digest": "sha256:cce2607988916d32d817a9159b877dfbf3fa844e930be4c9e3b0dc605bf252ea",
+    "license": "Apache-2.0",
+    "media_type": "image/png",
+    "origin": "generated from self-authored literals in conformance/ocr/v0/corpus/generate.py",
+    "path": "cases/region-control/source/region-control.png",
+    "pixel_dimensions": {
+      "height": 800,
+      "width": 1200
+    }
+  }
+}

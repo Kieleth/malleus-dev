@@ -66,10 +66,30 @@ def test_test_and_docs_profiles_are_subsets_of_the_default_plan() -> None:
         assert all(command.name != "small-shop" for command in commands)
 
 
+def test_recon_profile_has_exact_narrow_scope() -> None:
+    commands = ci.plan("recon")
+
+    assert len(commands) == 1
+    assert commands[0].name == "recon-tests"
+    assert commands[0].argv == (
+        sys.executable,
+        "-m",
+        "pytest",
+        "tests/test_recon.py",
+        "tests/test_recon_ontology.py",
+    )
+
+
 def test_package_profile_is_explicit_and_release_only() -> None:
     package_names = [command.name for command in ci.plan("package")]
 
-    assert package_names == ["package-build", "package-check", "package-smoke"]
+    assert package_names == [
+        "package-build",
+        "package-check",
+        "package-parity",
+        "package-smoke",
+    ]
+    assert ci.plan("package")[0].argv[-2:] == ("--sdist", "--wheel")
     assert set(package_names).isdisjoint(
         command.name for command in ci.plan("all")
     )
@@ -171,10 +191,11 @@ def test_wheel_probes_run_outside_the_repository(tmp_path: Path, monkeypatch) ->
     monkeypatch.setattr(ci.subprocess, "run", fake_schema)
 
     assert ci._smoke_package(context) == 0
-    assert len(calls) == 5
+    assert len(calls) == 6
     assert all(cwd == tmp_path for _, cwd in calls)
-    assert [Path(argv[0]).name for argv, _ in calls[-3:]] == [
+    assert [Path(argv[0]).name for argv, _ in calls[-4:]] == [
         "malleus-inquisitor",
+        "malleus-compiler",
         "malleus-ocr",
         "malleus-recon",
     ]

@@ -1,0 +1,102 @@
+{
+  "case_id": "incomplete-sequence",
+  "expected_verification": {
+    "capability": "AUDIT_ONLY",
+    "complete": false,
+    "conforms": true,
+    "diagnostic_codes": [],
+    "metrics": {
+      "coverage": {
+        "denominator": "declared_units",
+        "threshold": 1.0,
+        "value": 0.6666666666666666,
+        "verdict": "UNMET"
+      }
+    },
+    "units": {
+      "page:1": {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ"
+      },
+      "page:2": {
+        "disposition": "NOT_CHECKED",
+        "outcome": "NOT_OBSERVED"
+      },
+      "page:3": {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ"
+      }
+    }
+  },
+  "fixture_kind": "two_physical_pages_three_logical_units",
+  "missing_logical_units": [
+    "page:2"
+  ],
+  "mutations": [
+    {
+      "bundle": "cases/incomplete-sequence/mutations/observed-without-raster.bundle.json",
+      "expected_diagnostic_codes": [],
+      "expected_unit_outcome": {
+        "page:2": "NOT_RENDERED"
+      },
+      "id": "observed-without-raster",
+      "purpose": "An observed-unit assertion cannot replace a missing raster and reading.",
+      "verification": "cases/incomplete-sequence/mutations/observed-without-raster.verification.json"
+    }
+  ],
+  "purpose": "Source declares logical pages 1 and 3 against required 1, 2, and 3; this is a source-sequence gap, not OCR skipping a present physical page.",
+  "reference_reader": {
+    "description": "Fixed readings for self-authored fixtures. No recognition engine is invoked.",
+    "id": "malleus.fixture.control_reader@1",
+    "kind": "deterministic_control_reader",
+    "production_ocr": false
+  },
+  "regions": [
+    {
+      "attempt_status": "COMPLETED",
+      "expected_text": "CONTROL START\nLogical page 2 is absent from this source.",
+      "id": "fixture:incomplete-sequence:region:page-1-body",
+      "request": "cases/incomplete-sequence/requests/page-1-body.json",
+      "response": "cases/incomplete-sequence/responses/page-1-body.json",
+      "response_text": "CONTROL START\nLogical page 2 is absent from this source.",
+      "selected_text": "cases/incomplete-sequence/selected/page-1-body.txt",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=100,350,800,810"
+      },
+      "unit": "page:1"
+    },
+    {
+      "attempt_status": "COMPLETED",
+      "expected_text": "CONTROL END\nThe source sequence jumps from 1 to 3.",
+      "id": "fixture:incomplete-sequence:region:page-3-body",
+      "request": "cases/incomplete-sequence/requests/page-3-body.json",
+      "response": "cases/incomplete-sequence/responses/page-3-body.json",
+      "response_text": "CONTROL END\nThe source sequence jumps from 1 to 3.",
+      "selected_text": "cases/incomplete-sequence/selected/page-3-body.txt",
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=100,350,800,810"
+      },
+      "unit": "page:3"
+    }
+  ],
+  "source": {
+    "byte_length": 94154,
+    "digest": "sha256:3c26c2dff77fc3a95bacc5b31373ef053683a2736a74142d662015c5e9f21f7e",
+    "license": "Apache-2.0",
+    "logical_page_labels": [
+      "1 of 3",
+      "3 of 3"
+    ],
+    "media_type": "application/pdf",
+    "origin": "generated from self-authored literals in conformance/ocr/v0/corpus/generate.py",
+    "path": "cases/incomplete-sequence/source/incomplete-sequence.pdf",
+    "physical_page_count": 2,
+    "physical_page_size_points": {
+      "height": 700,
+      "width": 500
+    },
+    "raster_only": true
+  }
+}

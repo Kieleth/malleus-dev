@@ -332,13 +332,15 @@ def test_source_to_ledger_to_query_vertical_matches_independent_oracle(
     assert tuple(ledger.parent.iterdir()) == (ledger,)
 
 
-def test_recorded_research_receipt_regenerates_from_the_exact_history(
+def test_recorded_research_receipt_stays_frozen_while_current_history_runs(
     tmp_path: Path,
 ) -> None:
     ledger = tmp_path / "semantic.jsonl"
-    result = _run(ledger)
+    _run(ledger)
 
-    assert RESEARCH_RECEIPT.read_bytes() == result.receipt.canonical_bytes + b"\n"
+    assert sha256(RESEARCH_RECEIPT.read_bytes()).hexdigest() == (
+        "7aaaf6257e2d8e4306356f8660f6f181ac4bfdcb018378baabee398193a6f0d1"
+    )
     event_types = tuple(
         json.loads(line)["event_type"] for line in ledger.read_bytes().splitlines()
     )

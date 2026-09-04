@@ -93,7 +93,7 @@ active comparison. Popularity is not a stopping rule.
 
 Prefer the paper, publisher record, official repository, standard, dataset,
 or patent itself. Record a precise locator and access state in an
-`EvidenceAttachment`. Distinguish:
+`EvidenceAttachment`. On every reviewed relation, distinguish:
 
 - `SOURCE_EXPLICIT`: the inspected source states it.
 - `REVIEWER_INFERENCE`: the reviewer derives it from named evidence.
@@ -103,6 +103,10 @@ or patent itself. Record a precise locator and access state in an
 Never turn a search snippet, abstract alone, or missing search result into a
 claim about an entire paper. `NOT_ESTABLISHED` means this review did not
 establish the property. It does not mean the property is absent.
+
+`Claim` and `Result` records can name evidence but do not currently carry this
+status or a basis. Put the provenance-qualified analytical assertion on the
+relation instead of inventing fields the schema does not declare.
 
 ### 4. Atomize the paper
 
@@ -114,6 +118,10 @@ Use `CENTRAL` or `MATERIAL` only when the axis is genuinely claim-bearing for
 that subject. Keep `PARTIAL`, `ADJACENT`, `NOT_ESTABLISHED`, `CONTRADICTED`,
 and `NOT_APPLICABLE` visible. Do not promote them to manufacture a cleaner
 set result.
+
+No coverage record means the subject is unassessed against that axis. It does
+not mean `NOT_ESTABLISHED`. Record `NOT_ESTABLISHED` explicitly, with basis and
+evidence, when that is the review finding.
 
 ### 5. Compare with set algebra, then interpret
 
@@ -144,12 +152,61 @@ averaging confidence or choosing the preferred narrative.
 
 Run `malleus-recon validate` before reporting. Run `malleus-recon build` to
 emit the graph, evidence table, work-axis matrix, exact comparisons, metrics,
-bibliography, readable report, checksums, and deterministic archive. Inspect
-the report and at least one exact per-work comparison before handing off.
+bibliography, readable report, checksums, and an archive deterministic for the
+manifest's declared input, ontology, generator, and runtime closure. Use a
+fresh CLI process if implementation source files changed during the current
+Python process. Inspect the report and at least one exact per-work comparison
+before handing off.
+
+Manifest v3 binds the registry's exact source closure, all authored import
+resolutions, retained definition owners, the JSON-LD term map, and separated
+grammar and migration verification evidence. Canonical ontology locators are
+absolute, so moving the same ontology bytes changes exact build identity even
+though the structural ontology hash remains unchanged. Treat that as declared
+provenance, not drift to normalize away.
 
 Rejected candidates stay in the ledger and leave current graph state
 unchanged. Fix the candidate or revise the ontology deliberately. Never edit
 the JSONL ledger by hand.
+
+## Governed promotion
+
+Recon is the structural capture authority for its own project. `RECORDED`
+means the candidate passed the Recon ontology and replay rules. It is not an
+Assent decision, an accepted-history write, or permission to act.
+
+There is no shipped promotion command yet. Do not imitate one by writing the
+same result to both ledgers, by mapping `REVIEWED` to an Assent `ACCEPT` verdict
+or `ProposalState.ACCEPTED`, or by calling private compiler or change-set
+modules. Until the public governed-promotion adapter exists, prepare a reviewer
+handoff and leave core state unchanged.
+
+A future promotion attempt must select records from one validated Recon
+snapshot. Bind the structural-capture profile, project and ledger wire,
+record-event and replay-validator identities, exact project bytes, current
+ontology hash, the separated grammar and migration identities verified during
+the read, every crossed migration-receipt identity, ledger head and event
+count, selected event and record hashes, and the complete evidence and endpoint
+dependency closure. Also bind the current `ReviewTarget` and every
+applicable `ReviewBoundary` and `SearchEvent`, the selection policy,
+source-to-target mapping, target contract, and admission profile.
+
+For the current public Assent path, also bind the target graph ontology hash,
+`GraphBaseArtifact` ID and content hash, acceptance head, materialization head,
+state digest, and exact `EpistemicPolicyArtifact` ID and content hash. Policy
+applicability remains the adopter's responsibility. A receipt must be source
+provenance of the candidate, not a detached side file. If represented by a
+`SourceArtifact`, it records the receipt byte identity and locator, not the
+bytes themselves; retain the exact bytes at that locator. The proposal must
+bind the receipt-bearing `CandidateSubgraphArtifact.content_hash`, because
+`candidate_digest` and `artifact_hash` do not include `source_record_ids`.
+
+Missing or merely caller-declared evidence properties remain explicit
+limitations and must cause refusal when the target contract requires stronger
+evidence. A later Recon revision creates a new promotion attempt; it never
+silently rewrites an earlier governed record. Recon has no typed promotion
+outcome record, so do not write target outcomes back into Recon under an
+unrelated type.
 
 ## Literature-to-design handoff
 

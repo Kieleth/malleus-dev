@@ -134,6 +134,29 @@ history. An adopter may omit semantic history and keep the structural
 guarantees in this document, but cannot then claim Malleus accepted-state
 provenance or reconstruction.
 
+The domain-history profile answers a different question from the ontology:
+
+- The ontology says what kinds of domain records and fields are legal.
+- The history profile says what one accepted change means, where its history
+  starts, how domain and transaction time differ, and which current-state
+  projection family it claims.
+- The ledger records the ordered facts of proposal, checks, decision, and
+  application.
+- Replay derives the current graph from accepted changes. The graph is not a
+  second state authority.
+
+Core ships three content-addressed profile artifacts. `state-version` treats
+records as successive versions and powers the Small Shop proof.
+`source-assertion` treats a retained capture as one partial-import batch;
+optional per-assertion assertion and domain times, plus modality, stay in
+evidence and are reachable by the public provenance trace. Missing times remain
+absent, and their lexical values are not normalized by Core. `object-event`
+declares event-history semantics,
+but the governed population path still refuses Event records, so that profile
+is not yet executable. Adopters may define another closed profile. Merely
+naming a projection-rule family does not make Core an interpreter for arbitrary
+projection programs.
+
 ### 3. A constructed graph does not swap registries in place
 
 A current `KnowledgeGraph` keeps the `OntologyRegistry` it was constructed with;
@@ -146,13 +169,17 @@ narrowing a range, changing admission semantics, or changing an identifier can
 require reinterpretation or refusal.
 
 Current source beyond the released `0.13.3` package boundary contains a generic
-`MigrationReceipt`. It can record an asserted old and new ontology-hash
+`MigrationReceipt`. It records an asserted old and new ontology-hash
 transition, declared grade, reason, timestamp, chain link, and optional delta
-digest. It does not carry a transform, reader, record mapping, or query rewrite.
-`TOTAL` and `PARTIAL` are declared grades but currently make
-`accepted_hashes()` accept prior hashes identically. Current source therefore
-establishes neither total interpretation nor record-level indeterminacy.
-`HARD_BREAK` alone stops backward hash acceptance.
+digest. It does not carry a transform, record mapping, query rewrite, or
+verified delta. `MigrationVerifier` and `MigrationAwareJsonlLedger` now define
+one narrow reader contract: current-byte payload grammars need no receipt; an
+exact older identity is replayable only across a gapless path of `TOTAL`
+receipts. `PARTIAL`, `HARD_BREAK`, unknown, and grammar-versus-migration
+collision cases refuse. Every receipt must name the live registry's entry
+schema, and sidecar discovery uses that entry's retained absolute locator.
+`MigrationVerification` reports the exact grammar identities, migrated
+identities, and receipts used by the read.
 
 An ontology-identity change does not universally create a ledger epoch. A
 standalone structural `KnowledgeGraph` has no ledger epoch. In accepted design,
@@ -160,9 +187,10 @@ a new composition and ledger epoch are required when the change affects an
 accepted-temporal semantic role. A source-only change preserving the effective-
 contract identity does not require one.
 
-Receipts do not rewrite retained records. Recon is their only current source
-consumer; core `ProtocolLedger` does not consume them. OD-004 selected a hard
-break for the new persisted wire with no receipt or replay bridge. A canonical
+Receipts do not rewrite retained records. Recon is their current
+migration-aware ledger consumer; the base `JsonlLedger` remains grammar-only
+and core `ProtocolLedger` does not consume them. OD-004 selected a hard break
+for the new persisted wire with no receipt or replay bridge. A canonical
 cross-contract `MigrationPlan`, including interpretation and impact, remains
 Candidate work and may result in refusal.
 
@@ -172,6 +200,14 @@ Current core constructs `OntologyRegistry` directly from LinkML-shaped YAML and
 resolves declared imports while loading that registry. It does not execute
 official LinkML semantics. `KnowledgeGraph` accepts exactly one registry. There
 is no repository generator that emits a runtime registry source file.
+
+`OntologyRegistry.source_closure()` exposes the immutable sources actually used
+for that construction: exact parsed bytes, canonical absolute locators, all
+authored import resolutions including builtin and duplicate edges, and retained
+definition ownership. The structural `content_hash()` remains independent of
+filesystem location. Consumers that bind the absolute locators as provenance,
+including Recon manifest v3, intentionally acquire a location-sensitive exact
+artifact identity.
 
 Generated Python models, C++ types, schemas, or editor metadata may be useful
 projections of a retained contract source, but they are optional projections,
@@ -198,10 +234,12 @@ must preserve the same runtime gate and refusal semantics.
 
 ### 6. The bound runtime contract governs admission semantics
 
-The current runtime uses `OntologyRegistry` for admission. The accepted
-contract-compiler design replaces that syntax-bound path with a
-frontend-neutral `EffectiveContract`; it is not implemented yet. A reloadable
-`EffectiveContractArtifact` representation remains Candidate work.
+The current public graph API uses `OntologyRegistry` for admission. The
+accepted contract-compiler design replaces that syntax-bound path with a
+frontend-neutral `EffectiveContract`. A private compiler pipeline now composes
+and reloads that contract for controlled research cases, but it is not yet a
+public graph API or compatibility promise. Public promotion remains Candidate
+work.
 Use the registry for runtime introspection rather than duplicating vocabulary
 and endpoint rules in application code. Generated typed wrappers may improve
 authoring safety, but they are not the current Malleus API or authority.

@@ -8,13 +8,18 @@ the difference between a profile and a private module.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 from typing import Sequence
 
 from malleus import __version__
-from malleus.ocr.bundle import PROFILE_ID, PROFILE_VERSION, Bundle, BundleError
+from malleus.ocr.bundle import (
+    PROFILE_ID,
+    PROFILE_VERSION,
+    Bundle,
+    BundleError,
+    BundleSyntaxError,
+)
 from malleus.ocr.conformance import CASES, load_case
 from malleus.ocr.verify import (
     CAPABILITY,
@@ -80,19 +85,33 @@ def _report(result: VerificationResult, stream) -> int:
         print(f"  never checked: {never}", file=stream)
         print(f"  check failed:  {failed}", file=stream)
         return REFUSED
-    print(f"COMPLETE. {result.bundle_id} accounts for every declared unit and meets "
-          "the thresholds its source class froze before ingest.", file=stream)
+    print(
+        f"COMPLETE BY DECLARED THRESHOLDS. {result.bundle_id} meets every coverage "
+        "threshold its source class froze before ingest.",
+        file=stream,
+    )
+    if account.unaccounted:
+        never = ", ".join(account.units_with(DISPOSITION_NOT_CHECKED)) or "none"
+        failed = ", ".join(account.units_with(DISPOSITION_CHECK_FAILED)) or "none"
+        print("  Some declared units remain unaccounted for under that threshold.", file=stream)
+        print(f"  never checked: {never}", file=stream)
+        print(f"  check failed:  {failed}", file=stream)
+    else:
+        print("  Every declared unit is accounted for.", file=stream)
     return CONFORMS
 
 
 def _verify(path: Path, stream) -> int:
     try:
-        document = json.loads(path.read_text())
-    except (OSError, ValueError) as error:
+        source = path.read_bytes()
+    except OSError as error:
         print(f"cannot read {path}: {error}", file=stream)
         return UNREADABLE
     try:
-        bundle = Bundle.from_document(document)
+        bundle = Bundle.from_bytes(source)
+    except BundleSyntaxError as error:
+        print(f"cannot read {path}: {error}", file=stream)
+        return UNREADABLE
     except BundleError as error:
         print(f"not a bundle document: {error}", file=stream)
         return UNREADABLE

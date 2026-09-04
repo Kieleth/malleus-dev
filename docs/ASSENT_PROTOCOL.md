@@ -294,8 +294,8 @@ ACCEPT and atomic application may share one verified ledger event, so a failed
 application rejects the whole event rather than leaving a recorded acceptance
 without its state change.
 
-The current Python runtime has not yet cut over to that generic artifact or
-genesis boundary. It uses `CandidateSubgraphArtifact`,
+The current public Assent runtime has not yet cut over to that generic artifact
+or genesis boundary. It uses `CandidateSubgraphArtifact`,
 `AcceptedGraphApplication`, and an externally supplied `GraphBaseArtifact`.
 Standalone structural candidates may be persisted or materialized, but they
 remain non-governed and non-accepted as Malleus knowledge. An adopter may omit

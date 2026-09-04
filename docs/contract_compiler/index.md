@@ -4,16 +4,10 @@ The contract compiler documentation renders validated state. Executable
 schemas, source code, tests, and validated manifests remain the authorities for
 their respective claims.
 
-No public frontend adapter or adapter docstring exists yet. Pinned LinkML
-1.11.1 is the selected v0 target adapter. CC-R02 may implement and characterize
-that adapter under research authority, but it cannot authorize public exposure.
-Public namespace placement, autodoc, and Sphinx-rendered public documentation
-remain governed by open CC-D09/OD-009. If CC-D09/OD-009 permits promotion, the
-promoted adapter's code docstrings must document implementation and
-support-profile versions, supported declarations, refusals, applied defaults,
-neutral outputs, and provenance. Sphinx must surface that contract without
-redefining it. Another adapter may replace LinkML only behind the same explicit
-neutral output contract.
+The public `malleus.compiler` facade exposes the selected LinkML 1.11.1
+frontend and the compiler-to-history executors described below. LinkML remains
+one adapter, not the protocol. Another frontend may replace it only behind the
+same explicit neutral output contract and conformance suite.
 
 ## Private Greenhouse bootstrap
 
@@ -261,6 +255,56 @@ artifact. The ordered protocol ledger admits the exact change set, and an
 identified projector derives the accepted temporal graph by replay. This is a
 governed compiler target, not a claim that a public artifact class or generic
 runtime cutover ships today.
+
+## Optional grounded knowledge packs
+
+Malleus ships three small LinkML packs under `ontology/packs`: `metrology`,
+`chronology`, and `research`. They are offered vocabulary layers, not required
+protocol modules. A project can import the packs it needs or supply its own
+ontology through the same compiler boundary.
+
+Pack bytes are available with the top-level public
+`bundled_ontology_path("packs", "research.yaml")` helper. The public compiler
+still receives an explicit source map:
+
+```python
+from collections.abc import Mapping
+
+from malleus.compiler import compile_linkml_contract
+from malleus.inquisition import validate_pack_conformance, validate_pack_grounding
+
+
+def compile_research(exact_sources: Mapping[str, bytes]):
+    validate_pack_grounding(exact_sources["research"], role="PACK")
+    return compile_linkml_contract(
+        root_locator="research",
+        sources=exact_sources,
+    )
+```
+
+Here `exact_sources` contains the caller-selected bytes for `research`,
+`metrology`, `chronology`, `malleus`, and `linkml:types`. Nothing resolves from
+the network or an undeclared filesystem location.
+
+The separate `validate_pack_grounding` rite checks exact source bytes. It
+requires each borrowed term group to identify its source vocabulary and
+locator. The research pack therefore ties `Observation` explicitly to W3C
+SOSA/SSN rather than hiding several intellectual sources behind one citation.
+The rite is deliberately modest: it checks citation shape offline and returns
+a deterministic receipt or typed refusal. It does not judge whether the
+chosen source is good scholarship. For projects, bare Malleus roots and CURIEs
+resolved through the schema's exact prefix map trigger the same direct-root
+grounding requirement. Unrelated prefixes and unsupported full URI references
+do not masquerade as Malleus roots.
+
+If a project copies and edits a pack while claiming compatibility with it,
+`validate_pack_conformance(edited_bytes, reference=shipped_bytes)` binds both
+byte identities and checks the reference declaration surface. Documentation
+and additive declarations or enum values may change. Reference imports remain
+one unique, order-independent set. Removing a reference declaration, changing
+an existing declaration list, or adding a stronger constraint to one refuses.
+Extend an existing class through a new subclass. This is a structural check,
+not a claim that the edited vocabulary is semantically equivalent.
 
 ```{toctree}
 :maxdepth: 1

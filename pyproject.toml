@@ -39,6 +39,9 @@ ocr = []
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
+    "Pillow==12.3.0",
+    "pypdf==6.16.2",
+    "reportlab==4.4.9",
     "jsonschema>=4.23,<5",
     "build==1.2.2.post1",
     "hatchling==1.31.0",
@@ -54,6 +57,7 @@ dev = [
 
 [project.scripts]
 malleus-inquisitor = "malleus.inquisition.cli:main"
+malleus-compiler = "malleus.compiler_cli:main"
 malleus-ocr = "malleus.ocr.cli:main"
 malleus-recon = "malleus.recon.cli:main"
 
@@ -67,13 +71,26 @@ Issues = "https://github.com/kieleth/malleus-dev/issues"
 # Only the files explicitly listed below are packaged. Anything else present
 # in the working tree (local scratch files, experimental modules, notes) is
 # ignored by the build.
-exclude = [
-    "/src/malleus/_contract_compiler.py",
-    "/src/malleus/_contract_compiler_profile.json",
-]
 include = [
     "/src/malleus/__init__.py",
+    "/src/malleus/compiler.py",
+    "/src/malleus/compiler_cli.py",
+    "/src/malleus/_contract_binder.py",
+    "/src/malleus/_contract_binding_profile.json",
+    "/src/malleus/_contract_compiler.py",
+    "/src/malleus/_contract_compiler_profile.json",
+    "/src/malleus/profiles/*.json",
+    "/src/malleus/_contract_linkml_adapter.py",
     "/src/malleus/_contract_source.py",
+    "/src/malleus/_contract_pipeline/__init__.py",
+    "/src/malleus/_contract_pipeline/document.py",
+    "/src/malleus/_contract_pipeline/elaborate.py",
+    "/src/malleus/_contract_pipeline/knowledge.py",
+    "/src/malleus/_contract_pipeline/machine.py",
+    "/src/malleus/_contract_pipeline/model.py",
+    "/src/malleus/_contract_pipeline/population.py",
+    "/src/malleus/_contract_pipeline/revision.py",
+    "/src/malleus/_contract_pipeline/view.py",
     "/src/malleus/ontology.py",
     "/src/malleus/kg.py",
     "/src/malleus/protocol.py",
@@ -92,6 +109,8 @@ include = [
     "/src/malleus/prolog_verifier.py",
     "/src/malleus/inquisition/__init__.py",
     "/src/malleus/inquisition/cli.py",
+    "/src/malleus/inquisition/pack_grounding.py",
+    "/src/malleus/inquisition/pack-grounding.json",
     "/src/malleus/inquisition/rubric.yaml",
     "/src/malleus/ocr/__init__.py",
     "/src/malleus/ocr/bundle.py",
@@ -124,8 +143,16 @@ include = [
     "/tests/test_ocr.py",
     "/tests/test_recon_ontology.py",
     "/tests/test_recon.py",
+    "/tests/test_ocr_corpus.py",
+    "/conformance/ocr/v0/corpus/README.md",
+    "/conformance/ocr/v0/corpus/generate.py",
+    "/conformance/ocr/v0/corpus/**/*.json",
+    "/conformance/ocr/v0/corpus/**/*.txt",
+    "/conformance/ocr/v0/corpus/**/*.png",
+    "/conformance/ocr/v0/corpus/**/*.pdf",
     "/ontology/malleus.yaml",
     "/ontology/assent.yaml",
+    "/ontology/packs/*.yaml",
     "/ontology/domains/attack.yaml",
     "/ontology/domains/ocr.yaml",
     "/ontology/domains/cyp450.yaml",
@@ -156,6 +183,7 @@ include = [
     "/docs/PRINCIPLES.md",
     "/docs/RECIPES.md",
     "/docs/RECON_CONTRACT.md",
+    "/docs/OCR_FIXTURE_CORPUS.md",
     "/README.md",
     "/LICENSE",
     "/CHANGELOG.md",
@@ -165,16 +193,13 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = ["src/malleus"]
 core-metadata-version = "2.4"
-exclude = [
-    "/src/malleus/_contract_compiler.py",
-    "/src/malleus/_contract_compiler_profile.json",
-    "/src/malleus/_contract_linkml_adapter.py",
-    "/src/malleus/_contract_source.py",
-]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "ontology/malleus.yaml" = "share/malleus/ontology/malleus.yaml"
 "ontology/assent.yaml" = "share/malleus/ontology/assent.yaml"
+"ontology/packs/metrology.yaml" = "share/malleus/ontology/packs/metrology.yaml"
+"ontology/packs/chronology.yaml" = "share/malleus/ontology/packs/chronology.yaml"
+"ontology/packs/research.yaml" = "share/malleus/ontology/packs/research.yaml"
 "ontology/domains/attack.yaml" = "share/malleus/ontology/domains/attack.yaml"
 "ontology/domains/ocr.yaml" = "share/malleus/ontology/domains/ocr.yaml"
 "ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"
@@ -216,6 +241,7 @@ testpaths = [
     "tests/test_contract_compiler_environment.py",
     "tests/test_docs.py",
     "tests/test_ocr.py",
+    "tests/test_ocr_corpus.py",
     "tests/test_ontology.py",
     "tests/test_kg.py",
     "tests/test_prolog_verifier.py",

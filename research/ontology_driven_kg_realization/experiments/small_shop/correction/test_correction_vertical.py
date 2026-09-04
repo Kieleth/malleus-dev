@@ -35,7 +35,7 @@ POLICY = HERE / "policy.json"
 RUN_PROGRAM = HERE / "run.json"
 MAPPING = HERE / "mapping.json"
 CHECKS = HERE / "checks"
-EVIDENCE = HERE / "evidence"
+EVIDENCE = HERE / "evidence-role-v1"
 ORACLE = FIXTURE / "oracle/shop-supplier-order-correction.json"
 
 

@@ -1,0 +1,54 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:cfe243c6124764a2f4fb64f36bdbf7bdccb76b7598b65e6a04b2a1e900bc8633",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_contract_revision_v1/README.md"
+      },
+      {
+        "after_digest": "sha256:6287da012c9e272454959bc01f2213434757896f0f4680253e55772c0b25b0a1",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_contract_revision_v1/input/tbox/small-shop.yaml"
+      },
+      {
+        "after_digest": "sha256:797792ca6334701412576301c55fa6f076572dbe64704adfaa5217e122b8baf3",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_small_shop_contract_revision.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:136125cf9161b1597e74c34c92d4a4d5da42d1f0b1c8943f6fed26c66bc2a426",
+  "entry_id": "OVR-000374",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:dff133daedebd02657133f19aec0c78689268ae3c7f1f29773c7f9a938d07ded",
+  "recorded_at": "2026-09-04T03:28:31Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "18a715b47f6e357019bec37fb53863851467e4ce",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 374,
+  "subject": {
+    "id": "small-shop-contract-revision-conformance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Exercise additive contract revision and replay with the Small Shop fixture.",
+  "why": "The neutral P5 tests prove the generic revision laws, but the running Small Shop example previously began with its correction vocabulary already loaded. This fixture keeps the original ontology identity and imports, adds only the supplier-order state class and required slots, and proves through the public compiler surface that O1 and X1 survive the recorded revision while e4 is superseded by e7 in the same replayable history. It adds no protocol rule, general migration claim, or Small Shop vocabulary to Core."
+}

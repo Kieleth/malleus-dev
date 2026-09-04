@@ -1,0 +1,127 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ccaac8ac4f9f3d5f79b94013b725fa389280a4b5e2b3ef8eb7f98659cc8ce1fc",
+        "before_digest": "sha256:2c4440d423ed206fb77ea87a7f1a59354bf262419622b69048e2c1d80461a534",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:75294db40de0b4bd527cad4fc6f8447d232dc91a9014e9cab0033027e447bcdc",
+        "before_digest": "sha256:f22d770166d0649a9d437f84300717858ec4099fb63f9218d6fb59ddf9bac877",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:79c248536211fa328e3618c53b7c5d0ddeace8f98983a0caf4aa7f8ae6bcb68c",
+        "before_digest": "sha256:58f7891e701efbe1a54a927672598ace2b967f043bec3de198fca441c41669e5",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:f75aace2b67c25fec958e73798797e83ffdbd95a54900ff9102a54ba2674dad0",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md"
+      },
+      {
+        "after_digest": "sha256:59589d31930ff297025f1d3cd0f8f8b80ce54a9391411c27adf10e7feda35fa8",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/__init__.py"
+      },
+      {
+        "after_digest": "sha256:b2eeae42456fd6dc2d8cd87808e7f7bceab14382f9179a14abeea1d4cdc7a1c1",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json"
+      },
+      {
+        "after_digest": "sha256:c823cec259d290b6f226a1277999a83c06b0733978aa5051060f9f728acda5d7",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/invoice-base.json"
+      },
+      {
+        "after_digest": "sha256:7711ac910d40a48e23d8f69005f0421ebf15ea8da380d4d78e599586da897fe8",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/payment-e30.json"
+      },
+      {
+        "after_digest": "sha256:3a4691d0c4ccfb53a0f0416ff189d3778fa1427ed503e32a872a840dd7688667",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/ret010.json"
+      },
+      {
+        "after_digest": "sha256:a566f5b917e2a9c91eb9f829acb0dbfd6c207b71c8ed9e62402bed963d2009ad",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e4.json"
+      },
+      {
+        "after_digest": "sha256:aae9daa34539b0a1d93337360c1dd5108a5cb399423f30d3f7fcf854933a7e0c",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/plans/supplier-e7.json"
+      },
+      {
+        "after_digest": "sha256:165983419a12c2c637b66b01029035083fd51caa331e39e8c3725d66370e7756",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/run.py"
+      },
+      {
+        "after_digest": "sha256:ceaa751c77c7bf96ae0752d8e8a0de09327feaf0b5f1bf747fa2a09dd383ae01",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py"
+      },
+      {
+        "after_digest": "sha256:0d8e87e2003103b4ad9ef76d596cb01e4d0a91eeae044cff34615946d3b73de8",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_full_public_v1/input/tbox/small-shop.yaml"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ce20ee409ef084ce24b5f1fbd8c97fde9a86385e9ecd270f8521eedf6b92fb16",
+  "entry_id": "OVR-000376",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:fc02200e2e820843456b40f8401763ef3aef4667d1857b67cc9ef054a8928ccc",
+  "recorded_at": "2026-09-04T04:49:39Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "3912c3fc0510ec11291b22651c3547632ca213f0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0a4667acb8fb6605f0ab5b4e74ced7e6a9194582",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "098c289134b0233dfb191d45e564a7b281debc45",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "14bc10d62e38302a21b34d908b4aa7d531b1b4a8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 376,
+  "subject": {
+    "id": "small-shop-full-public-population-proof",
+    "type": "DOCUMENT"
+  },
+  "summary": "Run the complete Small Shop dataset through the public population, history, replay, query, and trace path.",
+  "why": "The earlier five-stage showcase proved the domain story through a private direct change-set assembler, while later public seams were proven on smaller slices. This conformance fixture preserves that historical evidence and expresses the same full dataset as five canonical adopter-authored population plans. One public-facade runner admits those plans around one additive ontology revision, reopens one append-only history, reproduces the same nine-record current graph, retains the superseded tenth record, and verifies every record back to exact plan, derivation, source, and mapping bytes. It adds no protocol rule, mapping DSL, universal domain-history model, Event population, Semantic Re-entry, stable wire, or release claim."
+}

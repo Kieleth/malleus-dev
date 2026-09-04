@@ -1,0 +1,117 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:3f25a9cf0fe4678be0985e07675907244312c01d3ecc1d10daa5d83bd39cc54d",
+        "before_digest": "sha256:125bbd1badac4e21e23075dae83a66e91ee9b2f10151c120cd51482c853fd9d0",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:16d256ad00dfa185cac25038fdebb5fe75011c54bfef1d5428ada3e0263afe16",
+        "before_digest": "sha256:261dab8fd72176bc0fe677be02c6922ade959a851e52a14f909fbc3cbe5c5528",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:c24dd8480b13029757c8954ec6fb610d2531bd68175c8d99413ae25732a70fe1",
+        "before_digest": "sha256:02c34cebacc0e2a4b9e72a835be554dcbb60e719565ce3477c9d9526437dfe5c",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:826275a87ce984767d5d3c9bdce569a5ad43540e8f06fac953337820c3bee99c",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-p5-report.md"
+      },
+      {
+        "after_digest": "sha256:243e69d1a4a6b6f4b5a6ec95161f44abfe0fbafbb05007acf1c93043c9534365",
+        "before_digest": "sha256:88e3fddc202028d61f2b9fab7fbe864b37e765ba6e3816cff4358f1cc2b159c5",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:df56e75870283e30fe42fa2cab8d1feaa78ba08ff7824ab0b6a0e577fab969ce",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:3e2148df0b3e69ba78eaa1e6f185bebfc5aa51d0cd3bbfbf88606213c90214c2",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/revision.py"
+      },
+      {
+        "after_digest": "sha256:b58fe38ec0e22424c823893ad89096c9f3d6f3f36e1630a4a784150c4cfb751e",
+        "before_digest": "sha256:c01d58359ec7c38c8876c9c1c255f7b388729359df7f9915f538565272a34f5f",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:7a4fe8f20c667785ba2bae2391a89e81015dcfcdb669309d15bbe27b5c33b48a",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:787fdd4ff7515131d65f54d78ce22115947f87420e69db74d0ac6f5ed02b29a9",
+        "before_digest": "sha256:3b586bfbdbd8e38eaff62669f1c5c8e301f718135fec1b4ab2952375dd31df68",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:fcf57e79d0dfbe37314671586b88969beb88d1b7b246ec7167650167a07b8103",
+        "before_digest": "sha256:6da1989627ae9f79d73ce2552195ee8b4a49b4e7777e7bb3cdf5aabd31b8ea49",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:7e2458ab1c33099011b308e77c3adb13f294b64878380f45c4e13bed85850a9a",
+  "entry_id": "OVR-000372",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:c7091adc5b107319d482b39c4bdcb3af545e362e150fd3a281bf438a975ba7d4",
+  "recorded_at": "2026-09-04T02:39:04Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "bcf877b798f4e2d82abacdf263ac471f1875357f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "30970a397b840542b5395247ae24a695a2cb2cb4",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6b7d91a0a9d14f460229e7e58a8918b36b1269ed",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 372,
+  "subject": {
+    "id": "additive-contract-revision-replay",
+    "type": "DOCUMENT"
+  },
+  "summary": "Record one additive ontology revision inside the existing knowledge history.",
+  "why": "A useful domain ontology must grow without severing the history that explains its accepted records. This cut makes that boundary explicit: compiled fact differences derive the change kinds, a data policy admits added classes, slots, and enum values while refusing added imports, and one migration receipt switches the active contract during replay. The path remains additive and does not claim a general migration engine, Event population, packs, or a chosen domain-history model."
+}

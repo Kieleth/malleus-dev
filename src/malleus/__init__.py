@@ -14,8 +14,12 @@ Example:
 
 from malleus.ontology import (
     EnumDef,
+    OntologyDefinitionSource,
     OntologyError,
+    OntologyImportResolution,
     OntologyRegistry,
+    OntologySource,
+    OntologySourceClosure,
     SlotConstraint,
     TypeDef,
     bundled_ontology_path,
@@ -111,6 +115,10 @@ __version__ = IMPLEMENTATION_STATUS.package_version
 __all__ = [
     "OntologyRegistry",
     "OntologyError",
+    "OntologySource",
+    "OntologyImportResolution",
+    "OntologyDefinitionSource",
+    "OntologySourceClosure",
     "TypeDef",
     "EnumDef",
     "SlotConstraint",

@@ -1,0 +1,67 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:baff81d6fdce488a2ebd7c19820de082d5d5790f7f18f55e6b577fa7deca1d61",
+        "before_digest": "sha256:74eebdc5bcece4fbae82975f989e99d28c41067dc6b5ffb16fb23c9f356ec11b",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:5866d0a5d684f8d830c7c62336982626d2b804169dab98cd4adbfedeaf2b67a7",
+        "before_digest": "sha256:d718cc1325ed16867942be5d0518f9b92f23755357b7bc91ab1d5b1911d6c970",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:bac2044f20598c202ae40ac496a2b1a412d612c6c7655c0ceaba004eb6673822",
+        "change": "CREATED",
+        "path": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-domain-history-boundary.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:a2ed59bfa0248a39e459a5fc0587341c60b0120cbef86b1f4b4f533ec007fb45",
+  "entry_id": "OVR-000363",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:58360830d206585706ec0b701ff5f16118a8dbd6b5e32473e6e527e6b77833d9",
+  "recorded_at": "2026-09-03T16:31:00Z",
+  "references": [
+    {
+      "digest": "sha256:bac2044f20598c202ae40ac496a2b1a412d612c6c7655c0ceaba004eb6673822",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-domain-history-boundary.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9c8698868c1021283ed9cd30d228a6e1fdc121a3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000362",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 363,
+  "subject": {
+    "id": "ccr11-small-shop-domain-history-clarification",
+    "type": "DOCUMENT"
+  },
+  "summary": "Clarify the Small Shop domain-history boundary.",
+  "why": "The executable showcase proves a domain graph model and one fixture-specific state-versioning encoding over Core's generic history laws. Calling its first change genesis without explaining the positional meaning could imply a formal seed role or a selected domain ledger vocabulary that does not exist. This forward clarification keeps the published runtime evidence unchanged while stating exactly what Core supplies and what adopters still choose."
+}

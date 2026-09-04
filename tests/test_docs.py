@@ -30,6 +30,11 @@ from myst_parser.parsers.directives import (
 from myst_parser.parsers.mdit import create_md_parser
 import pytest
 
+from malleus._contract_pipeline.knowledge import (
+    KnowledgeChangeRefusal,
+    KnowledgeChangeRefusalReason,
+    KnowledgeChangeSet,
+)
 from scripts.contract_compiler_integration import IntegrationState
 
 try:
@@ -76,6 +81,7 @@ PUBLIC_GUIDE_ROOT_IMPORTS = (
     "bundled_ontology_path",
     "stage_subgraph",
 )
+PUBLIC_GUIDE_MODULE_IMPORTS = {"malleus.compiler", "malleus.inquisition"}
 PUBLIC_IMPORT_TARGETS = {"malleus", "malleus.OntologyRegistry"}
 PROTOCOL_BOUNDARY_ROLES = (
     "PROTOCOL_INVARIANT",
@@ -104,6 +110,7 @@ PUBLIC_GUIDES = {
     "PRINCIPLES.md",
     "RECIPES.md",
     "RECON_CONTRACT.md",
+    "SMALL_SHOP_WALKTHROUGH.md",
 }
 INTERNAL_CONTRACT_COMPILER_DOC_SOURCES = {
     "contract_compiler/index.md",
@@ -250,19 +257,153 @@ INTERNAL_METAMODEL_IDENTITY_ROWS = (
 )
 APPROVED_REFERENCE_PATH = DOCS / "reference" / "index.md"
 APPROVED_REFERENCE_SOURCE = (
-    "# Current package-root reference\n"
+    "# Current public API reference\n"
     "\n"
-    "This page exercises Sphinx autodoc and autosummary against the existing public\n"
-    "package root. It does not promote contract-compiler stages.\n"
+    "This page exercises Sphinx autodoc and autosummary against the public package\n"
+    "root, migration module, narrow compiler facade, and pack checkers. It\n"
+    "does not promote private compiler stages or CLI implementation modules.\n"
+    "\n"
+    "`compile_population_plan` raises `PopulationPlanRefusal` with reason\n"
+    "`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or\n"
+    "signal records.\n"
+    "\n"
+    "`adapt_document_assertions` validates a document capture and emits the same\n"
+    "neutral population-plan grammar. Captured assertions remain evidence rather\n"
+    "than graph records.\n"
+    "\n"
+    "`trace_population_record` follows one accepted record through its change set,\n"
+    "population plan, history profile, field derivations, and retained inputs. It is\n"
+    "read-only and refuses to guess when a plan is absent or inconsistent.\n"
+    "\n"
+    "`KnowledgeChangeHistory.compose_contract_revision` derives an additive\n"
+    "contract revision from two compiled contracts. The current policy admits added\n"
+    "classes, slots, and enum values and refuses added imports.\n"
+    "\n"
+    "`validate_pack_grounding` checks the closed provenance annotation on an\n"
+    "optional knowledge pack or project ontology. It checks citation structure, not\n"
+    "the intellectual suitability of a cited vocabulary. Project root CURIEs are\n"
+    "resolved only through the source schema's exact Malleus namespace mapping.\n"
+    "\n"
+    "`validate_pack_conformance` checks an edited pack against exact reference\n"
+    "bytes. It permits documentation changes, new declarations, and new enum values\n"
+    "while refusing removal or strengthening of the reference declaration surface.\n"
+    "Reference imports must remain unique and set-equivalent.\n"
     "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
     "\n"
     "   malleus.OntologyRegistry\n"
+    "   malleus.OntologySource\n"
+    "   malleus.OntologyImportResolution\n"
+    "   malleus.OntologyDefinitionSource\n"
+    "   malleus.OntologySourceClosure\n"
+    "   malleus.migration.MigrationVerification\n"
+    "   malleus.migration.MigrationVerifier\n"
+    "   malleus.migration.MigrationAwareJsonlLedger\n"
+    "   malleus.compiler\n"
+    "   malleus.compiler.compile_linkml_contract\n"
+    "   malleus.compiler.compile_population_plan\n"
+    "   malleus.compiler.prepare_population_change\n"
+    "   malleus.compiler.trace_population_record\n"
+    "   malleus.compiler.adapt_document_assertions\n"
+    "   malleus.compiler.compile_contract_revision\n"
+    "   malleus.compiler.KnowledgeChangeHistory\n"
+    "   malleus.compiler.ContractRevision\n"
+    "   malleus.compiler.ContractRevisionRefusal\n"
+    "   malleus.compiler.ContractRevisionRefusalReason\n"
+    "   malleus.compiler.PopulationPlanRefusal\n"
+    "   malleus.compiler.PopulationPlanRefusalReason\n"
+    "   malleus.compiler.PopulationRecordTrace\n"
+    "   malleus.compiler.PopulationTraceRefusal\n"
+    "   malleus.compiler.PopulationTraceRefusalReason\n"
+    "   malleus.compiler.DocumentAssertionCompilation\n"
+    "   malleus.compiler.DocumentAssertionRefusal\n"
+    "   malleus.compiler.DocumentAssertionRefusalReason\n"
+    "   malleus.inquisition\n"
+    "   malleus.inquisition.validate_pack_conformance\n"
+    "   malleus.inquisition.validate_pack_grounding\n"
+    "   malleus.inquisition.PackConformanceReceipt\n"
+    "   malleus.inquisition.PackGroundingReceipt\n"
+    "   malleus.inquisition.PackGroundingRefusal\n"
+    "   malleus.inquisition.PackGroundingRefusalReason\n"
+    "   malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY\n"
     "\n"
     ".. automodule:: malleus\n"
     "\n"
     ".. autoclass:: malleus.OntologyRegistry\n"
+    "   :members: source_closure\n"
+    "\n"
+    ".. autoclass:: malleus.OntologySource\n"
+    "\n"
+    ".. autoclass:: malleus.OntologyImportResolution\n"
+    "\n"
+    ".. autoclass:: malleus.OntologyDefinitionSource\n"
+    "\n"
+    ".. autoclass:: malleus.OntologySourceClosure\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationVerification\n"
+    "   :members: receipt_digests\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationVerifier\n"
+    "   :members: verify\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationAwareJsonlLedger\n"
+    "   :members: read_verified\n"
+    "\n"
+    ".. automodule:: malleus.compiler\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.compile_linkml_contract\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.compile_population_plan\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.prepare_population_change\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.trace_population_record\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.adapt_document_assertions\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.compile_contract_revision\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.KnowledgeChangeHistory\n"
+    "   :members: compose_contract_revision, record_contract_revision\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevision\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevisionRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.ContractRevisionRefusalReason\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationPlanRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationPlanRefusalReason\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationRecordTrace\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationTraceRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationTraceRefusalReason\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionCompilation\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.DocumentAssertionRefusalReason\n"
+    "\n"
+    ".. automodule:: malleus.inquisition\n"
+    "\n"
+    ".. autofunction:: malleus.inquisition.validate_pack_conformance\n"
+    "\n"
+    ".. autofunction:: malleus.inquisition.validate_pack_grounding\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackConformanceReceipt\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingReceipt\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackGroundingRefusalReason\n"
+    "\n"
+    ".. autodata:: malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY\n"
     "```\n"
 ).encode()
 
@@ -285,14 +426,18 @@ def _load_conf() -> ModuleType:
 def _public_doc_paths(root: Path = DOCS) -> list[Path]:
     paths = [root / relative for relative in sorted(PUBLIC_DOC_SOURCES)]
     missing = [path for path in paths if not path.is_file()]
-    assert missing == [], f"required public documentation sources are missing: {missing}"
+    assert missing == [], (
+        f"required public documentation sources are missing: {missing}"
+    )
     return paths
 
 
 def _repository_doc_paths(root: Path = DOCS) -> list[Path]:
     paths = [root / relative for relative in sorted(REPOSITORY_DOC_SOURCES)]
     missing = [path for path in paths if not path.is_file()]
-    assert missing == [], f"required repository documentation sources are missing: {missing}"
+    assert missing == [], (
+        f"required repository documentation sources are missing: {missing}"
+    )
     return paths
 
 
@@ -332,9 +477,9 @@ def _assert_support_profile_guide(source: str) -> None:
     assert _table_after(source, "## Exactly-one expression boundary") == (
         EXPRESSION_EXTENSION_ROWS
     )
-    decisions = (
-        ROOT / "design" / "contract_compiler" / "decisions.md"
-    ).read_text(encoding="utf-8")
+    decisions = (ROOT / "design" / "contract_compiler" / "decisions.md").read_text(
+        encoding="utf-8"
+    )
     for header in (
         ("Exact source member", "Required raw value"),
         ("Lexeme class", "Exact examples", "Result"),
@@ -343,10 +488,13 @@ def _assert_support_profile_guide(source: str) -> None:
         ("Governed source vector", "D08 outcome", "Exact reason"),
     ):
         assert _table_named(source, header) == _table_named(decisions, header)
-    assert _table_named(
-        source,
-        ("Component", "Canonical byte length", "Internal content identity"),
-    ) == INTERNAL_METAMODEL_IDENTITY_ROWS
+    assert (
+        _table_named(
+            source,
+            ("Component", "Canonical byte length", "Internal content identity"),
+        )
+        == INTERNAL_METAMODEL_IDENTITY_ROWS
+    )
     for phrase in (
         "Unknown input fails instead of acquiring hidden upstream semantics.",
         "The adapter emits deterministic, frontend-neutral facts.",
@@ -515,9 +663,7 @@ def _hostile_state() -> IntegrationState:
     return IntegrationState(
         manifest={
             "program_id": "CC-PROGRAM-001",
-            "authority": {
-                "snapshot": {"state": "SEALED", "result_commit": "0" * 40}
-            },
+            "authority": {"snapshot": {"state": "SEALED", "result_commit": "0" * 40}},
             "unused_absolute_path": str(ROOT),
         },
         workstreams={"CC-000": (), "CC-001": ("CC-000",)},
@@ -553,9 +699,7 @@ def _normalized_examples(
     ):
         return [
             (f"{location} doctest {index}", example.source)
-            for index, example in enumerate(
-                doctest.DocTestParser().get_examples(block)
-            )
+            for index, example in enumerate(doctest.DocTestParser().get_examples(block))
         ]
     return [(location, block)]
 
@@ -864,7 +1008,7 @@ def _forbidden_example_operations(tree: ast.AST) -> list[str]:
         for name in names:
             if name == "pytest" or name.startswith(("linkml", "tests")):
                 found.append(f"forbidden import {name}")
-            if name.startswith("malleus."):
+            if name.startswith("malleus.") and name not in PUBLIC_GUIDE_MODULE_IMPORTS:
                 found.append(f"private Malleus import {name}")
         if isinstance(node, ast.Call):
             function = node.func
@@ -952,16 +1096,18 @@ def test_contract_compiler_support_profile_is_rendered_and_exact() -> None:
         encoding="utf-8"
     )
     _assert_support_profile_guide(guide)
-    decisions = (
-        ROOT / "design" / "contract_compiler" / "decisions.md"
-    ).read_text(encoding="utf-8")
+    decisions = (ROOT / "design" / "contract_compiler" / "decisions.md").read_text(
+        encoding="utf-8"
+    )
     assert _table_after(decisions, "#### Exact location classification") == (
         SUPPORT_PROFILE_ROWS
     )
-    assert _table_after(decisions, "#### Versioned exactly-one expression extension") == (
-        EXPRESSION_EXTENSION_ROWS
+    assert _table_after(
+        decisions, "#### Versioned exactly-one expression extension"
+    ) == (EXPRESSION_EXTENSION_ROWS)
+    assert (
+        "contract_compiler/support_profile.md" in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
     )
-    assert "contract_compiler/support_profile.md" in INTERNAL_CONTRACT_COMPILER_DOC_SOURCES
     assert "contract_compiler/support_profile.md" not in PUBLIC_DOC_SOURCES
     assert "contract_compiler/index.md" not in PUBLIC_DOC_SOURCES
     assert "contract_compiler/manifests.md" not in PUBLIC_DOC_SOURCES
@@ -975,9 +1121,7 @@ def test_contract_compiler_support_profile_refuses_semantic_drift() -> None:
         encoding="utf-8"
     )
     class_row = next(
-        line
-        for line in guide.splitlines()
-        if line.startswith("| `classes.<class>` |")
+        line for line in guide.splitlines() if line.startswith("| `classes.<class>` |")
     )
     condition_row = next(
         line
@@ -1011,8 +1155,7 @@ def test_contract_compiler_support_profile_refuses_semantic_drift() -> None:
         guide.replace(condition_row, "", 1),
         guide.replace(
             condition_row,
-            condition_row
-            + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
+            condition_row + "\n| `SlotCondition` | `cf:experimental` | string | 0..1 |",
             1,
         ),
         guide.replace("Source indexes never enter identity.", "", 1),
@@ -1146,22 +1289,141 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         (output / ".doctrees" / "environment.pickle").read_bytes()
     )
     objects = environment.domaindata["py"]["objects"]
-    assert set(objects) == {
-        "malleus",
+    ontology_class_ids = (
         "malleus.OntologyRegistry",
-        "malleus.ontology.OntologyRegistry",
+        "malleus.OntologySource",
+        "malleus.OntologyImportResolution",
+        "malleus.OntologyDefinitionSource",
+        "malleus.OntologySourceClosure",
+    )
+    migration_class_ids = (
+        "malleus.migration.MigrationVerification",
+        "malleus.migration.MigrationVerifier",
+        "malleus.migration.MigrationAwareJsonlLedger",
+    )
+    compiler_class_ids = (
+        "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.ContractRevision",
+        "malleus.compiler.ContractRevisionRefusal",
+        "malleus.compiler.ContractRevisionRefusalReason",
+        "malleus.compiler.PopulationPlanRefusal",
+        "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.PopulationRecordTrace",
+        "malleus.compiler.PopulationTraceRefusal",
+        "malleus.compiler.PopulationTraceRefusalReason",
+        "malleus.compiler.DocumentAssertionCompilation",
+        "malleus.compiler.DocumentAssertionRefusal",
+        "malleus.compiler.DocumentAssertionRefusalReason",
+    )
+    inquisition_class_ids = (
+        "malleus.inquisition.PackConformanceReceipt",
+        "malleus.inquisition.PackGroundingReceipt",
+        "malleus.inquisition.PackGroundingRefusal",
+        "malleus.inquisition.PackGroundingRefusalReason",
+    )
+    class_ids = (
+        ontology_class_ids
+        + migration_class_ids
+        + compiler_class_ids
+        + inquisition_class_ids
+    )
+    function_ids = (
+        "malleus.compiler.compile_linkml_contract",
+        "malleus.compiler.compile_population_plan",
+        "malleus.compiler.prepare_population_change",
+        "malleus.compiler.trace_population_record",
+        "malleus.compiler.adapt_document_assertions",
+        "malleus.compiler.compile_contract_revision",
+        "malleus.inquisition.validate_pack_conformance",
+        "malleus.inquisition.validate_pack_grounding",
+    )
+    data_ids = ("malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY",)
+    method_ids = (
+        "malleus.OntologyRegistry.source_closure",
+        "malleus.migration.MigrationVerifier.verify",
+        "malleus.migration.MigrationAwareJsonlLedger.read_verified",
+        "malleus.compiler.KnowledgeChangeHistory.compose_contract_revision",
+        "malleus.compiler.KnowledgeChangeHistory.record_contract_revision",
+    )
+    aliases = {
+        f"malleus.ontology.{name.removeprefix('malleus.')}": name
+        for name in ontology_class_ids
     }
-    assert objects["malleus"].objtype == "module"
-    assert objects["malleus"].node_id == "module-malleus"
-    assert objects["malleus"].aliased is False
-    assert objects["malleus.OntologyRegistry"].objtype == "class"
-    assert objects["malleus.OntologyRegistry"].node_id == "malleus.OntologyRegistry"
-    assert objects["malleus.OntologyRegistry"].aliased is False
-    assert objects["malleus.ontology.OntologyRegistry"].aliased is True
+    aliases.update(
+        {
+            "malleus._contract_pipeline.knowledge.KnowledgeChangeHistory": (
+                "malleus.compiler.KnowledgeChangeHistory"
+            ),
+            "malleus._contract_pipeline.population.PopulationPlanRefusal": (
+                "malleus.compiler.PopulationPlanRefusal"
+            ),
+            "malleus._contract_pipeline.population.PopulationPlanRefusalReason": (
+                "malleus.compiler.PopulationPlanRefusalReason"
+            ),
+            "malleus._contract_pipeline.population.PopulationRecordTrace": (
+                "malleus.compiler.PopulationRecordTrace"
+            ),
+            "malleus._contract_pipeline.population.PopulationTraceRefusal": (
+                "malleus.compiler.PopulationTraceRefusal"
+            ),
+            "malleus._contract_pipeline.population.PopulationTraceRefusalReason": (
+                "malleus.compiler.PopulationTraceRefusalReason"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionCompilation": (
+                "malleus.compiler.DocumentAssertionCompilation"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionRefusal": (
+                "malleus.compiler.DocumentAssertionRefusal"
+            ),
+            "malleus._contract_pipeline.document.DocumentAssertionRefusalReason": (
+                "malleus.compiler.DocumentAssertionRefusalReason"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevision": (
+                "malleus.compiler.ContractRevision"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevisionRefusal": (
+                "malleus.compiler.ContractRevisionRefusal"
+            ),
+            "malleus._contract_pipeline.revision.ContractRevisionRefusalReason": (
+                "malleus.compiler.ContractRevisionRefusalReason"
+            ),
+        }
+    )
+    aliases.update(
+        {
+            f"malleus.inquisition.pack_grounding.{name.rsplit('.', 1)[-1]}": name
+            for name in inquisition_class_ids
+        }
+    )
+    module_ids = {
+        "malleus": "module-malleus",
+        "malleus.compiler": "module-malleus.compiler",
+        "malleus.inquisition": "module-malleus.inquisition",
+    }
+    object_types = {
+        **dict.fromkeys(class_ids, "class"),
+        **dict.fromkeys(function_ids, "function"),
+        **dict.fromkeys(data_ids, "data"),
+        **dict.fromkeys(method_ids, "method"),
+    }
+    assert set(objects) == {*module_ids, *object_types, *aliases}
+    for identity, node_id in module_ids.items():
+        assert objects[identity].objtype == "module"
+        assert objects[identity].node_id == node_id
+        assert objects[identity].aliased is False
+    for identity, object_type in object_types.items():
+        assert objects[identity].objtype == object_type
+        assert objects[identity].node_id == identity
+        assert objects[identity].aliased is False
+    for alias, identity in aliases.items():
+        assert objects[alias].objtype == "class"
+        assert objects[alias].node_id == identity
+        assert objects[alias].aliased is True
     modules = environment.domaindata["py"]["modules"]
-    assert set(modules) == {"malleus"}
-    assert modules["malleus"].docname == "reference/index"
-    assert modules["malleus"].node_id == "module-malleus"
+    assert set(modules) == set(module_ids)
+    for identity, node_id in module_ids.items():
+        assert modules[identity].docname == "reference/index"
+        assert modules[identity].node_id == node_id
 
     doctree = pickle.loads(
         (output / ".doctrees" / "reference" / "index.doctree").read_bytes()
@@ -1172,24 +1434,71 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         if type(node).__name__ == "desc" and node.get("domain") == "py"
     ]
     signatures = [
-        node
-        for node in doctree.findall()
-        if type(node).__name__ == "desc_signature"
+        node for node in doctree.findall() if type(node).__name__ == "desc_signature"
     ]
+    signature_ids = (
+        "malleus.OntologyRegistry",
+        "malleus.OntologyRegistry.source_closure",
+        "malleus.OntologySource",
+        "malleus.OntologyImportResolution",
+        "malleus.OntologyDefinitionSource",
+        "malleus.OntologySourceClosure",
+        "malleus.migration.MigrationVerification",
+        "malleus.migration.MigrationVerifier",
+        "malleus.migration.MigrationVerifier.verify",
+        "malleus.migration.MigrationAwareJsonlLedger",
+        "malleus.migration.MigrationAwareJsonlLedger.read_verified",
+        "malleus.compiler.compile_linkml_contract",
+        "malleus.compiler.compile_population_plan",
+        "malleus.compiler.prepare_population_change",
+        "malleus.compiler.trace_population_record",
+        "malleus.compiler.adapt_document_assertions",
+        "malleus.compiler.compile_contract_revision",
+        "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.KnowledgeChangeHistory.compose_contract_revision",
+        "malleus.compiler.KnowledgeChangeHistory.record_contract_revision",
+        "malleus.compiler.ContractRevision",
+        "malleus.compiler.ContractRevisionRefusal",
+        "malleus.compiler.ContractRevisionRefusalReason",
+        "malleus.compiler.PopulationPlanRefusal",
+        "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.PopulationRecordTrace",
+        "malleus.compiler.PopulationTraceRefusal",
+        "malleus.compiler.PopulationTraceRefusalReason",
+        "malleus.compiler.DocumentAssertionCompilation",
+        "malleus.compiler.DocumentAssertionRefusal",
+        "malleus.compiler.DocumentAssertionRefusalReason",
+        "malleus.inquisition.validate_pack_conformance",
+        "malleus.inquisition.validate_pack_grounding",
+        "malleus.inquisition.PackConformanceReceipt",
+        "malleus.inquisition.PackGroundingReceipt",
+        "malleus.inquisition.PackGroundingRefusal",
+        "malleus.inquisition.PackGroundingRefusalReason",
+        "malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY",
+    )
     assert [(node.get("objtype"), node.get("classes")) for node in descriptions] == [
-        ("class", ["py", "class"])
+        (object_types[identity], ["py", object_types[identity]])
+        for identity in signature_ids
     ]
     assert [node.get("ids") for node in signatures] == [
-        ["malleus.OntologyRegistry"]
+        [identity] for identity in signature_ids
     ]
 
     rendered = (output / "reference" / "index.html").read_text(encoding="utf-8")
-    assert 'id="module-malleus"' in rendered
     assert '<table class="autosummary longtable docutils align-default">' in rendered
-    assert 'href="#malleus.OntologyRegistry"' in rendered
+    for node_id in module_ids.values():
+        assert f'id="{node_id}"' in rendered
+    for identity in (*class_ids, *function_ids, *data_ids):
+        assert f'href="#{identity}"' in rendered
+    for identity in signature_ids:
+        assert f'id="{identity}"' in rendered
+    assert "PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED" in rendered
+    assert "Captured assertions remain evidence" in rendered
+    assert "checks citation structure" in rendered
+    assert "malleus.compiler_cli" not in rendered
     assert 'class="py class"' in rendered
     assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered
-    assert ':py:obj:' not in rendered
+    assert ":py:obj:" not in rendered
     assert ".. py:" not in rendered
     assert (output / "py-modindex.html").is_file()
 
@@ -1299,7 +1608,9 @@ def test_manifest_projection_uses_only_the_fixed_sealed_validator_result(
     monkeypatch.setattr(module, "validate_integration", validate)
     signature = inspect.signature(module.manifest_projection)
     assert tuple(signature.parameters) == ("repository",)
-    assert _rendered_xml(module, state) == module.manifest_projection(ROOT).asdom().toxml()
+    assert (
+        _rendered_xml(module, state) == module.manifest_projection(ROOT).asdom().toxml()
+    )
     assert calls == [((ROOT,), {"require_sealed": True})]
 
     def refuse(*args: object, **kwargs: object) -> IntegrationState:
@@ -1362,9 +1673,7 @@ def test_repository_python_examples_are_ast_checked() -> None:
     for path, capture in autosummaries:
         assert "toctree" not in capture["options"], path
     blocks = [
-        block
-        for path in public_paths
-        for block in _public_source_python_blocks(path)
+        block for path in public_paths for block in _public_source_python_blocks(path)
     ]
     assert blocks, "documentation has no executable Python or doctest blocks"
     for location, source in blocks:
@@ -1376,7 +1685,9 @@ def test_repository_python_examples_are_ast_checked() -> None:
 @pytest.mark.parametrize(
     "mutation",
     [
-        lambda source: source.replace(b"package root", b"package-root", 1),
+        lambda source: source.replace(
+            b"public package\nroot", b"public package-root", 1
+        ),
         lambda source: source.replace(b"OntologyRegistry", b"KnowledgeGraph", 1),
         lambda source: source.replace(
             b".. automodule:: malleus\n",
@@ -1415,10 +1726,13 @@ def test_eval_rst_permission_cannot_be_spoofed_by_path_or_location(
         _public_source_captures(copied)
     with pytest.raises(AssertionError, match="unsupported MyST directive 'eval-rst'"):
         _public_source_python_blocks(copied)
-    assert _refusal_from(
-        APPROVED_REFERENCE_SOURCE.decode(),
-        location="docs/reference/index.md",
-    ) == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
+    assert (
+        _refusal_from(
+            APPROVED_REFERENCE_SOURCE.decode(),
+            location="docs/reference/index.md",
+        )
+        == "docs/reference/index.md: unsupported MyST directive 'eval-rst'"
+    )
 
 
 def test_repository_scan_excludes_unrendered_markdown_but_rst_stays_refused(
@@ -1526,8 +1840,14 @@ def test_real_autodoc_members_expands_unapproved_public_objects(tmp_path: Path) 
 @pytest.mark.parametrize(
     ("source", "target"),
     [
-        ("```{autosummary}\nlinkml_runtime.forbidden\n```\n", "linkml_runtime.forbidden"),
-        ("```{autosummary}\n:nosignatures:\n\nlinkml_runtime.forbidden\n```\n", "linkml_runtime.forbidden"),
+        (
+            "```{autosummary}\nlinkml_runtime.forbidden\n```\n",
+            "linkml_runtime.forbidden",
+        ),
+        (
+            "```{autosummary}\n:nosignatures:\n\nlinkml_runtime.forbidden\n```\n",
+            "linkml_runtime.forbidden",
+        ),
     ],
 )
 def test_autosummary_targets_cannot_bypass_ast_guard(
@@ -1537,17 +1857,19 @@ def test_autosummary_targets_cannot_bypass_ast_guard(
     assert _refusal_from(
         source,
         location="autosummary-target",
-    ) == (
-        f"autosummary-target: forbidden target {target!r} normalized {target!r}"
-    )
+    ) == (f"autosummary-target: forbidden target {target!r} normalized {target!r}")
 
 
 @pytest.mark.parametrize(
     "source",
-    ["```{automodule} malleus\n```\n\n```{autosummary}\n"
-     "malleus.OntologyRegistry\n```\n"],
+    [
+        "```{automodule} malleus\n```\n\n```{autosummary}\n"
+        "malleus.OntologyRegistry\n```\n"
+    ],
 )
-def test_public_root_autodoc_and_autosummary_targets_remain_allowed(source: str) -> None:
+def test_public_root_autodoc_and_autosummary_targets_remain_allowed(
+    source: str,
+) -> None:
     blocks = _myst_python_blocks_from(
         source,
         location="public-root-target",
@@ -1582,9 +1904,7 @@ def test_nested_myst_container_import_forms_are_checked(inner: str) -> None:
         expected_target = None
     else:
         myst_inner = "```{automodule} linkml\n```\n"
-        expected_target = (
-            f"{location}: forbidden target 'linkml' normalized 'linkml'"
-        )
+        expected_target = f"{location}: forbidden target 'linkml' normalized 'linkml'"
     source = f"````{{note}}\n{myst_inner}````\n"
 
     refusal = _refusal_from(source, location=location)
@@ -1601,9 +1921,7 @@ def test_valid_myst_autodoc_options_cannot_hide_import_targets(option: str) -> N
     assert _refusal_from(
         source,
         location="valid-myst-option",
-    ) == (
-        "valid-myst-option: forbidden target 'linkml' normalized 'linkml'"
-    )
+    ) == ("valid-myst-option: forbidden target 'linkml' normalized 'linkml'")
 
 
 def test_authored_rst_source_is_refused_with_actionable_path(tmp_path: Path) -> None:
@@ -1661,10 +1979,13 @@ def test_file_level_myst_parser_override_is_refused_before_scanning(
     configuration: str,
 ) -> None:
     source = f"---\n{configuration}---\n# File-local parser override\n"
-    assert _refusal_from(
-        source,
-        location="myst-topmatter",
-    ) == f"myst-topmatter: unsupported file-level MyST config {key!r}"
+    assert (
+        _refusal_from(
+            source,
+            location="myst-topmatter",
+        )
+        == f"myst-topmatter: unsupported file-level MyST config {key!r}"
+    )
 
 
 def test_real_myst_builder_executes_topmatter_enabled_directive(
@@ -1692,10 +2013,13 @@ def test_real_myst_builder_executes_topmatter_enabled_directive(
     assert result.returncode == 0, result.stdout + result.stderr
     report = (tmp_path / "output" / "output.txt").read_text(encoding="utf-8")
     assert "1 passed" in report
-    assert _refusal_from(
-        source_text,
-        location="real-myst-topmatter",
-    ) == "real-myst-topmatter: unsupported file-level MyST config 'myst'"
+    assert (
+        _refusal_from(
+            source_text,
+            location="real-myst-topmatter",
+        )
+        == "real-myst-topmatter: unsupported file-level MyST config 'myst'"
+    )
 
 
 @pytest.mark.parametrize(
@@ -1765,9 +2089,7 @@ def test_commonmark_container_import_forms_are_checked(
         assert result.returncode == 0, result.stdout + result.stderr
         expected_target = None
     else:
-        expected_target = (
-            f"{location}: forbidden target 'linkml' normalized 'linkml'"
-        )
+        expected_target = f"{location}: forbidden target 'linkml' normalized 'linkml'"
 
     refusal = _refusal_from(source, location=location)
     if expected_target is None:
@@ -1818,10 +2140,7 @@ def test_autodoc_and_autosummary_refuse_targets_outside_exact_allowlist(
     assert _refusal_from(
         source,
         location="exact-target-guard",
-    ) == (
-        f"exact-target-guard: {category} target {target!r} "
-        f"normalized {normalized!r}"
-    )
+    ) == (f"exact-target-guard: {category} target {target!r} normalized {normalized!r}")
 
 
 def test_autosummary_normalizes_only_a_leading_tilde() -> None:
@@ -1851,6 +2170,28 @@ def test_from_malleus_import_allows_only_the_current_guide_root_objects() -> Non
         "private Malleus import ContractCompiler",
         "private Malleus import ontology",
     ]
+
+
+def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
+    assert PUBLIC_GUIDE_MODULE_IMPORTS == {
+        "malleus.compiler",
+        "malleus.inquisition",
+    }
+    for source in (
+        "from malleus.compiler import compile_linkml_contract",
+        "from malleus.inquisition import validate_pack_conformance",
+        "from malleus.inquisition import validate_pack_grounding",
+    ):
+        assert _forbidden_example_operations(ast.parse(source)) == []
+
+    for module in (
+        "malleus._contract_pipeline",
+        "malleus.compiler_cli",
+        "malleus.ontology",
+    ):
+        assert _forbidden_example_operations(ast.parse(f"import {module}")) == [
+            f"private Malleus import {module}"
+        ]
 
 
 @pytest.mark.parametrize(
@@ -1886,30 +2227,28 @@ def test_dynamic_import_and_execution_calls_are_ast_refused(
 @pytest.mark.parametrize("directive", SPHINX_SKIPIF_DIRECTIVES)
 def test_myst_skipif_expressions_use_the_bounded_ast_policy(directive: str) -> None:
     source = (
-        f"```{{{directive}}}\n"
-        ":skipif: __import__('linkml') and False\n\n"
-        "pass\n"
-        "```\n"
+        f"```{{{directive}}}\n:skipif: __import__('linkml') and False\n\npass\n```\n"
     )
-    assert _refusal_from(
-        source,
-        location=f"myst-skipif-{directive}",
-    ) == f"myst-skipif-{directive}: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            source,
+            location=f"myst-skipif-{directive}",
+        )
+        == f"myst-skipif-{directive}: ['forbidden dynamic import __import__']"
+    )
 
 
 def test_myst_yaml_skipif_uses_the_bounded_ast_policy() -> None:
     source = (
-        "```{testcode}\n"
-        "---\n"
-        "skipif: __import__('linkml') and False\n"
-        "---\n"
-        "pass\n"
-        "```\n"
+        "```{testcode}\n---\nskipif: __import__('linkml') and False\n---\npass\n```\n"
     )
-    assert _refusal_from(
-        source,
-        location="myst-yaml-skipif",
-    ) == "myst-yaml-skipif: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            source,
+            location="myst-yaml-skipif",
+        )
+        == "myst-yaml-skipif: ['forbidden dynamic import __import__']"
+    )
 
 
 @pytest.mark.parametrize(
@@ -1955,10 +2294,13 @@ def test_real_doctest_evaluates_skipif_that_guard_refuses(tmp_path: Path) -> Non
     assert result.returncode == 0, result.stdout + result.stderr
     report = (tmp_path / "output" / "output.txt").read_text(encoding="utf-8")
     assert "1 passed" in report
-    assert _refusal_from(
-        index,
-        location="real-skipif",
-    ) == "real-skipif: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            index,
+            location="real-skipif",
+        )
+        == "real-skipif: ['forbidden dynamic import __import__']"
+    )
 
 
 def test_static_example_policy_states_its_non_sandbox_boundary() -> None:
@@ -2003,12 +2345,7 @@ def test_ordinary_import_aliases_cannot_hide_dynamic_calls(
 def test_real_doctest_executes_dynamic_import_that_guard_refuses(
     tmp_path: Path,
 ) -> None:
-    index = (
-        "# Dynamic import bypass\n\n"
-        "```{testcode}\n"
-        "__import__('linkml')\n"
-        "```\n"
-    )
+    index = "# Dynamic import bypass\n\n```{testcode}\n__import__('linkml')\n```\n"
     source = _isolated_docs(
         tmp_path,
         extensions=("myst_parser", "sphinx.ext.doctest"),
@@ -2017,10 +2354,13 @@ def test_real_doctest_executes_dynamic_import_that_guard_refuses(
     )
     result = _build("doctest", tmp_path / "output", source=source)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert _refusal_from(
-        index,
-        location="real-dynamic-import",
-    ) == "real-dynamic-import: ['forbidden dynamic import __import__']"
+    assert (
+        _refusal_from(
+            index,
+            location="real-dynamic-import",
+        )
+        == "real-dynamic-import: ['forbidden dynamic import __import__']"
+    )
 
 
 @pytest.mark.parametrize(
@@ -2060,9 +2400,7 @@ def test_real_builders_execute_import_forms_that_the_guard_refuses(
         location=f"real-{builder}",
     )
     if builder == "html":
-        assert refusal == (
-            "real-html: forbidden target 'linkml' normalized 'linkml'"
-        )
+        assert refusal == ("real-html: forbidden target 'linkml' normalized 'linkml'")
     else:
         assert f"real-{builder}" in refusal
         assert f"forbidden import {target}" in refusal
@@ -2164,9 +2502,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         (correction_root / "evidence" / "graph.json").read_text(encoding="utf-8")
     )
     correction_explanation = json.loads(
-        (correction_root / "evidence" / "explanation.json").read_text(
-            encoding="utf-8"
-        )
+        (correction_root / "evidence" / "explanation.json").read_text(encoding="utf-8")
     )
     normalized = " ".join(index.split())
     normalized_readme = " ".join(readme.split())
@@ -2188,6 +2524,8 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "Anyone could write those records by hand. That is not the achievement.",
         "The graph is the current view produced from that history, not a second source of truth.",
         "No LLM is needed to compile, decide, or replay this path.",
+        "The public `malleus.compiler` facade exposes the reusable executor",
+        "`malleus-compiler contract` compiles exact named LinkML source files.",
         "one immutable `KnowledgeChangeSet`",
         "One JSONL history records 20 bootstrap retention and registration events",
         "two fixture-supplied check receipts, and the final verdict. That is 25 events.",
@@ -2205,7 +2543,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         assert claim in normalized
 
     for boundary in (
-        "not yet a stable public API",
+        "Public here means an import path and installed command, not stable wire formats.",
         "This does not mean the general Malleus compiler is finished.",
         "not a release gate",
         "general mapping contract",
@@ -2289,7 +2627,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "sha256:ed170fd1434eb247c2b098a136f2b050021f9d1677d0477be9a69be5d6b63a17"
     )
     assert receipt["ledger_head"] == (
-        "sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad"
+        "sha256:3e07988bafd28a481c5eece5bfdad533ddbb63c93e862b9192944e04c8af3574"
     )
     assert receipt["queries"] == {
         "entities": [
@@ -2336,9 +2674,10 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "supplier-order-state:B:e4"
     )
     assert not (correction_root / "checks" / "source-integrity.json").exists()
-    entrypoint_digest = "sha256:" + hashlib.sha256(
-        (correction_root / "run.py").read_bytes()
-    ).hexdigest()
+    entrypoint_digest = (
+        "sha256:"
+        + hashlib.sha256((correction_root / "run.py").read_bytes()).hexdigest()
+    )
     for check_path in (correction_root / "checks").glob("*.json"):
         check = json.loads(check_path.read_text(encoding="utf-8"))
         assert check["executor"]["sha256"] == entrypoint_digest
@@ -2356,13 +2695,17 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
     ):
         assert evidence_claim in normalized_evidence
 
-    milestone_link = (
-        "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
-    )
+    milestone_link = "docs/index.md#first-compiler-to-ledger-to-knowledge-graph-proof"
     assert milestone_link in normalized_readme
-    assert "not yet a stable public compiler API or release" in normalized_readme
+    assert (
+        "Public here means a supported import path and installed command in packages "
+        "built from this source, not a stable wire format or release."
+        in normalized_readme
+    )
     for current_readme_claim in (
         "warehouse record plus a separate inventory lookup",
+        "from malleus.compiler import compile_linkml_contract",
+        "malleus-compiler contract",
         "graph-to-Prolog fact compiler",
         "Quick start: structural validation",
         "The fingerprint grammar is reported separately",
@@ -2383,6 +2726,368 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         assert stale_readme_claim not in readme
 
 
+def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
+    guide = (DOCS / "SMALL_SHOP_WALKTHROUGH.md").read_text(encoding="utf-8")
+    normalized = " ".join(guide.split())
+    index = (DOCS / "index.md").read_text(encoding="utf-8")
+    showcase = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "experiments"
+        / "small_shop"
+        / "showcase"
+    )
+    evidence_paths = {
+        name: showcase / "evidence" / name
+        for name in ("explanation.json", "graph.json", "queries.json", "receipt.json")
+    }
+    evidence_bytes = {name: path.read_bytes() for name, path in evidence_paths.items()}
+    evidence = {name: json.loads(source) for name, source in evidence_bytes.items()}
+    explanation = evidence["explanation.json"]
+    graph = evidence["graph.json"]
+    queries = evidence["queries.json"]
+    receipt = evidence["receipt.json"]
+    program = json.loads((showcase / "run.json").read_text(encoding="utf-8"))
+
+    assert "SMALL_SHOP_WALKTHROUGH.md" in PUBLIC_GUIDES
+    assert "[Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md)" in index
+    root_toctree = index.split("```{toctree}", 1)[1].split("```", 1)[0]
+    assert "SMALL_SHOP_WALKTHROUGH" in root_toctree.splitlines()
+
+    for source_value in (
+        '"event_id":"e27"',
+        '"items":["X1","X2","Y1"]',
+        "inventory_unit_id,product_code",
+        '"event_id":"e4","product_code":"Y","quantity":1',
+        '"event_id":"e7","product_code":"Y","quantity":2',
+        "invoice_id",
+        '"event_id":"e30","invoice_ids":["I1","I2"],"payment_id":"P1"',
+    ):
+        assert source_value in guide
+
+    for claim in (
+        "Only the ontology closure is compiled into neutral contract facts.",
+        "five immutable `KnowledgeChangeSet` values",
+        "`genesis` is a fixture name, not a formal `KnowledgeChangeSet` role.",
+        "it is not a complete seed snapshot",
+        "a fixture-specific state-versioning pattern, not a reusable Small Shop ledger vocabulary",
+        "They are retained inside the bound mapping artifacts",
+        "not carried as typed change-role fields into, or interpreted by, Core's generic change-set format.",
+        "Every population plan binds the shipped `state-version` profile.",
+        "completeness covers only the declared sources, not the whole world",
+        "Core now supplies closed, hashed profile artifacts",
+        "does not yet execute arbitrary projection rules from profile text",
+        "`object-event` profile is therefore declarative until Event population is supported",
+        "Each change's source closure is bundle-wide",
+        "`selected_records` identifies the rows used by the mapping",
+        "All 19 fixture source members",
+        "staged admission of pre-provisioned sources, not live observation",
+        "`PREPROVISIONED_BOOTSTRAP`",
+        "Source, mapping, or graph-shape drift refuses before mutation.",
+        "replay from the ledger alone, not recompilation from the ledger alone",
+        "The public population compiler accepts an already-authored plan; it does not invent this mapping.",
+        "`CHANGE_LEVEL_NOT_PER_OPERATION_CAUSALITY`",
+        "does not yet identify the query program or its dependency closure",
+        "Operation-level causality",
+        "arbitrary transaction-prefix queries",
+        "Cypher",
+        "generic collection fan-out",
+        "scoring and evaluation",
+        "effects",
+        "Semantic Re-entry",
+        "Meaning and decisions are explicit.",
+        "deterministic replay rebuilds it from the ledger",
+    ):
+        assert claim in normalized
+    assert "https://link.springer.com/chapter/10.1007/978-3-031-08848-3_9" in guide
+    assert "`P1`, `I1`, and `I2` co-occur" in normalized
+    assert "not asserted as a source-native direction by the chapter" in normalized
+
+    coordinates = explanation["coordinates"]
+    assert coordinates == {
+        "contract": {
+            "effective_contract_identity": (
+                "sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3"
+            ),
+            "fact_count": 1040,
+            "facts_identity": (
+                "sha256:88becf08c17ff132d872ac57fabd66f935fa44e9544c7f846a850d0148c71fa3"
+            ),
+            "validated_contract_artifact_id": (
+                "artifact:small-shop-showcase:validated-contract"
+            ),
+            "validated_contract_artifact_identity": (
+                "sha256:a4b3f1b88bd6cdef0d36512e11474e71b33f3389d1e4a4d42f2444f96c7223a1"
+            ),
+            "validated_fact_set_identity": (
+                "sha256:f34a1e660d1b592c1d46681e4ca77f3744ee3d090ed040404c60a23391d079ef"
+            ),
+        },
+        "graph": {
+            "current_record_count": 9,
+            "ontology_identity": (
+                "sha256:f34a1e660d1b592c1d46681e4ca77f3744ee3d090ed040404c60a23391d079ef"
+            ),
+            "state_digest": (
+                "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+            ),
+        },
+        "history": {
+            "acceptance_head": (
+                "sha256:741853f06741d9bbf89a1d574578e57c49749dd144cce2095c568a0d65bcd415"
+            ),
+            "binding_identity": (
+                "sha256:87d653d38f56f771a91668b05f99ec80ffcc2e5e8bbe841c7e6b978db6b89e5e"
+            ),
+            "event_count": 74,
+            "ledger_head": (
+                "sha256:741853f06741d9bbf89a1d574578e57c49749dd144cce2095c568a0d65bcd415"
+            ),
+            "materialization_head": (
+                "sha256:72679ae14f363f4bcebe7a31ce42b63770ed852875908fade78f23f6749f7f3c"
+            ),
+            "receipt_identity": (
+                "sha256:09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41"
+            ),
+        },
+    }
+    for value in (
+        coordinates["contract"]["effective_contract_identity"],
+        coordinates["history"]["ledger_head"],
+        coordinates["history"]["materialization_head"],
+        coordinates["history"]["receipt_identity"],
+        coordinates["graph"]["state_digest"],
+        explanation["run_program"]["identity"],
+    ):
+        assert value in guide
+
+    assert {
+        name: hashlib.sha256(source).hexdigest()
+        for name, source in evidence_bytes.items()
+    } == {
+        "explanation.json": (
+            "90497272ff3ffb5ae2572b4fede11e43336166c92a8fe22e0d3d298fd87c9254"
+        ),
+        "graph.json": (
+            "b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+        ),
+        "queries.json": (
+            "86e24272e9de1e3fc3c70648e61b80a9ba0f6ce55e8ad3d0fb22880f1b55b86e"
+        ),
+        "receipt.json": (
+            "09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41"
+        ),
+    }
+    assert coordinates["history"]["receipt_identity"] == (
+        "sha256:" + hashlib.sha256(evidence_bytes["receipt.json"]).hexdigest()
+    )
+    assert (
+        receipt["contract_identity"]
+        == coordinates["contract"]["effective_contract_identity"]
+    )
+    assert receipt["ledger_head"] == coordinates["history"]["ledger_head"]
+    assert receipt["graph_state_digest"] == coordinates["graph"]["state_digest"]
+    assert explanation["run_program"]["identity"] == (
+        "sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6"
+    )
+    assert explanation["run_program"]["decisions"] == program["decisions"]
+    assert explanation["run_program"]["limitations"] == program["limitations"]
+    assert program["decisions"]["source_arrival_model"] == {
+        "choice": "PREPROVISIONED_BOOTSTRAP",
+        "deferred": "STAGE_WISE_SOURCE_REGISTRATION_AND_OBSERVATION",
+        "meaning": "STAGED_ADMISSION_NOT_LIVE_OBSERVATION",
+    }
+
+    accepted_changes = explanation["accepted_changes"]
+    change_ids = [item["change_set_id"] for item in accepted_changes]
+    assert change_ids == [
+        "change:RET-010:genesis",
+        "change:SHOP-PAYMENT-SETTLEMENT:invoice-base",
+        "change:SHOP-PAYMENT-SETTLEMENT:P1:e30",
+        "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e4",
+        "change:SHOP-SUPPLIER-ORDER-CORRECTION:B:e7",
+    ]
+    first = accepted_changes[0]
+    assert first["ordinal"] == 0
+    assert first["base_coordinates"] == {
+        "acceptance_head": "GENESIS",
+        "accepted_state_digest": (
+            "sha256:45b604f659a3b41674815d950de9145deb9ab990677013c7062ab46ed417fd9e"
+        ),
+        "ledger_event_count": 49,
+        "ledger_head": (
+            "sha256:894c9119cdb5d33b4e1ef6811d2a86214488268f02235c7fd233042b42eda8ef"
+        ),
+        "materialization_head": "GENESIS",
+    }
+    assert [item["record_type"] for item in accepted_changes[1]["operations"]] == [
+        "Invoice",
+        "Invoice",
+    ]
+    assert accepted_changes[3]["operations"][0]["record_id"] == (
+        "supplier-order-state:B:e4"
+    )
+    assert all("kind" not in item and "role" not in item for item in accepted_changes)
+
+    correction_mapping = json.loads(
+        (
+            ROOT
+            / "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json"
+        ).read_text(encoding="utf-8")
+    )
+    settlement_mapping = json.loads(
+        (showcase / "settlement-mapping.json").read_text(encoding="utf-8")
+    )
+    assert [item["kind"] for item in correction_mapping["changes"]] == [
+        "INITIAL_DOMAIN_STATE",
+        "CORRECTION",
+    ]
+    assert [item["kind"] for item in settlement_mapping["stages"]] == [
+        "FIXTURE_ORCHESTRATED_EXISTING_BASE",
+        "FIXED_TWO_INVOICE_SETTLEMENT",
+    ]
+
+    provenance = next(
+        item
+        for item in queries["answers"]
+        if item["command"] == "record-change-provenance"
+    )
+    change_value = provenance["result"]["change"]["value"]
+    canonical_change = json.dumps(
+        change_value,
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    parsed_change = KnowledgeChangeSet.from_bytes(canonical_change)
+    assert parsed_change.change_set_id == change_value["change_set_id"]
+    assert "kind" not in parsed_change.data and "role" not in parsed_change.data
+    for field in ("kind", "role"):
+        malformed = dict(change_value)
+        malformed[field] = "GENESIS"
+        with pytest.raises(KnowledgeChangeRefusal) as caught:
+            KnowledgeChangeSet.from_bytes(
+                json.dumps(
+                    malformed,
+                    allow_nan=False,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ).encode("utf-8")
+            )
+        assert caught.value.reason is KnowledgeChangeRefusalReason.MALFORMED_CHANGE_SET
+
+    source_ids = set(receipt["source_identities"])
+    sources_by_prefix = {
+        prefix: {item for item in source_ids if item.startswith(prefix + ":")}
+        for prefix in ("ret010", "settlement", "correction")
+    }
+    assert {prefix: len(items) for prefix, items in sources_by_prefix.items()} == {
+        "ret010": 8,
+        "settlement": 6,
+        "correction": 5,
+    }
+    expected_prefixes = (
+        "ret010",
+        "settlement",
+        "settlement",
+        "correction",
+        "correction",
+    )
+    for change, prefix in zip(
+        explanation["accepted_changes"], expected_prefixes, strict=True
+    ):
+        assert set(change["source_record_ids"]) == sources_by_prefix[prefix]
+
+    records = {item["id"]: item for item in graph["nodes"]}
+    records.update({item["key"]: item for item in graph["relations"]})
+    assert set(records) == {
+        "O1",
+        "X1",
+        "contains:O1:X1",
+        "invoice:I1",
+        "invoice:I2",
+        "payment:P1",
+        "relation:P1:I1",
+        "relation:P1:I2",
+        "supplier-order-state:B:e7",
+    }
+    assert records["contains:O1:X1"]["target_id"] == "X1"
+    assert records["supplier-order-state:B:e7"]["ordered_quantity"] == 2
+    assert [
+        (item["source_id"], item["target_id"])
+        for item in graph["relations"]
+        if item["type"] == "PaymentSettlesInvoiceRelation"
+    ] == [("payment:P1", "invoice:I1"), ("payment:P1", "invoice:I2")]
+
+    answers = queries["answers"]
+    order = next(item for item in answers if item["command"] == "order-contents")
+    payment = next(item for item in answers if item["command"] == "payment-settlements")
+    history = next(
+        item for item in answers if item["command"] == "supplier-order-history"
+    )
+    provenance = next(
+        item
+        for item in answers
+        if item["command"] == "record-change-provenance"
+        and item["result"]["record"]["id"] == "relation:P1:I1"
+    )
+    assert order["result"]["contents"][0]["unit"]["id"] == "X1"
+    assert [
+        item["invoice"]["invoice_number"] for item in payment["result"]["settlements"]
+    ] == ["I1", "I2"]
+    assert [
+        item["record"]["ordered_quantity"] for item in history["result"]["states"]
+    ] == [1, 2]
+    assert provenance["result"]["provenance_scope"] == (
+        "CHANGE_LEVEL_NOT_PER_OPERATION_CAUSALITY"
+    )
+    assert provenance["result"]["change"]["value"]["change_set_id"] == (
+        "change:SHOP-PAYMENT-SETTLEMENT:P1:e30"
+    )
+    assert len(provenance["result"]["change_source_closure"]) == 6
+    assert len(provenance["result"]["change_evidence_closure"]) == 7
+
+    settlement = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "fixtures"
+        / "small_shop_fulfilment_settlement_v1"
+        / "input"
+    )
+    attribution = json.loads(
+        (settlement / "attribution.json").read_text(encoding="utf-8")
+    )
+    selection = json.loads(
+        (
+            settlement / "configuration" / "shop-payment-settlement-selection.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert attribution["published_source_claims"][-1] == {
+        "cooccurring_entity_ids": ["P1", "I1", "I2"],
+        "event_id": "e30",
+    }
+    assert attribution["interpretation_authority"] == (
+        "FIXTURE_DECLARATION_NOT_SOURCE_NATIVE_RELATION"
+    )
+    assert selection["settlement_semantics"] == (
+        "FIXTURE_DEFINED_DIRECTED_PAYMENT_TO_INVOICE"
+    )
+
+    for command in (
+        "showcase.run --output build/small-shop-showcase",
+        "showcase.query --history build/small-shop-showcase/history.jsonl order-contents O1",
+        "showcase.query --history build/small-shop-showcase/history.jsonl payment-settlements P1",
+        "showcase.query --history build/small-shop-showcase/history.jsonl supplier-order-history B",
+        "showcase.query --history build/small-shop-showcase/history.jsonl record-change-provenance relation:P1:I1",
+        "showcase.evidence --output build/small-shop-showcase-evidence",
+    ):
+        assert command in guide
+
+
 def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None:
     for path in (ROOT / "README.md", DOCS / "ADOPTION_GUIDE.md"):
         text = path.read_text(encoding="utf-8")
@@ -2390,17 +3095,19 @@ def test_public_guides_do_not_present_root_types_as_the_whole_protocol() -> None
 
 
 def test_semantic_history_is_an_optional_profile() -> None:
-    design = (
-        ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md"
-    ).read_text(encoding="utf-8")
+    design = (ROOT / "design" / "SEMANTIC_LOG_KNOWLEDGE_PROJECTION.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "The semantic-history and replay profile is optional." in design
 
 
-def test_graph_realization_separates_structure_governance_and_fixture_authority() -> None:
-    design = (
-        ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md"
-    ).read_text(encoding="utf-8")
+def test_graph_realization_separates_structure_governance_and_fixture_authority() -> (
+    None
+):
+    design = (ROOT / "design" / "ONTOLOGY_DRIVEN_KG_REALIZATION.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "StructuralGraphRealization" in design
     assert "GovernedAcceptedRealization" in design

@@ -1,0 +1,101 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:1d95f4948b022a5386c35acd9418567dc7bf09a0f66f474555c180134641cb47",
+        "before_digest": "sha256:299ef29f368faa84bd9e7b6408ecd6d579772856403e21496e2aa3daee507230",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:cb265900941cea6b5565a3e643097c242c4bd9b0bd34582474e3c370ef2d7b12",
+        "before_digest": "sha256:a09858eba3f8f585bc705fcaf8b011a8dc695eba521ea14c2e2a6f80856cfd4c",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:b52c23fe5c48f4e01b48974c0e1a17e8610f965fd65b978c86e41e3954ddccbf",
+        "before_digest": "sha256:4aa4ed0d1275deb11cda3e850d9d67b7ccca5975676bdbeae43cafbc394f9846",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:1c062d9bc21d5e7aa33f77d8d253fe3994259a16307c14427304379434d808c3",
+        "before_digest": "sha256:613b0e4a121ee4c7c8fc1525903cf532e508afc4c6124feac9ca4915be49bff1",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-p7-report.md"
+      },
+      {
+        "after_digest": "sha256:37df23e72a764c6ceb8b03797811c67586412698a2d6c0272e394d660b7bf838",
+        "before_digest": "sha256:87bae6022baa6f5dd4bcb1cc922d304173a75b2d7445be78bc3c43a2ec86ed9f",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/pack_grounding.py"
+      },
+      {
+        "after_digest": "sha256:ccb10ef69e9bdbda471d9ef76518f1015dc53a9f7782df710d8c8db089aefd66",
+        "before_digest": "sha256:bc0f7fce1a2b6b37f235b22405fd3f2122bad9bcee28c37a480331c58dbe03aa",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:2f055a08a1ab36d3651b63c8c70323961f0e58609c30409833dd18407555b387",
+        "before_digest": "sha256:06c3735367630f9ddc2b8895b8696c231434159e58de60cca5b330a3827ed601",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ba17babb82027c4bcd0af9a92918685451317847b6038f0fd5566832a99a46a4",
+  "entry_id": "OVR-000382",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:e4e8a41cd292cca4651e824bca47972b361bc2ec096af6c61d19ce339da35862",
+  "recorded_at": "2026-09-04T07:28:36Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "32aaf89b2954814d0b38972422abf48b8d678fa2",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "978d6bd2071b35d6319d9a59e8ab43f4a2ccb6ba",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "33f915b722000811fe142be69c00d865fdf746e6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b37c59708a4ed03eab89d0d3f8dda60912a4ee53",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "5d9a5308a486c310dc66dfd14802721ba0d46c46",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 382,
+  "subject": {
+    "id": "optional-pack-conformance-closure",
+    "type": "DOCUMENT"
+  },
+  "summary": "Close edited-pack list and import preservation gaps.",
+  "why": "The conformance rite previously issued receipts for duplicate declaration-list members and missing required imports that the compiler then refused. The smallest correction applies the existing unique set-equivalence rule to preserved declaration lists and root imports, keeping the rite structural, offline, and independent of pack-specific semantics."
+}

@@ -1,0 +1,94 @@
+id: https://malleus.dev/schema/packs/chronology
+name: malleus_chronology
+version: 0.1.0
+title: Malleus Chronology Knowledge Pack
+description: >-
+  Optional reusable vocabulary for instants, intervals, precision, duration,
+  and order-only domain time. These are domain facts, not protocol valid-time
+  coordinates.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  chronology: https://malleus.dev/schema/packs/chronology/
+
+imports:
+  - linkml:types
+  - malleus
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: Chronology
+      taxonomy: DDC 529
+      vocabularies:
+        - vocabulary: W3C Time Ontology in OWL, 2017 Recommendation
+          vocabulary_url: https://www.w3.org/TR/owl-time/
+          borrowed_terms:
+            - temporal entity
+            - instant
+            - interval
+            - beginning
+            - end
+            - duration
+            - temporal reference system
+      invented_terms: []
+
+enums:
+  TemporalPrecision:
+    description: Declared precision of a domain-time value.
+    permissible_values:
+      YEAR:
+      MONTH:
+      DAY:
+      HOUR:
+      MINUTE:
+      SECOND:
+      ORDER_ONLY:
+
+classes:
+  TemporalExtent:
+    mixin: true
+    description: Domain-time extent with optional calendar or order-only coordinates.
+    slots:
+      - begins_at
+      - ends_at
+      - duration
+      - temporal_precision
+      - temporal_reference_system
+      - order_key
+
+  Instant:
+    is_a: Entity
+    mixins:
+      - TemporalExtent
+    description: A temporal entity with no duration in the adopted domain model.
+
+  Interval:
+    is_a: Entity
+    mixins:
+      - TemporalExtent
+    description: A temporal entity with a beginning, an end, or both.
+
+slots:
+  begins_at:
+    range: datetime
+    description: Calendar beginning when the source supplies one.
+  ends_at:
+    range: datetime
+    description: Calendar end when the source supplies one.
+  duration:
+    range: string
+    description: Source-declared duration and unit, retained without conversion.
+  temporal_precision:
+    range: TemporalPrecision
+    description: Precision of the domain-time statement.
+  temporal_reference_system:
+    range: string
+    description: Reference system used by the domain-time statement.
+  order_key:
+    range: string
+    description: Relative ordering key when no calendar position is claimed.

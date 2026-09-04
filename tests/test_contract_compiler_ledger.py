@@ -6054,22 +6054,26 @@ def test_revision_18_conformance_rows_guard_closed_decisions() -> None:
         assert phrase in cc_r01
 
 
-def test_contract_compiler_docs_keep_public_adapter_promotion_gated() -> None:
+def test_contract_compiler_docs_bound_the_public_adapter_surface() -> None:
     index = (ROOT / "docs" / "contract_compiler" / "index.md").read_text(
         encoding="utf-8"
     )
     prose = " ".join(index.split())
 
-    assert "No public frontend adapter or adapter docstring exists yet." in prose
-    assert "Pinned LinkML 1.11.1 is the selected v0 target adapter." in prose
-    assert "CC-R02 may implement and characterize" in prose
-    assert "it cannot authorize public exposure." in prose
-    assert "remain governed by open CC-D09/OD-009." in prose
-    assert "If CC-D09/OD-009 permits promotion," in prose
-    assert "When CC-R02 exposes a public adapter," not in prose
-    assert "CC-R02 owns future public adapter docstrings" not in prose
-    assert "Each public frontend adapter documents" not in prose
-    assert "The default first-party adapter is" not in prose
+    assert (
+        "The public `malleus.compiler` facade exposes the selected LinkML 1.11.1 "
+        "frontend"
+    ) in prose
+    assert "LinkML remains one adapter, not the protocol." in prose
+    assert (
+        "Another frontend may replace it only behind the same explicit neutral "
+        "output contract and conformance suite."
+    ) in prose
+    assert (
+        "A future adapter or profile can be injected only as an explicit, "
+        "separately identified artifact"
+    ) in prose
+    assert "No public frontend adapter or adapter docstring exists yet." not in prose
 
 
 def test_rdf_guard_dependency_is_an_exact_direct_dev_pin() -> None:

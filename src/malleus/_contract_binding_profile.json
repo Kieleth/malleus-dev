@@ -34,8 +34,8 @@
     "separator": "/"
   },
   "declared_input": {
-    "support_profile": "malleus.linkml/private-v0",
-    "profile_sha256": "13d18eef5af48c142ff0195daf8d8ce947c4710981c3ba7d0d6fc4044302e287",
+    "support_profile": "malleus.linkml/private-v1",
+    "profile_sha256": "d9d31fae01c082a7dfd51df23d068fbdda7126965257847a7143addea74fd792",
     "sequence_item_occurrences": [
       {
         "pattern": [
@@ -53,6 +53,82 @@
           "*"
         ],
         "classification": "IDENTITY_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "annotations",
+          "grounding",
+          "value",
+          "vocabularies",
+          "*",
+          "borrowed_terms",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "annotations",
+          "grounding",
+          "value",
+          "vocabularies",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "annotations",
+          "grounding",
+          "value",
+          "invented_terms",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "annotations",
+          "grounding",
+          "value",
+          "vocabularies",
+          "*",
+          "borrowed_terms",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "annotations",
+          "grounding",
+          "value",
+          "vocabularies",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
+        "value_classification": null
+      },
+      {
+        "pattern": [
+          "classes",
+          "*",
+          "annotations",
+          "grounding",
+          "value",
+          "invented_terms",
+          "*"
+        ],
+        "classification": "ANNOTATION_ONLY",
         "value_classification": null
       },
       {

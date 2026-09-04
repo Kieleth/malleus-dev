@@ -268,14 +268,21 @@ reason, issue time, previous-receipt digest, and optional delta digest.
 JSON, checks the live head, and stops backward hash acceptance at a declared
 `HARD_BREAK`.
 
+**The Recon reader mismatch is now closed.** `MigrationVerifier` separates
+alternate payload grammars for the current bytes from exact historical
+migration identities. `MigrationAwareJsonlLedger` accepts the latter only over
+a gapless path of `TOTAL` receipts and reports the exact evidence crossed;
+`PARTIAL`, `HARD_BREAK`, unknown, and category-collision cases refuse. The base
+`JsonlLedger` remains grammar-only, and Recon no longer passes migration hashes
+through `historical_ontology_hashes`.
+
 Still open: the receipt is not a protocol-ledger boundary event and does not
-bind a release bundle. It carries no transform, reader, record mapping, query
-rewrite, or mechanically verified delta. `TOTAL` and `PARTIAL` currently accept
-prior hashes identically; core `ProtocolLedger` does not consume migration
-chains; and Recon is the only current source consumer. Branch and merge,
-authorization, and granularity below one ontology also remain unsettled. The
-implemented receipt records a change; it does not establish that every older
-record has a valid interpretation under the new ontology.
+bind a release bundle. It carries no transform, record mapping, query rewrite,
+or mechanically verified delta. Core `ProtocolLedger` does not consume
+migration chains. Branch and merge, authorization, and granularity below one
+ontology also remain unsettled. The implemented reader establishes one exact
+all-`TOTAL` replay path; it does not establish that every older record has a
+valid interpretation under the new ontology.
 
 ### A9. The envelope accepts two grammars; everything else still compares one
 
@@ -333,6 +340,15 @@ of the paper. The abstraction axis is no longer benchmark-to-benchmark.
 
 **Verdict: accept. B3's consumer condition is met; the rest of its promotion
 criteria are not, and this does not authorise core implementation by itself.**
+
+Current source closes the registry-introspection part, not this publication
+boundary. `OntologyRegistry.source_closure()` retains exact parsed bytes,
+canonical locators, every authored import resolution, and definition owners.
+Recon manifest v3 binds that closure and rechecks its sources before commit.
+Generic ledger events still do not bind the closure, release bundle, or
+producer identity, and Recon's absolute source locators are provenance rather
+than a portable content bundle. A10 therefore remains open outside the narrow
+Recon build boundary. Generator identity architecture is unchanged.
 
 ---
 

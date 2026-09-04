@@ -1,0 +1,36 @@
+{
+  "account": {
+    "complete": false,
+    "kind": "FINISHED_READING",
+    "metrics": [
+      {
+        "denominator": "declared_units",
+        "family": "coverage",
+        "threshold": 1.0,
+        "value": 0.6666666666666666,
+        "verdict": "UNMET"
+      }
+    ],
+    "units": [
+      {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ",
+        "unit": "page:1"
+      },
+      {
+        "disposition": "NOT_CHECKED",
+        "outcome": "NOT_OBSERVED",
+        "unit": "page:2"
+      },
+      {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ",
+        "unit": "page:3"
+      }
+    ]
+  },
+  "bundle_id": "fixture:incomplete-sequence:bundle",
+  "capability": "AUDIT_ONLY",
+  "conforms": true,
+  "diagnostics": []
+}

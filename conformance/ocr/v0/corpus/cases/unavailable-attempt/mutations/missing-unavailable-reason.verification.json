@@ -1,0 +1,32 @@
+{
+  "account": {
+    "complete": false,
+    "kind": "FINISHED_READING",
+    "metrics": [
+      {
+        "denominator": "declared_units",
+        "family": "coverage",
+        "threshold": 1.0,
+        "value": 0.0,
+        "verdict": "UNMET"
+      }
+    ],
+    "units": [
+      {
+        "disposition": "CHECK_FAILED",
+        "outcome": "UNAVAILABLE",
+        "unit": "image:1"
+      }
+    ]
+  },
+  "bundle_id": "fixture:unavailable-attempt:bundle",
+  "capability": "AUDIT_ONLY",
+  "conforms": false,
+  "diagnostics": [
+    {
+      "code": "OCR-D015",
+      "detail": "status is UNAVAILABLE and no unavailable_reason is given",
+      "subject": "fixture:unavailable-attempt:attempt:main"
+    }
+  ]
+}

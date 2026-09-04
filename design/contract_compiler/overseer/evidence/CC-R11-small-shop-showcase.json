@@ -1,0 +1,164 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 58123,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.py",
+      "sha256": "sha256:588ab3766625c184992860730fe33bc0ca17550b555fb9635d973e7a77d09244"
+    },
+    {
+      "byte_length": 6120,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.json",
+      "sha256": "sha256:766581ea6ca384cb325a05f235978bdbe849e8970304fe089b7a0509594a4835"
+    },
+    {
+      "byte_length": 338,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/checks/source-mapping-conformance.json",
+      "sha256": "sha256:ad5de0ee774298c12b641d7a15f1ef7fcab3adf693ad319bcc3e39959148734e"
+    },
+    {
+      "byte_length": 384,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/policy.json",
+      "sha256": "sha256:efa0ac20a3f6dbdad67c210ade3b3c4571ac8296463735fd29eb81d0852d32ed"
+    },
+    {
+      "byte_length": 4629,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/settlement-mapping.json",
+      "sha256": "sha256:93a2490b7b7eb4871bfc15217bfbc84162f874b9fa6bb746a29379fdcba36f62"
+    },
+    {
+      "byte_length": 15279,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/query.py",
+      "sha256": "sha256:4e7f04f4ce2a7db1cf0f6dbc93572cd191f475736886e4fb789273e91f0cbb53"
+    },
+    {
+      "byte_length": 13999,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence.py",
+      "sha256": "sha256:f196946ab8f527b0fdb67927c48021c516eebb4072e905c805dff3fd001cbbe9"
+    },
+    {
+      "byte_length": 17127,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json",
+      "sha256": "sha256:2f529922b1b88f4f0f43feed3dcdf71b578e2fa2b0ad37fb295013d61341f4b9"
+    },
+    {
+      "byte_length": 989,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/graph.json",
+      "sha256": "sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
+    },
+    {
+      "byte_length": 20660,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/queries.json",
+      "sha256": "sha256:e5dc8bb1be295ef9ebeae9582689d4f876036859b2739447dc60188f9bb8ba5c"
+    },
+    {
+      "byte_length": 4115,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/receipt.json",
+      "sha256": "sha256:edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4"
+    },
+    {
+      "byte_length": 2778,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/manifest.json",
+      "sha256": "sha256:d823ee893d78908f78078052f480f0b3a7c63a752a157164dae0bc7905d61274"
+    },
+    {
+      "byte_length": 1188,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/attribution.json",
+      "sha256": "sha256:d8560cdc50b7d49c3164c47778564da4f08a81cc1a6ede9dfc4442f5edbd3cbe"
+    },
+    {
+      "byte_length": 542,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/configuration/shop-payment-settlement-selection.json",
+      "sha256": "sha256:173795759f135d09c35b42c6d222fafde26660ae82b2915cab67d5c3ff5421bc"
+    },
+    {
+      "byte_length": 17,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/invoices.csv",
+      "sha256": "sha256:048b6c70b94cddc026c656f51746794f5dfc1a70ce2372c5fed341b02973f175"
+    },
+    {
+      "byte_length": 63,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/sources/payments.jsonl",
+      "sha256": "sha256:3ad1935a2912eb698c14977ff9e42b3e49020912de0dad6f37ad10b4e27a060d"
+    },
+    {
+      "byte_length": 1219,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/input/tbox/small-shop-settlement.yaml",
+      "sha256": "sha256:98dd530aa249763be24ff16a0ff4848c0821dc0150bf09ef2ee5a3f19e66b956"
+    },
+    {
+      "byte_length": 1926,
+      "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_settlement_v1/oracle/shop-payment-settlement.json",
+      "sha256": "sha256:d74b3a2c201bf083069383fe31797f8d848050279d5877bbf864ae316dfc16e6"
+    },
+    {
+      "byte_length": 21670,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/test_run.py",
+      "sha256": "sha256:f2ea7c2cee679262349864557b22a317ca788494946271c0cfdb874bd0340b33"
+    },
+    {
+      "byte_length": 13524,
+      "path": "docs/SMALL_SHOP_WALKTHROUGH.md",
+      "sha256": "sha256:74eebdc5bcece4fbae82975f989e99d28c41067dc6b5ffb16fb23c9f356ec11b"
+    }
+  ],
+  "base_commit": "f9052b4783100203318d4a21a0236f3851218af1",
+  "checks": [
+    {
+      "check_id": "ccr11-showcase-source-to-graph",
+      "method": "Run the three controlled fixture bundles through ontology closure, one EffectiveContract, five KnowledgeChangeSets, one semantic and protocol ledger, reopen, replay, and the read-only Small Shop query facade.",
+      "observed": "The run emits 1,040 neutral contract facts, admits five ordered changes through 74 immutable events, and derives nine current graph records. Payment P1 resolves to invoices I1 and I2; supplier order B retains quantity history 1 to 2 while only e7 is current.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-identities",
+      "method": "Verify the frozen contract, run program, source mapping, ledger, materialization, graph, query, and evidence identities, then regenerate the four committed evidence files twice.",
+      "observed": "The EffectiveContract is sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3. The 74-event ledger and acceptance head is sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e. Both fresh runs matched the four committed evidence files byte for byte.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-provenance",
+      "method": "Recompute all five mapping receipts from retained source bytes and inspect the provenance query for one settlement relation.",
+      "observed": "All five receipts recompute. The settlement relation joins to the exact immutable change, six-member bundle source closure, seven-artifact evidence closure, mapping, contract, valid time, and accepted-state coordinates. It is labeled change-level provenance and does not claim per-operation causality.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-conformance",
+      "method": "Run the fixture, runner, query, and evidence suite plus adjacent compiler, history, and knowledge-graph controls, then run changed-file Ruff and diff checks.",
+      "observed": "The focused showcase passed 66 tests. Independent adjacent validation passed 333 tests. Changed-file Ruff, formatting, and diff checks passed.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-independent-audit",
+      "method": "Submit the exact frozen fixture, runner, receipts, queries, and limitations to an independent P0 through P2 audit after each reported repair.",
+      "observed": "The final audit found no P0, P1, or P2 blocker. It independently reproduced ledger-only reopen, history, graph, mapping receipts, query answers, and byte-identical evidence regeneration.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-publication",
+      "method": "Check the Sphinx walkthrough and mechanical documentation guard against source bytes, ontology facts, run decisions, ledger chronology, graph records, queries, exact coordinates, attribution, and limitations.",
+      "observed": "The focused documentation checks passed. The page explains why the proof matters while distinguishing generic Core machinery from fixture-specific mapping, query, and evidence surfaces.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-showcase-paper-separation",
+      "method": "Confirm with the paper task whether this Core milestone requires a paper-specific evaluation or query capability.",
+      "observed": "The paper reported no missing Core read seam. Its ontology acquisition, population, query binding, and human evaluation remain paper-owned and independent.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This is a research-local executable showcase, not a public mapping format, stable API, or wire contract.",
+    "All fixture source members are anchored at bootstrap. The stages admit pre-provisioned bytes and do not observe live source arrival.",
+    "Each change binds its full fixture bundle. Mapping receipts identify selected rows but do not claim per-record or per-operation causality.",
+    "The fixture-specific Python mapper is not a general population compiler or mapping language.",
+    "Ledger-only replay reloads retained compiled artifacts. It does not recompile raw ontology dependencies without their compiler implementation.",
+    "Query answers are not bound to an independently identified query program or projection closure.",
+    "The settlement mapping supports exactly one declared two-invoice case. Generic fan-out is not claimed.",
+    "The five stages follow a frozen test ladder rather than business-event chronology; the invoice base marker is fixture orchestration, not source time.",
+    "No Cypher adapter, arbitrary transaction-prefix query, scoring, evaluator, Event projection, Semantic Re-entry, external effect, public package surface, or cross-language conformance is claimed.",
+    "The private runner still contains substantial protocol ceremony. A narrower consumer helper remains future work and is not inferred from this milestone."
+  ],
+  "recorded_at": "2026-09-03T06:10:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

@@ -1,0 +1,13 @@
+{
+  "contract": "malleus.fixture.control_request.v1",
+  "production_ocr": false,
+  "raster_digest": "sha256:5922a14e936bed3f4d5e27859e34c23a05dd929d1e95241c75831fa9d86b756c",
+  "reader_id": "malleus.fixture.control_reader@1",
+  "reader_kind": "deterministic_control_reader",
+  "region_id": "fixture:multipage-control:region:page-1-body",
+  "selector": {
+    "type": "FragmentSelector",
+    "value": "xywh=140,650,720,410"
+  },
+  "task": "return the fixed self-authored control reading"
+}

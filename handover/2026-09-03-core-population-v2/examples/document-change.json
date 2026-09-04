@@ -1,0 +1,80 @@
+{
+  "base_acceptance_head": "GENESIS",
+  "base_accepted_state_digest": "sha256:c6d3e4a1dc16c81d55a1a62ba6b756d3aec08965e57a77185e9216dc7b226275",
+  "base_ledger_event_count": 9,
+  "base_ledger_head": "sha256:30c0e2e0fe3a6cc3adfe18846053c25556086e32c5a2cbd1ce8f5fd81b81d017",
+  "base_materialization_head": "GENESIS",
+  "change_set_id": "change:plan:inspection-note:1",
+  "contract_identity": "sha256:0a9a02ced1581c30bbcf0daafcb2af7e5cfff8ff3bec7d206c00bcad9c456a02",
+  "contract_kind": "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0",
+  "evidence": [
+    {
+      "evidence_id": "profile:source-assertion",
+      "sha256": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5"
+    },
+    {
+      "evidence_id": "plan:inspection-note:1",
+      "sha256": "sha256:e20435961602e517fafbe646aad3c49b64269e0f395a1809644143188b861fe7"
+    },
+    {
+      "evidence_id": "capture:inspection-note",
+      "sha256": "sha256:503bb11d61c68aca12765d7d3ba57df498824f328118dc35977935b70dee7a99"
+    },
+    {
+      "evidence_id": "plan:inspection-note:1:gaps",
+      "sha256": "sha256:2c99dab9dcfc3f7dc3143eca7d0fbc0e1c40d3755392e9f9333a38936f00d5fd"
+    }
+  ],
+  "grammar": "malleus.knowledge-change-set/private-v0",
+  "operations": [
+    {
+      "depends_on": [],
+      "operation_id": "operation:plan:inspection-note:1:0",
+      "operation_type": "CREATE_ENTITY",
+      "ordinal": 0,
+      "properties": {
+        "name": "P-7"
+      },
+      "record_id": "asset:P-7",
+      "record_type": "Asset"
+    },
+    {
+      "depends_on": [],
+      "operation_id": "operation:plan:inspection-note:1:1",
+      "operation_type": "CREATE_ENTITY",
+      "ordinal": 1,
+      "properties": {
+        "inspected_on": "2026-03-02"
+      },
+      "record_id": "inspection:P-7:2026-03-02",
+      "record_type": "Inspection"
+    },
+    {
+      "depends_on": [
+        "operation:plan:inspection-note:1:1",
+        "operation:plan:inspection-note:1:0"
+      ],
+      "operation_id": "operation:plan:inspection-note:1:2",
+      "operation_type": "CREATE_RELATION",
+      "ordinal": 2,
+      "properties": {
+        "relation_type": "INSPECTION_OF"
+      },
+      "record_id": "inspection-of:P-7:2026-03-02",
+      "record_type": "InspectionOfRelation",
+      "source_id": "inspection:P-7:2026-03-02",
+      "target_id": "asset:P-7"
+    }
+  ],
+  "sources": [
+    {
+      "sha256": "sha256:7dbc2661468cfcd93b4ac43f77206f68e8a521ef95cf3865937333ebc1259745",
+      "source_id": "source:inspection-note"
+    }
+  ],
+  "supersedes": [],
+  "valid_time": {
+    "kind": "ORDER_ONLY",
+    "value": "capture:inspection-note"
+  }
+}

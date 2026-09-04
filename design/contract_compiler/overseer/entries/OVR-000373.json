@@ -1,0 +1,73 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d52129eec960119145c660f78c92ff10b220ce0427005bb24548134f084223de",
+        "before_digest": "sha256:826275a87ce984767d5d3c9bdce569a5ad43540e8f06fac953337820c3bee99c",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-p5-report.md"
+      },
+      {
+        "after_digest": "sha256:f94e8657c3c70859ede5de4e7e97a3ce2f3702316a988f2a941617b2582f96cf",
+        "before_digest": "sha256:5fe7a596f90fa75228022940ecd071bbaf01dddae086cad1ca9594d306238bc3",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:dabf4c8a728196be6551bf77de85819b22f32843a6711f6a024c47feaec100d0",
+        "before_digest": "sha256:58586e21d6ef485860d8cbb5c92a6b1422b9652148cad99cb7634fe2c601b09c",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:dff133daedebd02657133f19aec0c78689268ae3c7f1f29773c7f9a938d07ded",
+  "entry_id": "OVR-000373",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7e2458ab1c33099011b308e77c3adb13f294b64878380f45c4e13bed85850a9a",
+  "recorded_at": "2026-09-04T02:57:39Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "150579d66c3785b4f83c293c557d9a33bdc8a8bf",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "743120658ab1978057b9629d077c3cc2f3d1fe80",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "662df4f13b14197f92abb424e6504ec222f84017",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 373,
+  "subject": {
+    "id": "additive-contract-revision-package-closure",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the additive contract revision into the explicit source-archive closure.",
+  "why": "The public revision executor imported a module that the repository wheel contained but the explicit source-archive allowlist omitted. The existing parity gate caught the mismatch. This correction adds the one missing path and a hard assertion without changing dependencies, versions, compiler semantics, or the public API."
+}

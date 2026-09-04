@@ -1,0 +1,147 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8",
+        "before_digest": "sha256:2e2273b1638a91b792a9b7aab27c5430d6e85d531fa150e86cbc8d505ccace08",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:2bdefe372e337c64ed7f66918f07262b7a2e99ebbf11fa2d9ab5e546604bdfc8",
+        "before_digest": "sha256:659fff71f2eee50fb705da357a9c92b6c22f2c7f59b7bba51d0c0131d12e060d",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:106fe5022f83ad593cfaeba2a8fb7bd73004e41be66a582ea40a3d9e53424eb3",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-p8-report.md"
+      },
+      {
+        "after_digest": "sha256:8784afc2b2eb59ba6fb8045dfc4471350d249fd997cb401bf3b1f61617b68191",
+        "before_digest": "sha256:59abf2d51bed0ff947951cd77a030112884c90d0f82c27a6681cfa133a2f89a3",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8",
+  "entry_id": "OVR-000384",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc",
+  "recorded_at": "2026-09-04T08:38:09Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "d29c7b1b146420106a9bd4e2aab36519099b0533",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "321da76e8a8b523d7f51d1263c81860bf3daca6c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ff9bddda9bb7e49b566c5d7267f8b50b313c52f6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7da27cd61f8a64ba0dca9205b9d54ccb0bf6159c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b3769d6e9fb55ab4e7fd455ea545230de5a4a429",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "020ad57729e32bf698eca584a1194072eda3ec52",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "97ee55c2f0ecbc4a3c6883468332c9b770f6516b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9c087595b9f636b456892292455326e688224e74",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "387716a31e8483d56fd5f1ce95cf97555c67ba82",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0dd77db2790f6dfaad5ae760c9acb8577033d72a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c1c4ee68615eb74787b4d6d985f476164ace0491",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "dc9e17a50d9310e7b7fa71f9550397c2d18eb428",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ca4052409b08bf719a17cf3aacd3578e9b18a819",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "78da29b6f2c3e4a4f78ec67953b7c21dcc49749f",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8cc31735217a2d2000ea6cbfc7f459fbb59537ca",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "00c48a2da29b7497addc2e60d767cda2017d0dde",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "110e9a13584e8707f6abe36ce6adbb2e12ddfae0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "fc28543f87554899673816624500de4b2094f851",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 384,
+  "subject": {
+    "id": "nascent-project-adoption-playbook",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the self-contained fresh-project adoption playbook.",
+  "why": "A fresh adopter needed one model-neutral route from retained source bytes through ontology proposal, optional packs and history profile, population, conditional admission, replay, provenance trace, and bounded additive revision. The installed skill now treats exact supplied artifacts as a closed input set, gives schema-only, typed-graph-only, and governed-history adoption honest terminal paths, targets whole-reading capture, checks both census axes, admits only a present change set, and stops after at most two revision rounds. Executable guards construct the public typed-graph route and parse an installed-skill example with an illustrative reading and the existing private-v0 capture. They bind the exact seven-argument adapter signature, exercise every accepted modality and gap kind, and prove an untouched block without inventing another grammar or adding runtime behavior."
+}

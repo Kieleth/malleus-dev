@@ -1,0 +1,68 @@
+{
+  "actor": {
+    "id": "ccr11-small-shop-domain-history-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-03T16:31:01Z",
+    "claims": [
+      "This is a documentation-only follow-on to the published Small Shop showcase. It changes no ontology, mapping, KnowledgeChangeSet, protocol machine, ledger history, graph evidence, query result, runtime behavior, workstream state, decision, dependency, candidate, selection, or public API.",
+      "Small Shop selects a state-oriented domain graph model and fixture-specific state-versioning encoding. KnowledgeChangeHistory provides generic identity, closure, base-state, operation-order, valid-time, supersession, admission, atomicity, and replay laws without retailer vocabulary.",
+      "The first accepted Small Shop change has ordinal zero, GENESIS acceptance and materialization heads, an empty accepted-state base digest, and a ledger base count of 49. It is named genesis by fixture convention and is not the complete initial population because invoices and the B@e4 state enter later.",
+      "The correction and settlement mappings retain INITIAL_DOMAIN_STATE, CORRECTION, FIXTURE_ORCHESTRATED_EXISTING_BASE, and FIXED_TWO_INVOICE_SETTLEMENT labels. The labels remain inside bound mapping evidence and are neither typed change-role fields nor interpreted semantics in the generic KnowledgeChangeSet.",
+      "The documentation guard loads the exact mappings and recorded explanation, verifies the first and later population coordinates, parses a real provenance-exposed KnowledgeChangeSet, and proves added kind or role fields refuse under the closed grammar.",
+      "Two independent read-only audits reached the same boundary and recommended a documentation correction rather than a new runtime artifact. The sharper review findings were incorporated before this verification entry.",
+      "The walkthrough now says that adopters choose their domain ontology and change semantics, while this private executable path proves only entity and relation creation plus explicit supersession. It does not claim that other models are already executable through the same implementation.",
+      "No domain-level change contract is selected or placed on the formal roadmap. Such a contract requires a separate governed decision if a real consumer later needs portable or queryable change categories."
+    ],
+    "limitations": [
+      "The current KnowledgeChangeSet grammar is private and narrow, not a public arbitrary change language.",
+      "The mapping category labels are retained evidence but have no generic replay semantics.",
+      "Genesis remains positional rather than a typed change role, and the showcase's initial knowledge spans multiple ordinary changes.",
+      "No REA model, business-event projection, claim ledger, domain-history contract, public mapping format, or alternate history implementation is proved.",
+      "The already published tag remains the original milestone. This clarification is a forward commit and does not rewrite that tag or its evidence."
+    ]
+  },
+  "entry_hash": "sha256:b348fafe587005c1ad1884b7343ea407fe7edfa2730d327d8d2640dba03e3efc",
+  "entry_id": "OVR-000364",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a2ed59bfa0248a39e459a5fc0587341c60b0120cbef86b1f4b4f533ec007fb45",
+  "recorded_at": "2026-09-03T16:31:01Z",
+  "references": [
+    {
+      "digest": "sha256:bac2044f20598c202ae40ac496a2b1a412d612c6c7655c0ceaba004eb6673822",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-domain-history-boundary.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "9c8698868c1021283ed9cd30d228a6e1fdc121a3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000363",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000362",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 364,
+  "subject": {
+    "id": "ccr11-small-shop-domain-history-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the Small Shop domain-history clarification.",
+  "why": "The ontology, mapping labels, closed change-set shape, first-change coordinates, generic protocol events, and replay implementation show exactly where domain meaning ends and reusable history machinery begins. The retained audit and hard documentation checks prevent the public example from turning a fixture name or one state-version encoding into a Core semantic rule."
+}

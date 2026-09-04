@@ -1,0 +1,74 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000",
+      "CC-001",
+      "CC-PKG02"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:8d346b778994fac3184120eb0ddccc0fc34fb0baff234e49aab3965e70245c6b",
+        "before_digest": "sha256:c75df8157e196c5090c86ca0962a660d65cbbf2eee02d82b58443cf298094aab",
+        "change": "MODIFIED",
+        "path": "docs/RECON_CONTRACT.md"
+      },
+      {
+        "after_digest": "sha256:1b9e07b42be2d4b918e6fe5e7661f6ffdded9f807db6872ce0bccbff82b966c4",
+        "before_digest": "sha256:d84581576651340f10f3b63bfec49795297a49bc40b9b89cf6b667458cd57e20",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:5893f84e069585931d18a7c83028d4da1709420da49955fb88f234fe21e8ac4a",
+        "before_digest": "sha256:b69dab492794575aa59367e069e1ed91be97b46cae8081b0066df4f0cdb5dd05",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:4524b293a26b092f79dd0bcc03f93b40eae5877ff3b7a645e6c8246391005e3c",
+  "entry_id": "OVR-000369",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:40ddf9b39bc70a2075b34c9ef0e5cbaf5b8efc9a14ed1afd2b968b8ee8fc57d2",
+  "recorded_at": "2026-09-04T01:18:39Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "9a7fafc9a648578d82d539092444339c0f865235",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "d758d40bd084a25c0ca17cdb80720686f4d67a95",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 369,
+  "subject": {
+    "id": "recon-public-reference-checkpoint",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the Recon and compiler public documentation surface to one exact reviewed reference checkpoint.",
+  "why": "Recon's source-closure and migration APIs expanded the frozen eval-rst island, and the public compiler facade made exactly one documentation submodule import legitimate. This revision binds the complete reviewed island, keeps the import policy closed, and removes unsupported MyST fragment targets."
+}

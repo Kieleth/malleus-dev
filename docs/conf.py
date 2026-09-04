@@ -56,6 +56,7 @@ include_patterns = [
     "PRINCIPLES.md",
     "RECIPES.md",
     "RECON_CONTRACT.md",
+    "SMALL_SHOP_WALKTHROUGH.md",
     "contract_compiler/index.md",
     "contract_compiler/manifests.md",
     "contract_compiler/support_profile.md",

@@ -5297,6 +5297,35 @@ def test_workflows_delegate_to_the_fixed_local_runner_with_full_history(
         assert replaced not in source
 
 
+def test_windows_recon_job_delegates_to_exact_fixed_profile() -> None:
+    path = ROOT / ".github" / "workflows" / "tests.yml"
+    source = path.read_text(encoding="utf-8")
+    jobs = yaml.load(source, Loader=_UniqueYamlLoader)["jobs"]
+    job = jobs["windows-profile"]
+
+    assert job["runs-on"] == "windows-latest"
+    assert job["strategy"]["matrix"]["include"] == [
+        {"profile": "recon", "python-version": "3.12"}
+    ]
+    checkout = next(
+        step for step in job["steps"] if step.get("uses") == "actions/checkout@v4"
+    )
+    assert checkout["with"]["fetch-depth"] == 0
+    setup = next(
+        step for step in job["steps"] if step.get("uses") == "actions/setup-python@v5"
+    )
+    assert setup["with"] == {
+        "python-version": "${{ matrix.python-version }}",
+        "cache": "pip",
+        "cache-dependency-path": "pyproject.toml",
+    }
+    run_steps = [step["run"] for step in job["steps"] if "run" in step]
+    assert run_steps == [
+        'python -m pip install --upgrade pip\npython -m pip install -e ".[dev]"\n',
+        "python scripts/ci.py ${{ matrix.profile }} --require-clean",
+    ]
+
+
 def test_owned_governance_markdown_has_no_trailing_whitespace() -> None:
     paths = sorted(CONTRACT.rglob("*.md"))
     paths.append(ROOT / "handover" / "2026-08-24-contract-compiler-overseer.md")
@@ -7554,16 +7583,10 @@ def test_retained_source_boundary_completion_is_exact() -> None:
     )
 
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert project["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"] == [
-        "/src/malleus/_contract_compiler.py",
-        "/src/malleus/_contract_compiler_profile.json",
-        "/src/malleus/_contract_linkml_adapter.py",
-        "/src/malleus/_contract_source.py",
-    ]
-    assert (
-        "/src/malleus/_contract_source.py"
-        in project["tool"]["hatch"]["build"]["include"]
-    )
+    build = project["tool"]["hatch"]["build"]
+    assert "/src/malleus/_contract_source.py" in build["include"]
+    assert "/src/malleus/_contract_pipeline/revision.py" in build["include"]
+    assert "exclude" not in build["targets"]["wheel"]
 
     corpus = _read_json(ROOT / "conformance/contract_kernel/v0/corpus.json")
     assert [corpus["cases"][0]["case_id"] for corpus in corpus["corpora"]] == [
@@ -7923,7 +7946,7 @@ def test_linkml_adapter_completion_is_exact() -> None:
         "sha256:482652d190771c348442d374b7658fd00018a337968c2ac4c17705f4ed4ff4e9"
     )
     assert _digest(current_greenhouse) == (
-        "sha256:1b2ccefd0bb757cf00e825dff2877a814f465af1e914167398a88e1c10b0919c"
+        "sha256:19486dfd77ca06151a09fa30fc90283cc4f6633a19f10838cad34584298f1247"
     )
     candidate_paths = [
         artifact["path"] for artifact in card["candidate"]["artifacts"]
@@ -7940,14 +7963,16 @@ def test_linkml_adapter_completion_is_exact() -> None:
     )
     assert later_changes == {
         "src/malleus/_contract_compiler.py",
+        "src/malleus/_contract_compiler_profile.json",
+        "src/malleus/_contract_linkml_adapter.py",
         "tests/contract_compiler/test_greenhouse_compiler.py",
+        "tests/contract_compiler/test_linkml_adapter.py",
     }
 
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert (
-        "/src/malleus/_contract_linkml_adapter.py"
-        in package["tool"]["hatch"]["build"]["targets"]["wheel"]["exclude"]
-    )
+    build = package["tool"]["hatch"]["build"]
+    assert "/src/malleus/_contract_linkml_adapter.py" in build["include"]
+    assert "exclude" not in build["targets"]["wheel"]
 
     completion = tuple(
         entry for entry in ledger_state.entries if 305 <= entry["sequence"] <= 307

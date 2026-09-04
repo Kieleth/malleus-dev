@@ -6,9 +6,9 @@ Malleus package version `0.13.3` implements the
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 
-## Private compiler research
+## Public compiler and population facade
 
-One private Small Shop experiment now runs retained source bytes through the
+One Small Shop research experiment runs retained source bytes through the
 LinkML adapter, neutral contract facts, an identified declarative machine and
 policy, one immutable `KnowledgeChangeSet`, one append-only JSONL history, and
 replay from an empty accepted graph. The output is a canonical receipt and a
@@ -29,13 +29,102 @@ writing anything. Admission and replay remain separate. Source parsing, domain
 mapping, checks, policy, and protocol-event construction remain outside the
 helper.
 
-This does not advance the package stage above, replace the shipped Assent
-runtime, or expose a public compiler API. It proves the replacement seam on one
-controlled initial-population case and one controlled record correction.
-General correction semantics, mapping syntax, a public change-set wire,
-external effects, Semantic Re-entry, cross-language parity, package inclusion,
-and release work remain outside the implemented research cut. See
-`contract_compiler/index.md`.
+Packages built from this source expose the reusable pieces through
+`malleus.compiler`: exact-source LinkML contract compilation, population-plan
+compilation, governed admission, reopen, replay, and the replayed graph's query
+methods. The installed `malleus-compiler contract` command covers contract
+compilation. It accepts exact named ontology files and never accepts a raw
+ontology digest in their place. The sdist and direct wheel must contain the
+same compiler runtime bytes.
+
+The optional document-assertion adapter is also public through
+`malleus.compiler`. It checks exact reading and capture bytes, verbatim
+captured clauses, field-level formalisation targets, supported modalities, and
+typed representation gaps. It emits the same neutral population-plan grammar
+as structured-source adapters plus a two-axis review/formalisation census.
+Assertions remain retained evidence and are not added to the graph.
+
+The public facade also exposes a read-only population trace. Given one
+accepted record ID, it resolves and verifies the record history, accepted
+change set, canonical population plan, selected history profile, field
+derivations, and retained source and evidence bytes. It refuses changes that
+did not retain a population plan. The trace writes nothing and creates no new
+authority or artifact.
+
+The same knowledge history can now cross one explicit additive ontology
+revision. The revision artifact embeds the next validated and partial contract,
+derives its change kinds from compiled facts, binds the exact prior history
+coordinates, and carries a migration receipt. The shipped policy admits added
+classes, slots, and enum values. It refuses an added import while retaining
+`ADD_IMPORT` in the policy grammar. Replay rebuilds the current graph under the
+new contract and later change sets bind the new contract identity; earlier
+records and change sets remain in the same ledger.
+
+This facade does not replace the shipped Assent runtime, stabilize any
+`private-v0` wire grammar, or turn a domain's source mapping into Core policy.
+It proves the reusable seam on one controlled initial-population case and one
+controlled record correction. General correction semantics, mapping syntax,
+stable change-set wire, Event population, external effects, Semantic Re-entry,
+cross-language parity, and release work remain outside this cut.
+
+Three full, content-addressed domain-history profile artifacts now ship through
+`malleus.compiler`: `state-version`, `source-assertion`, and `object-event`.
+They declare origin and genesis scope, semantic unit, time semantics, change
+semantics, ontology roles, projection-rule family, and grounding. Small Shop
+executes the `state-version` profile. The document adapter executes a
+capture-batch `source-assertion` profile whose assertion modality and domain
+time remain reachable through retained evidence and the public trace. The
+`object-event` profile is declarative only because Event population remains
+unsupported. The runtime validates and binds these declarations but does not
+yet interpret arbitrary projection programs from them. Contract revision is
+additive only; it is not a general ontology migration or import-admission
+mechanism. See `contract_compiler/index.md`.
+
+Three optional, grounded knowledge packs also ship: `metrology`, `chronology`,
+and `research`. They provide reusable mixins, reference classes, and enums
+between the root primitives and a project ontology. A closed, content-addressed
+grounding rite checks that borrowed term groups name their vocabulary and
+locator, or that a root-extending project class records a bounded unsuccessful
+search. The rite checks structure only; it does not judge a citation's quality.
+An edited pack can be checked against exact reference bytes with the separate
+`pack-conformance` rite. It permits documentation and additive vocabulary
+changes through new declarations or enum values. It refuses removal or
+strengthening of the existing structural surface; an extension that changes an
+existing class uses a new subclass instead.
+Pack grounding is retained provenance and does not alter semantic fact
+identity. Packs remain adopter choices and are never required by the base
+protocol.
+
+The installable `malleus-acolyte` skill now carries a separate nascent-project
+playbook beside its ongoing-project standing orders. It starts from retained
+source bytes, keeps evaluation questions out of ontology construction and
+population, chooses optional packs and a domain-history profile explicitly,
+names the real grounding and compiler commands, routes document captures and
+structured sources into the same neutral population plan, preserves typed
+gaps, checks the capture census for untouched source blocks, and repeats only
+through additive contract revision. It treats every concrete Entity and
+Relation type as eligible, calls the public history admit and reopen boundaries,
+keeps the loop in one session by default, and caps it at two revision rounds.
+Admission runs only when `PopulationPreparation.change_set` is present;
+`NO_DOMAIN_CHANGE` retains its evidence without an admission call.
+The census keeps block review separate from assertion formalisation and states
+that uncaptured assertions remain invisible. With a current installation and
+exact inputs supplied, the procedure forbids ambient checkout, home-directory,
+network, or undeclared-document discovery and fails when an input is absent.
+Schema-only adopters stop after contract compilation. Typed-graph-only adopters
+construct and inspect checked records through `OntologyRegistry` and
+`KnowledgeGraph.from_records`, then stop before population and history. The
+population, admission, and replay steps require an exact history profile.
+For document population, retained-reading coverage overrides the general
+smallest-slice rule. A machine-parsed neutral template in the installed skill
+uses the existing `malleus.document-capture/private-v0` grammar, lists all six
+modalities and all six gap kinds, and runs every one through the public adapter.
+Its reading object is illustrative, not a closed grammar. The guards also bind
+the exact seven adapter arguments, prove one uncaptured block is reported
+`UNTOUCHED`, and construct the documented typed-graph-only route through the
+public registry and graph APIs. The playbook adds no compiler command, grammar,
+or runtime capability. It documents how a fresh adopter uses the public
+boundaries already listed above.
 
 ## Implemented
 
@@ -108,7 +197,7 @@ profile. A future delivery profile may add idempotency, outbox, deduplication,
 and external effect-ledger records without changing the core boundary. See
 `docs/EFFECT_PROTOCOL.md`.
 
-## Recon tooling in 0.10.0
+## Recon structural-capture tooling
 
 The package also ships Malleus Recon without advancing the core assent stage:
 
@@ -117,16 +206,32 @@ The package also ships Malleus Recon without advancing the core assent stage:
   claim-level comparison relations;
 - exact intersection, union, directional difference, partial, unresolved, and
   contested comparison views;
-- deterministic JSON, JSON-LD, GraphML, CSV, BibTeX, Markdown, manifest, and
-  ZIP outputs;
+- JSON, ontology-derived JSON-LD, GraphML, CSV, BibTeX, Markdown, manifest, and
+  ZIP outputs that are byte-deterministic for identical inputs and the
+  declared generator and runtime closure;
+- an immutable public `OntologyRegistry.source_closure()` with exact parsed
+  bytes, canonical source locators, all authored import resolutions, and
+  retained definition ownership;
+- strict manifest v3, manifest-last staged builds bound to the
+  structural-capture profile, exact project bytes, complete ontology source and
+  import closure, retained definition owners, derived term-map identity,
+  separated grammar and migration verification evidence, ledger head and
+  count, and the listed generator source closure;
+- incremental replay with project-level exclusion of overlapping current
+  Recon writers and initializers, plus per-output exclusion for builders;
+- a narrow `windows-latest` Recon CI job, declared as an expandable matrix
+  profile without claiming full Windows suite coverage or a completed remote
+  run;
 - an atomic typed importer for the existing literature-forensics graph v1.x;
   and
 - the `malleus-recon` agent skill, installable for Claude, Codex, or both.
 
 `RECORDED` establishes structural and ledger validity, not truth or novelty.
 Recon has no crawler, provider integration, automatic novelty adjudicator, or
-multi-writer store. Its source digests preserve caller declarations and do not
-independently authenticate source bytes. See `docs/RECON_CONTRACT.md`.
+multi-writer protocol. Its source digests preserve caller declarations and do
+not independently authenticate source bytes. Governed promotion is specified
+as a one-way, identity-bound boundary, but no promotion adapter is implemented.
+See `docs/RECON_CONTRACT.md`.
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -330,9 +435,22 @@ persists it as JSON, checks its live head, and stops backward hash acceptance at
 a declared `HARD_BREAK`.
 
 The receipt is not a protocol-ledger boundary event. It carries no transform,
-reader, record mapping, query rewrite, or verified delta. `TOTAL` and `PARTIAL`
-currently accept prior hashes identically, core `ProtocolLedger` does not
-consume migration chains, and Recon is the only current source consumer.
+record mapping, query rewrite, or verified delta. The public
+`MigrationVerifier` and `MigrationAwareJsonlLedger` provide the narrower reader
+that was previously missing: current-byte payload grammars verify without a
+receipt; an exact older identity verifies only across a gapless, all-`TOTAL`
+path; and `PARTIAL`, `HARD_BREAK`, unknown, or category-collision cases refuse.
+The receipt ontology must match the live registry entry name, and sidecar
+discovery remains anchored to the registry's retained absolute entry locator.
+`MigrationVerification` reports the separated grammar identities, migrated
+identities, and exact receipts crossed by a read.
+
+The base `JsonlLedger` remains grammar-only. Recon uses the migration-aware
+ledger and exposes only current-byte grammar aliases through
+`historical_ontology_hashes`, so migration identities no longer enter that
+parameter. Core `ProtocolLedger` still does not consume migration chains, and
+the new reader does not establish a generic record transform or cross-contract
+interpretation.
 
 ## Not implemented
 

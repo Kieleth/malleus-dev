@@ -1,0 +1,113 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:71705e5479c2ec122f46bc2775fdcf5ded558f793572052e45de3989fc576b86",
+        "before_digest": "sha256:3f25a9cf0fe4678be0985e07675907244312c01d3ecc1d10daa5d83bd39cc54d",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:f22d770166d0649a9d437f84300717858ec4099fb63f9218d6fb59ddf9bac877",
+        "before_digest": "sha256:5868b60f55e89836c7c77b533871217d00e98833d0134a91b11df8e26d4c3dea",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:58f7891e701efbe1a54a927672598ace2b967f043bec3de198fca441c41669e5",
+        "before_digest": "sha256:16d256ad00dfa185cac25038fdebb5fe75011c54bfef1d5428ada3e0263afe16",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:1f937916ee8b5881de3101e93edfd5fbe0ba47f872b8c9c83dae23490757bf82",
+        "before_digest": "sha256:c24dd8480b13029757c8954ec6fb610d2531bd68175c8d99413ae25732a70fe1",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:555a292b79673aa615b1f072496141195293019096e1910b064f9fe6fcb6aff1",
+        "before_digest": "sha256:df56e75870283e30fe42fa2cab8d1feaa78ba08ff7824ab0b6a0e577fab969ce",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:7bcf702e0a44703092a9e625a9b029949ff33b6d7b7d0c150facd03f63eee44b",
+        "before_digest": "sha256:b58fe38ec0e22424c823893ad89096c9f3d6f3f36e1630a4a784150c4cfb751e",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:87111538045d0372f26fd20f1c4924d6740d530c903753fba9c52add912b49df",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_population_trace.py"
+      },
+      {
+        "after_digest": "sha256:784c33c2ccce87048abeaf31aa99f4dc20898e9aa37e907d852c8d6f06c080e3",
+        "before_digest": "sha256:797792ca6334701412576301c55fa6f076572dbe64704adfaa5217e122b8baf3",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_small_shop_contract_revision.py"
+      },
+      {
+        "after_digest": "sha256:d56697ed329f20de869aafa6f4856de2d2a1b6f6d1950639e97d38ce1e00e28b",
+        "before_digest": "sha256:fcf57e79d0dfbe37314671586b88969beb88d1b7b246ec7167650167a07b8103",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:fc02200e2e820843456b40f8401763ef3aef4667d1857b67cc9ef054a8928ccc",
+  "entry_id": "OVR-000375",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:136125cf9161b1597e74c34c92d4a4d5da42d1f0b1c8943f6fed26c66bc2a426",
+  "recorded_at": "2026-09-04T04:10:49Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "c372b931fdbe2da58780f9ac941d809738500679",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e95e9b26d0a99b765a1934c59f33b4e5d827fb8b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c3a6fb6ec8f864a726ea12e049743b14e0e7b91c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0b5967a7fd56e9d24dfcc8f39855eac4a33a0825",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 375,
+  "subject": {
+    "id": "population-record-provenance-trace",
+    "type": "DOCUMENT"
+  },
+  "summary": "Expose a verified read-only path from an accepted record to retained population inputs.",
+  "why": "The compiler already retained the contract, history profile, population plan, field derivations, source bytes, evidence, change set, and record history, but adopters had to join those structures manually. This cut exposes one public read-only trace that reconstructs the pre-change base, recompiles the retained plan, and refuses if the accepted change cannot be reproduced exactly. It adds no persisted format, domain rule, graph authority, mapping language, Event population, or general DomainHistoryProfile policy."
+}

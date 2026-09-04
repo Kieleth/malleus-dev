@@ -22,6 +22,8 @@ same way a protocol record does. Nothing in this module writes to a ledger.
 from __future__ import annotations
 
 import hashlib
+import json
+import math
 import re
 from dataclasses import MISSING, asdict, dataclass, field, fields, is_dataclass
 from typing import Any, Mapping
@@ -38,6 +40,30 @@ DOCUMENT_VERSION = 1
 
 class BundleError(ValueError):
     """A document cannot be read as a bundle. Refuse; never repair."""
+
+
+class BundleSyntaxError(BundleError):
+    """Authored bytes are not one unambiguous JSON document."""
+
+
+def _strict_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    document: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in document:
+            raise BundleSyntaxError(f"bundle document repeats object key: {key}")
+        document[key] = value
+    return document
+
+
+def _reject_json_constant(value: str) -> None:
+    raise BundleSyntaxError(f"bundle document contains non-finite number: {value}")
+
+
+def _strict_json_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise BundleSyntaxError(f"bundle document contains non-finite number: {value}")
+    return parsed
 
 
 # Full, algorithm-tagged digests only. A truncated digest may be displayed and
@@ -72,6 +98,87 @@ _TUPLE_FIELDS = frozenset({
     "corrections", "selections",
 })
 
+_STRING_FIELDS = frozenset({
+    "id", "temporal_policy", "frozen_at", "inventory_basis", "digest",
+    "media_type", "locator", "source_id", "unit", "render_contract",
+    "raster_id", "selector_profile", "region_id", "request_digest", "status",
+    "response_digest", "unavailable_reason", "text_digest", "attempt_id",
+    "correction_id", "reviewed_hypothesis_id", "reviewer_id", "verdict",
+    "corrected_text_digest", "predecessor_id", "selected_id", "reason", "kind",
+    "data_handling_policy_id", "hostile_content_policy_id",
+})
+
+_STRING_ARRAY_FIELDS = frozenset({"required_units", "candidate_ids", "observed_units"})
+
+
+def _validate_document_field(cls: type, name: str, value: Any, where: str) -> None:
+    """Refuse JSON shapes the carrier annotations cannot represent safely."""
+    field_path = f"{where}.{name}"
+    if name in _TUPLE_FIELDS and not isinstance(value, (list, tuple)):
+        raise BundleError(f"{field_path} must be an array")
+    if name in _STRING_ARRAY_FIELDS:
+        invalid = next(
+            ((index, item) for index, item in enumerate(value) if not isinstance(item, str)),
+            None,
+        )
+        if invalid is not None:
+            index, item = invalid
+            raise BundleError(
+                f"{field_path}[{index}] must be a string, got {type(item).__name__}"
+            )
+    if name in _STRING_FIELDS and value is not None and not isinstance(value, str):
+        raise BundleError(f"{field_path} must be a string, got {type(value).__name__}")
+    if name == "byte_length" and (
+        not isinstance(value, int) or isinstance(value, bool)
+    ):
+        raise BundleError(f"{field_path} must be an integer, got {type(value).__name__}")
+    if name == "confidence" and value is not None and (
+        not isinstance(value, (int, float))
+        or isinstance(value, bool)
+        or not math.isfinite(float(value))
+    ):
+        raise BundleError(f"{field_path} must be a finite number")
+    if name == "human_verified" and not isinstance(value, bool):
+        raise BundleError(f"{field_path} must be a boolean, got {type(value).__name__}")
+    if name in {"selector", "config_identity", "metric_families", "transport_metadata"}:
+        if not isinstance(value, Mapping):
+            raise BundleError(f"{field_path} must be a mapping, got {type(value).__name__}")
+    if cls is OCRAttempt and name == "config_identity":
+        invalid = next(
+            (
+                (key, item)
+                for key, item in value.items()
+                if not isinstance(key, str) or not isinstance(item, str)
+            ),
+            None,
+        )
+        if invalid is not None:
+            key, item = invalid
+            raise BundleError(
+                f"{field_path}[{key!r}] must have a string key and value, "
+                f"got {type(item).__name__} value"
+            )
+    if cls is SourceClass and name == "metric_families":
+        for family, declaration in value.items():
+            if not isinstance(family, str):
+                raise BundleError(f"{field_path} names must be strings")
+            if not isinstance(declaration, Mapping):
+                raise BundleError(f"{field_path}[{family!r}] must be a mapping")
+            denominator = declaration.get("denominator")
+            if denominator is not None and not isinstance(denominator, str):
+                raise BundleError(
+                    f"{field_path}[{family!r}].denominator must be a string"
+                )
+            threshold = declaration.get("threshold")
+            if threshold is not None and (
+                not isinstance(threshold, (int, float))
+                or isinstance(threshold, bool)
+                or not math.isfinite(float(threshold))
+            ):
+                raise BundleError(
+                    f"{field_path}[{family!r}].threshold must be a finite number"
+                )
+
 
 def _construct(cls: type, data: Any, where: str) -> Any:
     """Build one plane from a document fragment, or refuse and say why.
@@ -86,18 +193,23 @@ def _construct(cls: type, data: Any, where: str) -> Any:
     unknown = sorted(set(data) - declared)
     if unknown:
         raise BundleError(f"{where} carries undeclared keys: {', '.join(unknown)}")
-    required = {
+    required = _DOCUMENT_REQUIRED_FIELDS.get(cls, frozenset({
         f.name for f in fields(cls)
         if f.default is MISSING and f.default_factory is MISSING
-    }
-    absent = sorted(required - set(data))
+    }))
+    absent = sorted(name for name in required if name not in data or data[name] is None)
     if absent:
         raise BundleError(f"{where} is missing required keys: {', '.join(absent)}")
+    for name, value in data.items():
+        _validate_document_field(cls, name, value, where)
     payload = {
-        name: tuple(value) if name in _TUPLE_FIELDS and isinstance(value, list) else value
+        name: tuple(value) if name in _TUPLE_FIELDS else value
         for name, value in data.items()
     }
-    return cls(**payload)
+    try:
+        return cls(**payload)
+    except (TypeError, ValueError) as error:
+        raise BundleError(f"{where} cannot be constructed: {error}") from error
 
 
 def _present(record: dict[str, Any]) -> dict[str, Any]:
@@ -344,6 +456,36 @@ class Bundle:
         }
 
     @classmethod
+    def from_bytes(cls, source: bytes) -> "Bundle":
+        """Read one exact UTF-8 JSON document, or refuse without repair."""
+        if not isinstance(source, bytes):
+            raise BundleSyntaxError("bundle document source must be exact bytes")
+        try:
+            text = source.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise BundleSyntaxError("bundle document is not UTF-8") from error
+        try:
+            document = json.loads(
+                text,
+                object_pairs_hook=_strict_json_object,
+                parse_constant=_reject_json_constant,
+                parse_float=_strict_json_float,
+            )
+        except BundleSyntaxError:
+            raise
+        except ValueError as error:
+            raise BundleSyntaxError(
+                f"bundle document is not valid JSON: {error}"
+            ) from error
+        try:
+            canonical_json(document)
+        except ValueError as error:
+            raise BundleSyntaxError(
+                f"bundle document is not canonical JSON data: {error}"
+            ) from error
+        return cls.from_document(document)
+
+    @classmethod
     def from_document(cls, document: Any) -> "Bundle":
         """Read a document, or refuse. Never partially read one."""
         if not isinstance(document, Mapping):
@@ -364,6 +506,10 @@ class Bundle:
                     f"document declares {key}={document[key]!r}; this reader verifies "
                     f"{value!r} and will not guess at the difference"
                 )
+        if not isinstance(document["document_version"], int) or isinstance(
+            document["document_version"], bool
+        ):
+            raise BundleError("document_version must be an integer")
         if "bundle" not in document:
             raise BundleError("document carries no bundle")
         payload = document["bundle"]
@@ -416,4 +562,31 @@ _PLANES: dict[str, type] = {
     "hypotheses": Hypothesis,
     "corrections": ReviewCorrection,
     "selections": Selection,
+}
+
+
+# Required here means required at the portable-document boundary. Some fields
+# map to required ontology slots. The collection fields also stay explicit so
+# an author-declared empty collection remains distinguishable from an omitted
+# collection the reader invented. Carrier defaults are only an ergonomic path
+# for constructing a new in-memory bundle.
+_DOCUMENT_REQUIRED_FIELDS: dict[type, frozenset[str]] = {
+    SourceClass: frozenset({
+        "id", "required_units", "metric_families", "temporal_policy", "frozen_at",
+        "inventory_basis",
+    }),
+    SourceRepresentation: frozenset({"id", "digest", "byte_length", "media_type", "locator"}),
+    Raster: frozenset({"id", "source_id", "unit", "digest", "render_contract"}),
+    Region: frozenset({"id", "raster_id", "selector", "selector_profile"}),
+    OCRAttempt: frozenset({"id", "region_id", "request_digest", "config_identity", "status"}),
+    Hypothesis: frozenset({"id", "region_id", "text_digest"}),
+    ReviewCorrection: frozenset({"id", "reviewed_hypothesis_id", "reviewer_id", "verdict"}),
+    Selection: frozenset({
+        "id", "region_id", "candidate_ids", "selected_id", "reason", "human_verified",
+    }),
+    Bundle: frozenset({
+        "id", "source_class", "kind", "sources", "rasters", "regions", "attempts",
+        "hypotheses", "corrections", "selections", "observed_units",
+        "data_handling_policy_id", "hostile_content_policy_id", "transport_metadata",
+    }),
 }

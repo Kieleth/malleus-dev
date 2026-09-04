@@ -10,12 +10,28 @@ profiles they need, replace implementations behind the same contracts, or stop
 before semantic history entirely. Start with the
 [protocol boundary taxonomy](protocol-boundary-taxonomy) for those boundaries.
 
+For the current five-change demonstration, read the
+[Small Shop end-to-end walkthrough](SMALL_SHOP_WALKTHROUGH.md). It extends the
+historical milestones below with settlement, one ledger, replay-derived current
+state, named queries, and exact change-level provenance.
+
+The newer
+[full public-path conformance evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
+executes all five changes through `malleus.compiler`, records one additive
+ontology revision, and traces every current and superseded record back to its
+retained population plan, field derivations, source bytes, and mapping bytes.
+It keeps the earlier research evidence unchanged.
+
 ## First compiler-to-ledger-to-knowledge-graph proof
 
-> **Status:** Working research milestone, 2 September 2026.
-> The path is executable and tested in this repository.
-> It is not yet a stable public API. It is not an installed command,
-> file-format promise, package feature, or release.
+> **Status:** Working research milestone, 3 September 2026.
+> The path is executable and tested in this repository. Packages built from
+> this source expose its generic executor through `malleus.compiler` and its
+> contract compiler through `malleus-compiler contract`.
+> Public here means an import path and installed command, not stable wire formats.
+> The fixture
+> mapping, high-level runner, evidence formats, and release remain research
+> work.
 
 **The first real Malleus compiler-to-ledger-to-knowledge-graph path is
 complete.** That sentence has a narrow meaning: the first scoped, research-only
@@ -67,6 +83,193 @@ In plain English, the parts have these separate jobs:
 | Knowledge change | Seals one proposed domain-state change together with its inputs, base state, operations, and identity. |
 | Ledger | Keeps the retained evidence, proposal, receipts, and decision in one append-only history. |
 | Knowledge graph | Presents the accepted view derived by replaying that history. |
+
+### Use the public boundary
+
+The public `malleus.compiler` facade exposes the reusable executor used below:
+exact-source LinkML contract compilation, population-plan compilation, governed
+admission, reopen, replay, and access to the replayed graph's query methods. A
+caller supplies every ontology source as exact bytes under the locator used by
+the root or its imports:
+
+```python
+from malleus.compiler import compile_linkml_contract
+
+compiled = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={"my-domain": ontology_bytes, "linkml:types": linkml_types_bytes},
+)
+```
+
+`malleus-compiler contract` compiles exact named LinkML source files. It is a
+convenience frontend to the same function, not a second compiler:
+
+```bash
+malleus-compiler contract \
+  --root my-domain \
+  --source my-domain path/to/my-domain.yaml \
+  --source linkml:types path/to/linkml-types.yaml
+```
+
+The command emits canonical validated-contract bytes. It never accepts a bare
+ontology hash. The Python facade exposes the later population and history
+steps, but it does not invent a source mapping, policy, machine, or domain
+history model. Those remain explicit adopter inputs. Formats still named
+`private-v0` may change before a compatibility contract is published.
+
+### Populate from a document without hiding the gaps
+
+Structured rows are not the only possible source. The optional
+`adapt_document_assertions` frontend accepts exact reading bytes, a capture
+that quotes specific passages, and graph records proposed by the adopter. It
+checks that every quoted passage occurs in the named text block and that every
+record field points back to a captured assertion. It then emits the same
+neutral population plan used by row adapters:
+
+```python
+import json
+
+from malleus.compiler import adapt_document_assertions
+
+compiled = adapt_document_assertions(
+    reading_bytes=reading_bytes,
+    capture_bytes=capture_bytes,
+    capture_id="capture:inspection-note",
+    plan_id="plan:inspection-note:1",
+    contract_identity=effective_contract.identity,
+    records=proposed_records,
+    supersessions=[],
+)
+population_plan = json.loads(compiled.canonical_plan_bytes)
+```
+
+The adapter does not invent `proposed_records`, accept them, or write the
+knowledge graph. The ordinary population compiler validates the emitted plan
+against the selected ontology contract. Admission and replay remain separate.
+Captured assertions stay retained ledger evidence rather than becoming graph
+records. The adapter derives `ORDER_ONLY` valid time from the capture ID. The
+caller cannot substitute a source-domain date for the whole capture batch;
+optional nonempty `assertion_time` and `domain_time` values stay in each
+retained assertion. Their exact lexical values are evidence, not normalized
+times. An omitted field means that time was not captured; Core supplies no
+default.
+
+The result also contains `canonical_census_bytes`. Its two independent axes
+say which source blocks were reviewed and which captured assertions were fully,
+partly, or not formalised. A quoted range that the ontology only models as one
+number, for example, becomes a typed gap instead of disappearing.
+
+The shipped `source-assertion` profile treats one capture as one atomic partial
+import, not as a complete world snapshot. A capture can contain assertions with
+different domain times or no stated domain time. The population plan's
+`valid_time` therefore records capture/import order; assertion time, domain
+time, and modality remain per-assertion retained evidence. The public trace is
+the selected provenance join: an ordinary graph query may expose an unqualified
+edge, while `trace_population_record` reaches the exact retained assertion and
+its modality. Do not present the edge alone as proof that a source asserted it
+as fact.
+
+### Trace an accepted record back to its source
+
+`trace_population_record` is a read-only join over information already retained
+by the public population path. Starting with one accepted graph-record ID, it
+resolves the record history, accepted change set, canonical population plan,
+selected domain-history profile, field derivations, source bytes, and evidence
+bytes:
+
+```python
+from malleus.compiler import trace_population_record
+
+trace = trace_population_record(
+    history.replay(),
+    "supplier-order-state:B:e7",
+)
+
+assert trace.history_profile.profile_id == "state-version"
+assert trace.record_history.supersedes_record_id == (
+    "supplier-order-state:B:e4"
+)
+quantity = next(
+    item
+    for item in trace.derivations
+    if item["path"] == ("properties", "ordered_quantity")
+)
+assert quantity["locator"] == "row:1:quantity"
+```
+
+The function performs no I/O and changes neither the ledger nor the graph. It
+recompiles the retained plan against the contract and accepted state that
+preceded the change, then checks that the resulting operations, closures,
+valid time, and supersession equal the accepted change set. Missing, ambiguous,
+or inconsistent provenance returns `PopulationTraceRefusal`; it is never
+guessed.
+
+For the document adapter, the same trace reaches locator `asr:001` and the
+exact retained capture containing its verbatim statement and `STATED`
+modality. Interpreting that capture remains an adapter-level concern. The
+generic trace exposes its exact bytes but does not turn the assertion into a
+graph record.
+
+This is an inspection view, not another persisted artifact or authority. It
+works for changes that bind a neutral population plan and profile. Older or
+manually composed change sets fail with `POPULATION_PLAN_NOT_BOUND`.
+
+### Grow the ontology without starting a new history
+
+A useful ontology will change. Starting a second ledger every time a project
+adds a field would hide the connection between old and new knowledge. Malleus
+can now record one narrow kind of ontology revision inside the same history.
+
+The caller compiles the revised ontology, keeps the protocol machine and policy
+unchanged, then asks the history to derive the revision:
+
+```python
+from malleus.compiler import (
+    compile_linkml_contract,
+    compose_partial_effective_contract,
+)
+
+current = history.replay()
+revised = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={
+        "my-domain": revised_ontology_bytes,
+        "linkml:types": linkml_types_bytes,
+    },
+)
+revised_partial = compose_partial_effective_contract(
+    validated_fact_set_sha256=revised.artifact.validated_fact_set_sha256,
+    normative_profile=current.partial_contract.normative_profile,
+)
+revision = history.compose_contract_revision(
+    revision_id="revision:catalog-v2",
+    target_validated_contract_bytes=revised.artifact.artifact_bytes,
+    target_partial_contract_bytes=revised_partial.canonical_bytes,
+    reason="add the product category needed by retained gaps",
+    issued_at="2026-09-03T00:00:00Z",
+)
+history.record_contract_revision(
+    revision=revision,
+    transaction_time="2026-09-03T00:00:00Z",
+    actor_id="actor:maintainer",
+)
+```
+
+The executor does not trust a label saying what changed. It compares the two
+compiled fact sets and derives `ADD_CLASS`, `ADD_SLOT`, or `ADD_ENUM_VALUE`.
+Those additions are admitted by the public `CONTRACT_REVISION_POLICY`. An
+`ADD_IMPORT` remains a legal grammar term but the current policy refuses it.
+Removing or changing an existing semantic fact also refuses.
+
+The recorded revision contains the target contract, the exact ledger and graph
+coordinates it follows, the derived changes, and a migration receipt. Replay
+loads the old contract, reaches that event, validates the accepted graph under
+the new contract, and continues. Later knowledge changes name the new contract
+identity. Earlier records and change sets remain in the same ledger.
+
+This is an additive revision path, not a general migration engine. It does not
+rewrite old records, change the protocol machine, admit new imports, or decide
+how an adopter should model domain history.
 
 ### Follow one fact through the system
 
@@ -187,7 +390,7 @@ retains source and compiled artifact bytes. Its readable lifecycle is:
 | 21 | Retain knowledge change `sha256:cc5ce1cf6f9521f5299fbc9a981f6dba6949afaabd3730b2f81037b51c5912af`. |
 | 22 | Propose that exact change. |
 | 23-24 | Record the two fixture-supplied `SATISFIED` check receipts. |
-| 25 | Record the `ACCEPT` verdict. The ledger head is `sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad`. |
+| 25 | Record the `ACCEPT` verdict. The ledger head is `sha256:3e07988bafd28a481c5eece5bfdad533ddbb63c93e862b9192944e04c8af3574`. |
 
 The [recorded canonical receipt](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json)
 is the compact evidence snapshot. It is an exact result of this private
@@ -212,11 +415,13 @@ the exact receipt check:
 ```bash
 pip install -e '.[dev]'
 python -m research.ontology_driven_kg_realization.experiments.small_shop.pareto.ret010 --ledger build/small-shop-ret010.jsonl
-python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py::test_recorded_research_receipt_regenerates_from_the_exact_history
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/pareto/test_vertical.py::test_recorded_research_receipt_stays_frozen_while_current_history_runs
 ```
 
 Running the module again reopens the same ledger and prints the same receipt.
-The test regenerates the result independently and compares its bytes exactly.
+The test keeps the historical RET-010 research receipt byte-identical while
+running the current, separately versioned history. It does not regenerate old
+evidence with newer compiler bytes.
 
 ### Try to break it
 
@@ -397,13 +602,14 @@ initial proof, correction inputs and answer key, generic record history, exact
 source-and-mapping checks, atomic refusal, and reopen. It proves one bounded
 record correction without changing the frozen initial fixture bytes.
 
-This was a focused research gate, not a release gate. The full repository and
-package suites were deliberately outside the milestone. Still missing are a
-supported public compiler API and command, a general mapping contract, broad
-ontology support, a supported interface for executed and retained check implementations,
-general update and correction behavior, external effects and observation, public bitemporal
-queries, Semantic Re-entry, and a second-language interpreter proving
-cross-language parity.
+This was a focused research gate, not a release gate. The generic compiler and
+history executor are now packaged behind a public Python facade, and contract
+compilation has an installed command. Still missing are stable wire contracts,
+a general mapping contract, broad ontology support, a supported interface for
+executed and retained check implementations, general update and correction
+behavior, external effects and observation, public bitemporal queries,
+Semantic Re-entry, and a second-language interpreter proving cross-language
+parity.
 
 See the [technical compiler notes](contract_compiler/index.md) and
 [implementation status](IMPLEMENTATION_STATUS.md) for the exact boundary.
@@ -414,6 +620,7 @@ See the [technical compiler notes](contract_compiler/index.md) and
 :maxdepth: 2
 
 ADOPTION_GUIDE
+SMALL_SHOP_WALKTHROUGH
 ARCHITECTURE
 ASSENT_PLAN
 ASSENT_PROTOCOL

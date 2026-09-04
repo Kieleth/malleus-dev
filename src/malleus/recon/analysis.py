@@ -3,22 +3,77 @@
 from __future__ import annotations
 
 import csv
+import errno
 import hashlib
+import html
 import io
 import json
+import os
+import platform
+import re
+import tempfile
 import zipfile
+import zlib
+from contextlib import contextmanager
 from copy import deepcopy
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Iterable, Iterator, Mapping
+from urllib.parse import quote
 from xml.etree import ElementTree as ET
 
 import networkx as nx
+import yaml
 
 from malleus.ledger import GENESIS
-from malleus.recon.store import BUILD_DIRECTORY, ReconError, ReconProject, StoredRecord
+from malleus.ontology import OntologyRegistry, OntologySourceClosure
+from malleus.recon.store import (
+    BUILD_DIRECTORY,
+    PROJECT_FILE,
+    ReconError,
+    ReconProject,
+    StoredRecord,
+    _assert_reserved_lock_identity,
+    _precheck_reserved_lock,
+)
+from malleus.status import IMPLEMENTATION_STATUS
 
 
 MATERIAL_LEVELS = frozenset({"CENTRAL", "MATERIAL"})
+STRUCTURAL_CAPTURE_PROFILE = "malleus.recon.structural-capture/v1"
+_BUILD_GENERATOR = {
+    "name": "malleus-recon",
+    "package": "malleus-dev",
+    "package_version": IMPLEMENTATION_STATUS.package_version,
+}
+_BUILD_RUNTIME = {
+    "python": platform.python_version(),
+    "python_implementation": platform.python_implementation(),
+    "networkx": nx.__version__,
+    "pyyaml": yaml.__version__,
+    "zlib": zlib.ZLIB_RUNTIME_VERSION,
+}
+_XSD = "http://www.w3.org/2001/XMLSchema#"
+_SCALAR_COERCIONS = {
+    "boolean": _XSD + "boolean",
+    "date": _XSD + "date",
+    "datetime": _XSD + "dateTime",
+    "decimal": _XSD + "decimal",
+    "double": _XSD + "double",
+    "float": _XSD + "float",
+    "integer": _XSD + "integer",
+    "time": _XSD + "time",
+    "timestamp": _XSD + "dateTime",
+    "uri": _XSD + "anyURI",
+    "uriorcurie": _XSD + "anyURI",
+}
+_DIGEST = re.compile(r"^[0-9a-f]{64}$")
+_ABSOLUTE_IRI = re.compile(r'^[A-Za-z][A-Za-z0-9+.-]*:[^\s<>"{}|\\^`]+$')
+_BUILD_MANIFEST_SCHEMA_VERSION = "3"
+_GENERATOR_CLOSURE_SCHEMA_VERSION = "1"
+_BUILD_LOCK_NAME = ".recon-build.lock"
+_LOCK_CONTENTION_ERRNOS = frozenset({errno.EACCES, errno.EAGAIN, errno.EWOULDBLOCK})
+_LOCK_CONTENTION_WINERRORS = frozenset({33})
 _NODE_COLUMNS = (
     "id",
     "type",
@@ -40,6 +95,46 @@ _EDGE_COLUMNS = (
     "coverage_level",
     "basis",
     "evidence_ids",
+)
+_HISTORICAL_OUTPUT_ALLOWLIST = frozenset(
+    {
+        "bibliography.bib",
+        "comparisons.json",
+        "edges.csv",
+        "evidence.csv",
+        "literature_kg.graphml",
+        "literature_kg.json",
+        "literature_kg.jsonld",
+        "metrics.json",
+        "nodes.csv",
+        "report.md",
+        "work_axis_matrix.csv",
+    }
+)
+_MANIFEST_FIELDS = frozenset(
+    {
+        "archive",
+        "event_count",
+        "files",
+        "generator",
+        "jsonld_ontology",
+        "ledger_head",
+        "ontology_verification",
+        "ontology_hash",
+        "profile",
+        "project",
+        "runtime",
+        "schema_version",
+        "state",
+    }
+)
+_IMPLEMENTATION_SOURCES = (
+    ("malleus.recon.analysis", Path(__file__)),
+    ("malleus.recon.store", Path(__file__).with_name("store.py")),
+    ("malleus.ontology", Path(__file__).parents[1] / "ontology.py"),
+    ("malleus.migration", Path(__file__).parents[1] / "migration.py"),
+    ("malleus.kg", Path(__file__).parents[1] / "kg.py"),
+    ("malleus.ledger", Path(__file__).parents[1] / "ledger.py"),
 )
 
 
@@ -146,12 +241,16 @@ def _graphml_value(value: Any) -> str | int | float | bool:
 
 
 def _profiles(records: Mapping[str, StoredRecord]) -> dict[str, dict[str, str]]:
+    active_axes = _active_axis_ids(records)
     profiles: dict[str, dict[str, str]] = {}
     for stored in records.values():
         if stored.record_type != "CoversAxisRelation":
             continue
         record = stored.record
-        if record.get("review_state") != "REVIEWED":
+        if (
+            record.get("review_state") != "REVIEWED"
+            or record["target_id"] not in active_axes
+        ):
             continue
         profiles.setdefault(record["source_id"], {})[record["target_id"]] = record[
             "coverage_level"
@@ -162,17 +261,42 @@ def _profiles(records: Mapping[str, StoredRecord]) -> dict[str, dict[str, str]]:
 def _contested_profiles(
     records: Mapping[str, StoredRecord],
 ) -> dict[str, dict[str, str]]:
+    active_axes = _active_axis_ids(records)
     profiles: dict[str, dict[str, str]] = {}
     for stored in records.values():
         if stored.record_type != "CoversAxisRelation":
             continue
         record = stored.record
-        if record.get("review_state") != "CONTESTED":
+        if (
+            record.get("review_state") != "CONTESTED"
+            or record["target_id"] not in active_axes
+        ):
             continue
         profiles.setdefault(record["source_id"], {})[record["target_id"]] = record[
             "coverage_level"
         ]
     return profiles
+
+
+def _active_axis_ids(records: Mapping[str, StoredRecord]) -> set[str]:
+    return {
+        identifier
+        for identifier, stored in records.items()
+        if stored.record_type == "ComparisonAxis"
+        and stored.record.get("review_state") != "RETIRED"
+    }
+
+
+def _reported_coverage(
+    reviewed: Mapping[str, str],
+    contested: Mapping[str, str],
+    axis: str,
+) -> str | None:
+    if axis in reviewed:
+        return reviewed[axis]
+    if axis in contested:
+        return f"CONTESTED:{contested[axis]}"
+    return None
 
 
 def compare_subjects(
@@ -217,22 +341,26 @@ def _compare_subjects(
         if stored.record_type == "ComparisonAxis"
         and stored.record.get("review_state") != "RETIRED"
     )
-    unresolved = {
+    reported = {
         axis: {
-            "target": target_profile.get(axis, "NOT_ESTABLISHED"),
-            "work": work_profile.get(axis, "NOT_ESTABLISHED"),
+            "target": _reported_coverage(target_profile, target_contested, axis),
+            "work": _reported_coverage(work_profile, work_contested, axis),
         }
         for axis in all_axes
-        if target_profile.get(axis, "NOT_ESTABLISHED")
-        in {"NOT_ESTABLISHED", "CONTRADICTED"}
-        or work_profile.get(axis, "NOT_ESTABLISHED")
-        in {"NOT_ESTABLISHED", "CONTRADICTED"}
+    }
+    unresolved = {
+        axis: values
+        for axis, values in reported.items()
+        if values["target"] in {"NOT_ESTABLISHED", "CONTRADICTED"}
+        or values["work"] in {"NOT_ESTABLISHED", "CONTRADICTED"}
+    }
+    unassessed = {
+        axis: values
+        for axis, values in reported.items()
+        if values["target"] is None or values["work"] is None
     }
     partial = {
-        axis: {
-            "target": target_profile.get(axis, "NOT_ESTABLISHED"),
-            "work": work_profile.get(axis, "NOT_ESTABLISHED"),
-        }
+        axis: reported[axis]
         for axis in all_axes
         if target_profile.get(axis) in {"PARTIAL", "ADJACENT"}
         or work_profile.get(axis) in {"PARTIAL", "ADJACENT"}
@@ -248,6 +376,7 @@ def _compare_subjects(
         "symmetric_difference": sorted(target_set ^ work_set),
         "partial_or_adjacent": partial,
         "unresolved": unresolved,
+        "unassessed": unassessed,
         "contested": {
             axis: {
                 "target": target_contested.get(axis),
@@ -259,22 +388,22 @@ def _compare_subjects(
         "work_profile": dict(sorted(work_profile.items())),
         "boundary": (
             "Set membership reflects reviewer-coded CENTRAL or MATERIAL coverage only; "
-            "this is not a novelty verdict."
+            "null means no active assessment is recorded, while NOT_ESTABLISHED is an "
+            "explicit reviewer-coded assessment. This is not a novelty verdict."
         ),
     }
 
 
 def metrics(project: ReconProject) -> dict[str, Any]:
     events, records = project.snapshot()
-    canonical = _canonical_snapshot(project, events, records)
-    return _metrics_snapshot(project, events, records, _networkx_graph(canonical))
+    _canonical_snapshot(project, events, records)
+    return _metrics_snapshot(project, events, records)
 
 
 def _metrics_snapshot(
     project: ReconProject,
     events: list[dict[str, Any]],
     records: Mapping[str, StoredRecord],
-    graph: nx.MultiDiGraph,
 ) -> dict[str, Any]:
     nodes, edges = _split_records(project, records)
     active_nodes = [node for node in nodes if node.get("review_state") != "RETIRED"]
@@ -309,7 +438,27 @@ def _metrics_snapshot(
         in {"Work", "Claim", "Result", *{edge["type"] for edge in active_edges}}
     ]
     supported = [record for record in evidence_bearing if record.get("evidence_ids")]
-    undirected = nx.Graph(graph.subgraph(active_node_ids))
+    undirected = nx.Graph()
+    undirected.add_nodes_from(active_node_ids)
+    undirected.add_edges_from(
+        (edge["source_id"], edge["target_id"]) for edge in active_edges
+    )
+    active_subjects = {
+        node["id"]
+        for node in active_nodes
+        if project.registry.is_subtype_of(node["type"], "ReviewSubject")
+    }
+    active_axes = {
+        node["id"] for node in active_nodes if node["type"] == "ComparisonAxis"
+    }
+    assessed_pairs = {
+        (edge["source_id"], edge["target_id"])
+        for edge in active_edges
+        if edge["type"] == "CoversAxisRelation"
+        and edge.get("review_state") in {"REVIEWED", "CONTESTED"}
+        and edge["source_id"] in active_subjects
+        and edge["target_id"] in active_axes
+    }
     return {
         "records": len(records),
         "active_records": len(active_nodes) + len(active_edges),
@@ -337,6 +486,10 @@ def _metrics_snapshot(
             edge.get("coverage_level") in {"NOT_ESTABLISHED", "CONTRADICTED"}
             for edge in active_edges
             if edge["type"] == "CoversAxisRelation"
+            and edge.get("review_state") == "REVIEWED"
+        ),
+        "unassessed_subject_axis_pairs": (
+            len(active_subjects) * len(active_axes) - len(assessed_pairs)
         ),
         "boundary": "Counts navigate the review; they do not rank paper quality or novelty.",
     }
@@ -380,31 +533,318 @@ def _matrix(
     return ["subject_id", *axes], rows
 
 
-def _jsonld(canonical: Mapping[str, Any]) -> dict[str, Any]:
+@dataclass(frozen=True)
+class _JsonLdOntology:
+    classes: Mapping[str, str]
+    slots: Mapping[str, str]
+    identity: Mapping[str, Any]
+    source_closure: OntologySourceClosure
+    structural_hash: str
+
+
+def _schema_document(path: Path) -> tuple[bytes, Mapping[str, Any]]:
+    try:
+        body = path.read_bytes()
+    except OSError as error:
+        raise ReconError(f"Cannot derive JSON-LD ontology terms from {path}: {error}") from error
+    return body, _schema_document_from_bytes(body, str(path))
+
+
+def _schema_document_from_bytes(
+    body: bytes,
+    locator: str,
+) -> Mapping[str, Any]:
+    try:
+        document = yaml.safe_load(body.decode("utf-8"))
+    except (TypeError, UnicodeDecodeError, yaml.YAMLError) as error:
+        raise ReconError(
+            f"Cannot derive JSON-LD ontology terms from {locator}: {error}"
+        ) from error
+    if not isinstance(document, dict):
+        raise ReconError(f"JSON-LD ontology source {locator} must contain one mapping")
+    return document
+
+
+def _schema_terms_from_document(
+    document: Mapping[str, Any],
+    path: Path,
+    section: str,
+) -> dict[str, str]:
+    try:
+        values = document[section]
+        schema_id = document["id"]
+        prefixes = document.get("prefixes", {})
+    except (KeyError, TypeError) as error:
+        raise ReconError(f"Cannot derive JSON-LD {section} ownership from {path}: {error}") from error
+    if (
+        not isinstance(values, dict)
+        or not all(isinstance(name, str) for name in values)
+        or not isinstance(schema_id, str)
+        or not isinstance(prefixes, dict)
+    ):
+        raise ReconError(f"Ontology {section} in {path} must be a mapping with string names")
+    uri_field = {"classes": "class_uri", "slots": "slot_uri"}.get(section)
+    if uri_field is None:
+        raise ReconError(f"Cannot derive JSON-LD terms for unsupported ontology section: {section}")
+    if _ABSOLUTE_IRI.fullmatch(schema_id) is None:
+        raise ReconError(f"Ontology schema id in {path} must be an absolute IRI")
+    vocabulary = schema_id.rstrip("/#") + "/"
+    terms = {}
+    for name, raw_definition in values.items():
+        definition = raw_definition if isinstance(raw_definition, dict) else {}
+        declared = definition.get(uri_field)
+        if declared is None:
+            term = vocabulary + name
+            if _ABSOLUTE_IRI.fullmatch(term) is None:
+                raise ReconError(
+                    f"Ontology {section}.{name} derived IRI must be absolute"
+                )
+            terms[name] = term
+            continue
+        if not isinstance(declared, str) or not declared:
+            raise ReconError(f"Ontology {section}.{name}.{uri_field} must be a nonblank string")
+        prefix, separator, local_name = declared.partition(":")
+        if separator and prefix in prefixes:
+            expansion = prefixes[prefix]
+            if not isinstance(expansion, str) or _ABSOLUTE_IRI.fullmatch(expansion) is None:
+                raise ReconError(
+                    f"Ontology prefix '{prefix}' expansion must be an absolute IRI"
+                )
+            term = expansion + local_name
+        elif re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", declared):
+            term = declared
+        else:
+            raise ReconError(
+                f"Ontology {section}.{name}.{uri_field} is not an absolute IRI or known CURIE"
+            )
+        if _ABSOLUTE_IRI.fullmatch(term) is None:
+            raise ReconError(
+                f"Ontology {section}.{name}.{uri_field} expanded IRI must be absolute"
+            )
+        terms[name] = term
+    return terms
+
+
+def _schema_terms(path: Path, section: str) -> dict[str, str]:
+    _, document = _schema_document(path)
+    return _schema_terms_from_document(document, path, section)
+
+
+def _jsonld_ontology(registry: OntologyRegistry) -> _JsonLdOntology:
+    closure = registry.source_closure()
+    documents = {
+        source.resolved_locator: _schema_document_from_bytes(
+            source.source_bytes,
+            source.resolved_locator,
+        )
+        for source in closure.sources
+    }
+    terms_by_source: dict[tuple[str, str], dict[str, str]] = {}
+
+    def owned_term(locator: str, section: str, name: str) -> str:
+        key = (locator, section)
+        if key not in terms_by_source:
+            terms_by_source[key] = _schema_terms_from_document(
+                documents[locator],
+                Path(locator),
+                section,
+            )
+        try:
+            return terms_by_source[key][name]
+        except KeyError as error:
+            raise ReconError(
+                f"Ontology closure says {locator} owns {section}.{name}, but the "
+                "retained source does not declare it"
+            ) from error
+
+    classes = {
+        definition.name: owned_term(
+            definition.source_locator,
+            "classes",
+            definition.name,
+        )
+        for definition in closure.definitions
+        if definition.kind == "class"
+    }
+    slots = {
+        definition.name: owned_term(
+            definition.source_locator,
+            "slots",
+            definition.name,
+        )
+        for definition in closure.definitions
+        if definition.kind == "slot"
+    }
+    term_map = {"classes": classes, "slots": slots}
+    term_map_body = _json_text(term_map).encode("utf-8")
+    identity = {
+        "sources": [
+            {
+                "source_role": source.source_role,
+                "resolved_locator": source.resolved_locator,
+                "bytes": source.byte_length,
+                "sha256": source.sha256,
+            }
+            for source in closure.sources
+        ],
+        "imports": [
+            {
+                "parent_locator": edge.parent_locator,
+                "ordinal": edge.ordinal,
+                "literal": edge.literal,
+                "target_role": edge.target_role,
+                "resolved_locator": edge.resolved_locator,
+            }
+            for edge in closure.imports
+        ],
+        "definitions": [
+            {
+                "kind": definition.kind,
+                "name": definition.name,
+                "source_locator": definition.source_locator,
+            }
+            for definition in closure.definitions
+        ],
+        "term_map": _file_identity(term_map_body),
+    }
+    return _JsonLdOntology(
+        classes=classes,
+        slots=slots,
+        identity=identity,
+        source_closure=closure,
+        structural_hash=f"sha256:{registry.content_hash()}",
+    )
+
+
+def _assert_jsonld_ontology_current(ontology: _JsonLdOntology) -> None:
+    for source in ontology.source_closure.sources:
+        path = Path(source.resolved_locator)
+        try:
+            body = path.read_bytes()
+        except OSError as error:
+            raise ReconError(
+                "Cannot recheck JSON-LD ontology "
+                f"{source.source_role} source {source.resolved_locator}: {error}"
+            ) from error
+        if body != source.source_bytes:
+            raise ReconError(
+                "JSON-LD ontology "
+                f"{source.source_role} source {source.resolved_locator} "
+                "changed during generation"
+            )
+
+
+def _ontology_iri(
+    name: str,
+    terms: Mapping[str, str],
+    *,
+    kind: str,
+) -> str:
+    try:
+        return terms[name]
+    except KeyError as error:
+        raise ReconError(
+            f"Cannot emit JSON-LD for ontology {kind} without ownership: {name}"
+        ) from error
+
+
+def _record_iri(identifier: Any) -> str:
+    if not isinstance(identifier, str) or not identifier.strip():
+        raise ReconError("JSON-LD record identifiers must be nonblank strings")
+    return "urn:malleus:recon:record:" + quote(identifier, safe="")
+
+
+def _range_coercion(registry: OntologyRegistry, range_name: str | None) -> str | None:
+    if range_name is None:
+        return None
+    if registry.has_type(range_name):
+        return "@id"
+    return _SCALAR_COERCIONS.get(range_name)
+
+
+def _jsonld_context(
+    registry: OntologyRegistry,
+    record_types: Iterable[str],
+    ontology: _JsonLdOntology | None = None,
+) -> dict[str, Any]:
+    ontology = ontology or _jsonld_ontology(registry)
+    ranges: dict[str, set[str | None]] = {}
+    for record_type in sorted(set(record_types)):
+        if not registry.has_type(record_type):
+            raise ReconError(f"Cannot emit JSON-LD for unknown ontology class: {record_type}")
+        for slot, constraint in registry.effective_slots(record_type).items():
+            if slot != "id":
+                ranges.setdefault(slot, set()).add(_range_coercion(registry, constraint.range))
+
+    context: dict[str, Any] = {}
+    for slot, coercions in sorted(ranges.items()):
+        if len(coercions) != 1:
+            raise ReconError(
+                f"Cannot emit one JSON-LD term for ontology slot '{slot}' with "
+                f"incompatible coercions: {sorted(str(item) for item in coercions)}"
+            )
+        definition: dict[str, str] = {
+            "@id": _ontology_iri(
+                slot,
+                ontology.slots,
+                kind="slot",
+            )
+        }
+        coercion = next(iter(coercions))
+        if coercion is not None:
+            definition["@type"] = coercion
+        context[slot] = definition if len(definition) > 1 else definition["@id"]
+    return context
+
+
+def _jsonld_property_value(
+    registry: OntologyRegistry,
+    record_type: str,
+    slot: str,
+    value: Any,
+) -> Any:
+    constraint = registry.effective_slots(record_type).get(slot)
+    if constraint is None:
+        raise ReconError(f"{record_type} JSON-LD record contains unknown slot: {slot}")
+    if constraint.range is not None and registry.has_type(constraint.range):
+        if isinstance(value, list):
+            return [_record_iri(item) for item in value]
+        return _record_iri(value)
+    return value
+
+
+def _jsonld(
+    canonical: Mapping[str, Any],
+    registry: OntologyRegistry,
+    ontology: _JsonLdOntology | None = None,
+) -> dict[str, Any]:
+    records = [*canonical["nodes"], *canonical["edges"]]
+    ontology = ontology or _jsonld_ontology(registry)
     items = []
-    for node in canonical["nodes"]:
-        items.append({"@id": node["id"], "@type": f"recon:{node['type']}", **{
-            key: value for key, value in node.items() if key not in {"id", "type"}
-        }})
-    for edge in canonical["edges"]:
-        items.append({
-            "@id": edge["id"],
-            "@type": f"recon:{edge['type']}",
-            "source": {"@id": edge["source_id"]},
-            "target": {"@id": edge["target_id"]},
-            **{
-                key: value
-                for key, value in edge.items()
-                if key not in {"id", "type", "source_id", "target_id"}
-            },
-        })
+    for record in records:
+        record_type = record["type"]
+        item = {
+            "@id": _record_iri(record["id"]),
+            "@type": _ontology_iri(
+                record_type,
+                ontology.classes,
+                kind="class",
+            ),
+        }
+        item.update(
+            {
+                slot: _jsonld_property_value(registry, record_type, slot, value)
+                for slot, value in record.items()
+                if slot not in {"id", "type"}
+            }
+        )
+        items.append(item)
     return {
-        "@context": {
-            "@vocab": "https://malleus.dev/schema/recon/",
-            "recon": "https://malleus.dev/schema/recon/",
-            "source": {"@id": "recon:source", "@type": "@id"},
-            "target": {"@id": "recon:target", "@type": "@id"},
-        },
+        "@context": _jsonld_context(
+            registry,
+            (record["type"] for record in records),
+            ontology,
+        ),
         "@graph": items,
     }
 
@@ -413,7 +853,13 @@ def _graphml_bytes(graph: nx.MultiDiGraph) -> bytes:
     generator = nx.generate_graphml(graph, encoding="utf-8", prettyprint=True)
     text = "\n".join(generator) + "\n"
     # Parse before writing so a malformed serializer result never enters build/.
-    ET.fromstring(text.encode("utf-8"))
+    try:
+        ET.fromstring(text.encode("utf-8"))
+    except ET.ParseError as error:
+        raise ReconError(
+            "Cannot generate GraphML: a source value contains an XML-invalid "
+            f"character ({error})"
+        ) from error
     return text.encode("utf-8")
 
 
@@ -447,18 +893,41 @@ def _bibtex(records: Mapping[str, StoredRecord]) -> str:
 
 
 def _bibtex_key(value: str) -> str:
-    cleaned = "".join(
-        character if character.isalnum() else "_" for character in value
-    ).strip("_")
-    return cleaned or "work_" + hashlib.sha256(value.encode("utf-8")).hexdigest()[:12]
+    return "work_" + value.encode("utf-8").hex()
 
 
 def _bibtex_escape(value: str) -> str:
-    return (
-        value.replace("\\", "\\textbackslash{}")
-        .replace("{", "\\{")
-        .replace("}", "\\}")
-    )
+    escaped = {
+        "\\": r"\textbackslash{}",
+        "{": r"\{",
+        "}": r"\}",
+        "%": r"\%",
+        "&": r"\&",
+        "$": r"\$",
+        "#": r"\#",
+        "_": r"\_",
+        "~": r"\textasciitilde{}",
+        "^": r"\textasciicircum{}",
+    }
+    return "".join(escaped.get(character, character) for character in value)
+
+
+def _markdown_single_line(value: Any) -> str:
+    return re.sub(r"[\r\n]+", " ", str(value))
+
+
+def _markdown_text(value: Any) -> str:
+    text = _markdown_single_line(value)
+    text = re.sub(r"([\\`*{}\[\]()#+.!_|-])", r"\\\1", text)
+    return html.escape(text, quote=False)
+
+
+def _markdown_code_span(value: Any) -> str:
+    text = _markdown_single_line(value).replace("|", r"\|")
+    longest_run = max((len(run) for run in re.findall(r"`+", text)), default=0)
+    fence = "`" * (longest_run + 1)
+    padding = " " if text.startswith(("`", " ")) or text.endswith(("`", " ")) else ""
+    return f"{fence}{padding}{text}{padding}{fence}"
 
 
 def _report(
@@ -476,7 +945,7 @@ def _report(
         key=lambda record: record["id"],
     )
     lines = [
-        f"# {project.config['title']}",
+        f"# {_markdown_text(project.config['title'])}",
         "",
         "This report is generated from the current recorded Recon state. Structural recording",
         "does not establish truth, novelty, copying, intent, or paper quality.",
@@ -496,9 +965,9 @@ def _report(
     ]
     for work in works:
         lines.append(
-            f"| {work['title']} (`{work['id']}`) | "
-            f"{work.get('priority_date', 'unverified')} | "
-            f"{work['publication_status']} |"
+            f"| {_markdown_text(work['title'])} ({_markdown_code_span(work['id'])}) | "
+            f"{_markdown_text(work.get('priority_date', 'unverified'))} | "
+            f"{_markdown_text(work['publication_status'])} |"
         )
     target_id = project.config["target_id"]
     target_profile = _profiles(records).get(target_id, {})
@@ -510,31 +979,33 @@ def _report(
             "",
             "## Target material set",
             "",
-            ", ".join(target_set) or "None recorded.",
+            ", ".join(_markdown_code_span(axis) for axis in target_set)
+            or "None recorded.",
             "",
             "## Claim-level comparison summary",
             "",
-            "| Work | Material axes | Shared | Target-only | Work-only | Partial | Unresolved | Contested |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Work | Material axes | Shared | Target-only | Work-only | Partial | Unresolved | Unassessed | Contested |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     for work in works:
         comparison = comparisons[work["id"]]
         lines.append(
-            f"| {work['title']} (`{work['id']}`) | "
+            f"| {_markdown_text(work['title'])} ({_markdown_code_span(work['id'])}) | "
             f"{sum(level in MATERIAL_LEVELS for level in comparison['work_profile'].values())} | "
             f"{len(comparison['intersection'])} | {len(comparison['target_difference'])} | "
             f"{len(comparison['work_difference'])} | "
             f"{len(comparison['partial_or_adjacent'])} | {len(comparison['unresolved'])} | "
-            f"{len(comparison['contested'])} |"
+            f"{len(comparison['unassessed'])} | {len(comparison['contested'])} |"
         )
     lines.extend(
         [
             "",
             "## Boundary",
             "",
-            "The sets above contain only reviewer-coded CENTRAL or MATERIAL axes. Missing",
-            "coverage means not established in the recorded review, not proof of absence.",
+            "The sets above contain only reviewer-coded CENTRAL or MATERIAL axes. A blank",
+            "matrix cell means no active assessment is recorded. NOT_ESTABLISHED is an",
+            "explicit reviewer-coded assessment, not proof of absence.",
             "Exact per-work sets and unresolved axes are in `comparisons.json` and are",
             "also available through `malleus-recon compare`.",
             "",
@@ -547,19 +1018,756 @@ def _write_zip(path: Path, files: Mapping[str, bytes]) -> None:
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, body in sorted(files.items()):
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.create_system = 3
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
-            archive.writestr(info, body)
+            archive.writestr(info, body, compresslevel=9)
+
+
+def _file_identity(body: bytes) -> dict[str, Any]:
+    return {"bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()}
+
+
+def _read_generator_identity() -> dict[str, Any]:
+    components = []
+    for name, path in _IMPLEMENTATION_SOURCES:
+        try:
+            body = path.read_bytes()
+        except OSError as error:
+            raise ReconError(
+                f"Cannot bind Recon generator implementation source {name}: {error}"
+            ) from error
+        components.append({"name": name, **_file_identity(body)})
+    closure_body = _json_text(
+        {
+            "schema_version": _GENERATOR_CLOSURE_SCHEMA_VERSION,
+            "components": components,
+        }
+    ).encode("utf-8")
+    return {
+        **_BUILD_GENERATOR,
+        "implementation": {
+            "schema_version": _GENERATOR_CLOSURE_SCHEMA_VERSION,
+            "components": components,
+            "closure": _file_identity(closure_body),
+        },
+    }
+
+
+_LOADED_GENERATOR_IDENTITY = _read_generator_identity()
+
+
+def _generator_identity() -> dict[str, Any]:
+    current = _read_generator_identity()
+    if current != _LOADED_GENERATOR_IDENTITY:
+        raise ReconError(
+            "Recon generator implementation sources differ from the code loaded "
+            "by this process"
+        )
+    return deepcopy(_LOADED_GENERATOR_IDENTITY)
+
+
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key '{key}'")
+        result[key] = value
+    return result
+
+
+def _project_identity(project: ReconProject) -> dict[str, Any]:
+    path = project.root / PROJECT_FILE
+    try:
+        body = path.read_bytes()
+        decoded = json.loads(
+            body.decode("utf-8"),
+            object_pairs_hook=_unique_json_object,
+        )
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+        raise ReconError(f"Cannot bind exact {PROJECT_FILE} bytes: {error}") from error
+    if decoded != project.config:
+        raise ReconError(
+            f"Cannot bind {PROJECT_FILE}: filesystem content differs from the loaded "
+            "project configuration"
+        )
+    return {"name": PROJECT_FILE, **_file_identity(body)}
+
+
+def _safe_build_name(name: Any) -> str:
+    if not isinstance(name, str) or name not in _HISTORICAL_OUTPUT_ALLOWLIST:
+        raise ValueError(f"manifest files contains undeclared output name: {name!r}")
+    return name
+
+
+def _exact_manifest_fields(value: Mapping[str, Any], expected: set[str], label: str) -> None:
+    if set(value) != expected:
+        raise ValueError(
+            f"{label} fields differ from the v{_BUILD_MANIFEST_SCHEMA_VERSION} "
+            "build contract"
+        )
+
+
+def _validate_file_identity(value: Any, label: str, *, named: bool = False) -> None:
+    if not isinstance(value, dict):
+        raise ValueError(f"{label} must be an object")
+    expected = {"bytes", "name", "sha256"} if named else {"bytes", "sha256"}
+    _exact_manifest_fields(value, expected, label)
+    if named and (not isinstance(value["name"], str) or not value["name"]):
+        raise ValueError(f"{label}.name must be a nonblank string")
+    if not isinstance(value["bytes"], int) or isinstance(value["bytes"], bool):
+        raise ValueError(f"{label}.bytes must be an integer")
+    if value["bytes"] < 0:
+        raise ValueError(f"{label}.bytes must not be negative")
+    if not isinstance(value["sha256"], str) or _DIGEST.fullmatch(value["sha256"]) is None:
+        raise ValueError(f"{label}.sha256 must be 64 lowercase hex digits")
+
+
+def _nonblank_manifest_text(value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} must be a nonblank string")
+    try:
+        value.encode("utf-8")
+    except UnicodeEncodeError as error:
+        raise ValueError(f"{label} must be UTF-8 encodable") from error
+    return value
+
+
+def _validate_jsonld_ontology_identity(value: Any) -> None:
+    if not isinstance(value, dict):
+        raise ValueError("jsonld_ontology must be an object")
+    _exact_manifest_fields(
+        value,
+        {"sources", "imports", "definitions", "term_map"},
+        "jsonld_ontology",
+    )
+
+    sources = value["sources"]
+    if not isinstance(sources, list) or not sources:
+        raise ValueError("jsonld_ontology.sources must be a nonempty list")
+    locators = []
+    for index, source in enumerate(sources):
+        label = f"jsonld_ontology.sources[{index}]"
+        if not isinstance(source, dict):
+            raise ValueError(f"{label} must be an object")
+        _exact_manifest_fields(
+            source,
+            {"source_role", "resolved_locator", "bytes", "sha256"},
+            label,
+        )
+        expected_role = "entry" if index == 0 else "import"
+        if source["source_role"] != expected_role:
+            raise ValueError(f"{label}.source_role must be {expected_role}")
+        locator = _nonblank_manifest_text(
+            source["resolved_locator"], f"{label}.resolved_locator"
+        )
+        if not Path(locator).is_absolute():
+            raise ValueError(f"{label}.resolved_locator must be absolute")
+        if locator in locators:
+            raise ValueError(f"{label}.resolved_locator is duplicated")
+        locators.append(locator)
+        _validate_file_identity(
+            {"bytes": source["bytes"], "sha256": source["sha256"]},
+            label,
+        )
+    if locators[1:] != sorted(locators[1:]):
+        raise ValueError("jsonld_ontology imported sources must be locator-sorted")
+    locator_set = set(locators)
+
+    imports = value["imports"]
+    if not isinstance(imports, list):
+        raise ValueError("jsonld_ontology.imports must be a list")
+    import_keys = []
+    parent_ordinals: dict[str, set[int]] = {}
+    for index, edge in enumerate(imports):
+        label = f"jsonld_ontology.imports[{index}]"
+        if not isinstance(edge, dict):
+            raise ValueError(f"{label} must be an object")
+        _exact_manifest_fields(
+            edge,
+            {
+                "parent_locator",
+                "ordinal",
+                "literal",
+                "target_role",
+                "resolved_locator",
+            },
+            label,
+        )
+        parent = _nonblank_manifest_text(
+            edge["parent_locator"], f"{label}.parent_locator"
+        )
+        literal = _nonblank_manifest_text(edge["literal"], f"{label}.literal")
+        target = _nonblank_manifest_text(
+            edge["resolved_locator"], f"{label}.resolved_locator"
+        )
+        ordinal = edge["ordinal"]
+        if not isinstance(ordinal, int) or isinstance(ordinal, bool) or ordinal < 0:
+            raise ValueError(f"{label}.ordinal must be a nonnegative integer")
+        if parent not in locator_set:
+            raise ValueError(f"{label}.parent_locator is not a retained source")
+        ordinals = parent_ordinals.setdefault(parent, set())
+        if ordinal in ordinals:
+            raise ValueError(f"{label}.ordinal is duplicated for its parent")
+        ordinals.add(ordinal)
+        role = edge["target_role"]
+        if role == "ontology":
+            if target not in locator_set:
+                raise ValueError(f"{label} targets an unretained ontology source")
+        elif role == "builtin":
+            if literal != "linkml:types" or target != "linkml:types":
+                raise ValueError(f"{label} names an unsupported builtin import")
+        else:
+            raise ValueError(f"{label}.target_role must be ontology or builtin")
+        import_keys.append((parent, ordinal, literal, role, target))
+    if import_keys != sorted(import_keys):
+        raise ValueError("jsonld_ontology.imports must be deterministically ordered")
+    for parent, ordinals in parent_ordinals.items():
+        if ordinals != set(range(len(ordinals))):
+            raise ValueError(
+                "jsonld_ontology.import ordinals must be contiguous for " + parent
+            )
+    reachable = {locators[0]}
+    changed = True
+    while changed:
+        changed = False
+        for parent, _ordinal, _literal, role, target in import_keys:
+            if role == "ontology" and parent in reachable and target not in reachable:
+                reachable.add(target)
+                changed = True
+    if reachable != locator_set:
+        raise ValueError(
+            "jsonld_ontology.sources contains a source unreachable from the entry"
+        )
+
+    definitions = value["definitions"]
+    if not isinstance(definitions, list):
+        raise ValueError("jsonld_ontology.definitions must be a list")
+    definition_keys = []
+    claimed = set()
+    for index, definition in enumerate(definitions):
+        label = f"jsonld_ontology.definitions[{index}]"
+        if not isinstance(definition, dict):
+            raise ValueError(f"{label} must be an object")
+        _exact_manifest_fields(
+            definition,
+            {"kind", "name", "source_locator"},
+            label,
+        )
+        kind = definition["kind"]
+        if kind not in {"type", "enum", "slot", "class"}:
+            raise ValueError(f"{label}.kind is unsupported")
+        name = _nonblank_manifest_text(definition["name"], f"{label}.name")
+        owner = _nonblank_manifest_text(
+            definition["source_locator"], f"{label}.source_locator"
+        )
+        if owner not in locator_set:
+            raise ValueError(f"{label}.source_locator is not a retained source")
+        claim = (kind, name)
+        if claim in claimed:
+            raise ValueError(f"{label} duplicates a definition owner")
+        claimed.add(claim)
+        definition_keys.append((kind, name, owner))
+    if definition_keys != sorted(definition_keys):
+        raise ValueError("jsonld_ontology.definitions must be deterministically ordered")
+
+    _validate_file_identity(value["term_map"], "jsonld_ontology.term_map")
+
+
+def _validate_digest_list(value: Any, label: str) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        raise ValueError(f"{label} must be a list")
+    if not all(
+        isinstance(identity, str)
+        and identity.startswith("sha256:")
+        and _DIGEST.fullmatch(identity[7:]) is not None
+        for identity in value
+    ):
+        raise ValueError(f"{label} must contain only sha256 identities")
+    if len(value) != len(set(value)):
+        raise ValueError(f"{label} must not contain duplicates")
+    return tuple(value)
+
+
+def _validate_ontology_verification(value: Any) -> None:
+    if not isinstance(value, dict):
+        raise ValueError("ontology_verification must be an object")
+    _exact_manifest_fields(
+        value,
+        {
+            "current_ontology_hash",
+            "verified_ontology_hashes",
+            "grammar_ontology_hashes",
+            "migrated_ontology_hashes",
+            "receipt_digests",
+        },
+        "ontology_verification",
+    )
+    current = value["current_ontology_hash"]
+    if (
+        not isinstance(current, str)
+        or not current.startswith("sha256:")
+        or _DIGEST.fullmatch(current[7:]) is None
+    ):
+        raise ValueError(
+            "ontology_verification.current_ontology_hash must be a sha256 identity"
+        )
+    verified = _validate_digest_list(
+        value["verified_ontology_hashes"],
+        "ontology_verification.verified_ontology_hashes",
+    )
+    grammar = _validate_digest_list(
+        value["grammar_ontology_hashes"],
+        "ontology_verification.grammar_ontology_hashes",
+    )
+    migrated = _validate_digest_list(
+        value["migrated_ontology_hashes"],
+        "ontology_verification.migrated_ontology_hashes",
+    )
+    receipts = _validate_digest_list(
+        value["receipt_digests"],
+        "ontology_verification.receipt_digests",
+    )
+    if set(grammar) & set(migrated):
+        raise ValueError(
+            "ontology_verification identity cannot be both grammar and migration"
+        )
+    if verified != (*grammar, *migrated):
+        raise ValueError(
+            "ontology_verification.verified_ontology_hashes must equal grammar "
+            "hashes followed by migrated hashes"
+        )
+    if bool(migrated) != bool(receipts):
+        raise ValueError(
+            "ontology_verification migrated identities and receipts must coexist"
+        )
+
+
+def _validate_manifest(
+    body: bytes,
+    expected_generator: Mapping[str, Any],
+) -> tuple[dict[str, Any], set[str]]:
+    manifest = json.loads(
+        body.decode("utf-8"),
+        object_pairs_hook=_unique_json_object,
+    )
+    if not isinstance(manifest, dict):
+        raise ValueError("manifest root must be an object")
+    _exact_manifest_fields(manifest, set(_MANIFEST_FIELDS), "manifest")
+    if manifest["schema_version"] != _BUILD_MANIFEST_SCHEMA_VERSION:
+        raise ValueError(f"schema_version must be '{_BUILD_MANIFEST_SCHEMA_VERSION}'")
+    if manifest["state"] != "COMMITTED":
+        raise ValueError("state must be COMMITTED")
+    if manifest["profile"] != STRUCTURAL_CAPTURE_PROFILE:
+        raise ValueError("profile does not identify the Recon structural-capture profile")
+    if manifest["generator"] != expected_generator:
+        raise ValueError("generator does not identify this exact Recon implementation")
+    if manifest["runtime"] != _BUILD_RUNTIME:
+        raise ValueError("runtime does not identify this Recon build runtime")
+
+    project_identity = manifest["project"]
+    _validate_file_identity(project_identity, "project", named=True)
+    if project_identity["name"] != PROJECT_FILE:
+        raise ValueError(f"project.name must be {PROJECT_FILE}")
+
+    _validate_jsonld_ontology_identity(manifest["jsonld_ontology"])
+    _validate_ontology_verification(manifest["ontology_verification"])
+    for field in ("ontology_hash", "ledger_head"):
+        value = manifest[field]
+        if (
+            not isinstance(value, str)
+            or not value.startswith("sha256:")
+            or _DIGEST.fullmatch(value[7:]) is None
+        ):
+            raise ValueError(f"{field} must be sha256:<64 lowercase hex digits>")
+    if (
+        manifest["ontology_verification"]["current_ontology_hash"]
+        != manifest["ontology_hash"]
+    ):
+        raise ValueError(
+            "ontology_verification.current_ontology_hash differs from ontology_hash"
+        )
+    event_count = manifest["event_count"]
+    if not isinstance(event_count, int) or isinstance(event_count, bool) or event_count < 0:
+        raise ValueError("event_count must be a nonnegative integer")
+
+    identities = manifest["files"]
+    if not isinstance(identities, dict):
+        raise ValueError("files must be an object")
+    managed = set()
+    for raw_name, identity in identities.items():
+        name = _safe_build_name(raw_name)
+        _validate_file_identity(identity, f"files.{name}")
+        managed.add(name)
+    archive = manifest["archive"]
+    if not isinstance(archive, dict):
+        raise ValueError("archive must be an object")
+    _exact_manifest_fields(archive, {"members", "name"}, "archive")
+    if archive["name"] != "recon_bundle.zip":
+        raise ValueError("archive.name must be recon_bundle.zip")
+    if archive["members"] != sorted({*managed, "manifest.json"}):
+        raise ValueError("archive.members differs from files")
+    return manifest, managed
+
+
+def _existing_managed_files(
+    destination: Path,
+    expected_generator: Mapping[str, Any] | None = None,
+) -> set[str]:
+    manifest_path = destination / "manifest.json"
+    if not manifest_path.exists():
+        return set()
+    if not manifest_path.is_file():
+        raise ReconError(f"Existing build manifest is not a file: {manifest_path}")
+    try:
+        manifest_body = manifest_path.read_bytes()
+        manifest, managed = _validate_manifest(
+            manifest_body,
+            expected_generator or _generator_identity(),
+        )
+        identities = manifest["files"]
+        for name, identity in identities.items():
+            path = destination / name
+            if not path.is_file():
+                raise ValueError(f"managed file is missing: {name}")
+            body = path.read_bytes()
+            if _file_identity(body) != {
+                "bytes": identity["bytes"],
+                "sha256": identity["sha256"],
+            }:
+                raise ValueError(f"managed file identity differs: {name}")
+        expected_members = sorted({*managed, "manifest.json"})
+        bundle_path = destination / "recon_bundle.zip"
+        if not bundle_path.is_file():
+            raise ValueError("managed archive is missing: recon_bundle.zip")
+        with zipfile.ZipFile(bundle_path, "r") as bundle:
+            if bundle.testzip() is not None:
+                raise ValueError("managed archive contains a corrupt member")
+            if bundle.namelist() != expected_members:
+                raise ValueError("managed archive member set differs from files")
+            if bundle.read("manifest.json") != manifest_body:
+                raise ValueError("managed archive manifest differs from commit marker")
+            for name in managed:
+                if bundle.read(name) != (destination / name).read_bytes():
+                    raise ValueError(f"managed archive member differs: {name}")
+        return managed & _HISTORICAL_OUTPUT_ALLOWLIST
+    except (
+        KeyError,
+        OSError,
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        ValueError,
+        zipfile.BadZipFile,
+    ):
+        # Derived output is recoverable. An unverifiable prior build grants no
+        # authority to delete stale names, but it does not block regeneration.
+        return set()
+
+
+def _write_staged_file(path: Path, body: bytes) -> None:
+    with path.open("xb") as stream:
+        stream.write(body)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def _verify_staged_build(
+    stage: Path,
+    files: Mapping[str, bytes],
+    expected_generator: Mapping[str, Any],
+) -> None:
+    for name, expected in files.items():
+        if (stage / name).read_bytes() != expected:
+            raise ReconError(f"Staged Recon output differs before commit: {name}")
+    try:
+        _, managed = _validate_manifest(files["manifest.json"], expected_generator)
+    except (KeyError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+        raise ReconError(
+            "Staged Recon manifest violates its "
+            f"v{_BUILD_MANIFEST_SCHEMA_VERSION} contract: {error}"
+        ) from error
+    if managed != set(files) - {"manifest.json"}:
+        raise ReconError("Staged Recon manifest file set differs from generated files")
+    archive_path = stage / "recon_bundle.zip"
+    with zipfile.ZipFile(archive_path, "r") as archive:
+        if archive.testzip() is not None:
+            raise ReconError("Staged Recon archive contains a corrupt member")
+        if archive.namelist() != sorted(files):
+            raise ReconError("Staged Recon archive member set differs from its manifest")
+        for name, expected in files.items():
+            if archive.read(name) != expected:
+                raise ReconError(f"Staged Recon archive member differs: {name}")
+
+
+def _fsync_directory(path: Path) -> None:
+    if os.name == "nt":
+        # Python cannot open directory handles for fsync on Windows. Every
+        # staged file is flushed before os.replace, and the manifest remains
+        # the last atomic replacement, so process failures still fail closed.
+        return
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _fsync_file(path: Path) -> None:
+    with path.open("r+b") as stream:
+        os.fsync(stream.fileno())
+
+
+def _initialize_build_lock(stream: Any) -> None:
+    if os.name == "nt":
+        stream.seek(0, os.SEEK_END)
+        if stream.tell() == 0:
+            stream.write(b"\0")
+            stream.flush()
+        stream.seek(0)
+
+
+def _acquire_build_lock(stream: Any) -> None:
+    if os.name == "nt":
+        import msvcrt
+
+        msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+        return
+
+    import fcntl
+
+    fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def _release_build_lock(stream: Any) -> None:
+    if os.name == "nt":
+        import msvcrt
+
+        stream.seek(0)
+        msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+        return
+
+    import fcntl
+
+    fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+
+
+def _is_lock_contention(error: OSError) -> bool:
+    return error.errno in _LOCK_CONTENTION_ERRNOS or getattr(
+        error, "winerror", None
+    ) in _LOCK_CONTENTION_WINERRORS
+
+
+@contextmanager
+def _exclusive_build(destination: Path) -> Iterator[None]:
+    """Serialize one destination's manifest inspection and commit transaction."""
+
+    destination = _canonical_build_destination(destination)
+    try:
+        destination.mkdir(parents=True, exist_ok=True)
+    except OSError as error:
+        raise ReconError(
+            f"Could not prepare Recon build lock destination {destination}: {error}"
+        ) from error
+    lock_path = destination / _BUILD_LOCK_NAME
+    _precheck_reserved_lock(lock_path, "Recon build lock")
+    try:
+        descriptor = os.open(
+            lock_path,
+            os.O_RDWR
+            | os.O_CREAT
+            | getattr(os, "O_BINARY", 0)
+            | getattr(os, "O_NOFOLLOW", 0),
+            0o600,
+        )
+    except OSError as error:
+        raise ReconError(f"Could not open Recon build lock {lock_path}: {error}") from error
+    try:
+        stream = os.fdopen(descriptor, "r+b", closefd=False)
+    except (OSError, ValueError) as error:
+        try:
+            os.close(descriptor)
+        except OSError:
+            pass
+        raise ReconError(f"Could not initialize Recon build lock {lock_path}: {error}") from error
+    try:
+        _assert_reserved_lock_identity(lock_path, descriptor, "Recon build lock")
+    except BaseException:
+        try:
+            stream.close()
+        except BaseException:
+            pass
+        try:
+            os.close(descriptor)
+        except BaseException:
+            pass
+        raise
+
+    acquired = False
+    body_failed = False
+    try:
+        try:
+            _initialize_build_lock(stream)
+        except OSError as error:
+            raise ReconError(
+                f"Could not initialize Recon build lock {lock_path}: {error}"
+            ) from error
+        try:
+            _acquire_build_lock(stream)
+            acquired = True
+        except OSError as error:
+            if _is_lock_contention(error):
+                raise ReconError(
+                    f"Recon build destination already has an active builder: {destination}"
+                ) from error
+            raise ReconError(f"Could not acquire Recon build lock {lock_path}: {error}") from error
+        _assert_reserved_lock_identity(lock_path, descriptor, "Recon build lock")
+        yield
+    except BaseException:
+        body_failed = True
+        raise
+    finally:
+        cleanup_interrupt = None
+        if acquired:
+            try:
+                _release_build_lock(stream)
+            except Exception:
+                # Closing the descriptor remains the final lock-release guard.
+                pass
+            except BaseException as error:
+                cleanup_interrupt = error
+        try:
+            stream.close()
+        except Exception:
+            pass
+        except BaseException as error:
+            if cleanup_interrupt is None:
+                cleanup_interrupt = error
+        try:
+            os.close(descriptor)
+        except Exception:
+            pass
+        except BaseException as error:
+            if cleanup_interrupt is None:
+                cleanup_interrupt = error
+        if not body_failed and cleanup_interrupt is not None:
+            raise cleanup_interrupt
+
+
+def _canonical_build_destination(destination: Path) -> Path:
+    try:
+        return destination.resolve(strict=False)
+    except (OSError, RuntimeError) as error:
+        raise ReconError(f"Could not resolve Recon build destination {destination}: {error}") from error
+
+
+def _commit_build(
+    destination: Path,
+    files: Mapping[str, bytes],
+    expected_generator: Mapping[str, Any],
+) -> dict[str, Path]:
+    try:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        previous = _existing_managed_files(destination, expected_generator)
+        destination.mkdir(parents=True, exist_ok=True)
+        temporary = tempfile.TemporaryDirectory(
+            prefix=".recon.", suffix=".staging", dir=destination
+        )
+        try:
+            stage = Path(temporary.name)
+            for name, body in sorted(files.items()):
+                _write_staged_file(stage / name, body)
+            bundle = stage / "recon_bundle.zip"
+            _write_zip(bundle, files)
+            _fsync_file(bundle)
+            _verify_staged_build(stage, files, expected_generator)
+
+            manifest_path = destination / "manifest.json"
+            manifest_path.unlink(missing_ok=True)
+            _fsync_directory(destination)
+            try:
+                for name in sorted(set(files) - {"manifest.json"}):
+                    (stage / name).replace(destination / name)
+                bundle.replace(destination / bundle.name)
+                for stale in sorted(previous - set(files)):
+                    (destination / stale).unlink(missing_ok=True)
+                _fsync_directory(destination)
+                (stage / "manifest.json").replace(manifest_path)
+                _fsync_directory(destination)
+            except BaseException:
+                rollback_error = None
+                try:
+                    manifest_path.unlink(missing_ok=True)
+                    _fsync_directory(destination)
+                except BaseException as failure:
+                    rollback_error = failure
+                if rollback_error is not None:
+                    try:
+                        marker_remains = manifest_path.exists()
+                    except OSError:
+                        marker_remains = True
+                    if marker_remains:
+                        raise ReconError(
+                            "Recon build outcome is indeterminate: manifest.json remains "
+                            "after publication and rollback both failed"
+                        )
+                raise
+        except BaseException:
+            try:
+                temporary.cleanup()
+            except BaseException:
+                pass
+            raise
+        try:
+            temporary.cleanup()
+        except Exception:
+            # The manifest is already replaced and directory-synced. Staging
+            # cleanup is maintenance now, not part of commit success.
+            pass
+    except OSError as error:
+        if error.errno == errno.EXDEV:
+            raise ReconError(
+                "Could not commit Recon build: staging and destination must be on "
+                "the same filesystem"
+            ) from error
+        raise ReconError(f"Could not commit Recon build without a torn manifest: {error}") from error
+    except zipfile.BadZipFile as error:
+        raise ReconError(f"Could not commit Recon build without a torn manifest: {error}") from error
+    return {
+        name: destination / name
+        for name in sorted({*files, "recon_bundle.zip"})
+    }
 
 
 def build_outputs(
     project: ReconProject,
     output_directory: str | Path | None = None,
 ) -> dict[str, Path]:
-    events, records = project.snapshot()
+    requested = Path(output_directory or project.root / BUILD_DIRECTORY)
+    destination = _canonical_build_destination(requested)
+    try:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as error:
+        raise ReconError(f"Could not prepare Recon build destination {destination}: {error}") from error
+    with _exclusive_build(destination):
+        return _build_outputs_locked(project, destination)
+
+
+def _build_outputs_locked(
+    project: ReconProject,
+    destination: Path,
+) -> dict[str, Path]:
+    events, records, ontology_verification = project.snapshot_verified()
+    project_identity = _project_identity(project)
+    generator_identity = _generator_identity()
+    jsonld_ontology = _jsonld_ontology(project.registry)
+    if jsonld_ontology.structural_hash != project.ontology_hash:
+        raise ReconError(
+            "Recon JSON-LD ontology snapshot does not match the project's active "
+            "ontology identity"
+        )
     canonical = _canonical_snapshot(project, events, records)
     graph = _networkx_graph(canonical)
-    result_metrics = _metrics_snapshot(project, events, records, graph)
+    result_metrics = _metrics_snapshot(project, events, records)
     matrix_columns, matrix_rows = _matrix(project, records)
     works = sorted(
         identifier
@@ -580,7 +1788,9 @@ def build_outputs(
     ]
     files: dict[str, bytes] = {
         "literature_kg.json": _json_text(canonical).encode("utf-8"),
-        "literature_kg.jsonld": _json_text(_jsonld(canonical)).encode("utf-8"),
+        "literature_kg.jsonld": _json_text(
+            _jsonld(canonical, project.registry, jsonld_ontology)
+        ).encode("utf-8"),
         "literature_kg.graphml": _graphml_bytes(graph),
         "nodes.csv": _csv_text(_NODE_COLUMNS, canonical["nodes"]).encode("utf-8"),
         "edges.csv": _csv_text(_EDGE_COLUMNS, canonical["edges"]).encode("utf-8"),
@@ -610,30 +1820,48 @@ def build_outputs(
             comparisons,
         ).encode("utf-8"),
     }
+    if not set(files) <= _HISTORICAL_OUTPUT_ALLOWLIST:
+        raise ReconError("Recon generated-output set differs from its deletion allowlist")
     manifest = {
-        "schema_version": "1",
+        "schema_version": _BUILD_MANIFEST_SCHEMA_VERSION,
+        "state": "COMMITTED",
+        "profile": STRUCTURAL_CAPTURE_PROFILE,
+        "generator": deepcopy(generator_identity),
+        "runtime": dict(_BUILD_RUNTIME),
+        "project": project_identity,
+        "jsonld_ontology": deepcopy(jsonld_ontology.identity),
+        "ontology_verification": {
+            "current_ontology_hash": ontology_verification.current_ontology_hash,
+            "verified_ontology_hashes": list(
+                ontology_verification.verified_ontology_hashes
+            ),
+            "grammar_ontology_hashes": list(
+                ontology_verification.grammar_ontology_hashes
+            ),
+            "migrated_ontology_hashes": list(
+                ontology_verification.migrated_ontology_hashes
+            ),
+            "receipt_digests": list(ontology_verification.receipt_digests),
+        },
         "ontology_hash": project.ontology_hash,
         "ledger_head": canonical["meta"]["ledger_head"],
+        "event_count": canonical["meta"]["event_count"],
         "files": {
-            name: {
-                "bytes": len(body),
-                "sha256": hashlib.sha256(body).hexdigest(),
-            }
+            name: _file_identity(body)
             for name, body in sorted(files.items())
+        },
+        "archive": {
+            "name": "recon_bundle.zip",
+            "members": sorted({*files, "manifest.json"}),
         },
     }
     files["manifest.json"] = _json_text(manifest).encode("utf-8")
-    destination = Path(output_directory or project.root / BUILD_DIRECTORY)
-    destination.mkdir(parents=True, exist_ok=True)
-    paths = {}
-    for name, body in sorted(files.items()):
-        path = destination / name
-        path.write_bytes(body)
-        paths[name] = path
-    bundle = destination / "recon_bundle.zip"
-    _write_zip(bundle, files)
-    paths[bundle.name] = bundle
-    return paths
+    if _project_identity(project) != project_identity:
+        raise ReconError(f"Cannot commit Recon build: {PROJECT_FILE} changed during generation")
+    if _generator_identity() != generator_identity:
+        raise ReconError("Cannot commit Recon build: generator implementation changed during generation")
+    _assert_jsonld_ontology_current(jsonld_ontology)
+    return _commit_build(destination, files, generator_identity)
 
 
 def visualize(

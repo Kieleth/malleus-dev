@@ -1,0 +1,88 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-000"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:ecd5d25f86e573609b2ec4b7d93f81373756e68cd24cf8beb710b9ebe0ae8f1f",
+        "before_digest": "sha256:6f9d4f4830037348514808d91587a79e49dc94d3308b542228e6a385b618321b",
+        "change": "MODIFIED",
+        "path": ".github/workflows/tests.yml"
+      },
+      {
+        "after_digest": "sha256:a258b679ef6c536242086ac723fcac9e4fa9d0698613b735cd759f0e08ccee2a",
+        "before_digest": "sha256:3c735b5f159616bb3fa4c739216bd723f1b70279c6175c775cc4fe87ffbf4545",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:ffe6c96e01f4aeee55ab8bc6bad8ffe76142747feceafa3a4bb38b729aa3fa17",
+        "before_digest": "sha256:8d5e06732b4979066f8d2699e1800b1d9b4822b4793da47475ccda2a43f02d32",
+        "change": "MODIFIED",
+        "path": "ROADMAP.md"
+      },
+      {
+        "after_digest": "sha256:7434dc684648feae61f90d99e9132fda9ceac1d7056a6a598b9fe1d502b3d880",
+        "before_digest": "sha256:2b19143ac90c756840c3b375a10a9daca000f87498e8357b72ba94285386029b",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:7c702acfca05cf7851acd569702f310798c89067e372a5480d9cf6c44a6d7052",
+        "before_digest": "sha256:1886bc631671b01d31d7ff5f9e80abe5bd8d562d86057c6250e7a82c15c698c2",
+        "change": "MODIFIED",
+        "path": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:9265ff6d8114d050b4aa256e1517e28b216399434364ca2ae000f8015f7d1443",
+        "before_digest": "sha256:6bf5c61fad25e4e1d451a9f38ca6bf0402e23eda228755f958ca3b2e825ff093",
+        "change": "MODIFIED",
+        "path": "scripts/ci.py"
+      },
+      {
+        "after_digest": "sha256:676ec10693a7d5fed1ec45b1a12898d9aa5a1d012f471f9d55ef36993be2e4f8",
+        "before_digest": "sha256:8298602990371ad0c10d38651ccffa5a6de44a2502ab7bf10f0e899e56d51029",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/test_ci.py"
+      },
+      {
+        "after_digest": "sha256:9097b968f192d89bae389b60ee27f977e10c05ed15db1b4d20369e7b5c8cc991",
+        "before_digest": "sha256:9f5e95a013410f93812cdfd2037b6243749b59aaf8b7cef33688385674b99b16",
+        "change": "MODIFIED",
+        "path": "tests/test_contract_compiler_integration.py"
+      },
+      {
+        "after_digest": "sha256:5d4f5aa75c541182ccbd53a630aa8f53b0c8844cc8fccf67b6c03edac41dcb47",
+        "before_digest": "sha256:036d79c412fde234d6b6056d40de98abc4ca763928e7f972a4f7a1f99ce44d23",
+        "change": "MODIFIED",
+        "path": "tests/test_protocol.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:091994613f894aee146817bb2d4fc01db4daf2ffcc65a81d19373590fe793513",
+  "entry_id": "OVR-000365",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:b348fafe587005c1ad1884b7343ea407fe7edfa2730d327d8d2640dba03e3efc",
+  "recorded_at": "2026-09-04T00:09:37Z",
+  "references": [
+    {
+      "relation": "AFFECTS",
+      "target": "CC-000",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 365,
+  "subject": {
+    "id": "recon-core-integration-alignment",
+    "type": "DOCUMENT"
+  },
+  "summary": "Align Recon with the current ontology and migration protocols and add an expandable Windows CI profile.",
+  "why": "Recon now consumes the ontology registry's immutable source closure and a migration-aware ledger verifier instead of reconstructing ontology provenance or selecting migration evidence independently. The governed documentation and CI contracts must record the same integration boundary and validation coverage."
+}

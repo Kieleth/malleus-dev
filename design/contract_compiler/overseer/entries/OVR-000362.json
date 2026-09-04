@@ -1,0 +1,92 @@
+{
+  "actor": {
+    "id": "ccr11-small-shop-showcase-verifier",
+    "type": "MECHANICAL"
+  },
+  "data": {
+    "as_of": "2026-09-03T06:10:04Z",
+    "claims": [
+      "This is bounded follow-on evidence for the completed private compiler-to-ledger work. OVR-000359 through OVR-000361 change no workstream state, accepted design decision, dependency, candidate, selection, or public API.",
+      "The retained run program records seven operator-delegated choices: one fresh five-stage history, an ORDER_ONLY invoice bootstrap marker, a private read-only query facade, change-level provenance, excluded scoring, pre-provisioned source bootstrap, and graph-at-accepted-change reads instead of arbitrary transaction-prefix queries.",
+      "The controlled source bundles compile to 1,040 neutral contract facts and one EffectiveContract sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3.",
+      "Five immutable KnowledgeChangeSets enter one 74-event semantic and protocol ledger in the exact order baseline, invoice base, payment settlement, supplier state e4, and supplier correction e7. The ledger and acceptance head is sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e.",
+      "Replay from the retained ledger derives nine current graph records with digest sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0. Payment P1 relates to invoices I1 and I2. Supplier order B is current at quantity 2 while its quantity 1 state remains in history and is marked superseded.",
+      "All five source-mapping receipts recompute from retained bytes. Provenance queries bind records to their exact immutable change, bundle-level source closure, evidence closure, mapping, contract, valid time, and accepted-state coordinates without claiming per-operation causality.",
+      "The source chapter supports the e30 co-occurrence of P1, I1, and I2. The directed payment-to-invoice relation is explicitly a fixture interpretation, not misrepresented as source-native semantics.",
+      "No runtime oracle or answer-comparison input is read. The independent settlement answer key is used only by tests.",
+      "The focused showcase passed 66 tests; independent adjacent compiler, history, and graph validation passed 333 tests; changed-file Ruff, formatting, and diff checks passed. Two fresh runs regenerated all four evidence files byte for byte. Independent final audit found no P0 through P2 blocker.",
+      "The public walkthrough binds exact source snippets, contract identity, ledger chronology, graph records, query answers, evidence digests, reproduction commands, and unsupported boundaries. Focused documentation guards pass.",
+      "The paper task independently confirmed that current Core graph reads are sufficient. Paper ontology acquisition, population, query binding, and human evaluation remain adopter-owned and are not added to Core by this milestone."
+    ],
+    "limitations": [
+      "The runner, mappings, query facade, and evidence formats are private research surfaces, not stable public APIs or wire contracts.",
+      "All fixture source members are anchored at bootstrap. The stages admit pre-provisioned bytes and do not observe live source arrival.",
+      "Source closure is bundle-wide and provenance is change-level. Per-record and per-operation causality are not claimed.",
+      "The fixture-specific Python mapper is not a general population compiler or mapping language.",
+      "Ledger replay reloads retained compiled artifacts but does not recompile raw ontology dependencies without the current Python implementation.",
+      "Query answers lack an independently identified query-program dependency closure.",
+      "The settlement mapper supports one fixed two-invoice case rather than generic fan-out.",
+      "The stage sequence follows the frozen test ladder rather than business chronology. The invoice marker is fixture orchestration, not source time.",
+      "No Cypher adapter, arbitrary transaction-prefix query, scoring, evaluator, Event projection, Semantic Re-entry, action execution, public package surface, or cross-language conformance is claimed.",
+      "The 1,636-line private runner and 74-event ceremony are evidence for a later narrow consumer helper, not authority to generalize one now.",
+      "Repository-wide documentation and release gates must still run from a clean checkout because unrelated shared-worktree changes currently violate a separately governed pyproject.toml digest."
+    ]
+  },
+  "entry_hash": "sha256:58360830d206585706ec0b701ff5f16118a8dbd6b5e32473e6e527e6b77833d9",
+  "entry_id": "OVR-000362",
+  "entry_type": "VERIFIED_FACT",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:d9e661acc7e9d571e7d495886918cd2ffc2ad95780f5702bd516b9120c8612fe",
+  "recorded_at": "2026-09-03T06:10:04Z",
+  "references": [
+    {
+      "digest": "sha256:d65956a5518ef0f76b35073b548ea0f573f8c028083a264d9f6b9c5ab1541f86",
+      "relation": "EVIDENCES",
+      "target": "design/contract_compiler/overseer/evidence/CC-R11-small-shop-showcase.json",
+      "type": "EVIDENCE"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000359",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000360",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000361",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-001",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-021",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-022",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 362,
+  "subject": {
+    "id": "ccr11-small-shop-showcase-verification",
+    "type": "EVIDENCE"
+  },
+  "summary": "Verify the five-change Small Shop end-to-end showcase.",
+  "why": "The exact controlled sources, compiled meaning, retained choices, five semantic changes, one ordered ledger, deterministic replay, current and historical graph reads, provenance joins, tests, independent audit, and public walkthrough support the bounded protocol claim while keeping adopter-specific mapping and evaluation outside Core."
+}

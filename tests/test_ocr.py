@@ -157,6 +157,32 @@ class TestReadingsReachTheirPixels:
         floating = Raster("ras:1", "src:missing", "page:1", D(2), "render:v1")
         assert "OCR-D003" in verify_bundle(_bundle(rasters=(floating,))).codes()
 
+    def test_a_hypothesis_cannot_claim_an_attempt_from_another_region(self):
+        crossed = Hypothesis("hyp:1", "reg:1", D(5), attempt_id="att:2")
+        result = verify_bundle(_bundle(hypotheses=(crossed,)))
+        assert "OCR-D003" in result.codes()
+        assert any(
+            diagnostic.subject == "hyp:1"
+            and "not hypothesis region 'reg:1'" in diagnostic.detail
+            for diagnostic in result.diagnostics
+        )
+
+    @pytest.mark.parametrize("selected,candidates", [
+        ("hyp:4", ("hyp:4",)),
+        ("hyp:1", ("hyp:1", "hyp:4")),
+    ])
+    def test_a_selection_cannot_cross_region_for_selected_or_candidate_readings(
+        self, selected, candidates
+    ):
+        selection = Selection("sel:crossed", "reg:1", candidates, selected, "fixture")
+        result = verify_bundle(_bundle(selections=(selection,)))
+        assert "OCR-D003" in result.codes()
+        assert any(
+            diagnostic.subject == "sel:crossed"
+            and "hypothesis 'hyp:4' belongs to region 'reg:2'" in diagnostic.detail
+            for diagnostic in result.diagnostics
+        )
+
 
 class TestIdentityPlanesStaySeparate:
     def test_a_correction_may_not_move_the_region(self):
@@ -179,8 +205,8 @@ class TestIdentityPlanesStaySeparate:
     def test_retries_do_not_collapse(self):
         """Two attempts on one region are two records, never one."""
         twice = (
-            OCRAttempt("att:1", "reg:1", D(3), {"model": "e@1"}, "FAILED"),
-            OCRAttempt("att:2", "reg:1", D(3), {"model": "e@1"}, "COMPLETED", D(4)),
+            *_bundle().attempts,
+            OCRAttempt("att:retry", "reg:1", D(3), {"model": "e@1"}, "FAILED"),
         )
         assert verify_bundle(_bundle(attempts=twice)).conforms
 
@@ -517,6 +543,163 @@ class TestThePortableDocument:
         with pytest.raises(BundleError):
             Bundle.from_document(document)
 
+    @pytest.mark.parametrize("mutate,field", [
+        (lambda d: d["bundle"].pop("kind"), "kind"),
+        (lambda d: d["bundle"]["source_class"].pop("inventory_basis"), "inventory_basis"),
+        (lambda d: d["bundle"]["regions"][0].pop("selector_profile"), "selector_profile"),
+        (lambda d: d["bundle"]["selections"][0].pop("human_verified"), "human_verified"),
+        (lambda d: d["bundle"].pop("data_handling_policy_id"), "data_handling_policy_id"),
+        (lambda d: d["bundle"].pop("hostile_content_policy_id"), "hostile_content_policy_id"),
+        (lambda d: d["bundle"].pop("transport_metadata"), "transport_metadata"),
+        (lambda d: d["bundle"].pop("corrections"), "corrections"),
+        (lambda d: d["bundle"].pop("observed_units"), "observed_units"),
+    ])
+    def test_document_parsing_never_invents_required_document_fields(
+        self, mutate, field
+    ):
+        """Absence is not an authored empty value.
+
+        Some fields map directly to required ontology slots. Collections are
+        document-boundary requirements because silently replacing an omitted
+        collection with an empty one changes what the author declared.
+        """
+        import json
+        from malleus.ocr.bundle import Bundle, BundleError
+        document = json.loads(json.dumps(_bundle().document()))
+        mutate(document)
+        with pytest.raises(BundleError, match=field):
+            Bundle.from_document(document)
+
+    @pytest.mark.parametrize("mutate,fragment", [
+        (lambda d: d["bundle"]["source_class"].update(required_units="page:1"),
+         "required_units must be an array"),
+        (lambda d: d["bundle"]["source_class"].update(required_units=["page:1", None]),
+         "required_units[1] must be a string"),
+        (lambda d: d["bundle"]["selections"][0].update(candidate_ids={}),
+         "candidate_ids must be an array"),
+        (lambda d: d["bundle"].update(observed_units="page:1"),
+         "observed_units must be an array"),
+        (lambda d: d["bundle"]["source_class"].update(metric_families=[]),
+         "metric_families must be a mapping"),
+        (lambda d: d["bundle"]["source_class"].update(metric_families={"coverage": []}),
+         "metric_families['coverage'] must be a mapping"),
+        (lambda d: d["bundle"]["source_class"]["metric_families"]["coverage"].update(
+            threshold="1.0"), "threshold must be a finite number"),
+        (lambda d: d["bundle"]["source_class"].update(frozen_at=123),
+         "frozen_at must be a string"),
+        (lambda d: d["bundle"]["sources"][0].update(digest=123),
+         "digest must be a string"),
+        (lambda d: d["bundle"]["attempts"][0].update(unavailable_reason=123),
+         "unavailable_reason must be a string"),
+    ])
+    def test_malformed_json_field_types_are_controlled_refusals(self, mutate, fragment):
+        import json
+        from malleus.ocr.bundle import Bundle, BundleError
+        document = json.loads(json.dumps(_bundle().document()))
+        mutate(document)
+        with pytest.raises(BundleError) as raised:
+            Bundle.from_document(document)
+        assert fragment in str(raised.value)
+
+
+@pytest.fixture
+def retained_region_bundle_bytes():
+    """Exact bytes from the smallest retained multi-region corpus case."""
+    from pathlib import Path
+
+    return (
+        Path(__file__).resolve().parents[1]
+        / "conformance"
+        / "ocr"
+        / "v0"
+        / "corpus"
+        / "cases"
+        / "region-control"
+        / "bundle.json"
+    ).read_bytes()
+
+
+class TestExactBundleBytes:
+    """The CLI verifies authored bytes, not a permissive reinterpretation."""
+
+    def test_the_retained_corpus_bundle_enters_from_its_exact_bytes(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle
+
+        bundle = Bundle.from_bytes(retained_region_bundle_bytes)
+        assert bundle.id == "fixture:region-control:bundle"
+        assert verify_bundle(bundle).conforms
+
+    @pytest.mark.parametrize(
+        "anchor,injection,key",
+        [
+            (
+                b'{\n  "bundle":',
+                b'{\n  "profile": "wrong-profile",\n  "bundle":',
+                "profile",
+            ),
+            (
+                b'    "transport_metadata": {\n',
+                b'    "transport_metadata": {\n      "network_access": true,\n',
+                "network_access",
+            ),
+        ],
+    )
+    def test_duplicate_keys_are_refused_at_every_object_depth(
+        self, retained_region_bundle_bytes, anchor, injection, key
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        assert retained_region_bundle_bytes.count(anchor) == 1
+        ambiguous = retained_region_bundle_bytes.replace(anchor, injection, 1)
+        assert ambiguous.count(f'"{key}"'.encode()) == 2
+        with pytest.raises(BundleError, match=rf"repeats object key: {key}"):
+            Bundle.from_bytes(ambiguous)
+
+    @pytest.mark.parametrize("literal", [b"NaN", b"Infinity", b"-Infinity", b"1e400"])
+    def test_nonfinite_numbers_are_refused_anywhere_in_the_document(
+        self, retained_region_bundle_bytes, literal
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        finite = b'      "network_access": false'
+        assert retained_region_bundle_bytes.count(finite) == 1
+        nonfinite = retained_region_bundle_bytes.replace(
+            finite, b'      "network_access": ' + literal, 1
+        )
+        with pytest.raises(BundleError, match="non-finite number"):
+            Bundle.from_bytes(nonfinite)
+
+    def test_non_scalar_unicode_is_refused_before_it_reaches_a_digest(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        value = b'      "network_access": false'
+        assert retained_region_bundle_bytes.count(value) == 1
+        non_scalar = retained_region_bundle_bytes.replace(
+            value, b'      "network_access": "\\ud800"', 1
+        )
+        with pytest.raises(BundleError, match="not canonical JSON data"):
+            Bundle.from_bytes(non_scalar)
+
+    def test_invalid_utf8_is_refused_before_document_construction(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        with pytest.raises(BundleError, match="not UTF-8"):
+            Bundle.from_bytes(b"\xff" + retained_region_bundle_bytes)
+
+    def test_the_exact_byte_boundary_does_not_accept_decoded_text(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        with pytest.raises(BundleError, match="must be exact bytes"):
+            Bundle.from_bytes(retained_region_bundle_bytes.decode("utf-8"))
+
 
 class TestThePackagedConformanceCases:
     """An adopter with only the wheel must be able to run something. Until
@@ -634,6 +817,35 @@ class TestTheCommandLine:
         code, out = self._run([str(path)], capsys)
         assert code == 0 and "COMPLETE" in out
         assert "page:1: READ" in out and "page:2: VERIFIED_BLANK" in out
+        assert "Every declared unit is accounted for" in out
+
+    def test_threshold_completeness_does_not_claim_every_unit_was_accounted_for(
+        self, tmp_path, capsys
+    ):
+        import json
+        source_class = _class(metric_families={
+            "coverage": {"denominator": "declared_units", "threshold": 0.5},
+        })
+        bundle = _bundle(
+            source_class=source_class,
+            rasters=(_bundle().rasters[0],),
+            regions=(_bundle().regions[0],),
+            attempts=(_bundle().attempts[0],),
+            hypotheses=(_bundle().hypotheses[0],),
+            corrections=(),
+            selections=(Selection(
+                "sel:1", "reg:1", ("hyp:1",), "hyp:1", "machine reading",
+            ),),
+            observed_units=("page:1",),
+        )
+        path = tmp_path / "threshold-complete.json"
+        path.write_text(json.dumps(bundle.document()))
+        code, out = self._run([str(path)], capsys)
+        assert code == 0
+        assert "COMPLETE BY DECLARED THRESHOLDS" in out
+        assert "Some declared units remain unaccounted for" in out
+        assert "never checked: page:2" in out
+        assert "accounts for every declared unit" not in out
 
     def test_a_refused_document_exits_one_and_names_every_diagnostic(self, tmp_path, capsys):
         import json
@@ -658,6 +870,23 @@ class TestTheCommandLine:
         missing = tmp_path / "absent.json"
         code, _ = self._run([str(missing)], capsys)
         assert code == 2
+
+    def test_an_ambiguous_bundle_is_unreadable_not_silently_reinterpreted(
+        self, tmp_path, capsys, retained_region_bundle_bytes
+    ):
+        path = tmp_path / "duplicate-profile.json"
+        anchor = b'{\n  "bundle":'
+        assert retained_region_bundle_bytes.count(anchor) == 1
+        path.write_bytes(retained_region_bundle_bytes.replace(
+            anchor,
+            b'{\n  "profile": "wrong-profile",\n  "bundle":',
+            1,
+        ))
+
+        code, out = self._run([str(path)], capsys)
+
+        assert code == 2
+        assert "repeats object key: profile" in out
 
     def test_the_packaged_suite_passes_from_the_command_line(self, capsys):
         code, out = self._run(["--conformance"], capsys)

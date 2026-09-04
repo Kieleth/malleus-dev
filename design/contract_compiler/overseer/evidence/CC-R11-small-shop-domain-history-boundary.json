@@ -1,0 +1,88 @@
+{
+  "artifacts": [
+    {
+      "byte_length": 15130,
+      "path": "docs/SMALL_SHOP_WALKTHROUGH.md",
+      "sha256": "sha256:baff81d6fdce488a2ebd7c19820de082d5d5790f7f18f55e6b577fa7deca1d61"
+    },
+    {
+      "byte_length": 100336,
+      "path": "tests/test_docs.py",
+      "sha256": "sha256:5866d0a5d684f8d830c7c62336982626d2b804169dab98cd4adbfedeaf2b67a7"
+    },
+    {
+      "byte_length": 64765,
+      "path": "src/malleus/_contract_pipeline/knowledge.py",
+      "sha256": "sha256:172b4c6f0d93b5fc184d83e9a003341382cc36eefd9cd98b48f253abd7f22915"
+    },
+    {
+      "byte_length": 58123,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/run.py",
+      "sha256": "sha256:588ab3766625c184992860730fe33bc0ca17550b555fb9635d973e7a77d09244"
+    },
+    {
+      "byte_length": 4058,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/mapping.json",
+      "sha256": "sha256:77bcc53ef39b301a940ee051c1afd6d3e08e90ba6e8bd344a7ba14ff6f101795"
+    },
+    {
+      "byte_length": 4629,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/settlement-mapping.json",
+      "sha256": "sha256:93a2490b7b7eb4871bfc15217bfbc84162f874b9fa6bb746a29379fdcba36f62"
+    },
+    {
+      "byte_length": 17127,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json",
+      "sha256": "sha256:2f529922b1b88f4f0f43feed3dcdf71b578e2fa2b0ad37fb295013d61341f4b9"
+    },
+    {
+      "byte_length": 4878,
+      "path": "research/ontology_driven_kg_realization/experiments/small_shop/correction/machine.json",
+      "sha256": "sha256:825c8d998ec311c93426dd7b787fff732eec09b7a9e0805fdfc2f7b215faf375"
+    }
+  ],
+  "base_commit": "9c8698868c1021283ed9cd30d228a6e1fdc121a3",
+  "checks": [
+    {
+      "check_id": "ccr11-shop-history-five-layer-audit",
+      "method": "Inspect the published ontology, mappings, change-set grammar, protocol machine, recorded explanation, and replay path as five separate layers.",
+      "observed": "Small Shop selects a state-oriented domain graph model and fixture mappings. Core supplies a domain-neutral history envelope, generic lifecycle machine, and replay projection; it contains no retailer or business-event vocabulary.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-shop-genesis-semantics",
+      "method": "Compare the closed KnowledgeChangeSet fields, first accepted change coordinates, mapping stage labels, and runner lowering.",
+      "observed": "KnowledgeChangeSet has no role or kind. The first change has an empty accepted-state base and GENESIS acceptance and materialization heads, but follows 49 bootstrap events and is not the complete initial population. Mapping-local change kinds are retained as evidence bytes but are not carried into or interpreted from the change set.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-shop-adopter-boundary",
+      "method": "Compare the executable Small Shop encoding with the documented protocol boundary taxonomy and optional semantic-history profile.",
+      "observed": "Core deliberately leaves the domain ontology, state-versus-event model, initial population, identity, valid-time meaning, mapping, and correction semantics to adopters. Small Shop has no single identified domain-level change contract gathering those choices.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-shop-history-doc-guard",
+      "method": "Add a public clarification and a focused documentation assertion, then run the exact walkthrough test, Ruff lint, and diff checks.",
+      "observed": "The focused walkthrough test passes. It binds the first change's exact base coordinates, later initial-state records, mapping-local category labels, and the strict absence of kind or role fields from a real retained KnowledgeChangeSet. The page distinguishes generic Core history laws from adopter-owned domain semantics without changing runtime or recorded showcase evidence.",
+      "result": "PASS"
+    },
+    {
+      "check_id": "ccr11-shop-history-independent-audit",
+      "method": "Ask two independent reviewers to classify the domain ontology, seed facts, later changes, protocol events, replay, and smallest correction from the exact published tree.",
+      "observed": "Both reviews independently found the same boundary: a real fixture-local state-version encoding over generic history machinery, no formal KCS genesis role, no portable Small Shop change vocabulary, and a documentation-only correction as the smallest honest repair.",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "This clarification changes no ontology, mapping, KnowledgeChangeSet, protocol event, ledger history, graph evidence, query result, or runtime behavior.",
+    "The current private KnowledgeChangeSet grammar supports entity creation, relation creation, valid time, dependencies, and optional record and change supersession; it is not a public arbitrary change language.",
+    "Small Shop mapping labels remain retained fixture evidence without generic interpreter semantics.",
+    "The first accepted change has a positional genesis role and is not the complete fixture seed state.",
+    "No domain-history profile, typed genesis role, business-event projection, REA model, public mapping format, or cross-language history contract is introduced.",
+    "Portable or queryable domain change categories would require a separately governed contract; no such contract or roadmap workstream is selected here."
+  ],
+  "recorded_at": "2026-09-03T16:30:00Z",
+  "schema": "malleus.contract-compiler.verification-report/v1",
+  "workstream_id": "CC-R11"
+}

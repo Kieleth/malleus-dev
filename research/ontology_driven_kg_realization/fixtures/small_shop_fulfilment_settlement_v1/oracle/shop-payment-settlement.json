@@ -1,0 +1,75 @@
+{
+  "case_id": "SHOP-PAYMENT-SETTLEMENT",
+  "excluded_claims": [
+    "ACCEPTED_KNOWLEDGE_OR_PROTOCOL_OUTCOME",
+    "GENERIC_COLLECTION_EXPANSION",
+    "GENERIC_SETTLEMENT_CARDINALITY",
+    "NATIVE_EVENT_KNOWLEDGE_GRAPH_SETTLEMENT_EDGE",
+    "PROPOSED_OPERATION_BYTES_OR_ORDER",
+    "SOURCE_ASSERTED_RELATION_DIRECTION"
+  ],
+  "expected_existing_base": {
+    "logical_entities": [
+      {
+        "attributes": {
+          "invoice_number": "I1"
+        },
+        "class": "Invoice",
+        "fixture_key": "I1"
+      },
+      {
+        "attributes": {
+          "invoice_number": "I2"
+        },
+        "class": "Invoice",
+        "fixture_key": "I2"
+      }
+    ]
+  },
+  "expected_outputs": {
+    "logical_entities": [
+      {
+        "attributes": {
+          "payment_number": "P1"
+        },
+        "class": "Payment",
+        "fixture_key": "P1"
+      }
+    ],
+    "logical_relations": [
+      {
+        "class": "PaymentSettlesInvoiceRelation",
+        "fixture_key": "P1:I1",
+        "relation_type": "PAYMENT_SETTLES_INVOICE",
+        "source_fixture_key": "P1",
+        "target_fixture_key": "I1"
+      },
+      {
+        "class": "PaymentSettlesInvoiceRelation",
+        "fixture_key": "P1:I2",
+        "relation_type": "PAYMENT_SETTLES_INVOICE",
+        "source_fixture_key": "P1",
+        "target_fixture_key": "I2"
+      }
+    ]
+  },
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-payment-settlement-v1",
+  "metadata": {
+    "artifact_class": "PRIVATE_FIXTURE_LOCAL_TEST_EVIDENCE",
+    "authorship": "INDEPENDENTLY_HAND_AUTHORED",
+    "compiler_input": false,
+    "publication_contract": "NON_PUBLIC_NO_COMPATIBILITY_CONTRACT",
+    "wire_format": "PRIVATE_UNSTABLE_NO_PUBLIC_SCHEMA"
+  },
+  "semantic_basis": "FIXTURE_DEFINED_DIRECTION_FROM_SOURCE_COOCCURRENCE",
+  "source_basis": {
+    "event_id": "e30",
+    "kind": "SOURCE_COOCCURRENCE",
+    "members": [
+      "P1",
+      "I1",
+      "I2"
+    ]
+  }
+}

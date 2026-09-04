@@ -399,8 +399,8 @@ accepted-state write path. ACCEPT and atomic application may share one verified
 ledger event, provided that event retains the distinct decision and application
 records and validates them together before any derived graph swap.
 
-The current Python runtime predates that generic artifact. It represents the
-same narrow path with a `CandidateSubgraphArtifact`, an
+The public Assent runtime path still predates that generic artifact. It
+represents the same narrow path with a `CandidateSubgraphArtifact`, an
 `AcceptedGraphApplication`, and a caller-supplied `GraphBaseArtifact`:
 
 ```text
@@ -436,9 +436,11 @@ graph is swapped only after the complete event validates.
 
 Direct candidate persistence or `materialize_into()` remains a structural
 facility. It may be useful without semantic history, but its result is
-non-governed and non-accepted as Malleus knowledge. The current external graph
-base and missing generic `KnowledgeChangeSet` therefore remain explicit
-limitations, not alternate accepted-state authorities.
+non-governed and non-accepted as Malleus knowledge. The external graph base and
+missing public `KnowledgeChangeSet` cutover therefore remain explicit Assent
+limitations, not alternate accepted-state authorities. A separate private
+compiler pipeline now proves `KnowledgeChangeSet` admission and replay from an
+empty graph. That research evidence is not yet the public Assent API.
 
 Six digest or head commitments remain distinct: `protocol_head_hash`,
 `acceptance_head`, `materialization_head`, `accepted_history_state_digest`,

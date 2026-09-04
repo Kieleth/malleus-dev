@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 from base64 import b64encode
+from copy import deepcopy
 from dataclasses import replace
 from hashlib import sha256
 import inspect
@@ -42,7 +43,15 @@ from tests.contract_compiler.pareto.test_validated_contract import (
 
 
 KCS_GRAMMAR = "malleus.knowledge-change-set/private-v0"
-BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v0"
+BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
+ROLE_BOUND_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
+ARTIFACT_RETENTION_ROLES = [
+    "KNOWLEDGE_HISTORY_BINDING",
+    "PARTIAL_EFFECTIVE_CONTRACT",
+    "RETAINED_EVIDENCE",
+    "SOURCE_ARTIFACT",
+    "VALIDATED_CONTRACT",
+]
 CONTRACT_KIND = "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0"
 TRANSACTION_TIME = "2026-09-01T00:00:00Z"
 
@@ -129,15 +138,31 @@ def _binding_payload() -> dict[str, object]:
         },
         "retention_events": {
             "ARTIFACT_REGISTERED": {
+                "allowed_roles": list(ARTIFACT_RETENTION_ROLES),
                 "identity_field": "artifact_identity",
                 "record_id_field": "artifact_id",
             },
             "SOURCE_REGISTERED": {
+                "allowed_roles": ["RETAINED_SOURCE"],
                 "identity_field": "source_identity",
                 "record_id_field": "source_id",
             },
         },
     }
+
+
+def _role_bound_binding_payload() -> dict[str, object]:
+    payload = deepcopy(_binding_payload())
+    payload["grammar"] = ROLE_BOUND_BINDING_GRAMMAR
+    retention = payload["retention_events"]
+    assert isinstance(retention, dict)
+    artifact = retention["ARTIFACT_REGISTERED"]
+    source = retention["SOURCE_REGISTERED"]
+    assert isinstance(artifact, dict)
+    assert isinstance(source, dict)
+    artifact["allowed_roles"] = list(ARTIFACT_RETENTION_ROLES)
+    source["allowed_roles"] = ["RETAINED_SOURCE"]
+    return payload
 
 
 def _history(tmp_path: Path):
@@ -1765,6 +1790,108 @@ def test_anchor_refuses_bytes_that_do_not_match_machine_identity(
     assert history.replay().graph.snapshot() == before.graph.snapshot()
 
 
+def test_artifact_event_cannot_retain_source_role(tmp_path: Path) -> None:
+    history, _, _, _ = _history(tmp_path)
+    retained = b"artifact bytes\n"
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.append_anchor(
+            machine_event=_event(
+                "ARTIFACT_REGISTERED",
+                artifact_id="artifact:wrong-role",
+                artifact_identity=_digest(retained),
+            ),
+            retained_bytes=retained,
+            media_type="application/octet-stream",
+            role="RETAINED_SOURCE",
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_source_event_cannot_retain_evidence_role_in_later_batch_member(
+    tmp_path: Path,
+) -> None:
+    history, _, _, _ = _history(tmp_path)
+    artifact = b"source artifact bytes\n"
+    source = b"source registration bytes\n"
+    ledger_before = _ledger_bytes(history)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.append_anchors(
+            anchors=(
+                KnowledgeAnchorInput(
+                    machine_event=_event(
+                        "ARTIFACT_REGISTERED",
+                        artifact_id="artifact:source",
+                        artifact_identity=_digest(artifact),
+                    ),
+                    retained_bytes=artifact,
+                    media_type="application/octet-stream",
+                    role="SOURCE_ARTIFACT",
+                ),
+                KnowledgeAnchorInput(
+                    machine_event=_event(
+                        "SOURCE_REGISTERED",
+                        artifact_id="artifact:source",
+                        source_id="source:wrong-role",
+                        source_identity=_digest(source),
+                    ),
+                    retained_bytes=source,
+                    media_type="application/octet-stream",
+                    role="RETAINED_EVIDENCE",
+                ),
+            ),
+            transaction_time=TRANSACTION_TIME,
+            actor_id="actor:test",
+        )
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_HISTORY
+    assert _ledger_bytes(history) == ledger_before
+
+
+def test_replay_refuses_an_event_role_pair_that_bypassed_the_writer(
+    tmp_path: Path,
+) -> None:
+    history, compiled, _, _ = _history(tmp_path)
+    retained = b"misclassified retained bytes\n"
+    machine_event = json.loads(
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="artifact:replay-wrong-role",
+            artifact_identity=_digest(retained),
+        )
+    )
+    ledger = JsonlLedger(
+        history.path,
+        compiled.artifact.validated_fact_set_sha256,
+    )
+    ledger.append(
+        event_id="anchor:RETAINED_SOURCE:artifact:replay-wrong-role",
+        event_type="ARTIFACT_REGISTERED",
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:test",
+        payload={
+            "machine_payload": machine_event["payload"],
+            "media_type": "application/octet-stream",
+            "record_id": "artifact:replay-wrong-role",
+            "retained_bytes_base64": b64encode(retained).decode("ascii"),
+            "retained_sha256": _digest(retained),
+            "role": "RETAINED_SOURCE",
+        },
+        validate=lambda _: None,
+    )
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        history.replay()
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.RETAINED_BYTES_MISMATCH
+
+
 @pytest.mark.parametrize(
     "role",
     [
@@ -1891,3 +2018,54 @@ def test_history_binding_is_canonical_and_data_owns_machine_vocabulary() -> None
         "knowledge_change_set_identity",
     ):
         assert literal not in production
+
+
+def test_role_bound_history_binding_is_canonical_and_closed() -> None:
+    payload = _role_bound_binding_payload()
+    source = _canonical(payload)
+
+    binding = KnowledgeChangeHistoryBinding.from_bytes(source)
+
+    assert binding.canonical_bytes == source
+    assert binding.identity == _digest(source)
+    assert binding.data["retention_events"]["ARTIFACT_REGISTERED"][
+        "allowed_roles"
+    ] == tuple(ARTIFACT_RETENTION_ROLES)
+    assert binding.data["retention_events"]["SOURCE_REGISTERED"]["allowed_roles"] == (
+        "RETAINED_SOURCE",
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["missing", "extra", "empty", "duplicate", "unsorted", "unknown", "not-list"],
+)
+def test_role_bound_history_binding_refuses_ambiguous_role_sets(
+    mutation: str,
+) -> None:
+    payload = _role_bound_binding_payload()
+    retention = payload["retention_events"]
+    assert isinstance(retention, dict)
+    artifact = retention["ARTIFACT_REGISTERED"]
+    assert isinstance(artifact, dict)
+    if mutation == "missing":
+        del artifact["allowed_roles"]
+    elif mutation == "extra":
+        artifact["extra"] = True
+    elif mutation == "empty":
+        artifact["allowed_roles"] = []
+    elif mutation == "duplicate":
+        artifact["allowed_roles"] = ["RETAINED_EVIDENCE", "RETAINED_EVIDENCE"]
+    elif mutation == "unsorted":
+        artifact["allowed_roles"] = ["VALIDATED_CONTRACT", "RETAINED_EVIDENCE"]
+    elif mutation == "unknown":
+        artifact["allowed_roles"] = ["SOMETHING_ELSE"]
+    elif mutation == "not-list":
+        artifact["allowed_roles"] = "RETAINED_EVIDENCE"
+    else:
+        raise AssertionError(mutation)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        KnowledgeChangeHistoryBinding.from_bytes(_canonical(payload))
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_BINDING

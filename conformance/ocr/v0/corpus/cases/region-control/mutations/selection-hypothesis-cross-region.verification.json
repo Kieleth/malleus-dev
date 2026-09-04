@@ -1,0 +1,32 @@
+{
+  "account": {
+    "complete": true,
+    "kind": "FINISHED_READING",
+    "metrics": [
+      {
+        "denominator": "declared_units",
+        "family": "coverage",
+        "threshold": 1.0,
+        "value": 1.0,
+        "verdict": "MET"
+      }
+    ],
+    "units": [
+      {
+        "disposition": "ACCOUNTED",
+        "outcome": "READ",
+        "unit": "image:1"
+      }
+    ]
+  },
+  "bundle_id": "fixture:region-control:bundle",
+  "capability": "AUDIT_ONLY",
+  "conforms": false,
+  "diagnostics": [
+    {
+      "code": "OCR-D003",
+      "detail": "hypothesis 'fixture:region-control:hypothesis:b:machine' belongs to region 'fixture:region-control:region:b', not selection region 'fixture:region-control:region:a'",
+      "subject": "fixture:region-control:selection:a"
+    }
+  ]
+}

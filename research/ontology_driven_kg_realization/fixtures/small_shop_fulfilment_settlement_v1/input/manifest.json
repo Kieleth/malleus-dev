@@ -1,0 +1,63 @@
+{
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "shop-payment-settlement-v1",
+  "limitations": [
+    "Only invoice identities I1 and I2 and the e30 co-occurrence of P1, I1, and I2 are source claims in scope.",
+    "The directed PAYMENT_SETTLES_INVOICE predicate is fixture-defined semantics, not a source-native Event Knowledge Graph edge.",
+    "The selected case has exactly two invoices and claims no generic collection expansion, fan-out, or cardinality rule.",
+    "The publication establishes event order but no accepted timestamp, invoice value, or payment value, so temporal semantics are ORDER_ONLY.",
+    "These members contain inputs only and make no compiler, protocol, ledger, runtime, or accepted-graph result claim."
+  ],
+  "members": [
+    {
+      "byte_length": 1188,
+      "media_type": "application/json",
+      "path": "attribution.json",
+      "role": "SOURCE_ATTRIBUTION",
+      "sha256": "sha256:d8560cdc50b7d49c3164c47778564da4f08a81cc1a6ede9dfc4442f5edbd3cbe"
+    },
+    {
+      "byte_length": 542,
+      "media_type": "application/json",
+      "path": "configuration/shop-payment-settlement-selection.json",
+      "role": "SCENARIO_SELECTION",
+      "sha256": "sha256:173795759f135d09c35b42c6d222fafde26660ae82b2915cab67d5c3ff5421bc"
+    },
+    {
+      "byte_length": 17,
+      "media_type": "text/csv",
+      "path": "sources/invoices.csv",
+      "role": "DOMAIN_REFERENCE_DATA",
+      "sha256": "sha256:048b6c70b94cddc026c656f51746794f5dfc1a70ce2372c5fed341b02973f175"
+    },
+    {
+      "byte_length": 63,
+      "media_type": "application/x-ndjson",
+      "path": "sources/payments.jsonl",
+      "role": "SOURCE_OCCURRENCE_TRANSCRIPTION",
+      "sha256": "sha256:3ad1935a2912eb698c14977ff9e42b3e49020912de0dad6f37ad10b4e27a060d"
+    },
+    {
+      "byte_length": 1219,
+      "media_type": "application/yaml",
+      "path": "tbox/small-shop-settlement.yaml",
+      "role": "LINKML_TBOX_EXTENSION",
+      "sha256": "sha256:98dd530aa249763be24ff16a0ff4848c0821dc0150bf09ef2ee5a3f19e66b956"
+    }
+  ],
+  "schema": "malleus.small-shop.input-set/v1",
+  "source_attribution": {
+    "attribution_member": "attribution.json",
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "source_locator": "Table 1",
+    "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+    "work_title": "Process Mining over Multiple Behavioral Dimensions with Event Knowledge Graphs"
+  },
+  "tbox_import": {
+    "byte_length": 1009,
+    "import_literal": "small-shop-correction",
+    "input_set_id": "shop-supplier-order-correction-v1",
+    "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_correction_v1/input/tbox/small-shop-correction.yaml",
+    "sha256": "sha256:54e4e170d704056008296c91d1398b024d3a3c3897aba2640599375bf6f42b62"
+  }
+}

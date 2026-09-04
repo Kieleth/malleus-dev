@@ -23,6 +23,15 @@ from pathlib import Path
 
 import yaml
 
+from malleus.inquisition.pack_grounding import (
+    PACK_GROUNDING_RITE_IDENTITY,
+    PackConformanceReceipt,
+    PackGroundingReceipt,
+    PackGroundingRefusal,
+    PackGroundingRefusalReason,
+    validate_pack_conformance,
+    validate_pack_grounding,
+)
 from malleus.ontology import OntologyError, OntologyRegistry, bundled_ontology_path
 
 HERESY = "HERESY"          # the rule is explicit and the schema breaks it
@@ -633,3 +642,27 @@ def run_rites(
                                "mark it inert in its description (see docs/RECIPES.md, "
                                "recipe 4)")
     return report
+
+
+__all__ = (
+    "COMMENDATION",
+    "EMITTED_RITES",
+    "Finding",
+    "HERESY",
+    "NOTE",
+    "PACK_GROUNDING_RITE_IDENTITY",
+    "PackConformanceReceipt",
+    "PackGroundingReceipt",
+    "PackGroundingRefusal",
+    "PackGroundingRefusalReason",
+    "REPORT_SCOPE",
+    "Report",
+    "RiteContractError",
+    "Rites",
+    "RubricError",
+    "SUSPICION",
+    "UNDISABLABLE_RITES",
+    "run_rites",
+    "validate_pack_conformance",
+    "validate_pack_grounding",
+)

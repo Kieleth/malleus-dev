@@ -1,0 +1,124 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:bf244c896cad8202e97e5249e4726ec6cb92be5aa09655274bd1f7f9c87c6992",
+        "before_digest": "sha256:1d95f4948b022a5386c35acd9418567dc7bf09a0f66f474555c180134641cb47",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:c8b1811ca8cf067a898437daf4bf81da6ef07ddfaf7465fd3bc17a2804a67d47",
+        "before_digest": "sha256:cb265900941cea6b5565a3e643097c242c4bd9b0bd34582474e3c370ef2d7b12",
+        "change": "MODIFIED",
+        "path": "docs/contract_compiler/index.md"
+      },
+      {
+        "after_digest": "sha256:9dd62ca1fd9bede317c32c154b1b63cd768bce04c1741b458b66cd5e2f605a18",
+        "before_digest": "sha256:a1af66fd8f558c2312db9c36637725835b948c32d622b52481bbede06b8b94ee",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:72c0fbfcc72d25390198f29e6cef41b1e93d1583edf1211e495304190dee0df9",
+        "before_digest": "sha256:b52c23fe5c48f4e01b48974c0e1a17e8610f965fd65b978c86e41e3954ddccbf",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:488eb3a50bb3e2580d94f2f68b26fbcee1650c8260d70084f1cdf78cbd521b55",
+        "before_digest": "sha256:1c062d9bc21d5e7aa33f77d8d253fe3994259a16307c14427304379434d808c3",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-core-population-p7-report.md"
+      },
+      {
+        "after_digest": "sha256:5dd505290e80b711dab448a4a649fa302c5247dff973d943317f7024a65eacf7",
+        "before_digest": "sha256:df7cceff66dde12929e3da3ce757f7fb16143677cc536d3680ccd9eabb77784d",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_binder.py"
+      },
+      {
+        "after_digest": "sha256:452d7b29ed541db6bb881eae025ea156cce07d6c7f4ec615d8f314f69aba6709",
+        "before_digest": "sha256:1f642cffadd71e0dc4aabe3f9fdf48b0c0068e2ff4a5e5b8ea588a18de8b3a3e",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/pack-grounding.json"
+      },
+      {
+        "after_digest": "sha256:8721fff12b5a183c8e112b4953854f191692c738cfc033fd96ea6908aa3f77b8",
+        "before_digest": "sha256:37df23e72a764c6ceb8b03797811c67586412698a2d6c0272e394d660b7bf838",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/pack_grounding.py"
+      },
+      {
+        "after_digest": "sha256:496e51131e3f2b58703f233edeaaa63cbd6ee7d39e74d6154028ed2422e2786f",
+        "before_digest": "sha256:ccb10ef69e9bdbda471d9ef76518f1015dc53a9f7782df710d8c8db089aefd66",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:f61bf42ab812043853df39fbc5b3d6226ef6ad89d2965ce45bbd897ffb01594b",
+        "before_digest": "sha256:2f055a08a1ab36d3651b63c8c70323961f0e58609c30409833dd18407555b387",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:ac089e6ecd26c43248f9a32d3a0ee4c089f7f424c30b7f8d7cd85295e34653dc",
+  "entry_id": "OVR-000383",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:ba17babb82027c4bcd0af9a92918685451317847b6038f0fd5566832a99a46a4",
+  "recorded_at": "2026-09-04T07:42:32Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "b4d1ad79b7d1baac2170a6bc1539497f1ff6e700",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2fb24f0c65249d5e75421c011c31534b5c581f60",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "99139ef5aa6c7b633377061c53e7b3a1b8484c2d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "380cb3d4ac82cbeea59c29a3a759e34a87ac3d4a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "ee429036a316075d6a526d9dd4cf31992455efff",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e58d65d78838d1d49077d98b77c9b4a5770c8636",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 383,
+  "subject": {
+    "id": "pack-grounding-compiler-alignment",
+    "type": "DOCUMENT"
+  },
+  "summary": "Align project grounding with compiler reference semantics.",
+  "why": "The grounding rite previously missed Malleus roots written as compiler-accepted CURIEs, while the binder misread unrelated grounding annotations as adoption markers. The correction gives the rite one explicit root namespace, resolves only source-declared prefixes against it, and enters adoption logic only when the adopts field exists. Executable documentation now uses the accepted annotation shape and the live immutable-receipt guard."
+}

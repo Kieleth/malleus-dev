@@ -1,0 +1,10 @@
+{
+  "contract": "malleus.fixture.control_response.v1",
+  "note": "Retained fixture response. No recognition engine was invoked.",
+  "outcome": "READING",
+  "production_ocr": false,
+  "reader_id": "malleus.fixture.control_reader@1",
+  "reader_kind": "deterministic_control_reader",
+  "region_id": "fixture:multipage-control:region:page-1-body",
+  "text": "The quick brown fox jumps.\nAMBIGUOUS TOKEN\nOOI1l"
+}
