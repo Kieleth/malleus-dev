@@ -108,7 +108,7 @@ profile. A future delivery profile may add idempotency, outbox, deduplication,
 and external effect-ledger records without changing the core boundary. See
 `docs/EFFECT_PROTOCOL.md`.
 
-## Recon tooling in 0.10.0
+## Recon structural-capture tooling
 
 The package also ships Malleus Recon without advancing the core assent stage:
 
@@ -117,16 +117,32 @@ The package also ships Malleus Recon without advancing the core assent stage:
   claim-level comparison relations;
 - exact intersection, union, directional difference, partial, unresolved, and
   contested comparison views;
-- deterministic JSON, JSON-LD, GraphML, CSV, BibTeX, Markdown, manifest, and
-  ZIP outputs;
+- JSON, ontology-derived JSON-LD, GraphML, CSV, BibTeX, Markdown, manifest, and
+  ZIP outputs that are byte-deterministic for identical inputs and the
+  declared generator and runtime closure;
+- an immutable public `OntologyRegistry.source_closure()` with exact parsed
+  bytes, canonical source locators, all authored import resolutions, and
+  retained definition ownership;
+- strict manifest v3, manifest-last staged builds bound to the
+  structural-capture profile, exact project bytes, complete ontology source and
+  import closure, retained definition owners, derived term-map identity,
+  separated grammar and migration verification evidence, ledger head and
+  count, and the listed generator source closure;
+- incremental replay with project-level exclusion of overlapping current
+  Recon writers and initializers, plus per-output exclusion for builders;
+- a narrow `windows-latest` Recon CI job, declared as an expandable matrix
+  profile without claiming full Windows suite coverage or a completed remote
+  run;
 - an atomic typed importer for the existing literature-forensics graph v1.x;
   and
 - the `malleus-recon` agent skill, installable for Claude, Codex, or both.
 
 `RECORDED` establishes structural and ledger validity, not truth or novelty.
 Recon has no crawler, provider integration, automatic novelty adjudicator, or
-multi-writer store. Its source digests preserve caller declarations and do not
-independently authenticate source bytes. See `docs/RECON_CONTRACT.md`.
+multi-writer protocol. Its source digests preserve caller declarations and do
+not independently authenticate source bytes. Governed promotion is specified
+as a one-way, identity-bound boundary, but no promotion adapter is implemented.
+See `docs/RECON_CONTRACT.md`.
 
 The Stage 5 boundary compiles public graph snapshots through one versioned fact
 contract, binds ontology and exact rule bytes through a pinned logic contract,
@@ -330,9 +346,22 @@ persists it as JSON, checks its live head, and stops backward hash acceptance at
 a declared `HARD_BREAK`.
 
 The receipt is not a protocol-ledger boundary event. It carries no transform,
-reader, record mapping, query rewrite, or verified delta. `TOTAL` and `PARTIAL`
-currently accept prior hashes identically, core `ProtocolLedger` does not
-consume migration chains, and Recon is the only current source consumer.
+record mapping, query rewrite, or verified delta. The public
+`MigrationVerifier` and `MigrationAwareJsonlLedger` provide the narrower reader
+that was previously missing: current-byte payload grammars verify without a
+receipt; an exact older identity verifies only across a gapless, all-`TOTAL`
+path; and `PARTIAL`, `HARD_BREAK`, unknown, or category-collision cases refuse.
+The receipt ontology must match the live registry entry name, and sidecar
+discovery remains anchored to the registry's retained absolute entry locator.
+`MigrationVerification` reports the separated grammar identities, migrated
+identities, and exact receipts crossed by a read.
+
+The base `JsonlLedger` remains grammar-only. Recon uses the migration-aware
+ledger and exposes only current-byte grammar aliases through
+`historical_ontology_hashes`, so migration identities no longer enter that
+parameter. Core `ProtocolLedger` still does not consume migration chains, and
+the new reader does not establish a generic record transform or cross-contract
+interpretation.
 
 ## Not implemented
 

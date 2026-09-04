@@ -89,6 +89,18 @@ TEST = (
         ),
     ),
 )
+RECON = (
+    Command(
+        "recon-tests",
+        (
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/test_recon.py",
+            "tests/test_recon_ontology.py",
+        ),
+    ),
+)
 SMALL_SHOP_TEST = Command(
     "small-shop",
     (
@@ -124,6 +136,7 @@ PACKAGE = (
 PROFILES = {
     "all": (*TEST, SMALL_SHOP_TEST, *DOCS),
     "test": TEST,
+    "recon": RECON,
     "docs": DOCS,
     "package": PACKAGE,
 }

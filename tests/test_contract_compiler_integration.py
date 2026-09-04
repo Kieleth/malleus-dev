@@ -5297,6 +5297,35 @@ def test_workflows_delegate_to_the_fixed_local_runner_with_full_history(
         assert replaced not in source
 
 
+def test_windows_recon_job_delegates_to_exact_fixed_profile() -> None:
+    path = ROOT / ".github" / "workflows" / "tests.yml"
+    source = path.read_text(encoding="utf-8")
+    jobs = yaml.load(source, Loader=_UniqueYamlLoader)["jobs"]
+    job = jobs["windows-profile"]
+
+    assert job["runs-on"] == "windows-latest"
+    assert job["strategy"]["matrix"]["include"] == [
+        {"profile": "recon", "python-version": "3.12"}
+    ]
+    checkout = next(
+        step for step in job["steps"] if step.get("uses") == "actions/checkout@v4"
+    )
+    assert checkout["with"]["fetch-depth"] == 0
+    setup = next(
+        step for step in job["steps"] if step.get("uses") == "actions/setup-python@v5"
+    )
+    assert setup["with"] == {
+        "python-version": "${{ matrix.python-version }}",
+        "cache": "pip",
+        "cache-dependency-path": "pyproject.toml",
+    }
+    run_steps = [step["run"] for step in job["steps"] if "run" in step]
+    assert run_steps == [
+        'python -m pip install --upgrade pip\npython -m pip install -e ".[dev]"\n',
+        "python scripts/ci.py ${{ matrix.profile }} --require-clean",
+    ]
+
+
 def test_owned_governance_markdown_has_no_trailing_whitespace() -> None:
     paths = sorted(CONTRACT.rglob("*.md"))
     paths.append(ROOT / "handover" / "2026-08-24-contract-compiler-overseer.md")

@@ -66,6 +66,20 @@ def test_test_and_docs_profiles_are_subsets_of_the_default_plan() -> None:
         assert all(command.name != "small-shop" for command in commands)
 
 
+def test_recon_profile_has_exact_narrow_scope() -> None:
+    commands = ci.plan("recon")
+
+    assert len(commands) == 1
+    assert commands[0].name == "recon-tests"
+    assert commands[0].argv == (
+        sys.executable,
+        "-m",
+        "pytest",
+        "tests/test_recon.py",
+        "tests/test_recon_ontology.py",
+    )
+
+
 def test_package_profile_is_explicit_and_release_only() -> None:
     package_names = [command.name for command in ci.plan("package")]
 

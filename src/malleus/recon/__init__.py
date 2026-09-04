@@ -1,9 +1,10 @@
-"""Evidence-first literature forensics for Malleus."""
+"""Structural, evidence-first literature capture for Malleus."""
 
 import sysconfig
 from pathlib import Path
 
 from malleus.recon.analysis import (
+    STRUCTURAL_CAPTURE_PROFILE,
     build_outputs,
     compare_subjects,
     current_graph,
@@ -51,6 +52,7 @@ __all__ = [
     "ReconProject",
     "RecordCandidate",
     "StoredRecord",
+    "STRUCTURAL_CAPTURE_PROFILE",
     "build_outputs",
     "bundled_contract_path",
     "compare_subjects",

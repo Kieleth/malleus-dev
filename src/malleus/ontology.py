@@ -11,7 +11,7 @@ from dataclasses import dataclass, field, fields
 from datetime import datetime
 from importlib.metadata import PackageNotFoundError, distribution
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Literal, Mapping
 
 import yaml
 
@@ -150,6 +150,52 @@ def bundled_ontology_path(*parts: str) -> Path:
 
 class OntologyError(ValueError):
     """Raised when an ontology cannot be loaded without ambiguity."""
+
+
+@dataclass(frozen=True, slots=True)
+class OntologySource:
+    """One exact byte-bearing source retained by an ontology registry."""
+
+    source_role: Literal["entry", "import"]
+    resolved_locator: str
+    source_bytes: bytes
+
+    @property
+    def byte_length(self) -> int:
+        return len(self.source_bytes)
+
+    @property
+    def sha256(self) -> str:
+        return hashlib.sha256(self.source_bytes).hexdigest()
+
+
+@dataclass(frozen=True, slots=True)
+class OntologyImportResolution:
+    """One authored import edge and the target selected by the loader."""
+
+    parent_locator: str
+    ordinal: int
+    literal: str
+    target_role: Literal["ontology", "builtin"]
+    resolved_locator: str
+
+
+@dataclass(frozen=True, slots=True)
+class OntologyDefinitionSource:
+    """The retained source that owns one resolved ontology definition."""
+
+    kind: Literal["type", "enum", "slot", "class"]
+    name: str
+    source_locator: str
+
+
+@dataclass(frozen=True, slots=True)
+class OntologySourceClosure:
+    """Immutable provenance for every source used to construct a registry."""
+
+    sources: tuple[OntologySource, ...]
+    imports: tuple[OntologyImportResolution, ...]
+    definitions: tuple[OntologyDefinitionSource, ...]
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -605,6 +651,7 @@ class OntologyRegistry:
         import_map: Mapping[str, str | Path] | None = None,
     ):
         self._schema_path = Path(schema_path)
+        self._entry_path = self._schema_path.resolve()
         self._import_map = {
             name: self._mapped_path(path) for name, path in (import_map or {}).items()
         }
@@ -618,12 +665,15 @@ class OntologyRegistry:
         # Kept so a declared adoption can be checked against what it adopts.
         self._claimed_definitions: dict[tuple[str, str], Any] = {}
         self._retirements: dict[str, Retirement] = {}
-        self._loaded_paths: set[Path] = set()
+        self._loaded_sources: dict[Path, bytes] = {}
+        self._import_resolutions: list[OntologyImportResolution] = []
         self._effective_slot_cache: dict[str, dict[str, SlotConstraint]] = {}
+        self._schema_name: str | None = None
         self._schema_version: str | None = None
-        self._load_schema(self._schema_path)
+        self._load_schema(self._entry_path)
         self._validate_retirement_successors()
         self._validate_schema()
+        self._source_closure = self._build_source_closure()
 
     def _validate_retirement_successors(self) -> None:
         """A retirement that points nowhere sends the reader to a dead end.
@@ -703,15 +753,15 @@ class OntologyRegistry:
 
     def _load_schema(self, path: Path) -> None:
         path = path.resolve()
-        if path in self._loaded_paths:
+        if path in self._loaded_sources:
             return
         if not path.is_file():
             raise OntologyError(f"Ontology file does not exist: '{path}'")
-        self._loaded_paths.add(path)
 
         try:
-            with path.open(encoding="utf-8") as stream:
-                schema = yaml.load(stream, Loader=UniqueKeyLoader)
+            source_bytes = path.read_bytes()
+            source_text = source_bytes.decode("utf-8")
+            schema = yaml.load(source_text, Loader=UniqueKeyLoader)
         except yaml.YAMLError as error:
             # Malformed YAML is the most common way a schema fails to load;
             # it must be a typed refusal every caller already catches, not a
@@ -719,18 +769,46 @@ class OntologyRegistry:
             raise OntologyError(f"Ontology is not valid YAML: '{path}': {error}") from error
         except UnicodeDecodeError as error:
             raise OntologyError(f"Ontology is not UTF-8: '{path}': {error}") from error
+        except OSError as error:
+            raise OntologyError(f"Cannot read ontology file '{path}': {error}") from error
         if not isinstance(schema, dict):
             raise OntologyError(f"Ontology must be a YAML mapping: '{path}'")
+        locator = str(path)
+        if not _utf8_encodable(locator):
+            raise OntologyError(
+                f"Ontology resolved locator is not UTF-8 encodable: {locator!r}"
+            )
+        # This mapping is the visited set as well as the retained evidence.
+        # Record before descending so cyclic imports terminate without a
+        # second loading mechanism or a second read of the same source.
+        self._loaded_sources[path] = source_bytes
         declared_version = schema.get("version")
         this_version = None if declared_version is None else str(declared_version)
-        if path == self._schema_path.resolve():
+        if path == self._entry_path:
+            declared_name = schema.get("name")
+            if declared_name is not None and (
+                not isinstance(declared_name, str) or not declared_name.strip()
+            ):
+                raise OntologyError(
+                    f"Ontology name must be a nonblank string: '{path}'"
+                )
+            self._schema_name = declared_name
             self._schema_version = this_version
 
         imports = schema.get("imports", [])
         if not isinstance(imports, list) or not all(isinstance(item, str) for item in imports):
             raise OntologyError(f"Ontology imports must be a list of strings: '{path}'")
-        for imported_name in imports:
+        for ordinal, imported_name in enumerate(imports):
             if imported_name == "linkml:types":
+                self._import_resolutions.append(
+                    OntologyImportResolution(
+                        parent_locator=locator,
+                        ordinal=ordinal,
+                        literal=imported_name,
+                        target_role="builtin",
+                        resolved_locator=imported_name,
+                    )
+                )
                 continue
             imported_path = self._resolve_import(path.parent, imported_name)
             if imported_path is None:
@@ -738,6 +816,22 @@ class OntologyRegistry:
                     f"Cannot resolve import '{imported_name}' required by '{path}'. "
                     "Provide a local file or an explicit import_map entry."
                 )
+            imported_path = imported_path.resolve()
+            imported_locator = str(imported_path)
+            if not _utf8_encodable(imported_locator):
+                raise OntologyError(
+                    "Ontology import resolved locator is not UTF-8 encodable: "
+                    f"{imported_locator!r}"
+                )
+            self._import_resolutions.append(
+                OntologyImportResolution(
+                    parent_locator=locator,
+                    ordinal=ordinal,
+                    literal=imported_name,
+                    target_role="ontology",
+                    resolved_locator=imported_locator,
+                )
+            )
             self._load_schema(imported_path)
 
         for name, definition in self._mapping(schema, "types", path).items():
@@ -993,6 +1087,61 @@ class OntologyRegistry:
     def schema_path(self) -> Path:
         """The file this registry was built from."""
         return self._schema_path
+
+    def source_closure(self) -> OntologySourceClosure:
+        """Return the immutable exact source closure used to build this registry."""
+        return self._source_closure
+
+    def _build_source_closure(self) -> OntologySourceClosure:
+        entry = OntologySource(
+            source_role="entry",
+            resolved_locator=str(self._entry_path),
+            source_bytes=self._loaded_sources[self._entry_path],
+        )
+        imported = tuple(
+            OntologySource(
+                source_role="import",
+                resolved_locator=str(path),
+                source_bytes=source_bytes,
+            )
+            for path, source_bytes in sorted(
+                self._loaded_sources.items(), key=lambda item: str(item[0])
+            )
+            if path != self._entry_path
+        )
+        definitions = tuple(
+            OntologyDefinitionSource(
+                kind=kind,
+                name=name,
+                source_locator=str(source),
+            )
+            for (kind, name), source in sorted(
+                self._definition_sources.items(),
+                key=lambda item: (item[0][0], item[0][1], str(item[1])),
+            )
+        )
+        imports = tuple(
+            sorted(
+                self._import_resolutions,
+                key=lambda item: (
+                    item.parent_locator,
+                    item.ordinal,
+                    item.literal,
+                    item.target_role,
+                    item.resolved_locator,
+                ),
+            )
+        )
+        return OntologySourceClosure(
+            sources=(entry, *imported),
+            imports=imports,
+            definitions=definitions,
+        )
+
+    @property
+    def schema_name(self) -> str | None:
+        """The entry schema's declared ``name:``, or None if absent."""
+        return self._schema_name
 
     @property
     def schema_version(self) -> str | None:

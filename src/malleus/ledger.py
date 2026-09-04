@@ -304,11 +304,7 @@ class JsonlLedger:
             )
             if prior_time is not None and transaction_time < prior_time:
                 raise LedgerError(f"{context}: transaction_time decreased")
-            if event["ontology_hash"] not in self.accepted_ontology_hashes:
-                raise LedgerError(
-                    f"{context}: ontology_hash does not match this ledger under any "
-                    f"payload grammar it accepts"
-                )
+            self._verify_ontology_hash(event["ontology_hash"], context)
             seen.add(event["ontology_hash"])
             require_digest(event["ontology_hash"], f"{context} ontology_hash")
             if event["previous_event_hash"] != prior_hash:
@@ -324,8 +320,18 @@ class JsonlLedger:
             event_ids.add(event["event_id"])
             prior_hash = event["event_hash"]
             prior_time = transaction_time
+        self._finish_ontology_verification(seen)
+
+    def _verify_ontology_hash(self, value: Any, context: str) -> None:
+        if value not in self.accepted_ontology_hashes:
+            raise LedgerError(
+                f"{context}: ontology_hash does not match this ledger under any "
+                f"payload grammar it accepts"
+            )
+
+    def _finish_ontology_verification(self, seen: set[str]) -> None:
         self.verified_ontology_hashes = tuple(
-            h for h in self.accepted_ontology_hashes if h in seen
+            value for value in self.accepted_ontology_hashes if value in seen
         )
 
 

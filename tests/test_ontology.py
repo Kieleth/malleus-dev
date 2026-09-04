@@ -7,18 +7,24 @@ for distributed ontology convergence.
 """
 
 import json
+import hashlib
 import re
 import subprocess
 import sys
 import textwrap
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 
 import pytest
 import yaml
 
 from malleus.ontology import (
+    OntologyDefinitionSource,
     OntologyError,
+    OntologyImportResolution,
     OntologyRegistry,
+    OntologySource,
+    OntologySourceClosure,
     SlotConstraint,
     bundled_ontology_path,
 )
@@ -1568,7 +1574,9 @@ class TestTheGrammarVersionIsNotAStructuralFact:
         """The strict check exists to catch what the producer-side one misses.
         Excluding the grammar marker must not blunt it."""
         from malleus.ontology import OntologyRegistry
-        import tempfile, pathlib, textwrap
+        import pathlib
+        import tempfile
+        import textwrap
         base = textwrap.dedent("""
             id: https://example.org/s
             name: s
@@ -1753,6 +1761,192 @@ class TestPromotionIsADuplicateThatIsNotAnError:
         registry = OntologyRegistry(domain)
         assert "probe_slot" in registry.effective_slots("Work") or True
         assert registry.content_hash()
+
+
+class TestOntologySourceClosure:
+    @staticmethod
+    def _schema(name: str, *, imports: str, slot: str) -> str:
+        return textwrap.dedent(f"""
+            id: https://example.org/{name}
+            name: {name}
+            version: 0.1.0
+            default_range: string
+            imports: [{imports}]
+            prefixes: {{linkml: 'https://w3id.org/linkml/'}}
+            classes:
+              {name.title()}:
+                slots: [{slot}]
+            slots:
+              {slot}:
+                range: string
+        """)
+
+    def test_public_closure_retains_exact_sources_edges_and_owners(self, tmp_path):
+        shared = tmp_path / "shared.yaml"
+        first_dir, second_dir = tmp_path / "first", tmp_path / "second"
+        first_dir.mkdir()
+        second_dir.mkdir()
+        first = first_dir / "base.yaml"
+        second = second_dir / "base.yaml"
+        entry = tmp_path / "entry.yaml"
+
+        shared.write_text(self._schema("shared", imports="linkml:types", slot="shared_slot"))
+        first.write_text(self._schema("first", imports="../shared.yaml", slot="first_slot"))
+        second.write_text(self._schema("second", imports="../shared.yaml", slot="second_slot"))
+        entry_bytes = self._schema(
+            "entry",
+            imports="linkml:types, first/base.yaml, second/base.yaml, first/base.yaml",
+            slot="entry_slot",
+        ).encode()
+        entry.write_bytes(entry_bytes)
+
+        registry = OntologyRegistry(entry)
+        closure = registry.source_closure()
+
+        assert isinstance(closure, OntologySourceClosure)
+        assert all(isinstance(source, OntologySource) for source in closure.sources)
+        assert all(
+            isinstance(edge, OntologyImportResolution) for edge in closure.imports
+        )
+        assert all(
+            isinstance(owner, OntologyDefinitionSource)
+            for owner in closure.definitions
+        )
+        assert closure.sources[0].source_role == "entry"
+        assert closure.sources[0].resolved_locator == str(entry.resolve())
+        assert closure.sources[0].source_bytes == entry_bytes
+        assert closure.sources[0].byte_length == len(entry_bytes)
+        assert closure.sources[0].sha256 == hashlib.sha256(entry_bytes).hexdigest()
+        assert [source.resolved_locator for source in closure.sources[1:]] == sorted(
+            [str(first.resolve()), str(second.resolve()), str(shared.resolve())]
+        )
+        assert len(closure.sources) == 4, "multiparent and duplicate imports load once"
+
+        entry_edges = [
+            edge for edge in closure.imports
+            if edge.parent_locator == str(entry.resolve())
+        ]
+        assert [(edge.ordinal, edge.literal) for edge in entry_edges] == [
+            (0, "linkml:types"),
+            (1, "first/base.yaml"),
+            (2, "second/base.yaml"),
+            (3, "first/base.yaml"),
+        ]
+        assert entry_edges[0].target_role == "builtin"
+        assert entry_edges[0].resolved_locator == "linkml:types"
+        assert entry_edges[1].target_role == "ontology"
+        assert sum(edge.resolved_locator == str(shared.resolve()) for edge in closure.imports) == 2
+
+        owners = {(item.kind, item.name): item.source_locator for item in closure.definitions}
+        assert owners[("class", "Entry")] == str(entry.resolve())
+        assert owners[("slot", "shared_slot")] == str(shared.resolve())
+        assert tuple(
+            (item.kind, item.name, item.source_locator) for item in closure.definitions
+        ) == tuple(sorted(
+            (item.kind, item.name, item.source_locator) for item in closure.definitions
+        ))
+
+    def test_closure_types_are_exported_from_the_package_root(self):
+        import malleus
+
+        assert malleus.OntologySource is OntologySource
+        assert malleus.OntologyImportResolution is OntologyImportResolution
+        assert malleus.OntologyDefinitionSource is OntologyDefinitionSource
+        assert malleus.OntologySourceClosure is OntologySourceClosure
+
+    def test_closure_is_deeply_immutable_and_survives_source_mutation(self, tmp_path):
+        path = tmp_path / "schema.yaml"
+        original = self._schema("schema", imports="linkml:types", slot="value").encode()
+        path.write_bytes(original)
+        registry = OntologyRegistry(path)
+        closure = registry.source_closure()
+        identity = registry.content_hash()
+
+        path.write_text("not: the schema that was parsed\n")
+        assert registry.source_closure() is closure
+        assert closure.sources[0].source_bytes == original
+        assert closure.sources[0].sha256 == hashlib.sha256(original).hexdigest()
+        assert registry.content_hash() == identity
+        with pytest.raises(FrozenInstanceError):
+            closure.sources[0].resolved_locator = "elsewhere"  # type: ignore[misc]
+        with pytest.raises(TypeError):
+            closure.sources[0].source_bytes[0] = 0  # type: ignore[index]
+
+    def test_relative_entry_is_canonical_after_working_directory_changes(
+        self, tmp_path, monkeypatch
+    ):
+        schema_dir = tmp_path / "schemas"
+        schema_dir.mkdir()
+        path = schema_dir / "entry.yaml"
+        path.write_text(self._schema("entry", imports="linkml:types", slot="value"))
+        monkeypatch.chdir(tmp_path)
+        registry = OntologyRegistry(Path("schemas/entry.yaml"))
+        monkeypatch.chdir(tmp_path.parent)
+        assert registry.source_closure().sources[0].resolved_locator == str(path.resolve())
+
+    def test_symlink_imports_deduplicate_by_canonical_locator(self, tmp_path):
+        target = tmp_path / "target.yaml"
+        alias = tmp_path / "alias.yaml"
+        entry = tmp_path / "entry.yaml"
+        target.write_text(self._schema("target", imports="linkml:types", slot="target_slot"))
+        try:
+            alias.symlink_to(target)
+        except OSError as error:
+            pytest.skip(f"symlinks unavailable: {error}")
+        entry.write_text(self._schema(
+            "entry", imports="target.yaml, alias.yaml", slot="entry_slot"
+        ))
+        closure = OntologyRegistry(entry).source_closure()
+        target_sources = [
+            source for source in closure.sources
+            if source.resolved_locator == str(target.resolve())
+        ]
+        target_edges = [
+            edge for edge in closure.imports
+            if edge.resolved_locator == str(target.resolve())
+        ]
+        assert len(target_sources) == 1
+        assert len(target_edges) == 2
+
+    def test_adopted_slot_owner_is_the_retained_upstream_definition(self, tmp_path):
+        upstream = tmp_path / "upstream.yaml"
+        downstream = tmp_path / "downstream.yaml"
+        upstream.write_text(self._schema(
+            "upstream", imports="linkml:types", slot="shared_slot"
+        ))
+        downstream.write_text(textwrap.dedent("""
+            id: https://example.org/downstream
+            name: downstream
+            version: 0.1.0
+            default_range: string
+            imports: [upstream]
+            prefixes: {linkml: 'https://w3id.org/linkml/'}
+            classes:
+              Downstream:
+                slots: [shared_slot]
+            slots:
+              shared_slot:
+                range: string
+                annotations: {adopts: true}
+        """))
+        owners = {
+            (item.kind, item.name): item.source_locator
+            for item in OntologyRegistry(downstream).source_closure().definitions
+        }
+        assert owners[("slot", "shared_slot")] == str(upstream.resolve())
+
+    def test_source_metadata_does_not_change_structural_identity(self, tmp_path):
+        first = tmp_path / "first.yaml"
+        second = tmp_path / "second.yaml"
+        first.write_text(self._schema("first", imports="linkml:types", slot="value"))
+        second.write_text(
+            self._schema("first", imports="linkml:types", slot="value").replace(
+                "https://example.org/first", "https://different.example/first"
+            )
+        )
+        left, right = OntologyRegistry(first), OntologyRegistry(second)
+        assert left.content_hash() == right.content_hash()
+        assert left.source_closure() != right.source_closure()
 
 
 class TestARetirementIsAWindowNotAWall:

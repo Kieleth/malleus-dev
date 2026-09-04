@@ -5,6 +5,39 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added immutable `OntologyRegistry.source_closure()` construction evidence:
+  exact parsed source bytes, canonical resolved locators, every authored import
+  edge, including builtin and duplicate edges, and the retained owner of every
+  definition. The registry's structural content hash remains independent of
+  filesystem location.
+- Added the public `MigrationVerification`, `MigrationVerifier`, and
+  `MigrationAwareJsonlLedger` APIs in `malleus.migration`. Migration-aware reads
+  accept current-byte payload grammars without receipts and exact older
+  identities only across gapless `TOTAL` paths. They refuse `PARTIAL`,
+  `HARD_BREAK`, unknown, and grammar-versus-migration collisions and report the
+  exact crossed receipts. The base `JsonlLedger` remains grammar-only.
+- Added a narrow `windows-latest` Recon CI job through the expandable
+  `scripts/ci.py recon` matrix profile. This declaration does not claim full
+  Windows suite coverage or a completed remote Actions run.
+
+### Changed
+
+- Changed Recon JSON-LD derivation to use the registry's actual source and
+  definition-owner closure and to recheck every byte-bearing source before
+  commit. Strict manifest v3 binds sources, imports, definition owners, the
+  term map, and separated grammar and migration verification evidence.
+  Canonical absolute source locators intentionally make exact Recon build
+  identity location-sensitive while structural ontology identity remains
+  location-independent.
+- Changed Recon to use the migration-aware ledger API. Its
+  `historical_ontology_hashes` surface now contains only alternate payload
+  grammar identities for the current ontology bytes. Governed Recon promotion
+  and generator identity changes remain unimplemented.
+
 ## [0.13.3] - 2026-08-20
 
 ### Fixed

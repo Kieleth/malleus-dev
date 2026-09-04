@@ -35,7 +35,13 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from malleus.ledger import DIGEST_PATTERN, content_digest
+from malleus.ledger import (
+    DIGEST_PATTERN,
+    JsonlLedger,
+    LedgerError,
+    content_digest,
+)
+from malleus.ontology import OntologyRegistry
 
 # The grades of reading rule. A change is legitimate when it carries one and
 # declares which. What malleus refuses is a break that is not declared: you may
@@ -241,8 +247,22 @@ class MigrationChain:
         that no longer exist, which is why they are recorded rather than
         recomputed.
         """
-        if self.receipts and not registry.verifies(f"sha256:{registry.content_hash()}") :
-            raise MigrationError("registry cannot verify its own identity")
+        if self.receipts:
+            registry_name = registry.schema_name
+            if registry_name is None:
+                raise MigrationError(
+                    "a live ontology must declare a name before migration receipts "
+                    "can be verified"
+                )
+            receipt_name = self.receipts[0].ontology
+            if receipt_name != registry_name:
+                raise MigrationError(
+                    f"the chain names ontology {receipt_name!r} and the live registry "
+                    f"entry names {registry_name!r}: the chain describes a different "
+                    "ontology"
+                )
+            if not registry.verifies(f"sha256:{registry.content_hash()}"):
+                raise MigrationError("registry cannot verify its own identity")
         head = self.head
         if head is not None and not registry.verifies(head):
             raise MigrationError(
@@ -274,14 +294,277 @@ class MigrationChain:
         return target
 
 
-def migration_chain(registry: Any) -> MigrationChain:
+def _registry_digest(subject: str, value: Any) -> str:
+    qualified = (
+        value
+        if isinstance(value, str) and value.startswith("sha256:")
+        else f"sha256:{value}"
+    )
+    checked = _digest(subject, qualified)
+    if checked is None:
+        raise MigrationError(f"{subject} is missing")
+    return checked
+
+
+def _unique(values: Iterable[str]) -> tuple[str, ...]:
+    return tuple(dict.fromkeys(values))
+
+
+@dataclass(frozen=True, slots=True)
+class MigrationVerification:
+    """Immutable evidence for the ontology identities accepted during one read."""
+
+    current_ontology_hash: str
+    verified_ontology_hashes: tuple[str, ...]
+    grammar_ontology_hashes: tuple[str, ...]
+    migrated_ontology_hashes: tuple[str, ...]
+    receipts: tuple[MigrationReceipt, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "verified_ontology_hashes",
+            tuple(self.verified_ontology_hashes),
+        )
+        object.__setattr__(
+            self,
+            "grammar_ontology_hashes",
+            tuple(self.grammar_ontology_hashes),
+        )
+        object.__setattr__(
+            self,
+            "migrated_ontology_hashes",
+            tuple(self.migrated_ontology_hashes),
+        )
+        object.__setattr__(self, "receipts", tuple(self.receipts))
+        _digest("current ontology hash", self.current_ontology_hash)
+        for name in (
+            "verified_ontology_hashes",
+            "grammar_ontology_hashes",
+            "migrated_ontology_hashes",
+        ):
+            values = getattr(self, name)
+            for value in values:
+                _digest(name.replace("_", " "), value)
+            if len(values) != len(set(values)):
+                raise MigrationError(f"{name.replace('_', ' ')} contains duplicates")
+        if set(self.grammar_ontology_hashes) & set(self.migrated_ontology_hashes):
+            raise MigrationError(
+                "an ontology identity cannot be both a payload grammar and a migration"
+            )
+        expected = (*self.grammar_ontology_hashes, *self.migrated_ontology_hashes)
+        if self.verified_ontology_hashes != expected:
+            raise MigrationError(
+                "verified ontology hashes must equal grammar hashes followed by "
+                "migrated hashes"
+            )
+        if not all(isinstance(receipt, MigrationReceipt) for receipt in self.receipts):
+            raise MigrationError("migration verification receipts must be MigrationReceipt values")
+
+    @property
+    def receipt_digests(self) -> tuple[str, ...]:
+        return tuple(receipt.digest for receipt in self.receipts)
+
+
+class MigrationVerifier:
+    """Verify recorded identities against one live registry and migration chain."""
+
+    def __init__(self, registry: OntologyRegistry, chain: MigrationChain) -> None:
+        if not isinstance(registry, OntologyRegistry):
+            raise MigrationError("migration verifier requires an OntologyRegistry")
+        if not isinstance(chain, MigrationChain):
+            raise MigrationError("migration verifier requires a MigrationChain")
+        current = _registry_digest("current ontology hash", registry.content_hash())
+        try:
+            grammar_items = sorted(registry.content_hashes().items(), reverse=True)
+        except (AttributeError, TypeError, ValueError) as error:
+            raise MigrationError(
+                "registry must expose deterministic payload grammar identities"
+            ) from error
+        computed_grammar_hashes = _unique(
+            _registry_digest(f"payload grammar {grammar}", value)
+            for grammar, value in grammar_items
+        )
+        if not computed_grammar_hashes or current not in computed_grammar_hashes:
+            raise MigrationError(
+                "the current ontology identity is absent from the registry's payload grammars"
+            )
+        grammar_hashes = (
+            current,
+            *(value for value in computed_grammar_hashes if value != current),
+        )
+        if not registry.verifies(*grammar_hashes):
+            raise MigrationError("registry cannot verify its own payload grammar identities")
+        chain.verified_against(registry)
+        if chain.head is not None and chain.head not in grammar_hashes:
+            raise MigrationError(
+                f"the chain ends at {chain.head[:19]}... and no payload grammar of "
+                "the live registry verifies that identity"
+            )
+
+        receipt_identities = {
+            identity
+            for receipt in chain.receipts
+            for identity in (receipt.from_hash, receipt.to_hash)
+        }
+        if chain.head is not None:
+            receipt_identities.discard(chain.head)
+        collisions = sorted(receipt_identities & set(grammar_hashes))
+        if collisions:
+            raise MigrationError(
+                "ontology identity is both a migration identity and a payload grammar "
+                f"for the live registry: {', '.join(collisions)}"
+            )
+
+        self._current_ontology_hash = current
+        self._grammar_ontology_hashes = grammar_hashes
+        self._receipts = tuple(chain.receipts)
+        self._chain_head = chain.head
+        self._migration_positions = {
+            receipt.from_hash: index for index, receipt in enumerate(self._receipts)
+        }
+
+    @property
+    def current_ontology_hash(self) -> str:
+        return self._current_ontology_hash
+
+    @property
+    def grammar_ontology_hashes(self) -> tuple[str, ...]:
+        return self._grammar_ontology_hashes
+
+    @property
+    def chain(self) -> MigrationChain:
+        return MigrationChain(self._receipts)
+
+    def verify(self, recorded_hashes: Iterable[str]) -> MigrationVerification:
+        """Verify identities and report the exact TOTAL receipts crossed."""
+        if isinstance(recorded_hashes, (str, bytes)):
+            raise MigrationError(
+                "recorded ontology hashes must be an iterable of digests, not one string"
+            )
+        try:
+            recorded = _unique(recorded_hashes)
+        except TypeError as error:
+            raise MigrationError("recorded ontology hashes must be iterable") from error
+        for value in recorded:
+            _digest("recorded ontology hash", value)
+
+        recorded_set = set(recorded)
+        grammar = tuple(
+            value for value in self._grammar_ontology_hashes if value in recorded_set
+        )
+        earliest_receipt: int | None = None
+        for value in recorded:
+            if value in self._grammar_ontology_hashes:
+                continue
+            position = self._migration_positions.get(value)
+            if position is None:
+                chain = MigrationChain(self._receipts)
+                anchor = self._chain_head or self._current_ontology_hash
+                raise MigrationError(
+                    f"recorded ontology hash {value} cannot be replayed: "
+                    f"{chain.explain(value, anchor)}"
+                )
+            for receipt in self._receipts[position:]:
+                if receipt.grade == PARTIAL:
+                    raise MigrationError(
+                        f"recorded ontology hash {value} crosses PARTIAL receipt "
+                        f"{receipt.digest}: {receipt.reason}. Generic replay has no "
+                        "record reader for a partial migration"
+                    )
+                if receipt.grade == HARD_BREAK:
+                    raise MigrationError(
+                        f"recorded ontology hash {value} crosses HARD_BREAK receipt "
+                        f"{receipt.digest}: {receipt.reason}"
+                    )
+            earliest_receipt = (
+                position
+                if earliest_receipt is None
+                else min(earliest_receipt, position)
+            )
+
+        migrated = tuple(
+            receipt.from_hash
+            for receipt in self._receipts
+            if receipt.from_hash in recorded_set
+        )
+        receipts = (
+            ()
+            if earliest_receipt is None
+            else self._receipts[earliest_receipt:]
+        )
+        return MigrationVerification(
+            current_ontology_hash=self._current_ontology_hash,
+            verified_ontology_hashes=(*grammar, *migrated),
+            grammar_ontology_hashes=grammar,
+            migrated_ontology_hashes=migrated,
+            receipts=receipts,
+        )
+
+
+class MigrationAwareJsonlLedger(JsonlLedger):
+    """A JSONL ledger whose historical identities require verified TOTAL receipts."""
+
+    def __init__(self, path: str | Path, verifier: MigrationVerifier) -> None:
+        if not isinstance(verifier, MigrationVerifier):
+            raise MigrationError("migration-aware ledger requires a MigrationVerifier")
+        self._verifier = verifier
+        historical_grammars = tuple(
+            value
+            for value in verifier.grammar_ontology_hashes
+            if value != verifier.current_ontology_hash
+        )
+        super().__init__(path, verifier.current_ontology_hash, historical_grammars)
+        self.verification = verifier.verify(())
+
+    @property
+    def verifier(self) -> MigrationVerifier:
+        return self._verifier
+
+    def _verify_ontology_hash(self, value: Any, context: str) -> None:
+        try:
+            self.verifier.verify((value,))
+        except MigrationError as error:
+            raise LedgerError(f"{context}: ontology_hash cannot be replayed: {error}") from error
+
+    def _finish_ontology_verification(self, seen: set[str]) -> None:
+        try:
+            self.verification = self.verifier.verify(seen)
+        except MigrationError as error:
+            raise LedgerError(f"Ledger ontology verification failed: {error}") from error
+        self.verified_ontology_hashes = self.verification.verified_ontology_hashes
+
+    def read_verified(
+        self,
+        *,
+        expected_head_hash: str | None = None,
+        expected_event_count: int | None = None,
+        additional_ontology_hashes: Iterable[str] = (),
+    ) -> tuple[list[dict[str, Any]], MigrationVerification]:
+        """Read the ledger and bind extra recorded identities into the same evidence."""
+        events = self.read(
+            expected_head_hash=expected_head_hash,
+            expected_event_count=expected_event_count,
+        )
+        event_hashes = tuple(event["ontology_hash"] for event in events)
+        try:
+            self.verification = self.verifier.verify(
+                (*event_hashes, *tuple(additional_ontology_hashes))
+            )
+        except (MigrationError, TypeError) as error:
+            raise LedgerError(f"Ledger ontology verification failed: {error}") from error
+        self.verified_ontology_hashes = self.verification.verified_ontology_hashes
+        return events, self.verification
+
+
+def migration_chain(registry: OntologyRegistry) -> MigrationChain:
     """The recorded changes for one bundled ontology, or an empty chain.
 
     A chain lives beside the schema it describes, named for it. Absent means
     no change was ever recorded, which is different from no change ever
     happening and is exactly why an unrecorded change cannot be stepped over.
     """
-    schema_path = Path(registry.schema_path)
+    schema_path = Path(registry.source_closure().sources[0].resolved_locator)
     chain_path = schema_path.with_name(f"{schema_path.stem}.migrations.json")
     if not chain_path.is_file():
         return MigrationChain(())

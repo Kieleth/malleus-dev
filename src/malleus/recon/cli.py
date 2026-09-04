@@ -83,14 +83,14 @@ def _run(args: argparse.Namespace) -> int:
             print(f"  {error}")
         return 0 if payload["decision"] == "RECORDED" else 1
     if args.command == "validate":
-        errors = project.validate()
+        events, state = project.snapshot()
+        errors = project.validate(state)
         if errors:
             for error in errors:
                 print(f"invalid: {error}")
             return 1
-        events = project.events()
         print(
-            f"valid: {len(project.current_records())} current records, "
+            f"valid: {len(state)} current records, "
             f"{len(events)} ledger events"
         )
         return 0

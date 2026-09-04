@@ -146,13 +146,17 @@ narrowing a range, changing admission semantics, or changing an identifier can
 require reinterpretation or refusal.
 
 Current source beyond the released `0.13.3` package boundary contains a generic
-`MigrationReceipt`. It can record an asserted old and new ontology-hash
+`MigrationReceipt`. It records an asserted old and new ontology-hash
 transition, declared grade, reason, timestamp, chain link, and optional delta
-digest. It does not carry a transform, reader, record mapping, or query rewrite.
-`TOTAL` and `PARTIAL` are declared grades but currently make
-`accepted_hashes()` accept prior hashes identically. Current source therefore
-establishes neither total interpretation nor record-level indeterminacy.
-`HARD_BREAK` alone stops backward hash acceptance.
+digest. It does not carry a transform, record mapping, query rewrite, or
+verified delta. `MigrationVerifier` and `MigrationAwareJsonlLedger` now define
+one narrow reader contract: current-byte payload grammars need no receipt; an
+exact older identity is replayable only across a gapless path of `TOTAL`
+receipts. `PARTIAL`, `HARD_BREAK`, unknown, and grammar-versus-migration
+collision cases refuse. Every receipt must name the live registry's entry
+schema, and sidecar discovery uses that entry's retained absolute locator.
+`MigrationVerification` reports the exact grammar identities, migrated
+identities, and receipts used by the read.
 
 An ontology-identity change does not universally create a ledger epoch. A
 standalone structural `KnowledgeGraph` has no ledger epoch. In accepted design,
@@ -160,9 +164,10 @@ a new composition and ledger epoch are required when the change affects an
 accepted-temporal semantic role. A source-only change preserving the effective-
 contract identity does not require one.
 
-Receipts do not rewrite retained records. Recon is their only current source
-consumer; core `ProtocolLedger` does not consume them. OD-004 selected a hard
-break for the new persisted wire with no receipt or replay bridge. A canonical
+Receipts do not rewrite retained records. Recon is their current
+migration-aware ledger consumer; the base `JsonlLedger` remains grammar-only
+and core `ProtocolLedger` does not consume them. OD-004 selected a hard break
+for the new persisted wire with no receipt or replay bridge. A canonical
 cross-contract `MigrationPlan`, including interpretation and impact, remains
 Candidate work and may result in refusal.
 
@@ -172,6 +177,14 @@ Current core constructs `OntologyRegistry` directly from LinkML-shaped YAML and
 resolves declared imports while loading that registry. It does not execute
 official LinkML semantics. `KnowledgeGraph` accepts exactly one registry. There
 is no repository generator that emits a runtime registry source file.
+
+`OntologyRegistry.source_closure()` exposes the immutable sources actually used
+for that construction: exact parsed bytes, canonical absolute locators, all
+authored import resolutions including builtin and duplicate edges, and retained
+definition ownership. The structural `content_hash()` remains independent of
+filesystem location. Consumers that bind the absolute locators as provenance,
+including Recon manifest v3, intentionally acquire a location-sensitive exact
+artifact identity.
 
 Generated Python models, C++ types, schemas, or editor metadata may be useful
 projections of a retained contract source, but they are optional projections,
