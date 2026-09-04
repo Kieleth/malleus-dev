@@ -24,6 +24,8 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Admission-branch RED tree: `3eee37ac79c73100ae4f6ad2e182d96768727f8d`
 - Final GREEN: `387716a31e8483d56fd5f1ce95cf97555c67ba82`
 - Final GREEN tree: `9f3b870e01b15cb0e6a96f6f9b3f24996ebb6b21`
+- Executable-surface guard: `0dd77db2790f6dfaad5ae760c9acb8577033d72a`
+- Executable-surface-guard tree: `c7bb8270e4f9b2576002c0aa4a1f5ba50c03410e`
 
 ## What changed
 
@@ -106,7 +108,7 @@ The public deliverable is the installable skill procedure itself.
   before the final GREEN.
 - The two direct playbook tests pass after the final GREEN.
 - The complete skill-installation and shipped-guidance slice passes 19 tests.
-- The complete Inquisitor test module passes 102 tests.
+- The complete Inquisitor test module passes 103 tests.
 - The content guard binds the model-neutral rules, real public command and
   function names, absence of model, fixture, answer, query, evaluation, brief,
   or paper specifics, and the ten-step order. It also checks that profile and
@@ -114,6 +116,10 @@ The public deliverable is the installable skill procedure itself.
   precede revision.
 - The installer test copies all shipped skills to a clean Codex project and
   proves the installed acolyte retains the playbook bytes.
+- A direct executable guard resolves all named Python objects from
+  `malleus.compiler.__all__`, verifies `KnowledgeChangeHistory.admit` and
+  `KnowledgeChangeHistory.reopen`, exercises the Codex skill installer and both
+  pack rites, and parses the documented compiler contract route.
 
 ## Non-claims
 
