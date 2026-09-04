@@ -143,6 +143,10 @@ IMPLEMENTED_MUTATIONS = {
             ("OCR-D016",),
             {"page:2": "UNREADABLE"},
         ),
+        "review-revision-cycle": (
+            ("OCR-D016", "OCR-D017"),
+            {"page:2": "UNREADABLE"},
+        ),
     },
     "region-control": {
         "hypothesis-attempt-cross-region": (("OCR-D003",), {}),
@@ -572,7 +576,7 @@ def test_deterministic_regeneration_matches_every_retained_byte() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert completed.stdout == "verified 67 deterministic corpus artifacts\n"
+    assert completed.stdout == "verified 69 deterministic corpus artifacts\n"
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
@@ -962,6 +966,31 @@ def test_multipage_review_revision_keeps_history_and_only_its_head_speaks() -> N
         ("OCR-D016", "fixture:multipage-control:region:page-2-blank")
     ]
     assert _expected_payload(unlinked)["units"]["page:2"] == {
+        "disposition": "ACCOUNTED",
+        "outcome": "UNREADABLE",
+    }
+
+
+def test_multipage_review_cycle_names_both_trapped_reviews() -> None:
+    case = next(
+        item for item in _manifest()["cases"] if item["id"] == "multipage-control"
+    )
+    mutation = next(
+        item for item in case["mutations"] if item["id"] == "review-revision-cycle"
+    )
+    result = verify_bundle(
+        Bundle.from_bytes(_artifact_path(mutation["bundle"]).read_bytes())
+    )
+    initial_id = "fixture:multipage-control:correction:page-2-blank"
+    revision_id = "fixture:multipage-control:correction:page-2-blank-revision"
+    assert not result.conforms
+    assert sorted(
+        item.subject for item in result.diagnostics if item.code == "OCR-D017"
+    ) == [initial_id, revision_id]
+    assert [
+        item.subject for item in result.diagnostics if item.code == "OCR-D016"
+    ] == ["fixture:multipage-control:region:page-2-blank"]
+    assert _expected_payload(result)["units"]["page:2"] == {
         "disposition": "ACCOUNTED",
         "outcome": "UNREADABLE",
     }

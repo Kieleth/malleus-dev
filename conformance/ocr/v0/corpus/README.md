@@ -20,7 +20,8 @@ The five cases separate different questions:
   known text and an intentionally ambiguous token. The second page is blank.
   Its bundle retains the machine-shaped reading and the human correction. The
   blank-page review revises `UNREADABLE` to `VERIFIED_BLANK` through an explicit
-  predecessor edge, retaining both review records.
+  predecessor edge, retaining both review records. Its missing-edge and cycle
+  mutations exercise `OCR-D016` and `OCR-D017` separately and together.
 * `incomplete-sequence` is a raster-only PDF containing visible logical pages
   1 of 3 and 3 of 3. Logical page 2 is absent from the source and the evidence
   census remains incomplete.

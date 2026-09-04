@@ -117,6 +117,14 @@
       "byte_length": 951,
       "sha256": "sha256:376c96ec2b17c0b6466958416684555245370bc5d855118d93b9adcb54aceeb0"
     },
+    "cases/multipage-control/mutations/review-revision-cycle.bundle.json": {
+      "byte_length": 7740,
+      "sha256": "sha256:e7547051f78095fb853a403faa55d9590a5d561b68ae3a4cdfee5e1295eb6b55"
+    },
+    "cases/multipage-control/mutations/review-revision-cycle.verification.json": {
+      "byte_length": 1282,
+      "sha256": "sha256:3e4fada2b7429600022ffb4cc4d89437c4b6e140016306a721619c225e9bea8b"
+    },
     "cases/multipage-control/mutations/review-revision-without-predecessor.bundle.json": {
       "byte_length": 7637,
       "sha256": "sha256:3695e3ae759ff3d7717cc17ab445593c7b8efedecfa45a033432ad10e9f8fbd0"
@@ -126,8 +134,8 @@
       "sha256": "sha256:a29a5e3aff0caef39b03c1ef08155bf1773e39fffa68a1afb5d6430abe4731b6"
     },
     "cases/multipage-control/oracle.json": {
-      "byte_length": 4172,
-      "sha256": "sha256:2a6590c049e2692c555b1cfc0de19ce534bd8051839c322df084eefa8e6adae5"
+      "byte_length": 4658,
+      "sha256": "sha256:0c2ee0de3e0d91a1b5b8e6866c009700a5084bc1eb881f374d3b80a191ddc4cd"
     },
     "cases/multipage-control/rasters/page-1.png": {
       "byte_length": 44557,
@@ -262,8 +270,8 @@
       "sha256": "sha256:9c35546eeb1ae562e07986330d359c8f38ebfc2a3697b656d967a6e804f49936"
     },
     "corpus.json": {
-      "byte_length": 9943,
-      "sha256": "sha256:c2f96abcf23c967c355baa8d665a6bb110e3245abc71b1fa97b90a231b19f656"
+      "byte_length": 10481,
+      "sha256": "sha256:d321ae747b3b8f8796cdd8d25335a199b94f50065030c7712c35f525b3242ba9"
     }
   },
   "scope": "every generated file except checksums.json"

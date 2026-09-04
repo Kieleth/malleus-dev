@@ -1127,6 +1127,26 @@ def _multipage_control(artifacts: Artifacts) -> dict[str, Any]:
         ),),
         extra={"expected_unit_outcome": {"page:2": "UNREADABLE"}},
     ))
+    cycle = copy.deepcopy(document)
+    initial_id = _id(case.id, "correction", "page-2-blank")
+    revision_id = _id(case.id, "correction", "page-2-blank-revision")
+    cycle["bundle"]["corrections"][1]["predecessor_id"] = revision_id
+    cycle_expected = _refusal(_expected({
+        "page:1": ("READ", "ACCOUNTED"),
+        "page:2": ("UNREADABLE", "ACCOUNTED"),
+    }), "OCR-D016", "OCR-D017")
+    mutations.append(case.write_mutation(
+        mutation_id="review-revision-cycle",
+        purpose="A review cycle names every trapped record and leaves both verdicts live.",
+        document=cycle,
+        expected=cycle_expected,
+        expected_diagnostics=(
+            ("OCR-D016", _id(case.id, "region", "page-2-blank")),
+            ("OCR-D017", initial_id),
+            ("OCR-D017", revision_id),
+        ),
+        extra={"expected_unit_outcome": {"page:2": "UNREADABLE"}},
+    ))
     return case.finish(
         fixture_kind="two_page_raster_only_pdf",
         expected=expected,
