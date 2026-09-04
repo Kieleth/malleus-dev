@@ -599,6 +599,32 @@ def test_population_plan_refuses_pinned_rule(
     )
 
 
+def test_population_plan_reports_every_underived_field_at_once(
+    contract_pair,
+) -> None:
+    population = _population()
+    _, partial = contract_pair
+    plan = _plan(partial.identity)
+    _remove_derivation(plan, "left-1", ["properties", "label"])
+    _remove_derivation(plan, "right-1", ["properties", "label"])
+    _remove_derivation(plan, "link:left-1:right-1", ["target_id"])
+
+    with pytest.raises(population.PopulationPlanRefusal) as refusal:
+        _compile(plan, contract_pair)
+
+    assert refusal.value.reason is (
+        population.PopulationPlanRefusalReason.UNDERIVED_FIELD
+    )
+    assert refusal.value.detail == (
+        "record fields lack derivations: "
+        "left-1:['properties', 'label'], "
+        "link:left-1:right-1:['target_id'], "
+        "right-1:['properties', 'label']; "
+        "every properties key and both relation endpoints need a derivation, "
+        "type and id do not"
+    )
+
+
 def test_population_plan_refuses_contract_and_view_mismatch(contract_pair) -> None:
     population = _population()
     compiled, _ = contract_pair
