@@ -36,14 +36,10 @@ __all__ = (
     "PopulationPlanRefusalReason",
     "PopulationPlanStatus",
     "PopulationPreparation",
-    "PopulationRecordTrace",
-    "PopulationTraceRefusal",
-    "PopulationTraceRefusalReason",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
     "compile_population_plan",
     "prepare_population_change",
-    "trace_population_record",
 )
 
 _GRAMMAR = "malleus.population-plan/private-v0"
