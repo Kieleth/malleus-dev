@@ -1359,7 +1359,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
     for identity in signature_ids:
         assert f'id="{identity}"' in rendered
     assert "PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED" in rendered
-    assert "Captured assertions remain evidence rather than graph records" in rendered
+    assert "Captured assertions remain evidence" in rendered
     assert "malleus.compiler_cli" not in rendered
     assert 'class="py class"' in rendered
     assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered

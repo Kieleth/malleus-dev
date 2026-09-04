@@ -1,0 +1,106 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-PKG02",
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:125bbd1badac4e21e23075dae83a66e91ee9b2f10151c120cd51482c853fd9d0",
+        "before_digest": "sha256:290bb5fc927d6aefd3b565b8b170a052cadc67e1d548fa30bbf787e6feb745e9",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:261dab8fd72176bc0fe677be02c6922ade959a851e52a14f909fbc3cbe5c5528",
+        "before_digest": "sha256:d9c446eefcedfa2e43684ff13a12ec99be45956ac1a5610dd4def1869c126af1",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:02c34cebacc0e2a4b9e72a835be554dcbb60e719565ce3477c9d9526437dfe5c",
+        "before_digest": "sha256:1b9e07b42be2d4b918e6fe5e7661f6ffdded9f807db6872ce0bccbff82b966c4",
+        "change": "MODIFIED",
+        "path": "docs/reference/index.md"
+      },
+      {
+        "after_digest": "sha256:baf429b823b0075f3c1667c90453f9fbca4b29899753723d9ee971e32c10e6b9",
+        "change": "CREATED",
+        "path": "handover/2026-09-03-core-population-p4-report.md"
+      },
+      {
+        "after_digest": "sha256:5fe7a596f90fa75228022940ecd071bbaf01dddae086cad1ca9594d306238bc3",
+        "before_digest": "sha256:2b9bce964c0c96d3721965b13353dad4fee9dcc1710028a277a8943c355c3507",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:35f6485f28d68e754525c1da22d7e5b3b689cf78463fc32b11bad93c668c251a",
+        "change": "CREATED",
+        "path": "src/malleus/_contract_pipeline/document.py"
+      },
+      {
+        "after_digest": "sha256:c01d58359ec7c38c8876c9c1c255f7b388729359df7f9915f538565272a34f5f",
+        "before_digest": "sha256:065f422138281d771f5d9c7de46b31533089893ad1ee1ac44492c8dda6c6c686",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:7fb1264b0243820f3773bb232f0c161cb0f90b2ab7bd25fd268731b96e9a84dd",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_document_assertion_adapter.py"
+      },
+      {
+        "after_digest": "sha256:6da1989627ae9f79d73ce2552195ee8b4a49b4e7777e7bb3cdf5aabd31b8ea49",
+        "before_digest": "sha256:5893f84e069585931d18a7c83028d4da1709420da49955fb88f234fe21e8ac4a",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:c7091adc5b107319d482b39c4bdcb3af545e362e150fd3a281bf438a975ba7d4",
+  "entry_id": "OVR-000371",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:7f9bbf9b16de54e32fd365a199e8cce1265b3615a297af9984b26694a346a2c5",
+  "recorded_at": "2026-09-04T02:00:49Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "7b986618e52ca9d52c228cc6a3720f28f4815add",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7dacc511329e5bb7d743b4247205174e2d7bc32d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "0500e90a4b3e3d18c2b96c0df14a573237dbd5a1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-PKG02",
+      "type": "WORKSTREAM"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 371,
+  "subject": {
+    "id": "document-assertion-population-adapter",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish the optional document-assertion adapter over the neutral population plan.",
+  "why": "Document sources need a deterministic route into the same population plan as structured rows without making assertions graph records or letting Core invent domain meaning. The adapter binds exact reading and capture bytes, checks verbatim assertions and field-level formalisation, retains gaps and modality as evidence, and publishes an independent coverage census. Admission, replay, graph mutation, ontology choice, and queryable epistemic qualification remain separate contracts."
+}
