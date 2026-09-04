@@ -10,7 +10,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from hashlib import sha256
+from importlib.resources import files
 import json
+from pathlib import Path
 from types import MappingProxyType
 
 from malleus._contract_binder import (
@@ -132,6 +134,250 @@ def _canonical(value: object) -> bytes:
 
 def _digest(source: bytes) -> str:
     return "sha256:" + sha256(source).hexdigest()
+
+
+def _profile_resource(name: str) -> tuple[bytes, dict[str, object]]:
+    try:
+        value = json.loads(files("malleus").joinpath("profiles", name).read_bytes())
+    except (OSError, TypeError, UnicodeError, ValueError) as error:
+        raise RuntimeError(f"installed Malleus profile is invalid: {name}") from error
+    if not isinstance(value, dict):
+        raise RuntimeError(f"installed Malleus profile is not an object: {name}")
+    return _canonical(value), value
+
+
+@dataclass(frozen=True, slots=True)
+class StructuralHistoryBundle:
+    """Core's exact mechanical-admission artifacts.
+
+    This bundle admits structural changes. It does not establish source truth,
+    domain adequacy, or epistemic correctness. Projects may instead compose
+    their own identified machine, policy, binding, and check executor.
+    """
+
+    canonical_bytes: bytes
+    identity: str
+    protocol_machine_program: ProtocolMachineProgram
+    policy_program: PolicyProgram
+    normative_profile: NormativeAdmissionProfile
+    history_binding: KnowledgeChangeHistoryBinding
+    check_contract_id: str
+    check_contract_identity: str
+    check_contract_bytes: bytes
+    success_outcome: str
+
+
+def _load_structural_history_bundle() -> StructuralHistoryBundle:
+    machine_source, _ = _profile_resource("structural-history-machine.json")
+    policy_source, _ = _profile_resource("structural-admission-policy.json")
+    binding_source, _ = _profile_resource("structural-history-binding.json")
+    check_source, check = _profile_resource("structural-admission-check.json")
+    expected_check_fields = {
+        "check_contract_id",
+        "checks",
+        "executor",
+        "grammar",
+        "non_claims",
+        "success_outcome",
+    }
+    if set(check) != expected_check_fields:
+        raise RuntimeError("installed structural-admission check fields are not closed")
+    check_id = check["check_contract_id"]
+    success_outcome = check["success_outcome"]
+    if (
+        check["grammar"] != "malleus.admission-check/private-v0"
+        or not isinstance(check_id, str)
+        or not check_id
+        or not isinstance(success_outcome, str)
+        or not success_outcome
+    ):
+        raise RuntimeError("installed structural-admission check is malformed")
+    machine = ProtocolMachineProgram.from_bytes(machine_source)
+    policy = PolicyProgram.from_bytes(policy_source)
+    binding = KnowledgeChangeHistoryBinding.from_bytes(binding_source)
+    check_identity = _digest(check_source)
+    if policy.required_checks != ((check_id, check_identity),):
+        raise RuntimeError("structural admission policy does not bind its exact check")
+    if success_outcome not in policy.outcome_verdicts:
+        raise RuntimeError("structural admission success outcome is not in policy")
+    normative = compose_normative_profile(
+        protocol_machine_program=machine,
+        policy_programs={"required-check-verdict": policy},
+        capability_refs=(),
+    )
+    source = _canonical(
+        {
+            "check_contract": check,
+            "check_contract_identity": check_identity,
+            "grammar": "malleus.structural-history-bundle/private-v0",
+            "history_binding": json.loads(binding.canonical_bytes),
+            "history_binding_identity": binding.identity,
+            "normative_profile": json.loads(normative.canonical_bytes),
+            "normative_profile_identity": normative.identity,
+        }
+    )
+    return StructuralHistoryBundle(
+        canonical_bytes=source,
+        identity=_digest(source),
+        protocol_machine_program=machine,
+        policy_program=policy,
+        normative_profile=normative,
+        history_binding=binding,
+        check_contract_id=check_id,
+        check_contract_identity=check_identity,
+        check_contract_bytes=check_source,
+        success_outcome=success_outcome,
+    )
+
+
+STRUCTURAL_HISTORY_BUNDLE = _load_structural_history_bundle()
+
+
+def _machine_event(event_type: str, **payload: object) -> bytes:
+    return _canonical({"event_type": event_type, "payload": payload})
+
+
+def create_structural_history(
+    path: str | Path,
+    *,
+    compilation: ValidatedContractCompilation,
+    transaction_time: str,
+    actor_id: str,
+) -> KnowledgeChangeHistory:
+    """Create and bootstrap a history under Core's structural policy."""
+
+    if not isinstance(compilation, ValidatedContractCompilation):
+        raise TypeError("compilation must be a ValidatedContractCompilation")
+    ledger_path = Path(path)
+    if ledger_path.exists() and ledger_path.stat().st_size:
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.MALFORMED_HISTORY,
+            "structural history path already contains ledger bytes",
+        )
+    partial = compose_partial_effective_contract(
+        validated_fact_set_sha256=compilation.artifact.validated_fact_set_sha256,
+        normative_profile=STRUCTURAL_HISTORY_BUNDLE.normative_profile,
+    )
+    history = KnowledgeChangeHistory(
+        ledger_path,
+        partial_contract=partial,
+        contract_view=compilation.view,
+        binding=STRUCTURAL_HISTORY_BUNDLE.history_binding,
+    )
+    artifacts = (
+        (
+            "malleus:bootstrap:validated-contract",
+            compilation.artifact.artifact_bytes,
+            "VALIDATED_CONTRACT",
+        ),
+        (
+            "malleus:bootstrap:partial-effective-contract",
+            partial.canonical_bytes,
+            "PARTIAL_EFFECTIVE_CONTRACT",
+        ),
+        (
+            "malleus:bootstrap:knowledge-history-binding",
+            STRUCTURAL_HISTORY_BUNDLE.history_binding.canonical_bytes,
+            "KNOWLEDGE_HISTORY_BINDING",
+        ),
+        (
+            "malleus:structural-admission-check/v1",
+            STRUCTURAL_HISTORY_BUNDLE.check_contract_bytes,
+            "RETAINED_EVIDENCE",
+        ),
+    )
+    history.append_anchors(
+        anchors=tuple(
+            KnowledgeAnchorInput(
+                machine_event=_machine_event(
+                    "ARTIFACT_REGISTERED",
+                    artifact_id=record_id,
+                    artifact_identity=_digest(content),
+                ),
+                retained_bytes=content,
+                media_type="application/json",
+                role=role,
+            )
+            for record_id, content, role in artifacts
+        ),
+        transaction_time=transaction_time,
+        actor_id=actor_id,
+    )
+    return history
+
+
+def admit_structural_change(
+    *,
+    history: KnowledgeChangeHistory,
+    preparation: PopulationPreparation,
+    transaction_time: str,
+    actor_id: str,
+) -> KnowledgeHistoryReplay:
+    """Atomically validate and admit one prepared structural change.
+
+    The successful check event is generated here and is persisted only if the
+    same candidate batch passes base, retained-closure, and graph application
+    validation. The caller cannot supply a check outcome.
+    """
+
+    if not isinstance(history, KnowledgeChangeHistory):
+        raise TypeError("history must be a KnowledgeChangeHistory")
+    if not isinstance(preparation, PopulationPreparation):
+        raise TypeError("preparation must be a PopulationPreparation")
+    change = preparation.change_set
+    if change is None:
+        raise PopulationPlanRefusal(
+            PopulationPlanRefusalReason.MALFORMED_PLAN,
+            "NO_DOMAIN_CHANGE has no change set to admit",
+        )
+    if (
+        history.partial_contract.normative_profile.identity
+        != STRUCTURAL_HISTORY_BUNDLE.normative_profile.identity
+        or history.binding.identity
+        != STRUCTURAL_HISTORY_BUNDLE.history_binding.identity
+    ):
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.IDENTITY_MISMATCH,
+            "history does not use the shipped structural admission bundle",
+        )
+    current = history.replay()
+    if current.receipt.identity != preparation.retention_replay.receipt.identity:
+        raise KnowledgeChangeRefusal(
+            KnowledgeChangeRefusalReason.STALE_BASE,
+            "population preparation is stale against the current history",
+        )
+    policy = STRUCTURAL_HISTORY_BUNDLE.policy_program
+    proposal_id = f"proposal:{change.change_set_id}:structural-admission"
+    events = (
+        _machine_event(
+            "CHANGE_PROPOSED",
+            expected_machine_state_identity=current.machine_state.identity,
+            knowledge_change_set_identity=change.identity,
+            policy_id=policy.identifier,
+            policy_identity=policy.identity,
+            proposal_id=proposal_id,
+        ),
+        _machine_event(
+            "CHECK_RECORDED",
+            check_contract_id=STRUCTURAL_HISTORY_BUNDLE.check_contract_id,
+            check_contract_identity=STRUCTURAL_HISTORY_BUNDLE.check_contract_identity,
+            outcome=STRUCTURAL_HISTORY_BUNDLE.success_outcome,
+            policy_identity=policy.identity,
+            proposal_id=proposal_id,
+            receipt_id=f"receipt:{change.change_set_id}:structural-admission",
+        ),
+        _machine_event(
+            "VERDICT_RECORDED",
+            decision_id=f"decision:{change.change_set_id}:structural-admission",
+            proposal_id=proposal_id,
+        ),
+    )
+    return history.admit(
+        change_set=change,
+        machine_events=events,
+        transaction_time=transaction_time,
+        actor_id=actor_id,
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -273,16 +519,20 @@ __all__ = (
     "ProtocolMachineProgramRefusalReason",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
+    "STRUCTURAL_HISTORY_BUNDLE",
+    "StructuralHistoryBundle",
     "SourceBoundaryRefusal",
     "SourceRefusalReason",
     "ValidatedContractArtifact",
     "ValidatedContractCompilation",
     "adapt_document_assertions",
+    "admit_structural_change",
     "compile_linkml_contract",
     "compile_contract_revision",
     "compile_population_plan",
     "compose_normative_profile",
     "compose_partial_effective_contract",
+    "create_structural_history",
     "execute_event",
     "load_validated_contract_artifact",
     "prepare_population_change",

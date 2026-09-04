@@ -1,0 +1,36 @@
+{
+  "accept_verdict": "ACCEPT",
+  "decision": {
+    "event_type": "VERDICT_RECORDED",
+    "proposal_id_field": "proposal_id",
+    "record_type": "DecisionRecord",
+    "verdict_field": "verdict"
+  },
+  "grammar": "malleus.knowledge-history-binding/private-v1",
+  "proposal": {
+    "change_set_identity_field": "knowledge_change_set_identity",
+    "event_type": "CHANGE_PROPOSED",
+    "proposal_id_field": "proposal_id",
+    "record_type": "ProposalRecord"
+  },
+  "retention_events": {
+    "ARTIFACT_REGISTERED": {
+      "allowed_roles": [
+        "KNOWLEDGE_HISTORY_BINDING",
+        "PARTIAL_EFFECTIVE_CONTRACT",
+        "RETAINED_EVIDENCE",
+        "SOURCE_ARTIFACT",
+        "VALIDATED_CONTRACT"
+      ],
+      "identity_field": "artifact_identity",
+      "record_id_field": "artifact_id"
+    },
+    "SOURCE_REGISTERED": {
+      "allowed_roles": [
+        "RETAINED_SOURCE"
+      ],
+      "identity_field": "source_identity",
+      "record_id_field": "source_id"
+    }
+  }
+}

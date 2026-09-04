@@ -1,0 +1,229 @@
+{
+    "capabilities": [],
+    "events": {
+        "ARTIFACT_REGISTERED": {
+            "instructions": [
+                {
+                    "id_field": "artifact_id",
+                    "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                    "refusal": "GLOBAL_RECORD_ID_EXISTS"
+                },
+                {
+                    "opcode": "STORE_EVENT_RECORD",
+                    "record_type": "ArtifactRecord"
+                }
+            ],
+            "record_type": "ArtifactRecord"
+        },
+        "CHANGE_PROPOSED": {
+            "instructions": [
+                {
+                    "event_field": "expected_machine_state_identity",
+                    "opcode": "REQUIRE_MACHINE_STATE_IDENTITY",
+                    "refusal": "STALE_MACHINE_STATE"
+                },
+                {
+                    "opcode": "REQUIRE_PROFILE_POLICY",
+                    "policy_id_field": "policy_id",
+                    "policy_identity_field": "policy_identity",
+                    "policy_ref": "required-check-verdict",
+                    "refusal": "POLICY_MISMATCH"
+                },
+                {
+                    "id_field": "proposal_id",
+                    "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                    "refusal": "GLOBAL_RECORD_ID_EXISTS"
+                },
+                {
+                    "opcode": "STORE_EVENT_RECORD",
+                    "record_type": "ProposalRecord"
+                }
+            ],
+            "record_type": "ProposalRecord"
+        },
+        "CHECK_RECORDED": {
+            "instructions": [
+                {
+                    "event_field": "proposal_id",
+                    "opcode": "REQUIRE_REFERENCED_RECORD",
+                    "record_type": "ProposalRecord",
+                    "refusal": "UNKNOWN_REFERENCE"
+                },
+                {
+                    "check_contract_id_field": "check_contract_id",
+                    "check_contract_identity_field": "check_contract_identity",
+                    "check_outcome_field": "outcome",
+                    "check_owner_field": "proposal_id",
+                    "check_policy_identity_field": "policy_identity",
+                    "check_record_type": "CheckRecord",
+                    "duplicate_refusal": "DUPLICATE_REQUIRED_CHECK_RECEIPT",
+                    "invalid_outcome_refusal": "UNACCEPTED_CHECK_OUTCOME",
+                    "opcode": "REQUIRE_POLICY_CHECK_OUTPUT",
+                    "policy_mismatch_refusal": "POLICY_MISMATCH",
+                    "policy_ref": "required-check-verdict",
+                    "proposal_id_field": "proposal_id",
+                    "proposal_policy_identity_field": "policy_identity",
+                    "proposal_record_type": "ProposalRecord",
+                    "unrequired_refusal": "UNREQUIRED_CHECK_RECEIPT"
+                },
+                {
+                    "id_field": "receipt_id",
+                    "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                    "refusal": "GLOBAL_RECORD_ID_EXISTS"
+                },
+                {
+                    "opcode": "STORE_EVENT_RECORD",
+                    "record_type": "CheckRecord"
+                }
+            ],
+            "record_type": "CheckRecord"
+        },
+        "SOURCE_REGISTERED": {
+            "instructions": [
+                {
+                    "event_field": "artifact_id",
+                    "opcode": "REQUIRE_REFERENCED_RECORD",
+                    "record_type": "ArtifactRecord",
+                    "refusal": "UNKNOWN_REFERENCE"
+                },
+                {
+                    "id_field": "source_id",
+                    "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                    "refusal": "GLOBAL_RECORD_ID_EXISTS"
+                },
+                {
+                    "opcode": "STORE_EVENT_RECORD",
+                    "record_type": "SourceRecord"
+                }
+            ],
+            "record_type": "SourceRecord"
+        },
+        "VERDICT_RECORDED": {
+            "instructions": [
+                {
+                    "event_field": "proposal_id",
+                    "opcode": "REQUIRE_REFERENCED_RECORD",
+                    "record_type": "ProposalRecord",
+                    "refusal": "UNKNOWN_REFERENCE"
+                },
+                {
+                    "event_field": "proposal_id",
+                    "index": "decision-by-proposal",
+                    "opcode": "REQUIRE_INDEX_ABSENT",
+                    "refusal": "TERMINAL_DECISION_EXISTS"
+                },
+                {
+                    "check_contract_id_field": "check_contract_id",
+                    "check_contract_identity_field": "check_contract_identity",
+                    "check_outcome_field": "outcome",
+                    "check_owner_field": "proposal_id",
+                    "check_policy_identity_field": "policy_identity",
+                    "check_record_type": "CheckRecord",
+                    "duplicate_refusal": "DUPLICATE_REQUIRED_CHECK_RECEIPT",
+                    "invalid_outcome_refusal": "UNACCEPTED_CHECK_OUTCOME",
+                    "missing_refusal": "MISSING_REQUIRED_CHECK",
+                    "opcode": "SELECT_POLICY_VERDICT",
+                    "policy_mismatch_refusal": "POLICY_MISMATCH",
+                    "policy_ref": "required-check-verdict",
+                    "proposal_id_field": "proposal_id",
+                    "proposal_policy_identity_field": "policy_identity",
+                    "proposal_record_type": "ProposalRecord",
+                    "target_field": "verdict",
+                    "unrequired_refusal": "UNREQUIRED_CHECK_RECEIPT"
+                },
+                {
+                    "id_field": "decision_id",
+                    "opcode": "REQUIRE_GLOBAL_ID_ABSENT",
+                    "refusal": "GLOBAL_RECORD_ID_EXISTS"
+                },
+                {
+                    "opcode": "STORE_EVENT_RECORD",
+                    "record_type": "DecisionRecord"
+                }
+            ],
+            "record_type": "DecisionRecord"
+        }
+    },
+    "grammar": "malleus.protocol-machine/private-v0",
+    "indexes": {
+        "decision-by-proposal": {
+            "field": "proposal_id",
+            "record_type": "DecisionRecord",
+            "unique": true
+        }
+    },
+    "record_schemas": {
+        "ArtifactRecord": {
+            "fields": {
+                "artifact_id": "STRING",
+                "artifact_identity": "DIGEST"
+            },
+            "id_field": "artifact_id",
+            "input_fields": [
+                "artifact_id",
+                "artifact_identity"
+            ]
+        },
+        "CheckRecord": {
+            "fields": {
+                "check_contract_id": "STRING",
+                "check_contract_identity": "DIGEST",
+                "outcome": "STRING",
+                "policy_identity": "DIGEST",
+                "proposal_id": "STRING",
+                "receipt_id": "STRING"
+            },
+            "id_field": "receipt_id",
+            "input_fields": [
+                "check_contract_id",
+                "check_contract_identity",
+                "outcome",
+                "policy_identity",
+                "proposal_id",
+                "receipt_id"
+            ]
+        },
+        "DecisionRecord": {
+            "fields": {
+                "decision_id": "STRING",
+                "proposal_id": "STRING",
+                "verdict": "VERDICT"
+            },
+            "id_field": "decision_id",
+            "input_fields": [
+                "decision_id",
+                "proposal_id"
+            ]
+        },
+        "ProposalRecord": {
+            "fields": {
+                "expected_machine_state_identity": "DIGEST",
+                "knowledge_change_set_identity": "DIGEST",
+                "policy_id": "STRING",
+                "policy_identity": "DIGEST",
+                "proposal_id": "STRING"
+            },
+            "id_field": "proposal_id",
+            "input_fields": [
+                "expected_machine_state_identity",
+                "knowledge_change_set_identity",
+                "policy_id",
+                "policy_identity",
+                "proposal_id"
+            ]
+        },
+        "SourceRecord": {
+            "fields": {
+                "artifact_id": "STRING",
+                "source_id": "STRING",
+                "source_identity": "DIGEST"
+            },
+            "id_field": "source_id",
+            "input_fields": [
+                "artifact_id",
+                "source_id",
+                "source_identity"
+            ]
+        }
+    }
+}

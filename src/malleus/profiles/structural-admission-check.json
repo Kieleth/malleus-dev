@@ -1,0 +1,16 @@
+{
+  "check_contract_id": "malleus.structural-admission/v1",
+  "checks": [
+    "EXACT_BASE_COORDINATES",
+    "RETAINED_SOURCE_AND_EVIDENCE_CLOSURE",
+    "STRUCTURAL_APPLICATION"
+  ],
+  "executor": "malleus.compiler.admit_structural_change/v1",
+  "grammar": "malleus.admission-check/private-v0",
+  "non_claims": [
+    "DOMAIN_ADEQUACY",
+    "EPISTEMIC_CORRECTNESS",
+    "SOURCE_TRUTH"
+  ],
+  "success_outcome": "SATISFIED"
+}
