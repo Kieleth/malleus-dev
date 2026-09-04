@@ -26,6 +26,24 @@ ASSERTION_MODALITIES = {
     "CONTESTED",
     "NEGATED",
 }
+QUDT_QUANTITY_KIND_NAMESPACE = "http://qudt.org/vocab/quantitykind/"
+QUDT_QUANTITY_KINDS = (
+    "Length",
+    "Time",
+    "Temperature",
+    "Pressure",
+    "Mass",
+    "Volume",
+    "Area",
+    "Velocity",
+    "Density",
+    "Frequency",
+    "Energy",
+    "Force",
+    "MassFraction",
+    "Count",
+    "Angle",
+)
 GROUNDING_EXAMPLE_MARKER = (
     "carries a `grounding` block:\n\n"
     "```yaml\n"
@@ -153,6 +171,72 @@ def test_metrology_uses_the_exact_vim_term_for_quantity_kind() -> None:
     assert "kind of quantity" in vim_terms
     assert "quantity kind" not in vim_terms
     assert "quantity_kind" in source["slots"]
+
+
+def test_metrology_classifies_quantity_kinds_against_the_qudt_vocabulary() -> None:
+    """A free-text kind alone is readable and not comparable.
+
+    One producer wrote 137 distinct strings into ``quantity_kind`` for 137
+    observations, so a type-only query binding could not sharpen. The pack
+    carries a controlled classification whose values are QUDT quantity-kind
+    names, plus one local escape, and the borrowed names are cited.
+    """
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    )
+    values = source["enums"]["QuantityKindClass"]["permissible_values"]
+    qudt = next(
+        item
+        for item in source["annotations"]["grounding"]["value"]["vocabularies"]
+        if item["vocabulary"] == "QUDT Quantity Kinds"
+    )
+
+    assert tuple(values) == QUDT_QUANTITY_KINDS + ("OTHER",)
+    assert qudt["vocabulary_url"] == QUDT_QUANTITY_KIND_NAMESPACE
+    assert tuple(qudt["borrowed_terms"]) == QUDT_QUANTITY_KINDS
+    assert source["version"] == "0.2.0"
+
+
+def test_metrology_keeps_the_source_wording_beside_the_classification() -> None:
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    )
+    carried = source["classes"]["Quantified"]["slots"]
+
+    assert carried.index("quantity_kind") + 1 == carried.index("quantity_kind_class")
+    assert source["slots"]["quantity_kind"]["range"] == "string"
+    assert source["slots"]["quantity_kind_class"]["range"] == "QuantityKindClass"
+
+
+def test_compiled_quantity_kind_class_is_optional_and_carries_the_qudt_names() -> None:
+    view = _compiler().compile_linkml_contract(
+        root_locator="research",
+        sources=_pack_sources(),
+    ).view
+
+    assert view.get_enum_values("QuantityKindClass") == frozenset(
+        QUDT_QUANTITY_KINDS + ("OTHER",)
+    )
+    assert view.get_slot_constraint("Observation", "quantity_kind_class").required is (
+        False
+    )
+    assert view.get_slot_constraint("Observation", "quantity_kind").required is False
+
+
+def test_shipped_pack_revision_is_its_own_conformance_baseline() -> None:
+    """The rite's baseline is the exact reference bytes its caller supplies.
+
+    ``validate_pack_conformance`` knows nothing of version history, so a
+    shipped revision checked against the bytes it ships as is never refused
+    for the declarations that revision added.
+    """
+    api = _inquisition()
+    for name in PACK_NAMES:
+        reference = bundled_ontology_path("packs", f"{name}.yaml").read_bytes()
+
+        receipt = api.validate_pack_conformance(reference, reference=reference)
+
+        assert receipt.source_sha256 == receipt.reference_sha256
 
 
 def test_research_observation_is_explicitly_grounded_in_sosa_ssn() -> None:
