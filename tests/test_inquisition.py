@@ -2019,21 +2019,30 @@ class TestSkillsAreInstallable:
             "records",
             "supersessions",
         )
-        result = compiler.adapt_document_assertions(
-            reading_bytes=reading_bytes,
-            capture_bytes=json.dumps(
-                capture,
-                allow_nan=False,
-                ensure_ascii=False,
-                separators=(",", ":"),
-                sort_keys=True,
-            ).encode(),
-            capture_id=template["capture_id"],
-            plan_id=template["plan_id"],
-            contract_identity=template["contract_identity"],
-            records=template["records"],
-            supersessions=template["supersessions"],
-        )
+        by_modality = {}
+        for modality in modalities:
+            candidate_capture = copy.deepcopy(capture)
+            candidate_capture["assertions"][0]["modality"] = modality
+            by_modality[modality] = compiler.adapt_document_assertions(
+                reading_bytes=reading_bytes,
+                capture_bytes=json.dumps(
+                    candidate_capture,
+                    allow_nan=False,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ).encode(),
+                capture_id=template["capture_id"],
+                plan_id=template["plan_id"],
+                contract_identity=template["contract_identity"],
+                records=template["records"],
+                supersessions=template["supersessions"],
+            )
+        result = by_modality["STATED"]
+        assert {
+            json.loads(compilation.capture_bytes)["assertions"][0]["modality"]
+            for compilation in by_modality.values()
+        } == set(modalities)
         plan = json.loads(result.canonical_plan_bytes)
         census = json.loads(result.canonical_census_bytes)
         assert plan["records"] == template["records"]
@@ -2072,6 +2081,35 @@ class TestSkillsAreInstallable:
         assert callable(compiler.KnowledgeChangeHistory.reopen)
         assert {"KnowledgeGraph", "OntologyRegistry"} <= set(malleus.__all__)
         assert callable(malleus.KnowledgeGraph.from_records)
+
+        schema = _write_schema(
+            tmp_path,
+            """
+            id: https://example.org/schema/nascent-typed-graph
+            name: nascent_typed_graph
+            imports:
+              - malleus
+              - linkml:types
+            classes:
+              ProjectObject:
+                is_a: Entity
+            """,
+        )
+        registry = malleus.OntologyRegistry(schema, import_map=ROOT_MAP)
+        graph = malleus.KnowledgeGraph.from_records(
+            registry,
+            {
+                "entities": [
+                    {
+                        "type": "ProjectObject",
+                        "id": "object:1",
+                        "properties": {},
+                    }
+                ]
+            },
+        )
+        assert graph.node_count == 1
+        assert graph.get_node("object:1")["type"] == "ProjectObject"
 
         assert main(
             ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
