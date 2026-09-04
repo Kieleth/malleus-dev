@@ -234,7 +234,12 @@ fallback.
    enum names. Keep protocol, provenance, ledger, policy, and query machinery
    out of the domain ontology: provenance locators, meaning block IDs,
    assertion IDs, and retained-input IDs, belong to the capture and the ledger,
-   never to a domain slot. Identifiers the source reports as facts about the
+   never to a domain slot. The `research` pack declares the one exception, and
+   it is narrow: a claim-bearing record carries `assertion_locator`, the opaque
+   route back to the retained assertion, and `statement_sha256`, the digest of
+   its exact text, and `statement` stays empty unless the record's `Source`
+   declares a licence that permits reproducing the sentence.
+   Identifiers the source reports as facts about the
    domain are domain slots and belong in the ontology: a DOI, a dataset URL, a
    grant number, an accession. Labels identify records; they never carry an
    otherwise untyped assertion. The baseline admissible population surface is
@@ -271,7 +276,10 @@ fallback.
    structured sources, write a source-specific adapter that emits the same
    neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
-   operation. Inspect the returned `canonical_census_bytes`; continue reviewing
+   operation. When a captured quantity fits one of the QUDT names in
+   `metrology`'s `QuantityKindClass`, set `quantity_kind_class` to it and keep
+   the source's own wording in `quantity_kind`, which stays open and is never
+   rewritten to fit the class; free text alone is readable and not comparable. Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
    `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
    `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
