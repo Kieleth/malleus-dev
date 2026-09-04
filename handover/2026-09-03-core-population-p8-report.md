@@ -38,6 +38,8 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Installed-capture-contract RED tree: `382c19b019586745a29c94c004cdaae883b6b212`
 - Corrected GREEN: `00c48a2da29b7497addc2e60d767cda2017d0dde`
 - Corrected GREEN tree: `5750a577555fbe705107ca9b3e4d1f6513d17193`
+- Executable-route guard: `110e9a13584e8707f6abe36ce6adbb2e12ddfae0`
+- Executable-route-guard tree: `3a43ee93ec073e0c0f1afe7ae1776cbc001c0a6a`
 
 ## What changed
 
@@ -139,9 +141,12 @@ The public deliverable is the installable skill procedure itself.
   exact history calls and no-change branch, bounded loop, Codex install path,
   ordering, leakage constraints, and the closed installed-artifact boundary
   before the final GREEN.
-- The final REDs guard the real typed-graph branch, exact seven-argument adapter
-  signature, installed-skill template, all capture invariants, all modalities,
-  all gap kinds, and absence of invented wrapper and reading grammars.
+- The final REDs guard the typed-graph instructions, exact seven-argument adapter
+  signature, installed-skill template, capture invariants, modality and gap
+  declarations, and absence of invented wrapper and reading grammars.
+- The successor execution guard constructs and inspects a real typed graph
+  through `OntologyRegistry` and `KnowledgeGraph.from_records`, and passes all
+  six declared modalities through the live document adapter.
 - The three direct playbook tests pass after the corrected GREEN.
 - The complete skill-installation class passes 12 tests in the working checkout.
 - A clean Git clone of the corrected GREEN runs the complete Inquisitor module
@@ -156,14 +161,15 @@ The public deliverable is the installable skill procedure itself.
   proves the installed acolyte retains the playbook bytes.
 - A direct executable guard resolves all named Python objects from
   `malleus.compiler.__all__`, verifies `KnowledgeChangeHistory.admit` and
-  `KnowledgeChangeHistory.reopen`, exercises the Codex skill installer and both
-  pack rites, and parses the documented compiler contract route.
+  `KnowledgeChangeHistory.reopen`, constructs and inspects the documented
+  typed-graph-only route, exercises the Codex skill installer and both pack
+  rites, and parses the documented compiler contract route.
 - A second direct guard installs the skill into a clean Codex project, proves its
   bytes equal the source skill, parses the JSON template from that installed
   copy, binds the exact adapter signature, checks its reading digest, and passes
-  all six gap kinds through the public adapter. The resulting plan retains every
-  gap, and the two-axis census reports their exact counts plus one `UNTOUCHED`
-  block.
+  all six gap kinds and all six modalities through the public adapter. The
+  resulting plan retains every gap, and the two-axis census reports their exact
+  counts plus one `UNTOUCHED` block.
 
 ## Non-claims
 

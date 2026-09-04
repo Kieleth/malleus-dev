@@ -118,12 +118,13 @@ population, admission, and replay steps require an exact history profile.
 For document population, retained-reading coverage overrides the general
 smallest-slice rule. A machine-parsed neutral template in the installed skill
 uses the existing `malleus.document-capture/private-v0` grammar, lists all six
-modalities and all six gap kinds, and runs every gap kind through the public
-adapter. Its reading object is illustrative, not a closed grammar. The guard
-also binds the exact seven adapter arguments and proves one uncaptured block is
-reported `UNTOUCHED`. The playbook adds no compiler command, grammar, or runtime
-capability. It documents how a fresh adopter uses the public boundaries already
-listed above.
+modalities and all six gap kinds, and runs every one through the public adapter.
+Its reading object is illustrative, not a closed grammar. The guards also bind
+the exact seven adapter arguments, prove one uncaptured block is reported
+`UNTOUCHED`, and construct the documented typed-graph-only route through the
+public registry and graph APIs. The playbook adds no compiler command, grammar,
+or runtime capability. It documents how a fresh adopter uses the public
+boundaries already listed above.
 
 ## Implemented
 
