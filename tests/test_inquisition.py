@@ -1810,7 +1810,23 @@ class TestSkillsAreInstallable:
         for phrase in required:
             assert phrase in section
         assert "The command-line compiler stops at contract compilation" in section
+        steps = (
+            "Retain the source boundary",
+            "Choose the Malleus level",
+            "Look for vocabulary before inventing it",
+            "Propose the project ontology",
+            "Run the structural gates and compile exact sources",
+            "Capture before formalising",
+            "Compile, then admit",
+            "Reopen, replay, and inspect",
+            "Grow only from recorded gaps",
+            "Stop honestly",
+        )
+        assert [section.index(step) for step in steps] == sorted(
+            section.index(step) for step in steps
+        )
         assert "paper" not in section.lower()
+        assert "brief" not in section.lower()
 
     def test_installed_acolyte_keeps_the_nascent_project_playbook(
         self, tmp_path, capsys

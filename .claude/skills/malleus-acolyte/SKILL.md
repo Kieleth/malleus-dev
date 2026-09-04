@@ -188,8 +188,8 @@ population is frozen.
    and values. Any normalization needs its own explicit evidence-bearing
    operation.
 7. **Compile, then admit.** Pass the proposed plan to
-   `compile_population_plan`, then `prepare_population_change`, then the selected
-   `KnowledgeChangeHistory`. The plan must bind its compiled contract, history
+   `compile_population_plan`, then `prepare_population_change`, then admit it
+   through `KnowledgeChangeHistory`. The plan must bind its compiled contract, history
    profile, adapter, source bytes, evidence, records, field-level derivations,
    typed gaps, and valid time. `NO_DOMAIN_CHANGE` is a valid outcome and never
    triggers fallback population. A refusal changes no accepted history.
