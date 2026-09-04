@@ -31,16 +31,17 @@ annotations:
           vocabulary_url: https://www.w3.org/TR/vocab-ssn/
           borrowed_terms:
             - Observation
-            - Instrument
             - Sample
+        - vocabulary: JCGM 200:2012 (VIM), 3rd edition
+          vocabulary_url: https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf
+          borrowed_terms:
+            - measuring instrument
         - vocabulary: OECD Frascati Manual 2015
           vocabulary_url: https://doi.org/10.1787/9789264239012-en
           borrowed_terms:
             - research and experimental development
-            - Agent
-            - Method
-            - Campaign
             - investigation
+            - method
         - vocabulary: SEPIO
           vocabulary_url: https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf
           borrowed_terms:
@@ -56,7 +57,15 @@ annotations:
             - Evidence
             - support
             - challenge
-      invented_terms: []
+      invented_terms:
+        - Campaign
+        - Instrument
+      invention_search: >-
+        The cited SOSA/SSN, VIM, Frascati, SEPIO, and Micropublications
+        vocabularies were checked for exact generic Campaign and Instrument
+        classes. SOSA/SSN uses Sensor, VIM uses measuring instrument, and no
+        exact generic Campaign class was found. The accepted pack keeps the
+        shorter local class names and records that choice here.
 
 enums:
   AssertionModality:

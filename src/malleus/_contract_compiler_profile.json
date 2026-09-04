@@ -267,6 +267,7 @@
         "taxonomy": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
         "vocabularies": {"classification": "ANNOTATION_ONLY", "item_classification": "ANNOTATION_ONLY", "item_shape": "grounding_vocabulary", "min_items": 1, "parser": "items"},
         "invented_terms": {"classification": "ANNOTATION_ONLY", "item_classification": "ANNOTATION_ONLY", "parser": "string_list"},
+        "invention_search": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"},
         "none_found": {"classification": "ANNOTATION_ONLY", "parser": "boolean"},
         "search": {"classification": "ANNOTATION_ONLY", "parser": "nonempty_string"}
       },

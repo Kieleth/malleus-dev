@@ -1,9 +1,9 @@
 {
-  "base_acceptance_head": "sha256:7d7811677fe76a777ee3b859e795e16e6c33dc9b91411c77c4ddeac333083946",
+  "base_acceptance_head": "sha256:b7f6b51d09079b870ba28c6e06195fb7849610a8fb05e3e4df69a5d4e61f9d28",
   "base_accepted_state_digest": "sha256:4e9dd147de37bb504ebcd7935425ade2614485b7292d74704e981493b5e31dea",
   "base_ledger_event_count": 13,
-  "base_ledger_head": "sha256:8143a0402fd1942cb7e22e8938ecc48976fa311dd4c61c31073e2c96802115a2",
-  "base_materialization_head": "sha256:e40623fecc96141f3ed01b86613eb174f557a539380552d68627dac85b3742bd",
+  "base_ledger_head": "sha256:66d69dcaf294d6df1b87b8c265d4f84a67c3b3bda8e7b9cb2e1bdb6162ce94a7",
+  "base_materialization_head": "sha256:e580757816cb852da5268ab7fbeb067b5fc68ceef772a5cecece84c73e03620b",
   "change_set_id": "change:plan:shop:B:e7",
   "contract_identity": "sha256:01470c0b41aa26720fb33c82fd65d3d00a5c26354db85b527fa6d7a79dc9beb2",
   "contract_kind": "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0",

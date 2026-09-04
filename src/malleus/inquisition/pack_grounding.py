@@ -74,6 +74,7 @@ def _load_rite() -> tuple[Mapping[str, object], str]:
             "annotation_key",
             "annotation_tag",
             "cited_fields",
+            "cited_with_inventions_fields",
             "vocabulary_fields",
             "none_found_fields",
         }
@@ -85,6 +86,7 @@ def _load_rite() -> tuple[Mapping[str, object], str]:
             "roles",
             "root_parents",
             "cited_fields",
+            "cited_with_inventions_fields",
             "vocabulary_fields",
             "none_found_fields",
         ):
@@ -112,6 +114,7 @@ _RITE, PACK_GROUNDING_RITE_IDENTITY = _load_rite()
 _ROLES = frozenset(_RITE["roles"])
 _ROOT_PARENTS = frozenset(_RITE["root_parents"])
 _CITED_FIELDS = frozenset(_RITE["cited_fields"])
+_CITED_WITH_INVENTIONS_FIELDS = frozenset(_RITE["cited_with_inventions_fields"])
 _VOCABULARY_FIELDS = frozenset(_RITE["vocabulary_fields"])
 _NONE_FOUND_FIELDS = frozenset(_RITE["none_found_fields"])
 
@@ -231,15 +234,26 @@ def _grounding(annotations: object, subject: str) -> None:
         )
     grounding = _mapping(annotation["value"], f"{subject}.grounding.value")
     fields = set(grounding)
-    if fields == _CITED_FIELDS:
+    if fields in {_CITED_FIELDS, _CITED_WITH_INVENTIONS_FIELDS}:
         _nonblank(grounding["area"], f"{subject}.grounding.area")
         _nonblank(grounding["taxonomy"], f"{subject}.grounding.taxonomy")
         _vocabularies(grounding["vocabularies"], subject)
-        _terms(
+        invented = _terms(
             grounding["invented_terms"],
             f"{subject}.grounding.invented_terms",
             nonempty=False,
         )
+        has_search = fields == _CITED_WITH_INVENTIONS_FIELDS
+        if bool(invented) != has_search:
+            raise PackGroundingRefusal(
+                PackGroundingRefusalReason.GROUNDING_INCOMPLETE,
+                f"{subject} must pair invented terms with invention_search",
+            )
+        if has_search:
+            _nonblank(
+                grounding["invention_search"],
+                f"{subject}.grounding.invention_search",
+            )
         return
     if fields == _NONE_FOUND_FIELDS:
         _nonblank(grounding["area"], f"{subject}.grounding.area")

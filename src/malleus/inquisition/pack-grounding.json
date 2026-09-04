@@ -10,6 +10,13 @@
     "vocabularies",
     "invented_terms"
   ],
+  "cited_with_inventions_fields": [
+    "area",
+    "taxonomy",
+    "vocabularies",
+    "invented_terms",
+    "invention_search"
+  ],
   "vocabulary_fields": [
     "vocabulary",
     "vocabulary_url",

@@ -35,7 +35,7 @@
   },
   "declared_input": {
     "support_profile": "malleus.linkml/private-v1",
-    "profile_sha256": "d3edfd40ac2ba4cb458291b0eac446ee736de11d3ece2f1574bd7c75824d90a8",
+    "profile_sha256": "d9d31fae01c082a7dfd51df23d068fbdda7126965257847a7143addea74fd792",
     "sequence_item_occurrences": [
       {
         "pattern": [
