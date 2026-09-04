@@ -2152,6 +2152,20 @@ comparison stays. The v4 result becomes a new section of its successor. The lean
 v4 draft is a support document and replaces nothing. Master plan 1.3.0 carries
 that ordering.
 
+Standing finding, unresolved: the active gate is red at this coordinate and was
+red before run-02 existed. `paper-v4/experiment-v4/test_run_contract.py::
+test_producer_input_set_is_exact_and_question_blind` compares run-01's frozen
+manifest digests against the live files, and the installed skill has moved from
+`sha256:ab0279f7…` to `sha256:2e0c9364…` since 6488ddb. Exactly one of the eight
+inputs drifted; the other seven still match. The assertion is wrong in kind, not
+in data: a frozen manifest records the bytes a past run consumed, and pinning it
+to whatever the working tree holds today makes every later Core change break a
+closed run. Run-01 is immutable, so this executor did not touch it. Run-02 keeps
+the same live-file pin deliberately, because `prepare_producer.py` must refuse to
+build a workspace whose inputs no longer match the contract, and that guard is
+only meaningful while the run is open. The disposition of run-01's test belongs
+to the overseer.
+
 Non-claim: This entry records a rebind and a message cut. No producer has run at
 this coordinate, no ontology has been accepted, and no population, replay, query
 or inspection result exists for run-02.
