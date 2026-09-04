@@ -1,0 +1,116 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:d2d76fe0181f74d5352b7535d19d7a6925ae0ca45ccb8393c0eaf1b64b06ba11",
+        "before_digest": "sha256:503d6d7cc4764d97380f2ef860b641ad0d0b187573907ce4a5b042ea1c667126",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/pack_grounding.py"
+      },
+      {
+        "after_digest": "sha256:4778e43da6c4477297ee0b46ad8ceef6ddfe0ae7b53b0c32530c689751beed5c",
+        "before_digest": "sha256:f419063ed7828560196354d798141ea3569702987c3a1aa064efef39997feadb",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:84e17804f3a26afdfd990b8e59d6fcbffa9c99faa7476d440198034f923a5406",
+        "before_digest": "sha256:df96be44f67dd11ac06d516f24c751159746285d5ae91e43bef3fecf0551948c",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:267ff6caced8ec3f7c6bc5c74999abee472aede94850dca0a53e998f1b6e704d",
+        "before_digest": "sha256:2481ee21206dacdc7f8fc54a6c164850f09a59dc862db658da8bca32bddcfd82",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:d5fbf128bfffedf9536efd017bdc91914c5c4d952d36a1fa7e86c46f40abac70",
+        "before_digest": "sha256:b26d98ee6251bc57839f073599262d9705cefa9d78a6b0fd4a8ec9422255f550",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:cc55edbcdf4cd8d6c6608cf8c8dd58c88044e4510c65432868f8acdcbb6d6867",
+        "before_digest": "sha256:4f52e68c06560f12bccbf65e40e1ebc93e9fa3bb787e79f33eb3c96efafcfbfc",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      },
+      {
+        "after_digest": "sha256:d9131a1648a961ca056640a845b78e4b2dd2cf8bf82cfe6a6c06fe416a7e454a",
+        "before_digest": "sha256:53791782d426f62ca6f1adb9b8324293c25eec85a0cda6e19e8956cce89ebe9a",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_compiler_cli.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:16169567cf12e49ca9e09f1ff23b12847b10f86e13bac1f174becbd7e33c2b48",
+  "entry_id": "OVR-000395",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:4d30f11102b8381266200a15761a88de6065ff4a5178ab786ad18fb0eb3503f4",
+  "recorded_at": "2026-09-04T22:15:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "c7729e6c10174031525f323e036c6bddbc5c4ae0",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e6fb4fe0b219f8224e753dd01e8d3dcc77b042e1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "4b03dcd0156d046349cf013e8e277b099657e94e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7276337fa75847ebcb6f0f26c88d9354a9c78ea6",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "714928ac636ee1acc6463d0a75d0983ee6d4f886",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "16872e03d33c1a05c15e6fd89a92814785506107",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "71308999e61f833bd8b7b43bb19fcf02447007c1",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000394",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 395,
+  "subject": {
+    "id": "aggregate-refusal-diagnostics",
+    "type": "DOCUMENT"
+  },
+  "summary": "Report every grounding shape defect, and every underived field, in one refusal each.",
+  "why": "Run-02 and run-03 each spent one of two diagnostic returns on a single unclosed vocabulary entry, and run-03 spent its last on one class whose invented terms lacked an invention_search, so it never reached population. Run-02's plan compiler named one underived field of a capture that carried 557. The rite now walks every class and every entry, collects each ill-formed position, and refuses once with the sorted list; each item carries its reason name and the closed field set for its position. The refusal keeps one reason, the first defect's in that order, so the closed enum and its callers are unchanged. DIRECT_ROOT_GROUNDING_REQUIRED keeps its behaviour and its precedence behind a shape defect, so a missing block and a malformed one stay separate refusals. The plan compiler collects every properties key and both relation endpoints that no derivation names and refuses once with the sorted set and the rule that closes them. The command line and the document adapter needed no change; a test drops two formalization targets from the fixture capture and holds that both names reach stderr. The skill's two sentences claiming one defect per refusal are replaced, behind failing guards."
+}
