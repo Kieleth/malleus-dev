@@ -2634,3 +2634,108 @@ and Haiku 4.5 is a different generation from the Opus 5 and Sonnet 5 cells
 beside it, so a difference between it and them would not isolate model capacity
 even after all three have run. What the design fixes is that the producer model
 is the only declared difference between the three.
+
+### E-0128, run-07 opens the paired-Haiku variant, a checker per phase
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-07/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `checker-message.md`,
+`test_contract.py`, `test_pipeline.py`, the receipt at
+`private/paper-v4-v4-run-07/producer-input-receipt.json`, and the run-06 launch
+log at `private/paper-v4-v4-run-06/launch-log.json`.
+
+Cell: run-07 is the first cell of a new protocol variant, `v4.1-pair`, decided
+by Luis on 2026-09-05 UTC, the night run-06's ontology gate closed: adversarial
+pairs, per phase, one fixing loop. A cell is a pair of fresh Claude Haiku 4.5
+sessions, both `claude-haiku-4-5-20251001`, both the Claude Code Agent tool at
+`subagent_type general-purpose` with no inherited context, both question-blind
+and isolated exactly as the producer is today. The producer block is run-06's
+key for key and `run-07/test_contract.py` compares the two blocks whole, so the
+model is not the variable this time. The scope block says it plainly:
+`matrix_cell` FIRST_OF_V4_1_PAIR, `unpaired_haiku_cell` run-06,
+`model_matched_cell` run-06, `variable` ADVERSARIAL_CHECKER_PER_PHASE_ONLY,
+`harness` IDENTICAL_TO_RUN_06_PLUS_THE_CHECK_DIRECTORY. Run-07 supersedes
+nothing. Run-04, run-05 and run-06 stay the three v4.1 cells, and run-02 and
+run-03 stay the two v4 cells.
+
+The rule set, recorded in the contract's `pairing` block and enforced by the two
+messages. In each phase the producer writes its artifact. A second fresh session,
+the checker, reads the same eight declared inputs plus that one artifact, and
+writes one report: `check/ontology-check-NN.md` in phase one,
+`check/population-check-01.md` in phase two. The producer gets exactly one
+revision on that report and states in `work/session-log.md` which items it
+accepted and which it declined, with the reason. Only then does the parent run
+the gate in phase one or the runner in phase two. Compiler diagnostic returns
+stay at most two and are counted separately from the one checker loop, which the
+manifest's session block records as
+`checker_loop_counts_against_diagnostic_returns` false. The checker owns
+`check/` and nothing else: it never edits the producer's files, never rewrites
+the artifact, never proposes wording, and never sees the questions, prior runs,
+the repository, the network, or a subagent of its own. Its report covers exactly
+four things: conformance to the skill's rules, meaning the grounding block's
+shape and content, the derivation rule, verbatim statements, the capture grammar
+and families; material the reading reports that the artifact omits, by block id;
+material the artifact states that the reading does not, by block id; and every
+vocabulary citation and URL it cannot vouch for from the declared inputs alone,
+each listed as UNVERIFIABLE with the instruction that the producer either cite a
+vocabulary it can vouch for or move the terms to `invented_terms` with an
+`invention_search` note. "No defect found" is a valid report.
+
+Why: run-06's producer passed the pack-grounding rite at attempt two and its
+grounding block cited `ISO 18611-1:2015 Earthquake magnitudes` at
+`iso.org/standard/62949.html`. ISO 18611-1 is *Ships and marine technology.
+Marine NOx reduction agent AUS 40. Part 1*, 2014. The citation is fabricated: the
+standard exists, the number is real, the subject is not the one claimed, and the
+URL does not describe it either. The rite checked the block's shape and closed
+field sets, which is all it claims to check, and the overseer did not check the
+citation at gate time. So the defect reached stage acceptance through a gate that
+was working as designed. Citation veracity has no mechanical gate anywhere in
+this harness, and writing one would mean shipping a vocabulary oracle. A second
+reader that must list every citation it cannot vouch for from the declared inputs
+alone is the cheapest check that can name what a shape gate cannot, and the same
+reader costs nothing extra to point at the two omissions a shape gate is also
+blind to: material in the reading the artifact dropped, and material in the
+artifact the reading never carried.
+
+Coordinates: the same Core commit run-04, run-05 and run-06 record,
+`8b806f7411e11b84e1156cea84b4b641d701db19`, tree
+`1da402a610c6e38f2b7d7abcd059133d66aa3cbe`, governance head `OVR-000396` at
+`sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2`. No
+declared input moved. All eight digests were recomputed, the seven tracked ones
+with `git show 8b806f7:<path>` and the untracked reading from its private path,
+and each equals run-06's, paths included: the skill `sha256:0909026f…`, the
+reading `sha256:f3885c7b…`, the Malleus root `sha256:5b737c21…`, the LinkML types
+`sha256:1c79b264…`, metrology `sha256:c6c205d1…` at 0.2.0, chronology
+`sha256:6fbd3b49…` at 0.1.0, research `sha256:5ca437c5…` at 0.2.0, and the
+packaged source-assertion profile `sha256:e7451aaf…`. The interface coordinates
+are new: `capture:paper-v4:yu-2025:v4:7` and `plan:paper-v4:yu-2025:v4:7`. The
+private workspace is `private/paper-v4-v4-run-07/producer`.
+
+Harness: `native_query.py` is byte identical to run-06's, run-05's, run-04's,
+run-03's and run-02's. `run.py` and `compile_ontology_candidate.py` are run-06's
+with the run id and the result schema string substituted, and `test_pipeline.py`
+asserts that by reconstructing each file from run-06's bytes. The spawn message
+is run-06's with the run id substituted and one paragraph added after "This is
+one question-blind session with two phases.", stating the check loop and nothing
+about the domain; the contract's `isolation` key now reads
+ISOLATION_ONLY_SPAWN_MESSAGE_PLUS_THE_CHECK_LOOP_PARAGRAPH. `prepare_producer.py`
+is the one harness file that changed: it creates the checker's `check/` directory
+empty and the receipt lists nine expected paths, the eight declared input targets
+and that directory, and the test compares it to run-06's line by line so those
+additions are the only difference. The spawn and checker messages are guarded the
+same way: no question-derived string, no modelling instruction beyond conformance
+to the skill, and the checker message must forbid editing the producer's files.
+
+Non-claim: no session has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-07, and run-04,
+run-05 and run-06 have not reached results either, so nothing here compares the
+paired protocol to the unpaired one. One paired cell against one unpaired cell is
+two observations, not a measurement of pairing. A checker that lists a citation
+as UNVERIFIABLE has not established that the citation is false, only that the
+declared inputs do not support it, and a checker of the same model family is not
+an independent authority on anything the model gets uniformly wrong; a fabricated
+citation both sessions find plausible will pass this loop exactly as it passed
+the rite. What the design fixes is that a second reader looks at the artifact
+before the gate does, that its report is retained, and that the producer must
+answer every item in writing.
