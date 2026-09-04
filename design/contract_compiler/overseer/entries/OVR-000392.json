@@ -1,0 +1,130 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2e0c936448f18b076fc7fef77e55e2428f73576e801bb6afc81f50c3d685458c",
+        "before_digest": "sha256:84337d7a9b7b914eb3bbd272da0f9f57496e932e8de45ca8719db5e9e68d0e16",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:dd0ec9d2c25a5aa121da9b8df85b0647f67c5dcf0b31ec59709e958ae1c12c76",
+        "before_digest": "sha256:5c3f489d589312bb29ce3b60701f7d3b62462f1e5f0f12e51c88e809fcf3cbca",
+        "change": "MODIFIED",
+        "path": "README.md"
+      },
+      {
+        "after_digest": "sha256:d21bd8a997c45cbb8afa4a461bda1231b7bc6610380d2925c03a32ff6d1b775f",
+        "before_digest": "sha256:a681b05123a791c7217cf5a05ca4e6ded789f85be4661b0d38300a416059c00d",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:471b1edefbbcebc6dc2eba563a318187d134abcff69e2056e3f358b3ba448a26",
+        "before_digest": "sha256:7f8be14c2d96d71f53d7b5476030ea74e6a95d698379af588f1e5b2d14522308",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler_cli.py"
+      },
+      {
+        "after_digest": "sha256:53791782d426f62ca6f1adb9b8324293c25eec85a0cda6e19e8956cce89ebe9a",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_compiler_cli.py"
+      },
+      {
+        "after_digest": "sha256:79f640e2794575d94d9a32cb52f39ed2264ed6bc25dde0dc8ee07d21b99e3cd0",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_repository_guards.py"
+      },
+      {
+        "after_digest": "sha256:63cea82a8cf87c5fbbe33d84a097f944cc0f8af04be450af18f97fa8b37bdae3",
+        "before_digest": "sha256:97352c1970afb66cca329eea6542244f132bc55b0e938830ef4ddb0970a8d7f7",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:202eee1bf98ecea6003dffc18d0f191474893599ea43c503a9bc45b8b8543a2f",
+        "before_digest": "sha256:0fd46d1898d557a868df08bffca05c7ce622bad17444392bbb1f025fd79720e3",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:66e6f00f3f273be1e0e8a254bf483eb6e55cce26cb15e0efdef012b514061093",
+  "entry_id": "OVR-000392",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:986bf3dabda9964d7f07a001fa6bfd5e228305ee1d7426b22200a567348c9e69",
+  "recorded_at": "2026-09-04T18:40:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "3da3bae3bd74f48c69cb8cde901178209371b136",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "110d7db97c1a08c9124807b6d05c006111d581ab",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c5ab86d77b1f617c0112bdb632fe7f3f2b33fb4e",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f3e00a3673f79551eba214f58f774d13f5844beb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f7bc6cc3cbc5d110f35905a555ee37fcf710ba39",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "b1dc22af41f02c057aadf84cfbe72fd573ac69eb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "409c0a7b57a472c44bb57262049442618b63a15c",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "f00634914b166ca555873405269873d10ecec3dd",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bffa8d95b618ab3097d59b10478b83b2a31515c8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000391",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 392,
+  "subject": {
+    "id": "public-population-command-line",
+    "type": "DOCUMENT"
+  },
+  "summary": "Carry the population route on malleus-compiler and guard two silent couplings.",
+  "why": "P3 left malleus-compiler at one subcommand: a session could propose an ontology from a shell and had to write Python for the rest. It now carries history create, retain, capture, populate, admit, replay, query and trace, each wrapping one public call, with transaction time, actor, profile and every source, evidence, plan and change-set file named explicitly, and refusals on stderr with exit 2. population_retention_events is the one new public name: prepare_population_change refuses any event set that is not exactly the artifacts it retains, and the gaps bytes it generates reach no public surface, so every caller restated that shape. admit rebuilds the preparation from the bytes populate wrote; the change set's own base coordinates refuse a moved base, under test. The end-to-end test reaches a ledger byte-identical to the library route but not the fixture change-set identity: that plan binds a contract composed with the seed script's normative profile, this route the shipped one. Two guards close couplings that had none: fixture manifest bytes, and handover references under src and tests, held to an exact inventory because OVR-000391's claim that none exist is not exact."
+}
