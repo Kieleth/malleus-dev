@@ -1,10 +1,10 @@
 # Malleus paper master plan
 
-Version: 1.1.0
+Version: 1.2.0
 
 Date: 2026-09-03
 
-Status: corrected run complete through Codex preliminary inspection, clean environment reproduction, and arXiv source plus rendered-PDF inspection under D-0018. The completed question-conditioned run at commit `746a48b` is frozen as historical evidence. The selected versioned run starts at ontology acquisition without competency-question conditioning, keeps query surfaces outside knowledge-state identity, and replaces automated exact-match scoring with source-grounded inspection. Identified human ratification, public reachability of the exact paper snapshot, and final author review remain pending.
+Status: corrected v2 run complete through Codex preliminary inspection, clean environment reproduction, and arXiv source plus rendered-PDF inspection under D-0018. The author has now authorized one KISS v4 document run after the required Core execution gate closes. V4 uses one producer loop, a `source-assertion` history profile with `PARTIAL_IMPORT` origin, grounded packs, typed gaps, and no question input before replay. It supersedes v2 as the selected paper result only if the full run, inspection, and reproduction gates pass. Until then, v2 remains the selected evidence and every v4 artifact is provisional.
 
 ## Objective
 
@@ -172,9 +172,12 @@ Use one protocol figure and compact result tables only where they reduce prose. 
 
 ## Remaining order
 
-1. Obtain identified human ratification of the inspection record.
-2. Publish the exact paper reproducer through an immutable tag or archive with a reachable URL.
-3. Perform the final author review and submit the arXiv bundle.
+1. Audit and bind the immutable Core artifacts for the full domain-history profile, grounded packs, and nascent-project playbook.
+2. Execute one fresh, question-free v4 producer loop from the selected reading, retaining typed gaps and no fallback.
+3. Dispose live state, reopen and replay the ledger, then bind and run evaluator-owned queries against the replayed graph.
+4. Prepare source-grounded preliminary inspection for author ratification.
+5. Reconcile the lean manuscript and arXiv source, reproduce from a clean checkout, and visually inspect the rendered PDF.
+6. Publish the exact paper reproducer through an immutable tag or archive, obtain final author review, and submit.
 
 ## Submission gate
 
@@ -194,6 +197,7 @@ Submit only when:
 
 ## Plan changelog
 
+- 1.2.0, 2026-09-03: Accepted the KISS v4 execution cut under the author's overnight relay instruction. Selected one document and one producer loop, `source-assertion` with conservative `PARTIAL_IMPORT` origin, questions only after replay, typed gaps, no fallback, and no more than two evidence-triggered ontology revision rounds. The prior three-producer matrix remains diagnostic background. V2 remains selected until v4 passes its complete evidence and reproduction gates.
 - 1.1.0, 2026-09-03: Applied D-0018. Preserved the completed question-conditioned run as history, selected a versioned rerun from ontology acquisition, removed competency questions and derived semantic targets from ontology construction, placed adopter query surfaces after replay identity, withdrew automated exact-match scoring, and selected source-grounded inspection with explicit human ratification.
 - 1.0.0, 2026-09-02: Applied D-0017. Rebound the isolated paper branch to exact Core `f9052b4`, accepted the published Small Shop correction tag as bounded research evidence, and accepted the later private composer as a private implementation seam. Preserved the PDF exclusion, five identities, frozen model inputs, and claim boundary.
 - 0.9.0, 2026-09-02: Applied author decisions D1 through D6. Moved to a pinned PDF text-layer reading, clean Core worktree, five-identity budget, fresh model-authored population, compiler-only ontology gate, one evaluator acceptance event, type-based query binding, and no fallback. Retired raster OCR, hand recovery, adequacy review, fixed graph closure, and answer-encoding recipes. D1 completed at the selected-reading digest above.

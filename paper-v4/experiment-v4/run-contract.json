@@ -1,0 +1,89 @@
+{
+  "schema": "malleus.paper-v4.v4-run-contract/v1",
+  "status": "WAITING_FOR_CORE_GATE",
+  "scope": {
+    "documents": 1,
+    "producer_loops": 1,
+    "staged_session_variant": false,
+    "new_multi_producer_matrix": false
+  },
+  "source": {
+    "source_id": "source:yu-2025-mid-atlantic-ridge",
+    "pdf_sha256": "sha256:7d3d42bf17cbf1280a63cbb164254b5b839f4e380d458086065cb309caf1a2a9",
+    "selected_reading_sha256": "sha256:f3885c7b50292cd2dea05b540abe68464b089767e478eca74cd37149900a8a17"
+  },
+  "core_gate": {
+    "status": "REQUIRED_UNBOUND",
+    "required_pieces": [
+      "FULL_DOMAIN_HISTORY_PROFILE",
+      "GROUNDED_PACKS_AND_PACK_GROUNDING",
+      "NASCENT_PROJECT_PLAYBOOK"
+    ]
+  },
+  "history": {
+    "profile_id": "source-assertion",
+    "semantic_unit": "ASSERTION",
+    "origin": "PARTIAL_IMPORT",
+    "modality_rule": "QUERYABLE_OR_TYPED_REFUSAL"
+  },
+  "producer": {
+    "session": "FRESH_SINGLE_SESSION",
+    "inputs": [
+      "MALLEUS_NASCENT_PROJECT_SKILL",
+      "SELECTED_READING",
+      "SHIPPED_DOMAIN_HISTORY_PROFILES",
+      "SHIPPED_GROUNDED_PACKS"
+    ],
+    "forbidden_inputs": [
+      "COMPETENCY_QUESTIONS",
+      "QUERY_BINDING",
+      "ANSWER_ORACLE",
+      "PRIOR_POPULATION",
+      "PRIOR_RESULT",
+      "MANUSCRIPT"
+    ],
+    "network": "FORBIDDEN",
+    "delegation": "FORBIDDEN",
+    "fallback": "FORBIDDEN",
+    "max_compiler_diagnostic_returns": 2,
+    "max_ontology_revision_rounds": 2,
+    "revision_trigger": "SOURCE_LOCATED_TYPED_GAP",
+    "terminal_rule": "STOP_WHEN_ANOTHER_ADDITION_WOULD_REQUIRE_INVENTION"
+  },
+  "population": {
+    "questions_visible": false,
+    "constructible_types": "ALL_CONCRETE_ENTITY_AND_RELATION_TYPES",
+    "field_level_source_derivations": "REQUIRED",
+    "typed_gaps": "REQUIRED_WHEN_ASSERTION_IS_NOT_FORMALIZED",
+    "human_repair": "FORBIDDEN"
+  },
+  "query": {
+    "binding_owner": "PAPER_EVALUATOR",
+    "binding_time": "AFTER_POPULATION_AND_REPLAY_FREEZE",
+    "execution_state": "REPLAY_DERIVED_GRAPH_ONLY",
+    "source_reads": "FORBIDDEN",
+    "network": "FORBIDDEN",
+    "embedding_index": "FORBIDDEN",
+    "knowledge_state_identity": "EXCLUDED"
+  },
+  "evaluation": {
+    "questions_enter_at": "POST_REPLAY_QUERY_BINDING",
+    "method": "SOURCE_GROUNDED_HUMAN_INSPECTION",
+    "numeric_score": "FORBIDDEN",
+    "preliminary_inspector": "CODEX",
+    "paper_evidence_requires": "LUIS_RATIFICATION"
+  },
+  "completion": [
+    "ONTOLOGY_DIAGNOSTIC_HISTORY",
+    "ACCEPTED_ONTOLOGY_AND_REVISIONS",
+    "DOCUMENT_CAPTURE_AND_CENSUS",
+    "POPULATION_PLAN_AND_TYPED_GAPS",
+    "ADMITTED_LEDGER",
+    "REOPEN_REPLAY_RECEIPT",
+    "POST_REPLAY_QUERY_BINDING",
+    "QUERY_RESULTS",
+    "SOURCE_GROUNDED_PRELIMINARY_INSPECTION",
+    "CLEAN_REPRODUCTION_RECEIPT",
+    "LEAN_MANUSCRIPT_AND_RENDERED_PDF"
+  ]
+}

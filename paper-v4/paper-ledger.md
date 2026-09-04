@@ -1543,3 +1543,17 @@ Provisional cut for author review: use one document and one default single-sessi
 Boundary: This is a recorded recommendation under the overnight autonomy instruction, not an accepted author decision. It does not increment the master plan, change the selected result, or authorize a run.
 
 Impact: Continue with paper prose, a dependency-stable run manifest, and harness isolation specifications. Start no v4 model population until the Core execution gate closes.
+
+### E-0100, author accepts the KISS v4 run and overnight relay
+
+Date: 2026-09-03
+
+Sources: the author's instruction to resume the paper and PDF capture as soon as Core finishes, to coordinate exact Core needs through the existing Core task, and to produce a new paper-ready result from rich replay-derived graph queries; the KISS priority in D-0001 and D-0002; and the provisional cut in E-0099.
+
+Decision: Execute one document and one fresh single-session producer loop. Use the shipped `source-assertion` history profile with origin `PARTIAL_IMPORT`, because the run cannot prove exhaustive capture of every assertion in the reading. Withhold competency questions, query binding, answer material, prior runs, and manuscript results from ontology construction and population. Bind evaluator-owned queries only after population and replay freeze. Permit at most two compiler-diagnostic returns and at most two ontology revision rounds triggered by source-located typed gaps. Allow no hand repair, alternate producer, or fallback. Retain the prior three-producer comparison as diagnostic background and move a new matrix and staged-session variant outside this paper.
+
+Boundary: V2 remains the selected result until the v4 Core gate, producer loop, admission, replay, query, inspection, and clean-reproduction gates all pass. Codex may prepare a preliminary source-grounded inspection overnight, but only Luis can ratify it as paper evidence. No current v2 identity or result is rewritten by this decision.
+
+Guard: `paper-v4/experiment-v4/run-contract.json` records the executable boundary without population facts or answer values. Its focused tests require one loop, no fallback, question-free construction, post-replay querying, source-free query execution, and an unbound Core gate that prevents premature execution.
+
+Impact: Master plan 1.2.0 accepts the lean v4 cut. Paper-only preparation continues while Core finishes the remaining public profile, pack, and playbook pieces.
