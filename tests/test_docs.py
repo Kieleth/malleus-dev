@@ -2706,6 +2706,15 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "warehouse record plus a separate inventory lookup",
         "from malleus.compiler import compile_linkml_contract",
         "malleus-compiler contract",
+        "malleus-compiler history create",
+        "malleus-compiler retain",
+        "malleus-compiler capture",
+        "malleus-compiler populate",
+        "malleus-compiler admit",
+        "malleus-compiler replay",
+        "malleus-compiler query",
+        "malleus-compiler trace",
+        "population_retention_events",
         "graph-to-Prolog fact compiler",
         "Quick start: structural validation",
         "The fingerprint grammar is reported separately",
@@ -2722,6 +2731,7 @@ def test_public_compiler_milestone_is_grounded_and_bounded() -> None:
         "Two examples ship with the library",
         "the six principles the rites defend",
         "2 means the instrument itself is broken",
+        "command currently covers contract compilation only",
     ):
         assert stale_readme_claim not in readme
 

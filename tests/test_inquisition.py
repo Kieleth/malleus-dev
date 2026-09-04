@@ -1802,6 +1802,15 @@ class TestSkillsAreInstallable:
             "KnowledgeGraph.from_records",
             "stop before step 6",
             "malleus-compiler contract",
+            "malleus-compiler history create",
+            "malleus-compiler retain",
+            "malleus-compiler capture",
+            "malleus-compiler populate",
+            "malleus-compiler admit",
+            "malleus-compiler replay",
+            "malleus-compiler query",
+            "malleus-compiler trace",
+            "population_retention_events",
             "Keep instances out of schema vocabulary",
             "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
             "Labels identify records",
@@ -1862,7 +1871,7 @@ class TestSkillsAreInstallable:
         )
         for phrase in required:
             assert phrase in section
-        assert "The command-line compiler stops at contract compilation" in section
+        assert "The command-line compiler stops at contract compilation" not in section
         steps = (
             "Retain the source boundary",
             "Choose the Malleus level",
@@ -1916,6 +1925,8 @@ class TestSkillsAreInstallable:
         ).read_text(encoding="utf-8")
         assert "## Starting a project with no schema" in installed
         assert "malleus-compiler contract" in installed
+        assert "malleus-compiler populate" in installed
+        assert "malleus-compiler trace" in installed
         assert "neutral population plan" in installed
 
     def test_nascent_document_template_runs_through_the_public_adapter(
