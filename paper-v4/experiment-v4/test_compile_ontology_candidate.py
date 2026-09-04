@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
-import shutil
+import subprocess
 
 
 SUBJECT_PATH = Path(__file__).with_name("compile_ontology_candidate.py")
@@ -17,23 +17,31 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def _producer_inputs(tmp_path: Path) -> Path:
+    # Run-01 is frozen at its recorded paper merge commit (which carries Core
+    # 6488ddb); its inputs are the bytes at that commit, not the live tree,
+    # which has moved since (the packs were revised on 2026-09-04).
+    contract = json.loads(Path(__file__).with_name("run-contract.json").read_bytes())
+    frozen_commit = contract["core_gate"]["execution_baseline"]["paper_merge_commit"]
     producer = tmp_path / "producer"
     for target in SUBJECT.SOURCE_TARGETS.values():
-        source = (
-            ROOT
-            / {
-                "inputs/malleus.yaml": "ontology/malleus.yaml",
-                "inputs/linkml-types.yaml": (
-                    "paper-v4/experiment-v2/run-inputs/linkml-types.yaml"
-                ),
-                "inputs/metrology.yaml": "ontology/packs/metrology.yaml",
-                "inputs/chronology.yaml": "ontology/packs/chronology.yaml",
-                "inputs/research.yaml": "ontology/packs/research.yaml",
-            }[target]
-        )
+        source = {
+            "inputs/malleus.yaml": "ontology/malleus.yaml",
+            "inputs/linkml-types.yaml": (
+                "paper-v4/experiment-v2/run-inputs/linkml-types.yaml"
+            ),
+            "inputs/metrology.yaml": "ontology/packs/metrology.yaml",
+            "inputs/chronology.yaml": "ontology/packs/chronology.yaml",
+            "inputs/research.yaml": "ontology/packs/research.yaml",
+        }[target]
+        frozen = subprocess.run(
+            ["git", "show", f"{frozen_commit}:{source}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         destination = producer / target
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
+        destination.write_bytes(frozen)
     return producer
 
 
