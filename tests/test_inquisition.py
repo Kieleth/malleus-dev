@@ -1804,6 +1804,10 @@ class TestSkillsAreInstallable:
             "document capture",
             "coverage of the retained reading is the objective",
             "never the smallest query- or answer-changing subset",
+            (
+                'overrides the global "smallest observation", "Build only what '
+                'changes the answer", and "Build less" rules for document capture'
+            ),
             "neutral population plan",
             "every concrete Entity and Relation type",
             "canonical_census_bytes",
