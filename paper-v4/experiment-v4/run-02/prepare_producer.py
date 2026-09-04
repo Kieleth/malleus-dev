@@ -95,7 +95,7 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
         "schema": "malleus.paper-v4.producer-input-receipt/v1",
         "run_id": manifest["run_id"],
         "core": manifest["core"],
-        "input_bytes": manifest["input_bytes"],
+        "input_bytes": manifest.get("input_bytes", {"tracked": "GIT_SHOW_AT_CORE_COMMIT", "untracked": ["SELECTED_READING"]}),
         "producer": manifest["producer"],
         "files": [
             {
