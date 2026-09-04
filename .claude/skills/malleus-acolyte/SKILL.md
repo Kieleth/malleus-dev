@@ -346,8 +346,8 @@ live grammar or closed shape; the adapter reads its pages and each block's ID,
 ordinal, and text. The only live grammar in this example is
 `DOCUMENT_CAPTURE_GRAMMAR == malleus.document-capture/private-v0` in
 `capture.schema`. The capture root, attribution, assertion, formalisation, and
-gap shapes are closed by the adapter. The Entity and Relation records illustrate
-the neutral plan envelopes checked by the population compiler.
+gap shapes are closed by the adapter. The Entity, Event, and Relation records
+illustrate the neutral plan envelopes checked by the population compiler.
 `assertion_time` and `domain_time` are optional strings: omit either when it is
 unknown, never invent it or encode it as null. `accepted_gap_kinds` lists the
 complete current set and is guidance, not an adapter argument.
@@ -359,6 +359,18 @@ statement must occur verbatim after whitespace normalization in that block. If
 `record_id` and `path` must resolve in `records`. Every `nothing_assertable`
 block ID must exist in the reading. A failure is a typed refusal, not permission
 to repair, infer, or ignore the capture.
+
+The `records` object carries an `events` envelope beside `entities` and
+`relations`. Event-typed records are admitted only when the bound profile's
+`ontology_roles.event` is nonempty and the accepted ontology declares the type;
+`event_participations` additionally need an `EventParticipation` type in the
+compiled contract. The adapter checks no family name of its own: it passes
+`records` through and names the shipped `source-assertion` profile, whose Event
+role is nonempty, in the plan it emits. The plan compiler decides admission
+against the profile actually bound, so pass that profile to
+`compile_population_plan`, or `--profile` to `malleus-compiler populate`; with
+no profile bound, only `entities` and `relations` are admitted and a nonempty
+`events` family refuses with `FAMILY_NOT_ADMITTED`.
 
 Provenance also runs the other way: every key under a record's `properties`,
 and both endpoints of a relation record, must be named by at least one
@@ -416,6 +428,19 @@ so sweep the whole capture for missing derivations before you submit it.
         "id": "assertion:1",
         "modality": "STATED",
         "statement": "On 2026-01-02, object A links to object B."
+      },
+      {
+        "block": "block:3",
+        "formalized_by": [
+          {
+            "path": ["properties", "outcome"],
+            "record_id": "event:inspection:1"
+          }
+        ],
+        "gaps": [],
+        "id": "assertion:2",
+        "modality": "STATED",
+        "statement": "Object A passed inspection."
       }
     ],
     "attribution": {
@@ -424,7 +449,7 @@ so sweep the whole capture for missing derivations before you submit it.
       "source_id": "source:neutral"
     },
     "nothing_assertable": [],
-    "reading_sha256": "sha256:259fa8fd86ba0afd43998e66fc0edc2633a41863f7e9b901707825e56a1d3423",
+    "reading_sha256": "sha256:b9ce4886371f23412e778928a20599d4f656e36cc117e1d2f606f73174e08e29",
     "schema": "malleus.document-capture/private-v0"
   },
   "capture_id": "capture:neutral:1",
@@ -443,6 +468,11 @@ so sweep the whole capture for missing derivations before you submit it.
             "id": "block:2",
             "ordinal": 1,
             "text": "No captured assertion in this block."
+          },
+          {
+            "id": "block:3",
+            "ordinal": 2,
+            "text": "Object A passed inspection."
           }
         ],
         "page": 1
@@ -460,6 +490,15 @@ so sweep the whole capture for missing derivations before you submit it.
         "id": "object:B",
         "properties": {},
         "type": "ProjectObject"
+      }
+    ],
+    "events": [
+      {
+        "id": "event:inspection:1",
+        "properties": {
+          "outcome": "PASSED"
+        },
+        "type": "ProjectInspectionEvent"
       }
     ],
     "relations": [
