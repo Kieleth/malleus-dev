@@ -20,8 +20,12 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Stronger-declaration RED: `8a0cb78b001370b3f5e1bed7d7f83ad9b27e9a75`
 - Stronger-declaration GREEN: `b5625b58ed274ab6734fc28e215910fcefc13479`
 - Strengthening-list RED: `9ff72d098e7f3b635888ec40141f16975a7cfb18`
-- Final implementation GREEN: `7a78406e7473cf49dee3901d221ffa5c5bd3655e`
-- Final implementation GREEN tree: `6bddb47e2d088134848988e61eeadbeff03165ee`
+- Strengthening-list GREEN: `7a78406e7473cf49dee3901d221ffa5c5bd3655e`
+- Duplicate-list RED: `32aaf89b2954814d0b38972422abf48b8d678fa2`
+- Duplicate-list GREEN: `978d6bd2071b35d6319d9a59e8ab43f4a2ccb6ba`
+- Reference-import RED: `33f915b722000811fe142be69c00d865fdf746e6`
+- Final implementation GREEN: `b37c59708a4ed03eab89d0d3f8dda60912a4ee53`
+- Final implementation GREEN tree: `ea2d724638f3a72fabe3d32a05f04502b814551c`
 
 ## What changed
 
@@ -84,9 +88,11 @@ traceback.
 The separate conformance call compares an edited pack with one exact reference
 pack. Documentation, new declarations, and enum values may be added. Existing
 classes, slots, enums, scalar constraints, mapping constraints, and declaration
-lists must remain structurally substitutable. A project extends an existing
-class through a new subclass rather than making old instances invalid. The
-receipt binds both source identities.
+lists must remain structurally substitutable. Preserved declaration lists may
+be reordered but cannot contain duplicates. Reference imports likewise remain
+one unique, set-equivalent list. A project extends an existing class through a
+new subclass rather than making old instances invalid. The receipt binds both
+source identities.
 
 The packs are available through `malleus.ontology.bundled_ontology_path` in a
 checkout and installed package. `malleus.compiler.compile_linkml_contract`
@@ -101,7 +107,7 @@ as `research` never resolves through ambient network or filesystem state.
 | `ontology/packs/chronology.yaml` | `6fbd3b49b32f698d8a9f31dcff770660153d822478a3007d0b8018c2af4439b1` |
 | `ontology/packs/research.yaml` | `c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e` |
 | grounding rite | `1f642cffadd71e0dc4aabe3f9fdf48b0c0068e2ff4a5e5b8ea588a18de8b3a3e` |
-| grounding and conformance executor | `87bae6022baa6f5dd4bcb1cc922d304173a75b2d7445be78bc3c43a2ec86ed9f` |
+| grounding and conformance executor | `37df23e72a764c6ceb8b03797811c67586412698a2d6c0272e394d660b7bf838` |
 
 The LinkML support profile advances from `malleus.linkml/private-v0` to
 `malleus.linkml/private-v1` because schema and class grounding annotations are
@@ -118,9 +124,9 @@ evidence is regenerated and tested separately.
 
 ## Mechanical evidence
 
-- The final focused pack suite passes 28 tests.
-- The complete contract-compiler and inquisitor suites pass 891 tests.
-- The Small Shop plus pack integration slice passes 243 tests after
+- The final focused pack suite passes 32 tests.
+- The complete contract-compiler and inquisitor suites pass 895 tests.
+- The Small Shop plus pack integration slice passes 247 tests after
   regenerating current evidence under the new compiler profile.
 - The three shipped packs compile through the public compiler.
 - One project importing both `research` and `metrology` compiles through the
@@ -131,7 +137,8 @@ evidence is regenerated and tested separately.
 - An edited copy may change documentation, add a class, and add an enum value.
   It refuses if the copy deletes the reference surface, makes a concrete class
   abstract, makes an existing slot required, or adds a requirement-bearing
-  mixin to an existing class.
+  mixin to an existing class. It also refuses repeated existing mixins,
+  repeated existing slots, and missing or duplicate reference imports.
 - Tests bind `Observation` and `Sample` specifically to SOSA/SSN, VIM to
   `measuring instrument`, and the supported Frascati terms to Frascati. They
   also prove that `Agent`, `Campaign`, and `Instrument` are not misreported as

@@ -297,11 +297,11 @@ chosen source is good scholarship.
 If a project copies and edits a pack while claiming compatibility with it,
 `validate_pack_conformance(edited_bytes, reference=shipped_bytes)` binds both
 byte identities and checks the reference declaration surface. Documentation
-and additive declarations or enum values may change. Removing a reference
-declaration, changing an existing declaration list, or adding a stronger
-constraint to one refuses. Extend an existing class through a new subclass.
-This is a structural check, not a claim that the edited vocabulary is
-semantically equivalent.
+and additive declarations or enum values may change. Reference imports remain
+one unique, order-independent set. Removing a reference declaration, changing
+an existing declaration list, or adding a stronger constraint to one refuses.
+Extend an existing class through a new subclass. This is a structural check,
+not a claim that the edited vocabulary is semantically equivalent.
 
 ```{toctree}
 :maxdepth: 1

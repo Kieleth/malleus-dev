@@ -27,6 +27,7 @@ the intellectual suitability of a cited vocabulary.
 `validate_pack_conformance` checks an edited pack against exact reference
 bytes. It permits documentation changes, new declarations, and new enum values
 while refusing removal or strengthening of the reference declaration surface.
+Reference imports must remain unique and set-equivalent.
 
 ```{eval-rst}
 .. autosummary::

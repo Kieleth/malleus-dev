@@ -372,8 +372,9 @@ def validate_pack_conformance(
 ) -> PackConformanceReceipt:
     """Check that an edited pack preserves one exact reference pack's surface.
 
-    Documentation may change and declarations may be added. Existing class,
-    slot, and enum declarations may not be removed or weakened.
+    Documentation may change and declarations may be added. Reference imports
+    remain one unique set. Existing class, slot, and enum declarations may not
+    be removed or weakened.
     """
 
     source_receipt = validate_pack_grounding(source, role="PACK")

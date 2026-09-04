@@ -286,6 +286,7 @@ APPROVED_REFERENCE_SOURCE = (
     "`validate_pack_conformance` checks an edited pack against exact reference\n"
     "bytes. It permits documentation changes, new declarations, and new enum values\n"
     "while refusing removal or strengthening of the reference declaration surface.\n"
+    "Reference imports must remain unique and set-equivalent.\n"
     "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
