@@ -1,10 +1,13 @@
-"""Build the run-02 producer workspace from the frozen input manifest.
+"""Build the run-02 producer workspace from the bytes at the recorded commit.
 
-The workspace is the Claude layout: the installer writes every shipped skill
-under ``.claude/skills`` and this script prunes that tree to exactly the one
-declared skill file. Nothing else survives. The closure is checked file by file
-against the manifest digests, so a drifted repository refuses here instead of
-producing a workspace that no longer matches the run contract.
+Core is expected to change the skill and the packs on main while this run is
+open. A run's declared inputs are the bytes its producer consumed, so every
+tracked input is read with ``git show <core commit>:<path>`` and never from the
+working tree; the skill is installed by writing those bytes to the Claude path
+rather than by running the installer against a tree that may have moved. The
+selected reading is untracked and is read from its private path. Every input is
+checked against the manifest digest, and the resulting file set must equal the
+declared targets exactly.
 """
 
 from __future__ import annotations
@@ -14,11 +17,11 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import subprocess
-import sys
 
 
 ROOT = Path(__file__).resolve().parents[3]
 MANIFEST = Path(__file__).with_name("producer-input-manifest.json")
+UNTRACKED_INPUTS = {"SELECTED_READING"}
 
 
 class ProducerPreparationRefusal(ValueError):
@@ -33,17 +36,24 @@ def _inside(path: Path, root: Path) -> bool:
     return path == root or root in path.parents
 
 
-def _prune_skill_tree(skill_root: Path, allowed: set[Path]) -> None:
-    for path in sorted(skill_root.rglob("*"), reverse=True):
-        if path.is_file() or path.is_symlink():
-            if path.resolve() not in allowed:
-                path.unlink()
-        elif path.is_dir() and not any(path.iterdir()):
-            path.rmdir()
+def _git_show(commit: str, path: str) -> bytes:
+    """The tracked bytes at ``commit``, or a refusal naming what is missing."""
+    completed = subprocess.run(
+        ["git", "show", f"{commit}:{path}"],
+        capture_output=True,
+        cwd=ROOT,
+    )
+    if completed.returncode != 0:
+        raise ProducerPreparationRefusal(
+            f"declared input is not readable at {commit}: {path}"
+            f" ({completed.stderr.decode(errors='replace').strip()})"
+        )
+    return completed.stdout
 
 
 def prepare(reading: Path, output: Path) -> dict[str, object]:
     manifest = json.loads(MANIFEST.read_bytes())
+    commit = manifest["core"]["commit"]
     private_root = (ROOT / "private").resolve()
     output = output.resolve()
     if output == private_root or not _inside(output, private_root):
@@ -53,10 +63,11 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
 
     sources: dict[str, bytes] = {}
     for item in manifest["declared_inputs"]:
-        source = (
-            reading if item["name"] == "SELECTED_READING" else ROOT / item["source"]
+        data = (
+            reading.read_bytes()
+            if item["name"] in UNTRACKED_INPUTS
+            else _git_show(commit, item["source"])
         )
-        data = source.read_bytes()
         if _digest(data) != item["sha256"]:
             raise ProducerPreparationRefusal(
                 f"declared input digest mismatch: {item['name']}"
@@ -65,22 +76,6 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.mkdir()
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "malleus.inquisition.cli",
-            "install-skills",
-            "--agent",
-            "claude",
-            "--project",
-            str(output),
-        ],
-        capture_output=True,
-        cwd=ROOT,
-        check=True,
-    )
-
     declared_targets: set[Path] = set()
     for item in manifest["declared_inputs"]:
         target = output / item["target"]
@@ -88,7 +83,6 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
         target.write_bytes(sources[item["name"]])
         declared_targets.add(target.resolve())
 
-    _prune_skill_tree(output / ".claude" / "skills", declared_targets)
     actual = {
         path.resolve()
         for path in output.rglob("*")
@@ -101,6 +95,7 @@ def prepare(reading: Path, output: Path) -> dict[str, object]:
         "schema": "malleus.paper-v4.producer-input-receipt/v1",
         "run_id": manifest["run_id"],
         "core": manifest["core"],
+        "input_bytes": manifest["input_bytes"],
         "producer": manifest["producer"],
         "files": [
             {
