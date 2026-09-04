@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 from base64 import b64encode
+from copy import deepcopy
 from dataclasses import replace
 from hashlib import sha256
 import inspect
@@ -43,6 +44,14 @@ from tests.contract_compiler.pareto.test_validated_contract import (
 
 KCS_GRAMMAR = "malleus.knowledge-change-set/private-v0"
 BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v0"
+ROLE_BOUND_BINDING_GRAMMAR = "malleus.knowledge-history-binding/private-v1"
+ARTIFACT_RETENTION_ROLES = [
+    "KNOWLEDGE_HISTORY_BINDING",
+    "PARTIAL_EFFECTIVE_CONTRACT",
+    "RETAINED_EVIDENCE",
+    "SOURCE_ARTIFACT",
+    "VALIDATED_CONTRACT",
+]
 CONTRACT_KIND = "PRIVATE_PARTIAL_EFFECTIVE_CONTRACT_V0"
 TRANSACTION_TIME = "2026-09-01T00:00:00Z"
 
@@ -138,6 +147,20 @@ def _binding_payload() -> dict[str, object]:
             },
         },
     }
+
+
+def _role_bound_binding_payload() -> dict[str, object]:
+    payload = deepcopy(_binding_payload())
+    payload["grammar"] = ROLE_BOUND_BINDING_GRAMMAR
+    retention = payload["retention_events"]
+    assert isinstance(retention, dict)
+    artifact = retention["ARTIFACT_REGISTERED"]
+    source = retention["SOURCE_REGISTERED"]
+    assert isinstance(artifact, dict)
+    assert isinstance(source, dict)
+    artifact["allowed_roles"] = list(ARTIFACT_RETENTION_ROLES)
+    source["allowed_roles"] = ["RETAINED_SOURCE"]
+    return payload
 
 
 def _history(tmp_path: Path):
@@ -1891,3 +1914,54 @@ def test_history_binding_is_canonical_and_data_owns_machine_vocabulary() -> None
         "knowledge_change_set_identity",
     ):
         assert literal not in production
+
+
+def test_role_bound_history_binding_is_canonical_and_closed() -> None:
+    payload = _role_bound_binding_payload()
+    source = _canonical(payload)
+
+    binding = KnowledgeChangeHistoryBinding.from_bytes(source)
+
+    assert binding.canonical_bytes == source
+    assert binding.identity == _digest(source)
+    assert binding.data["retention_events"]["ARTIFACT_REGISTERED"][
+        "allowed_roles"
+    ] == tuple(ARTIFACT_RETENTION_ROLES)
+    assert binding.data["retention_events"]["SOURCE_REGISTERED"]["allowed_roles"] == (
+        "RETAINED_SOURCE",
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["missing", "extra", "empty", "duplicate", "unsorted", "unknown", "not-list"],
+)
+def test_role_bound_history_binding_refuses_ambiguous_role_sets(
+    mutation: str,
+) -> None:
+    payload = _role_bound_binding_payload()
+    retention = payload["retention_events"]
+    assert isinstance(retention, dict)
+    artifact = retention["ARTIFACT_REGISTERED"]
+    assert isinstance(artifact, dict)
+    if mutation == "missing":
+        del artifact["allowed_roles"]
+    elif mutation == "extra":
+        artifact["extra"] = True
+    elif mutation == "empty":
+        artifact["allowed_roles"] = []
+    elif mutation == "duplicate":
+        artifact["allowed_roles"] = ["RETAINED_EVIDENCE", "RETAINED_EVIDENCE"]
+    elif mutation == "unsorted":
+        artifact["allowed_roles"] = ["VALIDATED_CONTRACT", "RETAINED_EVIDENCE"]
+    elif mutation == "unknown":
+        artifact["allowed_roles"] = ["SOMETHING_ELSE"]
+    elif mutation == "not-list":
+        artifact["allowed_roles"] = "RETAINED_EVIDENCE"
+    else:
+        raise AssertionError(mutation)
+
+    with pytest.raises(KnowledgeChangeRefusal) as refusal:
+        KnowledgeChangeHistoryBinding.from_bytes(_canonical(payload))
+
+    assert refusal.value.reason is KnowledgeChangeRefusalReason.MALFORMED_BINDING
