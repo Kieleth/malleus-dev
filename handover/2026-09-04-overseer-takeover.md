@@ -56,3 +56,11 @@ Branch `paper-v4-multimodel` at ca8c9de, tag `paper-v4-multimodel-v2`: manuscrip
 3. Merge `paper-v4-multimodel` into main, then the paper thread's 23 commits, resolve conflicts, push main and tag v2.
 4. Rebind the v4 run contract to the final Core coordinate, cut the spawn message to isolation, record the producer model, run one fresh producer through ontology, population, admission, replay, evaluator queries, review, ratification.
 5. Manuscript per decision 3.
+
+## Decisions taken (Luis, 2026-09-04 morning, in chat)
+
+1. Push main after the governance ledger is repaired: yes.
+2. P9 and the structural-history surface: keep and record (recorded in OVR-000385 to OVR-000390, commit bf3f3af).
+3. Manuscript of record: 1.2.1 on `paper-v4-multimodel` stays the paper; the v4 result becomes a new section when it exists; the three-producer comparison stays. The lean v4 draft does not replace the arXiv sources.
+4. The v4 rerun: one fresh Claude Opus 5 producer first, spawn message cut back to isolation only, model recorded in the run contract, then Sonnet 5 as a second cell if the first reaches queries.
+5. Execution: one Opus subagent per repair with a written contract, verified on disk by the overseer before the next; Core first, then paper.
