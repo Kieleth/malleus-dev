@@ -2778,7 +2778,11 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "completeness covers only the declared sources, not the whole world",
         "Core now supplies closed, hashed profile artifacts",
         "does not yet execute arbitrary projection rules from profile text",
-        "`object-event` profile is therefore declarative until Event population is supported",
+        (
+            "`object-event` profile now admits Event records and qualified "
+            "Event-to-Entity participation records through the same change-set, "
+            "admission, ledger, and replay path"
+        ),
         "Each change's source closure is bundle-wide",
         "`selected_records` identifies the rows used by the mapping",
         "All 19 fixture source members",
@@ -2898,6 +2902,30 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         "deferred": "STAGE_WISE_SOURCE_REGISTRATION_AND_OBSERVATION",
         "meaning": "STAGED_ADMISSION_NOT_LIVE_OBSERVATION",
     }
+
+    object_event_path = (
+        ROOT
+        / "research"
+        / "ontology_driven_kg_realization"
+        / "experiments"
+        / "small_shop"
+        / "object_event"
+        / "evidence.json"
+    )
+    object_event = json.loads(object_event_path.read_bytes())
+    assert object_event["oracle_matches"] is True
+    assert object_event["history"]["change_set_count"] == 1
+    assert len(object_event["observed"]["event"]) == 1
+    assert len(object_event["observed"]["participations"]) == 5
+    assert object_event["observed"]["relation_count"] == 0
+    assert "small_shop/object_event/evidence.json" in guide
+    for value in (
+        object_event["contract_identity"],
+        object_event["graph_state_digest"],
+        object_event["history"]["ledger_sha256"],
+        object_event["source_identity"],
+    ):
+        assert value in guide
 
     accepted_changes = explanation["accepted_changes"]
     change_ids = [item["change_set_id"] for item in accepted_changes]
