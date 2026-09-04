@@ -17,7 +17,8 @@ Use the locked paper interpreter. The manifest excludes superseded and retired
 experiment trees by construction and supplies the repository import path:
 
 ```sh
-/private/tmp/malleus-paper-v4-lock-verify/bin/python paper-v4/run_active_tests.py
+malleus_paper_env="$PWD/private/paper-v4-cp312"
+"$malleus_paper_env/bin/python" paper-v4/run_active_tests.py
 ```
 
 ## Reproduce the experiment

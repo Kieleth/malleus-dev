@@ -1592,6 +1592,8 @@ Observation: A directory-wide pytest invocation collected superseded tests under
 
 Guard: `paper-v4/active-test-manifest.json` names the active test roots, the two excluded historical roots, import roots, and pytest import mode. `paper-v4/run_active_tests.py` validates every path, refuses paths outside the repository or inside excluded history, sets the exact import roots, and runs the manifest. A paper-local test hardens those exclusions.
 
+The first README edit named the verifier's temporary environment directly. That host-local path was replaced by the documented repository-local environment variable. A test now refuses `/private/tmp` in publication instructions.
+
 Impact: The active gate now has one reproducible command. Superseded experiments cannot silently re-enter a v4 pass count.
 
 ### E-0104, v4 questions and human review are frozen outside the producer loop

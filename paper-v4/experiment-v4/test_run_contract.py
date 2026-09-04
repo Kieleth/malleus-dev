@@ -8,6 +8,7 @@ from pathlib import Path
 CONTRACT_PATH = Path(__file__).with_name("run-contract.json")
 ROOT = Path(__file__).resolve().parents[2]
 ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
+ARXIV_README = ROOT / "paper-v4" / "arxiv" / "README.md"
 
 
 def _contract() -> dict[str, object]:
@@ -115,3 +116,12 @@ def test_v4_questions_and_human_review_are_frozen_but_producer_blind() -> None:
     ]
     assert protocol["authorship"]["ratifier_actor_id"] == "actor:luis"
     assert "numeric_score" in protocol["forbidden_record_fields"]
+
+
+def test_publication_instructions_do_not_name_an_ephemeral_host_environment() -> None:
+    instructions = ARXIV_README.read_text(encoding="utf-8")
+
+    assert "/private/tmp" not in instructions
+    assert (
+        '"$malleus_paper_env/bin/python" paper-v4/run_active_tests.py' in instructions
+    )
