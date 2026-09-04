@@ -22,7 +22,7 @@ ASSERTION_TIMES = {
     },
     "asr:002": {
         "assertion_time": "2026-03-03T09:05:00Z",
-        "domain_time": "2026-03-01/2026-03-02",
+        "domain_time": "2026-03-01",
     },
     "asr:003": {
         "assertion_time": "2026-03-03T09:10:00Z",
@@ -32,6 +32,16 @@ ASSERTION_TIMES = {
 
 def _api():
     return import_module("malleus.compiler")
+
+
+def test_committed_capture_contains_distinct_and_absent_assertion_times() -> None:
+    _, capture, _, _ = _inputs()
+    by_id = {item["id"]: item for item in capture["assertions"]}
+
+    for assertion_id, expected in ASSERTION_TIMES.items():
+        for field, value in expected.items():
+            assert by_id[assertion_id][field] == value
+    assert "domain_time" not in by_id["asr:003"]
 
 
 def test_document_adapter_retains_distinct_and_absent_assertion_times() -> None:
@@ -53,7 +63,7 @@ def test_document_adapter_retains_distinct_and_absent_assertion_times() -> None:
     retained = json.loads(result.capture_bytes)
     by_id = {item["id"]: item for item in retained["assertions"]}
     assert by_id["asr:001"]["domain_time"] == "2026-03-02"
-    assert by_id["asr:002"]["domain_time"] == "2026-03-01/2026-03-02"
+    assert by_id["asr:002"]["domain_time"] == "2026-03-01"
     assert "domain_time" not in by_id["asr:003"]
 
 

@@ -151,6 +151,7 @@ def _document_replay(
         records=plan["records"],
         supersessions=plan["supersessions"],
     )
+    assert adapted.canonical_plan_bytes == _canonical(plan)
     plan = json.loads(adapted.canonical_plan_bytes)
     _retain_document_inputs(history, compiled, partial, reading_bytes, capture_bytes)
     gaps_id = f"{plan['plan_id']}:gaps"
@@ -181,6 +182,8 @@ def _document_replay(
         actor_id="actor:public-adopter",
     )
     assert prepared.change_set is not None
+    expected_change = json.loads((EXAMPLES / "document-change.json").read_bytes())
+    assert prepared.change_set.canonical_bytes == _canonical(expected_change)
     history.admit(
         change_set=prepared.change_set,
         machine_events=_protocol_events(

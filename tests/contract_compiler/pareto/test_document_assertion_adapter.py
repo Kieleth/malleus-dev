@@ -48,12 +48,6 @@ def _inputs() -> tuple[dict[str, object], ...]:
     assert isinstance(capture, dict)
     assert isinstance(plan, dict)
     assert isinstance(census, dict)
-    capture["reading_sha256"] = _digest(_canonical(reading))
-    plan["history_profile"]["sha256"] = _api().SOURCE_ASSERTION_PROFILE.identity
-    plan["valid_time"] = {
-        "kind": "ORDER_ONLY",
-        "value": "capture:inspection-note",
-    }
     return reading, capture, plan, census
 
 
