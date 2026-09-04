@@ -269,6 +269,44 @@ def test_edited_pack_conformance_allows_documentation_and_additive_changes() -> 
     assert receipt.reference_sha256 == "sha256:" + sha256(reference).hexdigest()
 
 
+@pytest.mark.parametrize(
+    "mutate,expected_path",
+    [
+        (
+            lambda source: source["classes"]["QuantityValue"].update(
+                {"abstract": True}
+            ),
+            "classes.QuantityValue.abstract",
+        ),
+        (
+            lambda source: source["slots"]["quantity_kind"].update({"required": True}),
+            "slots.quantity_kind.required",
+        ),
+    ],
+)
+def test_edited_pack_conformance_refuses_stronger_existing_declarations(
+    mutate,
+    expected_path: str,
+) -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    mutate(edited)
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_conformance(
+            yaml.safe_dump(edited, sort_keys=False).encode(),
+            reference=reference,
+        )
+
+    assert (
+        caught.value.reason is api.PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED
+    )
+    assert expected_path in caught.value.detail
+
+
 def test_pack_without_grounding_refuses_with_typed_reason() -> None:
     api = _inquisition()
     with pytest.raises(api.PackGroundingRefusal) as caught:
