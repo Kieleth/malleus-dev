@@ -5,6 +5,8 @@ from pathlib import Path
 
 
 CONTRACT_PATH = Path(__file__).with_name("run-contract.json")
+ROOT = Path(__file__).resolve().parents[2]
+ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
 
 
 def _contract() -> dict[str, object]:
@@ -62,3 +64,26 @@ def test_execution_remains_blocked_until_core_gate_is_bound() -> None:
 
     assert contract["status"] == "WAITING_FOR_CORE_GATE"
     assert contract["core_gate"]["status"] == "REQUIRED_UNBOUND"
+
+
+def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
+    manifest = json.loads(ACTIVE_TEST_MANIFEST.read_bytes())
+
+    assert manifest["schema"] == "malleus.paper-v4.active-test-manifest/v1"
+    assert manifest["python"] == "CPYTHON_3_12_LOCKED"
+    assert manifest["pythonpath"] == [".", "src"]
+    assert manifest["pytest_args"] == ["--import-mode=importlib", "-q"]
+    assert set(manifest["excluded_roots"]) == {
+        "paper-v4/experiment",
+        "paper-v4/retired",
+    }
+    assert "paper-v4/experiment-v4" in manifest["paths"]
+
+    excluded = [(ROOT / value).resolve() for value in manifest["excluded_roots"]]
+    for value in manifest["paths"]:
+        candidate = (ROOT / value).resolve()
+        assert candidate.exists()
+        assert candidate == ROOT or ROOT in candidate.parents
+        assert all(
+            candidate != root and root not in candidate.parents for root in excluded
+        )

@@ -1581,3 +1581,15 @@ Observation: A fresh run from an empty output directory reproduced the committed
 Paper impact: `trace_population_record` reconstructs and verifies the path from one replayed graph record through its accepted change, population plan, history profile, field derivations, and retained source and evidence bytes. For document captures, the evidence includes the source assertion and its modality. The paper can therefore query graph topology and join returned records to source assertion, locator, and modality without a paper-local compatibility adapter or a new Core query contract.
 
 Boundary: The five Small Shop plans remain adopter-authored and select the minimal `state-version` profile. This evidence adds no mapping language, universal history semantics, Event population, Semantic Re-entry, effects, stable wire, or release claim. The paper does not rebind its executable baseline at this entry. Its v4 run still waits for the full `DomainHistoryProfile`, grounded packs, and nascent-project playbook.
+
+### E-0103, the active paper gate is explicit
+
+Date: 2026-09-03
+
+Sources: the failed broad collection command over `paper-v4/`; the exact active paper and document test paths; and the locked CPython 3.12 environment.
+
+Observation: A directory-wide pytest invocation collected superseded tests under `paper-v4/experiment/` and historical tests under `paper-v4/retired/`. An otherwise correct explicit invocation also failed when its subprocess lacked the repository and `src` import roots. Neither failure changed repository or experiment state.
+
+Guard: `paper-v4/active-test-manifest.json` names the active test roots, the two excluded historical roots, import roots, and pytest import mode. `paper-v4/run_active_tests.py` validates every path, refuses paths outside the repository or inside excluded history, sets the exact import roots, and runs the manifest. A paper-local test hardens those exclusions.
+
+Impact: The active gate now has one reproducible command. Superseded experiments cannot silently re-enter a v4 pass count.
