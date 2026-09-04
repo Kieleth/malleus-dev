@@ -1798,8 +1798,9 @@ class TestSkillsAreInstallable:
             ),
             "DIRECT_ROOT_GROUNDING_REQUIRED",
             (
-                "it stops at the first block whose shape is wrong, one entry "
-                "at a time, so write the block correctly the first time"
+                "it reports every ill-formed block and entry in one refusal "
+                "too, sorted, each item naming its subject, its entry index "
+                "and the closed field set that position requires"
             ),
             "annotations: grounding: tag: grounding value: area:",
             "vocabulary_url:",
@@ -1915,7 +1916,10 @@ class TestSkillsAreInstallable:
                 "assertion's formalization target"
             ),
             "`type` and `id` are not derived",
-            "UNDERIVED_FIELD` naming the first such field it meets",
+            (
+                "UNDERIVED_FIELD` once, naming every such field in one sorted "
+                "detail with the rule that closes them"
+            ),
             "Every `nothing_assertable` block ID must exist",
             "CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`, `NEGATED`, or `STATED",
             "INTERVAL_NOT_EXPRESSIBLE",
@@ -1928,6 +1932,8 @@ class TestSkillsAreInstallable:
         for phrase in required:
             assert phrase in section
         assert "The command-line compiler stops at contract compilation" not in section
+        assert "stops at the first block whose shape is wrong" not in section
+        assert "naming the first such field it meets" not in section
         steps = (
             "Retain the source boundary",
             "Choose the Malleus level",
