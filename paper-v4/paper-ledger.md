@@ -1605,3 +1605,17 @@ Decision: Keep the four question texts but freeze them as a new v4 artifact at `
 Boundary: The protocol contains no answer oracle, canonical answer, exact-match rule, numeric score, schema symbol, record identifier, or source locator. Codex may create a preliminary record. Only `actor:luis` may ratify it as paper evidence.
 
 Impact: Query richness will be judged through responsive graph rows plus their source and modality traces, without letting the questions shape the ontology or population.
+
+### E-0105, the frozen multi-producer comparison isolates the v4 vocabulary failures
+
+Date: 2026-09-03
+
+Sources: annotated tag `paper-v4-multimodel-v2`, tag object `c9f2bd6dda0cb9a40c5d124230641a81a0261d8d`, commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; its three run manifests, ontologies, population records, replay receipts, query results, and human-ratified review records.
+
+Observation: All three runs accepted, recorded 23 ledger events, reopened, replayed, and made zero forbidden query-time source, network, or embedding accesses. Their graph populations were 13, 6, and 2 records, and their question row counts were `[0,2,4,0]`, `[0,0,0,1]`, and `[0,0,0,0]`. The invariant event count therefore says nothing about semantic coverage. Human review, not row count, found only one fully responsive result: the bounded quantities in CQ-03 from the first run.
+
+Failure classes: The runs independently exposed missing interval support, aggregate-only counts, source fields made mandatory without evidence, unnamed domain entities, and causal relations unable to carry hypothesis status. These map to the v4 typed gaps `INTERVAL_NOT_EXPRESSIBLE`, `AGGREGATE_ONLY`, `REQUIRED_FIELD_ABSENT_IN_SOURCE`, `TYPE_ABSENT`, `RELATION_ABSENT`, and `MODALITY_NOT_EXPRESSIBLE`. In two runs, the word “proposed” or its equivalent existed only in ontology prose, so emitting the causal edge would have flattened epistemic status.
+
+Reuse: V4 keeps deterministic type-bound native traversal, runtime witness identifiers, source-free query guards, and separate judgments for source support and question responsiveness. It retires pre-population query binding, the closed constructible subset, direct-edge-only limits, and question-guided population.
+
+Impact: This comparison is diagnostic background, not another v4 matrix. It explains why grounded packs, typed gaps, a declared history profile, and record-to-capture trace are needed before one new KISS run.
