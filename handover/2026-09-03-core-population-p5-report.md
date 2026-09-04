@@ -7,6 +7,7 @@ Status: implemented in Core, awaiting independent overseer verification.
 - RED commit: `bcf877b798f4e2d82abacdf263ac471f1875357f`
 - GREEN commit: `30970a397b840542b5395247ae24a695a2cb2cb4`
 - GREEN tree: `95d5adcc347b2ba8258b9cc31ea2b7e766b5b3f1`
+- Source-archive correction: `150579d66c3785b4f83c293c557d9a33bdc8a8bf`
 
 ## What changed
 
@@ -52,6 +53,14 @@ available as `compile_contract_revision`.
 - The complete contract-compiler Pareto suite passes 308 tests. The focused
   revision, history, governed-population, and public-compiler seam passes 145
   tests. Ruff and formatting checks pass for the changed Python surface.
+- The clean repository gate passes 2,904 tests with 3 skipped, all 192 Small
+  Shop tests, the compiler governance and integration checks, strict Sphinx
+  HTML and doctest builds, and the network-enabled external-link check.
+- The first package-parity run caught that the explicit source-archive
+  allowlist omitted the new revision module. The correction above adds that
+  one path plus a hard integration assertion. The corrected gate builds the
+  source archive and wheel, rebuilds the same wheel from the source archive,
+  clean-installs it, and starts the installed compiler command successfully.
 
 ## Non-claims
 
