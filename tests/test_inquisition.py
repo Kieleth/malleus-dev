@@ -1860,6 +1860,19 @@ class TestSkillsAreInstallable:
             "must name a known reading block",
             "If `formalized_by` is empty, at least one typed gap is required",
             "Every formalization `record_id` and `path` must resolve",
+            "raw bytes of the declared reading input exactly as supplied",
+            (
+                "`capture.reading_sha256` is `sha256:` followed by the "
+                "SHA-256 of those same bytes"
+            ),
+            "READING_MISMATCH",
+            (
+                "every key under a record's `properties`, and both endpoints "
+                "of a relation record, must be named by at least one "
+                "assertion's formalization target"
+            ),
+            "`type` and `id` are not derived",
+            "UNDERIVED_FIELD` naming the first such field it meets",
             "Every `nothing_assertable` block ID must exist",
             "CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`, `NEGATED`, or `STATED",
             "INTERVAL_NOT_EXPRESSIBLE",
