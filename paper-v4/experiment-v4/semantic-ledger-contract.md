@@ -102,17 +102,21 @@ it does not repair the ontology or authorize a guessed fact.
 
 ## Execution gate
 
-Core P3 is verified at final tip
-`add4535f757551b6ed30b449e19c31fc97769e1e`, tree
-`df2c0b7acafc44ff2d45ed9195d13b73577b0979`. It exposes contract compilation,
-neutral population compilation, governed admission, reopen, replay, and graph
-query through `malleus.compiler`.
+Core's public population, ontology-revision, replay, graph-read, and provenance
+trace path is verified at commit
+`8e8917533283009d152d3db97329335c663456c3`, tree
+`f38eae64b9050abce2538ce68d307147abf3968d`. The public
+`trace_population_record` read follows a replayed record through its accepted
+change, population plan, history profile, field derivations, and retained
+source and evidence bytes. This realizes the third no-flattening option above:
+the paper can join a graph row to its source assertion and modality without
+adding assertion metadata to every domain record. It does not make the graph
+edge self-qualifying, so paper queries that report epistemic status must execute
+and display that verified join.
 
 The v4 document run still waits for the later Core pieces that implement the
 approved experiment rather than another paper-local brief:
 
-- the document-assertion adapter;
-- replay across an ontology supersession and typed revision policy;
 - the full `DomainHistoryProfile` contract;
 - the grounded metrology, chronology, and research packs;
 - the nascent-project skill playbook.

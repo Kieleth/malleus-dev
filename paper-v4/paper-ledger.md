@@ -1569,3 +1569,15 @@ Observation: The source PDF recomputes to `sha256:7d3d42bf17cbf1280a63cbb164254b
 Boundary: This verifies only the source and reading inputs. It does not start the v4 producer loop, select an ontology, inspect document claims, bind Core, or create another manuscript identity. The scratch reading remains ignored and private.
 
 Impact: The v4 run can reuse the exact selected reading without introducing PDF or extractor drift. Its next external dependency remains the frozen Core execution gate.
+
+### E-0102, public replay-to-source trace and full Small Shop path pass paper audit
+
+Date: 2026-09-03
+
+Sources: Core commit `8e8917533283009d152d3db97329335c663456c3`, tree `f38eae64b9050abce2538ce68d307147abf3968d`; RED `3912c3fc0510ec11291b22651c3547632ca213f0`; GREEN `0a4667acb8fb6605f0ab5b4e74ced7e6a9194582`; governance entry `OVR-000376`; the public Small Shop population fixture and retained evidence; public `malleus.compiler` trace surface; and an independent detached checkout.
+
+Observation: A fresh run from an empty output directory reproduced the committed Small Shop evidence byte for byte. It contains 48 ledger events, five accepted changes, one additive ontology revision, ten historical records, and nine current records. The history bytes are `sha256:cd08faafbce7685f6432ade0549f53b87c8213f74e5e332a45d3ab691daa6739`; evidence is `sha256:b2eeae42456fd6dc2d8cd87808e7f7bceab14382f9179a14abeea1d4cdc7a1c1`. The detached audit reproduced 420 population, history, revision, public-facade, and graph tests plus all 194 Small Shop tests.
+
+Paper impact: `trace_population_record` reconstructs and verifies the path from one replayed graph record through its accepted change, population plan, history profile, field derivations, and retained source and evidence bytes. For document captures, the evidence includes the source assertion and its modality. The paper can therefore query graph topology and join returned records to source assertion, locator, and modality without a paper-local compatibility adapter or a new Core query contract.
+
+Boundary: The five Small Shop plans remain adopter-authored and select the minimal `state-version` profile. This evidence adds no mapping language, universal history semantics, Event population, Semantic Re-entry, effects, stable wire, or release claim. The paper does not rebind its executable baseline at this entry. Its v4 run still waits for the full `DomainHistoryProfile`, grounded packs, and nascent-project playbook.
