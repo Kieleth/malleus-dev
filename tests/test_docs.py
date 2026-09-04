@@ -81,6 +81,7 @@ PUBLIC_GUIDE_ROOT_IMPORTS = (
     "bundled_ontology_path",
     "stage_subgraph",
 )
+PUBLIC_GUIDE_MODULE_IMPORTS = {"malleus.compiler"}
 PUBLIC_IMPORT_TARGETS = {"malleus", "malleus.OntologyRegistry"}
 PROTOCOL_BOUNDARY_ROLES = (
     "PROTOCOL_INVARIANT",
@@ -256,19 +257,70 @@ INTERNAL_METAMODEL_IDENTITY_ROWS = (
 )
 APPROVED_REFERENCE_PATH = DOCS / "reference" / "index.md"
 APPROVED_REFERENCE_SOURCE = (
-    "# Current package-root reference\n"
+    "# Current public API reference\n"
     "\n"
-    "This page exercises Sphinx autodoc and autosummary against the existing public\n"
-    "package root. It does not promote contract-compiler stages.\n"
+    "This page exercises Sphinx autodoc and autosummary against the public package\n"
+    "root, migration module, and narrow compiler facade. It does not promote private\n"
+    "compiler stages or CLI implementation modules.\n"
+    "\n"
+    "`compile_population_plan` raises `PopulationPlanRefusal` with reason\n"
+    "`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or\n"
+    "signal records.\n"
     "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
     "\n"
     "   malleus.OntologyRegistry\n"
+    "   malleus.OntologySource\n"
+    "   malleus.OntologyImportResolution\n"
+    "   malleus.OntologyDefinitionSource\n"
+    "   malleus.OntologySourceClosure\n"
+    "   malleus.migration.MigrationVerification\n"
+    "   malleus.migration.MigrationVerifier\n"
+    "   malleus.migration.MigrationAwareJsonlLedger\n"
+    "   malleus.compiler\n"
+    "   malleus.compiler.compile_linkml_contract\n"
+    "   malleus.compiler.compile_population_plan\n"
+    "   malleus.compiler.prepare_population_change\n"
+    "   malleus.compiler.KnowledgeChangeHistory\n"
+    "   malleus.compiler.PopulationPlanRefusal\n"
+    "   malleus.compiler.PopulationPlanRefusalReason\n"
     "\n"
     ".. automodule:: malleus\n"
     "\n"
     ".. autoclass:: malleus.OntologyRegistry\n"
+    "   :members: source_closure\n"
+    "\n"
+    ".. autoclass:: malleus.OntologySource\n"
+    "\n"
+    ".. autoclass:: malleus.OntologyImportResolution\n"
+    "\n"
+    ".. autoclass:: malleus.OntologyDefinitionSource\n"
+    "\n"
+    ".. autoclass:: malleus.OntologySourceClosure\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationVerification\n"
+    "   :members: receipt_digests\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationVerifier\n"
+    "   :members: verify\n"
+    "\n"
+    ".. autoclass:: malleus.migration.MigrationAwareJsonlLedger\n"
+    "   :members: read_verified\n"
+    "\n"
+    ".. automodule:: malleus.compiler\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.compile_linkml_contract\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.compile_population_plan\n"
+    "\n"
+    ".. autofunction:: malleus.compiler.prepare_population_change\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.KnowledgeChangeHistory\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationPlanRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationPlanRefusalReason\n"
     "```\n"
 ).encode()
 
@@ -870,7 +922,10 @@ def _forbidden_example_operations(tree: ast.AST) -> list[str]:
         for name in names:
             if name == "pytest" or name.startswith(("linkml", "tests")):
                 found.append(f"forbidden import {name}")
-            if name.startswith("malleus."):
+            if (
+                name.startswith("malleus.")
+                and name not in PUBLIC_GUIDE_MODULE_IMPORTS
+            ):
                 found.append(f"private Malleus import {name}")
         if isinstance(node, ast.Call):
             function = node.func
@@ -1152,22 +1207,78 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         (output / ".doctrees" / "environment.pickle").read_bytes()
     )
     objects = environment.domaindata["py"]["objects"]
-    assert set(objects) == {
-        "malleus",
+    ontology_class_ids = (
         "malleus.OntologyRegistry",
-        "malleus.ontology.OntologyRegistry",
+        "malleus.OntologySource",
+        "malleus.OntologyImportResolution",
+        "malleus.OntologyDefinitionSource",
+        "malleus.OntologySourceClosure",
+    )
+    migration_class_ids = (
+        "malleus.migration.MigrationVerification",
+        "malleus.migration.MigrationVerifier",
+        "malleus.migration.MigrationAwareJsonlLedger",
+    )
+    compiler_class_ids = (
+        "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.PopulationPlanRefusal",
+        "malleus.compiler.PopulationPlanRefusalReason",
+    )
+    class_ids = ontology_class_ids + migration_class_ids + compiler_class_ids
+    function_ids = (
+        "malleus.compiler.compile_linkml_contract",
+        "malleus.compiler.compile_population_plan",
+        "malleus.compiler.prepare_population_change",
+    )
+    method_ids = (
+        "malleus.OntologyRegistry.source_closure",
+        "malleus.migration.MigrationVerifier.verify",
+        "malleus.migration.MigrationAwareJsonlLedger.read_verified",
+    )
+    aliases = {
+        f"malleus.ontology.{name.removeprefix('malleus.')}": name
+        for name in ontology_class_ids
     }
-    assert objects["malleus"].objtype == "module"
-    assert objects["malleus"].node_id == "module-malleus"
-    assert objects["malleus"].aliased is False
-    assert objects["malleus.OntologyRegistry"].objtype == "class"
-    assert objects["malleus.OntologyRegistry"].node_id == "malleus.OntologyRegistry"
-    assert objects["malleus.OntologyRegistry"].aliased is False
-    assert objects["malleus.ontology.OntologyRegistry"].aliased is True
+    aliases.update(
+        {
+            "malleus._contract_pipeline.knowledge.KnowledgeChangeHistory": (
+                "malleus.compiler.KnowledgeChangeHistory"
+            ),
+            "malleus._contract_pipeline.population.PopulationPlanRefusal": (
+                "malleus.compiler.PopulationPlanRefusal"
+            ),
+            "malleus._contract_pipeline.population.PopulationPlanRefusalReason": (
+                "malleus.compiler.PopulationPlanRefusalReason"
+            ),
+        }
+    )
+    module_ids = {
+        "malleus": "module-malleus",
+        "malleus.compiler": "module-malleus.compiler",
+    }
+    object_types = {
+        **dict.fromkeys(class_ids, "class"),
+        **dict.fromkeys(function_ids, "function"),
+        **dict.fromkeys(method_ids, "method"),
+    }
+    assert set(objects) == {*module_ids, *object_types, *aliases}
+    for identity, node_id in module_ids.items():
+        assert objects[identity].objtype == "module"
+        assert objects[identity].node_id == node_id
+        assert objects[identity].aliased is False
+    for identity, object_type in object_types.items():
+        assert objects[identity].objtype == object_type
+        assert objects[identity].node_id == identity
+        assert objects[identity].aliased is False
+    for alias, identity in aliases.items():
+        assert objects[alias].objtype == "class"
+        assert objects[alias].node_id == identity
+        assert objects[alias].aliased is True
     modules = environment.domaindata["py"]["modules"]
-    assert set(modules) == {"malleus"}
-    assert modules["malleus"].docname == "reference/index"
-    assert modules["malleus"].node_id == "module-malleus"
+    assert set(modules) == set(module_ids)
+    for identity, node_id in module_ids.items():
+        assert modules[identity].docname == "reference/index"
+        assert modules[identity].node_id == node_id
 
     doctree = pickle.loads(
         (output / ".doctrees" / "reference" / "index.doctree").read_bytes()
@@ -1182,17 +1293,43 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         for node in doctree.findall()
         if type(node).__name__ == "desc_signature"
     ]
+    signature_ids = (
+        "malleus.OntologyRegistry",
+        "malleus.OntologyRegistry.source_closure",
+        "malleus.OntologySource",
+        "malleus.OntologyImportResolution",
+        "malleus.OntologyDefinitionSource",
+        "malleus.OntologySourceClosure",
+        "malleus.migration.MigrationVerification",
+        "malleus.migration.MigrationVerifier",
+        "malleus.migration.MigrationVerifier.verify",
+        "malleus.migration.MigrationAwareJsonlLedger",
+        "malleus.migration.MigrationAwareJsonlLedger.read_verified",
+        "malleus.compiler.compile_linkml_contract",
+        "malleus.compiler.compile_population_plan",
+        "malleus.compiler.prepare_population_change",
+        "malleus.compiler.KnowledgeChangeHistory",
+        "malleus.compiler.PopulationPlanRefusal",
+        "malleus.compiler.PopulationPlanRefusalReason",
+    )
     assert [(node.get("objtype"), node.get("classes")) for node in descriptions] == [
-        ("class", ["py", "class"])
+        (object_types[identity], ["py", object_types[identity]])
+        for identity in signature_ids
     ]
     assert [node.get("ids") for node in signatures] == [
-        ["malleus.OntologyRegistry"]
+        [identity] for identity in signature_ids
     ]
 
     rendered = (output / "reference" / "index.html").read_text(encoding="utf-8")
-    assert 'id="module-malleus"' in rendered
     assert '<table class="autosummary longtable docutils align-default">' in rendered
-    assert 'href="#malleus.OntologyRegistry"' in rendered
+    for node_id in module_ids.values():
+        assert f'id="{node_id}"' in rendered
+    for identity in (*class_ids, *function_ids):
+        assert f'href="#{identity}"' in rendered
+    for identity in signature_ids:
+        assert f'id="{identity}"' in rendered
+    assert "PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED" in rendered
+    assert "malleus.compiler_cli" not in rendered
     assert 'class="py class"' in rendered
     assert 'class="sig sig-object py" id="malleus.OntologyRegistry"' in rendered
     assert ':py:obj:' not in rendered
@@ -1382,7 +1519,9 @@ def test_repository_python_examples_are_ast_checked() -> None:
 @pytest.mark.parametrize(
     "mutation",
     [
-        lambda source: source.replace(b"package root", b"package-root", 1),
+        lambda source: source.replace(
+            b"public package\nroot", b"public package-root", 1
+        ),
         lambda source: source.replace(b"OntologyRegistry", b"KnowledgeGraph", 1),
         lambda source: source.replace(
             b".. automodule:: malleus\n",
@@ -1857,6 +1996,21 @@ def test_from_malleus_import_allows_only_the_current_guide_root_objects() -> Non
         "private Malleus import ContractCompiler",
         "private Malleus import ontology",
     ]
+
+
+def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
+    assert PUBLIC_GUIDE_MODULE_IMPORTS == {"malleus.compiler"}
+    allowed = ast.parse("from malleus.compiler import compile_linkml_contract")
+    assert _forbidden_example_operations(allowed) == []
+
+    for module in (
+        "malleus._contract_pipeline",
+        "malleus.compiler_cli",
+        "malleus.ontology",
+    ):
+        assert _forbidden_example_operations(ast.parse(f"import {module}")) == [
+            f"private Malleus import {module}"
+        ]
 
 
 @pytest.mark.parametrize(

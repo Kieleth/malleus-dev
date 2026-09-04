@@ -1,8 +1,12 @@
 # Current public API reference
 
 This page exercises Sphinx autodoc and autosummary against the public package
-root and the public migration module. It does not promote contract-compiler
-stages.
+root, migration module, and narrow compiler facade. It does not promote private
+compiler stages or CLI implementation modules.
+
+`compile_population_plan` raises `PopulationPlanRefusal` with reason
+`PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED` when a plan contains event or
+signal records.
 
 ```{eval-rst}
 .. autosummary::
@@ -15,6 +19,13 @@ stages.
    malleus.migration.MigrationVerification
    malleus.migration.MigrationVerifier
    malleus.migration.MigrationAwareJsonlLedger
+   malleus.compiler
+   malleus.compiler.compile_linkml_contract
+   malleus.compiler.compile_population_plan
+   malleus.compiler.prepare_population_change
+   malleus.compiler.KnowledgeChangeHistory
+   malleus.compiler.PopulationPlanRefusal
+   malleus.compiler.PopulationPlanRefusalReason
 
 .. automodule:: malleus
 
@@ -37,4 +48,18 @@ stages.
 
 .. autoclass:: malleus.migration.MigrationAwareJsonlLedger
    :members: read_verified
+
+.. automodule:: malleus.compiler
+
+.. autofunction:: malleus.compiler.compile_linkml_contract
+
+.. autofunction:: malleus.compiler.compile_population_plan
+
+.. autofunction:: malleus.compiler.prepare_population_change
+
+.. autoclass:: malleus.compiler.KnowledgeChangeHistory
+
+.. autoclass:: malleus.compiler.PopulationPlanRefusal
+
+.. autoclass:: malleus.compiler.PopulationPlanRefusalReason
 ```

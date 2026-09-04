@@ -6,7 +6,7 @@ It records what a source says, what a reviewer infers, how works overlap, and
 what remains unresolved. It does not decide novelty or truth.
 
 This boundary follows the
-[Malleus protocol taxonomy](PRINCIPLES.md#protocol-boundary-taxonomy):
+[Malleus protocol taxonomy](PRINCIPLES.md):
 
 | Boundary | Role |
 |---|---|
@@ -89,7 +89,7 @@ The Python module remains provider-independent and makes no remote calls.
 
 `RECORDED` means the candidate passed the Recon ontology and local structural
 integrity rules. It is Recon's counterpart to the narrow Malleus rule that
-[`COMMITTED` means the shape was valid](PRINCIPLES.md#5-committed-means-the-shape-was-valid).
+[`COMMITTED` means the shape was valid](PRINCIPLES.md).
 It does not mean the candidate is empirically true, epistemically accepted, or
 safe to act on. `REJECTED` means the candidate and its exact validation errors
 remain in the Recon ledger but do not change the current structural graph. It
@@ -144,7 +144,7 @@ adapter may compute them from bytes it reads. Merely recording caller-supplied
 values does not authenticate remote content.
 
 This is narrower than the Malleus target that
-[an evidence-bearing tuple should point at exact bytes](PRINCIPLES.md#2-a-tuple-should-point-at-bytes).
+[an evidence-bearing tuple should point at exact bytes](PRINCIPLES.md).
 A future promotion policy must preserve the difference between caller-declared
 source identity and byte-verified source identity. It must refuse any target
 contract that requires evidence properties the selected Recon closure does not
