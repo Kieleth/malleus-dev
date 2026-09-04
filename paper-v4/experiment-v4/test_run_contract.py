@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from hashlib import sha256
 from pathlib import Path
+import subprocess
 
 
 CONTRACT_PATH = Path(__file__).with_name("run-contract.json")
@@ -210,10 +211,20 @@ def test_producer_input_set_is_exact_and_question_blind() -> None:
         declared["SELECTED_READING"]["sha256"]
         == _contract()["source"]["selected_reading_sha256"]
     )
+    # Run-01 is frozen at its recorded paper merge commit (which carries Core
+    # 6488ddb); its inputs are the bytes at that commit, not the live working
+    # tree, which has moved since.
+    frozen_commit = _contract()["core_gate"]["execution_baseline"]["paper_merge_commit"]
     for item in declared.values():
         if item["name"] == "SELECTED_READING":
             continue
-        assert item["sha256"] == _digest(ROOT / item["source"])
+        frozen = subprocess.run(
+            ["git", "show", f"{frozen_commit}:{item['source']}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert item["sha256"] == "sha256:" + sha256(frozen).hexdigest()
     assert manifest["session"] == {
         "fresh": True,
         "single_session": True,
