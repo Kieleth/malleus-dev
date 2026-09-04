@@ -1501,3 +1501,43 @@ Parallel evidence: The three frozen producer runs remain useful baseline evidenc
 KISS finding: The parallel manuscript is about 5,000 Markdown words and the approved v4 matrix adds three single-session producers, one staged-session variant, packs, typed gaps, and as many as two ontology revisions. Executing all of that would answer a larger question than the original thin paper. The smallest coherent paper argument is the distinction among domain vocabulary, domain-history meaning, and accepted replayable change. Whether the v4 matrix stays in this paper or moves to follow-on work is an author scope decision and is not taken here.
 
 Action that does not wait: `paper-v4/experiment-v4/brief-to-skill-map.md` removes paper and question rules from the future common skill, and `paper-v4/experiment-v4/spawn-message.md` reduces the experimenter input to isolation plus the selected-reading path. No Core code, result identity, baseline, manuscript claim, or plan version changed.
+
+### E-0097, Core public population boundary passes independent paper audit
+
+Date: 2026-09-03
+
+Sources: Core implementation commit `d758d40bd084a25c0ca17cdb80720686f4d67a95`, tree `e0fca1db8bc0a50ce5821ba7308686b98382a265`; final governance tip `add4535f757551b6ed30b449e19c31fc97769e1e`, tree `df2c0b7acafc44ff2d45ed9195d13b73577b0979`; `malleus.compiler`; `malleus-compiler contract`; public adopter, integration, ledger, and package artifacts in an isolated read-only clone.
+
+Observation: The public facade compiles exact LinkML source bytes, compiles and prepares the neutral population plan, admits a governed change, reopens and replays history, and exposes the replayed graph's native query methods. The public adopter test admits Small Shop states `B/Y/1@e4` and `B/Y/2@e7`, returns quantity 2 as current, and retains the exact `e4` to `e7` supersession without importing private or research Python modules. Event population refuses as `FAMILY_NOT_ADMITTED`, and the CLI rejects a raw ontology digest.
+
+Verification: The exact final tree passed 326 population, history, public-facade, and graph tests; 199 integration tests; and the ledger checker at 370 entries, head `OVR-000370` / `sha256:7f9bbf9b16de54e32fd365a199e8cce1265b3615a297af9984b26694a346a2c5`. A direct wheel and the wheel rebuilt from its source distribution were byte-identical at `sha256:01e091baa32df38708f53c2285a4b4ee131096861d18255fb7aff50eb0c2c78e`; both distribution artifacts passed `twine check`, and the installed command compiled the exact Small Shop ontology sources.
+
+Boundary: This proves a supported import path and installed command in packages built from that source. It does not stabilize a `private-v0` wire, invent mappings, select domain-history meaning, populate Events, implement Semantic Re-entry, or establish a package release. The paper experiment remains pinned to its selected v2 coordinate until a new run is authorized and complete.
+
+Impact: Core P3 no longer gates paper design. The document adapter, ontology-supersession replay, full profile, packs, and skill still gate the approved v4 execution.
+
+### E-0098, vocabulary and history meaning are separate causes of graph variance
+
+Date: 2026-09-03
+
+Sources: frozen `paper-v4-multimodel` branch at commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; the three retained run manifests, ontology receipts, population receipts, replay receipts, query results, and human review records; `paper-v4/experiment-v3/summarize_runs.py`; `design/KNOWLEDGE_PACKS.md`; and `paper-v4/experiment-v4/semantic-ledger-contract.md`.
+
+Observation: Artifact-derived comparison gives ontology entity/relation counts of 15/33, 20/18, and 8/8; population sizes of 13, 6, and 2; and CQ row counts of `[0,2,4,0]`, `[0,0,0,1]`, and `[0,0,0,0]` for gpt-5.6-sol, Claude Opus 5, and Claude Sonnet 5. All three produced 23-event histories and replayed successfully. The differing graphs therefore expose proposal vocabulary and capture choices, not a failure of atomic admission or replay.
+
+Finding: Packs can reduce reinvention of quantity, time, research, and modality terms. A separate `DomainHistoryProfile` is still required because an ontology does not say whether one accepted change is an assertion, state version, event, or commitment. Under `source-assertion`, there is a further representational risk: a captured `HYPOTHESISED` causal assertion may project as an unqualified graph relation if modality remains only in retained evidence. An optional `SourceAsserted` mixin does not mechanically prevent that flattening.
+
+Impact: The paper must explain vocabulary, history meaning, evidence-bearing population, and replay projection as four separate concerns. A bounded Core inquiry asks the later full-profile and pack pieces to enforce either queryable qualification, Claim reification, a typed provenance join, or refusal. This is not a P3 or P4 blocker and does not select the Core representation.
+
+### E-0099, paper work can advance while v4 execution waits
+
+Date: 2026-09-03
+
+Sources: `handover/2026-09-03-paper-executor-plan.md`; `handover/2026-09-03-core-population-v2.md`; Core P3 PASS in E-0097; and the KISS priority in D-0001 and D-0002.
+
+Observation: Re-running now would recreate the retired paper-local interface. The approved no-brief experiment needs the document adapter, ontology-supersession replay, full history profile, packs, and nascent-project skill. Those Core pieces are not frozen at this entry. Paper-owned isolation text and the brief-to-skill mapping are complete.
+
+Provisional cut for author review: use one document and one default single-session v4 loop in the lean paper. Retain the existing three-producer evidence as diagnostic background. Move the new three-producer matrix and strict staged-session variant to follow-on work. This removes repeated experiment cells without weakening the central claim that a model proposal crosses an explicit, source-grounded, replayable commitment boundary.
+
+Boundary: This is a recorded recommendation under the overnight autonomy instruction, not an accepted author decision. It does not increment the master plan, change the selected result, or authorize a run.
+
+Impact: Continue with paper prose, a dependency-stable run manifest, and harness isolation specifications. Start no v4 model population until the Core execution gate closes.
