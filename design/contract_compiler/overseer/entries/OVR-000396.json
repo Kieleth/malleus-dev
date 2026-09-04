@@ -1,0 +1,115 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:c6c205d1d027eb116c4e0c79fb3d3cd71d60dcb7b68b0f14654fde1e2e15bc0a",
+        "before_digest": "sha256:1050b24720f5e7df10dbf6096d8487b46490099b8066c2048a59ef0fa85fc586",
+        "change": "MODIFIED",
+        "path": "ontology/packs/metrology.yaml"
+      },
+      {
+        "after_digest": "sha256:5ca437c55a17b0d116a464c472500dca8261eb758bbf72355e0b04ec6dbf6706",
+        "before_digest": "sha256:c86abede14242c3179d45807ae6461bf8725ed64256971875d9291a85b7c280e",
+        "change": "MODIFIED",
+        "path": "ontology/packs/research.yaml"
+      },
+      {
+        "after_digest": "sha256:f4afc82949a41c806ee5f42b311b78c41e475bc42816ad941742cb9bf14094c0",
+        "before_digest": "sha256:b903cfb42e0a1b9ffe9f9ac04dac84338482b1a9b5be67d91de539cc14b6b0e5",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:0909026f2c9d50192f02cf8f7af2572fffbb5e3a542c3bc4dc35fc96098f360b",
+        "before_digest": "sha256:84e17804f3a26afdfd990b8e59d6fcbffa9c99faa7476d440198034f923a5406",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:527885786c41a981b55ed9f3c3a441b219a442847843529bbc091c325e81e6ad",
+        "before_digest": "sha256:267ff6caced8ec3f7c6bc5c74999abee472aede94850dca0a53e998f1b6e704d",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:290d302220f8f4215f72cc853654965638eb568b8bfbd98f76591256a68a6882",
+        "before_digest": "sha256:d5fbf128bfffedf9536efd017bdc91914c5c4d952d36a1fa7e86c46f40abac70",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:51a62e70dc8b80d3d14079f9b919d1aa45c519e66a22316938015d7c51a437f2",
+  "entry_id": "OVR-000396",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:16169567cf12e49ca9e09f1ff23b12847b10f86e13bac1f174becbd7e33c2b48",
+  "recorded_at": "2026-09-04T23:40:00Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "95e28d6bc202a28b6da714fafd83a4538ed77acc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7d2c8f66286550f6f0b2b35cd5838917efea20ed",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a041950b27498b4d4bb3d58335216fc8a0a692bb",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "e8b7f3b57606ee88ff668fc2065e0af301ff79e3",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "6cbf14d178df4702d18e6a391fb8151beea6e098",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2cda3fc60367b0e3ac9f9109114950f40ac50f05",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "1fb769828d225843fad210c85af2cc3628b1ca6d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "a422dfe6979588a76ee51792c71062983e48091a",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000395",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 396,
+  "subject": {
+    "id": "knowledge-pack-quantity-and-claim-text",
+    "type": "DOCUMENT"
+  },
+  "summary": "Classify quantities against QUDT and carry a claim by locator and digest.",
+  "why": "Run-02's producer wrote 137 distinct strings into metrology's open quantity_kind for 137 observations, so a type-only binding could not sharpen, and put verbatim source sentences in Claim.statement, withholding seven artifacts. Decision 13 seeds enum QuantityKindClass: fifteen QUDT quantity-kind names spelled as QUDT spells them plus a local OTHER, cited at http://qudt.org/vocab/quantitykind/. Optional slot quantity_kind_class joins the Quantified mixin beside quantity_kind, which stays open and keeps the source's wording. Decision 14 puts assertion_locator and statement_sha256 on research's SourceAsserted mixin, reaching Claim, Observation and any class inheriting Claim, as run-02's MechanismHypothesis does. Source gains licence; statement stays optional and carries a sentence only under a permitting licence. The locator is opaque and source-agnostic. Both packs are additive at 0.2.0. The compiler rejects pattern, so the digest shape is described, not enforced. The conformance rite is unchanged: its baseline is the caller's exact reference bytes, and a guard says so. paper-v4's input manifest pins the old pack digests and must be re-pinned by that thread."
+}
