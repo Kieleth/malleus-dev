@@ -306,6 +306,55 @@ def create_structural_history(
     return history
 
 
+def population_retention_events(
+    *,
+    history: KnowledgeChangeHistory,
+    compilation: PopulationPlanCompilation,
+    profile: DomainHistoryProfile,
+) -> Mapping[str, bytes]:
+    """Name the exact retention events one compiled plan still needs.
+
+    ``prepare_population_change`` retains the bound profile artifact when the
+    history does not hold it yet, the canonical plan bytes, and the generated
+    gaps artifact when the plan carries gaps. It refuses any event set that is
+    not exactly those records, and the gaps artifact bytes are not otherwise
+    reachable, so a caller cannot name them without restating this. The helper
+    decides nothing: a change to what the governed path retains refuses here
+    with ``MALFORMED_RETENTION_EVENT`` instead of retaining the wrong bytes.
+    """
+
+    if not isinstance(history, KnowledgeChangeHistory):
+        raise TypeError("history must be a KnowledgeChangeHistory")
+    if not isinstance(compilation, PopulationPlanCompilation):
+        raise TypeError("compilation must be a PopulationPlanCompilation")
+    if not isinstance(profile, DomainHistoryProfile):
+        raise TypeError("profile must be a DomainHistoryProfile")
+    plan = json.loads(compilation.canonical_plan_bytes)
+    retained = {member.record_id for member in history.replay().retained_inputs}
+    artifacts: list[tuple[str, bytes]] = []
+    profile_record_id = f"profile:{profile.profile_id}"
+    if profile_record_id not in retained:
+        artifacts.append((profile_record_id, profile.canonical_bytes))
+    artifacts.append((compilation.plan_id, compilation.canonical_plan_bytes))
+    if plan["gaps"]:
+        artifacts.append(
+            (
+                f"{compilation.plan_id}:gaps",
+                _canonical({"gaps": plan["gaps"], "plan_id": compilation.plan_id}),
+            )
+        )
+    return MappingProxyType(
+        {
+            record_id: _machine_event(
+                "ARTIFACT_REGISTERED",
+                artifact_id=record_id,
+                artifact_identity=_digest(content),
+            )
+            for record_id, content in artifacts
+        }
+    )
+
+
 def admit_structural_change(
     *,
     history: KnowledgeChangeHistory,
@@ -535,6 +584,7 @@ __all__ = (
     "create_structural_history",
     "execute_event",
     "load_validated_contract_artifact",
+    "population_retention_events",
     "prepare_population_change",
     "replay_events",
     "trace_population_record",
