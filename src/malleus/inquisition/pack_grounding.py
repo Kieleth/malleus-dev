@@ -452,20 +452,28 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
     else:
         classes = _mapping(document.get("classes", {}), "schema.classes")
         prefixes = _mapping(document.get("prefixes", {}), "schema.prefixes")
+        missing: list[tuple[str, str]] = []
         for name, raw_class in classes.items():
             body = _mapping(raw_class, f"classes.{name}")
-            if _direct_root_parent(body.get("is_a"), prefixes) is None:
+            root_parent = _direct_root_parent(body.get("is_a"), prefixes)
+            if root_parent is None:
                 continue
             try:
                 _grounding(body.get("annotations"), str(name))
             except PackGroundingRefusal as error:
                 if error.reason is PackGroundingRefusalReason.GROUNDING_REQUIRED:
-                    raise PackGroundingRefusal(
-                        PackGroundingRefusalReason.DIRECT_ROOT_GROUNDING_REQUIRED,
-                        f"project class {name} extends {body['is_a']} directly",
-                    ) from error
+                    missing.append((str(name), root_parent))
+                    continue
                 raise
             grounded.append(str(name))
+        if missing:
+            detail = "; ".join(
+                f"{name} extends {parent}" for name, parent in sorted(missing)
+            )
+            raise PackGroundingRefusal(
+                PackGroundingRefusalReason.DIRECT_ROOT_GROUNDING_REQUIRED,
+                "project classes extend Malleus roots without grounding: " + detail,
+            )
     return PackGroundingReceipt(
         role=role,
         source_id=source_id,
