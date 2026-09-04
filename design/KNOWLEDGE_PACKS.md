@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Sections marked "open" remain undecided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Decisions 13 and 14, taken on 2026-09-04 after run-02, ship in `metrology` and `research` at version 0.2.0; both are additive. Sections marked "open" remain undecided.
 
 ## Why
 
@@ -46,7 +46,7 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 
 ### metrology
 
-- Mixin `Quantified`: `quantity_kind` (string, open), `value_lower` (float), `value_upper` (float, equal to lower for an exact value), `unit` (string, UCUM code where one exists), `uncertainty` (float, optional), `determination` (enum `Determination`: MEASURED, DERIVED, ESTIMATED, MODELLED).
+- Mixin `Quantified`: `quantity_kind` (string, open, the source's own wording), `quantity_kind_class` (enum `QuantityKindClass`, optional, fifteen QUDT names plus OTHER), `value_lower` (float), `value_upper` (float, equal to lower for an exact value), `unit` (string, UCUM code where one exists), `uncertainty` (float, optional), `determination` (enum `Determination`: MEASURED, DERIVED, ESTIMATED, MODELLED).
 - Mixin `Counted`: `count` (integer), `count_scope` (string).
 - Class `Ratio` (Entity): `numerator_kind`, `denominator_kind`, `value`, `uncertainty`.
 - Class `QuantityValue` (Entity, wears `Quantified`) for projects that want quantities as nodes.
@@ -60,10 +60,10 @@ These are shapes for discussion, not schemas. Slot names follow the borrowed voc
 ### research
 
 - Enum `AssertionModality`, shared across every project that loads the pack: STATED, MEASURED, CALCULATED, HYPOTHESISED, CONTESTED, NEGATED. One coarse list so that "which records here are hypotheses" means the same thing in every graph. A project that needs finer distinctions adds a refinement slot beside it and never redefines a coarse value. The three producers' private enums (`ObservationBasis`, `DeterminationMode`, `LocationQuality`) are the evidence that this list must be shared.
-- Mixin `SourceAsserted`: `assertion_modality` (enum above), `assertion_confidence` (float, optional). Any entity or relation can wear it, so "melt degassing triggers earthquakes" can enter a graph as HYPOTHESISED instead of being left out.
-- Class `Claim` (Entity, wears `SourceAsserted`): `statement` (root slot), `claim_kind`. Seeded from Recon's `Claim`; the reviewer-workflow slots stay in Recon.
+- Mixin `SourceAsserted`: `assertion_modality` (enum above), `assertion_confidence` (float, optional), `assertion_locator` (string, optional, an opaque route back to the retained assertion), `statement_sha256` (string, optional, the digest of the exact retained assertion text). Any entity or relation can wear it, so "melt degassing triggers earthquakes" can enter a graph as HYPOTHESISED instead of being left out.
+- Class `Claim` (Entity, wears `SourceAsserted`): `statement` (root slot, optional and empty unless the record's `Source` declares a permitting licence), `claim_kind`. Seeded from Recon's `Claim`; the reviewer-workflow slots stay in Recon.
 - Class `Observation` (Entity, wears `Quantified`, `TemporalExtent`, `SourceAsserted`).
-- Classes `Method`, `Instrument`, `Campaign` (wears `TemporalExtent`, `Counted` for instrument counts), `Sample`, `Source` (a work or document), `Evidence` (root `locator`, source digest).
+- Classes `Method`, `Instrument`, `Campaign` (wears `TemporalExtent`, `Counted` for instrument counts), `Sample`, `Source` (a work or document, `licence` as the source declares it), `Evidence` (root `locator`, source digest).
 - Relations: CLAIM_CONCERNS (Claim to any entity), OBSERVED_WITH (Observation to Instrument or Method), PART_OF_CAMPAIGN, SAMPLED_FROM, SUPPORTS and CHALLENGES (Evidence or Claim to Claim, after Micropublications), REPORTED_BY (any record to Source).
 
 Two layers of epistemics, kept apart on purpose: `assertion_modality` is what the source says and how strongly, and it lives in the domain graph where a query can read it. Assent's `EpistemicDecision` is whether we accept the record of what the source said, and it lives in the ledger. Neither leaks into the other.
@@ -155,6 +155,44 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
 10. A `DomainHistoryProfile` is a separate adopter-owned contract, shipped as grounded reference profiles; the paper runs under `source-assertion`; Small Shop runs `state-version` and a separate `object-event` conformance history. Object-event materialization does not gate the paper.
 11. Requirements flow: Core touches Core and receives requirements with reproducers; the paper thread executes and files requirements through the overseer; the overseer verifies every Core deliverable on disk before the paper thread consumes it. Handovers: `handover/2026-09-03-core-requirements.md`, `handover/2026-09-03-paper-executor-plan.md`.
 12. Population (after the coverage RCA and Core's evaluation, `handover/2026-09-03-core-population-v2.md`, which supersedes the adapter handover): Core owns a neutral population plan (compiled contract identity, profile artifact, adapter identity, sources, records in the public record shape, supersessions, field-level derivations, typed gaps, valid time) and its deterministic lowering to the existing change-set grammar; a capture with zero records is the typed result NO_DOMAIN_CHANGE. The assertion, a verbatim clause with block, modality and attribution, is the unit of capture inside the optional document-assertion adapter, retained as evidence, never a graph record; the objective is coverage of the reading measured by a two-axis census (blocks reviewed or untouched; assertions fully, partly or unformalized), never "smallest"; competency questions enter only the evaluation loop after population is frozen; every concrete Entity and Relation type is admissible, and a selected profile with an Event role also admits concrete Event types plus EventParticipation types present in the compiled contract; ratification samples blocks. Built by Core, test first, in the order P1 to P4 of that handover.
+
+13. A controlled quantity-kind classification in `metrology`, additive. A fresh
+    producer given the packs used the open `quantity_kind` for 137 observations and
+    produced 137 distinct strings. Free text alone is readable and not comparable:
+    nothing groups two records reporting one kind under different wording, and a
+    type-only query binding has no field to sharpen on. The producer refused to coin
+    its own enum, correctly, because the skill says reuse before invent, and a private
+    list would have made that graph incomparable with the next one. So the pack ships
+    the list: enum `QuantityKindClass`, fifteen names taken from the QUDT
+    quantity-kind vocabulary at http://qudt.org/vocab/quantitykind/ and spelled as
+    QUDT spells them, Length, Time, Temperature, Pressure, Mass, Volume, Area,
+    Velocity, Density, Frequency, Energy, Force, MassFraction, Count and Angle, plus a
+    local `OTHER` for a quantity none of them fits. QUDT because the naming table
+    above already cites it as the ontology precedent for `metrology`, its names are
+    minted under a stable namespace, and VIM defines the concept while enumerating no
+    kinds. The optional slot `quantity_kind_class` sits beside `quantity_kind` in the
+    `Quantified` mixin. `quantity_kind` stays, stays open, and keeps the source's own
+    wording, which is never rewritten to fit the class; unset is the honest value when
+    the source's kind is unclear. The change is additive, so the pack is version 0.2.0
+    and the list grows by adding values rather than by redefining one.
+14. Claim text policy: the graph carries a locator and a digest, not the sentence. The
+    same producer wrote verbatim source sentences into `Claim.statement` and into root
+    `description`, which the accepted ontology permits and which a source-support
+    review wants to read. It also put copyrighted prose into the population plan, the
+    gaps, the replay receipt, the export records, the query result, the retained
+    capture and the ledger, and seven artifacts of that run are withheld with only
+    their digests public. The graph now carries `assertion_locator`, the route back to
+    the retained assertion, and `statement_sha256`, the digest of the exact retained
+    assertion text. Both sit on the `SourceAsserted` mixin, so they reach every
+    claim-bearing record and not only `Claim`: `Observation` wears the mixin, and a
+    project class that inherits `Claim` gets them without declaring anything.
+    `statement` stays and stays optional, and it carries a sentence only where the
+    record's `Source` declares a licence that permits reproduction; `Source` gains a
+    `licence` slot for that declaration. The locator is opaque and source-agnostic on
+    purpose: the pack does not parse it and does not assume a document, because a
+    source can be a PDF text layer, a malleus-ocr bundle, a recon record, or a time
+    span in a wav file. Retention does not change. The assertion stays where it
+    already was, in the retained capture, and the locator is what reaches it.
 
 ## Open
 
