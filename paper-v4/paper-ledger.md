@@ -2280,3 +2280,65 @@ Non-claim: stage acceptance is not domain adequacy, and nothing here is paper
 evidence. The run is admitted and replayed; the preliminary inspection staged
 under `paper-v4/evaluation-v4/` has not been performed and Luis has not
 ratified. No manuscript sentence changes on this entry.
+
+### E-0123, run-03 opens the second v4 cell with the model as the only variable
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-03/run-contract.json`,
+`producer-input-manifest.json`, `spawn-message.md`, `test_contract.py`, and the
+author's decision 4 of 2026-09-04 recorded in
+`handover/2026-09-04-overseer-takeover.md`.
+
+Cell: Run-02 reached queries, so the second cell opens. It is one fresh Claude
+Code subagent, Agent tool, `subagent_type general-purpose`, no inherited
+context, requested model `sonnet`, model family Claude Sonnet 5, reasoning
+effort the harness default and neither pinned nor observed. Every other key of
+the producer block is run-02's, and `run-03/test_contract.py` compares the two
+blocks key by key so only `requested_model` and `model_family` may differ. The
+scope block says it plainly: `matrix_cell` SECOND, `first_cell` run-02,
+`variable` PRODUCER_MODEL_ONLY, `harness` IDENTICAL_TO_RUN_02. Run-03 supersedes
+nothing; run-02 stays the first cell and its artifacts stay frozen.
+
+Coordinates: Core commit `26877364cc2649df9bc9a93fd10e75f993e31cb1`, tree
+`d12866050ad53d04243aaf0b4a899c626320d841`, governance head `OVR-000393` at
+`sha256:c97e3c65c4d1a455477277a33bb97e039c60fc0f06a09386ee86002ef31b97ad`. No
+Core file changed between run-02's commit `4881b3a` and this one, so all eight
+declared inputs carry run-02's digests unchanged: the skill at
+`sha256:2e0c9364…`, the reading at `sha256:f3885c7b…`, the root at
+`sha256:5b737c21…`, the LinkML types at `sha256:1c79b264…`, metrology
+`sha256:1050b247…`, chronology `sha256:6fbd3b49…`, research `sha256:c86abede…`,
+and the packaged source-assertion profile at `sha256:e7451aaf…`. The interface
+coordinates are new: `capture:paper-v4:yu-2025:v4:3` and
+`plan:paper-v4:yu-2025:v4:3`. The private workspace is
+`private/paper-v4-v4-run-03/producer`.
+
+Pinning, and why now: Core is about to change the skill and the packs on main.
+A run's declared inputs are the bytes its producer consumed, so run-03's
+`prepare_producer.py` reads every tracked input with
+`git show 26877364:<path>` and writes those bytes into the workspace, including
+the skill, which it installs by writing the file rather than by running
+`install-skills` against a tree that may have moved. The selected reading is
+untracked and is still read from its private path and checked against the
+manifest digest. The exact-closure check and the receipt are unchanged.
+`run-03/test_contract.py` asserts the seven tracked digests against
+`git show` and never against the working tree.
+
+Run-02 re-pointed: `run-02/test_contract.py` compared the same seven inputs
+against the live tree, the defect 82a2fa0 fixed for run-01 and the standing
+finding E-0121 left to the overseer. It now reads them from
+`git show 4881b3a:<path>`, so the coming Core change cannot turn a closed run
+red. Nothing else in run-02 moved; its frozen artifacts carry the digests E-0122
+recorded, and `run-03/test_contract.py` pins three of them.
+
+Two harness deviations from run-02, both consequences of the pinning and both
+visible in the manifest. `skill_installer` no longer names the
+`malleus-inquisitor install-skills` command, because run-03 does not run it; it
+records `WRITE_DECLARED_BYTES_AT_CORE_COMMIT` with the target path. A new
+`input_bytes` block states that tracked inputs come from git at the recorded
+commit and that `SELECTED_READING` is the one untracked input.
+
+Non-claim: no producer has run at this coordinate. No ontology, population,
+admission, replay, query or inspection result exists for run-03, and the
+comparison between the two cells is not a result until both are ratified. One
+cell per model is one observation per model, not a measurement of either model.
