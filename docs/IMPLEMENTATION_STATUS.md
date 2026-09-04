@@ -95,6 +95,19 @@ Pack grounding is retained provenance and does not alter semantic fact
 identity. Packs remain adopter choices and are never required by the base
 protocol.
 
+The installable `malleus-acolyte` skill now carries a separate nascent-project
+playbook beside its ongoing-project standing orders. It starts from retained
+source bytes, keeps evaluation questions out of ontology construction and
+population, chooses optional packs and a domain-history profile explicitly,
+names the real grounding and compiler commands, routes document captures and
+structured sources into the same neutral population plan, preserves typed
+gaps, checks the capture census for untouched source blocks, and repeats only
+through additive contract revision. It treats every concrete Entity and
+Relation type as eligible, calls the public history admit and reopen boundaries,
+keeps the loop in one session by default, and caps it at two revision rounds.
+The procedure adds no compiler command or runtime capability. It documents how
+a fresh adopter uses the public boundaries already listed above.
+
 ## Implemented
 
 - Stage 2: closed-world ontology and typed-graph validation
