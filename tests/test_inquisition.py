@@ -1843,6 +1843,19 @@ class TestSkillsAreInstallable:
             ),
             "neutral population plan",
             "every concrete Entity and Relation type",
+            (
+                "The `records` object carries an `events` envelope beside "
+                "`entities` and `relations`"
+            ),
+            (
+                "the bound profile's `ontology_roles.event` is nonempty and "
+                "the accepted ontology declares the type"
+            ),
+            (
+                "`event_participations` additionally need an "
+                "`EventParticipation` type"
+            ),
+            "FAMILY_NOT_ADMITTED",
             "canonical_census_bytes",
             "REVIEWED` or `UNTOUCHED",
             "FULLY_FORMALIZED`, `PARTLY_FORMALIZED`, or `UNFORMALIZED",
@@ -2074,8 +2087,13 @@ class TestSkillsAreInstallable:
             "statement",
         }
         assert set(assertion["gaps"][0]) == {"kind", "statement"}
-        assert set(template["records"]) == {"entities", "relations"}
+        assert set(template["records"]) == {"entities", "events", "relations"}
         assert set(template["records"]["entities"][0]) == {
+            "id",
+            "properties",
+            "type",
+        }
+        assert set(template["records"]["events"][0]) == {
             "id",
             "properties",
             "type",
@@ -2131,9 +2149,12 @@ class TestSkillsAreInstallable:
         assert census["blocks"] == {
             "block:1": "REVIEWED",
             "block:2": "UNTOUCHED",
+            "block:3": "REVIEWED",
         }
+        assert census["blocks_reviewed"] == 2
+        assert census["blocks_total"] == 3
         assert census["assertions"] == {
-            "FULLY_FORMALIZED": 0,
+            "FULLY_FORMALIZED": 1,
             "PARTLY_FORMALIZED": 1,
             "UNFORMALIZED": 0,
         }
