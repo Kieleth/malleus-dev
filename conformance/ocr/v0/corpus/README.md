@@ -24,7 +24,9 @@ The five cases separate different questions:
   census remains incomplete.
 * `failed-attempt` retains a request and controlled failure response over one
   rasterized region. The attempt remains `FAILED / CHECK_FAILED`, and no
-  hypothesis, selection, or selected text is invented.
+  hypothesis, selection, or selected text is invented. Its `retry-succeeds`
+  variant appends a completed attempt and first reading while retaining the
+  failed attempt byte-for-byte.
 * `unavailable-attempt` retains the intended request and the reason the call
   could not start. It carries no response artifact or digest, and removing the
   reason triggers `OCR-D015`.

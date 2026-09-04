@@ -137,7 +137,27 @@
     {
       "bundle": "cases/failed-attempt/bundle.json",
       "id": "failed-attempt",
-      "mutations": [],
+      "mutations": [
+        {
+          "bundle": "cases/failed-attempt/mutations/retry-succeeds.bundle.json",
+          "expected_diagnostic_codes": [],
+          "expected_unit_outcome": {
+            "image:1": "READ"
+          },
+          "id": "retry-succeeds",
+          "purpose": "A successful retry adds a reading without erasing the failed attempt.",
+          "requests": [
+            "cases/failed-attempt/requests/retry.json"
+          ],
+          "responses": [
+            "cases/failed-attempt/responses/retry.json"
+          ],
+          "selected_texts": [
+            "cases/failed-attempt/selected/retry.txt"
+          ],
+          "verification": "cases/failed-attempt/mutations/retry-succeeds.verification.json"
+        }
+      ],
       "oracle": "cases/failed-attempt/oracle.json",
       "purpose": "Retain a made-but-failed control-reader attempt without inventing a reading.",
       "rasters": [

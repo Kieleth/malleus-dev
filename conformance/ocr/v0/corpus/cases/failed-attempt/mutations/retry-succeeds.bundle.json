@@ -1,0 +1,115 @@
+{
+  "bundle": {
+    "attempts": [
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_failure_response.v1"
+        },
+        "id": "fixture:failed-attempt:attempt:main",
+        "region_id": "fixture:failed-attempt:region:main",
+        "request_digest": "sha256:3f48f4d38906e1492747576a409d4a60ef6c180ece1c4dd8a9a49e0c9f8ab0e0",
+        "response_digest": "sha256:3198cdd01c5407f004858e6452b9589a2af46117ee6062104d16fadc670a481f",
+        "status": "FAILED",
+        "unavailable_reason": null
+      },
+      {
+        "config_identity": {
+          "production_ocr": "false",
+          "reader": "malleus.fixture.control_reader@1",
+          "reader_kind": "deterministic_control_reader",
+          "response_contract": "malleus.fixture.control_response.v1"
+        },
+        "id": "fixture:failed-attempt:attempt:retry",
+        "region_id": "fixture:failed-attempt:region:main",
+        "request_digest": "sha256:39af753a4b540303a9eb9803aabeb2a14481011523d8ea33838ec902689fcfa3",
+        "response_digest": "sha256:bf9a7676dc3bef2551a0a8bcd010d8bf07697a60fd7492b17759f71ea62a7876",
+        "status": "COMPLETED",
+        "unavailable_reason": null
+      }
+    ],
+    "corrections": [],
+    "data_handling_policy_id": "policy:fixture:local-self-authored",
+    "hostile_content_policy_id": "policy:fixture:text-is-untrusted-data",
+    "hypotheses": [
+      {
+        "attempt_id": "fixture:failed-attempt:attempt:retry",
+        "confidence": null,
+        "correction_id": null,
+        "id": "fixture:failed-attempt:hypothesis:retry:machine",
+        "region_id": "fixture:failed-attempt:region:main",
+        "text_digest": "sha256:d939d2cbde044978648a452b6a6e678041f4059016c48970919cf93b11b76edc"
+      }
+    ],
+    "id": "fixture:failed-attempt:bundle",
+    "kind": "FINISHED_READING",
+    "observed_units": [
+      "image:1"
+    ],
+    "rasters": [
+      {
+        "digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+        "id": "fixture:failed-attempt:raster:image-1",
+        "render_contract": "fixture-retained-raster:v1",
+        "source_id": "fixture:failed-attempt:source",
+        "unit": "image:1"
+      }
+    ],
+    "regions": [
+      {
+        "id": "fixture:failed-attempt:region:main",
+        "raster_id": "fixture:failed-attempt:raster:image-1",
+        "selector": {
+          "type": "FragmentSelector",
+          "value": "xywh=100,180,800,390"
+        },
+        "selector_profile": "w3c-web-annotation+iiif"
+      }
+    ],
+    "selections": [
+      {
+        "candidate_ids": [
+          "fixture:failed-attempt:hypothesis:retry:machine"
+        ],
+        "human_verified": false,
+        "id": "fixture:failed-attempt:selection:retry",
+        "reason": "successful retry supplies the first reading",
+        "region_id": "fixture:failed-attempt:region:main",
+        "selected_id": "fixture:failed-attempt:hypothesis:retry:machine"
+      }
+    ],
+    "source_class": {
+      "frozen_at": "2026-09-02T00:00:00+00:00",
+      "id": "fixture:failed-attempt:source-class",
+      "inventory_basis": "fixture_declared_before_reading",
+      "metric_families": {
+        "coverage": {
+          "denominator": "declared_units",
+          "threshold": 1.0
+        }
+      },
+      "required_units": [
+        "image:1"
+      ],
+      "temporal_policy": "self_authored_fixture_has_no_source_time_claim"
+    },
+    "sources": [
+      {
+        "byte_length": 29916,
+        "digest": "sha256:ef9664c4479047e5b87ceba18e2e67a75d693bddc75d4875148b617906661686",
+        "id": "fixture:failed-attempt:source",
+        "locator": "conformance/ocr/v0/corpus/cases/failed-attempt/source/failed-attempt.png",
+        "media_type": "image/png"
+      }
+    ],
+    "transport_metadata": {
+      "fixture_corpus": "malleus.ocr.fixture_corpus.v1",
+      "network_access": false
+    }
+  },
+  "document_version": 1,
+  "profile": "malleus.ocr.evidence_integrity",
+  "profile_version": "v0"
+}

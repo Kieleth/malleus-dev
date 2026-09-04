@@ -739,6 +739,7 @@ class Case:
     def _exchange(
         self, name: str, raster: Mapping[str, Any], region: Mapping[str, Any],
         response_text: str, selected_text: str, outcome: str,
+        *, retain_in_reference: bool = True,
     ) -> dict[str, Any]:
         response_path = f"{self.prefix}/responses/{name}.json"
         selected_path = f"{self.prefix}/selected/{name}.txt"
@@ -762,7 +763,8 @@ class Case:
             "selected_text_path": selected_path,
             "selected_text_digest": _digest(selected_bytes),
         }
-        self.exchanges.append(exchange)
+        if retain_in_reference:
+            self.exchanges.append(exchange)
         return exchange
 
     def review(self, name: str, verdict: str, reason: str) -> None:
@@ -926,11 +928,63 @@ def _failed_attempt(artifacts: Artifacts) -> dict[str, Any]:
         metric_value=0.0,
         metric_verdict="UNMET",
     )
-    case.write_reference(expected)
+    document = case.write_reference(expected)
+    retry_text = "CONTROL TARGET\nTHIS REGION WILL NOT BE READ"
+    retry = case._exchange(
+        "retry",
+        raster,
+        case.bundle["regions"][0],
+        retry_text,
+        retry_text,
+        "READING",
+        retain_in_reference=False,
+    )
+    retried = copy.deepcopy(document)
+    region_id = _id(case.id, "region", "main")
+    attempt_id = _id(case.id, "attempt", "retry")
+    hypothesis_id = _id(case.id, "hypothesis", "retry", "machine")
+    retried["bundle"]["attempts"].append({
+        "id": attempt_id,
+        "region_id": region_id,
+        "request_digest": retry["request_digest"],
+        "config_identity": CONFIG_IDENTITY,
+        "status": "COMPLETED",
+        "response_digest": retry["response_digest"],
+        "unavailable_reason": None,
+    })
+    retried["bundle"]["hypotheses"].append({
+        "id": hypothesis_id,
+        "region_id": region_id,
+        "text_digest": retry["selected_text_digest"],
+        "attempt_id": attempt_id,
+        "correction_id": None,
+        "confidence": None,
+    })
+    retried["bundle"]["selections"].append({
+        "id": _id(case.id, "selection", "retry"),
+        "region_id": region_id,
+        "candidate_ids": [hypothesis_id],
+        "selected_id": hypothesis_id,
+        "reason": "successful retry supplies the first reading",
+        "human_verified": False,
+    })
+    retry_expected = _expected({"image:1": ("READ", "ACCOUNTED")})
+    mutations = [case.write_mutation(
+        mutation_id="retry-succeeds",
+        purpose="A successful retry adds a reading without erasing the failed attempt.",
+        document=retried,
+        expected=retry_expected,
+        extra={
+            "expected_unit_outcome": {"image:1": "READ"},
+            "requests": [retry["request_path"]],
+            "responses": [retry["response_path"]],
+            "selected_texts": [retry["selected_text_path"]],
+        },
+    )]
     return case.finish(
         fixture_kind="single_image_failed_attempt",
         expected=expected,
-        mutations=[],
+        mutations=mutations,
     )
 
 

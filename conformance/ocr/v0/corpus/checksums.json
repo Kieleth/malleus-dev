@@ -5,9 +5,17 @@
       "byte_length": 2698,
       "sha256": "sha256:c02feec88e2c76796bd1887324742688827965505f66967767e5ed063d5280b3"
     },
+    "cases/failed-attempt/mutations/retry-succeeds.bundle.json": {
+      "byte_length": 4124,
+      "sha256": "sha256:35301576b60a99c3ef5e8300f6efe5e1f07ce789c081c39c144f166bc91ac6ff"
+    },
+    "cases/failed-attempt/mutations/retry-succeeds.verification.json": {
+      "byte_length": 506,
+      "sha256": "sha256:f678dff126d61d8e58da03fe86fcecf29b02c4179c583914e8a77728d97675bb"
+    },
     "cases/failed-attempt/oracle.json": {
-      "byte_length": 1705,
-      "sha256": "sha256:f1e5e9a3c67f68f05e2ebf750acb1e5f05ef695ca9af21fb96f3a5cef3d75ba8"
+      "byte_length": 2359,
+      "sha256": "sha256:a53c8431c05aafe0772d22272cd4ba2db17313a2f1f04b9afcd2b0bd37bdbbd1"
     },
     "cases/failed-attempt/rasters/image-1.png": {
       "byte_length": 29916,
@@ -17,9 +25,21 @@
       "byte_length": 478,
       "sha256": "sha256:3f48f4d38906e1492747576a409d4a60ef6c180ece1c4dd8a9a49e0c9f8ab0e0"
     },
+    "cases/failed-attempt/requests/retry.json": {
+      "byte_length": 478,
+      "sha256": "sha256:39af753a4b540303a9eb9803aabeb2a14481011523d8ea33838ec902689fcfa3"
+    },
     "cases/failed-attempt/responses/main.json": {
       "byte_length": 453,
       "sha256": "sha256:3198cdd01c5407f004858e6452b9589a2af46117ee6062104d16fadc670a481f"
+    },
+    "cases/failed-attempt/responses/retry.json": {
+      "byte_length": 393,
+      "sha256": "sha256:bf9a7676dc3bef2551a0a8bcd010d8bf07697a60fd7492b17759f71ea62a7876"
+    },
+    "cases/failed-attempt/selected/retry.txt": {
+      "byte_length": 43,
+      "sha256": "sha256:d939d2cbde044978648a452b6a6e678041f4059016c48970919cf93b11b76edc"
     },
     "cases/failed-attempt/source/failed-attempt.png": {
       "byte_length": 29916,
@@ -234,8 +254,8 @@
       "sha256": "sha256:9c35546eeb1ae562e07986330d359c8f38ebfc2a3697b656d967a6e804f49936"
     },
     "corpus.json": {
-      "byte_length": 8662,
-      "sha256": "sha256:21fc045bdd790e8a1fdd81aa0352937d9362094352ee65e10e04644af410858f"
+      "byte_length": 9396,
+      "sha256": "sha256:bab467a44320137deb120ea006a1e17767ccdeb12097e145e9be36c056924618"
     }
   },
   "scope": "every generated file except checksums.json"

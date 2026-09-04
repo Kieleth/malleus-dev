@@ -131,7 +131,9 @@ LOCAL_PATH = re.compile(
 )
 
 IMPLEMENTED_MUTATIONS = {
-    "failed-attempt": {},
+    "failed-attempt": {
+        "retry-succeeds": ((), {"image:1": "READ"}),
+    },
     "incomplete-sequence": {
         "observed-without-raster": ((), {"page:2": "NOT_RENDERED"}),
     },
@@ -353,6 +355,9 @@ def _case_paths(case: dict[str, Any]) -> Iterator[str]:
     for mutation in case["mutations"]:
         yield mutation["bundle"]
         yield mutation["verification"]
+        for key in ("requests", "responses", "selected_texts"):
+            if key in mutation:
+                yield from mutation[key]
 
 
 def _verification_payload(result: VerificationResult) -> dict[str, Any]:
@@ -563,7 +568,7 @@ def test_deterministic_regeneration_matches_every_retained_byte() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert completed.stdout == "verified 60 deterministic corpus artifacts\n"
+    assert completed.stdout == "verified 65 deterministic corpus artifacts\n"
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
@@ -907,7 +912,7 @@ def test_failed_attempt_retains_the_failure_without_inventing_a_reading() -> Non
         "Retain a made-but-failed control-reader attempt without inventing a reading."
     )
     assert case["selected_texts"] == []
-    assert case["mutations"] == []
+    assert {item["id"] for item in case["mutations"]} == {"retry-succeeds"}
     assert len(bundle.rasters) == len(bundle.regions) == len(bundle.attempts) == 1
     assert bundle.hypotheses == bundle.corrections == bundle.selections == ()
 
@@ -964,6 +969,72 @@ def test_failed_attempt_cli_names_the_retry_queue_not_the_fetch_queue(capsys) ->
     assert "INCOMPLETE" in output
     assert "never checked: none" in output
     assert "check failed:  image:1" in output
+
+
+def test_successful_retry_adds_a_reading_without_erasing_the_failure(capsys) -> None:
+    from malleus.ocr.cli import CONFORMS, main
+
+    case = next(item for item in _manifest()["cases"] if item["id"] == "failed-attempt")
+    assert len(case["mutations"]) == 1
+    mutation = case["mutations"][0]
+    assert mutation["id"] == "retry-succeeds"
+    assert mutation["requests"] == ["cases/failed-attempt/requests/retry.json"]
+    assert mutation["responses"] == ["cases/failed-attempt/responses/retry.json"]
+    assert mutation["selected_texts"] == ["cases/failed-attempt/selected/retry.txt"]
+
+    base = Bundle.from_bytes(_artifact_path(case["bundle"]).read_bytes())
+    retried = Bundle.from_bytes(_artifact_path(mutation["bundle"]).read_bytes())
+    assert len(base.attempts) == 1
+    assert len(retried.attempts) == 2
+    assert retried.attempts[0] == base.attempts[0]
+    assert retried.sources == base.sources
+    assert retried.rasters == base.rasters
+    assert retried.regions == base.regions
+
+    failed, succeeded = retried.attempts
+    assert failed.status == "FAILED"
+    assert succeeded.status == "COMPLETED"
+    assert failed.id != succeeded.id
+    assert failed.region_id == succeeded.region_id == retried.regions[0].id
+    assert failed.response_digest == _digest(
+        _artifact_path(case["responses"][0]).read_bytes()
+    )
+    request_bytes = _artifact_path(mutation["requests"][0]).read_bytes()
+    response_bytes = _artifact_path(mutation["responses"][0]).read_bytes()
+    selected_bytes = _artifact_path(mutation["selected_texts"][0]).read_bytes()
+    assert succeeded.request_digest == _digest(request_bytes)
+    assert succeeded.response_digest == _digest(response_bytes)
+    request = json.loads(request_bytes)
+    response = json.loads(response_bytes)
+    assert request["region_id"] == response["region_id"] == succeeded.region_id
+    assert request["raster_digest"] == retried.rasters[0].digest
+    assert request["selector"] == retried.regions[0].selector
+    assert request["task"] == "return the fixed self-authored control reading"
+    assert response["outcome"] == "READING"
+    assert response["text"].encode("utf-8") == selected_bytes == (
+        b"CONTROL TARGET\nTHIS REGION WILL NOT BE READ"
+    )
+
+    assert len(retried.hypotheses) == len(retried.selections) == 1
+    hypothesis = retried.hypotheses[0]
+    selection = retried.selections[0]
+    assert hypothesis.attempt_id == succeeded.id
+    assert hypothesis.text_digest == _digest(selected_bytes)
+    assert selection.candidate_ids == (hypothesis.id,)
+    assert selection.selected_id == hypothesis.id
+
+    result = verify_bundle(retried)
+    assert result.conforms
+    assert result.account.complete
+    assert _expected_payload(result)["units"] == {
+        "image:1": {"disposition": "ACCOUNTED", "outcome": "READ"}
+    }
+
+    code = main([str(_artifact_path(mutation["bundle"]))])
+    output = capsys.readouterr().out
+    assert code == CONFORMS
+    assert "COMPLETE BY DECLARED THRESHOLDS" in output
+    assert "Every declared unit is accounted for" in output
 
 
 def test_unavailable_attempt_retains_a_reason_and_no_response() -> None:
