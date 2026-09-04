@@ -206,9 +206,12 @@ fallback.
    `malleus-inquisitor pack-grounding schema/your_project.yaml --role PROJECT`.
    If a pack was copied, also run its conformance command. Then run
    `malleus-compiler contract` with the project, root, LinkML types, and selected
-   pack files supplied under their exact import locators. The command-line
-   compiler stops at contract compilation. Population, admission, replay, and
-   query use the public `malleus.compiler` Python facade.
+   pack files supplied under their exact import locators. The same command
+   carries the rest of the route: steps 6 through 8 name each subcommand beside
+   the public `malleus.compiler` call it wraps, and either surface is complete
+   for those steps. Contract revision in step 9 remains a Python surface. Every
+   subcommand names its transaction time, actor ID, history profile, and every
+   source, evidence, plan, and change-set file explicitly; none is defaulted.
 6. **Capture before formalising.** For document population, coverage of the
    retained reading is the objective, never the smallest query- or
    answer-changing subset. This rule overrides the global "smallest observation",
@@ -217,7 +220,9 @@ fallback.
    document capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim
    assertions, attribution, block locators, modality, optional assertion or
    domain time, formalisation targets, and typed gaps. Pass it to
-   `adapt_document_assertions`. For structured sources, write a source-specific
+   `adapt_document_assertions`, or run `malleus-compiler capture`, which wraps
+   that call and writes the plan and census bytes to named output paths. For
+   structured sources, write a source-specific
    adapter that emits the same neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
    operation. Inspect the returned `canonical_census_bytes`; continue reviewing
@@ -227,8 +232,9 @@ fallback.
    formalized, and uncaptured assertions remain invisible. If the declared
    capture remains partial, retain that limitation and never call it complete.
 7. **Compile, then admit.** For Core's default governed path, create the new
-   ledger with `create_structural_history(..., compilation=compiled, ...)`.
-   This uses the installed, content-addressed `STRUCTURAL_HISTORY_BUNDLE` and
+   ledger with `create_structural_history(..., compilation=compiled, ...)`, or
+   run `malleus-compiler history create`. This uses the installed,
+   content-addressed `STRUCTURAL_HISTORY_BUNDLE` and
    retains its machine, policy, history binding, and executable check contract.
    The default proves mechanical base coordinates, retained input closure, and
    structural application. It does not establish source truth, domain adequacy,
@@ -236,10 +242,18 @@ fallback.
    its own identified policy and check implementations through the lower-level
    public primitives.
 
-   Pass the proposed plan to `compile_population_plan`, then
+   Retain the source and evidence bytes the plan names before it names them,
+   with `history.append_anchors(...)` or `malleus-compiler retain`; an
+   unretained source or evidence member refuses at preparation. Pass the
+   proposed plan to `compile_population_plan`, then
    `prepare_population_change`, and keep the returned `PopulationPreparation`
-   as `prepared`. When `prepared.change_set is not None`, call
-   `admit_structural_change(history=history, preparation=prepared, ...)`.
+   as `prepared`. `population_retention_events` names the exact artifacts that
+   call will retain, which is the profile, the plan, and the generated gaps
+   artifact; any other event set refuses. `malleus-compiler populate` wraps
+   those three and writes the composed change-set bytes. When
+   `prepared.change_set is not None`, call
+   `admit_structural_change(history=history, preparation=prepared, ...)`, or
+   run `malleus-compiler admit` with the change-set bytes populate wrote.
    Never write a `CHECK_RECORDED` outcome by hand: the helper emits its fixed
    check only inside the same failure-atomic validation and admission batch.
    For `NO_DOMAIN_CHANGE`, `prepared.change_set is None`; retain the
@@ -252,6 +266,10 @@ fallback.
    using `KnowledgeChangeHistory.reopen(...)`, replay the graph, query through the
    graph's public read methods, and use `trace_population_record` to reach the
    exact plan, source, capture, and field derivations behind an accepted record.
+   The same three reads are `malleus-compiler replay`, which writes
+   `export_records()` and the receipt to named paths, `malleus-compiler query`,
+   which takes a record type and repeated `--where KEY=VALUE` filters compared
+   as text, and `malleus-compiler trace` for one record ID.
    Do not call a structurally valid record true merely because it was admitted.
 9. **Grow only from recorded gaps.** Keep propose, populate, refuse or record
    gaps, revise, and repopulate in one working session by default. Set the limit

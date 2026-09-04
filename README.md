@@ -21,10 +21,10 @@ through the selected research chain, then reconstructs the same graph and
 receipt from retained history alone. The three graph records are deliberately
 simple. The achievement is making their path into accepted history explainable,
 testable, and replayable. The reusable path beneath the fixture is now exposed
-through `malleus.compiler`, with `malleus-compiler contract` as the installed
-contract-compilation command. Public here means a supported import path and
-installed command in packages built from this source, not a stable wire format
-or release.
+through `malleus.compiler`, with `malleus-compiler` as the installed command
+for that path, from `malleus-compiler contract` to admission, replay, and
+query. Public here means a supported import path and installed command in
+packages built from this source, not a stable wire format or release.
 [Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
 graph result.](docs/index.md#inspect-the-evidence)
 
@@ -138,9 +138,32 @@ malleus-compiler contract \
 ```
 
 It outputs the canonical validated contract artifact. It does not accept a raw
-ontology digest as a substitute for source bytes. Population, admission,
-reopen, replay, and graph query are Python surfaces in `malleus.compiler`; the
-command currently covers contract compilation only. Grammars still named
+ontology digest as a substitute for source bytes.
+
+The rest of the route is on the same command. Each subcommand wraps one public
+call in `malleus.compiler` and adds no meaning of its own:
+
+- `malleus-compiler history create` calls `create_structural_history`.
+- `malleus-compiler retain` appends the source and evidence anchors one history
+  needs before any plan names them.
+- `malleus-compiler capture` calls `adapt_document_assertions` and writes the
+  plan and census bytes.
+- `malleus-compiler populate` calls `compile_population_plan`,
+  `population_retention_events`, and `prepare_population_change`, then writes
+  the composed change-set bytes.
+- `malleus-compiler admit` calls `admit_structural_change`.
+- `malleus-compiler replay` reopens the ledger, replays, and writes
+  `export_records()` and the receipt.
+- `malleus-compiler query` calls the graph's public `query`.
+- `malleus-compiler trace` calls `trace_population_record`.
+
+The transaction time, the actor ID, the history profile, and every source,
+evidence, records, plan, and change-set file are command-line arguments.
+Nothing is defaulted and nothing is looked up. `capture` composes the plan's
+contract identity from the named sources and the shipped structural normative
+profile, which is the profile `history create` binds, so a plan built here
+binds a history created here. Typed refusals print to stderr with exit code 2
+and leave the accepted history byte-identical. Grammars still named
 `private-v0` remain explicitly unstable. Small Shop's source mapper and
 high-level runner remain research-local.
 
