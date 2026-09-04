@@ -2169,3 +2169,114 @@ to the overseer.
 Non-claim: This entry records a rebind and a message cut. No producer has run at
 this coordinate, no ontology has been accepted, and no population, replay, query
 or inspection result exists for run-02.
+
+### E-0122, run-02 is admitted and replayed after three ontology attempts and two structural returns
+
+Date: 2026-09-04
+
+Sources: `paper-v4/experiment-v4/run-02/ontology-run/result.json`,
+`results/run-result.json`, `results/launch-log.json`,
+`results/native-query-binding.json`, `results/withheld-artifacts.json`, and the
+private workspace `private/paper-v4-v4-run-02/`.
+
+Producer: one fresh Claude Code subagent, Agent tool, `subagent_type
+general-purpose`, no inherited context, requested model `opus`, model family
+Claude Opus 5, reasoning effort the harness default and neither pinned nor
+observed. It received `run-02/spawn-message.md` verbatim with the workspace path
+substituted, and the eight declared inputs at the digests
+`producer-input-manifest.json` pins. It never saw a question, an answer, a prior
+ontology, a prior population or a manuscript.
+
+Ontology, three attempts and two diagnostic returns, the limit: attempt 1 at
+`sha256:164417a5…` refused at `PACK_GROUNDING` with
+`DIRECT_ROOT_GROUNDING_REQUIRED` naming all ten ungrounded project classes in
+one sorted set, which is the aggregate diagnostic Core added after run-01 burned
+its budget on one class per refusal. Attempt 2 at `sha256:9dfaa95b…` refused
+with `GROUNDING_NOT_CLOSED` on a single vocabulary entry,
+`SpreadingCenter.grounding.vocabularies[0]`. Attempt 3 at `sha256:56f3e00d…` was
+accepted at 18:32:51Z with 3515 validated facts, validated fact set
+`sha256:c67acb93…`, validated contract `sha256:8b81f3d8…`, grounding receipt
+`sha256:8f977b60…` over ten grounded subjects, and population surface
+`sha256:6eb4afc3…`. No fallback, no hand repair.
+
+Population, two structural returns, both producer self-corrections: runner
+attempt 1 refused in the document adapter with `READING_MISMATCH` because the
+capture named the reading by its canonical-JSON digest `sha256:3ea159ad…` while
+the runner supplies the raw declared input bytes `sha256:f3885c7b…`; the
+producer had itself flagged the ambiguity in `work/status.json`. Runner attempt 2
+refused in the plan compiler with `UNDERIVED_FIELD`, `agent:anne-briais:
+['properties', 'agent_type']`. Each refusal was returned to the same producer,
+which corrected `work/document-population.json` itself. Nothing was admitted by
+the refused attempts; their ledgers are preserved under
+`private/paper-v4-v4-run-02/refused-runner-attempt-0{1,2}/`. The third attempt
+was admitted.
+
+Runner identities: transaction time `2026-09-04T19:05:41Z`, actor
+`actor:overseer-run-02`, contract identity `sha256:fe22571c…`, ontology
+`sha256:56f3e00d…`, plan `plan:paper-v4:yu-2025:v4:2` at `sha256:3a1c7131…`,
+capture `capture:paper-v4:yu-2025:v4:2` at `sha256:bfe75992…`, change set
+`change:plan:paper-v4:yu-2025:v4:2`, ledger head `sha256:673e1085…` over 14
+events, admitted receipt `sha256:19b274f6…` reproduced byte for byte by the
+reopened replay, export records `sha256:d23aad40…` likewise. Status
+`ADMITTED_AND_REPLAYED`.
+
+Census and counts: 329 assertions, 226 fully formalized, 103 partly formalized,
+none unformalized; 186 of 186 blocks reviewed; 419 entities, 170 relations, 0
+events, 0 event participations, 0 signals, 589 records traced; 0 supersessions.
+104 typed gaps: 84 `AGGREGATE_ONLY`, 16 `TYPE_ABSENT`, 3 `RELATION_ABSENT`, 1
+`INTERVAL_NOT_EXPRESSIBLE`.
+
+Query: the overseer bound `results/native-query-binding.json` after the replay
+was frozen, schema `malleus.paper-v4.native-query-binding/v2`, status
+`FROZEN_AFTER_REPLAY`, pinned to replay receipt `sha256:19b274f6…`. It is
+type-only: 21 cases over the four questions naming record types and projected
+field names, no record id, no locator, no value. `native_query.py` returned
+CQ-01 4 rows, CQ-02 32, CQ-03 34, CQ-04 3, with `forbidden_attempts` zero for
+file reads, sockets and embedding imports, and 126 witnesses traced by record id.
+
+Findings for Core and the skill:
+
+1. `reading_bytes` are the raw declared input bytes, not a canonical
+   re-serialization. The document adapter compares
+   `capture.reading_sha256` against the bytes it is handed, and the skill does
+   not say which digest a capture must carry. The producer guessed canonical
+   JSON and the run cost one structural return. The skill must state the rule at
+   the capture template.
+2. `UNDERIVED_FIELD` reports one field per refusal. Every property key and both
+   relation endpoints need a formalization target, so a capture missing several
+   derivations consumes one return per missing field, exactly the failure class
+   the aggregate grounding diagnostic already fixed one layer up. The plan
+   compiler should report the complete missing set in one refusal.
+3. The accepted population surface enumerates 26 `ENTITY` and 3 `RELATION`
+   record types and no `EVENT` type, although the ontology declares
+   `SeismicEvent` extending `Event`, the grounding receipt lists it among the
+   grounded subjects, and the `source-assertion` profile admits events. The
+   skill's capture template shows only entities and relations. The producer
+   therefore emitted no Event record and wrote typed gaps instead: seven of the
+   sixteen `TYPE_ABSENT` gaps say in terms that no Event record type exists in
+   the surface, at `assertion:0045`, `0076`, `0078`, `0086`, `0115`, `0159` and
+   `0177`. The count is mechanical from `gaps.json`, not an estimate.
+4. `GROUNDING_NOT_CLOSED` refuses one vocabulary entry at a time and does not
+   name the closed field set it requires. Attempt 2 spent the second and last
+   diagnostic return on a single entry whose required fields the diagnostic never
+   listed.
+5. Not previously recorded: the producer populated `statement` and `description`
+   properties with verbatim source sentences. That is legal under the accepted
+   ontology and it is what the source-support review needs, but it makes
+   `population-plan.json`, `gaps.json`, `replay-receipt.json`,
+   `export-records.json`, `query-result.json`, the retained capture and the
+   ledger carry reading text. Under v2 and v3 the same public files carried none.
+   Those seven artifacts are therefore withheld and only their digests are
+   public, recorded in `results/withheld-artifacts.json`. The public set was
+   checked file by file: no frozen artifact shares a 60-character normalized run
+   with any block of the selected reading, and `test_contract.py` holds that
+   line. The accepted ontology and the validated contract each share two
+   40-character runs with the reading, both noun phrases in the producer's own
+   `invention_search` prose, `fast- and intermediate-spreading ridges` and
+   `lithosphere-asthenosphere boundary`. They are terms, not statements, and they
+   were frozen with that recorded.
+
+Non-claim: stage acceptance is not domain adequacy, and nothing here is paper
+evidence. The run is admitted and replayed; the preliminary inspection staged
+under `paper-v4/evaluation-v4/` has not been performed and Luis has not
+ratified. No manuscript sentence changes on this entry.

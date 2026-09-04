@@ -1,0 +1,74 @@
+{
+  "schema": "malleus.paper-v4.native-query-binding/v2",
+  "status": "FROZEN_AFTER_REPLAY",
+  "bound_by": "paper evaluator (overseer session), after population, admission, disposal, reopen and replay were frozen; types read from the accepted population surface only",
+  "bound_after_replay_receipt_sha256": "sha256:19b274f6cb812ddcb593e0e9fb7aaefa1414f57c233efe92653f2ce8016acc5d",
+  "queries": [
+    {
+      "id": "NQ-CQ-01",
+      "question_id": "CQ-01",
+      "cases": [
+        {"ordinal": 1, "source_record_type": "SeismometerNetwork", "relation_record_type": "ResearchRelation", "target_record_type": "Campaign",
+         "output_fields": {"source": ["name", "count", "count_scope"], "relation": ["relation_type"], "target": ["name", "begins_at", "ends_at", "temporal_precision"]}},
+        {"ordinal": 2, "source_record_type": "Campaign", "relation_record_type": "ResearchRelation", "target_record_type": "SeismometerNetwork",
+         "output_fields": {"source": ["name", "begins_at", "ends_at", "temporal_precision"], "relation": ["relation_type"], "target": ["name", "count", "count_scope"]}},
+        {"ordinal": 3, "source_record_type": "ResearchAgent", "relation_record_type": "ContributionRelation", "target_record_type": "Campaign",
+         "output_fields": {"source": ["name", "agent_type"], "relation": ["relation_type"], "target": ["name"]}},
+        {"ordinal": 4, "source_record_type": "ResearchAgent", "relation_record_type": "ContributionRelation", "target_record_type": "SeismometerNetwork",
+         "output_fields": {"source": ["name", "agent_type"], "relation": ["relation_type"], "target": ["name", "count", "count_scope"]}},
+        {"ordinal": 5, "source_record_type": "ReportedObservation", "relation_record_type": "ResearchRelation", "target_record_type": "SeismometerNetwork",
+         "output_fields": {"source": ["name", "quantity_kind", "value_lower", "value_upper", "unit", "determination"], "relation": ["relation_type"], "target": ["name", "count", "count_scope"]}}
+      ]
+    },
+    {
+      "id": "NQ-CQ-02",
+      "question_id": "CQ-02",
+      "cases": [
+        {"ordinal": 1, "source_record_type": "ReportedObservation", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "quantity_kind", "value_lower", "value_upper", "unit", "determination", "assertion_modality"], "relation": ["relation_type"], "target": ["name", "subsection_kind", "accretionary_character"]}},
+        {"ordinal": 2, "source_record_type": "GeologicalStructure", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "structure_kind"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 3, "source_record_type": "LithosphericHorizon", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "horizon_kind"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 4, "source_record_type": "Claim", "relation_record_type": "ResearchRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["statement", "assertion_modality", "claim_kind"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}}
+      ]
+    },
+    {
+      "id": "NQ-CQ-03",
+      "question_id": "CQ-03",
+      "cases": [
+        {"ordinal": 1, "source_record_type": "ReportedObservation", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "quantity_kind", "value_lower", "value_upper", "unit", "determination", "assertion_modality"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 2, "source_record_type": "ReportedObservation", "relation_record_type": "RidgeRelation", "target_record_type": "MeltPopulation",
+         "output_fields": {"source": ["name", "quantity_kind", "value_lower", "value_upper", "unit", "determination", "assertion_modality"], "relation": ["relation_type"], "target": ["name", "melt_stage"]}},
+        {"ordinal": 3, "source_record_type": "ReportedObservation", "relation_record_type": "ResearchRelation", "target_record_type": "MeltPopulation",
+         "output_fields": {"source": ["name", "quantity_kind", "value_lower", "value_upper", "unit", "determination", "assertion_modality"], "relation": ["relation_type"], "target": ["name", "melt_stage"]}},
+        {"ordinal": 4, "source_record_type": "MeltPopulation", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "melt_stage"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 5, "source_record_type": "MeltPopulation", "relation_record_type": "RidgeRelation", "target_record_type": "MeltPopulation",
+         "output_fields": {"source": ["name", "melt_stage"], "relation": ["relation_type"], "target": ["name", "melt_stage"]}}
+      ]
+    },
+    {
+      "id": "NQ-CQ-04",
+      "question_id": "CQ-04",
+      "cases": [
+        {"ordinal": 1, "source_record_type": "MechanismHypothesis", "relation_record_type": "ResearchRelation", "target_record_type": "ReportedObservation",
+         "output_fields": {"source": ["name", "statement", "assertion_modality", "hypothesis_appraisal", "claim_kind"], "relation": ["relation_type"], "target": ["name", "quantity_kind"]}},
+        {"ordinal": 2, "source_record_type": "MechanismHypothesis", "relation_record_type": "ResearchRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "statement", "assertion_modality", "hypothesis_appraisal", "claim_kind"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 3, "source_record_type": "MechanismHypothesis", "relation_record_type": "RidgeRelation", "target_record_type": "RidgeSubsection",
+         "output_fields": {"source": ["name", "statement", "assertion_modality", "hypothesis_appraisal", "claim_kind"], "relation": ["relation_type"], "target": ["name", "subsection_kind"]}},
+        {"ordinal": 4, "source_record_type": "Claim", "relation_record_type": "ResearchRelation", "target_record_type": "MechanismHypothesis",
+         "output_fields": {"source": ["statement", "assertion_modality", "claim_kind"], "relation": ["relation_type"], "target": ["name", "statement", "assertion_modality", "hypothesis_appraisal"]}},
+        {"ordinal": 5, "source_record_type": "MechanismHypothesis", "relation_record_type": "ResearchRelation", "target_record_type": "MechanismHypothesis",
+         "output_fields": {"source": ["name", "statement", "hypothesis_appraisal"], "relation": ["relation_type"], "target": ["name", "statement", "hypothesis_appraisal"]}},
+        {"ordinal": 6, "source_record_type": "MechanismHypothesis", "relation_record_type": "ResearchRelation", "target_record_type": "Claim",
+         "output_fields": {"source": ["name", "statement", "assertion_modality", "hypothesis_appraisal"], "relation": ["relation_type"], "target": ["statement", "assertion_modality", "claim_kind"]}},
+        {"ordinal": 7, "source_record_type": "MechanismHypothesis", "relation_record_type": "ResearchRelation", "target_record_type": "MeltPopulation",
+         "output_fields": {"source": ["name", "statement", "assertion_modality", "hypothesis_appraisal"], "relation": ["relation_type"], "target": ["name", "melt_stage"]}}
+      ]
+    }
+  ]
+}

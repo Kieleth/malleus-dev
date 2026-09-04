@@ -1,0 +1,1046 @@
+id: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity-and-volatiles
+name: mid_ocean_ridge_seismicity_and_volatiles
+version: 0.1.0
+title: Mid-Ocean Ridge Seismicity and Melt Volatiles Project Ontology
+description: >-
+  Project ontology for one source document reporting ocean-bottom-seismometer
+  microseismicity, along-axis ridge structure, lithospheric horizons, rock
+  sampling, and melt volatile geochemistry at a slow-spreading mid-ocean ridge.
+  Vocabulary covers what the source reports and how it attributes it. It does
+  not encode the source's conclusions as class, slot, or enum names.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  morsv: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity-and-volatiles/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: >-
+        Seismology; submarine geology and marine geophysics; igneous
+        petrology and geochemistry; scholarly attribution and bibliographic
+        description
+      taxonomy: >-
+        DDC 551.22 (earthquakes and seismology), DDC 551.46 (oceanography
+        and submarine geology), DDC 552 (petrology), DDC 010 (bibliography)
+      vocabularies:
+        - vocabulary: >-
+            American Geosciences Institute, Glossary of Geology
+          vocabulary_url: https://www.americangeosciences.org
+          borrowed_terms:
+            - mid-ocean ridge
+            - sea-floor spreading
+            - spreading rate
+            - transform fault
+            - normal fault
+            - detachment fault
+            - mylonite
+            - shear zone
+            - magma
+            - melt
+            - lithosphere
+            - asthenosphere
+            - Mohorovicic discontinuity
+            - isotherm
+            - plate
+        - vocabulary: >-
+            IHO-IOC Publication B-6, Standardization of Undersea Feature
+            Names
+          vocabulary_url: https://iho.int
+          borrowed_terms:
+            - ridge
+            - fracture zone
+            - median valley
+            - valley
+            - seamount
+        - vocabulary: >-
+            QuakeML 1.2, seismological data exchange schema
+          vocabulary_url: https://quake.ethz.ch/quakeml/
+          borrowed_terms:
+            - event
+            - event type
+            - origin
+            - magnitude
+            - focal mechanism
+            - azimuthal gap
+        - vocabulary: >-
+            IASPEI New Manual of Seismological Observatory Practice
+            (NMSOP-2)
+          vocabulary_url: https://www.iaspei.org
+          borrowed_terms:
+            - hypocentre
+            - focal depth
+            - local magnitude
+            - magnitude of completeness
+            - b-value
+            - earthquake swarm
+        - vocabulary: >-
+            IUGS glossaries of igneous and metamorphic rocks, Le Maitre
+            (ed.) (2002) and Fettes and Desmons (eds.) (2007)
+          vocabulary_url: https://www.iugs.org
+          borrowed_terms:
+            - basalt
+            - peridotite
+            - melt inclusion
+            - mylonite
+        - vocabulary: >-
+            W3C SOSA/SSN
+          vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+          borrowed_terms:
+            - Observation
+            - has feature of interest
+            - used procedure
+            - made by sensor
+        - vocabulary: >-
+            W3C PROV-O, the PROV Ontology
+          vocabulary_url: https://www.w3.org/TR/prov-o/
+          borrowed_terms:
+            - Agent
+            - Person
+            - Organization
+            - was attributed to
+            - was derived from
+        - vocabulary: >-
+            DCMI Metadata Terms
+          vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+          borrowed_terms:
+            - creator
+            - contributor
+            - date
+            - identifier
+            - isPartOf
+      invented_terms:
+        - RidgeSubsection
+        - GeologicalStructure
+        - GeographicRegion
+        - LithosphericHorizon
+        - MeltPopulation
+        - RockSampleSuite
+        - SeismometerNetwork
+        - AnalysisSoftware
+        - ReportedObservation
+        - MechanismHypothesis
+        - SeismicEvent
+        - RidgeRelation
+        - ContributionRelation
+        - BibliographicSource
+        - Oriented
+        - SpreadingCenter
+      invention_search: >-
+        The listed vocabularies were searched before each local name was
+        coined, and every borrowed term above is the source of an enum value
+        or a slot meaning. The invented names are container classes and
+        carriers, not concepts: wherever a borrowed term exists it is used
+        as an enum value rather than as a new class, so the source
+        distinction is retained in data. Sample, Instrument, Observation,
+        Claim and Source are extended by subclass and never narrowed, and
+        Quantified, Counted, TemporalExtent and SourceAsserted are applied
+        as their packs declare them. Ten classes extend a Malleus root role
+        directly, because no pack carries a geological, geographic,
+        lithospheric, melt or agent concept, no pack declares an Event
+        subclass, and the one pack relation class binds relation_type to
+        ResearchRelationType, so subclassing it for a disjoint predicate set
+        would replace a pack surface rather than extend it. Each of those
+        ten carries its own class-level grounding. Vocabularies are cited
+        only where a canonical or publisher URL is known here; literature
+        that introduced a term but whose stable locator is not known here is
+        named in this field or in a class invention_search rather than given
+        a guessed URL.
+
+enums:
+
+  SpreadingRateClass:
+    description: >-
+      Spreading-rate class a source assigns to a spreading centre.
+    permissible_values:
+      ULTRASLOW:
+      SLOW:
+      INTERMEDIATE:
+      FAST:
+
+  RidgeSubsectionKind:
+    description: >-
+      Kind of along-axis subsection into which a source divides a spreading
+      centre.
+    permissible_values:
+      SUPERSEGMENT:
+      RIDGE_SEGMENT:
+      NON_TRANSFORM_DISCONTINUITY:
+      RIDGE_TRANSFORM_INTERSECTION:
+
+  AccretionaryCharacter:
+    description: >-
+      Crustal accretion character a source attributes to a ridge subsection.
+    permissible_values:
+      MAGMATIC:
+      AMAGMATIC:
+      TECTONIC:
+      MAGMATIC_AND_TECTONIC:
+
+  GeologicalStructureKind:
+    description: >-
+      Kind of mapped or inferred geological structure named by a source.
+    permissible_values:
+      TRANSFORM_FAULT:
+      TRANSFORM_VALLEY:
+      FRACTURE_ZONE:
+      DETACHMENT_FAULT:
+      DETACHMENT_TERMINATION:
+      NORMAL_FAULT:
+      MYLONITE_SHEAR_ZONE:
+      OCEANIC_CORE_COMPLEX:
+      CORRUGATED_SURFACE:
+      MASSIF:
+      TRANSVERSE_RIDGE:
+      SUSPENDED_VALLEY:
+      MEDIAN_VALLEY:
+      AXIAL_VALLEY:
+      NEOVOLCANIC_RIDGE:
+      HUMMOCKY_SEAFLOOR:
+      VOLCANIC_CONE:
+      VOLCANO:
+      SEAMOUNT:
+      AXIAL_MELT_LENS:
+      MAGMA_RESERVOIR:
+      HYDROTHERMAL_VENT_FIELD:
+      HYDROTHERMAL_MOUND:
+
+  GeographicRegionKind:
+    description: Kind of named geographic region referred to by a source.
+    permissible_values:
+      OCEAN_BASIN:
+      OCEAN_REGION:
+      ISLAND:
+      PENINSULA:
+      LANDMASS:
+      TECTONIC_PLATE:
+      RIDGE_FLANK:
+      STUDY_AREA:
+
+  LithosphericHorizonKind:
+    description: >-
+      Kind of subsurface boundary or surface a source treats as a horizon.
+    permissible_values:
+      SEAFLOOR:
+      MOHO:
+      BRITTLE_DUCTILE_BOUNDARY:
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+      ISOTHERM:
+
+  MeltStage:
+    description: >-
+      Stage a source assigns to a melt population. PRIMARY and PRIMITIVE are
+      kept apart because the source uses both words and this ontology does not
+      decide whether they name one population.
+    permissible_values:
+      PRIMARY:
+      PRIMITIVE:
+      PRE_ERUPTIVE:
+      ASCENDING:
+      DEGASSED:
+
+  RockSampleKind:
+    description: Kind of rock material a source reports having sampled or compiled.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      PERIDOTITE:
+      MORB_WHOLE_ROCK:
+      MELT_INCLUSION:
+      POPPING_ROCK:
+
+  LocationQualityCategory:
+    description: >-
+      Location quality category a source assigns to an earthquake location
+      under its own stated criteria.
+    permissible_values:
+      A:
+      B:
+      C:
+      D:
+
+  SeismicEventType:
+    description: Kind of occurrence recorded as a seismic or volcanic event.
+    permissible_values:
+      EARTHQUAKE:
+      EARTHQUAKE_SUBEVENT:
+      EARTHQUAKE_SWARM:
+      LONG_PERIOD_EARTHQUAKE:
+      VOLCANIC_ERUPTION:
+
+  HypothesisAppraisal:
+    description: >-
+      How a source appraises a mechanism hypothesis it has stated.
+    permissible_values:
+      PREFERRED:
+      NOT_SUPPORTED:
+
+  ResearchAgentType:
+    description: Kind of agent named by a source as taking part in the work.
+    permissible_values:
+      PERSON:
+      RESEARCH_ORGANIZATION:
+      FUNDING_BODY:
+      RESEARCH_INFRASTRUCTURE:
+      RESEARCH_VESSEL:
+
+  RidgeRelationType:
+    description: >-
+      Project relation predicates. Each value is read as
+      "source_id VALUE target_id".
+    permissible_values:
+      PART_OF_SPREADING_CENTER:
+        description: RidgeSubsection to SpreadingCenter.
+      ADJOINS:
+        description: RidgeSubsection to RidgeSubsection.
+      OFFSETS:
+        description: RidgeSubsection to RidgeSubsection.
+      BOUNDED_BY:
+        description: RidgeSubsection to GeologicalStructure.
+      HOSTED_BY:
+        description: GeologicalStructure to RidgeSubsection.
+      INTERSECTS:
+        description: GeologicalStructure to SpreadingCenter.
+      HORIZON_BENEATH:
+        description: LithosphericHorizon to RidgeSubsection.
+      MELT_BENEATH:
+        description: MeltPopulation to RidgeSubsection.
+      OBSERVATION_OF:
+        description: ReportedObservation to the entity it is reported about.
+      METHOD_APPLIED:
+        description: ReportedObservation to Method.
+      METHOD_IMPLEMENTED_BY:
+        description: Method to Instrument or AnalysisSoftware.
+      DERIVED_FROM:
+        description: >-
+          ReportedObservation to the entity the source says it was derived
+          from, such as another observation or a Ratio.
+      LOCATED_IN:
+        description: Any entity to GeographicRegion.
+
+  ContributionRoleType:
+    description: >-
+      Attribution predicates. Each value is read as
+      "source_id VALUE target_id".
+    permissible_values:
+      AUTHORED:
+        description: ResearchAgent to Source.
+      CORRESPONDING_AUTHOR_FOR:
+        description: ResearchAgent to Source.
+      AFFILIATED_WITH:
+        description: ResearchAgent to ResearchAgent.
+      FUNDED:
+        description: ResearchAgent to the entity the source says it funded.
+      ACKNOWLEDGES:
+        description: Source to ResearchAgent.
+      PARTICIPATED_IN:
+        description: ResearchAgent to Campaign.
+      OPERATED:
+        description: ResearchAgent to Instrument.
+
+classes:
+
+  Oriented:
+    mixin: true
+    description: >-
+      A record carrying a compass orientation exactly as the source states it.
+    slots:
+      - strike_orientation
+      - dip_direction
+
+  SpreadingCenter:
+    is_a: Entity
+    description: An oceanic spreading centre named by a source.
+    slots:
+      - spreading_class
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Submarine geology and marine geophysics
+          taxonomy: >-
+            DDC 551.46 (oceanography and submarine geology)
+          vocabularies:
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - mid-ocean ridge
+                - sea-floor spreading
+                - spreading rate
+            - vocabulary: >-
+                IHO-IOC Publication B-6, Standardization of Undersea Feature
+                Names
+              vocabulary_url: https://iho.int
+              borrowed_terms:
+                - ridge
+                - median valley
+          invented_terms:
+            - SpreadingCenter
+            - ULTRASLOW
+            - SLOW
+            - INTERMEDIATE
+            - FAST
+          invention_search: >-
+            The three packs carry no geographic or geological feature concept,
+            so this class extends the Entity root directly. B-6 names the
+            feature as a naming convention and the AGI glossary defines the
+            spreading rate quantity, but neither enumerates rate classes. The
+            four SpreadingRateClass values follow the source's own wording,
+            fast- and intermediate-spreading ridges and slow- and
+            ultraslow-spreading ridges; the ultraslow class was introduced by
+            Dick, Lin and Schouten (2003) in Nature 426, whose stable locator is
+            not known here, so the four values are recorded as coined rather
+            than given a guessed URL.
+
+  RidgeSubsection:
+    is_a: Entity
+    mixins:
+      - Oriented
+    description: >-
+      A named along-axis subsection of a spreading centre, as a source divides
+      it.
+    slots:
+      - subsection_kind
+      - accretionary_character
+    slot_usage:
+      subsection_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Submarine geology, mid-ocean ridge segmentation
+          taxonomy: >-
+            DDC 551.46 (oceanography and submarine geology)
+          vocabularies:
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - mid-ocean ridge
+                - median valley
+                - rift valley
+            - vocabulary: >-
+                IHO-IOC Publication B-6, Standardization of Undersea Feature
+                Names
+              vocabulary_url: https://iho.int
+              borrowed_terms:
+                - ridge
+                - median valley
+          invented_terms:
+            - RidgeSubsection
+            - SUPERSEGMENT
+            - RIDGE_SEGMENT
+            - NON_TRANSFORM_DISCONTINUITY
+            - RIDGE_TRANSFORM_INTERSECTION
+          invention_search: >-
+            The packs carry no segmentation or spatial-part concept, so this
+            class extends the Entity root directly. Ridge-axis discontinuity and
+            non-transform discontinuity were introduced by Macdonald et al.
+            (1988) in Nature 335; no codified vocabulary with a stable locator
+            known here carries them, so the four RidgeSubsectionKind values are
+            recorded as coined and the literature is named here rather than
+            given a guessed URL. The glossaries supply the containing feature
+            and its median and rift valley terms.
+
+  GeologicalStructure:
+    is_a: Entity
+    mixins:
+      - Oriented
+    description: >-
+      A mapped or inferred geological structure named by a source.
+    slots:
+      - structure_kind
+    slot_usage:
+      structure_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Structural geology and submarine geology
+          taxonomy: >-
+            DDC 551.8 (structural geology), DDC 551.46 (submarine geology)
+          vocabularies:
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - transform fault
+                - normal fault
+                - detachment fault
+                - fracture zone
+                - shear zone
+                - mylonite
+                - seamount
+                - massif
+                - volcano
+                - volcanic cone
+                - magma chamber
+                - hydrothermal vent
+                - strike
+                - dip
+            - vocabulary: >-
+                IHO-IOC Publication B-6, Standardization of Undersea Feature
+                Names
+              vocabulary_url: https://iho.int
+              borrowed_terms:
+                - fracture zone
+                - seamount
+                - median valley
+                - valley
+                - ridge
+            - vocabulary: >-
+                IUGS glossaries of igneous and metamorphic rocks, Le Maitre
+                (ed.) (2002) and Fettes and Desmons (eds.) (2007)
+              vocabulary_url: https://www.iugs.org
+              borrowed_terms:
+                - mylonite
+          invented_terms:
+            - GeologicalStructure
+            - OCEANIC_CORE_COMPLEX
+            - CORRUGATED_SURFACE
+            - DETACHMENT_TERMINATION
+            - NEOVOLCANIC_RIDGE
+            - HUMMOCKY_SEAFLOOR
+            - AXIAL_MELT_LENS
+            - AXIAL_VALLEY
+            - TRANSFORM_VALLEY
+            - TRANSVERSE_RIDGE
+            - SUSPENDED_VALLEY
+            - HYDROTHERMAL_VENT_FIELD
+            - HYDROTHERMAL_MOUND
+            - MAGMA_RESERVOIR
+          invention_search: >-
+            No pack carries a geological feature concept, so this class extends
+            the Entity root directly. The glossaries and the undersea feature
+            standard supply most of the twenty-three GeologicalStructureKind
+            values. Oceanic core complex and corrugated surface come from
+            Tucholke, Lin and Kleinrock (1998) in the Journal of Geophysical
+            Research Solid Earth, and transform fault, which the AGI glossary
+            carries and is therefore borrowed above, was introduced by Wilson
+            (1965) in Nature 207; neither locator is known here, so those
+            literature sources are named in prose. The remaining coined values
+            are the source's own names for mapped features, for which no
+            codified vocabulary with a stable locator was found.
+
+  GeographicRegion:
+    is_a: Entity
+    description: A named geographic region referred to by a source.
+    slots:
+      - region_kind
+    slot_usage:
+      region_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Geographic description and gazetteer classification
+          taxonomy: >-
+            DDC 910 (geography), DDC 551.46 (oceanography and submarine geology)
+          vocabularies:
+            - vocabulary: >-
+                IHO Publication S-23, Limits of Oceans and Seas
+              vocabulary_url: https://iho.int
+              borrowed_terms:
+                - ocean
+                - sea
+            - vocabulary: >-
+                GeoNames feature classes and feature codes
+              vocabulary_url: https://www.geonames.org
+              borrowed_terms:
+                - island
+                - peninsula
+                - ocean
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - plate
+                - plate boundary
+          invented_terms:
+            - GeographicRegion
+            - OCEAN_REGION
+            - LANDMASS
+            - RIDGE_FLANK
+            - STUDY_AREA
+          invention_search: >-
+            The packs carry no place concept, so this class extends the Entity
+            root directly. The limits standard and the gazetteer supply ocean,
+            sea, island and peninsula, and the glossary supplies plate.
+            OCEAN_REGION and LANDMASS are coarser containers coined here because
+            the gazetteer codes do not match how the source names those extents,
+            and RIDGE_FLANK and STUDY_AREA are the source's own framing of
+            extent.
+
+  LithosphericHorizon:
+    is_a: Entity
+    description: >-
+      A subsurface boundary or surface a source treats as a horizon.
+    slots:
+      - horizon_kind
+    slot_usage:
+      horizon_kind:
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Solid-earth geophysics, lithospheric structure and rheology
+          taxonomy: >-
+            DDC 551.1 (gross structure and properties of the earth)
+          vocabularies:
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - lithosphere
+                - asthenosphere
+                - Mohorovicic discontinuity
+                - isotherm
+                - sea floor
+          invented_terms:
+            - LithosphericHorizon
+            - BRITTLE_DUCTILE_BOUNDARY
+            - LITHOSPHERE_ASTHENOSPHERE_BOUNDARY
+          invention_search: >-
+            No pack carries a subsurface boundary concept, so this class extends
+            the Entity root directly. The glossary supplies the constituent
+            terms, which become the SEAFLOOR, MOHO and ISOTHERM values. The two
+            compound boundary terms are treated in the review literature, the
+            lithosphere-asthenosphere boundary by Fischer, Ford, Abt and Rychert
+            (2010) in the Annual Review of Earth and Planetary Sciences and the
+            brittle-ductile transition by Scholz (2019) in The Mechanics of
+            Earthquakes and Faulting; no codified vocabulary with a stable
+            locator known here carries them as terms, so they are recorded as
+            coined and the literature is named in prose.
+
+  MeltPopulation:
+    is_a: Entity
+    description: >-
+      A body of melt a source discusses as one population. The stage is
+      optional because a source may describe a melt population without staging
+      it.
+    slots:
+      - melt_stage
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Igneous petrology and magmatic volatiles
+          taxonomy: >-
+            DDC 552.1 (igneous rocks), DDC 551.1 (gross structure and properties
+            of the earth)
+          vocabularies:
+            - vocabulary: >-
+                American Geosciences Institute, Glossary of Geology
+              vocabulary_url: https://www.americangeosciences.org
+              borrowed_terms:
+                - magma
+                - melt
+                - primary magma
+                - partial melt
+            - vocabulary: >-
+                Reviews in Mineralogy volume 30, Volatiles in Magmas,
+                Mineralogical Society of America
+              vocabulary_url: https://www.minsocam.org
+              borrowed_terms:
+                - volatile
+                - degassing
+                - solubility
+                - saturation
+            - vocabulary: >-
+                IUGS glossaries of igneous and metamorphic rocks, Le Maitre
+                (ed.) (2002) and Fettes and Desmons (eds.) (2007)
+              vocabulary_url: https://www.iugs.org
+              borrowed_terms:
+                - basalt
+                - melt inclusion
+          invented_terms:
+            - MeltPopulation
+            - PRIMITIVE
+            - PRE_ERUPTIVE
+            - ASCENDING
+            - DEGASSED
+          invention_search: >-
+            The packs carry no material-body concept, so this class extends the
+            Entity root directly. PRIMARY is borrowed as primary magma.
+            PRIMITIVE is recorded as coined because the source uses primitive
+            melt alongside primary melt and this ontology does not decide the
+            two name one population; the glossary entry that would settle it is
+            not confirmed here. The three remaining values name where the melt
+            is in its ascent and follow the source's own wording, with the
+            volatile terms borrowed from the volatiles volume.
+
+  RockSampleSuite:
+    is_a: Sample
+    mixins:
+      - Counted
+    description: >-
+      A set of rock samples a source treats as one analysed unit. Used when the
+      source does not identify individual specimens.
+    slots:
+      - sample_kind
+    slot_usage:
+      sample_kind:
+        required: true
+
+  SeismometerNetwork:
+    is_a: Instrument
+    mixins:
+      - Counted
+    description: >-
+      A deployed network of seismometers, counted as the source counts it.
+
+  AnalysisSoftware:
+    is_a: Instrument
+    description: A named software package a source used to produce a result.
+    slots:
+      - software_version
+
+  ReportedObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A quantity or count a source reports, with the source's own name for the
+      quantity kind retained verbatim.
+    slot_usage:
+      quantity_kind:
+        required: true
+        description: >-
+          The source's own name for the reported quantity or count, retained
+          without normalization.
+
+  MechanismHypothesis:
+    is_a: Claim
+    description: >-
+      A candidate mechanism a source states and then appraises.
+    slots:
+      - hypothesis_appraisal
+    slot_usage:
+      statement:
+        required: true
+      hypothesis_appraisal:
+        required: true
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work a source cites or is itself, described bibliographically.
+    slots:
+      - creator_list
+      - publication_year
+      - container_title
+      - volume_designation
+      - page_range
+      - publication_doi
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person, organization, funder, infrastructure or vessel a source names
+      as taking part in the work.
+    slot_usage:
+      agent_type:
+        range: ResearchAgentType
+        required: true
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Scholarly attribution and agent description
+          taxonomy: >-
+            DDC 001.4 (research), DDC 010 (bibliography)
+          vocabularies:
+            - vocabulary: >-
+                W3C PROV-O, the PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - Agent
+                - Person
+                - Organization
+                - SoftwareAgent
+            - vocabulary: >-
+                NISO CRediT, Contributor Roles Taxonomy, ANSI/NISO Z39.104
+              vocabulary_url: https://credit.niso.org
+              borrowed_terms:
+                - contributor role
+                - investigation
+                - supervision
+                - funding acquisition
+          invented_terms:
+            - ResearchAgent
+            - RESEARCH_INFRASTRUCTURE
+            - RESEARCH_VESSEL
+          invention_search: >-
+            No pack carries an agent concept. The Malleus root carries Agent as
+            a mixin rather than as a class, so agency is applied as a trait to a
+            class that extends the Entity root directly, which is what the root
+            documents. PROV supplies the agent kinds, which become the PERSON,
+            RESEARCH_ORGANIZATION and FUNDING_BODY values; the two remaining
+            values are the source's own categories.
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceAsserted
+    description: >-
+      A single occurrence a source identifies, such as a named earthquake, a
+      subevent, a swarm or an eruption.
+    slots:
+      - location_quality
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Seismology and volcanology
+          taxonomy: >-
+            DDC 551.22 (earthquakes and seismology)
+          vocabularies:
+            - vocabulary: >-
+                QuakeML 1.2, seismological data exchange schema
+              vocabulary_url: https://quake.ethz.ch/quakeml/
+              borrowed_terms:
+                - event
+                - event type
+                - origin
+                - magnitude
+                - focal mechanism
+            - vocabulary: >-
+                IASPEI New Manual of Seismological Observatory Practice
+                (NMSOP-2)
+              vocabulary_url: https://www.iaspei.org
+              borrowed_terms:
+                - hypocentre
+                - focal depth
+                - local magnitude
+                - earthquake swarm
+                - long-period event
+          invented_terms:
+            - SeismicEvent
+            - EARTHQUAKE_SUBEVENT
+          invention_search: >-
+            No pack declares an Event subclass of any kind, so this class
+            extends the Event root directly, which the bound source-assertion
+            profile admits because its declared Event role is nonempty. QuakeML
+            names its own class Event, which collides with the Malleus root role
+            name, so the project class is named SeismicEvent and borrows
+            QuakeML's event type vocabulary as SeismicEventType values rather
+            than renaming the concept. Subevent is the source's own word and is
+            recorded as coined.
+
+  RidgeRelation:
+    is_a: Relation
+    description: A typed relation between project entities.
+    slot_usage:
+      relation_type:
+        range: RidgeRelationType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Structural and submarine geology; observation and derivation
+            modelling
+          taxonomy: >-
+            DDC 551.46 (submarine geology), DDC 001.4 (research)
+          vocabularies:
+            - vocabulary: >-
+                OBO Relations Ontology (RO)
+              vocabulary_url: https://obofoundry.org/ontology/ro.html
+              borrowed_terms:
+                - part of
+                - located in
+                - adjacent to
+            - vocabulary: >-
+                W3C SOSA/SSN
+              vocabulary_url: https://www.w3.org/TR/vocab-ssn/
+              borrowed_terms:
+                - has feature of interest
+                - used procedure
+                - made by sensor
+            - vocabulary: >-
+                W3C PROV-O, the PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - was derived from
+          invented_terms:
+            - RidgeRelation
+            - OFFSETS
+            - BOUNDED_BY
+            - HOSTED_BY
+            - INTERSECTS
+            - HORIZON_BENEATH
+            - MELT_BENEATH
+          invention_search: >-
+            The research pack supplies ResearchRelation, but it binds
+            relation_type to ResearchRelationType; subclassing it for a disjoint
+            predicate set would replace that pack surface rather than extend it,
+            so this class extends the Relation root directly and
+            ResearchRelation is used unchanged wherever its own predicates fit.
+            The borrowed predicates carry PART_OF_SPREADING_CENTER, ADJOINS,
+            LOCATED_IN, OBSERVATION_OF, METHOD_APPLIED, METHOD_IMPLEMENTED_BY
+            and DERIVED_FROM. The six ridge-specific predicates listed above
+            were searched for in all three vocabularies and found in none, so
+            they are coined and recorded here.
+
+  ContributionRelation:
+    is_a: Relation
+    description: >-
+      A typed attribution relation between agents, sources, campaigns and
+      instruments.
+    slot_usage:
+      relation_type:
+        range: ContributionRoleType
+    annotations:
+      grounding:
+        tag: grounding
+        value:
+          area: >-
+            Scholarly attribution
+          taxonomy: >-
+            DDC 010 (bibliography), DDC 001.4 (research)
+          vocabularies:
+            - vocabulary: >-
+                W3C PROV-O, the PROV Ontology
+              vocabulary_url: https://www.w3.org/TR/prov-o/
+              borrowed_terms:
+                - was attributed to
+                - was associated with
+                - acted on behalf of
+            - vocabulary: >-
+                DCMI Metadata Terms
+              vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+              borrowed_terms:
+                - creator
+                - contributor
+                - funder
+            - vocabulary: >-
+                NISO CRediT, Contributor Roles Taxonomy, ANSI/NISO Z39.104
+              vocabulary_url: https://credit.niso.org
+              borrowed_terms:
+                - contributor role
+          invented_terms:
+            - ContributionRelation
+          invention_search: >-
+            As for RidgeRelation, ResearchRelation cannot be subclassed without
+            replacing its bound predicate enum, so this class extends the
+            Relation root directly. PROV, DCMI and CRediT supply every
+            ContributionRoleType value. The prose contribution sentences the
+            source carries are not mapped onto those values, because that would
+            be interpretation; they are recorded as Claim statements instead.
+
+slots:
+
+  spreading_class:
+    range: SpreadingRateClass
+    description: Spreading-rate class the source assigns.
+
+  subsection_kind:
+    range: RidgeSubsectionKind
+    description: Kind of along-axis subsection.
+
+  accretionary_character:
+    range: AccretionaryCharacter
+    description: Crustal accretion character the source attributes.
+
+  structure_kind:
+    range: GeologicalStructureKind
+    description: Kind of geological structure.
+
+  region_kind:
+    range: GeographicRegionKind
+    description: Kind of geographic region.
+
+  horizon_kind:
+    range: LithosphericHorizonKind
+    description: Kind of horizon.
+
+  melt_stage:
+    range: MeltStage
+    description: Stage the source assigns to a melt population.
+
+  sample_kind:
+    range: RockSampleKind
+    description: Kind of rock material sampled or compiled.
+
+  strike_orientation:
+    range: string
+    description: >-
+      Compass orientation exactly as the source states it, retained without
+      conversion, for example N20 degrees E written as the source writes it.
+
+  dip_direction:
+    range: string
+    description: >-
+      Dip direction exactly as the source states it, retained without
+      conversion.
+
+  software_version:
+    range: string
+    description: Software version as the source states it.
+
+  location_quality:
+    range: LocationQualityCategory
+    description: >-
+      Location quality category the source assigns under its own criteria.
+
+  hypothesis_appraisal:
+    range: HypothesisAppraisal
+    description: How the source appraises the hypothesis it stated.
+
+  creator_list:
+    range: string
+    multivalued: true
+    description: Creators as the source lists them, in source order.
+
+  publication_year:
+    range: integer
+    description: Publication year as the source states it.
+
+  container_title:
+    range: string
+    description: Title of the containing work, as the source states it.
+
+  volume_designation:
+    range: string
+    description: Volume or issue designation, as the source states it.
+
+  page_range:
+    range: string
+    description: Page range or article number, as the source states it.
+
+  publication_doi:
+    range: string
+    description: DOI as the source states it.

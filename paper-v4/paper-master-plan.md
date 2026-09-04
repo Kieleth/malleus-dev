@@ -15,7 +15,15 @@ no question input before replay. That rerun is frozen as run-02 under
 `paper-v4/experiment-v4/run-02/`, bound to Core
 `4881b3a040aaafc7600d009a16ae910084ae32c2`, tree
 `f532210148cc43e84dfcd764742ff5cfffda10a4`, with an isolation-only spawn message
-and the producer model recorded in the run contract. Manuscript 1.2.1 on branch
+and the producer model recorded in the run contract. That rerun has executed:
+run-02 is admitted and replayed at Core
+`4881b3a040aaafc7600d009a16ae910084ae32c2`, ledger head `sha256:673e1085…` over
+14 events, receipt `sha256:19b274f6…` reproduced byte for byte by the reopened
+replay, 419 entities, 170 relations, 104 typed gaps, 186 of 186 blocks reviewed,
+and a post-replay type-only binding returning 4, 32, 34 and 3 rows over CQ-01 to
+CQ-04. It is awaiting preliminary review and ratification, staged under
+`paper-v4/evaluation-v4/`, and it is not paper evidence until Luis ratifies.
+Manuscript 1.2.1 on branch
 `paper-v4-multimodel` remains the paper of record; the v4 result becomes a new
 section of its successor. V4 supersedes nothing on its own: it is admitted to the
 paper only if the run, inspection, reproduction, and paper gates all pass.

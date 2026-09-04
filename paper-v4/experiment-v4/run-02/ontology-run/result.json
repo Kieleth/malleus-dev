@@ -1,0 +1,78 @@
+{
+  "schema": "malleus.paper-v4.ontology-run-result/v1",
+  "status": "ACCEPTED",
+  "run_id": "run-02",
+  "core": {
+    "commit": "4881b3a040aaafc7600d009a16ae910084ae32c2",
+    "tree": "f532210148cc43e84dfcd764742ff5cfffda10a4"
+  },
+  "producer_input_manifest_sha256": "sha256:c650f826cbcc51999d1293aba878d60f2058bd3c5e558047084b10ce94a566f8",
+  "producer": {
+    "kind": "CLAUDE_CODE_FRESH_SUBAGENT",
+    "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+    "requested_model": "opus",
+    "model_family": "Claude Opus 5",
+    "reasoning_effort": "harness default, not pinned or observed",
+    "boundary": "declared session boundary over a shared workspace, not an operating-system sandbox",
+    "session": "FRESH_SINGLE_SESSION",
+    "questions_visible": false,
+    "diagnostic_returns": 2,
+    "diagnostic_return_limit": 2,
+    "fallback_used": false,
+    "hand_repair_used": false,
+    "final_session_log_sha256": "sha256:15e8337c479de450be9a042cb2ed57e5a7c3393a3c86e0685173f7fcaa6673d7",
+    "final_status_sha256": "sha256:dab49a1eb0acef0ac47b64b7d08de2cb792b04b5dcf1385d77644178d8d95a31"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "DIRECT_ROOT_GROUNDING_REQUIRED",
+      "subjects": 10,
+      "ontology_sha256": "sha256:164417a5c4d075026f0637877871cfdd8d55b581f2643106f4b7b970f5cf9d1f",
+      "ontology_path": "paper-v4/experiment-v4/run-02/ontology-run/ontology-01.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-02/ontology-run/attempt-01-diagnostic.json",
+      "diagnostic_sha256": "sha256:2a40494e947397ea4ff9f9e2a8f4382eec808e92a31ca127295464f935529fbc",
+      "diagnostic_returned_to_producer_at": "2026-09-04T18:19:39Z"
+    },
+    {
+      "attempt": 2,
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_NOT_CLOSED",
+      "subjects": 1,
+      "ontology_sha256": "sha256:9dfaa95bbb7c5551056f6f2348bea96fac0820a1007a3744284758e97045b6b5",
+      "ontology_path": "paper-v4/experiment-v4/run-02/ontology-run/ontology-02.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-02/ontology-run/attempt-02-diagnostic.json",
+      "diagnostic_sha256": "sha256:50f8140f83a0d24e334a60d69c23a3a983873c410effc73110272ef36fababa8",
+      "diagnostic_returned_to_producer_at": "2026-09-04T18:25:35Z"
+    },
+    {
+      "attempt": 3,
+      "status": "ACCEPTED",
+      "stage": "COMPLETE",
+      "ontology_sha256": "sha256:56f3e00d4be176019e2f1f0f9d8422240ebd992b476a2a6e5daf704acd227225",
+      "ontology_path": "paper-v4/experiment-v4/run-02/ontology-run/ontology-03.yaml",
+      "diagnostic_path": "paper-v4/experiment-v4/run-02/ontology-run/attempt-03-diagnostic.json",
+      "diagnostic_sha256": "sha256:f77d6ec6d845432b00d037fcbba0a91f986b9d773fa0988e589921ef09a6c19b",
+      "accepted_at": "2026-09-04T18:32:51Z"
+    }
+  ],
+  "accepted": {
+    "ontology_sha256": "sha256:56f3e00d4be176019e2f1f0f9d8422240ebd992b476a2a6e5daf704acd227225",
+    "validated_contract_sha256": "sha256:8b81f3d82dd1845fc7dd1f4348b0551881a7c91f6800e669654ffcf9ad4b618b",
+    "validated_fact_set_sha256": "sha256:c67acb939c7cc38f00da1c89a87ebc7d263e064203df8fb2a833a1108bffc10c",
+    "fact_count": 3515,
+    "grounding_receipt_sha256": "sha256:8f977b60b9f1be3c1cfb39547c48ce70bb4894a921f89b7edd4123cc97a70e45",
+    "population_surface_sha256": "sha256:6eb4afc3ce297b16f26273f68aba434806bb3645ce6de8ee30b7ec1dbee97c3a",
+    "population_surface_families": {
+      "ENTITY": 26,
+      "RELATION": 3
+    }
+  },
+  "accepted_ontology_sha256": "sha256:56f3e00d4be176019e2f1f0f9d8422240ebd992b476a2a6e5daf704acd227225",
+  "population_started": true,
+  "stage_acceptance_non_claim": "STAGE_ACCEPTANCE_NOT_DOMAIN_ADEQUACY",
+  "next_boundary": "Population, admission and replay are recorded in results/run-result.json. Preliminary inspection under paper-v4/evaluation-v4 and Luis's ratification are pending; nothing here is paper evidence until ratified."
+}

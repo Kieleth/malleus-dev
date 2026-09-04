@@ -1,0 +1,74 @@
+{
+  "schema": "malleus.paper-v4.run-02-withheld-artifacts/v1",
+  "run_id": "run-02",
+  "reason": "Each file below reproduces text of the selected reading. Only its identity is public.",
+  "check": {
+    "method": "SHARED_NORMALIZED_CHARACTER_RUN_AGAINST_EVERY_READING_BLOCK",
+    "normalization": "UNICODE_WHITESPACE_COLLAPSED_TO_SINGLE_SPACE",
+    "ladder": [40, 60, 80, 120, 200, 320],
+    "frozen_threshold": "NO_PUBLIC_FILE_SHARES_A_60_CHARACTER_RUN"
+  },
+  "withheld": [
+    {
+      "name": "population-plan.json",
+      "private_path": "private/paper-v4-v4-run-02/results/population-plan.json",
+      "sha256": "sha256:3a1c7131b0a5a8c96aa1d2deeb25f0751271e1acc04fb51757a3d5aa5391c1a3",
+      "carries": "RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 320
+    },
+    {
+      "name": "gaps.json",
+      "private_path": "private/paper-v4-v4-run-02/results/gaps.json",
+      "sha256": "sha256:8cf43bbd820dac2b456d3b8d9cfe573d646f5cb86416a91d864576e061870c18",
+      "carries": "GAP_STATEMENTS_QUOTING_TWO_READING_FRAGMENTS",
+      "shared_run_chars_at_least": 40,
+      "public_substitute": "results/run-result.json gaps_by_kind"
+    },
+    {
+      "name": "replay-receipt.json",
+      "private_path": "private/paper-v4-v4-run-02/results/replay-receipt.json",
+      "sha256": "sha256:19b274f6cb812ddcb593e0e9fb7aaefa1414f57c233efe92653f2ce8016acc5d",
+      "carries": "REPLAYED_RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 320,
+      "public_substitute": "results/run-result.json replay_receipt_sha256, ledger_head, ledger_event_count, graph"
+    },
+    {
+      "name": "export-records.json",
+      "private_path": "private/paper-v4-v4-run-02/results/export-records.json",
+      "sha256": "sha256:d23aad40a811ea0ab6c64a30c4b9ac80a0baccc6b2e08441f1cfe0e650233403",
+      "carries": "EXPORTED_RECORD_PROPERTY_VALUES_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 320
+    },
+    {
+      "name": "query-result.json",
+      "private_path": "private/paper-v4-v4-run-02/query/query-result.json",
+      "sha256": "sha256:b900451f6b9f08fdc319aacac48ade393bb6c6f05ee51f360cb7443b05f10c89",
+      "carries": "PROJECTED_ROW_FIELDS_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 120,
+      "public_substitute": "results/query-trace-summary.json and the row counts in the review input manifest"
+    },
+    {
+      "name": "document-population.json",
+      "private_path": "private/paper-v4-v4-run-02/producer/work/document-population.json",
+      "sha256": "sha256:efdb5b06d37ecaf4b96e8a69fa4e01ec11ead51f9123fdf480e93dff93dfb5b2",
+      "carries": "PRODUCER_CAPTURE_ASSERTIONS_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 320
+    },
+    {
+      "name": "retained-capture.json",
+      "private_path": "private/paper-v4-v4-run-02/ledger/retained-capture.json",
+      "sha256": "sha256:bfe759920c357e4c9e394c7264cb5dc5a4eb779b58157c93e820cac28c20894b",
+      "carries": "RETAINED_CAPTURE_EVIDENCE_QUOTING_THE_READING",
+      "shared_run_chars_at_least": 120
+    },
+    {
+      "name": "history.jsonl",
+      "private_path": "private/paper-v4-v4-run-02/ledger/history.jsonl",
+      "sha256": "sha256:11fcd16f85926b99db3f8c683ffd324c86e4d639ed5cb13bf417e27ccec913e7",
+      "carries": "RETAINED_SOURCE_AND_CAPTURE_BYTES_AS_JSON_ESCAPED_TEXT",
+      "shared_run_chars_at_least": 0,
+      "note": "The ladder reports 0 because the ledger stores the reading JSON-escaped. It is withheld by contract, not by the measurement.",
+      "public_substitute": "results/run-result.json ledger_head and ledger_event_count"
+    }
+  ]
+}

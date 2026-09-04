@@ -1,0 +1,578 @@
+id: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity-and-volatiles
+name: mid_ocean_ridge_seismicity_and_volatiles
+version: 0.1.0
+title: Mid-Ocean Ridge Seismicity and Melt Volatiles Project Ontology
+description: >-
+  Project ontology for one source document reporting ocean-bottom-seismometer
+  microseismicity, along-axis ridge structure, lithospheric horizons, rock
+  sampling, and melt volatile geochemistry at a slow-spreading mid-ocean ridge.
+  Vocabulary covers what the source reports and how it attributes it. It does
+  not encode the source's conclusions as class, slot, or enum names.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  metrology: https://malleus.dev/schema/packs/metrology/
+  chronology: https://malleus.dev/schema/packs/chronology/
+  research: https://malleus.dev/schema/packs/research/
+  morsv: https://malleus.dev/schema/projects/mid-ocean-ridge-seismicity-and-volatiles/
+
+imports:
+  - linkml:types
+  - malleus
+  - metrology
+  - chronology
+  - research
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: >-
+        Seismology; submarine geology and marine geophysics; igneous petrology
+        and geochemistry; bibliographic description
+      taxonomy: >-
+        DDC 551.22 (earthquakes and seismology), DDC 551.46 (oceanography and
+        submarine geology), DDC 552 (petrology), DDC 010 (bibliography)
+      vocabularies:
+        - vocabulary: QuakeML 1.2, seismological data exchange schema
+          vocabulary_url: https://quake.ethz.ch/quakeml/
+          borrowed_terms:
+            - event
+            - origin
+            - magnitude
+            - focal mechanism
+            - azimuthal gap
+            - pick
+        - vocabulary: >-
+            IASPEI New Manual of Seismological Observatory Practice (NMSOP-2),
+            Bormann (ed.)
+          borrowed_terms:
+            - hypocentre
+            - focal depth
+            - local magnitude
+            - b-value
+            - magnitude of completeness
+            - earthquake swarm
+        - vocabulary: >-
+            IHO-IOC Publication B-6, Standardization of Undersea Feature Names
+          borrowed_terms:
+            - mid-ocean ridge
+            - transform fault
+            - fracture zone
+            - median valley
+            - seamount
+            - transverse ridge
+            - ridge
+        - vocabulary: >-
+            Macdonald et al. (1988), A new view of the mid-ocean ridge from the
+            behaviour of ridge-axis discontinuities, Nature 335
+          borrowed_terms:
+            - ridge-axis discontinuity
+            - non-transform discontinuity
+            - ridge segment
+        - vocabulary: >-
+            Tucholke, Lin and Kleinrock (1998), Megamullions and mullion
+            structure defining oceanic metamorphic core complexes on the
+            Mid-Atlantic Ridge, Journal of Geophysical Research Solid Earth
+          borrowed_terms:
+            - oceanic core complex
+            - corrugated surface
+            - detachment fault
+        - vocabulary: >-
+            IUGS Subcommission on the Systematics of Igneous Rocks, Le Maitre
+            (ed.) (2002), Igneous Rocks: A Classification and Glossary of Terms
+          borrowed_terms:
+            - basalt
+            - peridotite
+            - melt inclusion
+        - vocabulary: DCMI Metadata Terms
+          vocabulary_url: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+          borrowed_terms:
+            - creator
+            - date
+            - identifier
+            - isPartOf
+      invented_terms:
+        - RidgeSubsection
+        - GeologicalStructure
+        - GeographicRegion
+        - LithosphericHorizon
+        - MeltPopulation
+        - RockSampleSuite
+        - SeismometerNetwork
+        - AnalysisSoftware
+        - ReportedObservation
+        - MechanismHypothesis
+        - SeismicEvent
+        - RidgeRelation
+        - ContributionRelation
+        - BibliographicSource
+        - Oriented
+      invention_search: >-
+        The listed seismological, undersea-feature, ridge-discontinuity,
+        igneous-rock and bibliographic vocabularies were checked for exact
+        generic classes before each local name was coined. The borrowed terms
+        above are the source of the enum values and slot meanings; the invented
+        names are container classes that group those borrowed terms under the
+        Malleus Entity, Event and Relation roles, plus the two mixin and
+        relation carriers Malleus itself requires. Where a borrowed term exists
+        it is used as an enum value rather than as a new class, so that the
+        source distinction is retained in data.
+      pack_extension_note: >-
+        Sample, Instrument, Observation, Claim and Source are extended by
+        subclass, never narrowed. Quantified, Counted, TemporalExtent and
+        SourceAsserted are applied as declared by their packs.
+
+enums:
+
+  SpreadingRateClass:
+    description: >-
+      Spreading-rate class a source assigns to a spreading centre.
+    permissible_values:
+      ULTRASLOW:
+      SLOW:
+      INTERMEDIATE:
+      FAST:
+
+  RidgeSubsectionKind:
+    description: >-
+      Kind of along-axis subsection into which a source divides a spreading
+      centre.
+    permissible_values:
+      SUPERSEGMENT:
+      RIDGE_SEGMENT:
+      NON_TRANSFORM_DISCONTINUITY:
+      RIDGE_TRANSFORM_INTERSECTION:
+
+  AccretionaryCharacter:
+    description: >-
+      Crustal accretion character a source attributes to a ridge subsection.
+    permissible_values:
+      MAGMATIC:
+      AMAGMATIC:
+      TECTONIC:
+      MAGMATIC_AND_TECTONIC:
+
+  GeologicalStructureKind:
+    description: >-
+      Kind of mapped or inferred geological structure named by a source.
+    permissible_values:
+      TRANSFORM_FAULT:
+      TRANSFORM_VALLEY:
+      FRACTURE_ZONE:
+      DETACHMENT_FAULT:
+      DETACHMENT_TERMINATION:
+      NORMAL_FAULT:
+      MYLONITE_SHEAR_ZONE:
+      OCEANIC_CORE_COMPLEX:
+      CORRUGATED_SURFACE:
+      MASSIF:
+      TRANSVERSE_RIDGE:
+      SUSPENDED_VALLEY:
+      MEDIAN_VALLEY:
+      AXIAL_VALLEY:
+      NEOVOLCANIC_RIDGE:
+      HUMMOCKY_SEAFLOOR:
+      VOLCANIC_CONE:
+      VOLCANO:
+      SEAMOUNT:
+      AXIAL_MELT_LENS:
+      MAGMA_RESERVOIR:
+      HYDROTHERMAL_VENT_FIELD:
+      HYDROTHERMAL_MOUND:
+
+  GeographicRegionKind:
+    description: Kind of named geographic region referred to by a source.
+    permissible_values:
+      OCEAN_BASIN:
+      OCEAN_REGION:
+      ISLAND:
+      PENINSULA:
+      LANDMASS:
+      TECTONIC_PLATE:
+      RIDGE_FLANK:
+      STUDY_AREA:
+
+  LithosphericHorizonKind:
+    description: >-
+      Kind of subsurface boundary or surface a source treats as a horizon.
+    permissible_values:
+      SEAFLOOR:
+      MOHO:
+      BRITTLE_DUCTILE_BOUNDARY:
+      LITHOSPHERE_ASTHENOSPHERE_BOUNDARY:
+      ISOTHERM:
+
+  MeltStage:
+    description: >-
+      Stage a source assigns to a melt population. PRIMARY and PRIMITIVE are
+      kept apart because the source uses both words and this ontology does not
+      decide whether they name one population.
+    permissible_values:
+      PRIMARY:
+      PRIMITIVE:
+      PRE_ERUPTIVE:
+      ASCENDING:
+      DEGASSED:
+
+  RockSampleKind:
+    description: Kind of rock material a source reports having sampled or compiled.
+    permissible_values:
+      BASALT:
+      PILLOW_BASALT:
+      PERIDOTITE:
+      MORB_WHOLE_ROCK:
+      MELT_INCLUSION:
+      POPPING_ROCK:
+
+  LocationQualityCategory:
+    description: >-
+      Location quality category a source assigns to an earthquake location
+      under its own stated criteria.
+    permissible_values:
+      A:
+      B:
+      C:
+      D:
+
+  SeismicEventType:
+    description: Kind of occurrence recorded as a seismic or volcanic event.
+    permissible_values:
+      EARTHQUAKE:
+      EARTHQUAKE_SUBEVENT:
+      EARTHQUAKE_SWARM:
+      LONG_PERIOD_EARTHQUAKE:
+      VOLCANIC_ERUPTION:
+
+  HypothesisAppraisal:
+    description: >-
+      How a source appraises a mechanism hypothesis it has stated.
+    permissible_values:
+      PREFERRED:
+      NOT_SUPPORTED:
+
+  ResearchAgentType:
+    description: Kind of agent named by a source as taking part in the work.
+    permissible_values:
+      PERSON:
+      RESEARCH_ORGANIZATION:
+      FUNDING_BODY:
+      RESEARCH_INFRASTRUCTURE:
+      RESEARCH_VESSEL:
+
+  RidgeRelationType:
+    description: >-
+      Project relation predicates. Each value is read as
+      "source_id VALUE target_id".
+    permissible_values:
+      PART_OF_SPREADING_CENTER:
+        description: RidgeSubsection to SpreadingCenter.
+      ADJOINS:
+        description: RidgeSubsection to RidgeSubsection.
+      OFFSETS:
+        description: RidgeSubsection to RidgeSubsection.
+      BOUNDED_BY:
+        description: RidgeSubsection to GeologicalStructure.
+      HOSTED_BY:
+        description: GeologicalStructure to RidgeSubsection.
+      INTERSECTS:
+        description: GeologicalStructure to SpreadingCenter.
+      HORIZON_BENEATH:
+        description: LithosphericHorizon to RidgeSubsection.
+      MELT_BENEATH:
+        description: MeltPopulation to RidgeSubsection.
+      OBSERVATION_OF:
+        description: ReportedObservation to the entity it is reported about.
+      METHOD_APPLIED:
+        description: ReportedObservation to Method.
+      METHOD_IMPLEMENTED_BY:
+        description: Method to Instrument or AnalysisSoftware.
+      DERIVED_FROM:
+        description: >-
+          ReportedObservation to the entity the source says it was derived
+          from, such as another observation or a Ratio.
+      LOCATED_IN:
+        description: Any entity to GeographicRegion.
+
+  ContributionRoleType:
+    description: >-
+      Attribution predicates. Each value is read as
+      "source_id VALUE target_id".
+    permissible_values:
+      AUTHORED:
+        description: ResearchAgent to Source.
+      CORRESPONDING_AUTHOR_FOR:
+        description: ResearchAgent to Source.
+      AFFILIATED_WITH:
+        description: ResearchAgent to ResearchAgent.
+      FUNDED:
+        description: ResearchAgent to the entity the source says it funded.
+      ACKNOWLEDGES:
+        description: Source to ResearchAgent.
+      PARTICIPATED_IN:
+        description: ResearchAgent to Campaign.
+      OPERATED:
+        description: ResearchAgent to Instrument.
+
+classes:
+
+  Oriented:
+    mixin: true
+    description: >-
+      A record carrying a compass orientation exactly as the source states it.
+    slots:
+      - strike_orientation
+      - dip_direction
+
+  SpreadingCenter:
+    is_a: Entity
+    description: An oceanic spreading centre named by a source.
+    slots:
+      - spreading_class
+
+  RidgeSubsection:
+    is_a: Entity
+    mixins:
+      - Oriented
+    description: >-
+      A named along-axis subsection of a spreading centre, as a source divides
+      it.
+    slots:
+      - subsection_kind
+      - accretionary_character
+    slot_usage:
+      subsection_kind:
+        required: true
+
+  GeologicalStructure:
+    is_a: Entity
+    mixins:
+      - Oriented
+    description: >-
+      A mapped or inferred geological structure named by a source.
+    slots:
+      - structure_kind
+    slot_usage:
+      structure_kind:
+        required: true
+
+  GeographicRegion:
+    is_a: Entity
+    description: A named geographic region referred to by a source.
+    slots:
+      - region_kind
+    slot_usage:
+      region_kind:
+        required: true
+
+  LithosphericHorizon:
+    is_a: Entity
+    description: >-
+      A subsurface boundary or surface a source treats as a horizon.
+    slots:
+      - horizon_kind
+    slot_usage:
+      horizon_kind:
+        required: true
+
+  MeltPopulation:
+    is_a: Entity
+    description: >-
+      A body of melt a source discusses as one population. The stage is
+      optional because a source may describe a melt population without staging
+      it.
+    slots:
+      - melt_stage
+
+  RockSampleSuite:
+    is_a: Sample
+    mixins:
+      - Counted
+    description: >-
+      A set of rock samples a source treats as one analysed unit. Used when the
+      source does not identify individual specimens.
+    slots:
+      - sample_kind
+    slot_usage:
+      sample_kind:
+        required: true
+
+  SeismometerNetwork:
+    is_a: Instrument
+    mixins:
+      - Counted
+    description: >-
+      A deployed network of seismometers, counted as the source counts it.
+
+  AnalysisSoftware:
+    is_a: Instrument
+    description: A named software package a source used to produce a result.
+    slots:
+      - software_version
+
+  ReportedObservation:
+    is_a: Observation
+    mixins:
+      - Counted
+    description: >-
+      A quantity or count a source reports, with the source's own name for the
+      quantity kind retained verbatim.
+    slot_usage:
+      quantity_kind:
+        required: true
+        description: >-
+          The source's own name for the reported quantity or count, retained
+          without normalization.
+
+  MechanismHypothesis:
+    is_a: Claim
+    description: >-
+      A candidate mechanism a source states and then appraises.
+    slots:
+      - hypothesis_appraisal
+    slot_usage:
+      statement:
+        required: true
+      hypothesis_appraisal:
+        required: true
+
+  BibliographicSource:
+    is_a: Source
+    description: >-
+      A work a source cites or is itself, described bibliographically.
+    slots:
+      - creator_list
+      - publication_year
+      - container_title
+      - volume_designation
+      - page_range
+      - publication_doi
+
+  ResearchAgent:
+    is_a: Entity
+    mixins:
+      - Agent
+    description: >-
+      A person, organization, funder, infrastructure or vessel a source names
+      as taking part in the work.
+    slot_usage:
+      agent_type:
+        range: ResearchAgentType
+        required: true
+
+  SeismicEvent:
+    is_a: Event
+    mixins:
+      - Quantified
+      - SourceAsserted
+    description: >-
+      A single occurrence a source identifies, such as a named earthquake, a
+      subevent, a swarm or an eruption.
+    slots:
+      - location_quality
+    slot_usage:
+      event_type:
+        range: SeismicEventType
+
+  RidgeRelation:
+    is_a: Relation
+    description: A typed relation between project entities.
+    slot_usage:
+      relation_type:
+        range: RidgeRelationType
+
+  ContributionRelation:
+    is_a: Relation
+    description: >-
+      A typed attribution relation between agents, sources, campaigns and
+      instruments.
+    slot_usage:
+      relation_type:
+        range: ContributionRoleType
+
+slots:
+
+  spreading_class:
+    range: SpreadingRateClass
+    description: Spreading-rate class the source assigns.
+
+  subsection_kind:
+    range: RidgeSubsectionKind
+    description: Kind of along-axis subsection.
+
+  accretionary_character:
+    range: AccretionaryCharacter
+    description: Crustal accretion character the source attributes.
+
+  structure_kind:
+    range: GeologicalStructureKind
+    description: Kind of geological structure.
+
+  region_kind:
+    range: GeographicRegionKind
+    description: Kind of geographic region.
+
+  horizon_kind:
+    range: LithosphericHorizonKind
+    description: Kind of horizon.
+
+  melt_stage:
+    range: MeltStage
+    description: Stage the source assigns to a melt population.
+
+  sample_kind:
+    range: RockSampleKind
+    description: Kind of rock material sampled or compiled.
+
+  strike_orientation:
+    range: string
+    description: >-
+      Compass orientation exactly as the source states it, retained without
+      conversion, for example N20 degrees E written as the source writes it.
+
+  dip_direction:
+    range: string
+    description: >-
+      Dip direction exactly as the source states it, retained without
+      conversion.
+
+  software_version:
+    range: string
+    description: Software version as the source states it.
+
+  location_quality:
+    range: LocationQualityCategory
+    description: >-
+      Location quality category the source assigns under its own criteria.
+
+  hypothesis_appraisal:
+    range: HypothesisAppraisal
+    description: How the source appraises the hypothesis it stated.
+
+  creator_list:
+    range: string
+    multivalued: true
+    description: Creators as the source lists them, in source order.
+
+  publication_year:
+    range: integer
+    description: Publication year as the source states it.
+
+  container_title:
+    range: string
+    description: Title of the containing work, as the source states it.
+
+  volume_designation:
+    range: string
+    description: Volume or issue designation, as the source states it.
+
+  page_range:
+    range: string
+    description: Page range or article number, as the source states it.
+
+  publication_doi:
+    range: string
+    description: DOI as the source states it.

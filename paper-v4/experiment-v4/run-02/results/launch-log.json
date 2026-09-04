@@ -1,0 +1,79 @@
+{
+  "schema": "malleus.paper-v4.producer-launch-log/v1",
+  "run": "run-02",
+  "launches": [
+    {
+      "ordinal": 1,
+      "phase": "ONTOLOGY",
+      "launched_at": "2026-09-04T18:07:51Z",
+      "harness": "Claude Code Agent tool, subagent_type general-purpose, no inherited context",
+      "requested_model": "opus",
+      "model_family": "Claude Opus 5",
+      "spawn_message": "paper-v4/experiment-v4/run-02/spawn-message.md with <PRODUCER_WORKSPACE> substituted by the absolute workspace path",
+      "outcome": "ONTOLOGY_READY"
+    }
+  ],
+  "gate": [
+    {
+      "attempt": 1,
+      "ontology_sha256": "sha256:164417a5c4d075026f0637877871cfdd8d55b581f2643106f4b7b970f5cf9d1f",
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "DIRECT_ROOT_GROUNDING_REQUIRED",
+      "subjects": 10,
+      "diagnostic_returned_to_producer_at": "2026-09-04T18:19:39Z",
+      "diagnostic_return_ordinal": 1,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 2,
+      "ontology_sha256": "sha256:9dfaa95bbb7c5551056f6f2348bea96fac0820a1007a3744284758e97045b6b5",
+      "status": "REFUSED",
+      "stage": "PACK_GROUNDING",
+      "reason": "GROUNDING_NOT_CLOSED",
+      "subjects": 1,
+      "detail": "SpreadingCenter.grounding.vocabularies[0] fields are not closed",
+      "diagnostic_returned_to_producer_at": "2026-09-04T18:25:35Z",
+      "diagnostic_return_ordinal": 2,
+      "diagnostic_return_limit": 2
+    },
+    {
+      "attempt": 3,
+      "ontology_sha256": "sha256:56f3e00d4be176019e2f1f0f9d8422240ebd992b476a2a6e5daf704acd227225",
+      "status": "ACCEPTED",
+      "validated_fact_set_sha256": "sha256:c67acb939c7cc38f00da1c89a87ebc7d263e064203df8fb2a833a1108bffc10c",
+      "fact_count": 3515,
+      "accepted_at": "2026-09-04T18:32:51Z",
+      "phase_two_inputs_staged": [
+        "accepted/population-surface.json",
+        "accepted/diagnostic.json"
+      ]
+    }
+  ],
+  "population": [
+    {
+      "runner_attempt": 1,
+      "transaction_time": "2026-09-04T18:58:59Z",
+      "status": "REFUSED",
+      "stage": "DOCUMENT_ADAPTER",
+      "reason": "READING_MISMATCH",
+      "detail": "capture does not name the supplied reading bytes",
+      "cause": "capture.reading_sha256 carried the canonical-JSON digest 3ea159ad...; the runner supplies the raw declared input bytes f3885c7b... (ambiguity the producer itself flagged in status.json)",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-04T18:59:20Z",
+      "structural_diagnostic_return_ordinal": 1,
+      "hand_repair": false
+    },
+    {
+      "runner_attempt": 2,
+      "transaction_time": "2026-09-04T19:01:03Z",
+      "status": "REFUSED",
+      "stage": "PLAN_COMPILER",
+      "reason": "UNDERIVED_FIELD",
+      "detail": "record field lacks derivation: agent:anne-briais:['properties', 'agent_type']",
+      "structural_diagnostic_returned_to_producer_at": "2026-09-04T19:01:29Z",
+      "structural_diagnostic_return_ordinal": 2,
+      "structural_diagnostic_return_limit": 2,
+      "hand_repair": false
+    }
+  ]
+}
