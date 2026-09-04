@@ -6,6 +6,7 @@ import ast
 from hashlib import sha256
 from importlib import import_module
 from importlib.resources import files
+import inspect
 import json
 from pathlib import Path
 import subprocess
@@ -289,6 +290,111 @@ def test_public_module_exposes_the_executable_pipeline_without_private_imports()
         or name.startswith("research.")
         for name in imported
     )
+
+
+def test_public_structural_history_bundle_replaces_fixture_protocol_bytes() -> None:
+    api = _api()
+    bundle = api.STRUCTURAL_HISTORY_BUNDLE
+
+    assert {
+        "STRUCTURAL_HISTORY_BUNDLE",
+        "StructuralHistoryBundle",
+        "admit_structural_change",
+        "create_structural_history",
+    } <= set(api.__all__)
+    assert isinstance(bundle, api.StructuralHistoryBundle)
+    assert bundle.protocol_machine_program.event_names == {
+        "ARTIFACT_REGISTERED",
+        "CHANGE_PROPOSED",
+        "CHECK_RECORDED",
+        "SOURCE_REGISTERED",
+        "VERDICT_RECORDED",
+    }
+    assert bundle.policy_program.required_checks == (
+        (bundle.check_contract_id, bundle.check_contract_identity),
+    )
+    assert bundle.history_binding.identity.startswith("sha256:")
+    assert bundle.identity.startswith("sha256:")
+    assert b"small-shop" not in bundle.canonical_bytes
+    assert b"ret010" not in bundle.canonical_bytes.lower()
+    assert "outcome" not in inspect.signature(api.admit_structural_change).parameters
+    assert "machine_events" not in inspect.signature(
+        api.admit_structural_change
+    ).parameters
+
+
+def test_public_structural_history_executes_and_records_its_own_check(
+    tmp_path: Path,
+) -> None:
+    api = _api()
+    compiled = _compiled_shop(api)
+    history = api.create_structural_history(
+        tmp_path / "structural-history.jsonl",
+        compilation=compiled,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:public-adopter",
+    )
+    source = (SHOP_FIXTURE / "input/sources/supplier-order-history.jsonl").read_bytes()
+    _anchor(
+        history,
+        _event(
+            "ARTIFACT_REGISTERED",
+            artifact_id="artifact:supplier-order-source",
+            artifact_identity=_digest(source),
+        ),
+        source,
+        "SOURCE_ARTIFACT",
+    )
+    _anchor(
+        history,
+        _event(
+            "SOURCE_REGISTERED",
+            artifact_id="artifact:supplier-order-source",
+            source_id="source:supplier-order-history",
+            source_identity=_digest(source),
+        ),
+        source,
+        "RETAINED_SOURCE",
+    )
+    plan = _plan(api, history.partial_contract, source, "e4")
+    prepared = api.prepare_population_change(
+        history=history,
+        plan=plan,
+        profile=json.loads(api.STATE_VERSION_PROFILE.canonical_bytes),
+        retention_events=_retention_events(api, plan, True),
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:public-adopter",
+    )
+
+    admitted = api.admit_structural_change(
+        history=history,
+        preparation=prepared,
+        transaction_time=TRANSACTION_TIME,
+        actor_id="actor:public-adopter",
+    )
+    reopened = api.KnowledgeChangeHistory.reopen(history.path).replay()
+
+    assert admitted.graph.query("SupplierOrderState") == [
+        {
+            "id": "supplier-order-state:B:e4",
+            "ordered_quantity": 1,
+            "product_code": "Y",
+            "source_occurrence_id": "e4",
+            "supplier_order_id": "B",
+            "type": "SupplierOrderState",
+        }
+    ]
+    assert reopened.receipt == admitted.receipt
+    check_records = tuple(
+        record
+        for record in reopened.machine_state.records
+        if record.record_type == "CheckRecord"
+    )
+    assert len(check_records) == 1
+    assert check_records[0].fields["check_contract_id"] == (
+        api.STRUCTURAL_HISTORY_BUNDLE.check_contract_id
+    )
+    assert check_records[0].fields["outcome"] == "SATISFIED"
 
 
 def test_public_adopter_compiles_admits_reopens_and_queries_e4_e7(
