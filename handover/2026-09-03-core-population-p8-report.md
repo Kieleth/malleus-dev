@@ -26,6 +26,12 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Final GREEN tree: `9f3b870e01b15cb0e6a96f6f9b3f24996ebb6b21`
 - Executable-surface guard: `0dd77db2790f6dfaad5ae760c9acb8577033d72a`
 - Executable-surface-guard tree: `c7bb8270e4f9b2576002c0aa4a1f5ba50c03410e`
+- Capture-contract RED: `c1c4ee68615eb74787b4d6d985f476164ace0491`
+- Capture-contract RED tree: `db4ee9687da03206579b762a962cbc652a9631dd`
+- Coverage-precedence RED: `dc9e17a50d9310e7b7fa71f9550397c2d18eb428`
+- Coverage-precedence RED tree: `bc439fe37523432c3101e861d5e58d5698c2c014`
+- Runnable-capture GREEN: `ca4052409b08bf719a17cf3aacd3578e9b18a819`
+- Runnable-capture GREEN tree: `e24a801a04cab296e05295a9150bf7033f58abe7`
 
 ## What changed
 
@@ -37,7 +43,9 @@ The playbook gives a fresh adopter one ordered path:
 
 1. retain exact source bytes and model only what they support;
 2. choose only the Malleus level needed, and choose a domain-history profile
-   explicitly when governed history is wanted;
+   explicitly when governed history is wanted. Schema-only or typed-graph-only
+   adoption stops after structural compilation; steps 6 through 9 are the
+   governed-history branch and require the profile;
 3. inspect the optional `metrology`, `chronology`, and `research` packs before
    inventing project vocabulary, and extend a pack concept before extending
    root;
@@ -50,7 +58,8 @@ The playbook gives a fresh adopter one ordered path:
    plan through an explicit source adapter, then use the two-axis capture census
    to inspect both block review and assertion formalisation, continue over source
    blocks still marked `UNTOUCHED`, and retain the fact that reviewed blocks can
-   contain uncaptured assertions;
+   contain uncaptured assertions. Whole-reading coverage overrides the global
+   smallest-slice rule for this capture task;
 7. compile and prepare that plan, admit only a non-null
    `prepared.change_set` through one `KnowledgeChangeHistory` with
    `history.admit(change_set=prepared.change_set, ...)`, and retain a
@@ -67,6 +76,14 @@ closed working set. The section explicitly supersedes the older checkout probe
 and adoption-guide pre-read. It forbids ambient home-directory, checkout,
 network, and undeclared-document discovery, and requires an explicit failure
 when a needed capability or artifact is absent.
+
+The skill carries one marked, machine-parsed
+`malleus.nascent-document-example/private-v0` JSON block. It shows the exact
+closed reading, capture, attribution, assertion, optional time, formalisation,
+gap, Entity, and Relation shapes needed by the current adapter, and lists all
+six accepted gap kinds. Its neutral example is executed directly through
+`adapt_document_assertions` in the conformance suite. The block says explicitly
+that private-v0 is current input guidance, not a stable wire promise.
 
 The exact grounding standing order from `design/KNOWLEDGE_PACKS.md` is carried
 into the skill. The playbook also preserves the twelve generic rules extracted
@@ -107,8 +124,8 @@ The public deliverable is the installable skill procedure itself.
   ordering, leakage constraints, and the closed installed-artifact boundary
   before the final GREEN.
 - The two direct playbook tests pass after the final GREEN.
-- The complete skill-installation and shipped-guidance slice passes 19 tests.
-- The complete Inquisitor test module passes 103 tests.
+- The complete skill-installation and shipped-guidance slice passes 21 tests.
+- The complete Inquisitor test module passes 104 tests.
 - The content guard binds the model-neutral rules, real public command and
   function names, absence of model, fixture, answer, query, evaluation, brief,
   or paper specifics, and the ten-step order. It also checks that profile and
@@ -120,6 +137,10 @@ The public deliverable is the installable skill procedure itself.
   `malleus.compiler.__all__`, verifies `KnowledgeChangeHistory.admit` and
   `KnowledgeChangeHistory.reopen`, exercises the Codex skill installer and both
   pack rites, and parses the documented compiler contract route.
+- A second direct guard parses the JSON template from the installed skill,
+  verifies every closed record shape and accepted gap kind, checks its reading
+  digest, and passes it through the public document adapter to a deterministic
+  plan and two-axis census.
 
 ## Non-claims
 
