@@ -141,6 +141,14 @@ to ontology construction or population. It may inspect the replayed graph only
 after the population is frozen. Refresh the Codex-installed copy before starting:
 `malleus-inquisitor install-skills --agent codex --project .`.
 
+When current installed capabilities and exact input artifacts are provided, this
+section supersedes the earlier capability probe and ADOPTION_GUIDE.md pre-read.
+Use only the installed package and skill plus the declared source, profile, pack,
+and project artifacts. Do not inspect home directories, local checkouts, the
+network, or undeclared repository documentation. If a required capability or
+artifact is absent, fail explicitly without an ambient probe, install, or
+fallback.
+
 1. **Retain the source boundary.** Identify the exact source bytes and their
    locators. Model only concepts, properties, relations, values, and distinctions
    materially supported by those bytes. Never invent a missing value, count,
@@ -190,9 +198,11 @@ after the population is frozen. Refresh the Codex-installed copy before starting
    adapter that emits the same neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
    operation. Inspect the returned `canonical_census_bytes`; continue reviewing
-   and capturing source-supported material across `UNTOUCHED` blocks. If the
-   declared capture remains partial, retain that limitation and never call it
-   complete.
+   and capturing source-supported material across both census axes. Each block is
+   `REVIEWED` or `UNTOUCHED`; each captured assertion is `FULLY_FORMALIZED`,
+   `PARTLY_FORMALIZED`, or `UNFORMALIZED`. A reviewed block is not thereby
+   formalized, and uncaptured assertions remain invisible. If the declared
+   capture remains partial, retain that limitation and never call it complete.
 7. **Compile, then admit.** Pass the proposed plan to
    `compile_population_plan`, then `prepare_population_change`, then admit it
    with `history.admit(...)` through `KnowledgeChangeHistory`. The plan must bind
