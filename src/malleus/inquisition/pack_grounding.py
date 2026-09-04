@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 
 import yaml
 
-from malleus.ontology import UniqueKeyLoader
+from malleus.ontology import OntologyError, UniqueKeyLoader
 
 
 _RITE_PATH = Path(__file__).with_name("pack-grounding.json")
@@ -292,7 +292,7 @@ def validate_pack_grounding(source: bytes, *, role: str) -> PackGroundingReceipt
     try:
         decoded = source.decode("utf-8")
         root = yaml.load(decoded, Loader=UniqueKeyLoader)
-    except (UnicodeDecodeError, yaml.YAMLError) as error:
+    except (UnicodeDecodeError, yaml.YAMLError, OntologyError) as error:
         raise PackGroundingRefusal(
             PackGroundingRefusalReason.MALFORMED_SOURCE,
             f"source is not unique-key UTF-8 YAML: {error}",

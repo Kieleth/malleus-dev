@@ -46,10 +46,10 @@ annotations:
           vocabulary_url: https://ceur-ws.org/Vol-1747/IT605_ICBO2016.pdf
           borrowed_terms:
             - assertion
-            - evidence line
-            - evidence item
+            - Data Item
+            - Evidence Line
             - support
-            - challenge
+            - refute
         - vocabulary: Micropublications semantic model
           vocabulary_url: https://doi.org/10.1186/2041-1480-5-28
           borrowed_terms:
