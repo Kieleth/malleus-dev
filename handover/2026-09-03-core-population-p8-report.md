@@ -32,6 +32,12 @@ Status: implemented in Core, awaiting independent overseer verification.
 - Coverage-precedence RED tree: `bc439fe37523432c3101e861d5e58d5698c2c014`
 - Runnable-capture GREEN: `ca4052409b08bf719a17cf3aacd3578e9b18a819`
 - Runnable-capture GREEN tree: `e24a801a04cab296e05295a9150bf7033f58abe7`
+- Exact-adapter-contract RED: `78da29b6f2c3e4a4f78ec67953b7c21dcc49749f`
+- Exact-adapter-contract RED tree: `bcf13345809f4b25b70166ca4ddd87b630e79428`
+- Installed-capture-contract RED: `8cc31735217a2d2000ea6cbfc7f459fbb59537ca`
+- Installed-capture-contract RED tree: `382c19b019586745a29c94c004cdaae883b6b212`
+- Corrected GREEN: `00c48a2da29b7497addc2e60d767cda2017d0dde`
+- Corrected GREEN tree: `5750a577555fbe705107ca9b3e4d1f6513d17193`
 
 ## What changed
 
@@ -43,8 +49,10 @@ The playbook gives a fresh adopter one ordered path:
 
 1. retain exact source bytes and model only what they support;
 2. choose only the Malleus level needed, and choose a domain-history profile
-   explicitly when governed history is wanted. Schema-only or typed-graph-only
-   adoption stops after structural compilation; steps 6 through 9 are the
+   explicitly when governed history is wanted. Schema-only adoption stops after
+   contract compilation. Typed-graph-only adoption loads the compiled registry,
+   constructs records through `KnowledgeGraph.from_records`, inspects the checked
+   graph, and stops before population or history. Steps 6 through 9 are the
    governed-history branch and require the profile;
 3. inspect the optional `metrology`, `chronology`, and `research` packs before
    inventing project vocabulary, and extend a pack concept before extending
@@ -77,13 +85,21 @@ and adoption-guide pre-read. It forbids ambient home-directory, checkout,
 network, and undeclared-document discovery, and requires an explicit failure
 when a needed capability or artifact is absent.
 
-The skill carries one marked, machine-parsed
-`malleus.nascent-document-example/private-v0` JSON block. It shows the exact
-closed reading, capture, attribution, assertion, optional time, formalisation,
-gap, Entity, and Relation shapes needed by the current adapter, and lists all
-six accepted gap kinds. Its neutral example is executed directly through
-`adapt_document_assertions` in the conformance suite. The block says explicitly
-that private-v0 is current input guidance, not a stable wire promise.
+The skill carries one marked, machine-parsed documentation example. Its reading
+object is illustrative, because the adapter does not own a closed reading
+grammar. Its capture object is bound to the sole live grammar in the example,
+`malleus.document-capture/private-v0`. The example lists all six accepted
+modalities and all six gap kinds, shows the capture, attribution, assertion,
+optional-time, formalisation, gap, Entity, and Relation inputs, and contains one
+uncaptured reading block. The installed copy is parsed and executed through
+`adapt_document_assertions` in the conformance suite. No wrapper or reading
+grammar was invented.
+
+The same section states the capture rules that the public adapter enforces:
+assertions use a known modality and block; their statements occur verbatim after
+whitespace normalization; an assertion without a formalisation has a typed gap;
+every formalisation record and path resolves; and every `nothing_assertable`
+block exists in the reading.
 
 The exact grounding standing order from `design/KNOWLEDGE_PACKS.md` is carried
 into the skill. The playbook also preserves the twelve generic rules extracted
@@ -123,9 +139,14 @@ The public deliverable is the installable skill procedure itself.
   exact history calls and no-change branch, bounded loop, Codex install path,
   ordering, leakage constraints, and the closed installed-artifact boundary
   before the final GREEN.
-- The two direct playbook tests pass after the final GREEN.
-- The complete skill-installation and shipped-guidance slice passes 21 tests.
-- The complete Inquisitor test module passes 104 tests.
+- The final REDs guard the real typed-graph branch, exact seven-argument adapter
+  signature, installed-skill template, all capture invariants, all modalities,
+  all gap kinds, and absence of invented wrapper and reading grammars.
+- The three direct playbook tests pass after the corrected GREEN.
+- The complete skill-installation class passes 12 tests in the working checkout.
+- A clean Git clone of the corrected GREEN runs the complete Inquisitor module
+  as 103 passed and 1 skipped. The skipped check needs a deliberately untracked
+  external doctrine fixture; it is not counted as passed.
 - The content guard binds the model-neutral rules, real public command and
   function names, absence of model, fixture, answer, query, evaluation, brief,
   or paper specifics, and the ten-step order. It also checks that profile and
@@ -137,10 +158,12 @@ The public deliverable is the installable skill procedure itself.
   `malleus.compiler.__all__`, verifies `KnowledgeChangeHistory.admit` and
   `KnowledgeChangeHistory.reopen`, exercises the Codex skill installer and both
   pack rites, and parses the documented compiler contract route.
-- A second direct guard parses the JSON template from the installed skill,
-  verifies every closed record shape and accepted gap kind, checks its reading
-  digest, and passes it through the public document adapter to a deterministic
-  plan and two-axis census.
+- A second direct guard installs the skill into a clean Codex project, proves its
+  bytes equal the source skill, parses the JSON template from that installed
+  copy, binds the exact adapter signature, checks its reading digest, and passes
+  all six gap kinds through the public adapter. The resulting plan retains every
+  gap, and the two-axis census reports their exact counts plus one `UNTOUCHED`
+  block.
 
 ## Non-claims
 

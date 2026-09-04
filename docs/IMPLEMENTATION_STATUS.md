@@ -111,14 +111,19 @@ The census keeps block review separate from assertion formalisation and states
 that uncaptured assertions remain invisible. With a current installation and
 exact inputs supplied, the procedure forbids ambient checkout, home-directory,
 network, or undeclared-document discovery and fails when an input is absent.
-Schema-only and typed-graph-only adopters stop after structural compilation;
-the population, admission, and replay steps require an exact history profile.
+Schema-only adopters stop after contract compilation. Typed-graph-only adopters
+construct and inspect checked records through `OntologyRegistry` and
+`KnowledgeGraph.from_records`, then stop before population and history. The
+population, admission, and replay steps require an exact history profile.
 For document population, retained-reading coverage overrides the general
-smallest-slice rule. A machine-parsed neutral template exposes the current
-private-v0 capture, record, and six-kind gap shapes and runs through the public
-adapter in tests. It is guidance, not a stable wire. The playbook adds no
-compiler command or runtime capability. It documents how a fresh adopter uses
-the public boundaries already listed above.
+smallest-slice rule. A machine-parsed neutral template in the installed skill
+uses the existing `malleus.document-capture/private-v0` grammar, lists all six
+modalities and all six gap kinds, and runs every gap kind through the public
+adapter. Its reading object is illustrative, not a closed grammar. The guard
+also binds the exact seven adapter arguments and proves one uncaptured block is
+reported `UNTOUCHED`. The playbook adds no compiler command, grammar, or runtime
+capability. It documents how a fresh adopter uses the public boundaries already
+listed above.
 
 ## Implemented
 
