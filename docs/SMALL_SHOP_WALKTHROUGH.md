@@ -213,11 +213,11 @@ The recorded coordinates are:
 | Neutral contract facts | `1,040` |
 | Effective contract identity | `sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3` |
 | Ledger events | `74` |
-| Ledger and acceptance head | `sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a` |
-| Materialization head | `sha256:d3c0351a8b84e27f9a5cf3e505b4532677cc02bac5554de42b6e64f54951a808` |
+| Ledger and acceptance head | `sha256:741853f06741d9bbf89a1d574578e57c49749dd144cce2095c568a0d65bcd415` |
+| Materialization head | `sha256:72679ae14f363f4bcebe7a31ce42b63770ed852875908fade78f23f6749f7f3c` |
 | Current graph records | `9` |
 | Current graph digest | `sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0` |
-| Receipt identity and file SHA-256 | `sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701` |
+| Receipt identity and file SHA-256 | `sha256:09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41` |
 | Retained run-program identity | `sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6` |
 
 Reopening uses replay from the ledger alone, not recompilation from the ledger

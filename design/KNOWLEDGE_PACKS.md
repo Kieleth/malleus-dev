@@ -1,6 +1,6 @@
 # Knowledge packs, typed gaps, and the revision loop
 
-Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, and structural grounding rite are implemented. Sections marked "open" remain undecided.
+Status: design decided in conversation on 2026-09-03 between Luis and the overseer session, after the three-producer paper runs. The population path, additive revision, domain-history profiles, three optional packs, structural grounding rite, and minimum edited-pack conformance rite are implemented. Sections marked "open" remain undecided.
 
 ## Why
 
@@ -36,7 +36,7 @@ Luis asked for names taken from an existing taxonomy of areas of knowledge rathe
 | --- | --- | --- | --- | --- |
 | `metrology` | The science of measurement; formal and physical sciences in the outline of disciplines | 530.8 Physical measurement | JCGM 200:2012, the International Vocabulary of Metrology (VIM), 3rd edition; QUDT as the ontology precedent | quantity, quantity value, measurement unit, measurement uncertainty, measured versus derived value, quantity kind |
 | `chronology` | Time and its reckoning | 529 Chronology | W3C Time Ontology in OWL (OWL-Time), Recommendation 2017 | temporal entity, instant, interval, beginning, end, duration, temporal reference system |
-| `research` | Research and experimental development; the scholarly record | 001.4 Research | Frascati Manual 2015 for the definition of research; SEPIO for assertion, evidence line and evidence item; the Micropublications model for statement plus attribution plus support and challenge | claim, evidence, support, challenge, method, agent, investigation |
+| `research` | Research and experimental development; the scholarly record | 001.4 Research | Frascati Manual 2015 for research, investigation, and method; SOSA/SSN for Observation and Sample; VIM for measuring instrument; SEPIO for assertion, Data Item, Evidence Line, support, and refute; Micropublications for Claim, Evidence, support, and challenge | observation, sample, claim, evidence, support, challenge, method, investigation |
 
 Why these names and not "algebra", "time" and "science": algebra names operations on quantities, not quantities with units and uncertainty, which is what was missing and what VIM defines; "time" is fine as a word but 529 names the area; "science" is the whole of DDC 500 and would claim far more than a claims-and-evidence vocabulary. If a later reader finds a better-grounded name, the DDC number and the seminal source stay and the file name changes.
 
@@ -89,6 +89,8 @@ annotations:
 
 A new rite, `pack-grounding`, refuses a pack without a grounding block, a grounding block without a taxonomy locator and a vocabulary citation, and a class that extends root directly without either a grounding block or a `grounding: none-found` declaration. The rite checks presence and shape; it cannot judge whether the grounding is apt, and it must not pretend to.
 
+The separate `pack-conformance` rite checks a copied pack against one exact reference pack. The copy may change documentation, add declarations, and add enum values. It may not remove a reference class, slot, or enum; change an existing declaration list; weaken inherited structure; change an existing scalar constraint; or add a new scalar or mapping constraint to an existing declaration. An extension that changes an existing class instead becomes a new subclass. The receipt binds both byte identities. This is a minimum structural substitutability check, not proof that two vocabularies mean the same thing.
+
 Why this is a rule and not advice: the three producers did not lack skill, they lacked a reflex. Each built a competent private vocabulary in minutes. The reflex the skill installs is to look first, borrow second, invent last, and leave a trail either way.
 
 ## Domain-history profiles
@@ -140,14 +142,14 @@ A gap becomes a ledger event of DEFER shape, bound to the population proposal. G
 6. Revision round is slots, enum values and classes first; imports reserved in the grammar, refused by policy.
 7. The skill owns modelling, the library owns the interface, the experimenter owns isolation only; briefs are retired.
 8. Never prime a session with the questions.
-9. Grounding is a standing order in the skill and a machine-checkable `grounding` block on packs and root-extending classes, enforced by a `pack-grounding` rite.
+9. Grounding is a standing order in the skill and a machine-checkable `grounding` block on packs and root-extending classes, enforced by a `pack-grounding` rite. An adopter claiming that an edited copy preserves a shipped pack runs `pack-conformance` against the exact reference bytes.
 10. A `DomainHistoryProfile` is a separate adopter-owned contract, shipped as grounded reference profiles; the paper runs under `source-assertion`, Small Shop under `state-version`; Event materialization is Core's `object-event` track and does not gate the paper.
 11. Requirements flow: Core touches Core and receives requirements with reproducers; the paper thread executes and files requirements through the overseer; the overseer verifies every Core deliverable on disk before the paper thread consumes it. Handovers: `handover/2026-09-03-core-requirements.md`, `handover/2026-09-03-paper-executor-plan.md`.
 12. Population (after the coverage RCA and Core's evaluation, `handover/2026-09-03-core-population-v2.md`, which supersedes the adapter handover): Core owns a neutral population plan (compiled contract identity, profile artifact, adapter identity, sources, records in the public record shape, supersessions, field-level derivations, typed gaps, valid time) and its deterministic lowering to the existing change-set grammar; a capture with zero records is the typed result NO_DOMAIN_CHANGE. The assertion, a verbatim clause with block, modality and attribution, is the unit of capture inside the optional document-assertion adapter, retained as evidence, never a graph record; the objective is coverage of the reading measured by a two-axis census (blocks reviewed or untouched; assertions fully, partly or unformalized), never "smallest"; competency questions enter only the evaluation loop after population is frozen; the admissible set is every concrete Entity and Relation type of the compiled contract; ratification samples blocks. Built by Core, test first, in the order P1 to P4 of that handover.
 
 ## Open
 
-- Pack conformance: the inquisitor's rites check the root profile; packs will need their own rites (a project that copies and edits a pack must still be checkable). Not designed.
+- Deeper pack compatibility beyond the shipped structural-substitutability check remains open. The current rite does not prove definition equivalence, behavioral compatibility, or intellectual aptitude.
 - Whether the private admission path should accept root `Event` and `Signal` operations. Deferred until packs and the loop show demand.
 - Whether `research` owns the reading locator structure or the OCR domain ontology does. Current lean: the root `locator` slot is the only coupling; `research.Evidence` carries a locator string and a source digest; OCR keeps ownership of reading structure.
 - Relation-level modality reaches only relations, not relations about relations. A hypothesis about a causal chain needs the chain reified as entities, which the packs allow but do not force.

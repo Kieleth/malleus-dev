@@ -86,6 +86,11 @@ between the root primitives and a project ontology. A closed, content-addressed
 grounding rite checks that borrowed term groups name their vocabulary and
 locator, or that a root-extending project class records a bounded unsuccessful
 search. The rite checks structure only; it does not judge a citation's quality.
+An edited pack can be checked against exact reference bytes with the separate
+`pack-conformance` rite. It permits documentation and additive vocabulary
+changes through new declarations or enum values. It refuses removal or
+strengthening of the existing structural surface; an extension that changes an
+existing class uses a new subclass instead.
 Pack grounding is retained provenance and does not alter semantic fact
 identity. Packs remain adopter choices and are never required by the base
 protocol.

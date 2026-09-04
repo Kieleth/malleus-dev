@@ -271,7 +271,7 @@ still receives an explicit source map:
 from collections.abc import Mapping
 
 from malleus.compiler import compile_linkml_contract
-from malleus.inquisition import validate_pack_grounding
+from malleus.inquisition import validate_pack_conformance, validate_pack_grounding
 
 
 def compile_research(exact_sources: Mapping[str, bytes]):
@@ -293,6 +293,15 @@ SOSA/SSN rather than hiding several intellectual sources behind one citation.
 The rite is deliberately modest: it checks citation shape offline and returns
 a deterministic receipt or typed refusal. It does not judge whether the
 chosen source is good scholarship.
+
+If a project copies and edits a pack while claiming compatibility with it,
+`validate_pack_conformance(edited_bytes, reference=shipped_bytes)` binds both
+byte identities and checks the reference declaration surface. Documentation
+and additive declarations or enum values may change. Removing a reference
+declaration, changing an existing declaration list, or adding a stronger
+constraint to one refuses. Extend an existing class through a new subclass.
+This is a structural check, not a claim that the edited vocabulary is
+semantically equivalent.
 
 ```{toctree}
 :maxdepth: 1

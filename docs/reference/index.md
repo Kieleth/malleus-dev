@@ -1,7 +1,7 @@
 # Current public API reference
 
 This page exercises Sphinx autodoc and autosummary against the public package
-root, migration module, narrow compiler facade, and pack-grounding checker. It
+root, migration module, narrow compiler facade, and pack checkers. It
 does not promote private compiler stages or CLI implementation modules.
 
 `compile_population_plan` raises `PopulationPlanRefusal` with reason
@@ -23,6 +23,10 @@ classes, slots, and enum values and refuses added imports.
 `validate_pack_grounding` checks the closed provenance annotation on an
 optional knowledge pack or project ontology. It checks citation structure, not
 the intellectual suitability of a cited vocabulary.
+
+`validate_pack_conformance` checks an edited pack against exact reference
+bytes. It permits documentation changes, new declarations, and new enum values
+while refusing removal or strengthening of the reference declaration surface.
 
 ```{eval-rst}
 .. autosummary::
@@ -55,7 +59,9 @@ the intellectual suitability of a cited vocabulary.
    malleus.compiler.DocumentAssertionRefusal
    malleus.compiler.DocumentAssertionRefusalReason
    malleus.inquisition
+   malleus.inquisition.validate_pack_conformance
    malleus.inquisition.validate_pack_grounding
+   malleus.inquisition.PackConformanceReceipt
    malleus.inquisition.PackGroundingReceipt
    malleus.inquisition.PackGroundingRefusal
    malleus.inquisition.PackGroundingRefusalReason
@@ -124,7 +130,11 @@ the intellectual suitability of a cited vocabulary.
 
 .. automodule:: malleus.inquisition
 
+.. autofunction:: malleus.inquisition.validate_pack_conformance
+
 .. autofunction:: malleus.inquisition.validate_pack_grounding
+
+.. autoclass:: malleus.inquisition.PackConformanceReceipt
 
 .. autoclass:: malleus.inquisition.PackGroundingReceipt
 

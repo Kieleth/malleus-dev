@@ -3,6 +3,8 @@
 Usage:
     malleus-inquisitor path/to/schema.yaml
     malleus-inquisitor path/to/schema.yaml --map malleus=vendor/malleus.yaml --json
+    malleus-inquisitor pack-grounding path/to/pack.yaml --role PACK
+    malleus-inquisitor pack-conformance edited.yaml --against reference.yaml
     malleus-inquisitor install-skills [--user | --project DIR] [--agent AGENT]
 
 Exit code 0 with a root ontology profile purity seal, 1 when heresies are

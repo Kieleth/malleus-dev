@@ -260,7 +260,7 @@ APPROVED_REFERENCE_SOURCE = (
     "# Current public API reference\n"
     "\n"
     "This page exercises Sphinx autodoc and autosummary against the public package\n"
-    "root, migration module, narrow compiler facade, and pack-grounding checker. It\n"
+    "root, migration module, narrow compiler facade, and pack checkers. It\n"
     "does not promote private compiler stages or CLI implementation modules.\n"
     "\n"
     "`compile_population_plan` raises `PopulationPlanRefusal` with reason\n"
@@ -282,6 +282,10 @@ APPROVED_REFERENCE_SOURCE = (
     "`validate_pack_grounding` checks the closed provenance annotation on an\n"
     "optional knowledge pack or project ontology. It checks citation structure, not\n"
     "the intellectual suitability of a cited vocabulary.\n"
+    "\n"
+    "`validate_pack_conformance` checks an edited pack against exact reference\n"
+    "bytes. It permits documentation changes, new declarations, and new enum values\n"
+    "while refusing removal or strengthening of the reference declaration surface.\n"
     "\n"
     "```{eval-rst}\n"
     ".. autosummary::\n"
@@ -314,7 +318,9 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.DocumentAssertionRefusal\n"
     "   malleus.compiler.DocumentAssertionRefusalReason\n"
     "   malleus.inquisition\n"
+    "   malleus.inquisition.validate_pack_conformance\n"
     "   malleus.inquisition.validate_pack_grounding\n"
+    "   malleus.inquisition.PackConformanceReceipt\n"
     "   malleus.inquisition.PackGroundingReceipt\n"
     "   malleus.inquisition.PackGroundingRefusal\n"
     "   malleus.inquisition.PackGroundingRefusalReason\n"
@@ -383,7 +389,11 @@ APPROVED_REFERENCE_SOURCE = (
     "\n"
     ".. automodule:: malleus.inquisition\n"
     "\n"
+    ".. autofunction:: malleus.inquisition.validate_pack_conformance\n"
+    "\n"
     ".. autofunction:: malleus.inquisition.validate_pack_grounding\n"
+    "\n"
+    ".. autoclass:: malleus.inquisition.PackConformanceReceipt\n"
     "\n"
     ".. autoclass:: malleus.inquisition.PackGroundingReceipt\n"
     "\n"
@@ -1304,6 +1314,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.DocumentAssertionRefusalReason",
     )
     inquisition_class_ids = (
+        "malleus.inquisition.PackConformanceReceipt",
         "malleus.inquisition.PackGroundingReceipt",
         "malleus.inquisition.PackGroundingRefusal",
         "malleus.inquisition.PackGroundingRefusalReason",
@@ -1321,6 +1332,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
+        "malleus.inquisition.validate_pack_conformance",
         "malleus.inquisition.validate_pack_grounding",
     )
     data_ids = ("malleus.inquisition.PACK_GROUNDING_RITE_IDENTITY",)
@@ -1454,7 +1466,9 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.DocumentAssertionCompilation",
         "malleus.compiler.DocumentAssertionRefusal",
         "malleus.compiler.DocumentAssertionRefusalReason",
+        "malleus.inquisition.validate_pack_conformance",
         "malleus.inquisition.validate_pack_grounding",
+        "malleus.inquisition.PackConformanceReceipt",
         "malleus.inquisition.PackGroundingReceipt",
         "malleus.inquisition.PackGroundingRefusal",
         "malleus.inquisition.PackGroundingRefusalReason",
@@ -2163,6 +2177,7 @@ def test_public_guide_submodule_imports_are_exactly_allowlisted() -> None:
     }
     for source in (
         "from malleus.compiler import compile_linkml_contract",
+        "from malleus.inquisition import validate_pack_conformance",
         "from malleus.inquisition import validate_pack_grounding",
     ):
         assert _forbidden_example_operations(ast.parse(source)) == []
@@ -2801,7 +2816,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
                 "artifact:small-shop-showcase:validated-contract"
             ),
             "validated_contract_artifact_identity": (
-                "sha256:680fa39a5305462acbac24609e2896bec8082c1069093f893363c8583526d27e"
+                "sha256:a4b3f1b88bd6cdef0d36512e11474e71b33f3389d1e4a4d42f2444f96c7223a1"
             ),
             "validated_fact_set_identity": (
                 "sha256:f34a1e660d1b592c1d46681e4ca77f3744ee3d090ed040404c60a23391d079ef"
@@ -2818,20 +2833,20 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         },
         "history": {
             "acceptance_head": (
-                "sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a"
+                "sha256:741853f06741d9bbf89a1d574578e57c49749dd144cce2095c568a0d65bcd415"
             ),
             "binding_identity": (
                 "sha256:87d653d38f56f771a91668b05f99ec80ffcc2e5e8bbe841c7e6b978db6b89e5e"
             ),
             "event_count": 74,
             "ledger_head": (
-                "sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a"
+                "sha256:741853f06741d9bbf89a1d574578e57c49749dd144cce2095c568a0d65bcd415"
             ),
             "materialization_head": (
-                "sha256:d3c0351a8b84e27f9a5cf3e505b4532677cc02bac5554de42b6e64f54951a808"
+                "sha256:72679ae14f363f4bcebe7a31ce42b63770ed852875908fade78f23f6749f7f3c"
             ),
             "receipt_identity": (
-                "sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701"
+                "sha256:09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41"
             ),
         },
     }
@@ -2850,16 +2865,16 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         for name, source in evidence_bytes.items()
     } == {
         "explanation.json": (
-            "7dd3f9280562d786cc222e22473b88a3631a4cd401cfa2e9c67801de2fd79fb6"
+            "90497272ff3ffb5ae2572b4fede11e43336166c92a8fe22e0d3d298fd87c9254"
         ),
         "graph.json": (
             "b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0"
         ),
         "queries.json": (
-            "4ec19541f38348c99dd5bd28cc7f498568234a713da6b843d4d2b9ffc21627b2"
+            "86e24272e9de1e3fc3c70648e61b80a9ba0f6ce55e8ad3d0fb22880f1b55b86e"
         ),
         "receipt.json": (
-            "c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701"
+            "09b81985d03c810678704178fa3fb4c26f76b2b0077eb3bf9a3456e0d675ad41"
         ),
     }
     assert coordinates["history"]["receipt_identity"] == (
@@ -2900,7 +2915,7 @@ def test_public_small_shop_walkthrough_matches_recorded_showcase() -> None:
         ),
         "ledger_event_count": 49,
         "ledger_head": (
-            "sha256:22cedecec7dd1b87f588b70f195f02859342dedd8d004b693ed5688f17e90a40"
+            "sha256:894c9119cdb5d33b4e1ef6811d2a86214488268f02235c7fd233042b42eda8ef"
         ),
         "materialization_head": "GENESIS",
     }
