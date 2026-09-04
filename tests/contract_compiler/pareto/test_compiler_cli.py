@@ -568,3 +568,295 @@ def test_typed_population_refusals_print_to_stderr_with_exit_two(
     assert err.startswith(b"malleus-compiler: ")
     assert b"UNRETAINED_SOURCE" in err
     assert not (tmp_path / "change-set.json").exists()
+
+
+def _admitted_history(capsysbinary, tmp_path: Path) -> tuple[Path, Path, dict, dict]:
+    ledger = _create_history(capsysbinary, tmp_path)
+    _retain_inputs(capsysbinary, ledger)
+    plan_out, census_out, capture_summary = _capture_plan(capsysbinary, tmp_path)
+    _populate(capsysbinary, tmp_path, ledger, plan_out)
+    admitted = _admit(capsysbinary, tmp_path, ledger, plan_out)
+    return ledger, plan_out, capture_summary, admitted
+
+
+def _library_route(path: Path) -> object:
+    """Drive the same fixture through malleus.compiler with no command line."""
+
+    api = _api()
+    compilation = api.compile_linkml_contract(
+        root_locator="inspection-note",
+        sources={
+            "inspection-note": (FIXTURE / "inspection-note.yaml").read_bytes(),
+            "malleus": (ROOT / "ontology/malleus.yaml").read_bytes(),
+            "linkml:types": LINKML_TYPES.read_bytes(),
+        },
+    )
+    partial = api.compose_partial_effective_contract(
+        validated_fact_set_sha256=compilation.artifact.validated_fact_set_sha256,
+        normative_profile=api.STRUCTURAL_HISTORY_BUNDLE.normative_profile,
+    )
+    history = api.create_structural_history(
+        path,
+        compilation=compilation,
+        transaction_time=TRANSACTION_TIME,
+        actor_id=ACTOR,
+    )
+    reading = (FIXTURE / "reading.json").read_bytes()
+    capture = (FIXTURE / "document-capture.json").read_bytes()
+
+    def anchor(record_id, content, role, event_type, **payload):
+        return api.KnowledgeAnchorInput(
+            machine_event=_canonical(
+                {"event_type": event_type, "payload": payload}
+            ),
+            retained_bytes=content,
+            media_type="application/json",
+            role=role,
+        )
+
+    history.append_anchors(
+        anchors=(
+            anchor(
+                SOURCE_ARTIFACT_ID,
+                reading,
+                "SOURCE_ARTIFACT",
+                "ARTIFACT_REGISTERED",
+                artifact_id=SOURCE_ARTIFACT_ID,
+                artifact_identity=_digest(reading),
+            ),
+            anchor(
+                SOURCE_ID,
+                reading,
+                "RETAINED_SOURCE",
+                "SOURCE_REGISTERED",
+                artifact_id=SOURCE_ARTIFACT_ID,
+                source_id=SOURCE_ID,
+                source_identity=_digest(reading),
+            ),
+            anchor(
+                CAPTURE_ID,
+                capture,
+                "RETAINED_EVIDENCE",
+                "ARTIFACT_REGISTERED",
+                artifact_id=CAPTURE_ID,
+                artifact_identity=_digest(capture),
+            ),
+        ),
+        transaction_time=TRANSACTION_TIME,
+        actor_id=ACTOR,
+    )
+    fixture_plan = json.loads((FIXTURE / "document-plan.json").read_bytes())
+    adapted = api.adapt_document_assertions(
+        reading_bytes=reading,
+        capture_bytes=capture,
+        capture_id=CAPTURE_ID,
+        plan_id="plan:inspection-note:1",
+        contract_identity=partial.identity,
+        records=fixture_plan["records"],
+        supersessions=fixture_plan["supersessions"],
+    )
+    plan = json.loads(adapted.canonical_plan_bytes)
+    profile_data = json.loads(api.SOURCE_ASSERTION_PROFILE.canonical_bytes)
+    profile = api.DomainHistoryProfile.from_data(profile_data)
+    replay = history.replay()
+    compiled_plan = api.compile_population_plan(
+        plan,
+        partial_contract=replay.partial_contract,
+        contract_view=replay.contract_view,
+        base_state=api.PopulationBaseState.from_replay(replay),
+        history_profile=profile,
+    )
+    prepared = api.prepare_population_change(
+        history=history,
+        plan=plan,
+        profile=profile_data,
+        retention_events=api.population_retention_events(
+            history=history, compilation=compiled_plan, profile=profile
+        ),
+        transaction_time=TRANSACTION_TIME,
+        actor_id=ACTOR,
+    )
+    api.admit_structural_change(
+        history=history,
+        preparation=prepared,
+        transaction_time=TRANSACTION_TIME,
+        actor_id=ACTOR,
+    )
+    return api.KnowledgeChangeHistory.reopen(path).replay()
+
+
+def test_replay_writes_the_export_records_and_the_receipt(
+    tmp_path: Path, capsysbinary
+) -> None:
+    api = _api()
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+    records_out = tmp_path / "records.json"
+    receipt_out = tmp_path / "receipt.json"
+
+    summary = _emitted(
+        capsysbinary,
+        [
+            "replay",
+            "--ledger",
+            str(ledger),
+            "--records-out",
+            str(records_out),
+            "--receipt-out",
+            str(receipt_out),
+        ],
+    )
+
+    replay = api.KnowledgeChangeHistory.reopen(ledger).replay()
+    assert json.loads(records_out.read_bytes()) == replay.graph.export_records()
+    assert records_out.read_bytes() == _canonical(replay.graph.export_records())
+    assert receipt_out.read_bytes() == replay.receipt.canonical_bytes
+    assert summary["receipt_identity"] == replay.receipt.identity
+    assert summary["graph_state_digest"] == replay.graph.state_digest()
+    assert summary["records_path"] == str(records_out)
+    assert summary["receipt_path"] == str(receipt_out)
+
+
+def test_query_reads_the_replayed_graph_through_its_public_signature(
+    tmp_path: Path, capsysbinary
+) -> None:
+    ledger, _, _, _ = _admitted_history(capsysbinary, tmp_path)
+
+    code, out, err = _run(
+        capsysbinary, ["query", "--ledger", str(ledger), "--type", "Asset"]
+    )
+    assert code == 0, err.decode()
+    assert json.loads(out) == [{"id": "asset:P-7", "name": "P-7", "type": "Asset"}]
+
+    code, filtered, _ = _run(
+        capsysbinary,
+        ["query", "--ledger", str(ledger), "--type", "Asset", "--where", "name=P-7"],
+    )
+    assert code == 0
+    assert json.loads(filtered) == json.loads(out)
+
+    code, empty, _ = _run(
+        capsysbinary,
+        ["query", "--ledger", str(ledger), "--type", "Asset", "--where", "name=P-8"],
+    )
+    assert code == 0
+    assert json.loads(empty) == []
+
+    code, nothing, err = _run(
+        capsysbinary,
+        ["query", "--ledger", str(ledger), "--type", "Asset", "--where", "name"],
+    )
+    assert code == 2
+    assert nothing == b""
+    assert err.startswith(b"malleus-compiler: ")
+
+
+def test_trace_reaches_the_retained_plan_source_and_capture(
+    tmp_path: Path, capsysbinary
+) -> None:
+    api = _api()
+    ledger, plan_out, _, _ = _admitted_history(capsysbinary, tmp_path)
+
+    trace = _emitted(
+        capsysbinary,
+        ["trace", "--ledger", str(ledger), "--record-id", "asset:P-7"],
+    )
+
+    plan_bytes = plan_out.read_bytes()
+    assert trace["record_id"] == "asset:P-7"
+    assert trace["record_type"] == "Asset"
+    assert trace["change_set_id"] == "change:plan:inspection-note:1"
+    assert trace["population_plan"] == {
+        "plan_id": "plan:inspection-note:1",
+        "sha256": _digest(plan_bytes),
+    }
+    assert trace["history_profile"] == {
+        "profile_id": "source-assertion",
+        "sha256": api.SOURCE_ASSERTION_PROFILE.identity,
+    }
+    assert trace["sources"] == [
+        {
+            "record_id": SOURCE_ID,
+            "sha256": _digest((FIXTURE / "reading.json").read_bytes()),
+        }
+    ]
+    assert {item["record_id"] for item in trace["evidence"]} == {
+        "profile:source-assertion",
+        "plan:inspection-note:1",
+        CAPTURE_ID,
+        "plan:inspection-note:1:gaps",
+    }
+    assert trace["derivations"] == [
+        {
+            "locator": "asr:001",
+            "path": ["properties", "name"],
+            "record_id": "asset:P-7",
+            "source_id": SOURCE_ID,
+        }
+    ]
+    assert trace["supersedes_record_id"] is None
+    assert trace["superseded_by"] is None
+    assert trace["valid_from"] == {"kind": "ORDER_ONLY", "value": CAPTURE_ID}
+
+
+def test_cli_chain_equals_the_library_route_on_the_inspection_note_fixture(
+    tmp_path: Path, capsysbinary
+) -> None:
+    api = _api()
+    cli_root = tmp_path / "cli"
+    cli_root.mkdir()
+
+    code, artifact, err = _run(capsysbinary, ["contract", *_contract_arguments()])
+    assert code == 0, err.decode()
+    ledger, plan_out, capture_summary, admitted = _admitted_history(
+        capsysbinary, cli_root
+    )
+    records_out = cli_root / "records.json"
+    _emitted(
+        capsysbinary,
+        [
+            "replay",
+            "--ledger",
+            str(ledger),
+            "--records-out",
+            str(records_out),
+            "--receipt-out",
+            str(cli_root / "receipt.json"),
+        ],
+    )
+    _run(capsysbinary, ["query", "--ledger", str(ledger), "--type", "Asset"])
+    _emitted(
+        capsysbinary,
+        ["trace", "--ledger", str(ledger), "--record-id", "asset:P-7"],
+    )
+
+    library = _library_route(tmp_path / "library-history.jsonl")
+    exported = json.loads(records_out.read_bytes())
+    fixture_plan = json.loads((FIXTURE / "document-plan.json").read_bytes())
+    fixture_change = json.loads((FIXTURE / "document-change.json").read_bytes())
+
+    assert json.loads(artifact)["grammar"] == (
+        "malleus.validated-contract-artifact/private-v0"
+    )
+    assert exported == library.graph.export_records()
+    assert exported["entities"] == fixture_plan["records"]["entities"]
+    assert exported["relations"] == fixture_plan["records"]["relations"]
+    assert exported["events"] == []
+    assert exported["event_participations"] == []
+    assert exported["signals"] == []
+    assert admitted["receipt_identity"] == library.receipt.identity
+    assert admitted["graph_state_digest"] == library.graph.state_digest()
+    assert ledger.read_bytes() == (tmp_path / "library-history.jsonl").read_bytes()
+
+    # The fixture's change set cannot be reproduced from this route and the
+    # graph export is what is asserted instead. The fixture plan binds a
+    # partial effective contract composed with the seed script's own normative
+    # profile; this route composes the shipped structural one, so the bound
+    # contract identity differs before any base coordinate is compared.
+    assert fixture_change["contract_identity"] == fixture_plan["contract_identity"]
+    assert fixture_plan["contract_identity"] != capture_summary["contract_identity"]
+    assert admitted["change_set_identity"] != _digest(
+        _canonical(fixture_change)
+    )
+    assert api.STRUCTURAL_HISTORY_BUNDLE.normative_profile.identity not in json.dumps(
+        fixture_change
+    )
