@@ -2064,3 +2064,31 @@ Boundary: Semantic audit is PASS with no paper capability blocker. Full Core
 tests, packaging, governance, immutable review, and an exact final coordinate
 remain pending. The failed first run and P8 identity stay unchanged until that
 packet arrives.
+
+### E-0120, working manuscript semantics corrected before result insertion
+
+Date: 2026-09-04
+
+Review target: `paper-v4/manuscript-v4-working.md` at paper commit `dc16d1c`.
+
+Corrections: A domain history profile defines the meaning of one accepted
+change, not one ledger event. One accepted change may produce several protocol
+events. The source-assertion profile means one atomic document-capture batch,
+with `PARTIAL_IMPORT` origin, `DECLARED_CAPTURE_ONLY` completeness, and
+capture/import-order knowledge time. Assertion and domain times are optional
+per-assertion evidence. Preparation evidence may remain after a later admission
+refusal; admission itself cannot persist a partial accepted change or graph
+state.
+
+Claim guard: Result claims, accepted-run artifacts, trace coverage, embedding
+access observations, final admitted record families, and the corrected Core
+bundle remain bracketed until the corrected run and final Core coordinate are
+frozen. Query binding is stated as a replaceable post-replay artifact outside
+accepted-state, ledger, and replay identity. Producer isolation and whole-reading
+coverage are described as task instructions and observable census behavior, not
+as operating-system isolation or exhaustive-extraction guarantees.
+
+KISS decision: Keep the first run in the main text as one short structural
+refusal. Exact class names and diagnostics stay in the artifact record. Keep REA
+only as a bounded analogy between domain vocabulary and history semantics; make
+no REA mapping or Event-population claim.

@@ -63,8 +63,8 @@ The published Small Shop correction fixture is an implementation baseline, not
 a second empirical case. Its research milestone is annotated tag
 `research/small-shop-correction-replay-v1`, tag object
 `449ba25964a88ead86cc1aec337be1631cad9471`, at commit
-`e94f45c74475948dfebdc89247bfb070de0b778d`. The v4 execution checkout is
-first-run execution was bound to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
+`e94f45c74475948dfebdc89247bfb070de0b778d`. The first v4 execution was bound
+to Core commit `6488ddbfc599e8899d269f8794810f352a5d1fe0`, tree
 `6fc5e585e5058e7376ea1aef96fcb49b59107e5e`, merged only into the isolated
 paper branch at paper commit `f8d96123f86b2af41d9c67353f952d56565cf6af`.
 P6 passed at commit
