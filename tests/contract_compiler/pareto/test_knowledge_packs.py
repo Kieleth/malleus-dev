@@ -307,6 +307,32 @@ def test_edited_pack_conformance_refuses_stronger_existing_declarations(
     assert expected_path in caught.value.detail
 
 
+def test_edited_pack_conformance_refuses_a_new_mixin_on_an_existing_class() -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    edited["slots"]["local_tag"] = {"range": "string"}
+    edited["classes"]["RequiredTag"] = {
+        "mixin": True,
+        "slots": ["local_tag"],
+        "slot_usage": {"local_tag": {"required": True}},
+    }
+    edited["classes"]["QuantityValue"]["mixins"].append("RequiredTag")
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_conformance(
+            yaml.safe_dump(edited, sort_keys=False).encode(),
+            reference=reference,
+        )
+
+    assert (
+        caught.value.reason is api.PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED
+    )
+    assert "classes.QuantityValue.mixins['RequiredTag']" in caught.value.detail
+
+
 def test_pack_without_grounding_refuses_with_typed_reason() -> None:
     api = _inquisition()
     with pytest.raises(api.PackGroundingRefusal) as caught:
