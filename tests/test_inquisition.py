@@ -1839,8 +1839,15 @@ class TestSkillsAreInstallable:
             "incomplete captures, gaps, and typed refusals as results",
             "query-shaped vocabulary",
             "current private-v0 shape, not a stable wire",
+            "reading object is illustrative input, not a live grammar or closed shape",
             "reading_bytes`, `capture_bytes`, `capture_id`, `plan_id`, `contract_identity`, `records`, and `supersessions",
             "canonical JSON bytes",
+            "after whitespace normalization",
+            "must name a known reading block",
+            "If `formalized_by` is empty, at least one typed gap is required",
+            "Every formalization `record_id` and `path` must resolve",
+            "Every `nothing_assertable` block ID must exist",
+            "CALCULATED`, `CONTESTED`, `HYPOTHESISED`, `MEASURED`, `NEGATED`, or `STATED",
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
             "MODALITY_NOT_EXPRESSIBLE",
@@ -1906,20 +1913,50 @@ class TestSkillsAreInstallable:
         assert "malleus-compiler contract" in installed
         assert "neutral population plan" in installed
 
-    def test_nascent_document_template_runs_through_the_public_adapter(self):
+    def test_nascent_document_template_runs_through_the_public_adapter(
+        self, tmp_path, capsys
+    ):
         from hashlib import sha256
         from importlib import import_module
         from inspect import signature
 
-        skill = (
-            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
-        ).read_text(encoding="utf-8")
+        assert main(
+            ["install-skills", "--agent", "codex", "--project", str(tmp_path)]
+        ) == 0
+        capsys.readouterr()
+        installed_skill = (
+            tmp_path / ".codex" / "skills" / "malleus-acolyte" / "SKILL.md"
+        )
+        source_skill = self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        assert installed_skill.read_bytes() == source_skill.read_bytes()
+        skill = installed_skill.read_text(encoding="utf-8")
         template_region = skill.split(
             "<!-- malleus-nascent-document-template:start -->", 1
         )[1].split("<!-- malleus-nascent-document-template:end -->", 1)[0]
         template = json.loads(template_region.split("```json", 1)[1].split("```", 1)[0])
         assert "schema" not in template
-        assert template["documentation_example"] == "nascent-document-input"
+        assert "documentation_example" not in template
+        assert "schema" not in template["reading"]
+        assert set(template) == {
+            "accepted_gap_kinds",
+            "accepted_modalities",
+            "capture",
+            "capture_id",
+            "contract_identity",
+            "plan_id",
+            "reading",
+            "records",
+            "supersessions",
+        }
+        modalities = [
+            "CALCULATED",
+            "CONTESTED",
+            "HYPOTHESISED",
+            "MEASURED",
+            "NEGATED",
+            "STATED",
+        ]
+        assert template["accepted_modalities"] == modalities
         gap_kinds = [
             "INTERVAL_NOT_EXPRESSIBLE",
             "AGGREGATE_ONLY",
@@ -1972,6 +2009,7 @@ class TestSkillsAreInstallable:
         }
 
         compiler = import_module("malleus.compiler")
+        assert capture["schema"] == compiler.DOCUMENT_CAPTURE_GRAMMAR
         assert tuple(signature(compiler.adapt_document_assertions).parameters) == (
             "reading_bytes",
             "capture_bytes",
