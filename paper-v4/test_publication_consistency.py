@@ -26,6 +26,9 @@ SHOP = (
     ROOT
     / "research/ontology_driven_kg_realization/experiments/small_shop/public_population"
 )
+# The Small Shop domain is a controlled transcription of Table 1 of Fahland's
+# event-knowledge-graph chapter. Every fixture input set declares this DOI.
+FIXTURE_DOI = "10.1007/978-3-031-08848-3_9"
 
 
 def _text(path: Path) -> str:
@@ -106,6 +109,60 @@ def test_publication_claims_match_frozen_v3_producer_results() -> None:
             assert facts in body
             assert classes in body
             assert rows in body
+
+
+def test_the_calibration_fixture_is_attributed_to_its_source() -> None:
+    """The shop is transcribed, not invented; the publications must say whose."""
+
+    fixtures = ROOT / "research/ontology_driven_kg_realization/fixtures"
+    declarations = sorted(fixtures.glob("small_shop_fulfilment*/**/manifest.json")) + sorted(
+        fixtures.glob("small_shop_fulfilment*/**/attribution.json")
+    )
+    assert declarations, "no Small Shop fixture declarations found"
+    attributions = []
+    for path in declarations:
+        document = json.loads(path.read_bytes())
+        attribution = document.get("source_attribution", document)
+        if "doi" not in attribution:
+            continue
+        attributions.append(attribution)
+    assert attributions
+    for attribution in attributions:
+        assert attribution["doi"] == FIXTURE_DOI
+        assert attribution["source_locator"] == "Table 1"
+        assert (
+            attribution["transcription_classification"]
+            == "CONTROLLED_FIXTURE_TRANSCRIPTION"
+        )
+
+    bibliography = _text(PAPER / "arxiv/references.bib")
+    assert "@incollection{fahland2022ekg," in bibliography
+    assert "Fahland, Dirk" in bibliography
+    assert "Process Mining Handbook" in bibliography
+    assert "Springer International Publishing" in bibliography
+    assert "2022" in bibliography
+    assert r"\citep{fahland2022ekg}" in _text(TEX)
+
+    for publication in (MANUSCRIPT, TEX, README):
+        body = _text(publication)
+        assert FIXTURE_DOI in body
+        assert "controlled transcription of Table" in body
+        # The shop is never presented as a domain of our own design.
+        assert "logistics" not in body
+
+    for publication in (MANUSCRIPT, TEX):
+        body = _text(publication)
+        assert "CONTROLLED" in body and "FIXTURE" in body and "TRANSCRIPTION" in body
+        assert "The domain is not ours." in body
+        assert (
+            "The settlement relation between a payment and its two invoices is "
+            "declared by the fixture and not read from the source"
+        ) in body
+        assert (
+            "The fixture holds no Event record, because event-graph nodes are "
+            "outside the transcription"
+        ) in body
+        assert "nothing here evaluates the chapter it transcribes" in body
 
 
 def test_publication_claims_match_the_calibration_fixture() -> None:

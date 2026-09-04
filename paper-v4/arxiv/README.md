@@ -23,8 +23,12 @@ malleus_paper_env="$PWD/private/paper-v4-cp312"
 
 ## Reproduce the calibration fixture
 
-The logistics shop fixture of Section 4.1 needs no private input and no locked
-interpreter. From the repository root:
+The Small Shop fixture of Section 4.1 is a controlled transcription of Table 1 of
+Fahland, "Process Mining over Multiple Behavioral Dimensions with Event Knowledge
+Graphs", doi 10.1007/978-3-031-08848-3_9; each input set records its own accepted
+and excluded claims in
+`research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment*/input/attribution.json`.
+It needs no private input and no locked interpreter. From the repository root:
 
 ```sh
 python -m research.ontology_driven_kg_realization.experiments.small_shop.public_population.run \
