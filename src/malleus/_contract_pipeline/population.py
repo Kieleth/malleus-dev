@@ -914,14 +914,14 @@ def compile_population_plan(
             PopulationPlanRefusalReason.IDENTITY_MISMATCH,
             "plan and domain-history profile disagree",
         )
-    occurrence_events_admitted = bool(
-        selected_profile is not None
-        and selected_profile.semantic_unit == "OCCURRENCE"
-        and selected_profile.ontology_roles["event"]
+    event_records_admitted = bool(
+        selected_profile is not None and selected_profile.ontology_roles["event"]
     )
     allowed_families = {"entities", "relations"}
-    if occurrence_events_admitted:
-        allowed_families.update({"events", "event_participations"})
+    if event_records_admitted:
+        allowed_families.add("events")
+        if contract_view.has_type("EventParticipation"):
+            allowed_families.add("event_participations")
 
     adapter = _object(
         root["adapter"],
