@@ -132,6 +132,83 @@ Then resolve by verdict:
 Read ADOPTION_GUIDE.md once per project before schema work; it is your
 operating manual and this skill is its enforcement arm.
 
+## Starting a project with no schema
+
+Use this path when the project has no accepted domain schema or semantic
+history yet. Every generated ontology, record set, and population is a
+proposal, not accepted knowledge. Do not ask for or accept competency questions,
+answer keys, query bindings, or evaluation criteria as inputs to ontology
+construction or population. They may inspect the replayed graph only after the
+population is frozen.
+
+1. **Retain the source boundary.** Identify the exact source bytes and their
+   locators. Model only concepts, properties, relations, values, and distinctions
+   materially supported by those bytes. Never invent a missing value, count,
+   record, relation, or epistemic status. Do not collapse two source concepts
+   merely because the current vocabulary cannot distinguish them.
+2. **Choose the Malleus level and, when governed history is needed, its history
+   profile.** A schema or typed graph does not require a semantic ledger. For a
+   governed history, choose `state-version`, `source-assertion`, or `object-event`
+   explicitly. The last is declarative today: Event population refuses until
+   Core publishes that operation family. Record any custom profile as exact
+   bytes. Never infer a history model from the first record or from ledger order.
+3. **Look for vocabulary before inventing it.** Inspect the optional
+   `metrology`, `chronology`, and `research` packs. Import only what the domain
+   needs. Check a copied pack with `malleus-inquisitor pack-conformance`; extend
+   an existing pack class through a new subclass rather than weakening its
+   surface.
+
+   Before you propose a concept that could belong to a pack, ground it. Name the
+   area of knowledge it comes from in an existing taxonomy (the Dewey Decimal
+   Classification number, or the field in the outline of academic disciplines),
+   name the seminal vocabulary in that area, borrow its terms and their
+   definitions, and record the citation. Invent a term only when the grounding
+   search finds none, and say so in the record.
+
+4. **Propose the project ontology.** Import `linkml:types`, the Malleus root, and
+   only the selected packs. Derive domain records from Malleus roles directly or
+   through pack types. Keep instances out of schema vocabulary: source values,
+   identifiers, conclusions, and wording are data, not class, slot, relation, or
+   enum names. Keep protocol, provenance, locators, ledger, policy, and query
+   machinery out of the domain ontology. Labels identify records; they never
+   carry an otherwise untyped assertion.
+5. **Run the structural gates and compile exact sources.** Run
+   `malleus-inquisitor pack-grounding schema/your_project.yaml --role PROJECT`.
+   If a pack was copied, also run its conformance command. Then run
+   `malleus-compiler contract` with the project, root, LinkML types, and selected
+   pack files supplied under their exact import locators. The command-line
+   compiler stops at contract compilation. Population, admission, replay, and
+   query use the public `malleus.compiler` Python facade.
+6. **Capture before formalising.** For document sources, make one exact document
+   capture under `DOCUMENT_CAPTURE_GRAMMAR`: retain verbatim assertions,
+   attribution, block locators, modality, optional assertion or domain time,
+   formalisation targets, and typed gaps. Pass it to
+   `adapt_document_assertions`. For structured sources, write a source-specific
+   adapter that emits the same neutral population plan. Preserve source units
+   and values. Any normalization needs its own explicit evidence-bearing
+   operation.
+7. **Compile, then admit.** Pass the proposed plan to
+   `compile_population_plan`, then `prepare_population_change`, then the selected
+   `KnowledgeChangeHistory`. The plan must bind its compiled contract, history
+   profile, adapter, source bytes, evidence, records, field-level derivations,
+   typed gaps, and valid time. `NO_DOMAIN_CHANGE` is a valid outcome and never
+   triggers fallback population. A refusal changes no accepted history.
+8. **Reopen, replay, and inspect.** Reopen the history from its retained ledger,
+   replay the graph, query through the graph's public read methods, and use
+   `trace_population_record` to reach the exact plan, source, capture, and field
+   derivations behind an accepted record. Do not call a structurally valid record
+   true merely because it was admitted.
+9. **Grow only from recorded gaps.** If typed gaps cluster around a missing
+   class, optional slot, or enum value, propose an additive ontology revision,
+   pass the prior and proposed contracts to `compile_contract_revision`, record
+   the migration receipt, and repeat from the retained source. Reach for a pack
+   before a new root concept. Do not silently narrow or delete a definition that
+   already has instances.
+10. **Stop honestly.** Stop when another addition would require invention.
+    Preserve incomplete captures, gaps, and typed refusals as results. Do not add
+    a fallback mapper, hand-built accepted state, or query-shaped vocabulary to
+    make the run look complete.
+
 ## Standing orders (the playbook, condensed)
 
 1. Schema first, code second. When the human names a new domain concept,

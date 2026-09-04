@@ -1773,26 +1773,39 @@ class TestSkillsAreInstallable:
         skill = (
             self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
         ).read_text(encoding="utf-8")
-        section = skill.split("## Starting a project with no schema", 1)[1].split(
-            "\n## ", 1
-        )[0]
+        section = " ".join(
+            skill.split("## Starting a project with no schema", 1)[1]
+            .split("\n## ", 1)[0]
+            .split()
+        )
         required = (
             "proposal, not accepted knowledge",
             "Do not ask for or accept competency questions",
+            "Model only concepts, properties, relations, values, and distinctions materially supported",
+            "Never invent a missing value, count, record, relation, or epistemic status",
+            "Do not collapse two source concepts",
             "metrology`, `chronology`, and `research",
             "pack-grounding",
             "pack-conformance",
             "state-version`, `source-assertion`, or `object-event",
             "malleus-compiler contract",
+            "Keep instances out of schema vocabulary",
+            "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
+            "Labels identify records",
             "document capture",
             "neutral population plan",
+            "Preserve source units and values",
+            "explicit evidence-bearing operation",
             "typed gaps",
             "NO_DOMAIN_CHANGE",
             "compile_population_plan",
             "prepare_population_change",
             "KnowledgeChangeHistory",
             "trace_population_record",
+            "compile_contract_revision",
             "Stop when another addition would require invention",
+            "incomplete captures, gaps, and typed refusals as results",
+            "query-shaped vocabulary",
         )
         for phrase in required:
             assert phrase in section
