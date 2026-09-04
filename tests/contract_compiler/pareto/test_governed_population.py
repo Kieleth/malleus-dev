@@ -28,6 +28,10 @@ from tests.contract_compiler.pareto.test_knowledge_change_history import (
     _record_change,
     _admit_record_change,
 )
+from tests.contract_compiler.pareto.test_domain_history_profile import (
+    SOURCE_ASSERTION_PROFILE_DATA,
+    STATE_VERSION_PROFILE_DATA,
+)
 from tests.contract_compiler.pareto.test_population_plan import (
     PROFILE_BYTES,
     _plan,
@@ -45,30 +49,9 @@ from tests.contract_compiler.pareto.test_validated_contract import (
 )
 
 
-PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v0"
-STATE_VERSION_PROFILE_DATA = {
-    "grammar": PROFILE_GRAMMAR,
-    "grounding": {
-        "note": "minimal artifact: identity and unit only; full fields per P6",
-        "taxonomy": "temporal database versioning; Small Shop walkthrough",
-    },
-    "origin": "EMPTY",
-    "profile_id": "state-version",
-    "semantic_unit": "STATE_VERSION",
-}
-SOURCE_ASSERTION_PROFILE_DATA = {
-    "grammar": PROFILE_GRAMMAR,
-    "grounding": {
-        "note": "minimal artifact: identity and unit only; full fields per P6",
-        "taxonomy": "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications",
-    },
-    "origin": "EMPTY",
-    "profile_id": "source-assertion",
-    "semantic_unit": "ASSERTION",
-}
 PROFILE_IDENTITIES = {
-    "source-assertion": "sha256:1a24e12fc35b8a88dad634f4b19387cb451a3bfbe35cf7b9021159310a142f3c",
-    "state-version": "sha256:a6a12681534884f17f233aaa2bde382d730e2496c17216aa3b3ae8c24c9a1da8",
+    "source-assertion": "sha256:2317d88fd236fb63d5f4b68262619de6b5874946ab2ea8144b1b9a2995f471d5",
+    "state-version": "sha256:b18f3129942761e03ce754af6cec8c689c94b91468aa105a423f5b27ddf20dc3",
 }
 NEUTRAL_PROFILE_DATA = json.loads(PROFILE_BYTES)
 SHOP_FIXTURE = (
@@ -248,7 +231,7 @@ def _custom_evidence_history(tmp_path: Path):
         (STATE_VERSION_PROFILE_DATA, "STATE_VERSION_PROFILE"),
     ],
 )
-def test_minimal_profiles_are_canonical_immutable_and_content_addressed(
+def test_profiles_are_canonical_immutable_and_content_addressed(
     profile_data: dict[str, object], constant_name: str
 ) -> None:
     compiled = population.DomainHistoryProfile.from_data(deepcopy(profile_data))
@@ -258,11 +241,16 @@ def test_minimal_profiles_are_canonical_immutable_and_content_addressed(
     assert compiled.canonical_bytes == _canonical(profile_data)
     assert compiled.identity == PROFILE_IDENTITIES[compiled.profile_id]
     assert set(compiled.data) == {
+        "change_semantics",
+        "genesis",
         "grammar",
         "grounding",
+        "ontology_roles",
         "origin",
         "profile_id",
+        "projection_rule_family",
         "semantic_unit",
+        "time_semantics",
     }
     with pytest.raises(TypeError):
         compiled.data["grounding"]["note"] = "changed"
@@ -270,19 +258,19 @@ def test_minimal_profiles_are_canonical_immutable_and_content_addressed(
         compiled.identity = "sha256:" + "0" * 64
 
 
-def test_minimal_profile_exposes_the_exact_value_bound_by_its_bytes() -> None:
+def test_profile_exposes_the_exact_value_bound_by_its_bytes() -> None:
     value = deepcopy(STATE_VERSION_PROFILE_DATA)
     value["grounding"] = {1: "integer key is canonicalized"}
 
     compiled = population.DomainHistoryProfile.from_data(value)
 
-    assert compiled.data == json.loads(compiled.canonical_bytes)
+    assert compiled.canonical_bytes == _canonical(value)
     assert compiled.grounding == {"1": "integer key is canonicalized"}
     with pytest.raises(TypeError):
         compiled.grounding["1"] = "changed"
 
 
-def test_minimal_profile_rebuilds_a_directly_constructed_mutable_value() -> None:
+def test_profile_rebuilds_a_directly_constructed_mutable_value() -> None:
     canonical_bytes = _canonical(STATE_VERSION_PROFILE_DATA)
     mutable_data = deepcopy(STATE_VERSION_PROFILE_DATA)
     forged = population.DomainHistoryProfile(
@@ -292,19 +280,25 @@ def test_minimal_profile_rebuilds_a_directly_constructed_mutable_value() -> None
         profile_id="state-version",
         semantic_unit="STATE_VERSION",
         origin="EMPTY",
+        genesis=mutable_data["genesis"],
+        time_semantics=mutable_data["time_semantics"],
+        change_semantics=mutable_data["change_semantics"],
+        ontology_roles=mutable_data["ontology_roles"],
+        projection_rule_family=mutable_data["projection_rule_family"],
         grounding=mutable_data["grounding"],
     )
 
     rebuilt = population.DomainHistoryProfile.from_data(forged)
 
-    assert rebuilt == forged
+    assert rebuilt.canonical_bytes == forged.canonical_bytes
+    assert rebuilt.identity == forged.identity
     assert rebuilt is not forged
     with pytest.raises(TypeError):
         rebuilt.grounding["note"] = "changed"
 
 
 @pytest.mark.parametrize("canonical_bytes", [b"not-json", b'{"grammar":'])
-def test_minimal_profile_wraps_malformed_instance_bytes(
+def test_profile_wraps_malformed_instance_bytes(
     canonical_bytes: bytes,
 ) -> None:
     forged = population.DomainHistoryProfile(
@@ -314,6 +308,11 @@ def test_minimal_profile_wraps_malformed_instance_bytes(
         profile_id="state-version",
         semantic_unit="STATE_VERSION",
         origin="EMPTY",
+        genesis=STATE_VERSION_PROFILE_DATA["genesis"],
+        time_semantics=STATE_VERSION_PROFILE_DATA["time_semantics"],
+        change_semantics=STATE_VERSION_PROFILE_DATA["change_semantics"],
+        ontology_roles=STATE_VERSION_PROFILE_DATA["ontology_roles"],
+        projection_rule_family=STATE_VERSION_PROFILE_DATA["projection_rule_family"],
         grounding=STATE_VERSION_PROFILE_DATA["grounding"],
     )
 
@@ -338,9 +337,7 @@ def test_minimal_profile_wraps_malformed_instance_bytes(
         ("nonobject-grounding", "GROUNDING_REQUIRED"),
     ],
 )
-def test_minimal_profile_refuses_undeclared_semantics(
-    mutation: str, reason: str
-) -> None:
+def test_profile_refuses_undeclared_semantics(mutation: str, reason: str) -> None:
     value = deepcopy(STATE_VERSION_PROFILE_DATA)
     if mutation == "extra":
         value["extra"] = True

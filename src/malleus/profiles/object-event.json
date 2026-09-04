@@ -1,0 +1,39 @@
+{
+  "change_semantics": {
+    "addition": "APPEND_IMMUTABLE_EVENT",
+    "correction": "APPEND_CORRECTING_EVENT",
+    "retraction": "APPEND_RETRACTING_EVENT",
+    "transition": "DERIVE_FROM_EVENT_ORDER"
+  },
+  "genesis": {
+    "boundary": "FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH",
+    "completeness_scope": "DECLARED_EVENT_SOURCES_ONLY"
+  },
+  "grammar": "malleus.domain-history-profile/private-v1",
+  "grounding": {
+    "citations": [
+      "OCEL 2.0"
+    ],
+    "taxonomy": "object-centric event log"
+  },
+  "ontology_roles": {
+    "claim": [],
+    "entity": [
+      "Entity"
+    ],
+    "event": [
+      "Event"
+    ],
+    "state": []
+  },
+  "origin": "EMPTY",
+  "profile_id": "object-event",
+  "projection_rule_family": "CURRENT_STATE_DERIVED_FROM_EVENTS",
+  "semantic_unit": "OCCURRENCE",
+  "time_semantics": {
+    "assertion_time": "NOT_REPRESENTED",
+    "domain_time": "KNOWLEDGE_VALID_TIME",
+    "knowledge_valid_time": "DOMAIN_TIME",
+    "transaction_time": "LEDGER_TRANSACTION_TIME"
+  }
+}

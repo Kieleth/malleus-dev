@@ -14,6 +14,9 @@ import pytest
 import malleus
 from malleus import KnowledgeGraph
 from malleus._contract_pipeline.knowledge import KnowledgeOperation, KnowledgeValidTime
+from tests.contract_compiler.pareto.test_domain_history_profile import (
+    STATE_VERSION_PROFILE_DATA,
+)
 from tests.contract_compiler.pareto.test_knowledge_change_history import (
     TRANSACTION_TIME,
     _admit_record_change,
@@ -67,6 +70,7 @@ P1_SYMBOLS = frozenset(
 P2_SYMBOLS = frozenset(
     {
         "DomainHistoryProfile",
+        "OBJECT_EVENT_PROFILE",
         "PopulationPreparation",
         "SOURCE_ASSERTION_PROFILE",
         "STATE_VERSION_PROFILE",
@@ -100,15 +104,7 @@ P1_REASONS = frozenset(
         "UNSUPPORTED_VALID_TIME",
     }
 )
-PROFILE_BYTES = _canonical(
-    {
-        "grammar": "malleus.domain-history-profile/private-v0",
-        "grounding": {"basis": "neutral P1 test"},
-        "origin": "EMPTY",
-        "profile_id": "state-version",
-        "semantic_unit": "STATE_VERSION",
-    }
-)
+PROFILE_BYTES = _canonical(STATE_VERSION_PROFILE_DATA)
 
 
 def _digest(source: bytes) -> str:

@@ -7,6 +7,7 @@ from hashlib import sha256
 from importlib import import_module
 import json
 from pathlib import Path
+import tomllib
 
 import pytest
 
@@ -182,8 +183,18 @@ def test_three_full_profiles_are_public_canonical_and_explicit(
         role: tuple(types) for role, types in data["ontology_roles"].items()
     }
     assert profile.projection_rule_family == data["projection_rule_family"]
+    artifact = ROOT / "src/malleus/profiles" / f"{profile.profile_id}.json"
+    assert json.loads(artifact.read_bytes()) == data
     with pytest.raises(TypeError):
         profile.time_semantics["domain_time"] = "changed"
+
+
+def test_profile_artifacts_are_part_of_the_installed_package() -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert (
+        "/src/malleus/profiles/*.json" in project["tool"]["hatch"]["build"]["include"]
+    )
 
 
 def test_source_assertion_profile_keeps_claims_in_evidence_and_requires_trace() -> None:

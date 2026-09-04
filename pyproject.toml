@@ -79,6 +79,7 @@ include = [
     "/src/malleus/_contract_binding_profile.json",
     "/src/malleus/_contract_compiler.py",
     "/src/malleus/_contract_compiler_profile.json",
+    "/src/malleus/profiles/*.json",
     "/src/malleus/_contract_linkml_adapter.py",
     "/src/malleus/_contract_source.py",
     "/src/malleus/_contract_pipeline/__init__.py",

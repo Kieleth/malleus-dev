@@ -8,6 +8,7 @@ from datetime import datetime
 from enum import Enum
 from hashlib import sha256
 import json
+from pathlib import Path
 from types import MappingProxyType
 
 from malleus._contract_pipeline.knowledge import (
@@ -36,6 +37,7 @@ __all__ = (
     "PopulationPlanRefusalReason",
     "PopulationPlanStatus",
     "PopulationPreparation",
+    "OBJECT_EVENT_PROFILE",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
     "compile_population_plan",
@@ -68,12 +70,44 @@ _OPERATION_TYPES = (
     ("relations", "CREATE_RELATION"),
 )
 _OPERATION_TYPE_BY_FAMILY = MappingProxyType(dict(_OPERATION_TYPES))
-_PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v0"
+_PROFILE_GRAMMAR = "malleus.domain-history-profile/private-v1"
 _PROFILE_FIELDS = frozenset(
-    {"grammar", "grounding", "origin", "profile_id", "semantic_unit"}
+    {
+        "change_semantics",
+        "genesis",
+        "grammar",
+        "grounding",
+        "ontology_roles",
+        "origin",
+        "profile_id",
+        "projection_rule_family",
+        "semantic_unit",
+        "time_semantics",
+    }
+)
+_PROFILE_CHANGE_FIELDS = frozenset(
+    {"addition", "correction", "retraction", "transition"}
+)
+_PROFILE_GENESIS_FIELDS = frozenset({"boundary", "completeness_scope"})
+_PROFILE_ROLE_FIELDS = frozenset({"claim", "entity", "event", "state"})
+_PROFILE_TIME_FIELDS = frozenset(
+    {
+        "assertion_time",
+        "domain_time",
+        "knowledge_valid_time",
+        "transaction_time",
+    }
 )
 _PROFILE_ORIGINS = frozenset(
     {"EMPTY", "HISTORICAL_RECONSTRUCTION", "PARTIAL_IMPORT", "SNAPSHOT"}
+)
+_PROFILE_GENESIS_BOUNDARIES = MappingProxyType(
+    {
+        "EMPTY": "FIRST_ACCEPTED_CHANGE_SET_OVER_EMPTY_GRAPH",
+        "HISTORICAL_RECONSTRUCTION": "RETAINED_HISTORICAL_RECONSTRUCTION",
+        "PARTIAL_IMPORT": "RETAINED_PARTIAL_IMPORT",
+        "SNAPSHOT": "RETAINED_SNAPSHOT",
+    }
 )
 _PROFILE_SEMANTIC_UNITS = frozenset(
     {"ASSERTION", "COMMITMENT", "COMPOSITION", "OCCURRENCE", "STATE_VERSION"}
@@ -426,7 +460,7 @@ def _verify_retention_event(
 
 @dataclass(frozen=True, slots=True)
 class DomainHistoryProfile:
-    """Canonical minimal statement of one adopter's domain-history semantics."""
+    """Canonical statement of one adopter's domain-history semantics."""
 
     canonical_bytes: bytes
     identity: str
@@ -434,6 +468,11 @@ class DomainHistoryProfile:
     profile_id: str
     semantic_unit: str
     origin: str
+    genesis: Mapping[str, object]
+    time_semantics: Mapping[str, object]
+    change_semantics: Mapping[str, object]
+    ontology_roles: Mapping[str, object]
+    projection_rule_family: str
     grounding: Mapping[str, object]
 
     @classmethod
@@ -447,7 +486,20 @@ class DomainHistoryProfile:
                     "domain-history profile bytes are not valid JSON",
                 ) from error
             rebuilt = cls.from_data(decoded)
-            if rebuilt != value:
+            if (
+                rebuilt.canonical_bytes != value.canonical_bytes
+                or rebuilt.identity != value.identity
+                or _thaw(rebuilt.data) != _thaw(value.data)
+                or rebuilt.profile_id != value.profile_id
+                or rebuilt.semantic_unit != value.semantic_unit
+                or rebuilt.origin != value.origin
+                or _thaw(rebuilt.genesis) != _thaw(value.genesis)
+                or _thaw(rebuilt.time_semantics) != _thaw(value.time_semantics)
+                or _thaw(rebuilt.change_semantics) != _thaw(value.change_semantics)
+                or _thaw(rebuilt.ontology_roles) != _thaw(value.ontology_roles)
+                or rebuilt.projection_rule_family != value.projection_rule_family
+                or _thaw(rebuilt.grounding) != _thaw(value.grounding)
+            ):
                 raise _refuse(
                     PopulationPlanRefusalReason.IDENTITY_MISMATCH,
                     "domain-history profile fields do not match its bytes",
@@ -516,6 +568,33 @@ class DomainHistoryProfile:
                 PopulationPlanRefusalReason.UNKNOWN_ORIGIN,
                 f"unknown domain-history origin: {origin}",
             )
+        genesis = _profile_text_map(
+            root,
+            "genesis",
+            _PROFILE_GENESIS_FIELDS,
+        )
+        expected_boundary = _PROFILE_GENESIS_BOUNDARIES[origin]
+        if genesis["boundary"] != expected_boundary:
+            raise _refuse(
+                PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                f"{origin} origin requires genesis boundary: {expected_boundary}",
+            )
+        _profile_text_map(
+            root,
+            "time_semantics",
+            _PROFILE_TIME_FIELDS,
+        )
+        _profile_text_map(
+            root,
+            "change_semantics",
+            _PROFILE_CHANGE_FIELDS,
+        )
+        _profile_roles(root["ontology_roles"])
+        projection_rule_family = _text(
+            root["projection_rule_family"],
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            "domain-history projection rule family is required",
+        )
         grounding = _object(
             root["grounding"],
             PopulationPlanRefusalReason.GROUNDING_REQUIRED,
@@ -529,7 +608,15 @@ class DomainHistoryProfile:
         frozen = _freeze(root)
         assert isinstance(frozen, Mapping)
         frozen_grounding = frozen["grounding"]
+        frozen_genesis = frozen["genesis"]
+        frozen_time_semantics = frozen["time_semantics"]
+        frozen_change_semantics = frozen["change_semantics"]
+        frozen_ontology_roles = frozen["ontology_roles"]
         assert isinstance(frozen_grounding, Mapping)
+        assert isinstance(frozen_genesis, Mapping)
+        assert isinstance(frozen_time_semantics, Mapping)
+        assert isinstance(frozen_change_semantics, Mapping)
+        assert isinstance(frozen_ontology_roles, Mapping)
         return cls(
             canonical_bytes=canonical,
             identity=_digest(canonical),
@@ -537,36 +624,91 @@ class DomainHistoryProfile:
             profile_id=profile_id,
             semantic_unit=semantic_unit,
             origin=origin,
+            genesis=frozen_genesis,
+            time_semantics=frozen_time_semantics,
+            change_semantics=frozen_change_semantics,
+            ontology_roles=frozen_ontology_roles,
+            projection_rule_family=projection_rule_family,
             grounding=frozen_grounding,
         )
 
 
-SOURCE_ASSERTION_PROFILE = DomainHistoryProfile.from_data(
-    {
-        "grammar": _PROFILE_GRAMMAR,
-        "grounding": {
-            "note": "minimal artifact: identity and unit only; full fields per P6",
-            "taxonomy": (
-                "Micropublications (Clark, Ciccarese, Goble 2014); nanopublications"
-            ),
-        },
-        "origin": "EMPTY",
-        "profile_id": "source-assertion",
-        "semantic_unit": "ASSERTION",
+def _profile_text_map(
+    root: Mapping[str, object],
+    field: str,
+    fields: frozenset[str],
+) -> dict[str, str]:
+    value = _object(
+        root[field],
+        PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+        f"domain-history {field} must be an object",
+    )
+    _exact(
+        value,
+        fields,
+        PopulationPlanRefusalReason.FIELDS_NOT_CLOSED,
+        f"domain-history {field} fields are not closed",
+    )
+    return {
+        key: _text(
+            value[key],
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            f"domain-history {field}.{key} is required",
+        )
+        for key in sorted(fields)
     }
-)
-STATE_VERSION_PROFILE = DomainHistoryProfile.from_data(
-    {
-        "grammar": _PROFILE_GRAMMAR,
-        "grounding": {
-            "note": "minimal artifact: identity and unit only; full fields per P6",
-            "taxonomy": "temporal database versioning; Small Shop walkthrough",
-        },
-        "origin": "EMPTY",
-        "profile_id": "state-version",
-        "semantic_unit": "STATE_VERSION",
-    }
-)
+
+
+def _profile_roles(value: object) -> dict[str, list[str]]:
+    roles = _object(
+        value,
+        PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+        "domain-history ontology roles must be an object",
+    )
+    _exact(
+        roles,
+        _PROFILE_ROLE_FIELDS,
+        PopulationPlanRefusalReason.FIELDS_NOT_CLOSED,
+        "domain-history ontology-role fields are not closed",
+    )
+    result: dict[str, list[str]] = {}
+    for role in sorted(_PROFILE_ROLE_FIELDS):
+        raw_types = _array(
+            roles[role],
+            PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+            f"domain-history {role} role must be an array",
+        )
+        types = [
+            _text(
+                value,
+                PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                f"domain-history {role} role contains an invalid type",
+            )
+            for value in raw_types
+        ]
+        if types != sorted(set(types)):
+            raise _refuse(
+                PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
+                f"domain-history {role} role types must be sorted and unique",
+            )
+        result[role] = types
+    return result
+
+
+def _shipped_profile(name: str) -> DomainHistoryProfile:
+    path = Path(__file__).resolve().parents[1] / "profiles" / f"{name}.json"
+    try:
+        data = json.loads(path.read_bytes())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RuntimeError(
+            f"cannot load shipped domain-history profile: {path}"
+        ) from error
+    return DomainHistoryProfile.from_data(data)
+
+
+SOURCE_ASSERTION_PROFILE = _shipped_profile("source-assertion")
+STATE_VERSION_PROFILE = _shipped_profile("state-version")
+OBJECT_EVENT_PROFILE = _shipped_profile("object-event")
 
 
 def _validate_contract(

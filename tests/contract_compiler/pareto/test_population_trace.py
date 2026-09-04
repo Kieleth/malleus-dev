@@ -113,7 +113,7 @@ def _retain_document_inputs(history, compiled, partial, reading: bytes, capture:
     )
 
 
-def _document_replay(tmp_path: Path):
+def _document_replay(tmp_path: Path, *, first_assertion_modality: str = "STATED"):
     api = _api()
     compiled = api.compile_linkml_contract(
         root_locator="inspection-note",
@@ -131,6 +131,7 @@ def _document_replay(tmp_path: Path):
         api, compiled, tmp_path / "document-trace.jsonl"
     )
     reading, capture, plan, _ = _inputs()
+    capture["assertions"][0]["modality"] = first_assertion_modality
     reading_bytes = _canonical(reading)
     capture_bytes = _canonical(capture)
     adapted = api.adapt_document_assertions(
@@ -270,6 +271,34 @@ def test_document_trace_reaches_assertion_locator_and_retained_capture(
     assert assertion["modality"] == "STATED"
     assert assertion["statement"] == "Pump P-7 was inspected on 2026-03-02."
     assert trace.sources[0].record_id == "source:inspection-note"
+    assert history.path.read_bytes() == ledger_before
+
+
+def test_hypothesised_graph_record_remains_qualified_by_retained_trace(
+    tmp_path: Path,
+) -> None:
+    api = _api()
+    history, replay = _document_replay(
+        tmp_path,
+        first_assertion_modality="HYPOTHESISED",
+    )
+    ledger_before = history.path.read_bytes()
+
+    trace = api.trace_population_record(replay, "inspection-of:P-7:2026-03-02")
+    capture = json.loads(
+        next(
+            item.content
+            for item in trace.evidence
+            if item.record_id == "capture:inspection-note"
+        )
+    )
+    assertion = next(item for item in capture["assertions"] if item["id"] == "asr:001")
+
+    assert trace.history_profile.projection_rule_family == (
+        "CURRENT_NON_SUPERSEDED_RECORDS_WITH_RETAINED_ASSERTION_TRACE"
+    )
+    assert assertion["modality"] == "HYPOTHESISED"
+    assert "modality" not in replay.graph.get_relation("inspection-of:P-7:2026-03-02")
     assert history.path.read_bytes() == ledger_before
 
 
