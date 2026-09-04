@@ -204,12 +204,15 @@ fallback.
    formalized, and uncaptured assertions remain invisible. If the declared
    capture remains partial, retain that limitation and never call it complete.
 7. **Compile, then admit.** Pass the proposed plan to
-   `compile_population_plan`, then `prepare_population_change`, then admit it
-   with `history.admit(...)` through `KnowledgeChangeHistory`. The plan must bind
-   its compiled contract, history profile, adapter, source bytes, evidence,
-   records, field-level derivations, typed gaps, and valid time.
-   `NO_DOMAIN_CHANGE` is a valid outcome and never triggers fallback population.
-   A refusal changes no accepted history.
+   `compile_population_plan`, then `prepare_population_change`, and keep the
+   returned `PopulationPreparation` as `prepared`. When
+   `prepared.change_set is not None`, call
+   `history.admit(change_set=prepared.change_set, ...)`. For
+   `NO_DOMAIN_CHANGE`, `prepared.change_set is None`; retain the preparation's
+   evidence and do not call `history.admit`. The plan must bind its compiled
+   contract, history profile, adapter, source bytes, evidence, records,
+   field-level derivations, typed gaps, and valid time. `NO_DOMAIN_CHANGE` never
+   triggers fallback population. A refusal changes no accepted history.
 8. **Reopen, replay, and inspect.** Reopen the history from its retained ledger,
    using `KnowledgeChangeHistory.reopen(...)`, replay the graph, query through the
    graph's public read methods, and use `trace_population_record` to reach the
