@@ -402,6 +402,52 @@ def test_governing_design_uses_the_executable_grounding_shape() -> None:
     )
 
 
+def test_governing_design_records_the_pack_revision_decisions() -> None:
+    """The design record is where the reason survives the change.
+
+    Decision 13 says why free text alone failed and why the list is QUDT's
+    rather than a coined one. Decision 14 says why the graph carries a route
+    and a digest instead of the sentence.
+    """
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+
+    for phrase in (
+        "13. A controlled quantity-kind classification in `metrology`",
+        "137 distinct strings",
+        "reuse before invent",
+        "`QuantityKindClass`",
+        "http://qudt.org/vocab/quantitykind/",
+        "keeps the source's own wording",
+        "additive",
+        "14. Claim text policy",
+        "`assertion_locator`",
+        "`statement_sha256`",
+        "`SourceAsserted` mixin",
+        "declares a licence that permits reproduction",
+        "a PDF text layer, a malleus-ocr bundle, a recon record, or a time "
+        "span in a wav file",
+    ):
+        assert phrase in normalized
+    assert normalized.index("13. A controlled quantity-kind classification") < (
+        normalized.index("14. Claim text policy")
+    )
+
+
+def test_governing_design_sketches_match_the_shipped_pack_revisions() -> None:
+    design = (ROOT / "design" / "KNOWLEDGE_PACKS.md").read_text(encoding="utf-8")
+    normalized = " ".join(design.split())
+    metrology = normalized.split("### metrology", 1)[1].split("### chronology", 1)[0]
+    research = normalized.split("### research", 1)[1].split("## Grounding", 1)[0]
+    status = normalized.split("Status:", 1)[1].split("## Why", 1)[0]
+
+    assert "`quantity_kind_class`" in metrology
+    assert "`assertion_locator`" in research
+    assert "`statement_sha256`" in research
+    assert "`licence`" in research
+    assert "0.2.0" in status
+
+
 def test_public_milestone_names_the_live_frozen_receipt_guard() -> None:
     index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
     current = (
