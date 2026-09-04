@@ -21,6 +21,22 @@ malleus_paper_env="$PWD/private/paper-v4-cp312"
 "$malleus_paper_env/bin/python" paper-v4/run_active_tests.py
 ```
 
+## Reproduce the calibration fixture
+
+The logistics shop fixture of Section 4.1 needs no private input and no locked
+interpreter. From the repository root:
+
+```sh
+python -m research.ontology_driven_kg_realization.experiments.small_shop.public_population.run \
+  --output build/small-shop-public-population
+```
+
+It writes `history.jsonl` and `evidence.json`. Running it again reopens the same
+history and emits byte-identical evidence without changing the ledger. The
+committed `research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json`
+is the expected result of a fresh run, and `test_run.py` beside it asserts that
+equality along with the current and historical record sets.
+
 ## Reproduce the experiment
 
 Run these commands from the repository root at the commit tagged `paper-v4-multimodel-v2`. That coordinate contains the v2 experiment, the two further producer runs, their human ratification records, the environment lock, and the drivers. It is based on Core commit `f9052b4783100203318d4a21a0236f3851218af1`, tree `39a1ab48b913abc26f975873792c639ee690e811`. The paper coordinate is outside the five experiment identities.
@@ -90,7 +106,7 @@ The manifest-driven harness itself is checked against the v2 run: `paper-v4/expe
 
 ## The v4 run-02 single-producer run
 
-`paper-v4/experiment-v4/run-02/` holds the fourth run, reported in Section 4.5 of the manuscript. It has no reproducer tag. It lives at the commit that carries that directory, on Core commit `4881b3a040aaafc7600d009a16ae910084ae32c2`, tree `f532210148cc43e84dfcd764742ff5cfffda10a4`. The tag `paper-v4-multimodel-v2` remains the coordinate for the v2 and v3 runs above.
+`paper-v4/experiment-v4/run-02/` holds the current run, reported in Section 4.2 of the manuscript, with its narrative in Appendix B.3 and its coordinates in Appendix A.4. It has no reproducer tag. It lives at the commit that carries that directory, on Core commit `4881b3a040aaafc7600d009a16ae910084ae32c2`, tree `f532210148cc43e84dfcd764742ff5cfffda10a4`. The tag `paper-v4-multimodel-v2` remains the coordinate for the v2 and v3 runs above.
 
 Frozen and public in that directory:
 
