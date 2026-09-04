@@ -45,6 +45,7 @@
   },
   "regions": [
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "The quick brown fox jumps.\nAMBIGUOUS TOKEN\nO0I1l",
       "human_verdict": "CORRECTED",
       "id": "fixture:multipage-control:region:page-1-body",
@@ -59,6 +60,7 @@
       "unit": "page:1"
     },
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "",
       "human_verdict": "VERIFIED_BLANK",
       "id": "fixture:multipage-control:region:page-2-blank",

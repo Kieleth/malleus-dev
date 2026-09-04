@@ -8,10 +8,11 @@ origin and license explicitly.
 
 The retained responses come from `malleus.fixture.control_reader@1`. That reader
 is a deterministic fixture producer, not a production OCR engine. It returns
-fixed readings for fixed, self-authored regions so tests can inspect the evidence
-boundary without depending on a provider, model, network, or native OCR stack.
+fixed readings or a fixed controlled failure for self-authored regions so tests
+can inspect the evidence boundary without depending on a provider, model,
+network, or native OCR stack.
 
-The three cases separate different questions:
+The four cases separate different questions:
 
 * `region-control` has two visible regions in one PNG. Its mutations cross the
   attempt and selection lineage between the regions.
@@ -21,6 +22,9 @@ The three cases separate different questions:
 * `incomplete-sequence` is a raster-only PDF containing visible logical pages
   1 of 3 and 3 of 3. Logical page 2 is absent from the source and the evidence
   census remains incomplete.
+* `failed-attempt` retains a request and controlled failure response over one
+  rasterized region. The attempt remains `FAILED / CHECK_FAILED`, and no
+  hypothesis, selection, or selected text is invented.
 
 `generate.py` owns every file below `cases/`, plus `corpus.json` and
 `checksums.json`. It writes invariant PDF metadata, fixed timestamps, canonical

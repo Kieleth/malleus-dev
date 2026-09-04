@@ -45,6 +45,13 @@ REFERENCE_READER = {
     "production_ocr": False,
 }
 RASTER_BINDINGS = {
+    "failed-attempt": (
+        (
+            "cases/failed-attempt/rasters/image-1.png",
+            "fixture:failed-attempt:raster:image-1",
+            "image:1",
+        ),
+    ),
     "region-control": (
         (
             "cases/region-control/rasters/image-1.png",
@@ -117,6 +124,7 @@ LOCAL_PATH = re.compile(
 )
 
 IMPLEMENTED_MUTATIONS = {
+    "failed-attempt": {},
     "incomplete-sequence": {
         "observed-without-raster": ((), {"page:2": "NOT_RENDERED"}),
     },
@@ -437,6 +445,7 @@ def test_manifest_is_closed_and_every_retained_file_is_listed_once() -> None:
         "runtime_binding",
     }
     assert {case["id"] for case in manifest["cases"]} == {
+        "failed-attempt",
         "region-control",
         "multipage-control",
         "incomplete-sequence",
@@ -543,7 +552,7 @@ def test_deterministic_regeneration_matches_every_retained_byte() -> None:
         text=True,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert completed.stdout == "verified 45 deterministic corpus artifacts\n"
+    assert completed.stdout == "verified 52 deterministic corpus artifacts\n"
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
@@ -670,7 +679,7 @@ def test_retained_rasters_have_bound_digests_and_dimensions(
 
 
 @pytest.mark.parametrize("case", _manifest()["cases"], ids=lambda case: case["id"])
-def test_retained_sidecars_bind_each_reading_path(case: dict[str, Any]) -> None:
+def test_retained_sidecars_bind_each_attempt_path(case: dict[str, Any]) -> None:
     bundle = _load(_artifact_path(case["bundle"]))["bundle"]
     oracle = _load(_artifact_path(case["oracle"]))
     regions = {item["id"]: item for item in bundle["regions"]}
@@ -684,9 +693,11 @@ def test_retained_sidecars_bind_each_reading_path(case: dict[str, Any]) -> None:
     )
     assert {item["request"] for item in oracle["regions"]} == set(case["requests"])
     assert {item["response"] for item in oracle["regions"]} == set(case["responses"])
-    assert {item["selected_text"] for item in oracle["regions"]} == set(
-        case["selected_texts"]
-    )
+    assert {
+        item["selected_text"]
+        for item in oracle["regions"]
+        if "selected_text" in item
+    } == set(case["selected_texts"])
 
     for expected in oracle["regions"]:
         region = regions[expected["id"]]
@@ -697,13 +708,12 @@ def test_retained_sidecars_bind_each_reading_path(case: dict[str, Any]) -> None:
         selections = [
             item for item in bundle["selections"] if item["region_id"] == region["id"]
         ]
-        assert len(attempts) == len(selections) == 1
+        assert len(attempts) == 1
         attempt = attempts[0]
-        selection = selections[0]
+        assert attempt["status"] == expected["attempt_status"]
 
         request_bytes = _artifact_path(expected["request"]).read_bytes()
         response_bytes = _artifact_path(expected["response"]).read_bytes()
-        selected_bytes = _artifact_path(expected["selected_text"]).read_bytes()
         assert attempt["request_digest"] == _digest(request_bytes)
         assert attempt["response_digest"] == _digest(response_bytes)
 
@@ -719,6 +729,58 @@ def test_retained_sidecars_bind_each_reading_path(case: dict[str, Any]) -> None:
             "selector",
             "task",
         }
+        assert request["region_id"] == response["region_id"] == region["id"]
+        assert request["selector"] == region["selector"]
+        assert request["raster_digest"] == rasters[region["raster_id"]]["digest"]
+        for sidecar in (request, response):
+            assert sidecar["reader_id"] == REFERENCE_READER["id"]
+            assert sidecar["reader_kind"] == REFERENCE_READER["kind"]
+            assert sidecar["production_ocr"] is REFERENCE_READER["production_ocr"]
+        assert request["contract"] == "malleus.fixture.control_request.v1"
+        assert attempt["config_identity"] == {
+            "production_ocr": "false",
+            "reader": REFERENCE_READER["id"],
+            "reader_kind": REFERENCE_READER["kind"],
+            "response_contract": response["contract"],
+        }
+
+        if attempt["status"] == "FAILED":
+            assert set(expected) == {
+                "attempt_status",
+                "failure_class",
+                "id",
+                "request",
+                "response",
+                "selector",
+                "unit",
+            }
+            assert set(response) == {
+                "contract",
+                "failure_class",
+                "note",
+                "outcome",
+                "production_ocr",
+                "reader_id",
+                "reader_kind",
+                "region_id",
+                "retryable",
+            }
+            assert request["task"] == "return the fixed self-authored control failure"
+            assert response["contract"] == "malleus.fixture.control_failure_response.v1"
+            assert response["outcome"] == "FAILED"
+            assert response["failure_class"] == expected["failure_class"]
+            assert response["retryable"] is True
+            assert attempt["unavailable_reason"] is None
+            assert selections == []
+            assert [
+                item for item in bundle["hypotheses"] if item["region_id"] == region["id"]
+            ] == []
+            continue
+
+        assert attempt["status"] == "COMPLETED"
+        assert len(selections) == 1
+        selection = selections[0]
+        selected_bytes = _artifact_path(expected["selected_text"]).read_bytes()
         assert set(response) == {
             "contract",
             "note",
@@ -729,26 +791,12 @@ def test_retained_sidecars_bind_each_reading_path(case: dict[str, Any]) -> None:
             "region_id",
             "text",
         }
-        assert request["region_id"] == response["region_id"] == region["id"]
-        assert request["selector"] == region["selector"]
-        assert request["raster_digest"] == rasters[region["raster_id"]]["digest"]
-        for sidecar in (request, response):
-            assert sidecar["reader_id"] == REFERENCE_READER["id"]
-            assert sidecar["reader_kind"] == REFERENCE_READER["kind"]
-            assert sidecar["production_ocr"] is REFERENCE_READER["production_ocr"]
-        assert request["contract"] == "malleus.fixture.control_request.v1"
         assert request["task"] == "return the fixed self-authored control reading"
         assert response["contract"] == "malleus.fixture.control_response.v1"
         assert (
             response["note"]
             == "Retained fixture response. No recognition engine was invoked."
         )
-        assert attempt["config_identity"] == {
-            "production_ocr": "false",
-            "reader": REFERENCE_READER["id"],
-            "reader_kind": REFERENCE_READER["kind"],
-            "response_contract": response["contract"],
-        }
         assert response["outcome"] == ("BLANK" if response["text"] == "" else "READING")
 
         machine = [
@@ -804,6 +852,75 @@ def test_multipage_oracle_selects_the_body_without_the_visible_heading() -> None
         "value": "xywh=0,0,1000,1400",
     }
     assert blank["expected_text"] == blank["response_text"] == ""
+
+
+def test_failed_attempt_retains_the_failure_without_inventing_a_reading() -> None:
+    case = next(item for item in _manifest()["cases"] if item["id"] == "failed-attempt")
+    bundle_bytes = _artifact_path(case["bundle"]).read_bytes()
+    bundle = Bundle.from_bytes(bundle_bytes)
+    oracle = _load(_artifact_path(case["oracle"]))
+
+    assert case["purpose"] == oracle["purpose"] == (
+        "Retain a made-but-failed control-reader attempt without inventing a reading."
+    )
+    assert case["selected_texts"] == []
+    assert case["mutations"] == []
+    assert len(bundle.rasters) == len(bundle.regions) == len(bundle.attempts) == 1
+    assert bundle.hypotheses == bundle.corrections == bundle.selections == ()
+
+    attempt = bundle.attempts[0]
+    assert attempt.status == "FAILED"
+    assert attempt.unavailable_reason is None
+    response_path = _artifact_path(case["responses"][0])
+    assert attempt.response_digest == _digest(response_path.read_bytes())
+    assert _load(response_path) == {
+        "contract": "malleus.fixture.control_failure_response.v1",
+        "failure_class": "FIXTURE_CONTROL_FAILURE",
+        "note": (
+            "The deterministic fixture reader returned this controlled failure. "
+            "No OCR engine or provider was invoked."
+        ),
+        "outcome": "FAILED",
+        "production_ocr": False,
+        "reader_id": REFERENCE_READER["id"],
+        "reader_kind": REFERENCE_READER["kind"],
+        "region_id": bundle.regions[0].id,
+        "retryable": True,
+    }
+
+    result = verify_bundle(bundle)
+    assert result.conforms
+    assert not result.account.complete
+    assert _expected_payload(result) == oracle["expected_verification"] == {
+        "capability": "AUDIT_ONLY",
+        "complete": False,
+        "conforms": True,
+        "diagnostic_codes": [],
+        "metrics": {
+            "coverage": {
+                "denominator": "declared_units",
+                "threshold": 1.0,
+                "value": 0.0,
+                "verdict": "UNMET",
+            }
+        },
+        "units": {
+            "image:1": {"disposition": "CHECK_FAILED", "outcome": "FAILED"}
+        },
+    }
+
+
+def test_failed_attempt_cli_names_the_retry_queue_not_the_fetch_queue(capsys) -> None:
+    from malleus.ocr.cli import REFUSED, main
+
+    case = next(item for item in _manifest()["cases"] if item["id"] == "failed-attempt")
+    code = main([str(_artifact_path(case["bundle"]))])
+    output = capsys.readouterr().out
+
+    assert code == REFUSED
+    assert "INCOMPLETE" in output
+    assert "never checked: none" in output
+    assert "check failed:  image:1" in output
 
 
 def test_corpus_contains_no_local_paths_credentials_or_private_metadata() -> None:

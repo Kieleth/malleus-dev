@@ -50,6 +50,7 @@
   },
   "regions": [
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "REGION A\nALPHA 123\nLEFT BOX",
       "id": "fixture:region-control:region:a",
       "request": "cases/region-control/requests/a.json",
@@ -63,6 +64,7 @@
       "unit": "image:1"
     },
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "REGION B\nBRAVO 789\nRIGHT BOX",
       "id": "fixture:region-control:region:b",
       "request": "cases/region-control/requests/b.json",

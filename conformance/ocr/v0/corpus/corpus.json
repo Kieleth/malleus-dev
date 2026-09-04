@@ -133,6 +133,29 @@
       ],
       "source": "cases/incomplete-sequence/source/incomplete-sequence.pdf",
       "verification": "cases/incomplete-sequence/verification.json"
+    },
+    {
+      "bundle": "cases/failed-attempt/bundle.json",
+      "id": "failed-attempt",
+      "mutations": [],
+      "oracle": "cases/failed-attempt/oracle.json",
+      "purpose": "Retain a made-but-failed control-reader attempt without inventing a reading.",
+      "rasters": [
+        {
+          "height": 700,
+          "path": "cases/failed-attempt/rasters/image-1.png",
+          "width": 1000
+        }
+      ],
+      "requests": [
+        "cases/failed-attempt/requests/main.json"
+      ],
+      "responses": [
+        "cases/failed-attempt/responses/main.json"
+      ],
+      "selected_texts": [],
+      "source": "cases/failed-attempt/source/failed-attempt.png",
+      "verification": "cases/failed-attempt/verification.json"
     }
   ],
   "corpus_id": "malleus.ocr.fixture_corpus",

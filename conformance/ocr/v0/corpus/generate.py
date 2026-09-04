@@ -215,6 +215,32 @@ def _region_control_png() -> bytes:
     return _png_bytes(image)
 
 
+def _failed_attempt_png() -> bytes:
+    image = Image.new("RGB", (1000, 700), "#f7f5ef")
+    draw = ImageDraw.Draw(image)
+    draw.rectangle((0, 0, 1000, 112), fill="#152238")
+    _centered_text(
+        draw, (0, 0, 1000, 112), "MALLEUS OCR FIXTURE | FAILED ATTEMPT", _font(38),
+        fill="#ffffff",
+    )
+    box = (100, 180, 900, 570)
+    draw.rounded_rectangle(box, radius=24, fill="#f8e1dd", outline="#152238", width=6)
+    _centered_text(
+        draw,
+        box,
+        "CONTROL TARGET\nTHIS REGION WILL NOT BE READ",
+        _font(48),
+    )
+    _centered_text(
+        draw,
+        (100, 610, 900, 675),
+        "The failed call remains evidence, not a reading.",
+        _font(26),
+        fill="#39465b",
+    )
+    return _png_bytes(image)
+
+
 def _document_page(
     logical_page: str,
     heading: str,
@@ -528,17 +554,7 @@ class Case:
             response_text = selected_text
         if not isinstance(response_text, str) or not isinstance(selected_text, str):
             raise CorpusError(f"{self.id}/{name}: reading texts must be strings")
-        if len(xywh) != 4 or any(type(value) is not int or value < 0 for value in xywh):
-            raise CorpusError(f"{self.id}/{name}: xywh must contain four nonnegative integers")
-        region = {
-            "id": _id(self.id, "region", name), "raster_id": raster["id"],
-            "selector": {
-                "type": "FragmentSelector",
-                "value": "xywh=" + ",".join(str(value) for value in xywh),
-            },
-            "selector_profile": "w3c-web-annotation+iiif",
-        }
-        self.bundle["regions"].append(region)
+        region = self._add_region(name, raster, xywh)
         exchange = self._exchange(name, raster, region, response_text, selected_text, outcome)
         attempt = {
             "id": _id(self.id, "attempt", name), "region_id": region["id"],
@@ -565,6 +581,7 @@ class Case:
             "request": exchange["request_path"], "response": exchange["response_path"],
             "selected_text": exchange["selected_text_path"],
             "response_text": response_text, "expected_text": selected_text,
+            "attempt_status": "COMPLETED",
         }
         self.oracle_regions.append(oracle)
         reading = {
@@ -574,31 +591,123 @@ class Case:
         self.readings[name] = reading
         return reading
 
-    def _exchange(
-        self, name: str, raster: Mapping[str, Any], region: Mapping[str, Any],
-        response_text: str, selected_text: str, outcome: str,
+    def add_failed_attempt(
+        self, name: str, raster: Mapping[str, Any], xywh: tuple[int, int, int, int]
     ) -> dict[str, Any]:
-        request_path = f"{self.prefix}/requests/{name}.json"
+        region = self._add_region(name, raster, xywh)
+        request_path, request_digest = self._request(
+            name,
+            raster,
+            region,
+            task="return the fixed self-authored control failure",
+        )
         response_path = f"{self.prefix}/responses/{name}.json"
-        selected_path = f"{self.prefix}/selected/{name}.txt"
+        response = {
+            "contract": "malleus.fixture.control_failure_response.v1",
+            "reader_id": READER["id"],
+            "reader_kind": READER["kind"],
+            "production_ocr": False,
+            "region_id": region["id"],
+            "outcome": "FAILED",
+            "failure_class": "FIXTURE_CONTROL_FAILURE",
+            "retryable": True,
+            "note": (
+                "The deterministic fixture reader returned this controlled failure. "
+                "No OCR engine or provider was invoked."
+            ),
+        }
+        response_bytes = self.artifacts.add_json(response_path, response)
+        exchange = {
+            "request_path": request_path,
+            "request_digest": request_digest,
+            "response_path": response_path,
+            "response_digest": _digest(response_bytes),
+        }
+        self.exchanges.append(exchange)
+        attempt = {
+            "id": _id(self.id, "attempt", name),
+            "region_id": region["id"],
+            "request_digest": request_digest,
+            "config_identity": {
+                **CONFIG_IDENTITY,
+                "response_contract": response["contract"],
+            },
+            "status": "FAILED",
+            "response_digest": exchange["response_digest"],
+            "unavailable_reason": None,
+        }
+        self.bundle["attempts"].append(attempt)
+        oracle = {
+            "id": region["id"],
+            "unit": raster["unit"],
+            "selector": region["selector"],
+            "request": request_path,
+            "response": response_path,
+            "attempt_status": "FAILED",
+            "failure_class": response["failure_class"],
+        }
+        self.oracle_regions.append(oracle)
+        return {"region": region, "exchange": exchange, "attempt": attempt, "oracle": oracle}
+
+    def _add_region(
+        self, name: str, raster: Mapping[str, Any], xywh: tuple[int, int, int, int]
+    ) -> dict[str, Any]:
+        if len(xywh) != 4 or any(type(value) is not int or value < 0 for value in xywh):
+            raise CorpusError(f"{self.id}/{name}: xywh must contain four nonnegative integers")
+        region_id = _id(self.id, "region", name)
+        if any(item["id"] == region_id for item in self.bundle["regions"]):
+            raise CorpusError(f"{self.id}: region declared twice: {name}")
+        region = {
+            "id": region_id, "raster_id": raster["id"],
+            "selector": {
+                "type": "FragmentSelector",
+                "value": "xywh=" + ",".join(str(value) for value in xywh),
+            },
+            "selector_profile": "w3c-web-annotation+iiif",
+        }
+        self.bundle["regions"].append(region)
+        return region
+
+    def _request(
+        self,
+        name: str,
+        raster: Mapping[str, Any],
+        region: Mapping[str, Any],
+        *,
+        task: str,
+    ) -> tuple[str, str]:
+        request_path = f"{self.prefix}/requests/{name}.json"
         request = {
             "contract": "malleus.fixture.control_request.v1", "reader_id": READER["id"],
             "reader_kind": READER["kind"], "production_ocr": False,
             "raster_digest": raster["digest"], "region_id": region["id"],
-            "selector": region["selector"],
-            "task": "return the fixed self-authored control reading",
+            "selector": region["selector"], "task": task,
         }
+        request_bytes = self.artifacts.add_json(request_path, request)
+        return request_path, _digest(request_bytes)
+
+    def _exchange(
+        self, name: str, raster: Mapping[str, Any], region: Mapping[str, Any],
+        response_text: str, selected_text: str, outcome: str,
+    ) -> dict[str, Any]:
+        response_path = f"{self.prefix}/responses/{name}.json"
+        selected_path = f"{self.prefix}/selected/{name}.txt"
+        request_path, request_digest = self._request(
+            name,
+            raster,
+            region,
+            task="return the fixed self-authored control reading",
+        )
         response = {
             "contract": "malleus.fixture.control_response.v1", "reader_id": READER["id"],
             "reader_kind": READER["kind"], "production_ocr": False,
             "region_id": region["id"], "outcome": outcome, "text": response_text,
             "note": "Retained fixture response. No recognition engine was invoked.",
         }
-        request_bytes = self.artifacts.add_json(request_path, request)
         response_bytes = self.artifacts.add_json(response_path, response)
         selected_bytes = self.artifacts.add_text(selected_path, selected_text)
         exchange = {
-            "request_path": request_path, "request_digest": _digest(request_bytes),
+            "request_path": request_path, "request_digest": request_digest,
             "response_path": response_path, "response_digest": _digest(response_bytes),
             "selected_text_path": selected_path,
             "selected_text_digest": _digest(selected_bytes),
@@ -684,7 +793,11 @@ class Case:
             "verification": self.verification_path, "rasters": self.raster_manifest,
             "requests": [item["request_path"] for item in self.exchanges],
             "responses": [item["response_path"] for item in self.exchanges],
-            "selected_texts": [item["selected_text_path"] for item in self.exchanges],
+            "selected_texts": [
+                item["selected_text_path"]
+                for item in self.exchanges
+                if "selected_text_path" in item
+            ],
             "mutations": mutations,
         }
 
@@ -734,6 +847,36 @@ def _region_control(artifacts: Artifacts) -> dict[str, Any]:
         fixture_kind="single_image_two_regions",
         expected=expected,
         mutations=mutations,
+    )
+
+
+def _failed_attempt(artifacts: Artifacts) -> dict[str, Any]:
+    source = _failed_attempt_png()
+    purpose = "Retain a made-but-failed control-reader attempt without inventing a reading."
+    case = Case(
+        artifacts,
+        case_id="failed-attempt",
+        purpose=purpose,
+        source_name="failed-attempt.png",
+        source=source,
+        media_type="image/png",
+        required_units=["image:1"],
+        observed_units=["image:1"],
+        source_details={"pixel_dimensions": {"width": 1000, "height": 700}},
+    )
+    raster = case.add_raster("image-1", "image:1", source, width=1000, height=700)
+    case.add_failed_attempt("main", raster, (100, 180, 800, 390))
+    expected = _expected(
+        complete=False,
+        units={"image:1": ("FAILED", "CHECK_FAILED")},
+        metric_value=0.0,
+        metric_verdict="UNMET",
+    )
+    case.write_reference(expected)
+    return case.finish(
+        fixture_kind="single_image_failed_attempt",
+        expected=expected,
+        mutations=[],
     )
 
 
@@ -874,7 +1017,7 @@ def _incomplete_sequence(artifacts: Artifacts) -> dict[str, Any]:
 def build_artifacts() -> dict[str, bytes]:
     _assert_generator_runtime()
     artifacts = Artifacts()
-    builders = (_region_control, _multipage_control, _incomplete_sequence)
+    builders = (_region_control, _multipage_control, _incomplete_sequence, _failed_attempt)
     cases = [builder(artifacts) for builder in builders]
     root_ontology = ROOT / "ontology" / "malleus.yaml"
     ocr_ontology = ROOT / "ontology" / "domains" / "ocr.yaml"

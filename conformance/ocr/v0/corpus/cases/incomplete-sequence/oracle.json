@@ -53,6 +53,7 @@
   },
   "regions": [
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "CONTROL START\nLogical page 2 is absent from this source.",
       "id": "fixture:incomplete-sequence:region:page-1-body",
       "request": "cases/incomplete-sequence/requests/page-1-body.json",
@@ -66,6 +67,7 @@
       "unit": "page:1"
     },
     {
+      "attempt_status": "COMPLETED",
       "expected_text": "CONTROL END\nThe source sequence jumps from 1 to 3.",
       "id": "fixture:incomplete-sequence:region:page-3-body",
       "request": "cases/incomplete-sequence/requests/page-3-body.json",
