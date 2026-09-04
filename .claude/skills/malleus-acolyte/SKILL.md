@@ -191,9 +191,11 @@ fallback.
    own class-level block; a class derived through a pack type carries none.
    Under role `PACK` one block sits at the top of the pack document. The rite
    reports every ungrounded root extension in a single
-   `DIRECT_ROOT_GROUNDING_REQUIRED` refusal, but it stops at the first block
-   whose shape is wrong, one entry at a time, so write the block correctly the
-   first time:
+   `DIRECT_ROOT_GROUNDING_REQUIRED` refusal, and it reports every ill-formed
+   block and entry in one refusal too, sorted, each item naming its subject,
+   its entry index and the closed field set that position requires. A missing
+   block and a malformed one are separate refusals: fix the shapes first, then
+   the rite reports whatever is still ungrounded.
 
    ```yaml
    classes:
@@ -381,8 +383,8 @@ and both endpoints of a relation record, must be named by at least one
 assertion's formalization target. `type` and `id` are not derived and need no
 target; an event participation carries its `event_id` and `entity_id` under
 `properties`, so the same rule reaches them there. The plan compiler refuses
-`UNDERIVED_FIELD` naming the first such field it meets, one field per refusal,
-so sweep the whole capture for missing derivations before you submit it.
+`UNDERIVED_FIELD` once, naming every such field in one sorted detail with the
+rule that closes them.
 
 <!-- malleus-nascent-document-template:start -->
 ```json
