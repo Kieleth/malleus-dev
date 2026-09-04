@@ -1593,3 +1593,15 @@ Observation: A directory-wide pytest invocation collected superseded tests under
 Guard: `paper-v4/active-test-manifest.json` names the active test roots, the two excluded historical roots, import roots, and pytest import mode. `paper-v4/run_active_tests.py` validates every path, refuses paths outside the repository or inside excluded history, sets the exact import roots, and runs the manifest. A paper-local test hardens those exclusions.
 
 Impact: The active gate now has one reproducible command. Superseded experiments cannot silently re-enter a v4 pass count.
+
+### E-0104, v4 questions and human review are frozen outside the producer loop
+
+Date: 2026-09-03
+
+Sources: the four existing document competency questions; the accepted D3 and D6 decisions; the v2 source-grounded review method; and the public replay-to-source trace verified in E-0102.
+
+Decision: Keep the four question texts but freeze them as a new v4 artifact at `sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86`. The producer cannot read this artifact. It enters only after ontology, capture, population, admission, and replay have frozen. A new v4 review protocol at `sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379` keeps the two qualitative judgments from v2 and adds the verified graph-row-to-capture trace as review material.
+
+Boundary: The protocol contains no answer oracle, canonical answer, exact-match rule, numeric score, schema symbol, record identifier, or source locator. Codex may create a preliminary record. Only `actor:luis` may ratify it as paper evidence.
+
+Impact: Query richness will be judged through responsive graph rows plus their source and modality traces, without letting the questions shape the ontology or population.

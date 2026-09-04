@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 from pathlib import Path
 
 
@@ -11,6 +12,10 @@ ACTIVE_TEST_MANIFEST = ROOT / "paper-v4" / "active-test-manifest.json"
 
 def _contract() -> dict[str, object]:
     return json.loads(CONTRACT_PATH.read_bytes())
+
+
+def _digest(path: Path) -> str:
+    return "sha256:" + sha256(path.read_bytes()).hexdigest()
 
 
 def test_v4_is_one_kiss_loop_with_no_fallback() -> None:
@@ -87,3 +92,26 @@ def test_active_gate_cannot_collect_superseded_or_retired_experiments() -> None:
         assert all(
             candidate != root and root not in candidate.parents for root in excluded
         )
+
+
+def test_v4_questions_and_human_review_are_frozen_but_producer_blind() -> None:
+    evaluation = _contract()["evaluation"]
+    question_binding = evaluation["competency_questions"]
+    protocol_binding = evaluation["review_protocol"]
+    question_path = ROOT / question_binding["path"]
+    protocol_path = ROOT / protocol_binding["path"]
+    questions = json.loads(question_path.read_bytes())
+    protocol = json.loads(protocol_path.read_bytes())
+
+    assert question_binding["producer_visibility"] == "WITHHELD"
+    assert questions["visibility"] == "WITHHELD_FROM_PRODUCER_UNTIL_POST_REPLAY"
+    assert question_binding["sha256"] == _digest(question_path)
+    assert protocol_binding["sha256"] == _digest(protocol_path)
+    assert protocol["fixed_identities"]["competency_questions_sha256"] == _digest(
+        question_path
+    )
+    assert protocol["question_ids"] == [
+        question["id"] for question in questions["questions"]
+    ]
+    assert protocol["authorship"]["ratifier_actor_id"] == "actor:luis"
+    assert "numeric_score" in protocol["forbidden_record_fields"]

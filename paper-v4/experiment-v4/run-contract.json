@@ -71,7 +71,16 @@
     "method": "SOURCE_GROUNDED_HUMAN_INSPECTION",
     "numeric_score": "FORBIDDEN",
     "preliminary_inspector": "CODEX",
-    "paper_evidence_requires": "LUIS_RATIFICATION"
+    "paper_evidence_requires": "LUIS_RATIFICATION",
+    "competency_questions": {
+      "path": "paper-v4/experiment-v4/competency-questions.json",
+      "sha256": "sha256:fdb5458ed16eda84be844c1ac3c2a72fa8e18a9feb06367c922fae1c3f688a86",
+      "producer_visibility": "WITHHELD"
+    },
+    "review_protocol": {
+      "path": "paper-v4/evaluation-v4/review-protocol.json",
+      "sha256": "sha256:7cee52a7d6ea5018fe8443e621c72280b05c2bb5cc1e4a2eeaa27208665ed379"
+    }
   },
   "completion": [
     "ONTOLOGY_DIAGNOSTIC_HISTORY",
