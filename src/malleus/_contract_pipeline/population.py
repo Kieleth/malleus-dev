@@ -16,10 +16,15 @@ from malleus._contract_pipeline.knowledge import (
     KnowledgeChangeSet,
     KnowledgeHistoryReplay,
     KnowledgeOperation,
+    KnowledgeRecordHistory,
+    KnowledgeRetainedInput,
     KnowledgeValidTime,
 )
 from malleus._contract_pipeline.machine import PartialEffectiveContract
-from malleus._contract_pipeline.view import ContractView
+from malleus._contract_pipeline.view import (
+    ContractView,
+    load_validated_contract_artifact,
+)
 from malleus.kg import KnowledgeGraph, RECORD_FAMILIES
 
 
@@ -31,10 +36,14 @@ __all__ = (
     "PopulationPlanRefusalReason",
     "PopulationPlanStatus",
     "PopulationPreparation",
+    "PopulationRecordTrace",
+    "PopulationTraceRefusal",
+    "PopulationTraceRefusalReason",
     "SOURCE_ASSERTION_PROFILE",
     "STATE_VERSION_PROFILE",
     "compile_population_plan",
     "prepare_population_change",
+    "trace_population_record",
 )
 
 _GRAMMAR = "malleus.population-plan/private-v0"
@@ -128,6 +137,23 @@ class PopulationPlanRefusalReason(str, Enum):
 
 class PopulationPlanRefusal(ValueError):
     def __init__(self, reason: PopulationPlanRefusalReason, detail: str) -> None:
+        self.reason = reason
+        self.detail = detail
+        super().__init__(f"{reason.name}: {detail}")
+
+
+class PopulationTraceRefusalReason(str, Enum):
+    MALFORMED_REQUEST = "MALFORMED_REQUEST"
+    UNKNOWN_RECORD = "UNKNOWN_RECORD"
+    UNKNOWN_CHANGE_SET = "UNKNOWN_CHANGE_SET"
+    POPULATION_PLAN_NOT_BOUND = "POPULATION_PLAN_NOT_BOUND"
+    AMBIGUOUS_POPULATION_PLAN = "AMBIGUOUS_POPULATION_PLAN"
+    HISTORY_PROFILE_NOT_BOUND = "HISTORY_PROFILE_NOT_BOUND"
+    TRACE_INCONSISTENT = "TRACE_INCONSISTENT"
+
+
+class PopulationTraceRefusal(ValueError):
+    def __init__(self, reason: PopulationTraceRefusalReason, detail: str) -> None:
         self.reason = reason
         self.detail = detail
         super().__init__(f"{reason.name}: {detail}")
@@ -246,6 +272,22 @@ class PopulationPreparation:
     compilation: PopulationPlanCompilation
     change_set: KnowledgeChangeSet | None
     retention_replay: KnowledgeHistoryReplay
+
+
+@dataclass(frozen=True, slots=True)
+class PopulationRecordTrace:
+    """Verified read-only path from one accepted record to retained inputs."""
+
+    record_id: str
+    record_history: KnowledgeRecordHistory
+    change_set: KnowledgeChangeSet
+    population_plan_bytes: bytes
+    population_plan_identity: str
+    population_plan: Mapping[str, object]
+    history_profile: DomainHistoryProfile
+    derivations: tuple[Mapping[str, object], ...]
+    sources: tuple[KnowledgeRetainedInput, ...]
+    evidence: tuple[KnowledgeRetainedInput, ...]
 
 
 def _object(
@@ -1324,4 +1366,335 @@ def prepare_population_change(
         compilation=compilation,
         change_set=change_set,
         retention_replay=retention_replay,
+    )
+
+
+def _trace_refuse(
+    reason: PopulationTraceRefusalReason, detail: str
+) -> PopulationTraceRefusal:
+    return PopulationTraceRefusal(reason, detail)
+
+
+def _trace_closure(
+    replay: KnowledgeHistoryReplay,
+    declared: tuple[tuple[str, str], ...],
+    *,
+    roles: frozenset[str],
+    label: str,
+) -> tuple[KnowledgeRetainedInput, ...]:
+    retained = {member.record_id: member for member in replay.retained_inputs}
+    result: list[KnowledgeRetainedInput] = []
+    for record_id, identity in declared:
+        member = retained.get(record_id)
+        if member is None or member.identity != identity or member.role not in roles:
+            raise _trace_refuse(
+                PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+                f"{label} closure member is unavailable: {record_id}",
+            )
+        result.append(member)
+    return tuple(result)
+
+
+def _trace_plan(
+    evidence: tuple[KnowledgeRetainedInput, ...],
+) -> tuple[KnowledgeRetainedInput, dict[str, object]]:
+    candidates: list[tuple[KnowledgeRetainedInput, dict[str, object]]] = []
+    for member in evidence:
+        try:
+            value = json.loads(member.content)
+        except (json.JSONDecodeError, TypeError, UnicodeDecodeError):
+            continue
+        if isinstance(value, dict) and value.get("grammar") == _GRAMMAR:
+            candidates.append((member, value))
+    if not candidates:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.POPULATION_PLAN_NOT_BOUND,
+            "accepted change does not bind a retained population plan",
+        )
+    if len(candidates) != 1:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.AMBIGUOUS_POPULATION_PLAN,
+            "accepted change binds more than one population plan",
+        )
+    return candidates[0]
+
+
+def _trace_contract(
+    replay: KnowledgeHistoryReplay, contract_identity: str
+) -> tuple[PartialEffectiveContract, ContractView]:
+    base_contracts = [
+        member
+        for member in replay.retained_inputs
+        if member.role == "PARTIAL_EFFECTIVE_CONTRACT"
+    ]
+    base_views = [
+        member
+        for member in replay.retained_inputs
+        if member.role == "VALIDATED_CONTRACT"
+    ]
+    if len(base_contracts) != 1 or len(base_views) != 1:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+            "history does not retain one base contract and validated view",
+        )
+    try:
+        candidates = [
+            (
+                PartialEffectiveContract.from_bytes(base_contracts[0].content),
+                load_validated_contract_artifact(base_views[0].content),
+            ),
+            *(
+                (revision.target_partial_contract, revision.target_contract_view)
+                for revision in replay.contract_revisions
+            ),
+        ]
+    except (TypeError, ValueError) as error:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+            "history contract bytes cannot be reconstructed",
+        ) from error
+    matches = [pair for pair in candidates if pair[0].identity == contract_identity]
+    if len(matches) != 1:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+            "change-set contract cannot be resolved uniquely",
+        )
+    return matches[0]
+
+
+def _trace_base_state(
+    replay: KnowledgeHistoryReplay, change_set_id: str
+) -> PopulationBaseState:
+    active: dict[str, _BaseRecord] = {}
+    historical: set[str] = set()
+    found = False
+    family_by_operation = {
+        "CREATE_ENTITY": "entities",
+        "CREATE_EVENT": "events",
+        "CREATE_RELATION": "relations",
+        "CREATE_SIGNAL": "signals",
+    }
+    for change in replay.change_sets:
+        if change.change_set_id == change_set_id:
+            found = True
+            break
+        for operation in change.operations:
+            family = family_by_operation.get(operation.operation_type)
+            if family is None:
+                raise _trace_refuse(
+                    PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+                    f"unsupported historical operation: {operation.operation_type}",
+                )
+            if operation.supersedes_record_id is not None:
+                if active.pop(operation.supersedes_record_id, None) is None:
+                    raise _trace_refuse(
+                        PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+                        "record supersession cannot be reconstructed",
+                    )
+            record: dict[str, object] = {
+                "id": operation.record_id,
+                "properties": _thaw(operation.properties),
+                "type": operation.record_type,
+            }
+            if operation.operation_type == "CREATE_RELATION":
+                record["source_id"] = operation.source_id
+                record["target_id"] = operation.target_id
+            active[operation.record_id] = _BaseRecord(
+                family=family,
+                record=_freeze(record),
+                change_set_id=change.change_set_id,
+                operation_type=operation.operation_type,
+                record_type=operation.record_type,
+                valid_from=change.valid_time,
+            )
+            historical.add(operation.record_id)
+    if not found:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.UNKNOWN_CHANGE_SET,
+            f"accepted change is absent: {change_set_id}",
+        )
+    return PopulationBaseState(tuple(active.values()), frozenset(historical))
+
+
+def _trace_profile(
+    replay: KnowledgeHistoryReplay,
+    change: KnowledgeChangeSet,
+    plan: Mapping[str, object],
+) -> DomainHistoryProfile:
+    reference = plan.get("history_profile")
+    if not isinstance(reference, Mapping):
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.HISTORY_PROFILE_NOT_BOUND,
+            "population plan does not bind a history profile",
+        )
+    profile_id = reference.get("profile_id")
+    identity = reference.get("sha256")
+    record_id = f"profile:{profile_id}"
+    if (record_id, identity) not in change.evidence:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.HISTORY_PROFILE_NOT_BOUND,
+            "change-set evidence does not bind the plan's history profile",
+        )
+    retained = {member.record_id: member for member in replay.retained_inputs}
+    member = retained.get(record_id)
+    if member is None or member.identity != identity:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.HISTORY_PROFILE_NOT_BOUND,
+            "retained history profile differs from the plan reference",
+        )
+    try:
+        value = json.loads(member.content)
+        profile = DomainHistoryProfile.from_data(value)
+    except (json.JSONDecodeError, PopulationPlanRefusal, TypeError) as error:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.HISTORY_PROFILE_NOT_BOUND,
+            "retained history profile cannot be reconstructed",
+        ) from error
+    if profile.profile_id != profile_id or profile.identity != identity:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.HISTORY_PROFILE_NOT_BOUND,
+            "retained history profile identity is inconsistent",
+        )
+    return profile
+
+
+def _verify_trace(
+    replay: KnowledgeHistoryReplay,
+    change: KnowledgeChangeSet,
+    plan_member: KnowledgeRetainedInput,
+    plan: dict[str, object],
+) -> tuple[DomainHistoryProfile, PopulationPlanCompilation]:
+    profile = _trace_profile(replay, change, plan)
+    partial_contract, contract_view = _trace_contract(replay, change.contract_identity)
+    try:
+        compilation = compile_population_plan(
+            plan,
+            partial_contract=partial_contract,
+            contract_view=contract_view,
+            base_state=_trace_base_state(replay, change.change_set_id),
+        )
+    except PopulationPlanRefusal as error:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+            f"retained population plan no longer compiles: {error}",
+        ) from error
+    retained = {member.record_id: member for member in replay.retained_inputs}
+    try:
+        expected_evidence = tuple(
+            (record_id, retained[record_id].identity)
+            for record_id in compilation.evidence_record_ids
+        )
+        expected_sources = tuple(
+            (reference["source_id"], reference["sha256"])
+            for reference in plan["sources"]
+        )
+    except (KeyError, TypeError) as error:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+            "population closure cannot be reconstructed",
+        ) from error
+    checks = (
+        (
+            plan_member.content,
+            compilation.canonical_plan_bytes,
+            "canonical plan bytes",
+        ),
+        (plan_member.record_id, compilation.plan_id, "plan record ID"),
+        (
+            change.change_set_id,
+            f"change:{compilation.plan_id}",
+            "change-set ID",
+        ),
+        (change.sources, expected_sources, "source closure"),
+        (change.evidence, expected_evidence, "evidence closure"),
+        (change.operations, compilation.operations, "operations"),
+        (change.valid_time, compilation.valid_time, "valid time"),
+        (change.supersedes, compilation.supersedes, "supersession closure"),
+    )
+    for actual, expected, label in checks:
+        if actual != expected:
+            raise _trace_refuse(
+                PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+                f"population plan and accepted change disagree on {label}",
+            )
+    gaps = plan["gaps"]
+    if gaps:
+        gaps_id = f"{compilation.plan_id}:gaps"
+        expected_gaps = _canonical({"gaps": gaps, "plan_id": compilation.plan_id})
+        member = retained.get(gaps_id)
+        if member is None or member.content != expected_gaps:
+            raise _trace_refuse(
+                PopulationTraceRefusalReason.TRACE_INCONSISTENT,
+                "retained gaps differ from the population plan",
+            )
+    return profile, compilation
+
+
+def trace_population_record(
+    replay: KnowledgeHistoryReplay, record_id: str
+) -> PopulationRecordTrace:
+    """Resolve one accepted record through its plan, profile, and retained inputs."""
+
+    if not isinstance(replay, KnowledgeHistoryReplay):
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.MALFORMED_REQUEST,
+            "a knowledge-history replay is required",
+        )
+    if not isinstance(record_id, str) or not record_id:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.MALFORMED_REQUEST,
+            "a record ID is required",
+        )
+    try:
+        record_history = replay.record_history[record_id]
+    except KeyError as error:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.UNKNOWN_RECORD,
+            f"accepted record is absent: {record_id}",
+        ) from error
+    changes = [
+        change
+        for change in replay.change_sets
+        if change.change_set_id == record_history.change_set_id
+    ]
+    if len(changes) != 1:
+        raise _trace_refuse(
+            PopulationTraceRefusalReason.UNKNOWN_CHANGE_SET,
+            f"record change is not uniquely available: {record_history.change_set_id}",
+        )
+    change = changes[0]
+    sources = _trace_closure(
+        replay,
+        change.sources,
+        roles=frozenset({"RETAINED_SOURCE"}),
+        label="source",
+    )
+    evidence = _trace_closure(
+        replay,
+        change.evidence,
+        roles=_POPULATION_EVIDENCE_ROLES,
+        label="evidence",
+    )
+    plan_member, plan = _trace_plan(evidence)
+    profile, _ = _verify_trace(replay, change, plan_member, plan)
+    frozen_plan = _freeze(plan)
+    assert isinstance(frozen_plan, Mapping)
+    raw_derivations = frozen_plan["derivations"]
+    assert isinstance(raw_derivations, tuple)
+    derivations = tuple(
+        item
+        for item in raw_derivations
+        if isinstance(item, Mapping) and item.get("record_id") == record_id
+    )
+    return PopulationRecordTrace(
+        record_id=record_id,
+        record_history=record_history,
+        change_set=change,
+        population_plan_bytes=bytes(plan_member.content),
+        population_plan_identity=plan_member.identity,
+        population_plan=frozen_plan,
+        history_profile=profile,
+        derivations=derivations,
+        sources=sources,
+        evidence=evidence,
     )

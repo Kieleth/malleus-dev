@@ -155,6 +155,51 @@ history-profile contract must either require that qualification, reify the
 claim, or provide a typed provenance join. Until then, do not present an
 unqualified projected edge as proof that a source asserted it as fact.
 
+### Trace an accepted record back to its source
+
+`trace_population_record` is a read-only join over information already retained
+by the public population path. Starting with one accepted graph-record ID, it
+resolves the record history, accepted change set, canonical population plan,
+selected domain-history profile, field derivations, source bytes, and evidence
+bytes:
+
+```python
+from malleus.compiler import trace_population_record
+
+trace = trace_population_record(
+    history.replay(),
+    "supplier-order-state:B:e7",
+)
+
+assert trace.history_profile.profile_id == "state-version"
+assert trace.record_history.supersedes_record_id == (
+    "supplier-order-state:B:e4"
+)
+quantity = next(
+    item
+    for item in trace.derivations
+    if item["path"] == ("properties", "ordered_quantity")
+)
+assert quantity["locator"] == "row:1:quantity"
+```
+
+The function performs no I/O and changes neither the ledger nor the graph. It
+recompiles the retained plan against the contract and accepted state that
+preceded the change, then checks that the resulting operations, closures,
+valid time, and supersession equal the accepted change set. Missing, ambiguous,
+or inconsistent provenance returns `PopulationTraceRefusal`; it is never
+guessed.
+
+For the document adapter, the same trace reaches locator `asr:001` and the
+exact retained capture containing its verbatim statement and `STATED`
+modality. Interpreting that capture remains an adapter-level concern. The
+generic trace exposes its exact bytes but does not turn the assertion into a
+graph record.
+
+This is an inspection view, not another persisted artifact or authority. It
+works for changes that bind a neutral population plan and profile. Older or
+manually composed change sets fail with `POPULATION_PLAN_NOT_BOUND`.
+
 ### Grow the ontology without starting a new history
 
 A useful ontology will change. Starting a second ledger every time a project

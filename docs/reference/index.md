@@ -12,6 +12,10 @@ signal records.
 neutral population-plan grammar. Captured assertions remain evidence rather
 than graph records.
 
+`trace_population_record` follows one accepted record through its change set,
+population plan, history profile, field derivations, and retained inputs. It is
+read-only and refuses to guess when a plan is absent or inconsistent.
+
 `KnowledgeChangeHistory.compose_contract_revision` derives an additive
 contract revision from two compiled contracts. The current policy admits added
 classes, slots, and enum values and refuses added imports.
@@ -31,6 +35,7 @@ classes, slots, and enum values and refuses added imports.
    malleus.compiler.compile_linkml_contract
    malleus.compiler.compile_population_plan
    malleus.compiler.prepare_population_change
+   malleus.compiler.trace_population_record
    malleus.compiler.adapt_document_assertions
    malleus.compiler.compile_contract_revision
    malleus.compiler.KnowledgeChangeHistory
@@ -39,6 +44,9 @@ classes, slots, and enum values and refuses added imports.
    malleus.compiler.ContractRevisionRefusalReason
    malleus.compiler.PopulationPlanRefusal
    malleus.compiler.PopulationPlanRefusalReason
+   malleus.compiler.PopulationRecordTrace
+   malleus.compiler.PopulationTraceRefusal
+   malleus.compiler.PopulationTraceRefusalReason
    malleus.compiler.DocumentAssertionCompilation
    malleus.compiler.DocumentAssertionRefusal
    malleus.compiler.DocumentAssertionRefusalReason
@@ -73,6 +81,8 @@ classes, slots, and enum values and refuses added imports.
 
 .. autofunction:: malleus.compiler.prepare_population_change
 
+.. autofunction:: malleus.compiler.trace_population_record
+
 .. autofunction:: malleus.compiler.adapt_document_assertions
 
 .. autofunction:: malleus.compiler.compile_contract_revision
@@ -89,6 +99,12 @@ classes, slots, and enum values and refuses added imports.
 .. autoclass:: malleus.compiler.PopulationPlanRefusal
 
 .. autoclass:: malleus.compiler.PopulationPlanRefusalReason
+
+.. autoclass:: malleus.compiler.PopulationRecordTrace
+
+.. autoclass:: malleus.compiler.PopulationTraceRefusal
+
+.. autoclass:: malleus.compiler.PopulationTraceRefusalReason
 
 .. autoclass:: malleus.compiler.DocumentAssertionCompilation
 

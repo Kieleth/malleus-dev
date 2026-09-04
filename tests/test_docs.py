@@ -271,6 +271,10 @@ APPROVED_REFERENCE_SOURCE = (
     "neutral population-plan grammar. Captured assertions remain evidence rather\n"
     "than graph records.\n"
     "\n"
+    "`trace_population_record` follows one accepted record through its change set,\n"
+    "population plan, history profile, field derivations, and retained inputs. It is\n"
+    "read-only and refuses to guess when a plan is absent or inconsistent.\n"
+    "\n"
     "`KnowledgeChangeHistory.compose_contract_revision` derives an additive\n"
     "contract revision from two compiled contracts. The current policy admits added\n"
     "classes, slots, and enum values and refuses added imports.\n"
@@ -290,6 +294,7 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.compile_linkml_contract\n"
     "   malleus.compiler.compile_population_plan\n"
     "   malleus.compiler.prepare_population_change\n"
+    "   malleus.compiler.trace_population_record\n"
     "   malleus.compiler.adapt_document_assertions\n"
     "   malleus.compiler.compile_contract_revision\n"
     "   malleus.compiler.KnowledgeChangeHistory\n"
@@ -298,6 +303,9 @@ APPROVED_REFERENCE_SOURCE = (
     "   malleus.compiler.ContractRevisionRefusalReason\n"
     "   malleus.compiler.PopulationPlanRefusal\n"
     "   malleus.compiler.PopulationPlanRefusalReason\n"
+    "   malleus.compiler.PopulationRecordTrace\n"
+    "   malleus.compiler.PopulationTraceRefusal\n"
+    "   malleus.compiler.PopulationTraceRefusalReason\n"
     "   malleus.compiler.DocumentAssertionCompilation\n"
     "   malleus.compiler.DocumentAssertionRefusal\n"
     "   malleus.compiler.DocumentAssertionRefusalReason\n"
@@ -332,6 +340,8 @@ APPROVED_REFERENCE_SOURCE = (
     "\n"
     ".. autofunction:: malleus.compiler.prepare_population_change\n"
     "\n"
+    ".. autofunction:: malleus.compiler.trace_population_record\n"
+    "\n"
     ".. autofunction:: malleus.compiler.adapt_document_assertions\n"
     "\n"
     ".. autofunction:: malleus.compiler.compile_contract_revision\n"
@@ -348,6 +358,12 @@ APPROVED_REFERENCE_SOURCE = (
     ".. autoclass:: malleus.compiler.PopulationPlanRefusal\n"
     "\n"
     ".. autoclass:: malleus.compiler.PopulationPlanRefusalReason\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationRecordTrace\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationTraceRefusal\n"
+    "\n"
+    ".. autoclass:: malleus.compiler.PopulationTraceRefusalReason\n"
     "\n"
     ".. autoclass:: malleus.compiler.DocumentAssertionCompilation\n"
     "\n"
@@ -1258,6 +1274,9 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.ContractRevisionRefusalReason",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.PopulationRecordTrace",
+        "malleus.compiler.PopulationTraceRefusal",
+        "malleus.compiler.PopulationTraceRefusalReason",
         "malleus.compiler.DocumentAssertionCompilation",
         "malleus.compiler.DocumentAssertionRefusal",
         "malleus.compiler.DocumentAssertionRefusalReason",
@@ -1267,6 +1286,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.compile_linkml_contract",
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
+        "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
     )
@@ -1291,6 +1311,15 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
             ),
             "malleus._contract_pipeline.population.PopulationPlanRefusalReason": (
                 "malleus.compiler.PopulationPlanRefusalReason"
+            ),
+            "malleus._contract_pipeline.population.PopulationRecordTrace": (
+                "malleus.compiler.PopulationRecordTrace"
+            ),
+            "malleus._contract_pipeline.population.PopulationTraceRefusal": (
+                "malleus.compiler.PopulationTraceRefusal"
+            ),
+            "malleus._contract_pipeline.population.PopulationTraceRefusalReason": (
+                "malleus.compiler.PopulationTraceRefusalReason"
             ),
             "malleus._contract_pipeline.document.DocumentAssertionCompilation": (
                 "malleus.compiler.DocumentAssertionCompilation"
@@ -1366,6 +1395,7 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.compile_linkml_contract",
         "malleus.compiler.compile_population_plan",
         "malleus.compiler.prepare_population_change",
+        "malleus.compiler.trace_population_record",
         "malleus.compiler.adapt_document_assertions",
         "malleus.compiler.compile_contract_revision",
         "malleus.compiler.KnowledgeChangeHistory",
@@ -1376,6 +1406,9 @@ def test_autodoc_and_autosummary_render_the_existing_package_root(
         "malleus.compiler.ContractRevisionRefusalReason",
         "malleus.compiler.PopulationPlanRefusal",
         "malleus.compiler.PopulationPlanRefusalReason",
+        "malleus.compiler.PopulationRecordTrace",
+        "malleus.compiler.PopulationTraceRefusal",
+        "malleus.compiler.PopulationTraceRefusalReason",
         "malleus.compiler.DocumentAssertionCompilation",
         "malleus.compiler.DocumentAssertionRefusal",
         "malleus.compiler.DocumentAssertionRefusalReason",

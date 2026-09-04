@@ -84,10 +84,14 @@ from malleus._contract_pipeline.population import (
     PopulationPlanRefusalReason,
     PopulationPlanStatus,
     PopulationPreparation,
+    PopulationRecordTrace,
+    PopulationTraceRefusal,
+    PopulationTraceRefusalReason,
     SOURCE_ASSERTION_PROFILE,
     STATE_VERSION_PROFILE,
     compile_population_plan,
     prepare_population_change,
+    trace_population_record,
 )
 from malleus._contract_pipeline.revision import (
     CONTRACT_REVISION_POLICY,
@@ -259,6 +263,9 @@ __all__ = (
     "PopulationPlanRefusalReason",
     "PopulationPlanStatus",
     "PopulationPreparation",
+    "PopulationRecordTrace",
+    "PopulationTraceRefusal",
+    "PopulationTraceRefusalReason",
     "ProtocolMachineProgram",
     "ProtocolMachineProgramRefusal",
     "ProtocolMachineProgramRefusalReason",
@@ -278,4 +285,5 @@ __all__ = (
     "load_validated_contract_artifact",
     "prepare_population_change",
     "replay_events",
+    "trace_population_record",
 )

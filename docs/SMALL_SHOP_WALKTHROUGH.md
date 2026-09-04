@@ -227,6 +227,21 @@ contract, mapping, sources, evidence, valid time, and accepted-state
 coordinates. It does not claim that each source member caused each individual
 operation.
 
+The newer public population path can go one level deeper. In the
+[contract-revision conformance fixture](../research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_contract_revision_v1/README.md),
+`trace_population_record(replay, "supplier-order-state:B:e7")` verifies and
+returns the retained `state-version` profile, population plan, four field
+derivations, exact supplier-history source bytes, accepted change set, and the
+`B@e4` supersession link. The trace is rebuilt after reopening the ledger and
+does not write to it.
+
+The larger five-stage showcase on this page predates the neutral population
+plan and composes its changes through the earlier direct change-set path. Its
+change-level provenance remains valid, but `trace_population_record` correctly
+returns `POPULATION_PLAN_NOT_BOUND` for those older changes. Migrating that
+showcase is separate work; the read API does not invent a missing historical
+plan.
+
 Run and query the same path from the repository root:
 
 ```bash

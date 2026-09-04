@@ -248,4 +248,8 @@ def test_small_shop_replays_one_history_across_one_contract_revision(
         reopened.record_history["supplier-order-state:B:e4"].superseded_by
         == "supplier-order-state:B:e7"
     )
+    trace = compiler.trace_population_record(reopened, "supplier-order-state:B:e7")
+    assert trace.history_profile == compiler.STATE_VERSION_PROFILE
+    assert trace.change_set.contract_identity == target_partial.identity
+    assert trace.population_plan["plan_id"] == "plan:shop:B:e7"
     assert reopened.receipt == e7.receipt

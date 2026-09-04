@@ -44,6 +44,13 @@ typed representation gaps. It emits the same neutral population-plan grammar
 as structured-source adapters plus a two-axis review/formalisation census.
 Assertions remain retained evidence and are not added to the graph.
 
+The public facade also exposes a read-only population trace. Given one
+accepted record ID, it resolves and verifies the record history, accepted
+change set, canonical population plan, selected history profile, field
+derivations, and retained source and evidence bytes. It refuses changes that
+did not retain a population plan. The trace writes nothing and creates no new
+authority or artifact.
+
 The same knowledge history can now cross one explicit additive ontology
 revision. The revision artifact embeds the next validated and partial contract,
 derives its change kinds from compiled facts, binds the exact prior history

@@ -214,9 +214,7 @@ def test_small_shop_trace_reaches_profile_plan_field_and_source_bytes(
     assert trace.population_plan_identity == _digest(
         replay.retained_bytes("plan:shop:B:e7")
     )
-    assert trace.record_history.supersedes_record_id == (
-        "supplier-order-state:B:e4"
-    )
+    assert trace.record_history.supersedes_record_id == ("supplier-order-state:B:e4")
     assert [dict(item) for item in trace.derivations] == [
         {
             "locator": "row:1:supplier_order_id",
@@ -260,9 +258,7 @@ def test_document_trace_reaches_assertion_locator_and_retained_capture(
     history, replay = _document_replay(tmp_path)
     ledger_before = history.path.read_bytes()
 
-    trace = api.trace_population_record(
-        replay, "inspection-of:P-7:2026-03-02"
-    )
+    trace = api.trace_population_record(replay, "inspection-of:P-7:2026-03-02")
 
     assert trace.history_profile == api.SOURCE_ASSERTION_PROFILE
     assert {item["locator"] for item in trace.derivations} == {"asr:001"}
@@ -270,9 +266,7 @@ def test_document_trace_reaches_assertion_locator_and_retained_capture(
         item for item in trace.evidence if item.record_id == "capture:inspection-note"
     )
     capture = json.loads(capture_input.content)
-    assertion = next(
-        item for item in capture["assertions"] if item["id"] == "asr:001"
-    )
+    assertion = next(item for item in capture["assertions"] if item["id"] == "asr:001")
     assert assertion["modality"] == "STATED"
     assert assertion["statement"] == "Pump P-7 was inspected on 2026-03-02."
     assert trace.sources[0].record_id == "source:inspection-note"
