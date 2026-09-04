@@ -373,6 +373,33 @@ def test_edited_pack_conformance_refuses_duplicate_existing_list_member(
     assert expected_path in caught.value.detail
 
 
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda source: source["imports"].remove("malleus"),
+        lambda source: source["imports"].append("malleus"),
+    ],
+)
+def test_edited_pack_conformance_preserves_unique_reference_imports(mutate) -> None:
+    api = _inquisition()
+    reference = bundled_ontology_path("packs", "metrology.yaml").read_bytes()
+    edited = yaml.safe_load(reference)
+    edited["id"] = "https://example.org/packs/local-metrology"
+    edited["name"] = "local_metrology"
+    mutate(edited)
+
+    with pytest.raises(api.PackGroundingRefusal) as caught:
+        api.validate_pack_conformance(
+            yaml.safe_dump(edited, sort_keys=False).encode(),
+            reference=reference,
+        )
+
+    assert (
+        caught.value.reason is api.PackGroundingRefusalReason.PACK_SURFACE_NOT_PRESERVED
+    )
+    assert "imports['malleus']" in caught.value.detail
+
+
 def test_pack_without_grounding_refuses_with_typed_reason() -> None:
     api = _inquisition()
     with pytest.raises(api.PackGroundingRefusal) as caught:
