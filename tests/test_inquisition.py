@@ -1832,7 +1832,17 @@ class TestSkillsAreInstallable:
             "malleus-compiler trace",
             "population_retention_events",
             "Keep instances out of schema vocabulary",
-            "Keep protocol, provenance, locators, ledger, policy, and query machinery out",
+            "Keep protocol, provenance, ledger, policy, and query machinery out",
+            (
+                "provenance locators, meaning block IDs, assertion IDs, and "
+                "retained-input IDs, belong to the capture and the ledger, "
+                "never to a domain slot"
+            ),
+            (
+                "Identifiers the source reports as facts about the domain are "
+                "domain slots and belong in the ontology: a DOI, a dataset "
+                "URL, a grant number, an accession"
+            ),
             "Labels identify records",
             "document capture",
             "coverage of the retained reading is the objective",
