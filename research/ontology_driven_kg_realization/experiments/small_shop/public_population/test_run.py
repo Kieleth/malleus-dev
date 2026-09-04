@@ -124,6 +124,9 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
     }
     observed_sources: set[str] = set()
     observed_plans: set[str] = set()
+    plan_paths = {
+        json.loads(path.read_bytes())["plan_id"]: path for path in module.PLAN_PATHS
+    }
     for record_id, history in second.replay.record_history.items():
         trace = compiler.trace_population_record(second.replay, record_id)
         assert trace.history_profile == compiler.STATE_VERSION_PROFILE
@@ -132,6 +135,10 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
         assert trace.population_plan_identity.startswith("sha256:")
         assert trace.population_plan_bytes == second.replay.retained_bytes(
             trace.population_plan["plan_id"]
+        )
+        assert (
+            trace.population_plan_bytes
+            == plan_paths[trace.population_plan["plan_id"]].read_bytes()
         )
         assert trace.sources
         assert trace.evidence
@@ -143,9 +150,7 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
         observed_plans.add(trace.population_plan["plan_id"])
 
         operation = history.operation
-        expected_paths = {
-            ("properties", field) for field in operation.properties
-        }
+        expected_paths = {("properties", field) for field in operation.properties}
         if operation.operation_type == "CREATE_RELATION":
             expected_paths |= {("source_id",), ("target_id",)}
         assert {tuple(item["path"]) for item in trace.derivations} == expected_paths
@@ -163,9 +168,7 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
         == "supplier-order-state:B:e7"
     )
     assert (
-        second.replay.record_history[
-            "supplier-order-state:B:e7"
-        ].supersedes_record_id
+        second.replay.record_history["supplier-order-state:B:e7"].supersedes_record_id
         == "supplier-order-state:B:e4"
     )
     assert (output / "history.jsonl").read_bytes() == ledger_before_trace
