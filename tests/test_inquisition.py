@@ -1769,6 +1769,50 @@ class TestSkillsAreInstallable:
             assert requirement in normalized
         assert "every future example as conformance fixtures" not in normalized
 
+    def test_acolyte_carries_the_nascent_project_playbook(self):
+        skill = (
+            self.SKILL_ROOT / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        section = skill.split("## Starting a project with no schema", 1)[1].split(
+            "\n## ", 1
+        )[0]
+        required = (
+            "proposal, not accepted knowledge",
+            "Do not ask for or accept competency questions",
+            "metrology`, `chronology`, and `research",
+            "pack-grounding",
+            "pack-conformance",
+            "state-version`, `source-assertion`, or `object-event",
+            "malleus-compiler contract",
+            "document capture",
+            "neutral population plan",
+            "typed gaps",
+            "NO_DOMAIN_CHANGE",
+            "compile_population_plan",
+            "prepare_population_change",
+            "KnowledgeChangeHistory",
+            "trace_population_record",
+            "Stop when another addition would require invention",
+        )
+        for phrase in required:
+            assert phrase in section
+        assert "The command-line compiler stops at contract compilation" in section
+        assert "paper" not in section.lower()
+
+    def test_installed_acolyte_keeps_the_nascent_project_playbook(
+        self, tmp_path, capsys
+    ):
+        assert main(
+            ["install-skills", "--project", str(tmp_path), "--agent", "codex"]
+        ) == 0
+        capsys.readouterr()
+        installed = (
+            tmp_path / ".codex" / "skills" / "malleus-acolyte" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        assert "## Starting a project with no schema" in installed
+        assert "malleus-compiler contract" in installed
+        assert "neutral population plan" in installed
+
     def test_install_skills_into_a_project(self, tmp_path, capsys):
         assert main(["install-skills", "--project", str(tmp_path)]) == 0
         out = capsys.readouterr().out
