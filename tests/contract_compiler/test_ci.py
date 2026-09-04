@@ -89,6 +89,7 @@ def test_package_profile_is_explicit_and_release_only() -> None:
         "package-parity",
         "package-smoke",
     ]
+    assert ci.plan("package")[0].argv[-2:] == ("--sdist", "--wheel")
     assert set(package_names).isdisjoint(
         command.name for command in ci.plan("all")
     )

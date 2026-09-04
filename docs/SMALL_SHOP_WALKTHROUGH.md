@@ -194,12 +194,12 @@ The recorded coordinates are:
 | Neutral contract facts | `1,040` |
 | Effective contract identity | `sha256:0c43eac9537c1fbc5102f3b805dc3e6a17530e7ab1f573020fe2d9a559da67a3` |
 | Ledger events | `74` |
-| Ledger and acceptance head | `sha256:f7937650a84876bf3c930c327920b771a363e7a3d5a8ddb20a8690b9b640785e` |
-| Materialization head | `sha256:f82106a444c86f65fa62daac8e27adc11754aaf6b415b2ad432040cd5cce218d` |
+| Ledger and acceptance head | `sha256:7d3dbe526a75bdea348ec150f7253ce5d8cdb1e0e288a799d0ad158025c7c06a` |
+| Materialization head | `sha256:d3c0351a8b84e27f9a5cf3e505b4532677cc02bac5554de42b6e64f54951a808` |
 | Current graph records | `9` |
 | Current graph digest | `sha256:b92787c8bb07e977416c7b4996ef5dd60544becbe0ca7a39b9075756ba43a6a0` |
-| Receipt identity and file SHA-256 | `sha256:edfc193e2ba5a17e15e702980e30e7391696e99255ec88b83c0752e2dcdffca4` |
-| Retained run-program identity | `sha256:766581ea6ca384cb325a05f235978bdbe849e8970304fe089b7a0509594a4835` |
+| Receipt identity and file SHA-256 | `sha256:c4e2dca34fbbffdfe4ede0ac8dfb20bb83e10457dedee2448e4d1cbbca3c6701` |
+| Retained run-program identity | `sha256:7096c3f82e3f96aa7e1efa6f11a120bb2b3a6c441520d66589408fd8895885c6` |
 
 Reopening uses replay from the ledger alone, not recompilation from the ledger
 alone. Replay loads retained compiled contract and protocol artifacts and does
@@ -261,7 +261,8 @@ Generic Core covers ontology closure and contract compilation, immutable
 `KnowledgeChangeSet` values, ledger admission, replay, record history, and the
 underlying graph query primitives. The named Small Shop source mapping and
 read-only query facade remain research-local. ABox mapping is fixture-specific
-Python, not a public population compiler.
+Python. The public population compiler accepts an already-authored plan; it
+does not invent this mapping.
 
 This showcase does not yet identify the query program or its dependency
 closure. Operation-level causality, arbitrary transaction-prefix queries,

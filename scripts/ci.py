@@ -7,11 +7,13 @@ import argparse
 from dataclasses import dataclass
 import hashlib
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import subprocess
 import sys
+import tarfile
 from tempfile import TemporaryDirectory
 from typing import Sequence
+import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -129,8 +131,12 @@ DOCS = tuple(
     for builder in ("html", "doctest", "linkcheck")
 )
 PACKAGE = (
-    Command("package-build", (sys.executable, "-m", "build")),
+    Command(
+        "package-build",
+        (sys.executable, "-m", "build", "--sdist", "--wheel"),
+    ),
     Command("package-check", (sys.executable, "-m", "twine", "check")),
+    Command("package-parity", (sys.executable, "-m", "build")),
     Command("package-smoke", (sys.executable, "-m", "venv")),
 )
 PROFILES = {
@@ -234,6 +240,77 @@ def _built_artifacts(context: Context) -> tuple[Path, ...]:
     return artifacts
 
 
+def _extract_sdist(sdist: Path, destination: Path) -> Path:
+    with tarfile.open(sdist, "r:gz") as archive:
+        members = archive.getmembers()
+        paths = tuple(PurePosixPath(member.name) for member in members)
+        if not paths or any(
+            path.is_absolute()
+            or not path.parts
+            or ".." in path.parts
+            or not (member.isfile() or member.isdir())
+            for path, member in zip(paths, members, strict=True)
+        ):
+            raise ValueError("source archive contains an unsafe member")
+        roots = {path.parts[0] for path in paths}
+        if len(roots) != 1:
+            raise ValueError("source archive must contain one root directory")
+        if sys.version_info >= (3, 12):
+            archive.extractall(destination, members=members, filter="data")
+        else:  # pragma: no cover - compatibility with supported Python 3.10/3.11
+            archive.extractall(destination, members=members)
+    return destination / next(iter(roots))
+
+
+def _wheel_contents(path: Path) -> dict[str, bytes]:
+    with zipfile.ZipFile(path) as archive:
+        names = archive.namelist()
+        if len(names) != len(set(names)):
+            raise ValueError("wheel contains duplicate members")
+        return {name: archive.read(name) for name in names if not name.endswith("/")}
+
+
+def _check_package_parity(context: Context, command: Command) -> int:
+    try:
+        artifacts = _built_artifacts(context)
+        direct = next(path for path in artifacts if path.suffix == ".whl")
+        sdist = next(path for path in artifacts if path.name.endswith(".tar.gz"))
+        source = _extract_sdist(sdist, context.temporary / "sdist-source")
+    except (OSError, ValueError, tarfile.TarError) as error:
+        print(f"[ci] cannot inspect source archive: {error}", file=sys.stderr)
+        return 2
+    rebuilt_directory = context.temporary / "sdist-wheel"
+    rebuilt_directory.mkdir()
+    result = _call(
+        (
+            *command.argv,
+            "--no-isolation",
+            "--wheel",
+            "--outdir",
+            str(rebuilt_directory),
+            str(source),
+        ),
+        cwd=context.temporary,
+    )
+    if result:
+        return result
+    rebuilt = tuple(rebuilt_directory.glob("*.whl"))
+    if len(rebuilt) != 1:
+        print("[ci] source archive must rebuild exactly one wheel", file=sys.stderr)
+        return 2
+    try:
+        if _wheel_contents(direct) != _wheel_contents(rebuilt[0]):
+            print(
+                "[ci] repository and source-archive wheels differ",
+                file=sys.stderr,
+            )
+            return 1
+    except (OSError, ValueError, zipfile.BadZipFile) as error:
+        print(f"[ci] cannot compare wheels: {error}", file=sys.stderr)
+        return 2
+    return 0
+
+
 def _smoke_package(context: Context) -> int:
     try:
         artifacts = _built_artifacts(context)
@@ -273,6 +350,7 @@ def _smoke_package(context: Context) -> int:
         return schema.returncode
     checks = (
         (scripts / "malleus-inquisitor", schema.stdout.strip()),
+        (scripts / "malleus-compiler", "--help"),
         (scripts / "malleus-ocr", "--help"),
         (scripts / "malleus-recon", "--help"),
     )
@@ -294,6 +372,8 @@ def run_command(command: Command, context: Context) -> int:
             print(f"[ci] {error}", file=sys.stderr)
             return 2
         return _call((*command.argv, *(str(path) for path in artifacts)))
+    if command.name == "package-parity":
+        return _check_package_parity(context, command)
     if command.name == "package-smoke":
         return _smoke_package(context)
     if command.name.startswith("docs-"):

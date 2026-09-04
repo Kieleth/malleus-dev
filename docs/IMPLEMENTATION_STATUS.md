@@ -6,9 +6,9 @@ Malleus package version `0.13.3` implements the
 This is a capability boundary, not a claim that the research program is
 complete. The machine-readable source is `malleus.IMPLEMENTATION_STATUS`.
 
-## Private compiler research
+## Public compiler and population facade
 
-One private Small Shop experiment now runs retained source bytes through the
+One Small Shop research experiment runs retained source bytes through the
 LinkML adapter, neutral contract facts, an identified declarative machine and
 policy, one immutable `KnowledgeChangeSet`, one append-only JSONL history, and
 replay from an empty accepted graph. The output is a canonical receipt and a
@@ -29,12 +29,20 @@ writing anything. Admission and replay remain separate. Source parsing, domain
 mapping, checks, policy, and protocol-event construction remain outside the
 helper.
 
-This does not advance the package stage above, replace the shipped Assent
-runtime, or expose a public compiler API. It proves the replacement seam on one
-controlled initial-population case and one controlled record correction.
-General correction semantics, mapping syntax, a public change-set wire,
-external effects, Semantic Re-entry, cross-language parity, package inclusion,
-and release work remain outside the implemented research cut. See
+Packages built from this source expose the reusable pieces through
+`malleus.compiler`: exact-source LinkML contract compilation, population-plan
+compilation, governed admission, reopen, replay, and the replayed graph's query
+methods. The installed `malleus-compiler contract` command covers contract
+compilation. It accepts exact named ontology files and never accepts a raw
+ontology digest in their place. The sdist and direct wheel must contain the
+same compiler runtime bytes.
+
+This facade does not replace the shipped Assent runtime, stabilize any
+`private-v0` wire grammar, or turn a domain's source mapping into Core policy.
+It proves the reusable seam on one controlled initial-population case and one
+controlled record correction. General correction semantics, mapping syntax,
+stable change-set wire, Event population, external effects, Semantic Re-entry,
+cross-language parity, and release work remain outside this cut. See
 `contract_compiler/index.md`.
 
 ## Implemented

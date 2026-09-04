@@ -57,6 +57,7 @@ dev = [
 
 [project.scripts]
 malleus-inquisitor = "malleus.inquisition.cli:main"
+malleus-compiler = "malleus.compiler_cli:main"
 malleus-ocr = "malleus.ocr.cli:main"
 malleus-recon = "malleus.recon.cli:main"
 
@@ -70,13 +71,23 @@ Issues = "https://github.com/kieleth/malleus-dev/issues"
 # Only the files explicitly listed below are packaged. Anything else present
 # in the working tree (local scratch files, experimental modules, notes) is
 # ignored by the build.
-exclude = [
-    "/src/malleus/_contract_compiler.py",
-    "/src/malleus/_contract_compiler_profile.json",
-]
 include = [
     "/src/malleus/__init__.py",
+    "/src/malleus/compiler.py",
+    "/src/malleus/compiler_cli.py",
+    "/src/malleus/_contract_binder.py",
+    "/src/malleus/_contract_binding_profile.json",
+    "/src/malleus/_contract_compiler.py",
+    "/src/malleus/_contract_compiler_profile.json",
+    "/src/malleus/_contract_linkml_adapter.py",
     "/src/malleus/_contract_source.py",
+    "/src/malleus/_contract_pipeline/__init__.py",
+    "/src/malleus/_contract_pipeline/elaborate.py",
+    "/src/malleus/_contract_pipeline/knowledge.py",
+    "/src/malleus/_contract_pipeline/machine.py",
+    "/src/malleus/_contract_pipeline/model.py",
+    "/src/malleus/_contract_pipeline/population.py",
+    "/src/malleus/_contract_pipeline/view.py",
     "/src/malleus/ontology.py",
     "/src/malleus/kg.py",
     "/src/malleus/protocol.py",
@@ -176,12 +187,6 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = ["src/malleus"]
 core-metadata-version = "2.4"
-exclude = [
-    "/src/malleus/_contract_compiler.py",
-    "/src/malleus/_contract_compiler_profile.json",
-    "/src/malleus/_contract_linkml_adapter.py",
-    "/src/malleus/_contract_source.py",
-]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "ontology/malleus.yaml" = "share/malleus/ontology/malleus.yaml"

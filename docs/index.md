@@ -17,10 +17,14 @@ state, named queries, and exact change-level provenance.
 
 ## First compiler-to-ledger-to-knowledge-graph proof
 
-> **Status:** Working research milestone, 2 September 2026.
-> The path is executable and tested in this repository.
-> It is not yet a stable public API. It is not an installed command,
-> file-format promise, package feature, or release.
+> **Status:** Working research milestone, 3 September 2026.
+> The path is executable and tested in this repository. Packages built from
+> this source expose its generic executor through `malleus.compiler` and its
+> contract compiler through `malleus-compiler contract`.
+> Public here means an import path and installed command, not stable wire formats.
+> The fixture
+> mapping, high-level runner, evidence formats, and release remain research
+> work.
 
 **The first real Malleus compiler-to-ledger-to-knowledge-graph path is
 complete.** That sentence has a narrow meaning: the first scoped, research-only
@@ -72,6 +76,39 @@ In plain English, the parts have these separate jobs:
 | Knowledge change | Seals one proposed domain-state change together with its inputs, base state, operations, and identity. |
 | Ledger | Keeps the retained evidence, proposal, receipts, and decision in one append-only history. |
 | Knowledge graph | Presents the accepted view derived by replaying that history. |
+
+### Use the public boundary
+
+The public `malleus.compiler` facade exposes the reusable executor used below:
+exact-source LinkML contract compilation, population-plan compilation, governed
+admission, reopen, replay, and access to the replayed graph's query methods. A
+caller supplies every ontology source as exact bytes under the locator used by
+the root or its imports:
+
+```python
+from malleus.compiler import compile_linkml_contract
+
+compiled = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={"my-domain": ontology_bytes, "linkml:types": linkml_types_bytes},
+)
+```
+
+`malleus-compiler contract` compiles exact named LinkML source files. It is a
+convenience frontend to the same function, not a second compiler:
+
+```bash
+malleus-compiler contract \
+  --root my-domain \
+  --source my-domain path/to/my-domain.yaml \
+  --source linkml:types path/to/linkml-types.yaml
+```
+
+The command emits canonical validated-contract bytes. It never accepts a bare
+ontology hash. The Python facade exposes the later population and history
+steps, but it does not invent a source mapping, policy, machine, or domain
+history model. Those remain explicit adopter inputs. Formats still named
+`private-v0` may change before a compatibility contract is published.
 
 ### Follow one fact through the system
 
@@ -192,7 +229,7 @@ retains source and compiled artifact bytes. Its readable lifecycle is:
 | 21 | Retain knowledge change `sha256:cc5ce1cf6f9521f5299fbc9a981f6dba6949afaabd3730b2f81037b51c5912af`. |
 | 22 | Propose that exact change. |
 | 23-24 | Record the two fixture-supplied `SATISFIED` check receipts. |
-| 25 | Record the `ACCEPT` verdict. The ledger head is `sha256:3d055403ccbe39266e89c44cd49b63f14a909d1c6ca4eb65fe7afa38b7912bad`. |
+| 25 | Record the `ACCEPT` verdict. The ledger head is `sha256:3e07988bafd28a481c5eece5bfdad533ddbb63c93e862b9192944e04c8af3574`. |
 
 The [recorded canonical receipt](../research/ontology_driven_kg_realization/experiments/small_shop/pareto/ret-010-research-receipt.json)
 is the compact evidence snapshot. It is an exact result of this private
@@ -402,13 +439,14 @@ initial proof, correction inputs and answer key, generic record history, exact
 source-and-mapping checks, atomic refusal, and reopen. It proves one bounded
 record correction without changing the frozen initial fixture bytes.
 
-This was a focused research gate, not a release gate. The full repository and
-package suites were deliberately outside the milestone. Still missing are a
-supported public compiler API and command, a general mapping contract, broad
-ontology support, a supported interface for executed and retained check implementations,
-general update and correction behavior, external effects and observation, public bitemporal
-queries, Semantic Re-entry, and a second-language interpreter proving
-cross-language parity.
+This was a focused research gate, not a release gate. The generic compiler and
+history executor are now packaged behind a public Python facade, and contract
+compilation has an installed command. Still missing are stable wire contracts,
+a general mapping contract, broad ontology support, a supported interface for
+executed and retained check implementations, general update and correction
+behavior, external effects and observation, public bitemporal queries,
+Semantic Re-entry, and a second-language interpreter proving cross-language
+parity.
 
 See the [technical compiler notes](contract_compiler/index.md) and
 [implementation status](IMPLEMENTATION_STATUS.md) for the exact boundary.

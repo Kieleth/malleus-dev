@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 from hashlib import sha256
 from importlib import import_module
 from importlib.resources import files
@@ -265,11 +266,24 @@ def test_public_module_exposes_the_executable_pipeline_without_private_imports()
     }
 
     assert required <= set(api.__all__)
-    source = Path(__file__).read_text(encoding="utf-8")
-    assert "from malleus._contract_pipeline" not in source
-    assert "import malleus._contract_pipeline" not in source
-    assert "import research." not in source
-    assert "from research." not in source
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    imported = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    } | {
+        node.module
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    }
+    assert not any(
+        name == "malleus._contract_pipeline"
+        or name.startswith("malleus._contract_pipeline.")
+        or name == "research"
+        or name.startswith("research.")
+        for name in imported
+    )
 
 
 def test_public_adopter_compiles_admits_reopens_and_queries_e4_e7(
@@ -377,4 +391,12 @@ def test_compiler_cli_compiles_exact_named_sources() -> None:
     assert result.returncode == 0, result.stderr.decode()
     artifact = json.loads(result.stdout)
     assert artifact["grammar"] == "malleus.validated-contract-artifact/private-v0"
-    assert "ontology-digest" not in result.args
+
+    raw_identity = subprocess.run(
+        (*command, "--ontology-digest", "sha256:" + "0" * 64),
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    assert raw_identity.returncode == 2
+    assert b"unrecognized arguments: --ontology-digest" in raw_identity.stderr

@@ -20,8 +20,11 @@ The Small Shop proof takes a warehouse record plus a separate inventory lookup
 through the selected research chain, then reconstructs the same graph and
 receipt from retained history alone. The three graph records are deliberately
 simple. The achievement is making their path into accepted history explainable,
-testable, and replayable. This is working repository evidence, not yet a stable
-public compiler API or release.
+testable, and replayable. The reusable path beneath the fixture is now exposed
+through `malleus.compiler`, with `malleus-compiler contract` as the installed
+contract-compilation command. Public here means a supported import path and
+installed command in packages built from this source, not a stable wire format
+or release.
 [Inspect the exact sources, ontology, contracts, receipt, ledger lifecycle, and
 graph result.](docs/index.md#inspect-the-evidence)
 
@@ -94,9 +97,37 @@ pip install malleus-dev
 ```
 
 The released Python package contains the graph-to-Prolog fact compiler and
-verifier. That is distinct from the research-only ontology-to-contract compiler
-in the milestone above. Executing Prolog checks also requires a `swipl`
-executable on `PATH`; absence fails explicitly at check time.
+verifier. Packages built from the current source also contain the deterministic
+ontology-to-contract compiler, population-plan compiler, governed history, and
+replay boundary. Import it with:
+
+```python
+from malleus.compiler import compile_linkml_contract
+
+compilation = compile_linkml_contract(
+    root_locator="my-domain",
+    sources={"my-domain": ontology_bytes, "linkml:types": linkml_types_bytes},
+)
+```
+
+The convenience command accepts one exact file for every named source:
+
+```bash
+malleus-compiler contract \
+  --root my-domain \
+  --source my-domain path/to/my-domain.yaml \
+  --source linkml:types path/to/linkml-types.yaml
+```
+
+It outputs the canonical validated contract artifact. It does not accept a raw
+ontology digest as a substitute for source bytes. Population, admission,
+reopen, replay, and graph query are Python surfaces in `malleus.compiler`; the
+command currently covers contract compilation only. Grammars still named
+`private-v0` remain explicitly unstable. Small Shop's source mapper and
+high-level runner remain research-local.
+
+Executing Prolog checks also requires a `swipl` executable on `PATH`; absence
+fails explicitly at check time.
 
 Recon's core recording and export code ships with Malleus. Install its optional
 dependency set for the interactive graph view:
