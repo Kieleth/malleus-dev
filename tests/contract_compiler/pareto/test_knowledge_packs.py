@@ -123,19 +123,36 @@ def test_shipped_pack_is_resolvable_grounded_and_compilable(name: str) -> None:
 
 
 def test_research_pack_carries_the_shared_assertion_modality() -> None:
-    source = yaml.safe_load(bundled_ontology_path("packs", "research.yaml").read_bytes())
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
     values = source["enums"]["AssertionModality"]["permissible_values"]
     assert set(values) == ASSERTION_MODALITIES
 
 
 def test_research_observation_is_explicitly_grounded_in_sosa_ssn() -> None:
-    source = yaml.safe_load(bundled_ontology_path("packs", "research.yaml").read_bytes())
-    vocabularies = source["annotations"]["grounding"]["value"]["vocabularies"]
-    sosa = next(
-        item for item in vocabularies if item["vocabulary"] == "W3C SOSA/SSN"
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
     )
+    vocabularies = source["annotations"]["grounding"]["value"]["vocabularies"]
+    sosa = next(item for item in vocabularies if item["vocabulary"] == "W3C SOSA/SSN")
     assert sosa["vocabulary_url"] == "https://www.w3.org/TR/vocab-ssn/"
     assert "Observation" in sosa["borrowed_terms"]
+
+
+def test_research_pack_matches_the_accepted_campaign_surface() -> None:
+    source = yaml.safe_load(
+        bundled_ontology_path("packs", "research.yaml").read_bytes()
+    )
+    classes = source["classes"]
+    relations = source["enums"]["ResearchRelationType"]["permissible_values"]
+
+    assert source["imports"] == ["linkml:types", "malleus", "metrology", "chronology"]
+    assert classes["Campaign"]["is_a"] == "Entity"
+    assert classes["Campaign"]["mixins"] == ["TemporalExtent", "Counted"]
+    assert "Investigation" not in classes
+    assert "PART_OF_CAMPAIGN" in relations
+    assert "PART_OF_INVESTIGATION" not in relations
 
 
 def test_project_importing_research_and_metrology_compiles_through_public_api() -> None:
@@ -186,7 +203,9 @@ def test_pack_without_grounding_refuses_with_typed_reason() -> None:
         ),
     ],
 )
-def test_grounding_shape_refuses_unknown_or_missing_meaning(mutation, reason: str) -> None:
+def test_grounding_shape_refuses_unknown_or_missing_meaning(
+    mutation, reason: str
+) -> None:
     api = _inquisition()
     grounding = _cited_grounding()
     mutation(grounding)
