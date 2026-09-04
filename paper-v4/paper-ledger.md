@@ -1485,3 +1485,19 @@ Final gate: A clean hash-locked CPython environment passed 189 tests across the 
 Boundary: The PDF is a reviewed build artifact, not a human-ratified answer evaluation. The exact executable paper snapshot is local commit `8e818103e6867e326544123a30abe756bdd45117`, tree `455e91e3110d1789fb3db8c8a902bc2e87c4eb04`. It contains the v2 code, artifacts, and environment lock but not the later prose. It is not yet reachable through a public immutable tag or archive, and the paper states that limit. Neither the PDF digest nor this code coordinate enters the five experiment identity groups.
 
 Impact: All nonhuman experiment, reproduction, manuscript, source-bundle, compilation, and visual-QA work is complete. Submission still requires Luis's source-review ratification, publication of the exact executable snapshot, and final author review.
+
+### E-0096, executor handover separates paper work from the Core gate
+
+Date: 2026-09-03
+
+Sources: approved executor plan `handover/2026-09-03-paper-executor-plan.md` as amended through Core handover commit `7e9563e8ac32ed2504f990d592e1f4638a584efb`; `design/KNOWLEDGE_PACKS.md`; Core population handover `handover/2026-09-03-core-population-v2.md`; frozen branch `paper-v4-multimodel` at tag `paper-v4-multimodel-v2`, commit `ca8c9de276808ec56d0237f57192c942712fbd1b`; and a read-only run of the active paper and document tests in its retained CPython 3.12.9 environment.
+
+Observation: The handover introduces the missing contract between ontology and ledger mechanics. A `DomainHistoryProfile` states what one change means. The document case selects `source-assertion`; Small Shop selects `state-version`. Assertions in the document profile are retained capture evidence linked to graph fields, not automatically Claim or Event records. The same physical history and replay machinery can therefore serve two semantic-ledger choices without pretending that Core selected either domain meaning.
+
+Core gate: The neutral population compiler has a verified P1 cut. P2 governed integration remains under correction for declarative retention-event role binding and has no accepted final coordinate at this entry. The public facade, document adapter, ontology-supersession replay, full profile, packs, and nascent-project skill required by the approved v4 loop are not yet verified. A selected v4 run must not start against moving private seams.
+
+Parallel evidence: The three frozen producer runs remain useful baseline evidence. In the retained environment, 198 active document-paper, v2, v3-fidelity, review, environment, and publication tests pass with `PYTHONPATH=.:src`. The runs differ sharply in vocabulary and query rows while all admit and replay. Human ratification records exist for all three. This evidence diagnoses ontology variability; it does not supply the new history-profile execution.
+
+KISS finding: The parallel manuscript is about 5,000 Markdown words and the approved v4 matrix adds three single-session producers, one staged-session variant, packs, typed gaps, and as many as two ontology revisions. Executing all of that would answer a larger question than the original thin paper. The smallest coherent paper argument is the distinction among domain vocabulary, domain-history meaning, and accepted replayable change. Whether the v4 matrix stays in this paper or moves to follow-on work is an author scope decision and is not taken here.
+
+Action that does not wait: `paper-v4/experiment-v4/brief-to-skill-map.md` removes paper and question rules from the future common skill, and `paper-v4/experiment-v4/spawn-message.md` reduces the experimenter input to isolation plus the selected-reading path. No Core code, result identity, baseline, manuscript claim, or plan version changed.
