@@ -83,7 +83,12 @@ def test_recon_profile_has_exact_narrow_scope() -> None:
 def test_package_profile_is_explicit_and_release_only() -> None:
     package_names = [command.name for command in ci.plan("package")]
 
-    assert package_names == ["package-build", "package-check", "package-smoke"]
+    assert package_names == [
+        "package-build",
+        "package-check",
+        "package-parity",
+        "package-smoke",
+    ]
     assert set(package_names).isdisjoint(
         command.name for command in ci.plan("all")
     )
@@ -185,10 +190,11 @@ def test_wheel_probes_run_outside_the_repository(tmp_path: Path, monkeypatch) ->
     monkeypatch.setattr(ci.subprocess, "run", fake_schema)
 
     assert ci._smoke_package(context) == 0
-    assert len(calls) == 5
+    assert len(calls) == 6
     assert all(cwd == tmp_path for _, cwd in calls)
-    assert [Path(argv[0]).name for argv, _ in calls[-3:]] == [
+    assert [Path(argv[0]).name for argv, _ in calls[-4:]] == [
         "malleus-inquisitor",
+        "malleus-compiler",
         "malleus-ocr",
         "malleus-recon",
     ]
