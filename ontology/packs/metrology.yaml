@@ -1,6 +1,6 @@
 id: https://malleus.dev/schema/packs/metrology
 name: malleus_metrology
-version: 0.1.0
+version: 0.2.0
 title: Malleus Metrology Knowledge Pack
 description: >-
   Optional reusable vocabulary for quantities, bounds, units, uncertainty,
@@ -32,9 +32,52 @@ annotations:
             - measurement unit
             - measurement uncertainty
             - kind of quantity
+        - vocabulary: QUDT Quantity Kinds
+          vocabulary_url: http://qudt.org/vocab/quantitykind/
+          borrowed_terms:
+            - Length
+            - Time
+            - Temperature
+            - Pressure
+            - Mass
+            - Volume
+            - Area
+            - Velocity
+            - Density
+            - Frequency
+            - Energy
+            - Force
+            - MassFraction
+            - Count
+            - Angle
       invented_terms: []
 
 enums:
+  QuantityKindClass:
+    description: >-
+      Controlled classification of a reported quantity. Every value except
+      OTHER is a name minted in the QUDT quantity-kind vocabulary, spelled as
+      QUDT spells it. OTHER is local and records that no listed kind fits. The
+      list is deliberately short and grows by adding values, never by
+      redefining one.
+    permissible_values:
+      Length:
+      Time:
+      Temperature:
+      Pressure:
+      Mass:
+      Volume:
+      Area:
+      Velocity:
+      Density:
+      Frequency:
+      Energy:
+      Force:
+      MassFraction:
+      Count:
+      Angle:
+      OTHER:
+
   Determination:
     description: How a quantity value was obtained.
     permissible_values:
@@ -49,6 +92,7 @@ classes:
     description: A record carrying a bounded quantity and its measurement context.
     slots:
       - quantity_kind
+      - quantity_kind_class
       - value_lower
       - value_upper
       - unit
@@ -80,7 +124,17 @@ classes:
 slots:
   quantity_kind:
     range: string
-    description: Kind of quantity being reported.
+    description: >-
+      Kind of quantity being reported, in the source's own wording. Open on
+      purpose: it is what the source said, and it is never rewritten to fit
+      quantity_kind_class.
+  quantity_kind_class:
+    range: QuantityKindClass
+    description: >-
+      Optional classification of the same quantity against the QUDT
+      quantity-kind names, so that two records reporting one kind under
+      different wording compare. OTHER when no listed kind fits. Leaving it
+      unset is the honest result when the source's kind is unclear.
   value_lower:
     range: float
     description: Lower bound, equal to value_upper for an exact value.
