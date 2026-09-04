@@ -16,6 +16,13 @@ facts and their accepted history.
 The point is not the size of the graph. The point is that meaning, mapping,
 checks, decisions, history, and projection remain separate and inspectable.
 
+The original showcase below remains frozen evidence. A newer sibling
+[public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+now sends the same complete five-stage dataset through `malleus.compiler` using
+five canonical neutral population plans. It also records one additive ontology
+revision, reopens one history, and verifies every current and superseded record
+back to its retained plan, field derivations, source bytes, and mapping bytes.
+
 ## 1. Start with controlled source bytes
 
 The baseline source says that warehouse event `e27` packed order `O1` with
@@ -236,12 +243,15 @@ derivations, exact supplier-history source bytes, accepted change set, and the
 `B@e4` supersession link. The trace is rebuilt after reopening the ledger and
 does not write to it.
 
-The larger five-stage showcase on this page predates the neutral population
-plan and composes its changes through the earlier direct change-set path. Its
-change-level provenance remains valid, but `trace_population_record` correctly
-returns `POPULATION_PLAN_NOT_BOUND` for those older changes. Migrating that
-showcase is separate work; the read API does not invent a missing historical
-plan.
+The frozen showcase on this page predates the neutral population plan and
+composes its changes through the earlier direct change-set path. Its
+change-level provenance remains valid, and `trace_population_record` correctly
+returns `POPULATION_PLAN_NOT_BOUND` for those historical changes. The newer
+public-path fixture leaves that evidence untouched and rebuilds the same
+nine-record current graph through five explicit population plans. Its trace
+therefore reaches retained source and mapping bytes for all ten current and
+superseded records. The read API never invents a missing plan for the older
+history.
 
 Run and query the same path from the repository root:
 
@@ -254,6 +264,19 @@ python -m research.ontology_driven_kg_realization.experiments.small_shop.showcas
 python -m research.ontology_driven_kg_realization.experiments.small_shop.showcase.evidence --output build/small-shop-showcase-evidence
 python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/showcase
 ```
+
+Run the complete dataset through the public population and history boundary:
+
+```bash
+python -m research.ontology_driven_kg_realization.experiments.small_shop.public_population.run --output build/small-shop-public-population
+python -m pytest -q research/ontology_driven_kg_realization/experiments/small_shop/public_population/test_run.py
+```
+
+That run records 48 ledger events, five accepted changes, one additive contract
+revision, ten historical records, and nine current records. Its committed
+[evidence](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json)
+binds the exact ledger bytes and contains the graph, selected queries, and a
+verified record-level provenance trace for every accepted record.
 
 The committed evidence is
 [explanation.json](../research/ontology_driven_kg_realization/experiments/small_shop/showcase/evidence/explanation.json),

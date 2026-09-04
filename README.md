@@ -36,6 +36,16 @@ executes and retains the exact source-and-mapping and structural check receipts
 used for each change. This remains a private research runner, but its
 [sources, contracts, history, current graph, and limits are all inspectable](docs/index.md#correct-one-fact-without-rewriting-the-past).
 
+The latest integration run combines the full five-stage dataset behind the
+public `malleus.compiler` facade. Five explicit population plans create the
+order, unit, invoices, payment, settlement relations, and two supplier-order
+states. One additive ontology revision separates the smaller starting contract
+from the later vocabulary. Reopen and replay derive nine current records, while
+the history keeps ten, including the superseded `B@e4` state. Every record is
+then traced to exact retained source and mapping bytes. See the
+[full public-path conformance run](research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+and its [committed evidence](research/ontology_driven_kg_realization/experiments/small_shop/public_population/evidence.json).
+
 ## Why this exists
 
 I believe words have power. The closer we work with them, the more carefully we

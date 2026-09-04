@@ -408,7 +408,7 @@ def _trace_record(
     }
 
 
-def _evidence(replay: compiler.KnowledgeHistoryReplay) -> bytes:
+def _evidence(replay: compiler.KnowledgeHistoryReplay, history_bytes: bytes) -> bytes:
     graph = replay.graph.snapshot()
     contract_identities = tuple(
         dict.fromkeys(change.contract_identity for change in replay.change_sets)
@@ -433,8 +433,10 @@ def _evidence(replay: compiler.KnowledgeHistoryReplay) -> bytes:
                 "history": {
                     "acceptance_head": replay.acceptance_head,
                     "change_set_count": len(replay.change_sets),
+                    "graph_state_digest": replay.graph.state_digest(),
                     "ledger_event_count": replay.ledger_event_count,
                     "ledger_head": replay.ledger_head,
+                    "ledger_sha256": _digest(history_bytes),
                     "materialization_head": replay.materialization_head,
                     "receipt_identity": replay.receipt.identity,
                 },
@@ -475,7 +477,7 @@ def run_full_shop(output: Path) -> FullShopRun:
         if history_path.exists()
         else _build_history(history_path)
     )
-    evidence_bytes = _evidence(replay)
+    evidence_bytes = _evidence(replay, history_path.read_bytes())
     (output / "evidence.json").write_bytes(evidence_bytes)
     return FullShopRun(replay, evidence_bytes)
 

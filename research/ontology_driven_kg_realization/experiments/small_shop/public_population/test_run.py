@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+from hashlib import sha256
 from importlib import import_module
 import json
 from pathlib import Path
@@ -104,6 +105,10 @@ def test_full_run_admits_reopens_queries_and_traces_every_record(
 
     assert first.evidence_bytes == second.evidence_bytes
     assert first.evidence_bytes == EXPECTED_EVIDENCE.read_bytes()
+    evidence = json.loads(first.evidence_bytes)
+    assert evidence["history"]["ledger_sha256"] == (
+        "sha256:" + sha256(ledger_before_trace).hexdigest()
+    )
     assert first.replay.receipt == second.replay.receipt
     assert (output / "history.jsonl").read_bytes() == ledger_before_trace
 

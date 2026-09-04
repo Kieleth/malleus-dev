@@ -15,6 +15,13 @@ For the current five-change demonstration, read the
 historical milestones below with settlement, one ledger, replay-derived current
 state, named queries, and exact change-level provenance.
 
+The newer
+[full public-path conformance run](../research/ontology_driven_kg_realization/experiments/small_shop/public_population/README.md)
+executes all five changes through `malleus.compiler`, records one additive
+ontology revision, and verifies every current and superseded record back to its
+retained population plan, field derivations, source bytes, and mapping bytes.
+It keeps the earlier research evidence unchanged.
+
 ## First compiler-to-ledger-to-knowledge-graph proof
 
 > **Status:** Working research milestone, 3 September 2026.
