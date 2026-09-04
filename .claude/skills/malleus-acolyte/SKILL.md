@@ -222,8 +222,8 @@ fallback.
    domain time, formalisation targets, and typed gaps. Pass it to
    `adapt_document_assertions`, or run `malleus-compiler capture`, which wraps
    that call and writes the plan and census bytes to named output paths. For
-   structured sources, write a source-specific
-   adapter that emits the same neutral population plan. Preserve source units
+   structured sources, write a source-specific adapter that emits the same
+   neutral population plan. Preserve source units
    and values. Any normalization needs its own explicit evidence-bearing
    operation. Inspect the returned `canonical_census_bytes`; continue reviewing
    and capturing source-supported material across both census axes. Each block is
@@ -234,8 +234,8 @@ fallback.
 7. **Compile, then admit.** For Core's default governed path, create the new
    ledger with `create_structural_history(..., compilation=compiled, ...)`, or
    run `malleus-compiler history create`. This uses the installed,
-   content-addressed `STRUCTURAL_HISTORY_BUNDLE` and
-   retains its machine, policy, history binding, and executable check contract.
+   content-addressed `STRUCTURAL_HISTORY_BUNDLE` and retains its machine,
+   policy, history binding, and executable check contract.
    The default proves mechanical base coordinates, retained input closure, and
    structural application. It does not establish source truth, domain adequacy,
    or epistemic correctness. A project that needs stronger acceptance supplies
@@ -250,7 +250,8 @@ fallback.
    as `prepared`. `population_retention_events` names the exact artifacts that
    call will retain, which is the profile, the plan, and the generated gaps
    artifact; any other event set refuses. `malleus-compiler populate` wraps
-   those three and writes the composed change-set bytes. When
+   `compile_population_plan`, `population_retention_events` and
+   `prepare_population_change`, and writes the composed change-set bytes. When
    `prepared.change_set is not None`, call
    `admit_structural_change(history=history, preparation=prepared, ...)`, or
    run `malleus-compiler admit` with the change-set bytes populate wrote.
