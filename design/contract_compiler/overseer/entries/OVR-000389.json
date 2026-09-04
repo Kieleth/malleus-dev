@@ -1,0 +1,104 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:84337d7a9b7b914eb3bbd272da0f9f57496e932e8de45ca8719db5e9e68d0e16",
+        "before_digest": "sha256:014a804cf344c52182b8629748a3a95937cf9433019a2977d9f2e9b97411be64",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      },
+      {
+        "after_digest": "sha256:b903cfb42e0a1b9ffe9f9ac04dac84338482b1a9b5be67d91de539cc14b6b0e5",
+        "before_digest": "sha256:bf244c896cad8202e97e5249e4726ec6cb92be5aa09655274bd1f7f9c87c6992",
+        "change": "MODIFIED",
+        "path": "design/KNOWLEDGE_PACKS.md"
+      },
+      {
+        "after_digest": "sha256:50075f328e59880b679a6cca1b88473772aa0d96789faa769785db30ae1bbadc",
+        "before_digest": "sha256:c8a2a61e34792fcf0b96f114beb307e00040f0a4be8dcf151a629fdcb4bab8a8",
+        "change": "MODIFIED",
+        "path": "docs/ADOPTION_GUIDE.md"
+      },
+      {
+        "after_digest": "sha256:27b3fb4764196eddfea8220e017ddafb1c0d2e2aaa5257a4a8323178b21281a6",
+        "before_digest": "sha256:2bdefe372e337c64ed7f66918f07262b7a2e99ebbf11fa2d9ab5e546604bdfc8",
+        "change": "MODIFIED",
+        "path": "docs/IMPLEMENTATION_STATUS.md"
+      },
+      {
+        "after_digest": "sha256:fcbe51fdcefd78e601df41deda7eb588537b3cf4fd22760c39d21ec9c8b23e63",
+        "before_digest": "sha256:bafc726433aa75a4734b61dd331df468e072a8fad7c86b4a2edfcf8f7d801b56",
+        "change": "MODIFIED",
+        "path": "docs/KNOWLEDGE_GRAPH_PROTOCOL.md"
+      },
+      {
+        "after_digest": "sha256:b39ddabb26aca5c383f5746184f0f609966f84a729205370cef2840db608039f",
+        "before_digest": "sha256:fcec3d3fcff5861ffc9bdf5d915ce735c3eef0cb886d44924167f7a92f6b5001",
+        "change": "MODIFIED",
+        "path": "docs/SMALL_SHOP_WALKTHROUGH.md"
+      },
+      {
+        "after_digest": "sha256:97243aa0e739ecc2618e0ddcbedbc23b7fe0017e7a56beacb60d564b0bd6381a",
+        "before_digest": "sha256:9dd62ca1fd9bede317c32c154b1b63cd768bce04c1741b458b66cd5e2f605a18",
+        "change": "MODIFIED",
+        "path": "docs/index.md"
+      },
+      {
+        "after_digest": "sha256:dda161e2772fc12d20e301c2c2a83300cf4afba412447889da48ebe361c91041",
+        "before_digest": "sha256:f73ceb0bfd4df0162b9da47c11d8e3ff8ddaeb9e60c883c01ea115ec6885e743",
+        "change": "MODIFIED",
+        "path": "handover/2026-09-03-population-pareto-backlog.md"
+      },
+      {
+        "after_digest": "sha256:97352c1970afb66cca329eea6542244f132bc55b0e938830ef4ddb0970a8d7f7",
+        "before_digest": "sha256:f61bf42ab812043853df39fbc5b3d6226ef6ad89d2965ce45bbd897ffb01594b",
+        "change": "MODIFIED",
+        "path": "tests/test_docs.py"
+      },
+      {
+        "after_digest": "sha256:0fd46d1898d557a868df08bffca05c7ce622bad17444392bbb1f025fd79720e3",
+        "before_digest": "sha256:abe47856f238f7c7a1c0501966992669051eb2f32e385632f253cd5b947d2abf",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:a93ad1365bb46cd9f77941ce8cbcf347041d4004848692ddf22715401a78d3cd",
+  "entry_id": "OVR-000389",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:477d62f532e550c39318eec7a60f5d0f57e11a075db0c317fc44be48225d434a",
+  "recorded_at": "2026-09-04T15:47:54Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "c19c347bea4de8958b0718d39a7095fbca15e03b",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "88291bbbd97ea23cc42f228b9bdd06268c8d1d76",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 389,
+  "subject": {
+    "id": "governed-object-event-public-guidance",
+    "type": "DOCUMENT"
+  },
+  "summary": "Publish object-event guidance and correct the backlog record of the deferral.",
+  "why": "The public pages, the installed skill and the executable documentation guards now describe the role-gated Event path and the neutral structural bootstrap alongside the existing state-version and source-assertion routes. 88291bb had removed Event materialization from the deferred list in the Pareto backlog without saying why; the note now records that the item was deferred on 2026-09-03 and implemented on 2026-09-04 under the overnight relay instruction, names af176fe, 6990658 and 13f11aa, and keeps Event-to-Event ordering and Signal population deferred."
+}

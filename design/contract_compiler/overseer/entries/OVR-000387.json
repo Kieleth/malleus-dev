@@ -1,0 +1,122 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:fc9ebe2b1010dd7496a6c2645c8110b5dae413921bbbc500e8184148e6086d28",
+        "change": "CREATED",
+        "path": "tests/contract_compiler/pareto/test_object_event_population.py"
+      },
+      {
+        "after_digest": "sha256:0c60c669620a28954f439d4337738ec31001043f2a7be33eb69f7d72d0af411f",
+        "change": "CREATED",
+        "path": "ontology/profiles/object-event.yaml"
+      },
+      {
+        "after_digest": "sha256:14205891c83d73cff32fdc82b02ac171141ff89a8b34ae4d4e0b33b2abdb97ae",
+        "before_digest": "sha256:cacdcfb21d1993675bb07710244155a74425de6cf45b62e3a5e60021af8ed1d8",
+        "change": "MODIFIED",
+        "path": "pyproject.toml"
+      },
+      {
+        "after_digest": "sha256:9fadb8b72e7148042d5fe6b2d5c36060d37366ae5f575fea1f302e487857b743",
+        "before_digest": "sha256:243e69d1a4a6b6f4b5a6ec95161f44abfe0fbafbb05007acf1c93043c9534365",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/knowledge.py"
+      },
+      {
+        "after_digest": "sha256:f419063ed7828560196354d798141ea3569702987c3a1aa064efef39997feadb",
+        "before_digest": "sha256:34779ae6883a2c14844f7735fe20d6e5994c5d41d8a0a5ab85d5626a52954f8a",
+        "change": "MODIFIED",
+        "path": "src/malleus/_contract_pipeline/population.py"
+      },
+      {
+        "after_digest": "sha256:c872112310caed657a30a7e0c0239cace924b24b1455502bdc3f0b145458dafb",
+        "before_digest": "sha256:b249f866817f4e223ecf38c9a1b12ed1d50a5967debf6f218110ba7e4d1248a1",
+        "change": "MODIFIED",
+        "path": "src/malleus/accepted.py"
+      },
+      {
+        "after_digest": "sha256:3fa76bb88b091ee37c0b7a9002116a54706d01b2807b27ab5ffaaec30943ef3c",
+        "before_digest": "sha256:110b0eea5791c8b1b4495c55b65ab746d10fdc3bd308a7ea24a55612f128e316",
+        "change": "MODIFIED",
+        "path": "src/malleus/kg.py"
+      },
+      {
+        "after_digest": "sha256:f14b5f6aea208d8a8518ead869a3d9f78132c665e9d42ddea295a5b16b687b6b",
+        "before_digest": "sha256:8bcfd50567b03f54011780a72f725d993f3f04443165d61cdf0f93e5f3bc5609",
+        "change": "MODIFIED",
+        "path": "src/malleus/staging.py"
+      },
+      {
+        "after_digest": "sha256:7e797c0bc0b4986350031846a70384adaefc1914ff535e23c4b6f48cc324b2b8",
+        "before_digest": "sha256:3c5546215f84d371ffffcfb9ee560e316722783b5e2a7705fd0d1e206d35bf63",
+        "change": "MODIFIED",
+        "path": "tests/test_kg.py"
+      },
+      {
+        "after_digest": "sha256:4f52e68c06560f12bccbf65e40e1ebc93e9fa3bb787e79f33eb3c96efafcfbfc",
+        "before_digest": "sha256:9156b58bdb24be1207079e5b7d07ef0317ef106e207c6553e181d93d9cbf4085",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_population_plan.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:77fe0b8a9a48d4707a4a9f8ae2c9eb229c7227bda17edd3af884be3ba9d3423f",
+  "entry_id": "OVR-000387",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6a1e35d91a4f8e9c95025ada2b054b8935e937f858e255629836368860b8cc8c",
+  "recorded_at": "2026-09-04T15:47:52Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "2bf1c3ab2a82880301273ed7ecae57d2f0518aff",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "af176fe3dd9c6c1c914f612947cf9d53340d5bfc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "89d781283a718da46296e9bd21ca910912b7d888",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "69906585ee502a4600cb73e5bb881cd140f3caf8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "13f11aa19e9b198055217feab3fd47afb746bded",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "2f9bb909c887f68b4f56b72434223223276c3829",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 387,
+  "subject": {
+    "id": "governed-object-event-population",
+    "type": "DOCUMENT"
+  },
+  "summary": "Admit Event and EventParticipation records under a declared ontology role.",
+  "why": "P9 was deferred on 2026-09-03 and built on 2026-09-04 under the overnight relay instruction, not because a consumer earned it. compile_population_plan now admits the events family only when the bound domain-history profile declares an Event ontology role, and event_participations only when the compiled contract also carries the EventParticipation type; every other case still refuses with FAMILY_NOT_ADMITTED. CREATE_EVENT_PARTICIPATION stages participation without widening relation endpoints. Two facts are recorded rather than hidden: 13f11aa restored the canonical operation dependency order after the new family disturbed it with no preceding failing test, and 2f9bb90 pins that order afterwards instead. Event-to-Event ordering and Signal population remain unimplemented."
+}

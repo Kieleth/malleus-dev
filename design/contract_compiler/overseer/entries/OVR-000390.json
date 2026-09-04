@@ -1,0 +1,60 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "as_of": "2026-09-04T15:47:55Z",
+    "basis": [
+      "src/malleus/_contract_pipeline/population.py sets event_records_admitted from the bound domain-history profile ontology_roles[\"event\"], adds the events family when it is true, and adds event_participations only when the compiled contract has the EventParticipation type.",
+      "Every other public family outside that admitted set still raises PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED, pinned by tests/contract_compiler/pareto/test_population_plan.py for events and signals without an Event-role profile and by tests/contract_compiler/pareto/test_public_compiler.py.",
+      "tests/contract_compiler/pareto/test_object_event_population.py admits, reopens, replays and queries the object-event fixture and pins that a source-assertion profile can describe events without admitting them as occurrences."
+    ],
+    "limitations": [
+      "This observation does not supersede OVR-000368; the entry stays active and its other statements are unchanged.",
+      "Event-to-Event ordering and Signal population are still unimplemented and signals still refuse.",
+      "The admission is profile-driven, so a plan bound to a profile without an Event ontology role refuses exactly as OVR-000368 described."
+    ]
+  },
+  "entry_hash": "sha256:f314dcc07584e08a4e57a2633fcdd69c11288e3b038439dfa7e659f822cb2c3b",
+  "entry_id": "OVR-000390",
+  "entry_type": "OBSERVATION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:a93ad1365bb46cd9f77941ce8cbcf347041d4004848692ddf22715401a78d3cd",
+  "recorded_at": "2026-09-04T15:47:55Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "OVR-000368",
+      "type": "ENTRY"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "af176fe3dd9c6c1c914f612947cf9d53340d5bfc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "69906585ee502a4600cb73e5bb881cd140f3caf8",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "13f11aa19e9b198055217feab3fd47afb746bded",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 390,
+  "subject": {
+    "id": "public-compiler-population-facade",
+    "type": "DOCUMENT"
+  },
+  "summary": "Retire the OVR-000368 claim that Event population always refuses.",
+  "why": "OVR-000368 closes with \"Event population still refuses with the public FAMILY_NOT_ADMITTED result\". That has been untrue since af176fe. It is recorded here rather than as a CORRECTION because a CORRECTION makes its target inactive, and dropping OVR-000368 from the projection breaks the recorded document chain at OVR-000181, OVR-000369, OVR-000371, OVR-000375 and OVR-000376, which append-only entries cannot repair. Everything else in OVR-000368 stands."
+}

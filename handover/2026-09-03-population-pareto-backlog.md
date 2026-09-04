@@ -19,3 +19,7 @@ After this invariant passes its focused tests and the active Small Shop suite, m
 - Operation-level provenance, generic fan-out, Event-to-Event ordering, Signal population, and Semantic Re-entry.
 
 Promote one of these items only when a public contract needs it or a concrete reproducer shows that the current path cannot serve an adopter. Until then, preserve it as roadmap work rather than blocking the executable end-to-end path.
+
+## Promoted out of this list on 2026-09-04
+
+Event materialization was deferred here on 2026-09-03 and implemented on 2026-09-04 under Luis's overnight relay instruction, not because a public contract or a concrete reproducer earned it. `af176fe` admits the `events` and `event_participations` families when the bound domain-history profile declares an Event ontology role, `6990658` restricts that admission to the declared role, and `13f11aa` restores the canonical operation dependency order that the new family had disturbed. Event-to-Event ordering, Signal population, operation-level provenance, generic fan-out, and Semantic Re-entry stay deferred.

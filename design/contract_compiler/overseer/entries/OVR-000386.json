@@ -1,0 +1,98 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:a681b05123a791c7217cf5a05ca4e6ded789f85be4661b0d38300a416059c00d",
+        "before_digest": "sha256:68cf3c0647d4347bc5237c8d5dcfb9cc805c9dd1e7888aa7c47378ac58cb7e72",
+        "change": "MODIFIED",
+        "path": "src/malleus/compiler.py"
+      },
+      {
+        "after_digest": "sha256:daa2cc88009b281ae5343497ced2fceea77417ba77b115cf854554d617e1aee9",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/structural-admission-check.json"
+      },
+      {
+        "after_digest": "sha256:4e0acca2c15b78f66d3994e77d4f9e878ed4cc69047ede08a8aa9b455aa71546",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/structural-admission-policy.json"
+      },
+      {
+        "after_digest": "sha256:16ab95a679e61a005bf861eb1369dd635ef715bb59892a06d06047540f5e3fae",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/structural-history-binding.json"
+      },
+      {
+        "after_digest": "sha256:d35f3b34d4db439337fc0d70566401c0a4e4cc160e1e482ff2036e55df8f9394",
+        "change": "CREATED",
+        "path": "src/malleus/profiles/structural-history-machine.json"
+      },
+      {
+        "after_digest": "sha256:2d59051150012dd686d59d1afc133f56071788647dc4fa139905538c7504a28e",
+        "before_digest": "sha256:787fdd4ff7515131d65f54d78ce22115947f87420e69db74d0ac6f5ed02b29a9",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_public_compiler.py"
+      },
+      {
+        "after_digest": "sha256:abe47856f238f7c7a1c0501966992669051eb2f32e385632f253cd5b947d2abf",
+        "before_digest": "sha256:8784afc2b2eb59ba6fb8045dfc4471350d249fd997cb401bf3b1f61617b68191",
+        "change": "MODIFIED",
+        "path": "tests/test_inquisition.py"
+      },
+      {
+        "after_digest": "sha256:014a804cf344c52182b8629748a3a95937cf9433019a2977d9f2e9b97411be64",
+        "before_digest": "sha256:ab0279f7b1bda382e45e490f19580805a150dc9159e5912269f9a38350e3fcc8",
+        "change": "MODIFIED",
+        "path": ".claude/skills/malleus-acolyte/SKILL.md"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6a1e35d91a4f8e9c95025ada2b054b8935e937f858e255629836368860b8cc8c",
+  "entry_id": "OVR-000386",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:6802ca1061193aa081b0e688d981d7f968b523f79f53a8f8a09f9fc83793741e",
+  "recorded_at": "2026-09-04T15:47:51Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "cd64076b2c7d4210bdb5e2619f3d903a4f0d4923",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "7e26aa3ff3057ee1d10dd31127f097adf602cf50",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "c163e62b439975377dae7fab6e4cad1d1b55643d",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "bcc7d7be3a67a8da7093f60b20d65ac5b569f661",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 386,
+  "subject": {
+    "id": "neutral-structural-history-bootstrap",
+    "type": "DOCUMENT"
+  },
+  "summary": "Ship the neutral structural-history bootstrap and its packaged protocol artifacts.",
+  "why": "A project with a typed graph and no governed history had no route into one that did not borrow a domain fixture. The public facade gains create_structural_history and admit_structural_change over four packaged artifacts: a history binding, a state machine, an admission policy, and an admission check. The failing public-facade test landed before the implementation, and the installed skill now teaches the route. The artifacts are structural only: they carry no domain vocabulary, no Event semantics, and no claim of a stable wire format."
+}

@@ -1,0 +1,56 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:b26d98ee6251bc57839f073599262d9705cefa9d78a6b0fd4a8ec9422255f550",
+        "before_digest": "sha256:496e51131e3f2b58703f233edeaaa63cbd6ee7d39e74d6154028ed2422e2786f",
+        "change": "MODIFIED",
+        "path": "tests/contract_compiler/pareto/test_knowledge_packs.py"
+      },
+      {
+        "after_digest": "sha256:503d6d7cc4764d97380f2ef860b641ad0d0b187573907ce4a5b042ea1c667126",
+        "before_digest": "sha256:8721fff12b5a183c8e112b4953854f191692c738cfc033fd96ea6908aa3f77b8",
+        "change": "MODIFIED",
+        "path": "src/malleus/inquisition/pack_grounding.py"
+      }
+    ]
+  },
+  "entry_hash": "sha256:6802ca1061193aa081b0e688d981d7f968b523f79f53a8f8a09f9fc83793741e",
+  "entry_id": "OVR-000385",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:2410138e81e343e8a1044ffdc58801db1311ed4419aa3b3c89ce1d50693ac8b8",
+  "recorded_at": "2026-09-04T15:47:50Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "41af4259821b2153bb6c5aec513c265772a20439",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "EVIDENCES",
+      "target": "8e8df83efeed307ca4ccdf1a1c60c6ebaaadaf16",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 385,
+  "subject": {
+    "id": "aggregate-project-grounding-diagnostic",
+    "type": "DOCUMENT"
+  },
+  "summary": "Report every missing project grounding subject in one diagnostic.",
+  "why": "The pack-grounding rite refused one missing subject at a time, so a fresh producer spent a whole budget rediscovering the next omission after each attempt. The checker now collects every ungrounded subject before it refuses, and the failing test that demanded the aggregate landed first. This changes the diagnostic only. Grounding remains structural, offline, and pack-local, and no refusal reason, pack vocabulary, or public name changes."
+}

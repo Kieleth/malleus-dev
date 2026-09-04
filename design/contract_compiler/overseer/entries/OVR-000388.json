@@ -1,0 +1,99 @@
+{
+  "actor": {
+    "id": "overseer",
+    "type": "OVERSEER"
+  },
+  "data": {
+    "affected_ids": [
+      "CC-R11"
+    ],
+    "documents": [
+      {
+        "after_digest": "sha256:2d9fe7ecb28a9346454061da95b6dddf8a06303a89cf7ae299d2640ce6ea1398",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/__init__.py"
+      },
+      {
+        "after_digest": "sha256:f504d6ef5fd6d742792280f04fb8e1cf7604f13425f8a99774f54f1b2179a57b",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/evidence.json"
+      },
+      {
+        "after_digest": "sha256:6d557b872806886218ac5b90f0630a7dc7d6450ca8a226a106878acd97cc2374",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/run.py"
+      },
+      {
+        "after_digest": "sha256:1fea047c1c1a6e846d1d448dcfbbb097f8c5b3cfaabe12f10e8fa2297fdcda2a",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/experiments/small_shop/object_event/test_run.py"
+      },
+      {
+        "after_digest": "sha256:7cbb692312615b7c199c2835ddd6aa16d149a0893c3e1c10220eeb8a1a3054d9",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/README.md"
+      },
+      {
+        "after_digest": "sha256:203e6c1ddfc2d2d3c7d02c0156a682b775aaf790175cf667f336250cc62cfb39",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/configuration/mapping.json"
+      },
+      {
+        "after_digest": "sha256:5fac71f4cc6876d39ade5878c03c7c574990086c6b62ee3b6ed8a47b0380eb4b",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/configuration/time-context.json"
+      },
+      {
+        "after_digest": "sha256:fad3a9c6e136e2b9711c07e6c8163f27a9bc4be5502531614a944e622afe644d",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/population/ret-040.json"
+      },
+      {
+        "after_digest": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/sources/warehouse.jsonl"
+      },
+      {
+        "after_digest": "sha256:f989f2aa78d97f06b6e5d266146c3cd38ea6a86e2e5c5d65b09497b5495a5947",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/input/tbox/small-shop-object-event.yaml"
+      },
+      {
+        "after_digest": "sha256:6459c6ebb6d85e3e9be9b2273608137b74fc196519f55210d663f30f993d2113",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/manifest.json"
+      },
+      {
+        "after_digest": "sha256:e777ffca3adb74212b0ec75b52017a7dbb91e476425b85594fad70f41050390a",
+        "change": "CREATED",
+        "path": "research/ontology_driven_kg_realization/fixtures/small_shop_fulfilment_object_event_v1/oracle/ret-040.json"
+      }
+    ]
+  },
+  "entry_hash": "sha256:477d62f532e550c39318eec7a60f5d0f57e11a075db0c317fc44be48225d434a",
+  "entry_id": "OVR-000388",
+  "entry_type": "DOCUMENT_REVISION",
+  "ledger": "overseer",
+  "previous_entry_hash": "sha256:77fe0b8a9a48d4707a4a9f8ae2c9eb229c7227bda17edd3af884be3ba9d3423f",
+  "recorded_at": "2026-09-04T15:47:53Z",
+  "references": [
+    {
+      "relation": "EVIDENCES",
+      "target": "af176fe3dd9c6c1c914f612947cf9d53340d5bfc",
+      "type": "COMMIT"
+    },
+    {
+      "relation": "AFFECTS",
+      "target": "CC-R11",
+      "type": "WORKSTREAM"
+    }
+  ],
+  "schema": "malleus.contract-compiler.ledger-entry/v1",
+  "sequence": 388,
+  "subject": {
+    "id": "small-shop-object-event-fixture",
+    "type": "DOCUMENT"
+  },
+  "summary": "Bind the Small Shop object-event fixture and its research experiment.",
+  "why": "The object-event path needed one runnable case that is not the state-version fixture. small_shop_fulfilment_object_event_v1 supplies retained warehouse source bytes, an object-event TBox, a mapping, a time context, one population plan and its oracle; the research experiment compiles, populates, admits, replays and queries them. The fixture is research evidence, not a Malleus rule: its ontology choices, mapping conveniences and query shapes stay research-local and bind nothing in Core beyond the profile identity it declares."
+}
