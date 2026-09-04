@@ -1792,6 +1792,26 @@ class TestSkillsAreInstallable:
             "pack-grounding",
             "pack-conformance",
             "extend a pack concept before extending root",
+            (
+                "the rite reads only classes whose `is_a` is a Malleus root "
+                "directly"
+            ),
+            "DIRECT_ROOT_GROUNDING_REQUIRED",
+            (
+                "it stops at the first block whose shape is wrong, one entry "
+                "at a time, so write the block correctly the first time"
+            ),
+            "annotations: grounding: tag: grounding value: area:",
+            "vocabulary_url:",
+            "borrowed_terms:",
+            "invented_terms: []",
+            "must equal one of three closed forms exactly",
+            "requires `invention_search` beside it",
+            "`none_found: true` and `search`",
+            (
+                "each entry carries exactly `vocabulary`, `vocabulary_url` "
+                "and `borrowed_terms`"
+            ),
             "state-version`, `source-assertion`, or `object-event",
             "Event admissibility follows the profile's declared Event role",
             "Steps 6 through 9 are the governed-history branch",
