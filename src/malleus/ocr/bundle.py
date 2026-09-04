@@ -22,6 +22,7 @@ same way a protocol record does. Nothing in this module writes to a ledger.
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 import re
 from dataclasses import MISSING, asdict, dataclass, field, fields, is_dataclass
@@ -39,6 +40,30 @@ DOCUMENT_VERSION = 1
 
 class BundleError(ValueError):
     """A document cannot be read as a bundle. Refuse; never repair."""
+
+
+class BundleSyntaxError(BundleError):
+    """Authored bytes are not one unambiguous JSON document."""
+
+
+def _strict_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    document: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in document:
+            raise BundleSyntaxError(f"bundle document repeats object key: {key}")
+        document[key] = value
+    return document
+
+
+def _reject_json_constant(value: str) -> None:
+    raise BundleSyntaxError(f"bundle document contains non-finite number: {value}")
+
+
+def _strict_json_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise BundleSyntaxError(f"bundle document contains non-finite number: {value}")
+    return parsed
 
 
 # Full, algorithm-tagged digests only. A truncated digest may be displayed and
@@ -429,6 +454,36 @@ class Bundle:
             "document_version": DOCUMENT_VERSION,
             "bundle": asdict(self),
         }
+
+    @classmethod
+    def from_bytes(cls, source: bytes) -> "Bundle":
+        """Read one exact UTF-8 JSON document, or refuse without repair."""
+        if not isinstance(source, bytes):
+            raise BundleSyntaxError("bundle document source must be exact bytes")
+        try:
+            text = source.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise BundleSyntaxError("bundle document is not UTF-8") from error
+        try:
+            document = json.loads(
+                text,
+                object_pairs_hook=_strict_json_object,
+                parse_constant=_reject_json_constant,
+                parse_float=_strict_json_float,
+            )
+        except BundleSyntaxError:
+            raise
+        except ValueError as error:
+            raise BundleSyntaxError(
+                f"bundle document is not valid JSON: {error}"
+            ) from error
+        try:
+            canonical_json(document)
+        except ValueError as error:
+            raise BundleSyntaxError(
+                f"bundle document is not canonical JSON data: {error}"
+            ) from error
+        return cls.from_document(document)
 
     @classmethod
     def from_document(cls, document: Any) -> "Bundle":

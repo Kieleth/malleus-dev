@@ -602,6 +602,105 @@ class TestThePortableDocument:
         assert fragment in str(raised.value)
 
 
+@pytest.fixture
+def retained_region_bundle_bytes():
+    """Exact bytes from the smallest retained multi-region corpus case."""
+    from pathlib import Path
+
+    return (
+        Path(__file__).resolve().parents[1]
+        / "conformance"
+        / "ocr"
+        / "v0"
+        / "corpus"
+        / "cases"
+        / "region-control"
+        / "bundle.json"
+    ).read_bytes()
+
+
+class TestExactBundleBytes:
+    """The CLI verifies authored bytes, not a permissive reinterpretation."""
+
+    def test_the_retained_corpus_bundle_enters_from_its_exact_bytes(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle
+
+        bundle = Bundle.from_bytes(retained_region_bundle_bytes)
+        assert bundle.id == "fixture:region-control:bundle"
+        assert verify_bundle(bundle).conforms
+
+    @pytest.mark.parametrize(
+        "anchor,injection,key",
+        [
+            (
+                b'{\n  "bundle":',
+                b'{\n  "profile": "wrong-profile",\n  "bundle":',
+                "profile",
+            ),
+            (
+                b'    "transport_metadata": {\n',
+                b'    "transport_metadata": {\n      "network_access": true,\n',
+                "network_access",
+            ),
+        ],
+    )
+    def test_duplicate_keys_are_refused_at_every_object_depth(
+        self, retained_region_bundle_bytes, anchor, injection, key
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        assert retained_region_bundle_bytes.count(anchor) == 1
+        ambiguous = retained_region_bundle_bytes.replace(anchor, injection, 1)
+        assert ambiguous.count(f'"{key}"'.encode()) == 2
+        with pytest.raises(BundleError, match=rf"repeats object key: {key}"):
+            Bundle.from_bytes(ambiguous)
+
+    @pytest.mark.parametrize("literal", [b"NaN", b"Infinity", b"-Infinity", b"1e400"])
+    def test_nonfinite_numbers_are_refused_anywhere_in_the_document(
+        self, retained_region_bundle_bytes, literal
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        finite = b'      "network_access": false'
+        assert retained_region_bundle_bytes.count(finite) == 1
+        nonfinite = retained_region_bundle_bytes.replace(
+            finite, b'      "network_access": ' + literal, 1
+        )
+        with pytest.raises(BundleError, match="non-finite number"):
+            Bundle.from_bytes(nonfinite)
+
+    def test_non_scalar_unicode_is_refused_before_it_reaches_a_digest(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        value = b'      "network_access": false'
+        assert retained_region_bundle_bytes.count(value) == 1
+        non_scalar = retained_region_bundle_bytes.replace(
+            value, b'      "network_access": "\\ud800"', 1
+        )
+        with pytest.raises(BundleError, match="not canonical JSON data"):
+            Bundle.from_bytes(non_scalar)
+
+    def test_invalid_utf8_is_refused_before_document_construction(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        with pytest.raises(BundleError, match="not UTF-8"):
+            Bundle.from_bytes(b"\xff" + retained_region_bundle_bytes)
+
+    def test_the_exact_byte_boundary_does_not_accept_decoded_text(
+        self, retained_region_bundle_bytes
+    ):
+        from malleus.ocr.bundle import Bundle, BundleError
+
+        with pytest.raises(BundleError, match="must be exact bytes"):
+            Bundle.from_bytes(retained_region_bundle_bytes.decode("utf-8"))
+
+
 class TestThePackagedConformanceCases:
     """An adopter with only the wheel must be able to run something. Until
     these shipped, 'passes the conformance suite' meant 'cloned our repo'."""
@@ -771,6 +870,23 @@ class TestTheCommandLine:
         missing = tmp_path / "absent.json"
         code, _ = self._run([str(missing)], capsys)
         assert code == 2
+
+    def test_an_ambiguous_bundle_is_unreadable_not_silently_reinterpreted(
+        self, tmp_path, capsys, retained_region_bundle_bytes
+    ):
+        path = tmp_path / "duplicate-profile.json"
+        anchor = b'{\n  "bundle":'
+        assert retained_region_bundle_bytes.count(anchor) == 1
+        path.write_bytes(retained_region_bundle_bytes.replace(
+            anchor,
+            b'{\n  "profile": "wrong-profile",\n  "bundle":',
+            1,
+        ))
+
+        code, out = self._run([str(path)], capsys)
+
+        assert code == 2
+        assert "repeats object key: profile" in out
 
     def test_the_packaged_suite_passes_from_the_command_line(self, capsys):
         code, out = self._run(["--conformance"], capsys)

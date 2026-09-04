@@ -11,9 +11,11 @@ audio and you replace the selector profile while the identity planes, digest
 rules, staleness semantics and coverage declarations stand unchanged.
 
 The artifact is the bundle document, not the Python object. `Bundle.document()`
-and `Bundle.from_document()` are the boundary, `malleus-ocr` verifies one from
-the command line, and `malleus-ocr --conformance` runs the packaged cases. An
-adapter conforms by emitting a document; it may be written in any language.
+emits one, `Bundle.from_bytes()` strictly reads untrusted document bytes, and
+`Bundle.from_document()` reads an already-parsed trusted mapping. `malleus-ocr`
+verifies one from the command line, and `malleus-ocr --conformance` runs the
+packaged cases. An adapter conforms by emitting a document; it may be written
+in any language.
 
 The authority for this vocabulary is `ontology/domains/ocr.yaml`. Every plane
 is a typed record under a root primitive, and `verify_bundle` validates each
