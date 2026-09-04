@@ -153,6 +153,7 @@ include = [
     "/ontology/malleus.yaml",
     "/ontology/assent.yaml",
     "/ontology/packs/*.yaml",
+    "/ontology/profiles/*.yaml",
     "/ontology/domains/attack.yaml",
     "/ontology/domains/ocr.yaml",
     "/ontology/domains/cyp450.yaml",
@@ -200,6 +201,7 @@ core-metadata-version = "2.4"
 "ontology/packs/metrology.yaml" = "share/malleus/ontology/packs/metrology.yaml"
 "ontology/packs/chronology.yaml" = "share/malleus/ontology/packs/chronology.yaml"
 "ontology/packs/research.yaml" = "share/malleus/ontology/packs/research.yaml"
+"ontology/profiles/object-event.yaml" = "share/malleus/ontology/profiles/object-event.yaml"
 "ontology/domains/attack.yaml" = "share/malleus/ontology/domains/attack.yaml"
 "ontology/domains/ocr.yaml" = "share/malleus/ontology/domains/ocr.yaml"
 "ontology/domains/cyp450.yaml" = "share/malleus/ontology/domains/cyp450.yaml"

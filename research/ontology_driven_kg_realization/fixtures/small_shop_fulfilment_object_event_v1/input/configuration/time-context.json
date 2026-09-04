@@ -1,0 +1,8 @@
+{
+  "calendar": "PROLEPTIC_GREGORIAN",
+  "fixture_year": 2000,
+  "source_field": "time",
+  "source_format": "%d-%m %H:%M",
+  "timezone": "UTC",
+  "timezone_semantics": "FIXED_UTC_NO_DST"
+}

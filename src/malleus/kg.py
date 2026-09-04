@@ -17,6 +17,7 @@ class OpType(str, Enum):
     CREATE_RELATION = "CREATE_RELATION"
     CREATE_SIGNAL = "CREATE_SIGNAL"
     CREATE_EVENT = "CREATE_EVENT"
+    CREATE_EVENT_PARTICIPATION = "CREATE_EVENT_PARTICIPATION"
 
 
 class OpStatus(str, Enum):
@@ -25,13 +26,14 @@ class OpStatus(str, Enum):
     REJECTED = "REJECTED"
 
 
-# Family order is replay order: a relation needs its endpoints and a signal
-# needs its bearer already materialized when its record is replayed.
+# Family order is replay order: event participation and relations need their
+# endpoints, and a signal needs its bearer already materialized.
 RECORD_FAMILIES: tuple[tuple[str, str], ...] = (
     ("entities", "ENTITY"),
+    ("events", "EVENT"),
+    ("event_participations", "EVENT_PARTICIPATION"),
     ("relations", "RELATION"),
     ("signals", "SIGNAL"),
-    ("events", "EVENT"),
 )
 
 
@@ -110,7 +112,12 @@ class KnowledgeGraph:
 
     def fork(self) -> "KnowledgeGraph":
         """Return an isolated graph copy suitable for candidate evaluation."""
-        return deepcopy(self)
+        copy = KnowledgeGraph(self._registry)
+        copy._graph = deepcopy(self._graph)
+        copy._operations = deepcopy(self._operations)
+        copy._identifiers = deepcopy(self._identifiers)
+        copy._current_turn = self._current_turn
+        return copy
 
     def state_projection(self) -> "KnowledgeGraph":
         """Return materialized graph state without the local operation audit."""
@@ -139,7 +146,12 @@ class KnowledgeGraph:
                 properties = {
                     key: deepcopy(value)
                     for key, value in data.items()
-                    if key not in {"type", "is_signal", "is_event"}
+                    if key not in {
+                        "type",
+                        "is_signal",
+                        "is_event",
+                        "is_event_participation",
+                    }
                 }
                 source_id = None
                 target_id = None
@@ -239,8 +251,12 @@ class KnowledgeGraph:
             )
         elif kind == "SIGNAL":
             operation = self.create_signal(record["type"], record["id"], record["properties"])
-        else:
+        elif kind == "EVENT":
             operation = self.create_event(record["type"], record["id"], record["properties"])
+        else:
+            operation = self.create_event_participation(
+                record["type"], record["id"], record["properties"]
+            )
         if operation.op_status == OpStatus.REJECTED:
             return [f"{label} '{record['id']}': {operation.rejection_reason}"]
         return []
@@ -376,6 +392,58 @@ class KnowledgeGraph:
         if not common.valid:
             return common
         return self._validate_payload(event_type, {**properties, "id": event_id})
+
+    def _validate_event_participation(
+        self,
+        participation_type: str,
+        participation_id: str,
+        properties: dict[str, Any],
+    ) -> ValidationResult:
+        type_result = self._validate_category(
+            participation_type,
+            "EventParticipation",
+            "event participation type",
+        )
+        if not type_result.valid:
+            return type_result
+        common = self._validate_common_id(
+            participation_id,
+            properties,
+            {"id", "type", "is_event_participation"},
+        )
+        if not common.valid:
+            return common
+        structural = self._validate_payload(
+            participation_type, {**properties, "id": participation_id}
+        )
+        if not structural.valid:
+            return structural
+        for role, property_name, expected_kind in (
+            ("Event", "event_id", "EVENT"),
+            ("Entity", "entity_id", "ENTITY"),
+        ):
+            identifier = properties.get(property_name)
+            if not isinstance(identifier, str) or not identifier:
+                return ValidationResult(False, f"{role} ID is required")
+            endpoint = self._identifiers.get(identifier)
+            if endpoint is None:
+                return ValidationResult(False, f"{role} '{identifier}' does not exist")
+            endpoint_kind, endpoint_type = endpoint
+            if endpoint_kind != expected_kind:
+                return ValidationResult(
+                    False, f"{role} '{identifier}' is not an {role}"
+                )
+            expected = self._registry.get_slot_constraint(
+                participation_type, property_name
+            )
+            if expected and expected.range and self._registry.has_type(expected.range):
+                if not self._registry.is_subtype_of(endpoint_type, expected.range):
+                    return ValidationResult(
+                        False,
+                        f"{role} '{identifier}' has type '{endpoint_type}', "
+                        f"expected '{expected.range}' for {participation_type}",
+                    )
+        return ValidationResult(True)
 
     def _validate_category(
         self,
@@ -548,6 +616,42 @@ class KnowledgeGraph:
             self._identifiers[event_id] = ("EVENT", event_type_class)
         return operation
 
+    def create_event_participation(
+        self,
+        participation_type: str,
+        participation_id: str,
+        properties: dict[str, Any] | None = None,
+    ) -> Operation:
+        """Create one qualified Entity participation in an Event."""
+
+        props, property_error = self._properties(properties)
+        result = (
+            ValidationResult(False, property_error)
+            if property_error
+            else self._validate_event_participation(
+                participation_type, participation_id, props
+            )
+        )
+        data = {**deepcopy(props), "id": participation_id}
+        operation = self._record(
+            OpType.CREATE_EVENT_PARTICIPATION,
+            participation_type,
+            data,
+            result,
+        )
+        if result.valid:
+            self._graph.add_node(
+                participation_id,
+                type=participation_type,
+                is_event_participation=True,
+                **deepcopy(props),
+            )
+            self._identifiers[participation_id] = (
+                "EVENT_PARTICIPATION",
+                participation_type,
+            )
+        return operation
+
     def query(
         self,
         entity_type: str | None = None,
@@ -581,6 +685,40 @@ class KnowledgeGraph:
             if target_id and target != target_id:
                 continue
             results.append(deepcopy({"source_id": source, "target_id": target, "key": key, **data}))
+        return results
+
+    def query_event_participations(
+        self,
+        *,
+        event_id: str | None = None,
+        entity_id: str | None = None,
+        qualifier: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return qualified Event-to-Entity participation records."""
+
+        results = []
+        for node_id, data in self._graph.nodes(data=True):
+            if not data.get("is_event_participation"):
+                continue
+            if event_id is not None and data.get("event_id") != event_id:
+                continue
+            if entity_id is not None and data.get("entity_id") != entity_id:
+                continue
+            if qualifier is not None and data.get("qualifier") != qualifier:
+                continue
+            results.append(
+                deepcopy(
+                    {
+                        "id": node_id,
+                        **{
+                            key: value
+                            for key, value in data.items()
+                            if key != "is_event_participation"
+                        },
+                    }
+                )
+            )
+        results.sort(key=lambda item: item["id"])
         return results
 
     def get_node(self, node_id: str) -> dict[str, Any] | None:

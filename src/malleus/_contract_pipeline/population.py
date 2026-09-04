@@ -64,9 +64,16 @@ _ROOT_FIELDS = frozenset(
     }
 )
 _PUBLIC_FAMILIES = frozenset(family for family, _ in RECORD_FAMILIES)
-_ADMITTED_FAMILIES = ("entities", "relations")
+_ADMITTED_FAMILIES = (
+    "entities",
+    "events",
+    "event_participations",
+    "relations",
+)
 _OPERATION_TYPES = (
     ("entities", "CREATE_ENTITY"),
+    ("events", "CREATE_EVENT"),
+    ("event_participations", "CREATE_EVENT_PARTICIPATION"),
     ("relations", "CREATE_RELATION"),
 )
 _OPERATION_TYPE_BY_FAMILY = MappingProxyType(dict(_OPERATION_TYPES))
@@ -832,6 +839,7 @@ def compile_population_plan(
     partial_contract: PartialEffectiveContract,
     contract_view: ContractView,
     base_state: PopulationBaseState,
+    history_profile: object | None = None,
 ) -> PopulationPlanCompilation:
     """Validate and lower one neutral population plan without I/O."""
 
@@ -893,6 +901,27 @@ def compile_population_plan(
             PopulationPlanRefusalReason.MALFORMED_PROFILE_REFERENCE,
             "history-profile digest is malformed",
         )
+    selected_profile = (
+        DomainHistoryProfile.from_data(history_profile)
+        if history_profile is not None
+        else None
+    )
+    if selected_profile is not None and (
+        profile_id != selected_profile.profile_id
+        or profile["sha256"] != selected_profile.identity
+    ):
+        raise _refuse(
+            PopulationPlanRefusalReason.IDENTITY_MISMATCH,
+            "plan and domain-history profile disagree",
+        )
+    occurrence_events_admitted = bool(
+        selected_profile is not None
+        and selected_profile.semantic_unit == "OCCURRENCE"
+        and selected_profile.ontology_roles["event"]
+    )
+    allowed_families = {"entities", "relations"}
+    if occurrence_events_admitted:
+        allowed_families.update({"events", "event_participations"})
 
     adapter = _object(
         root["adapter"],
@@ -947,7 +976,7 @@ def compile_population_plan(
                 PopulationPlanRefusalReason.MALFORMED_PLAN,
                 f"record family {family} must be an array",
             )
-    for family in ("signals", "events"):
+    for family in sorted(_PUBLIC_FAMILIES - allowed_families):
         if records.get(family, []):
             raise _refuse(
                 PopulationPlanRefusalReason.FAMILY_NOT_ADMITTED,
@@ -1019,6 +1048,23 @@ def compile_population_plan(
                 raise _refuse(
                     PopulationPlanRefusalReason.DANGLING_ENDPOINT,
                     f"relation {relation['id']} has absent {endpoint_name}: {endpoint}",
+                )
+    for participation in records.get("event_participations", []):
+        assert isinstance(participation, dict)
+        properties = participation.get("properties")
+        if not isinstance(properties, dict):
+            continue
+        for endpoint_name in ("event_id", "entity_id"):
+            endpoint = properties.get(endpoint_name)
+            if (
+                isinstance(endpoint, str)
+                and endpoint not in by_id
+                and endpoint not in base_changes
+            ):
+                raise _refuse(
+                    PopulationPlanRefusalReason.DANGLING_ENDPOINT,
+                    "event participation "
+                    f"{participation['id']} has absent {endpoint_name}: {endpoint}",
                 )
 
     superseded_by_record: dict[str, str] = {}
@@ -1271,13 +1317,18 @@ def compile_population_plan(
             assert isinstance(record_type, str)
             ordinal = len(operations)
             operation_id = f"operation:{plan_id}:{ordinal}"
-            dependencies: list[str] = []
+            endpoint_ids: tuple[object, ...] = ()
             if family == "relations":
-                for endpoint in (record["source_id"], record["target_id"]):
-                    assert isinstance(endpoint, str)
-                    dependency = operation_by_record.get(endpoint)
-                    if dependency is not None and dependency not in dependencies:
-                        dependencies.append(dependency)
+                endpoint_ids = (record["source_id"], record["target_id"])
+            elif family == "event_participations":
+                properties = record["properties"]
+                assert isinstance(properties, dict)
+                endpoint_ids = (properties["event_id"], properties["entity_id"])
+            dependencies = [
+                dependency
+                for record_id, dependency in operation_by_record.items()
+                if record_id in endpoint_ids
+            ]
             operation = KnowledgeOperation(
                 ordinal=ordinal,
                 operation_id=operation_id,
@@ -1350,6 +1401,7 @@ def prepare_population_change(
         partial_contract=before.partial_contract,
         contract_view=before.contract_view,
         base_state=PopulationBaseState.from_replay(before),
+        history_profile=compiled_profile,
     )
     root = json.loads(compilation.canonical_plan_bytes)
     assert isinstance(root, dict)
@@ -1609,6 +1661,7 @@ def _trace_base_state(
     family_by_operation = {
         "CREATE_ENTITY": "entities",
         "CREATE_EVENT": "events",
+        "CREATE_EVENT_PARTICIPATION": "event_participations",
         "CREATE_RELATION": "relations",
         "CREATE_SIGNAL": "signals",
     }
@@ -1710,6 +1763,7 @@ def _verify_trace(
             partial_contract=partial_contract,
             contract_view=contract_view,
             base_state=_trace_base_state(replay, change.change_set_id),
+            history_profile=profile,
         )
     except PopulationPlanRefusal as error:
         raise _trace_refuse(

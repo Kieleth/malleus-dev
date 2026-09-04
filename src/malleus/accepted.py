@@ -999,6 +999,7 @@ def _graph_operations(graph: KnowledgeGraph) -> dict[str, ProposedOperation]:
         "ENTITY": ProposedOperation.entity,
         "SIGNAL": ProposedOperation.signal,
         "EVENT": ProposedOperation.event,
+        "EVENT_PARTICIPATION": ProposedOperation.event_participation,
     }
     for item in graph.canonical_operations():
         kind = item["kind"]
@@ -1031,6 +1032,7 @@ def _base_operation_order(graph: KnowledgeGraph) -> list[str]:
     categories = {
         OpType.CREATE_ENTITY: 0,
         OpType.CREATE_EVENT: 0,
+        OpType.CREATE_EVENT_PARTICIPATION: 1,
         OpType.CREATE_RELATION: 1,
         OpType.CREATE_SIGNAL: 2,
     }

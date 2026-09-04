@@ -113,6 +113,20 @@ class ProposedOperation:
     ) -> "ProposedOperation":
         return cls(OpType.CREATE_EVENT, record_type, record_id, properties)
 
+    @classmethod
+    def event_participation(
+        cls,
+        record_type: str,
+        record_id: str,
+        properties: Mapping[str, Any] | None = None,
+    ) -> "ProposedOperation":
+        return cls(
+            OpType.CREATE_EVENT_PARTICIPATION,
+            record_type,
+            record_id,
+            properties,
+        )
+
     def copy(self) -> "ProposedOperation":
         return ProposedOperation(
             self.op_type,
@@ -307,6 +321,10 @@ def _apply(graph: KnowledgeGraph, write: ProposedOperation) -> Operation:
         return graph.create_signal(write.record_type, write.record_id, properties)
     if write.op_type == OpType.CREATE_EVENT:
         return graph.create_event(write.record_type, write.record_id, properties)
+    if write.op_type == OpType.CREATE_EVENT_PARTICIPATION:
+        return graph.create_event_participation(
+            write.record_type, write.record_id, properties
+        )
     raise StagingError(f"Unsupported proposed operation type: {write.op_type}")
 
 

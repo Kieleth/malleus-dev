@@ -1,0 +1,20 @@
+{
+  "fixture_id": "OKG-FX001",
+  "input_set_id": "small-shop-object-event-ret-040-v1",
+  "members": [
+    {"bytes": 670, "path": "input/configuration/mapping.json", "sha256": "sha256:203e6c1ddfc2d2d3c7d02c0156a682b775aaf790175cf667f336250cc62cfb39"},
+    {"bytes": 189, "path": "input/configuration/time-context.json", "sha256": "sha256:5fac71f4cc6876d39ade5878c03c7c574990086c6b62ee3b6ed8a47b0380eb4b"},
+    {"bytes": 6160, "path": "input/population/ret-040.json", "sha256": "sha256:fad3a9c6e136e2b9711c07e6c8163f27a9bc4be5502531614a944e622afe644d"},
+    {"bytes": 118, "path": "input/sources/warehouse.jsonl", "sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e"},
+    {"bytes": 1661, "path": "input/tbox/small-shop-object-event.yaml", "sha256": "sha256:f989f2aa78d97f06b6e5d266146c3cd38ea6a86e2e5c5d65b09497b5495a5947"},
+    {"bytes": 1070, "path": "oracle/ret-040.json", "sha256": "sha256:e777ffca3adb74212b0ec75b52017a7dbb91e476425b85594fad70f41050390a"}
+  ],
+  "schema": "malleus.small-shop.object-event-input-set/v1",
+  "source_attribution": {
+    "doi": "10.1007/978-3-031-08848-3_9",
+    "event_id": "e27",
+    "source_locator": "Table 1",
+    "transcription_classification": "CONTROLLED_FIXTURE_TRANSCRIPTION",
+    "work_title": "Event Knowledge Graphs"
+  }
+}

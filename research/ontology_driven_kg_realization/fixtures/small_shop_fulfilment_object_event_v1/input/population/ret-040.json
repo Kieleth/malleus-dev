@@ -1,0 +1,68 @@
+{
+  "adapter": {
+    "adapter_id": "small-shop-object-event-fixture",
+    "version": "1"
+  },
+  "contract_identity": "sha256:90c8bc3e02e34d12a6b1c3c8d9cd8a5dcba3927c42922f15eb34b8aea30efd47",
+  "derivations": [
+    {"locator": "row:0:order", "path": ["properties", "order_number"], "record_id": "O1", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:actor", "path": ["properties", "actor_id"], "record_id": "R4", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[0]", "path": ["properties", "inventory_unit_id"], "record_id": "X1", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[1]", "path": ["properties", "inventory_unit_id"], "record_id": "X2", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[2]", "path": ["properties", "inventory_unit_id"], "record_id": "Y1", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:activity", "path": ["properties", "event_type"], "record_id": "e27", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:time", "path": ["properties", "occurred_at"], "record_id": "e27", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:event_id", "path": ["properties", "event_id"], "record_id": "participation:e27:O1:ORDER", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:order", "path": ["properties", "entity_id"], "record_id": "participation:e27:O1:ORDER", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:order", "path": ["properties", "qualifier"], "record_id": "participation:e27:O1:ORDER", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:event_id", "path": ["properties", "event_id"], "record_id": "participation:e27:R4:ACTOR", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:actor", "path": ["properties", "entity_id"], "record_id": "participation:e27:R4:ACTOR", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:actor", "path": ["properties", "qualifier"], "record_id": "participation:e27:R4:ACTOR", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:event_id", "path": ["properties", "event_id"], "record_id": "participation:e27:X1:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[0]", "path": ["properties", "entity_id"], "record_id": "participation:e27:X1:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[0]", "path": ["properties", "qualifier"], "record_id": "participation:e27:X1:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:event_id", "path": ["properties", "event_id"], "record_id": "participation:e27:X2:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[1]", "path": ["properties", "entity_id"], "record_id": "participation:e27:X2:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[1]", "path": ["properties", "qualifier"], "record_id": "participation:e27:X2:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:event_id", "path": ["properties", "event_id"], "record_id": "participation:e27:Y1:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[2]", "path": ["properties", "entity_id"], "record_id": "participation:e27:Y1:ITEM", "source_id": "source:small-shop:object-event:warehouse"},
+    {"locator": "row:0:items[2]", "path": ["properties", "qualifier"], "record_id": "participation:e27:Y1:ITEM", "source_id": "source:small-shop:object-event:warehouse"}
+  ],
+  "evidence": [
+    {"evidence_id": "artifact:small-shop:object-event-mapping", "sha256": "sha256:203e6c1ddfc2d2d3c7d02c0156a682b775aaf790175cf667f336250cc62cfb39"},
+    {"evidence_id": "artifact:small-shop:object-event-time-context", "sha256": "sha256:5fac71f4cc6876d39ade5878c03c7c574990086c6b62ee3b6ed8a47b0380eb4b"}
+  ],
+  "gaps": [],
+  "grammar": "malleus.population-plan/private-v0",
+  "history_profile": {
+    "profile_id": "object-event",
+    "sha256": "sha256:38bb0e408d28d8785c6a85f92d4a833b68a18fac1371490de3587c1179780e78"
+  },
+  "plan_id": "plan:small-shop:ret-040-object-event",
+  "records": {
+    "entities": [
+      {"id": "O1", "properties": {"order_number": "O1"}, "type": "SalesOrder"},
+      {"id": "R4", "properties": {"actor_id": "R4"}, "type": "WarehouseActor"},
+      {"id": "X1", "properties": {"inventory_unit_id": "X1"}, "type": "InventoryUnit"},
+      {"id": "X2", "properties": {"inventory_unit_id": "X2"}, "type": "InventoryUnit"},
+      {"id": "Y1", "properties": {"inventory_unit_id": "Y1"}, "type": "InventoryUnit"}
+    ],
+    "event_participations": [
+      {"id": "participation:e27:O1:ORDER", "properties": {"entity_id": "O1", "event_id": "e27", "qualifier": "ORDER"}, "type": "PackShipmentParticipation"},
+      {"id": "participation:e27:R4:ACTOR", "properties": {"entity_id": "R4", "event_id": "e27", "qualifier": "ACTOR"}, "type": "PackShipmentParticipation"},
+      {"id": "participation:e27:X1:ITEM", "properties": {"entity_id": "X1", "event_id": "e27", "qualifier": "ITEM"}, "type": "PackShipmentParticipation"},
+      {"id": "participation:e27:X2:ITEM", "properties": {"entity_id": "X2", "event_id": "e27", "qualifier": "ITEM"}, "type": "PackShipmentParticipation"},
+      {"id": "participation:e27:Y1:ITEM", "properties": {"entity_id": "Y1", "event_id": "e27", "qualifier": "ITEM"}, "type": "PackShipmentParticipation"}
+    ],
+    "events": [
+      {"id": "e27", "properties": {"event_type": "PACK_SHIPMENT", "occurred_at": "2000-05-07T17:00:00Z"}, "type": "PackShipmentEvent"}
+    ],
+    "relations": [],
+    "signals": []
+  },
+  "sources": [
+    {"sha256": "sha256:6ff31debb3603892de9d015f4e412da9f40a4add384f3f939b506ab7066e640e", "source_id": "source:small-shop:object-event:warehouse"}
+  ],
+  "supersessions": [],
+  "valid_time": {"kind": "INSTANT", "value": "2000-05-07T17:00:00Z"}
+}

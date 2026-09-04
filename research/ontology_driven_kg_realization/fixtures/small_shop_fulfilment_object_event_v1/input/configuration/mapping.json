@@ -1,0 +1,32 @@
+{
+  "event": {
+    "id_field": "event_id",
+    "occurred_at": {
+      "source_field": "time",
+      "time_context": "configuration/time-context.json"
+    },
+    "type_field": "activity",
+    "type_values": {
+      "Pack Shipment": "PACK_SHIPMENT"
+    }
+  },
+  "participants": [
+    {
+      "field": "order",
+      "qualifier": "ORDER",
+      "type": "SalesOrder"
+    },
+    {
+      "field": "items",
+      "qualifier": "ITEM",
+      "type": "InventoryUnit"
+    },
+    {
+      "field": "actor",
+      "qualifier": "ACTOR",
+      "type": "WarehouseActor"
+    }
+  ],
+  "schema": "malleus.small-shop.object-event-mapping/fixture-v1",
+  "source": "sources/warehouse.jsonl"
+}

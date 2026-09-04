@@ -910,10 +910,16 @@ def populated_kg(cyp450_kg):
 
 
 class TestExportRecords:
-    def test_export_has_the_four_create_families(self, populated_kg):
-        """Export buckets match the four create_* families."""
+    def test_export_has_the_five_create_families(self, populated_kg):
+        """Export buckets match the five create_* families."""
         export = populated_kg.export_records()
-        assert set(export) == {"entities", "relations", "signals", "events"}
+        assert set(export) == {
+            "entities",
+            "event_participations",
+            "events",
+            "relations",
+            "signals",
+        }
         assert [len(export[family]) for family in ("entities", "relations", "signals", "events")] == [3, 2, 1, 1]
 
     def test_records_carry_create_arguments(self, populated_kg):

@@ -1,0 +1,35 @@
+{
+  "authorship": "INDEPENDENTLY_HAND_AUTHORED",
+  "compiler_input": false,
+  "expected": {
+    "entities": [
+      ["O1", "SalesOrder"],
+      ["R4", "WarehouseActor"],
+      ["X1", "InventoryUnit"],
+      ["X2", "InventoryUnit"],
+      ["Y1", "InventoryUnit"]
+    ],
+    "event": {
+      "event_type": "PACK_SHIPMENT",
+      "id": "e27",
+      "occurred_at": "2000-05-07T17:00:00Z",
+      "type": "PackShipmentEvent"
+    },
+    "participations": [
+      ["participation:e27:O1:ORDER", "e27", "O1", "ORDER"],
+      ["participation:e27:R4:ACTOR", "e27", "R4", "ACTOR"],
+      ["participation:e27:X1:ITEM", "e27", "X1", "ITEM"],
+      ["participation:e27:X2:ITEM", "e27", "X2", "ITEM"],
+      ["participation:e27:Y1:ITEM", "e27", "Y1", "ITEM"]
+    ],
+    "relation_count": 0
+  },
+  "fixture_id": "OKG-FX001",
+  "limitations": [
+    "No Event-to-Event order is represented.",
+    "No product code is inferred for an item.",
+    "The year and timezone are fixture context, not source claims."
+  ],
+  "scenario": "RET-040",
+  "wire": "PRIVATE_FIXTURE_LOCAL_TEST_EVIDENCE"
+}

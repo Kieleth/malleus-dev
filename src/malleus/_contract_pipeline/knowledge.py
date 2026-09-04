@@ -317,7 +317,8 @@ def _operation(raw: object, expected_ordinal: int) -> KnowledgeOperation:
     operation_type = _text(value.get("operation_type"), "operation type is required")
     required_fields = (
         _ENTITY_OPERATION_FIELDS
-        if operation_type == "CREATE_ENTITY"
+        if operation_type
+        in {"CREATE_ENTITY", "CREATE_EVENT", "CREATE_EVENT_PARTICIPATION"}
         else _RELATION_OPERATION_FIELDS
         if operation_type == "CREATE_RELATION"
         else frozenset()
@@ -1916,7 +1917,19 @@ class KnowledgeChangeHistory:
                     operation.record_id,
                     dict(operation.properties),
                 )
-            else:
+            elif operation.operation_type == "CREATE_EVENT":
+                result = staged.create_event(
+                    operation.record_type,
+                    operation.record_id,
+                    dict(operation.properties),
+                )
+            elif operation.operation_type == "CREATE_EVENT_PARTICIPATION":
+                result = staged.create_event_participation(
+                    operation.record_type,
+                    operation.record_id,
+                    dict(operation.properties),
+                )
+            elif operation.operation_type == "CREATE_RELATION":
                 assert operation.source_id is not None
                 assert operation.target_id is not None
                 result = staged.create_relation(
@@ -1925,6 +1938,10 @@ class KnowledgeChangeHistory:
                     operation.source_id,
                     operation.target_id,
                     dict(operation.properties),
+                )
+            else:  # guarded by KnowledgeChangeSet.from_bytes
+                raise AssertionError(
+                    f"unsupported knowledge operation: {operation.operation_type}"
                 )
             if result.op_status is not OpStatus.COMMITTED:
                 raise _refuse(

@@ -1,0 +1,85 @@
+id: https://malleus.dev/schema/small-shop-object-event
+name: small_shop_object_event
+version: 0.1.0
+title: Small Shop Object Event TBox
+description: >-
+  Fixture-local vocabulary for the controlled e27 packing occurrence.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  object_event: https://malleus.dev/schema/profiles/object-event/
+  shop_event: https://malleus.dev/schema/small-shop-object-event/
+
+imports:
+  - linkml:types
+  - object-event
+
+enums:
+  ShopEventKind:
+    permissible_values:
+      PACK_SHIPMENT:
+
+  ShopParticipationQualifier:
+    permissible_values:
+      ACTOR:
+      ITEM:
+      ORDER:
+
+slots:
+  actor_id:
+    range: string
+  inventory_unit_id:
+    range: string
+  order_number:
+    range: string
+
+classes:
+  SalesOrder:
+    is_a: Entity
+    slots:
+      - order_number
+    slot_usage:
+      order_number:
+        required: true
+
+  InventoryUnit:
+    is_a: Entity
+    slots:
+      - inventory_unit_id
+    slot_usage:
+      inventory_unit_id:
+        required: true
+
+  WarehouseActor:
+    is_a: Entity
+    slots:
+      - actor_id
+    slot_usage:
+      actor_id:
+        required: true
+
+  PackShipmentEvent:
+    is_a: Event
+    slot_usage:
+      event_type:
+        range: ShopEventKind
+        required: true
+        equals_string: PACK_SHIPMENT
+      occurred_at:
+        required: true
+
+  PackShipmentParticipation:
+    is_a: EventParticipation
+    slot_usage:
+      entity_id:
+        range: Entity
+        required: true
+      event_id:
+        range: PackShipmentEvent
+        required: true
+      qualifier:
+        range: ShopParticipationQualifier
+        required: true

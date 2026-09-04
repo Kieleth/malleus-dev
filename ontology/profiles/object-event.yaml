@@ -1,0 +1,68 @@
+id: https://malleus.dev/schema/profiles/object-event
+name: malleus_object_event
+version: 0.1.0
+title: Malleus Object Event Profile
+description: >-
+  Optional vocabulary for qualified participation of enduring entities in
+  events. It keeps event participation distinct from Entity-to-Entity
+  relations and does not define Event-to-Event ordering.
+
+default_range: string
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  malleus: https://malleus.dev/schema/
+  object_event: https://malleus.dev/schema/profiles/object-event/
+
+imports:
+  - linkml:types
+  - malleus
+
+annotations:
+  grounding:
+    tag: grounding
+    value:
+      area: Object-centric event data
+      taxonomy: OCEL 2.0 event-to-object relationship
+      vocabularies:
+        - vocabulary: Object-Centric Event Log 2.0
+          vocabulary_url: https://www.ocel-standard.org/specification/formats/json/
+          borrowed_terms:
+            - event
+            - object
+            - qualifier
+      invented_terms:
+        - EventParticipation
+      invention_search: >-
+        OCEL 2.0 represents qualified event-to-object relationships as event
+        relationship entries. This profile gives each such participation a
+        stable record identity for ledger replay and provenance.
+
+classes:
+  EventParticipation:
+    abstract: true
+    description: >-
+      A qualified participation of one Entity in one Event. This is a
+      separately identified record, not an ordinary Entity-to-Entity Relation.
+    mixins:
+      - Identifiable
+    slots:
+      - event_id
+      - entity_id
+      - qualifier
+
+slots:
+  event_id:
+    range: Event
+    required: true
+    description: Event in which the entity participates.
+
+  entity_id:
+    range: Entity
+    required: true
+    description: Enduring entity participating in the event.
+
+  qualifier:
+    range: string
+    required: true
+    description: Domain-defined role played by the entity in the event.
