@@ -33,8 +33,8 @@ PROFILE_FIELDS = {
 
 SOURCE_ASSERTION_PROFILE_DATA = {
     "change_semantics": {
-        "addition": "ADD_FORMALIZATION",
-        "correction": "SUPERSEDE_FORMALIZATION",
+        "addition": "ADD_CAPTURE_BATCH_FORMALIZATIONS",
+        "correction": "SUPERSEDE_CAPTURE_BATCH_FORMALIZATIONS",
         "retraction": "NOT_ADMITTED",
         "transition": "NOT_APPLICABLE",
     },
@@ -61,10 +61,11 @@ SOURCE_ASSERTION_PROFILE_DATA = {
     "projection_rule_family": (
         "CURRENT_NON_SUPERSEDED_RECORDS_WITH_RETAINED_ASSERTION_TRACE"
     ),
-    "semantic_unit": "ASSERTION",
+    "semantic_unit": "COMPOSITION",
     "time_semantics": {
-        "assertion_time": "RETAINED_CAPTURE_ATTRIBUTION",
-        "domain_time": "KNOWLEDGE_VALID_TIME",
+        "assertion_time": "RETAINED_ASSERTION_EVIDENCE",
+        "domain_time": "RETAINED_ASSERTION_EVIDENCE",
+        "knowledge_valid_time": "CAPTURE_IMPORT_ORDER",
         "transaction_time": "LEDGER_TRANSACTION_TIME",
     },
 }
@@ -98,6 +99,7 @@ STATE_VERSION_PROFILE_DATA = {
     "time_semantics": {
         "assertion_time": "NOT_REPRESENTED",
         "domain_time": "KNOWLEDGE_VALID_TIME",
+        "knowledge_valid_time": "DOMAIN_TIME",
         "transaction_time": "LEDGER_TRANSACTION_TIME",
     },
 }
@@ -131,6 +133,7 @@ OBJECT_EVENT_PROFILE_DATA = {
     "time_semantics": {
         "assertion_time": "NOT_REPRESENTED",
         "domain_time": "KNOWLEDGE_VALID_TIME",
+        "knowledge_valid_time": "DOMAIN_TIME",
         "transaction_time": "LEDGER_TRANSACTION_TIME",
     },
 }
@@ -186,8 +189,11 @@ def test_three_full_profiles_are_public_canonical_and_explicit(
 def test_source_assertion_profile_keeps_claims_in_evidence_and_requires_trace() -> None:
     profile = _api().SOURCE_ASSERTION_PROFILE
 
+    assert profile.semantic_unit == "COMPOSITION"
     assert profile.ontology_roles["claim"] == ()
-    assert profile.time_semantics["assertion_time"] == ("RETAINED_CAPTURE_ATTRIBUTION")
+    assert profile.time_semantics["assertion_time"] == "RETAINED_ASSERTION_EVIDENCE"
+    assert profile.time_semantics["domain_time"] == "RETAINED_ASSERTION_EVIDENCE"
+    assert profile.time_semantics["knowledge_valid_time"] == "CAPTURE_IMPORT_ORDER"
     assert profile.projection_rule_family.endswith("RETAINED_ASSERTION_TRACE")
 
 
@@ -210,6 +216,22 @@ def test_object_event_profile_is_declared_without_claiming_event_admission() -> 
     assert profile.semantic_unit == "OCCURRENCE"
     assert profile.ontology_roles["event"] == ("Event",)
     assert profile.projection_rule_family == "CURRENT_STATE_DERIVED_FROM_EVENTS"
+
+
+def test_retired_minimal_profile_shape_is_not_a_fallback() -> None:
+    api = _api()
+    retired = {
+        "grammar": "malleus.domain-history-profile/private-v0",
+        "grounding": {"taxonomy": "underspecified"},
+        "origin": "EMPTY",
+        "profile_id": "state-version",
+        "semantic_unit": "STATE_VERSION",
+    }
+
+    with pytest.raises(api.PopulationPlanRefusal) as refusal:
+        api.DomainHistoryProfile.from_data(retired)
+
+    assert refusal.value.reason is api.PopulationPlanRefusalReason.FIELDS_NOT_CLOSED
 
 
 @pytest.mark.parametrize(
