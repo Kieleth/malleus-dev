@@ -1205,6 +1205,7 @@ def compile_population_plan(
         )
         derived.add((record_id, path))
 
+    underived: list[tuple[str, tuple[str, ...]]] = []
     for record_id, record in by_id.items():
         properties = record["properties"]
         assert isinstance(properties, dict)
@@ -1213,10 +1214,17 @@ def compile_population_plan(
             required.extend((("source_id",), ("target_id",)))
         for path in required:
             if (record_id, path) not in derived:
-                raise _refuse(
-                    PopulationPlanRefusalReason.UNDERIVED_FIELD,
-                    f"record field lacks derivation: {record_id}:{list(path)}",
-                )
+                underived.append((record_id, path))
+    if underived:
+        raise _refuse(
+            PopulationPlanRefusalReason.UNDERIVED_FIELD,
+            "record fields lack derivations: "
+            + ", ".join(
+                f"{record_id}:{list(path)}" for record_id, path in sorted(underived)
+            )
+            + "; every properties key and both relation endpoints need a "
+            "derivation, type and id do not",
+        )
 
     gaps = _array(
         root["gaps"],
