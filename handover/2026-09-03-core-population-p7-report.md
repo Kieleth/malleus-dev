@@ -120,8 +120,8 @@ evidence is regenerated and tested separately.
 
 - The final focused pack suite passes 28 tests.
 - The complete contract-compiler and inquisitor suites pass 891 tests.
-- The full Small Shop integration slice passes 215 tests after regenerating
-  current evidence under the new compiler profile.
+- The Small Shop plus pack integration slice passes 243 tests after
+  regenerating current evidence under the new compiler profile.
 - The three shipped packs compile through the public compiler.
 - One project importing both `research` and `metrology` compiles through the
   same public path.
