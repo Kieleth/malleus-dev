@@ -139,7 +139,6 @@ compiled = adapt_document_assertions(
     contract_identity=effective_contract.identity,
     records=proposed_records,
     supersessions=[],
-    valid_time={"kind": "INSTANT", "value": "2026-03-02T00:00:00Z"},
 )
 population_plan = json.loads(compiled.canonical_plan_bytes)
 ```
@@ -148,7 +147,12 @@ The adapter does not invent `proposed_records`, accept them, or write the
 knowledge graph. The ordinary population compiler validates the emitted plan
 against the selected ontology contract. Admission and replay remain separate.
 Captured assertions stay retained ledger evidence rather than becoming graph
-records.
+records. The adapter derives `ORDER_ONLY` valid time from the capture ID. The
+caller cannot substitute a source-domain date for the whole capture batch;
+optional nonempty `assertion_time` and `domain_time` values stay in each
+retained assertion. Their exact lexical values are evidence, not normalized
+times. An omitted field means that time was not captured; Core supplies no
+default.
 
 The result also contains `canonical_census_bytes`. Its two independent axes
 say which source blocks were reviewed and which captured assertions were fully,

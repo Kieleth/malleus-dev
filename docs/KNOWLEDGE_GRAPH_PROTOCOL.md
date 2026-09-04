@@ -148,8 +148,10 @@ The domain-history profile answers a different question from the ontology:
 Core ships three content-addressed profile artifacts. `state-version` treats
 records as successive versions and powers the Small Shop proof.
 `source-assertion` treats a retained capture as one partial-import batch;
-per-assertion modality and domain time stay in evidence and are reachable by
-the public provenance trace. `object-event` declares event-history semantics,
+optional per-assertion assertion and domain times, plus modality, stay in
+evidence and are reachable by the public provenance trace. Missing times remain
+absent, and their lexical values are not normalized by Core. `object-event`
+declares event-history semantics,
 but the governed population path still refuses Event records, so that profile
 is not yet executable. Adopters may define another closed profile. Merely
 naming a projection-rule family does not make Core an interpreter for arbitrary

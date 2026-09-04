@@ -37,6 +37,7 @@ _ASSERTION_FIELDS = {
     "modality",
     "statement",
 }
+_ASSERTION_TIME_FIELDS = {"assertion_time", "domain_time"}
 _FORMALIZATION_FIELDS = {"path", "record_id"}
 _GAP_FIELDS = {"kind", "statement"}
 _MODALITIES = {
@@ -240,7 +241,6 @@ def adapt_document_assertions(
     contract_identity: str,
     records: object,
     supersessions: object,
-    valid_time: object,
 ) -> DocumentAssertionCompilation:
     """Turn one checked document capture into one neutral population plan."""
 
@@ -291,7 +291,15 @@ def adapt_document_assertions(
 
     for raw_assertion in assertions:
         assertion = _obj(raw_assertion, "assertion")
-        _closed(assertion, _ASSERTION_FIELDS, "assertion")
+        if not _ASSERTION_FIELDS <= set(assertion) or set(assertion) - (
+            _ASSERTION_FIELDS | _ASSERTION_TIME_FIELDS
+        ):
+            raise _fail(
+                DocumentAssertionRefusalReason.FIELDS_NOT_CLOSED,
+                "assertion fields are not closed",
+            )
+        for field in _ASSERTION_TIME_FIELDS & set(assertion):
+            _word(assertion[field], f"assertion {field}")
         assertion_id = _word(assertion["id"], "assertion ID")
         if assertion_id in seen_assertions:
             raise _fail(
@@ -352,6 +360,13 @@ def adapt_document_assertions(
     capture_id = _word(capture_id, "capture ID")
     plan_id = _word(plan_id, "plan ID")
     contract_identity = _word(contract_identity, "contract identity")
+    if (
+        SOURCE_ASSERTION_PROFILE.time_semantics["knowledge_valid_time"]
+        != "CAPTURE_IMPORT_ORDER"
+    ):
+        raise RuntimeError(
+            "the document adapter requires capture-import-order history semantics"
+        )
     capture_identity = _digest(capture_bytes)
     plan = {
         "adapter": dict(DOCUMENT_ASSERTION_ADAPTER),
@@ -368,7 +383,7 @@ def adapt_document_assertions(
         "records": record_data,
         "sources": [{"sha256": reading_identity, "source_id": source_id}],
         "supersessions": json.loads(_canonical(supersessions, "supersessions")),
-        "valid_time": json.loads(_canonical(valid_time, "valid time")),
+        "valid_time": {"kind": "ORDER_ONLY", "value": capture_id},
     }
     census = {
         "assertions": counts,

@@ -41,16 +41,21 @@ profile choices are:
 - genesis boundary `RETAINED_PARTIAL_IMPORT`;
 - completeness `DECLARED_CAPTURE_ONLY`;
 - semantic unit `COMPOSITION`;
-- change-set valid time `CAPTURE_IMPORT_ORDER`;
+- change-set valid time `CAPTURE_IMPORT_ORDER`, represented as `ORDER_ONLY`
+  with the exact capture ID as its value;
 - assertion and domain time `RETAINED_ASSERTION_EVIDENCE`;
 - projection family
   `CURRENT_NON_SUPERSEDED_RECORDS_WITH_RETAINED_ASSERTION_TRACE`.
 
 This resolves captures containing assertions with different domain times or no
-stated domain time. The public trace reaches each retained assertion, including
-its modality and time. An ordinary graph query may still show an unqualified
-domain edge, so the edge alone is not evidence that the source asserted it as
-fact.
+stated domain time. The adapter derives this value and no longer accepts a
+caller-supplied `valid_time`, so a source date cannot masquerade as the whole
+batch's time. Ledger order supplies the ordering. The public trace reaches each
+retained assertion, including its modality and optional `assertion_time` and
+`domain_time` strings. These strings are exact lexical evidence, not normalized
+Core time values; absence remains absence. An ordinary graph query may still
+show an unqualified domain edge, so the edge alone is not evidence that the
+source asserted it as fact.
 
 ## Small Shop rule
 
@@ -72,9 +77,9 @@ The regenerated exact outputs are:
 ## Mechanical evidence
 
 - Profile, document-adapter, public-trace, public-compiler, and public Small
-  Shop focused tests pass: 41 tests.
+  Shop focused tests pass: 46 tests.
 - The complete contract-compiler Pareto suite plus the public Small Shop run
-  passes: 331 tests.
+  passes: 336 tests.
 - Every Small Shop research test passes: 194 tests.
 - Tests reject the old grammar, extra or missing fields, invalid origin/genesis
   pairs, unknown origins and units, unordered or duplicate role roots, and
@@ -82,6 +87,10 @@ The regenerated exact outputs are:
 - One HYPOTHESISED assertion is admitted as an unqualified domain relation, then
   traced back to its exact retained modality. This mechanically guards the
   selected provenance-join boundary.
+- Separate tests prove that callers cannot supply batch valid time, two
+  assertions retain different assertion and domain times, a third retains no
+  domain time, malformed time values refuse, and public replay trace returns
+  the exact evidence.
 - The shipped JSON files, not Python constants, own the three profile choices.
 
 ## Non-claims

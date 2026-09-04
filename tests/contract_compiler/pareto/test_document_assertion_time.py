@@ -6,6 +6,8 @@ from importlib import import_module
 import json
 from pathlib import Path
 
+import pytest
+
 from tests.contract_compiler.pareto.test_document_assertion_adapter import (
     _canonical,
     _inputs,
@@ -46,7 +48,6 @@ def test_document_adapter_retains_distinct_and_absent_assertion_times() -> None:
         contract_identity=str(plan["contract_identity"]),
         records=plan["records"],
         supersessions=plan["supersessions"],
-        valid_time=plan["valid_time"],
     )
 
     retained = json.loads(result.capture_bytes)
@@ -72,10 +73,34 @@ def test_public_trace_reaches_each_assertions_own_time_or_absence(
     )
     by_id = {item["id"]: item for item in capture["assertions"]}
 
-    assert by_id["asr:001"]["assertion_time"] != by_id["asr:002"][
-        "assertion_time"
-    ]
+    assert by_id["asr:001"]["assertion_time"] != by_id["asr:002"]["assertion_time"]
     assert by_id["asr:001"]["domain_time"] != by_id["asr:002"]["domain_time"]
     assert "domain_time" not in by_id["asr:003"]
     assert trace.change_set.valid_time.kind == "ORDER_ONLY"
     assert trace.change_set.valid_time.value == "capture:inspection-note"
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (("assertion_time", ""), ("domain_time", 17)),
+)
+def test_document_adapter_refuses_malformed_assertion_time(
+    field: str,
+    value: object,
+) -> None:
+    api = _api()
+    reading, capture, plan, _ = _inputs()
+    capture["assertions"][0][field] = value
+
+    with pytest.raises(api.DocumentAssertionRefusal) as refusal:
+        api.adapt_document_assertions(
+            reading_bytes=_canonical(reading),
+            capture_bytes=_canonical(capture),
+            capture_id="capture:inspection-note",
+            plan_id=str(plan["plan_id"]),
+            contract_identity=str(plan["contract_identity"]),
+            records=plan["records"],
+            supersessions=plan["supersessions"],
+        )
+
+    assert refusal.value.reason is api.DocumentAssertionRefusalReason.MALFORMED_CAPTURE

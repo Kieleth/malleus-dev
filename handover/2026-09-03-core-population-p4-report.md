@@ -2,6 +2,10 @@
 
 Status: implemented in Core, awaiting independent overseer verification.
 
+This is the historical P4 surface. P6 removes the caller-supplied `valid_time`
+argument and derives `ORDER_ONLY` capture/import time from `capture_id`. See
+`2026-09-03-core-population-p6-report.md` for the current contract.
+
 ## Coordinates
 
 - RED commit: `7b986618e52ca9d52c228cc6a3720f28f4815add`

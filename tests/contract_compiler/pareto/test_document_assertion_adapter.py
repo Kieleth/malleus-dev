@@ -50,6 +50,10 @@ def _inputs() -> tuple[dict[str, object], ...]:
     assert isinstance(census, dict)
     capture["reading_sha256"] = _digest(_canonical(reading))
     plan["history_profile"]["sha256"] = _api().SOURCE_ASSERTION_PROFILE.identity
+    plan["valid_time"] = {
+        "kind": "ORDER_ONLY",
+        "value": "capture:inspection-note",
+    }
     return reading, capture, plan, census
 
 
@@ -70,7 +74,6 @@ def _adapt(
         contract_identity=str(plan["contract_identity"]),
         records=plan["records"],
         supersessions=plan["supersessions"],
-        valid_time=plan["valid_time"],
     )
 
 
@@ -222,7 +225,6 @@ def test_document_adapter_refuses_malformed_or_open_inputs(
             contract_identity=str(plan["contract_identity"]),
             records=plan["records"],
             supersessions=plan["supersessions"],
-            valid_time=plan["valid_time"],
         )
 
     assert refusal.value.reason is getattr(api.DocumentAssertionRefusalReason, reason)
@@ -264,7 +266,6 @@ def test_document_adapter_can_emit_a_gaps_only_plan() -> None:
         contract_identity=str(plan["contract_identity"]),
         records={"entities": [], "relations": []},
         supersessions=[],
-        valid_time=plan["valid_time"],
     )
     emitted = json.loads(result.canonical_plan_bytes)
 

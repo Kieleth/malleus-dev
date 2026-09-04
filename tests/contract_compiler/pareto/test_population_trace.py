@@ -113,7 +113,12 @@ def _retain_document_inputs(history, compiled, partial, reading: bytes, capture:
     )
 
 
-def _document_replay(tmp_path: Path, *, first_assertion_modality: str = "STATED"):
+def _document_replay(
+    tmp_path: Path,
+    *,
+    first_assertion_modality: str = "STATED",
+    assertion_times: dict[str, dict[str, str]] | None = None,
+):
     api = _api()
     compiled = api.compile_linkml_contract(
         root_locator="inspection-note",
@@ -132,6 +137,9 @@ def _document_replay(tmp_path: Path, *, first_assertion_modality: str = "STATED"
     )
     reading, capture, plan, _ = _inputs()
     capture["assertions"][0]["modality"] = first_assertion_modality
+    if assertion_times is not None:
+        for assertion in capture["assertions"]:
+            assertion.update(assertion_times[assertion["id"]])
     reading_bytes = _canonical(reading)
     capture_bytes = _canonical(capture)
     adapted = api.adapt_document_assertions(
@@ -142,7 +150,6 @@ def _document_replay(tmp_path: Path, *, first_assertion_modality: str = "STATED"
         contract_identity=partial.identity,
         records=plan["records"],
         supersessions=plan["supersessions"],
-        valid_time=plan["valid_time"],
     )
     plan = json.loads(adapted.canonical_plan_bytes)
     _retain_document_inputs(history, compiled, partial, reading_bytes, capture_bytes)
